@@ -1,0 +1,9 @@
+ext {
+
+    kotlinVersion = '1.1.2-4'
+
+    slf4jVersion = '1.7.25'
+
+    okHttpVersion = '2.5.0'
+
+}
