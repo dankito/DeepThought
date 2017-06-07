@@ -1,4 +1,4 @@
-package net.dankito.deepthought
+package net.dankito.deepthought.android
 
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
