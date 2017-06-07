@@ -1,5 +1,8 @@
 include ':DeepThoughtAndroidApp'
+
 include ':WebClient'
+include ':FaviconExtractor'
 
 
 project(':WebClient').projectDir = "$rootDir/libs/util/WebClient" as File
+project(':FaviconExtractor').projectDir = "$rootDir/libs/util/FaviconExtractor" as File
