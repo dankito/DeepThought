@@ -8,4 +8,8 @@ ext {
 
     jsoupVersion = '1.10.2'
 
+    junitVersion = '4.12'
+
+    hamcrestVersion = '1.3'
+
 }
