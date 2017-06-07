@@ -1,14 +1,24 @@
 package net.dankito.webclient
 
 
-data class RequestParameters(val url: String, var body: String? = null, var contentType: ContentType = ContentType.FORM_URL_ENCODED,
-                             var userAgent: String? = null, var cookieHandling: CookieHandling = CookieHandling.ACCEPT_NONE,
-                             var connectionTimeoutMillis: Int = 0, var countConnectionRetries: Int = 0, var hasStringResponse: Boolean = true,
+data class RequestParameters(val url: String, var body: String? = null,
+                             var contentType: ContentType = ContentType.FORM_URL_ENCODED,
+                             var userAgent: String? = RequestParameters.DEFAULT_USER_AGENT,
+                             var cookieHandling: CookieHandling = CookieHandling.ACCEPT_NONE,
+                             var connectionTimeoutMillis: Int = RequestParameters.DEFAULT_CONNECTION_TIMEOUT_MILLIS,
+                             var countConnectionRetries: Int = RequestParameters.DEFAULT_COUNT_CONNECTION_RETRIES,
+                             var hasStringResponse: Boolean = true,
                              var downloadBufferSize: Int = RequestParameters.DEFAULT_DOWNLOAD_BUFFER_SIZE,
                              var downloadProgressListener: ((progress: Float, downloadedChunk: ByteArray) -> Unit)? = null) {
 
     companion object {
+        const val DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0"
+
+        const val DEFAULT_CONNECTION_TIMEOUT_MILLIS = 2000
+
         const val DEFAULT_DOWNLOAD_BUFFER_SIZE = 8 * 1024
+
+        const val DEFAULT_COUNT_CONNECTION_RETRIES = 2
     }
 
 
