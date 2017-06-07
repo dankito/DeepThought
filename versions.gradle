@@ -6,4 +6,6 @@ ext {
 
     okHttpVersion = '2.5.0'
 
+    jsoupVersion = '1.10.2'
+
 }
