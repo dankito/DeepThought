@@ -8,7 +8,10 @@ import net.dankito.data_access.network.webclient.OkHttpWebClient
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.faviconextractor.FaviconComparator
 import net.dankito.faviconextractor.FaviconExtractor
+import net.dankito.feedaddressextractor.FeedAddressExtractor
 import net.dankito.newsreader.article.ArticleExtractors
+import net.dankito.newsreader.feed.IFeedReader
+import net.dankito.newsreader.feed.RomeFeedReader
 import net.dankito.serializer.ISerializer
 import net.dankito.serializer.JacksonJsonSerializer
 import net.dankito.utils.ImageCache
@@ -62,6 +65,19 @@ class CommonModule {
     @Singleton
     fun provideArticleExtractors(webClient: IWebClient) : ArticleExtractors {
         return ArticleExtractors(webClient)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideFeedAddressExtractor(webClient: IWebClient) : FeedAddressExtractor {
+        return FeedAddressExtractor(webClient)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFeedReader() : IFeedReader {
+        return RomeFeedReader()
     }
 
 }

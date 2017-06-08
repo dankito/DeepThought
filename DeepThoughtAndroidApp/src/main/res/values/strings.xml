@@ -16,4 +16,13 @@
 
     <string name="dialog_ask_extractor_name_enter_name">Enter name:</string>
 
+    <string formatted="false" name="error_no_rss_or_atom_feed_found_for_url">No RSS or Atom feed found for url %s</string>
+    <string formatted="false" name="error_cannot_read_feed_or_extract_feed_addresses_from_url">Cannot read feed or extract feed addresses from url %s: %s</string>
+
+    <string formatted="false" name="error_could_not_extract_article_from_url">Could not extract article from url %s: %s</string>
+
+    <string name="bild_easter_egg">Wir achten selbstverständlich die Meinungsfreiheit, bei Bild kennt unsere Toleranz jedoch Grenzen.\nWir wollen nicht, dass unsere App für
+        solch ein hetzerisches Machwerk verwendet wird.\nDie App wird deshalb nun abstürzen.
+    </string>
+
 </resources>

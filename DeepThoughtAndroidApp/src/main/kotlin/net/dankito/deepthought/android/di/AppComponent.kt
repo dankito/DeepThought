@@ -5,6 +5,7 @@ import net.dankito.deepthought.android.MainActivity
 import net.dankito.deepthought.android.activities.ArticleSummaryActivity
 import net.dankito.deepthought.android.activities.ViewArticleActivity
 import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorsAdapter
+import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.di.CommonModule
@@ -21,6 +22,8 @@ interface AppComponent : CommonComponent {
 
 
     fun inject(mainActivity: MainActivity)
+
+    fun inject(addArticleSummaryExtractorDialog: AddArticleSummaryExtractorDialog)
 
     fun inject(articleSummaryExtractorsDialog: ArticleSummaryExtractorsDialog)
 
