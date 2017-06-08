@@ -6,7 +6,11 @@ include ':NewsReader'
 include ':RomeFeedReader'
 include ':FeedAddressExtractor'
 
+
+/*      Service Layer       */
+
 include ':Serializer'
+include ':Utils'
 
 
 /*      Data Access Layer       */
@@ -24,6 +28,7 @@ project(':RomeFeedReader').projectDir = "$rootDir/libs/news/RomeFeedReader" as F
 project(':FeedAddressExtractor').projectDir = "$rootDir/libs/news/FeedAddressExtractor" as File
 
 project(':Serializer').projectDir = "$rootDir/libs/service_layer/serializer/Serializer" as File
+project(':Utils').projectDir = "$rootDir/libs/service_layer/utils/Utils" as File
 
 
 project(':WebClient').projectDir = "$rootDir/libs/data_access_layer/network/WebClient" as File
