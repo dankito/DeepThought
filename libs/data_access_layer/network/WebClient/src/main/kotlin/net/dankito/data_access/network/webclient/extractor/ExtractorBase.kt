@@ -1,7 +1,7 @@
-package net.dankito.webclient.extractor
+package net.dankito.data_access.network.webclient.extractor
 
-import net.dankito.webclient.IWebClient
-import net.dankito.webclient.RequestParameters
+import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.data_access.network.webclient.RequestParameters
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.net.URL

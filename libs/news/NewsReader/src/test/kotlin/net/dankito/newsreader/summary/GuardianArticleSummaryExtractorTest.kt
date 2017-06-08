@@ -1,7 +1,7 @@
 package net.dankito.newsreader.summary
 
 import net.dankito.newsreader.model.ArticleSummary
-import net.dankito.webclient.IWebClient
+import net.dankito.data_access.network.webclient.IWebClient
 import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.nullValue
 import org.junit.Assert

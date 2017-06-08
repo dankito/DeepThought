@@ -2,7 +2,7 @@ package net.dankito.newsreader.article
 
 import net.dankito.newsreader.model.Article
 import net.dankito.newsreader.model.ArticleSummaryItem
-import net.dankito.webclient.extractor.AsyncResult
+import net.dankito.data_access.network.webclient.extractor.AsyncResult
 
 
 interface IArticleExtractor {

@@ -1,4 +1,4 @@
-package net.dankito.webclient.extractor
+package net.dankito.data_access.network.webclient.extractor
 
 
 // TODO: find a better library (e.g. Utils lib)

@@ -1,4 +1,4 @@
-package net.dankito.webclient
+package net.dankito.data_access.network.webclient
 
 import com.squareup.okhttp.*
 import org.slf4j.LoggerFactory

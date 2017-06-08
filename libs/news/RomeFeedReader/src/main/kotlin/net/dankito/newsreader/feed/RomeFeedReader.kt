@@ -6,7 +6,7 @@ import com.rometools.rome.io.SyndFeedInput
 import com.rometools.rome.io.XmlReader
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.newsreader.model.FeedArticleSummary
-import net.dankito.webclient.extractor.AsyncResult
+import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import org.jsoup.Jsoup
 import org.slf4j.LoggerFactory
 import java.net.URL

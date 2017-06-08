@@ -3,7 +3,7 @@ package net.dankito.newsreader.summary
 import net.dankito.newsreader.article.GuardianArticleExtractor
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
-import net.dankito.webclient.IWebClient
+import net.dankito.data_access.network.webclient.IWebClient
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 

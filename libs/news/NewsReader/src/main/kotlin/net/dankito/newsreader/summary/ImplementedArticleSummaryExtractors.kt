@@ -1,6 +1,6 @@
 package net.dankito.newsreader.summary
 
-import net.dankito.webclient.IWebClient
+import net.dankito.data_access.network.webclient.IWebClient
 
 
 class ImplementedArticleSummaryExtractors(val webClient: IWebClient) {

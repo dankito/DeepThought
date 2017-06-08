@@ -2,10 +2,10 @@ package net.dankito.newsreader.article
 
 import net.dankito.newsreader.model.Article
 import net.dankito.newsreader.model.ArticleSummaryItem
-import net.dankito.webclient.CookieHandling
-import net.dankito.webclient.IWebClient
-import net.dankito.webclient.RequestParameters
-import net.dankito.webclient.extractor.AsyncResult
+import net.dankito.data_access.network.webclient.CookieHandling
+import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.data_access.network.webclient.RequestParameters
+import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import org.jsoup.nodes.Document
 import org.slf4j.LoggerFactory
 import kotlin.concurrent.thread

@@ -1,6 +1,6 @@
 package net.dankito.newsreader.article
 
-import net.dankito.webclient.IWebClient
+import net.dankito.data_access.network.webclient.IWebClient
 import org.junit.Test
 
 class GuardianArticleExtractorTest : ArticleExtractorTestBase() {

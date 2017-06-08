@@ -1,9 +1,9 @@
 package net.dankito.newsreader.summary
 
 import net.dankito.newsreader.model.ArticleSummary
-import net.dankito.webclient.IWebClient
-import net.dankito.webclient.extractor.AsyncResult
-import net.dankito.webclient.extractor.ExtractorBase
+import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.data_access.network.webclient.extractor.AsyncResult
+import net.dankito.data_access.network.webclient.extractor.ExtractorBase
 import org.jsoup.nodes.Document
 import org.slf4j.LoggerFactory
 import kotlin.concurrent.thread
