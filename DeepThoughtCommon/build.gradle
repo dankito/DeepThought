@@ -4,13 +4,6 @@ sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
 
 
-buildscript {
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
-}
-
 dependencies {
     compile project(':NewsReader')
     compile project(':RomeFeedReader')
@@ -18,4 +11,8 @@ dependencies {
     compile project(':Serializer')
     compile project(':FileStorageService')
     compile project(':Utils')
+
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    compile "com.google.dagger:dagger:$daggerVersion"
+    compileOnly 'javax.annotation:jsr250-api:1.0'
 }
