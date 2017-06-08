@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -25,7 +26,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
 
         val fab = findViewById(R.id.fab) as FloatingActionButton
-        fab.setOnClickListener { view -> }
+        fab.setOnClickListener { view -> floatingActionButtonClicked() }
 
 //        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
 //        val toggle = ActionBarDrawerToggle(
@@ -35,6 +36,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val navigationView = findViewById(R.id.nav_view) as NavigationView
         navigationView.setNavigationItemSelectedListener(this)
+    }
+
+    private fun floatingActionButtonClicked() {
+        val articleSummaryExtractorsDialog = ArticleSummaryExtractorsDialog(this)
+        articleSummaryExtractorsDialog.showDialog()
     }
 
     override fun onBackPressed() {
