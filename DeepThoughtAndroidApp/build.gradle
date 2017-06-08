@@ -45,6 +45,8 @@ dependencies {
     implementation project(':DeepThoughtCommon')
     implementation project(':AndroidFileStorageService')
 
+    implementation "com.squareup.picasso:picasso:$picassoVersion"
+
     implementation "org.slf4j:slf4j-android:$slf4jVersion"
 
     implementation 'com.android.support:appcompat-v7:25.3.1'
