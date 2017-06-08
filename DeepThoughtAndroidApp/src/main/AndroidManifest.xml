@@ -30,6 +30,11 @@
             android:theme="@style/AppTheme.NoActionBar"
         />
 
+        <activity android:name=".activities.ViewArticleActivity"
+                  android:parentActivityName=".activities.ArticleSummaryActivity"
+                  android:theme="@style/AppTheme.NoActionBar"
+        />
+
     </application>
 
 </manifest>
