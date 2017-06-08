@@ -4,7 +4,7 @@ import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.RequestParameters
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import java.net.URL
+import java.net.URI
 
 
 // TODO: find a better library
@@ -43,15 +43,30 @@ abstract class ExtractorBase(val webClient : IWebClient) {
             }
         }
         else if(url.startsWith("/")) {
-            val urlInstance = URL(URL(siteUrl), url)
-            absoluteUrl = urlInstance.toExternalForm()
+            tryToMakeUrlAbsolute(url, siteUrl)?.let { absoluteUrl = it }
         }
         else if(url.startsWith("http") == false) {
-            val urlInstance = URL(URL(siteUrl), url)
-            absoluteUrl = urlInstance.toExternalForm()
+            tryToMakeUrlAbsolute(url, siteUrl)?.let { absoluteUrl = it }
         }
 
         return absoluteUrl
+    }
+
+    private fun tryToMakeUrlAbsolute(relativeUrl: String, siteUrl: String): String? {
+        try {
+            val relativeUri = URI(relativeUrl)
+            if(relativeUri.isAbsolute && relativeUri.scheme.startsWith("http") == false) {
+                return relativeUrl // it's an absolute uri but just doesn't start with http, e.g. mailto: for file:
+            }
+
+            val uri = URI(siteUrl)
+            return uri.resolve(relativeUrl).toString()
+//            val port = if(uri.port > 0) ":" + uri.port else ""
+//            val separator = if(relativeUrl.startsWith("/")) "" else "/"
+//            return uri.scheme + "://" + uri.host + port + separator + relativeUrl
+        } catch(ignored: Exception) { }
+
+        return null
     }
 
 }
