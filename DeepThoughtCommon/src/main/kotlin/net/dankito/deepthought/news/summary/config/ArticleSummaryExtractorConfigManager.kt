@@ -29,13 +29,13 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, va
     private var configurations: MutableMap<String, ArticleSummaryExtractorConfig> = linkedMapOf()
 
     @Inject
-    lateinit var faviconExtractor: FaviconExtractor
+    protected lateinit var faviconExtractor: FaviconExtractor
 
     @Inject
-    lateinit var faviconComparator: FaviconComparator
+    protected lateinit var faviconComparator: FaviconComparator
 
     @Inject
-    lateinit var serializer: ISerializer
+    protected lateinit var serializer: ISerializer
 
     private val listeners = mutableListOf<ConfigChangedListener>()
 
