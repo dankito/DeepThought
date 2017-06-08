@@ -7,12 +7,9 @@ import net.dankito.deepthought.android.activities.ViewArticleActivity
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.newsreader.model.Article
 import net.dankito.serializer.ISerializer
-import net.dankito.serializer.JacksonJsonSerializer
 
 
-class Router(private val context: Context) {
-
-    private val serializer: ISerializer = JacksonJsonSerializer() // TODO: inject
+class Router(private val context: Context, private val serializer: ISerializer) {
 
 
     fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig) {

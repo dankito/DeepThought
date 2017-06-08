@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import net.dankito.deepthought.android.DeepThoughtApplication
 import net.dankito.deepthought.android.routing.Router
+import net.dankito.serializer.ISerializer
 import javax.inject.Singleton
 
 
@@ -20,8 +21,8 @@ class ActivitiesModule(private val application: DeepThoughtApplication) {
 
     @Provides
     @Singleton
-    fun provideRouter(context: Context) : Router {
-        return Router(context)
+    fun provideRouter(context: Context, serializer: ISerializer) : Router {
+        return Router(context, serializer)
     }
 
 }
