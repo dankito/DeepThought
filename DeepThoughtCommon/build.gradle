@@ -1,0 +1,21 @@
+apply plugin: 'kotlin'
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+}
+
+dependencies {
+    compile project(':NewsReader')
+    compile project(':RomeFeedReader')
+    compile project(':FaviconExtractor')
+    compile project(':Serializer')
+    compile project(':FileStorageService')
+    compile project(':Utils')
+}
