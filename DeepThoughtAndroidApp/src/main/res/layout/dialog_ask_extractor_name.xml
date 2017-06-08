@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/txtAskExtractorNameLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_ask_extractor_name_enter_name"
+    />
+
+    <EditText
+        android:id="@+id/edtxtAskExtractorName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtAskExtractorNameLabel"
+        android:layout_marginTop="@dimen/dialog_ask_extractor_name_enter_name_margin_top"
+    />
+
+</RelativeLayout>

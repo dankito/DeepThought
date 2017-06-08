@@ -8,4 +8,8 @@
     <string name="activity_article_summary_menu_reload">Reload</string>
     <string name="activity_article_summary_menu_load_more">Load more</string>
 
+    <string name="dialog_article_summary_extractors_add_extractor">Add</string>
+
+    <string name="dialog_ask_extractor_name_enter_name">Enter name:</string>
+
 </resources>
