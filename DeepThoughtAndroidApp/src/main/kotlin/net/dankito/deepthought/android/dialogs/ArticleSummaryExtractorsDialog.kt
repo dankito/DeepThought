@@ -2,6 +2,7 @@ package net.dankito.deepthought.android.dialogs
 
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorsAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.routing.Router
@@ -34,10 +35,15 @@ class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
         builder = builder.setAdapter(adapter, { dialog, which ->
             val selectedExtractor = adapter.getItem(which)
             showSelectedSummaryExtractor(selectedExtractor)
-            dialog.cancel()
+            dialog.dismiss()
         })
 
-        builder.setNegativeButton(android.R.string.cancel, { dialog, _ -> dialog.cancel() })
+        builder.setNegativeButton(android.R.string.cancel, { dialog, _ -> dialog.dismiss() })
+
+        builder.setNeutralButton(R.string.dialog_article_summary_extractors_add_extractor, { dialog, which ->
+            showAddArticleSummaryExtractorView()
+            dialog.dismiss()
+        })
 
         builder.setOnDismissListener { summaryExtractors.removeListener(articleSummaryExtractorConfigChangedListener)  }
 
@@ -55,6 +61,10 @@ class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
 
     private fun showSelectedSummaryExtractor(selectedExtractor: ArticleSummaryExtractorConfig) {
         router.showArticleSummaryView(selectedExtractor)
+    }
+
+    private fun showAddArticleSummaryExtractorView() {
+        router.showAddArticleSummaryExtractorView(activity.supportFragmentManager)
     }
 
 }
