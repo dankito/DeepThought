@@ -31,5 +31,5 @@ android {
 }
 
 dependencies {
-    compile project(':FileStorageService')
+    implementation project(':FileStorageService')
 }
