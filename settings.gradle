@@ -3,6 +3,10 @@ include ':DeepThoughtAndroidApp'
 include ':WebClient'
 include ':FaviconExtractor'
 
+include ':NewsReader'
+
 
 project(':WebClient').projectDir = "$rootDir/libs/util/WebClient" as File
 project(':FaviconExtractor').projectDir = "$rootDir/libs/util/FaviconExtractor" as File
+
+project(':NewsReader').projectDir = "$rootDir/libs/news/NewsReader" as File
