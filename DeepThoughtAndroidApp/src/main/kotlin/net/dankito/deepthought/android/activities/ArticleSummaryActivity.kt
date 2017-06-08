@@ -11,10 +11,9 @@ import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_article_summary.*
-import net.dankito.data_access.filesystem.AndroidFileStorageService
-import net.dankito.data_access.network.webclient.OkHttpWebClient
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ArticleSummaryAdapter
+import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.routing.Router
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
@@ -23,10 +22,10 @@ import net.dankito.newsreader.model.Article
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.serializer.ISerializer
-import net.dankito.serializer.JacksonJsonSerializer
 import net.dankito.utils.ImageCache
 import org.slf4j.LoggerFactory
 import java.io.File
+import javax.inject.Inject
 
 class ArticleSummaryActivity : AppCompatActivity() {
 
@@ -38,35 +37,38 @@ class ArticleSummaryActivity : AppCompatActivity() {
     }
 
 
-    private lateinit var extractorsConfigManager: ArticleSummaryExtractorConfigManager // TODO: inject
+    @Inject
+    protected lateinit var extractorsConfigManager: ArticleSummaryExtractorConfigManager
 
-    private val webClient = OkHttpWebClient() // TODO: inject
+    @Inject
+    protected lateinit var articleExtractors: ArticleExtractors
 
-    private val articleExtractors = ArticleExtractors(webClient) // TODO: inject
+    @Inject
+    protected lateinit var serializer: ISerializer
 
-    private val serializer: ISerializer = JacksonJsonSerializer() // TODO: inject
+    @Inject
+    protected lateinit var imageCache: ImageCache
+
+    @Inject
+    protected lateinit var router: Router
+
 
     private var extractorConfig: ArticleSummaryExtractorConfig? = null
 
-    private lateinit var imageCache: ImageCache
-
-    private val adapter = ArticleSummaryAdapter()
-
     private var lastLoadedSummary: ArticleSummary? = null
 
-    private lateinit var router: Router // TODO: inject
+    private val adapter = ArticleSummaryAdapter()
 
     private var mnLoadMore: MenuItem? = null
 
 
+    init {
+        AppComponent.component.inject(this)
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        router = Router(this.applicationContext)
-
-        val fileStorageService = AndroidFileStorageService(this.applicationContext)
-        extractorsConfigManager = ArticleSummaryExtractorConfigManager(webClient, fileStorageService)
-        imageCache = ImageCache(webClient, serializer, fileStorageService)
 
         setupUI()
 
