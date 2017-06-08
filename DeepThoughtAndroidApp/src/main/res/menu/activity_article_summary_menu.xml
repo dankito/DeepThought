@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/mnReload"
+        app:showAsAction="always"
+        android:orderInCategory="100"
+        android:title="@string/activity_article_summary_menu_reload"
+        android:icon="@android:drawable/stat_notify_sync"
+        />
+
+    <item
+        android:id="@+id/mnLoadMore"
+        app:showAsAction="always"
+        android:orderInCategory="200"
+        android:title="@string/activity_article_summary_menu_load_more"
+        android:icon="@android:drawable/arrow_down_float"
+        android:visible="false"
+    />
+
+</menu>
