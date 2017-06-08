@@ -45,6 +45,8 @@ dependencies {
     implementation project(':DeepThoughtCommon')
     implementation project(':AndroidFileStorageService')
 
+    implementation "org.slf4j:slf4j-android:$slf4jVersion"
+
     implementation 'com.android.support:appcompat-v7:25.3.1'
     implementation 'com.android.support:design:25.3.1'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
