@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/list_item_found_feed_address_margin_left_and_right"
+                android:layout_marginStart="@dimen/list_item_found_feed_address_margin_left_and_right"
+                android:layout_marginRight="@dimen/list_item_found_feed_address_margin_left_and_right"
+                android:layout_marginEnd="@dimen/list_item_found_feed_address_margin_left_and_right"
+>
+
+    <TextView
+        android:id="@+id/txtFeedName"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:maxLines="2"
+        android:ellipsize="end"
+    />
+
+    <TextView
+        android:id="@+id/txtFeedUrl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/txtFeedName"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="@dimen/list_item_found_feed_address_feed_url_margin_bottom"
+    />
+
+</RelativeLayout>

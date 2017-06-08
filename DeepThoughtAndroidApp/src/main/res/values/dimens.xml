@@ -14,4 +14,8 @@
     <dimen name="list_item_article_summary_item_preview_image_size">80dp</dimen>
     <dimen name="list_item_article_summary_item_preview_image_margin_right">6dp</dimen>
 
+    <dimen name="list_item_found_feed_address_height">40dp</dimen>
+    <dimen name="list_item_found_feed_address_margin_left_and_right">0dp</dimen>
+    <dimen name="list_item_found_feed_address_feed_url_margin_bottom">6dp</dimen>
+
 </resources>
