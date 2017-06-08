@@ -5,4 +5,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="activity_article_summary_menu_reload">Reload</string>
+    <string name="activity_article_summary_menu_load_more">Load more</string>
+
 </resources>
