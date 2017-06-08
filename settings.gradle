@@ -10,6 +10,7 @@ include ':FeedAddressExtractor'
 include ':Serializer'
 
 include ':FileStorageService'
+include ':AndroidFileStorageService'
 
 
 project(':WebClient').projectDir = "$rootDir/libs/util/WebClient" as File
@@ -22,3 +23,4 @@ project(':FeedAddressExtractor').projectDir = "$rootDir/libs/news/FeedAddressExt
 project(':Serializer').projectDir = "$rootDir/libs/service_layer/serializer/Serializer" as File
 
 project(':FileStorageService').projectDir = "$rootDir/libs/data_access_layer/filesystem/FileStorageService" as File
+project(':AndroidFileStorageService').projectDir = "$rootDir/libs/data_access_layer/filesystem/AndroidFileStorageService" as File
