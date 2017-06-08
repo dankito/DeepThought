@@ -5,4 +5,10 @@
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="list_item_article_summary_extractor_height">70dp</dimen>
+    <dimen name="list_item_article_summary_extractor_margin">4dp</dimen>
+    <dimen name="list_item_article_summary_extractor_preview_image_size">60dp</dimen>
+    <dimen name="list_item_article_summary_extractor_preview_image_margin_right">6dp</dimen>
+
 </resources>
