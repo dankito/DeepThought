@@ -9,6 +9,8 @@ include ':FeedAddressExtractor'
 
 include ':Serializer'
 
+include ':FileStorageService'
+
 
 project(':WebClient').projectDir = "$rootDir/libs/util/WebClient" as File
 project(':FaviconExtractor').projectDir = "$rootDir/libs/util/FaviconExtractor" as File
@@ -18,3 +20,5 @@ project(':RomeFeedReader').projectDir = "$rootDir/libs/news/RomeFeedReader" as F
 project(':FeedAddressExtractor').projectDir = "$rootDir/libs/news/FeedAddressExtractor" as File
 
 project(':Serializer').projectDir = "$rootDir/libs/service_layer/serializer/Serializer" as File
+
+project(':FileStorageService').projectDir = "$rootDir/libs/data_access_layer/filesystem/FileStorageService" as File
