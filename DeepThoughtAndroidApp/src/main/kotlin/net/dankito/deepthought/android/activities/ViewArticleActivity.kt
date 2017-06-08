@@ -5,9 +5,10 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_view_article.*
 import net.dankito.deepthought.android.R
+import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.newsreader.model.Article
 import net.dankito.serializer.ISerializer
-import net.dankito.serializer.JacksonJsonSerializer
+import javax.inject.Inject
 
 
 class ViewArticleActivity : AppCompatActivity() {
@@ -17,9 +18,15 @@ class ViewArticleActivity : AppCompatActivity() {
     }
 
 
-    private val serializer: ISerializer = JacksonJsonSerializer() // TODO: inject
+    @Inject
+    protected lateinit var serializer: ISerializer
 
     private var article: Article? = null
+
+
+    init {
+        AppComponent.component.inject(this)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

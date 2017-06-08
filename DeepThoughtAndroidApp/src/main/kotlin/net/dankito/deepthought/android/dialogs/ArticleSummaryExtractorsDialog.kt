@@ -2,23 +2,31 @@ package net.dankito.deepthought.android.dialogs
 
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import net.dankito.data_access.filesystem.AndroidFileStorageService
-import net.dankito.data_access.network.webclient.OkHttpWebClient
 import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorsAdapter
+import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.routing.Router
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.news.summary.config.ConfigChangedListener
+import javax.inject.Inject
 
 
 class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
 
-    private val router = Router(activity.applicationContext) // TODO: inject
+    @Inject
+    protected lateinit var router: Router
 
-    // TODO: inject
-    private val summaryExtractors = ArticleSummaryExtractorConfigManager(OkHttpWebClient(), AndroidFileStorageService(activity))
+    @Inject
+    protected lateinit var summaryExtractors: ArticleSummaryExtractorConfigManager
 
-    private val adapter = ArticleSummaryExtractorsAdapter(activity, summaryExtractors.getConfigs())
+    private var adapter: ArticleSummaryExtractorsAdapter
+
+
+    init {
+        AppComponent.component.inject(this)
+
+        adapter = ArticleSummaryExtractorsAdapter(activity, summaryExtractors.getConfigs())
+    }
 
 
     fun showDialog() {
