@@ -10,6 +10,10 @@
 
     <string name="dialog_article_summary_extractors_add_extractor">Add</string>
 
+    <string name="dialog_add_article_summary_extractor_feed_or_website_url">Feed or website url</string>
+    <string name="dialog_add_article_summary_extractor_check_feed_or_website_url">Check</string>
+    <string name="dialog_add_article_summary_extractor_found_feeds">Found feeds:</string>
+
     <string name="dialog_ask_extractor_name_enter_name">Enter name:</string>
 
 </resources>

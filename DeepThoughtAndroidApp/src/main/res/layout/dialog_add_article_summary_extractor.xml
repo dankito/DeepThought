@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dialog_add_article_summary_extractor_margin_left_and_right"
+                android:layout_marginRight="@dimen/dialog_add_article_summary_extractor_margin_left_and_right"
+>
+
+    <TextView
+        android:id="@+id/txtFeedOrWebsiteUrl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_add_article_summary_extractor_feed_or_website_url"
+    />
+
+    <EditText
+        android:id="@+id/edtxtFeedOrWebsiteUrl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtFeedOrWebsiteUrl"
+        android:inputType="textUri"
+        android:layout_marginTop="@dimen/dialog_add_article_summary_extractor_text_feed_or_website_url_margin_top_and_bottom"
+        android:layout_marginBottom="@dimen/dialog_add_article_summary_extractor_text_feed_or_website_url_margin_top_and_bottom"
+    />
+
+    <Button
+        android:id="@+id/btnCheckFeedOrWebsiteUrl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edtxtFeedOrWebsiteUrl"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:text="@string/dialog_add_article_summary_extractor_check_feed_or_website_url"
+    />
+
+    <TextView
+        android:id="@+id/txtFeedSearchResultsLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnCheckFeedOrWebsiteUrl"
+        android:layout_marginTop="@dimen/dialog_add_article_summary_extractor_label_feed_search_results_margin_top"
+        android:visibility="gone"
+        android:text="@string/dialog_add_article_summary_extractor_found_feeds"
+    />
+
+    <ListView
+        android:id="@+id/lstFeedSearchResults"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtFeedSearchResultsLabel"
+        android:layout_marginTop="@dimen/dialog_add_article_summary_extractor_listview_feed_search_results_margin_top"
+        android:visibility="gone"
+    />
+
+</RelativeLayout>
