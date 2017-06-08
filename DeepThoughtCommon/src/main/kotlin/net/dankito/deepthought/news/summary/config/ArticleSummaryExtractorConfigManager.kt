@@ -2,6 +2,7 @@ package net.dankito.deepthought.news.summary.config
 
 import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.deepthought.di.CommonComponent
 import net.dankito.faviconextractor.Favicon
 import net.dankito.faviconextractor.FaviconComparator
 import net.dankito.faviconextractor.FaviconExtractor
@@ -11,8 +12,9 @@ import net.dankito.newsreader.feed.RomeFeedReader
 import net.dankito.newsreader.model.FeedArticleSummary
 import net.dankito.newsreader.summary.ImplementedArticleSummaryExtractors
 import net.dankito.serializer.ISerializer
-import net.dankito.serializer.JacksonJsonSerializer
 import org.slf4j.LoggerFactory
+import java.util.*
+import javax.inject.Inject
 
 
 class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, val fileStorageService: IFileStorageService) {
@@ -26,16 +28,21 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, va
 
     private var configurations: MutableMap<String, ArticleSummaryExtractorConfig> = linkedMapOf()
 
-    private val faviconExtractor = FaviconExtractor(webClient) // TODO: inject
+    @Inject
+    lateinit var faviconExtractor: FaviconExtractor
 
-    private val faviconComparator = FaviconComparator(webClient) // TODO: inject
+    @Inject
+    lateinit var faviconComparator: FaviconComparator
 
-    private val serializer: ISerializer = JacksonJsonSerializer() // TODO: inject
+    @Inject
+    lateinit var serializer: ISerializer
 
     private val listeners = mutableListOf<ConfigChangedListener>()
 
 
     init {
+        CommonComponent.component.inject(this)
+
         readPersistedConfigs()
 
         initImplementedExtractors()
