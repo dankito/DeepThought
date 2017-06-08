@@ -6,7 +6,6 @@ targetCompatibility = "1.7"
 
 dependencies {
     compile project(':WebClient')
-    compile project(':FaviconExtractor')
 
     testCompile ("junit:junit:$junitVersion", {
         exclude group: 'org.hamcrest', module: 'hamcrest-core'
