@@ -27,6 +27,7 @@ include ':FileStorageService'
 include ':AndroidFileStorageService'
 
 include ':EntityManager'
+include ':CouchbaseLiteEntityManagerBase'
 include ':couchbase-lite-jpa'
 include ':JpaAnnotationReader'
 
@@ -49,5 +50,6 @@ project(':FileStorageService').projectDir = "$rootDir/libs/data_access_layer/fil
 project(':AndroidFileStorageService').projectDir = "$rootDir/libs/data_access_layer/filesystem/AndroidFileStorageService" as File
 
 project(':EntityManager').projectDir = "$rootDir/libs/data_access_layer/database/EntityManager" as File
+project(':CouchbaseLiteEntityManagerBase').projectDir = "$rootDir/libs/data_access_layer/database/CouchbaseLiteEntityManagerBase" as File
 project(':couchbase-lite-jpa').projectDir = "$rootDir/libs/data_access_layer/database/couchbase-lite-jpa" as File
 project(':JpaAnnotationReader').projectDir = "$rootDir/libs/data_access_layer/database/JpaAnnotationReader" as File
