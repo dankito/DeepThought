@@ -19,12 +19,10 @@ data class Note(
     @JoinColumn(name = TableConfig.NoteNoteTypeJoinColumnName)
     var type: NoteType? = null
         set(type) {
-            val previousValue = this.type
+            if (field !== type) {
+                field?.removeNote(this)
 
-            if (this.type !== type) {
-                this.type?.removeNote(this)
-
-                this.type = type
+                field = type
 
                 type?.addNote(this)
             }

@@ -2,20 +2,8 @@ package net.dankito.deepthought.model
 
 import net.dankito.deepthought.model.config.TableConfig
 import java.io.Serializable
-import java.util.HashSet
-
-import javax.persistence.CascadeType
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.JoinColumn
-import javax.persistence.JoinTable
-import javax.persistence.Lob
-import javax.persistence.ManyToMany
-import javax.persistence.ManyToOne
-import javax.persistence.OneToMany
-import javax.persistence.OneToOne
-import javax.persistence.Transient
+import java.util.*
+import javax.persistence.*
 
 
 @Entity(name = TableConfig.EntryTableName)
@@ -78,9 +66,9 @@ data class Entry(
     @JoinColumn(name = TableConfig.EntryReferenceJoinColumnName)
     var reference: Reference? = null
         set(reference) {
-            this.reference?.removeEntry(this)
+            field?.removeEntry(this)
 
-            this.reference = reference
+            field = reference
 
             reference?.addEntry(this)
         }
@@ -128,8 +116,9 @@ data class Entry(
         return false
     }
 
-    fun hasTag(tag: Tag): Boolean {
-        return tags.contains(tag)
+
+    fun hasReference(): Boolean {
+        return reference != null
     }
 
 
