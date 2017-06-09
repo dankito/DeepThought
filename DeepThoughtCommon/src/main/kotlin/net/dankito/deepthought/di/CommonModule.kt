@@ -14,7 +14,9 @@ import net.dankito.newsreader.feed.IFeedReader
 import net.dankito.newsreader.feed.RomeFeedReader
 import net.dankito.serializer.ISerializer
 import net.dankito.serializer.JacksonJsonSerializer
+import net.dankito.utils.IThreadPool
 import net.dankito.utils.ImageCache
+import net.dankito.utils.ThreadPool
 import javax.inject.Singleton
 
 
@@ -34,6 +36,12 @@ class CommonModule {
         return JacksonJsonSerializer()
     }
 
+
+    @Provides
+    @Singleton
+    fun provideThreadPool() : IThreadPool {
+        return ThreadPool()
+    }
 
     @Provides
     @Singleton
