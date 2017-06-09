@@ -9,14 +9,23 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
+import net.dankito.deepthought.service.data.DataManager
+import javax.inject.Inject
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    @Inject
+    protected lateinit var dataManager: DataManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setupUI()
+
+        setupDataAsync()
     }
 
     private fun setupUI() {
@@ -95,4 +104,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer.closeDrawer(GravityCompat.START)
         return true
     }
+
+
+    private fun setupDataAsync() {
+        thread {
+            AppComponent.component.inject(this)
+
+            dataManager.addInitializationListener {
+                dataManagerInitialized()
+            }
+        }
+    }
+
+    private fun dataManagerInitialized() {
+        runOnUiThread {
+
+        }
+    }
+
 }
