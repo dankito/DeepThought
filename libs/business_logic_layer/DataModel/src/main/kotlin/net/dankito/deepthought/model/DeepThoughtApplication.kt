@@ -14,6 +14,10 @@ data class DeepThoughtApplication(
         @JoinColumn(name = TableConfig.DeepThoughtApplicationLastLoggedOnUserJoinColumnName)
         var lastLoggedOnUser: User,
 
+        @OneToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST))
+        @JoinColumn(name = TableConfig.DeepThoughtApplicationLocalDeviceJoinColumnName)
+        val localDevice: Device,
+
         //  @Column(name = TableConfig.DeepThoughtApplicationAutoLogOnLastLoggedOnUserColumnName, columnDefinition = "SMALLINT DEFAULT 0", nullable = false)
         @Column(name = TableConfig.DeepThoughtApplicationAutoLogOnLastLoggedOnUserColumnName)
         var autoLogOnLastLoggedOnUser: Boolean = false
@@ -39,11 +43,6 @@ data class DeepThoughtApplication(
     var devices: MutableSet<Device> = HashSet()
         private set
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST))
-    @JoinColumn(name = TableConfig.DeepThoughtApplicationLocalDeviceJoinColumnName)
-    var localDevice: Device? = null
-        internal set
-
 
     @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     @OrderBy(value = "sortOrder")
@@ -51,12 +50,11 @@ data class DeepThoughtApplication(
         private set
 
 
-    private constructor() : this(User(""), false)
+    private constructor() : this(User("", ""), Device("", "", ""), false)
 
 
     fun addUser(user: User): Boolean {
         if (users.add(user)) {
-            user.application = this
             return true
         }
 
@@ -65,7 +63,6 @@ data class DeepThoughtApplication(
 
     fun removeUser(user: User): Boolean {
         if (users.remove(user)) {
-            user.application = null
             return true
         }
 
@@ -75,7 +72,6 @@ data class DeepThoughtApplication(
 
     fun addGroup(group: UsersGroup): Boolean {
         if (groups.add(group)) {
-            group.application = this
             return true
         }
 
@@ -84,7 +80,6 @@ data class DeepThoughtApplication(
 
     fun removeGroup(group: UsersGroup): Boolean {
         if (groups.remove(group)) {
-            group.application = null
             return true
         }
 
@@ -94,7 +89,6 @@ data class DeepThoughtApplication(
 
     fun addDevice(device: Device): Boolean {
         if (devices.add(device)) {
-            device.application = this
             return true
         }
 
@@ -107,7 +101,6 @@ data class DeepThoughtApplication(
         }
 
         if (devices.remove(device)) {
-            device.application = null
             return true
         }
 
