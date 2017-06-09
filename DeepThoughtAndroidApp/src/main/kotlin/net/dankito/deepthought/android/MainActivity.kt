@@ -9,9 +9,13 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import kotlinx.android.synthetic.main.content_main.*
+import net.dankito.deepthought.android.adapter.EntryAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
+import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.service.data.EntryService
 import javax.inject.Inject
 import kotlin.concurrent.thread
 
@@ -20,12 +24,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     @Inject
     protected lateinit var dataManager: DataManager
 
+    @Inject
+    protected lateinit var entryService: EntryService
+
+
+    private val entryAdapter = EntryAdapter()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setupUI()
 
         setupDataAsync()
+    }
+
+    override fun onDestroy() {
+        entryService.removeEntitiesUpdatedListener(entriesUpdatedListener)
+
+        super.onDestroy()
     }
 
     private fun setupUI() {
@@ -45,6 +62,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val navigationView = findViewById(R.id.nav_view) as NavigationView
         navigationView.setNavigationItemSelectedListener(this)
+
+        lstEntries.adapter = entryAdapter
+        lstEntries.setOnItemClickListener { _, _, position, _ -> clickedOnEntry(entryAdapter.getItem(position)) }
     }
 
     private fun floatingActionButtonClicked() {
@@ -106,6 +126,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
+    private fun clickedOnEntry(item: Entry) {
+        // TODO
+    }
+
+
     private fun setupDataAsync() {
         thread {
             AppComponent.component.inject(this)
@@ -117,9 +142,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun dataManagerInitialized() {
-        runOnUiThread {
+        entryService.addEntitiesUpdatedListener(entriesUpdatedListener)
 
+        retrieveAndShowEntries()
+    }
+
+    private fun retrieveAndShowEntries() {
+        entryService.getAllAsync {
+            runOnUiThread {
+                entryAdapter.setItems(it)
+            }
         }
+    }
+
+
+    private val entriesUpdatedListener: () -> Unit = {
+        retrieveAndShowEntries()
     }
 
 }
