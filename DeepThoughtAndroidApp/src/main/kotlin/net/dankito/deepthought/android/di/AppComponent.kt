@@ -8,12 +8,13 @@ import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorsAdapter
 import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
 import net.dankito.deepthought.di.CommonComponent
+import net.dankito.deepthought.di.CommonDataModule
 import net.dankito.deepthought.di.CommonModule
 import javax.inject.Singleton
 
 
 @Singleton
-@Component(modules = arrayOf(ActivitiesModule::class, AndroidCommonModule::class, CommonModule::class))
+@Component(modules = arrayOf(ActivitiesModule::class, AndroidCommonModule::class, CommonModule::class, CommonDataModule::class))
 interface AppComponent : CommonComponent {
 
     companion object {
