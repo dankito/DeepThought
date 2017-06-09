@@ -10,4 +10,7 @@ dependencies {
     compile("com.rometools:rome-fetcher:$romeVersion", {
       exclude group: 'commons-logging', module: 'commons-logging'
     })
+
+
+    testCompile "junit:junit:$junitVersion"
 }
