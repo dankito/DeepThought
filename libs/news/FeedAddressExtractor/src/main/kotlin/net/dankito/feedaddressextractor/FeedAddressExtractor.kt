@@ -14,8 +14,8 @@ import kotlin.concurrent.thread
 class FeedAddressExtractor(private val webClient : IWebClient) {
 
     companion object {
-        private val RSS_FEED_TYPE = "application/rss+xml"
-        private val ATOM_FEED_TYPE = "application/atom+xml"
+        private const val RSS_FEED_TYPE = "application/rss+xml"
+        private const val ATOM_FEED_TYPE = "application/atom+xml"
     }
 
 

@@ -13,10 +13,10 @@ import java.util.concurrent.TimeUnit
 class OkHttpWebClient : IWebClient {
 
     companion object {
-        protected val FORM_URL_ENCODED_MEDIA_TYPE = MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8")
-        protected val JSON_MEDIA_TYPE = MediaType.parse("application/json; charset=UTF-8")
+        private val FORM_URL_ENCODED_MEDIA_TYPE = MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8")
+        private val JSON_MEDIA_TYPE = MediaType.parse("application/json; charset=UTF-8")
 
-        protected val DEFAULT_CONNECTION_TIMEOUT_MILLIS = 10000
+        private const val DEFAULT_CONNECTION_TIMEOUT_MILLIS = 10000
 
         private val log = LoggerFactory.getLogger(OkHttpWebClient::class.java)
     }

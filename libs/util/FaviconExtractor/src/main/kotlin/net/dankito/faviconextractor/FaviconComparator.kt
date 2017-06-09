@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 class FaviconComparator(val webClient : IWebClient) {
 
     companion object {
-        val DEFAULT_MIN_SIZE = 32
+        const val DEFAULT_MIN_SIZE = 32
 
         private val log = LoggerFactory.getLogger(FaviconComparator::class.java)
     }

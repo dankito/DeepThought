@@ -6,7 +6,7 @@ import java.io.*
 open class JavaFileStorageService : IFileStorageService {
 
     companion object {
-        private val DATA_FOLDER_NAME = "data"
+        private const val DATA_FOLDER_NAME = "data"
     }
 
 

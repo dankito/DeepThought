@@ -20,7 +20,7 @@ import javax.inject.Inject
 class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, val fileStorageService: IFileStorageService) {
 
     companion object {
-        private val FILE_NAME = "ArticleSummaryExtractorConfigurations.json"
+        private const val FILE_NAME = "ArticleSummaryExtractorConfigurations.json"
 
         private val log = LoggerFactory.getLogger(ArticleSummaryExtractorConfigManager::class.java)
     }

@@ -30,7 +30,7 @@ import javax.inject.Inject
 class AddArticleSummaryExtractorDialog : DialogFragment() {
 
     companion object {
-        val TAG = "ADD_ARTICLE_SUMMARY_EXTRACTOR_DIALOG"
+        const val TAG = "ADD_ARTICLE_SUMMARY_EXTRACTOR_DIALOG"
     }
 
 

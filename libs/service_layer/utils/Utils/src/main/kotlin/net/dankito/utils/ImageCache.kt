@@ -14,7 +14,7 @@ import java.net.URI
 class ImageCache(private val webClient: IWebClient, private val serializer: ISerializer, private val fileStorageService: IFileStorageService) {
 
     companion object {
-        private val CACHE_FILE_NAME = "ImageCache.json"
+        private const val CACHE_FILE_NAME = "ImageCache.json"
 
         private val log = LoggerFactory.getLogger(ImageCache::class.java)
     }
