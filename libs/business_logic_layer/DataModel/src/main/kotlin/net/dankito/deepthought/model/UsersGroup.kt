@@ -7,7 +7,7 @@ import javax.persistence.*
 
 
 @Entity(name = TableConfig.GroupTableName)
-data class Group(
+data class UsersGroup(
         @Column(name = TableConfig.GroupNameColumnName)
         var name: String
 ) : UserDataEntity() {

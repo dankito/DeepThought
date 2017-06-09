@@ -58,7 +58,7 @@ class TableConfig {
         const val UserDeviceJoinTableDeviceIdColumnName = "device_id"
 
 
-        /*          User Group Join Table Config        */
+        /*          User UsersGroup Join Table Config        */
 
         const val UserGroupJoinTableName = "user_group_join_table"
 
@@ -66,7 +66,7 @@ class TableConfig {
         const val UserGroupJoinTableGroupIdColumnName = "group_id"
 
 
-        /*          Group Table Config        */
+        /*          UsersGroup Table Config        */
 
         const val GroupTableName = "group_dt" // 'group' is not allowed as table name as it's a system table, so i used group_dt (for _deep_thought)
 
@@ -99,7 +99,7 @@ class TableConfig {
         const val DeviceDeepThoughtApplicationJoinColumnName = "application_id"
 
 
-        /*          Group Device Join Table Config        */
+        /*          UsersGroup Device Join Table Config        */
 
         const val GroupDeviceJoinTableName = "group_device_join_table"
 
