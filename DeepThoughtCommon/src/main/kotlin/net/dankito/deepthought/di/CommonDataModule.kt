@@ -10,6 +10,8 @@ import net.dankito.deepthought.model.enums.FileType
 import net.dankito.deepthought.model.enums.NoteType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
+import net.dankito.service.data.EntryService
+import net.dankito.service.data.ReferenceService
 import javax.inject.Singleton
 
 
@@ -26,6 +28,19 @@ class CommonDataModule {
     @Singleton
     fun provideDataManager(entityManager: IEntityManager, configuration: EntityManagerConfiguration, dataInitializer: DefaultDataInitializer) : DataManager {
         return DataManager(entityManager, configuration, dataInitializer)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideEntryService(dataManager: DataManager) : EntryService {
+        return EntryService(dataManager)
+    }
+
+    @Provides
+    @Singleton
+    fun provideReferenceService(dataManager: DataManager) : ReferenceService {
+        return ReferenceService(dataManager)
     }
 
 
