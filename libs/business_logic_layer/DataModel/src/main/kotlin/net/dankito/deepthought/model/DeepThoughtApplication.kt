@@ -27,15 +27,15 @@ data class DeepThoughtApplication(
 
 
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "application", cascade = arrayOf(CascadeType.PERSIST))
+    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     var users: MutableSet<User> = HashSet()
         private set
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "application", cascade = arrayOf(CascadeType.PERSIST))
+    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     var groups: MutableSet<UsersGroup> = HashSet()
         private set
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "application", cascade = arrayOf(CascadeType.PERSIST))
+    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     var devices: MutableSet<Device> = HashSet()
         private set
 
@@ -45,7 +45,7 @@ data class DeepThoughtApplication(
         internal set
 
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "application", cascade = arrayOf(CascadeType.PERSIST))
+    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     @OrderBy(value = "sortOrder")
     var applicationLanguages: MutableSet<ApplicationLanguage> = HashSet<ApplicationLanguage>() // these are the Languages the UI can display
         private set

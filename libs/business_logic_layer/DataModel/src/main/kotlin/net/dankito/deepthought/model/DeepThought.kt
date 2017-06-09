@@ -16,7 +16,7 @@ class DeepThought : UserDataEntity(), Serializable {
     }
 
 
-    @OneToMany(mappedBy = "deepThought", fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
+    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     var entries: MutableSet<Entry> = HashSet()
         private set
 
@@ -24,34 +24,34 @@ class DeepThought : UserDataEntity(), Serializable {
     var nextEntryIndex = 0
         private set
 
-    @OneToMany(mappedBy = "deepThought", fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
+    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     var tags: MutableSet<Tag> = HashSet()
         private set
 
 
-    @OneToMany(mappedBy = "deepThought", fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
+    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     var references: MutableSet<Reference> = HashSet()
         private set
 
-    @OneToMany(mappedBy = "deepThought", fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
+    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     var notes: MutableSet<Note> = HashSet()
         private set
 
-    @OneToMany(mappedBy = "deepThought", fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
+    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     var files: MutableSet<FileLink> = HashSet()
         private set
 
-    @OneToMany(mappedBy = "deepThought", fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
+    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     var entriesGroups: MutableSet<EntriesGroup> = HashSet()
         private set
 
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "deepThought", cascade = arrayOf(CascadeType.PERSIST))
+    @OneToMany(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST))
     @OrderBy(value = "sortOrder")
     var noteTypes: MutableSet<NoteType> = TreeSet<NoteType>()
         private set
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "deepThought", cascade = arrayOf(CascadeType.PERSIST))
+    @OneToMany(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST))
     @OrderBy(value = "sortOrder")
     var fileTypes: MutableSet<FileType> = TreeSet<FileType>()
         private set
