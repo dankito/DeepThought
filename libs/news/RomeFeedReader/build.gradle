@@ -7,5 +7,7 @@ targetCompatibility = "1.7"
 dependencies {
     compile project(':NewsReader')
 
-    compile "com.rometools:rome-fetcher:$romeVersion"
+    compile("com.rometools:rome-fetcher:$romeVersion", {
+      exclude group: 'commons-logging', module: 'commons-logging'
+    })
 }
