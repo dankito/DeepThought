@@ -50,6 +50,8 @@ dependencies {
     implementation project(':DeepThoughtCommon')
     implementation project(':AndroidFileStorageService')
 
+    implementation project(':AndroidCouchbaseLiteEntityManager')
+
     implementation "com.squareup.picasso:picasso:$picassoVersion"
 
     implementation "org.slf4j:slf4j-android:$slf4jVersion"
