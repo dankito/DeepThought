@@ -14,6 +14,11 @@ include ':Serializer'
 include ':Utils'
 
 
+/*      Business logic Layer       */
+
+include ':DataModel'
+
+
 /*      Data Access Layer       */
 
 include ':WebClient'
@@ -30,6 +35,8 @@ project(':FeedAddressExtractor').projectDir = "$rootDir/libs/news/FeedAddressExt
 
 project(':Serializer').projectDir = "$rootDir/libs/service_layer/serializer/Serializer" as File
 project(':Utils').projectDir = "$rootDir/libs/service_layer/utils/Utils" as File
+
+project(':DataModel').projectDir = "$rootDir/libs/business_logic_layer/DataModel" as File
 
 
 project(':WebClient').projectDir = "$rootDir/libs/data_access_layer/network/WebClient" as File
