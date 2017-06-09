@@ -69,7 +69,7 @@ data class User(
 
     @OneToOne(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     @JoinColumn(name = TableConfig.UserUsersDefaultGroupJoinColumnName)
-    var usersDefaultGroup: Group? = null
+    var usersDefaultGroup: UsersGroup? = null
         internal set (usersDefaultGroup) {
             if (usersDefaultGroup != null && groups.contains(usersDefaultGroup) === false)
                 addGroup(usersDefaultGroup)
@@ -79,7 +79,7 @@ data class User(
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH))
     @JoinTable(name = TableConfig.UserGroupJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.UserGroupJoinTableUserIdColumnName)/*, referencedColumnName = "id"*/), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.UserGroupJoinTableGroupIdColumnName)/*, referencedColumnName = "id"*/))
-    var groups: MutableSet<Group> = HashSet()
+    var groups: MutableSet<UsersGroup> = HashSet()
         private set
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -150,7 +150,7 @@ data class User(
         return groups.size > 0
     }
 
-    fun addGroup(group: Group): Boolean {
+    fun addGroup(group: UsersGroup): Boolean {
         if (groups.contains(group) === false) {
             if (groups.add(group)) {
                 group.addUser(this)
@@ -162,7 +162,7 @@ data class User(
         return false
     }
 
-    fun removeGroup(group: Group): Boolean {
+    fun removeGroup(group: UsersGroup): Boolean {
         if (groups.contains(group) === true) {
             if (groups.remove(group)) {
                 group.removeUser(this)

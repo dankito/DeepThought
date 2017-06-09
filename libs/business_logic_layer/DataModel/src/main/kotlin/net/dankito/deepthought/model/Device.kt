@@ -42,7 +42,7 @@ data class Device(
         private set
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "devices")
-    var groups: MutableSet<Group> = HashSet()
+    var groups: MutableSet<UsersGroup> = HashSet()
         private set
 
     @Column(name = TableConfig.DeviceIconColumnName)
@@ -85,7 +85,7 @@ data class Device(
 
 
 
-    fun addGroup(group: Group): Boolean {
+    fun addGroup(group: UsersGroup): Boolean {
         if (groups.contains(group) == false) {
             if (groups.add(group)) {
                 group.addDevice(this)
@@ -97,7 +97,7 @@ data class Device(
         return false
     }
 
-    fun removeGroup(group: Group): Boolean {
+    fun removeGroup(group: UsersGroup): Boolean {
         if (groups.contains(group) == true) {
             if (groups.remove(group)) {
                 group.removeDevice(this)
