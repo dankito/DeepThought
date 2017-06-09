@@ -1,0 +1,37 @@
+package net.dankito.deepthought.android.adapter
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import kotlinx.android.synthetic.main.list_item_entry.view.*
+import net.dankito.deepthought.android.R
+import net.dankito.deepthought.model.Entry
+import org.jsoup.Jsoup
+
+
+class EntryAdapter: ListAdapter<Entry>() {
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        val view = convertView ?: LayoutInflater.from(parent?.context).inflate(R.layout.list_item_entry, parent, false)
+
+        val entry = getItem(position)
+
+
+        view.txtReferencePreview.visibility = if(entry.hasReference()) View.VISIBLE else View.GONE
+
+        var entryPreview = Jsoup.parseBodyFragment(entry.abstractString).text() // TODO: externalize to PreviewService
+        if(entryPreview.length < 200) {
+            if(entryPreview.length > 0) {
+                entryPreview += " "
+            }
+
+            entryPreview += Jsoup.parseBodyFragment(entry.content).text()
+        }
+
+        view.txtEntryPreview.text = entryPreview
+
+        view.txtEntryTags.visibility = if(entry.hasTags()) View.VISIBLE else View.GONE
+
+        return view
+    }
+}
