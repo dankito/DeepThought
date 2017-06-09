@@ -10,7 +10,6 @@ import javax.persistence.*
 open class BaseEntity : Serializable {
 
 
-    //  @JsonIgnore
     @Column(name = TableConfig.BaseEntityIdColumnName)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

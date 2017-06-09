@@ -57,7 +57,6 @@ class DeepThought : UserDataEntity(), Serializable {
         private set
 
 
-    //  @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = TableConfig.DeepThoughtDeepThoughtOwnerJoinColumnName)
     var deepThoughtOwner: User? = null
