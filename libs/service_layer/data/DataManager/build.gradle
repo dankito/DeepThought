@@ -1,0 +1,12 @@
+apply plugin: 'kotlin'
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+
+
+dependencies {
+    compile project(':DataModel')
+    compile project(':EntityManager')
+
+    compile "org.slf4j:slf4j-api:$slf4jVersion"
+}
