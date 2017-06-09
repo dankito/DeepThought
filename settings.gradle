@@ -26,6 +26,7 @@ include ':WebClient'
 include ':FileStorageService'
 include ':AndroidFileStorageService'
 
+include ':couchbase-lite-jpa'
 include ':JpaAnnotationReader'
 
 
@@ -46,4 +47,5 @@ project(':WebClient').projectDir = "$rootDir/libs/data_access_layer/network/WebC
 project(':FileStorageService').projectDir = "$rootDir/libs/data_access_layer/filesystem/FileStorageService" as File
 project(':AndroidFileStorageService').projectDir = "$rootDir/libs/data_access_layer/filesystem/AndroidFileStorageService" as File
 
+project(':couchbase-lite-jpa').projectDir = "$rootDir/libs/data_access_layer/database/couchbase-lite-jpa" as File
 project(':JpaAnnotationReader').projectDir = "$rootDir/libs/data_access_layer/database/JpaAnnotationReader" as File
