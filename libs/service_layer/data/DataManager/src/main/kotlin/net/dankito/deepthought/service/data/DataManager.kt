@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory
 import kotlin.concurrent.thread
 
 
-class DataManager(private val entityManager: IEntityManager, private val configuration: EntityManagerConfiguration, private val defaultDataInitializer: DefaultDataInitializer) {
+class DataManager(val entityManager: IEntityManager, private val configuration: EntityManagerConfiguration, private val defaultDataInitializer: DefaultDataInitializer) {
 
     companion object {
         private val log = LoggerFactory.getLogger(DataManager::class.java)
@@ -20,7 +20,8 @@ class DataManager(private val entityManager: IEntityManager, private val configu
     private lateinit var loggedOnUser: User
     private var currentDeepThought: DeepThought? = null
 
-    private var isInitialized = false
+    var isInitialized = false
+        private set
 
     private val initializationListeners = mutableSetOf<() -> Unit>()
 
