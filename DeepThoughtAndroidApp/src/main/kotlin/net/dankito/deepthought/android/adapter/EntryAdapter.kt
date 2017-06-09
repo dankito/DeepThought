@@ -17,7 +17,11 @@ class EntryAdapter: ListAdapter<Entry>() {
         val entry = getItem(position)
 
 
-        view.txtReferencePreview.visibility = if(entry.hasReference()) View.VISIBLE else View.GONE
+        view.txtReferencePreview.visibility = View.GONE
+        entry.reference?.let {
+            view.txtReferencePreview.visibility = View.VISIBLE
+            view.txtReferencePreview.text = it.title
+        }
 
         var entryPreview = Jsoup.parseBodyFragment(entry.abstractString).text() // TODO: externalize to PreviewService
         if(entryPreview.length < 200) {
