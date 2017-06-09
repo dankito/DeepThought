@@ -2,12 +2,17 @@ package net.dankito.deepthought.android.activities
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_view_article.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Reference
 import net.dankito.newsreader.model.Article
 import net.dankito.serializer.ISerializer
+import net.dankito.service.data.EntryService
+import net.dankito.service.data.ReferenceService
 import javax.inject.Inject
 
 
@@ -17,6 +22,12 @@ class ViewArticleActivity : AppCompatActivity() {
         const val ARTICLE_INTENT_EXTRA_NAME = "ARTICLE"
     }
 
+
+    @Inject
+    protected lateinit var entryService: EntryService
+
+    @Inject
+    protected lateinit var referenceService: ReferenceService
 
     @Inject
     protected lateinit var serializer: ISerializer
@@ -86,10 +97,23 @@ class ViewArticleActivity : AppCompatActivity() {
     }
 
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.view_article_activity_menu, menu)
+
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == android.R.id.home) {
-            onBackPressed()
-            return true
+        when(item?.itemId) {
+            android.R.id.home -> {
+                returnToPreviousView()
+                return true
+            }
+
+            R.id.mnSaveArticle -> {
+                saveArticle()
+                return true
+            }
         }
 
         return super.onOptionsItemSelected(item)
@@ -99,6 +123,34 @@ class ViewArticleActivity : AppCompatActivity() {
         this.article = serializer.deserializeObject(serializedArticle, Article::class.java)
 
         wbArticle.loadDataWithBaseURL(article?.url, article?.content, "text/html; charset=UTF-8", null, null)
+    }
+
+    private fun saveArticle() {
+        article?.let { article ->
+            val entry = Entry(article.content, article.abstract ?: "")
+
+            entry.reference = createAndPersistRefernce(article)
+
+            entryService.persist(entry)
+        }
+
+        returnToPreviousView()
+    }
+
+    private fun createAndPersistRefernce(article: Article): Reference {
+        val reference = Reference(article.title)
+
+        reference.onlineAddress = article.url
+        reference.publishingDate = article.publishingDate
+
+        referenceService.persist(reference)
+
+        return reference
+    }
+
+
+    private fun returnToPreviousView() {
+        onBackPressed()
     }
 
 }
