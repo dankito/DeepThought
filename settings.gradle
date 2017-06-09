@@ -11,6 +11,7 @@ include ':FeedAddressExtractor'
 /*      Service Layer       */
 
 include ':DataManager'
+include ':DataServices'
 
 include ':Serializer'
 include ':Utils'
@@ -44,6 +45,7 @@ project(':FeedAddressExtractor').projectDir = "$rootDir/libs/news/FeedAddressExt
 
 
 project(':DataManager').projectDir = "$rootDir/libs/service_layer/data/DataManager" as File
+project(':DataServices').projectDir = "$rootDir/libs/service_layer/data/DataServices" as File
 
 project(':Serializer').projectDir = "$rootDir/libs/service_layer/serializer/Serializer" as File
 project(':Utils').projectDir = "$rootDir/libs/service_layer/utils/Utils" as File
