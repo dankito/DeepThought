@@ -7,14 +7,12 @@ import javax.persistence.*
 
 @Entity(name = TableConfig.DeviceTableName)
 data class Device(
-        @Column(name = TableConfig.DeviceUniversallyUniqueIdColumnName)
-        var universallyUniqueId: String,
 
         @Column(name = TableConfig.DeviceNameColumnName)
         var name: String,
 
-        @Column(name = TableConfig.DeviceDescriptionColumnName)
-        var description: String,
+        @Column(name = TableConfig.DeviceUniversallyUniqueIdColumnName)
+        var universallyUniqueId: String,
 
         @Column(name = TableConfig.DevicePlatformColumnName)
         var platform: String = "",
@@ -23,7 +21,10 @@ data class Device(
         var osVersion: String = "",
 
         @Column(name = TableConfig.DevicePlatformArchitectureColumnName)
-        var platformArchitecture: String = ""
+        var platformArchitecture: String = "",
+
+        @Column(name = TableConfig.DeviceDescriptionColumnName)
+        var description: String = ""
 
 ) : UserDataEntity() {
 
@@ -49,38 +50,17 @@ data class Device(
     @Lob
     var deviceIcon: ByteArray? = null
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = TableConfig.DeviceDeepThoughtApplicationJoinColumnName)
-    var application: DeepThoughtApplication? = null
-        internal set
 
-
-    private constructor() : this("", "", "")
+    private constructor() : this("", "")
 
 
 
-    fun addUser(user: User): Boolean {
-        if (users.contains(user) == false) {
-            if (users.add(user)) {
-                user.addDevice(this)
-
-                return true
-            }
-        }
-
-        return false
+    internal fun addUser(user: User): Boolean {
+        return users.add(user)
     }
 
-    fun removeUser(user: User): Boolean {
-        if (users.contains(user) == true) {
-            if (users.remove(user)) {
-                user.removeDevice(this)
-
-                return true
-            }
-        }
-
-        return false
+    internal fun removeUser(user: User): Boolean {
+        return users.remove(user)
     }
 
 

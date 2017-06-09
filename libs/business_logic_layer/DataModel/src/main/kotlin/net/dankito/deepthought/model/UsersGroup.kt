@@ -8,17 +8,19 @@ import javax.persistence.*
 
 @Entity(name = TableConfig.GroupTableName)
 data class UsersGroup(
+
         @Column(name = TableConfig.GroupNameColumnName)
-        var name: String
+        var name: String,
+
+        @Column(name = TableConfig.GroupUniversallyUniqueIdColumnName)
+        var universallyUniqueId: String
+
 ) : UserDataEntity() {
 
     companion object {
         private const val serialVersionUID = 6783280420819608640L
     }
 
-
-    @Column(name = TableConfig.GroupUniversallyUniqueIdColumnName)
-    var universallyUniqueId = ""
 
     @Column(name = TableConfig.GroupDescriptionColumnName)
     var description = ""
@@ -32,42 +34,16 @@ data class UsersGroup(
     var devices: MutableSet<Device> = HashSet()
         private set
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = TableConfig.GroupDeepThoughtApplicationJoinColumnName)
-    var application: DeepThoughtApplication? = null
-        internal set
+
+    private constructor() : this("", "")
 
 
-    private constructor() : this("")
-
-    constructor(name: String, universallyUniqueId: String, owner: User) : this(name) {
-        this.universallyUniqueId = universallyUniqueId
-        this.owner = owner
+    internal fun addUser(user: User): Boolean {
+        return users.add(user)
     }
 
-
-    fun addUser(user: User): Boolean {
-        if (users.contains(user) == false) {
-            if (users.add(user)) {
-                user.addGroup(this)
-
-                return true
-            }
-        }
-
-        return false
-    }
-
-    fun removeUser(user: User): Boolean {
-        if (users.contains(user) == true) {
-            if (users.remove(user)) {
-                user.removeGroup(this)
-
-                return true
-            }
-        }
-
-        return false
+    internal fun removeUser(user: User): Boolean {
+        return users.remove(user)
     }
 
 
@@ -75,28 +51,12 @@ data class UsersGroup(
         return devices.size > 0
     }
 
-    fun addDevice(device: Device): Boolean {
-        if (devices.contains(device) == false) {
-            if (devices.add(device)) {
-                device.addGroup(this)
-
-                return true
-            }
-        }
-
-        return false
+    internal fun addDevice(device: Device): Boolean {
+        return devices.add(device)
     }
 
-    fun removeDevice(device: Device): Boolean {
-        if (devices.contains(device) == true) {
-            if (devices.remove(device)) {
-                device.removeGroup(this)
-
-                return true
-            }
-        }
-
-        return false
+    internal fun removeDevice(device: Device): Boolean {
+        return devices.remove(device)
     }
 
 

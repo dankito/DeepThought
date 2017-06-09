@@ -12,7 +12,10 @@ import javax.persistence.*
 data class User(
 
         @Column(name = TableConfig.UserUserNameColumnName)
-        var userName: String
+        var userName: String,
+
+        @Column(name = TableConfig.UserUniversallyUniqueIdColumnName)
+        var universallyUniqueId: String
 
 ) : BaseEntity(), Serializable {
 
@@ -21,17 +24,15 @@ data class User(
     }
 
 
-    private constructor() : this("")
+    private constructor() : this("", "")
 
-    constructor(name: String, universallyUniqueId: String, isLocalUser: Boolean) : this(name) {
-        this.universallyUniqueId = universallyUniqueId
+    constructor(name: String, universallyUniqueId: String, isLocalUser: Boolean, usersDefaultGroup: UsersGroup) : this(name, universallyUniqueId) {
         this.isLocalUser = isLocalUser
+
+        this.usersDefaultGroup = usersDefaultGroup
     }
 
 
-
-    @Column(name = TableConfig.UserUniversallyUniqueIdColumnName)
-    var universallyUniqueId: String = ""
 
     @Column(name = TableConfig.UserIsLocalUserColumnName, columnDefinition = "SMALLINT DEFAULT 0", nullable = false)
     var isLocalUser: Boolean = true
@@ -71,21 +72,21 @@ data class User(
     @JoinColumn(name = TableConfig.UserUsersDefaultGroupJoinColumnName)
     var usersDefaultGroup: UsersGroup? = null
         internal set (usersDefaultGroup) {
-            if (usersDefaultGroup != null && groups.contains(usersDefaultGroup) === false)
-                addGroup(usersDefaultGroup)
+            field = usersDefaultGroup
 
-            this.usersDefaultGroup = usersDefaultGroup
+            if (usersDefaultGroup != null) {
+                usersDefaultGroup.owner = this
+
+                if(groups.contains(usersDefaultGroup) === false) {
+                    addGroup(usersDefaultGroup)
+                }
+            }
         }
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH))
     @JoinTable(name = TableConfig.UserGroupJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.UserGroupJoinTableUserIdColumnName)/*, referencedColumnName = "id"*/), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.UserGroupJoinTableGroupIdColumnName)/*, referencedColumnName = "id"*/))
     var groups: MutableSet<UsersGroup> = HashSet()
         private set
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = TableConfig.UserDeepThoughtApplicationJoinColumnName)
-    var application: DeepThoughtApplication? = null
-        internal set
 
 
     fun addDeepThought(deepThought: DeepThought): Boolean {
