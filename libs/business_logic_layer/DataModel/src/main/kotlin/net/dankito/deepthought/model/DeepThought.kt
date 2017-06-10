@@ -21,7 +21,7 @@ class DeepThought : UserDataEntity(), Serializable {
         private set
 
     @Column(name = TableConfig.DeepThoughtNextEntryIndexColumnName)
-    var nextEntryIndex = 0
+    var nextEntryIndex = 0L
         private set
 
     @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
@@ -109,7 +109,7 @@ class DeepThought : UserDataEntity(), Serializable {
         entry.previewImage = null
     }
 
-    private fun increaseNextEntryIndex(): Int {
+    private fun increaseNextEntryIndex(): Long {
         return ++nextEntryIndex
     }
 

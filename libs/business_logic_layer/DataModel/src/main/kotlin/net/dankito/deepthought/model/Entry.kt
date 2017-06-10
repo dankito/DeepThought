@@ -31,7 +31,7 @@ data class Entry(
     @Transient private var plainTextContent: String? = null
 
     @Column(name = TableConfig.EntryEntryIndexColumnName)
-    var entryIndex: Int = 0
+    var entryIndex: Long = 0
 
     @ManyToMany(fetch = FetchType.LAZY)/*, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }*/
     @JoinTable(name = TableConfig.EntryTagJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.EntryTagJoinTableEntryIdColumnName)/*, referencedColumnName = "id"*/), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.EntryTagJoinTableTagIdColumnName)/*, referencedColumnName = "id"*/))
