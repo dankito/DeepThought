@@ -47,10 +47,7 @@ dependencies {
 
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
-    implementation project(':DeepThoughtCommon')
-    implementation project(':AndroidFileStorageService')
-
-    implementation project(':AndroidCouchbaseLiteEntityManager')
+    implementation project(':DeepThoughtAndroidLogic')
 
     implementation "com.squareup.picasso:picasso:$picassoVersion"
 

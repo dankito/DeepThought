@@ -31,7 +31,11 @@ android {
 }
 
 dependencies {
-    implementation project(':DeepThoughtCommon')
+    compile project(':DeepThoughtCommon')
+
+    compile project(':AndroidFileStorageService')
+
+    compile project(':AndroidCouchbaseLiteEntityManager')
 
     implementation 'com.android.support:appcompat-v7:25.3.1'
 
