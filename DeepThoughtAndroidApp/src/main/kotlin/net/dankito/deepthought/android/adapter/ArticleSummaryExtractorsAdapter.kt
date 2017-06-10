@@ -1,6 +1,6 @@
 package net.dankito.deepthought.android.adapter
 
-import android.net.Uri
+import android.graphics.Bitmap
 import android.os.Looper
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
@@ -10,9 +10,9 @@ import android.widget.ImageView
 import kotlinx.android.synthetic.main.list_item_article_summary_extractor.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.android.service.utils.BitmapCache
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.utils.ImageCache
-import java.io.File
 import javax.inject.Inject
 
 
@@ -23,9 +23,13 @@ class ArticleSummaryExtractorsAdapter(private val activity: AppCompatActivity, e
     @Inject
     protected lateinit var imageCache: ImageCache
 
+    private var bitmapCache: BitmapCache
+
 
     init {
         AppComponent.component.inject(this)
+
+        bitmapCache = BitmapCache(imageCache)
     }
 
 
@@ -50,22 +54,22 @@ class ArticleSummaryExtractorsAdapter(private val activity: AppCompatActivity, e
         imageView.setImageBitmap(null)
 
         extractorConfig.iconUrl?.let { iconUrl ->
-            imageCache.getCachedForRetrieveIconForUrlAsync(iconUrl) { result ->
-                result.result?.let { iconPath ->
+            bitmapCache.getBitmapForUrlAsync(iconUrl) { result ->
+                result.result?.let { bitmap ->
                     if(iconUrl == imageView.tag) { // check if icon in imgPreviewImage still for the same iconUrl should be displayed
-                        showIcon(imageView, iconPath)
+                        showIcon(imageView, bitmap)
                     }
                 }
             }
         }
     }
 
-    private fun showIcon(imageView: ImageView, iconPath: File) {
+    private fun showIcon(imageView: ImageView, bitmap: Bitmap) {
         if (Looper.getMainLooper().thread == Thread.currentThread()) {
-            imageView.setImageURI(Uri.fromFile(iconPath))
+            imageView.setImageBitmap(bitmap)
         } else {
             activity.runOnUiThread {
-                imageView.setImageURI(Uri.fromFile(iconPath))
+                imageView.setImageBitmap(bitmap)
             }
         }
     }
