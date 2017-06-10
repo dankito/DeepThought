@@ -8,7 +8,7 @@ class ThreadPool : IThreadPool {
     private val threadPool = Executors.newCachedThreadPool()
 
 
-    override fun runAsync(runnable: () -> Unit) {
+    override fun runAsync(runnable: Runnable) {
         threadPool.execute(runnable)
     }
 
