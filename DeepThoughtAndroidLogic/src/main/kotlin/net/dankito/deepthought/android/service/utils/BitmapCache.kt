@@ -1,4 +1,4 @@
-package net.dankito.deepthought.android.service
+package net.dankito.deepthought.android.service.utils
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
