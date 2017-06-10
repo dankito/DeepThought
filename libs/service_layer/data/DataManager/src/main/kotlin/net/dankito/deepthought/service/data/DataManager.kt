@@ -16,9 +16,11 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
     }
 
 
-    private lateinit var application: DeepThoughtApplication
-    private lateinit var loggedOnUser: User
-    private var currentDeepThought: DeepThought? = null
+    lateinit var application: DeepThoughtApplication
+    lateinit var loggedOnUser: User
+    var currentDeepThought: DeepThought? = null
+
+    var dataFolderPath: String
 
     var isInitialized = false
         private set
@@ -27,6 +29,8 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
 
 
     init {
+        dataFolderPath = configuration.dataFolder
+
         thread {
             initializeDataManager()
         }
