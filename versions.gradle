@@ -18,6 +18,9 @@ ext {
 
     couchbaseLiteVersion = '1.4.0'
 
+    // Lucene 5.x and 4.8 and above need java.nio.file.Path to create an index Directory which is not supported by Android (yet) -> use an older Version to be compatible with Android
+    luceneVersion = '4.7.2'
+
     junitVersion = '4.12'
 
     hamcrestVersion = '1.3'

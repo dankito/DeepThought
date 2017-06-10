@@ -1,0 +1,18 @@
+apply plugin: 'kotlin'
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+
+
+dependencies {
+    compile project(':SearchEngine')
+    compile project(':DataServices')
+
+    compile "org.apache.lucene:lucene-core:$luceneVersion"
+    compile "org.apache.lucene:lucene-analyzers-common:$luceneVersion"
+    compile "org.apache.lucene:lucene-queryparser:$luceneVersion"
+    compile "org.apache.lucene:lucene-misc:$luceneVersion"
+//    compile "org.apache.lucene:lucene-codecs:$luceneVersion"
+
+    testCompile "junit:junit:$junitVersion"
+}
