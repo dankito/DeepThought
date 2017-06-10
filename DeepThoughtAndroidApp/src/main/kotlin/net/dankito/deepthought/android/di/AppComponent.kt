@@ -7,6 +7,7 @@ import net.dankito.deepthought.android.activities.ViewArticleActivity
 import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorsAdapter
 import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
+import net.dankito.deepthought.android.service.di.AndroidCommonModule
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.di.CommonDataModule
 import net.dankito.deepthought.di.CommonModule

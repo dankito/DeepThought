@@ -1,4 +1,4 @@
-package net.dankito.deepthought.android.di
+package net.dankito.deepthought.android.service.di
 
 import android.content.Context
 import dagger.Module

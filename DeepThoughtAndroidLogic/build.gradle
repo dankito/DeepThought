@@ -37,6 +37,8 @@ dependencies {
 
     compile project(':AndroidCouchbaseLiteEntityManager')
 
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+
     implementation 'com.android.support:appcompat-v7:25.3.1'
 
     testImplementation "junit:junit:$junitVersion"
