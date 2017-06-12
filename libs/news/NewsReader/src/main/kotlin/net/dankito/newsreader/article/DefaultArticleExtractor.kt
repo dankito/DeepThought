@@ -20,6 +20,10 @@ class DefaultArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
     }
 
 
+    override fun getName(): String? {
+        return null
+    }
+
     override fun extractArticleAsync(item: ArticleSummaryItem, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
         thread {
             try {

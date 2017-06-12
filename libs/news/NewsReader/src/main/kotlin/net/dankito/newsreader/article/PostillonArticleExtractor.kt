@@ -19,13 +19,17 @@ class PostillonArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
     }
 
 
+    override fun getName(): String? {
+        return "Postillon"
+    }
+
     override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
         document.body().select(".post").first()?.let { postElement ->
             postElement.select(".post-title")?.let { titleElement ->
                 postElement.select(".post-body").first()?.let { bodyElement ->
                     val entry = Entry(extractContent(bodyElement))
 
-                    val reference = Reference(url, titleElement.text(), extractPublishingDate(postElement))
+                    val reference = Reference(url, titleElement.text(), extractPublishingDate(postElement), getName())
 
                     // TODO: handle previewImageUrl
 //                    bodyElement.select(".separator a img").first()?.let { reference.previewImageUrl = it.attr("src") }

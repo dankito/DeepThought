@@ -19,6 +19,10 @@ class HeiseNewsAndDeveloperArticleExtractor(webClient: IWebClient) : ArticleExtr
     }
 
 
+    override fun getName(): String? {
+        return "Heise"
+    }
+
     override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
         document.body().select("article").first()?.let { article ->
             article.select("header").first()?.let { header ->
@@ -39,7 +43,7 @@ class HeiseNewsAndDeveloperArticleExtractor(webClient: IWebClient) : ArticleExtr
             // TODO: handle previewImageUrl
             val previewImageUrl = makeLinkAbsolute(articleElement.select(".aufmacherbild img").first()?.attr("src") ?: "", url)
             val publishingDate = extractPublishingDate(header)
-            val reference = Reference(url, title, publishingDate)
+            val reference = Reference(url, title, publishingDate, getName())
 
             return EntryExtractionResult(entry, reference)
         }

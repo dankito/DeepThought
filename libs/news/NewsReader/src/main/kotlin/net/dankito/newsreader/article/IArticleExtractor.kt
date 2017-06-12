@@ -7,6 +7,9 @@ import net.dankito.newsreader.model.EntryExtractionResult
 
 interface IArticleExtractor {
 
+    fun getName() : String?
+
+
     fun extractArticleAsync(item : ArticleSummaryItem, callback: (AsyncResult<EntryExtractionResult>) -> Unit)
 
     fun extractArticleAsync(url : String, callback: (AsyncResult<EntryExtractionResult>) -> Unit)

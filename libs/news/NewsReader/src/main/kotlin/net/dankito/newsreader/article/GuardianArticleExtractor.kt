@@ -11,6 +11,11 @@ import java.util.*
 
 class GuardianArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient) {
 
+    override fun getName(): String? {
+        return "The Guardian"
+    }
+
+
     override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
         document.body().select("#article").first()?.let { articleElement ->
             articleElement.select(".mobile-only").remove()
@@ -31,7 +36,7 @@ class GuardianArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(web
         articleElement.select(".content__standfirst").first()?.let { entry.abstractString = it.text() }
 
 
-        val reference = Reference(url, titleElement.text(), extractPublishingDate(contentMainElement))
+        val reference = Reference(url, titleElement.text(), extractPublishingDate(contentMainElement), getName())
 
         // TODO: handle previewImageUrl
 //        contentMainElement.select(".media-primary").first()?.let { reference.previewImageUrl = extractUrlFromFigureElement(it) }
