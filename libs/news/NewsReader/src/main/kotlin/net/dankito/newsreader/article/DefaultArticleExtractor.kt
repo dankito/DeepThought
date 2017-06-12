@@ -57,11 +57,11 @@ class DefaultArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
     }
 
     override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
-        return null // will not be called in this case
+        return EntryExtractionResult(Entry(extractContent(document)), Reference(url, document.title()))
     }
 
 
-    private fun extractContent(document: Document, contentIndicator: String): String {
+    private fun extractContent(document: Document, contentIndicator: String? = null): String {
         var content = ArticleTextExtractor.extractContent(document, contentIndicator)
 
         if (content == null) {
