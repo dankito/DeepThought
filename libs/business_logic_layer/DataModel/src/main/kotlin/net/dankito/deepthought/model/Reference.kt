@@ -87,6 +87,10 @@ data class Reference(
         this.publishingDate = publishingDate
     }
 
+    constructor(onlineAddress: String, title: String, publishingDate: Date? = null, series: String? = null) : this(onlineAddress, title, publishingDate) {
+        this.series = series
+    }
+
 
     fun hasEntries(): Boolean {
         return entries.size > 0
