@@ -8,11 +8,19 @@ import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.filesystem.AndroidFileStorageService
 import net.dankito.data_access.filesystem.IFileStorageService
+import net.dankito.deepthought.android.service.platform.AndroidPlatformConfiguration
+import net.dankito.utils.IPlatformConfiguration
 import javax.inject.Singleton
 
 
 @Module
 class AndroidCommonModule {
+
+    @Provides
+    @Singleton
+    fun providePlatformConfiguration(context: Context) : IPlatformConfiguration {
+        return AndroidPlatformConfiguration(context)
+    }
 
 
     @Provides
