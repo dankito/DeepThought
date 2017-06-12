@@ -8,7 +8,7 @@ import net.dankito.service.data.messages.EntityChanged
 import net.dankito.service.eventbus.IEventBus
 
 
-abstract class EntityServiceBase<T : BaseEntity>(dataManager: DataManager, private val eventBus: IEventBus) {
+abstract class EntityServiceBase<T : BaseEntity>(dataManager: DataManager, val eventBus: IEventBus) {
 
     protected val entityManager = dataManager.entityManager
 

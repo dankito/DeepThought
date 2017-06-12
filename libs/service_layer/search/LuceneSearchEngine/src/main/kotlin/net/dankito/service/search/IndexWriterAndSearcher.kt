@@ -2,6 +2,8 @@ package net.dankito.service.search
 
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.service.data.EntityServiceBase
+import net.dankito.service.data.messages.EntityChangeType
+import net.dankito.service.data.messages.EntityChanged
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.document.Document
 import org.apache.lucene.index.DirectoryReader
@@ -38,6 +40,17 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
     private var indexSearcher: IndexSearcher? = null
 
     private var commitIndicesTimer: Timer? = null
+
+    private var eventBusListener: Any
+
+
+    init {
+        eventBusListener = createEntityChangedListener() // we need to hold on to a reference otherwise MBassador's WeakReference would be garbage collected
+
+        entityService.eventBus.register(eventBusListener)
+    }
+
+    abstract fun createEntityChangedListener(): Any
 
 
     fun createDirectory(indexBaseDir: File) : Directory? {
@@ -120,6 +133,20 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
             else {
                 return directoryReader
             }
+        }
+    }
+
+
+    fun handleEntityChange(entityChanged: EntityChanged<TEntity>) {
+        if(entityChanged.changeType == EntityChangeType.Created) {
+            indexEntity(entityChanged.entity)
+        }
+        else if(entityChanged.changeType == EntityChangeType.Updated) {
+            removeEntityFromIndex(entityChanged.entity)
+            indexEntity(entityChanged.entity)
+        }
+        else if(entityChanged.changeType == EntityChangeType.Deleted) {
+            removeEntityFromIndex(entityChanged.entity)
         }
     }
 

@@ -2,6 +2,8 @@ package net.dankito.service.search
 
 import net.dankito.deepthought.model.Entry
 import net.dankito.service.data.EntryService
+import net.dankito.service.data.messages.EntryChanged
+import net.engio.mbassy.listener.Handler
 import org.apache.lucene.document.*
 
 
@@ -41,6 +43,18 @@ class EntryIndexWriterAndSearcher(entryService: EntryService) : IndexWriterAndSe
 
     override fun getIdFieldName(): String {
         return FieldName.EntryId
+    }
+
+
+    override fun createEntityChangedListener(): Any {
+        return object {
+
+            @Handler
+            fun entityChanged(entryChanged: EntryChanged) {
+                handleEntityChange(entryChanged)
+            }
+
+        }
     }
 
 }
