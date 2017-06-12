@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.content_main.*
 import net.dankito.deepthought.android.adapter.EntryAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
+import net.dankito.deepthought.android.routing.Router
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
@@ -30,6 +31,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
+
+    @Inject
+    protected lateinit var router: Router
 
     @Inject
     protected lateinit var eventBus: IEventBus
@@ -135,8 +139,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-    private fun clickedOnEntry(item: Entry) {
-        // TODO
+    private fun clickedOnEntry(entry: Entry) {
+        router.showEntryView(entry)
     }
 
 

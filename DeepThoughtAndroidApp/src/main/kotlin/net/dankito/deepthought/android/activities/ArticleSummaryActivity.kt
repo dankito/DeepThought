@@ -222,7 +222,7 @@ class ArticleSummaryActivity : AppCompatActivity() {
     }
 
     private fun showArticle(extractionResult: EntryExtractionResult) {
-        router.showArticleView(extractionResult)
+        router.showEntryView(extractionResult)
     }
 
     private fun showArticleExtractionError(item: ArticleSummaryItem, extractionError: Exception) {

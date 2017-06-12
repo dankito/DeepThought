@@ -7,6 +7,7 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_view_article.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
 import net.dankito.newsreader.model.EntryExtractionResult
 import net.dankito.serializer.ISerializer
@@ -18,6 +19,7 @@ import javax.inject.Inject
 class ViewArticleActivity : AppCompatActivity() {
 
     companion object {
+        const val ENTRY_INTENT_EXTRA_NAME = "ENTRY"
         const val ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ENTRY_EXTRACTION_RESULT"
     }
 
@@ -30,6 +32,8 @@ class ViewArticleActivity : AppCompatActivity() {
 
     @Inject
     protected lateinit var serializer: ISerializer
+
+    private var entry: Entry? = null
 
     private var entryExtractionResult: EntryExtractionResult? = null
 
@@ -47,17 +51,22 @@ class ViewArticleActivity : AppCompatActivity() {
         savedInstanceState?.let { restoreState(it) }
 
         intent.getStringExtra(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)?.let { showSerializedEntryExtractionResult(it) }
+        intent.getStringExtra(ENTRY_INTENT_EXTRA_NAME)?.let { showSerializedEntry(it) }
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
         savedInstanceState.getString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)?.let { showSerializedEntryExtractionResult(it) }
+        savedInstanceState.getString(ENTRY_INTENT_EXTRA_NAME)?.let { showSerializedEntry(it) }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
 
         outState?.let { outState ->
-            outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, null) // fallback
+            outState.putString(ENTRY_INTENT_EXTRA_NAME, null)
+            entry?.let { outState.putString(ENTRY_INTENT_EXTRA_NAME, serializer.serializeObject(it)) }
+
+            outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, null)
             entryExtractionResult?.let { outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, serializer.serializeObject(it)) }
         }
     }
@@ -116,6 +125,21 @@ class ViewArticleActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showSerializedEntry(serializedEntry: String) {
+        this.entry = serializer.deserializeObject(serializedEntry, Entry::class.java)
+
+        entry?.let { entry ->
+            val url = entry.reference?.onlineAddress
+
+            if(url != null) {
+                wbArticle.loadDataWithBaseURL(url, entry.content, "text/html; charset=UTF-8", null, null)
+            }
+            else {
+                wbArticle.loadData(entry.content, "text/html; charset=UTF-8", null)
+            }
+        }
     }
 
     private fun showSerializedEntryExtractionResult(serializedExtractionResult: String) {
