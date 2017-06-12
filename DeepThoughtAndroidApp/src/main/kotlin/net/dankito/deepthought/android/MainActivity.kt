@@ -15,9 +15,10 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.service.data.DataManager
-import net.dankito.service.data.EntryService
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.eventbus.IEventBus
+import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.specific.EntriesSearch
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 import kotlin.concurrent.thread
@@ -28,7 +29,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     protected lateinit var dataManager: DataManager
 
     @Inject
-    protected lateinit var entryService: EntryService
+    protected lateinit var searchEngine: ISearchEngine
 
     @Inject
     protected lateinit var eventBus: IEventBus
@@ -145,22 +146,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             eventBus.register(eventBusListener)
 
-            dataManager.addInitializationListener {
-                dataManagerInitialized()
+            searchEngine.addInitializationListener {
+                searchEngineInitialized()
             }
         }
     }
 
-    private fun dataManagerInitialized() {
+    private fun searchEngineInitialized() {
         retrieveAndShowEntries()
     }
 
     private fun retrieveAndShowEntries() {
-        entryService.getAllAsync {
+        searchEngine.searchEntries(EntriesSearch { result ->
             runOnUiThread {
-                entryAdapter.setItems(it)
+                entryAdapter.setItems(result)
             }
-        }
+        })
     }
 
 
