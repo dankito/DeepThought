@@ -1,9 +1,9 @@
 package net.dankito.newsreader.summary
 
+import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.newsreader.article.HeiseNewsAndDeveloperArticleExtractor
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
-import net.dankito.data_access.network.webclient.IWebClient
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
@@ -50,11 +50,11 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
 
             extractDachzeile(contentUrlElement, article)
 
-            topArticleElement.select(".img_clip img").first().let {
+            topArticleElement.select(".img_clip img").first()?.let {
                 article.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
             }
 
-            topArticleElement.select("p").first().let { article.summary = it.text() }
+            topArticleElement.select("p").first()?.let { article.summary = it.text() }
 
             return article
         }
@@ -63,7 +63,7 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
     }
 
     open protected fun extractDachzeile(contentUrlElement: Element, article: ArticleSummaryItem) {
-        contentUrlElement.select(".dachzeile").first().let {
+        contentUrlElement.select(".dachzeile").first()?.let {
             if (it.text().isNullOrEmpty() == false) {
                 article.title = it.text() + " - " + article.title
             }
@@ -80,7 +80,7 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
         item.select("header a").firstOrNull()?.let { headerElement ->
             val article = ArticleSummaryItem(makeLinkAbsolute(headerElement.attr("href") ?: "", url), headerElement.text() ?: "", HeiseNewsAndDeveloperArticleExtractor::class.java)
 
-            item.select(".indexlist_text").first().let { textElement ->
+            item.select(".indexlist_text").first()?.let { textElement ->
                 article.summary = textElement.text()
 
                 textElement.select("img").let { article.previewImageUrl = makeLinkAbsolute(it.attr("src"), url) }

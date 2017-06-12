@@ -1,7 +1,7 @@
 package net.dankito.newsreader.article
 
-import net.dankito.newsreader.model.Article
 import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.newsreader.model.Article
 import org.jsoup.nodes.Comment
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -18,8 +18,8 @@ class HeiseNewsAndDeveloperArticleExtractor(webClient: IWebClient) : ArticleExtr
 
 
     override fun parseHtmlToArticle(document: Document, url: String): Article? {
-        document.body().select("article").first().let { article ->
-            article.select("header").first().let { header ->
+        document.body().select("article").first()?.let { article ->
+            article.select("header").first()?.let { header ->
                 header.select(".article__heading").first()?.text()?.let { title ->
                     return parseArticle(header, article, url, title)
                 }
@@ -44,9 +44,9 @@ class HeiseNewsAndDeveloperArticleExtractor(webClient: IWebClient) : ArticleExtr
     }
 
     private fun extractContent(articleElement: Element, url: String): String {
-        return articleElement.select(".meldung_wrapper").first().children().filter { element ->
+        return articleElement.select(".meldung_wrapper").first()?.children()!!.filter { element ->
             element.hasClass("meldung_anrisstext") == false && containsOnlyComment(element) == false
-        }.joinToString(separator = "") { getContentElementHtml(it, url) }
+        }?.joinToString(separator = "") { getContentElementHtml(it, url) }
     }
 
     private fun containsOnlyComment(element: Element) : Boolean {
@@ -59,9 +59,11 @@ class HeiseNewsAndDeveloperArticleExtractor(webClient: IWebClient) : ArticleExtr
     }
 
     private fun extractPublishingDate(header: Element): Date? {
-        header.select(".publish-info time").first().let {
+        header.select(".publish-info time").first()?.let {
             return DateTimeFormat.parse(it.attr("datetime"))
         }
+
+        return null
     }
 
 }

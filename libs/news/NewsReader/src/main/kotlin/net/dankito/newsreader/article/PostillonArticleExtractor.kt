@@ -1,7 +1,7 @@
 package net.dankito.newsreader.article
 
-import net.dankito.newsreader.model.Article
 import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.newsreader.model.Article
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Node
@@ -20,7 +20,7 @@ class PostillonArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
     override fun parseHtmlToArticle(document: Document, url: String): Article? {
         document.body().select(".post").first()?.let { postElement ->
             postElement.select(".post-title")?.let { titleElement ->
-                postElement.select(".post-body").first().let { bodyElement ->
+                postElement.select(".post-body").first()?.let { bodyElement ->
                     val article = Article(url, titleElement.text(), extractContent(bodyElement))
 
                     article.publishingDate = extractPublishingDate(postElement)

@@ -1,7 +1,7 @@
 package net.dankito.newsreader.article
 
-import net.dankito.newsreader.model.Article
 import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.newsreader.model.Article
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.util.*
@@ -14,7 +14,7 @@ class GuardianArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(web
             articleElement.select(".mobile-only").remove()
 
             articleElement.select(".content__headline").first()?.let { titleElement ->
-                articleElement.select(".js-content-main-column").first().let { contentMainElement ->
+                articleElement.select(".js-content-main-column").first()?.let { contentMainElement ->
                     return extractArticle(url, articleElement, titleElement, contentMainElement)
                 }
             }
