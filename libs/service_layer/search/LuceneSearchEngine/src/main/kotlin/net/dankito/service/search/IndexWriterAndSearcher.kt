@@ -7,6 +7,7 @@ import org.apache.lucene.document.Document
 import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.index.IndexWriter
 import org.apache.lucene.index.IndexWriterConfig
+import org.apache.lucene.index.Term
 import org.apache.lucene.search.IndexSearcher
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.FSDirectory
@@ -141,18 +142,6 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
     abstract fun createDocumentFromEntry(entity: TEntity): Document
 
-
-    fun deleteIndex() {
-        writer?.let { writer ->
-            writer.deleteAll()
-            writer.prepareCommit()
-            writer.commit()
-
-            markIndexHasBeenUpdated()
-        }
-    }
-
-
     protected fun indexDocument(doc: Document) {
         try {
             writer?.let { writer ->
@@ -165,6 +154,40 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
             }
         } catch (ex: Exception) {
             log.error("Could not index Document " + doc, ex)
+        }
+    }
+
+
+    protected fun removeEntityFromIndex(removedEntity: TEntity) {
+        if(isReadOnly === true) {
+            return
+        }
+
+        try {
+            writer?.let { writer ->
+                log.info("Removing Entity {} from index", removedEntity)
+
+                writer.deleteDocuments(Term(getIdFieldName(), removedEntity.id))
+
+                startCommitIndicesTimer()
+
+                markIndexHasBeenUpdated() // so that on next search updates are reflected
+            }
+        } catch (ex: Exception) {
+            log.error("Could not delete Document for removed entity " + removedEntity, ex)
+        }
+    }
+
+    abstract fun getIdFieldName(): String
+
+
+    fun deleteIndex() {
+        writer?.let { writer ->
+            writer.deleteAll()
+            writer.prepareCommit()
+            writer.commit()
+
+            markIndexHasBeenUpdated()
         }
     }
 

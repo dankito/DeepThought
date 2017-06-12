@@ -39,4 +39,8 @@ class EntryIndexWriterAndSearcher(entryService: EntryService) : IndexWriterAndSe
         return doc
     }
 
+    override fun getIdFieldName(): String {
+        return FieldName.EntryId
+    }
+
 }
