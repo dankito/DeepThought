@@ -2,13 +2,15 @@ package net.dankito.service.data
 
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.service.data.messages.EntitiesOfTypeChanged
+import net.dankito.service.data.messages.EntityChangeType
+import net.dankito.service.data.messages.EntityChanged
+import net.dankito.service.eventbus.IEventBus
 
 
-abstract class EntityServiceBase<T : BaseEntity>(dataManager: DataManager) {
+abstract class EntityServiceBase<T : BaseEntity>(dataManager: DataManager, private val eventBus: IEventBus) {
 
     protected val entityManager = dataManager.entityManager
-
-    protected val entitiesUpdatedListeners = mutableSetOf<() -> Unit>()
 
 
     fun getAllAsync(callback: (List<T>) -> Unit) {
@@ -25,32 +27,28 @@ abstract class EntityServiceBase<T : BaseEntity>(dataManager: DataManager) {
     fun persist(entity: T) {
         entityManager.persistEntity(entity as Any)
 
-        callEntitiesUpdatedListeners()
+        callEntitiesUpdatedListeners(entity, EntityChangeType.Created)
     }
 
     fun update(entity: T) {
         entityManager.updateEntity(entity as Any)
 
-        callEntitiesUpdatedListeners()
+        callEntitiesUpdatedListeners(entity, EntityChangeType.Updated)
     }
 
     fun delete(entity: T) {
         entityManager.deleteEntity(entity as Any)
 
-        callEntitiesUpdatedListeners()
+        callEntitiesUpdatedListeners(entity, EntityChangeType.Deleted)
     }
 
 
-    fun addEntitiesUpdatedListener(listener: () -> Unit) {
-        entitiesUpdatedListeners.add(listener)
+    private fun callEntitiesUpdatedListeners(entity: T, changeType: EntityChangeType) {
+        eventBus.postAsync(createEntityChangedMessage(entity, changeType))
+
+        eventBus.postAsync(EntitiesOfTypeChanged(getEntityClass()))
     }
 
-    fun removeEntitiesUpdatedListener(listener: () -> Unit) {
-        entitiesUpdatedListeners.remove(listener)
-    }
-
-    private fun callEntitiesUpdatedListeners() {
-        entitiesUpdatedListeners.forEach { it() }
-    }
+    abstract fun createEntityChangedMessage(entity: T, changeType: EntityChangeType): EntityChanged<out BaseEntity>
 
 }

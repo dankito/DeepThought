@@ -16,6 +16,9 @@ import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.EntryService
+import net.dankito.service.data.messages.EntitiesOfTypeChanged
+import net.dankito.service.eventbus.IEventBus
+import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 import kotlin.concurrent.thread
 
@@ -26,6 +29,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     @Inject
     protected lateinit var entryService: EntryService
+
+    @Inject
+    protected lateinit var eventBus: IEventBus
+
+    private val eventBusListener = EventBusListener()
 
 
     private val entryAdapter = EntryAdapter()
@@ -40,7 +48,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onDestroy() {
-        entryService.removeEntitiesUpdatedListener(entriesUpdatedListener)
+        eventBus.unregister(eventBusListener)
 
         super.onDestroy()
     }
@@ -135,6 +143,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         thread {
             AppComponent.component.inject(this)
 
+            eventBus.register(eventBusListener)
+
             dataManager.addInitializationListener {
                 dataManagerInitialized()
             }
@@ -142,8 +152,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun dataManagerInitialized() {
-        entryService.addEntitiesUpdatedListener(entriesUpdatedListener)
-
         retrieveAndShowEntries()
     }
 
@@ -156,8 +164,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-    private val entriesUpdatedListener: () -> Unit = {
-        retrieveAndShowEntries()
+    inner class EventBusListener {
+
+        @Handler()
+        fun entriesChanged(entitiesOfTypeChanged: EntitiesOfTypeChanged) {
+            retrieveAndShowEntries()
+        }
+
     }
 
 }

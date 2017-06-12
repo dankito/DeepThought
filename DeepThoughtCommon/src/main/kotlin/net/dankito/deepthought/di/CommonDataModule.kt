@@ -12,6 +12,8 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.ReferenceService
+import net.dankito.service.eventbus.IEventBus
+import net.dankito.service.eventbus.MBassadorEventBus
 import javax.inject.Singleton
 
 
@@ -30,17 +32,23 @@ class CommonDataModule {
         return DataManager(entityManager, configuration, dataInitializer)
     }
 
+    @Provides
+    @Singleton
+    fun provideEventBus() : IEventBus {
+        return MBassadorEventBus()
+    }
+
 
     @Provides
     @Singleton
-    fun provideEntryService(dataManager: DataManager) : EntryService {
-        return EntryService(dataManager)
+    fun provideEntryService(dataManager: DataManager, eventBus: IEventBus) : EntryService {
+        return EntryService(dataManager, eventBus)
     }
 
     @Provides
     @Singleton
-    fun provideReferenceService(dataManager: DataManager) : ReferenceService {
-        return ReferenceService(dataManager)
+    fun provideReferenceService(dataManager: DataManager, eventBus: IEventBus) : ReferenceService {
+        return ReferenceService(dataManager, eventBus)
     }
 
 
