@@ -14,6 +14,7 @@ import net.dankito.service.data.EntryService
 import net.dankito.service.data.ReferenceService
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
+import net.dankito.utils.IPlatformConfiguration
 import javax.inject.Singleton
 
 
@@ -22,8 +23,8 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideDefaultDataInitializer() : DefaultDataInitializer {
-        return DefaultDataInitializer()
+    fun provideDefaultDataInitializer(platformConfiguration: IPlatformConfiguration) : DefaultDataInitializer {
+        return DefaultDataInitializer(platformConfiguration)
     }
 
     @Provides

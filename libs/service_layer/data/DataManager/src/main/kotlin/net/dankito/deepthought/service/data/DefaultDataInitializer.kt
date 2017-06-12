@@ -1,11 +1,12 @@
 package net.dankito.deepthought.service.data
 
 import net.dankito.deepthought.model.*
+import net.dankito.utils.IPlatformConfiguration
 import org.slf4j.LoggerFactory
 import java.util.*
 
 
-open class DefaultDataInitializer {
+open class DefaultDataInitializer(private val platformConfiguration: IPlatformConfiguration) {
 
     companion object {
         private val log = LoggerFactory.getLogger(DefaultDataInitializer::class.java)
@@ -35,9 +36,7 @@ open class DefaultDataInitializer {
         var userName: String = getLocalizedString("default.user.name")
 
         try {
-            // TODO
-//            userName = Application.getPlatformConfiguration().getUserName()
-            userName = "Manfred"
+            userName = platformConfiguration.getUserName()
         } catch (ex: Exception) {
             log.error("Could not get System property user.name", ex)
         }
@@ -58,19 +57,11 @@ open class DefaultDataInitializer {
     protected open fun createUserDefaultDevice(user: User): Device {
         val universallyUniqueId = UUID.randomUUID().toString()
 
-        var platform = System.getProperty("os.name")
-        var deviceName = getLocalizedString("users.default.device.name", user.userName, platform)
-        var osVersion = System.getProperty("os.version")
+        val osVersion = platformConfiguration.getOsVersionString()
+        val platform = platformConfiguration.getPlatformName()
 
-        // TODO
-//        if (Application.getPlatformConfiguration() != null) { // TODO: try to get rid of static method calls
-//            osVersion = Application.getPlatformConfiguration().getOsVersionString()
-//            platform = Application.getPlatformConfiguration().getPlatformName()
-//
-//            if (Application.getPlatformConfiguration().getDeviceName() != null) {
-//                deviceName = Application.getPlatformConfiguration().getDeviceName()
-//            }
-//        }
+        var deviceName = getLocalizedString("users.default.device.name", user.userName, platform)
+        platformConfiguration.getDeviceName()?.let { deviceName = it }
 
         val userDefaultDevice = Device(deviceName, universallyUniqueId,
                 platform, osVersion, System.getProperty("os.arch"))
