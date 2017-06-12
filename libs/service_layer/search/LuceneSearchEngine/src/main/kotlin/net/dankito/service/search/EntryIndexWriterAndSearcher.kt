@@ -56,10 +56,17 @@ class EntryIndexWriterAndSearcher(entryService: EntryService) : IndexWriterAndSe
     fun searchEntries(search: EntriesSearch, termsToFilterFor: Array<String>) {
         val query = BooleanQuery()
 
+        addQueryForOptions(search, query)
+
+        addQueryForSearchTerm(termsToFilterFor, query, search)
+
+        executeQueryForSearchWithCollectionResult(search, query, Entry::class.java, listOf(SortOption(FieldName.EntryCreated, SortOrder.Descending, SortField.Type.LONG)))
+    }
+
+    private fun addQueryForOptions(search: EntriesSearch, query: BooleanQuery) {
         if (search.filterOnlyEntriesWithoutTags) {
             query.add(TermQuery(Term(FieldName.EntryNoTags, NoTagsFieldValue)), BooleanClause.Occur.MUST)
-        }
-        else if (search.entriesMustHaveTheseTags.size > 0) {
+        } else if (search.entriesMustHaveTheseTags.size > 0) {
             val filterEntriesQuery = BooleanQuery()
             for (tag in search.entriesMustHaveTheseTags) {
                 filterEntriesQuery.add(TermQuery(Term(FieldName.EntryTagsIds, tag.id)), BooleanClause.Occur.MUST)
@@ -67,11 +74,12 @@ class EntryIndexWriterAndSearcher(entryService: EntryService) : IndexWriterAndSe
 
             query.add(filterEntriesQuery, BooleanClause.Occur.MUST)
         }
+    }
 
-        if(termsToFilterFor.size == 0) {
+    private fun addQueryForSearchTerm(termsToFilterFor: Array<String>, query: BooleanQuery, search: EntriesSearch) {
+        if (termsToFilterFor.size == 0) {
             query.add(WildcardQuery(Term(FieldName.EntryId, "*")), BooleanClause.Occur.MUST)
-        }
-        else {
+        } else {
             for (term in termsToFilterFor) {
                 val escapedTerm = QueryParser.escape(term)
                 val termQuery = BooleanQuery()
@@ -86,8 +94,6 @@ class EntryIndexWriterAndSearcher(entryService: EntryService) : IndexWriterAndSe
                 query.add(termQuery, BooleanClause.Occur.MUST)
             }
         }
-
-        executeQueryForSearchWithCollectionResult(search, query, Entry::class.java, listOf(SortOption(FieldName.EntryCreated, SortOrder.Descending, SortField.Type.LONG)))
     }
 
 
