@@ -49,12 +49,12 @@ object ArticleTextExtractor {
      * @return extracted article, all HTML tags stripped
      */
     @Throws(Exception::class)
-    fun extractContent(input: InputStream, contentIndicator: String): String? {
+    fun extractContent(input: InputStream, contentIndicator: String?): String? {
         return extractContent(Jsoup.parse(input, null, ""), contentIndicator)
     }
 
     @Throws(Exception::class)
-    fun extractContent(doc: Document?, contentIndicator: String): String? {
+    fun extractContent(doc: Document?, contentIndicator: String?): String? {
         if (doc == null)
             throw NullPointerException("missing document")
 
@@ -111,7 +111,7 @@ object ArticleTextExtractor {
      * *
      * @param contentIndicator a text which should be included into the extracted content, or null
      */
-    private fun getWeight(e: Element, contentIndicator: String): Int {
+    private fun getWeight(e: Element, contentIndicator: String?): Int {
         var weight = calcWeight(e)
         weight += Math.round(e.ownText().length / 100.0 * 10).toInt()
         weight += weightChildNodes(e, contentIndicator)
