@@ -1,5 +1,8 @@
 include ':DeepThoughtAndroidApp'
 include ':DeepThoughtAndroidLogic'
+
+include ':DeepThoughtJavaLogic'
+
 include ':DeepThoughtCommon'
 
 include ':FaviconExtractor'
