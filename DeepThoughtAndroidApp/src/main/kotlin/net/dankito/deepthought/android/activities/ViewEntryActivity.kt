@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.activity_view_article.*
+import kotlinx.android.synthetic.main.activity_view_entry.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Entry
@@ -16,7 +16,7 @@ import net.dankito.service.data.ReferenceService
 import javax.inject.Inject
 
 
-class ViewArticleActivity : AppCompatActivity() {
+class ViewEntryActivity : AppCompatActivity() {
 
     companion object {
         const val ENTRY_INTENT_EXTRA_NAME = "ENTRY"
@@ -72,7 +72,7 @@ class ViewArticleActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
-        setContentView(R.layout.activity_view_article)
+        setContentView(R.layout.activity_view_entry)
 
         setSupportActionBar(toolbar)
 
@@ -81,7 +81,7 @@ class ViewArticleActivity : AppCompatActivity() {
 
         supportActionBar?.title = ""
 
-        val settings = wbArticle.getSettings()
+        val settings = wbEntry.getSettings()
         settings.defaultTextEncodingName = "UTF-8"
         settings.javaScriptEnabled = true
     }
@@ -94,19 +94,19 @@ class ViewArticleActivity : AppCompatActivity() {
     }
 
     private fun pauseWebView() {
-        // to prevent that a video keeps on playing in WebView when navigating away from ViewArticleActivity
+        // to prevent that a video keeps on playing in WebView when navigating away from ViewEntryActivity
         // see https://stackoverflow.com/a/6230902
         try {
             Class.forName("android.webkit.WebView")
                     .getMethod("onPause")
-                    .invoke(wbArticle)
+                    .invoke(wbEntry)
 
         } catch(ignored: Exception) { }
     }
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.view_article_activity_menu, menu)
+        menuInflater.inflate(R.menu.view_entry_activity_menu, menu)
 
         return true
     }
@@ -118,8 +118,8 @@ class ViewArticleActivity : AppCompatActivity() {
                 return true
             }
 
-            R.id.mnSaveArticle -> {
-                saveArticle()
+            R.id.mnSaveEntry -> {
+                saveEntry()
                 return true
             }
         }
@@ -134,10 +134,10 @@ class ViewArticleActivity : AppCompatActivity() {
             val url = entry.reference?.onlineAddress
 
             if(url != null) {
-                wbArticle.loadDataWithBaseURL(url, entry.content, "text/html; charset=UTF-8", null, null)
+                wbEntry.loadDataWithBaseURL(url, entry.content, "text/html; charset=UTF-8", null, null)
             }
             else {
-                wbArticle.loadData(entry.content, "text/html; charset=UTF-8", null)
+                wbEntry.loadData(entry.content, "text/html; charset=UTF-8", null)
             }
         }
     }
@@ -145,10 +145,10 @@ class ViewArticleActivity : AppCompatActivity() {
     private fun showSerializedEntryExtractionResult(serializedExtractionResult: String) {
         this.entryExtractionResult = serializer.deserializeObject(serializedExtractionResult, EntryExtractionResult::class.java)
 
-        wbArticle.loadDataWithBaseURL(entryExtractionResult?.reference?.onlineAddress, entryExtractionResult?.entry?.content, "text/html; charset=UTF-8", null, null)
+        wbEntry.loadDataWithBaseURL(entryExtractionResult?.reference?.onlineAddress, entryExtractionResult?.entry?.content, "text/html; charset=UTF-8", null, null)
     }
 
-    private fun saveArticle() {
+    private fun saveEntry() {
         entryExtractionResult?.let { entryExtractionResult ->
             val entry = entryExtractionResult.entry
 

@@ -31,7 +31,7 @@
             android:theme="@style/AppTheme.NoActionBar"
         />
 
-        <activity android:name=".activities.ViewArticleActivity"
+        <activity android:name=".activities.ViewEntryActivity"
                   android:parentActivityName=".activities.ArticleSummaryActivity"
                   android:theme="@style/AppTheme.NoActionBar"
         />
