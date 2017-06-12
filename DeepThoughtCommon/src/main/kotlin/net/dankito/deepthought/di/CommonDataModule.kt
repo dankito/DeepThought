@@ -29,8 +29,9 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideDataManager(entityManager: IEntityManager, configuration: EntityManagerConfiguration, dataInitializer: DefaultDataInitializer) : DataManager {
-        return DataManager(entityManager, configuration, dataInitializer)
+    fun provideDataManager(entityManager: IEntityManager, configuration: EntityManagerConfiguration,
+                           dataInitializer: DefaultDataInitializer, platformConfiguration: IPlatformConfiguration) : DataManager {
+        return DataManager(entityManager, configuration, dataInitializer, platformConfiguration)
     }
 
     @Provides

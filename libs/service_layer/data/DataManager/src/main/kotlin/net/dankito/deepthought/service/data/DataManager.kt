@@ -5,11 +5,14 @@ import net.dankito.data_access.database.IEntityManager
 import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.model.DeepThoughtApplication
 import net.dankito.deepthought.model.User
+import net.dankito.utils.IPlatformConfiguration
 import org.slf4j.LoggerFactory
+import java.io.File
 import kotlin.concurrent.thread
 
 
-class DataManager(val entityManager: IEntityManager, private val configuration: EntityManagerConfiguration, private val defaultDataInitializer: DefaultDataInitializer) {
+class DataManager(val entityManager: IEntityManager, private val configuration: EntityManagerConfiguration,
+                  private val defaultDataInitializer: DefaultDataInitializer, private val platformConfiguration: IPlatformConfiguration) {
 
     companion object {
         private val log = LoggerFactory.getLogger(DataManager::class.java)
@@ -20,7 +23,7 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
     lateinit var loggedOnUser: User
     var currentDeepThought: DeepThought? = null
 
-    var dataFolderPath: String
+    var dataFolderPath: File
 
     var isInitialized = false
         private set
@@ -29,7 +32,7 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
 
 
     init {
-        dataFolderPath = configuration.dataFolder
+        dataFolderPath = platformConfiguration.getDefaultDataFolder()
 
         thread {
             initializeDataManager()
