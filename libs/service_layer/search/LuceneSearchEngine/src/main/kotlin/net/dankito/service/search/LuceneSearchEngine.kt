@@ -2,6 +2,7 @@ package net.dankito.service.search
 
 import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.service.data.EntryService
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.store.Directory
@@ -11,12 +12,16 @@ import org.slf4j.LoggerFactory
 import java.io.File
 
 
-class LuceneSearchEngine(private val dataManager: DataManager, private val indexWritersAndSearchers: Set<IndexWriterAndSearcher<*>>) {
+class LuceneSearchEngine(private val dataManager: DataManager, entryService: EntryService) {
 
     companion object {
         private val log = LoggerFactory.getLogger(LuceneSearchEngine::class.java)
     }
 
+
+    private val entryIndexWriterAndSearcher: EntryIndexWriterAndSearcher
+
+    private val indexWritersAndSearchers: List<IndexWriterAndSearcher<*>>
 
     private lateinit var defaultIndexDirectory: Directory
 
@@ -30,6 +35,10 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val index
 
 
     init {
+        entryIndexWriterAndSearcher = EntryIndexWriterAndSearcher(entryService)
+
+        indexWritersAndSearchers = listOf(EntryIndexWriterAndSearcher(entryService))
+
         dataManager.addInitializationListener { dataManagerInitialized() }
     }
 
