@@ -23,19 +23,26 @@ class EntryAdapter: ListAdapter<Entry>() {
             view.txtReferencePreview.text = it.title
         }
 
-        var entryPreview = Jsoup.parseBodyFragment(entry.abstractString).text() // TODO: externalize to PreviewService
-        if(entryPreview.length < 200) {
-            if(entryPreview.length > 0) {
+        view.txtEntryPreview.text = getEntryPreview(entry) // TODO: externalize to PreviewService
+
+        view.txtEntryTags.visibility = if(entry.hasTags()) View.VISIBLE else View.GONE
+
+        return view
+    }
+
+
+    private fun getEntryPreview(entry: Entry): String? {
+        var entryPreview = Jsoup.parseBodyFragment(entry.abstractString).text()
+
+        if (entryPreview.length < 200) {
+            if (entryPreview.length > 0) {
                 entryPreview += " "
             }
 
             entryPreview += Jsoup.parseBodyFragment(entry.content).text()
         }
 
-        view.txtEntryPreview.text = entryPreview
-
-        view.txtEntryTags.visibility = if(entry.hasTags()) View.VISIBLE else View.GONE
-
-        return view
+        return entryPreview
     }
+
 }
