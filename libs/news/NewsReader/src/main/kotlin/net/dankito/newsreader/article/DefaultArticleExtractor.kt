@@ -44,13 +44,7 @@ class DefaultArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
 
     private fun extractContent(item: ArticleSummaryItem) : String {
         requestUrl(item.url).let { document ->
-            var content = ArticleTextExtractor.extractContent(document, item.summary)
-
-            if(content == null) {
-                content = document.body().toString()
-            }
-
-            return content
+            return extractContent(document, item.summary)
         }
     }
 
@@ -64,6 +58,17 @@ class DefaultArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
 
     override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
         return null // will not be called in this case
+    }
+
+
+    private fun extractContent(document: Document, contentIndicator: String): String {
+        var content = ArticleTextExtractor.extractContent(document, contentIndicator)
+
+        if (content == null) {
+            content = document.body().toString()
+        }
+
+        return content
     }
 
 }
