@@ -3,6 +3,8 @@ package net.dankito.service.search
 import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.EntryService
+import net.dankito.service.search.specific.EntriesSearch
+import net.dankito.utils.IThreadPool
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.store.Directory
@@ -12,7 +14,8 @@ import org.slf4j.LoggerFactory
 import java.io.File
 
 
-class LuceneSearchEngine(private val dataManager: DataManager, entryService: EntryService) {
+class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThreadPool, entryService: EntryService)
+    : SearchEngineBase(threadPool) {
 
     companion object {
         private val log = LoggerFactory.getLogger(LuceneSearchEngine::class.java)
@@ -31,13 +34,11 @@ class LuceneSearchEngine(private val dataManager: DataManager, entryService: Ent
 
     private var isIndexReady = false
 
-    private var isInitialized = false
-
 
     init {
         entryIndexWriterAndSearcher = EntryIndexWriterAndSearcher(entryService)
 
-        indexWritersAndSearchers = listOf(EntryIndexWriterAndSearcher(entryService))
+        indexWritersAndSearchers = listOf(entryIndexWriterAndSearcher)
 
         dataManager.addInitializationListener { dataManagerInitialized() }
     }
@@ -67,7 +68,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, entryService: Ent
                 rebuildIndex() // do not rebuild index asynchronously as Application depends on some functions of SearchEngine (like Entries without Tags)
             }
 
-            isInitialized = true
+            searchEngineInitialized()
         } catch (ex: Exception) {
             log.error("Could not open Lucene Index Directory for DeepThought " + deepThought, ex)
         }
@@ -150,4 +151,12 @@ class LuceneSearchEngine(private val dataManager: DataManager, entryService: Ent
             log.error("Could not delete Lucene index", ex)
         }
     }
+
+
+    /*      ISearchEngine implementation        */
+
+    override fun searchEntries(search: EntriesSearch, termsToSearchFor: Array<String>) {
+        entryIndexWriterAndSearcher.searchEntries(search, termsToSearchFor)
+    }
+
 }

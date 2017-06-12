@@ -4,6 +4,7 @@ import net.dankito.deepthought.model.BaseEntity
 import net.dankito.service.data.EntityServiceBase
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.EntityChanged
+import net.dankito.service.search.results.LazyLoadingLuceneSearchResultsList
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.document.Document
 import org.apache.lucene.index.DirectoryReader
@@ -11,6 +12,7 @@ import org.apache.lucene.index.IndexWriter
 import org.apache.lucene.index.IndexWriterConfig
 import org.apache.lucene.index.Term
 import org.apache.lucene.search.IndexSearcher
+import org.apache.lucene.search.Query
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.FSDirectory
 import org.apache.lucene.store.LockObtainFailedException
@@ -186,7 +188,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
 
     protected fun removeEntityFromIndex(removedEntity: TEntity) {
-        if(isReadOnly === true) {
+        if(isReadOnly) {
             return
         }
 
@@ -242,6 +244,34 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
     private fun markIndexHasBeenUpdated() {
         indexSearcher = null
+    }
+
+
+    @Throws(Exception::class)
+    protected fun executeQuery(query: Query, resultEntityClass: Class<TEntity>, sortOptions: List<SortOption>): List<TEntity> {
+        log.debug("Executing Query " + query)
+
+        getIndexSearcher()?.let {
+            return LazyLoadingLuceneSearchResultsList<TEntity>(entityService.entityManager, it, query, resultEntityClass, getIdFieldName(), 1000, sortOptions)
+        }
+
+        return listOf()
+    }
+
+    protected fun executeQueryForSearchWithCollectionResult(search: SearchWithCollectionResult<TEntity>, query: Query, resultEntityClass: Class<TEntity>, sortOptions: List<SortOption>) {
+        if (search.isInterrupted)
+            return
+
+        try {
+            getIndexSearcher()?.let {
+                search.results = executeQuery(query, resultEntityClass, sortOptions)
+            }
+        } catch (ex: Exception) {
+            log.error("Could not execute Query " + query.toString(), ex)
+            // TODO: set error flag in Search
+        }
+
+        search.fireSearchCompleted()
     }
 
 }
