@@ -17,6 +17,8 @@ include ':DataServices'
 include ':SearchEngine'
 include ':LuceneSearchEngine'
 
+include ':EventBus'
+
 include ':Serializer'
 include ':Utils'
 
@@ -53,6 +55,8 @@ project(':DataServices').projectDir = "$rootDir/libs/service_layer/data/DataServ
 
 project(':SearchEngine').projectDir = "$rootDir/libs/service_layer/search/SearchEngine" as File
 project(':LuceneSearchEngine').projectDir = "$rootDir/libs/service_layer/search/LuceneSearchEngine" as File
+
+project(':EventBus').projectDir = "$rootDir/libs/service_layer/eventbus/EventBus" as File
 
 project(':Serializer').projectDir = "$rootDir/libs/service_layer/serializer/Serializer" as File
 project(':Utils').projectDir = "$rootDir/libs/service_layer/utils/Utils" as File
