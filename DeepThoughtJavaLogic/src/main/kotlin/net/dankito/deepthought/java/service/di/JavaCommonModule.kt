@@ -25,11 +25,7 @@ class JavaCommonModule {
     @Provides
     @Singleton
     fun provideEntityManager(configuration: EntityManagerConfiguration) : IEntityManager {
-        val entityManager = JavaCouchbaseLiteEntityManager(configuration)
-
-        entityManager.open(configuration)
-
-        return entityManager
+        return JavaCouchbaseLiteEntityManager(configuration)
     }
 
     @Provides
