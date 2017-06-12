@@ -9,6 +9,7 @@ dependencies {
     compile project(':EntityManager')
     compile project(':DataManager')
     compile project(':DataServices')
+    compile project(':LuceneSearchEngine')
 
     compile project(':NewsReader')
     compile project(':FeedAddressExtractor')
