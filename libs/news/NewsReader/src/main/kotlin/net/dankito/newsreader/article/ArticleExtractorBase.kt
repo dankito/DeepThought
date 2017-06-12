@@ -1,10 +1,10 @@
 package net.dankito.newsreader.article
 
-import net.dankito.newsreader.model.Article
-import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.data_access.network.webclient.extractor.ExtractorBase
+import net.dankito.newsreader.model.ArticleSummaryItem
+import net.dankito.newsreader.model.EntryExtractionResult
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
@@ -18,11 +18,11 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
     }
 
 
-    override fun extractArticleAsync(item : ArticleSummaryItem, callback: (AsyncResult<Article>) -> Unit) {
+    override fun extractArticleAsync(item : ArticleSummaryItem, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
         extractArticleAsync(item.url, callback)
     }
 
-    override fun extractArticleAsync(url : String, callback: (AsyncResult<Article>) -> Unit) {
+    override fun extractArticleAsync(url : String, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
         thread {
             try {
                 callback(AsyncResult(true, result = extractArticle(url)))
@@ -33,7 +33,7 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
         }
     }
 
-    private fun extractArticle(url: String): Article? {
+    private fun extractArticle(url: String): EntryExtractionResult? {
         try {
             requestUrl(url).let { document ->
                 return parseHtmlToArticle(document, url)
@@ -45,7 +45,7 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
         return null
     }
 
-    abstract protected fun parseHtmlToArticle(document: Document, url: String): Article?
+    abstract protected fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult?
 
 
     protected fun makeLinksAbsolute(element: Element, url: String) {

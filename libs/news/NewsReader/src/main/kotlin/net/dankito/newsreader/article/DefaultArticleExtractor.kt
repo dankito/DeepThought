@@ -1,11 +1,13 @@
 package net.dankito.newsreader.article
 
-import net.dankito.newsreader.model.Article
-import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.data_access.network.webclient.CookieHandling
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.RequestParameters
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
+import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Reference
+import net.dankito.newsreader.model.ArticleSummaryItem
+import net.dankito.newsreader.model.EntryExtractionResult
 import org.jsoup.nodes.Document
 import org.slf4j.LoggerFactory
 import kotlin.concurrent.thread
@@ -18,11 +20,11 @@ class DefaultArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
     }
 
 
-    override fun extractArticleAsync(item: ArticleSummaryItem, callback: (AsyncResult<Article>) -> Unit) {
+    override fun extractArticleAsync(item: ArticleSummaryItem, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
         thread {
             try {
-                val article = extractArticle(item)
-                callback(AsyncResult(true, result = article))
+                val extractionResult = extractArticle(item)
+                callback(AsyncResult(true, result = extractionResult))
             } catch(e: Exception) {
                 log.error("Could not extract Article", e)
                 callback(AsyncResult(false, e))
@@ -30,9 +32,13 @@ class DefaultArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
         }
     }
 
-    private fun extractArticle(item: ArticleSummaryItem) : Article {
+    private fun extractArticle(item: ArticleSummaryItem) : EntryExtractionResult {
         extractContent(item).let { content ->
-            return Article(item.url, item.title, content, item.summary, item.publishedDate, item.previewImageUrl)
+            val entry = Entry(content, item.summary)
+            // TODO: handle item.previewImageUrl
+            val reference = Reference(item.url, item.title, item.publishedDate)
+
+            return EntryExtractionResult(entry, reference)
         }
     }
 
@@ -56,7 +62,7 @@ class DefaultArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
         return parameters
     }
 
-    override fun parseHtmlToArticle(document: Document, url: String): Article? {
+    override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
         return null // will not be called in this case
     }
 

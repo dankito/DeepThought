@@ -1,7 +1,9 @@
 package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.newsreader.model.Article
+import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Reference
+import net.dankito.newsreader.model.EntryExtractionResult
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Node
@@ -17,17 +19,18 @@ class PostillonArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
     }
 
 
-    override fun parseHtmlToArticle(document: Document, url: String): Article? {
+    override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
         document.body().select(".post").first()?.let { postElement ->
             postElement.select(".post-title")?.let { titleElement ->
                 postElement.select(".post-body").first()?.let { bodyElement ->
-                    val article = Article(url, titleElement.text(), extractContent(bodyElement))
+                    val entry = Entry(extractContent(bodyElement))
 
-                    article.publishingDate = extractPublishingDate(postElement)
+                    val reference = Reference(url, titleElement.text(), extractPublishingDate(postElement))
 
-                    bodyElement.select(".separator a img").first()?.let { article.previewImageUrl = it.attr("src") }
+                    // TODO: handle previewImageUrl
+//                    bodyElement.select(".separator a img").first()?.let { reference.previewImageUrl = it.attr("src") }
 
-                    return article
+                    return EntryExtractionResult(entry, reference)
                 }
             }
         }

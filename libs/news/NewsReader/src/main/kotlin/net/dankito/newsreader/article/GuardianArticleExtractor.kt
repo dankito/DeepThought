@@ -1,7 +1,9 @@
 package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.newsreader.model.Article
+import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Reference
+import net.dankito.newsreader.model.EntryExtractionResult
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.util.*
@@ -9,7 +11,7 @@ import java.util.*
 
 class GuardianArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient) {
 
-    override fun parseHtmlToArticle(document: Document, url: String): Article? {
+    override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
         document.body().select("#article").first()?.let { articleElement ->
             articleElement.select(".mobile-only").remove()
 
@@ -23,16 +25,18 @@ class GuardianArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(web
         return null
     }
 
-    private fun extractArticle(url: String, articleElement: Element, titleElement: Element, contentMainElement: Element): Article {
-        val article = Article(url, titleElement.text(), extractContent(contentMainElement))
+    private fun extractArticle(url: String, articleElement: Element, titleElement: Element, contentMainElement: Element): EntryExtractionResult {
+        val entry = Entry(extractContent(contentMainElement))
 
-        article.publishingDate = extractPublishingDate(contentMainElement)
+        articleElement.select(".content__standfirst").first()?.let { entry.abstractString = it.text() }
 
-        contentMainElement.select(".media-primary").first()?.let { article.previewImageUrl = extractUrlFromFigureElement(it) }
 
-        articleElement.select(".content__standfirst").first()?.let { article.abstract = it.text() }
+        val reference = Reference(url, titleElement.text(), extractPublishingDate(contentMainElement))
 
-        return article
+        // TODO: handle previewImageUrl
+//        contentMainElement.select(".media-primary").first()?.let { reference.previewImageUrl = extractUrlFromFigureElement(it) }
+
+        return EntryExtractionResult(entry, reference)
     }
 
     private fun extractUrlFromFigureElement(figureElement: Element): String? {

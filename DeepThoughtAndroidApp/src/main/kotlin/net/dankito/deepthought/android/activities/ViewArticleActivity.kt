@@ -7,9 +7,8 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_view_article.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
-import net.dankito.newsreader.model.Article
+import net.dankito.newsreader.model.EntryExtractionResult
 import net.dankito.serializer.ISerializer
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.ReferenceService
@@ -19,7 +18,7 @@ import javax.inject.Inject
 class ViewArticleActivity : AppCompatActivity() {
 
     companion object {
-        const val ARTICLE_INTENT_EXTRA_NAME = "ARTICLE"
+        const val ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ENTRY_EXTRACTION_RESULT"
     }
 
 
@@ -32,7 +31,7 @@ class ViewArticleActivity : AppCompatActivity() {
     @Inject
     protected lateinit var serializer: ISerializer
 
-    private var article: Article? = null
+    private var entryExtractionResult: EntryExtractionResult? = null
 
 
     init {
@@ -47,19 +46,19 @@ class ViewArticleActivity : AppCompatActivity() {
 
         savedInstanceState?.let { restoreState(it) }
 
-        intent.getStringExtra(ARTICLE_INTENT_EXTRA_NAME)?.let { showSerializedArticle(it) }
+        intent.getStringExtra(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)?.let { showSerializedEntryExtractionResult(it) }
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
-        savedInstanceState.getString(ARTICLE_INTENT_EXTRA_NAME)?.let { showSerializedArticle(it) }
+        savedInstanceState.getString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)?.let { showSerializedEntryExtractionResult(it) }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
 
         outState?.let { outState ->
-            outState.putString(ARTICLE_INTENT_EXTRA_NAME, null) // fallback
-            article?.let { outState.putString(ARTICLE_INTENT_EXTRA_NAME, serializer.serializeObject(it)) }
+            outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, null) // fallback
+            entryExtractionResult?.let { outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, serializer.serializeObject(it)) }
         }
     }
 
@@ -119,17 +118,17 @@ class ViewArticleActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun showSerializedArticle(serializedArticle: String) {
-        this.article = serializer.deserializeObject(serializedArticle, Article::class.java)
+    private fun showSerializedEntryExtractionResult(serializedExtractionResult: String) {
+        this.entryExtractionResult = serializer.deserializeObject(serializedExtractionResult, EntryExtractionResult::class.java)
 
-        wbArticle.loadDataWithBaseURL(article?.url, article?.content, "text/html; charset=UTF-8", null, null)
+        wbArticle.loadDataWithBaseURL(entryExtractionResult?.reference?.onlineAddress, entryExtractionResult?.entry?.content, "text/html; charset=UTF-8", null, null)
     }
 
     private fun saveArticle() {
-        article?.let { article ->
-            val entry = Entry(article.content, article.abstract ?: "")
+        entryExtractionResult?.let { entryExtractionResult ->
+            val entry = entryExtractionResult.entry
 
-            entry.reference = createAndPersistRefernce(article)
+            entry.reference = createAndPersistReference(entryExtractionResult)
 
             entryService.persist(entry)
         }
@@ -137,13 +136,12 @@ class ViewArticleActivity : AppCompatActivity() {
         returnToPreviousView()
     }
 
-    private fun createAndPersistRefernce(article: Article): Reference {
-        val reference = Reference(article.title)
+    private fun createAndPersistReference(entryExtractionResult: EntryExtractionResult): Reference? {
+        val reference = entryExtractionResult.reference
 
-        reference.onlineAddress = article.url
-        reference.publishingDate = article.publishingDate
-
-        referenceService.persist(reference)
+        if(reference != null) {
+            referenceService.persist(reference)
+        }
 
         return reference
     }

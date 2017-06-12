@@ -18,9 +18,9 @@ import net.dankito.deepthought.android.routing.Router
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.newsreader.article.ArticleExtractors
-import net.dankito.newsreader.model.Article
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
+import net.dankito.newsreader.model.EntryExtractionResult
 import net.dankito.serializer.ISerializer
 import net.dankito.utils.ImageCache
 import org.slf4j.LoggerFactory
@@ -221,8 +221,8 @@ class ArticleSummaryActivity : AppCompatActivity() {
         }
     }
 
-    private fun showArticle(article: Article) {
-        router.showArticleView(article)
+    private fun showArticle(extractionResult: EntryExtractionResult) {
+        router.showArticleView(extractionResult)
     }
 
     private fun showArticleExtractionError(item: ArticleSummaryItem, extractionError: Exception) {

@@ -1,8 +1,8 @@
 package net.dankito.newsreader.article
 
-import net.dankito.newsreader.model.Article
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.OkHttpWebClient
+import net.dankito.newsreader.model.EntryExtractionResult
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.Assert.assertThat
@@ -26,32 +26,39 @@ abstract class ArticleExtractorTestBase {
         testArticle(article, url, title, abstract, previewImageUrl)
     }
 
-    protected open fun getArticle(url: String) : Article? {
-        var article: Article? = null
+    protected open fun getArticle(url: String) : EntryExtractionResult? {
+        var extractionResult: EntryExtractionResult? = null
         val countDownLatch = CountDownLatch(1)
 
         underTest.extractArticleAsync(url) {
-            article = it.result
+            extractionResult = it.result
 
             countDownLatch.countDown()
         }
 
         countDownLatch.await(20, TimeUnit.SECONDS)
 
-        return article
+        return extractionResult
     }
 
-    protected open fun testArticle(article: Article?, url: String, title: String, abstract: String?, previewImageUrl: String? = null) {
-        assertThat(article, notNullValue())
+    protected open fun testArticle(extractionResult: EntryExtractionResult?, url: String, title: String, abstract: String?, previewImageUrl: String? = null) {
+        assertThat(extractionResult, notNullValue())
 
-        article?.let { article ->
-            assertThat(article.url, `is`(url))
-            assertThat(article.title, `is`(title))
-            assertThat(article.abstract, `is`(abstract))
-            assertThat(article.content.isNullOrBlank(), `is`(false))
-            assertThat(article.previewImageUrl, notNullValue())
-            previewImageUrl?.let { assertThat(article.previewImageUrl, `is`(previewImageUrl)) }
-            assertThat(article.publishingDate, notNullValue())
+        extractionResult?.let { extractionResult ->
+            assertThat(extractionResult.entry.content.isNullOrBlank(), `is`(false))
+            assertThat(extractionResult.entry.abstractString, `is`(abstract))
+
+            assertThat(extractionResult.reference, notNullValue())
+
+            extractionResult.reference?.let { reference ->
+                assertThat(reference.onlineAddress, `is`(url))
+                assertThat(reference.title, `is`(title))
+                assertThat(reference.publishingDate, notNullValue())
+
+                // TODO: handle previewImageUrl
+//                assertThat(extractionResult.previewImageUrl, notNullValue())
+//                previewImageUrl?.let { assertThat(extractionResult.previewImageUrl, `is`(previewImageUrl)) }
+            }
         }
     }
 

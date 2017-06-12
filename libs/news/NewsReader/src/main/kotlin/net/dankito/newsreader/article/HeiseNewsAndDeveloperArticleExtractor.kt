@@ -1,7 +1,9 @@
 package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.newsreader.model.Article
+import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Reference
+import net.dankito.newsreader.model.EntryExtractionResult
 import org.jsoup.nodes.Comment
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -17,7 +19,7 @@ class HeiseNewsAndDeveloperArticleExtractor(webClient: IWebClient) : ArticleExtr
     }
 
 
-    override fun parseHtmlToArticle(document: Document, url: String): Article? {
+    override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
         document.body().select("article").first()?.let { article ->
             article.select("header").first()?.let { header ->
                 header.select(".article__heading").first()?.text()?.let { title ->
@@ -29,15 +31,17 @@ class HeiseNewsAndDeveloperArticleExtractor(webClient: IWebClient) : ArticleExtr
         return null
     }
 
-    private fun parseArticle(header: Element, article: Element, url: String, title: String) : Article? {
+    private fun parseArticle(header: Element, article: Element, url: String, title: String) : EntryExtractionResult? {
         article.select(".meldung_wrapper").first()?.let { articleElement ->
-            val abstract = articleElement.select(".meldung_anrisstext").first()?.text()
+            val entry = Entry(extractContent(article, url))
+            articleElement.select(".meldung_anrisstext").first()?.text()?.let { entry.abstractString = it }
+
+            // TODO: handle previewImageUrl
             val previewImageUrl = makeLinkAbsolute(articleElement.select(".aufmacherbild img").first()?.attr("src") ?: "", url)
             val publishingDate = extractPublishingDate(header)
+            val reference = Reference(url, title, publishingDate)
 
-            val content = extractContent(article, url)
-
-            return Article(url, title, content, abstract, publishingDate, previewImageUrl)
+            return EntryExtractionResult(entry, reference)
         }
 
         return null
