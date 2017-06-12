@@ -10,7 +10,7 @@ import net.dankito.service.eventbus.IEventBus
 
 abstract class EntityServiceBase<T : BaseEntity>(dataManager: DataManager, val eventBus: IEventBus) {
 
-    protected val entityManager = dataManager.entityManager
+    val entityManager = dataManager.entityManager
 
 
     fun getAllAsync(callback: (List<T>) -> Unit) {
@@ -44,7 +44,7 @@ abstract class EntityServiceBase<T : BaseEntity>(dataManager: DataManager, val e
 
 
     private fun callEntitiesUpdatedListeners(entity: T, changeType: EntityChangeType) {
-        eventBus.postAsync(createEntityChangedMessage(entity, changeType))
+        eventBus.post(createEntityChangedMessage(entity, changeType)) // has to be called synchronized so that LuceneSearchEngine can update its index before any other class  accesses updated index
 
         eventBus.postAsync(EntitiesOfTypeChanged(getEntityClass()))
     }

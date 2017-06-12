@@ -94,7 +94,7 @@ class EntryIndexWriterAndSearcher(entryService: EntryService) : IndexWriterAndSe
     override fun createEntityChangedListener(): Any {
         return object {
 
-            @Handler
+            @Handler(priority = Int.MAX_VALUE)
             fun entityChanged(entryChanged: EntryChanged) {
                 handleEntityChange(entryChanged)
             }
