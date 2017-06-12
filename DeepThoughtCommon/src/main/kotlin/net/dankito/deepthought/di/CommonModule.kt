@@ -6,6 +6,7 @@ import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.OkHttpWebClient
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
+import net.dankito.deepthought.service.data.DataManager
 import net.dankito.faviconextractor.FaviconComparator
 import net.dankito.faviconextractor.FaviconExtractor
 import net.dankito.feedaddressextractor.FeedAddressExtractor
@@ -14,6 +15,9 @@ import net.dankito.newsreader.feed.IFeedReader
 import net.dankito.newsreader.feed.RomeFeedReader
 import net.dankito.serializer.ISerializer
 import net.dankito.serializer.JacksonJsonSerializer
+import net.dankito.service.data.EntryService
+import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.LuceneSearchEngine
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ImageCache
 import net.dankito.utils.ThreadPool
@@ -47,6 +51,13 @@ class CommonModule {
     @Singleton
     fun provideImageCache(webClient: IWebClient, serializer: ISerializer, fileStorageService: IFileStorageService) : ImageCache {
         return ImageCache(webClient,serializer, fileStorageService)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideSearchEngine(dataManager: DataManager, threadPool: IThreadPool, entryService: EntryService) : ISearchEngine {
+        return LuceneSearchEngine(dataManager, threadPool, entryService)
     }
 
 
