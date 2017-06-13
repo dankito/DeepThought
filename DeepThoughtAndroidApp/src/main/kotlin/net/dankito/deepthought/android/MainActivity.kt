@@ -12,10 +12,10 @@ import kotlinx.android.synthetic.main.content_main.*
 import net.dankito.deepthought.android.adapter.EntryAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
-import net.dankito.deepthought.android.routing.Router
 import net.dankito.deepthought.android.service.ui.BaseActivity
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.MainViewPresenter
 import net.dankito.deepthought.ui.view.IMainView
 import net.dankito.service.search.ISearchEngine
@@ -30,7 +30,7 @@ class MainActivity : BaseActivity(), IMainView, NavigationView.OnNavigationItemS
     protected lateinit var searchEngine: ISearchEngine
 
     @Inject
-    protected lateinit var router: Router
+    protected lateinit var router: IRouter
 
     private val presenter: MainViewPresenter
 

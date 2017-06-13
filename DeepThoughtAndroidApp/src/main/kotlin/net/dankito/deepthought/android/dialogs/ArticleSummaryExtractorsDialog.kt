@@ -5,17 +5,17 @@ import android.support.v7.app.AppCompatActivity
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorsAdapter
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.routing.Router
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.news.summary.config.ConfigChangedListener
+import net.dankito.deepthought.ui.IRouter
 import javax.inject.Inject
 
 
 class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
 
     @Inject
-    protected lateinit var router: Router
+    protected lateinit var router: IRouter
 
     @Inject
     protected lateinit var summaryExtractors: ArticleSummaryExtractorConfigManager

@@ -13,10 +13,10 @@ import kotlinx.android.synthetic.main.activity_article_summary.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ArticleSummaryAdapter
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.routing.Router
 import net.dankito.deepthought.android.service.ui.BaseActivity
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
+import net.dankito.deepthought.ui.IRouter
 import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
@@ -50,7 +50,7 @@ class ArticleSummaryActivity : BaseActivity() {
     protected lateinit var imageCache: ImageCache
 
     @Inject
-    protected lateinit var router: Router
+    protected lateinit var router: IRouter
 
 
     private var extractorConfig: ArticleSummaryExtractorConfig? = null
