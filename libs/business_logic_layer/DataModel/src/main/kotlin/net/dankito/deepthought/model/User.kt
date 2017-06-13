@@ -77,7 +77,7 @@ data class User(
             if (usersDefaultGroup != null) {
                 usersDefaultGroup.owner = this
 
-                if(groups.contains(usersDefaultGroup) === false) {
+                if(groups.contains(usersDefaultGroup) == false) {
                     addGroup(usersDefaultGroup)
                 }
             }
@@ -90,7 +90,7 @@ data class User(
 
 
     fun addDeepThought(deepThought: DeepThought): Boolean {
-        if (this.deepThoughts.contains(deepThought) === false) {
+        if (this.deepThoughts.contains(deepThought) == false) {
             if (this.deepThoughts.add(deepThought)) {
                 deepThought.deepThoughtOwner = this
 
@@ -102,7 +102,7 @@ data class User(
     }
 
     fun removeDeepThought(deepThought: DeepThought): Boolean {
-        if (this.deepThoughts.contains(deepThought) === true) {
+        if (this.deepThoughts.contains(deepThought) == true) {
             if (this.deepThoughts.remove(deepThought)) {
                 deepThought.deepThoughtOwner = null
 
@@ -152,7 +152,7 @@ data class User(
     }
 
     fun addGroup(group: UsersGroup): Boolean {
-        if (groups.contains(group) === false) {
+        if (groups.contains(group) == false) {
             if (groups.add(group)) {
                 group.addUser(this)
 
@@ -164,7 +164,7 @@ data class User(
     }
 
     fun removeGroup(group: UsersGroup): Boolean {
-        if (groups.contains(group) === true) {
+        if (groups.contains(group) == true) {
             if (groups.remove(group)) {
                 group.removeUser(this)
 
