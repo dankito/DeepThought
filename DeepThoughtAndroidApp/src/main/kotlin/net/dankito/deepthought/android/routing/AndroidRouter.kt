@@ -13,7 +13,7 @@ import net.dankito.newsreader.model.EntryExtractionResult
 import net.dankito.serializer.ISerializer
 
 
-class Router(private val context: Context, private val activityTracker: CurrentActivityTracker, private val serializer: ISerializer) : IRouter {
+class AndroidRouter(private val context: Context, private val activityTracker: CurrentActivityTracker, private val serializer: ISerializer) : IRouter {
 
 
     override fun showAddArticleSummaryExtractorView() {
