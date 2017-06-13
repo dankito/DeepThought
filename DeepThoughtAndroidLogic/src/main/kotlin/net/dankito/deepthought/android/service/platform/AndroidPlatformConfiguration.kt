@@ -15,7 +15,7 @@ class AndroidPlatformConfiguration(val context: Context) : IPlatformConfiguratio
 
     override fun getDeviceName(): String? {
         var manufacturer = Build.MANUFACTURER
-        if (manufacturer.length > 0 && Character.isLowerCase(manufacturer[0])) {
+        if (manufacturer.isNotEmpty() && Character.isLowerCase(manufacturer[0])) {
             manufacturer = Character.toUpperCase(manufacturer[0]) + manufacturer.substring(1)
         }
 
@@ -36,10 +36,10 @@ class AndroidPlatformConfiguration(val context: Context) : IPlatformConfiguratio
 
 
     override fun getDefaultDataFolder(): File {
-        var dataFolderFile = context.getDir("data", Context.MODE_PRIVATE)
+        val dataFolderFile = context.getDir("data", Context.MODE_PRIVATE)
 
-        if (dataFolderFile.exists() === false) {
-            dataFolderFile!!.mkdirs()
+        if (dataFolderFile.exists() == false) {
+            dataFolderFile.mkdirs()
         }
 
         return dataFolderFile
