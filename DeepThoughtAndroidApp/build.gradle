@@ -33,6 +33,13 @@ android {
         main.java.srcDirs += [ 'src/main/kotlin', 'src/main/kapt']
     }
 
+    dexOptions {
+        maxProcessCount 4 // this is the default value
+        javaMaxHeapSize "3g"
+
+        preDexLibraries = true
+    }
+
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/NOTICE'
