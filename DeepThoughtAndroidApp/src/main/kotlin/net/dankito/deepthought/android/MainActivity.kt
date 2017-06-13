@@ -5,7 +5,6 @@ import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
@@ -14,6 +13,7 @@ import net.dankito.deepthought.android.adapter.EntryAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
 import net.dankito.deepthought.android.routing.Router
+import net.dankito.deepthought.android.service.ui.BaseActivity
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.presenter.MainViewPresenter
@@ -21,7 +21,7 @@ import net.dankito.deepthought.ui.view.IMainView
 import net.dankito.service.search.ISearchEngine
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), IMainView, NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : BaseActivity(), IMainView, NavigationView.OnNavigationItemSelectedListener {
 
     @Inject
     protected lateinit var dataManager: DataManager

@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
@@ -15,6 +14,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ArticleSummaryAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.routing.Router
+import net.dankito.deepthought.android.service.ui.BaseActivity
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.newsreader.article.ArticleExtractors
@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory
 import java.io.File
 import javax.inject.Inject
 
-class ArticleSummaryActivity : AppCompatActivity() {
+class ArticleSummaryActivity : BaseActivity() {
 
     companion object {
         const val EXTRACTOR_URL_INTENT_EXTRA_NAME = "EXTRACTOR_URL"

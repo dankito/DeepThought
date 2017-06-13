@@ -1,12 +1,12 @@
 package net.dankito.deepthought.android.activities
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_view_entry.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.android.service.ui.BaseActivity
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
 import net.dankito.newsreader.model.EntryExtractionResult
@@ -16,7 +16,7 @@ import net.dankito.service.data.ReferenceService
 import javax.inject.Inject
 
 
-class ViewEntryActivity : AppCompatActivity() {
+class ViewEntryActivity : BaseActivity() {
 
     companion object {
         const val ENTRY_INTENT_EXTRA_NAME = "ENTRY"
