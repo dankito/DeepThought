@@ -36,3 +36,7 @@ allprojects {
         mavenCentral()
     }
 }
+
+subprojects {
+    task allDeps(type: DependencyReportTask) {}
+}
