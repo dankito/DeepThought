@@ -16,15 +16,12 @@ import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
 import net.dankito.deepthought.android.routing.Router
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.service.data.DataManager
-import net.dankito.service.data.messages.EntitiesOfTypeChanged
-import net.dankito.service.eventbus.IEventBus
+import net.dankito.deepthought.ui.presenter.MainViewPresenter
+import net.dankito.deepthought.ui.view.IMainView
 import net.dankito.service.search.ISearchEngine
-import net.dankito.service.search.specific.EntriesSearch
-import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
-import kotlin.concurrent.thread
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), IMainView, NavigationView.OnNavigationItemSelectedListener {
 
     @Inject
     protected lateinit var dataManager: DataManager
@@ -35,13 +32,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     @Inject
     protected lateinit var router: Router
 
-    @Inject
-    protected lateinit var eventBus: IEventBus
-
-    private val eventBusListener = EventBusListener()
-
+    private val presenter: MainViewPresenter
 
     private val entryAdapter = EntryAdapter()
+
+
+    init {
+        AppComponent.component.inject(this)
+
+        presenter = MainViewPresenter(this, router, dataManager, searchEngine)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,11 +49,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         setupUI()
 
-        setupDataAsync()
+        presenter.setupDataAsync()
     }
 
     override fun onDestroy() {
-        eventBus.unregister(eventBusListener)
+        presenter.onDestroy()
 
         super.onDestroy()
     }
@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
 
         val fab = findViewById(R.id.fab) as FloatingActionButton
-        fab.setOnClickListener { view -> floatingActionButtonClicked() }
+        fab.setOnClickListener { floatingActionButtonClicked() }
 
 //        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
 //        val toggle = ActionBarDrawerToggle(
@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navigationView.setNavigationItemSelectedListener(this)
 
         lstEntries.adapter = entryAdapter
-        lstEntries.setOnItemClickListener { _, _, position, _ -> clickedOnEntry(entryAdapter.getItem(position)) }
+        lstEntries.setOnItemClickListener { _, _, position, _ -> presenter.clickedOnEntry(entryAdapter.getItem(position)) }
     }
 
     private fun floatingActionButtonClicked() {
@@ -139,43 +139,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-    private fun clickedOnEntry(entry: Entry) {
-        router.showEntryView(entry)
-    }
+    /*          IMainView implementation            */
 
-
-    private fun setupDataAsync() {
-        thread {
-            AppComponent.component.inject(this)
-
-            eventBus.register(eventBusListener)
-
-            searchEngine.addInitializationListener {
-                searchEngineInitialized()
-            }
+    override fun showEntries(entries: List<Entry>) {
+        runOnUiThread {
+            entryAdapter.setItems(entries)
         }
-    }
-
-    private fun searchEngineInitialized() {
-        retrieveAndShowEntries()
-    }
-
-    private fun retrieveAndShowEntries() {
-        searchEngine.searchEntries(EntriesSearch { result ->
-            runOnUiThread {
-                entryAdapter.setItems(result)
-            }
-        })
-    }
-
-
-    inner class EventBusListener {
-
-        @Handler()
-        fun entriesChanged(entitiesOfTypeChanged: EntitiesOfTypeChanged) {
-            retrieveAndShowEntries()
-        }
-
     }
 
 }
