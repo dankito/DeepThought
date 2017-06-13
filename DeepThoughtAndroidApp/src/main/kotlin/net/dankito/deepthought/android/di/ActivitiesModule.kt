@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import net.dankito.deepthought.android.DeepThoughtApplication
 import net.dankito.deepthought.android.routing.Router
+import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
 import net.dankito.serializer.ISerializer
 import javax.inject.Singleton
 
@@ -16,6 +17,13 @@ class ActivitiesModule(private val application: DeepThoughtApplication) {
     @Singleton
     fun provideApplicationContext() : Context {
         return application
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideCurrentActivityTracker() : CurrentActivityTracker {
+        return CurrentActivityTracker()
     }
 
 
