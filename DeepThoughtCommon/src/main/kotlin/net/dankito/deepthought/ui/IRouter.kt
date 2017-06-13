@@ -15,4 +15,7 @@ interface IRouter {
 
     fun showEntryView(extractionResult: EntryExtractionResult)
 
+
+    fun returnToPreviousView()
+
 }

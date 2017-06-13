@@ -52,4 +52,9 @@ class AndroidRouter(private val context: Context, private val activityTracker: C
         context.startActivity(viewArticleIntent)
     }
 
+
+    fun returnToPreviousView() {
+        activityTracker.currentActivity?.onBackPressed()
+    }
+
 }
