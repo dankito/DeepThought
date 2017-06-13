@@ -2,10 +2,10 @@ package net.dankito.deepthought.android.routing
 
 import android.content.Context
 import android.content.Intent
-import android.support.v4.app.FragmentManager
 import net.dankito.deepthought.android.activities.ArticleSummaryActivity
 import net.dankito.deepthought.android.activities.ViewEntryActivity
 import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
+import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.IRouter
@@ -13,13 +13,15 @@ import net.dankito.newsreader.model.EntryExtractionResult
 import net.dankito.serializer.ISerializer
 
 
-class Router(private val context: Context, private val serializer: ISerializer) : IRouter {
+class Router(private val context: Context, private val activityTracker: CurrentActivityTracker, private val serializer: ISerializer) : IRouter {
 
 
-    fun showAddArticleSummaryExtractorView(fragmentManager: FragmentManager) {
-        val addArticleSummaryExtractorDialog = AddArticleSummaryExtractorDialog()
+    fun showAddArticleSummaryExtractorView() {
+        activityTracker.currentActivity?.supportFragmentManager?.let { fragmentManager ->
+            val addArticleSummaryExtractorDialog = AddArticleSummaryExtractorDialog()
 
-        addArticleSummaryExtractorDialog.show(fragmentManager, AddArticleSummaryExtractorDialog.TAG)
+            addArticleSummaryExtractorDialog.show(fragmentManager, AddArticleSummaryExtractorDialog.TAG)
+        }
     }
 
     override fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig) {

@@ -64,7 +64,7 @@ class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
     }
 
     private fun showAddArticleSummaryExtractorView() {
-        router.showAddArticleSummaryExtractorView(activity.supportFragmentManager)
+        router.showAddArticleSummaryExtractorView()
     }
 
 }

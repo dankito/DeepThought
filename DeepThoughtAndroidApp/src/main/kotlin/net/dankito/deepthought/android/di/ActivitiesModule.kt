@@ -29,8 +29,8 @@ class ActivitiesModule(private val application: DeepThoughtApplication) {
 
     @Provides
     @Singleton
-    fun provideRouter(context: Context, serializer: ISerializer) : Router {
-        return Router(context, serializer)
+    fun provideRouter(context: Context, activityTracker: CurrentActivityTracker, serializer: ISerializer) : Router {
+        return Router(context, activityTracker, serializer)
     }
 
 }
