@@ -40,7 +40,7 @@ class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
 
         builder.setNegativeButton(android.R.string.cancel, { dialog, _ -> dialog.dismiss() })
 
-        builder.setNeutralButton(R.string.dialog_article_summary_extractors_add_extractor, { dialog, which ->
+        builder.setNeutralButton(R.string.dialog_article_summary_extractors_add_extractor, { dialog, _ ->
             showAddArticleSummaryExtractorView()
             dialog.dismiss()
         })

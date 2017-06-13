@@ -128,7 +128,7 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
             val url = URI(enteredFeedOrWebsiteUrl)
             if(url.host?.toLowerCase()?.contains("bild.de") ?: false) {
                 AlertDialog.Builder(activity).setMessage(R.string.bild_easter_egg)
-                        .setNegativeButton(android.R.string.ok, { dialog, which -> throw Exception("Du hast bild.de eingegeben") })
+                        .setNegativeButton(android.R.string.ok, { _, _ -> throw Exception("Du hast bild.de eingegeben") })
                         .create().show()
             }
         } catch(ignored: Exception) { }
@@ -137,7 +137,7 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
     private fun handleExtractFeedAddressesResult(feedOrWebsiteUrl: String, asyncResult: AsyncResult<List<FeedAddress>>) {
         if (asyncResult.result != null) {
             val feedAddresses = asyncResult.result as List<FeedAddress>
-            if (feedAddresses.size == 0) {
+            if (feedAddresses.isEmpty()) {
                 showNoFeedAddressesFoundError(feedOrWebsiteUrl)
             } else {
                 showFoundFeedAddresses(feedAddresses)
@@ -202,7 +202,7 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
     }
 
     private fun showError(error: String) {
-        var builder = AlertDialog.Builder(activity)
+        val builder = AlertDialog.Builder(activity)
 
         builder.setMessage(error)
 
