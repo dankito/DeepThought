@@ -8,7 +8,8 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.ui.BaseActivity
 import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.ui.IRouter
+import net.dankito.deepthought.ui.presenter.EntryViewPresenter
 import net.dankito.newsreader.model.EntryExtractionResult
 import net.dankito.serializer.ISerializer
 import net.dankito.service.data.EntryService
@@ -31,11 +32,16 @@ class ViewEntryActivity : BaseActivity() {
     protected lateinit var referenceService: ReferenceService
 
     @Inject
+    protected lateinit var router: IRouter
+
+    @Inject
     protected lateinit var serializer: ISerializer
 
     private var entry: Entry? = null
 
     private var entryExtractionResult: EntryExtractionResult? = null
+
+    private lateinit var presenter: EntryViewPresenter
 
 
     init {
@@ -52,6 +58,8 @@ class ViewEntryActivity : BaseActivity() {
 
         intent.getStringExtra(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)?.let { showSerializedEntryExtractionResult(it) }
         intent.getStringExtra(ENTRY_INTENT_EXTRA_NAME)?.let { showSerializedEntry(it) }
+
+        presenter = EntryViewPresenter(entry, entryExtractionResult, entryService, referenceService, router)
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
@@ -114,12 +122,12 @@ class ViewEntryActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId) {
             android.R.id.home -> {
-                returnToPreviousView()
+                presenter.returnToPreviousView()
                 return true
             }
 
             R.id.mnSaveEntry -> {
-                saveEntry()
+                presenter.saveEntry()
                 return true
             }
         }
@@ -146,33 +154,6 @@ class ViewEntryActivity : BaseActivity() {
         this.entryExtractionResult = serializer.deserializeObject(serializedExtractionResult, EntryExtractionResult::class.java)
 
         wbEntry.loadDataWithBaseURL(entryExtractionResult?.reference?.onlineAddress, entryExtractionResult?.entry?.content, "text/html; charset=UTF-8", null, null)
-    }
-
-    private fun saveEntry() {
-        entryExtractionResult?.let { entryExtractionResult ->
-            val entry = entryExtractionResult.entry
-
-            entry.reference = createAndPersistReference(entryExtractionResult)
-
-            entryService.persist(entry)
-        }
-
-        returnToPreviousView()
-    }
-
-    private fun createAndPersistReference(entryExtractionResult: EntryExtractionResult): Reference? {
-        val reference = entryExtractionResult.reference
-
-        if(reference != null) {
-            referenceService.persist(reference)
-        }
-
-        return reference
-    }
-
-
-    private fun returnToPreviousView() {
-        onBackPressed()
     }
 
 }
