@@ -8,11 +8,12 @@ import net.dankito.deepthought.android.activities.ViewEntryActivity
 import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
+import net.dankito.deepthought.ui.IRouter
 import net.dankito.newsreader.model.EntryExtractionResult
 import net.dankito.serializer.ISerializer
 
 
-class Router(private val context: Context, private val serializer: ISerializer) {
+class Router(private val context: Context, private val serializer: ISerializer) : IRouter {
 
 
     fun showAddArticleSummaryExtractorView(fragmentManager: FragmentManager) {
@@ -21,7 +22,7 @@ class Router(private val context: Context, private val serializer: ISerializer) 
         addArticleSummaryExtractorDialog.show(fragmentManager, AddArticleSummaryExtractorDialog.TAG)
     }
 
-    fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig) {
+    override fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig) {
         val articleSummaryActivityIntent = Intent(context, ArticleSummaryActivity::class.java)
 
         articleSummaryActivityIntent.putExtra(ArticleSummaryActivity.EXTRACTOR_URL_INTENT_EXTRA_NAME, extractor.url)
@@ -29,13 +30,13 @@ class Router(private val context: Context, private val serializer: ISerializer) 
         context.startActivity(articleSummaryActivityIntent)
     }
 
-    fun showEntryView(entry: Entry) {
+    override fun showEntryView(entry: Entry) {
         val serializedEntry = serializer.serializeObject(entry)
 
         showEntryView(ViewEntryActivity.ENTRY_INTENT_EXTRA_NAME, serializedEntry)
     }
 
-    fun showEntryView(extractionResult: EntryExtractionResult) {
+    override fun showEntryView(extractionResult: EntryExtractionResult) {
         val serializedExtractionResult = serializer.serializeObject(extractionResult)
 
         showEntryView(ViewEntryActivity.ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, serializedExtractionResult)
