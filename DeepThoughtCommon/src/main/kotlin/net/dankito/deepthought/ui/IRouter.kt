@@ -7,6 +7,8 @@ import net.dankito.newsreader.model.EntryExtractionResult
 
 interface IRouter {
 
+    fun showAddArticleSummaryExtractorView()
+
     fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig)
 
     fun showEntryView(entry: Entry)

@@ -16,7 +16,7 @@ import net.dankito.serializer.ISerializer
 class Router(private val context: Context, private val activityTracker: CurrentActivityTracker, private val serializer: ISerializer) : IRouter {
 
 
-    fun showAddArticleSummaryExtractorView() {
+    override fun showAddArticleSummaryExtractorView() {
         activityTracker.currentActivity?.supportFragmentManager?.let { fragmentManager ->
             val addArticleSummaryExtractorDialog = AddArticleSummaryExtractorDialog()
 
