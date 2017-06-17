@@ -50,25 +50,28 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
-    implementation project(':DeepThoughtAndroidLogic')
+    compile project(':DeepThoughtAndroidLogic')
 
-    implementation "com.squareup.picasso:picasso:$picassoVersion"
+    compile "com.squareup.picasso:picasso:$picassoVersion"
 
-    implementation "org.slf4j:slf4j-android:$slf4jVersion"
+    compile "org.slf4j:slf4j-android:$slf4jVersion"
 
-    implementation "com.android.support:appcompat-v7:$androidAppCompatVersion"
-    implementation "com.android.support:design:$androidAppCompatVersion"
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support:multidex:1.0.1'
 
-    testImplementation "junit:junit:$junitVersion"
+    compile "com.android.support:appcompat-v7:$androidAppCompatVersion"
+    compile "com.android.support:design:$androidAppCompatVersion"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    testCompile "junit:junit:$junitVersion"
 
     kaptTest "com.google.dagger:dagger-compiler:$daggerVersion"
+//    kapt project(':JPAAnnotationProcessor')
 
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }
