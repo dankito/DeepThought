@@ -14,8 +14,12 @@ android {
         applicationId "net.dankito.deepthought"
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargetSdkVersion
+
         versionCode versionCode
         versionName versionName
+
+        multiDexEnabled true
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
