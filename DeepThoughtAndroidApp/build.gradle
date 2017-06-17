@@ -7,15 +7,15 @@ apply plugin: 'kotlin-kapt'
 
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion androidCompileSdkVersion
+    buildToolsVersion androidBuildToolsVersion
 
     defaultConfig {
         applicationId "net.dankito.deepthought"
-        minSdkVersion 15
-        targetSdkVersion 25
-        versionCode 1
-        versionName "0.2"
+        minSdkVersion androidMinSdkVersion
+        targetSdkVersion androidTargetSdkVersion
+        versionCode versionCode
+        versionName versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -60,8 +60,8 @@ dependencies {
 
     implementation "org.slf4j:slf4j-android:$slf4jVersion"
 
-    implementation 'com.android.support:appcompat-v7:25.3.1'
-    implementation 'com.android.support:design:25.3.1'
+    implementation "com.android.support:appcompat-v7:$androidAppCompatVersion"
+    implementation "com.android.support:design:$androidAppCompatVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
     testImplementation "junit:junit:$junitVersion"

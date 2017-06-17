@@ -1,6 +1,20 @@
 ext {
 
+    versionName = '0.2'
+
+    versionCode = 1
+
     kotlinVersion = '1.1.2-4'
+
+    androidCompileSdkVersion = 25
+
+    androidBuildToolsVersion = '25.0.2'
+
+    androidMinSdkVersion = 15
+
+    androidTargetSdkVersion = 25
+
+    androidAppCompatVersion = '25.3.1'
 
     daggerVersion = '2.11'
 
