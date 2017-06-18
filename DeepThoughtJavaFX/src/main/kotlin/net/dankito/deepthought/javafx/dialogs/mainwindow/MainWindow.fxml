@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.input.*?>
+<?import org.controlsfx.control.*?>
+<?import org.controlsfx.control.textfield.*?>
+<?import javafx.scene.web.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+
+<BorderPane id="AnchorPane" prefHeight="620.0" prefWidth="1150.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+   </center>
+   <bottom>
+      <GridPane fx:id="statusBar" alignment="CENTER_LEFT" maxHeight="24.0" minHeight="24.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Label fx:id="statusLabelCountEntries" prefWidth="100.0" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.valignment="CENTER" />
+            <Label fx:id="statusLabel" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" />
+         </children>
+      </GridPane>
+   </bottom>
+   <center>
+      <SplitPane fx:id="contentPane" BorderPane.alignment="CENTER">
+        <items>
+            <TabPane fx:id="tbpnOverview" prefWidth="300.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab fx:id="tabTags" text="%tags" />
+              </tabs>
+            </TabPane>
+        </items>
+      </SplitPane>
+   </center>
+   <top>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <GridPane fx:id="grdpnMainMenu">
+              <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints fillWidth="false" hgrow="NEVER" maxWidth="60.0" minWidth="0.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <MenuButton fx:id="btnOnlineArticleExtractors" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" maxHeight="29.0" mnemonicParsing="false" prefWidth="60.0" style="-fx-border-image-insets: 0; -fx-border-insets: 0; -fx-padding: 0;" visible="false" GridPane.columnIndex="1">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Action 1" />
+                      <MenuItem mnemonicParsing="false" text="Action 2" />
+                    </items>
+                  </MenuButton>
+                  <MenuBar fx:id="mainMenu" GridPane.hgrow="ALWAYS">
+                    <menus>
+                      <Menu fx:id="mnitmMainMenuViewFile" mnemonicParsing="false" text="%file">
+                        <items>
+                              <Menu fx:id="mnitmFileClipboard" disable="true" mnemonicParsing="false" text="%clipboard" />
+                              <SeparatorMenuItem mnemonicParsing="false" />
+                          <MenuItem fx:id="mnitmFileQuit" mnemonicParsing="false" onAction="#handleMenuItemFileCloseAction" text="%quit">
+                                 <accelerator>
+                                    <KeyCodeCombination alt="UP" code="Q" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+                                 </accelerator>
+                              </MenuItem>
+                        </items>
+                      </Menu>
+                      <Menu mnemonicParsing="false" text="%edit" visible="false" />
+                        <Menu fx:id="mnitmMainMenuView" mnemonicParsing="false" text="%view">
+                          <items>
+                              <SeparatorMenuItem mnemonicParsing="false" />
+                              <CheckMenuItem fx:id="chkmnitmViewShowQuickEditEntryPane" mnemonicParsing="false" text="%show.quick.edit.entry.pane" />
+                          </items>
+                        </Menu>
+                        <Menu fx:id="mnitmMainMenuTools" mnemonicParsing="false" text="%tools">
+                           <items>
+                              <Menu fx:id="mnitmToolsLanguage" mnemonicParsing="false" text="%language">
+                                <items>
+                                    <CheckMenuItem mnemonicParsing="false" text="%application.language.english" />
+                                    <CheckMenuItem mnemonicParsing="false" text="%application.language.german" />
+                                </items>
+                              </Menu>
+                              <SeparatorMenuItem mnemonicParsing="false" />
+                            <MenuItem fx:id="mnitmToolsBackups" disable="true" mnemonicParsing="false" onAction="#handleMenuItemToolsBackupsAction" text="%backups...">
+                                 <accelerator>
+                                    <KeyCodeCombination alt="UP" code="B" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+                                 </accelerator>
+                              </MenuItem>
+                           </items>
+                        </Menu>
+                        <Menu fx:id="mnitmMainMenuWindow" disable="true" mnemonicParsing="false" onShowing="#handleMainMenuWindowShowing" text="%window" />
+                      <Menu mnemonicParsing="false" text="%help">
+                        <items>
+                          <MenuItem disable="true" mnemonicParsing="false" text="\%about" />
+                        </items>
+                      </Menu>
+                    </menus>
+                  </MenuBar>
+               </children>
+            </GridPane>
+         </children>
+      </VBox>
+   </top>
+</BorderPane>
