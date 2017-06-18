@@ -6,7 +6,7 @@ targetCompatibility = "1.8"
 
 sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
-    main.test.srcDirs += 'src/test/kotlin'
+    test.java.srcDirs += 'src/test/kotlin'
 }
 
 
