@@ -14,6 +14,7 @@ import net.dankito.newsreader.summary.ImplementedArticleSummaryExtractors
 import net.dankito.serializer.ISerializer
 import net.dankito.utils.IThreadPool
 import org.slf4j.LoggerFactory
+import java.io.FileNotFoundException
 import java.util.*
 import javax.inject.Inject
 
@@ -65,7 +66,9 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
                 }
             }
         } catch(e: Exception) {
-            log.error("Could not deserialize ArticleSummaryExtractorConfigs", e)
+            if(e is FileNotFoundException == false) { // on first start-up file does not exist -> don't log error in this case
+                log.error("Could not deserialize ArticleSummaryExtractorConfigs", e)
+            }
         }
     }
 

@@ -8,6 +8,7 @@ import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.serializer.ISerializer
 import org.slf4j.LoggerFactory
 import java.io.File
+import java.io.FileNotFoundException
 import java.net.URI
 
 
@@ -35,7 +36,9 @@ class ImageCache(private val webClient: IWebClient, private val serializer: ISer
                         HashMap<String, File>
             }
         } catch(e: Exception) {
-            log.error("Could not deserialize ImageCache", e)
+            if(e is FileNotFoundException == false) { // on first start-up file does not exist -> don't log error in this case
+                log.error("Could not deserialize ImageCache", e)
+            }
         }
     }
 
