@@ -30,6 +30,10 @@ abstract class EntityServiceBase<T : BaseEntity>(dataManager: DataManager, val e
         callEntitiesUpdatedListeners(entity, EntityChangeType.Created)
     }
 
+    fun retrieve(id: String): T? {
+        return entityManager.getEntityById(getEntityClass(), id)
+    }
+
     fun update(entity: T) {
         entityManager.updateEntity(entity as Any)
 
