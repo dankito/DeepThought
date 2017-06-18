@@ -2,6 +2,8 @@ apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'application'
 
+apply plugin: 'kotlin-kapt'
+
 
 mainClassName = "net.dankito.deepthought.javafx.DeepThoughtJavaFXApplicationKt"
 
@@ -13,8 +15,8 @@ targetCompatibility = "1.8"
 
 
 sourceSets {
-    main.java.srcDirs += 'src/main/kotlin'
-    test.java.srcDirs += 'src/test/kotlin/'
+    main.java.srcDirs += [ 'src/main/kotlin', 'build/generated/source/kapt/main']
+    test.java.srcDirs += [ 'src/test/kotlin', 'build/generated/source/kapt/test']
 
     main {
         resources {
@@ -27,6 +29,8 @@ sourceSets {
 
 dependencies {
     compile project(':DeepThoughtJavaLogic')
+
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
     compile("no.tornado:tornadofx:$tornadoFXVersion", {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
