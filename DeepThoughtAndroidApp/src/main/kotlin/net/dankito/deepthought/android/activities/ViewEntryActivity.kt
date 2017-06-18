@@ -5,6 +5,8 @@ import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_view_entry.*
 import net.dankito.deepthought.android.R
+import net.dankito.deepthought.android.R.id.toolbar
+import net.dankito.deepthought.android.R.id.wbEntry
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.ui.BaseActivity
 import net.dankito.deepthought.model.Entry
@@ -138,25 +140,25 @@ class ViewEntryActivity : BaseActivity() {
 
     private fun showEntryFromDatabase(entryId: String) {
         entryService.retrieve(entryId)?.let { entry ->
-            showEntry(entry)
-        }
-    }
-
-    private fun showEntry(entry: Entry) {
-        val url = entry.reference?.onlineAddress
-
-        if(url != null) {
-            wbEntry.loadDataWithBaseURL(url, entry.content, "text/html; charset=UTF-8", null, null)
-        }
-        else {
-            wbEntry.loadData(entry.content, "text/html; charset=UTF-8", null)
+            showEntry(entry, entry.reference?.onlineAddress)
         }
     }
 
     private fun showSerializedEntryExtractionResult(serializedExtractionResult: String) {
         this.entryExtractionResult = serializer.deserializeObject(serializedExtractionResult, EntryExtractionResult::class.java)
 
-        wbEntry.loadDataWithBaseURL(entryExtractionResult?.reference?.onlineAddress, entryExtractionResult?.entry?.content, "text/html; charset=UTF-8", null, null)
+        showEntry(entryExtractionResult?.entry, entryExtractionResult?.reference?.onlineAddress)
+    }
+
+    private fun showEntry(entry: Entry?, url: String?) {
+        val content = entry?.content
+
+        if(url != null) {
+            wbEntry.loadDataWithBaseURL(url, content, "text/html; charset=UTF-8", null, null)
+        }
+        else {
+            wbEntry.loadData(content, "text/html; charset=UTF-8", null)
+        }
     }
 
 }
