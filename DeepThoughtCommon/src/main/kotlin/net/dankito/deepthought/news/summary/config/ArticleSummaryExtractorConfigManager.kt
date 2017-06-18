@@ -57,7 +57,7 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, va
                 configurations = serializer.deserializeObject(fileContent, LinkedHashMap::class.java, String::class.java, ArticleSummaryExtractorConfig::class.java) as
                         LinkedHashMap<String, ArticleSummaryExtractorConfig>
 
-                configurations.forEach { _, config ->
+                configurations.forEach { (_, config) ->
                     if(config.iconUrl == null) {
                         loadIconAsync(config)
                     }
@@ -82,7 +82,7 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, va
     }
 
     private fun initAddedExtractors() {
-        configurations.forEach { _, config ->
+        configurations.forEach { (_, config) ->
             if(config.extractor == null) {
                 config.extractor = FeedArticleSummaryExtractor(config.url, createFeedReader())
             }
