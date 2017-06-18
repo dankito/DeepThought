@@ -1,6 +1,7 @@
 package net.dankito.deepthought.android.di
 
 import dagger.Component
+import net.dankito.deepthought.android.DeepThoughtApplication
 import net.dankito.deepthought.android.MainActivity
 import net.dankito.deepthought.android.activities.ArticleSummaryActivity
 import net.dankito.deepthought.android.activities.ViewEntryActivity
@@ -22,6 +23,8 @@ interface AppComponent : CommonComponent {
         lateinit var component: AppComponent
     }
 
+
+    fun inject(app: DeepThoughtApplication)
 
     fun inject(mainActivity: MainActivity)
 
