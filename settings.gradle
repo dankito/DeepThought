@@ -1,6 +1,7 @@
 include ':DeepThoughtAndroidApp'
 include ':DeepThoughtAndroidLogic'
 
+include ':DeepThoughtJavaFX'
 include ':DeepThoughtJavaLogic'
 
 include ':DeepThoughtCommon'
