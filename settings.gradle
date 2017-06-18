@@ -43,6 +43,9 @@ include ':CouchbaseLiteEntityManagerBase'
 include ':JavaCouchbaseLiteEntityManager'
 include ':AndroidCouchbaseLiteEntityManager'
 include ':couchbase-lite-jpa'
+include ':jpa-apt'
+include ':JPAAnnotationReaderAPI'
+include ':JPAAnnotationProcessor'
 include ':JpaAnnotationReader'
 
 
@@ -78,4 +81,7 @@ project(':CouchbaseLiteEntityManagerBase').projectDir = "$rootDir/libs/data_acce
 project(':JavaCouchbaseLiteEntityManager').projectDir = "$rootDir/libs/data_access_layer/database/JavaCouchbaseLiteEntityManager" as File
 project(':AndroidCouchbaseLiteEntityManager').projectDir = "$rootDir/libs/data_access_layer/database/AndroidCouchbaseLiteEntityManager" as File
 project(':couchbase-lite-jpa').projectDir = "$rootDir/libs/data_access_layer/database/couchbase-lite-jpa" as File
+project(':jpa-apt').projectDir = "$rootDir/libs/data_access_layer/database/jpa-apt" as File
+project(':JPAAnnotationReaderAPI').projectDir = "$rootDir/libs/data_access_layer/database/jpa-apt/JPAAnnotationReaderAPI" as File
+project(':JPAAnnotationProcessor').projectDir = "$rootDir/libs/data_access_layer/database/jpa-apt/JPAAnnotationProcessor" as File
 project(':JpaAnnotationReader').projectDir = "$rootDir/libs/data_access_layer/database/JpaAnnotationReader" as File

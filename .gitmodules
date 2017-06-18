@@ -4,3 +4,6 @@
 [submodule "libs/data_access_layer/database/couchbase-lite-jpa"]
 	path = libs/data_access_layer/database/couchbase-lite-jpa
 	url = https://github.com/dankito/couchbase-lite-jpa
+[submodule "libs/data_access_layer/database/jpa-apt"]
+	path = libs/data_access_layer/database/jpa-apt
+	url = https://github.com/dankito/jpa-apt
