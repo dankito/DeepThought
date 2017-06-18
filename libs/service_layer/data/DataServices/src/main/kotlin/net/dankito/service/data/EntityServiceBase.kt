@@ -14,10 +14,10 @@ abstract class EntityServiceBase<T : BaseEntity>(dataManager: DataManager, val e
 
 
     fun getAllAsync(callback: (List<T>) -> Unit) {
-        callback(getEntries())
+        callback(getAll())
     }
 
-    fun getEntries() : List<T> {
+    fun getAll() : List<T> {
         return entityManager.getAllEntitiesOfType(getEntityClass())
     }
 

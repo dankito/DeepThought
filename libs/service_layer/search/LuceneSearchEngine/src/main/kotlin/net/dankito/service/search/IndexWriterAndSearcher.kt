@@ -154,7 +154,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
 
     fun indexAllEntities() {
-        for(entity in entityService.getEntries()) {
+        for(entity in entityService.getAll()) {
             indexEntity(entity)
         }
     }
