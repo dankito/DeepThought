@@ -20,7 +20,7 @@ import javax.inject.Inject
 class ViewEntryActivity : BaseActivity() {
 
     companion object {
-        const val ENTRY_INTENT_EXTRA_NAME = "ENTRY"
+        const val ENTRY_ID_INTENT_EXTRA_NAME = "ENTRY_ID"
         const val ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ENTRY_EXTRACTION_RESULT"
     }
 
@@ -57,22 +57,22 @@ class ViewEntryActivity : BaseActivity() {
         savedInstanceState?.let { restoreState(it) }
 
         intent.getStringExtra(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)?.let { showSerializedEntryExtractionResult(it) }
-        intent.getStringExtra(ENTRY_INTENT_EXTRA_NAME)?.let { showSerializedEntry(it) }
+        intent.getStringExtra(ENTRY_ID_INTENT_EXTRA_NAME)?.let { entryId -> showEntryFromDatabase(entryId) }
 
         presenter = EntryViewPresenter(entry, entryExtractionResult, entryService, referenceService, router)
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
         savedInstanceState.getString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)?.let { showSerializedEntryExtractionResult(it) }
-        savedInstanceState.getString(ENTRY_INTENT_EXTRA_NAME)?.let { showSerializedEntry(it) }
+        savedInstanceState.getString(ENTRY_ID_INTENT_EXTRA_NAME)?.let { entryId -> showEntryFromDatabase(entryId) }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
 
         outState?.let { outState ->
-            outState.putString(ENTRY_INTENT_EXTRA_NAME, null)
-            entry?.let { outState.putString(ENTRY_INTENT_EXTRA_NAME, serializer.serializeObject(it)) }
+            outState.putString(ENTRY_ID_INTENT_EXTRA_NAME, null)
+            entry?.id?.let { entryId -> outState.putString(ENTRY_ID_INTENT_EXTRA_NAME, entryId) }
 
             outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, null)
             entryExtractionResult?.let { outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, serializer.serializeObject(it)) }
@@ -135,18 +135,29 @@ class ViewEntryActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+
+    private fun showEntryFromDatabase(entryId: String) {
+        entryService.retrieve(entryId)?.let { entry ->
+            showEntry(entry)
+        }
+    }
+
     private fun showSerializedEntry(serializedEntry: String) {
         this.entry = serializer.deserializeObject(serializedEntry, Entry::class.java)
 
         entry?.let { entry ->
-            val url = entry.reference?.onlineAddress
+            showEntry(entry)
+        }
+    }
 
-            if(url != null) {
-                wbEntry.loadDataWithBaseURL(url, entry.content, "text/html; charset=UTF-8", null, null)
-            }
-            else {
-                wbEntry.loadData(entry.content, "text/html; charset=UTF-8", null)
-            }
+    private fun showEntry(entry: Entry) {
+        val url = entry.reference?.onlineAddress
+
+        if(url != null) {
+            wbEntry.loadDataWithBaseURL(url, entry.content, "text/html; charset=UTF-8", null, null)
+        }
+        else {
+            wbEntry.loadData(entry.content, "text/html; charset=UTF-8", null)
         }
     }
 

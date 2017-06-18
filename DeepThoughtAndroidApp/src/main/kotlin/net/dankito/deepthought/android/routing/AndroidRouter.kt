@@ -34,9 +34,7 @@ class AndroidRouter(private val context: Context, private val activityTracker: C
     }
 
     override fun showEntryView(entry: Entry) {
-        val serializedEntry = serializer.serializeObject(entry)
-
-        showEntryView(ViewEntryActivity.ENTRY_INTENT_EXTRA_NAME, serializedEntry)
+        entry.id?.let { entryId -> showEntryView(ViewEntryActivity.ENTRY_ID_INTENT_EXTRA_NAME, entryId) }
     }
 
     override fun showEntryView(extractionResult: EntryExtractionResult) {
