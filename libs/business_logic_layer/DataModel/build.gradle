@@ -8,5 +8,6 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
-    compile "org.eclipse.persistence:javax.persistence:$javaxPersistenceVersion"
+    compile project(':JPAAnnotationReaderAPI')
+    kapt project(':JPAAnnotationProcessor')
 }
