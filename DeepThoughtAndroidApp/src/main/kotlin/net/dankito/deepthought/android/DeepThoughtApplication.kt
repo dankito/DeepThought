@@ -1,6 +1,6 @@
 package net.dankito.deepthought.android
 
-import android.app.Application
+import android.support.multidex.MultiDexApplication
 import net.dankito.deepthought.android.di.ActivitiesModule
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.di.DaggerAppComponent
@@ -8,7 +8,7 @@ import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.di.CommonModule
 
 
-class DeepThoughtApplication : Application() {
+class DeepThoughtApplication : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
