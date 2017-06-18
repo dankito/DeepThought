@@ -12,12 +12,13 @@ import net.dankito.newsreader.feed.RomeFeedReader
 import net.dankito.newsreader.model.FeedArticleSummary
 import net.dankito.newsreader.summary.ImplementedArticleSummaryExtractors
 import net.dankito.serializer.ISerializer
+import net.dankito.utils.IThreadPool
 import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
 
 
-class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, val fileStorageService: IFileStorageService) {
+class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, private val fileStorageService: IFileStorageService, private val threadPool: IThreadPool) {
 
     companion object {
         private const val FILE_NAME = "ArticleSummaryExtractorConfigurations.json"
@@ -122,7 +123,7 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, va
     fun addFeed(feedUrl: String, summary: FeedArticleSummary, callback: (ArticleSummaryExtractorConfig?) -> Unit) {
         val extractor = FeedArticleSummaryExtractor(feedUrl, createFeedReader())
 
-        getIconForFeed(summary) {
+        getIconForFeedAsync(summary) {
             val config = ArticleSummaryExtractorConfig(extractor, feedUrl, summary.title ?: "", it)
 
             addConfig(config)
@@ -133,6 +134,12 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, va
 
     private fun createFeedReader(): IFeedReader {
         return RomeFeedReader()
+    }
+
+    private fun getIconForFeedAsync(summary: FeedArticleSummary, callback: (iconUrl: String?) -> Unit) {
+        threadPool.runAsync {
+            getIconForFeed(summary, callback)
+        }
     }
 
     private fun getIconForFeed(summary: FeedArticleSummary, callback: (iconUrl: String?) -> Unit) {
