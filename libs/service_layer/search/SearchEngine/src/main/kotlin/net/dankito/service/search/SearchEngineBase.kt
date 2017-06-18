@@ -14,7 +14,7 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
     override fun searchEntries(search: EntriesSearch) {
         val termsToSearchFor = getTermsToSearchFor(search, " ")
 
-        threadPool.runAsync(Runnable { searchEntries(search, termsToSearchFor) })
+        threadPool.runAsync { searchEntries(search, termsToSearchFor) }
     }
 
     abstract fun searchEntries(search: EntriesSearch, termsToSearchFor: Array<String>)

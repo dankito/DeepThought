@@ -3,7 +3,7 @@ package net.dankito.utils
 
 interface IThreadPool {
 
-    fun runAsync(runnable: Runnable)
+    fun runAsync(runnable: () -> Unit)
 
     fun shutDown()
 
