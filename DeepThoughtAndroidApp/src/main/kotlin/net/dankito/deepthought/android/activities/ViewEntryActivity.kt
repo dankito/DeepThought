@@ -142,14 +142,6 @@ class ViewEntryActivity : BaseActivity() {
         }
     }
 
-    private fun showSerializedEntry(serializedEntry: String) {
-        this.entry = serializer.deserializeObject(serializedEntry, Entry::class.java)
-
-        entry?.let { entry ->
-            showEntry(entry)
-        }
-    }
-
     private fun showEntry(entry: Entry) {
         val url = entry.reference?.onlineAddress
 
