@@ -6,7 +6,7 @@ import net.dankito.deepthought.di.CommonDataModule
 import net.dankito.deepthought.di.CommonModule
 import net.dankito.deepthought.java.service.di.JavaCommonModule
 import net.dankito.deepthought.javafx.DeepThoughtJavaFXApplication
-import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindow
+import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import javax.inject.Singleton
 
 
@@ -22,6 +22,6 @@ interface AppComponent : CommonComponent {
 
     fun inject(app: DeepThoughtJavaFXApplication)
 
-    fun inject(mainWindow: MainWindow)
+    fun inject(mainWindowController: MainWindowController)
 
 }
