@@ -23,17 +23,24 @@ class BitmapCache(private val imageCache: ImageCache) {
             imageCache.getCachedForRetrieveIconForUrlAsync(url) { result ->
                 result.result?.let {
                     val bitmap = createAndCacheBitmap(url, it)
-                    callback(AsyncResult(true, result =  bitmap))
+                    if(bitmap != null) {
+                        callback(AsyncResult(true, result = bitmap))
+                    }
+                    else {
+                        callback(AsyncResult(false, Exception("Could not retrieve bitmap from url $it")))
+                    }
                 }
                 result.error?.let { callback(AsyncResult(false, it)) }
             }
         }
     }
 
-    private fun createAndCacheBitmap(url: String, file: File): Bitmap {
+    private fun createAndCacheBitmap(url: String, file: File): Bitmap? {
         val bitmap = BitmapFactory.decodeFile(file.path)
 
-        bitmapsCache.put(url, bitmap)
+        if(bitmap != null) {
+            bitmapsCache.put(url, bitmap)
+        }
 
         return bitmap
     }
