@@ -26,6 +26,7 @@ class AndroidRouter(private val context: Context, private val activityTracker: C
 
     override fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig) {
         val articleSummaryActivityIntent = Intent(context, ArticleSummaryActivity::class.java)
+        articleSummaryActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
         articleSummaryActivityIntent.putExtra(ArticleSummaryActivity.EXTRACTOR_URL_INTENT_EXTRA_NAME, extractor.url)
 
@@ -46,6 +47,7 @@ class AndroidRouter(private val context: Context, private val activityTracker: C
 
     private fun showEntryView(intentExtraName: String, intentExtraValue: String) {
         val viewArticleIntent = Intent(context, ViewEntryActivity::class.java)
+        viewArticleIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
         viewArticleIntent.putExtra(intentExtraName, intentExtraValue)
 
