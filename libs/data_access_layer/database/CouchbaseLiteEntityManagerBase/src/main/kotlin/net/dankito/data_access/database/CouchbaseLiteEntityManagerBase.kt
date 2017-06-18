@@ -1,9 +1,8 @@
 package net.dankito.data_access.database
 
 import com.couchbase.lite.*
-import net.dankito.jpa.annotationreader.JpaAnnotationReader
-import net.dankito.jpa.annotationreader.JpaAnnotationReaderResult
-import net.dankito.jpa.annotationreader.config.EntityConfig
+import net.dankito.jpa.apt.config.EntityConfig
+import net.dankito.jpa.apt.config.JPAEntityConfiguration
 import net.dankito.jpa.cache.DaoCache
 import net.dankito.jpa.cache.ObjectCache
 import net.dankito.jpa.couchbaselite.Dao
@@ -40,10 +39,20 @@ abstract class CouchbaseLiteEntityManagerBase(protected var context: Context) : 
 
         createDatabase(configuration)
 
-        val jpaAnnotationReader = JpaAnnotationReader()
-        val result = jpaAnnotationReader.readConfiguration(*configuration.entityClasses.toTypedArray())
+        val result = loadGeneratedModel()
 
         createDaos(result)
+    }
+
+    private fun loadGeneratedModel(): JPAEntityConfiguration {
+        val generatedConfigsClass = Class.forName("net.dankito.jpa.apt.generated.GeneratedEntityConfigs")
+        val generatedConfigs = generatedConfigsClass.newInstance()
+
+        val getGeneratedEntityConfigsMethod = generatedConfigsClass.getDeclaredMethod("getGeneratedEntityConfigs")
+
+        val generatedEntityConfigs = getGeneratedEntityConfigsMethod.invoke(generatedConfigs) as List<EntityConfig>
+
+        return JPAEntityConfiguration(generatedEntityConfigs)
     }
 
     override fun close() {
@@ -64,8 +73,8 @@ abstract class CouchbaseLiteEntityManagerBase(protected var context: Context) : 
         database = manager.openDatabase(configuration.databaseName, options)
     }
 
-    protected fun createDaos(result: JpaAnnotationReaderResult) {
-        for (entityConfig in result.readEntities) {
+    protected fun createDaos(result: JPAEntityConfiguration) {
+        for (entityConfig in result.entities) {
             val entityDao = createDaoForEntity(entityConfig)
 
             daoCache.addDao(entityConfig.entityClass, entityDao)
@@ -73,7 +82,7 @@ abstract class CouchbaseLiteEntityManagerBase(protected var context: Context) : 
         }
     }
 
-    protected fun createDaoForEntity(entityConfig: EntityConfig<*, *>): Dao {
+    protected fun createDaoForEntity(entityConfig: EntityConfig): Dao {
         return Dao(database, entityConfig, objectCache, daoCache)
     }
 
