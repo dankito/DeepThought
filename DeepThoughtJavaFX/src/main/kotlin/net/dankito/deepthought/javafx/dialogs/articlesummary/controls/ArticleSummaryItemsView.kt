@@ -17,28 +17,25 @@ class ArticleSummaryItemsView(private val controller: ArticleSummaryController) 
         prefHeight = 400.0
 
         cellFormat {
-            graphic = cache {
+            graphic = hbox {
+                imageview(it.previewImageUrl) {
+                    isPreserveRatio = true
+                    fitHeight = 100.0
+                    fitWidth = 120.0
+                }
 
-                hbox {
-                    imageview(it.previewImageUrl) {
-                        isPreserveRatio = true
-                        fitHeight = 100.0
-                        fitWidth = 120.0
+                vbox {
+                    hboxConstraints {
+                        hgrow = Priority.ALWAYS
+                        marginLeftRight(6.0)
                     }
 
-                    vbox {
-                        hboxConstraints {
-                            hgrow = Priority.ALWAYS
-                            marginLeftRight(6.0)
-                        }
+                    label(it.title)
 
-                        label(it.title)
+                    label(it.summary) {
+                        vgrow = Priority.ALWAYS
 
-                        label(it.summary) {
-                            vgrow = Priority.ALWAYS
-
-                            isWrapText = true
-                        }
+                        isWrapText = true
                     }
                 }
             }
