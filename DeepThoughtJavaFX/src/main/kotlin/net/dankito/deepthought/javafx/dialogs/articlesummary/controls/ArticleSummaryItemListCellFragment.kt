@@ -1,7 +1,13 @@
 package net.dankito.deepthought.javafx.dialogs.articlesummary.controls
 
+import javafx.geometry.HPos
+import javafx.geometry.Pos
+import javafx.geometry.VPos
 import javafx.scene.layout.Priority
+import javafx.scene.layout.Region
+import javafx.scene.paint.Color
 import net.dankito.deepthought.javafx.dialogs.articlesummary.model.ArticleSummaryItemModel
+import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.newsreader.model.ArticleSummaryItem
 import tornadofx.*
 
@@ -10,9 +16,23 @@ class ArticleSummaryItemListCellFragment : ListCellFragment<ArticleSummaryItem>(
 
     val summaryItem = ArticleSummaryItemModel().bindTo(this)
 
+
     override val root = hbox {
         cellProperty.addListener { _, _, newValue -> // so that the graphic always has cell's width
-            newValue?.let { prefWidthProperty().bind(it.widthProperty()) }
+            newValue?.let { prefWidthProperty().bind(it.widthProperty().subtract(16)) }
+        }
+
+        alignment = Pos.CENTER
+        minHeight = 100.0
+        prefHeight = 100.0
+
+        checkbox {
+            prefWidth = 30.0
+            action {  }
+
+            hboxConstraints {
+                alignment = Pos.CENTER
+            }
         }
 
         imageview(summaryItem.previewImageUrl) {
@@ -22,12 +42,23 @@ class ArticleSummaryItemListCellFragment : ListCellFragment<ArticleSummaryItem>(
         }
 
         vbox {
+            useMaxHeight = true
+            prefHeight = Region.USE_COMPUTED_SIZE
+            alignment = Pos.CENTER_LEFT
+
             hboxConstraints {
                 hgrow = Priority.ALWAYS
                 marginLeftRight(6.0)
             }
 
-            label(summaryItem.title)
+            label(summaryItem.title) {
+                maxHeight = 20.0
+                FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
+
+                vboxConstraints {
+                    marginBottom = 6.0
+                }
+            }
 
             label(summaryItem.summary) {
                 vgrow = Priority.ALWAYS
