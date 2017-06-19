@@ -63,10 +63,12 @@ class MainWindow : View() {
         val iconView = ImageView(iconUrl)
         iconView.isPreserveRatio = true
         iconView.fitHeight = 38.0
+        iconView.fitWidth = 38.0
 
         val graphicsPane = HBox(iconView)
         graphicsPane.prefWidth = 38.0
         graphicsPane.maxWidth = 38.0
+        graphicsPane.prefHeight = 38.0
         graphicsPane.maxHeight = 38.0
         graphicsPane.alignment = Pos.CENTER
 
