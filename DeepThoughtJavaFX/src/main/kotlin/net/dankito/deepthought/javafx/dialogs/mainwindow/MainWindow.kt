@@ -6,7 +6,6 @@ import javafx.event.ActionEvent
 import javafx.event.Event
 import javafx.fxml.FXML
 import javafx.geometry.Pos
-import javafx.scene.Node
 import javafx.scene.control.MenuButton
 import javafx.scene.control.MenuItem
 import javafx.scene.control.Tab
@@ -22,6 +21,11 @@ import tornadofx.*
 
 
 class MainWindow : View() {
+
+    companion object {
+        private const val ICON_SIZE = 38.0
+    }
+
 
     val controller: MainWindowController by inject()
 
@@ -46,33 +50,35 @@ class MainWindow : View() {
 
 
     fun addArticleSummaryExtractor(articleSummaryExtractorConfig: ArticleSummaryExtractorConfig) {
-        val articleContentExtractorMenuItem = MenuItem(articleSummaryExtractorConfig.name)
-        articleContentExtractorMenuItem.tag = articleSummaryExtractorConfig
-        articleContentExtractorMenuItem.setOnAction { find(ArticleSummaryView::class, mapOf(ArticleSummaryView::articleSummaryExtractor to articleSummaryExtractorConfig))
-                .openWindow() }
+        val extractorItem = MenuItem(articleSummaryExtractorConfig.name)
+        extractorItem.tag = articleSummaryExtractorConfig
+        extractorItem.setOnAction { find(ArticleSummaryView::class, mapOf(ArticleSummaryView::articleSummaryExtractor to articleSummaryExtractorConfig)).openWindow() }
+
+        val graphicPane = hbox {
+            prefWidth = ICON_SIZE
+            maxWidth = ICON_SIZE
+            prefHeight = ICON_SIZE
+            maxHeight = ICON_SIZE
+            alignment = Pos.CENTER
+        }
+        extractorItem.graphic = graphicPane
 
         articleSummaryExtractorConfig.iconUrl?.let { iconUrl ->
-            articleContentExtractorMenuItem.graphic = createOnlineArticleContentExtractorIcon(iconUrl)
+            createOnlineArticleContentExtractorIcon(graphicPane, iconUrl)
         }
 
-        btnOnlineArticleExtractors.items.add(articleContentExtractorMenuItem)
+        btnOnlineArticleExtractors.items.add(extractorItem)
         btnOnlineArticleExtractors.isVisible = true
     }
 
-    private fun createOnlineArticleContentExtractorIcon(iconUrl: String): Node {
+    private fun createOnlineArticleContentExtractorIcon(graphicPane: HBox, iconUrl: String) {
         val iconView = ImageView(iconUrl)
         iconView.isPreserveRatio = true
-        iconView.fitHeight = 38.0
-        iconView.fitWidth = 38.0
+        iconView.fitHeight = ICON_SIZE
+        iconView.fitWidth = ICON_SIZE
 
-        val graphicsPane = HBox(iconView)
-        graphicsPane.prefWidth = 38.0
-        graphicsPane.maxWidth = 38.0
-        graphicsPane.prefHeight = 38.0
-        graphicsPane.maxHeight = 38.0
-        graphicsPane.alignment = Pos.CENTER
-
-        return graphicsPane
+        graphicPane.clear()
+        graphicPane.add(iconView)
     }
 
     fun articleSummaryExtractorUpdated(articleSummaryExtractorConfig: ArticleSummaryExtractorConfig) {
@@ -81,7 +87,7 @@ class MainWindow : View() {
                 menuItem.text = articleSummaryExtractorConfig.name
 
                 articleSummaryExtractorConfig.iconUrl?.let { iconUrl ->
-                    menuItem.graphic = createOnlineArticleContentExtractorIcon(iconUrl)
+                    createOnlineArticleContentExtractorIcon(menuItem.graphic as HBox, iconUrl)
                 }
 
                 return@forEach
