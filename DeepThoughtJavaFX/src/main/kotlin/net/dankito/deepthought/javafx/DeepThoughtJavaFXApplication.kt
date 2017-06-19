@@ -26,9 +26,9 @@ class DeepThoughtJavaFXApplication : App(MainWindow::class) {
 
 
     override fun start(stage: Stage) {
-        super.start(stage)
-
         setupDI()
+
+        super.start(stage)
 
         mainWindowController.init()
     }
