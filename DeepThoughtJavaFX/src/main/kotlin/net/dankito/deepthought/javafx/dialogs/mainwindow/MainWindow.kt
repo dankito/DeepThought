@@ -13,7 +13,6 @@ import javafx.scene.control.TabPane
 import javafx.scene.image.ImageView
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
-import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.EntryView
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
@@ -52,7 +51,7 @@ class MainWindow : View() {
     fun addArticleSummaryExtractor(articleSummaryExtractorConfig: ArticleSummaryExtractorConfig) {
         val extractorItem = MenuItem(articleSummaryExtractorConfig.name)
         extractorItem.tag = articleSummaryExtractorConfig
-        extractorItem.setOnAction { find(ArticleSummaryView::class, mapOf(ArticleSummaryView::articleSummaryExtractor to articleSummaryExtractorConfig)).openWindow() }
+        extractorItem.setOnAction { controller.showArticlesSummaryView(articleSummaryExtractorConfig) }
 
         val graphicPane = hbox {
             prefWidth = ICON_SIZE

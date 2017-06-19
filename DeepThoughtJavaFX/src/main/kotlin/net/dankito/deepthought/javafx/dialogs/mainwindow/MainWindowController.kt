@@ -8,6 +8,7 @@ import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.news.summary.config.ConfigChangedListener
+import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.data.EntryService
 import tornadofx.*
 import javax.inject.Inject
@@ -27,6 +28,9 @@ class MainWindowController : Controller() {
     @Inject
     protected lateinit var extractorsConfigManager: ArticleSummaryExtractorConfigManager
 
+    @Inject
+    protected lateinit var router: IRouter
+
 
     val mainWindow: MainWindow by inject()
 
@@ -45,6 +49,10 @@ class MainWindowController : Controller() {
         override fun configChanged(config: ArticleSummaryExtractorConfig) {
             FXUtils.runOnUiThread { mainWindow.articleSummaryExtractorUpdated(config) }
         }
+    }
+
+    fun showArticlesSummaryView(articleSummaryExtractorConfig: ArticleSummaryExtractorConfig) {
+        router.showArticleSummaryView(articleSummaryExtractorConfig)
     }
 
 }
