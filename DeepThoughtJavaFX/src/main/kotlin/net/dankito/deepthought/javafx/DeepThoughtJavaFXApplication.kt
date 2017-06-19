@@ -5,6 +5,7 @@ import javafx.stage.Stage
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.di.DaggerAppComponent
+import net.dankito.deepthought.javafx.di.JavaFXModule
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindow
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.service.data.DataManager
@@ -36,6 +37,7 @@ class DeepThoughtJavaFXApplication : App(MainWindow::class) {
 
     private fun setupDI() {
         val component = DaggerAppComponent.builder()
+                .javaFXModule(JavaFXModule(mainWindowController))
                 .build()
 
         CommonComponent.component = component
