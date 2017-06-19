@@ -33,6 +33,12 @@ class FaviconComparator(val webClient : IWebClient) {
             }
         }
 
+        if(maxSize != null) { // if maxSize is set, try next without maxSize
+            favicons.filter { doesFitSize(it, minSize, null, false) }.sortedByDescending { it.size }.firstOrNull()?.let {
+                return it
+            }
+        }
+
         favicons.filter { it.size == null }.firstOrNull()?.let { return it }
 
         return bestIcon
