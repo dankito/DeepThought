@@ -32,7 +32,7 @@ class MainActivity : BaseActivity(), IMainView, NavigationView.OnNavigationItemS
     @Inject
     protected lateinit var router: IRouter
 
-    private lateinit var presenter: EntriesListPresenter
+    private var presenter: EntriesListPresenter
 
     private val entryAdapter = EntryAdapter()
 
@@ -40,8 +40,8 @@ class MainActivity : BaseActivity(), IMainView, NavigationView.OnNavigationItemS
     init {
         AppComponent.component.inject(this)
 
-        presenter = EntriesListPresenter(this, router, dataManager, searchEngine)
-        presenter.setupDataAsync()
+        presenter = EntriesListPresenter(this, router, searchEngine)
+        presenter.initialize()
     }
 
 
@@ -52,7 +52,7 @@ class MainActivity : BaseActivity(), IMainView, NavigationView.OnNavigationItemS
     }
 
     override fun onDestroy() {
-        presenter.onDestroy()
+        presenter.cleanUp()
 
         super.onDestroy()
     }
@@ -76,7 +76,7 @@ class MainActivity : BaseActivity(), IMainView, NavigationView.OnNavigationItemS
         navigationView.setNavigationItemSelectedListener(this)
 
         lstEntries.adapter = entryAdapter
-        lstEntries.setOnItemClickListener { _, _, position, _ -> presenter.clickedOnEntry(entryAdapter.getItem(position)) }
+        lstEntries.setOnItemClickListener { _, _, position, _ -> presenter.showEntry(entryAdapter.getItem(position)) }
     }
 
     private fun floatingActionButtonClicked() {
