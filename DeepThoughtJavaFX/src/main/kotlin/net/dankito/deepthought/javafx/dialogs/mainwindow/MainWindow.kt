@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
 import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
+import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.EntryView
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import tornadofx.*
@@ -33,8 +34,12 @@ class MainWindow : View() {
 
     val btnOnlineArticleExtractors: MenuButton by fxid()
 
+    val entryView: EntryView by inject()
+
 
     init {
+        root.center = entryView.root
+
         btnOnlineArticleExtractors.items.clear() // remove automatically added 'Article 1' and 'Article 2'
         FXUtils.ensureNodeOnlyUsesSpaceIfVisible(btnOnlineArticleExtractors)
     }
