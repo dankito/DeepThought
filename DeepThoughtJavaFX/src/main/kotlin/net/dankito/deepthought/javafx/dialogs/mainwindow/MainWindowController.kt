@@ -1,16 +1,28 @@
 package net.dankito.deepthought.javafx.dialogs.mainwindow
 
+import javafx.collections.FXCollections
 import net.dankito.deepthought.javafx.di.AppComponent
+import net.dankito.deepthought.javafx.dialogs.mainwindow.model.EntryModel
 import net.dankito.deepthought.javafx.util.FXUtils
+import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.news.summary.config.ConfigChangedListener
+import net.dankito.service.data.EntryService
 import tornadofx.*
 import javax.inject.Inject
 
 
 class MainWindowController : Controller() {
 
+
+    val entryModel = EntryModel()
+
+    val entries = FXCollections.observableArrayList<Entry>()
+
+
+    @Inject
+    protected lateinit var entryService: EntryService
 
     @Inject
     protected lateinit var extractorsConfigManager: ArticleSummaryExtractorConfigManager
@@ -24,6 +36,8 @@ class MainWindowController : Controller() {
 
         extractorsConfigManager.addListener(articleSummaryExtractorConfigChangedListener)
         extractorsConfigManager.getConfigs().forEach { mainWindow.addArticleSummaryExtractor(it) }
+
+        entryService.getAllAsync { entries.setAll(it) }
     }
 
 
