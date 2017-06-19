@@ -41,7 +41,6 @@ class MainActivity : BaseActivity(), IEntriesListView, NavigationView.OnNavigati
         AppComponent.component.inject(this)
 
         presenter = EntriesListPresenter(this, router, searchEngine)
-        presenter.initialize()
     }
 
 

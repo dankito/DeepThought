@@ -21,7 +21,7 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
     private val eventBusListener = EventBusListener()
 
 
-    fun initialize() {
+    init {
         thread {
             CommonComponent.component.inject(this)
 
