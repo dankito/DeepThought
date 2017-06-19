@@ -148,6 +148,7 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
     }
 
     private fun getIconForFeed(summary: FeedArticleSummary, callback: (iconUrl: String?) -> Unit) {
+        // TODO: extract Favicons, add summary.imageUrl to them and then get best one from them. Otherwise a way worse icon could be used then would be possible from Favicons
         summary.imageUrl?.let { iconUrl ->
             if(faviconComparator.doesFitSize(iconUrl, mustBeSquarish = true)) {
                 return callback(iconUrl)
