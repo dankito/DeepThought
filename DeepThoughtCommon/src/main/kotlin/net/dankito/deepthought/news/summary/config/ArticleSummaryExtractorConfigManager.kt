@@ -24,6 +24,8 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
     companion object {
         private const val FILE_NAME = "ArticleSummaryExtractorConfigurations.json"
 
+        private const val MAX_SIZE = 152
+
         private val log = LoggerFactory.getLogger(ArticleSummaryExtractorConfigManager::class.java)
     }
 
@@ -105,7 +107,7 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
     private fun loadIconAsync(url: String, callback: (String?) -> Unit)  {
         faviconExtractor.extractFaviconsAsync(url) {
             if(it.result != null) {
-                callback(faviconComparator.getBestIcon(it.result as List<Favicon>, maxSize = 152, returnSquarishOneIfPossible = true)?.url)
+                callback(faviconComparator.getBestIcon(it.result as List<Favicon>, maxSize = MAX_SIZE, returnSquarishOneIfPossible = true)?.url)
             }
             else {
                 callback(null)
