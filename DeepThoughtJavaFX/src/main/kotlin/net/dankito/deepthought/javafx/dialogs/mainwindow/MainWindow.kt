@@ -14,6 +14,7 @@ import javafx.scene.control.TabPane
 import javafx.scene.image.ImageView
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
+import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import tornadofx.*
@@ -42,7 +43,8 @@ class MainWindow : View() {
     fun addArticleSummaryExtractor(articleSummaryExtractorConfig: ArticleSummaryExtractorConfig) {
         val articleContentExtractorMenuItem = MenuItem(articleSummaryExtractorConfig.name)
         articleContentExtractorMenuItem.tag = articleSummaryExtractorConfig
-        articleContentExtractorMenuItem.setOnAction {  }
+        articleContentExtractorMenuItem.setOnAction { find(ArticleSummaryView::class, mapOf(ArticleSummaryView::articleSummaryExtractor to articleSummaryExtractorConfig))
+                .openWindow() }
 
         articleSummaryExtractorConfig.iconUrl?.let { iconUrl ->
             articleContentExtractorMenuItem.graphic = createOnlineArticleContentExtractorIcon(iconUrl)
