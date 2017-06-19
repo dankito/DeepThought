@@ -16,7 +16,7 @@ import net.dankito.deepthought.android.service.ui.BaseActivity
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.presenter.MainViewPresenter
+import net.dankito.deepthought.ui.presenter.EntriesListPresenter
 import net.dankito.deepthought.ui.view.IMainView
 import net.dankito.service.search.ISearchEngine
 import javax.inject.Inject
@@ -32,7 +32,7 @@ class MainActivity : BaseActivity(), IMainView, NavigationView.OnNavigationItemS
     @Inject
     protected lateinit var router: IRouter
 
-    private val presenter: MainViewPresenter
+    private lateinit var presenter: EntriesListPresenter
 
     private val entryAdapter = EntryAdapter()
 
@@ -40,7 +40,8 @@ class MainActivity : BaseActivity(), IMainView, NavigationView.OnNavigationItemS
     init {
         AppComponent.component.inject(this)
 
-        presenter = MainViewPresenter(this, router, dataManager, searchEngine)
+        presenter = EntriesListPresenter(this, router, dataManager, searchEngine)
+        presenter.setupDataAsync()
     }
 
 
@@ -48,8 +49,6 @@ class MainActivity : BaseActivity(), IMainView, NavigationView.OnNavigationItemS
         super.onCreate(savedInstanceState)
 
         setupUI()
-
-        presenter.setupDataAsync()
     }
 
     override fun onDestroy() {

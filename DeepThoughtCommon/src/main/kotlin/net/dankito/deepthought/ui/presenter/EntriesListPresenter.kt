@@ -14,7 +14,7 @@ import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class MainViewPresenter(private val mainView: IMainView, private var router: IRouter, private var dataManager: DataManager, private var searchEngine: ISearchEngine) {
+class EntriesListPresenter(private val mainView: IMainView, private var router: IRouter, private var dataManager: DataManager, private var searchEngine: ISearchEngine) {
 
     @Inject
     protected lateinit var eventBus: IEventBus
