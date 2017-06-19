@@ -1,6 +1,7 @@
 package net.dankito.service.data
 
 import net.dankito.deepthought.model.BaseEntity
+import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.data.messages.EntityChangeType
@@ -8,7 +9,7 @@ import net.dankito.service.data.messages.EntityChanged
 import net.dankito.service.eventbus.IEventBus
 
 
-abstract class EntityServiceBase<T : BaseEntity>(dataManager: DataManager, val eventBus: IEventBus) {
+abstract class EntityServiceBase<T : BaseEntity>(val dataManager: DataManager, val eventBus: IEventBus) {
 
     val entityManager = dataManager.entityManager
 
@@ -25,10 +26,14 @@ abstract class EntityServiceBase<T : BaseEntity>(dataManager: DataManager, val e
 
 
     fun persist(entity: T) {
+        dataManager.currentDeepThought?.let { addEntityToDeepThought(it, entity) }
+
         entityManager.persistEntity(entity as Any)
 
         callEntitiesUpdatedListeners(entity, EntityChangeType.Created)
     }
+
+    protected abstract fun addEntityToDeepThought(deepThought: DeepThought, entity: T)
 
     fun retrieve(id: String): T? {
         return entityManager.getEntityById(getEntityClass(), id)
