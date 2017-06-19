@@ -3,7 +3,7 @@ package net.dankito.deepthought.ui.presenter
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.view.IMainView
+import net.dankito.deepthought.ui.view.IEntriesListView
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
@@ -13,7 +13,7 @@ import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class EntriesListPresenter(private val mainView: IMainView, private var router: IRouter, private var searchEngine: ISearchEngine) {
+class EntriesListPresenter(private val entriesListView: IEntriesListView, private var router: IRouter, private var searchEngine: ISearchEngine) {
 
     @Inject
     protected lateinit var eventBus: IEventBus
@@ -49,7 +49,7 @@ class EntriesListPresenter(private val mainView: IMainView, private var router: 
 
     private fun retrieveAndShowEntries() {
         searchEngine.searchEntries(EntriesSearch { result ->
-            mainView.showEntries(result)
+            entriesListView.showEntries(result)
         })
     }
 

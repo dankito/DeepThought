@@ -17,11 +17,11 @@ import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EntriesListPresenter
-import net.dankito.deepthought.ui.view.IMainView
+import net.dankito.deepthought.ui.view.IEntriesListView
 import net.dankito.service.search.ISearchEngine
 import javax.inject.Inject
 
-class MainActivity : BaseActivity(), IMainView, NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : BaseActivity(), IEntriesListView, NavigationView.OnNavigationItemSelectedListener {
 
     @Inject
     protected lateinit var dataManager: DataManager
@@ -138,7 +138,7 @@ class MainActivity : BaseActivity(), IMainView, NavigationView.OnNavigationItemS
     }
 
 
-    /*          IMainView implementation            */
+    /*          IEntriesListView implementation            */
 
     override fun showEntries(entries: List<Entry>) {
         runOnUiThread {
