@@ -6,10 +6,11 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
+import android.support.v7.widget.Toolbar
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.activity_article_summary.*
+import android.widget.ListView
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ArticleSummaryAdapter
 import net.dankito.deepthought.android.di.AppComponent
@@ -85,8 +86,8 @@ class ArticleSummaryActivity : BaseActivity() {
         restoreState(savedInstanceState.getString(EXTRACTOR_URL_INTENT_EXTRA_NAME), savedInstanceState.getString(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME))
     }
 
-    private fun restoreState(extractorClass: String?, serializedLastLoadedSummary: String?) {
-        extractorClass?.let { initializeArticlesSummaryExtractor(it) }
+    private fun restoreState(extractorUrl: String?, serializedLastLoadedSummary: String?) {
+        extractorUrl?.let { initializeArticlesSummaryExtractor(it) }
 
         if(serializedLastLoadedSummary != null) {
             val summary = serializer.deserializeObject(serializedLastLoadedSummary, ArticleSummary::class.java)
@@ -109,6 +110,9 @@ class ArticleSummaryActivity : BaseActivity() {
 
     private fun setupUI() {
         setContentView(R.layout.activity_article_summary)
+
+        val toolbar = findViewById(R.id.toolbar) as Toolbar // TODO: don't know why Kotlin Android extensions aren't working anymore
+        val lstArticleSummaryItems = findViewById(R.id.lstArticleSummaryItems) as ListView
 
         setSupportActionBar(toolbar)
 
@@ -145,9 +149,9 @@ class ArticleSummaryActivity : BaseActivity() {
     }
 
 
-    private fun initializeArticlesSummaryExtractor(extractorClassName: String) {
+    private fun initializeArticlesSummaryExtractor(extractorUrl: String) {
         try {
-            extractorsConfigManager.getConfig(extractorClassName)?.let { config ->
+            extractorsConfigManager.getConfig(extractorUrl)?.let { config ->
                 this.extractorConfig = config
 
                 supportActionBar?.title = config.name
@@ -222,7 +226,7 @@ class ArticleSummaryActivity : BaseActivity() {
     }
 
     private fun showArticle(extractionResult: EntryExtractionResult) {
-        router.showEntryView(extractionResult)
+        router.showViewEntryView(extractionResult)
     }
 
     private fun showArticleExtractionError(item: ArticleSummaryItem, extractionError: Exception) {
