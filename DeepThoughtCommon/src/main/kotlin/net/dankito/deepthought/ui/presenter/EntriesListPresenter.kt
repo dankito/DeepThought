@@ -39,7 +39,7 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
 
 
     fun showEntry(entry: Entry) {
-        router.showEntryView(entry)
+        router.showViewEntryView(entry)
     }
 
 

@@ -11,9 +11,14 @@ interface IRouter {
 
     fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig)
 
-    fun showEntryView(entry: Entry)
 
-    fun showEntryView(extractionResult: EntryExtractionResult)
+    fun showViewEntryView(entry: Entry)
+
+    fun showViewEntryView(extractionResult: EntryExtractionResult)
+
+    fun showEditEntryView(entry: Entry)
+
+    fun showEditEntryView(extractionResult: EntryExtractionResult)
 
 
     fun returnToPreviousView()

@@ -33,11 +33,11 @@ class AndroidRouter(private val context: Context, private val activityTracker: C
         context.startActivity(articleSummaryActivityIntent)
     }
 
-    override fun showEntryView(entry: Entry) {
+    override fun showViewEntryView(entry: Entry) {
         entry.id?.let { entryId -> showEntryView(ViewEntryActivity.ENTRY_ID_INTENT_EXTRA_NAME, entryId) }
     }
 
-    override fun showEntryView(extractionResult: EntryExtractionResult) {
+    override fun showViewEntryView(extractionResult: EntryExtractionResult) {
         val serializedExtractionResult = serializer.serializeObject(extractionResult)
 
         showEntryView(ViewEntryActivity.ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, serializedExtractionResult)
@@ -50,6 +50,15 @@ class AndroidRouter(private val context: Context, private val activityTracker: C
         viewArticleIntent.putExtra(intentExtraName, intentExtraValue)
 
         context.startActivity(viewArticleIntent)
+    }
+
+
+    override fun showEditEntryView(entry: Entry) {
+
+    }
+
+    override fun showEditEntryView(extractionResult: EntryExtractionResult) {
+
     }
 
 

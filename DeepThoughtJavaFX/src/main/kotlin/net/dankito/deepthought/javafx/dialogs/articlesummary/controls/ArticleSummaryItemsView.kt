@@ -16,5 +16,7 @@ class ArticleSummaryItemsView(private val controller: ArticleSummaryController) 
         prefHeight = 400.0
 
         cellFragment(ArticleSummaryItemListCellFragment::class)
+
+        onDoubleClick { controller.itemDoubleClicked(selectedItem) }
     }
 }
