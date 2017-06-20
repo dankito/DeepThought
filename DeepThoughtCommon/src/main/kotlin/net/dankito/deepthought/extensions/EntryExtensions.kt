@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 private val PublishingDateFormat = DateFormat.getDateInstance(DateFormat.SHORT)
 
-private val previewCache = PreviewCache()
+private val previewCache = EntryPreviewCache()
 
 
 val Entry.abstractPlainText: String
@@ -78,7 +78,7 @@ private fun getPlainTextForHtml(htmlString: String): String {
 }
 
 
-class PreviewCache {
+class EntryPreviewCache {
 
     private val abstractPlainTextCache = ConcurrentHashMap<Entry, String>()
 
