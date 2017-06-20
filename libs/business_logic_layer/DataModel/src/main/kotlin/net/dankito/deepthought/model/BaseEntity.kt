@@ -47,6 +47,11 @@ open class BaseEntity : Serializable {
     }
 
 
+    @Transient
+    fun isPersisted(): Boolean {
+        return id != null
+    }
+
     @PrePersist
     protected open fun prePersist() {
         createdOn = Date()
