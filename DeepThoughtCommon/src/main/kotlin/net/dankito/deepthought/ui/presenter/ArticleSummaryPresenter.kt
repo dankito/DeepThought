@@ -9,7 +9,7 @@ import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.newsreader.model.EntryExtractionResult
 
 
-class ArticleSummaryPresenter(private val articleExtractors: ArticleExtractors, private val router: IRouter) {
+open class ArticleSummaryPresenter(protected val articleExtractors: ArticleExtractors, protected val router: IRouter) {
 
     fun extractArticlesSummary(extractorConfig: ArticleSummaryExtractorConfig?, callback: (AsyncResult<out ArticleSummary>) -> Unit) {
         extractorConfig?.extractor?.extractSummaryAsync {
@@ -33,7 +33,7 @@ class ArticleSummaryPresenter(private val articleExtractors: ArticleExtractors, 
         }
     }
 
-    private fun showArticle(extractionResult: EntryExtractionResult) {
+    protected open fun showArticle(extractionResult: EntryExtractionResult) {
         router.showViewEntryView(extractionResult)
     }
 

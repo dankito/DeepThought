@@ -1,13 +1,21 @@
 package net.dankito.deepthought.javafx.dialogs.articlesummary
 
+import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.articlesummary.controls.ArticleSummaryItemsView
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
+import net.dankito.deepthought.ui.IRouter
+import net.dankito.newsreader.article.ArticleExtractors
 import tornadofx.*
+import javax.inject.Inject
 
 
 class ArticleSummaryView : Fragment() {
 
-    private lateinit var articleSummaryItemsView: ArticleSummaryItemsView
+    @Inject
+    protected lateinit var articleExtractors: ArticleExtractors
+
+    @Inject
+    protected lateinit var router: IRouter
 
 
     override val root = borderpane {
@@ -16,14 +24,14 @@ class ArticleSummaryView : Fragment() {
 
     val articleSummaryExtractor: ArticleSummaryExtractorConfig by param()
 
-    private lateinit var controller: ArticleSummaryController
+    private var controller: ArticleSummaryController
 
 
     init {
-        controller = ArticleSummaryController(articleSummaryExtractor)
+        AppComponent.component.inject(this)
 
-        articleSummaryItemsView = ArticleSummaryItemsView(controller)
+        controller = ArticleSummaryController(articleSummaryExtractor, articleExtractors, router)
 
-        root.center = articleSummaryItemsView.root
+        root.center = ArticleSummaryItemsView(controller).root
     }
 }
