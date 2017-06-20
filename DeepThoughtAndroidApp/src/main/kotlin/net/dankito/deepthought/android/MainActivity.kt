@@ -1,27 +1,27 @@
 package net.dankito.deepthought.android
 
 import android.os.Bundle
+import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
+import android.support.v4.view.ViewPager
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.content_main.*
-import net.dankito.deepthought.android.adapter.EntryAdapter
+import kotlinx.android.synthetic.main.app_bar_main.*
+import net.dankito.deepthought.android.adapter.MainActivitySectionsPagerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
 import net.dankito.deepthought.android.service.ui.BaseActivity
-import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.presenter.EntriesListPresenter
-import net.dankito.deepthought.ui.view.IEntriesListView
 import net.dankito.service.search.ISearchEngine
 import javax.inject.Inject
 
-class MainActivity : BaseActivity(), IEntriesListView, NavigationView.OnNavigationItemSelectedListener {
+
+class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     @Inject
     protected lateinit var dataManager: DataManager
@@ -32,15 +32,14 @@ class MainActivity : BaseActivity(), IEntriesListView, NavigationView.OnNavigati
     @Inject
     protected lateinit var router: IRouter
 
-    private var presenter: EntriesListPresenter
 
-    private val entryAdapter = EntryAdapter()
+    private lateinit var sectionsPagerAdapter: MainActivitySectionsPagerAdapter
+
+    private var previousSelectedBottomViewNavigationItem: MenuItem? = null
 
 
     init {
         AppComponent.component.inject(this)
-
-        presenter = EntriesListPresenter(this, router, searchEngine)
     }
 
 
@@ -48,12 +47,6 @@ class MainActivity : BaseActivity(), IEntriesListView, NavigationView.OnNavigati
         super.onCreate(savedInstanceState)
 
         setupUI()
-    }
-
-    override fun onDestroy() {
-        presenter.cleanUp()
-
-        super.onDestroy()
     }
 
     private fun setupUI() {
@@ -74,8 +67,11 @@ class MainActivity : BaseActivity(), IEntriesListView, NavigationView.OnNavigati
         val navigationView = findViewById(R.id.nav_view) as NavigationView
         navigationView.setNavigationItemSelectedListener(this)
 
-        lstEntries.adapter = entryAdapter
-        lstEntries.setOnItemClickListener { _, _, position, _ -> presenter.showEntry(entryAdapter.getItem(position)) }
+        sectionsPagerAdapter = MainActivitySectionsPagerAdapter(supportFragmentManager, searchEngine, router)
+        viewPager.adapter = sectionsPagerAdapter
+        viewPager.addOnPageChangeListener(viewPagerPageChangeListener)
+
+        bottomViewNavigation.setOnNavigationItemSelectedListener(bottomViewNavigationItemSelectedListener)
     }
 
     private fun floatingActionButtonClicked() {
@@ -136,13 +132,36 @@ class MainActivity : BaseActivity(), IEntriesListView, NavigationView.OnNavigati
         return true
     }
 
+    val viewPagerPageChangeListener = object : ViewPager.OnPageChangeListener {
 
-    /*          IEntriesListView implementation            */
+        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
 
-    override fun showEntries(entries: List<Entry>) {
-        runOnUiThread {
-            entryAdapter.setItems(entries)
         }
+
+        override fun onPageSelected(position: Int) {
+            val previous = previousSelectedBottomViewNavigationItem
+            if (previous != null) {
+                previous.isChecked = false
+            }
+            else {
+                bottomViewNavigation.menu.getItem(0).isChecked = false
+            }
+
+            val currentItem = bottomViewNavigation.menu.getItem(position)
+            currentItem.isChecked = true
+            previousSelectedBottomViewNavigationItem = currentItem
+
+        }
+
+        override fun onPageScrollStateChanged(state: Int) {
+
+        }
+    }
+
+    val bottomViewNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        viewPager.setCurrentItem(item.order, true)
+
+        return@OnNavigationItemSelectedListener true
     }
 
 }
