@@ -111,12 +111,20 @@ abstract class EditEntryViewBase : Fragment() {
 
 
     protected open fun saveEntry() { // TODO: move to Presenter
-        // TODO: check if has an update or entry was newly created
-        entryService.persist(getEntryForSaving())
+        val entry = getEntryForSaving()
+
+        if(entry.isPersisted() == false) {
+            entryService.persist(entry)
+        }
+        else {
+            entryService.update(entry)
+        }
 
         getReferenceForSaving()?.let { reference ->
-            // TODO: check if has an update or reference was newly created
-            referenceService.persist(reference)
+            if(reference.isPersisted() == false) {
+                entry.reference = reference
+                referenceService.persist(reference)
+            }
         }
 
         // TODO: also save Tags
