@@ -26,6 +26,8 @@ abstract class EntityServiceBase<T : BaseEntity>(val dataManager: DataManager, v
 
 
     fun persist(entity: T) {
+        onPrePersist(entity)
+
         entityManager.persistEntity(entity as Any)
 
         dataManager.currentDeepThought?.let {
@@ -34,6 +36,10 @@ abstract class EntityServiceBase<T : BaseEntity>(val dataManager: DataManager, v
         }
 
         callEntitiesUpdatedListeners(entity, EntityChangeType.Created)
+    }
+
+    protected open fun onPrePersist(entity: T) {
+        // may be overwritten in sub class
     }
 
     protected abstract fun addEntityToDeepThought(deepThought: DeepThought, entity: T)
