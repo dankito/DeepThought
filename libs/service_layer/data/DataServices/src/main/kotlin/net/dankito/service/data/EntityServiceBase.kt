@@ -26,9 +26,12 @@ abstract class EntityServiceBase<T : BaseEntity>(val dataManager: DataManager, v
 
 
     fun persist(entity: T) {
-        dataManager.currentDeepThought?.let { addEntityToDeepThought(it, entity) }
-
         entityManager.persistEntity(entity as Any)
+
+        dataManager.currentDeepThought?.let {
+            addEntityToDeepThought(it, entity)
+            entityManager.updateEntity(it)
+        }
 
         callEntitiesUpdatedListeners(entity, EntityChangeType.Created)
     }
