@@ -2,6 +2,9 @@
 
     <string name="app_name">DeepThought</string>
 
+    <string name="tab_entries_title">Entries</string>
+    <string name="tab_tags_title">Tags</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
