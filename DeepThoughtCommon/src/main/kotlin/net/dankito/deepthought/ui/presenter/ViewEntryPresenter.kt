@@ -8,7 +8,7 @@ import net.dankito.service.data.EntryService
 import net.dankito.service.data.ReferenceService
 
 
-class EntryViewPresenter(private var entry: Entry?, private var entryExtractionResult: EntryExtractionResult?,
+class ViewEntryPresenter(private var entry: Entry?, private var entryExtractionResult: EntryExtractionResult?,
                          private var entryService: EntryService, private var referenceService: ReferenceService, private var router: IRouter) {
 
     fun saveEntry() {

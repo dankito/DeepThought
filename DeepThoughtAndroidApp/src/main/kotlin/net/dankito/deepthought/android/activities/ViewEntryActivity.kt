@@ -5,13 +5,11 @@ import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_view_entry.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.R.id.toolbar
-import net.dankito.deepthought.android.R.id.wbEntry
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.ui.BaseActivity
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.presenter.EntryViewPresenter
+import net.dankito.deepthought.ui.presenter.ViewEntryPresenter
 import net.dankito.newsreader.model.EntryExtractionResult
 import net.dankito.serializer.ISerializer
 import net.dankito.service.data.EntryService
@@ -43,7 +41,7 @@ class ViewEntryActivity : BaseActivity() {
 
     private var entryExtractionResult: EntryExtractionResult? = null
 
-    private lateinit var presenter: EntryViewPresenter
+    private lateinit var presenter: ViewEntryPresenter
 
 
     init {
@@ -61,7 +59,7 @@ class ViewEntryActivity : BaseActivity() {
         intent.getStringExtra(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)?.let { showSerializedEntryExtractionResult(it) }
         intent.getStringExtra(ENTRY_ID_INTENT_EXTRA_NAME)?.let { entryId -> showEntryFromDatabase(entryId) }
 
-        presenter = EntryViewPresenter(entry, entryExtractionResult, entryService, referenceService, router)
+        presenter = ViewEntryPresenter(entry, entryExtractionResult, entryService, referenceService, router)
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
