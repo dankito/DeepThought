@@ -11,12 +11,14 @@ import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ListView
+import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ArticleSummaryAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.ui.BaseActivity
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
+import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.newsreader.model.ArticleSummary
@@ -54,6 +56,8 @@ class ArticleSummaryActivity : BaseActivity() {
     protected lateinit var router: IRouter
 
 
+    private var presenter: ArticleSummaryPresenter
+
     private var extractorConfig: ArticleSummaryExtractorConfig? = null
 
     private var lastLoadedSummary: ArticleSummary? = null
@@ -65,6 +69,8 @@ class ArticleSummaryActivity : BaseActivity() {
 
     init {
         AppComponent.component.inject(this)
+
+        presenter = ArticleSummaryPresenter(articleExtractors, router)
     }
 
 
@@ -188,15 +194,20 @@ class ArticleSummaryActivity : BaseActivity() {
     }
 
     private fun extractArticlesSummary() {
-        extractorConfig?.extractor?.extractSummaryAsync {
-            it.result?.let { showArticleSummaryThreadSafe(it, false) }
+        presenter.extractArticlesSummary(extractorConfig) {
+            articleSummaryReceived(it, false)
         }
     }
 
     private fun loadMoreItems() {
-        extractorConfig?.extractor?.loadMoreItemsAsync {
-            it.result?.let { showArticleSummaryThreadSafe(it, true)  }
+        presenter.loadMoreItems(extractorConfig) {
+            articleSummaryReceived(it, true)
         }
+    }
+
+    private fun articleSummaryReceived(result: AsyncResult<out ArticleSummary>, hasLoadedMoreItems: Boolean) {
+        result.result?.let { showArticleSummaryThreadSafe(it, hasLoadedMoreItems)  }
+        result.error?.let { /* TODO: show error */ }
     }
 
     private fun showArticleSummaryThreadSafe(summary: ArticleSummary, hasLoadedMoreItems: Boolean) {
@@ -217,16 +228,9 @@ class ArticleSummaryActivity : BaseActivity() {
     }
 
     private fun articleClicked(item: ArticleSummaryItem) {
-        articleExtractors.getExtractorForItem(item)?.let { extractor ->
-            extractor.extractArticleAsync(item) { asyncResult ->
-                asyncResult.result?.let { showArticle(it) }
-                asyncResult.error?.let { showArticleExtractionError(item, it) }
-            }
+        presenter.getAndShowArticle(item) {
+            showArticleExtractionError(item, it)
         }
-    }
-
-    private fun showArticle(extractionResult: EntryExtractionResult) {
-        router.showViewEntryView(extractionResult)
     }
 
     private fun showArticleExtractionError(item: ArticleSummaryItem, extractionError: Exception) {
