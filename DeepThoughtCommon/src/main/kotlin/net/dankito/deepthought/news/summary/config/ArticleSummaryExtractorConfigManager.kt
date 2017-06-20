@@ -120,8 +120,8 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
         return configurations.values.toList()
     }
 
-    fun getConfig(id: String) : ArticleSummaryExtractorConfig? {
-        return configurations[id]
+    fun getConfig(url: String) : ArticleSummaryExtractorConfig? {
+        return configurations[url]
     }
 
 
