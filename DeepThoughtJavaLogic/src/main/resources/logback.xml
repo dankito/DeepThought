@@ -30,7 +30,7 @@
     </appender>
 
     <!-- to ignore all other packages like Hibernate -->
-    <logger name="net.dankito.deepthought" level="DEBUG"/>
+    <logger name="net.dankito" level="DEBUG"/>
 
     <root level="ERROR">
     <!--<root level="ALL">-->
