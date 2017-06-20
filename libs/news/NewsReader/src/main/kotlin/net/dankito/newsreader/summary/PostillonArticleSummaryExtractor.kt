@@ -1,9 +1,9 @@
 package net.dankito.newsreader.summary
 
+import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.newsreader.article.PostillonArticleExtractor
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
-import net.dankito.data_access.network.webclient.IWebClient
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
@@ -58,6 +58,8 @@ class PostillonArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
             val article = ArticleSummaryItem(makeLinkAbsolute(titleAnchor.attr("href"), url), titleAnchor.text(), PostillonArticleExtractor::class.java)
 
             postElement.select(".post-body").first()?.let { contentElement ->
+                contentElement.select(".more-link").remove() // remove "mehr ..."
+
                 article.summary = contentElement.text()
 
                 contentElement.select("img").first()?.let { article.previewImageUrl = it.attr("src") }
