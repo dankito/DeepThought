@@ -16,6 +16,12 @@ class EntryService(dataManager: DataManager, eventBus: IEventBus): EntityService
         return Entry::class.java
     }
 
+    override fun onPrePersist(entity: Entry) {
+        super.onPrePersist(entity)
+
+        dataManager.currentDeepThought?.let { entity.entryIndex = it.increaseNextEntryIndex() }
+    }
+
     override fun addEntityToDeepThought(deepThought: DeepThought, entity: Entry) {
         deepThought.addEntry(entity)
     }

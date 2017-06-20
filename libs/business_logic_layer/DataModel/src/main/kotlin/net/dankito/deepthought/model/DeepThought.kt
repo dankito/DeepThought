@@ -68,8 +68,6 @@ class DeepThought : UserDataEntity(), Serializable {
     }
 
     fun addEntry(entry: Entry): Boolean {
-        entry.entryIndex = increaseNextEntryIndex()
-
         return entries.add(entry)
     }
 
@@ -109,7 +107,7 @@ class DeepThought : UserDataEntity(), Serializable {
         entry.previewImage = null
     }
 
-    private fun increaseNextEntryIndex(): Long {
+    fun increaseNextEntryIndex(): Long {
         return ++nextEntryIndex
     }
 
