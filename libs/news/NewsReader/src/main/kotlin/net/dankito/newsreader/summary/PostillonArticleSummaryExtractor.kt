@@ -60,7 +60,7 @@ class PostillonArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
             postElement.select(".post-body").first()?.let { contentElement ->
                 contentElement.select(".more-link").remove() // remove "mehr ..."
 
-                article.summary = contentElement.text()
+                article.summary = contentElement.text().replace(" +++ +++ ", " +++\n+++ ") // for Newsticker items: place each ticker on a new line
 
                 contentElement.select("img").first()?.let { article.previewImageUrl = it.attr("src") }
             }
