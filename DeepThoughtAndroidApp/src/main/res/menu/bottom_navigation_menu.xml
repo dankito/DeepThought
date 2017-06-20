@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/btnvEntries"
+        android:title="@string/tab_entries_title"
+        android:orderInCategory="0"
+        />
+
+    <item
+        android:id="@+id/btnvTags"
+        android:title="@string/tab_tags_title"
+        android:orderInCategory="1"
+    />
+
+</menu>
