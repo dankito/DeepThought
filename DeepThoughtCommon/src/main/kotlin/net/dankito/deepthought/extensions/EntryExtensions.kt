@@ -6,12 +6,9 @@ import net.dankito.service.data.messages.EntryChanged
 import net.dankito.service.eventbus.IEventBus
 import net.engio.mbassy.listener.Handler
 import org.jsoup.Jsoup
-import java.text.DateFormat
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 
-
-private val PublishingDateFormat = DateFormat.getDateInstance(DateFormat.SHORT)
 
 private val previewCache = EntryPreviewCache()
 
@@ -56,21 +53,7 @@ val Entry.entryPreview: String
 
 val Entry.referencePreview: String
     get() {
-        reference?.let { reference ->
-            var preview = reference.title
-
-            var publisherAndDate = reference.series ?: ""
-
-            reference.publishingDate?.let { publisherAndDate += " " + PublishingDateFormat.format(it) }
-
-            if(publisherAndDate.isNullOrBlank() == false) {
-                preview = publisherAndDate.trim() + " - " + preview
-            }
-
-            return preview
-        }
-
-        return ""
+        return reference.preview
     }
 
 private fun getPlainTextForHtml(htmlString: String): String {
