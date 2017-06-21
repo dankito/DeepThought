@@ -42,10 +42,6 @@ class EntriesListView(private val searchEngine: ISearchEngine, private val route
         presenter = EntriesListPresenter(this, router, searchEngine)
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
     override fun onDestroy() {
         presenter.cleanUp()
 
