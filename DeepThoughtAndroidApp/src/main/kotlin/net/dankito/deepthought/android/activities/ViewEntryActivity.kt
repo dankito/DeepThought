@@ -41,11 +41,13 @@ class ViewEntryActivity : BaseActivity() {
 
     private var entryExtractionResult: EntryExtractionResult? = null
 
-    private lateinit var presenter: ViewEntryPresenter
+    private var presenter: ViewEntryPresenter
 
 
     init {
         AppComponent.component.inject(this)
+
+        presenter = ViewEntryPresenter(entryService, referenceService, router)
     }
 
 
@@ -58,8 +60,6 @@ class ViewEntryActivity : BaseActivity() {
 
         intent.getStringExtra(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)?.let { showSerializedEntryExtractionResult(it) }
         intent.getStringExtra(ENTRY_ID_INTENT_EXTRA_NAME)?.let { entryId -> showEntryFromDatabase(entryId) }
-
-        presenter = ViewEntryPresenter(entry, entryExtractionResult, entryService, referenceService, router)
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
@@ -127,7 +127,9 @@ class ViewEntryActivity : BaseActivity() {
             }
 
             R.id.mnSaveEntry -> {
-                presenter.saveEntry()
+                entryExtractionResult?.let { // should actually never be null at this stage as mnSaveEntry is only shown when entryExtractionResult != null
+                    presenter.saveEntryExtractionResult(it)
+                }
                 return true
             }
         }
