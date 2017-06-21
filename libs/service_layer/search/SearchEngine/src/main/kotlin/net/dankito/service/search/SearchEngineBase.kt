@@ -26,7 +26,7 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
         if (search.searchTerm.isNullOrBlank())
             searchTags(search, ArrayList<String>())
         else {
-            val tagNamesToFilterFor = search.searchTerm.apply { toLowerCase() }.split(",").map { it.trim() }.dropLastWhile { it.isEmpty() }
+            val tagNamesToFilterFor = search.searchTerm.toLowerCase().split(",").map { it.trim() }.dropLastWhile { it.isEmpty() }
 
             threadPool.runAsync { searchTags(search, tagNamesToFilterFor) }
         }
