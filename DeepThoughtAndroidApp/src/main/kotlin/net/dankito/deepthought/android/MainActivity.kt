@@ -35,7 +35,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     private lateinit var sectionsPagerAdapter: MainActivitySectionsPagerAdapter
 
-    private var previousSelectedBottomViewNavigationItem: MenuItem? = null
+    private var currentlySelectedNavigationItem: MenuItem? = null
 
 
     init {
@@ -139,7 +139,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
 
         override fun onPageSelected(position: Int) {
-            val previous = previousSelectedBottomViewNavigationItem
+            val previous = currentlySelectedNavigationItem
             if (previous != null) {
                 previous.isChecked = false
             }
@@ -149,7 +149,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
             val currentItem = bottomViewNavigation.menu.getItem(position)
             currentItem.isChecked = true
-            previousSelectedBottomViewNavigationItem = currentItem
+            currentlySelectedNavigationItem = currentItem
 
         }
 
