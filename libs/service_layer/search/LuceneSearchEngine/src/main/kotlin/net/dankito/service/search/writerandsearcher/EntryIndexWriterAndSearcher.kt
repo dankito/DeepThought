@@ -27,7 +27,7 @@ class EntryIndexWriterAndSearcher(entryService: EntryService) : IndexWriterAndSe
     }
 
 
-    override fun createDocumentFromEntry(entity: Entry): Document {
+    override fun createDocumentForEntity(entity: Entry): Document {
         val doc = Document()
 
         doc.add(StringField(getIdFieldName(), entity.id, Field.Store.YES))

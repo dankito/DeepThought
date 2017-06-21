@@ -165,7 +165,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
     fun indexEntity(entity: TEntity) {
         try {
-            val doc = createDocumentFromEntry(entity)
+            val doc = createDocumentForEntity(entity)
 
             indexDocument(doc)
         } catch (e: Exception) {
@@ -173,7 +173,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
         }
     }
 
-    abstract fun createDocumentFromEntry(entity: TEntity): Document
+    abstract fun createDocumentForEntity(entity: TEntity): Document
 
     protected fun indexDocument(doc: Document) {
         try {
