@@ -8,6 +8,10 @@ import net.dankito.service.search.Search
 class TagsSearch(searchTerm: String = Search.EmptySearchTerm, completedListener: (TagsSearchResults) -> Unit) : Search<TagsSearchResults>(searchTerm, completedListener) {
 
 
+    init {
+        results = TagsSearchResults(searchTerm)
+    }
+
     protected val resultsCount: Int
         get() = results.relevantMatchesCount
 
