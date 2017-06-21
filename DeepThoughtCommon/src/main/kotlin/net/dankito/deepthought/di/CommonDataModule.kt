@@ -12,6 +12,7 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.ReferenceService
+import net.dankito.service.data.TagService
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.utils.IPlatformConfiguration
@@ -51,6 +52,12 @@ class CommonDataModule {
     @Singleton
     fun provideReferenceService(dataManager: DataManager, eventBus: IEventBus) : ReferenceService {
         return ReferenceService(dataManager, eventBus)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTagService(dataManager: DataManager, eventBus: IEventBus) : TagService {
+        return TagService(dataManager, eventBus)
     }
 
 
