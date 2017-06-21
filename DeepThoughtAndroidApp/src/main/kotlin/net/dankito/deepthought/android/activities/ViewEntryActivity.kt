@@ -14,6 +14,7 @@ import net.dankito.newsreader.model.EntryExtractionResult
 import net.dankito.serializer.ISerializer
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.ReferenceService
+import net.dankito.service.data.TagService
 import javax.inject.Inject
 
 
@@ -32,6 +33,9 @@ class ViewEntryActivity : BaseActivity() {
     protected lateinit var referenceService: ReferenceService
 
     @Inject
+    protected lateinit var tagService: TagService
+
+    @Inject
     protected lateinit var router: IRouter
 
     @Inject
@@ -47,7 +51,7 @@ class ViewEntryActivity : BaseActivity() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = ViewEntryPresenter(entryService, referenceService, router)
+        presenter = ViewEntryPresenter(entryService, referenceService, tagService, router)
     }
 
 

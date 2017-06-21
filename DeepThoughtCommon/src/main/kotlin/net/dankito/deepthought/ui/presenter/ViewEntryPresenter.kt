@@ -5,11 +5,12 @@ import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.newsreader.model.EntryExtractionResult
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.ReferenceService
+import net.dankito.service.data.TagService
 
 
-class ViewEntryPresenter(entryService: EntryService, referenceService: ReferenceService, private var router: IRouter) {
+class ViewEntryPresenter(entryService: EntryService, referenceService: ReferenceService, tagService: TagService, private var router: IRouter) {
 
-    private val entryPersister = EntryPersister(entryService, referenceService)
+    private val entryPersister = EntryPersister(entryService, referenceService, tagService)
 
 
     fun saveEntryExtractionResult(result: EntryExtractionResult) {
