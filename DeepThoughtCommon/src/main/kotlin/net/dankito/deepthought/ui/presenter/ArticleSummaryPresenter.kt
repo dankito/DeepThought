@@ -47,8 +47,8 @@ open class ArticleSummaryPresenter(protected val articleExtractors: ArticleExtra
     private fun getDefaultTagsForExtractor(extractor: IArticleExtractor, callback: (List<Tag>) -> Unit) {
         extractor.getName()?.let { extractorName ->
             searchEngine.searchTags(TagsSearch(extractorName) { tagsSearchResults ->
-                tagsSearchResults.exactMatchesOfLastResult?.let {
-                    callback(listOf(it))
+                if(tagsSearchResults.exactMatchesOfLastResult.isNotEmpty()) {
+                    callback(tagsSearchResults.exactMatchesOfLastResult)
                     return@TagsSearch
                 }
 

@@ -2,8 +2,7 @@ package net.dankito.service.search.specific
 
 
 import net.dankito.deepthought.model.Tag
-
-import java.util.ArrayList
+import java.util.*
 
 
 class TagsSearchResult {
@@ -11,10 +10,10 @@ class TagsSearchResult {
     var searchTerm: String
         protected set
 
-    protected var hasExactMatch: Boolean = false
+    protected var hasExactMatches: Boolean = false
 
-    var exactMatch: Tag? = null
-        protected set
+    var exactMatches: List<Tag> = ArrayList()
+        private set
 
     protected var singleMatchProperty: Tag? = null
 
@@ -29,26 +28,25 @@ class TagsSearchResult {
         findExactMatch(searchTerm, allMatches)
     }
 
-    constructor(searchTerm: String, allMatches: List<Tag>, exactMatch: Tag?) {
+    constructor(searchTerm: String, allMatches: List<Tag>, exactMatches: List<Tag>) {
         this.searchTerm = searchTerm
         this.allMatches = allMatches
-        this.hasExactMatch = exactMatch != null
-        this.exactMatch = exactMatch
+        this.hasExactMatches = exactMatches.isNotEmpty()
+        this.exactMatches = exactMatches
     }
 
 
     protected fun findExactMatch(searchTerm: String, allMatches: List<Tag>) {
         for (match in allMatches) {
             if (searchTerm == match.name.toLowerCase()) {
-                this.hasExactMatch = true
-                this.exactMatch = match
-                break
+                this.hasExactMatches = true
+                (this.exactMatches as MutableList).add(match)
             }
         }
     }
 
-    fun hasExactMatch(): Boolean {
-        return hasExactMatch
+    fun hasExactMatches(): Boolean {
+        return hasExactMatches
     }
 
     fun hasSingleMatch(): Boolean {
@@ -75,7 +73,7 @@ class TagsSearchResult {
 
 
     override fun toString(): String {
-        return searchTerm + " has " + allMatchesCount + " matches, hasExactMatch = " + hasExactMatch()
+        return searchTerm + " has " + allMatchesCount + " matches, hasExactMatches = " + hasExactMatches()
     }
 
 }

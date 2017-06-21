@@ -57,8 +57,9 @@ class TagsSearchResults(val overAllSearchTerm: String) {
         this.relevantMatchesSortedProperty = relevantMatchesSorted
 
         // TODO: what was that good for?
-        if (results.size == 0)
-            addSearchResult(TagsSearchResult(overAllSearchTerm, relevantMatchesSorted, null))
+        if (results.size == 0) {
+            addSearchResult(TagsSearchResult(overAllSearchTerm, relevantMatchesSorted))
+        }
     }
 
 
@@ -83,7 +84,7 @@ class TagsSearchResults(val overAllSearchTerm: String) {
         val exactMatches = ArrayList<Tag>()
 
         for(result in results) {
-            result.exactMatch?.let { exactMatches.add(it) }
+            exactMatches.addAll(result.exactMatches)
         }
 
         return exactMatches
@@ -113,14 +114,15 @@ class TagsSearchResults(val overAllSearchTerm: String) {
     }
 
     fun isExactMatchOfLastResult(tag: Tag): Boolean {
-        if (hasEmptySearchTerm)
-        // no exact or relevant matches
+        if (hasEmptySearchTerm) { // no exact or relevant matches
             return false
-        if (hasLastResult() == false)
+        }
+        if (hasLastResult() == false) {
             return false
+        }
 
         lastResult?.let { lastResult ->
-            return lastResult.hasExactMatch() && lastResult.exactMatch == tag
+            return lastResult.hasExactMatches() && lastResult.exactMatches.contains(tag)
         }
         return false
     }
@@ -162,7 +164,7 @@ class TagsSearchResults(val overAllSearchTerm: String) {
         for (i in 0..results.size - 1 - 1) {
             val result = results[i]
 
-            result.exactMatch?.let { nonLastResultExactOrSingleMatches.add(it) }
+            nonLastResultExactOrSingleMatches.addAll(result.exactMatches)
 
             result.getSingleMatch()?.let { nonLastResultExactOrSingleMatches.add(it) }
         }
@@ -186,7 +188,7 @@ class TagsSearchResults(val overAllSearchTerm: String) {
 
         for (i in 0..results.size - 1 - 1) {
             val result = results[i]
-            if (result.hasExactMatch() == false && result.hasSingleMatch() == false)
+            if (result.hasExactMatches() == false && result.hasSingleMatch() == false)
                 nonLastResultNotExactOrSingleMatches.addAll(result.allMatches)
         }
 
@@ -210,11 +212,15 @@ class TagsSearchResults(val overAllSearchTerm: String) {
     }
 
     fun hasLastResultExactMatch(): Boolean {
-        if (hasLastResult() == false)
+        if (hasLastResult() == false) {
             return false
+        }
 
-        val lastResult = lastResult
-        return lastResult!!.hasExactMatch()
+        lastResult?.let { lastResult ->
+            return lastResult.hasExactMatches()
+        }
+
+        return false
     }
 
     val lastResult: TagsSearchResult?
@@ -226,14 +232,13 @@ class TagsSearchResults(val overAllSearchTerm: String) {
             return results[results.size - 1]
         }
 
-    val exactMatchesOfLastResult: Tag?
+    val exactMatchesOfLastResult: List<Tag>
         get() {
-            val lastResult = lastResult
-            if (lastResult != null) {
-                return lastResult.exactMatch
+            lastResult?.let { lastResult ->
+                return lastResult.exactMatches
             }
 
-            return null
+            return listOf()
         }
 
 

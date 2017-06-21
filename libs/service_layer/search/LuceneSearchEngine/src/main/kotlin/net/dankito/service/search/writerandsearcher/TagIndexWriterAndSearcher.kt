@@ -80,14 +80,14 @@ class TagIndexWriterAndSearcher(tagService: TagService) : IndexWriterAndSearcher
                     return
                 }
 
-                val exactMatch = getExactMatchTag(searchTerm)
+                val exactMatches = getExactMatches(searchTerm)
 
                 val query = WildcardQuery(Term(FieldName.TagName, "*$searchTerm*"))
                 if (search.isInterrupted) {
                     return
                 }
 
-                search.addResult(TagsSearchResult(tagNameToFilterFor, executeSearchTagsQuery(query), exactMatch))
+                search.addResult(TagsSearchResult(tagNameToFilterFor, executeSearchTagsQuery(query), exactMatches))
             } catch (e: Exception) {
                 log.error("Could not parse query for $tagNameToFilterFor (overall search term was ${search.searchTerm}", e)
                 search.errorOccurred(e)
@@ -100,12 +100,10 @@ class TagIndexWriterAndSearcher(tagService: TagService) : IndexWriterAndSearcher
         search.fireSearchCompleted()
     }
 
-    private fun getExactMatchTag(searchTerm: String): Tag? {
+    private fun getExactMatches(searchTerm: String): List<Tag> {
         val exactMatchQuery = TermQuery(Term(FieldName.TagName, searchTerm))
 
-        val exactMatchResults = executeQuery(exactMatchQuery, Tag::class.java, 2)
-
-        return if(exactMatchResults.size == 1) exactMatchResults.get(0) else null
+        return executeQuery(exactMatchQuery, Tag::class.java)
     }
 
     private fun getAllRelevantTagsSorted(search: TagsSearch) {
@@ -117,7 +115,7 @@ class TagIndexWriterAndSearcher(tagService: TagService) : IndexWriterAndSearcher
             }
 
             val searchTerm = QueryParser.escape(result.searchTerm)
-            if (result.hasExactMatch() && result !== search.results.lastResult) {
+            if (result.hasExactMatches() && result !== search.results.lastResult) {
                 sortRelevantTagsQuery.add(TermQuery(Term(FieldName.TagName, searchTerm)), BooleanClause.Occur.SHOULD)
             }
             else {
