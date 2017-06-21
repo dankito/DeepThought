@@ -64,7 +64,7 @@ class EntryIndexWriterAndSearcher(entryService: EntryService) : IndexWriterAndSe
 
         addQueryForSearchTerm(termsToFilterFor, query, search)
 
-        executeQueryForSearchWithCollectionResult(search, query, Entry::class.java, listOf(SortOption(FieldName.EntryCreated, SortOrder.Descending, SortField.Type.LONG)))
+        executeQueryForSearchWithCollectionResult(search, query, Entry::class.java, SortOption(FieldName.EntryCreated, SortOrder.Descending, SortField.Type.LONG))
     }
 
     private fun addQueryForOptions(search: EntriesSearch, query: BooleanQuery) {

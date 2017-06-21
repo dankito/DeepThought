@@ -250,23 +250,23 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
 
     @Throws(Exception::class)
-    protected fun executeQuery(query: Query, resultEntityClass: Class<TEntity>, sortOptions: List<SortOption>): List<TEntity> {
+    protected fun executeQuery(query: Query, resultEntityClass: Class<TEntity>, vararg sortOptions: SortOption): List<TEntity> {
         log.debug("Executing Query " + query)
 
         getIndexSearcher()?.let {
-            return LazyLoadingLuceneSearchResultsList<TEntity>(entityService.entityManager, it, query, resultEntityClass, getIdFieldName(), 1000, sortOptions)
+            return LazyLoadingLuceneSearchResultsList<TEntity>(entityService.entityManager, it, query, resultEntityClass, getIdFieldName(), 1000, sortOptions.asList())
         }
 
         return listOf()
     }
 
-    protected fun executeQueryForSearchWithCollectionResult(search: SearchWithCollectionResult<TEntity>, query: Query, resultEntityClass: Class<TEntity>, sortOptions: List<SortOption>) {
+    protected fun executeQueryForSearchWithCollectionResult(search: SearchWithCollectionResult<TEntity>, query: Query, resultEntityClass: Class<TEntity>, vararg sortOptions: SortOption) {
         if (search.isInterrupted)
             return
 
         try {
             getIndexSearcher()?.let {
-                search.results = executeQuery(query, resultEntityClass, sortOptions)
+                search.results = executeQuery(query, resultEntityClass, *sortOptions)
             }
         } catch (ex: Exception) {
             log.error("Could not execute Query " + query.toString(), ex)
