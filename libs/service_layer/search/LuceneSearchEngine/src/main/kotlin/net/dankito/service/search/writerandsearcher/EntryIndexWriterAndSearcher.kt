@@ -1,17 +1,19 @@
-package net.dankito.service.search
+package net.dankito.service.search.writerandsearcher
 
 import net.dankito.deepthought.model.Entry
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.messages.EntryChanged
+import net.dankito.service.search.FieldName
+import net.dankito.service.search.FieldValue
 import net.dankito.service.search.FieldValue.NoTagsFieldValue
+import net.dankito.service.search.SortOption
+import net.dankito.service.search.SortOrder
 import net.dankito.service.search.specific.EntriesSearch
 import net.engio.mbassy.listener.Handler
 import org.apache.lucene.document.*
 import org.apache.lucene.index.Term
 import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.*
-
-
 
 
 class EntryIndexWriterAndSearcher(entryService: EntryService) : IndexWriterAndSearcher<Entry>(entryService) {

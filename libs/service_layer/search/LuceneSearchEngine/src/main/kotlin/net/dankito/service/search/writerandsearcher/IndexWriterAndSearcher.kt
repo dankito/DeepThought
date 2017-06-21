@@ -1,9 +1,11 @@
-package net.dankito.service.search
+package net.dankito.service.search.writerandsearcher
 
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.service.data.EntityServiceBase
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.EntityChanged
+import net.dankito.service.search.SearchWithCollectionResult
+import net.dankito.service.search.SortOption
 import net.dankito.service.search.results.LazyLoadingLuceneSearchResultsList
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.document.Document
