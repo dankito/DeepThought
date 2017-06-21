@@ -15,7 +15,7 @@ class MainActivitySectionsPagerAdapter(fragmentManager: FragmentManager, searchE
 
     private val entriesListView = EntriesListView(searchEngine, router)
 
-    private val tagsListView = TagsListView()
+    private val tagsListView = TagsListView(searchEngine, router)
 
 
     override fun getCount(): Int {
