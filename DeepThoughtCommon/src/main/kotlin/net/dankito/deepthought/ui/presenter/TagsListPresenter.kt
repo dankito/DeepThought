@@ -7,6 +7,7 @@ import net.dankito.deepthought.ui.view.ITagsListView
 import net.dankito.service.data.messages.TagChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.Search
 import net.dankito.service.search.specific.TagsSearch
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
@@ -14,6 +15,9 @@ import kotlin.concurrent.thread
 
 
 class TagsListPresenter(private val tagsListView: ITagsListView, private var router: IRouter, private var searchEngine: ISearchEngine) {
+
+    private var lastSearchTerm = Search.EmptySearchTerm
+
 
     @Inject
     protected lateinit var eventBus: IEventBus
@@ -43,7 +47,14 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private var rou
     }
 
     private fun retrieveAndShowTags() {
-        searchEngine.searchTags(TagsSearch { result ->
+        searchTags(Search.EmptySearchTerm)
+    }
+
+
+    fun searchTags(searchTerm: String) {
+        lastSearchTerm = searchTerm
+
+        searchEngine.searchTags(TagsSearch(searchTerm) { result ->
             tagsListView.showTags(result.getAllMatches())
         })
     }
