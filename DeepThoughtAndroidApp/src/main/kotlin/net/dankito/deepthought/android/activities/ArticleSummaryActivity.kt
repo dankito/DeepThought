@@ -23,6 +23,8 @@ import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.serializer.ISerializer
+import net.dankito.service.data.TagService
+import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.ImageCache
 import org.slf4j.LoggerFactory
 import java.io.File
@@ -43,6 +45,12 @@ class ArticleSummaryActivity : BaseActivity() {
 
     @Inject
     protected lateinit var articleExtractors: ArticleExtractors
+
+    @Inject
+    protected lateinit var tagService: TagService
+
+    @Inject
+    protected lateinit var searchEngine: ISearchEngine
 
     @Inject
     protected lateinit var serializer: ISerializer
@@ -68,7 +76,7 @@ class ArticleSummaryActivity : BaseActivity() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = ArticleSummaryPresenter(articleExtractors, router)
+        presenter = ArticleSummaryPresenter(articleExtractors, tagService, searchEngine, router)
     }
 
 
