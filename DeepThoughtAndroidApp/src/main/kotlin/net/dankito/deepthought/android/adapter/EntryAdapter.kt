@@ -3,6 +3,7 @@ package net.dankito.deepthought.android.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import kotlinx.android.synthetic.main.list_item_entry.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.extensions.entryPreview
@@ -24,11 +25,22 @@ class EntryAdapter: ListAdapter<Entry>() {
         view.txtReferencePreview.text = entry.referencePreview
 
         view.txtEntryPreview.text = entry.entryPreview
+        setTxtEntryPreviewMaxLines(view.txtEntryPreview, entry)
 
         view.txtEntryTags.visibility = if(entry.hasTags()) View.VISIBLE else View.GONE
         view.txtEntryTags.text = entry.tagsPreview
 
         return view
+    }
+
+    private fun setTxtEntryPreviewMaxLines(txtEntryPreview: TextView, entry: Entry) {
+        var countPreviewLines = if(entry.hasReference()) 3 else 4
+
+        if(entry.hasTags() == false) {
+            countPreviewLines++
+        }
+
+        txtEntryPreview.setLines(countPreviewLines)
     }
 
 }
