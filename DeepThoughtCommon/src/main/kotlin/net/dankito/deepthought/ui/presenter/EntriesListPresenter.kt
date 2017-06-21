@@ -7,6 +7,7 @@ import net.dankito.deepthought.ui.view.IEntriesListView
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.Search
 import net.dankito.service.search.specific.EntriesSearch
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
@@ -14,6 +15,9 @@ import kotlin.concurrent.thread
 
 
 class EntriesListPresenter(private val entriesListView: IEntriesListView, private var router: IRouter, private var searchEngine: ISearchEngine) {
+
+    private var lastSearchTerm = Search.EmptySearchTerm
+
 
     @Inject
     protected lateinit var eventBus: IEventBus
@@ -48,7 +52,14 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
     }
 
     private fun retrieveAndShowEntries() {
-        searchEngine.searchEntries(EntriesSearch { result ->
+        searchEntries(Search.EmptySearchTerm)
+    }
+
+
+    fun searchEntries(searchTerm: String, searchInContent: Boolean = true, searchInAbstract: Boolean = true) {
+        lastSearchTerm = searchTerm
+
+        searchEngine.searchEntries(EntriesSearch(searchTerm, searchInContent, searchInAbstract) { result ->
             entriesListView.showEntries(result)
         })
     }
