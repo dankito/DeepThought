@@ -27,6 +27,8 @@ import java.util.*
 abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: EntityServiceBase<TEntity>) {
 
     companion object {
+        protected const val DEFAULT_COUNT_MAX_SEARCH_RESULTS = 1000
+
         private const val WAIT_TIME_BEFORE_COMMITTING_INDICES_MILLIS = 1500L
 
         private val log = LoggerFactory.getLogger(IndexWriterAndSearcher::class.java)
@@ -250,23 +252,24 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
 
     @Throws(Exception::class)
-    protected fun executeQuery(query: Query, resultEntityClass: Class<TEntity>, vararg sortOptions: SortOption): List<TEntity> {
+    protected fun executeQuery(query: Query, resultEntityClass: Class<TEntity>, countMaxSearchResults: Int = DEFAULT_COUNT_MAX_SEARCH_RESULTS, vararg sortOptions: SortOption): List<TEntity> {
         log.debug("Executing Query " + query)
 
         getIndexSearcher()?.let {
-            return LazyLoadingLuceneSearchResultsList<TEntity>(entityService.entityManager, it, query, resultEntityClass, getIdFieldName(), 1000, sortOptions.asList())
+            return LazyLoadingLuceneSearchResultsList<TEntity>(entityService.entityManager, it, query, resultEntityClass, getIdFieldName(), countMaxSearchResults, sortOptions.asList())
         }
 
         return listOf()
     }
 
-    protected fun executeQueryForSearchWithCollectionResult(search: SearchWithCollectionResult<TEntity>, query: Query, resultEntityClass: Class<TEntity>, vararg sortOptions: SortOption) {
+    protected fun executeQueryForSearchWithCollectionResult(search: SearchWithCollectionResult<TEntity>, query: Query, resultEntityClass: Class<TEntity>,
+                                                            countMaxSearchResults: Int = DEFAULT_COUNT_MAX_SEARCH_RESULTS, vararg sortOptions: SortOption) {
         if (search.isInterrupted)
             return
 
         try {
             getIndexSearcher()?.let {
-                search.results = executeQuery(query, resultEntityClass, *sortOptions)
+                search.results = executeQuery(query, resultEntityClass, countMaxSearchResults, *sortOptions)
             }
         } catch (ex: Exception) {
             log.error("Could not execute Query " + query.toString(), ex)
