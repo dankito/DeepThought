@@ -10,7 +10,7 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
 import net.dankito.deepthought.android.adapter.MainActivitySectionsPagerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
