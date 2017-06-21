@@ -14,9 +14,10 @@ import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class EntriesListPresenter(private val entriesListView: IEntriesListView, private var router: IRouter, private var searchEngine: ISearchEngine) {
+class EntriesListPresenter(private val entriesListView: IEntriesListView, private var router: IRouter, private var searchEngine: ISearchEngine)
+    : IMainViewSectionPresenter {
 
-    private var lastSearchTerm = Search.EmptySearchTerm
+    private var lastSearchTermProperty = Search.EmptySearchTerm
 
 
     @Inject
@@ -31,13 +32,14 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
 
             eventBus.register(eventBusListener)
 
+            // EntriesListPresenter is the big exception. As it's first displayed at app start no lazy data retrieval is needed for it, get all entries as soon as SearchEngine is initialized
             searchEngine.addInitializationListener {
-                searchEngineInitialized()
+                retrieveAndShowEntries()
             }
         }
     }
 
-    fun cleanUp() {
+    override fun cleanUp() {
         eventBus.unregister(eventBusListener)
     }
 
@@ -47,8 +49,8 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
     }
 
 
-    private fun searchEngineInitialized() {
-        retrieveAndShowEntries()
+    override fun getAndShowAllEntities() {
+        searchEngine.addInitializationListener { retrieveAndShowEntries() }
     }
 
     private fun retrieveAndShowEntries() {
@@ -57,11 +59,15 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
 
 
     fun searchEntries(searchTerm: String, searchInContent: Boolean = true, searchInAbstract: Boolean = true) {
-        lastSearchTerm = searchTerm
+       lastSearchTermProperty = searchTerm
 
         searchEngine.searchEntries(EntriesSearch(searchTerm, searchInContent, searchInAbstract) { result ->
             entriesListView.showEntries(result)
         })
+    }
+
+    override fun getLastSearchTerm(): String {
+        return lastSearchTermProperty
     }
 
 

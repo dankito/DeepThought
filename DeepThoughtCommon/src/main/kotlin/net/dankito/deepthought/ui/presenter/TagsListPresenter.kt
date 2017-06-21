@@ -14,9 +14,10 @@ import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class TagsListPresenter(private val tagsListView: ITagsListView, private var router: IRouter, private var searchEngine: ISearchEngine) {
+class TagsListPresenter(private val tagsListView: ITagsListView, private var router: IRouter, private var searchEngine: ISearchEngine)
+    : IMainViewSectionPresenter {
 
-    private var lastSearchTerm = Search.EmptySearchTerm
+    private var lastSearchTermProperty = Search.EmptySearchTerm
 
 
     @Inject
@@ -30,20 +31,16 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private var rou
             CommonComponent.component.inject(this)
 
             eventBus.register(eventBusListener)
-
-            searchEngine.addInitializationListener {
-                searchEngineInitialized()
-            }
         }
     }
 
-    fun cleanUp() {
+    override fun cleanUp() {
         eventBus.unregister(eventBusListener)
     }
 
 
-    private fun searchEngineInitialized() {
-        retrieveAndShowTags()
+    override fun getAndShowAllEntities() {
+        searchEngine.addInitializationListener { retrieveAndShowTags() }
     }
 
     private fun retrieveAndShowTags() {
@@ -52,11 +49,15 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private var rou
 
 
     fun searchTags(searchTerm: String) {
-        lastSearchTerm = searchTerm
+        lastSearchTermProperty = searchTerm
 
         searchEngine.searchTags(TagsSearch(searchTerm) { result ->
             tagsListView.showTags(result.getAllMatches())
         })
+    }
+
+    override fun getLastSearchTerm(): String {
+        return lastSearchTermProperty
     }
 
 
