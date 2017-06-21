@@ -14,7 +14,7 @@
         app:showAsAction="always"
         android:orderInCategory="200"
         android:title="@string/activity_article_summary_menu_load_more"
-        android:icon="@android:drawable/arrow_down_float"
+        android:icon="@drawable/ic_forward_white_48dp"
         android:visible="false"
     />
 
