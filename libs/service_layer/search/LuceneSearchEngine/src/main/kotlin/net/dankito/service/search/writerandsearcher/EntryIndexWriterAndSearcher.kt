@@ -57,7 +57,7 @@ class EntryIndexWriterAndSearcher(entryService: EntryService) : IndexWriterAndSe
     }
 
 
-    fun searchEntries(search: EntriesSearch, termsToFilterFor: Array<String>) {
+    fun searchEntries(search: EntriesSearch, termsToFilterFor: List<String>) {
         val query = BooleanQuery()
 
         addQueryForOptions(search, query)
@@ -81,7 +81,7 @@ class EntryIndexWriterAndSearcher(entryService: EntryService) : IndexWriterAndSe
         }
     }
 
-    private fun addQueryForSearchTerm(termsToFilterFor: Array<String>, query: BooleanQuery, search: EntriesSearch) {
+    private fun addQueryForSearchTerm(termsToFilterFor: List<String>, query: BooleanQuery, search: EntriesSearch) {
         if (termsToFilterFor.isEmpty()) {
             query.add(WildcardQuery(Term(FieldName.EntryId, "*")), BooleanClause.Occur.MUST)
         }

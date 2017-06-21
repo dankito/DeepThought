@@ -15,30 +15,29 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
 
 
     override fun searchEntries(search: EntriesSearch) {
-        val termsToSearchFor = getTermsToSearchFor(search, " ")
+        val termsToSearchFor = getSingleSearchTerms(search.searchTerm, " ")
 
         threadPool.runAsync { searchEntries(search, termsToSearchFor) }
     }
 
-    abstract fun searchEntries(search: EntriesSearch, termsToSearchFor: Array<String>)
+    abstract fun searchEntries(search: EntriesSearch, termsToSearchFor: List<String>)
 
     override fun searchTags(search: TagsSearch) {
         if (search.searchTerm.isNullOrBlank())
             searchTags(search, ArrayList<String>())
         else {
-            val tagNamesToFilterFor = search.searchTerm.toLowerCase().split(",").map { it.trim() }.dropLastWhile { it.isEmpty() }
+            val tagNamesToFilterFor = getSingleSearchTerms(search.searchTerm, ",")
 
             threadPool.runAsync { searchTags(search, tagNamesToFilterFor) }
         }
     }
 
-    abstract fun searchTags(search: TagsSearch, termsToSearchFor: Collection<String>)
+    abstract fun searchTags(search: TagsSearch, termsToSearchFor: List<String>)
 
 
-    private fun getTermsToSearchFor(search: EntriesSearch, separator: String): Array<String> {
-        val lowerCaseFilter = search.searchTerm.toLowerCase()
-        val termsToSearchFor = lowerCaseFilter.split(separator).dropLastWhile { it.isEmpty() }.toTypedArray()
-        return termsToSearchFor
+    private fun getSingleSearchTerms(overallSearchTerm: String, separator: String): List<String> {
+        // make overallSearchTerm lower case, split it at all separators and trim resulting single search terms
+        return overallSearchTerm.toLowerCase().split(separator).map { it.trim() }.dropLastWhile { it.isEmpty() }
     }
 
 

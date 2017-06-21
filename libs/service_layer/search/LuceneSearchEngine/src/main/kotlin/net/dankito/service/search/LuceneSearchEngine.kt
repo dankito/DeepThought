@@ -160,11 +160,11 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
 
     /*      ISearchEngine implementation        */
 
-    override fun searchEntries(search: EntriesSearch, termsToSearchFor: Array<String>) {
+    override fun searchEntries(search: EntriesSearch, termsToSearchFor: List<String>) {
         entryIndexWriterAndSearcher.searchEntries(search, termsToSearchFor)
     }
 
-    override fun searchTags(search: TagsSearch, termsToSearchFor: Collection<String>) {
+    override fun searchTags(search: TagsSearch, termsToSearchFor: List<String>) {
         tagIndexWriterAndSearcher.searchTags(search, termsToSearchFor)
     }
 

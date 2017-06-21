@@ -47,7 +47,7 @@ class TagIndexWriterAndSearcher(tagService: TagService) : IndexWriterAndSearcher
     }
 
 
-    fun searchTags(search: TagsSearch, termsToSearchFor: Collection<String>) {
+    fun searchTags(search: TagsSearch, termsToSearchFor: List<String>) {
         if(termsToSearchFor.isEmpty()) {
             executeSearchForEmptySearchTerm(search)
         }
@@ -68,7 +68,7 @@ class TagIndexWriterAndSearcher(tagService: TagService) : IndexWriterAndSearcher
         search.fireSearchCompleted()
     }
 
-    private fun executeSearchForNonEmptySearchTerm(search: TagsSearch, tagNamesToSearchFor: Collection<String>) {
+    private fun executeSearchForNonEmptySearchTerm(search: TagsSearch, tagNamesToSearchFor: List<String>) {
         for (tagNameToFilterFor in tagNamesToSearchFor) {
             if (search.isInterrupted) {
                 return
