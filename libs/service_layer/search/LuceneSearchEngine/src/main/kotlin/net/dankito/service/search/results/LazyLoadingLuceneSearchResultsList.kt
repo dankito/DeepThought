@@ -11,7 +11,7 @@ import java.util.*
 
 
 class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEntityManager, private var searcher: IndexSearcher, query: Query, resultType: Class<T>,
-                             private var idFieldName: String, countTopNHits: Int = 1000, sortOptions: List<SortOption> = ArrayList<SortOption>(0))
+                            private var idFieldName: String, countMaxSearchResults: Int = 1000, sortOptions: List<SortOption> = ArrayList<SortOption>(0))
     : LazyLoadingList<T>(entityManager, resultType) {
 
     companion object {
@@ -22,7 +22,7 @@ class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEntityM
     init {
         try {
             val sort = getSorting(sortOptions)
-            val hits = searcher.search(query, countTopNHits, sort).scoreDocs
+            val hits = searcher.search(query, countMaxSearchResults, sort).scoreDocs
 
             this.entityIds = retrieveEntityIds(hits)
         } catch (ex: Exception) {
@@ -34,7 +34,7 @@ class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEntityM
     private fun getSorting(sortOptions: List<SortOption>): Sort {
         val sort = Sort()
 
-        if (sortOptions.size > 0) {
+        if (sortOptions.isNotEmpty()) {
             val sortFields = arrayOfNulls<SortField>(sortOptions.size)
 
             for(i in sortOptions.indices) {
