@@ -119,8 +119,10 @@ class TagsSearchResults(val overAllSearchTerm: String) {
         if (hasLastResult() == false)
             return false
 
-        val lastResult = lastResult
-        return lastResult!!.hasExactMatch() && lastResult.exactMatch == tag
+        lastResult?.let { lastResult ->
+            return lastResult.hasExactMatch() && lastResult.exactMatch == tag
+        }
+        return false
     }
 
     fun isSingleMatchOfLastResult(tag: Tag): Boolean {
