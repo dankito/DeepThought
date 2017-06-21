@@ -4,7 +4,6 @@ package net.dankito.service.search.specific;
 import net.dankito.deepthought.model.Tag;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 
@@ -18,17 +17,17 @@ public class TagsSearchResult {
 
   protected Tag singleMatch = null;
 
-  protected Collection<Tag> allMatches;
+  protected List<Tag> allMatches;
 
 
-  public TagsSearchResult(String searchTerm, Collection<Tag> allMatches) {
+  public TagsSearchResult(String searchTerm, List<Tag> allMatches) {
     this.searchTerm = searchTerm;
     this.allMatches = allMatches;
 
     findExactMatch(searchTerm, allMatches);
   }
 
-  public TagsSearchResult(String searchTerm, Collection<Tag> allMatches, Tag exactMatch) {
+  public TagsSearchResult(String searchTerm, List<Tag> allMatches, Tag exactMatch) {
     this.searchTerm = searchTerm;
     this.allMatches = allMatches;
     this.hasExactMatch = exactMatch != null;
@@ -36,7 +35,7 @@ public class TagsSearchResult {
   }
 
 
-  protected void findExactMatch(String searchTerm, Collection<Tag> allMatches) {
+  protected void findExactMatch(String searchTerm, List<Tag> allMatches) {
     for(Tag match : allMatches) {
       if(searchTerm.equals(match.getName().toLowerCase())) {
         this.hasExactMatch = true;
@@ -82,7 +81,7 @@ public class TagsSearchResult {
     return allMatches.size();
   }
 
-  public Collection<Tag> getAllMatches() {
+  public List<Tag> getAllMatches() {
     return allMatches;
   }
 

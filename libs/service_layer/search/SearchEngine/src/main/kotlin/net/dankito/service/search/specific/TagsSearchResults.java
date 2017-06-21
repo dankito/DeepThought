@@ -6,7 +6,6 @@ import net.dankito.service.search.Search;
 import net.dankito.service.search.util.CombinedLazyLoadingList;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 
@@ -21,15 +20,15 @@ public class TagsSearchResults {
 
   protected List<TagsSearchResult> results = new ArrayList<>();
 
-  protected Collection<Tag> allMatches = null;
+  protected List<Tag> allMatches = null;
 
-  protected Collection<Tag> relevantMatchesSorted = new ArrayList<>();
+  protected List<Tag> relevantMatchesSorted = new ArrayList<>();
 
-  protected Collection<Tag> exactMatches = null;
+  protected List<Tag> exactMatches = null;
 
-  protected Collection<Tag> exactOrSingleMatchesNotOfLastResult = null;
+  protected List<Tag> exactOrSingleMatchesNotOfLastResult = null;
 
-  protected Collection<Tag> matchesButOfLastResult = null;
+  protected List<Tag> matchesButOfLastResult = null;
 
 
   public TagsSearchResults() {
@@ -41,7 +40,7 @@ public class TagsSearchResults {
     this.overAllSearchTerm = overAllSearchTerm;
   }
 
-  public TagsSearchResults(String overAllSearchTerm, Collection<Tag> relevantMatchesSorted) {
+  public TagsSearchResults(String overAllSearchTerm, List<Tag> relevantMatchesSorted) {
     this(overAllSearchTerm);
     setRelevantMatchesSorted(relevantMatchesSorted);
   }
@@ -58,13 +57,13 @@ public class TagsSearchResults {
     return 0;
   }
 
-  public Collection<Tag> getRelevantMatchesSorted() {
+  public List<Tag> getRelevantMatchesSorted() {
     if(relevantMatchesSorted == null)
       return getAllMatches();
     return relevantMatchesSorted;
   }
 
-  public void setRelevantMatchesSorted(Collection<Tag> relevantMatchesSorted) {
+  public void setRelevantMatchesSorted(List<Tag> relevantMatchesSorted) {
     this.relevantMatchesSorted = relevantMatchesSorted;
 
     // TODO: what was that good for?
@@ -73,7 +72,7 @@ public class TagsSearchResults {
   }
 
 
-  public Collection<Tag> getAllMatches() {
+  public List<Tag> getAllMatches() {
     if(allMatches == null)
       allMatches = determineAllMatches();
 
@@ -82,15 +81,15 @@ public class TagsSearchResults {
 
 
 
-  public Collection<Tag> getExactMatches() {
+  public List<Tag> getExactMatches() {
     if(exactMatches == null)
       exactMatches = determineExactMatches();
 
     return exactMatches;
   }
 
-  protected Collection<Tag> determineExactMatches() {
-    Collection<Tag> exactMatches = new ArrayList<>();
+  protected List<Tag> determineExactMatches() {
+    List<Tag> exactMatches = new ArrayList<>();
 
     for(TagsSearchResult result : getResults()) {
       if(result.hasExactMatch())
@@ -149,13 +148,13 @@ public class TagsSearchResults {
   }
 
 
-  protected Collection<Tag> getExactOrSingleMatchesNotOfLastResult() {
+  protected List<Tag> getExactOrSingleMatchesNotOfLastResult() {
     if(exactOrSingleMatchesNotOfLastResult == null)
       exactOrSingleMatchesNotOfLastResult = determineExactOrSingleMatchesNotOfLastResult();
     return exactOrSingleMatchesNotOfLastResult;
   }
 
-  protected Collection<Tag> determineExactOrSingleMatchesNotOfLastResult() {
+  protected List<Tag> determineExactOrSingleMatchesNotOfLastResult() {
     List<Tag> nonLastResultExactOrSingleMatches = new ArrayList<>();
 
     for(int i = 0; i < results.size() - 1; i++) {
@@ -169,13 +168,13 @@ public class TagsSearchResults {
     return nonLastResultExactOrSingleMatches;
   }
 
-  protected Collection<Tag> getMatchesNotOfLastResult() {
+  protected List<Tag> getMatchesNotOfLastResult() {
     if(matchesButOfLastResult == null)
       matchesButOfLastResult = determineMatchesNotOfLastResult();
     return matchesButOfLastResult;
   }
 
-  protected Collection<Tag> determineMatchesNotOfLastResult() {
+  protected List<Tag> determineMatchesNotOfLastResult() {
     List<Tag> nonLastResultNotExactOrSingleMatches = new ArrayList<>();
 
     for(int i = 0; i < results.size() - 1; i++) {
@@ -188,7 +187,7 @@ public class TagsSearchResults {
   }
 
 
-  protected Collection<Tag> determineAllMatches() {
+  protected List<Tag> determineAllMatches() {
     CombinedLazyLoadingList<Tag> allMatches = new CombinedLazyLoadingList<>();
 
     for(TagsSearchResult result : getResults()) {
