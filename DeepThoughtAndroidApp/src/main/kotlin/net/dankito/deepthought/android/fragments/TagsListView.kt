@@ -8,6 +8,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.TagAdapter
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.deepthought.ui.presenter.TagsListPresenter
 import net.dankito.deepthought.ui.view.ITagsListView
 import net.dankito.service.search.ISearchEngine
@@ -30,12 +31,10 @@ class TagsListView(private val searchEngine: ISearchEngine, private val router: 
         rootView?.lstTags?.setOnItemClickListener { _, _, position, _ -> presenter.showEntriesForTag(adapter.getItem(position)) }
     }
 
-    override fun initPresenter() {
+    override fun initPresenter(): IMainViewSectionPresenter {
         presenter = TagsListPresenter(this, router, searchEngine)
-    }
 
-    override fun cleanUpPresenter() {
-        presenter.cleanUp()
+        return presenter
     }
 
 
@@ -46,6 +45,8 @@ class TagsListView(private val searchEngine: ISearchEngine, private val router: 
     override fun initOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.fragment_tab_tags_menu, menu)
     }
+
+    override fun getQueryHint() = activity.getString(R.string.search_hint_tags)
 
     override fun searchEntities(query: String) {
         presenter.searchTags(query)

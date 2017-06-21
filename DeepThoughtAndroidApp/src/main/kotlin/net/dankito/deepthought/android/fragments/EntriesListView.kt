@@ -9,6 +9,7 @@ import net.dankito.deepthought.android.adapter.EntryAdapter
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EntriesListPresenter
+import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.deepthought.ui.view.IEntriesListView
 import net.dankito.service.search.ISearchEngine
 
@@ -29,12 +30,10 @@ class EntriesListView(private val searchEngine: ISearchEngine, private val route
         rootView?.lstEntries?.setOnItemClickListener { _, _, position, _ -> presenter.showEntry(entryAdapter.getItem(position)) }
     }
 
-    override fun initPresenter() {
+    override fun initPresenter(): IMainViewSectionPresenter {
         presenter = EntriesListPresenter(this, router, searchEngine)
-    }
 
-    override fun cleanUpPresenter() {
-        presenter.cleanUp()
+        return presenter
     }
 
 
@@ -45,6 +44,8 @@ class EntriesListView(private val searchEngine: ISearchEngine, private val route
     override fun initOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.fragment_tab_entries_menu, menu)
     }
+
+    override fun getQueryHint() = activity.getString(R.string.search_hint_entries)
 
     override fun searchEntities(query: String) {
         presenter.searchEntries(query)

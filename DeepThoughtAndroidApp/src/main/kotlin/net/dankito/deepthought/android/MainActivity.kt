@@ -158,6 +158,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             currentItem.isChecked = true
             currentlySelectedNavigationItem = currentItem
 
+            sectionsPagerAdapter.getItem(position).viewCameIntoView()
         }
 
         override fun onPageScrollStateChanged(state: Int) {

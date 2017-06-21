@@ -7,9 +7,16 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.SearchView
 import android.view.*
 import net.dankito.deepthought.android.R
+import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
+import net.dankito.service.search.Search
 
 
 abstract class MainActivityTabFragment : Fragment() {
+
+    private lateinit var presenter: IMainViewSectionPresenter
+
+    protected var searchView: SearchView? = null
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater?.inflate(getLayoutResourceId(), container, false)
@@ -25,9 +32,7 @@ abstract class MainActivityTabFragment : Fragment() {
 
     protected abstract fun setupUI(rootView: View?)
 
-    abstract fun initPresenter()
-
-    abstract fun cleanUpPresenter()
+    abstract fun initPresenter(): IMainViewSectionPresenter
 
     protected open fun getHasOptionsMenu(): Boolean {
         return false // may be overwritten in sub class
@@ -37,6 +42,8 @@ abstract class MainActivityTabFragment : Fragment() {
 
     }
 
+    protected open fun getQueryHint() = ""
+
     protected open fun searchEntities(query: String) {
 
     }
@@ -44,13 +51,25 @@ abstract class MainActivityTabFragment : Fragment() {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
 
-        initPresenter()
+        presenter = initPresenter()
     }
 
     override fun onDestroy() {
-        cleanUpPresenter()
+        presenter.cleanUp()
 
         super.onDestroy()
+    }
+
+
+    fun viewCameIntoView() {
+        val lastSearchTerm = presenter.getLastSearchTerm()
+
+        if(lastSearchTerm == Search.EmptySearchTerm) {
+            presenter.getAndShowAllEntities()
+        }
+        else {
+
+        }
     }
 
 
@@ -62,14 +81,26 @@ abstract class MainActivityTabFragment : Fragment() {
             val searchItem = menu.findItem(R.id.search)
 
             (searchItem?.actionView as? SearchView)?.let { searchView ->
-                val searchManager = activity.getSystemService(Context.SEARCH_SERVICE) as SearchManager
-                searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.componentName))
-                searchView.queryHint = activity.getString(R.string.search_hint_entries)
-                searchView.setOnQueryTextListener(entriesQueryTextListener)
+                this.searchView = searchView
+
+                initSearchView(searchView)
             }
         }
 
         super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    private fun initSearchView(searchView: SearchView) {
+        val searchManager = activity.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.componentName))
+        searchView.queryHint = getQueryHint()
+        searchView.setOnQueryTextListener(entriesQueryTextListener)
+
+        val lastSearchTerm = presenter.getLastSearchTerm()
+        if(lastSearchTerm != Search.EmptySearchTerm) {
+            searchView.isIconified = false
+            searchView.setQuery(lastSearchTerm, true)
+        }
     }
 
 
