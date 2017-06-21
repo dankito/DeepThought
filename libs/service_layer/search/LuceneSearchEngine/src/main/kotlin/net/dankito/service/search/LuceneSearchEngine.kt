@@ -4,6 +4,8 @@ import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.EntryService
 import net.dankito.service.search.specific.EntriesSearch
+import net.dankito.service.search.writerandsearcher.EntryIndexWriterAndSearcher
+import net.dankito.service.search.writerandsearcher.IndexWriterAndSearcher
 import net.dankito.utils.IThreadPool
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.analysis.standard.StandardAnalyzer
