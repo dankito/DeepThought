@@ -2,14 +2,14 @@ package net.dankito.service.search.specific;
 
 
 import net.dankito.deepthought.model.Reference;
-import net.dankito.service.search.SearchBase;
+import net.dankito.service.search.Search;
 import net.dankito.service.search.SearchCompletedListener;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 
-public class ReferenceSearch extends SearchBase {
+public class ReferenceSearch extends Search {
 
   protected Collection<Reference> results = new ArrayList<>();
 

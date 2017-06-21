@@ -2,13 +2,13 @@ package net.dankito.service.search.specific;
 
 
 import net.dankito.deepthought.model.Tag;
-import net.dankito.service.search.SearchBase;
+import net.dankito.service.search.Search;
 import net.dankito.service.search.SearchCompletedListener;
 
 import java.util.Collection;
 
 
-public class TagsSearch extends SearchBase {
+public class TagsSearch extends Search {
 
   protected TagsSearchResults results = null;
 

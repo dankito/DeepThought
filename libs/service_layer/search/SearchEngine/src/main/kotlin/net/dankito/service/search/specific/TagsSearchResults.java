@@ -2,7 +2,7 @@ package net.dankito.service.search.specific;
 
 
 import net.dankito.deepthought.model.Tag;
-import net.dankito.service.search.SearchBase;
+import net.dankito.service.search.Search;
 import net.dankito.service.search.util.CombinedLazyLoadingList;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class TagsSearchResults {
 
-  public final static TagsSearchResults EmptySearchResults = new TagsSearchResults(SearchBase.EmptySearchTerm, new ArrayList<Tag>());
+  public final static TagsSearchResults EmptySearchResults = new TagsSearchResults(Search.EmptySearchTerm, new ArrayList<Tag>());
 
 
   protected String overAllSearchTerm;
