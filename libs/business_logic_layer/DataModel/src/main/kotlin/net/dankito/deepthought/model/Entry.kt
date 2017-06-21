@@ -4,6 +4,7 @@ import net.dankito.deepthought.model.config.TableConfig
 import java.io.Serializable
 import java.util.*
 import javax.persistence.*
+import kotlin.collections.ArrayList
 
 
 @Entity(name = TableConfig.EntryTableName)
@@ -95,6 +96,16 @@ data class Entry(
 
     val countTags: Int
         get() = tags.size
+
+    fun setTags(tags: Collection<Tag>) {
+        for(previousTag in ArrayList(this.tags)) {
+            removeTag(previousTag)
+        }
+
+        for(newTag in tags) {
+            addTag(newTag)
+        }
+    }
 
     fun addTag(tag: Tag): Boolean {
         if (tags.add(tag)) {
