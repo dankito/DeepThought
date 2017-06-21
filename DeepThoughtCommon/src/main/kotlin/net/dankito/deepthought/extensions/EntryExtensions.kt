@@ -51,10 +51,23 @@ val Entry.entryPreview: String
         return preview
     }
 
+
 val Entry.referencePreview: String
     get() {
         return reference.preview
     }
+
+
+val Entry.tagsPreview: String
+    get() {
+        previewCache.getCachedTagsPreview(this)?.let { return it }
+
+        val preview = this.tags.joinToString { it.name }
+
+        previewCache.cacheTagPreview(this, preview)
+        return preview
+    }
+
 
 private fun getPlainTextForHtml(htmlString: String): String {
     return Jsoup.parseBodyFragment(htmlString).text()
@@ -68,6 +81,8 @@ class EntryPreviewCache {
     private val contentPlainTextCache = ConcurrentHashMap<Entry, String>()
 
     private val entryPreviewCache = ConcurrentHashMap<Entry, String>()
+
+    private val tagsPreviewCache = ConcurrentHashMap<Entry, String>()
 
 
     @Inject
@@ -108,10 +123,20 @@ class EntryPreviewCache {
     }
 
 
+    fun getCachedTagsPreview(entry: Entry): String? {
+        return tagsPreviewCache[entry]
+    }
+
+    fun cacheTagPreview(entry: Entry, tagsPreview: String) {
+        tagsPreviewCache.put(entry, tagsPreview)
+    }
+
+
     private fun clearCacheForEntry(entry: Entry) {
         abstractPlainTextCache.remove(entry)
         contentPlainTextCache.remove(entry)
         entryPreviewCache.remove(entry)
+        tagsPreviewCache.remove(entry)
     }
 
 

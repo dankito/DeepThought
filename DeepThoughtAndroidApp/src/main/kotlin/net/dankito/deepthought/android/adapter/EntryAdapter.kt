@@ -7,6 +7,7 @@ import kotlinx.android.synthetic.main.list_item_entry.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.extensions.entryPreview
 import net.dankito.deepthought.extensions.referencePreview
+import net.dankito.deepthought.extensions.tagsPreview
 import net.dankito.deepthought.model.Entry
 
 
@@ -25,6 +26,7 @@ class EntryAdapter: ListAdapter<Entry>() {
         view.txtEntryPreview.text = entry.entryPreview
 
         view.txtEntryTags.visibility = if(entry.hasTags()) View.VISIBLE else View.GONE
+        view.txtEntryTags.text = entry.tagsPreview
 
         return view
     }
