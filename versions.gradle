@@ -16,6 +16,8 @@ ext {
 
     androidAppCompatVersion = '23.4.0'
 
+    androidDesignVersion = '25.0.1'
+
     daggerVersion = '2.11'
 
     slf4jVersion = '1.7.25'
