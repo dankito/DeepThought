@@ -5,6 +5,7 @@ import net.dankito.deepthought.extensions.EntryPreviewCache
 import net.dankito.deepthought.extensions.ReferencePreviewCache
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.ui.presenter.EntriesListPresenter
+import net.dankito.deepthought.ui.presenter.TagsListPresenter
 import javax.inject.Singleton
 
 
@@ -20,6 +21,8 @@ interface CommonComponent {
     fun inject(articleSummaryExtractorConfigManager: ArticleSummaryExtractorConfigManager)
 
     fun inject(entriesListPresenter: EntriesListPresenter)
+
+    fun inject(tagsListPresenter: TagsListPresenter)
 
     fun inject(entryPreviewCache: EntryPreviewCache)
 
