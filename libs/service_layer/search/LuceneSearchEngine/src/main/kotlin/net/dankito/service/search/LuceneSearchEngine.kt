@@ -3,9 +3,12 @@ package net.dankito.service.search
 import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.EntryService
+import net.dankito.service.data.TagService
 import net.dankito.service.search.specific.EntriesSearch
+import net.dankito.service.search.specific.TagsSearch
 import net.dankito.service.search.writerandsearcher.EntryIndexWriterAndSearcher
 import net.dankito.service.search.writerandsearcher.IndexWriterAndSearcher
+import net.dankito.service.search.writerandsearcher.TagIndexWriterAndSearcher
 import net.dankito.utils.IThreadPool
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.analysis.standard.StandardAnalyzer
@@ -16,7 +19,7 @@ import org.slf4j.LoggerFactory
 import java.io.File
 
 
-class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThreadPool, entryService: EntryService)
+class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThreadPool, entryService: EntryService, tagService: TagService)
     : SearchEngineBase(threadPool) {
 
     companion object {
@@ -24,7 +27,9 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
     }
 
 
-    private val entryIndexWriterAndSearcher: EntryIndexWriterAndSearcher
+    private val entryIndexWriterAndSearcher = EntryIndexWriterAndSearcher(entryService)
+
+    private val tagIndexWriterAndSearcher = TagIndexWriterAndSearcher(tagService)
 
     private val indexWritersAndSearchers: List<IndexWriterAndSearcher<*>>
 
@@ -38,9 +43,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
 
 
     init {
-        entryIndexWriterAndSearcher = EntryIndexWriterAndSearcher(entryService)
-
-        indexWritersAndSearchers = listOf(entryIndexWriterAndSearcher)
+        indexWritersAndSearchers = listOf(entryIndexWriterAndSearcher, tagIndexWriterAndSearcher)
 
         dataManager.addInitializationListener { dataManagerInitialized() }
     }
@@ -159,6 +162,10 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
 
     override fun searchEntries(search: EntriesSearch, termsToSearchFor: Array<String>) {
         entryIndexWriterAndSearcher.searchEntries(search, termsToSearchFor)
+    }
+
+    override fun searchTags(search: TagsSearch, termsToSearchFor: Collection<String>) {
+        tagIndexWriterAndSearcher.searchTags(search, termsToSearchFor)
     }
 
 }
