@@ -49,7 +49,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_above="@+id/bottomViewNavigation"
-        app:srcCompat="@android:drawable/ic_input_add"
+        app:srcCompat="@drawable/ic_add_white_48dp"
     />
 
     <android.support.design.widget.BottomNavigationView
