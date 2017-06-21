@@ -16,8 +16,8 @@ import tornadofx.*
 /**
  * Yeah, i know this is bad design, a Controller deriving from a Presenter ...
  */
-class ArticleSummaryController(articleSummaryExtractor: ArticleSummaryExtractorConfig, articleExtractors: ArticleExtractors, tagService: TagService,
-                               searchEngine: ISearchEngine, router: IRouter)
+class ArticleSummaryPresenterJavaFX(articleSummaryExtractor: ArticleSummaryExtractorConfig, articleExtractors: ArticleExtractors, tagService: TagService,
+                                    searchEngine: ISearchEngine, router: IRouter)
     : ArticleSummaryPresenter(articleExtractors, tagService, searchEngine, router) {
 
     val itemModel = ArticleSummaryItemModel()

@@ -32,14 +32,14 @@ class ArticleSummaryView : Fragment() {
 
     val articleSummaryExtractor: ArticleSummaryExtractorConfig by param()
 
-    private var controller: ArticleSummaryController
+    private var presenter: ArticleSummaryPresenterJavaFX
 
 
     init {
         AppComponent.component.inject(this)
 
-        controller = ArticleSummaryController(articleSummaryExtractor, articleExtractors, tagService, searchEngine, router)
+        presenter = ArticleSummaryPresenterJavaFX(articleSummaryExtractor, articleExtractors, tagService, searchEngine, router)
 
-        root.center = ArticleSummaryItemsView(controller).root
+        root.center = ArticleSummaryItemsView(presenter).root
     }
 }
