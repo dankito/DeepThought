@@ -3,7 +3,7 @@ package net.dankito.service.search
 import java.util.concurrent.atomic.AtomicBoolean
 
 
-abstract class Search<TResult : Any>(searchTerm: String, protected val completedListener: (TResult) -> Unit) {
+abstract class Search<TResult : Any>(val searchTerm: String, protected val completedListener: (TResult) -> Unit) {
 
 
     companion object {
@@ -13,28 +13,31 @@ abstract class Search<TResult : Any>(searchTerm: String, protected val completed
 
     lateinit var results: TResult
 
+    protected var interrupt = AtomicBoolean(false)
 
-    var searchTerm: String
+
+    val isInterrupted: Boolean
+        get() = interrupt.get()
+
+    var errorOccurred = false
         protected set
 
-    protected var interrupt = AtomicBoolean(false)
+    var error: Exception? = null
+        protected set
 
     var isCompleted = false
         protected set
-
-
-    init {
-        this.searchTerm = searchTerm
-    }
 
 
     fun interrupt() {
         this.interrupt.set(true)
     }
 
-    val isInterrupted: Boolean
-        get() = interrupt.get()
 
+    fun errorOccurred(error: Exception) {
+        this.errorOccurred = true
+        this.error = error
+    }
 
     fun fireSearchCompleted() {
         if (isInterrupted) { // do not call completedListener then
