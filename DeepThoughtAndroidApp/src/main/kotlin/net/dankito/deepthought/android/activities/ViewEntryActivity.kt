@@ -116,6 +116,8 @@ class ViewEntryActivity : BaseActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.view_entry_activity_menu, menu)
 
+        menu?.findItem(R.id.mnSaveEntry)?.isVisible = entryExtractionResult != null
+
         return true
     }
 
