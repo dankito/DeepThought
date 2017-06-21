@@ -52,7 +52,7 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private var rou
         lastSearchTermProperty = searchTerm
 
         searchEngine.searchTags(TagsSearch(searchTerm) { result ->
-            tagsListView.showTags(result.getAllMatches())
+            tagsListView.showTags(result.getRelevantMatchesSorted())
         })
     }
 
