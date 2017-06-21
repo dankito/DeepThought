@@ -114,8 +114,8 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
         if (indexSearcher == null) {
             try {
                 createIndexSearcher(isReadOnly)
-            } catch (ex: Exception) {
-                log.error("Could not create IndexSearcher for $this", ex)
+            } catch (e: Exception) {
+                log.error("Could not create IndexSearcher for $this", e)
             }
 
         }
@@ -168,8 +168,8 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
             val doc = createDocumentFromEntry(entity)
 
             indexDocument(doc)
-        } catch (ex: Exception) {
-            log.error("Could not index Entity " + entity, ex)
+        } catch (e: Exception) {
+            log.error("Could not index Entity " + entity, e)
         }
     }
 
@@ -185,8 +185,8 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
                 markIndexHasBeenUpdated() // so that on next search updates are reflected
             }
-        } catch (ex: Exception) {
-            log.error("Could not index Document " + doc, ex)
+        } catch (e: Exception) {
+            log.error("Could not index Document " + doc, e)
         }
     }
 
@@ -206,8 +206,8 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
                 markIndexHasBeenUpdated() // so that on next search updates are reflected
             }
-        } catch (ex: Exception) {
-            log.error("Could not delete Document for removed entity " + removedEntity, ex)
+        } catch (e: Exception) {
+            log.error("Could not delete Document for removed entity " + removedEntity, e)
         }
     }
 
@@ -271,9 +271,9 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
             getIndexSearcher()?.let {
                 search.results = executeQuery(query, resultEntityClass, countMaxSearchResults, *sortOptions)
             }
-        } catch (ex: Exception) {
-            log.error("Could not execute Query " + query.toString(), ex)
-            // TODO: set error flag in Search
+        } catch (e: Exception) {
+            log.error("Could not execute Query " + query.toString(), e)
+            search.errorOccurred(e)
         }
 
         search.fireSearchCompleted()
