@@ -12,8 +12,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:singleLine="true"
-        android:ellipsize="end"
+        android:maxLines="1"
         android:textSize="@dimen/list_item_entry_reference_preview_text_size"
         />
 
@@ -26,7 +27,9 @@
         android:layout_below="@+id/txtReferencePreview"
         android:layout_above="@+id/txtEntryTags"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:minLines="3"
         android:ellipsize="end"
         android:textSize="@dimen/list_item_entry_preview_text_size"
@@ -39,7 +42,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:singleLine="true"
+        android:layout_alignParentEnd="true"
+        android:maxLines="1"
         android:ellipsize="end"
         android:textSize="@dimen/list_item_entry_tags_text_size"
         />
