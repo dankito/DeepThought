@@ -1,7 +1,10 @@
 package net.dankito.service.search
 
 import net.dankito.service.search.specific.EntriesSearch
+import net.dankito.service.search.specific.TagsSearch
 import net.dankito.utils.IThreadPool
+
+
 
 
 abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearchEngine {
@@ -18,6 +21,18 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
     }
 
     abstract fun searchEntries(search: EntriesSearch, termsToSearchFor: Array<String>)
+
+    override fun searchTags(search: TagsSearch) {
+        if (search.searchTerm.isNullOrBlank())
+            searchTags(search, ArrayList<String>())
+        else {
+            val tagNamesToFilterFor = search.searchTerm.apply { toLowerCase() }.split(",").map { it.trim() }.dropLastWhile { it.isEmpty() }
+
+            threadPool.runAsync { searchTags(search, tagNamesToFilterFor) }
+        }
+    }
+
+    abstract fun searchTags(search: TagsSearch, termsToSearchFor: Collection<String>)
 
 
     private fun getTermsToSearchFor(search: EntriesSearch, separator: String): Array<String> {
