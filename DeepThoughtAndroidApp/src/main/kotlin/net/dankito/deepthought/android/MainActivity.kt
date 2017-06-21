@@ -132,7 +132,14 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         return true
     }
 
-    val viewPagerPageChangeListener = object : ViewPager.OnPageChangeListener {
+
+    private val bottomViewNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        viewPager.setCurrentItem(item.order, true)
+
+        return@OnNavigationItemSelectedListener true
+    }
+
+    private val viewPagerPageChangeListener = object : ViewPager.OnPageChangeListener {
 
         override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
 
@@ -156,12 +163,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         override fun onPageScrollStateChanged(state: Int) {
 
         }
-    }
-
-    val bottomViewNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        viewPager.setCurrentItem(item.order, true)
-
-        return@OnNavigationItemSelectedListener true
     }
 
 }
