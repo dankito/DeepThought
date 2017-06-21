@@ -8,6 +8,7 @@ import javafx.scene.web.WebView
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.ui.presenter.EditEntryPresenter
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.ReferenceService
 import tornadofx.*
@@ -33,6 +34,9 @@ abstract class EditEntryViewBase : Fragment() {
     private var wbContent: WebView by singleAssign()
 
 
+    private val presenter: EditEntryPresenter
+
+
     @Inject
     protected lateinit var entryService: EntryService
 
@@ -42,6 +46,8 @@ abstract class EditEntryViewBase : Fragment() {
 
     init {
         AppComponent.component.inject(this)
+
+        presenter = EditEntryPresenter(entryService, referenceService)
     }
 
 
@@ -110,24 +116,8 @@ abstract class EditEntryViewBase : Fragment() {
     }
 
 
-    protected open fun saveEntry() { // TODO: move to Presenter
-        val entry = getEntryForSaving()
-
-        if(entry.isPersisted() == false) {
-            entryService.persist(entry)
-        }
-        else {
-            entryService.update(entry)
-        }
-
-        getReferenceForSaving()?.let { reference ->
-            if(reference.isPersisted() == false) {
-                entry.reference = reference
-                referenceService.persist(reference)
-            }
-        }
-
-        // TODO: also save Tags
+    protected open fun saveEntry() {
+        presenter.saveEntry(getEntryForSaving(), getReferenceForSaving())
     }
 
     protected abstract fun getEntryForSaving(): Entry
