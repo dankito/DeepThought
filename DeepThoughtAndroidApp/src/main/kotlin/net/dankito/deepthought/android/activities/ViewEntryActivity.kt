@@ -90,8 +90,8 @@ class ViewEntryActivity : BaseActivity() {
         supportActionBar?.title = ""
 
         val settings = wbEntry.getSettings()
-        settings.defaultTextEncodingName = "UTF-8"
-        settings.javaScriptEnabled = true
+        settings.defaultTextEncodingName = "UTF-8" // otherwise non ASCII text doesn't get displayed correctly
+        settings.javaScriptEnabled = true // so that embedded videos etc. work
     }
 
 
