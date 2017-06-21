@@ -8,14 +8,17 @@ import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.newsreader.model.EntryExtractionResult
+import net.dankito.service.data.TagService
+import net.dankito.service.search.ISearchEngine
 import tornadofx.*
 
 
 /**
  * Yeah, i know this is bad design, a Controller deriving from a Presenter ...
  */
-class ArticleSummaryController(articleSummaryExtractor: ArticleSummaryExtractorConfig, articleExtractors: ArticleExtractors, router: IRouter)
-    : ArticleSummaryPresenter(articleExtractors, router) {
+class ArticleSummaryController(articleSummaryExtractor: ArticleSummaryExtractorConfig, articleExtractors: ArticleExtractors, tagService: TagService,
+                               searchEngine: ISearchEngine, router: IRouter)
+    : ArticleSummaryPresenter(articleExtractors, tagService, searchEngine, router) {
 
     val itemModel = ArticleSummaryItemModel()
 
