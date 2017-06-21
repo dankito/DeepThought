@@ -27,29 +27,31 @@ class EntryIndexWriterAndSearcher(entryService: EntryService) : IndexWriterAndSe
     }
 
 
-    override fun createDocumentFromEntry(entry: Entry): Document {
+    override fun createDocumentFromEntry(entity: Entry): Document {
         val doc = Document()
 
-        doc.add(StringField(getIdFieldName(), entry.id, Field.Store.YES))
+        doc.add(StringField(getIdFieldName(), entity.id, Field.Store.YES))
 
         // TODO: get plain text
-//        doc.add(Field(FieldName.EntryAbstract, entry.getAbstractAsPlainText(), TextField.TYPE_NOT_STORED))
-//        doc.add(Field(FieldName.EntryContent, entry.getContentAsPlainText(), TextField.TYPE_NOT_STORED))
-        doc.add(Field(FieldName.EntryAbstract, entry.abstractString, TextField.TYPE_NOT_STORED))
-        doc.add(Field(FieldName.EntryContent, entry.content, TextField.TYPE_NOT_STORED))
+//        doc.add(Field(FieldName.EntryAbstract, entity.getAbstractAsPlainText(), TextField.TYPE_NOT_STORED))
+//        doc.add(Field(FieldName.EntryContent, entity.getContentAsPlainText(), TextField.TYPE_NOT_STORED))
+        doc.add(Field(FieldName.EntryAbstract, entity.abstractString, TextField.TYPE_NOT_STORED))
+        doc.add(Field(FieldName.EntryContent, entity.content, TextField.TYPE_NOT_STORED))
 
-        doc.add(LongField(FieldName.EntryIndex, entry.entryIndex, Field.Store.YES))
+        doc.add(LongField(FieldName.EntryIndex, entity.entryIndex, Field.Store.YES))
 
-        doc.add(LongField(FieldName.EntryCreated, entry.createdOn.getTime(), Field.Store.YES))
-        doc.add(LongField(FieldName.EntryModified, entry.modifiedOn.getTime(), Field.Store.YES))
+        doc.add(LongField(FieldName.EntryCreated, entity.createdOn.getTime(), Field.Store.YES))
+        doc.add(LongField(FieldName.EntryModified, entity.modifiedOn.getTime(), Field.Store.YES))
 
-        if (entry.hasTags()) {
-            for (tag in entry.tags) {
+        if (entity.hasTags()) {
+            for(tag in entity.tags) {
                 doc.add(StringField(FieldName.EntryTagsIds, tag.id, Field.Store.YES))
                 //        doc.add(new StringField(FieldName.EntryTags, tag.getName().toLowerCase(), Field.Store.YES));
             }
-        } else
+        }
+        else {
             doc.add(StringField(FieldName.EntryNoTags, FieldValue.NoTagsFieldValue, Field.Store.NO))
+        }
 
         return doc
     }
@@ -68,7 +70,8 @@ class EntryIndexWriterAndSearcher(entryService: EntryService) : IndexWriterAndSe
     private fun addQueryForOptions(search: EntriesSearch, query: BooleanQuery) {
         if (search.filterOnlyEntriesWithoutTags) {
             query.add(TermQuery(Term(FieldName.EntryNoTags, NoTagsFieldValue)), BooleanClause.Occur.MUST)
-        } else if (search.entriesMustHaveTheseTags.size > 0) {
+        }
+        else if (search.entriesMustHaveTheseTags.isNotEmpty()) {
             val filterEntriesQuery = BooleanQuery()
             for (tag in search.entriesMustHaveTheseTags) {
                 filterEntriesQuery.add(TermQuery(Term(FieldName.EntryTagsIds, tag.id)), BooleanClause.Occur.MUST)
@@ -79,9 +82,10 @@ class EntryIndexWriterAndSearcher(entryService: EntryService) : IndexWriterAndSe
     }
 
     private fun addQueryForSearchTerm(termsToFilterFor: Array<String>, query: BooleanQuery, search: EntriesSearch) {
-        if (termsToFilterFor.size == 0) {
+        if (termsToFilterFor.isEmpty()) {
             query.add(WildcardQuery(Term(FieldName.EntryId, "*")), BooleanClause.Occur.MUST)
-        } else {
+        }
+        else {
             for (term in termsToFilterFor) {
                 val escapedTerm = QueryParser.escape(term)
                 val termQuery = BooleanQuery()
