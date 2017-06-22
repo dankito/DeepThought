@@ -25,7 +25,7 @@ open class Tag(
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags") // TODO: has cascade also to be set to { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH } as in Entry?
     var entries: MutableList<Entry> = ArrayList() // TODO: don't expose a mutable list to the outside
-        private set
+        protected set
 
     init {
         this.name = name
