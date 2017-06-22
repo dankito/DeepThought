@@ -158,9 +158,11 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
 
     fun indexAllEntities() {
-        for(entity in entityService.getAll()) {
-            indexEntity(entity)
-        }
+        try {
+            for(entity in entityService.getAll()) {
+                indexEntity(entity)
+            }
+        } catch(e: Exception) { log.error("Could not index all entities for ${javaClass.simpleName}", e) }
     }
 
     fun indexEntity(entity: TEntity) {

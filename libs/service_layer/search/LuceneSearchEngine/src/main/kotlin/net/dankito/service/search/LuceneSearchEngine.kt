@@ -134,6 +134,10 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
         deleteIndex()
 
         log.info("Going to rebuild Lucene index ...")
+
+        indexWritersAndSearchers.forEach { it.indexAllEntities() }
+
+        log.info("Done rebuilding Lucene Index.");
     }
 
     /**
