@@ -7,7 +7,7 @@ import net.dankito.service.search.Search
 import net.dankito.service.search.SearchWithCollectionResult
 
 
-class EntriesSearch(searchTerm: String = Search.EmptySearchTerm, val filterContent: Boolean = true, val filterAbstract: Boolean = true,
+class EntriesSearch(searchTerm: String = Search.EmptySearchTerm, val filterContent: Boolean = true, val filterAbstract: Boolean = true, val filterReference: Boolean = true,
                     val filterOnlyEntriesWithoutTags: Boolean = false, val entriesMustHaveTheseTags: MutableCollection<Tag> = mutableListOf(),
                     completedListener: (List<Entry>) -> Unit) : SearchWithCollectionResult<Entry>(searchTerm, completedListener) {
 
