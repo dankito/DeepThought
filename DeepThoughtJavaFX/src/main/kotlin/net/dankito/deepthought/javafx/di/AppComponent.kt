@@ -11,6 +11,7 @@ import net.dankito.deepthought.javafx.dialogs.entry.EditEntryViewBase
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindow
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.EntriesListView
+import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.TagsListView
 import javax.inject.Singleton
 
 
@@ -31,6 +32,8 @@ interface AppComponent : CommonComponent {
     fun inject(mainWindowController: MainWindowController)
 
     fun inject(entriesListView: EntriesListView)
+
+    fun inject(tagsListView: TagsListView)
 
     fun inject(articleSummaryView: ArticleSummaryView)
 
