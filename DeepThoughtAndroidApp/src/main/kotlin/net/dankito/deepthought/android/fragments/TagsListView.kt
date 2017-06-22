@@ -61,4 +61,8 @@ class TagsListView(private val searchEngine: ISearchEngine, private val router: 
         }
     }
 
+    override fun updateDisplayedTags() {
+        activity.runOnUiThread  { adapter.notifyDataSetChanged() }
+    }
+
 }

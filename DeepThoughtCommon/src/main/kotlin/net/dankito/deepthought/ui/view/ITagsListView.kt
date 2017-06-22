@@ -7,4 +7,6 @@ interface ITagsListView {
 
     fun showTags(tags: List<Tag>)
 
+    fun updateDisplayedTags()
+
 }
