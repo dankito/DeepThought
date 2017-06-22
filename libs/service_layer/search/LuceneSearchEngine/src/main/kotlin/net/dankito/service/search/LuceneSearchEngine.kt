@@ -70,6 +70,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
             createIndexSearchersAndWriters()
 
             if (indexDirExists == false) {
+                // TODO: inform user that index is going to be rebuilt and that this takes some time
                 rebuildIndex() // do not rebuild index asynchronously as Application depends on some functions of SearchEngine (like Entries without Tags)
             }
 
