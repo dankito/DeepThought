@@ -32,17 +32,6 @@
          </children>
       </GridPane>
    </bottom>
-   <center>
-      <SplitPane fx:id="contentPane" BorderPane.alignment="CENTER">
-        <items>
-            <TabPane fx:id="tbpnOverview" prefWidth="300.0" tabClosingPolicy="UNAVAILABLE">
-              <tabs>
-                <Tab fx:id="tabTags" text="%tags" />
-              </tabs>
-            </TabPane>
-        </items>
-      </SplitPane>
-   </center>
    <top>
       <VBox BorderPane.alignment="CENTER">
          <children>
