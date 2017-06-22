@@ -14,7 +14,7 @@ import net.dankito.deepthought.ui.view.ITagsListView
 import net.dankito.service.search.ISearchEngine
 
 
-class TagsListView(private val searchEngine: ISearchEngine, private val router: IRouter) : MainActivityTabFragment(), ITagsListView {
+class TagsListView(private val dataManager: DataManager, private val searchEngine: ISearchEngine, private val router: IRouter) : MainActivityTabFragment(), ITagsListView {
 
     private lateinit var presenter: TagsListPresenter
 

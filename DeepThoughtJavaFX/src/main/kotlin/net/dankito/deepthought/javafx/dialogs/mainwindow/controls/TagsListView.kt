@@ -1,11 +1,13 @@
 package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 
 import javafx.collections.FXCollections
+import javafx.collections.ObservableList
 import javafx.scene.control.TableView
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.TagViewModel
 import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.TagsListPresenter
 import net.dankito.deepthought.ui.view.ITagsListView
@@ -16,15 +18,20 @@ import javax.inject.Inject
 
 class TagsListView : View(), ITagsListView {
 
-    private val searchBar: TagsSearchBar
-
     private val presenter: TagsListPresenter
 
+    private val searchBar: TagsSearchBar
 
-    private val tags = FXCollections.observableArrayList<Tag>()
+    private lateinit var tableTags: TableView<Tag>
+
+
+    private val tags: ObservableList<Tag> = FXCollections.observableArrayList()
 
     private val tagViewModel = TagViewModel()
 
+
+    @Inject
+    protected lateinit var dataManager: DataManager
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
@@ -35,7 +42,7 @@ class TagsListView : View(), ITagsListView {
     init {
         AppComponent.component.inject(this)
 
-        presenter = TagsListPresenter(this, router, searchEngine)
+        presenter = TagsListPresenter(this, dataManager, searchEngine, router)
         searchBar = TagsSearchBar(presenter)
 
         presenter.getAndShowAllEntities()
@@ -50,7 +57,7 @@ class TagsListView : View(), ITagsListView {
     override val root = vbox {
         add(searchBar.root)
 
-        tableview<Tag> {
+        tableTags = tableview<Tag> {
             column(messages["tag.column.header.name"], Tag::displayText) {
                 isResizable = true
                 makeEditable()
@@ -93,6 +100,10 @@ class TagsListView : View(), ITagsListView {
 
     override fun showTags(tags: List<Tag>) {
         runLater { this.tags.setAll(tags) }
+    }
+
+    override fun updateDisplayedTags() {
+        runLater { tableTags.items.invalidate() }
     }
 
 }

@@ -1,24 +1,31 @@
 package net.dankito.deepthought.ui.presenter
 
 import net.dankito.deepthought.di.CommonComponent
+import net.dankito.deepthought.model.AllEntriesCalculatedTag
+import net.dankito.deepthought.model.CalculatedTag
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.ITagsListView
+import net.dankito.service.data.messages.EntryChanged
 import net.dankito.service.data.messages.TagChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
 import net.dankito.service.search.specific.TagsSearch
+import net.dankito.service.search.util.CombinedLazyLoadingList
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class TagsListPresenter(private val tagsListView: ITagsListView, private var router: IRouter, private var searchEngine: ISearchEngine)
+class TagsListPresenter(private val tagsListView: ITagsListView, private val dataManager: DataManager, private val searchEngine: ISearchEngine, private val router: IRouter)
     : IMainViewSectionPresenter {
 
     private var lastSearchTermProperty = Search.EmptySearchTerm
+
+    private val calculatedTags = ArrayList<CalculatedTag>()
 
 
     @Inject
@@ -32,6 +39,10 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private var rou
             CommonComponent.component.inject(this)
 
             eventBus.register(eventBusListener)
+
+            calculatedTags.add(AllEntriesCalculatedTag(dataManager))
+
+            dataManager.addInitializationListener { tagsListView.updateDisplayedTags() }
         }
     }
 
@@ -53,7 +64,13 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private var rou
         lastSearchTermProperty = searchTerm
 
         searchEngine.searchTags(TagsSearch(searchTerm) { result ->
-            tagsListView.showTags(result.getRelevantMatchesSorted())
+            var tags = result.getRelevantMatchesSorted()
+
+            if(searchTerm == Search.EmptySearchTerm) {
+                tags = CombinedLazyLoadingList<Tag>(calculatedTags, result.getRelevantMatchesSorted())
+            }
+
+            tagsListView.showTags(tags)
         })
     }
 
@@ -72,6 +89,11 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private var rou
         @Handler()
         fun tagsChanged(tagChanged: TagChanged) {
             retrieveAndShowTags()
+        }
+
+        @Handler()
+        fun tagsChanged(entryChanged: EntryChanged) {
+            tagsListView.updateDisplayedTags() // count entries on tag(s) may have changed
         }
 
     }

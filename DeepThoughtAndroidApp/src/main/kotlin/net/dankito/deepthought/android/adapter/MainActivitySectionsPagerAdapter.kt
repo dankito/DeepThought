@@ -9,13 +9,13 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.search.ISearchEngine
 
 
-class MainActivitySectionsPagerAdapter(fragmentManager: FragmentManager, searchEngine: ISearchEngine, router: IRouter)
+class MainActivitySectionsPagerAdapter(fragmentManager: FragmentManager, dataManager: DataManager, searchEngine: ISearchEngine, router: IRouter)
     : FragmentPagerAdapter(fragmentManager) {
 
 
     private val entriesListView = EntriesListView(searchEngine, router)
 
-    private val tagsListView = TagsListView(searchEngine, router)
+    private val tagsListView = TagsListView(dataManager, searchEngine, router)
 
 
     override fun getCount(): Int {

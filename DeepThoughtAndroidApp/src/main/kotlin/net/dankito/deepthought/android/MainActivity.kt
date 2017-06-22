@@ -67,7 +67,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val navigationView = findViewById(R.id.nav_view) as NavigationView
         navigationView.setNavigationItemSelectedListener(this)
 
-        sectionsPagerAdapter = MainActivitySectionsPagerAdapter(supportFragmentManager, searchEngine, router)
+        sectionsPagerAdapter = MainActivitySectionsPagerAdapter(supportFragmentManager, dataManager, searchEngine, router)
         viewPager.adapter = sectionsPagerAdapter
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener)
 
