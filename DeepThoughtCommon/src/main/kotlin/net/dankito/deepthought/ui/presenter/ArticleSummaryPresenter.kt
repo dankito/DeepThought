@@ -31,15 +31,22 @@ open class ArticleSummaryPresenter(protected val articleExtractors: ArticleExtra
 
 
     fun getAndShowArticle(item: ArticleSummaryItem, errorCallback: (Exception) -> Unit) {
+        getArticle(item) {
+            it.result?.let { showArticle(it) }
+            it.error?.let { errorCallback(it) }
+        }
+    }
+
+    private fun getArticle(item: ArticleSummaryItem, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
         articleExtractors.getExtractorForItem(item)?.let { extractor ->
             extractor.extractArticleAsync(item) { asyncResult ->
                 asyncResult.result?.let {
                     getDefaultTagsForExtractor(extractor) { tags ->
                         it.tags.addAll(tags)
-                        showArticle(it)
+                        callback(asyncResult)
                     }
                 }
-                asyncResult.error?.let { errorCallback(it) }
+                asyncResult.error?.let { callback(asyncResult) }
             }
         }
     }
