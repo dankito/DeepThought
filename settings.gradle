@@ -5,6 +5,7 @@ include ':DeepThoughtJavaFX'
 include ':DeepThoughtJavaLogic'
 
 include ':DeepThoughtCommon'
+include ':DeepThoughtBaseLib'
 
 include ':FaviconExtractor'
 
@@ -67,6 +68,7 @@ project(':EventBus').projectDir = "$rootDir/libs/service_layer/eventbus/EventBus
 
 project(':Serializer').projectDir = "$rootDir/libs/service_layer/serializer/Serializer" as File
 project(':Utils').projectDir = "$rootDir/libs/service_layer/utils/Utils" as File
+project(':DeepThoughtBaseLib').projectDir = "$rootDir/libs/service_layer/utils/DeepThoughtBaseLib" as File
 
 
 project(':DataModel').projectDir = "$rootDir/libs/business_logic_layer/DataModel" as File
