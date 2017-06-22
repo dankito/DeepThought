@@ -7,7 +7,7 @@ import javax.persistence.*
 
 
 @Entity(name = TableConfig.TagTableName)
-class Tag(
+open class Tag(
         @Column(name = TableConfig.TagNameColumnName)
         var name: String
 
