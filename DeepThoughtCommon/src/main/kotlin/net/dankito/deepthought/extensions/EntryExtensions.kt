@@ -88,11 +88,13 @@ class EntryPreviewCache {
     @Inject
     protected lateinit var eventBus: IEventBus
 
+    private val eventBusListener = EventBusListener()
+
 
     init {
         CommonComponent.component.inject(this)
 
-        eventBus.register(EventBusListener())
+        eventBus.register(eventBusListener)
     }
 
 
