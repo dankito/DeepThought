@@ -5,7 +5,9 @@ import net.dankito.deepthought.extensions.entryPreview
 import net.dankito.deepthought.extensions.referencePreview
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
+import net.dankito.deepthought.javafx.routing.JavaFXRouter
 import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EntriesListPresenter
 import net.dankito.deepthought.ui.view.IEntriesListView
@@ -39,6 +41,8 @@ class EntriesListView : View(), IEntriesListView {
 
         presenter = EntriesListPresenter(this, router, searchEngine)
         searchBar = EntriesSearchBar(presenter)
+
+        (router as? JavaFXRouter)?.entriesListView = this // TODO: this is bad code design
     }
 
     override fun onUndock() {
@@ -74,6 +78,10 @@ class EntriesListView : View(), IEntriesListView {
 
     override fun showEntries(entries: List<Entry>) {
         runLater { controller.entries.setAll(entries) }
+    }
+
+    override fun showEntriesForTag(tag: Tag, entries: List<Entry>) {
+        presenter.showEntriesForTag(tag, entries)
     }
 
 }

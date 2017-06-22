@@ -77,8 +77,13 @@ class TagsListView : View(), ITagsListView {
 
             vgrow = Priority.ALWAYS
 
-            selectionModel.selectedItemProperty().addListener { _, _, newValue -> presenter.showEntriesForTag(newValue) }
+            selectionModel.selectedItemProperty().addListener { _, _, newValue -> tagSelected(newValue) }
         }
+    }
+
+    private fun tagSelected(selectedTag: Tag) {
+        // TODO: when tag filter is applied only pass filtered entries to showEntriesForTag()
+        presenter.showEntriesForTag(selectedTag, selectedTag.entries)
     }
 
 

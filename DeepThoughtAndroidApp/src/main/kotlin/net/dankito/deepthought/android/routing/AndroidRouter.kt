@@ -2,6 +2,7 @@ package net.dankito.deepthought.android.routing
 
 import android.content.Context
 import android.content.Intent
+import android.nfc.Tag
 import net.dankito.deepthought.android.activities.ArticleSummaryActivity
 import net.dankito.deepthought.android.activities.ViewEntryActivity
 import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
@@ -14,6 +15,11 @@ import net.dankito.serializer.ISerializer
 
 
 class AndroidRouter(private val context: Context, private val activityTracker: CurrentActivityTracker, private val serializer: ISerializer) : IRouter {
+
+
+    override fun showEntriesForTag(tag: Tag, entries: List<Entry>) {
+        // TODO: what to do on Android?
+    }
 
 
     override fun showAddArticleSummaryExtractorView() {

@@ -5,12 +5,22 @@ import net.dankito.deepthought.javafx.dialogs.entry.EditEntryExtractionResultVie
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryView
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.deepthought.ui.view.IEntriesListView
 import net.dankito.newsreader.model.EntryExtractionResult
 
 
 class JavaFXRouter(private val mainWindowController: MainWindowController) : IRouter {
+
+    lateinit var entriesListView: IEntriesListView
+
+
+    override fun showEntriesForTag(tag: Tag, entries: List<Entry>) {
+        entriesListView.showEntriesForTag(tag, entries)
+    }
+
 
     override fun showAddArticleSummaryExtractorView() {
         // TODO

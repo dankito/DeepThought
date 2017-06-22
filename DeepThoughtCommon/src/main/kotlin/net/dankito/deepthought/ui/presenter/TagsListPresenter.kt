@@ -1,6 +1,7 @@
 package net.dankito.deepthought.ui.presenter
 
 import net.dankito.deepthought.di.CommonComponent
+import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.ITagsListView
@@ -61,8 +62,8 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private var rou
     }
 
 
-    fun showEntriesForTag(tag: Tag) {
-        // TODO
+    fun showEntriesForTag(tag: Tag, entries: List<Entry>) {
+        router.showEntriesForTag(tag, entries)
     }
 
 
