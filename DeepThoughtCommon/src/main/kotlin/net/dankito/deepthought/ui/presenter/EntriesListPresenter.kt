@@ -70,7 +70,7 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
     }
 
 
-    fun searchEntries(searchTerm: String, searchInContent: Boolean = true, searchInAbstract: Boolean = true, searchCompleted: ((List<Entry>) -> Unit)? = null) {
+    fun searchEntries(searchTerm: String, searchInContent: Boolean = true, searchInAbstract: Boolean = true, searchInReference: Boolean = true, searchCompleted: ((List<Entry>) -> Unit)? = null) {
        lastSearchTermProperty = searchTerm
 
         var filterOnlyEntriesWithoutTags = false
@@ -83,7 +83,7 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
             filterOnlyEntriesWithoutTags = it is EntriesWithoutTagsCalculatedTag
         }
 
-        searchEngine.searchEntries(EntriesSearch(searchTerm, searchInContent, searchInAbstract, filterOnlyEntriesWithoutTags, entriesMustHaveTheseTags) { result ->
+        searchEngine.searchEntries(EntriesSearch(searchTerm, searchInContent, searchInAbstract, searchInReference, filterOnlyEntriesWithoutTags, entriesMustHaveTheseTags) { result ->
             entriesListView.showEntries(result)
 
             if(searchCompleted != null) {
