@@ -8,7 +8,6 @@ dependencies {
     compile project(':DeepThoughtBaseLib')
     compile project(':EntityManager')
     compile project(':DataManager')
-    compile project(':DataServices')
     compile project(':LuceneSearchEngine')
 
     compile project(':NewsReader')

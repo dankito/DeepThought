@@ -10,6 +10,7 @@ dependencies {
 
     compile project(':DataModel')
     compile project(':EventBus')
+    compile project(':DataServices')
 
     compile "org.slf4j:slf4j-api:$slf4jVersion"
 

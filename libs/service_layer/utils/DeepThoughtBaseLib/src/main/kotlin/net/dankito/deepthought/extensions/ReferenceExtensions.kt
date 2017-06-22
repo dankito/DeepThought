@@ -1,6 +1,6 @@
 package net.dankito.deepthought.extensions
 
-import net.dankito.deepthought.di.CommonComponent
+import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.model.Reference
 import net.dankito.service.data.messages.ReferenceChanged
 import net.dankito.service.eventbus.IEventBus
@@ -50,7 +50,7 @@ class ReferencePreviewCache {
 
 
     init {
-        CommonComponent.component.inject(this)
+        BaseComponent.component.inject(this)
 
         eventBus.register(eventBusListener)
     }

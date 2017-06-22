@@ -1,6 +1,6 @@
 package net.dankito.deepthought.extensions
 
-import net.dankito.deepthought.di.CommonComponent
+import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.model.Entry
 import net.dankito.service.data.messages.EntryChanged
 import net.dankito.service.eventbus.IEventBus
@@ -92,7 +92,7 @@ class EntryPreviewCache {
 
 
     init {
-        CommonComponent.component.inject(this)
+        BaseComponent.component.inject(this)
 
         eventBus.register(eventBusListener)
     }
