@@ -14,7 +14,7 @@ class EntriesSearchBar(private val presenter: EntriesListPresenter) : View() {
         useMaxWidth = true
         alignment = Pos.CENTER_LEFT
 
-        label("Search:")
+        label(messages["search.textbox.label"])
 
         textfield {
             hboxConstraints {
@@ -22,7 +22,7 @@ class EntriesSearchBar(private val presenter: EntriesListPresenter) : View() {
                 marginLeftRight(6.0)
             }
 
-            promptText = "TODO"
+            promptText = messages["search.entries.prompt.text"]
 
             textProperty().addListener { _, _, newValue -> presenter.searchEntries(newValue) }
             setOnKeyReleased { event ->

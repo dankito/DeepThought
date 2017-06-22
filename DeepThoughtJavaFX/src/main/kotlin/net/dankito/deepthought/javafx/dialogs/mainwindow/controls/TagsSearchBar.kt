@@ -14,7 +14,7 @@ class TagsSearchBar(private val presenter: TagsListPresenter) : View() {
         useMaxWidth = true
         alignment = Pos.CENTER_LEFT
 
-        label("Search:")
+        label(messages["search.textbox.label"])
 
         textfield {
             hboxConstraints {
@@ -22,7 +22,7 @@ class TagsSearchBar(private val presenter: TagsListPresenter) : View() {
                 marginLeftRight(6.0)
             }
 
-            promptText = "TODO"
+            promptText = messages["search.tags.prompt.text"]
 
             textProperty().addListener { _, _, newValue -> presenter.searchTags(newValue) }
             setOnKeyReleased { event ->

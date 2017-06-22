@@ -51,11 +51,11 @@ class EntriesListView : View(), IEntriesListView {
         add(searchBar.root)
 
         tableview<Entry> {
-            column("id", Entry::entryIndex).prefWidth(46.0)
-            column("reference", Entry::referencePreview).weigthedWidth(4.0)
-            column("preview", Entry::entryPreview).weigthedWidth(4.0)
-    //        column("createdOn", stringBinding(Entry::createdOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
-    //        column("modifiedOn", stringBinding(Entry::modifiedOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
+            column(messages["entry.column.header.index"], Entry::entryIndex).prefWidth(46.0)
+            column(messages["entry.column.header.reference"], Entry::referencePreview).weigthedWidth(4.0)
+            column(messages["entry.column.header.preview"], Entry::entryPreview).weigthedWidth(4.0)
+    //        column(messages["entry.column.header.created"], stringBinding(Entry::createdOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
+    //        column(messages["entry.column.header.modified"], stringBinding(Entry::modifiedOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
 
             columnResizePolicy = SmartResize.POLICY
 

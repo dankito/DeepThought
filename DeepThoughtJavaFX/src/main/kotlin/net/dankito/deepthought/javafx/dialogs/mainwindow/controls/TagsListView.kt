@@ -4,7 +4,6 @@ import javafx.collections.FXCollections
 import javafx.scene.control.TableView
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.di.AppComponent
-import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.TagViewModel
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
@@ -52,7 +51,7 @@ class TagsListView : View(), ITagsListView {
         add(searchBar.root)
 
         tableview<Tag> {
-            column("name", Tag::displayText) {
+            column(messages["tag.column.header.name"], Tag::displayText) {
                 isResizable = true
                 makeEditable()
                 setSortable(false)
