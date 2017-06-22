@@ -6,20 +6,37 @@ import android.view.View
 import kotlinx.android.synthetic.main.fragment_tab_tags.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.TagAdapter
+import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.deepthought.ui.presenter.TagsListPresenter
 import net.dankito.deepthought.ui.view.ITagsListView
 import net.dankito.service.search.ISearchEngine
-import net.dankito.deepthought.service.data.DataManager
+import javax.inject.Inject
 
 
-class TagsListView(private val dataManager: DataManager, private val searchEngine: ISearchEngine, private val router: IRouter) : MainActivityTabFragment(), ITagsListView {
+class TagsListView : MainActivityTabFragment(), ITagsListView {
+
+    @Inject
+    protected lateinit var dataManager: DataManager
+
+    @Inject
+    protected lateinit var searchEngine: ISearchEngine
+
+    @Inject
+    protected lateinit var router: IRouter
+
 
     private lateinit var presenter: TagsListPresenter
 
     private val adapter = TagAdapter()
+
+
+    init {
+        AppComponent.component.inject(this)
+    }
 
 
 

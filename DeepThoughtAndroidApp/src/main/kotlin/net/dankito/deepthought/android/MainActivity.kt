@@ -15,22 +15,9 @@ import net.dankito.deepthought.android.adapter.MainActivitySectionsPagerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
 import net.dankito.deepthought.android.service.ui.BaseActivity
-import net.dankito.deepthought.service.data.DataManager
-import net.dankito.deepthought.ui.IRouter
-import net.dankito.service.search.ISearchEngine
-import javax.inject.Inject
 
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
-
-    @Inject
-    protected lateinit var dataManager: DataManager
-
-    @Inject
-    protected lateinit var searchEngine: ISearchEngine
-
-    @Inject
-    protected lateinit var router: IRouter
 
 
     private lateinit var sectionsPagerAdapter: MainActivitySectionsPagerAdapter
@@ -67,7 +54,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val navigationView = findViewById(R.id.nav_view) as NavigationView
         navigationView.setNavigationItemSelectedListener(this)
 
-        sectionsPagerAdapter = MainActivitySectionsPagerAdapter(supportFragmentManager, dataManager, searchEngine, router)
+        sectionsPagerAdapter = MainActivitySectionsPagerAdapter(supportFragmentManager)
         viewPager.adapter = sectionsPagerAdapter
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener)
 

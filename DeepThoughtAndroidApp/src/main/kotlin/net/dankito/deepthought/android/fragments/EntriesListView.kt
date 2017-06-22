@@ -6,6 +6,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.fragment_tab_entries.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.EntryAdapter
+import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
@@ -13,13 +14,26 @@ import net.dankito.deepthought.ui.presenter.EntriesListPresenter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.deepthought.ui.view.IEntriesListView
 import net.dankito.service.search.ISearchEngine
+import javax.inject.Inject
 
 
-class EntriesListView(private val searchEngine: ISearchEngine, private val router: IRouter) : MainActivityTabFragment(), IEntriesListView {
+class EntriesListView : MainActivityTabFragment(), IEntriesListView {
+
+    @Inject
+    protected lateinit var searchEngine: ISearchEngine
+
+    @Inject
+    protected lateinit var router: IRouter
+
 
     private lateinit var presenter: EntriesListPresenter
 
     private val entryAdapter = EntryAdapter()
+
+
+    init {
+        AppComponent.component.inject(this)
+    }
 
 
     override fun getLayoutResourceId(): Int {
