@@ -93,6 +93,9 @@ class TagsListView : View(), ITagsListView {
             // TODO: when tag filter is applied only pass filtered entries to showEntriesForTag()
             presenter.showEntriesForTag(selectedTag, selectedTag.entries)
         }
+        else {
+//            presenter.clearSelectedTag() // TODO
+        }
     }
 
 
