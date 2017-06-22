@@ -20,16 +20,10 @@ data class Entry(
 
 ) : UserDataEntity(), Serializable {
 
-    // TODO: contentAsPlainText, abstractAsPlainText, preview and longPreview change when content or abstract gets set
-
     companion object {
         private const val serialVersionUID = 596730656893495215L
     }
 
-
-    @Transient private var plainTextAbstract: String? = null
-
-    @Transient private var plainTextContent: String? = null
 
     @Column(name = TableConfig.EntryEntryIndexColumnName)
     var entryIndex: Long = 0
