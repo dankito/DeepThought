@@ -16,13 +16,9 @@ class EntriesSearch(searchTerm: String = Search.EmptySearchTerm, val filterConte
     var entriesMustHaveTheseTags: MutableCollection<Tag> = ArrayList()
 
 
-    constructor(searchTerm: String, filterContent: Boolean, filterAbstract: Boolean, filterOnlyEntriesWithoutTags: Boolean, completedListener: (List<Entry>) -> Unit)
+    constructor(searchTerm: String, filterContent: Boolean, filterAbstract: Boolean, filterOnlyEntriesWithoutTags: Boolean, entriesMustHaveTheseTags: MutableCollection<Tag>, completedListener: (List<Entry>) -> Unit)
             : this(searchTerm, filterContent, filterAbstract, completedListener) {
         this.filterOnlyEntriesWithoutTags = filterOnlyEntriesWithoutTags
-    }
-
-    constructor(searchTerm: String, filterContent: Boolean, filterAbstract: Boolean, entriesMustHaveTheseTags: MutableCollection<Tag>, completedListener: (List<Entry>) -> Unit)
-            : this(searchTerm, filterContent, filterAbstract, completedListener) {
         this.entriesMustHaveTheseTags = entriesMustHaveTheseTags
     }
 
