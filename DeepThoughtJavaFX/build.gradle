@@ -15,13 +15,13 @@ targetCompatibility = "1.8"
 
 
 sourceSets {
-    main.java.srcDirs += [ 'src/main/kotlin', 'build/generated/source/kapt/main']
-    test.java.srcDirs += [ 'src/test/kotlin', 'build/generated/source/kapt/test']
+    main.java.srcDirs += [ 'src/main/kotlin', 'build/generated/source/kapt/main' ]
+    test.java.srcDirs += [ 'src/test/kotlin', 'build/generated/source/kapt/test' ]
 
     main {
         resources {
-            srcDirs = [ "src/main/java", "src/main/kotlin", "src/main/resources" ]
-            includes = ["**/*.fxml"]
+            srcDirs = [ "src/main/kotlin", "src/main/resources" ] // for TornadoFX .fxml files should reside in the same folder as <View>.kt -> add src/main/kotlin as resource folder
+            excludes = [ "**/*.kt", "**/*.java" ]
         }
     }
 }
