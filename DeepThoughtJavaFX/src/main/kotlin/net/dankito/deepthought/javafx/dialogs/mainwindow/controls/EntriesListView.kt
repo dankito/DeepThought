@@ -1,5 +1,6 @@
 package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 
+import javafx.scene.layout.Priority
 import net.dankito.deepthought.extensions.entryPreview
 import net.dankito.deepthought.extensions.referencePreview
 import net.dankito.deepthought.javafx.di.AppComponent
@@ -20,7 +21,9 @@ class EntriesListView : View(), IEntriesListView {
         private val dateTimeFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG)
     }
 
-    val controller: MainWindowController by inject()
+    private val controller: MainWindowController by inject()
+
+    private val searchBar: EntriesSearchBar
 
     private val entriesListPresenter: EntriesListPresenter
 
@@ -35,6 +38,7 @@ class EntriesListView : View(), IEntriesListView {
         AppComponent.component.inject(this)
 
         entriesListPresenter = EntriesListPresenter(this, router, searchEngine)
+        searchBar = EntriesSearchBar(entriesListPresenter)
     }
 
     override fun onUndock() {
@@ -43,20 +47,26 @@ class EntriesListView : View(), IEntriesListView {
     }
 
 
-    override val root = tableview<Entry> {
-        column("index", Entry::entryIndex).weigthedWidth(1.0)
-        column("reference", Entry::referencePreview).weigthedWidth(4.0)
-        column("content", Entry::entryPreview).weigthedWidth(4.0)
-//        column("createdOn", stringBinding(Entry::createdOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
-//        column("modifiedOn", stringBinding(Entry::modifiedOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
+    override val root = vbox {
+        add(searchBar.root)
 
-        columnResizePolicy = SmartResize.POLICY
+        tableview<Entry> {
+            column("id", Entry::entryIndex).prefWidth(46.0)
+            column("reference", Entry::referencePreview).weigthedWidth(4.0)
+            column("preview", Entry::entryPreview).weigthedWidth(4.0)
+    //        column("createdOn", stringBinding(Entry::createdOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
+    //        column("modifiedOn", stringBinding(Entry::modifiedOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
 
-        items = controller.entries
+            columnResizePolicy = SmartResize.POLICY
 
-        bindSelected(controller.entryModel)
+            items = controller.entries
 
-        onDoubleClick { router.showEditEntryView(selectionModel.selectedItem) }
+            bindSelected(controller.entryModel)
+
+            vgrow = Priority.ALWAYS
+
+            onDoubleClick { router.showEditEntryView(selectionModel.selectedItem) }
+        }
     }
 
 
