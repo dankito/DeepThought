@@ -44,7 +44,7 @@ open class SettableEncodingResourceBundleControl(private val encoding: String) :
         if (stream != null) {
             try {
                 // Only this line is changed to make it to read properties files as UTF-8.
-                bundle = PropertyResourceBundle(InputStreamReader(stream, encoding))
+                bundle = ThrowNoErrorOnMissingValuePropertyResourceBundle(InputStreamReader(stream, encoding))
             } finally {
                 stream.close()
             }
