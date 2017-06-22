@@ -6,7 +6,7 @@ targetCompatibility = "1.7"
 
 dependencies {
     compile project(':SearchEngine')
-    compile project(':DataServices')
+    compile project(':DeepThoughtBaseLib')
 
     compile "org.apache.lucene:lucene-core:$luceneVersion"
     compile "org.apache.lucene:lucene-analyzers-common:$luceneVersion"

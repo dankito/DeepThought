@@ -1,5 +1,7 @@
 package net.dankito.service.search.writerandsearcher
 
+import net.dankito.deepthought.extensions.abstractPlainText
+import net.dankito.deepthought.extensions.contentPlainText
 import net.dankito.deepthought.model.Entry
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.messages.EntryChanged
@@ -32,11 +34,8 @@ class EntryIndexWriterAndSearcher(entryService: EntryService) : IndexWriterAndSe
 
         doc.add(StringField(getIdFieldName(), entity.id, Field.Store.YES))
 
-        // TODO: get plain text
-//        doc.add(Field(FieldName.EntryAbstract, entity.getAbstractAsPlainText(), TextField.TYPE_NOT_STORED))
-//        doc.add(Field(FieldName.EntryContent, entity.getContentAsPlainText(), TextField.TYPE_NOT_STORED))
-        doc.add(Field(FieldName.EntryAbstract, entity.abstractString, TextField.TYPE_NOT_STORED))
-        doc.add(Field(FieldName.EntryContent, entity.content, TextField.TYPE_NOT_STORED))
+        doc.add(Field(FieldName.EntryAbstract, entity.abstractPlainText, TextField.TYPE_NOT_STORED))
+        doc.add(Field(FieldName.EntryContent, entity.contentPlainText, TextField.TYPE_NOT_STORED))
 
         doc.add(LongField(FieldName.EntryIndex, entity.entryIndex, Field.Store.YES))
 
@@ -46,7 +45,6 @@ class EntryIndexWriterAndSearcher(entryService: EntryService) : IndexWriterAndSe
         if (entity.hasTags()) {
             for(tag in entity.tags) {
                 doc.add(StringField(FieldName.EntryTagsIds, tag.id, Field.Store.YES))
-                //        doc.add(new StringField(FieldName.EntryTags, tag.getName().toLowerCase(), Field.Store.YES));
             }
         }
         else {
