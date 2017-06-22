@@ -7,6 +7,7 @@ import kotlinx.android.synthetic.main.fragment_tab_entries.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.EntryAdapter
 import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EntriesListPresenter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
@@ -58,6 +59,10 @@ class EntriesListView(private val searchEngine: ISearchEngine, private val route
         activity.runOnUiThread {
             entryAdapter.setItems(entries)
         }
+    }
+
+    override fun showEntriesForTag(tag: Tag, entries: List<Entry>) {
+        presenter.showEntriesForTag(tag, entries)
     }
 
 }

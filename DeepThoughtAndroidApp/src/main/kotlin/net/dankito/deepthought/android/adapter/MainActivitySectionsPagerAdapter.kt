@@ -7,6 +7,7 @@ import net.dankito.deepthought.android.fragments.MainActivityTabFragment
 import net.dankito.deepthought.android.fragments.TagsListView
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.search.ISearchEngine
+import net.dankito.deepthought.service.data.DataManager
 
 
 class MainActivitySectionsPagerAdapter(fragmentManager: FragmentManager, dataManager: DataManager, searchEngine: ISearchEngine, router: IRouter)

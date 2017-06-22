@@ -12,6 +12,7 @@ import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.deepthought.ui.presenter.TagsListPresenter
 import net.dankito.deepthought.ui.view.ITagsListView
 import net.dankito.service.search.ISearchEngine
+import net.dankito.deepthought.service.data.DataManager
 
 
 class TagsListView(private val dataManager: DataManager, private val searchEngine: ISearchEngine, private val router: IRouter) : MainActivityTabFragment(), ITagsListView {
@@ -28,11 +29,11 @@ class TagsListView(private val dataManager: DataManager, private val searchEngin
 
     override fun setupUI(rootView: View?) {
         rootView?.lstTags?.adapter = adapter
-        rootView?.lstTags?.setOnItemClickListener { _, _, position, _ -> presenter.showEntriesForTag(adapter.getItem(position)) }
+        rootView?.lstTags?.setOnItemClickListener { _, _, position, _ -> tagSelected(adapter.getItem(position)) }
     }
 
     override fun initPresenter(): IMainViewSectionPresenter {
-        presenter = TagsListPresenter(this, router, searchEngine)
+        presenter = TagsListPresenter(this, dataManager, searchEngine, router)
 
         return presenter
     }
@@ -50,6 +51,17 @@ class TagsListView(private val dataManager: DataManager, private val searchEngin
 
     override fun searchEntities(query: String) {
         presenter.searchTags(query)
+    }
+
+
+    private fun tagSelected(selectedTag: Tag?) {
+        if(selectedTag != null) {
+            // TODO: when tag filter is applied only pass filtered entries to showEntriesForTag()
+            presenter.showEntriesForTag(selectedTag, selectedTag.entries)
+        }
+        else {
+//            presenter.clearSelectedTag() // TODO
+        }
     }
 
 

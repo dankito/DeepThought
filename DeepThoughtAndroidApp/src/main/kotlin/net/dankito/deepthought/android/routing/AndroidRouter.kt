@@ -2,12 +2,12 @@ package net.dankito.deepthought.android.routing
 
 import android.content.Context
 import android.content.Intent
-import android.nfc.Tag
 import net.dankito.deepthought.android.activities.ArticleSummaryActivity
 import net.dankito.deepthought.android.activities.ViewEntryActivity
 import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
 import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
 import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.newsreader.model.EntryExtractionResult
