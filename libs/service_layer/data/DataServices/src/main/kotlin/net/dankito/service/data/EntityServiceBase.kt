@@ -32,8 +32,9 @@ abstract class EntityServiceBase<T : BaseEntity>(val dataManager: DataManager, v
         entityManager.persistEntity(entity as Any)
 
         dataManager.currentDeepThought?.let {
-            addEntityToDeepThought(it, entity)
-            entityManager.updateEntity(it)
+            if(addEntityToDeepThought(it, entity)) {
+                entityManager.updateEntity(it)
+            }
         }
 
         callEntitiesUpdatedListeners(entity, EntityChangeType.Created)
@@ -43,7 +44,7 @@ abstract class EntityServiceBase<T : BaseEntity>(val dataManager: DataManager, v
         // may be overwritten in sub class
     }
 
-    protected abstract fun addEntityToDeepThought(deepThought: DeepThought, entity: T)
+    protected abstract fun addEntityToDeepThought(deepThought: DeepThought, entity: T): Boolean
 
     fun retrieve(id: String): T? {
         return entityManager.getEntityById(getEntityClass(), id)

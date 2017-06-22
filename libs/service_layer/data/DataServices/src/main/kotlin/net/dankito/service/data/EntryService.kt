@@ -22,8 +22,8 @@ class EntryService(dataManager: DataManager, eventBus: IEventBus): EntityService
         dataManager.currentDeepThought?.let { entity.entryIndex = it.increaseNextEntryIndex() }
     }
 
-    override fun addEntityToDeepThought(deepThought: DeepThought, entity: Entry) {
-        deepThought.addEntry(entity)
+    override fun addEntityToDeepThought(deepThought: DeepThought, entity: Entry): Boolean {
+        return deepThought.addEntry(entity)
     }
 
     override fun createEntityChangedMessage(entity: Entry, changeType: EntityChangeType): EntityChanged<out BaseEntity> {

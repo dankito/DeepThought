@@ -16,8 +16,8 @@ class ReferenceService(dataManager: DataManager, eventBus: IEventBus) : EntitySe
         return Reference::class.java
     }
 
-    override fun addEntityToDeepThought(deepThought: DeepThought, entity: Reference) {
-        deepThought.addReference(entity)
+    override fun addEntityToDeepThought(deepThought: DeepThought, entity: Reference): Boolean {
+        return deepThought.addReference(entity)
     }
 
     override fun createEntityChangedMessage(entity: Reference, changeType: EntityChangeType): EntityChanged<out BaseEntity> {

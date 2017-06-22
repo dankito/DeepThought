@@ -16,8 +16,8 @@ class TagService(dataManager: DataManager, eventBus: IEventBus) : EntityServiceB
         return Tag::class.java
     }
 
-    override fun addEntityToDeepThought(deepThought: DeepThought, entity: Tag) {
-        deepThought.addTag(entity)
+    override fun addEntityToDeepThought(deepThought: DeepThought, entity: Tag): Boolean {
+        return deepThought.addTag(entity)
     }
 
     override fun createEntityChangedMessage(entity: Tag, changeType: EntityChangeType): EntityChanged<out BaseEntity> {
