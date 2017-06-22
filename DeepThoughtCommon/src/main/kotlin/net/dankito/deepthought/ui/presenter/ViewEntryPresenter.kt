@@ -14,7 +14,7 @@ class ViewEntryPresenter(entryService: EntryService, referenceService: Reference
 
 
     fun saveEntryExtractionResult(result: EntryExtractionResult) {
-        entryPersister.saveEntry(result.entry, result.reference, result.tags)
+        entryPersister.saveEntry(result)
 
         returnToPreviousView()
     }
