@@ -2,6 +2,7 @@ package net.dankito.deepthought.ui.presenter
 
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.IEntriesListView
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
@@ -16,6 +17,10 @@ import kotlin.concurrent.thread
 
 class EntriesListPresenter(private val entriesListView: IEntriesListView, private var router: IRouter, private var searchEngine: ISearchEngine)
     : IMainViewSectionPresenter {
+
+    private var unfilteredEntries: List<Entry> = listOf()
+
+    private var selectedTag: Tag? = null
 
     private var lastSearchTermProperty = Search.EmptySearchTerm
 
@@ -33,9 +38,7 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
             eventBus.register(eventBusListener)
 
             // EntriesListPresenter is the big exception. As it's first displayed at app start no lazy data retrieval is needed for it, get all entries as soon as SearchEngine is initialized
-            searchEngine.addInitializationListener {
-                retrieveAndShowEntries()
-            }
+            searchEngine.addInitializationListener { getAndShowAllEntities() }
         }
     }
 
@@ -50,19 +53,37 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
 
 
     override fun getAndShowAllEntities() {
-        searchEngine.addInitializationListener { retrieveAndShowEntries() }
+        searchEngine.addInitializationListener {
+            searchEntries(Search.EmptySearchTerm) {
+                unfilteredEntries = it
+            }
+        }
     }
 
-    private fun retrieveAndShowEntries() {
-        searchEntries(Search.EmptySearchTerm)
+    fun showEntriesForTag(tag: Tag, entries: List<Entry>) {
+        selectedTag = tag
+        unfilteredEntries = entries
+
+        searchEntries(lastSearchTermProperty) // apply lastSearchTerm on unfilteredEntries
     }
 
 
-    fun searchEntries(searchTerm: String, searchInContent: Boolean = true, searchInAbstract: Boolean = true) {
+    fun searchEntries(searchTerm: String, searchInContent: Boolean = true, searchInAbstract: Boolean = true, searchCompleted: ((List<Entry>) -> Unit)? = null) {
        lastSearchTermProperty = searchTerm
 
-        searchEngine.searchEntries(EntriesSearch(searchTerm, searchInContent, searchInAbstract) { result ->
+        val filterOnlyEntriesWithoutTags = false
+        val entriesMustHaveTheseTags = mutableListOf<Tag>()
+
+        selectedTag?.let {
+            entriesMustHaveTheseTags.add(it)
+        }
+
+        searchEngine.searchEntries(EntriesSearch(searchTerm, searchInContent, searchInAbstract, filterOnlyEntriesWithoutTags, entriesMustHaveTheseTags) { result ->
             entriesListView.showEntries(result)
+
+            if(searchCompleted != null) {
+                searchCompleted(result)
+            }
         })
     }
 
@@ -75,7 +96,7 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
 
         @Handler()
         fun entriesChanged(entitiesOfTypeChanged: EntitiesOfTypeChanged) {
-            retrieveAndShowEntries()
+            searchEntries(lastSearchTermProperty)
         }
 
     }
