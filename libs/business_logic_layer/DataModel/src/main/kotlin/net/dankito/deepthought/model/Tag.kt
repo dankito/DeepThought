@@ -24,7 +24,7 @@ class Tag(
     var description = ""
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags") // TODO: has cascade also to be set to { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH } as in Entry?
-    var entries: MutableCollection<Entry> = ArrayList()
+    var entries: MutableList<Entry> = ArrayList() // TODO: don't expose a mutable list to the outside
         private set
 
     init {
@@ -43,13 +43,8 @@ class Tag(
         get() = entries.size
 
     internal fun addEntry(entry: Entry): Boolean {
-        if (entries is List<*>) {
-            // i know this is not perfect as added Entry could have a smaller EntryIndex than already added ones
-            (entries as MutableList<Entry>).add(0, entry) // but sorting is not an option as with sorting all Entries would have to be loaded witch is bad on Tags with a lot of Entries
-        }
-        else {
-            entries.add(entry)
-        }
+        // i know this is not perfect as added Entry could have a smaller EntryIndex than already added ones
+        entries.add(0, entry) // but sorting is not an option as with sorting all Entries would have to be loaded witch is bad on Tags with a lot of Entries
 
         return true
     }
