@@ -2,6 +2,7 @@ package net.dankito.deepthought.ui.presenter
 
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.CalculatedTag
+import net.dankito.deepthought.model.EntriesWithoutTagsCalculatedTag
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
@@ -72,13 +73,14 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
     fun searchEntries(searchTerm: String, searchInContent: Boolean = true, searchInAbstract: Boolean = true, searchCompleted: ((List<Entry>) -> Unit)? = null) {
        lastSearchTermProperty = searchTerm
 
-        val filterOnlyEntriesWithoutTags = false
+        var filterOnlyEntriesWithoutTags = false
         val entriesMustHaveTheseTags = mutableListOf<Tag>()
 
         selectedTag?.let {
             if(it is CalculatedTag == false) {
                 entriesMustHaveTheseTags.add(it)
             }
+            filterOnlyEntriesWithoutTags = it is EntriesWithoutTagsCalculatedTag
         }
 
         searchEngine.searchEntries(EntriesSearch(searchTerm, searchInContent, searchInAbstract, filterOnlyEntriesWithoutTags, entriesMustHaveTheseTags) { result ->

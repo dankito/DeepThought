@@ -1,15 +1,11 @@
 package net.dankito.deepthought.ui.presenter
 
 import net.dankito.deepthought.di.CommonComponent
-import net.dankito.deepthought.model.AllEntriesCalculatedTag
-import net.dankito.deepthought.model.CalculatedTag
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.ITagsListView
-import net.dankito.service.data.messages.EntryChanged
-import net.dankito.service.data.messages.TagChanged
+import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
@@ -41,6 +37,7 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private val dat
             eventBus.register(eventBusListener)
 
             calculatedTags.add(AllEntriesCalculatedTag(dataManager))
+            calculatedTags.add(EntriesWithoutTagsCalculatedTag(searchEngine, eventBus))
 
             dataManager.addInitializationListener { tagsListView.updateDisplayedTags() }
         }
@@ -87,13 +84,11 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private val dat
     inner class EventBusListener {
 
         @Handler()
-        fun tagsChanged(tagChanged: TagChanged) {
-            retrieveAndShowTags()
-        }
-
-        @Handler()
-        fun tagsChanged(entryChanged: EntryChanged) {
-            tagsListView.updateDisplayedTags() // count entries on tag(s) may have changed
+        fun entityChanged(entitiesOfTypeChanged: EntitiesOfTypeChanged) {
+            when(entitiesOfTypeChanged.entityType) {
+                Tag::class.java -> retrieveAndShowTags()
+                Entry::class.java -> tagsListView.updateDisplayedTags() // count entries on tag(s) may have changed
+            }
         }
 
     }
