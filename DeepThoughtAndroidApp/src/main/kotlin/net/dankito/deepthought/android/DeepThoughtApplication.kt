@@ -4,6 +4,7 @@ import android.support.multidex.MultiDexApplication
 import net.dankito.deepthought.android.di.ActivitiesModule
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.di.DaggerAppComponent
+import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.di.CommonModule
 import net.dankito.deepthought.service.data.DataManager
@@ -28,6 +29,7 @@ class DeepThoughtApplication : MultiDexApplication() {
                 .activitiesModule(ActivitiesModule(this))
                 .build()
 
+        BaseComponent.component = component
         CommonComponent.component = component
         AppComponent.component = component
 
