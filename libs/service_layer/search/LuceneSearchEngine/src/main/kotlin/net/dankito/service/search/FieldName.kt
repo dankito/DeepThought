@@ -16,24 +16,11 @@ object FieldName {
     val EntryCreated = "created"
     val EntryModified = "modified"
 
-    val EntryTags = "tags"
     val EntryTagsIds = "tags_ids"
     val EntryNoTags = "no_tags"
 
-    val EntryCategories = "categories"
-    val EntryNoCategories = "no_categories"
-
-    val EntryPersons = "persons"
-    val EntryNoPersons = "no_persons"
-
-    val EntrySeries = "series"
-    val EntryNoSeries = "no_series"
-
     val EntryReference = "reference"
     val EntryNoReference = "no_reference"
-
-    val EntryReferenceSubDivision = "reference_sub_division"
-    val EntryNoReferenceSubDivision = "no_reference_sub_division"
 
     val EntryNotes = "notes"
     val EntryNoNotes = "no_notes"
@@ -44,25 +31,6 @@ object FieldName {
     val TagId = "tag_id"
 
     val TagName = "tag_name"
-
-
-    /*      Categories      */
-
-    val CategoryId = "category_id"
-
-    val CategoryName = "category_name"
-    val CategoryDescription = "category_description"
-
-    val CategoryParentCategoryId = "parent_category_id"
-    val CategoryParentCategoryName = "parent_category_name"
-
-
-    /*      Persons      */
-
-    val PersonId = "person_id"
-
-    val PersonFirstName = "person_first_name"
-    val PersonLastName = "person_last_name"
 
 
     /*      References      */

@@ -2,6 +2,7 @@ package net.dankito.service.search.writerandsearcher
 
 import net.dankito.deepthought.extensions.abstractPlainText
 import net.dankito.deepthought.extensions.contentPlainText
+import net.dankito.deepthought.extensions.referencePreview
 import net.dankito.deepthought.model.Entry
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.messages.EntryChanged
@@ -51,6 +52,14 @@ class EntryIndexWriterAndSearcher(entryService: EntryService) : IndexWriterAndSe
             doc.add(StringField(FieldName.EntryNoTags, FieldValue.NoTagsFieldValue, Field.Store.NO))
         }
 
+        val reference = entity.reference
+        if(reference != null) {
+            doc.add(Field(FieldName.EntryReference, entity.referencePreview, TextField.TYPE_NOT_STORED))
+        }
+        else {
+            doc.add(StringField(FieldName.EntryNoReference, FieldValue.NoReferenceFieldValue, Field.Store.NO))
+        }
+
         return doc
     }
 
@@ -93,6 +102,9 @@ class EntryIndexWriterAndSearcher(entryService: EntryService) : IndexWriterAndSe
                 }
                 if (search.filterAbstract) {
                     termQuery.add(PrefixQuery(Term(FieldName.EntryAbstract, escapedTerm)), BooleanClause.Occur.SHOULD)
+                }
+                if (search.filterReference) {
+                    termQuery.add(PrefixQuery(Term(FieldName.EntryReference, escapedTerm)), BooleanClause.Occur.SHOULD)
                 }
 
                 query.add(termQuery, BooleanClause.Occur.MUST)
