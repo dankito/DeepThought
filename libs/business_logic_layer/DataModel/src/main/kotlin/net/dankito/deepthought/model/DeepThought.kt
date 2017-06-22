@@ -17,7 +17,7 @@ class DeepThought : UserDataEntity(), Serializable {
 
 
     @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
-    var entries: MutableSet<Entry> = HashSet()
+    var entries: MutableList<Entry> = mutableListOf() // TODO: don't expose a mutable list
         private set
 
     @Column(name = TableConfig.DeepThoughtNextEntryIndexColumnName)
@@ -25,24 +25,24 @@ class DeepThought : UserDataEntity(), Serializable {
         private set
 
     @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
-    var tags: MutableSet<Tag> = HashSet()
+    var tags: MutableList<Tag> = mutableListOf()
         private set
 
 
     @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
-    var references: MutableSet<Reference> = HashSet()
+    var references: MutableList<Reference> = mutableListOf()
         private set
 
     @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
-    var notes: MutableSet<Note> = HashSet()
+    var notes: MutableList<Note> = mutableListOf()
         private set
 
     @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
-    var files: MutableSet<FileLink> = HashSet()
+    var files: MutableList<FileLink> = mutableListOf()
         private set
 
     @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
-    var entriesGroups: MutableSet<EntriesGroup> = HashSet()
+    var entriesGroups: MutableList<EntriesGroup> = mutableListOf()
         private set
 
 
