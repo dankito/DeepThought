@@ -25,7 +25,7 @@ class EntriesListView : View(), IEntriesListView {
 
     private val searchBar: EntriesSearchBar
 
-    private val entriesListPresenter: EntriesListPresenter
+    private val presenter: EntriesListPresenter
 
 
     @Inject
@@ -37,12 +37,12 @@ class EntriesListView : View(), IEntriesListView {
     init {
         AppComponent.component.inject(this)
 
-        entriesListPresenter = EntriesListPresenter(this, router, searchEngine)
-        searchBar = EntriesSearchBar(entriesListPresenter)
+        presenter = EntriesListPresenter(this, router, searchEngine)
+        searchBar = EntriesSearchBar(presenter)
     }
 
     override fun onUndock() {
-        entriesListPresenter.cleanUp()
+        presenter.cleanUp()
         super.onUndock()
     }
 
