@@ -1,6 +1,7 @@
 package net.dankito.deepthought.javafx.di
 
 import dagger.Component
+import net.dankito.deepthought.di.BaseModule
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.di.CommonDataModule
 import net.dankito.deepthought.di.CommonModule
@@ -16,7 +17,7 @@ import javax.inject.Singleton
 
 
 @Singleton
-@Component(modules = arrayOf(JavaFXModule::class, JavaCommonModule::class, CommonModule::class, CommonDataModule::class))
+@Component(modules = arrayOf(JavaFXModule::class, JavaCommonModule::class, CommonModule::class, CommonDataModule::class, BaseModule::class))
 interface AppComponent : CommonComponent {
 
     companion object {

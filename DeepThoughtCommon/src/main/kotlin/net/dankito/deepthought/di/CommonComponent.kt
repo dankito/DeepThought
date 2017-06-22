@@ -10,8 +10,8 @@ import javax.inject.Singleton
 
 
 @Singleton
-@Component(modules = arrayOf(CommonModule::class, CommonDataModule::class))
-interface CommonComponent {
+@Component(modules = arrayOf(CommonModule::class, CommonDataModule::class, BaseModule::class))
+interface CommonComponent : BaseComponent {
 
     companion object {
         lateinit var component: CommonComponent

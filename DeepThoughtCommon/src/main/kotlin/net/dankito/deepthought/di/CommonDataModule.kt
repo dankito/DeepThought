@@ -14,7 +14,6 @@ import net.dankito.service.data.EntryService
 import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.TagService
 import net.dankito.service.eventbus.IEventBus
-import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.utils.IPlatformConfiguration
 import javax.inject.Singleton
 
@@ -33,12 +32,6 @@ class CommonDataModule {
     fun provideDataManager(entityManager: IEntityManager, configuration: EntityManagerConfiguration,
                            dataInitializer: DefaultDataInitializer, platformConfiguration: IPlatformConfiguration) : DataManager {
         return DataManager(entityManager, configuration, dataInitializer, platformConfiguration)
-    }
-
-    @Provides
-    @Singleton
-    fun provideEventBus() : IEventBus {
-        return MBassadorEventBus()
     }
 
 

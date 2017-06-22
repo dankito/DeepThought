@@ -2,6 +2,7 @@ package net.dankito.deepthought.javafx
 
 import javafx.application.Application
 import javafx.stage.Stage
+import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.di.DaggerAppComponent
@@ -49,6 +50,7 @@ class DeepThoughtJavaFXApplication : App(MainWindow::class) {
                 .javaFXModule(JavaFXModule(mainWindowController))
                 .build()
 
+        BaseComponent.component = component
         CommonComponent.component = component
         AppComponent.component = component
 
