@@ -2,6 +2,7 @@ package net.dankito.deepthought.javafx.dialogs.entry
 
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Tag
 import net.dankito.newsreader.model.EntryExtractionResult
 import org.jsoup.Jsoup
 
@@ -26,20 +27,9 @@ class EditEntryExtractionResultView : EditEntryViewBase() {
         return extractionResult.reference
     }
 
-
-    override fun saveEntry() {
-        super.saveEntry()
-
-        var entryUpdated = false
-
-        extractionResult.reference?.let {
-            extractionResult.entry.reference = it
-            entryUpdated = true
-        }
-
-        if(entryUpdated) {
-            entryService.update(extractionResult.entry)
-        }
+    override fun getTagsForSaving(): List<Tag> {
+        return extractionResult.tags
     }
+
 
 }

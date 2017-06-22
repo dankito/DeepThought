@@ -8,6 +8,7 @@ import javafx.scene.web.WebView
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.ReferenceService
@@ -121,11 +122,13 @@ abstract class EditEntryViewBase : Fragment() {
 
 
     protected open fun saveEntry() {
-        presenter.saveEntry(getEntryForSaving(), getReferenceForSaving())
+        presenter.saveEntry(getEntryForSaving(), getReferenceForSaving(), getTagsForSaving())
     }
 
     protected abstract fun getEntryForSaving(): Entry
 
     protected abstract fun getReferenceForSaving(): Reference?
+
+    protected abstract fun getTagsForSaving(): List<Tag>
 
 }
