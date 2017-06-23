@@ -1,4 +1,4 @@
-package net.dankito.deepthought.javafx.dialogs.articlesummary
+package net.dankito.deepthought.javafx.dialogs.articlesummary.presenter
 
 import javafx.collections.FXCollections
 import net.dankito.deepthought.javafx.dialogs.articlesummary.model.ArticleSummaryItemModel

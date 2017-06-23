@@ -3,7 +3,7 @@ package net.dankito.deepthought.javafx.dialogs.articlesummary.controls
 import javafx.collections.FXCollections
 import javafx.collections.ObservableMap
 import javafx.scene.control.CheckBox
-import net.dankito.deepthought.javafx.dialogs.articlesummary.JavaFXArticleSummaryPresenter
+import net.dankito.deepthought.javafx.dialogs.articlesummary.presenter.JavaFXArticleSummaryPresenter
 import net.dankito.newsreader.model.ArticleSummaryItem
 import tornadofx.*
 

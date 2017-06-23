@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.collections.MapChangeListener
 import javafx.geometry.Pos
 import javafx.scene.control.CheckBox
-import net.dankito.deepthought.javafx.dialogs.articlesummary.JavaFXArticleSummaryPresenter
+import net.dankito.deepthought.javafx.dialogs.articlesummary.presenter.JavaFXArticleSummaryPresenter
 import net.dankito.newsreader.model.ArticleSummaryItem
 import tornadofx.*
 

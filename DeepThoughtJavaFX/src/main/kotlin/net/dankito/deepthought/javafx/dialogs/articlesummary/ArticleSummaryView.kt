@@ -3,6 +3,7 @@ package net.dankito.deepthought.javafx.dialogs.articlesummary
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.articlesummary.controls.ArticleSummaryControlBarView
 import net.dankito.deepthought.javafx.dialogs.articlesummary.controls.ArticleSummaryItemsView
+import net.dankito.deepthought.javafx.dialogs.articlesummary.presenter.JavaFXArticleSummaryPresenter
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
