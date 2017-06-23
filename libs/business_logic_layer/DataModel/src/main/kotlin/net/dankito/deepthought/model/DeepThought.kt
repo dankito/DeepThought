@@ -229,7 +229,7 @@ class DeepThought : UserDataEntity(), Serializable {
         return readLaterArticles.add(readLaterArticle)
     }
 
-    fun removeEntriesGroup(readLaterArticle: ReadLaterArticle): Boolean {
+    fun removeReadLaterArticle(readLaterArticle: ReadLaterArticle): Boolean {
         return readLaterArticles.remove(readLaterArticle)
     }
 
