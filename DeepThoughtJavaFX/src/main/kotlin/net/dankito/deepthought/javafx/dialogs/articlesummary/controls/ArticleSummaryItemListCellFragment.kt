@@ -1,11 +1,10 @@
 package net.dankito.deepthought.javafx.dialogs.articlesummary.controls
 
-import javafx.geometry.HPos
+import javafx.collections.ObservableMap
 import javafx.geometry.Pos
-import javafx.geometry.VPos
+import javafx.scene.control.CheckBox
 import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
-import javafx.scene.paint.Color
 import net.dankito.deepthought.javafx.dialogs.articlesummary.model.ArticleSummaryItemModel
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.newsreader.model.ArticleSummaryItem
@@ -28,7 +27,10 @@ class ArticleSummaryItemListCellFragment : ListCellFragment<ArticleSummaryItem>(
 
         checkbox {
             prefWidth = 30.0
-            action {  }
+
+            selectedProperty().addListener { _, _, isSelected ->
+                itemSelectionChanged(isSelected, item, this)
+            }
 
             hboxConstraints {
                 alignment = Pos.CENTER
@@ -64,6 +66,17 @@ class ArticleSummaryItemListCellFragment : ListCellFragment<ArticleSummaryItem>(
                 vgrow = Priority.ALWAYS
 
                 isWrapText = true
+            }
+        }
+    }
+
+    private fun itemSelectionChanged(isSelected: Boolean, item: ArticleSummaryItem, checkBox: CheckBox) {
+        // really bad code design
+        (cell?.listView?.userData as? ObservableMap<ArticleSummaryItem, CheckBox>)?.let { checkedItems ->
+            if (isSelected) {
+                checkedItems.put(item, checkBox)
+            } else {
+                checkedItems.remove(item)
             }
         }
     }
