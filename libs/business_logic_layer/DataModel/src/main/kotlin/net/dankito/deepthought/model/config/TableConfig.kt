@@ -140,24 +140,17 @@ class TableConfig {
 
         const val EntryTableName = "entry"
 
-        const val EntryParentEntryJoinColumnName = "parent_entry_id"
-        const val EntryTitleColumnName = "title"
         const val EntryAbstractColumnName = "abstract"
         const val EntryContentColumnName = "content"
-        const val EntrySeriesTitleJoinColumnName = "series_title_id"
         const val EntryReferenceJoinColumnName = "reference_id"
-        const val EntryReferenceSubDivisionJoinColumnName = "reference_sub_division_id"
         const val EntryIndicationColumnName = "indication"
         const val EntryPreviewImageJoinColumnName = "preview_image_id"
+        const val EntryPreviewImageUrlColumnName = "preview_image_url"
 
         const val EntryEntryIndexColumnName = "entry_index"
         const val EntryLanguageJoinColumnName = "language_id"
 
         const val EntryDeepThoughtJoinColumnName = "deep_thought_id"
-
-        const val EntryTagsPseudoColumnName = "tags"
-        const val EntryCategoriesPseudoColumnName = "categories"
-        const val EntryPersonsPseudoColumnName = "persons"
 
 
         /*          Entry Tag Join Table Config        */
