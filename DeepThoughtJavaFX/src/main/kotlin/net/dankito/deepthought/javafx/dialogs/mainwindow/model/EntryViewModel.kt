@@ -8,7 +8,7 @@ import net.dankito.deepthought.model.Entry
 import tornadofx.*
 
 
-class EntryModel : ItemViewModel<Entry>() {
+class EntryViewModel : ItemViewModel<Entry>() {
 
     val index = bind { SimpleLongProperty(item?.entryIndex ?: 0) }
 
