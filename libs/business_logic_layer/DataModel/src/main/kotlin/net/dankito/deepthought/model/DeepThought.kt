@@ -47,6 +47,7 @@ class DeepThought : UserDataEntity(), Serializable {
 
 
     @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
+    @OrderBy("createdOn DESC")
     var readLaterArticles: MutableList<ReadLaterArticle> = mutableListOf()
         private set
 
