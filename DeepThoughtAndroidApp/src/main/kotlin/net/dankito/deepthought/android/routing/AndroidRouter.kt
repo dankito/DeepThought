@@ -39,6 +39,11 @@ class AndroidRouter(private val context: Context, private val activityTracker: C
         context.startActivity(articleSummaryActivityIntent)
     }
 
+    override fun showReadLaterArticlesView() {
+        // TODO
+    }
+
+
     override fun showViewEntryView(entry: Entry) {
         entry.id?.let { entryId -> showEntryView(ViewEntryActivity.ENTRY_ID_INTENT_EXTRA_NAME, entryId) }
     }

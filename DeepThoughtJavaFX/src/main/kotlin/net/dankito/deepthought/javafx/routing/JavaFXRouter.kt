@@ -4,6 +4,7 @@ import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryExtractionResultView
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryView
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
+import net.dankito.deepthought.javafx.dialogs.readlaterarticle.ReadLaterArticleView
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
@@ -28,6 +29,10 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
 
     override fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig) {
         mainWindowController.find(ArticleSummaryView::class, mapOf(ArticleSummaryView::articleSummaryExtractor to extractor)).openWindow()
+    }
+
+    override fun showReadLaterArticlesView() {
+        mainWindowController.find(ReadLaterArticleView::class).openWindow()
     }
 
 
