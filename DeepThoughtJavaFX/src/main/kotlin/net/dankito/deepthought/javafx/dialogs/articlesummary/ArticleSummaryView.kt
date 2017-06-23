@@ -1,10 +1,19 @@
 package net.dankito.deepthought.javafx.dialogs.articlesummary
 
+import javafx.beans.property.SimpleBooleanProperty
+import javafx.beans.property.SimpleStringProperty
+import javafx.collections.ListChangeListener
+import javafx.collections.MapChangeListener
+import javafx.geometry.Pos
+import javafx.scene.control.CheckBox
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.articlesummary.controls.ArticleSummaryItemsView
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.newsreader.article.ArticleExtractors
+import net.dankito.newsreader.model.ArticleSummaryItem
+import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import tornadofx.*
@@ -15,6 +24,12 @@ class ArticleSummaryView : Fragment() {
 
     @Inject
     protected lateinit var articleExtractors: ArticleExtractors
+
+    @Inject
+    protected lateinit var entryPerister: EntryPersister
+
+    @Inject
+    protected lateinit var readLaterArticleService: ReadLaterArticleService
 
     @Inject
     protected lateinit var tagService: TagService
@@ -38,8 +53,9 @@ class ArticleSummaryView : Fragment() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = ArticleSummaryPresenterJavaFX(articleSummaryExtractor, articleExtractors, tagService, searchEngine, router)
+        presenter = ArticleSummaryPresenterJavaFX(articleSummaryExtractor, articleExtractors, entryPerister, readLaterArticleService, tagService, searchEngine, router)
 
-        root.center = ArticleSummaryItemsView(presenter).root
+        articleSummaryItemsView = ArticleSummaryItemsView(presenter)
+        root.center = articleSummaryItemsView.root
     }
 }
