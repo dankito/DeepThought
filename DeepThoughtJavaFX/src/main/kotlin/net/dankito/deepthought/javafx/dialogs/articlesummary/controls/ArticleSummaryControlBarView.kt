@@ -5,16 +5,35 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.collections.MapChangeListener
 import javafx.geometry.Pos
 import javafx.scene.control.CheckBox
+import javafx.scene.control.ContentDisplay
+import javafx.scene.image.ImageView
 import net.dankito.deepthought.javafx.dialogs.articlesummary.presenter.JavaFXArticleSummaryPresenter
+import net.dankito.deepthought.javafx.res.icons.IconPaths
+import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.newsreader.model.ArticleSummaryItem
 import tornadofx.*
 
 
 class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPresenter, private val articleSummaryItemsView: ArticleSummaryItemsView) : View() {
 
-    private val areSelectedItemsActionButtonsDisabled = SimpleBooleanProperty(true)
+    companion object {
+        private const val ButtonsHeight = 40.0
+
+        private const val TextButtonsWidth = 120.0
+
+        private const val IconButtonsWidth = ButtonsHeight
+
+        private const val ButtonsTopAndBottomMargin = 4.0
+
+        private const val ButtonsLeftMargin = 12.0
+
+        private const val BarHeight = ButtonsHeight + 2 * ButtonsTopAndBottomMargin
+    }
+
 
     private val countItemsSelectedLabelText = SimpleStringProperty(String.format(messages["count.items.selected"], 0))
+
+    private val areSelectedItemsActionButtonsDisabled = SimpleBooleanProperty(true)
 
 
     init {
@@ -27,8 +46,8 @@ class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPr
 
 
     override val root = anchorpane {
-        minHeight = 48.0
-        maxHeight = 48.0
+        minHeight = BarHeight
+        maxHeight = BarHeight
 
         hbox {
             anchorpaneConstraints {
@@ -44,41 +63,91 @@ class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPr
             }
 
             button(messages["view.selected.items"]) {
-                prefWidth = 120.0
+                prefWidth = TextButtonsWidth
                 useMaxHeight = true
                 disableProperty().bind(areSelectedItemsActionButtonsDisabled)
 
                 action { viewSelectedItems() }
 
                 hboxConstraints {
-                    marginLeft = 12.0
-                    marginTopBottom(4.0)
+                    marginLeft = ButtonsLeftMargin
+                    marginTopBottom(ButtonsTopAndBottomMargin)
                 }
             }
 
             button(messages["read.selected.items.later"]) {
-                prefWidth = 120.0
+                prefWidth = TextButtonsWidth
                 useMaxHeight = true
                 disableProperty().bind(areSelectedItemsActionButtonsDisabled)
 
                 action { saveSelectedItemsForLaterReading() }
 
                 hboxConstraints {
-                    marginLeft = 12.0
-                    marginTopBottom(4.0)
+                    marginLeft = ButtonsLeftMargin
+                    marginTopBottom(ButtonsTopAndBottomMargin)
                 }
             }
 
             button(messages["save.selected.items"]) {
-                prefWidth = 120.0
+                prefWidth = TextButtonsWidth
                 useMaxHeight = true
                 disableProperty().bind(areSelectedItemsActionButtonsDisabled)
 
                 action { saveSelectedItems() }
 
                 hboxConstraints {
-                    marginLeft = 12.0
-                    marginTopBottom(4.0)
+                    marginLeft = ButtonsLeftMargin
+                    marginTopBottom(ButtonsTopAndBottomMargin)
+                }
+            }
+        }
+
+        hbox {
+            anchorpaneConstraints {
+                topAnchor = 0.0
+                rightAnchor = 0.0
+                bottomAnchor = 0.0
+            }
+
+            alignment = Pos.CENTER_LEFT
+
+            button {
+                minHeight = ButtonsHeight
+                maxHeight = ButtonsHeight
+                minWidth = IconButtonsWidth
+                maxWidth = IconButtonsWidth
+
+                contentDisplay = ContentDisplay.GRAPHIC_ONLY
+                graphic = ImageView(IconPaths.UpdateIconPath)
+
+                action { presenter.extractArticlesSummary() }
+
+                hboxConstraints {
+                    marginLeft = ButtonsLeftMargin
+                    marginTopBottom(ButtonsTopAndBottomMargin)
+                }
+            }
+
+            button {
+                minHeight = ButtonsHeight
+                maxHeight = ButtonsHeight
+                minWidth = IconButtonsWidth
+                maxWidth = IconButtonsWidth
+
+                visibleProperty().bind(presenter.canLoadMoreItems)
+                FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
+
+                contentDisplay = ContentDisplay.GRAPHIC_ONLY
+                val icon = ImageView(IconPaths.LoadNextItemsIconPath)
+                icon.fitWidth = 30.0
+                icon.fitHeight = 30.0
+                graphic = icon
+
+                action { presenter.loadMoreItems() }
+
+                hboxConstraints {
+                    marginLeft = ButtonsLeftMargin
+                    marginTopBottom(ButtonsTopAndBottomMargin)
                 }
             }
         }
