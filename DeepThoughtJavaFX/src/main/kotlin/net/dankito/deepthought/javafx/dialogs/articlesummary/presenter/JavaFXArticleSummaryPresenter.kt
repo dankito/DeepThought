@@ -3,7 +3,7 @@ package net.dankito.deepthought.javafx.dialogs.articlesummary.presenter
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
-import net.dankito.deepthought.javafx.dialogs.articlesummary.model.ArticleSummaryItemModel
+import net.dankito.deepthought.javafx.dialogs.articlesummary.model.ArticleSummaryItemViewModel
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
@@ -33,7 +33,7 @@ class JavaFXArticleSummaryPresenter(private val articleSummaryExtractor: Article
     }
 
 
-    val itemModel = ArticleSummaryItemModel()
+    val itemModel = ArticleSummaryItemViewModel()
 
     val items = FXCollections.observableArrayList<ArticleSummaryItem>()
 

@@ -5,7 +5,7 @@ import net.dankito.newsreader.model.ArticleSummaryItem
 import tornadofx.*
 
 
-class ArticleSummaryItemModel : ItemViewModel<ArticleSummaryItem>() {
+class ArticleSummaryItemViewModel : ItemViewModel<ArticleSummaryItem>() {
 
     val previewImageUrl = bind { SimpleStringProperty(item?.previewImageUrl) }
 

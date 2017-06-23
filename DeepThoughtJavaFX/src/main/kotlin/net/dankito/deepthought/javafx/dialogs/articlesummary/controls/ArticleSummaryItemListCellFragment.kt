@@ -5,7 +5,7 @@ import javafx.geometry.Pos
 import javafx.scene.control.CheckBox
 import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
-import net.dankito.deepthought.javafx.dialogs.articlesummary.model.ArticleSummaryItemModel
+import net.dankito.deepthought.javafx.dialogs.articlesummary.model.ArticleSummaryItemViewModel
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.newsreader.model.ArticleSummaryItem
 import tornadofx.*
@@ -13,7 +13,7 @@ import tornadofx.*
 
 class ArticleSummaryItemListCellFragment : ListCellFragment<ArticleSummaryItem>() {
 
-    val summaryItem = ArticleSummaryItemModel().bindTo(this)
+    val summaryItem = ArticleSummaryItemViewModel().bindTo(this)
 
 
     override val root = hbox {
