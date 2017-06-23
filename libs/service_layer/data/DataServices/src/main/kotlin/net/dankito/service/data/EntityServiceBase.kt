@@ -7,6 +7,7 @@ import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.EntityChanged
 import net.dankito.service.eventbus.IEventBus
+import kotlin.concurrent.thread
 
 
 abstract class EntityServiceBase<T : BaseEntity>(val dataManager: DataManager, val eventBus: IEventBus) {
@@ -15,7 +16,9 @@ abstract class EntityServiceBase<T : BaseEntity>(val dataManager: DataManager, v
 
 
     fun getAllAsync(callback: (List<T>) -> Unit) {
-        callback(getAll())
+        thread { // TODO: use IThreadPool
+            callback(getAll())
+        }
     }
 
     fun getAll() : List<T> {
