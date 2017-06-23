@@ -111,6 +111,12 @@ class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPr
 
             alignment = Pos.CENTER_LEFT
 
+            label(presenter.lastUpdateTime) {
+                hboxConstraints {
+                    marginLeft = ButtonsLeftMargin
+                }
+            }
+
             button {
                 minHeight = ButtonsHeight
                 maxHeight = ButtonsHeight
@@ -123,7 +129,7 @@ class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPr
                 action { presenter.extractArticlesSummary() }
 
                 hboxConstraints {
-                    marginLeft = ButtonsLeftMargin
+                    marginLeft = 6.0
                     marginTopBottom(ButtonsTopAndBottomMargin)
                 }
             }
@@ -138,10 +144,7 @@ class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPr
                 FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
 
                 contentDisplay = ContentDisplay.GRAPHIC_ONLY
-                val icon = ImageView(IconPaths.LoadNextItemsIconPath)
-                icon.fitWidth = 30.0
-                icon.fitHeight = 30.0
-                graphic = icon
+                graphic = ImageView(IconPaths.LoadNextItemsIconPath)
 
                 action { presenter.loadMoreItems() }
 

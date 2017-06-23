@@ -1,6 +1,7 @@
 package net.dankito.deepthought.javafx.dialogs.articlesummary.presenter
 
 import javafx.beans.property.SimpleBooleanProperty
+import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import net.dankito.deepthought.javafx.dialogs.articlesummary.model.ArticleSummaryItemModel
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
@@ -15,6 +16,8 @@ import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import tornadofx.*
+import java.text.DateFormat
+import java.util.*
 
 
 /**
@@ -24,11 +27,19 @@ class JavaFXArticleSummaryPresenter(private val articleSummaryExtractor: Article
                                     readLaterArticleService: ReadLaterArticleService, tagService: TagService, searchEngine: ISearchEngine, router: IRouter)
     : ArticleSummaryPresenter(articleExtractors, entryPersister, readLaterArticleService, tagService, searchEngine, router) {
 
+
+    companion object {
+        private val LastUpdateTimeDateFormat = DateFormat.getDateTimeInstance()
+    }
+
+
     val itemModel = ArticleSummaryItemModel()
 
     val items = FXCollections.observableArrayList<ArticleSummaryItem>()
 
     val canLoadMoreItems = SimpleBooleanProperty(false)
+
+    val lastUpdateTime = SimpleStringProperty("")
 
 
     init {
@@ -60,6 +71,8 @@ class JavaFXArticleSummaryPresenter(private val articleSummaryExtractor: Article
             }
 
             canLoadMoreItems.set(articleSummary.canLoadMoreItems)
+
+            lastUpdateTime.set(LastUpdateTimeDateFormat.format(Date()))
         }
     }
 
