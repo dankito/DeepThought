@@ -84,14 +84,21 @@ open class ArticleSummaryPresenter(protected val articleExtractors: ArticleExtra
     private fun getArticle(item: ArticleSummaryItem, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
         articleExtractors.getExtractorForItem(item)?.let { extractor ->
             extractor.extractArticleAsync(item) { asyncResult ->
-                asyncResult.result?.let {
-                    getDefaultTagsForExtractor(extractor) { tags ->
-                        it.tags.addAll(tags)
-                        callback(asyncResult)
-                    }
-                }
+                asyncResult.result?.let { retrievedArticle(extractor, item, asyncResult, it, callback) }
                 asyncResult.error?.let { callback(asyncResult) }
             }
+        }
+    }
+
+    private fun retrievedArticle(extractor: IArticleExtractor, item: ArticleSummaryItem, asyncResult: AsyncResult<EntryExtractionResult>,
+                                 extractionResult: EntryExtractionResult, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
+        if(extractionResult.entry.previewImageUrl == null) {
+            extractionResult.entry.previewImageUrl = item.previewImageUrl
+        }
+
+        getDefaultTagsForExtractor(extractor) { tags ->
+            extractionResult.tags.addAll(tags)
+            callback(asyncResult)
         }
     }
 
