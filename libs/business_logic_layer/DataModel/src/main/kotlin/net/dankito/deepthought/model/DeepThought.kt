@@ -46,6 +46,11 @@ class DeepThought : UserDataEntity(), Serializable {
         private set
 
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
+    var readLaterArticles: MutableList<ReadLaterArticle> = mutableListOf()
+        private set
+
+
     @OneToMany(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST))
     @OrderBy(value = "sortOrder")
     var noteTypes: MutableSet<NoteType> = TreeSet<NoteType>()
@@ -212,6 +217,19 @@ class DeepThought : UserDataEntity(), Serializable {
         }
 
         return false
+    }
+
+
+    fun getCountReadLaterArticles(): Int {
+        return readLaterArticles.size
+    }
+
+    fun addReadLaterArticle(readLaterArticle: ReadLaterArticle): Boolean {
+        return readLaterArticles.add(readLaterArticle)
+    }
+
+    fun removeEntriesGroup(readLaterArticle: ReadLaterArticle): Boolean {
+        return readLaterArticles.remove(readLaterArticle)
     }
 
 }

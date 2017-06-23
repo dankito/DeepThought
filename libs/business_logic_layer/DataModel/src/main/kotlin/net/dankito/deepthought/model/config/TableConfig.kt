@@ -352,5 +352,12 @@ class TableConfig {
 
         const val BackupFileServiceTypeTableName = "backup_file_service_type"
 
+
+        /*          ReadLaterArticle Table Config        */
+
+        const val ReadLaterArticleTableName = "read_later_article"
+
+        const val ReadLaterArticleEntryExtractionResultColumnName = "entry_extraction_result"
+
     }
 }
