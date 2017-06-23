@@ -10,9 +10,7 @@ import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
-import net.dankito.service.data.EntryService
-import net.dankito.service.data.ReferenceService
-import net.dankito.service.data.TagService
+import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import tornadofx.*
 import javax.inject.Inject
 
@@ -40,19 +38,13 @@ abstract class EditEntryViewBase : Fragment() {
 
 
     @Inject
-    protected lateinit var entryService: EntryService
-
-    @Inject
-    protected lateinit var referenceService: ReferenceService
-
-    @Inject
-    protected lateinit var tagService: TagService
+    protected lateinit var entryPersister: EntryPersister
 
 
     init {
         AppComponent.component.inject(this)
 
-        presenter = EditEntryPresenter(entryService, referenceService, tagService)
+        presenter = EditEntryPresenter(entryPersister)
     }
 
 

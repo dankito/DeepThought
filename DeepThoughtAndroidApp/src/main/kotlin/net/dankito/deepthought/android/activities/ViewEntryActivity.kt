@@ -10,6 +10,7 @@ import net.dankito.deepthought.android.service.ui.BaseActivity
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ViewEntryPresenter
+import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.newsreader.model.EntryExtractionResult
 import net.dankito.serializer.ISerializer
 import net.dankito.service.data.EntryService
@@ -30,10 +31,7 @@ class ViewEntryActivity : BaseActivity() {
     protected lateinit var entryService: EntryService
 
     @Inject
-    protected lateinit var referenceService: ReferenceService
-
-    @Inject
-    protected lateinit var tagService: TagService
+    protected lateinit var entryPersister: EntryPersister
 
     @Inject
     protected lateinit var router: IRouter
@@ -51,7 +49,7 @@ class ViewEntryActivity : BaseActivity() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = ViewEntryPresenter(entryService, referenceService, tagService, router)
+        presenter = ViewEntryPresenter(entryPersister, router)
     }
 
 
