@@ -18,7 +18,7 @@ import tornadofx.*
 /**
  * Yeah, i know this is bad design, a Controller deriving from a Presenter ...
  */
-class ArticleSummaryPresenterJavaFX(articleSummaryExtractor: ArticleSummaryExtractorConfig, articleExtractors: ArticleExtractors, entryPersister: EntryPersister,
+class JavaFXArticleSummaryPresenter(articleSummaryExtractor: ArticleSummaryExtractorConfig, articleExtractors: ArticleExtractors, entryPersister: EntryPersister,
                                     readLaterArticleService: ReadLaterArticleService, tagService: TagService, searchEngine: ISearchEngine, router: IRouter)
     : ArticleSummaryPresenter(articleExtractors, entryPersister, readLaterArticleService, tagService, searchEngine, router) {
 

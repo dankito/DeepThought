@@ -37,7 +37,7 @@ class ArticleSummaryView : Fragment() {
 
     val articleSummaryExtractor: ArticleSummaryExtractorConfig by param()
 
-    private var presenter: ArticleSummaryPresenterJavaFX
+    private var presenter: JavaFXArticleSummaryPresenter
 
     private val articleSummaryItemsView: ArticleSummaryItemsView
 
@@ -53,7 +53,7 @@ class ArticleSummaryView : Fragment() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = ArticleSummaryPresenterJavaFX(articleSummaryExtractor, articleExtractors, entryPerister, readLaterArticleService, tagService, searchEngine, router)
+        presenter = JavaFXArticleSummaryPresenter(articleSummaryExtractor, articleExtractors, entryPerister, readLaterArticleService, tagService, searchEngine, router)
 
         articleSummaryItemsView = ArticleSummaryItemsView(presenter)
         root.center = articleSummaryItemsView.root

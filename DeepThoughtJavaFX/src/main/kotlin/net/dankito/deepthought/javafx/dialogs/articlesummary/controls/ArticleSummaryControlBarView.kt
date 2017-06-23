@@ -5,12 +5,12 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.collections.MapChangeListener
 import javafx.geometry.Pos
 import javafx.scene.control.CheckBox
-import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryPresenterJavaFX
+import net.dankito.deepthought.javafx.dialogs.articlesummary.JavaFXArticleSummaryPresenter
 import net.dankito.newsreader.model.ArticleSummaryItem
 import tornadofx.*
 
 
-class ArticleSummaryControlBarView(private val presenter: ArticleSummaryPresenterJavaFX, private val articleSummaryItemsView: ArticleSummaryItemsView) : View() {
+class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPresenter, private val articleSummaryItemsView: ArticleSummaryItemsView) : View() {
 
     private val areSelectedItemsActionButtonsDisabled = SimpleBooleanProperty(true)
 
