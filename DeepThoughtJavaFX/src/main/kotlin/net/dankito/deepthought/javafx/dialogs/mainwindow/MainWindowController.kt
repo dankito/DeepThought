@@ -2,7 +2,7 @@ package net.dankito.deepthought.javafx.dialogs.mainwindow
 
 import javafx.collections.FXCollections
 import net.dankito.deepthought.javafx.di.AppComponent
-import net.dankito.deepthought.javafx.dialogs.mainwindow.model.EntryModel
+import net.dankito.deepthought.javafx.dialogs.mainwindow.model.EntryViewModel
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class MainWindowController : Controller() {
 
 
-    val entryModel = EntryModel()
+    val entryModel = EntryViewModel()
 
     val entries = FXCollections.observableArrayList<Entry>()
 
@@ -53,6 +53,10 @@ class MainWindowController : Controller() {
 
     fun showArticlesSummaryView(articleSummaryExtractorConfig: ArticleSummaryExtractorConfig) {
         router.showArticleSummaryView(articleSummaryExtractorConfig)
+    }
+
+    fun showReadLaterArticlesView() {
+        router.showReadLaterArticlesView()
     }
 
 }
