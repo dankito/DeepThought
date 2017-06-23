@@ -55,7 +55,10 @@ data class Entry(
 
     @OneToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST))
     @JoinColumn(name = TableConfig.EntryPreviewImageJoinColumnName)
-    var previewImage: FileLink? = null
+    var previewImage: FileLink? = null // TODO: may remove
+
+    @Column(name = TableConfig.EntryPreviewImageUrlColumnName)
+    var previewImageUrl: String? = null
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.MERGE))
     @JoinColumn(name = TableConfig.EntryReferenceJoinColumnName)
