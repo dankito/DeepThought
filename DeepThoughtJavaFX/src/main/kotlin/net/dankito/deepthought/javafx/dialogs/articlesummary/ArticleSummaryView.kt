@@ -49,7 +49,7 @@ class ArticleSummaryView : Fragment() {
 
     private val areSelectedItemsActionButtonsDisabled = SimpleBooleanProperty(true)
 
-    private val countItemsSelectedLabelText = SimpleStringProperty(messages["count.items.selected"])
+    private val countItemsSelectedLabelText = SimpleStringProperty(String.format(messages["count.items.selected"], 0))
 
 
 
