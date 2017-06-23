@@ -75,7 +75,7 @@ class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPr
                 }
             }
 
-            button(messages["read.selected.items.later"]) {
+            button(messages["save.selected.items.for.later.reading"]) {
                 prefWidth = TextButtonsWidth
                 useMaxHeight = true
                 disableProperty().bind(areSelectedItemsActionButtonsDisabled)
