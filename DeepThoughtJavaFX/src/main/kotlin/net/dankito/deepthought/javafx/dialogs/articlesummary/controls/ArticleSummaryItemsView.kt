@@ -25,6 +25,30 @@ class ArticleSummaryItemsView(private val presenter: JavaFXArticleSummaryPresent
 
         cellFragment(ArticleSummaryItemListCellFragment::class)
 
+        contextmenu {
+            item(messages["context.menu.article.summary.item.save"]) {
+                action {
+                    selectedItem?.let { presenter.getAndSaveArticle(it) {
+                        // TODO: show error message
+                    } }
+                }
+            }
+
+            item(messages["context.menu.article.summary.item.save.for.later.reading"]) {
+                action {
+                    selectedItem?.let { presenter.getAndSaveArticleForLaterReading(it) {
+                        // TODO: show error message
+                    } }
+                }
+            }
+
+            separator()
+
+            item(messages["context.menu.article.summary.item.copy.url.to.clipboard"]) {
+                isDisable = true
+            }
+        }
+
         onDoubleClick {
             selectedItem?.let { presenter.getAndShowArticle(it) }
         }
