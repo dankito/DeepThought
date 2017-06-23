@@ -20,6 +20,10 @@ class ReadLaterArticleService(dataManager: DataManager, eventBus: IEventBus) : E
         return deepThought.addReadLaterArticle(entity)
     }
 
+    override fun removeEntityFromDeepThought(deepThought: DeepThought, entity: ReadLaterArticle): Boolean {
+        return deepThought.removeReadLaterArticle(entity)
+    }
+
     override fun createEntityChangedMessage(entity: ReadLaterArticle, changeType: EntityChangeType): EntityChanged<out BaseEntity> {
         return ReadLaterArticleChanged(entity, changeType)
     }

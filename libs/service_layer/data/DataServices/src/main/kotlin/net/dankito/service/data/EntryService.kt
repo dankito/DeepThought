@@ -26,6 +26,10 @@ class EntryService(dataManager: DataManager, eventBus: IEventBus): EntityService
         return deepThought.addEntry(entity)
     }
 
+    override fun removeEntityFromDeepThought(deepThought: DeepThought, entity: Entry): Boolean {
+        return deepThought.removeEntry(entity)
+    }
+
     override fun createEntityChangedMessage(entity: Entry, changeType: EntityChangeType): EntityChanged<out BaseEntity> {
         return EntryChanged(entity, changeType)
     }

@@ -20,6 +20,10 @@ class ReferenceService(dataManager: DataManager, eventBus: IEventBus) : EntitySe
         return deepThought.addReference(entity)
     }
 
+    override fun removeEntityFromDeepThought(deepThought: DeepThought, entity: Reference): Boolean {
+        return deepThought.removeReference(entity)
+    }
+
     override fun createEntityChangedMessage(entity: Reference, changeType: EntityChangeType): EntityChanged<out BaseEntity> {
         return ReferenceChanged(entity, changeType)
     }

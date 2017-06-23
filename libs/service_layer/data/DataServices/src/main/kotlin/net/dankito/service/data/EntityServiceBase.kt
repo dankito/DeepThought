@@ -49,6 +49,7 @@ abstract class EntityServiceBase<T : BaseEntity>(val dataManager: DataManager, v
 
     protected abstract fun addEntityToDeepThought(deepThought: DeepThought, entity: T): Boolean
 
+
     fun retrieve(id: String): T? {
         return entityManager.getEntityById(getEntityClass(), id)
     }
@@ -60,10 +61,18 @@ abstract class EntityServiceBase<T : BaseEntity>(val dataManager: DataManager, v
     }
 
     fun delete(entity: T) {
+        dataManager.currentDeepThought?.let {
+            if(removeEntityFromDeepThought(it, entity)) {
+                entityManager.updateEntity(it)
+            }
+        }
+
         entityManager.deleteEntity(entity as Any)
 
         callEntitiesUpdatedListeners(entity, EntityChangeType.Deleted)
     }
+
+    abstract fun removeEntityFromDeepThought(deepThought: DeepThought, entity: T): Boolean
 
 
     private fun callEntitiesUpdatedListeners(entity: T, changeType: EntityChangeType) {

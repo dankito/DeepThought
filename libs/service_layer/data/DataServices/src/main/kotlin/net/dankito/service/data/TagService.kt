@@ -20,6 +20,10 @@ class TagService(dataManager: DataManager, eventBus: IEventBus) : EntityServiceB
         return deepThought.addTag(entity)
     }
 
+    override fun removeEntityFromDeepThought(deepThought: DeepThought, entity: Tag): Boolean {
+        return deepThought.removeTag(entity)
+    }
+
     override fun createEntityChangedMessage(entity: Tag, changeType: EntityChangeType): EntityChanged<out BaseEntity> {
         return TagChanged(entity, changeType)
     }
