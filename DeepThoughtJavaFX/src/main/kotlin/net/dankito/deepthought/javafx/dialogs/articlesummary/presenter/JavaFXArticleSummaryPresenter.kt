@@ -33,11 +33,9 @@ class JavaFXArticleSummaryPresenter(articleSummaryExtractor: ArticleSummaryExtra
         }
     }
 
-    fun itemDoubleClicked(selectedItem: ArticleSummaryItem?) {
-        selectedItem?.let { item ->
-            getAndShowArticle(item) {
-                showArticleExtractionError(item, it)
-            }
+    fun getAndShowArticle(item: ArticleSummaryItem) {
+        getAndShowArticle(item) {
+            showArticleExtractionError(item, it)
         }
     }
 

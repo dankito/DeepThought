@@ -25,7 +25,9 @@ class ArticleSummaryItemsView(private val presenter: JavaFXArticleSummaryPresent
 
         cellFragment(ArticleSummaryItemListCellFragment::class)
 
-        onDoubleClick { presenter.itemDoubleClicked(selectedItem) }
+        onDoubleClick {
+            selectedItem?.let { presenter.getAndShowArticle(it) }
+        }
     }
 
 
