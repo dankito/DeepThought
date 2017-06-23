@@ -2,7 +2,6 @@ package net.dankito.deepthought.javafx.dialogs.articlesummary
 
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
-import javafx.collections.ListChangeListener
 import javafx.collections.MapChangeListener
 import javafx.geometry.Pos
 import javafx.scene.control.CheckBox
@@ -127,6 +126,8 @@ class ArticleSummaryView : Fragment() {
 
             countItemsSelectedLabelText.set(String.format(messages["count.items.selected"], it.map.size))
         })
+
+        title = articleSummaryExtractor.name
     }
 
 
