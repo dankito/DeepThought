@@ -14,17 +14,19 @@ class EntriesWithoutTagsCalculatedTag(private val searchEngine: ISearchEngine, p
 
 
     init {
-        searchEngine.addInitializationListener { getEntriesWithoutTags() }
+        searchEngine.addInitializationListener { getEntriesWithoutTags(false) }
 
         eventBus.register(eventBusListener)
     }
 
 
-    private fun getEntriesWithoutTags() {
+    private fun getEntriesWithoutTags(informUIOfUpdate: Boolean) {
         searchEngine.searchEntries(EntriesSearch(filterOnlyEntriesWithoutTags = true) {
             this.entries = it
 
-            eventBus.postAsync(EntitiesOfTypeChanged(Tag::class.java))
+            if(informUIOfUpdate) {
+                eventBus.postAsync(EntitiesOfTypeChanged(Tag::class.java))
+            }
         })
     }
 
@@ -33,7 +35,7 @@ class EntriesWithoutTagsCalculatedTag(private val searchEngine: ISearchEngine, p
 
         @Handler()
         fun entriesChanged(entryChanged: EntryChanged) {
-            getEntriesWithoutTags()
+            getEntriesWithoutTags(true)
         }
 
     }
