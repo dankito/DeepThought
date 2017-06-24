@@ -14,14 +14,15 @@ data class Device(
         @Column(name = TableConfig.UniqueDeviceIdColumnName)
         var uniqueDeviceId: String,
 
-        @Column(name = TableConfig.DevicePlatformColumnName)
-        var platform: String = "",
+        @Enumerated(EnumType.ORDINAL)
+        @Column(name = TableConfig.DeviceOsTypeColumnName)
+        var osType: OsType,
+
+        @Column(name = TableConfig.DeviceOsNameColumnName)
+        var osName: String = "",
 
         @Column(name = TableConfig.DeviceOsVersionColumnName)
         var osVersion: String = "",
-
-        @Column(name = TableConfig.DevicePlatformArchitectureColumnName)
-        var platformArchitecture: String = "",
 
         @Column(name = TableConfig.DeviceDescriptionColumnName)
         var description: String = ""
@@ -66,7 +67,7 @@ data class Device(
     var deviceIcon: ByteArray? = null
 
 
-    private constructor() : this("", "")
+    private constructor() : this("", "", OsType.DESKTOP)
 
 
 

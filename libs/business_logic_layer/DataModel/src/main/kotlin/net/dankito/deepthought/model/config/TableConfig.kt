@@ -83,20 +83,11 @@ class TableConfig {
         const val UniqueDeviceIdColumnName = "unique_device_id"
         const val DeviceNameColumnName = "name"
         const val DeviceDescriptionColumnName = "description"
-        const val DevicePlatformColumnName = "platform"
-        const val DevicePlatformArchitectureColumnName = "platform_architecture"
+        const val DeviceOsTypeColumnName = "os_type"
+        const val DeviceOsNameColumnName = "os_name"
         const val DeviceOsVersionColumnName = "os_version"
         const val DeviceLastKnownIpColumnName = "last_known_ip"
         const val DeviceIconColumnName = "device_icon"
-        const val DeviceUserRegionColumnName = "user_region"
-        const val DeviceUserLanguageColumnName = "user_language"
-        const val DeviceUserTimezoneColumnName = "user_timezone"
-        const val DeviceJavaRuntimeVersionColumnName = "java_runtime_version"
-        const val DeviceJavaClassVersionColumnName = "java_class_version"
-        const val DeviceJavaSpecificationVersionColumnName = "java_specification_version"
-        const val DeviceJavaVirtualMachineVersionColumnName = "java_vm_version"
-        const val DeviceOwnerJoinColumnName = "owner_id"
-        const val DeviceDeepThoughtApplicationJoinColumnName = "application_id"
 
 
         /*          Device_SynchronizedDevices JoinTable Column Names        */
