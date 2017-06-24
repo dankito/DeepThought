@@ -23,13 +23,13 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
     abstract fun searchEntries(search: EntriesSearch, termsToSearchFor: List<String>)
 
     override fun searchTags(search: TagsSearch) {
-        if (search.searchTerm.isNullOrBlank())
-            searchTags(search, ArrayList<String>())
-        else {
-            val tagNamesToFilterFor = getSingleSearchTerms(search.searchTerm, ",")
+        var tagNamesToFilterFor: List<String> = ArrayList<String>()
 
-            threadPool.runAsync { searchTags(search, tagNamesToFilterFor) }
+        if (search.searchTerm.isNullOrBlank() == false) {
+            tagNamesToFilterFor = getSingleSearchTerms(search.searchTerm, ",")
         }
+
+        threadPool.runAsync { searchTags(search, tagNamesToFilterFor) }
     }
 
     abstract fun searchTags(search: TagsSearch, termsToSearchFor: List<String>)
