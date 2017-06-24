@@ -1,8 +1,7 @@
 package net.dankito.deepthought.javafx.dialogs.articlesummary.controls
 
 import javafx.collections.FXCollections
-import javafx.collections.ObservableMap
-import javafx.scene.control.CheckBox
+import javafx.collections.ObservableSet
 import net.dankito.deepthought.javafx.dialogs.articlesummary.presenter.JavaFXArticleSummaryPresenter
 import net.dankito.newsreader.model.ArticleSummaryItem
 import tornadofx.*
@@ -10,7 +9,7 @@ import tornadofx.*
 
 class ArticleSummaryItemsView(private val presenter: JavaFXArticleSummaryPresenter) : View() {
 
-    val checkedItems: ObservableMap<ArticleSummaryItem, CheckBox> = FXCollections.observableHashMap()
+    val checkedItems: ObservableSet<ArticleSummaryItem> = FXCollections.observableSet(LinkedHashSet())
 
 
     override val root = listview<ArticleSummaryItem> {
@@ -56,7 +55,7 @@ class ArticleSummaryItemsView(private val presenter: JavaFXArticleSummaryPresent
 
 
     fun clearSelectedItems() {
-        ArrayList(checkedItems.values).forEach { it.isSelected = false }
+        checkedItems.clear()
     }
 
 }

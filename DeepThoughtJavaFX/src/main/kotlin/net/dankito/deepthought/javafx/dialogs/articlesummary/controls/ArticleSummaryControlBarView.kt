@@ -2,9 +2,8 @@ package net.dankito.deepthought.javafx.dialogs.articlesummary.controls
 
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
-import javafx.collections.MapChangeListener
+import javafx.collections.SetChangeListener
 import javafx.geometry.Pos
-import javafx.scene.control.CheckBox
 import javafx.scene.control.ContentDisplay
 import javafx.scene.image.ImageView
 import net.dankito.deepthought.javafx.dialogs.articlesummary.presenter.JavaFXArticleSummaryPresenter
@@ -37,10 +36,10 @@ class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPr
 
 
     init {
-        articleSummaryItemsView.checkedItems.addListener(MapChangeListener<ArticleSummaryItem, CheckBox> {
-            areSelectedItemsActionButtonsDisabled.set(it.map.size == 0)
+        articleSummaryItemsView.checkedItems.addListener(SetChangeListener<ArticleSummaryItem> {
+            areSelectedItemsActionButtonsDisabled.set(it.set.size == 0)
 
-            countItemsSelectedLabelText.set(String.format(messages["count.items.selected"], it.map.size))
+            countItemsSelectedLabelText.set(String.format(messages["count.items.selected"], it.set.size))
         })
     }
 
@@ -188,8 +187,8 @@ class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPr
         articleSummaryItemsView.clearSelectedItems()
     }
 
-    private fun getSelectedItems(): List<ArticleSummaryItem> {
-        return articleSummaryItemsView.checkedItems.keys.toList()
+    private fun getSelectedItems(): Collection<ArticleSummaryItem> {
+        return articleSummaryItemsView.checkedItems
     }
 
 }

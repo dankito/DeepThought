@@ -1,6 +1,6 @@
 package net.dankito.deepthought.javafx.dialogs.articlesummary.controls
 
-import javafx.collections.ObservableMap
+import javafx.collections.*
 import javafx.geometry.Pos
 import javafx.scene.control.CheckBox
 import javafx.scene.layout.Priority
@@ -15,6 +15,26 @@ class ArticleSummaryItemListCellFragment : ListCellFragment<ArticleSummaryItem>(
 
     val summaryItem = ArticleSummaryItemViewModel().bindTo(this)
 
+    var checkedItems: ObservableSet<ArticleSummaryItem>? = null
+
+    private lateinit var checkBoxIsItemSelected: CheckBox
+
+
+    init {
+        cellProperty.addListener { _, _, newValue ->
+            if(newValue?.listView?.userData is ObservableSet<*>) {
+                checkedItems = newValue?.listView?.userData as? ObservableSet<ArticleSummaryItem>
+
+                checkedItems?.addListener(SetChangeListener<ArticleSummaryItem> {
+                    checkBoxIsItemSelected.isSelected = it.set.contains(item)
+                })
+            }
+        }
+
+        itemProperty.addListener { _, _, newValue ->
+            checkBoxIsItemSelected.isSelected = checkedItems?.contains(newValue) ?: false
+        }
+    }
 
     override val root = hbox {
         cellProperty.addListener { _, _, newValue -> // so that the graphic always has cell's width
@@ -25,11 +45,11 @@ class ArticleSummaryItemListCellFragment : ListCellFragment<ArticleSummaryItem>(
         minHeight = 100.0
         prefHeight = 100.0
 
-        checkbox {
+        checkBoxIsItemSelected = checkbox() {
             prefWidth = 30.0
 
             selectedProperty().addListener { _, _, isSelected ->
-                itemSelectionChanged(isSelected, item, this)
+                itemSelectionChanged(isSelected, item)
             }
 
             hboxConstraints {
@@ -70,12 +90,12 @@ class ArticleSummaryItemListCellFragment : ListCellFragment<ArticleSummaryItem>(
         }
     }
 
-    private fun itemSelectionChanged(isSelected: Boolean, item: ArticleSummaryItem, checkBox: CheckBox) {
-        // really bad code design
-        (cell?.listView?.userData as? ObservableMap<ArticleSummaryItem, CheckBox>)?.let { checkedItems ->
+    private fun itemSelectionChanged(isSelected: Boolean, item: ArticleSummaryItem) {
+        checkedItems?.let { checkedItems ->
             if (isSelected) {
-                checkedItems.put(item, checkBox)
-            } else {
+                checkedItems.add(item)
+            }
+            else {
                 checkedItems.remove(item)
             }
         }
