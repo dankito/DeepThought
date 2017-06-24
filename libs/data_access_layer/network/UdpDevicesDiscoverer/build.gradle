@@ -1,0 +1,14 @@
+apply plugin: 'kotlin'
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+
+
+dependencies {
+    compile project(':DevicesDiscoverer')
+
+    testCompile "junit:junit:$junitVersion"
+
+    testCompile "ch.qos.logback:logback-core:$logbackVersion"
+    testCompile "ch.qos.logback:logback-classic:$logbackVersion"
+}
