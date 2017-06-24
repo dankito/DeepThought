@@ -1,9 +1,9 @@
 package net.dankito.deepthought.javafx.dialogs.mainwindow
 
-import javafx.collections.FXCollections
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.EntryViewModel
 import net.dankito.deepthought.javafx.util.FXUtils
+import net.dankito.deepthought.javafx.util.LazyLoadingObservableList
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
@@ -19,7 +19,7 @@ class MainWindowController : Controller() {
 
     val entryModel = EntryViewModel()
 
-    val entries = FXCollections.observableArrayList<Entry>()
+    val entries = LazyLoadingObservableList<Entry>()
 
 
     @Inject
@@ -40,8 +40,6 @@ class MainWindowController : Controller() {
 
         extractorsConfigManager.addListener(articleSummaryExtractorConfigChangedListener)
         extractorsConfigManager.getConfigs().forEach { mainWindow.addArticleSummaryExtractor(it) }
-
-        entryService.getAllAsync { entries.setAll(it) }
     }
 
 
