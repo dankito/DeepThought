@@ -44,7 +44,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <MenuButton fx:id="btnOnlineArticleExtractors" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" maxHeight="29.0" mnemonicParsing="false" prefWidth="60.0" style="-fx-border-image-insets: 0; -fx-border-insets: 0; -fx-padding: 0;" visible="false" GridPane.columnIndex="1">
+                  <MenuButton fx:id="btnArticleExtractors" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" maxHeight="29.0" mnemonicParsing="false" prefWidth="60.0" style="-fx-border-image-insets: 0; -fx-border-insets: 0; -fx-padding: 0;" visible="false" GridPane.columnIndex="1">
                     <items>
                       <MenuItem mnemonicParsing="false" text="Action 1" />
                       <MenuItem mnemonicParsing="false" text="Action 2" />

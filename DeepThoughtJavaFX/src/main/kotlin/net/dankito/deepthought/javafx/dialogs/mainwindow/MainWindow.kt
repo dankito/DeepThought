@@ -6,17 +6,22 @@ import javafx.event.ActionEvent
 import javafx.event.Event
 import javafx.fxml.FXML
 import javafx.geometry.Pos
-import javafx.scene.control.MenuButton
-import javafx.scene.control.MenuItem
-import javafx.scene.control.Tab
-import javafx.scene.control.TabPane
+import javafx.scene.control.*
 import javafx.scene.image.ImageView
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
-import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.EntryView
+import javafx.scene.layout.Priority
+import javafx.scene.layout.VBox
+import net.dankito.deepthought.javafx.di.AppComponent
+import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.EntriesListView
+import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.TagsListView
+import net.dankito.deepthought.javafx.res.icons.IconPaths
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
+import net.dankito.deepthought.service.data.DataManager
+import net.dankito.service.data.ReadLaterArticleService
 import tornadofx.*
+import javax.inject.Inject
 
 
 class MainWindow : View() {
@@ -29,24 +34,89 @@ class MainWindow : View() {
     val controller: MainWindowController by inject()
 
 
+    @Inject
+    protected lateinit var dataManager: DataManager
+
+    @Inject
+    protected lateinit var readLaterArticleService: ReadLaterArticleService
+
+
     override val root: BorderPane by fxml()
 
-    val tbpnOverview: TabPane by fxid()
+    private var tbpnOverview: TabPane by singleAssign()
 
-    val tabTags: Tab by fxid()
+    private var tabTags: Tab by singleAssign()
 
-    val btnOnlineArticleExtractors: MenuButton by fxid()
+    private var splpnContent: SplitPane by singleAssign()
 
-    val entryView: EntryView by inject()
+    private var contentPane: VBox by singleAssign()
+
+    private val btnArticleExtractors: MenuButton by fxid()
+
+    val tagsListView: TagsListView by inject()
+
+    val entriesListView: EntriesListView by inject()
 
 
     init {
-        root.center = entryView.root
+        AppComponent.component.inject(this)
 
-        btnOnlineArticleExtractors.items.clear() // remove automatically added 'Article 1' and 'Article 2'
-        FXUtils.ensureNodeOnlyUsesSpaceIfVisible(btnOnlineArticleExtractors)
+        setupUI()
     }
 
+    private fun setupUI() {
+        splpnContent = splitpane {
+            tbpnOverview = tabpane {
+                prefWidth = 300.0
+                tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
+
+                tabTags = tab(messages["tags.tab.label"]) {
+                    prefWidth = 300.0
+
+                    add(tagsListView.root)
+                }
+            }
+
+            contentPane = vbox {
+
+            }
+        }
+
+        root.center = splpnContent
+
+        contentPane.add(entriesListView.root)
+        VBox.setVgrow(entriesListView.root, Priority.ALWAYS)
+
+        splpnContent.setDividerPosition(0, 0.2)
+
+        setupButtonArticleExtractors()
+    }
+
+    private fun setupButtonArticleExtractors() {
+        btnArticleExtractors.items.clear() // remove automatically added 'Article 1' and 'Article 2'
+
+        btnArticleExtractors.setGraphic(ImageView(IconPaths.NewspaperIconPath))
+
+        FXUtils.ensureNodeOnlyUsesSpaceIfVisible(btnArticleExtractors)
+
+        dataManager.addInitializationListener {
+            if(dataManager.currentDeepThought?.readLaterArticles?.isNotEmpty() ?: false) {
+                runLater { addShowReadLaterArticlesMenuItem() }
+            }
+        }
+    }
+
+
+    private fun addShowReadLaterArticlesMenuItem() {
+        val showReadLaterArticlesItem = MenuItem(messages["article.extractors.item.show.read.later.articles"])
+        showReadLaterArticlesItem.action { controller.showReadLaterArticlesView() }
+
+        addMenuButtonArticleExtractorsMenuItem(showReadLaterArticlesItem, 0)
+
+        addMenuButtonArticleExtractorsMenuItem(SeparatorMenuItem(), 1)
+
+        btnArticleExtractors.isVisible = true
+    }
 
     fun addArticleSummaryExtractor(articleSummaryExtractorConfig: ArticleSummaryExtractorConfig) {
         val extractorItem = MenuItem(articleSummaryExtractorConfig.name)
@@ -54,9 +124,9 @@ class MainWindow : View() {
         extractorItem.setOnAction { controller.showArticlesSummaryView(articleSummaryExtractorConfig) }
 
         val graphicPane = hbox {
-            prefWidth = ICON_SIZE
+            minWidth = ICON_SIZE
             maxWidth = ICON_SIZE
-            prefHeight = ICON_SIZE
+            minHeight = ICON_SIZE
             maxHeight = ICON_SIZE
             alignment = Pos.CENTER
         }
@@ -66,8 +136,8 @@ class MainWindow : View() {
             createOnlineArticleContentExtractorIcon(graphicPane, iconUrl)
         }
 
-        btnOnlineArticleExtractors.items.add(extractorItem)
-        btnOnlineArticleExtractors.isVisible = true
+        addMenuButtonArticleExtractorsMenuItem(extractorItem)
+        btnArticleExtractors.isVisible = true
     }
 
     private fun createOnlineArticleContentExtractorIcon(graphicPane: HBox, iconUrl: String) {
@@ -80,8 +150,19 @@ class MainWindow : View() {
         graphicPane.add(iconView)
     }
 
+    private fun addMenuButtonArticleExtractorsMenuItem(item: MenuItem, index: Int = -1) {
+        synchronized(btnArticleExtractors) {
+            if(index >= 0) {
+                btnArticleExtractors.items.add(index, item)
+            }
+            else {
+                btnArticleExtractors.items.add(item)
+            }
+        }
+    }
+
     fun articleSummaryExtractorUpdated(articleSummaryExtractorConfig: ArticleSummaryExtractorConfig) {
-        btnOnlineArticleExtractors.items.forEach { menuItem ->
+        btnArticleExtractors.items.forEach { menuItem ->
             if(menuItem.tag == articleSummaryExtractorConfig) {
                 menuItem.text = articleSummaryExtractorConfig.name
 
