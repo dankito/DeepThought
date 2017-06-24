@@ -26,7 +26,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.979899"
-     inkscape:cx="303.09605"
+     inkscape:cx="274.81178"
      inkscape:cy="755.9126"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -54,17 +54,19 @@
      id="layer1">
     <ellipse
        id="path3680"
-       cx="68.289886"
-       cy="81.041954"
-       rx="28.883921"
-       ry="25.239761"
-       style="fill:none;stroke:#000000;stroke-width:1.19289076;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       cx="67.755341"
+       cy="80.70787"
+       rx="25.835709"
+       ry="25.86651"
+       style="fill:none;stroke:#000000;stroke-width:1.842;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       inkscape:export-xdpi="15.19"
+       inkscape:export-ydpi="15.19" />
     <rect
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.98604023;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect4487"
-       width="21.782465"
+       width="21.178555"
        height="13.096207"
-       x="45.970356"
+       x="46.574268"
        y="73.829948" />
     <path
        sodipodi:type="star"
@@ -81,7 +83,8 @@
        inkscape:rounded="0"
        inkscape:randomized="0"
        d="M 68.287369,94.944237 68.874915,80.735476 68.447905,66.520984 80.45928,74.134195 92.982896,80.871639 80.383974,87.46719 Z"
-       inkscape:transform-center-x="-1.1149753"
-       inkscape:transform-center-y="0.36882408" />
+       inkscape:transform-center-x="-0.98613144"
+       inkscape:transform-center-y="0.37011578"
+       transform="matrix(0.88444254,0,0,1.003493,7.8785194,-0.28198508)" />
   </g>
 </svg>
