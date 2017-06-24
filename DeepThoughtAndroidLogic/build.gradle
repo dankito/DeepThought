@@ -33,9 +33,11 @@ android {
 dependencies {
     compile project(':DeepThoughtCommon')
 
-    compile project(':AndroidFileStorageService')
-
     compile project(':AndroidCouchbaseLiteEntityManager')
+
+    compile project(':AndroidUdpDevicesDiscoverer')
+
+    compile project(':AndroidFileStorageService')
 
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 

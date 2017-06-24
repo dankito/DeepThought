@@ -17,6 +17,8 @@ dependencies {
 
     compile project(':JavaCouchbaseLiteEntityManager')
 
+    compile project(':UdpDevicesDiscoverer')
+
     compile "ch.qos.logback:logback-core:$logbackVersion"
     compile "ch.qos.logback:logback-classic:$logbackVersion"
 

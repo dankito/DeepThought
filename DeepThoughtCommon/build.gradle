@@ -16,6 +16,7 @@ dependencies {
     compile project(':FaviconExtractor')
 
     compile project(':Serializer')
+    compile project(':DevicesDiscoverer')
     compile project(':FileStorageService')
 
     compile project(':Utils')

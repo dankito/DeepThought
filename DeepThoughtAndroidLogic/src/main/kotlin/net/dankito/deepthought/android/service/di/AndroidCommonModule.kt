@@ -8,8 +8,11 @@ import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.filesystem.AndroidFileStorageService
 import net.dankito.data_access.filesystem.IFileStorageService
+import net.dankito.data_access.network.discovery.AndroidUdpDevicesDiscoverer
+import net.dankito.data_access.network.discovery.IDevicesDiscoverer
 import net.dankito.deepthought.android.service.platform.AndroidPlatformConfiguration
 import net.dankito.utils.IPlatformConfiguration
+import net.dankito.utils.IThreadPool
 import javax.inject.Singleton
 
 
@@ -27,6 +30,12 @@ class AndroidCommonModule {
     @Singleton
     fun provideEntityManager(context: Context, configuration: EntityManagerConfiguration) : IEntityManager {
         return AndroidCouchbaseLiteEntityManager(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDevicesDiscoverer(context: Context, threadPool: IThreadPool) : IDevicesDiscoverer {
+        return AndroidUdpDevicesDiscoverer(context, threadPool)
     }
 
     @Provides

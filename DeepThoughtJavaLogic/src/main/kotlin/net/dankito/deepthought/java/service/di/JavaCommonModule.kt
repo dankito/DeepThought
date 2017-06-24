@@ -7,8 +7,11 @@ import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.data_access.filesystem.JavaFileStorageService
+import net.dankito.data_access.network.discovery.IDevicesDiscoverer
+import net.dankito.data_access.network.discovery.UdpDevicesDiscoverer
 import net.dankito.deepthought.java.service.platform.JavaPlatformConfiguration
 import net.dankito.utils.IPlatformConfiguration
+import net.dankito.utils.IThreadPool
 import javax.inject.Singleton
 
 
@@ -26,6 +29,12 @@ class JavaCommonModule {
     @Singleton
     fun provideEntityManager(configuration: EntityManagerConfiguration) : IEntityManager {
         return JavaCouchbaseLiteEntityManager(configuration)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDevicesDiscoverer(threadPool: IThreadPool) : IDevicesDiscoverer {
+        return UdpDevicesDiscoverer(threadPool)
     }
 
     @Provides
