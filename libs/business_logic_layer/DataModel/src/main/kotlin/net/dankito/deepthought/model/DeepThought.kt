@@ -114,7 +114,9 @@ class DeepThought : UserDataEntity(), Serializable {
     }
 
     fun increaseNextEntryIndex(): Long {
-        return ++nextEntryIndex
+        synchronized(this) {
+            return ++nextEntryIndex
+        }
     }
 
 
