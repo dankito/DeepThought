@@ -12,4 +12,5 @@ build/
 .DS_Store
 .externalNativeBuild
 
+/data/
 **/*.log
