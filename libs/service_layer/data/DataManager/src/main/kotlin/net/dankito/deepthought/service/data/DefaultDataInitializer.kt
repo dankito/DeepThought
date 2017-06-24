@@ -58,13 +58,13 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
         val universallyUniqueId = UUID.randomUUID().toString()
 
         val osVersion = platformConfiguration.getOsVersionString()
-        val platform = platformConfiguration.getPlatformName()
+        val osName = platformConfiguration.getOsName()
 
-        var deviceName = getLocalizedString("users.default.device.name", user.userName, platform)
+        var deviceName = getLocalizedString("users.default.device.name", user.userName, osName)
         platformConfiguration.getDeviceName()?.let { deviceName = it }
 
-        val userDefaultDevice = Device(deviceName, universallyUniqueId,
-                platform, osVersion, System.getProperty("os.arch"))
+        val userDefaultDevice = Device(deviceName, universallyUniqueId, platformConfiguration.getOsType(),
+                osName, osVersion)
 
         return userDefaultDevice
     }
