@@ -99,6 +99,22 @@ class TableConfig {
         const val DeviceDeepThoughtApplicationJoinColumnName = "application_id"
 
 
+        /*          Device_SynchronizedDevices JoinTable Column Names        */
+
+        const val DEVICE_SYNCHRONIZED_DEVICES_JOIN_TABLE_NAME = "LocalConfig_SynchronizedDevices";
+
+        const val DEVICE_SYNCHRONIZED_DEVICES_LOCAL_CONFIG_ID_COLUMN_NAME = "local_config_id";
+        const val DEVICE_SYNCHRONIZED_DEVICES_DEVICE_ID_COLUMN_NAME = "device_id";
+
+
+        /*          Device_IgnoredDevices JoinTable Column Names        */
+
+        const val DEVICE_IGNORED_DEVICES_JOIN_TABLE_NAME = "LocalConfig_IgnoredDevices";
+
+        const val DEVICE_IGNORED_DEVICES_LOCAL_CONFIG_ID_COLUMN_NAME = "local_config_id";
+        const val DEVICE_IGNORED_DEVICES_DEVICE_ID_COLUMN_NAME = "device_id";
+
+
         /*          UsersGroup Device Join Table Config        */
 
         const val GroupDeviceJoinTableName = "group_device_join_table"
