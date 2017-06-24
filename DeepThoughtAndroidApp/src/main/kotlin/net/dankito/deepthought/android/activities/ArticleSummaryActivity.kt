@@ -7,8 +7,11 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.util.TypedValue
+import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.AbsListView
+import android.widget.ListView
 import kotlinx.android.synthetic.main.activity_article_summary.*
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.deepthought.android.R
@@ -78,6 +81,8 @@ class ArticleSummaryActivity : BaseActivity() {
 
     private val adapter = ArticleSummaryAdapter()
 
+    private val selectedArticlesInContextualActionMode = LinkedHashSet<ArticleSummaryItem>()
+
     private var mnLoadMore: MenuItem? = null
 
 
@@ -137,6 +142,8 @@ class ArticleSummaryActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         lstArticleSummaryItems.adapter = adapter
+        lstArticleSummaryItems.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
+        lstArticleSummaryItems.setMultiChoiceModeListener(lstArticleSummaryItemsMultiChoiceListener)
         lstArticleSummaryItems.setOnItemClickListener { _, _, position, _ -> articleClicked(adapter.getItem(position)) }
     }
 
@@ -256,6 +263,83 @@ class ArticleSummaryActivity : BaseActivity() {
 
             builder.create().show()
         }
+    }
+
+
+    private val lstArticleSummaryItemsMultiChoiceListener = object: AbsListView.MultiChoiceModeListener {
+
+        override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+            mode.menuInflater.inflate(R.menu.activity_article_summary_contextual_action_menu, menu)
+
+            return true
+        }
+
+        override fun onItemCheckedStateChanged(mode: ActionMode, position: Int, id: Long, checked: Boolean) {
+            adapter.getItem(position)?.let { item ->
+                if(checked) {
+                    selectedArticlesInContextualActionMode.add(item)
+                }
+                else {
+                    selectedArticlesInContextualActionMode.remove(item)
+                }
+            }
+
+            mode.title = getString(R.string.activity_article_summary_menu_count_articles_selected, selectedArticlesInContextualActionMode.size)
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
+            return false
+        }
+
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+            when(item.itemId) {
+                R.id.mnViewArticle -> {
+                    showSelectedArticles()
+                    mode.finish()
+                    return true
+                }
+                R.id.mnSaveArticleForLaterReading -> {
+                    saveSelectedArticlesForLaterReading()
+                    mode.finish()
+                    return true
+                }
+                R.id.mnSaveArticle -> {
+                    saveSelectedArticles()
+                    mode.finish()
+                    return true
+                }
+                else -> return false
+            }
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode) {
+            selectedArticlesInContextualActionMode.clear()
+        }
+
+    }
+
+    private fun showSelectedArticles(): Boolean {
+        selectedArticlesInContextualActionMode.forEach { presenter.getAndShowArticle(it) {
+            // TODO: show error message
+        } }
+
+        return true
+    }
+
+    private fun saveSelectedArticlesForLaterReading(): Boolean {
+        selectedArticlesInContextualActionMode.forEach { presenter.getAndSaveArticleForLaterReading(it) {
+            // TODO: show error message
+        } }
+
+        return true
+    }
+
+    private fun saveSelectedArticles(): Boolean {
+        selectedArticlesInContextualActionMode.forEach { presenter.getAndSaveArticle(it) {
+            // TODO: show error message
+        } }
+
+        return true
     }
 
 }
