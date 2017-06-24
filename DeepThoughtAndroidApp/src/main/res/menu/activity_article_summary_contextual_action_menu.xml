@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/mnViewArticle"
+        android:title="@string/activity_article_summary_menu_view"
+        android:icon="@android:drawable/ic_menu_view"
+    />
+
+    <item
+        android:id="@+id/mnSaveArticleForLaterReading"
+        android:title="@string/activity_article_summary_menu_save_for_later_reading"
+        android:icon="@android:drawable/ic_menu_save"
+    />
+
+    <item
+        android:id="@+id/mnSaveArticle"
+        android:title="@string/activity_article_summary_menu_save"
+        android:icon="@android:drawable/ic_menu_save"
+    />
+
+</menu>
