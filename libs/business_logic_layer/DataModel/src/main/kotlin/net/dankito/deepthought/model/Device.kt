@@ -11,8 +11,8 @@ data class Device(
         @Column(name = TableConfig.DeviceNameColumnName)
         var name: String,
 
-        @Column(name = TableConfig.DeviceUniversallyUniqueIdColumnName)
-        var universallyUniqueId: String,
+        @Column(name = TableConfig.UniqueDeviceIdColumnName)
+        var uniqueDeviceId: String,
 
         @Column(name = TableConfig.DevicePlatformColumnName)
         var platform: String = "",

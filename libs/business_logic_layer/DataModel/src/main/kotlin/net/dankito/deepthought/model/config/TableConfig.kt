@@ -80,7 +80,7 @@ class TableConfig {
 
         const val DeviceTableName = "device"
 
-        const val DeviceUniversallyUniqueIdColumnName = "universally_unique_id"
+        const val UniqueDeviceIdColumnName = "unique_device_id"
         const val DeviceNameColumnName = "name"
         const val DeviceDescriptionColumnName = "description"
         const val DevicePlatformColumnName = "platform"
