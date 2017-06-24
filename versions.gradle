@@ -14,9 +14,9 @@ ext {
 
     androidTargetSdkVersion = 25
 
-    androidAppCompatVersion = '25.3.1'
+    androidAppCompatVersion = '25.4.0'
 
-    androidDesignVersion = '25.3.1'
+    androidDesignVersion = '25.4.0'
 
     daggerVersion = '2.11'
 
