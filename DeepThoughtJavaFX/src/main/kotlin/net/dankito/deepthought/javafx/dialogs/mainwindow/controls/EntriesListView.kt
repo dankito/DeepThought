@@ -54,7 +54,7 @@ class EntriesListView : View(), IEntriesListView {
     override val root = vbox {
         add(searchBar.root)
 
-        tableview<Entry> {
+        tableview<Entry>(controller.entries) {
             column(messages["entry.column.header.index"], Entry::entryIndex).prefWidth(46.0)
             column(messages["entry.column.header.reference"], Entry::referencePreview).weigthedWidth(4.0)
             column(messages["entry.column.header.preview"], Entry::entryPreview).weigthedWidth(4.0)
@@ -62,8 +62,6 @@ class EntriesListView : View(), IEntriesListView {
     //        column(messages["entry.column.header.modified"], stringBinding(Entry::modifiedOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
 
             columnResizePolicy = SmartResize.POLICY
-
-            items = controller.entries
 
             bindSelected(controller.entryModel)
 
