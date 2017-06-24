@@ -67,7 +67,7 @@ data class Device(
     var deviceIcon: ByteArray? = null
 
 
-    private constructor() : this("", "", OsType.DESKTOP)
+    internal constructor() : this("", "", OsType.DESKTOP)
 
 
 
