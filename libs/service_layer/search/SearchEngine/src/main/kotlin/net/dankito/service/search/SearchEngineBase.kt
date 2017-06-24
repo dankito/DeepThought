@@ -54,7 +54,7 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
         isInitialized = true
 
         for(listener in HashSet<() -> Unit>(initializationListeners)) {
-            callInitializationListener(listener)
+            threadPool.runAsync { callInitializationListener(listener) }
         }
 
         initializationListeners.clear()
