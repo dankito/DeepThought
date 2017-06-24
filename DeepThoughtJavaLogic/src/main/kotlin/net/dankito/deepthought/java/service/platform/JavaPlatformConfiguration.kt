@@ -1,5 +1,6 @@
 package net.dankito.deepthought.java.service.platform
 
+import net.dankito.deepthought.model.OsType
 import net.dankito.utils.IPlatformConfiguration
 import java.io.File
 
@@ -13,7 +14,11 @@ class JavaPlatformConfiguration : IPlatformConfiguration {
         return null
     }
 
-    override fun getPlatformName(): String {
+    override fun getOsType(): OsType {
+        return OsType.DESKTOP
+    }
+
+    override fun getOsName(): String {
         return System.getProperty("os.name")
     }
 

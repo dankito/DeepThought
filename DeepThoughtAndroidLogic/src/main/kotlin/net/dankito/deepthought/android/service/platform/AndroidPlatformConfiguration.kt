@@ -2,6 +2,7 @@ package net.dankito.deepthought.android.service.platform
 
 import android.content.Context
 import android.os.Build
+import net.dankito.deepthought.model.OsType
 import net.dankito.utils.IPlatformConfiguration
 import java.io.File
 
@@ -22,7 +23,11 @@ class AndroidPlatformConfiguration(val context: Context) : IPlatformConfiguratio
         return manufacturer + " " + Build.MODEL
     }
 
-    override fun getPlatformName(): String {
+    override fun getOsType(): OsType {
+        return OsType.ANDROID
+    }
+
+    override fun getOsName(): String {
         return "Android"
     }
 
