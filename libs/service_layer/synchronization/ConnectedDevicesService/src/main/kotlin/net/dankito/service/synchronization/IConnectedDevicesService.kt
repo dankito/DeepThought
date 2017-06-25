@@ -33,7 +33,7 @@ interface IConnectedDevicesService {
 
     fun getDiscoveredDeviceForDevice(device: Device): DiscoveredDevice?
 
-    fun getDiscoveredDeviceForId(uniqueDeviceId: String): DiscoveredDevice?
+    fun getDiscoveredDeviceForId(deviceId: String): DiscoveredDevice?
 
     val allDiscoveredDevices: List<DiscoveredDevice>
 

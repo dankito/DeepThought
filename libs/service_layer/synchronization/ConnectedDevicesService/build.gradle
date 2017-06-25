@@ -8,5 +8,6 @@ dependencies {
     compile project(':DataManager')
     compile project(':DevicesDiscoverer')
     compile project(':ClientCommunicator')
+    compile project(':SyncManager')
     compile project(':EntityManager')
 }
