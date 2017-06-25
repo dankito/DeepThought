@@ -3,7 +3,7 @@ package net.dankito.data_access.network.discovery
 import net.dankito.utils.AsyncProducerConsumerQueue
 import net.dankito.utils.ConsumerListener
 import net.dankito.utils.IThreadPool
-import net.dankito.utils.services.NetworkHelper
+import net.dankito.utils.services.network.NetworkHelper
 import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.net.*
