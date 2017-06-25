@@ -153,7 +153,7 @@ class CommunicationManagerTest {
 
             localSyncManager = CouchbaseLiteSyncManager(localEntityManager as CouchbaseLiteEntityManagerBase, localNetworkSettings, threadPool)
 
-            localConnectedDevicesService = ConnectedDevicesService(localDevicesDiscoverer, localClientCommunicator, localSyncManager, localDataManager, localNetworkSettings, localEntityManager)
+            localConnectedDevicesService = ConnectedDevicesService(localDevicesDiscoverer, localClientCommunicator, localSyncManager, localNetworkSettings, localEntityManager)
 
             localCommunicationManager = CommunicationManager(localConnectedDevicesService, localSyncManager, localClientCommunicator, localNetworkSettings)
 
@@ -181,7 +181,7 @@ class CommunicationManagerTest {
 
             remoteSyncManager = CouchbaseLiteSyncManager(remoteEntityManager as CouchbaseLiteEntityManagerBase, remoteNetworkSettings, threadPool)
 
-            remoteConnectedDevicesService = ConnectedDevicesService(remoteDevicesDiscoverer, remoteClientCommunicator, remoteSyncManager, remoteDataManager, remoteNetworkSettings, remoteEntityManager)
+            remoteConnectedDevicesService = ConnectedDevicesService(remoteDevicesDiscoverer, remoteClientCommunicator, remoteSyncManager, remoteNetworkSettings, remoteEntityManager)
 
             remoteCommunicationManager = CommunicationManager(remoteConnectedDevicesService, remoteSyncManager, remoteClientCommunicator, remoteNetworkSettings)
 
@@ -195,6 +195,14 @@ class CommunicationManagerTest {
     @After
     @Throws(Exception::class)
     fun tearDown() {
+        localCommunicationManager.stop()
+        localEntityManager.close()
+
+        remoteCommunicationManager.stop()
+        remoteEntityManager.close()
+
+        fileStorageService.deleteFolderRecursively(localPlatformConfiguration.getDefaultDataFolder().path)
+        fileStorageService.deleteFolderRecursively(remotePlatformConfiguration.getDefaultDataFolder().path)
     }
 
 

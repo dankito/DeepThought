@@ -11,7 +11,6 @@ import net.dankito.data_access.network.discovery.IDevicesDiscoverer
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.model.INetworkSettings
-import net.dankito.deepthought.service.data.DataManager
 import org.slf4j.LoggerFactory
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
@@ -20,7 +19,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 // TODO: replace IEntityManager with DevicesService
 class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer, private val clientCommunicator: IClientCommunicator, private val syncManager: ISyncManager,
-                              dataManager: DataManager, private val networkSettings: INetworkSettings, private val entityManager: IEntityManager) : IConnectedDevicesService {
+                              private val networkSettings: INetworkSettings, private val entityManager: IEntityManager) : IConnectedDevicesService {
 
     companion object {
         const val DEVICE_ID_AND_MESSAGES_PORT_SEPARATOR = "|"
@@ -31,28 +30,23 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
     }
 
 
-    protected var localDevice: Device
+    private var localDevice: Device = networkSettings.localHostDevice
 
 
-    protected var discoveredDevices: MutableMap<String, DiscoveredDevice> = ConcurrentHashMap()
+    private var discoveredDevices: MutableMap<String, DiscoveredDevice> = ConcurrentHashMap()
 
-    protected var devicesPendingStartSynchronization: MutableMap<String, DiscoveredDevice> = ConcurrentHashMap()
+    private var devicesPendingStartSynchronization: MutableMap<String, DiscoveredDevice> = ConcurrentHashMap()
 
-    protected var knownSynchronizedDevices: MutableMap<String, DiscoveredDevice> = ConcurrentHashMap()
+    private var knownSynchronizedDevices: MutableMap<String, DiscoveredDevice> = ConcurrentHashMap()
 
-    protected var knownIgnoredDevices: MutableMap<String, DiscoveredDevice> = ConcurrentHashMap()
+    private var knownIgnoredDevices: MutableMap<String, DiscoveredDevice> = ConcurrentHashMap()
 
-    protected var unknownDevices: MutableMap<String, DiscoveredDevice> = ConcurrentHashMap()
-
-
-    protected var discoveredDevicesListeners: MutableList<DiscoveredDevicesListener> = CopyOnWriteArrayList()
-
-    protected var knownSynchronizedDevicesListeners: MutableList<KnownSynchronizedDevicesListener> = CopyOnWriteArrayList()
+    private var unknownDevices: MutableMap<String, DiscoveredDevice> = ConcurrentHashMap()
 
 
-    init {
-        this.localDevice = dataManager.localDevice
-    }
+    private var discoveredDevicesListeners: MutableList<DiscoveredDevicesListener> = CopyOnWriteArrayList()
+
+    private var knownSynchronizedDevicesListeners: MutableList<KnownSynchronizedDevicesListener> = CopyOnWriteArrayList()
 
 
     override fun start() {
