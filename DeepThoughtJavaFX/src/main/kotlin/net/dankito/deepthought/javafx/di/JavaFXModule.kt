@@ -3,7 +3,8 @@ package net.dankito.deepthought.javafx.di
 import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.network.communication.callback.IsSynchronizationPermittedHandler
-import net.dankito.deepthought.android.appstart.CommunicationManagerStarter
+import net.dankito.deepthought.javafx.appstart.CommunicationManagerStarter
+import net.dankito.deepthought.javafx.appstart.JavaFXAppInitializer
 import net.dankito.deepthought.javafx.dialogs.JavaFXDialogService
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
@@ -16,6 +17,12 @@ import javax.inject.Singleton
 
 @Module
 class JavaFXModule(private val mainWindowController: MainWindowController) {
+
+    @Provides
+    @Singleton
+    fun provideAppInitializer() : JavaFXAppInitializer {
+        return JavaFXAppInitializer()
+    }
 
     @Provides
     @Singleton

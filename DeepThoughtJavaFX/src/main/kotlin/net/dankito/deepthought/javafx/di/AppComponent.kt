@@ -7,6 +7,8 @@ import net.dankito.deepthought.di.CommonDataModule
 import net.dankito.deepthought.di.CommonModule
 import net.dankito.deepthought.java.service.di.JavaCommonModule
 import net.dankito.deepthought.javafx.DeepThoughtJavaFXApplication
+import net.dankito.deepthought.javafx.appstart.CommunicationManagerStarter
+import net.dankito.deepthought.javafx.appstart.JavaFXAppInitializer
 import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryViewBase
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindow
@@ -28,6 +30,10 @@ interface AppComponent : CommonComponent {
 
 
     fun inject(app: DeepThoughtJavaFXApplication)
+
+    fun inject(communicationManagerStarter: CommunicationManagerStarter)
+
+    fun inject(appInitializer: JavaFXAppInitializer)
 
     fun inject(mainWindow: MainWindow)
 

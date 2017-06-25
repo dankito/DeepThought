@@ -1,7 +1,7 @@
-package net.dankito.deepthought.android.appstart
+package net.dankito.deepthought.javafx.appstart
 
-import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.communication.ICommunicationManager
+import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.service.search.ISearchEngine
 import java.util.*
 import javax.inject.Inject
@@ -40,7 +40,7 @@ class CommunicationManagerStarter(searchEngine: ISearchEngine) {
 
 
     private fun startCommunicationManager() {
-        AppComponent.component.inject(this)
+        AppComponent.component.inject(this) // and only now create CommunicationManager as now localDevice is loaded from Db
 
         communicationManager.startAsync()
     }
