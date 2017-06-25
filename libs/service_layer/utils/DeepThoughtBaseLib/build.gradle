@@ -22,4 +22,17 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     compile "com.google.dagger:dagger:$daggerVersion"
     compileOnly 'javax.annotation:jsr250-api:1.0'
+
+
+    testCompile "junit:junit:$junitVersion"
+    testCompile "org.mockito:mockito-core:$mockitoVersion"
+
+    testCompile "ch.qos.logback:logback-core:$logbackVersion"
+    testCompile "ch.qos.logback:logback-classic:$logbackVersion"
+
+    testCompile project(':UdpDevicesDiscoverer')
+    testCompile project(':TcpSocketClientCommunicator')
+    testCompile project(':JavaCouchbaseLiteEntityManager')
+    testCompile project(':CouchbaseLiteSyncManager')
+    testCompile project(':FileStorageService')
 }
