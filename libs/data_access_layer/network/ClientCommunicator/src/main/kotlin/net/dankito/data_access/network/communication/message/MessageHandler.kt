@@ -49,7 +49,7 @@ class MessageHandler(protected var config: MessageHandlerConfig) : IMessageHandl
                                                                 callback: (Response<RequestPermitSynchronizationResponseBody>) -> Unit) {
         if (permitsSynchronization) {
             val (nonce, correctResponse) = challengeHandler.createChallengeForDevice(remoteDeviceInfo)
-            permittingHandler.showCorrectResponseToUserNonBlocking(remoteDeviceInfo, correctResponse)
+            permittingHandler.showResponseToEnterOnOtherDeviceNonBlocking(remoteDeviceInfo, correctResponse)
 
             callback(Response(RequestPermitSynchronizationResponseBody(
                     RequestPermitSynchronizationResult.RESPOND_TO_CHALLENGE, nonce)))

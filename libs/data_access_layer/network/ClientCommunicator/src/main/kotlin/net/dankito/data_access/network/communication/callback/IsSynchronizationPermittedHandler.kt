@@ -7,6 +7,6 @@ interface IsSynchronizationPermittedHandler {
 
     fun shouldPermitSynchronizingWithDevice(remoteDeviceInfo: DeviceInfo, callback: (remoteDeviceInfo: DeviceInfo, permitsSynchronization: Boolean) -> Unit)
 
-    fun showCorrectResponseToUserNonBlocking(remoteDeviceInfo: DeviceInfo, correctResponse: String)
+    fun showResponseToEnterOnOtherDeviceNonBlocking(remoteDeviceInfo: DeviceInfo, correctResponse: String)
 
 }

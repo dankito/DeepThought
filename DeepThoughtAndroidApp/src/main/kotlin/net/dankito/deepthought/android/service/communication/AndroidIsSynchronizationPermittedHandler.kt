@@ -61,7 +61,7 @@ class AndroidIsSynchronizationPermittedHandler(private var context: Context) : I
     }
 
 
-    override fun showCorrectResponseToUserNonBlocking(remoteDeviceInfo: DeviceInfo, correctResponse: String) {
+    override fun showResponseToEnterOnOtherDeviceNonBlocking(remoteDeviceInfo: DeviceInfo, correctResponse: String) {
         val callMainActivityIntent = Intent(context, MainActivity::class.java)
         callMainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         callMainActivityIntent.putExtra(IS_SYNCHRONIZATION_PERMITTED_HANDLER_EXTRA_NAME, SHOW_CORRECT_RESPONSE_TO_USER_NON_BLOCKING_ACTION)
