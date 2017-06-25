@@ -1,6 +1,5 @@
 package net.dankito.data_access.network.communication
 
-import net.dankito.data_access.network.communication.callback.ClientCommunicatorListener
 import net.dankito.data_access.network.communication.callback.IsSynchronizationPermittedHandler
 import net.dankito.data_access.network.communication.message.*
 import net.dankito.deepthought.model.DiscoveredDevice
@@ -40,10 +39,10 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
     }
 
 
-    override fun start(desiredCommunicatorPort: Int, listener: ClientCommunicatorListener) {
+    override fun start(desiredCommunicatorPort: Int, startedCallback: (couldStartMessagesReceiver: Boolean, messagesReceiverPort: Int, startException: Exception?) -> Unit) {
         requestReceiver.start(desiredCommunicatorPort, object : RequestReceiverCallback {
             override fun started(requestReceiver: IRequestReceiver, couldStartReceiver: Boolean, messagesReceiverPort: Int, startException: Exception?) {
-                listener.started(couldStartReceiver, messagesReceiverPort, startException)
+                startedCallback(couldStartReceiver, messagesReceiverPort, startException)
             }
         })
     }

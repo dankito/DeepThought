@@ -1,6 +1,5 @@
 package net.dankito.data_access.network.communication
 
-import net.dankito.data_access.network.communication.callback.ClientCommunicatorListener
 import net.dankito.data_access.network.communication.callback.IsSynchronizationPermittedHandler
 import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.data_access.network.communication.message.Response
@@ -45,13 +44,11 @@ class TcpSocketClientCommunicatorTest {
 
         val countDownLatch = CountDownLatch(1)
 
-        underTest.start(MESSAGES_RECEIVER_PORT, object : ClientCommunicatorListener {
-            override fun started(couldStartMessagesReceiver: Boolean, messagesReceiverPort: Int, startException: Exception?) {
-                discoveredRemoteDevice.messagesPort = messagesReceiverPort
-                destinationAddress = InetSocketAddress("localhost", messagesReceiverPort)
-                countDownLatch.countDown()
-            }
-        })
+        underTest.start(MESSAGES_RECEIVER_PORT) { _, messagesReceiverPort, _ ->
+            discoveredRemoteDevice.messagesPort = messagesReceiverPort
+            destinationAddress = InetSocketAddress("localhost", messagesReceiverPort)
+            countDownLatch.countDown()
+        }
 
         try {
             countDownLatch.await(1, TimeUnit.SECONDS)

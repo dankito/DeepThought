@@ -1,6 +1,5 @@
 package net.dankito.data_access.network.communication
 
-import net.dankito.data_access.network.communication.callback.ClientCommunicatorListener
 import net.dankito.data_access.network.communication.message.*
 import net.dankito.deepthought.model.DiscoveredDevice
 import java.net.SocketAddress
@@ -8,7 +7,7 @@ import java.net.SocketAddress
 
 interface IClientCommunicator {
 
-    fun start(desiredCommunicatorPort: Int, listener: ClientCommunicatorListener)
+    fun start(desiredCommunicatorPort: Int, startedCallback: (couldStartMessagesReceiver: Boolean, messagesReceiverPort: Int, startException: Exception?) -> Unit)
 
     fun stop()
 
