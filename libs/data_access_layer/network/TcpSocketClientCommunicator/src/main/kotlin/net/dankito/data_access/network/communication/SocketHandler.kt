@@ -73,20 +73,19 @@ open class SocketHandler {
 
     @Throws(IOException::class)
     protected fun receiveMessage(inputStream: InputStream): SocketResult {
-        val byteOutputStream = ByteArrayOutputStream(CommunicationConfig.MAX_MESSAGE_SIZE)
+        val buffer = ByteArray(CommunicationConfig.MAX_MESSAGE_SIZE)
 
-        val totalRead = inputStream.copyTo(byteOutputStream, CommunicationConfig.MAX_MESSAGE_SIZE)
+        val receivedMessageSize = inputStream.read(buffer)
 
-        val buffer = byteOutputStream.toByteArray()
-
-        if (totalRead > 0 && totalRead < CommunicationConfig.MAX_MESSAGE_SIZE) {
+        if (receivedMessageSize > 0 && receivedMessageSize < CommunicationConfig.MAX_MESSAGE_SIZE) {
             val responseString = buffer.toString(CommunicationConfig.MESSAGE_CHARSET)
-
             return SocketResult(true, receivedMessage = responseString)
-        } else {
-            if (totalRead <= 0) {
+        }
+        else {
+            if (receivedMessageSize <= 0) {
                 return SocketResult(false, Exception("Could not receive any bytes"))
-            } else {
+            }
+            else {
                 return SocketResult(false, Exception("Received message exceeds max message length of " + CommunicationConfig.MAX_MESSAGE_SIZE))
             }
         }
