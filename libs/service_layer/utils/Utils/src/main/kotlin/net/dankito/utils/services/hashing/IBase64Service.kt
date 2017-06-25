@@ -1,7 +1,14 @@
 package net.dankito.utils.services.hashing
 
+import java.nio.charset.Charset
+
 
 interface IBase64Service {
+
+    companion object {
+        val DEFAULT_CHAR_SET: Charset = Charset.forName("UTF-8")
+    }
+
 
     fun encode(stringToEncode: String): String
 
