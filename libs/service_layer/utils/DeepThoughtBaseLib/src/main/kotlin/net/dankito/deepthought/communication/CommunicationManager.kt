@@ -11,11 +11,14 @@ class CommunicationManager(private var connectedDevicesService: IConnectedDevice
 
     override fun startAsync() {
         clientCommunicator.start(CommunicatorConfig.DEFAULT_MESSAGES_RECEIVER_PORT, object : ClientCommunicatorListener {
-            override fun started(couldStartMessagesReceiver: Boolean, messagesReceiverPort: Int, startException: Exception) {
+            override fun started(couldStartMessagesReceiver: Boolean, messagesReceiverPort: Int, startException: Exception?) {
                 if (couldStartMessagesReceiver) {
                     successfullyStartedClientCommunicator(messagesReceiverPort)
-                } else {
-                    startingClientCommunicatorFailed(startException)
+                }
+                else {
+                    startException?.let { startException ->
+                        startingClientCommunicatorFailed(startException)
+                    }
                 }
             }
         })
