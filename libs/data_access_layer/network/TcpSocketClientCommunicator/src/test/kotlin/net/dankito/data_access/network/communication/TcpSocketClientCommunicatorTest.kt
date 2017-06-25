@@ -50,7 +50,7 @@ class TcpSocketClientCommunicatorTest {
         val countDownLatch = CountDownLatch(1)
 
         underTest.start(MESSAGES_RECEIVER_PORT, object : ClientCommunicatorListener {
-            override fun started(couldStartMessagesReceiver: Boolean, messagesReceiverPort: Int, startException: Exception) {
+            override fun started(couldStartMessagesReceiver: Boolean, messagesReceiverPort: Int, startException: Exception?) {
                 discoveredRemoteDevice.messagesPort = messagesReceiverPort
                 destinationAddress = InetSocketAddress("localhost", messagesReceiverPort)
                 countDownLatch.countDown()
