@@ -15,6 +15,15 @@ class NetworkSettings(override val localHostDevice: Device) : INetworkSettings {
             callSettingChangedListeners(NetworkSetting.MESSAGES_PORT, value, oldValue)
         }
 
+    override var basicDataSynchronizationPort: Int = 0
+        set(value) {
+            val oldValue = this.basicDataSynchronizationPort
+
+            field = value
+
+            callSettingChangedListeners(NetworkSetting.SYNCHRONIZATION_PORT, value, oldValue)
+        }
+
     override var synchronizationPort: Int = 0
         set(value) {
             val oldValue = this.synchronizationPort

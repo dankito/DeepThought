@@ -7,6 +7,8 @@ interface INetworkSettings {
 
     var messagePort: Int
 
+    var basicDataSynchronizationPort: Int
+
     var synchronizationPort: Int
 
     fun getDiscoveredDevice(uniqueDeviceId: String): DiscoveredDevice?
