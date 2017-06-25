@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.network.communication.callback.IsSynchronizationPermittedHandler
 import net.dankito.deepthought.android.DeepThoughtApplication
+import net.dankito.deepthought.android.appstart.AndroidAppInitializer
 import net.dankito.deepthought.android.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.android.dialogs.AndroidDialogService
 import net.dankito.deepthought.android.routing.AndroidRouter
@@ -24,6 +25,13 @@ class ActivitiesModule(private val application: DeepThoughtApplication) {
     @Singleton
     fun provideApplicationContext() : Context {
         return application
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideAndroidAppInitializer() : AndroidAppInitializer {
+        return AndroidAppInitializer()
     }
 
 
