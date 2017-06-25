@@ -2,7 +2,6 @@ package net.dankito.deepthought.javafx.service.communication
 
 import javafx.application.Platform
 import net.dankito.data_access.network.communication.callback.IsSynchronizationPermittedHandler
-import net.dankito.data_access.network.communication.callback.ShouldPermitSynchronizingWithDeviceCallback
 import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.deepthought.javafx.util.FXUtils
 
@@ -13,11 +12,11 @@ class JavaFXIsSynchronizationPermittedHandler : IsSynchronizationPermittedHandle
     //  protected Localization localization;
 
 
-    override fun shouldPermitSynchronizingWithDevice(remoteDeviceInfo: DeviceInfo, callback: ShouldPermitSynchronizingWithDeviceCallback) {
+    override fun shouldPermitSynchronizingWithDevice(remoteDeviceInfo: DeviceInfo, callback: (remoteDeviceInfo: DeviceInfo, permitsSynchronization: Boolean) -> Unit) {
         FXUtils.runOnUiThread { shouldPermitSynchronizingWithDeviceOnUiThread(remoteDeviceInfo, callback) }
     }
 
-    protected fun shouldPermitSynchronizingWithDeviceOnUiThread(remoteDeviceInfo: DeviceInfo, callback: ShouldPermitSynchronizingWithDeviceCallback) {
+    protected fun shouldPermitSynchronizingWithDeviceOnUiThread(remoteDeviceInfo: DeviceInfo, callback: (remoteDeviceInfo: DeviceInfo, permitsSynchronization: Boolean) -> Unit) {
         // TODO
         //    String message = localization.getLocalizedString("alert.message.permit.device.to.synchronize", remoteDeviceInfo);
         //    String alertTitle = localization.getLocalizedString("alert.title.permit.device.to.synchronize");
@@ -26,7 +25,7 @@ class JavaFXIsSynchronizationPermittedHandler : IsSynchronizationPermittedHandle
 
         val permitsSynchronization = true
 
-        callback.done(remoteDeviceInfo, permitsSynchronization)
+        callback(remoteDeviceInfo, permitsSynchronization)
     }
 
     override fun showCorrectResponseToUserNonBlocking(remoteDeviceInfo: DeviceInfo, correctResponse: String) {

@@ -4,9 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-
 import net.dankito.data_access.network.communication.callback.IsSynchronizationPermittedHandler
-import net.dankito.data_access.network.communication.callback.ShouldPermitSynchronizingWithDeviceCallback
 import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.deepthought.android.MainActivity
 
@@ -30,7 +28,7 @@ class AndroidIsSynchronizationPermittedHandler(private var context: Context) : I
     }
 
 
-    override fun shouldPermitSynchronizingWithDevice(remoteDeviceInfo: DeviceInfo, callback: ShouldPermitSynchronizingWithDeviceCallback) {
+    override fun shouldPermitSynchronizingWithDevice(remoteDeviceInfo: DeviceInfo, callback: (remoteDeviceInfo: DeviceInfo, permitsSynchronization: Boolean) -> Unit) {
         createBroadcastReceiverForShouldPermitSynchronizingWithDeviceResultIntent(remoteDeviceInfo, callback)
 
         val callMainActivityIntent = Intent(context, MainActivity::class.java)
@@ -42,7 +40,7 @@ class AndroidIsSynchronizationPermittedHandler(private var context: Context) : I
         context.startActivity(callMainActivityIntent)
     }
 
-    protected fun createBroadcastReceiverForShouldPermitSynchronizingWithDeviceResultIntent(remoteDeviceInfo: DeviceInfo, callback: ShouldPermitSynchronizingWithDeviceCallback) {
+    protected fun createBroadcastReceiverForShouldPermitSynchronizingWithDeviceResultIntent(remoteDeviceInfo: DeviceInfo, callback: (remoteDeviceInfo: DeviceInfo, permitsSynchronization: Boolean) -> Unit) {
         val filter = IntentFilter()
         filter.addAction(SHOULD_PERMIT_SYNCHRONIZING_WITH_DEVICE_ACTION)
 
@@ -56,10 +54,10 @@ class AndroidIsSynchronizationPermittedHandler(private var context: Context) : I
         context.registerReceiver(receiver, filter)
     }
 
-    protected fun handleShouldPermitSynchronizingWithDeviceResultIntent(remoteDeviceInfo: DeviceInfo, intent: Intent, callback: ShouldPermitSynchronizingWithDeviceCallback) {
+    protected fun handleShouldPermitSynchronizingWithDeviceResultIntent(remoteDeviceInfo: DeviceInfo, intent: Intent, callback: (remoteDeviceInfo: DeviceInfo, permitsSynchronization: Boolean) -> Unit) {
         val permitsSynchronization = intent.getBooleanExtra(PERMITS_SYNCHRONIZATION_EXTRA_NAME, false)
 
-        callback.done(remoteDeviceInfo, permitsSynchronization)
+        callback(remoteDeviceInfo, permitsSynchronization)
     }
 
 

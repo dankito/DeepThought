@@ -3,7 +3,6 @@ package net.dankito.data_access.network.communication.message
 import net.dankito.data_access.network.communication.CommunicatorConfig
 import net.dankito.data_access.network.communication.callback.IsSynchronizationPermittedHandler
 import net.dankito.data_access.network.communication.callback.RequestHandlerCallback
-import net.dankito.data_access.network.communication.callback.ShouldPermitSynchronizingWithDeviceCallback
 import net.dankito.deepthought.model.INetworkSettings
 
 
@@ -38,14 +37,13 @@ class MessageHandler(protected var config: MessageHandlerConfig) : IMessageHandl
 
 
     protected fun handleRequestPermitSynchronizationRequest(request: Request<DeviceInfo>, callback: RequestHandlerCallback) {
-        val remoteDeviceInfo = request.body
-        val permittingHandler = config.permissionHandler
+        request.body?.let { remoteDeviceInfo ->
+            val permittingHandler = config.permissionHandler
 
-        permittingHandler.shouldPermitSynchronizingWithDevice(remoteDeviceInfo!!, object : ShouldPermitSynchronizingWithDeviceCallback {
-            override fun done(remoteDeviceInfo: DeviceInfo, permitsSynchronization: Boolean) {
+            permittingHandler.shouldPermitSynchronizingWithDevice(remoteDeviceInfo) { _, permitsSynchronization ->
                 handleShouldPermitSynchronizingWithDeviceResult(remoteDeviceInfo, permitsSynchronization, permittingHandler, callback)
             }
-        })
+        }
     }
 
     protected fun handleShouldPermitSynchronizingWithDeviceResult(remoteDeviceInfo: DeviceInfo, permitsSynchronization: Boolean, permittingHandler: IsSynchronizationPermittedHandler, callback: RequestHandlerCallback) {
