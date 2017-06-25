@@ -44,7 +44,7 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
     override fun start(desiredCommunicatorPort: Int, listener: ClientCommunicatorListener) {
         requestReceiver.start(desiredCommunicatorPort, object : RequestReceiverCallback {
             override fun started(requestReceiver: IRequestReceiver, couldStartReceiver: Boolean, messagesReceiverPort: Int, startException: Exception?) {
-                listener.started(couldStartReceiver, messagesReceiverPort, startException!!)
+                listener.started(couldStartReceiver, messagesReceiverPort, startException)
             }
         })
     }
