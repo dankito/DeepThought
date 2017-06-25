@@ -85,7 +85,9 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
 
     protected fun createAndPersistDefaultDeepThought(): DeepThought? {
         application = defaultDataInitializer.createDefaultData()
+
         loggedOnUser = application.lastLoggedOnUser
+        localDevice = application.localDevice
 
         currentDeepThought = loggedOnUser.lastViewedDeepThought
 
