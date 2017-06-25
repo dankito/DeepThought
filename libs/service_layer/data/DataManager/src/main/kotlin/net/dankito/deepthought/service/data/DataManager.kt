@@ -4,6 +4,7 @@ import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.model.DeepThoughtApplication
+import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.User
 import net.dankito.utils.IPlatformConfiguration
 import org.slf4j.LoggerFactory
@@ -20,7 +21,10 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
 
 
     lateinit var application: DeepThoughtApplication
+
     lateinit var loggedOnUser: User
+    lateinit var localDevice: Device
+
     var currentDeepThought: DeepThought? = null
 
     var dataFolderPath: File
@@ -57,7 +61,10 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
 
             if (applicationsQueryResult.size > 0) { // TODO: what to do if there's more than one DeepThoughtApplication instance persisted?
                 application = applicationsQueryResult[0]
+
                 loggedOnUser = application.lastLoggedOnUser
+                localDevice = application.localDevice
+
                 // TODO: set application language according to user's settings
 
                 // TODO: what to return if user was already logged on but autoLogOn is set to false?
