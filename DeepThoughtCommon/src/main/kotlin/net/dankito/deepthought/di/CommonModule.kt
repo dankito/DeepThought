@@ -2,9 +2,18 @@ package net.dankito.deepthought.di
 
 import dagger.Module
 import dagger.Provides
+import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.filesystem.IFileStorageService
+import net.dankito.data_access.network.communication.IClientCommunicator
+import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
+import net.dankito.data_access.network.communication.callback.IsSynchronizationPermittedHandler
+import net.dankito.data_access.network.discovery.IDevicesDiscoverer
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.OkHttpWebClient
+import net.dankito.deepthought.communication.CommunicationManager
+import net.dankito.deepthought.communication.ICommunicationManager
+import net.dankito.deepthought.model.INetworkSettings
+import net.dankito.deepthought.model.NetworkSettings
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.faviconextractor.FaviconComparator
@@ -19,9 +28,11 @@ import net.dankito.service.data.EntryService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.LuceneSearchEngine
+import net.dankito.service.synchronization.ConnectedDevicesService
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ImageCache
 import net.dankito.utils.ThreadPool
+import net.dankito.utils.services.hashing.IBase64Service
 import javax.inject.Singleton
 
 
@@ -98,6 +109,34 @@ class CommonModule {
     @Singleton
     fun provideFeedReader() : IFeedReader {
         return RomeFeedReader()
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideNetworkSettings(dataManager: DataManager) : INetworkSettings {
+        return NetworkSettings(dataManager.localDevice)
+    }
+
+    @Provides
+    @Singleton
+    fun provideClientCommunicator(networkSettings: INetworkSettings, permissionHandler: IsSynchronizationPermittedHandler, base64Service: IBase64Service, threadPool: IThreadPool)
+            : IClientCommunicator {
+        return TcpSocketClientCommunicator(networkSettings, permissionHandler, base64Service, threadPool)
+    }
+
+    @Provides
+    @Singleton
+    fun provideConnectedDevicesService(devicesDiscoverer: IDevicesDiscoverer, clientCommunicator: IClientCommunicator, dataManager: DataManager,
+                                       networkSettings: INetworkSettings, entityManager: IEntityManager) : ConnectedDevicesService {
+        return ConnectedDevicesService(devicesDiscoverer, clientCommunicator, dataManager, networkSettings, entityManager)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCommunicationManager(connectedDevicesService: ConnectedDevicesService, clientCommunicator: IClientCommunicator, networkSettings: INetworkSettings)
+            : ICommunicationManager {
+        return CommunicationManager(connectedDevicesService, clientCommunicator, networkSettings)
     }
 
 }
