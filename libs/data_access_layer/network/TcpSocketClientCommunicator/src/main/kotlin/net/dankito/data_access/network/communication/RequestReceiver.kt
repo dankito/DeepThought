@@ -1,7 +1,6 @@
 package net.dankito.data_access.network.communication
 
 
-import net.dankito.data_access.network.communication.callback.RequestHandlerCallback
 import net.dankito.data_access.network.communication.message.IMessageHandler
 import net.dankito.data_access.network.communication.message.Request
 import net.dankito.data_access.network.communication.message.Response
@@ -129,11 +128,7 @@ class RequestReceiver(private var socketHandler: SocketHandler, private var mess
     }
 
     protected fun receivedRequest(clientSocket: Socket, request: Request<*>) {
-        messageHandler.handleReceivedRequest(request, object : RequestHandlerCallback {
-            override fun done(response: Response<*>) {
-                dispatchResponseToRequest(clientSocket, request, response)
-            }
-        })
+        messageHandler.handleReceivedRequest(request) { response -> dispatchResponseToRequest(clientSocket, request, response) }
     }
 
 

@@ -2,7 +2,6 @@ package net.dankito.data_access.network.communication.message
 
 import net.dankito.data_access.network.communication.CommunicatorConfig
 import net.dankito.data_access.network.communication.callback.IsSynchronizationPermittedHandler
-import net.dankito.data_access.network.communication.callback.RequestHandlerCallback
 import net.dankito.deepthought.model.INetworkSettings
 
 
@@ -21,9 +20,9 @@ class MessageHandler(protected var config: MessageHandlerConfig) : IMessageHandl
     }
 
 
-    override fun handleReceivedRequest(request: Request<*>, callback: RequestHandlerCallback) {
+    override fun handleReceivedRequest(request: Request<*>, callback: (Response<out Any>) -> Unit) {
         when (request.method) {
-            CommunicatorConfig.GET_DEVICE_INFO_METHOD_NAME -> callback.done(handleGetDeviceInfoRequest(request))
+            CommunicatorConfig.GET_DEVICE_INFO_METHOD_NAME -> callback(handleGetDeviceInfoRequest(request))
             CommunicatorConfig.REQUEST_PERMIT_SYNCHRONIZATION_METHOD_NAME -> handleRequestPermitSynchronizationRequest(request as Request<DeviceInfo>, callback)
             CommunicatorConfig.RESPONSE_TO_SYNCHRONIZATION_PERMITTING_CHALLENGE_METHOD_NAME -> handleRespondToSynchronizationPermittingChallengeRequest(request as Request<RespondToSynchronizationPermittingChallengeRequestBody>, callback)
             CommunicatorConfig.REQUEST_START_SYNCHRONIZATION_METHOD_NAME -> handleRequestStartSynchronizationRequest(request as Request<RequestStartSynchronizationRequestBody>, callback)
@@ -31,12 +30,12 @@ class MessageHandler(protected var config: MessageHandlerConfig) : IMessageHandl
     }
 
 
-    private fun handleGetDeviceInfoRequest(request: Request<*>): Response<*> {
+    private fun handleGetDeviceInfoRequest(request: Request<*>): Response<DeviceInfo> {
         return Response(DeviceInfo.fromDevice(networkSettings.localHostDevice))
     }
 
 
-    private fun handleRequestPermitSynchronizationRequest(request: Request<DeviceInfo>, callback: RequestHandlerCallback) {
+    private fun handleRequestPermitSynchronizationRequest(request: Request<DeviceInfo>, callback: (Response<RequestPermitSynchronizationResponseBody>) -> Unit) {
         request.body?.let { remoteDeviceInfo ->
             val permittingHandler = config.permissionHandler
 
@@ -46,31 +45,35 @@ class MessageHandler(protected var config: MessageHandlerConfig) : IMessageHandl
         }
     }
 
-    private fun handleShouldPermitSynchronizingWithDeviceResult(remoteDeviceInfo: DeviceInfo, permitsSynchronization: Boolean, permittingHandler: IsSynchronizationPermittedHandler, callback: RequestHandlerCallback) {
+    private fun handleShouldPermitSynchronizingWithDeviceResult(remoteDeviceInfo: DeviceInfo, permitsSynchronization: Boolean, permittingHandler: IsSynchronizationPermittedHandler,
+                                                                callback: (Response<RequestPermitSynchronizationResponseBody>) -> Unit) {
         if (permitsSynchronization) {
             val (nonce, correctResponse) = challengeHandler.createChallengeForDevice(remoteDeviceInfo)
             permittingHandler.showCorrectResponseToUserNonBlocking(remoteDeviceInfo, correctResponse)
 
-            callback.done(Response(RequestPermitSynchronizationResponseBody(
+            callback(Response(RequestPermitSynchronizationResponseBody(
                     RequestPermitSynchronizationResult.RESPOND_TO_CHALLENGE, nonce)))
-        } else {
-            callback.done(Response(RequestPermitSynchronizationResponseBody(RequestPermitSynchronizationResult.DENIED)))
+        }
+        else {
+            callback(Response(RequestPermitSynchronizationResponseBody(RequestPermitSynchronizationResult.DENIED)))
         }
     }
 
-    private fun handleRespondToSynchronizationPermittingChallengeRequest(request: Request<RespondToSynchronizationPermittingChallengeRequestBody>, callback: RequestHandlerCallback) {
+    private fun handleRespondToSynchronizationPermittingChallengeRequest(request: Request<RespondToSynchronizationPermittingChallengeRequestBody>,
+                                                                         callback: (Response<RespondToSynchronizationPermittingChallengeResponseBody>) -> Unit) {
         request.body?.let { body ->
-            var responseBody: RespondToSynchronizationPermittingChallengeResponseBody? = null
+            var responseBody: RespondToSynchronizationPermittingChallengeResponseBody
 
             if (challengeHandler.isResponseOk(body.nonce, body.challengeResponse)) {
                 addToPermittedSynchronizedDevices(body)
 
                 responseBody = RespondToSynchronizationPermittingChallengeResponseBody(networkSettings.synchronizationPort)
-            } else {
+            }
+            else {
                 responseBody = createWrongCodeResponse(body.nonce)
             }
 
-            callback.done(Response<RespondToSynchronizationPermittingChallengeResponseBody>(responseBody))
+            callback(Response(responseBody))
         }
     }
 
@@ -98,10 +101,10 @@ class MessageHandler(protected var config: MessageHandlerConfig) : IMessageHandl
     }
 
 
-    private fun handleRequestStartSynchronizationRequest(request: Request<RequestStartSynchronizationRequestBody>, callback: RequestHandlerCallback) {
+    private fun handleRequestStartSynchronizationRequest(request: Request<RequestStartSynchronizationRequestBody>, callback: (Response<RequestStartSynchronizationResponseBody>) -> Unit) {
         request.body?.let { body ->
             if(isDevicePermittedToSynchronize(body.uniqueDeviceId) == false) {
-                callback.done(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.DENIED)))
+                callback(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.DENIED)))
             }
             else {
                 val permittedSynchronizedDevice = networkSettings.getDiscoveredDevice(body.uniqueDeviceId)
@@ -111,8 +114,7 @@ class MessageHandler(protected var config: MessageHandlerConfig) : IMessageHandl
                     networkSettings.addConnectedDevicePermittedToSynchronize(permittedSynchronizedDevice)
                 }
 
-                callback.done(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.ALLOWED,
-                        networkSettings.synchronizationPort)))
+                callback(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.ALLOWED, networkSettings.synchronizationPort)))
             }
         }
     }
