@@ -13,7 +13,6 @@ import net.dankito.deepthought.javafx.util.UTF8ResourceBundleControl
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.search.ISearchEngine
 import tornadofx.*
-import tornadofx.FX.Companion.messages
 import java.util.*
 import javax.inject.Inject
 
@@ -58,6 +57,13 @@ class DeepThoughtJavaFXApplication : App(MainWindow::class) {
         // speeding app start up a bit.
         // That's also the reason why LuceneSearchEngine gets injected here so that as soon as DataManager is initialized it can initialize its indices
         component.inject(this)
+    }
+
+
+    @Throws(Exception::class)
+    override fun stop() {
+        super.stop()
+        System.exit(0) // otherwise Window would be closed but application still running in background
     }
 
 }
