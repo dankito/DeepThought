@@ -1,0 +1,16 @@
+apply plugin: 'kotlin'
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    compile project(':ClientCommunicator')
+
+    testCompile "junit:junit:$junitVersion"
+    testCompile "org.mockito:mockito-core:$mockitoVersion"
+
+    testCompile "ch.qos.logback:logback-core:$logbackVersion"
+    testCompile "ch.qos.logback:logback-classic:$logbackVersion"
+}

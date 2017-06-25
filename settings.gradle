@@ -42,6 +42,7 @@ include ':UdpDevicesDiscoverer'
 include ':AndroidUdpDevicesDiscoverer'
 
 include ':ClientCommunicator'
+include ':TcpSocketClientCommunicator'
 
 include ':FileStorageService'
 include ':AndroidFileStorageService'
@@ -87,6 +88,7 @@ project(':UdpDevicesDiscoverer').projectDir = "$rootDir/libs/data_access_layer/n
 project(':AndroidUdpDevicesDiscoverer').projectDir = "$rootDir/libs/data_access_layer/network/AndroidUdpDevicesDiscoverer" as File
 
 project(':ClientCommunicator').projectDir = "$rootDir/libs/data_access_layer/network/ClientCommunicator" as File
+project(':TcpSocketClientCommunicator').projectDir = "$rootDir/libs/data_access_layer/network/TcpSocketClientCommunicator" as File
 
 project(':FileStorageService').projectDir = "$rootDir/libs/data_access_layer/filesystem/FileStorageService" as File
 project(':AndroidFileStorageService').projectDir = "$rootDir/libs/data_access_layer/filesystem/AndroidFileStorageService" as File
