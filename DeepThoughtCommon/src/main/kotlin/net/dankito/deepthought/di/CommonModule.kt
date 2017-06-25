@@ -35,12 +35,19 @@ import net.dankito.service.synchronization.ISyncManager
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ImageCache
 import net.dankito.utils.ThreadPool
+import net.dankito.utils.localization.Localization
 import net.dankito.utils.services.hashing.IBase64Service
 import javax.inject.Singleton
 
 
 @Module
 class CommonModule {
+
+    @Provides
+    @Singleton
+    fun provideLocalization() : Localization {
+        return Localization()
+    }
 
 
     @Provides
