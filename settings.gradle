@@ -19,6 +19,8 @@ include ':FeedAddressExtractor'
 include ':DataManager'
 include ':DataServices'
 
+include ':ConnectedDevicesService'
+
 include ':SearchEngine'
 include ':LuceneSearchEngine'
 
@@ -67,6 +69,8 @@ project(':FeedAddressExtractor').projectDir = "$rootDir/libs/news/FeedAddressExt
 
 project(':DataManager').projectDir = "$rootDir/libs/service_layer/data/DataManager" as File
 project(':DataServices').projectDir = "$rootDir/libs/service_layer/data/DataServices" as File
+
+project(':ConnectedDevicesService').projectDir = "$rootDir/libs/service_layer/synchronization/ConnectedDevicesService" as File
 
 project(':SearchEngine').projectDir = "$rootDir/libs/service_layer/search/SearchEngine" as File
 project(':LuceneSearchEngine').projectDir = "$rootDir/libs/service_layer/search/LuceneSearchEngine" as File
