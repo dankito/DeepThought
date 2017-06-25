@@ -40,7 +40,7 @@ class CommunicationManagerStarter(searchEngine: ISearchEngine) {
 
 
     private fun startCommunicationManager() {
-        AppComponent.component.inject(this)
+        AppComponent.component.inject(this) // and only now create CommunicationManager as now localDevice is loaded from Db
 
         communicationManager.startAsync()
     }
