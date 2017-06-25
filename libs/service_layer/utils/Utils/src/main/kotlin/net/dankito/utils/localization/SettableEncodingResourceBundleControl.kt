@@ -1,11 +1,4 @@
-package net.dankito.deepthought.javafx.util
-
-import java.util.*
-import impl.org.controlsfx.i18n.Localization
-import tornadofx.*
-import java.io.IOException
-import java.io.InputStream
-import java.io.InputStreamReader
+package net.dankito.utils.localization
 
 
 /**
@@ -16,16 +9,16 @@ import java.io.InputStreamReader
  *
  * <p>Copied from https://stackoverflow.com/questions/4659929/how-to-use-utf-8-in-resource-properties-with-resourcebundle</p>
  */
-open class SettableEncodingResourceBundleControl(private val encoding: String) : ResourceBundle.Control() {
+open class SettableEncodingResourceBundleControl(private val encoding: String) : java.util.ResourceBundle.Control() {
 
-    @Throws(IllegalAccessException::class, InstantiationException::class, IOException::class)
-    override fun newBundle(baseName: String, locale: Locale, format: String, loader: ClassLoader, reload: Boolean): ResourceBundle? {
+    @Throws(IllegalAccessException::class, InstantiationException::class, java.io.IOException::class)
+    override fun newBundle(baseName: String, locale: java.util.Locale, format: String, loader: ClassLoader, reload: Boolean): java.util.ResourceBundle? {
         // The below is a copyFile of the default implementation.
         val bundleName = toBundleName(baseName, locale)
         val resourceName = toResourceName(bundleName, "properties")
 
-        var bundle: ResourceBundle? = null
-        var stream: InputStream? = null
+        var bundle: java.util.ResourceBundle? = null
+        var stream: java.io.InputStream? = null
 
         if (reload) {
             val url = loader.getResource(resourceName)
@@ -38,13 +31,13 @@ open class SettableEncodingResourceBundleControl(private val encoding: String) :
             }
         }
         else {
-            stream = Localization::class.java.classLoader.getResourceAsStream(resourceName)
+            stream = SettableEncodingResourceBundleControl::class.java.classLoader.getResourceAsStream(resourceName)
         }
 
         if (stream != null) {
             try {
                 // Only this line is changed to make it to read properties files as UTF-8.
-                bundle = ThrowNoErrorOnMissingValuePropertyResourceBundle(InputStreamReader(stream, encoding))
+                bundle = ThrowNoErrorOnMissingValuePropertyResourceBundle(java.io.InputStreamReader(stream, encoding))
             } finally {
                 stream.close()
             }

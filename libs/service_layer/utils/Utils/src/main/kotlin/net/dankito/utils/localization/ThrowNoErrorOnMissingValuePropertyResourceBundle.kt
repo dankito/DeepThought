@@ -1,14 +1,9 @@
-package net.dankito.deepthought.javafx.util
-
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.io.Reader
-import java.util.*
+package net.dankito.utils.localization
 
 
-class ThrowNoErrorOnMissingValuePropertyResourceBundle(reader: Reader) : PropertyResourceBundle(reader) {
+class ThrowNoErrorOnMissingValuePropertyResourceBundle(reader: java.io.Reader) : java.util.PropertyResourceBundle(reader) {
 
-    constructor(stream: InputStream) : this(InputStreamReader(stream))
+    constructor(stream: java.io.InputStream) : this(java.io.InputStreamReader(stream))
 
     // copied from TornadoFX Messages.kt
 
@@ -23,8 +18,10 @@ class ThrowNoErrorOnMissingValuePropertyResourceBundle(reader: Reader) : Propert
      */
     override fun handleGetObject(key: String?): Any {
         var value = super.handleGetObject(key)
-        if (value == null && parent != null)
+
+        if (value == null && parent != null) {
             value = parent.getObject(key)
+        }
 
         return value ?: "[$key]"
     }

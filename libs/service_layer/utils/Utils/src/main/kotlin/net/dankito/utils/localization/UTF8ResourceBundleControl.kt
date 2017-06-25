@@ -1,4 +1,4 @@
-package net.dankito.deepthought.javafx.util
+package net.dankito.utils.localization
 
 
 /**
