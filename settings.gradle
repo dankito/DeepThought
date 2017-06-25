@@ -20,6 +20,7 @@ include ':DataManager'
 include ':DataServices'
 
 include ':SyncManager'
+include ':CouchbaseLiteSyncManager'
 include ':ConnectedDevicesService'
 
 include ':SearchEngine'
@@ -72,6 +73,7 @@ project(':DataManager').projectDir = "$rootDir/libs/service_layer/data/DataManag
 project(':DataServices').projectDir = "$rootDir/libs/service_layer/data/DataServices" as File
 
 project(':SyncManager').projectDir = "$rootDir/libs/service_layer/synchronization/SyncManager" as File
+project(':CouchbaseLiteSyncManager').projectDir = "$rootDir/libs/service_layer/synchronization/CouchbaseLiteSyncManager" as File
 project(':ConnectedDevicesService').projectDir = "$rootDir/libs/service_layer/synchronization/ConnectedDevicesService" as File
 
 project(':SearchEngine').projectDir = "$rootDir/libs/service_layer/search/SearchEngine" as File
