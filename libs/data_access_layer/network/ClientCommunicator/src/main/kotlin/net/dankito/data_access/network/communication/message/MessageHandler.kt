@@ -31,12 +31,12 @@ class MessageHandler(protected var config: MessageHandlerConfig) : IMessageHandl
     }
 
 
-    protected fun handleGetDeviceInfoRequest(request: Request<*>): Response<*> {
+    private fun handleGetDeviceInfoRequest(request: Request<*>): Response<*> {
         return Response(DeviceInfo.fromDevice(networkSettings.localHostDevice))
     }
 
 
-    protected fun handleRequestPermitSynchronizationRequest(request: Request<DeviceInfo>, callback: RequestHandlerCallback) {
+    private fun handleRequestPermitSynchronizationRequest(request: Request<DeviceInfo>, callback: RequestHandlerCallback) {
         request.body?.let { remoteDeviceInfo ->
             val permittingHandler = config.permissionHandler
 
@@ -46,7 +46,7 @@ class MessageHandler(protected var config: MessageHandlerConfig) : IMessageHandl
         }
     }
 
-    protected fun handleShouldPermitSynchronizingWithDeviceResult(remoteDeviceInfo: DeviceInfo, permitsSynchronization: Boolean, permittingHandler: IsSynchronizationPermittedHandler, callback: RequestHandlerCallback) {
+    private fun handleShouldPermitSynchronizingWithDeviceResult(remoteDeviceInfo: DeviceInfo, permitsSynchronization: Boolean, permittingHandler: IsSynchronizationPermittedHandler, callback: RequestHandlerCallback) {
         if (permitsSynchronization) {
             val (nonce, correctResponse) = challengeHandler.createChallengeForDevice(remoteDeviceInfo)
             permittingHandler.showCorrectResponseToUserNonBlocking(remoteDeviceInfo, correctResponse)
@@ -58,19 +58,20 @@ class MessageHandler(protected var config: MessageHandlerConfig) : IMessageHandl
         }
     }
 
-    protected fun handleRespondToSynchronizationPermittingChallengeRequest(request: Request<RespondToSynchronizationPermittingChallengeRequestBody>, callback: RequestHandlerCallback) {
-        val nonce = request.body!!.nonce
-        var responseBody: RespondToSynchronizationPermittingChallengeResponseBody? = null
+    private fun handleRespondToSynchronizationPermittingChallengeRequest(request: Request<RespondToSynchronizationPermittingChallengeRequestBody>, callback: RequestHandlerCallback) {
+        request.body?.let { body ->
+            var responseBody: RespondToSynchronizationPermittingChallengeResponseBody? = null
 
-        if (challengeHandler.isResponseOk(nonce, request.body.challengeResponse)) {
-            addToPermittedSynchronizedDevices(request.body)
+            if (challengeHandler.isResponseOk(body.nonce, body.challengeResponse)) {
+                addToPermittedSynchronizedDevices(body)
 
-            responseBody = RespondToSynchronizationPermittingChallengeResponseBody(networkSettings.synchronizationPort)
-        } else {
-            responseBody = createWrongCodeResponse(nonce)
+                responseBody = RespondToSynchronizationPermittingChallengeResponseBody(networkSettings.synchronizationPort)
+            } else {
+                responseBody = createWrongCodeResponse(body.nonce)
+            }
+
+            callback.done(Response<RespondToSynchronizationPermittingChallengeResponseBody>(responseBody))
         }
-
-        callback.done(Response<RespondToSynchronizationPermittingChallengeResponseBody>(responseBody))
     }
 
     protected fun addToPermittedSynchronizedDevices(requestBody: RespondToSynchronizationPermittingChallengeRequestBody) {
@@ -85,7 +86,7 @@ class MessageHandler(protected var config: MessageHandlerConfig) : IMessageHandl
         }
     }
 
-    protected fun createWrongCodeResponse(nonce: String): RespondToSynchronizationPermittingChallengeResponseBody {
+    private fun createWrongCodeResponse(nonce: String): RespondToSynchronizationPermittingChallengeResponseBody {
         val responseBody: RespondToSynchronizationPermittingChallengeResponseBody
         val countRetriesLeft = challengeHandler.getCountRetriesLeftForNonce(nonce)
         if (countRetriesLeft > 0) {
@@ -97,25 +98,26 @@ class MessageHandler(protected var config: MessageHandlerConfig) : IMessageHandl
     }
 
 
-    protected fun handleRequestStartSynchronizationRequest(request: Request<RequestStartSynchronizationRequestBody>, callback: RequestHandlerCallback) {
-        val body = request.body
-
-        if (isDevicePermittedToSynchronize(body!!.uniqueDeviceId) == false) {
-            callback.done(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.DENIED)))
-        } else {
-            val permittedSynchronizedDevice = networkSettings.getDiscoveredDevice(body.uniqueDeviceId)
-            if (permittedSynchronizedDevice != null) {
-                permittedSynchronizedDevice.synchronizationPort = body.synchronizationPort
-
-                networkSettings.addConnectedDevicePermittedToSynchronize(permittedSynchronizedDevice)
+    private fun handleRequestStartSynchronizationRequest(request: Request<RequestStartSynchronizationRequestBody>, callback: RequestHandlerCallback) {
+        request.body?.let { body ->
+            if(isDevicePermittedToSynchronize(body.uniqueDeviceId) == false) {
+                callback.done(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.DENIED)))
             }
+            else {
+                val permittedSynchronizedDevice = networkSettings.getDiscoveredDevice(body.uniqueDeviceId)
+                if (permittedSynchronizedDevice != null) {
+                    permittedSynchronizedDevice.synchronizationPort = body.synchronizationPort
 
-            callback.done(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.ALLOWED,
-                    networkSettings.synchronizationPort)))
+                    networkSettings.addConnectedDevicePermittedToSynchronize(permittedSynchronizedDevice)
+                }
+
+                callback.done(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.ALLOWED,
+                        networkSettings.synchronizationPort)))
+            }
         }
     }
 
-    protected fun isDevicePermittedToSynchronize(remoteDeviceUniqueId: String): Boolean {
+    private fun isDevicePermittedToSynchronize(remoteDeviceUniqueId: String): Boolean {
         val synchronizedDevices = networkSettings.localHostDevice.synchronizedDevices
 
         for (synchronizedDevice in synchronizedDevices) {
