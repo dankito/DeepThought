@@ -1,14 +1,10 @@
 package net.dankito.deepthought.javafx.util
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-
 import javafx.application.Platform
 import javafx.css.Styleable
 import javafx.geometry.Insets
 import javafx.geometry.Point2D
 import javafx.scene.Node
-import javafx.scene.Scene
 import javafx.scene.control.MenuItem
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.SplitPane
@@ -21,13 +17,14 @@ import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import javafx.stage.Screen
 import javafx.stage.Window
+import java.util.concurrent.CountDownLatch
 
 
 object FXUtils {
 
     val HtmlEditorDefaultText = "<html dir=\"ltr\"><head></head><body contenteditable=\"true\"></body></html>"
 
-    val SizeMaxValue: Double? = java.lang.Double.MAX_VALUE
+    val SizeMaxValue: Double = Double.MAX_VALUE
 
 
     fun runOnUiThread(runnable: () -> Unit) {
@@ -37,6 +34,21 @@ object FXUtils {
             Platform.runLater(runnable)
         }
     }
+
+    fun <T> executeActionOnUIThread(defaultValue: T, action: () -> T) : T {
+        var result: T = defaultValue
+        val countDownLatch = CountDownLatch(1)
+
+        Platform.runLater {
+            result = action()
+
+            countDownLatch.countDown()
+        }
+
+        countDownLatch.await()
+        return result
+    }
+
 
     fun ensureNodeOnlyUsesSpaceIfVisible(node: Node) {
         node.managedProperty().bind(node.visibleProperty())
