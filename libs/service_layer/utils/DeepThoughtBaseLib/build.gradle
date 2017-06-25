@@ -12,6 +12,10 @@ dependencies {
     compile project(':EventBus')
     compile project(':DataServices')
 
+    compile project(':DevicesDiscoverer')
+    compile project(':TcpSocketClientCommunicator')
+    compile project(':ConnectedDevicesService')
+
     compile "org.slf4j:slf4j-api:$slf4jVersion"
 
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
