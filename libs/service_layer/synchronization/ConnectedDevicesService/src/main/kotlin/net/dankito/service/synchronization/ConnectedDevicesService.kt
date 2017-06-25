@@ -21,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
 
+// TODO: replace IEntityManager with DevicesService
 class ConnectedDevicesService(protected var devicesDiscoverer: IDevicesDiscoverer, protected var clientCommunicator: IClientCommunicator, dataManager: DataManager, protected var networkSettings: INetworkSettings, protected var entityManager: IEntityManager) : IConnectedDevicesService {
 
     protected var localDevice: Device
@@ -43,7 +44,6 @@ class ConnectedDevicesService(protected var devicesDiscoverer: IDevicesDiscovere
 
 
     init {
-
         this.localDevice = dataManager.localDevice
     }
 
