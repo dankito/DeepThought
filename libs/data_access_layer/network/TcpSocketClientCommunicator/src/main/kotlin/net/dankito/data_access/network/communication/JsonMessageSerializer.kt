@@ -34,16 +34,18 @@ class JsonMessageSerializer(protected var messageHandler: IMessageHandler) : IMe
             requestBodyString = serializeObject(body)
         }
 
-        requestBodyString?.let { requestBodyString ->
-            val requestString = createRequestString(request.method, requestBodyString)
-            return getBytesFromString(requestString)
-        }
-
-        return null
+        val requestString = createRequestString(request.method, requestBodyString)
+        return getBytesFromString(requestString)
     }
 
-    protected fun createRequestString(methodName: String, body: String): String {
-        return methodName + CommunicationConfig.METHOD_NAME_AND_BODY_SEPARATOR + body
+    protected fun createRequestString(methodName: String, body: String?): String {
+        var requestString = methodName + CommunicationConfig.METHOD_NAME_AND_BODY_SEPARATOR
+
+        if(body != null) {
+            requestString += body
+        }
+
+        return requestString
     }
 
 
