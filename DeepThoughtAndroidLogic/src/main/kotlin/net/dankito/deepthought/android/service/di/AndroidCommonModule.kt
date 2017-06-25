@@ -10,9 +10,11 @@ import net.dankito.data_access.filesystem.AndroidFileStorageService
 import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.data_access.network.discovery.AndroidUdpDevicesDiscoverer
 import net.dankito.data_access.network.discovery.IDevicesDiscoverer
+import net.dankito.deepthought.android.service.hashing.AndroidBase64Service
 import net.dankito.deepthought.android.service.platform.AndroidPlatformConfiguration
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.services.hashing.IBase64Service
 import javax.inject.Singleton
 
 
@@ -42,6 +44,13 @@ class AndroidCommonModule {
     @Singleton
     fun provideFileStorageService(context: Context) : IFileStorageService {
         return AndroidFileStorageService(context)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideBase64Service() : IBase64Service {
+        return AndroidBase64Service()
     }
 
 }
