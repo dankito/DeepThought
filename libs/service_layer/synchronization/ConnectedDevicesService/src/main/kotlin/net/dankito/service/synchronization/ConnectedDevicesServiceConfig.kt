@@ -3,10 +3,10 @@ package net.dankito.service.synchronization
 
 object ConnectedDevicesServiceConfig {
 
-    val DEVICES_DISCOVERER_PORT = 32788
+    const val DEVICES_DISCOVERER_PORT = 32788
 
-    val CHECK_FOR_DEVICES_INTERVAL_MILLIS = 500
+    const val CHECK_FOR_DEVICES_INTERVAL_MILLIS = 500
 
-    val DISCOVERY_MESSAGE_PREFIX = "DeepThought"
+    const val DISCOVERY_MESSAGE_PREFIX = "DeepThought"
 
 }
