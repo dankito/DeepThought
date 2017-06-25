@@ -5,9 +5,12 @@ import net.dankito.data_access.network.communication.IClientCommunicator
 import net.dankito.data_access.network.communication.callback.ClientCommunicatorListener
 import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.service.synchronization.IConnectedDevicesService
+import net.dankito.service.synchronization.ISyncManager
+import java.util.*
 
 
-class CommunicationManager(private var connectedDevicesService: IConnectedDevicesService, private var clientCommunicator: IClientCommunicator, private var networkSettings: INetworkSettings) : ICommunicationManager {
+class CommunicationManager(private val connectedDevicesService: IConnectedDevicesService, private val syncManager: ISyncManager, private val clientCommunicator: IClientCommunicator,
+                           private val networkSettings: INetworkSettings) : ICommunicationManager {
 
     override fun startAsync() {
         clientCommunicator.start(CommunicatorConfig.DEFAULT_MESSAGES_RECEIVER_PORT, object : ClientCommunicatorListener {
@@ -38,6 +41,20 @@ class CommunicationManager(private var connectedDevicesService: IConnectedDevice
     private fun successfullyStartedClientCommunicator(messagesReceiverPort: Int) {
         networkSettings.messagePort = messagesReceiverPort
 
+        val random = Random(System.nanoTime())
+
+        val desiredSynchronizationPort = messagesReceiverPort + random.nextInt(400)
+        val desiredBasicDataSynchronizationPort = desiredSynchronizationPort + random.nextInt(700)
+
+        syncManager.startAsync(desiredSynchronizationPort, desiredBasicDataSynchronizationPort) {
+            successfullyStartedSyncManager(it)
+        }
+    }
+
+    private fun successfullyStartedSyncManager(basicDataSyncPort: Int) {
+        networkSettings.basicDataSynchronizationPort = basicDataSyncPort
+
         connectedDevicesService.start()
     }
+
 }

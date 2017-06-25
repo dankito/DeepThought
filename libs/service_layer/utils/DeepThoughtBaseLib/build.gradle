@@ -15,6 +15,7 @@ dependencies {
     compile project(':DevicesDiscoverer')
     compile project(':TcpSocketClientCommunicator')
     compile project(':ConnectedDevicesService')
+    compile project(':SyncManager')
 
     compile "org.slf4j:slf4j-api:$slf4jVersion"
 
