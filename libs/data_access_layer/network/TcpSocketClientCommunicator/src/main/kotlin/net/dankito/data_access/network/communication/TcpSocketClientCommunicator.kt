@@ -54,17 +54,17 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
     }
 
 
-    override fun getDeviceInfo(destinationAddress: SocketAddress, callback: SendRequestCallback<DeviceInfo>) {
+    override fun getDeviceInfo(destinationAddress: SocketAddress, callback: (Response<DeviceInfo>) -> Unit) {
         requestSender.sendRequestAndReceiveResponseAsync<Any, DeviceInfo>(destinationAddress,
                 Request<Any>(CommunicatorConfig.GET_DEVICE_INFO_METHOD_NAME), object : SendRequestCallback<DeviceInfo> {
             override fun done(response: Response<DeviceInfo>) {
-                callback.done(response)
+                callback(response)
             }
         })
     }
 
 
-    override fun requestPermitSynchronization(remoteDevice: DiscoveredDevice, callback: SendRequestCallback<RequestPermitSynchronizationResponseBody>) {
+    override fun requestPermitSynchronization(remoteDevice: DiscoveredDevice, callback: (Response<RequestPermitSynchronizationResponseBody>) -> Unit) {
         networkSettings.addDevicesAskedForPermittingSynchronization(remoteDevice)
 
         val request = Request(CommunicatorConfig.REQUEST_PERMIT_SYNCHRONIZATION_METHOD_NAME,
@@ -77,13 +77,13 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
                             networkSettings.removeDevicesAskedForPermittingSynchronization(remoteDevice)
                         }
 
-                        callback.done(response)
+                        callback(response)
                     }
                 })
     }
 
     override fun respondToSynchronizationPermittingChallenge(remoteDevice: DiscoveredDevice, nonce: String, challengeResponse: String,
-                                                             callback: SendRequestCallback<RespondToSynchronizationPermittingChallengeResponseBody>) {
+                                                             callback: (Response<RespondToSynchronizationPermittingChallengeResponseBody>) -> Unit) {
         challengeHandler.createChallengeResponse(nonce, challengeResponse)?.let { challengeResponse ->
             val request = Request(CommunicatorConfig.RESPONSE_TO_SYNCHRONIZATION_PERMITTING_CHALLENGE_METHOD_NAME,
                     RespondToSynchronizationPermittingChallengeRequestBody(nonce, challengeResponse, networkSettings.synchronizationPort))
@@ -93,7 +93,7 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
                         override fun done(response: Response<RespondToSynchronizationPermittingChallengeResponseBody>) {
                             handleRespondToSynchronizationPermittingChallengeResponse(remoteDevice, response)
 
-                            callback.done(response)
+                            callback(response)
                         }
                     })
         }
@@ -114,7 +114,7 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
     }
 
 
-    override fun requestStartSynchronization(remoteDevice: DiscoveredDevice, callback: SendRequestCallback<RequestStartSynchronizationResponseBody>) {
+    override fun requestStartSynchronization(remoteDevice: DiscoveredDevice, callback: (Response<RequestStartSynchronizationResponseBody>) -> Unit) {
         networkSettings.addDevicesAskedForPermittingSynchronization(remoteDevice)
 
         val request = Request(CommunicatorConfig.REQUEST_START_SYNCHRONIZATION_METHOD_NAME,
@@ -125,7 +125,7 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
                     override fun done(response: Response<RequestStartSynchronizationResponseBody>) {
                         networkSettings.removeDevicesAskedForPermittingSynchronization(remoteDevice)
 
-                        callback.done(response)
+                        callback(response)
                     }
                 })
     }

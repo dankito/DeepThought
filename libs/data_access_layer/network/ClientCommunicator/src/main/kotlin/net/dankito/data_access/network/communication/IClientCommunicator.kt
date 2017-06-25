@@ -1,13 +1,8 @@
 package net.dankito.data_access.network.communication
 
 import net.dankito.data_access.network.communication.callback.ClientCommunicatorListener
-import net.dankito.data_access.network.communication.callback.SendRequestCallback
-import net.dankito.data_access.network.communication.message.DeviceInfo
-import net.dankito.data_access.network.communication.message.RequestPermitSynchronizationResponseBody
-import net.dankito.data_access.network.communication.message.RequestStartSynchronizationResponseBody
-import net.dankito.data_access.network.communication.message.RespondToSynchronizationPermittingChallengeResponseBody
+import net.dankito.data_access.network.communication.message.*
 import net.dankito.deepthought.model.DiscoveredDevice
-
 import java.net.SocketAddress
 
 
@@ -17,12 +12,12 @@ interface IClientCommunicator {
 
     fun stop()
 
-    fun getDeviceInfo(destinationAddress: SocketAddress, callback: SendRequestCallback<DeviceInfo>)
+    fun getDeviceInfo(destinationAddress: SocketAddress, callback: (Response<DeviceInfo>) -> Unit)
 
-    fun requestPermitSynchronization(remoteDevice: DiscoveredDevice, callback: SendRequestCallback<RequestPermitSynchronizationResponseBody>)
+    fun requestPermitSynchronization(remoteDevice: DiscoveredDevice, callback: (Response<RequestPermitSynchronizationResponseBody>) -> Unit)
 
-    fun respondToSynchronizationPermittingChallenge(remoteDevice: DiscoveredDevice, nonce: String, challengeResponse: String, callback: SendRequestCallback<RespondToSynchronizationPermittingChallengeResponseBody>)
+    fun respondToSynchronizationPermittingChallenge(remoteDevice: DiscoveredDevice, nonce: String, challengeResponse: String, callback: (Response<RespondToSynchronizationPermittingChallengeResponseBody>) -> Unit)
 
-    fun requestStartSynchronization(remoteDevice: DiscoveredDevice, callback: SendRequestCallback<RequestStartSynchronizationResponseBody>)
+    fun requestStartSynchronization(remoteDevice: DiscoveredDevice, callback: (Response<RequestStartSynchronizationResponseBody>) -> Unit)
 
 }

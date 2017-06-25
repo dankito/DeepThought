@@ -2,7 +2,6 @@ package net.dankito.service.synchronization
 
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.network.communication.IClientCommunicator
-import net.dankito.data_access.network.communication.callback.SendRequestCallback
 import net.dankito.data_access.network.communication.message.RequestStartSynchronizationResponseBody
 import net.dankito.data_access.network.communication.message.RequestStartSynchronizationResult
 import net.dankito.data_access.network.communication.message.Response
@@ -161,11 +160,9 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
     private fun discoveredKnownSynchronizedDevice(device: DiscoveredDevice, deviceInfoKey: String) {
         devicesPendingStartSynchronization.put(deviceInfoKey, device)
 
-        clientCommunicator.requestStartSynchronization(device, object : SendRequestCallback<RequestStartSynchronizationResponseBody> {
-            override fun done(response: Response<RequestStartSynchronizationResponseBody>) {
-                handleRequestStartSynchronizationResponse(response, device, deviceInfoKey)
-            }
-        })
+        clientCommunicator.requestStartSynchronization(device) { response ->
+            handleRequestStartSynchronizationResponse(response, device, deviceInfoKey)
+        }
     }
 
     private fun handleRequestStartSynchronizationResponse(response: Response<RequestStartSynchronizationResponseBody>, device: DiscoveredDevice, deviceInfoKey: String) {

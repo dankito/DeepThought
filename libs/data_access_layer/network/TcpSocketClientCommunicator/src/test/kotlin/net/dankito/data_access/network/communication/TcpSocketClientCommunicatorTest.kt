@@ -2,7 +2,6 @@ package net.dankito.data_access.network.communication
 
 import net.dankito.data_access.network.communication.callback.ClientCommunicatorListener
 import net.dankito.data_access.network.communication.callback.IsSynchronizationPermittedHandler
-import net.dankito.data_access.network.communication.callback.SendRequestCallback
 import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.data_access.network.communication.message.Response
 import net.dankito.deepthought.model.*
@@ -82,12 +81,10 @@ class TcpSocketClientCommunicatorTest {
         val responseHolder = AtomicReference<Response<DeviceInfo>>()
         val countDownLatch = CountDownLatch(1)
 
-        underTest.getDeviceInfo(destinationAddress, object : SendRequestCallback<DeviceInfo> {
-            override fun done(response: Response<DeviceInfo>) {
-                responseHolder.set(response)
-                countDownLatch.countDown()
-            }
-        })
+        underTest.getDeviceInfo(destinationAddress) { response ->
+            responseHolder.set(response)
+            countDownLatch.countDown()
+        }
 
 
         try {
