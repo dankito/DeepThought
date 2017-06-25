@@ -5,10 +5,7 @@ import net.dankito.data_access.network.communication.callback.IsSynchronizationP
 import net.dankito.data_access.network.communication.callback.SendRequestCallback
 import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.data_access.network.communication.message.Response
-import net.dankito.deepthought.model.Device
-import net.dankito.deepthought.model.DiscoveredDevice
-import net.dankito.deepthought.model.NetworkSettings
-import net.dankito.deepthought.model.OsType
+import net.dankito.deepthought.model.*
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.services.hashing.IBase64Service
 import org.hamcrest.CoreMatchers.`is`
@@ -66,6 +63,9 @@ class TcpSocketClientCommunicatorTest {
 
     protected fun setUpRemoteDevice() {
         remoteDevice = Device(DEVICE_NAME, DEVICE_UNIQUE_ID, DEVICE_OS_TYPE, DEVICE_OS_NAME, DEVICE_OS_VERSION, "")
+        val idField = BaseEntity::class.java.getDeclaredField("id")
+        idField.isAccessible = true
+        idField.set(remoteDevice, DEVICE_ID)
 
         discoveredRemoteDevice = DiscoveredDevice(remoteDevice, "localhost")
     }
@@ -104,7 +104,7 @@ class TcpSocketClientCommunicatorTest {
         assertThat<DeviceInfo>(remoteDeviceInfo, notNullValue())
 
         remoteDeviceInfo?.let { remoteDeviceInfo ->
-//            assertThat(remoteDeviceInfo.id, `is`(DEVICE_ID))
+            assertThat(remoteDeviceInfo.id, `is`(DEVICE_ID))
             assertThat(remoteDeviceInfo.uniqueDeviceId, `is`(DEVICE_UNIQUE_ID))
             assertThat(remoteDeviceInfo.name, `is`(DEVICE_NAME))
             assertThat(remoteDeviceInfo.osName, `is`(DEVICE_OS_NAME))
