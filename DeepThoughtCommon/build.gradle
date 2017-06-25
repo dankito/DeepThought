@@ -10,6 +10,9 @@ dependencies {
     compile project(':DataManager')
     compile project(':LuceneSearchEngine')
 
+    compile project(':CouchbaseLiteEntityManagerBase') // to instantiate CouchbaseLiteSyncManager
+    compile project(':CouchbaseLiteSyncManager')
+
     compile project(':NewsReader')
     compile project(':FeedAddressExtractor')
     compile project(':RomeFeedReader')

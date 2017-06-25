@@ -2,6 +2,7 @@ package net.dankito.deepthought.di
 
 import dagger.Module
 import dagger.Provides
+import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.data_access.network.communication.IClientCommunicator
@@ -29,6 +30,8 @@ import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.LuceneSearchEngine
 import net.dankito.service.synchronization.ConnectedDevicesService
+import net.dankito.service.synchronization.CouchbaseLiteSyncManager
+import net.dankito.service.synchronization.ISyncManager
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ImageCache
 import net.dankito.utils.ThreadPool
@@ -127,16 +130,22 @@ class CommonModule {
 
     @Provides
     @Singleton
-    fun provideConnectedDevicesService(devicesDiscoverer: IDevicesDiscoverer, clientCommunicator: IClientCommunicator, dataManager: DataManager,
-                                       networkSettings: INetworkSettings, entityManager: IEntityManager) : ConnectedDevicesService {
-        return ConnectedDevicesService(devicesDiscoverer, clientCommunicator, dataManager, networkSettings, entityManager)
+    fun provideSyncManager(entityManager: IEntityManager, networkSettings: INetworkSettings, threadPool: IThreadPool) : ISyncManager {
+        return CouchbaseLiteSyncManager(entityManager as CouchbaseLiteEntityManagerBase, networkSettings, threadPool)
     }
 
     @Provides
     @Singleton
-    fun provideCommunicationManager(connectedDevicesService: ConnectedDevicesService, clientCommunicator: IClientCommunicator, networkSettings: INetworkSettings)
+    fun provideConnectedDevicesService(devicesDiscoverer: IDevicesDiscoverer, clientCommunicator: IClientCommunicator, syncManager: ISyncManager, dataManager: DataManager,
+                                       networkSettings: INetworkSettings, entityManager: IEntityManager) : ConnectedDevicesService {
+        return ConnectedDevicesService(devicesDiscoverer, clientCommunicator, syncManager, dataManager, networkSettings, entityManager)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCommunicationManager(connectedDevicesService: ConnectedDevicesService, syncManager: ISyncManager, clientCommunicator: IClientCommunicator, networkSettings: INetworkSettings)
             : ICommunicationManager {
-        return CommunicationManager(connectedDevicesService, clientCommunicator, networkSettings)
+        return CommunicationManager(connectedDevicesService, syncManager, clientCommunicator, networkSettings)
     }
 
 }
