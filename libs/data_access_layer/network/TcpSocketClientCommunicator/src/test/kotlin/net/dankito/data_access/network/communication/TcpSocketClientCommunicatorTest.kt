@@ -65,7 +65,7 @@ class TcpSocketClientCommunicatorTest {
     }
 
     protected fun setUpRemoteDevice() {
-        remoteDevice = Device(DEVICE_ID, DEVICE_NAME, DEVICE_UNIQUE_ID, DEVICE_OS_TYPE, DEVICE_OS_NAME, DEVICE_OS_VERSION, "")
+        remoteDevice = Device(DEVICE_NAME, DEVICE_UNIQUE_ID, DEVICE_OS_TYPE, DEVICE_OS_NAME, DEVICE_OS_VERSION, "")
 
         discoveredRemoteDevice = DiscoveredDevice(remoteDevice, "localhost")
     }
@@ -102,12 +102,15 @@ class TcpSocketClientCommunicatorTest {
 
         val remoteDeviceInfo = response.body
         assertThat<DeviceInfo>(remoteDeviceInfo, notNullValue())
-        assertThat(remoteDeviceInfo!!.id, `is`(DEVICE_ID))
-        assertThat(remoteDeviceInfo.uniqueDeviceId, `is`(DEVICE_UNIQUE_ID))
-        assertThat(remoteDeviceInfo.name, `is`(DEVICE_NAME))
-        assertThat(remoteDeviceInfo.osName, `is`(DEVICE_OS_NAME))
-        assertThat(remoteDeviceInfo.osVersion, `is`(DEVICE_OS_VERSION))
-        assertThat(remoteDeviceInfo.osType, `is`(DEVICE_OS_TYPE))
+
+        remoteDeviceInfo?.let { remoteDeviceInfo ->
+//            assertThat(remoteDeviceInfo.id, `is`(DEVICE_ID))
+            assertThat(remoteDeviceInfo.uniqueDeviceId, `is`(DEVICE_UNIQUE_ID))
+            assertThat(remoteDeviceInfo.name, `is`(DEVICE_NAME))
+            assertThat(remoteDeviceInfo.osName, `is`(DEVICE_OS_NAME))
+            assertThat(remoteDeviceInfo.osVersion, `is`(DEVICE_OS_VERSION))
+            assertThat(remoteDeviceInfo.osType, `is`(DEVICE_OS_TYPE))
+        }
     }
 
     companion object {
