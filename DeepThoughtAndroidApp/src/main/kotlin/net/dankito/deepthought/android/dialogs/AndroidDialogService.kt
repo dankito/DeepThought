@@ -13,19 +13,19 @@ import net.dankito.utils.ui.IDialogService
 
 class AndroidDialogService(private val currentActivityTracker: CurrentActivityTracker) : IDialogService {
 
-    override fun showInfoMessage(infoMessage: String, alertTitle: String?) {
+    override fun showInfoMessage(infoMessage: CharSequence, alertTitle: CharSequence?) {
         currentActivityTracker.currentActivity?.let { activity ->
             activity.runOnUiThread { showInfoMessageOnUIThread(activity, infoMessage, alertTitle) }
         }
     }
 
-    private fun showInfoMessageOnUIThread(activity: Activity, message: String, alertTitle: String?) {
+    private fun showInfoMessageOnUIThread(activity: Activity, message: CharSequence, alertTitle: CharSequence?) {
         val builder = createDialog(activity, message, alertTitle, android.R.drawable.ic_dialog_info)
 
         builder.create().show()
     }
 
-    override fun showConfirmationDialog(message: String, alertTitle: String?, optionSelected: (Boolean) -> Unit) {
+    override fun showConfirmationDialog(message: CharSequence, alertTitle: CharSequence?, optionSelected: (Boolean) -> Unit) {
         currentActivityTracker.currentActivity?.let { activity ->
             if(Looper.getMainLooper().getThread() == Thread.currentThread()) {
                 showConfirmMessageOnUiThread(activity, message, alertTitle, optionSelected)
@@ -36,7 +36,7 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
         }
     }
 
-    private fun showConfirmMessageOnUiThread(activity: Activity, message: String, alertTitle: String?, optionSelected: (Boolean) -> Unit) {
+    private fun showConfirmMessageOnUiThread(activity: Activity, message: CharSequence, alertTitle: CharSequence?, optionSelected: (Boolean) -> Unit) {
         val builder = createDialog(activity, message, alertTitle)
 
         builder.setNegativeButton(android.R.string.no, { _, _ -> optionSelected(false) })
@@ -46,13 +46,13 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
         builder.create().show()
     }
 
-    override fun showErrorMessage(errorMessage: String, alertTitle: String?, exception: Exception?) {
+    override fun showErrorMessage(errorMessage: CharSequence, alertTitle: CharSequence?, exception: Exception?) {
         currentActivityTracker.currentActivity?.let { activity ->
             activity.runOnUiThread { showErrorMessageOnUIThread(activity, errorMessage, alertTitle, exception) }
         }
     }
 
-    private fun showErrorMessageOnUIThread(activity: Activity, errorMessage: String, alertTitle: String?, exception: Exception?) {
+    private fun showErrorMessageOnUIThread(activity: Activity, errorMessage: CharSequence, alertTitle: CharSequence?, exception: Exception?) {
         val builder = createDialog(activity, errorMessage, alertTitle, android.R.drawable.ic_dialog_alert)
 
         // TODO: show exception
@@ -60,13 +60,13 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
         builder.create().show()
     }
 
-    override fun askForTextInput(questionText: String, alertTitleText: String?, defaultValue: String?, callback: (Boolean, String?) -> Unit) {
+    override fun askForTextInput(questionText: CharSequence, alertTitleText: CharSequence?, defaultValue: CharSequence?, callback: (Boolean, String?) -> Unit) {
         currentActivityTracker.currentActivity?.let { activity ->
             askForTextInputOnUIThread(activity, questionText, alertTitleText, defaultValue, callback)
         }
     }
 
-    private fun askForTextInputOnUIThread(activity: Activity, questionText: String, alertTitleText: String?, defaultValue: String?, callback: (Boolean, String?) -> Unit) {
+    private fun askForTextInputOnUIThread(activity: Activity, questionText: CharSequence, alertTitleText: CharSequence?, defaultValue: CharSequence?, callback: (Boolean, String?) -> Unit) {
         val builder = createDialog(activity, questionText, alertTitleText)
 
         val input = EditText(activity)
@@ -110,4 +110,5 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
 
         return builder
     }
+
 }

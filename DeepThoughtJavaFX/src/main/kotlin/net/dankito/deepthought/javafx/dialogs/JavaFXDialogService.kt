@@ -16,30 +16,30 @@ import java.io.StringWriter
 class JavaFXDialogService : IDialogService {
 
 
-    override fun showInfoMessage(infoMessage: String, alertTitle: String?) {
+    override fun showInfoMessage(infoMessage: CharSequence, alertTitle: CharSequence?) {
         showInfoMessage(infoMessage, alertTitle, null)
     }
 
-    fun showInfoMessage(infoMessage: String, alertTitle: String?, owner: Stage?) {
+    fun showInfoMessage(infoMessage: CharSequence, alertTitle: CharSequence?, owner: Stage?) {
         FXUtils.runOnUiThread { showInfoMessageOnUiThread(infoMessage, alertTitle, owner) }
     }
 
-    private fun showInfoMessageOnUiThread(infoMessage: String, alertTitle: String?, owner: Stage?) {
+    private fun showInfoMessageOnUiThread(infoMessage: CharSequence, alertTitle: CharSequence?, owner: Stage?) {
         val alert = createDialog(Alert.AlertType.INFORMATION, infoMessage, alertTitle, owner, ButtonType.OK)
 
         alert.showAndWait()
     }
 
 
-    override fun showConfirmationDialog(message: String, alertTitle: String?, optionSelected: (Boolean) -> Unit) {
+    override fun showConfirmationDialog(message: CharSequence, alertTitle: CharSequence?, optionSelected: (Boolean) -> Unit) {
         showConfirmationDialog(message, alertTitle, null, optionSelected)
     }
 
-    fun showConfirmationDialog(message: String, alertTitle: String?, owner: Stage?, optionSelected: (Boolean) -> Unit) {
+    fun showConfirmationDialog(message: CharSequence, alertTitle: CharSequence?, owner: Stage?, optionSelected: (Boolean) -> Unit) {
         FXUtils.runOnUiThread { showConfirmationDialogOnUiThread(message, alertTitle, owner, optionSelected) }
     }
 
-    private fun showConfirmationDialogOnUiThread(message: String, alertTitle: String?, owner: Stage?, optionSelected: (Boolean) -> Unit) {
+    private fun showConfirmationDialogOnUiThread(message: CharSequence, alertTitle: CharSequence?, owner: Stage?, optionSelected: (Boolean) -> Unit) {
         val alert = createDialog(Alert.AlertType.CONFIRMATION, message, alertTitle, owner, ButtonType.NO, ButtonType.YES)
 
         val result = alert.showAndWait()
@@ -47,15 +47,15 @@ class JavaFXDialogService : IDialogService {
     }
 
 
-    override fun showErrorMessage(errorMessage: String, alertTitle: String?, exception: Exception?) {
+    override fun showErrorMessage(errorMessage: CharSequence, alertTitle: CharSequence?, exception: Exception?) {
         showErrorMessage(errorMessage, alertTitle, exception, null)
     }
 
-    fun showErrorMessage(errorMessage: String, alertTitle: String?, exception: Exception?, owner: Stage?) {
+    fun showErrorMessage(errorMessage: CharSequence, alertTitle: CharSequence?, exception: Exception?, owner: Stage?) {
         FXUtils.runOnUiThread { showErrorMessageOnUiThread(errorMessage, alertTitle, exception, owner) }
     }
 
-    private fun showErrorMessageOnUiThread(errorMessage: String, alertTitle: String?, exception: Exception?, owner: Stage?) {
+    private fun showErrorMessageOnUiThread(errorMessage: CharSequence, alertTitle: CharSequence?, exception: Exception?, owner: Stage?) {
         val alert = createDialog(Alert.AlertType.ERROR, errorMessage, alertTitle, owner, ButtonType.OK)
 
         if (exception != null) {
@@ -92,14 +92,14 @@ class JavaFXDialogService : IDialogService {
     }
 
 
-    private fun createDialog(alertType: Alert.AlertType, message: String, alertTitle: String?, owner: Stage?, vararg buttons: ButtonType): Alert {
+    private fun createDialog(alertType: Alert.AlertType, message: CharSequence, alertTitle: CharSequence?, owner: Stage?, vararg buttons: ButtonType): Alert {
         val alert = Alert(alertType)
 
-        alertTitle?.let { alert.title = it }
+        (alertTitle as? String)?.let { alert.title = it }
 
         owner?.let { alert.initOwner(it) }
 
-        setAlertContent(alert, message)
+        (message as? String)?.let { setAlertContent(alert, it) }
         alert.headerText = null
 
         alert.buttonTypes.setAll(*buttons)
@@ -136,19 +136,20 @@ class JavaFXDialogService : IDialogService {
     }
 
 
-    override fun askForTextInput(questionText: String, alertTitleText: String?, defaultValue: String?, callback: (Boolean, String?) -> Unit) {
+    override fun askForTextInput(questionText: CharSequence, alertTitleText: CharSequence?, defaultValue: CharSequence?, callback: (Boolean, String?) -> Unit) {
         FXUtils.runOnUiThread { askForTextInputOnUiThread(questionText, alertTitleText, defaultValue, callback) }
     }
 
-    private fun askForTextInputOnUiThread(questionText: String, alertTitleText: String?, defaultValue: String?, callback: (Boolean, String?) -> Unit) {
-        val dialog = TextInputDialog(defaultValue)
+    private fun askForTextInputOnUiThread(questionText: CharSequence, alertTitleText: CharSequence?, defaultValue: CharSequence?, callback: (Boolean, String?) -> Unit) {
+        val dialog = TextInputDialog(defaultValue as? String)
         dialog.headerText = null
-        dialog.title = alertTitleText
-        dialog.contentText = questionText
+        dialog.title = alertTitleText as? String
+        dialog.contentText = questionText as? String
 
         val result = dialog.showAndWait()
 
-        callback(result.isPresent, result.get())
+        val enteredCode = if(result.isPresent) result.get() else null
+        callback(result.isPresent, enteredCode)
     }
 
 }
