@@ -60,8 +60,9 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
             val abstract = articleBody.select(".entry-summary").first()?.html() ?: ""
 
             cleanArticleBody(articleBody)
+            val content = loadLazyLoadingElementsAndGetContent(articleBody)
 
-            val entry = Entry(articleBody.html(), abstract)
+            val entry = Entry(content, abstract)
 
             siteContent.select(".topenrichment figure img").first()?.let { entry.previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(it, "src", siteUrl) }
 
@@ -73,6 +74,25 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
     private fun cleanArticleBody(articleBody: Element) {
         articleBody.select(".entry-summary, #article-sidebar-wrapper, .ad, .authors, .teaserable-layout").remove()
+    }
+
+    private fun loadLazyLoadingElementsAndGetContent(element: Element): String {
+        extractInlineGalleries(element)
+
+        super.loadLazyLoadingElements(element)
+
+        return element.html()
+    }
+
+    private fun extractInlineGalleries(element: Element) {
+        element.select("figure.gallery.inline").forEach { inlineGallery ->
+            inlineGallery.select(".navigation").remove()
+
+            inlineGallery.select("li").forEach { imageListElement ->
+                imageListElement.remove()
+                inlineGallery.append("<p>" + imageListElement.html() + "</p>")
+            }
+        }
     }
 
 

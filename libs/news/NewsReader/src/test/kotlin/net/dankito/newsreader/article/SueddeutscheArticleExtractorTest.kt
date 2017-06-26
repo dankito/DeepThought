@@ -20,11 +20,19 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun extractArticleWithInlineImageGallery() {
+        getAndTestArticle("http://www.sueddeutsche.de/leben/kommune-revolution-am-bettrand-1.3544828",
+                "Revolution am Bettrand",
+                "Thomas Hesterberg machte 1967 das legendäre Foto der Kommune 1, auf dem die Bewohner ihre nackten Hintern der Kamera entgegenstrecken. Tatsächlich ging es in der Wohngemeinschaft gar nicht so freizügig zu.",
+                null, 10500)
+    }
+
+    @Test
     fun extractArticleWithImageGallery() {
         getAndTestArticle("http://www.sueddeutsche.de/leben/kommune-revolution-am-bettrand-1.3548573",
                 "Revolution am Bettrand",
                 "Thomas Hesterberg machte 1967 das legendäre Foto der Kommune 1, auf dem die Bewohner ihre nackten Hintern der Kamera entgegenstrecken. Tatsächlich ging es dort gar nicht so freizügig zu. Wir zeigen weitere, bislang unveröffentlichte Bilder.",
-                null, 16000) // first page has a length of little more than 2900
+                null, 16000)
     }
 
     @Test
