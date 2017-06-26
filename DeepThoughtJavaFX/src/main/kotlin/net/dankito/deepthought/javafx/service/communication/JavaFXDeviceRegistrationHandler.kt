@@ -1,5 +1,6 @@
 package net.dankito.deepthought.javafx.service.communication
 
+import javafx.application.Platform
 import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
 import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.deepthought.javafx.util.FXUtils
@@ -24,7 +25,9 @@ class JavaFXDeviceRegistrationHandler(dialogService: IDialogService, localizatio
     override fun showResponseToEnterOnOtherDeviceNonBlocking(remoteDeviceInfo: DeviceInfo, correctResponse: String) {
         val message = localization.getLocalizedString("alert.message.enter.this.code.on.remote.device", remoteDeviceInfo, correctResponse);
 
-        dialogService.showInfoMessage(message, null)
+        Platform.runLater { // so that it's really non blocking
+            dialogService.showInfoMessage(message, null)
+        }
     }
 
 
