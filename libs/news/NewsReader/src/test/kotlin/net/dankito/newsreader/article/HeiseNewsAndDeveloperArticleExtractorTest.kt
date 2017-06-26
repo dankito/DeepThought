@@ -17,4 +17,20 @@ class HeiseNewsAndDeveloperArticleExtractorTest : ArticleExtractorTestBase() {
                 "Nach dem Wechsel von Eclipse zu IntellJ IDEA mag man die Kotlin-Unterstützung in Android als weiteren Ritterschlag verstehen. Doch der Geadelte ist hier nicht das Projekt Kotlin, sondern Google selbst – sagt Technologieexperte Benjamin Schmid.")
     }
 
+    @Test
+    fun extractZwistMitBundesnetzAgenturArticle() {
+        getAndTestArticle("https://www.heise.de/newsticker/meldung/Zwist-mit-Bundesnetzagentur-Keine-Neuanmeldungen-beim-E-Mail-Anbieter-FastMail-in-Deutschland-3755918.html",
+                "Zwist mit Bundesnetzagentur: Keine Neuanmeldungen beim E-Mail-Anbieter FastMail in Deutschland",
+                "Der altgediente australische E-Mail-Hoster hat seine Apps in Reaktion auf eine Anfrage der Bundesnetzagentur vom deutschen Markt zurückgezogen – eine Registrierung mit deutscher IP ist nicht länger möglich.")
+    }
+
+    @Test
+    fun extractMultiPageArticle() {
+        getAndTestArticle("https://www.heise.de/newsticker/meldung/50-Jahre-Geldautomat-den-kann-ich-gut-gebrauchen-3750924.html",
+                "50 Jahre Geldautomat – \"den kann ich gut gebrauchen\"",
+                "Es ist selbstverständlich geworden, an jeder Straßenecke Bargeld aus dem Automaten ziehen zu können. Doch Geldautomaten gibt es erst seit 50 Jahren. Ihre " +
+                        "Erfindung verdankt die Maschine einer Verspätung.",
+                "https://1.f.ix.de/scale/geometry/695/q75/imgs/18/2/2/2/5/7/6/8/2160544145_a1d9d08f19_o-308b3c396dd30932.jpeg")
+    }
+
 }
