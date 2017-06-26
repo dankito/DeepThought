@@ -5,6 +5,7 @@ import net.dankito.data_access.network.webclient.OkHttpWebClient
 import net.dankito.newsreader.model.EntryExtractionResult
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
+import org.hamcrest.Matchers.greaterThan
 import org.junit.Assert.assertThat
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -20,10 +21,10 @@ abstract class ArticleExtractorTestBase {
     abstract fun createArticleExtractor(webClient: IWebClient): IArticleExtractor
 
 
-    protected open fun getAndTestArticle(url: String, title: String, abstract: String?, previewImageUrl: String? = null) {
+    protected open fun getAndTestArticle(url: String, title: String, abstract: String?, previewImageUrl: String? = null, minContentLength: Int? = null) {
         val article = getArticle(url)
 
-        testArticle(article, url, title, abstract, previewImageUrl)
+        testArticle(article, url, title, abstract, previewImageUrl, minContentLength)
     }
 
     protected open fun getArticle(url: String) : EntryExtractionResult? {
@@ -41,12 +42,15 @@ abstract class ArticleExtractorTestBase {
         return extractionResult
     }
 
-    protected open fun testArticle(extractionResult: EntryExtractionResult?, url: String, title: String, abstract: String?, previewImageUrl: String? = null) {
+    protected open fun testArticle(extractionResult: EntryExtractionResult?, url: String, title: String, abstract: String?, previewImageUrl: String? = null, minContentLength: Int? = null) {
         assertThat(extractionResult, notNullValue())
 
         extractionResult?.let { extractionResult ->
             assertThat(extractionResult.entry.content.isNullOrBlank(), `is`(false))
             assertThat(extractionResult.entry.abstractString, `is`(abstract))
+
+            previewImageUrl?.let { assertThat(extractionResult.entry.previewImageUrl, `is`(previewImageUrl)) }
+            minContentLength?.let { assertThat(extractionResult.entry.content.length, `is`(greaterThan(it))) }
 
             assertThat(extractionResult.reference, notNullValue())
 
@@ -54,8 +58,6 @@ abstract class ArticleExtractorTestBase {
                 assertThat(reference.url, `is`(url))
                 assertThat(reference.title, `is`(title))
                 assertThat(reference.publishingDate, notNullValue())
-
-                previewImageUrl?.let { assertThat(extractionResult.entry.previewImageUrl, `is`(previewImageUrl)) }
             }
         }
     }
