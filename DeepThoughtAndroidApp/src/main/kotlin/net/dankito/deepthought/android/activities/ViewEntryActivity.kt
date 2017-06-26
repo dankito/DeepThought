@@ -144,14 +144,14 @@ class ViewEntryActivity : BaseActivity() {
 
     private fun showEntryFromDatabase(entryId: String) {
         entryService.retrieve(entryId)?.let { entry ->
-            showEntry(entry, entry.reference?.onlineAddress)
+            showEntry(entry, entry.reference?.url)
         }
     }
 
     private fun showSerializedEntryExtractionResult(serializedExtractionResult: String) {
         this.entryExtractionResult = serializer.deserializeObject(serializedExtractionResult, EntryExtractionResult::class.java)
 
-        showEntry(entryExtractionResult?.entry, entryExtractionResult?.reference?.onlineAddress)
+        showEntry(entryExtractionResult?.entry, entryExtractionResult?.reference?.url)
     }
 
     private fun showEntry(entry: Entry?, url: String?) {
