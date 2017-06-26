@@ -90,7 +90,7 @@ abstract class ExtractorBase(val webClient : IWebClient) {
         }
     }
 
-    protected open fun loadLazyLoadingElement(lazyLoadingElement: Element) {
+    protected open fun loadLazyLoadingElement(lazyLoadingElement: Element): Element {
         val source = lazyLoadingElement.attr("data-src")
 
         if(source.isNotBlank()) {
@@ -99,6 +99,8 @@ abstract class ExtractorBase(val webClient : IWebClient) {
                 else -> lazyLoadingElement.attr("src", source)
             }
         }
+
+        return lazyLoadingElement
     }
 
 
