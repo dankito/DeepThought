@@ -4,14 +4,13 @@ import javafx.application.Application
 import javafx.stage.Stage
 import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.di.CommonComponent
+import net.dankito.deepthought.javafx.appstart.JavaFXAppInitializer
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.di.DaggerAppComponent
 import net.dankito.deepthought.javafx.di.JavaFXModule
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindow
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
-import net.dankito.deepthought.javafx.util.UTF8ResourceBundleControl
-import net.dankito.deepthought.service.data.DataManager
-import net.dankito.service.search.ISearchEngine
+import net.dankito.utils.localization.UTF8ResourceBundleControl
 import tornadofx.*
 import java.util.*
 import javax.inject.Inject
@@ -20,10 +19,7 @@ import javax.inject.Inject
 class DeepThoughtJavaFXApplication : App(MainWindow::class) {
 
     @Inject
-    protected lateinit var dataManager: DataManager
-
-    @Inject
-    protected lateinit var searchEngine: ISearchEngine
+    protected lateinit var appInitializer: JavaFXAppInitializer
 
 
     val mainWindowController: MainWindowController by inject()
@@ -57,6 +53,8 @@ class DeepThoughtJavaFXApplication : App(MainWindow::class) {
         // speeding app start up a bit.
         // That's also the reason why LuceneSearchEngine gets injected here so that as soon as DataManager is initialized it can initialize its indices
         component.inject(this)
+
+        appInitializer.initializeApp()
     }
 
 
