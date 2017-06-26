@@ -55,6 +55,18 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
         return null
     }
 
+    protected open fun extractArticleWithPost(url: String, body: String? = null): EntryExtractionResult? {
+        try {
+            requestUrlWithPost(url, body).let { document ->
+                return parseHtmlToArticle(document, url)
+            }
+        } catch (e: Exception) {
+            log.error("Could not extract article with post from " + url, e)
+        }
+
+        return null
+    }
+
     abstract protected fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult?
 
 
