@@ -4,6 +4,7 @@ import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.RequestParameters
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import java.net.URI
 
 
@@ -67,6 +68,24 @@ abstract class ExtractorBase(val webClient : IWebClient) {
         } catch(ignored: Exception) { }
 
         return null
+    }
+
+
+    protected open fun loadLazyLoadingElements(element: Element) {
+        for (lazyLoadingElement in element.select("[data-src]")) {
+            loadLazyLoadingElement(lazyLoadingElement)
+        }
+    }
+
+    protected open fun loadLazyLoadingElement(lazyLoadingElement: Element) {
+        val source = lazyLoadingElement.attr("data-src")
+
+        if(source.isNotBlank()) {
+            when (lazyLoadingElement.nodeName()) {
+                "img" -> lazyLoadingElement.attr("src", source)
+                else -> lazyLoadingElement.attr("src", source)
+            }
+        }
     }
 
 }
