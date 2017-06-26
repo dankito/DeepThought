@@ -52,8 +52,8 @@ class DefaultArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
         }
     }
 
-    override fun createParametersForUrl(url: String): RequestParameters {
-        val parameters = super.createParametersForUrl(url)
+    override fun createParametersForUrl(url: String, body: String?): RequestParameters {
+        val parameters = super.createParametersForUrl(url, body)
 
         parameters.cookieHandling = CookieHandling.ACCEPT_ALL_ONLY_FOR_THIS_CALL // some site like New York Times require that cookies are enabled
 

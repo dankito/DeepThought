@@ -25,8 +25,21 @@ abstract class ExtractorBase(val webClient : IWebClient) {
         }
     }
 
-    protected open fun createParametersForUrl(url: String): RequestParameters {
-        val parameters = RequestParameters(url)
+    protected fun requestUrlWithPost(url: String, body: String? = null): Document {
+        val parameters = createParametersForUrl(url, body)
+
+        webClient.post(parameters).let { response ->
+            if(response.isSuccessful) {
+                return Jsoup.parse(response.body, url)
+            }
+            else {
+                throw Exception(response.error)
+            }
+        }
+    }
+
+    protected open fun createParametersForUrl(url: String, body: String? = null): RequestParameters {
+        val parameters = RequestParameters(url, body)
 
         return parameters
     }
