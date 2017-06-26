@@ -1,6 +1,6 @@
 package net.dankito.data_access.network.communication
 
-import net.dankito.data_access.network.communication.callback.IsSynchronizationPermittedHandler
+import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.communication.message.*
 import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.model.INetworkSettings
@@ -10,7 +10,7 @@ import java.net.InetSocketAddress
 import java.net.SocketAddress
 
 
-class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings, permissionHandler: IsSynchronizationPermittedHandler, base64Service: IBase64Service,
+class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings, registrationHandler: IDeviceRegistrationHandler, base64Service: IBase64Service,
                                   threadPool: IThreadPool) : IClientCommunicator {
 
     private lateinit var requestSender: IRequestSender
@@ -21,13 +21,13 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
 
 
     init {
-        setupDependencies(networkSettings, permissionHandler, base64Service, threadPool)
+        setupDependencies(networkSettings, registrationHandler, base64Service, threadPool)
     }
 
-    private fun setupDependencies(networkSettings: INetworkSettings, permissionHandler: IsSynchronizationPermittedHandler, base64Service: IBase64Service, threadPool: IThreadPool) {
+    private fun setupDependencies(networkSettings: INetworkSettings, registrationHandler: IDeviceRegistrationHandler, base64Service: IBase64Service, threadPool: IThreadPool) {
         this.challengeHandler = ChallengeHandler(base64Service)
 
-        val messageHandlerConfig = MessageHandlerConfig(networkSettings, challengeHandler, permissionHandler)
+        val messageHandlerConfig = MessageHandlerConfig(networkSettings, challengeHandler, registrationHandler)
 
         val socketHandler = SocketHandler()
         val messageHandler = MessageHandler(messageHandlerConfig)

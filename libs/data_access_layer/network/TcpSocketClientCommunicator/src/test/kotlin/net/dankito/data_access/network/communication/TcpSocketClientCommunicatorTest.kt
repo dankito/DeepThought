@@ -1,6 +1,6 @@
 package net.dankito.data_access.network.communication
 
-import net.dankito.data_access.network.communication.callback.IsSynchronizationPermittedHandler
+import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.data_access.network.communication.message.Response
 import net.dankito.deepthought.model.*
@@ -40,7 +40,7 @@ class TcpSocketClientCommunicatorTest {
 
         val networkSettings = NetworkSettings(remoteDevice)
 
-        underTest = TcpSocketClientCommunicator(networkSettings, Mockito.mock(IsSynchronizationPermittedHandler::class.java), Mockito.mock(IBase64Service::class.java), ThreadPool())
+        underTest = TcpSocketClientCommunicator(networkSettings, Mockito.mock(IDeviceRegistrationHandler::class.java), Mockito.mock(IBase64Service::class.java), ThreadPool())
 
         val countDownLatch = CountDownLatch(1)
 
