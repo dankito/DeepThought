@@ -19,7 +19,15 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
 
 
     override fun extractArticleAsync(item : ArticleSummaryItem, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
-        extractArticleAsync(item.url, callback)
+        extractArticleAsync(item.url) { extractionResult ->
+            extractionResult.result?.entry?.let { entry ->
+                if(entry.previewImageUrl == null) {
+                    entry.previewImageUrl = item.previewImageUrl
+                }
+            }
+
+            callback(extractionResult)
+        }
     }
 
     override fun extractArticleAsync(url : String, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {

@@ -55,9 +55,7 @@ abstract class ArticleExtractorTestBase {
                 assertThat(reference.title, `is`(title))
                 assertThat(reference.publishingDate, notNullValue())
 
-                // TODO: handle previewImageUrl
-//                assertThat(extractionResult.previewImageUrl, notNullValue())
-//                previewImageUrl?.let { assertThat(extractionResult.previewImageUrl, `is`(previewImageUrl)) }
+                previewImageUrl?.let { assertThat(extractionResult.entry.previewImageUrl, `is`(previewImageUrl)) }
             }
         }
     }
