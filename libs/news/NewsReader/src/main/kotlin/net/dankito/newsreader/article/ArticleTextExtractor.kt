@@ -217,8 +217,14 @@ object ArticleTextExtractor {
 
     private fun loadLazyLoadingElements(element: Element) {
         for (lazyLoadingElement in element.select("[data-src]")) {
-            val source = lazyLoadingElement.attr("data-src")
+            loadLazyLoadingElement(lazyLoadingElement)
+        }
+    }
 
+    private fun loadLazyLoadingElement(lazyLoadingElement: Element) {
+        val source = lazyLoadingElement.attr("data-src")
+
+        if(source.isNotBlank()) {
             when (lazyLoadingElement.nodeName()) {
                 "img" -> lazyLoadingElement.attr("src", source)
                 else -> lazyLoadingElement.attr("src", source)
