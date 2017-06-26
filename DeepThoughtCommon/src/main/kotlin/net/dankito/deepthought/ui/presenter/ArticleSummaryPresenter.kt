@@ -92,10 +92,6 @@ open class ArticleSummaryPresenter(protected val articleExtractors: ArticleExtra
 
     private fun retrievedArticle(extractor: IArticleExtractor, item: ArticleSummaryItem, asyncResult: AsyncResult<EntryExtractionResult>,
                                  extractionResult: EntryExtractionResult, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
-        if(extractionResult.entry.previewImageUrl == null) {
-            extractionResult.entry.previewImageUrl = item.previewImageUrl
-        }
-
         getDefaultTagsForExtractor(extractor) { tags ->
             extractionResult.tags.addAll(tags)
             callback(asyncResult)
