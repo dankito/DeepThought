@@ -25,11 +25,23 @@ class HeiseNewsAndDeveloperArticleExtractor(webClient: IWebClient) : ArticleExtr
 
     override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
         document.body().select("article").first()?.let { article ->
+            getReadAllOnOnePageUrl(article, url)?.let { allOnOnePageUrl ->
+                return extractArticle(allOnOnePageUrl)
+            }
+
             article.select("header").first()?.let { header ->
                 header.select(".article__heading").first()?.text()?.let { title ->
                     return parseArticle(header, article, url, title)
                 }
             }
+        }
+
+        return null
+    }
+
+    private fun getReadAllOnOnePageUrl(article: Element, siteUrl: String): String? {
+        article.select(".pre-akwa-toc__item--onepage a.pre-akwa-toc__link").first()?.let { allOnOnePageAnchorElement ->
+            return makeLinkAbsolute(allOnOnePageAnchorElement.attr("href"), siteUrl)
         }
 
         return null
