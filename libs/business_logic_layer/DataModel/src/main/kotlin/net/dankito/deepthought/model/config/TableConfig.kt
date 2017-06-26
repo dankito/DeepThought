@@ -280,7 +280,7 @@ class TableConfig {
         const val ReferenceSubTitleColumnName = "sub_title"
         const val ReferenceAbstractColumnName = "abstract"
         const val ReferenceLengthColumnName = "length"
-        const val ReferenceOnlineAddressColumnName = "online_address"
+        const val ReferenceUrlColumnName = "url"
         const val ReferenceLastAccessDateColumnName = "last_access_date"
         const val ReferenceNotesColumnName = "notes"
         const val ReferencePreviewImageJoinColumnName = "preview_image_id"

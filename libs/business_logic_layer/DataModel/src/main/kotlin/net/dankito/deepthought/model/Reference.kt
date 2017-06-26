@@ -31,8 +31,8 @@ data class Reference(
     @Column(name = TableConfig.ReferenceLengthColumnName)
     var length: String? = null
 
-    @Column(name = TableConfig.ReferenceOnlineAddressColumnName)
-    var onlineAddress: String? = null
+    @Column(name = TableConfig.ReferenceUrlColumnName)
+    var url: String? = null
 
     @Column(name = TableConfig.ReferenceSeriesColumnName)
     var series: String? = null
@@ -82,12 +82,12 @@ data class Reference(
 
     private constructor() : this("")
 
-    constructor(onlineAddress: String, title: String, publishingDate: Date? = null) : this(title, "") {
-        this.onlineAddress = onlineAddress
+    constructor(url: String, title: String, publishingDate: Date? = null) : this(title, "") {
+        this.url = url
         this.publishingDate = publishingDate
     }
 
-    constructor(onlineAddress: String, title: String, publishingDate: Date? = null, series: String? = null) : this(onlineAddress, title, publishingDate) {
+    constructor(url: String, title: String, publishingDate: Date? = null, series: String? = null) : this(url, title, publishingDate) {
         this.series = series
     }
 
