@@ -33,6 +33,10 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
     override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
+        if(isMultiPageArticle(document)) {
+            return extractArticleWithPost(url, "article.singlePage=true")
+        }
+
         document.body().select("#sitecontent").first()?.let { siteContent ->
             val reference = extractReference(siteContent, url)
 
@@ -50,6 +54,10 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         }
 
         return null
+    }
+
+    private fun isMultiPageArticle(document: Document): Boolean {
+        return document.body().getElementById("singlePageForm") != null
     }
 
     private fun cleanArticleBody(articleBody: Element) {
