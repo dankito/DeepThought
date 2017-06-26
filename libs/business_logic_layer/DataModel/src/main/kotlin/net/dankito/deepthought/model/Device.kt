@@ -139,4 +139,15 @@ data class Device(
         return false
     }
 
+
+    fun getDisplayText(): String {
+        var displayText = osName + " " + osVersion;
+
+        if(osName.toLowerCase().contains("android")) {
+            displayText = name + " (" + displayText + ")";
+        }
+
+        return displayText
+    }
+
 }
