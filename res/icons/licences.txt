@@ -1,0 +1,8 @@
+Almost all Android icons taken from Google Material Design Icons:
+http://google.github.io/material-design-icons/#getting-icons
+Apache License 2
+
+
+Device Icons (Android, Apple, Linux, Windows) taken from Devicons:
+http://konpa.github.io/devicon/
+MIT License
