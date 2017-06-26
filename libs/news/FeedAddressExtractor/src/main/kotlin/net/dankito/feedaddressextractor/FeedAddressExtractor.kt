@@ -78,7 +78,7 @@ class FeedAddressExtractor(private val webClient : IWebClient) {
                 absoluteUrl = "https:" + url
             }
             else {
-                absoluteUrl = "http" + url
+                absoluteUrl = "http:" + url
             }
         }
         else if(url.startsWith("/")) {
