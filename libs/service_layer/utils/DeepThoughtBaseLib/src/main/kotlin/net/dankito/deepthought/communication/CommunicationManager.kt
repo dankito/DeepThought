@@ -64,7 +64,12 @@ class CommunicationManager(private val connectedDevicesService: IConnectedDevice
     private val discoveredDevicesListener = object : DiscoveredDevicesListener {
         override fun deviceDiscovered(connectedDevice: DiscoveredDevice, type: DiscoveredDeviceType) {
             if(type == DiscoveredDeviceType.UNKNOWN_DEVICE) {
-                registrationHandler.showUnknownDeviceDiscovered(clientCommunicator, connectedDevice)
+                synchronized(networkSettings) {
+                    if(networkSettings.didShowNotificationToUserForUnknownDevice(connectedDevice) == false) {
+                        networkSettings.addUnknownDeviceNotificationShownToUser(connectedDevice)
+                        registrationHandler.showUnknownDeviceDiscovered(clientCommunicator, connectedDevice)
+                    }
+                }
             }
         }
 
