@@ -22,6 +22,16 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         return "SZ"
     }
 
+
+    override fun extractArticle(url: String): EntryExtractionResult? {
+        var siteUrl = url
+        if(siteUrl.contains("?reduced=true")) {
+            siteUrl = siteUrl.replace("?reduced=true", "")
+        }
+
+        return super.extractArticle(siteUrl)
+    }
+
     override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
         document.body().select("#sitecontent").first()?.let { siteContent ->
             val reference = extractReference(siteContent, url)
