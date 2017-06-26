@@ -2,6 +2,7 @@ package net.dankito.deepthought.communication
 
 import net.dankito.data_access.network.communication.CommunicatorConfig
 import net.dankito.data_access.network.communication.IClientCommunicator
+import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.service.synchronization.IConnectedDevicesService
 import net.dankito.service.synchronization.ISyncManager
@@ -9,7 +10,7 @@ import java.util.*
 
 
 class CommunicationManager(private val connectedDevicesService: IConnectedDevicesService, private val syncManager: ISyncManager, private val clientCommunicator: IClientCommunicator,
-                           private val networkSettings: INetworkSettings) : ICommunicationManager {
+                           private val registrationHandler: IDeviceRegistrationHandler, private val networkSettings: INetworkSettings) : ICommunicationManager {
 
     override fun startAsync() {
         clientCommunicator.start(CommunicatorConfig.DEFAULT_MESSAGES_RECEIVER_PORT) { couldStartMessagesReceiver, messagesReceiverPort, startException ->

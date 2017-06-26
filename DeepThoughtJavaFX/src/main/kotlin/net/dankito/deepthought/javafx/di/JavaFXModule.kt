@@ -2,14 +2,13 @@ package net.dankito.deepthought.javafx.di
 
 import dagger.Module
 import dagger.Provides
-import net.dankito.data_access.network.communication.callback.IsSynchronizationPermittedHandler
+import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.deepthought.javafx.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.javafx.appstart.JavaFXAppInitializer
 import net.dankito.deepthought.javafx.dialogs.JavaFXDialogService
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
-import net.dankito.deepthought.javafx.service.communication.JavaFXIsSynchronizationPermittedHandler
-import net.dankito.deepthought.ui.IDialogService
+import net.dankito.deepthought.javafx.service.communication.JavaFXDeviceRegistrationHandler
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.search.ISearchEngine
 import javax.inject.Singleton
@@ -47,8 +46,8 @@ class JavaFXModule(private val mainWindowController: MainWindowController) {
 
     @Provides
     @Singleton
-    fun provideIsSynchronizationPermittedHandler() : IsSynchronizationPermittedHandler {
-        return JavaFXIsSynchronizationPermittedHandler()
+    fun provideDeviceRegistrationHandler() : IDeviceRegistrationHandler {
+        return JavaFXDeviceRegistrationHandler()
     }
 
 }

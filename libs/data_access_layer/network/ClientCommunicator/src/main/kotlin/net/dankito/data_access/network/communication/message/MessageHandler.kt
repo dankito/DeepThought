@@ -1,7 +1,7 @@
 package net.dankito.data_access.network.communication.message
 
 import net.dankito.data_access.network.communication.CommunicatorConfig
-import net.dankito.data_access.network.communication.callback.IsSynchronizationPermittedHandler
+import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.deepthought.model.INetworkSettings
 
 
@@ -37,19 +37,19 @@ class MessageHandler(protected var config: MessageHandlerConfig) : IMessageHandl
 
     private fun handleRequestPermitSynchronizationRequest(request: Request<DeviceInfo>, callback: (Response<RequestPermitSynchronizationResponseBody>) -> Unit) {
         request.body?.let { remoteDeviceInfo ->
-            val permittingHandler = config.permissionHandler
+            val registrationHandler = config.registrationHandler
 
-            permittingHandler.shouldPermitSynchronizingWithDevice(remoteDeviceInfo) { _, permitsSynchronization ->
+            registrationHandler.shouldPermitSynchronizingWithDevice(remoteDeviceInfo) { _, permitsSynchronization ->
                 handleShouldPermitSynchronizingWithDeviceResult(remoteDeviceInfo, permitsSynchronization, permittingHandler, callback)
             }
         }
     }
 
-    private fun handleShouldPermitSynchronizingWithDeviceResult(remoteDeviceInfo: DeviceInfo, permitsSynchronization: Boolean, permittingHandler: IsSynchronizationPermittedHandler,
+    private fun handleShouldPermitSynchronizingWithDeviceResult(remoteDeviceInfo: DeviceInfo, permitsSynchronization: Boolean, registrationHandler: IDeviceRegistrationHandler,
                                                                 callback: (Response<RequestPermitSynchronizationResponseBody>) -> Unit) {
         if (permitsSynchronization) {
             val (nonce, correctResponse) = challengeHandler.createChallengeForDevice(remoteDeviceInfo)
-            permittingHandler.showResponseToEnterOnOtherDeviceNonBlocking(remoteDeviceInfo, correctResponse)
+            registrationHandler.showResponseToEnterOnOtherDeviceNonBlocking(remoteDeviceInfo, correctResponse)
 
             callback(Response(RequestPermitSynchronizationResponseBody(
                     RequestPermitSynchronizationResult.RESPOND_TO_CHALLENGE, nonce)))

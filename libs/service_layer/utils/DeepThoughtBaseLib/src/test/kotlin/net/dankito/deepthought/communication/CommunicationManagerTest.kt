@@ -7,7 +7,7 @@ import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.data_access.network.communication.IClientCommunicator
 import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
-import net.dankito.data_access.network.communication.callback.IsSynchronizationPermittedHandler
+import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.discovery.UdpDevicesDiscoverer
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.data.DataManager
@@ -69,7 +69,7 @@ class CommunicationManagerTest {
 
     private lateinit var localNetworkSettings: INetworkSettings
 
-    private lateinit var localPermissionHandler: IsSynchronizationPermittedHandler
+    private lateinit var localRegistrationHandler: IDeviceRegistrationHandler
 
     private val localDevicesDiscoverer = UdpDevicesDiscoverer(threadPool)
 
@@ -108,7 +108,7 @@ class CommunicationManagerTest {
 
     private lateinit var remoteNetworkSettings: INetworkSettings
 
-    private lateinit var remotePermissionHandler: IsSynchronizationPermittedHandler
+    private lateinit var remoteRegistrationHandler: IDeviceRegistrationHandler
 
     private val remoteDevicesDiscoverer = UdpDevicesDiscoverer(threadPool)
 
@@ -137,7 +137,7 @@ class CommunicationManagerTest {
     }
 
     private fun setupLocalDevice() {
-        localPermissionHandler = Mockito.mock(IsSynchronizationPermittedHandler::class.java)
+        localRegistrationHandler = Mockito.mock(IDeviceRegistrationHandler::class.java)
 
         val entityManagerConfiguration = EntityManagerConfiguration(localPlatformConfiguration.getDefaultDataFolder().path, "test")
         localEntityManager = JavaCouchbaseLiteEntityManager(entityManagerConfiguration)
@@ -149,13 +149,13 @@ class CommunicationManagerTest {
             localDevice = localDataManager.localDevice
             localNetworkSettings = NetworkSettings(localDevice)
 
-            localClientCommunicator = TcpSocketClientCommunicator(localNetworkSettings, localPermissionHandler, base64Service, threadPool)
+            localClientCommunicator = TcpSocketClientCommunicator(localNetworkSettings, localRegistrationHandler, base64Service, threadPool)
 
             localSyncManager = CouchbaseLiteSyncManager(localEntityManager as CouchbaseLiteEntityManagerBase, localNetworkSettings, threadPool)
 
             localConnectedDevicesService = ConnectedDevicesService(localDevicesDiscoverer, localClientCommunicator, localSyncManager, localNetworkSettings, localEntityManager)
 
-            localCommunicationManager = CommunicationManager(localConnectedDevicesService, localSyncManager, localClientCommunicator, localNetworkSettings)
+            localCommunicationManager = CommunicationManager(localConnectedDevicesService, localSyncManager, localClientCommunicator, localRegistrationHandler, localNetworkSettings)
 
             initializationLatch.countDown()
         }
@@ -165,7 +165,7 @@ class CommunicationManagerTest {
 
 
     private fun setupRemoteDevice() {
-        remotePermissionHandler = Mockito.mock(IsSynchronizationPermittedHandler::class.java)
+        remoteRegistrationHandler = Mockito.mock(IDeviceRegistrationHandler::class.java)
 
         val entityManagerConfiguration = EntityManagerConfiguration(remotePlatformConfiguration.getDefaultDataFolder().path, "test")
         remoteEntityManager = JavaCouchbaseLiteEntityManager(entityManagerConfiguration)
@@ -177,13 +177,13 @@ class CommunicationManagerTest {
             remoteDevice = remoteDataManager.localDevice
             remoteNetworkSettings = NetworkSettings(remoteDevice)
 
-            remoteClientCommunicator = TcpSocketClientCommunicator(remoteNetworkSettings, remotePermissionHandler, base64Service, threadPool)
+            remoteClientCommunicator = TcpSocketClientCommunicator(remoteNetworkSettings, remoteRegistrationHandler, base64Service, threadPool)
 
             remoteSyncManager = CouchbaseLiteSyncManager(remoteEntityManager as CouchbaseLiteEntityManagerBase, remoteNetworkSettings, threadPool)
 
             remoteConnectedDevicesService = ConnectedDevicesService(remoteDevicesDiscoverer, remoteClientCommunicator, remoteSyncManager, remoteNetworkSettings, remoteEntityManager)
 
-            remoteCommunicationManager = CommunicationManager(remoteConnectedDevicesService, remoteSyncManager, remoteClientCommunicator, remoteNetworkSettings)
+            remoteCommunicationManager = CommunicationManager(remoteConnectedDevicesService, remoteSyncManager, remoteClientCommunicator, remoteRegistrationHandler, remoteNetworkSettings)
 
             initializationLatch.countDown()
         }

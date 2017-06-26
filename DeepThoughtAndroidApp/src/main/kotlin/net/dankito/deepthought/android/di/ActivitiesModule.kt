@@ -3,15 +3,14 @@ package net.dankito.deepthought.android.di
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import net.dankito.data_access.network.communication.callback.IsSynchronizationPermittedHandler
+import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.deepthought.android.DeepThoughtApplication
 import net.dankito.deepthought.android.appstart.AndroidAppInitializer
 import net.dankito.deepthought.android.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.android.dialogs.AndroidDialogService
 import net.dankito.deepthought.android.routing.AndroidRouter
-import net.dankito.deepthought.android.service.communication.AndroidIsSynchronizationPermittedHandler
+import net.dankito.deepthought.android.service.communication.AndroidDeviceRegistrationHandler
 import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
-import net.dankito.deepthought.ui.IDialogService
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.serializer.ISerializer
 import net.dankito.service.search.ISearchEngine
@@ -30,7 +29,7 @@ class ActivitiesModule(private val application: DeepThoughtApplication) {
 
     @Provides
     @Singleton
-    fun provideAndroidAppInitializer() : AndroidAppInitializer {
+    fun provideAppInitializer() : AndroidAppInitializer {
         return AndroidAppInitializer()
     }
 
@@ -57,8 +56,9 @@ class ActivitiesModule(private val application: DeepThoughtApplication) {
 
     @Provides
     @Singleton
-    fun provideIsSynchronizationPermittedHandler(context: Context) : IsSynchronizationPermittedHandler {
-        return AndroidIsSynchronizationPermittedHandler(context)
+    fun provideIsDeviceRegistrationHandler(context: Context, dialogService: IDialogService, localization: Localization, currentActivityTracker: CurrentActivityTracker)
+            : IDeviceRegistrationHandler {
+        return AndroidDeviceRegistrationHandler(context)
     }
 
     @Provides

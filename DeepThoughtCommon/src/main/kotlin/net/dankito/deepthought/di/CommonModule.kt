@@ -7,7 +7,7 @@ import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.data_access.network.communication.IClientCommunicator
 import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
-import net.dankito.data_access.network.communication.callback.IsSynchronizationPermittedHandler
+import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.discovery.IDevicesDiscoverer
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.OkHttpWebClient
@@ -130,9 +130,9 @@ class CommonModule {
 
     @Provides
     @Singleton
-    fun provideClientCommunicator(networkSettings: INetworkSettings, permissionHandler: IsSynchronizationPermittedHandler, base64Service: IBase64Service, threadPool: IThreadPool)
+    fun provideClientCommunicator(networkSettings: INetworkSettings, registrationHandler: IDeviceRegistrationHandler, base64Service: IBase64Service, threadPool: IThreadPool)
             : IClientCommunicator {
-        return TcpSocketClientCommunicator(networkSettings, permissionHandler, base64Service, threadPool)
+        return TcpSocketClientCommunicator(networkSettings, registrationHandler, base64Service, threadPool)
     }
 
     @Provides
@@ -150,9 +150,10 @@ class CommonModule {
 
     @Provides
     @Singleton
-    fun provideCommunicationManager(connectedDevicesService: ConnectedDevicesService, syncManager: ISyncManager, clientCommunicator: IClientCommunicator, networkSettings: INetworkSettings)
+    fun provideCommunicationManager(connectedDevicesService: ConnectedDevicesService, syncManager: ISyncManager, clientCommunicator: IClientCommunicator,
+                                    registrationHandler: IDeviceRegistrationHandler, networkSettings: INetworkSettings)
             : ICommunicationManager {
-        return CommunicationManager(connectedDevicesService, syncManager, clientCommunicator, networkSettings)
+        return CommunicationManager(connectedDevicesService, syncManager, clientCommunicator, registrationHandler, networkSettings)
     }
 
 }
