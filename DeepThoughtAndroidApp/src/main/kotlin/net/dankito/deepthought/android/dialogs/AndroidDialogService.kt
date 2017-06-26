@@ -62,7 +62,7 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
 
     override fun askForTextInput(questionText: CharSequence, alertTitleText: CharSequence?, defaultValue: CharSequence?, callback: (Boolean, String?) -> Unit) {
         currentActivityTracker.currentActivity?.let { activity ->
-            askForTextInputOnUIThread(activity, questionText, alertTitleText, defaultValue, callback)
+            activity.runOnUiThread { askForTextInputOnUIThread(activity, questionText, alertTitleText, defaultValue, callback) }
         }
     }
 
