@@ -35,7 +35,7 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
         }
     }
 
-    private fun extractArticle(url: String): EntryExtractionResult? {
+    protected open fun extractArticle(url: String): EntryExtractionResult? {
         try {
             requestUrl(url).let { document ->
                 return parseHtmlToArticle(document, url)
