@@ -8,6 +8,7 @@ class ImplementedArticleSummaryExtractors(val webClient: IWebClient) {
     private val extractors = LinkedHashMap<Class<out IImplementedArticleSummaryExtractor>, IImplementedArticleSummaryExtractor>()
 
     init {
+        extractors.put(SueddeutscheArticleSummaryExtractor::class.java, SueddeutscheArticleSummaryExtractor(webClient))
         extractors.put(HeiseNewsArticleSummaryExtractor::class.java, HeiseNewsArticleSummaryExtractor(webClient))
         extractors.put(HeiseDeveloperArticleSummaryExtractor::class.java, HeiseDeveloperArticleSummaryExtractor(webClient))
         extractors.put(GuardianArticleSummaryExtractor::class.java, GuardianArticleSummaryExtractor(webClient))
