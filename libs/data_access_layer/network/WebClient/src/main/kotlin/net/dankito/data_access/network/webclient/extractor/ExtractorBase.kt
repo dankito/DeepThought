@@ -88,4 +88,15 @@ abstract class ExtractorBase(val webClient : IWebClient) {
         }
     }
 
+
+    protected fun getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(element: Element, attributeName: String, siteUrl: String): String {
+        val source = element.attr("data-src")
+
+        if(source.isNotBlank()) { // if element does not have attribute 'data-src' a blank string is returned
+            return makeLinkAbsolute(source, siteUrl)
+        }
+
+        return makeLinkAbsolute(element.attr(attributeName), siteUrl)
+    }
+
 }
