@@ -1,4 +1,4 @@
-package net.dankito.deepthought.ui
+package net.dankito.utils.ui
 
 
 interface IDialogService {
