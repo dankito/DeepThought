@@ -1,6 +1,5 @@
 package net.dankito.deepthought.model
 
-import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 
 
@@ -33,13 +32,15 @@ class NetworkSettings(override val localHostDevice: Device) : INetworkSettings {
             callSettingChangedListeners(NetworkSetting.SYNCHRONIZATION_PORT, value, oldValue)
         }
 
-    protected var discoveredDevices: MutableMap<String, DiscoveredDevice> = HashMap()
+    private val discoveredDevices: MutableMap<String, DiscoveredDevice> = HashMap()
 
-    protected var connectedDevicesPermittedToSynchronization: MutableMap<String, DiscoveredDevice> = HashMap()
+    private val connectedDevicesPermittedToSynchronization: MutableMap<String, DiscoveredDevice> = HashMap()
 
-    protected var devicesAskedForPermittingSynchronization: MutableMap<String, DiscoveredDevice> = HashMap()
+    private val devicesAskedForPermittingSynchronization: MutableMap<String, DiscoveredDevice> = HashMap()
 
-    protected var listeners: MutableList<NetworkSettingsChangedListener> = CopyOnWriteArrayList()
+    private val unknownDeviceNotificationShownToUser: MutableMap<String, DiscoveredDevice> = HashMap()
+
+    private val listeners: MutableList<NetworkSettingsChangedListener> = CopyOnWriteArrayList()
 
 
 
@@ -87,6 +88,23 @@ class NetworkSettings(override val localHostDevice: Device) : INetworkSettings {
         devicesAskedForPermittingSynchronization.remove(device.device.uniqueDeviceId)
 
         callSettingChangedListeners(NetworkSetting.REMOVED_DEVICES_ASKED_FOR_PERMITTING_SYNCHRONIZATION, device, null)
+    }
+
+
+    override fun didShowNotificationToUserForUnknownDevice(device: DiscoveredDevice): Boolean {
+        return unknownDeviceNotificationShownToUser.containsKey(device.device.uniqueDeviceId)
+    }
+
+    override fun addUnknownDeviceNotificationShownToUser(device: DiscoveredDevice) {
+        unknownDeviceNotificationShownToUser.put(device.device.uniqueDeviceId, device)
+
+        callSettingChangedListeners(NetworkSetting.ADDED_UNKNOWN_DEVICE_NOTIFICATION_SHOWN_TO_USER, device, null)
+    }
+
+    override fun removeUnknownDeviceNotificationShownToUser(device: DiscoveredDevice) {
+        unknownDeviceNotificationShownToUser.remove(device.device.uniqueDeviceId)
+
+        callSettingChangedListeners(NetworkSetting.REMOVED_UNKNOWN_DEVICE_NOTIFICATION_SHOWN_TO_USER, device, null)
     }
 
 

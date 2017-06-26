@@ -25,6 +25,12 @@ interface INetworkSettings {
 
     fun removeDevicesAskedForPermittingSynchronization(device: DiscoveredDevice)
 
+    fun didShowNotificationToUserForUnknownDevice(device: DiscoveredDevice): Boolean
+
+    fun addUnknownDeviceNotificationShownToUser(device: DiscoveredDevice)
+
+    fun removeUnknownDeviceNotificationShownToUser(device: DiscoveredDevice)
+
     fun addListener(listener: NetworkSettingsChangedListener)
 
     fun removeListener(listener: NetworkSettingsChangedListener)
