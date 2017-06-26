@@ -12,6 +12,8 @@ interface IDeviceRegistrationHandler {
      */
     fun showUnknownDeviceDiscovered(clientCommunicator: IClientCommunicator, unknownDevice: DiscoveredDevice)
 
+    fun unknownDeviceDisconnected(disconnectedDevice: DiscoveredDevice)
+
     fun shouldPermitSynchronizingWithDevice(remoteDeviceInfo: DeviceInfo, callback: (remoteDeviceInfo: DeviceInfo, permitsSynchronization: Boolean) -> Unit)
 
     fun showResponseToEnterOnOtherDeviceNonBlocking(remoteDeviceInfo: DeviceInfo, correctResponse: String)

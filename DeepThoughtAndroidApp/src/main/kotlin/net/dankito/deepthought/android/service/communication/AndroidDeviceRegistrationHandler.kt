@@ -47,6 +47,14 @@ class AndroidDeviceRegistrationHandler(private var context: Context, dialogServi
     }
 
 
+    override fun unknownDeviceDisconnected(disconnectedDevice: DiscoveredDevice) {
+        if(deviceIdShowingSnackbarFor == disconnectedDevice.device.id) {
+            currentActivityTracker.currentActivity?.let { activity ->
+                snackbarAskToSyncDataWithDevice?.dismiss()
+            }
+        }
+    }
+
     override fun showUnknownDeviceDiscoveredView(unknownDevice: DiscoveredDevice, callback: (Boolean, Boolean) -> Unit) {
         currentActivityTracker.currentActivity?.let { activity ->
             activity.runOnUiThread { askUserToSyncDataWithDeviceOnMainThread(activity, unknownDevice, callback) }
@@ -55,15 +63,16 @@ class AndroidDeviceRegistrationHandler(private var context: Context, dialogServi
 
     private fun askUserToSyncDataWithDeviceOnMainThread(currentActivity: Activity, remoteDevice: DiscoveredDevice, callback: (Boolean, Boolean) -> Unit) {
         val rootView = currentActivity.findViewById(android.R.id.content)
-        snackbarAskToSyncDataWithDevice = Snackbar.make(rootView, "", Snackbar.LENGTH_INDEFINITE)
-        deviceIdShowingSnackbarFor = remoteDevice.device.id
+
+        synchronized(this) {
+            snackbarAskToSyncDataWithDevice = Snackbar.make(rootView, "", Snackbar.LENGTH_INDEFINITE)
+            deviceIdShowingSnackbarFor = remoteDevice.device.id
+        }
 
         snackbarAskToSyncDataWithDevice?.let { snackbar ->
             snackbar.addCallback(object : Snackbar.Callback() {
                 override fun onDismissed(snackbar: Snackbar, event: Int) {
-                    resetSnackbar()
-
-//                    addDeviceToListDoNotAskAnymoreToSyncDataWith(device)
+                    resetSnackbar(remoteDevice)
                 }
             })
 
@@ -135,9 +144,13 @@ class AndroidDeviceRegistrationHandler(private var context: Context, dialogServi
         return 0 // TODO: create a placeholder logo
     }
 
-    private fun resetSnackbar() {
-        snackbarAskToSyncDataWithDevice = null
-        deviceIdShowingSnackbarFor = null
+    private fun resetSnackbar(remoteDevice: DiscoveredDevice) {
+        synchronized(this) {
+            if(deviceIdShowingSnackbarFor == remoteDevice.device.id) { // otherwise when a second snackbar gets display, shortly after for first one dismiss is called and that call resets snackbarAskToSyncDataWithDevice and deviceIdShowingSnackbarFor
+                snackbarAskToSyncDataWithDevice = null
+                deviceIdShowingSnackbarFor = null
+            }
+        }
     }
 
 }

@@ -47,4 +47,8 @@ class JavaFXDeviceRegistrationHandler(dialogService: IDialogService, localizatio
         }
     }
 
+    override fun unknownDeviceDisconnected(disconnectedDevice: DiscoveredDevice) {
+        // TODO: with current implementation there's no way to get instance of AlertDialog so that we cannot dismiss it
+    }
+
 }
