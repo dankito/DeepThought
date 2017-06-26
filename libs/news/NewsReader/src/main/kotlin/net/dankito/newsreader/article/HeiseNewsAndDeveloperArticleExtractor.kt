@@ -53,8 +53,12 @@ class HeiseNewsAndDeveloperArticleExtractor(webClient: IWebClient) : ArticleExtr
 
     private fun extractContent(articleElement: Element, url: String): String {
         return articleElement.select(".meldung_wrapper").first()?.children()!!.filter { element ->
-            element.hasClass("meldung_anrisstext") == false && containsOnlyComment(element) == false
+            shouldFilterElement(element) == false
         }?.joinToString(separator = "") { getContentElementHtml(it, url) }
+    }
+
+    private fun shouldFilterElement(element: Element): Boolean {
+        return element.hasClass("meldung_anrisstext") || element.hasClass("widget-werbung") || containsOnlyComment(element)
     }
 
     private fun containsOnlyComment(element: Element) : Boolean {
