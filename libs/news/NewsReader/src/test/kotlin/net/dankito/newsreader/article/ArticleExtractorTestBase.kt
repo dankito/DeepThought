@@ -51,7 +51,7 @@ abstract class ArticleExtractorTestBase {
             assertThat(extractionResult.reference, notNullValue())
 
             extractionResult.reference?.let { reference ->
-                assertThat(reference.onlineAddress, `is`(url))
+                assertThat(reference.url, `is`(url))
                 assertThat(reference.title, `is`(title))
                 assertThat(reference.publishingDate, notNullValue())
 
