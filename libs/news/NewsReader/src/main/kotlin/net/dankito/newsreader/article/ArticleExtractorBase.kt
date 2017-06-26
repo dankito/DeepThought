@@ -25,7 +25,9 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
     override fun extractArticleAsync(url : String, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
         thread {
             try {
-                callback(AsyncResult(true, result = extractArticle(url)))
+                val extractionResult = extractArticle(url)
+                extractionResult?.reference?.url = url // explicitly set reference's url as for multipage articles article may gets extracted from a url different than url parameter
+                callback(AsyncResult(true, result = extractionResult))
             } catch(e: Exception) {
                 log.error("Could not get article for " + url, e)
                 callback(AsyncResult(false, e))
