@@ -16,8 +16,7 @@ import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IDialogService
-
-
+import java.util.concurrent.ConcurrentHashMap
 
 
 class AndroidDeviceRegistrationHandler(private var context: Context, dialogService: IDialogService,
@@ -27,6 +26,8 @@ class AndroidDeviceRegistrationHandler(private var context: Context, dialogServi
     private var snackbarAskToSyncDataWithDevice: Snackbar? = null
 
     private var deviceIdShowingSnackbarFor: String? = null
+
+    private val unknownDevicesWaitingToShowNotificationToUser = ConcurrentHashMap<DiscoveredDevice, (Boolean, Boolean) -> Unit>()
 
 
     override fun shouldPermitSynchronizingWithDevice(remoteDeviceInfo: DeviceInfo, callback: (remoteDeviceInfo: DeviceInfo, permitsSynchronization: Boolean) -> Unit) {
@@ -56,6 +57,11 @@ class AndroidDeviceRegistrationHandler(private var context: Context, dialogServi
     }
 
     override fun showUnknownDeviceDiscoveredView(unknownDevice: DiscoveredDevice, callback: (Boolean, Boolean) -> Unit) {
+        if(snackbarAskToSyncDataWithDevice != null) { // Snackbar for another device already shown
+            unknownDevicesWaitingToShowNotificationToUser.put(unknownDevice, callback)
+            return
+        }
+
         currentActivityTracker.currentActivity?.let { activity ->
             activity.runOnUiThread { askUserToSyncDataWithDeviceOnMainThread(activity, unknownDevice, callback) }
         }
@@ -72,7 +78,7 @@ class AndroidDeviceRegistrationHandler(private var context: Context, dialogServi
         snackbarAskToSyncDataWithDevice?.let { snackbar ->
             snackbar.addCallback(object : Snackbar.Callback() {
                 override fun onDismissed(snackbar: Snackbar, event: Int) {
-                    resetSnackbar(remoteDevice)
+                    snackbarDismmissed(remoteDevice)
                 }
             })
 
@@ -144,11 +150,16 @@ class AndroidDeviceRegistrationHandler(private var context: Context, dialogServi
         return 0 // TODO: create a placeholder logo
     }
 
-    private fun resetSnackbar(remoteDevice: DiscoveredDevice) {
+    private fun snackbarDismmissed(remoteDevice: DiscoveredDevice) {
         synchronized(this) {
             if(deviceIdShowingSnackbarFor == remoteDevice.device.id) { // otherwise when a second snackbar gets display, shortly after for first one dismiss is called and that call resets snackbarAskToSyncDataWithDevice and deviceIdShowingSnackbarFor
                 snackbarAskToSyncDataWithDevice = null
                 deviceIdShowingSnackbarFor = null
+
+                unknownDevicesWaitingToShowNotificationToUser.entries.firstOrNull()?.let {
+                    unknownDevicesWaitingToShowNotificationToUser.remove(it.key)
+                    showUnknownDeviceDiscoveredView(it.key, it.value)
+                }
             }
         }
     }
