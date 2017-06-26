@@ -1,10 +1,12 @@
 package net.dankito.newsreader.summary
 
-import net.dankito.newsreader.model.ArticleSummary
-import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.OkHttpWebClient
+import net.dankito.newsreader.model.ArticleSummary
+import net.dankito.newsreader.model.ArticleSummaryItem
+import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.*
+import org.junit.Assert
 import org.junit.Assert.assertThat
 import org.junit.Test
 import java.util.concurrent.CountDownLatch
@@ -75,6 +77,10 @@ abstract class ArticleSummaryExtractorTestBase {
         return false
     }
 
-    abstract fun testCanLoadMoreItems(summary: ArticleSummary)
+
+    protected open fun testCanLoadMoreItems(summary: ArticleSummary) {
+        Assert.assertThat(summary.canLoadMoreItems, CoreMatchers.`is`(false))
+        Assert.assertThat(summary.nextItemsUrl, nullValue())
+    }
 
 }
