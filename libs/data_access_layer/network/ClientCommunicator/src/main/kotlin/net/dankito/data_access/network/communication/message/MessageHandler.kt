@@ -40,7 +40,7 @@ class MessageHandler(protected var config: MessageHandlerConfig) : IMessageHandl
             val registrationHandler = config.registrationHandler
 
             registrationHandler.shouldPermitSynchronizingWithDevice(remoteDeviceInfo) { _, permitsSynchronization ->
-                handleShouldPermitSynchronizingWithDeviceResult(remoteDeviceInfo, permitsSynchronization, permittingHandler, callback)
+                handleShouldPermitSynchronizingWithDeviceResult(remoteDeviceInfo, permitsSynchronization, registrationHandler, callback)
             }
         }
     }
