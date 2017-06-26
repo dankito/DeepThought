@@ -8,7 +8,7 @@ import android.text.InputType
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
-import net.dankito.deepthought.ui.IDialogService
+import net.dankito.utils.ui.IDialogService
 
 
 class AndroidDialogService(private val currentActivityTracker: CurrentActivityTracker) : IDialogService {

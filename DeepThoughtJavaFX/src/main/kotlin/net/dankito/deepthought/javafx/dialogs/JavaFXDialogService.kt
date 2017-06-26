@@ -8,7 +8,7 @@ import javafx.scene.layout.VBox
 import javafx.stage.Screen
 import javafx.stage.Stage
 import net.dankito.deepthought.javafx.util.FXUtils
-import net.dankito.deepthought.ui.IDialogService
+import net.dankito.utils.ui.IDialogService
 import java.io.PrintWriter
 import java.io.StringWriter
 
