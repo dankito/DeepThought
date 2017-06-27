@@ -1,6 +1,5 @@
 package net.dankito.deepthought.service.data
 
-import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.model.DeepThoughtApplication
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.User
@@ -22,11 +21,9 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
         val localDevice = createUserDefaultDevice(defaultLocalUser)
         defaultLocalUser.addDevice(localDevice)
 
-        val defaultDeepThought = createEmptyDeepThought()
-
         val application = initDeepThoughtApplication(defaultLocalUser, localDevice)
 
-        createEnumerationsDefaultValues(defaultDeepThought)
+        createEnumerationsDefaultValues(application)
 
         return application
     }
@@ -63,15 +60,6 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
     }
 
 
-    protected open fun createEmptyDeepThought(): DeepThought {
-        val emptyDeepThought = DeepThought()
-
-        createEnumerationsDefaultValues(emptyDeepThought)
-
-        return emptyDeepThought
-    }
-
-
     private fun initDeepThoughtApplication(defaultLocalUser: User, localDevice: Device): DeepThoughtApplication {
         val application = DeepThoughtApplication(defaultLocalUser, localDevice, true)
 
@@ -87,12 +75,12 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
     }
 
 
-    protected open fun createEnumerationsDefaultValues(deepThought: DeepThought) {
+    protected open fun createEnumerationsDefaultValues(deepThought: DeepThoughtApplication) {
         createNoteTypeDefaultValues(deepThought)
         createFileTypeDefaultValues(deepThought)
     }
 
-    protected open fun createNoteTypeDefaultValues(deepThought: DeepThought) {
+    protected open fun createNoteTypeDefaultValues(deepThought: DeepThoughtApplication) {
 //        deepThought.addNoteType(NoteType("note.type.unset", true, false, 1))
 //        deepThought.addNoteType(NoteType("note.type.comment", true, false, 2))
 //        deepThought.addNoteType(NoteType("note.type.info", true, false, 3))
@@ -100,7 +88,7 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
 //        deepThought.addNoteType(NoteType("note.type.thought", true, false, 5))
     }
 
-    protected open fun createFileTypeDefaultValues(deepThought: DeepThought) {
+    protected open fun createFileTypeDefaultValues(deepThought: DeepThoughtApplication) {
 //        deepThought.addFileType(FileType("file.type.other.files", FileUtils.OtherFilesFolderName, true, false, Integer.MAX_VALUE))
 //        deepThought.addFileType(FileType("file.type.document", FileUtils.DocumentsFilesFolderName, true, true, 1))
 //        deepThought.addFileType(FileType("file.type.image", FileUtils.ImagesFilesFolderName, true, false, 2))
