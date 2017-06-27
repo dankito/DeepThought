@@ -105,7 +105,7 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
 
 
     private fun  getLocalizedString(resourceKey: String, vararg parameter: String): String {
-        return localization.getLocalizedString(resourceKey, parameter)
+        return localization.getLocalizedString(resourceKey, *parameter)
     }
 
 }
