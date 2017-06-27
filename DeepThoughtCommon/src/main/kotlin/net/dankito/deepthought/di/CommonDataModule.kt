@@ -17,6 +17,7 @@ import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.TagService
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.IPlatformConfiguration
+import net.dankito.utils.localization.Localization
 import javax.inject.Singleton
 
 
@@ -25,8 +26,8 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideDefaultDataInitializer(platformConfiguration: IPlatformConfiguration) : DefaultDataInitializer {
-        return DefaultDataInitializer(platformConfiguration)
+    fun provideDefaultDataInitializer(platformConfiguration: IPlatformConfiguration, localization: Localization) : DefaultDataInitializer {
+        return DefaultDataInitializer(platformConfiguration, localization)
     }
 
     @Provides

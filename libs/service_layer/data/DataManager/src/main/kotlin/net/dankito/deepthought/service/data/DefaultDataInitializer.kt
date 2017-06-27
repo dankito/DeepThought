@@ -4,11 +4,12 @@ import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.User
 import net.dankito.utils.IPlatformConfiguration
+import net.dankito.utils.localization.Localization
 import org.slf4j.LoggerFactory
 import java.util.*
 
 
-open class DefaultDataInitializer(private val platformConfiguration: IPlatformConfiguration) {
+open class DefaultDataInitializer(private val platformConfiguration: IPlatformConfiguration, private val localization: Localization) {
 
     companion object {
         private val log = LoggerFactory.getLogger(DefaultDataInitializer::class.java)
@@ -98,7 +99,7 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
 
 
     private fun  getLocalizedString(resourceKey: String, vararg parameter: String): String {
-        return resourceKey // TODO
+        return localization.getLocalizedString(resourceKey, parameter)
     }
 
 }
