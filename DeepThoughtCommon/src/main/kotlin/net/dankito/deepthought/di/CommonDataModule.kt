@@ -78,13 +78,13 @@ class CommonDataModule {
                 DeepThoughtApplication::class.java,
 
                 ApplicationLanguage::class.java,
+                FileType::class.java,
+                NoteType::class.java,
+
 
                 User::class.java,
                 Device::class.java,
 
-
-                FileType::class.java,
-                NoteType::class.java,
 
                 Entry::class.java,
                 Tag::class.java,
