@@ -21,7 +21,7 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
 
     lateinit var deepThought: DeepThought
 
-    lateinit var loggedOnUser: User
+    lateinit var localUser: User
     lateinit var localDevice: Device
 
     var dataFolderPath: File
@@ -59,7 +59,7 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
             if (deepThoughtQueryResult.size > 0) { // TODO: what to do if there's more than one DeepThought instance persisted?
                 deepThought = deepThoughtQueryResult[0]
 
-                loggedOnUser = deepThought.lastLoggedOnUser
+                localUser = deepThought.localUser
                 localDevice = deepThought.localDevice
 
                 // TODO: set application language according to user's settings
@@ -76,7 +76,7 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
     protected fun createAndPersistDefaultDeepThought() {
         deepThought = defaultDataInitializer.createDefaultData()
 
-        loggedOnUser = deepThought.lastLoggedOnUser
+        localUser = deepThought.localUser
         localDevice = deepThought.localDevice
 
         entityManager.persistEntity(deepThought)

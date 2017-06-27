@@ -13,8 +13,8 @@ import javax.persistence.*
 data class DeepThought(
 
         @OneToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST))
-        @JoinColumn(name = TableConfig.DeepThoughtLastLoggedOnUserJoinColumnName)
-        var lastLoggedOnUser: User, // TODO: rename to localUser
+        @JoinColumn(name = TableConfig.DeepThoughtLocalUserJoinColumnName)
+        var localUser: User,
 
         @OneToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST))
         @JoinColumn(name = TableConfig.DeepThoughtLocalDeviceJoinColumnName)
