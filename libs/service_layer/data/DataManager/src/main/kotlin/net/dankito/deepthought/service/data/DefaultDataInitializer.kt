@@ -41,17 +41,9 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
             log.error("Could not get System property user.name", ex)
         }
 
-        val userGroup = createUserDefaultGroup(userName)
-
-        val user = User(userName, universallyUniqueId, true, userGroup)
+        val user = User(userName, universallyUniqueId)
 
         return user
-    }
-
-    protected open fun createUserDefaultGroup(userName: String): UsersGroup {
-        val universallyUniqueId = UUID.randomUUID().toString()
-
-        return UsersGroup(getLocalizedString("users.group", userName), universallyUniqueId)
     }
 
     protected open fun createUserDefaultDevice(user: User): Device {

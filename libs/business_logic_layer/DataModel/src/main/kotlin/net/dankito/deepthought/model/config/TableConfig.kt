@@ -43,11 +43,8 @@ class TableConfig {
         const val UserFirstNameColumnName = "first_name"
         const val UserLastNameColumnName = "last_name"
         const val UserPasswordColumnName = "password"
-        const val UserIsLocalUserColumnName = "is_local_user"
         const val UserUserDeviceSettingsColumnName = "settings"
         const val UserLastViewedDeepThoughtColumnName = "last_viewed_deep_thought"
-        const val UserUsersDefaultGroupJoinColumnName = "default_group"
-        const val UserDeepThoughtApplicationJoinColumnName = "application_id"
 
 
         /*          User Device Join Table Config        */
@@ -56,14 +53,6 @@ class TableConfig {
 
         const val UserDeviceJoinTableUserIdColumnName = "user_id"
         const val UserDeviceJoinTableDeviceIdColumnName = "device_id"
-
-
-        /*          User UsersGroup Join Table Config        */
-
-        const val UserGroupJoinTableName = "user_group_join_table"
-
-        const val UserGroupJoinTableUserIdColumnName = "user_id"
-        const val UserGroupJoinTableGroupIdColumnName = "group_id"
 
 
         /*          UsersGroup Table Config        */
@@ -86,7 +75,6 @@ class TableConfig {
         const val DeviceOsTypeColumnName = "os_type"
         const val DeviceOsNameColumnName = "os_name"
         const val DeviceOsVersionColumnName = "os_version"
-        const val DeviceLastKnownIpColumnName = "last_known_ip"
         const val DeviceIconColumnName = "device_icon"
 
 

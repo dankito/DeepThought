@@ -81,7 +81,6 @@ class CommonDataModule {
 
                 User::class.java,
                 Device::class.java,
-                UsersGroup::class.java,
 
 
                 DeepThought::class.java,
