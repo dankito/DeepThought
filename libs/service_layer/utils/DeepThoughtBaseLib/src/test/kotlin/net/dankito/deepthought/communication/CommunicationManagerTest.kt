@@ -147,7 +147,7 @@ class CommunicationManagerTest {
 
         localDataManager.addInitializationListener {
             localDevice = localDataManager.localDevice
-            localNetworkSettings = NetworkSettings(localDevice)
+            localNetworkSettings = NetworkSettings(localDevice, localDataManager.loggedOnUser)
 
             localClientCommunicator = TcpSocketClientCommunicator(localNetworkSettings, localRegistrationHandler, base64Service, threadPool)
 
@@ -175,7 +175,7 @@ class CommunicationManagerTest {
 
         remoteDataManager.addInitializationListener {
             remoteDevice = remoteDataManager.localDevice
-            remoteNetworkSettings = NetworkSettings(remoteDevice)
+            remoteNetworkSettings = NetworkSettings(remoteDevice, remoteDataManager.loggedOnUser)
 
             remoteClientCommunicator = TcpSocketClientCommunicator(remoteNetworkSettings, remoteRegistrationHandler, base64Service, threadPool)
 

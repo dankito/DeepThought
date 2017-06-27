@@ -15,6 +15,7 @@ import org.junit.Test
 import org.mockito.Mockito
 import java.net.InetSocketAddress
 import java.net.SocketAddress
+import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
@@ -38,7 +39,7 @@ class TcpSocketClientCommunicatorTest {
     fun setUp() {
         setUpRemoteDevice()
 
-        val networkSettings = NetworkSettings(remoteDevice)
+        val networkSettings = NetworkSettings(remoteDevice, User("Local", UUID.randomUUID().toString()))
 
         underTest = TcpSocketClientCommunicator(networkSettings, Mockito.mock(IDeviceRegistrationHandler::class.java), Mockito.mock(IBase64Service::class.java), ThreadPool())
 
