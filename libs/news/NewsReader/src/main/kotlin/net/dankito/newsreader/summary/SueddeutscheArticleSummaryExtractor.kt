@@ -1,7 +1,9 @@
 package net.dankito.newsreader.summary
 
 import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.newsreader.article.ArticleExtractorBase
 import net.dankito.newsreader.article.SueddeutscheArticleExtractor
+import net.dankito.newsreader.article.SueddeutscheMagazinArticleExtractor
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import org.jsoup.nodes.Document
@@ -37,7 +39,8 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
 
     private fun mapTeaserElementToArticleSummaryItem(teaserElement: Element, siteUrl: String): ArticleSummaryItem? {
         teaserElement.select(".entry-title").first()?.let { titleElement ->
-            val item = ArticleSummaryItem(makeLinkAbsolute(titleElement.attr("href"), siteUrl), titleElement.text(), SueddeutscheArticleExtractor::class.java)
+            val articleUrl = makeLinkAbsolute(titleElement.attr("href"), siteUrl)
+            val item = ArticleSummaryItem(articleUrl, titleElement.text(), getArticleExtractorClass(articleUrl))
 
             titleElement.select("img").first()?.let { item.previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(it, "src", siteUrl) }
 
@@ -64,7 +67,8 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
             var title = titleAnchor.select(".tile-teaser-title").first()?.text() ?: ""
             titleAnchor.select(".tile-teaser-overline").first()?.let { title = it.text() + " - " + title }
 
-            val item = ArticleSummaryItem(makeLinkAbsolute(titleAnchor.attr("href"), siteUrl), title, SueddeutscheArticleExtractor::class.java)
+            val articleUrl = makeLinkAbsolute(titleAnchor.attr("href"), siteUrl)
+            val item = ArticleSummaryItem(articleUrl, title, getArticleExtractorClass(articleUrl))
 
             titleAnchor.select("img").first()?.let { item.previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(it, "src", siteUrl) }
 
@@ -85,7 +89,8 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
 
     private fun mapTeaserListItemToArticleSummaryItem(teaserListItemElement: Element, siteUrl: String): ArticleSummaryItem? {
         teaserListItemElement.select("a").first()?.let {
-            val item = ArticleSummaryItem(makeLinkAbsolute(it.attr("href"), siteUrl), it.text(), SueddeutscheArticleExtractor::class.java)
+            val articleUrl = makeLinkAbsolute(it.attr("href"), siteUrl)
+            val item = ArticleSummaryItem(articleUrl, it.text(), getArticleExtractorClass(articleUrl))
 
             it.select("img").first()?.let { item.previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(it, "src", siteUrl) }
 
@@ -98,6 +103,14 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
         }
 
         return null
+    }
+
+    private fun getArticleExtractorClass(articleUrl: String): Class<out ArticleExtractorBase> {
+        if(articleUrl.contains("//sz-magazin.sueddeutsche.de/")) {
+            return SueddeutscheMagazinArticleExtractor::class.java
+        }
+
+        return SueddeutscheArticleExtractor::class.java
     }
 
 }
