@@ -37,12 +37,6 @@ data class User(
     var password: String = ""
 
 
-//        @Transient var settings: UserDeviceSettings? = null;
-
-    @Column(name = TableConfig.UserUserDeviceSettingsColumnName)
-    @Lob
-    private var settingsString: String = ""
-
     @OneToOne(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     @JoinColumn(name = TableConfig.UserLastViewedDeepThoughtColumnName)
     var lastViewedDeepThought: DeepThought? = null
