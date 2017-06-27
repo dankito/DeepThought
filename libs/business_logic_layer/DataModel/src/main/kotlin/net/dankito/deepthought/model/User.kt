@@ -47,41 +47,12 @@ data class User(
     @JoinColumn(name = TableConfig.UserLastViewedDeepThoughtColumnName)
     var lastViewedDeepThought: DeepThought? = null
 
-    // TODO: make lazy again if an user really can have multiple DeepThoughts
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "deepThoughtOwner", cascade = arrayOf(CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH))
-    var deepThoughts: MutableSet<DeepThought> = HashSet()
-        private set
-
     //  @OneToMany(fetch = FetchType.EAGER, mappedBy = "deviceOwner"/*, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }*/)
     @ManyToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH))
     @JoinTable(name = TableConfig.UserDeviceJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.UserDeviceJoinTableUserIdColumnName)/*, referencedColumnName = "id"*/), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.UserDeviceJoinTableDeviceIdColumnName)/*, referencedColumnName = "id"*/))
     var devices: MutableSet<Device> = HashSet()
         private set
 
-
-    fun addDeepThought(deepThought: DeepThought): Boolean {
-        if (this.deepThoughts.contains(deepThought) == false) {
-            if (this.deepThoughts.add(deepThought)) {
-                deepThought.deepThoughtOwner = this
-
-                return true
-            }
-        }
-
-        return false
-    }
-
-    fun removeDeepThought(deepThought: DeepThought): Boolean {
-        if (this.deepThoughts.contains(deepThought) == true) {
-            if (this.deepThoughts.remove(deepThought)) {
-                deepThought.deepThoughtOwner = null
-
-                return true
-            }
-        }
-
-        return false
-    }
 
 
     fun hasDevices(): Boolean {

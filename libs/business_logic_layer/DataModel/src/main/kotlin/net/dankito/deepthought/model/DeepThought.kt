@@ -63,12 +63,6 @@ class DeepThought : UserDataEntity(), Serializable {
         private set
 
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = TableConfig.DeepThoughtDeepThoughtOwnerJoinColumnName)
-    var deepThoughtOwner: User? = null
-        internal set
-
-
     fun getCountEntries() : Int {
         return entries.size
     }

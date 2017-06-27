@@ -23,7 +23,6 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
         defaultLocalUser.addDevice(localDevice)
 
         val defaultDeepThought = createEmptyDeepThought()
-        defaultLocalUser.addDeepThought(defaultDeepThought)
         defaultLocalUser.lastViewedDeepThought = defaultDeepThought
 
         val application = initDeepThoughtApplication(defaultLocalUser, localDevice)
