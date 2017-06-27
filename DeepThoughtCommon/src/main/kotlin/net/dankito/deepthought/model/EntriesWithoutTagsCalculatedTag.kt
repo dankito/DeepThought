@@ -1,43 +1,16 @@
 package net.dankito.deepthought.model
 
-import net.dankito.service.data.messages.EntitiesOfTypeChanged
-import net.dankito.service.data.messages.EntryChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.EntriesSearch
-import net.engio.mbassy.listener.Handler
 
 
-class EntriesWithoutTagsCalculatedTag(private val searchEngine: ISearchEngine, private val eventBus: IEventBus) : CalculatedTag("Entries without tags") { // TODO: translate
+class EntriesWithoutTagsCalculatedTag(searchEngine: ISearchEngine, eventBus: IEventBus) : CalculatedTag("Entries without tags", searchEngine, eventBus) { // TODO: translate
 
-    private val eventBusListener = EventBusListener()
-
-
-    init {
-        searchEngine.addInitializationListener { getEntriesWithoutTags(false) }
-
-        eventBus.register(eventBusListener)
-    }
-
-
-    private fun getEntriesWithoutTags(informUIOfUpdate: Boolean) {
+    override fun retrieveEntriesAsync(done: (List<Entry>) -> Unit) {
         searchEngine.searchEntries(EntriesSearch(filterOnlyEntriesWithoutTags = true) {
-            this.entries = it
-
-            if(informUIOfUpdate) {
-                eventBus.postAsync(EntitiesOfTypeChanged(Tag::class.java))
-            }
+            done(it)
         })
-    }
-
-
-    inner class EventBusListener {
-
-        @Handler()
-        fun entriesChanged(entryChanged: EntryChanged) {
-            getEntriesWithoutTags(true)
-        }
-
     }
 
 }
