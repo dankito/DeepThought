@@ -11,7 +11,7 @@ class ReadLaterArticle(
         @Column(name = TableConfig.ReadLaterArticleEntryExtractionResultColumnName)
         var serializedEntryExtractionResult: String
 
-) : UserDataEntity() {
+) : BaseEntity() {
 
     companion object {
         private const val serialVersionUID = 1204202485407318616L

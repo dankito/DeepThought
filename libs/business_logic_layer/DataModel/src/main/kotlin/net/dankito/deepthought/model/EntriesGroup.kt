@@ -14,7 +14,7 @@ data class EntriesGroup(
         @Column(name = TableConfig.EntriesGroupGroupNameColumnName)
         var groupName: String
 
-) : UserDataEntity() {
+) : BaseEntity() {
 
 
     companion object {

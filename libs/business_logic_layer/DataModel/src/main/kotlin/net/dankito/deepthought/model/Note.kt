@@ -12,7 +12,7 @@ data class Note(
         @Lob
         var note: String
 
-) : UserDataEntity() {
+) : BaseEntity() {
 
 
     @ManyToOne(fetch = FetchType.EAGER)

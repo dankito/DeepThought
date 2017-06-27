@@ -1,14 +1,14 @@
 package net.dankito.deepthought.model.enums
 
 
-import net.dankito.deepthought.model.UserDataEntity
+import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.model.config.TableConfig
 import javax.persistence.Column
 import javax.persistence.MappedSuperclass
 
 
 @MappedSuperclass
-open class ExtensibleEnumeration : UserDataEntity {
+open class ExtensibleEnumeration : BaseEntity {
 
     // TODO: localize nameResourceKey
 

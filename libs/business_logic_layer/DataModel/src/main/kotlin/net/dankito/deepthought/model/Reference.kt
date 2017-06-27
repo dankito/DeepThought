@@ -14,7 +14,7 @@ data class Reference(
         @Column(name = TableConfig.ReferenceSubTitleColumnName)
         var subTitle: String = ""
 
-) : UserDataEntity() {
+) : BaseEntity() {
 
     // TODO: reset preview on changes to title, publishingDate or issueOrPublishingDate
     // TODO: reproduces setting publishingDate with tryToParseIssueOrPublishingDateToDate() when issueOrPublishingDate gets set

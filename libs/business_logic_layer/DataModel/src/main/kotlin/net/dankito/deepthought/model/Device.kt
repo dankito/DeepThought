@@ -26,7 +26,7 @@ data class Device(
         @Column(name = TableConfig.DeviceDescriptionColumnName)
         var description: String = ""
 
-) : UserDataEntity() {
+) : BaseEntity() {
 
 
     companion object {
