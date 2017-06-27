@@ -1,7 +1,6 @@
 package net.dankito.service.data
 
 import net.dankito.deepthought.model.BaseEntity
-import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.messages.EntityChangeType
@@ -14,14 +13,6 @@ class ReferenceService(dataManager: DataManager, eventBus: IEventBus) : EntitySe
 
     override fun getEntityClass(): Class<Reference> {
         return Reference::class.java
-    }
-
-    override fun addEntityToDeepThought(deepThought: DeepThought, entity: Reference): Boolean {
-        return deepThought.addReference(entity)
-    }
-
-    override fun removeEntityFromDeepThought(deepThought: DeepThought, entity: Reference): Boolean {
-        return deepThought.removeReference(entity)
     }
 
     override fun createEntityChangedMessage(entity: Reference, changeType: EntityChangeType): EntityChanged<out BaseEntity> {

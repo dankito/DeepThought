@@ -1,7 +1,6 @@
 package net.dankito.service.data
 
 import net.dankito.deepthought.model.BaseEntity
-import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.messages.EntityChangeType
@@ -14,14 +13,6 @@ class ReadLaterArticleService(dataManager: DataManager, eventBus: IEventBus) : E
 
     override fun getEntityClass(): Class<ReadLaterArticle> {
         return ReadLaterArticle::class.java
-    }
-
-    override fun addEntityToDeepThought(deepThought: DeepThought, entity: ReadLaterArticle): Boolean {
-        return deepThought.addReadLaterArticle(entity)
-    }
-
-    override fun removeEntityFromDeepThought(deepThought: DeepThought, entity: ReadLaterArticle): Boolean {
-        return deepThought.removeReadLaterArticle(entity)
     }
 
     override fun createEntityChangedMessage(entity: ReadLaterArticle, changeType: EntityChangeType): EntityChanged<out BaseEntity> {

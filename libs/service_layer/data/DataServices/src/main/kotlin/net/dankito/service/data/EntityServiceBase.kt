@@ -1,7 +1,6 @@
 package net.dankito.service.data
 
 import net.dankito.deepthought.model.BaseEntity
-import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.data.messages.EntityChangeType
@@ -34,20 +33,12 @@ abstract class EntityServiceBase<T : BaseEntity>(val dataManager: DataManager, v
         // we first have to persist an entity so that it gets an id and than can add it to DeepThought (otherwise it would be added to DeepThought with id null)
         entityManager.persistEntity(entity as Any)
 
-        dataManager.currentDeepThought?.let {
-            if(addEntityToDeepThought(it, entity)) {
-                entityManager.updateEntity(it)
-            }
-        }
-
         callEntitiesUpdatedListeners(entity, EntityChangeType.Created)
     }
 
     protected open fun onPrePersist(entity: T) {
         // may be overwritten in sub class
     }
-
-    protected abstract fun addEntityToDeepThought(deepThought: DeepThought, entity: T): Boolean
 
 
     fun retrieve(id: String): T? {
@@ -61,18 +52,10 @@ abstract class EntityServiceBase<T : BaseEntity>(val dataManager: DataManager, v
     }
 
     fun delete(entity: T) {
-        dataManager.currentDeepThought?.let {
-            if(removeEntityFromDeepThought(it, entity)) {
-                entityManager.updateEntity(it)
-            }
-        }
-
         entityManager.deleteEntity(entity as Any)
 
         callEntitiesUpdatedListeners(entity, EntityChangeType.Deleted)
     }
-
-    abstract fun removeEntityFromDeepThought(deepThought: DeepThought, entity: T): Boolean
 
 
     private fun callEntitiesUpdatedListeners(entity: T, changeType: EntityChangeType) {

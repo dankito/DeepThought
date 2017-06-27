@@ -1,7 +1,6 @@
 package net.dankito.service.data
 
 import net.dankito.deepthought.model.BaseEntity
-import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.messages.EntityChangeType
@@ -14,14 +13,6 @@ class TagService(dataManager: DataManager, eventBus: IEventBus) : EntityServiceB
 
     override fun getEntityClass(): Class<Tag> {
         return Tag::class.java
-    }
-
-    override fun addEntityToDeepThought(deepThought: DeepThought, entity: Tag): Boolean {
-        return deepThought.addTag(entity)
-    }
-
-    override fun removeEntityFromDeepThought(deepThought: DeepThought, entity: Tag): Boolean {
-        return deepThought.removeTag(entity)
     }
 
     override fun createEntityChangedMessage(entity: Tag, changeType: EntityChangeType): EntityChanged<out BaseEntity> {
