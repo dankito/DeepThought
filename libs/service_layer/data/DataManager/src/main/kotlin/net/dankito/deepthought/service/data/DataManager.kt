@@ -2,7 +2,7 @@ package net.dankito.deepthought.service.data
 
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.IEntityManager
-import net.dankito.deepthought.model.DeepThoughtApplication
+import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.User
 import net.dankito.utils.IPlatformConfiguration
@@ -19,7 +19,7 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
     }
 
 
-    lateinit var application: DeepThoughtApplication
+    lateinit var deepThought: DeepThought
 
     lateinit var loggedOnUser: User
     lateinit var localDevice: Device
@@ -54,18 +54,18 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
 
     private fun retrieveBasicData() {
         try {
-            val applicationsQueryResult = entityManager.getAllEntitiesOfType(DeepThoughtApplication::class.java)
+            val applicationsQueryResult = entityManager.getAllEntitiesOfType(DeepThought::class.java)
 
-            if (applicationsQueryResult.size > 0) { // TODO: what to do if there's more than one DeepThoughtApplication instance persisted?
-                application = applicationsQueryResult[0]
+            if (applicationsQueryResult.size > 0) { // TODO: what to do if there's more than one DeepThought instance persisted?
+                deepThought = applicationsQueryResult[0]
 
-                loggedOnUser = application.lastLoggedOnUser
-                localDevice = application.localDevice
+                loggedOnUser = deepThought.lastLoggedOnUser
+                localDevice = deepThought.localDevice
 
                 // TODO: set application language according to user's settings
             }
         } catch (ex: Exception) {
-            log.error("Could not deserialize DeepThoughtApplication", ex)
+            log.error("Could not deserialize DeepThought", ex)
             // TODO: determine if this is ok because this is the first Application start or if a severe error occurred?
         }
 
@@ -74,12 +74,12 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
     }
 
     protected fun createAndPersistDefaultDeepThought() {
-        application = defaultDataInitializer.createDefaultData()
+        deepThought = defaultDataInitializer.createDefaultData()
 
-        loggedOnUser = application.lastLoggedOnUser
-        localDevice = application.localDevice
+        loggedOnUser = deepThought.lastLoggedOnUser
+        localDevice = deepThought.localDevice
 
-        entityManager.persistEntity(application)
+        entityManager.persistEntity(deepThought)
     }
 
 

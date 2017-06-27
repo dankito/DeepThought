@@ -75,7 +75,7 @@ class CommonDataModule {
         val configuration = EntityManagerConfiguration("data", "deep_thought_db")
 
         configuration.entityClasses = listOf<Class<*>>(
-                DeepThoughtApplication::class.java,
+                DeepThought::class.java,
 
                 ApplicationLanguage::class.java,
                 FileType::class.java,

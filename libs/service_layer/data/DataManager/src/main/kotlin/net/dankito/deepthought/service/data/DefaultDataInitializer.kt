@@ -1,6 +1,6 @@
 package net.dankito.deepthought.service.data
 
-import net.dankito.deepthought.model.DeepThoughtApplication
+import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.User
 import net.dankito.utils.IPlatformConfiguration
@@ -15,17 +15,17 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
     }
 
 
-    fun createDefaultData(): DeepThoughtApplication {
-        val defaultLocalUser = createNewLocalUser()
+    fun createDefaultData(): DeepThought {
+        val localUser = createNewLocalUser()
 
-        val localDevice = createUserDefaultDevice(defaultLocalUser)
-        defaultLocalUser.addDevice(localDevice)
+        val localDevice = createUserDefaultDevice(localUser)
+        localUser.addDevice(localDevice)
 
-        val application = initDeepThoughtApplication(defaultLocalUser, localDevice)
+        val deepThought = initDeepThought(localUser, localDevice)
 
-        createEnumerationsDefaultValues(application)
+        createEnumerationsDefaultValues(deepThought)
 
-        return application
+        return deepThought
     }
 
 
@@ -60,27 +60,27 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
     }
 
 
-    private fun initDeepThoughtApplication(defaultLocalUser: User, localDevice: Device): DeepThoughtApplication {
-        val application = DeepThoughtApplication(defaultLocalUser, localDevice, true)
+    private fun initDeepThought(defaultLocalUser: User, localDevice: Device): DeepThought {
+        val deepThought = DeepThought(defaultLocalUser, localDevice, true)
 
-        application.addUser(defaultLocalUser)
+        deepThought.addUser(defaultLocalUser)
 
         for (device in defaultLocalUser.devices) {
-            application.addDevice(device)
+            deepThought.addDevice(device)
         }
 
         // TODO: create ApplicationLanguages
 
-        return application
+        return deepThought
     }
 
 
-    protected open fun createEnumerationsDefaultValues(deepThought: DeepThoughtApplication) {
+    protected open fun createEnumerationsDefaultValues(deepThought: DeepThought) {
         createNoteTypeDefaultValues(deepThought)
         createFileTypeDefaultValues(deepThought)
     }
 
-    protected open fun createNoteTypeDefaultValues(deepThought: DeepThoughtApplication) {
+    protected open fun createNoteTypeDefaultValues(deepThought: DeepThought) {
 //        deepThought.addNoteType(NoteType("note.type.unset", true, false, 1))
 //        deepThought.addNoteType(NoteType("note.type.comment", true, false, 2))
 //        deepThought.addNoteType(NoteType("note.type.info", true, false, 3))
@@ -88,7 +88,7 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
 //        deepThought.addNoteType(NoteType("note.type.thought", true, false, 5))
     }
 
-    protected open fun createFileTypeDefaultValues(deepThought: DeepThoughtApplication) {
+    protected open fun createFileTypeDefaultValues(deepThought: DeepThought) {
 //        deepThought.addFileType(FileType("file.type.other.files", FileUtils.OtherFilesFolderName, true, false, Integer.MAX_VALUE))
 //        deepThought.addFileType(FileType("file.type.document", FileUtils.DocumentsFilesFolderName, true, true, 1))
 //        deepThought.addFileType(FileType("file.type.image", FileUtils.ImagesFilesFolderName, true, false, 2))

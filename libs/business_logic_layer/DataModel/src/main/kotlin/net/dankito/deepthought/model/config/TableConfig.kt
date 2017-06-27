@@ -15,15 +15,15 @@ class TableConfig {
         const val BaseEntityDeletedColumnName = "deleted"
 
 
-        /*          DeepThoughtApplication Table Config        */
+        /*          DeepThought Table Config        */
 
-        const val DeepThoughtApplicationTableName = "application"
+        const val DeepThoughtTableName = "deep_thought"
 
-        const val DeepThoughtApplicationDataModelVersionColumnName = "data_model_version"
-        const val DeepThoughtApplicationLastLoggedOnUserJoinColumnName = "last_logged_on_user_id"
-        const val DeepThoughtApplicationAutoLogOnLastLoggedOnUserColumnName = "auto_log_on_last_logged_on_user"
-        const val DeepThoughtApplicationLocalDeviceJoinColumnName = "local_device_id"
-        const val DeepThoughtApplicationNextEntryIndexColumnName = "next_entry_index"
+        const val DeepThoughtDataModelVersionColumnName = "data_model_version"
+        const val DeepThoughtLastLoggedOnUserJoinColumnName = "last_logged_on_user_id"
+        const val DeepThoughtAutoLogOnLastLoggedOnUserColumnName = "auto_log_on_last_logged_on_user"
+        const val DeepThoughtLocalDeviceJoinColumnName = "local_device_id"
+        const val DeepThoughtNextEntryIndexColumnName = "next_entry_index"
 
 
         /*          User Table Config        */

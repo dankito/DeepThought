@@ -9,19 +9,19 @@ import java.util.*
 import javax.persistence.*
 
 
-@Entity(name = TableConfig.DeepThoughtApplicationTableName)
-data class DeepThoughtApplication(
+@Entity(name = TableConfig.DeepThoughtTableName)
+data class DeepThought(
 
         @OneToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST))
-        @JoinColumn(name = TableConfig.DeepThoughtApplicationLastLoggedOnUserJoinColumnName)
+        @JoinColumn(name = TableConfig.DeepThoughtLastLoggedOnUserJoinColumnName)
         var lastLoggedOnUser: User, // TODO: rename to localUser
 
         @OneToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST))
-        @JoinColumn(name = TableConfig.DeepThoughtApplicationLocalDeviceJoinColumnName)
+        @JoinColumn(name = TableConfig.DeepThoughtLocalDeviceJoinColumnName)
         val localDevice: Device,
 
-        //  @Column(name = TableConfig.DeepThoughtApplicationAutoLogOnLastLoggedOnUserColumnName, columnDefinition = "SMALLINT DEFAULT 0", nullable = false)
-        @Column(name = TableConfig.DeepThoughtApplicationAutoLogOnLastLoggedOnUserColumnName)
+        //  @Column(name = TableConfig.DeepThoughtAutoLogOnLastLoggedOnUserColumnName, columnDefinition = "SMALLINT DEFAULT 0", nullable = false)
+        @Column(name = TableConfig.DeepThoughtAutoLogOnLastLoggedOnUserColumnName)
         var autoLogOnLastLoggedOnUser: Boolean = false // TODO: remove
 
 ) : BaseEntity(), Serializable {
@@ -58,7 +58,7 @@ data class DeepThoughtApplication(
         private set
 
 
-    @Column(name = TableConfig.DeepThoughtApplicationNextEntryIndexColumnName)
+    @Column(name = TableConfig.DeepThoughtNextEntryIndexColumnName)
     var nextEntryIndex = 0L
         private set
 
