@@ -83,8 +83,6 @@ class CommonDataModule {
                 Device::class.java,
 
 
-                DeepThought::class.java,
-
                 FileType::class.java,
                 NoteType::class.java,
 
