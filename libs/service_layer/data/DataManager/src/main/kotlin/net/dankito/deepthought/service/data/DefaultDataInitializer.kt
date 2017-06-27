@@ -1,6 +1,9 @@
 package net.dankito.deepthought.service.data
 
-import net.dankito.deepthought.model.*
+import net.dankito.deepthought.model.DeepThought
+import net.dankito.deepthought.model.DeepThoughtApplication
+import net.dankito.deepthought.model.Device
+import net.dankito.deepthought.model.User
 import net.dankito.utils.IPlatformConfiguration
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -75,11 +78,6 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
         val application = DeepThoughtApplication(defaultLocalUser, localDevice, true)
 
         application.addUser(defaultLocalUser)
-
-        for (group in defaultLocalUser.groups) {
-            application.addGroup(group)
-            localDevice.addGroup(group)
-        }
 
         for (device in defaultLocalUser.devices) {
             application.addDevice(device)
