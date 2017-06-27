@@ -100,8 +100,10 @@ class MainWindow : View() {
         FXUtils.ensureNodeOnlyUsesSpaceIfVisible(btnArticleExtractors)
 
         dataManager.addInitializationListener {
-            if(dataManager.currentDeepThought?.readLaterArticles?.isNotEmpty() ?: false) {
-                runLater { addShowReadLaterArticlesMenuItem() }
+            readLaterArticleService.getAllAsync {
+                if(it.isNotEmpty()) {
+                    runLater { addShowReadLaterArticlesMenuItem() }
+                }
             }
         }
     }

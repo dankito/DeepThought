@@ -49,11 +49,6 @@ class ReadLaterArticlePresenter(private val view: IReadLaterArticleView, private
     }
 
     private fun getReadLaterArticles() {
-        readLaterArticleService.dataManager.currentDeepThought?.readLaterArticles?.let {
-            readLaterArticlesRetrieved(it)
-            return
-        }
-
         readLaterArticleService.getAllAsync {
             readLaterArticlesRetrieved(it)
         }
