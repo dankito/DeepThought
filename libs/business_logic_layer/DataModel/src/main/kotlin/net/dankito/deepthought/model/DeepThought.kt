@@ -9,10 +9,6 @@ import java.util.*
 import javax.persistence.*
 
 
-
-
-
-
 @Entity(name = TableConfig.DeepThoughtTableName)
 data class DeepThought(
 
@@ -101,6 +97,19 @@ data class DeepThought(
         }
 
         return false
+    }
+
+
+    fun addApplicationLanguage(applicationLanguage: ApplicationLanguage): Boolean {
+        return applicationLanguages.add(applicationLanguage)
+    }
+
+    fun removeApplicationLanguage(applicationLanguage: ApplicationLanguage): Boolean {
+        if (applicationLanguage.isSystemValue) {
+            return false
+        }
+
+        return applicationLanguages.remove(applicationLanguage)
     }
 
 
