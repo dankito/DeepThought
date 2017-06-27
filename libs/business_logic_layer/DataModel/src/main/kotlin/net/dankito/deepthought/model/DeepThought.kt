@@ -40,7 +40,7 @@ data class DeepThought(
 
     @OneToMany(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST))
     @OrderBy(value = "sortOrder")
-    var applicationLanguages: MutableSet<ApplicationLanguage> = HashSet<ApplicationLanguage>() // these are the Languages the UI can display
+    var applicationLanguages: MutableSet<ApplicationLanguage> = TreeSet<ApplicationLanguage>() // these are the Languages the UI can display
         private set
 
     @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
