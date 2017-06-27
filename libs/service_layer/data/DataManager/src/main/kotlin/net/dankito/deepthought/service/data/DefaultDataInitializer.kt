@@ -67,8 +67,6 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
     private fun initDeepThought(defaultLocalUser: User, localDevice: Device): DeepThought {
         val deepThought = DeepThought(defaultLocalUser, localDevice)
 
-        deepThought.addUser(defaultLocalUser)
-
         deepThought.addDevice(localDevice)
 
         return deepThought

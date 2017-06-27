@@ -33,10 +33,6 @@ data class DeepThought(
 
 
     @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
-    var users: MutableSet<User> = HashSet()
-        private set
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     var devices: MutableSet<Device> = HashSet()
         private set
 
@@ -63,23 +59,6 @@ data class DeepThought(
 
 
     private constructor() : this(User(), Device())
-
-
-    fun addUser(user: User): Boolean {
-        if (users.add(user)) {
-            return true
-        }
-
-        return false
-    }
-
-    fun removeUser(user: User): Boolean {
-        if (users.remove(user)) {
-            return true
-        }
-
-        return false
-    }
 
 
     fun addDevice(device: Device): Boolean {
