@@ -30,7 +30,7 @@ class SueddeutscheMagazinArticleExtractorTest : ArticleExtractorTestBase() {
 
     @Test
     fun extractArticleRemoveNewsletter() {
-        getAndTestArticle("http://sz-magazin.sueddeutsche.de/texte/anzeigen/46118",
+        getAndTestArticle("http://sz-magazin.sueddeutsche.de/texte/anzeigen/46103",
                 "Ab in die Kiste",
                 "Mit einer Holzkiste auf dem Rad zeigt man Liebe zur Umwelt - und Leichtgläubigkeit.",
                 "http://sz-magazin.sueddeutsche.de/upl/images/user/8059/thumbs_text/93255.jpg",
