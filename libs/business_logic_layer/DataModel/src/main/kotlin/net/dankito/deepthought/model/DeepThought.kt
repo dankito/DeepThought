@@ -109,7 +109,7 @@ data class DeepThought(
     }
 
     fun removeNoteType(noteType: NoteType): Boolean {
-        if (noteType.isDeletable == false) {
+        if (noteType.isSystemValue) {
             return false
         }
 
@@ -121,7 +121,7 @@ data class DeepThought(
     }
 
     fun removeFileType(fileType: FileType): Boolean {
-        if (fileType.isDeletable == false) {
+        if (fileType.isSystemValue) {
             return false
         }
 

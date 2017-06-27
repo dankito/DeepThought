@@ -24,7 +24,7 @@ class NoteType : ExtensibleEnumeration {
 
     constructor(name: String) : super(name)
 
-    constructor(nameResourceKey: String, isSystemValue: Boolean, isDeletable: Boolean, sortOrder: Int) : super(nameResourceKey, isSystemValue, isDeletable, sortOrder)
+    constructor(nameResourceKey: String, isSystemValue: Boolean, sortOrder: Int) : super(nameResourceKey, isSystemValue, sortOrder)
 
 
     fun addNote(note: Note): Boolean {

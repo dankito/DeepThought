@@ -23,7 +23,7 @@ class ApplicationLanguage : ExtensibleEnumeration {
 
     constructor(name: String) : super(name) {}
 
-    constructor(nameResourceKey: String, languageKey: String, isSystemValue: Boolean, isDeletable: Boolean, sortOrder: Int) : super(nameResourceKey, isSystemValue, isDeletable, sortOrder) {
+    constructor(nameResourceKey: String, languageKey: String, isSystemValue: Boolean, sortOrder: Int) : super(nameResourceKey, isSystemValue, sortOrder) {
         this.languageKey = languageKey
     }
 

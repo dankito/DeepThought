@@ -201,7 +201,6 @@ class TableConfig {
         const val ExtensibleEnumerationDescriptionColumnName = "description"
         const val ExtensibleEnumerationSortOrderColumnName = "sort_order"
         const val ExtensibleEnumerationIsSystemValueColumnName = "is_system_value"
-        const val ExtensibleEnumerationIsDeletableColumnName = "is_deletable"
 
 
         /*          ApplicationLanguage Table Config        */
