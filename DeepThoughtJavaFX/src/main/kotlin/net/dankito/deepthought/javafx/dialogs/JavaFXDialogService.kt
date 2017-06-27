@@ -148,8 +148,8 @@ class JavaFXDialogService : IDialogService {
 
         val result = dialog.showAndWait()
 
-        val enteredCode = if(result.isPresent) result.get() else null
-        callback(result.isPresent, enteredCode)
+        val enteredText = if(result.isPresent) result.get() else null
+        callback(result.isPresent, enteredText)
     }
 
 }
