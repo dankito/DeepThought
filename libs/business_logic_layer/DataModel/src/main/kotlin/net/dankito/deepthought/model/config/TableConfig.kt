@@ -21,7 +21,6 @@ class TableConfig {
 
         const val DeepThoughtDataModelVersionColumnName = "data_model_version"
         const val DeepThoughtLastLoggedOnUserJoinColumnName = "last_logged_on_user_id"
-        const val DeepThoughtAutoLogOnLastLoggedOnUserColumnName = "auto_log_on_last_logged_on_user"
         const val DeepThoughtLocalDeviceJoinColumnName = "local_device_id"
         const val DeepThoughtNextEntryIndexColumnName = "next_entry_index"
 

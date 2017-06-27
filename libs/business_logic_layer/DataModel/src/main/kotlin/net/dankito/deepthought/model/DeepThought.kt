@@ -18,11 +18,7 @@ data class DeepThought(
 
         @OneToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST))
         @JoinColumn(name = TableConfig.DeepThoughtLocalDeviceJoinColumnName)
-        val localDevice: Device,
-
-        //  @Column(name = TableConfig.DeepThoughtAutoLogOnLastLoggedOnUserColumnName, columnDefinition = "SMALLINT DEFAULT 0", nullable = false)
-        @Column(name = TableConfig.DeepThoughtAutoLogOnLastLoggedOnUserColumnName)
-        var autoLogOnLastLoggedOnUser: Boolean = false // TODO: remove
+        val localDevice: Device
 
 ) : BaseEntity(), Serializable {
 
@@ -63,7 +59,7 @@ data class DeepThought(
         private set
 
 
-    private constructor() : this(User("", ""), Device(), false)
+    private constructor() : this(User("", ""), Device())
 
 
     fun addUser(user: User): Boolean {
