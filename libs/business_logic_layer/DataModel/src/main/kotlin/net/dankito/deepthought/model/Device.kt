@@ -36,9 +36,6 @@ data class Device(
 
 
 
-    @Column(name = TableConfig.DeviceLastKnownIpColumnName)
-    var lastKnownIpAddress: String = ""
-
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "devices") // TODO: has cascade also to be set to { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }
     var users: MutableSet<User> = HashSet()
         private set
