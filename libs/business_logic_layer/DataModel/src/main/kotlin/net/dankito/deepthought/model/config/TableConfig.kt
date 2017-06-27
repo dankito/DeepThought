@@ -32,6 +32,7 @@ class TableConfig {
         const val DeepThoughtApplicationLastLoggedOnUserJoinColumnName = "last_logged_on_user_id"
         const val DeepThoughtApplicationAutoLogOnLastLoggedOnUserColumnName = "auto_log_on_last_logged_on_user"
         const val DeepThoughtApplicationLocalDeviceJoinColumnName = "local_device_id"
+        const val DeepThoughtApplicationNextEntryIndexColumnName = "next_entry_index"
 
 
         /*          User Table Config        */
@@ -87,29 +88,6 @@ class TableConfig {
         /*          DeepThought Table Config        */
 
         const val DeepThoughtTableName = "deep_thought"
-
-        const val DeepThoughtNextEntryIndexColumnName = "next_entry_index"
-        const val DeepThoughtTopLevelCategoryJoinColumnName = "top_level_category_id"
-        const val DeepThoughtTopLevelEntryJoinColumnName = "top_level_entry_id"
-        const val DeepThoughtDefaultEntryTemplateJoinColumnName = "default_entry_template_id"
-        const val DeepThoughtDeepThoughtSettingsColumnName = "settings"
-        const val DeepThoughtLastViewedCategoryJoinColumnName = "last_viewed_category_id"
-        const val DeepThoughtLastViewedTagJoinColumnName = "last_viewed_tag_id"
-        const val DeepThoughtLastViewedIndexTermJoinColumnName = "last_viewed_index_term_id"
-        const val DeepThoughtLastViewedEntryJoinColumnName = "last_viewed_entry_id"
-        const val DeepThoughtLastSelectedTabColumnName = "selected_tab"
-        const val DeepThoughtLastSelectedAndroidTabColumnName = "selected_android_tab"
-
-
-        /*          DeepThought FavoriteEntryTemplate Join Table Config        */
-
-        const val DeepThoughtFavoriteEntryTemplateJoinTableName = "deep_thought_favorite_entry_template_join_table"
-
-        const val DeepThoughtFavoriteEntryTemplateJoinTableDeepThoughtIdColumnName = "deep_thought_id"
-        const val DeepThoughtFavoriteEntryTemplateJoinTableEntryTemplateIdColumnName = "favorite_entry_template_id"
-        const val DeepThoughtFavoriteEntryTemplateJoinTableEntryTemplateKeyColumnName = "template_key"
-        const val DeepThoughtFavoriteEntryTemplateJoinTableEntryTemplateIndexColumnName = "favorite_index"
-        const val DeepThoughtFavoriteEntryTemplateJoinTableDeepThoughtJoinColumnName = "deep_thought_id"
 
 
         /*          Entry Table Config        */

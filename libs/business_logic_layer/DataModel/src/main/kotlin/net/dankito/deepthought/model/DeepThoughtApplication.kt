@@ -12,7 +12,7 @@ data class DeepThoughtApplication(
 
         @OneToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST))
         @JoinColumn(name = TableConfig.DeepThoughtApplicationLastLoggedOnUserJoinColumnName)
-        var lastLoggedOnUser: User,
+        var lastLoggedOnUser: User, // TODO: rename to localUser
 
         @OneToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST))
         @JoinColumn(name = TableConfig.DeepThoughtApplicationLocalDeviceJoinColumnName)
@@ -20,7 +20,7 @@ data class DeepThoughtApplication(
 
         //  @Column(name = TableConfig.DeepThoughtApplicationAutoLogOnLastLoggedOnUserColumnName, columnDefinition = "SMALLINT DEFAULT 0", nullable = false)
         @Column(name = TableConfig.DeepThoughtApplicationAutoLogOnLastLoggedOnUserColumnName)
-        var autoLogOnLastLoggedOnUser: Boolean = false
+        var autoLogOnLastLoggedOnUser: Boolean = false // TODO: remove
 
 ) : BaseEntity(), Serializable {
 
@@ -43,6 +43,11 @@ data class DeepThoughtApplication(
     @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     @OrderBy(value = "sortOrder")
     var applicationLanguages: MutableSet<ApplicationLanguage> = HashSet<ApplicationLanguage>() // these are the Languages the UI can display
+        private set
+
+
+    @Column(name = TableConfig.DeepThoughtApplicationNextEntryIndexColumnName)
+    var nextEntryIndex = 0L
         private set
 
 
@@ -84,6 +89,13 @@ data class DeepThoughtApplication(
         }
 
         return false
+    }
+
+
+    fun increaseNextEntryIndex(): Long {
+        synchronized(this) {
+            return ++nextEntryIndex
+        }
     }
 
 }

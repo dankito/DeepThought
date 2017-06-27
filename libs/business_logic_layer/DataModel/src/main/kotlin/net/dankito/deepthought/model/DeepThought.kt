@@ -20,10 +20,6 @@ class DeepThought : UserDataEntity(), Serializable {
     var entries: MutableList<Entry> = mutableListOf() // TODO: don't expose a mutable list
         private set
 
-    @Column(name = TableConfig.DeepThoughtNextEntryIndexColumnName)
-    var nextEntryIndex = 0L
-        private set
-
     @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     var tags: MutableList<Tag> = mutableListOf()
         private set
@@ -105,12 +101,6 @@ class DeepThought : UserDataEntity(), Serializable {
         }
 
         entry.previewImage = null
-    }
-
-    fun increaseNextEntryIndex(): Long {
-        synchronized(this) {
-            return ++nextEntryIndex
-        }
     }
 
 
