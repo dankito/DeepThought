@@ -43,7 +43,6 @@ class TableConfig {
         const val UserFirstNameColumnName = "first_name"
         const val UserLastNameColumnName = "last_name"
         const val UserPasswordColumnName = "password"
-        const val UserUserDeviceSettingsColumnName = "settings"
         const val UserLastViewedDeepThoughtColumnName = "last_viewed_deep_thought"
 
 
@@ -55,14 +54,21 @@ class TableConfig {
         const val UserDeviceJoinTableDeviceIdColumnName = "device_id"
 
 
-        /*          UsersGroup Table Config        */
+        /*          User_SynchronizedDevices JoinTable Column Names        */
 
-        const val GroupTableName = "group_dt" // 'group' is not allowed as table name as it's a system table, so i used group_dt (for _deep_thought)
+        const val USER_SYNCHRONIZED_DEVICES_JOIN_TABLE_NAME = "LocalConfig_SynchronizedDevices";
 
-        const val GroupUniversallyUniqueIdColumnName = "universally_unique_id"
-        const val GroupNameColumnName = "name"
-        const val GroupDescriptionColumnName = "description"
-        const val GroupDeepThoughtApplicationJoinColumnName = "application_id"
+        const val USER_SYNCHRONIZED_DEVICES_LOCAL_CONFIG_ID_COLUMN_NAME = "local_config_id";
+        const val USER_SYNCHRONIZED_DEVICES_DEVICE_ID_COLUMN_NAME = "device_id";
+
+
+        /*          User_IgnoredDevices JoinTable Column Names        */
+
+        const val USER_IGNORED_DEVICES_JOIN_TABLE_NAME = "LocalConfig_IgnoredDevices";
+
+        const val USER_IGNORED_DEVICES_LOCAL_CONFIG_ID_COLUMN_NAME = "local_config_id";
+        const val USER_IGNORED_DEVICES_DEVICE_ID_COLUMN_NAME = "device_id";
+
 
 
         /*          Device Table Config        */
@@ -78,30 +84,6 @@ class TableConfig {
         const val DeviceIconColumnName = "device_icon"
 
 
-        /*          Device_SynchronizedDevices JoinTable Column Names        */
-
-        const val DEVICE_SYNCHRONIZED_DEVICES_JOIN_TABLE_NAME = "LocalConfig_SynchronizedDevices";
-
-        const val DEVICE_SYNCHRONIZED_DEVICES_LOCAL_CONFIG_ID_COLUMN_NAME = "local_config_id";
-        const val DEVICE_SYNCHRONIZED_DEVICES_DEVICE_ID_COLUMN_NAME = "device_id";
-
-
-        /*          Device_IgnoredDevices JoinTable Column Names        */
-
-        const val DEVICE_IGNORED_DEVICES_JOIN_TABLE_NAME = "LocalConfig_IgnoredDevices";
-
-        const val DEVICE_IGNORED_DEVICES_LOCAL_CONFIG_ID_COLUMN_NAME = "local_config_id";
-        const val DEVICE_IGNORED_DEVICES_DEVICE_ID_COLUMN_NAME = "device_id";
-
-
-        /*          UsersGroup Device Join Table Config        */
-
-        const val GroupDeviceJoinTableName = "group_device_join_table"
-
-        const val GroupDeviceJoinTableGroupIdColumnName = "group_id"
-        const val GroupDeviceJoinTableDeviceIdColumnName = "device_id"
-
-
         /*          DeepThought Table Config        */
 
         const val DeepThoughtTableName = "deep_thought"
@@ -109,7 +91,6 @@ class TableConfig {
         const val DeepThoughtNextEntryIndexColumnName = "next_entry_index"
         const val DeepThoughtTopLevelCategoryJoinColumnName = "top_level_category_id"
         const val DeepThoughtTopLevelEntryJoinColumnName = "top_level_entry_id"
-        const val DeepThoughtDeepThoughtOwnerJoinColumnName = "owner_id"
         const val DeepThoughtDefaultEntryTemplateJoinColumnName = "default_entry_template_id"
         const val DeepThoughtDeepThoughtSettingsColumnName = "settings"
         const val DeepThoughtLastViewedCategoryJoinColumnName = "last_viewed_category_id"

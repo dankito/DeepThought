@@ -47,6 +47,20 @@ data class User(
     var devices: MutableSet<Device> = HashSet()
         private set
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = TableConfig.USER_SYNCHRONIZED_DEVICES_JOIN_TABLE_NAME,
+            joinColumns = arrayOf( JoinColumn(name = TableConfig.USER_SYNCHRONIZED_DEVICES_LOCAL_CONFIG_ID_COLUMN_NAME) ),
+            inverseJoinColumns = arrayOf( JoinColumn(name = TableConfig.USER_SYNCHRONIZED_DEVICES_DEVICE_ID_COLUMN_NAME) ))
+    var synchronizedDevices: List<Device> = ArrayList()
+        private set
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = TableConfig.USER_IGNORED_DEVICES_JOIN_TABLE_NAME,
+            joinColumns = arrayOf( JoinColumn(name = TableConfig.USER_IGNORED_DEVICES_LOCAL_CONFIG_ID_COLUMN_NAME) ),
+            inverseJoinColumns = arrayOf( JoinColumn(name = TableConfig.USER_IGNORED_DEVICES_DEVICE_ID_COLUMN_NAME) ))
+    var ignoredDevices: List<Device> = ArrayList()
+        private set
+
 
 
     fun hasDevices(): Boolean {
@@ -68,6 +82,40 @@ data class User(
     fun removeDevice(device: Device): Boolean {
         if(devices.contains(device) == true) {
             return devices.remove(device)
+        }
+
+        return false
+    }
+
+
+    fun addSynchronizedDevice(device: Device): Boolean {
+        if (synchronizedDevices.contains(device) == false) {
+            return (synchronizedDevices as? MutableList<Device>)?.add(device) ?: false
+        }
+
+        return false
+    }
+
+    fun removeSynchronizedDevice(device: Device): Boolean {
+        if (synchronizedDevices.contains(device)) {
+            return (synchronizedDevices as? MutableList<Device>)?.remove(device) ?: false
+        }
+
+        return false
+    }
+
+
+    fun addIgnoredDevice(device: Device): Boolean {
+        if (ignoredDevices.contains(device) == false) {
+            return (ignoredDevices as? MutableList<Device>)?.add(device) ?: false
+        }
+
+        return false
+    }
+
+    fun removeIgnoredDevice(device: Device): Boolean {
+        if (ignoredDevices.contains(device)) {
+            return (ignoredDevices as? MutableList<Device>)?.remove(device) ?: false
         }
 
         return false
