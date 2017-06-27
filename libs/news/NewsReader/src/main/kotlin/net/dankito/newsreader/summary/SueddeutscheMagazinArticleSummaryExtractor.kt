@@ -26,9 +26,9 @@ class SueddeutscheMagazinArticleSummaryExtractor(webClient: IWebClient) : Articl
 
     private fun mapToArticleSummaryItem(textHolder: Element, siteUrl: String): ArticleSummaryItem? {
         textHolder.select("h2 > a").first()?.let { heading ->
-            val item = ArticleSummaryItem(makeLinkAbsolute(heading.attr("href"), siteUrl), heading.text(), SueddeutscheMagazinArticleExtractor::class.java)
+            val item = ArticleSummaryItem(makeLinkAbsolute(heading.attr("href"), siteUrl), convertGuardedAreaToDash(heading.text()), SueddeutscheMagazinArticleExtractor::class.java)
 
-            item.summary = textHolder.select("p").first()?.text() ?: ""
+            item.summary = convertGuardedAreaToDash(textHolder.select("p").first()?.text() ?: "")
             textHolder.parents().select("img").first()?.attr("src")?.let { item.previewImageUrl = makeLinkAbsolute(it, siteUrl) }
 
             return item
