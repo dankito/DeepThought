@@ -93,24 +93,16 @@ data class User(
     }
 
     fun addDevice(device: Device): Boolean {
-        if (devices.contains(device) == false) {
-            if (devices.add(device)) {
-                device.addUser(this)
-
-                return true
-            }
+        if(devices.contains(device) == false) {
+            return devices.add(device)
         }
 
         return false
     }
 
     fun removeDevice(device: Device): Boolean {
-        if (devices.contains(device) == true) {
-            if (devices.remove(device)) {
-                device.removeUser(this)
-
-                return true
-            }
+        if(devices.contains(device) == true) {
+            return devices.remove(device)
         }
 
         return false

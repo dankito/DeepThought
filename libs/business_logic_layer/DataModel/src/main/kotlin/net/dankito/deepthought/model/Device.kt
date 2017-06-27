@@ -35,12 +35,6 @@ data class Device(
     }
 
 
-
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "devices") // TODO: has cascade also to be set to { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }
-    var users: MutableSet<User> = HashSet()
-        private set
-
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = TableConfig.DEVICE_SYNCHRONIZED_DEVICES_JOIN_TABLE_NAME,
             joinColumns = arrayOf( JoinColumn(name = TableConfig.DEVICE_SYNCHRONIZED_DEVICES_LOCAL_CONFIG_ID_COLUMN_NAME) ),
@@ -62,15 +56,6 @@ data class Device(
 
     internal constructor() : this("", "", OsType.DESKTOP)
 
-
-
-    internal fun addUser(user: User): Boolean {
-        return users.add(user)
-    }
-
-    internal fun removeUser(user: User): Boolean {
-        return users.remove(user)
-    }
 
 
     fun addSynchronizedDevice(device: Device): Boolean {
