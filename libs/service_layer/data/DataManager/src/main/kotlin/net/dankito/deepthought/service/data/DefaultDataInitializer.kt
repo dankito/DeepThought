@@ -25,7 +25,7 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
 
         val localDevice = createUserDefaultDevice(localUser)
 
-        val deepThought = initDeepThought(localUser, localDevice)
+        val deepThought = DeepThought(localUser, localDevice)
 
         createEnumerationsDefaultValues(deepThought)
 
@@ -61,15 +61,6 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
                 osName, osVersion)
 
         return userDefaultDevice
-    }
-
-
-    private fun initDeepThought(defaultLocalUser: User, localDevice: Device): DeepThought {
-        val deepThought = DeepThought(defaultLocalUser, localDevice)
-
-        deepThought.addDevice(localDevice)
-
-        return deepThought
     }
 
 

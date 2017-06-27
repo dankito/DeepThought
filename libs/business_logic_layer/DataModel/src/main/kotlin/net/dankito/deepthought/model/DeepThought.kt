@@ -32,11 +32,6 @@ data class DeepThought(
     val dataModelVersion = 1
 
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
-    var devices: MutableSet<Device> = HashSet()
-        private set
-
-
     @OneToMany(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST))
     @OrderBy(value = "sortOrder")
     var applicationLanguages: MutableSet<ApplicationLanguage> = TreeSet<ApplicationLanguage>() // these are the Languages the UI can display
@@ -59,27 +54,6 @@ data class DeepThought(
 
 
     private constructor() : this(User(), Device())
-
-
-    fun addDevice(device: Device): Boolean {
-        if (devices.add(device)) {
-            return true
-        }
-
-        return false
-    }
-
-    fun removeDevice(device: Device): Boolean {
-        if (localDevice == device) { // don't delete local device!
-            return false
-        }
-
-        if (devices.remove(device)) {
-            return true
-        }
-
-        return false
-    }
 
 
     fun addApplicationLanguage(applicationLanguage: ApplicationLanguage): Boolean {
