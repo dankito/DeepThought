@@ -1,6 +1,3 @@
-[submodule "libs/data_access_layer/database/JpaAnnotationReader"]
-	path = libs/data_access_layer/database/JpaAnnotationReader
-	url = https://github.com/dankito/JpaAnnotationReader.git
 [submodule "libs/data_access_layer/database/couchbase-lite-jpa"]
 	path = libs/data_access_layer/database/couchbase-lite-jpa
 	url = https://github.com/dankito/couchbase-lite-jpa
