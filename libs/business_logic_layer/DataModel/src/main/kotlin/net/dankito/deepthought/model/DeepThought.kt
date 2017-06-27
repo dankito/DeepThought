@@ -9,6 +9,10 @@ import java.util.*
 import javax.persistence.*
 
 
+
+
+
+
 @Entity(name = TableConfig.DeepThoughtTableName)
 data class DeepThought(
 
@@ -97,6 +101,31 @@ data class DeepThought(
         }
 
         return false
+    }
+
+
+    fun addNoteType(noteType: NoteType): Boolean {
+        return noteTypes.add(noteType)
+    }
+
+    fun removeNoteType(noteType: NoteType): Boolean {
+        if (noteType.isDeletable == false) {
+            return false
+        }
+
+        return noteTypes.remove(noteType)
+    }
+
+    fun addFileType(fileType: FileType): Boolean {
+        return fileTypes.add(fileType)
+    }
+
+    fun removeFileType(fileType: FileType): Boolean {
+        if (fileType.isDeletable == false) {
+            return false
+        }
+
+        return fileTypes.remove(fileType)
     }
 
 
