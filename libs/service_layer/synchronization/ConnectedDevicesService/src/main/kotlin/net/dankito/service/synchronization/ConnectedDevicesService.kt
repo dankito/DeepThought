@@ -11,6 +11,7 @@ import net.dankito.data_access.network.discovery.IDevicesDiscoverer
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.model.INetworkSettings
+import net.dankito.deepthought.model.User
 import org.slf4j.LoggerFactory
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
@@ -31,6 +32,8 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
 
 
     private var localDevice: Device = networkSettings.localHostDevice
+
+    private var localUser: User = networkSettings.localUser
 
 
     private var discoveredDevices: MutableMap<String, DiscoveredDevice> = ConcurrentHashMap()
@@ -205,11 +208,11 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
 
 
     private fun isKnownSynchronizedDevice(device: DiscoveredDevice): Boolean {
-        return localDevice.synchronizedDevices.contains(device.device)
+        return localUser.synchronizedDevices.contains(device.device)
     }
 
     private fun isKnownIgnoredDevice(device: DiscoveredDevice): Boolean {
-        return localDevice.ignoredDevices.contains(device.device)
+        return localUser.ignoredDevices.contains(device.device)
     }
 
 
@@ -303,17 +306,17 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
     }
 
     protected fun addDeviceToLocalConfigSynchronizedDevices(device: DiscoveredDevice) {
-        if (localDevice.ignoredDevices.contains(device.device)) {
-            localDevice.removeIgnoredDevice(device.device)
+        if (localUser.ignoredDevices.contains(device.device)) {
+            localUser.removeIgnoredDevice(device.device)
         }
-        localDevice.addSynchronizedDevice(device.device)
+        localUser.addSynchronizedDevice(device.device)
 
         entityManager.updateEntity(localDevice)
     }
 
 
     override fun stopSynchronizingWithDevice(device: DiscoveredDevice) {
-        localDevice.removeSynchronizedDevice(device.device)
+        localUser.removeSynchronizedDevice(device.device)
 
         val deviceInfoKey = getDeviceKeyForLocalStorage(device)
         knownSynchronizedDevices.remove(deviceInfoKey)
@@ -328,7 +331,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
     }
 
     override fun addDeviceToIgnoreList(device: DiscoveredDevice) {
-        if (localDevice.addIgnoredDevice(device.device)) {
+        if (localUser.addIgnoredDevice(device.device)) {
             if (entityManager.updateEntity(localDevice)) {
                 val deviceInfoKey = getDeviceKeyForLocalStorage(device)
                 unknownDevices.remove(deviceInfoKey)
@@ -341,7 +344,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
     }
 
     override fun startSynchronizingWithIgnoredDevice(device: DiscoveredDevice) {
-        if (localDevice.removeIgnoredDevice(device.device)) {
+        if (localUser.removeIgnoredDevice(device.device)) {
             if (entityManager.updateEntity(localDevice)) {
                 val deviceInfoKey = getDeviceKeyForLocalStorage(device)
                 knownIgnoredDevices.remove(deviceInfoKey)
