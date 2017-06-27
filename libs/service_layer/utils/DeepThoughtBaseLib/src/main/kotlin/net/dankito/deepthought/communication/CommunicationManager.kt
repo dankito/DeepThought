@@ -74,6 +74,9 @@ class CommunicationManager(private val connectedDevicesService: IConnectedDevice
         }
 
         override fun disconnectedFromDevice(disconnectedDevice: DiscoveredDevice) {
+            if(networkSettings.didShowNotificationToUserForUnknownDevice(disconnectedDevice)) {
+                registrationHandler.unknownDeviceDisconnected(disconnectedDevice)
+            }
         }
 
     }
