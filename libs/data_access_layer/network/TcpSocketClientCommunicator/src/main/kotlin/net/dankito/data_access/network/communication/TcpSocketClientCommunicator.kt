@@ -78,11 +78,10 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
     override fun respondToSynchronizationPermittingChallenge(remoteDevice: DiscoveredDevice, nonce: String, challengeResponse: String,
                                                              callback: (Response<RespondToSynchronizationPermittingChallengeResponseBody>) -> Unit) {
         challengeHandler.createChallengeResponse(nonce, challengeResponse)?.let { challengeResponse ->
-            val request = Request(CommunicatorConfig.RESPONSE_TO_SYNCHRONIZATION_PERMITTING_CHALLENGE_METHOD_NAME,
+            val request = Request<RespondToSynchronizationPermittingChallengeRequestBody>(CommunicatorConfig.RESPONSE_TO_SYNCHRONIZATION_PERMITTING_CHALLENGE_METHOD_NAME,
                     RespondToSynchronizationPermittingChallengeRequestBody(nonce, challengeResponse, networkSettings.synchronizationPort))
 
-            requestSender.sendRequestAndReceiveResponseAsync<RespondToSynchronizationPermittingChallengeRequestBody, RespondToSynchronizationPermittingChallengeResponseBody>(
-                    getSocketAddressFromDevice(remoteDevice), request) { response ->
+            requestSender.sendRequestAndReceiveResponseAsync(getSocketAddressFromDevice(remoteDevice), request) { response: Response<RespondToSynchronizationPermittingChallengeResponseBody> ->
                         handleRespondToSynchronizationPermittingChallengeResponse(remoteDevice, response)
 
                         callback(response)
@@ -91,15 +90,15 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
     }
 
     private fun handleRespondToSynchronizationPermittingChallengeResponse(remoteDevice: DiscoveredDevice, response: Response<RespondToSynchronizationPermittingChallengeResponseBody>) {
-        if (response.isCouldHandleMessage) {
-            val result = response.body!!.result
+        response.body?.let { body ->
+            val result = body.result
 
-            if (response.body!!.result !== RespondToSynchronizationPermittingChallengeResult.WRONG_CODE) {
+            if(body.result !== RespondToSynchronizationPermittingChallengeResult.WRONG_CODE) {
                 networkSettings.removeDevicesAskedForPermittingSynchronization(remoteDevice)
             }
 
-            if (result === RespondToSynchronizationPermittingChallengeResult.ALLOWED) {
-                remoteDevice.synchronizationPort = response.body!!.synchronizationPort
+            if(result === RespondToSynchronizationPermittingChallengeResult.ALLOWED) {
+                remoteDevice.synchronizationPort = body.synchronizationPort
             }
         }
     }
