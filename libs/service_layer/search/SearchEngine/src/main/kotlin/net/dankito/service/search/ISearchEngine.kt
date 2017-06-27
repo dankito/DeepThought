@@ -13,4 +13,17 @@ interface ISearchEngine {
 
     fun searchTags(search: TagsSearch)
 
+//    fun getEntriesForTagAsync(tag: Tag, listener: SearchCompletedListener<Collection<Entry>>)
+
+//    fun findAllEntriesHavingTheseTags(tagsToFilterFor: Collection<Tag>, listener: SearchCompletedListener<FindAllEntriesHavingTheseTagsResult>)
+//    fun findAllEntriesHavingTheseTags(tagsToFilterFor: Collection<Tag>, searchTerm: String, listener: SearchCompletedListener<FindAllEntriesHavingTheseTagsResult>)
+
+//    fun searchReferenceBases(search: ReferenceSearch)
+//    fun searchForReferenceOfDate(optionalSeriesTitleTitle: String, search: Search<Reference>)
+//
+//    fun searchFiles(search: FilesSearch)
+//
+//
+//    fun close()
+
 }
