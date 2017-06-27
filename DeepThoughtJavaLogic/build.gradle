@@ -11,8 +11,6 @@ sourceSets {
 
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion"
-
     compile project(':DeepThoughtCommon')
 
     compile project(':JavaCouchbaseLiteEntityManager')
