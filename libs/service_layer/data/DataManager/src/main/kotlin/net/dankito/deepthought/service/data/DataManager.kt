@@ -2,7 +2,6 @@ package net.dankito.deepthought.service.data
 
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.IEntityManager
-import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.model.DeepThoughtApplication
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.User
@@ -24,8 +23,6 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
 
     lateinit var loggedOnUser: User
     lateinit var localDevice: Device
-
-    var currentDeepThought: DeepThought? = null
 
     var dataFolderPath: File
 
@@ -55,7 +52,7 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
         entityManager.open(configuration)
     }
 
-    private fun retrieveBasicData(): DeepThought? {
+    private fun retrieveBasicData() {
         try {
             val applicationsQueryResult = entityManager.getAllEntitiesOfType(DeepThoughtApplication::class.java)
 
@@ -66,13 +63,6 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
                 localDevice = application.localDevice
 
                 // TODO: set application language according to user's settings
-
-                // TODO: what to return if user was already logged on but autoLogOn is set to false?
-                if (application.autoLogOnLastLoggedOnUser) {
-                    currentDeepThought = loggedOnUser.lastViewedDeepThought
-
-                    return currentDeepThought
-                }
             }
         } catch (ex: Exception) {
             log.error("Could not deserialize DeepThoughtApplication", ex)
@@ -80,20 +70,16 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
         }
 
 
-        return createAndPersistDefaultDeepThought()
+        createAndPersistDefaultDeepThought()
     }
 
-    protected fun createAndPersistDefaultDeepThought(): DeepThought? {
+    protected fun createAndPersistDefaultDeepThought() {
         application = defaultDataInitializer.createDefaultData()
 
         loggedOnUser = application.lastLoggedOnUser
         localDevice = application.localDevice
 
-        currentDeepThought = loggedOnUser.lastViewedDeepThought
-
         entityManager.persistEntity(application)
-
-        return currentDeepThought
     }
 
 
