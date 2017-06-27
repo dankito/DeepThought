@@ -27,15 +27,9 @@ data class User(
     private constructor() : this("", "")
 
     constructor(name: String, universallyUniqueId: String, isLocalUser: Boolean, usersDefaultGroup: UsersGroup) : this(name, universallyUniqueId) {
-        this.isLocalUser = isLocalUser
-
         this.usersDefaultGroup = usersDefaultGroup
     }
 
-
-
-    @Column(name = TableConfig.UserIsLocalUserColumnName, columnDefinition = "SMALLINT DEFAULT 0", nullable = false)
-    var isLocalUser: Boolean = true
 
     @Column(name = TableConfig.UserFirstNameColumnName)
     var firstName: String = ""
