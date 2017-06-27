@@ -36,10 +36,6 @@ data class DeepThoughtApplication(
         private set
 
     @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
-    var groups: MutableSet<UsersGroup> = HashSet()
-        private set
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     var devices: MutableSet<Device> = HashSet()
         private set
 
@@ -63,23 +59,6 @@ data class DeepThoughtApplication(
 
     fun removeUser(user: User): Boolean {
         if (users.remove(user)) {
-            return true
-        }
-
-        return false
-    }
-
-
-    fun addGroup(group: UsersGroup): Boolean {
-        if (groups.add(group)) {
-            return true
-        }
-
-        return false
-    }
-
-    fun removeGroup(group: UsersGroup): Boolean {
-        if (groups.remove(group)) {
             return true
         }
 

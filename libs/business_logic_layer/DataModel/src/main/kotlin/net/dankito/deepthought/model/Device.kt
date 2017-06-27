@@ -40,10 +40,6 @@ data class Device(
     var users: MutableSet<User> = HashSet()
         private set
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "devices")
-    var groups: MutableSet<UsersGroup> = HashSet()
-        private set
-
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = TableConfig.DEVICE_SYNCHRONIZED_DEVICES_JOIN_TABLE_NAME,
@@ -74,32 +70,6 @@ data class Device(
 
     internal fun removeUser(user: User): Boolean {
         return users.remove(user)
-    }
-
-
-
-    fun addGroup(group: UsersGroup): Boolean {
-        if (groups.contains(group) == false) {
-            if (groups.add(group)) {
-                group.addDevice(this)
-
-                return true
-            }
-        }
-
-        return false
-    }
-
-    fun removeGroup(group: UsersGroup): Boolean {
-        if (groups.contains(group) == true) {
-            if (groups.remove(group)) {
-                group.removeDevice(this)
-
-                return true
-            }
-        }
-
-        return false
     }
 
 

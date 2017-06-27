@@ -26,10 +26,6 @@ data class User(
 
     private constructor() : this("", "")
 
-    constructor(name: String, universallyUniqueId: String, isLocalUser: Boolean, usersDefaultGroup: UsersGroup) : this(name, universallyUniqueId) {
-        this.usersDefaultGroup = usersDefaultGroup
-    }
-
 
     @Column(name = TableConfig.UserFirstNameColumnName)
     var firstName: String = ""
@@ -60,26 +56,6 @@ data class User(
     @ManyToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH))
     @JoinTable(name = TableConfig.UserDeviceJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.UserDeviceJoinTableUserIdColumnName)/*, referencedColumnName = "id"*/), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.UserDeviceJoinTableDeviceIdColumnName)/*, referencedColumnName = "id"*/))
     var devices: MutableSet<Device> = HashSet()
-        private set
-
-    @OneToOne(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
-    @JoinColumn(name = TableConfig.UserUsersDefaultGroupJoinColumnName)
-    var usersDefaultGroup: UsersGroup? = null
-        internal set (usersDefaultGroup) {
-            field = usersDefaultGroup
-
-            if (usersDefaultGroup != null) {
-                usersDefaultGroup.owner = this
-
-                if(groups.contains(usersDefaultGroup) == false) {
-                    addGroup(usersDefaultGroup)
-                }
-            }
-        }
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH))
-    @JoinTable(name = TableConfig.UserGroupJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.UserGroupJoinTableUserIdColumnName)/*, referencedColumnName = "id"*/), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.UserGroupJoinTableGroupIdColumnName)/*, referencedColumnName = "id"*/))
-    var groups: MutableSet<UsersGroup> = HashSet()
         private set
 
 
@@ -132,35 +108,6 @@ data class User(
         if (devices.contains(device) == true) {
             if (devices.remove(device)) {
                 device.removeUser(this)
-
-                return true
-            }
-        }
-
-        return false
-    }
-
-
-    fun hasGroups(): Boolean {
-        return groups.size > 0
-    }
-
-    fun addGroup(group: UsersGroup): Boolean {
-        if (groups.contains(group) == false) {
-            if (groups.add(group)) {
-                group.addUser(this)
-
-                return true
-            }
-        }
-
-        return false
-    }
-
-    fun removeGroup(group: UsersGroup): Boolean {
-        if (groups.contains(group) == true) {
-            if (groups.remove(group)) {
-                group.removeUser(this)
 
                 return true
             }
