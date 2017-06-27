@@ -23,7 +23,6 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
         defaultLocalUser.addDevice(localDevice)
 
         val defaultDeepThought = createEmptyDeepThought()
-        defaultLocalUser.lastViewedDeepThought = defaultDeepThought
 
         val application = initDeepThoughtApplication(defaultLocalUser, localDevice)
 
@@ -81,6 +80,9 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
         for (device in defaultLocalUser.devices) {
             application.addDevice(device)
         }
+
+        // TODO: create ApplicationLanguages
+
         return application
     }
 
