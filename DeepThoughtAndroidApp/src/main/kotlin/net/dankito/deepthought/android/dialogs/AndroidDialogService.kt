@@ -41,7 +41,7 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
 
         builder.setNegativeButton(android.R.string.no, { _, _ -> optionSelected(false) })
 
-        builder.setNegativeButton(android.R.string.yes, { _, _ -> optionSelected(true) })
+        builder.setPositiveButton(android.R.string.yes, { _, _ -> optionSelected(true) })
 
         builder.create().show()
     }
