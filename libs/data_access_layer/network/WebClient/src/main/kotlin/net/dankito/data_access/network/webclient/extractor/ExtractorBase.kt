@@ -119,4 +119,8 @@ abstract class ExtractorBase(val webClient : IWebClient) {
         return text.replace("\u00A0", " ") // Converting &nbsp; entities
     }
 
+    protected fun convertGuardedAreaToDash(text: String): String {
+        return text.replace('\u0096', '-')
+    }
+
 }
