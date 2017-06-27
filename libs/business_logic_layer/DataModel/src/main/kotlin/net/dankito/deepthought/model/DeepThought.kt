@@ -59,7 +59,7 @@ data class DeepThought(
         private set
 
 
-    private constructor() : this(User("", ""), Device())
+    private constructor() : this(User(), Device())
 
 
     fun addUser(user: User): Boolean {

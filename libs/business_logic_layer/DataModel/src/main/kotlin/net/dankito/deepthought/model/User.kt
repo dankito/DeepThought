@@ -24,7 +24,7 @@ data class User(
     }
 
 
-    private constructor() : this("", "")
+    internal constructor() : this("", "")
 
 
     @Column(name = TableConfig.UserFirstNameColumnName)
