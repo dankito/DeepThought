@@ -1,6 +1,6 @@
 package net.dankito.deepthought.java.service.platform
 
-import net.dankito.deepthought.model.OsType
+import net.dankito.deepthought.model.enums.OsType
 import net.dankito.utils.IPlatformConfiguration
 import java.io.File
 

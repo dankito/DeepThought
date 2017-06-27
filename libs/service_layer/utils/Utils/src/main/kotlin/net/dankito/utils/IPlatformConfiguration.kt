@@ -1,6 +1,6 @@
 package net.dankito.utils
 
-import net.dankito.deepthought.model.OsType
+import net.dankito.deepthought.model.enums.OsType
 import java.io.File
 
 

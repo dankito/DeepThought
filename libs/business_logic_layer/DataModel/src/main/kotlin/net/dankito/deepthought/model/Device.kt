@@ -1,6 +1,7 @@
 package net.dankito.deepthought.model
 
 import net.dankito.deepthought.model.config.TableConfig
+import net.dankito.deepthought.model.enums.OsType
 import javax.persistence.*
 
 

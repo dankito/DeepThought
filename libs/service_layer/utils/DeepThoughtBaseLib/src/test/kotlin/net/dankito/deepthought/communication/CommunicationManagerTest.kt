@@ -10,6 +10,7 @@ import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.discovery.UdpDevicesDiscoverer
 import net.dankito.deepthought.model.*
+import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.service.synchronization.*

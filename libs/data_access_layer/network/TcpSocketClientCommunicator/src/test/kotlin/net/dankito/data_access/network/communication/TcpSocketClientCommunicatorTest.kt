@@ -4,6 +4,7 @@ import net.dankito.data_access.network.communication.callback.IDeviceRegistratio
 import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.data_access.network.communication.message.Response
 import net.dankito.deepthought.model.*
+import net.dankito.deepthought.model.enums.OsType
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.services.hashing.IBase64Service
 import org.hamcrest.CoreMatchers.`is`
