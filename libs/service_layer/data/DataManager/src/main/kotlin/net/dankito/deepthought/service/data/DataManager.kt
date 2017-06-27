@@ -12,7 +12,7 @@ import kotlin.concurrent.thread
 
 
 class DataManager(val entityManager: IEntityManager, private val configuration: EntityManagerConfiguration,
-                  private val defaultDataInitializer: DefaultDataInitializer, private val platformConfiguration: IPlatformConfiguration) {
+                  private val defaultDataInitializer: DefaultDataInitializer, platformConfiguration: IPlatformConfiguration) {
 
     companion object {
         private val log = LoggerFactory.getLogger(DataManager::class.java)
@@ -56,7 +56,7 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
         try {
             val deepThoughtQueryResult = entityManager.getAllEntitiesOfType(DeepThought::class.java)
 
-            if (deepThoughtQueryResult.size > 0) { // TODO: what to do if there's more than one DeepThought instance persisted?
+            if (deepThoughtQueryResult.isNotEmpty()) { // TODO: what to do if there's more than one DeepThought instance persisted?
                 deepThought = deepThoughtQueryResult[0]
 
                 localUser = deepThought.localUser
