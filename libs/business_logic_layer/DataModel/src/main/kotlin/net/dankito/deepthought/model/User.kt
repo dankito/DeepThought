@@ -44,16 +44,16 @@ data class User(
         private set
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = TableConfig.USER_SYNCHRONIZED_DEVICES_JOIN_TABLE_NAME,
-            joinColumns = arrayOf( JoinColumn(name = TableConfig.USER_SYNCHRONIZED_DEVICES_LOCAL_CONFIG_ID_COLUMN_NAME) ),
-            inverseJoinColumns = arrayOf( JoinColumn(name = TableConfig.USER_SYNCHRONIZED_DEVICES_DEVICE_ID_COLUMN_NAME) ))
+    @JoinTable(name = TableConfig.UserSynchronizedDevicesJoinTableName,
+            joinColumns = arrayOf( JoinColumn(name = TableConfig.UserSynchronizedDevicesUserIdColumnName) ),
+            inverseJoinColumns = arrayOf( JoinColumn(name = TableConfig.UserSynchronizedDevicesDeviceIdColumnName) ))
     var synchronizedDevices: List<Device> = ArrayList()
         private set
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = TableConfig.USER_IGNORED_DEVICES_JOIN_TABLE_NAME,
-            joinColumns = arrayOf( JoinColumn(name = TableConfig.USER_IGNORED_DEVICES_LOCAL_CONFIG_ID_COLUMN_NAME) ),
-            inverseJoinColumns = arrayOf( JoinColumn(name = TableConfig.USER_IGNORED_DEVICES_DEVICE_ID_COLUMN_NAME) ))
+    @JoinTable(name = TableConfig.UserIgnoredDevicesJoinTableName,
+            joinColumns = arrayOf( JoinColumn(name = TableConfig.UserIgnoredDevicesUserIdColumnName) ),
+            inverseJoinColumns = arrayOf( JoinColumn(name = TableConfig.UserIgnoredDevicesDeviceIdColumnName) ))
     var ignoredDevices: List<Device> = ArrayList()
         private set
 

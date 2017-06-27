@@ -45,20 +45,20 @@ class TableConfig {
         const val UserDeviceJoinTableDeviceIdColumnName = "device_id"
 
 
-        /*          User_SynchronizedDevices JoinTable Column Names        */
+        /*          User SynchronizedDevices JoinTable Column Names        */
 
-        const val USER_SYNCHRONIZED_DEVICES_JOIN_TABLE_NAME = "LocalConfig_SynchronizedDevices"
+        const val UserSynchronizedDevicesJoinTableName = "user_synchronized_devices_join_table"
 
-        const val USER_SYNCHRONIZED_DEVICES_LOCAL_CONFIG_ID_COLUMN_NAME = "local_config_id"
-        const val USER_SYNCHRONIZED_DEVICES_DEVICE_ID_COLUMN_NAME = "device_id"
+        const val UserSynchronizedDevicesUserIdColumnName = "user_id"
+        const val UserSynchronizedDevicesDeviceIdColumnName = "device_id"
 
 
-        /*          User_IgnoredDevices JoinTable Column Names        */
+        /*          User IgnoredDevices JoinTable Column Names        */
 
-        const val USER_IGNORED_DEVICES_JOIN_TABLE_NAME = "LocalConfig_IgnoredDevices"
+        const val UserIgnoredDevicesJoinTableName = "user_ignored_devices_join_table"
 
-        const val USER_IGNORED_DEVICES_LOCAL_CONFIG_ID_COLUMN_NAME = "local_config_id"
-        const val USER_IGNORED_DEVICES_DEVICE_ID_COLUMN_NAME = "device_id"
+        const val UserIgnoredDevicesUserIdColumnName = "user_id"
+        const val UserIgnoredDevicesDeviceIdColumnName = "device_id"
 
 
 
