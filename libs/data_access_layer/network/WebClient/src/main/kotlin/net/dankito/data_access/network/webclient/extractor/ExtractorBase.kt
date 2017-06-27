@@ -114,4 +114,9 @@ abstract class ExtractorBase(val webClient : IWebClient) {
         return makeLinkAbsolute(element.attr(attributeName), siteUrl)
     }
 
+
+    protected fun convertNonBreakableSpans(text: String): String {
+        return text.replace("\u00A0", " ") // Converting &nbsp; entities
+    }
+
 }
