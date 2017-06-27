@@ -3,6 +3,7 @@ package net.dankito.deepthought.service.data
 import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.User
+import net.dankito.deepthought.model.enums.ApplicationLanguage
 import net.dankito.deepthought.model.enums.FileType
 import net.dankito.deepthought.model.enums.FileTypeDefaultFolderName
 import net.dankito.deepthought.model.enums.NoteType
@@ -76,13 +77,17 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
 
 
     protected open fun createEnumerationsDefaultValues(deepThought: DeepThought) {
-        createNoteTypeDefaultValues(deepThought)
-        createFileTypeDefaultValues(deepThought)
-
-        // TODO: create ApplicationLanguages
+        createDefaultApplicationLanguages(deepThought)
+        createDefaultNoteTypes(deepThought)
+        createDefaultFileTypes(deepThought)
     }
 
-    protected open fun createNoteTypeDefaultValues(deepThought: DeepThought) {
+    protected open fun createDefaultApplicationLanguages(deepThought: DeepThought) {
+        deepThought.addApplicationLanguage(ApplicationLanguage("application.language.english", "en", true, 1))
+        deepThought.addApplicationLanguage(ApplicationLanguage("application.language.german", "de", true, 2))
+    }
+
+    protected open fun createDefaultNoteTypes(deepThought: DeepThought) {
         deepThought.addNoteType(NoteType("note.type.unset", true, 1))
         deepThought.addNoteType(NoteType("note.type.comment", true, 2))
         deepThought.addNoteType(NoteType("note.type.info", true, 3))
@@ -90,7 +95,7 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
         deepThought.addNoteType(NoteType("note.type.thought", true, 5))
     }
 
-    protected open fun createFileTypeDefaultValues(deepThought: DeepThought) {
+    protected open fun createDefaultFileTypes(deepThought: DeepThought) {
         deepThought.addFileType(FileType("file.type.document", FileTypeDefaultFolderName.Documents.folderName, true, 1))
         deepThought.addFileType(FileType("file.type.image", FileTypeDefaultFolderName.Images.folderName, true, 2))
         deepThought.addFileType(FileType("file.type.audio", FileTypeDefaultFolderName.Audio.folderName, true, 3))
