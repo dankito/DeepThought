@@ -8,7 +8,7 @@ import javax.persistence.MappedSuperclass
 
 
 @MappedSuperclass
-open class ExtensibleEnumeration : BaseEntity {
+open class ExtensibleEnumeration : BaseEntity, Comparable<ExtensibleEnumeration> {
 
     // TODO: localize nameResourceKey
 
@@ -47,6 +47,11 @@ open class ExtensibleEnumeration : BaseEntity {
         this.nameResourceKey = nameResourceKey
         this.isSystemValue = isSystemValue
         this.sortOrder = sortOrder
+    }
+
+
+    override fun compareTo(other: ExtensibleEnumeration): Int {
+        return sortOrder.compareTo(other.sortOrder)
     }
 
 }
