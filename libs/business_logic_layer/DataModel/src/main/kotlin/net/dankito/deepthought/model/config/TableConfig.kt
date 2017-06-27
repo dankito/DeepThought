@@ -36,14 +36,6 @@ class TableConfig {
         const val UserPasswordColumnName = "password"
 
 
-        /*          User Device Join Table Config        */
-
-        const val UserDeviceJoinTableName = "user_device_join_table"
-
-        const val UserDeviceJoinTableUserIdColumnName = "user_id"
-        const val UserDeviceJoinTableDeviceIdColumnName = "device_id"
-
-
         /*          User SynchronizedDevices JoinTable Column Names        */
 
         const val UserSynchronizedDevicesJoinTableName = "user_synchronized_devices_join_table"

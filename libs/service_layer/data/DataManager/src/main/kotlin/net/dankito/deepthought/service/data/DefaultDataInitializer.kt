@@ -24,7 +24,6 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
         val localUser = createNewLocalUser()
 
         val localDevice = createUserDefaultDevice(localUser)
-        localUser.addDevice(localDevice)
 
         val deepThought = initDeepThought(localUser, localDevice)
 

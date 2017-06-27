@@ -37,12 +37,6 @@ data class User(
     var password: String = ""
 
 
-    //  @OneToMany(fetch = FetchType.EAGER, mappedBy = "deviceOwner"/*, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }*/)
-    @ManyToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH))
-    @JoinTable(name = TableConfig.UserDeviceJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.UserDeviceJoinTableUserIdColumnName)/*, referencedColumnName = "id"*/), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.UserDeviceJoinTableDeviceIdColumnName)/*, referencedColumnName = "id"*/))
-    var devices: MutableSet<Device> = HashSet()
-        private set
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = TableConfig.UserSynchronizedDevicesJoinTableName,
             joinColumns = arrayOf( JoinColumn(name = TableConfig.UserSynchronizedDevicesUserIdColumnName) ),
@@ -57,31 +51,6 @@ data class User(
     var ignoredDevices: List<Device> = ArrayList()
         private set
 
-
-
-    fun hasDevices(): Boolean {
-        return devices.size > 0
-    }
-
-    fun containsDevice(device: Device): Boolean {
-        return devices.contains(device)
-    }
-
-    fun addDevice(device: Device): Boolean {
-        if(devices.contains(device) == false) {
-            return devices.add(device)
-        }
-
-        return false
-    }
-
-    fun removeDevice(device: Device): Boolean {
-        if(devices.contains(device) == true) {
-            return devices.remove(device)
-        }
-
-        return false
-    }
 
 
     fun addSynchronizedDevice(device: Device): Boolean {
