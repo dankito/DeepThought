@@ -3,7 +3,6 @@ package net.dankito.deepthought.service.data
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.deepthought.model.DeepThought
-import net.dankito.deepthought.model.DeepThoughtApplication
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.User
 import net.dankito.utils.IPlatformConfiguration
@@ -13,19 +12,17 @@ import kotlin.concurrent.thread
 
 
 class DataManager(val entityManager: IEntityManager, private val configuration: EntityManagerConfiguration,
-                  private val defaultDataInitializer: DefaultDataInitializer, private val platformConfiguration: IPlatformConfiguration) {
+                  private val defaultDataInitializer: DefaultDataInitializer, platformConfiguration: IPlatformConfiguration) {
 
     companion object {
         private val log = LoggerFactory.getLogger(DataManager::class.java)
     }
 
 
-    lateinit var application: DeepThoughtApplication
+    lateinit var deepThought: DeepThought
 
-    lateinit var loggedOnUser: User
+    lateinit var localUser: User
     lateinit var localDevice: Device
-
-    var currentDeepThought: DeepThought? = null
 
     var dataFolderPath: File
 
@@ -55,45 +52,34 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
         entityManager.open(configuration)
     }
 
-    private fun retrieveBasicData(): DeepThought? {
+    private fun retrieveBasicData() {
         try {
-            val applicationsQueryResult = entityManager.getAllEntitiesOfType(DeepThoughtApplication::class.java)
+            val deepThoughtQueryResult = entityManager.getAllEntitiesOfType(DeepThought::class.java)
 
-            if (applicationsQueryResult.size > 0) { // TODO: what to do if there's more than one DeepThoughtApplication instance persisted?
-                application = applicationsQueryResult[0]
+            if (deepThoughtQueryResult.isNotEmpty()) { // TODO: what to do if there's more than one DeepThought instance persisted?
+                deepThought = deepThoughtQueryResult[0]
 
-                loggedOnUser = application.lastLoggedOnUser
-                localDevice = application.localDevice
+                localUser = deepThought.localUser
+                localDevice = deepThought.localDevice
 
                 // TODO: set application language according to user's settings
-
-                // TODO: what to return if user was already logged on but autoLogOn is set to false?
-                if (application.autoLogOnLastLoggedOnUser) {
-                    currentDeepThought = loggedOnUser.lastViewedDeepThought
-
-                    return currentDeepThought
-                }
             }
         } catch (ex: Exception) {
-            log.error("Could not deserialize DeepThoughtApplication", ex)
-            // TODO: determine if this is ok because this is the first Application start or if a severe error occurred?
+            log.error("Could not deserialize DeepThought", ex)
+            // TODO: determine if this is ok because this is the first app start or if a severe error occurred?
         }
 
 
-        return createAndPersistDefaultDeepThought()
+        createAndPersistDefaultDeepThought()
     }
 
-    protected fun createAndPersistDefaultDeepThought(): DeepThought? {
-        application = defaultDataInitializer.createDefaultData()
+    protected fun createAndPersistDefaultDeepThought() {
+        deepThought = defaultDataInitializer.createDefaultData()
 
-        loggedOnUser = application.lastLoggedOnUser
-        localDevice = application.localDevice
+        localUser = deepThought.localUser
+        localDevice = deepThought.localDevice
 
-        currentDeepThought = loggedOnUser.lastViewedDeepThought
-
-        entityManager.persistEntity(application)
-
-        return currentDeepThought
+        entityManager.persistEntity(deepThought)
     }
 
 

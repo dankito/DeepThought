@@ -1,16 +1,16 @@
 package net.dankito.deepthought.model
 
-import net.dankito.deepthought.service.data.DataManager
+import net.dankito.service.eventbus.IEventBus
+import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.specific.EntriesSearch
 
 
-class AllEntriesCalculatedTag(private val dataManager: DataManager) : CalculatedTag("All Entries") { // TODO: translate
+class AllEntriesCalculatedTag(searchEngine: ISearchEngine, eventBus: IEventBus) : CalculatedTag("All Entries", searchEngine, eventBus) { // TODO: translate
 
-    init {
-        dataManager.addInitializationListener {
-            dataManager.currentDeepThought?.let {
-                entries = it.entries
-            }
-        }
+    override fun retrieveEntriesAsync(done: (List<Entry>) -> Unit) {
+        searchEngine.searchEntries(EntriesSearch {
+            done(it)
+        })
     }
 
 }

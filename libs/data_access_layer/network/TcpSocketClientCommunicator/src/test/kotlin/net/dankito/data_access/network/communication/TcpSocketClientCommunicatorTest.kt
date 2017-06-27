@@ -4,6 +4,7 @@ import net.dankito.data_access.network.communication.callback.IDeviceRegistratio
 import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.data_access.network.communication.message.Response
 import net.dankito.deepthought.model.*
+import net.dankito.deepthought.model.enums.OsType
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.services.hashing.IBase64Service
 import org.hamcrest.CoreMatchers.`is`
@@ -15,6 +16,7 @@ import org.junit.Test
 import org.mockito.Mockito
 import java.net.InetSocketAddress
 import java.net.SocketAddress
+import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
@@ -38,7 +40,7 @@ class TcpSocketClientCommunicatorTest {
     fun setUp() {
         setUpRemoteDevice()
 
-        val networkSettings = NetworkSettings(remoteDevice)
+        val networkSettings = NetworkSettings(remoteDevice, User("Local", UUID.randomUUID().toString()))
 
         underTest = TcpSocketClientCommunicator(networkSettings, Mockito.mock(IDeviceRegistrationHandler::class.java), Mockito.mock(IBase64Service::class.java), ThreadPool())
 

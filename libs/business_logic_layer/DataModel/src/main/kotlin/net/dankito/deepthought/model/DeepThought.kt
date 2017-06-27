@@ -1,6 +1,7 @@
 package net.dankito.deepthought.model
 
 import net.dankito.deepthought.model.config.TableConfig
+import net.dankito.deepthought.model.enums.ApplicationLanguage
 import net.dankito.deepthought.model.enums.FileType
 import net.dankito.deepthought.model.enums.NoteType
 import java.io.Serializable
@@ -9,230 +10,141 @@ import javax.persistence.*
 
 
 @Entity(name = TableConfig.DeepThoughtTableName)
-class DeepThought : UserDataEntity(), Serializable {
+data class DeepThought(
+
+        @OneToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST))
+        @JoinColumn(name = TableConfig.DeepThoughtLocalUserJoinColumnName)
+        var localUser: User,
+
+        @OneToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST))
+        @JoinColumn(name = TableConfig.DeepThoughtLocalDeviceJoinColumnName)
+        val localDevice: Device
+
+) : BaseEntity(), Serializable {
+
 
     companion object {
-        private const val serialVersionUID = 441616313532856392L
+        private const val serialVersionUID = -3232937271770851228L
     }
 
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
-    var entries: MutableList<Entry> = mutableListOf() // TODO: don't expose a mutable list
-        private set
-
-    @Column(name = TableConfig.DeepThoughtNextEntryIndexColumnName)
-    var nextEntryIndex = 0L
-        private set
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
-    var tags: MutableList<Tag> = mutableListOf()
-        private set
+    @Column(name = TableConfig.DeepThoughtDataModelVersionColumnName)
+    val dataModelVersion = 1
 
 
     @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
-    var references: MutableList<Reference> = mutableListOf()
+    var users: MutableSet<User> = HashSet()
         private set
 
     @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
-    var notes: MutableList<Note> = mutableListOf()
-        private set
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
-    var files: MutableList<FileLink> = mutableListOf()
-        private set
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
-    var entriesGroups: MutableList<EntriesGroup> = mutableListOf()
-        private set
-
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
-    @OrderBy("createdOn DESC")
-    var readLaterArticles: MutableList<ReadLaterArticle> = mutableListOf()
+    var devices: MutableSet<Device> = HashSet()
         private set
 
 
     @OneToMany(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST))
     @OrderBy(value = "sortOrder")
+    var applicationLanguages: MutableSet<ApplicationLanguage> = TreeSet<ApplicationLanguage>() // these are the Languages the UI can display
+        private set
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
+    @OrderBy(value = "sortOrder")
     var noteTypes: MutableSet<NoteType> = TreeSet<NoteType>()
         private set
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST))
+    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     @OrderBy(value = "sortOrder")
     var fileTypes: MutableSet<FileType> = TreeSet<FileType>()
         private set
 
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = TableConfig.DeepThoughtDeepThoughtOwnerJoinColumnName)
-    var deepThoughtOwner: User? = null
-        internal set
+    @Column(name = TableConfig.DeepThoughtNextEntryIndexColumnName)
+    var nextEntryIndex = 0L
+        private set
 
 
-    fun getCountEntries() : Int {
-        return entries.size
-    }
+    private constructor() : this(User(), Device())
 
-    fun addEntry(entry: Entry): Boolean {
-        return entries.add(entry)
-    }
 
-    fun removeEntry(entry: Entry): Boolean {
-        if (entries.remove(entry)) {
-            removeAllRelationsFromEntry(entry)
-
+    fun addUser(user: User): Boolean {
+        if (users.add(user)) {
             return true
         }
 
         return false
     }
 
-    private fun removeAllRelationsFromEntry(entry: Entry) {
-        for (tag in ArrayList(entry.tags)) {
-            entry.removeTag(tag)
+    fun removeUser(user: User): Boolean {
+        if (users.remove(user)) {
+            return true
         }
 
-        entry.reference = null
-
-        for (note in ArrayList(entry.notes)) {
-            entry.removeNote(note)
-        }
-
-        for (entriesGroup in ArrayList(entry.entryGroups)) {
-            entry.removeEntriesGroup(entriesGroup)
-        }
-
-        for (attachedFile in ArrayList(entry.attachedFiles)) {
-            entry.removeAttachedFile(attachedFile)
-        }
-
-        for (embeddedFile in ArrayList(entry.embeddedFiles)) {
-            entry.removeEmbeddedFile(embeddedFile)
-        }
-
-        entry.previewImage = null
+        return false
     }
+
+
+    fun addDevice(device: Device): Boolean {
+        if (devices.add(device)) {
+            return true
+        }
+
+        return false
+    }
+
+    fun removeDevice(device: Device): Boolean {
+        if (localDevice == device) { // don't delete local device!
+            return false
+        }
+
+        if (devices.remove(device)) {
+            return true
+        }
+
+        return false
+    }
+
+
+    fun addApplicationLanguage(applicationLanguage: ApplicationLanguage): Boolean {
+        return applicationLanguages.add(applicationLanguage)
+    }
+
+    fun removeApplicationLanguage(applicationLanguage: ApplicationLanguage): Boolean {
+        if (applicationLanguage.isSystemValue) {
+            return false
+        }
+
+        return applicationLanguages.remove(applicationLanguage)
+    }
+
+
+    fun addNoteType(noteType: NoteType): Boolean {
+        return noteTypes.add(noteType)
+    }
+
+    fun removeNoteType(noteType: NoteType): Boolean {
+        if (noteType.isSystemValue) {
+            return false
+        }
+
+        return noteTypes.remove(noteType)
+    }
+
+    fun addFileType(fileType: FileType): Boolean {
+        return fileTypes.add(fileType)
+    }
+
+    fun removeFileType(fileType: FileType): Boolean {
+        if (fileType.isSystemValue) {
+            return false
+        }
+
+        return fileTypes.remove(fileType)
+    }
+
 
     fun increaseNextEntryIndex(): Long {
         synchronized(this) {
             return ++nextEntryIndex
         }
-    }
-
-
-    fun getCountTags() : Int {
-        return tags.size
-    }
-
-    fun addTag(tag: Tag): Boolean {
-        return tags.add(tag)
-    }
-
-    fun removeTag(tag: Tag): Boolean {
-        if (tags.remove(tag)) {
-            for (entry in ArrayList(tag.entries)) {
-                entry.removeTag(tag)
-            }
-
-            return true
-        }
-
-        return false
-    }
-
-
-    fun getCountReferences() : Int {
-        return references.size
-    }
-
-    fun addReference(reference: Reference): Boolean {
-        return references.add(reference)
-    }
-
-    fun removeReference(reference: Reference): Boolean {
-        if (references.remove(reference)) {
-            for (entry in ArrayList(reference.entries)) {
-                entry.reference = null
-            }
-
-            return true
-        }
-
-        return false
-    }
-
-
-    fun addNote(note: Note): Boolean {
-        return notes.add(note)
-    }
-
-    fun removeNote(note: Note): Boolean {
-        return notes.remove(note)
-    }
-
-
-    fun getCountFiles() : Int {
-        return files.size
-    }
-
-    fun addFile(file: FileLink): Boolean {
-        return files.add(file)
-    }
-
-    fun removeFile(file: FileLink): Boolean {
-        if (files.remove(file)) {
-            for (entry in ArrayList(file.entriesAttachedTo)) {
-                entry.removeAttachedFile(file)
-            }
-            for (entry in ArrayList(file.entriesEmbeddedIn)) {
-                entry.removeEmbeddedFile(file)
-            }
-
-            for (reference in ArrayList(file.referencesAttachedTo)) {
-                reference.removeAttachedFile(file)
-            }
-            for (reference in ArrayList(file.referencesEmbeddedIn)) {
-                reference.removeEmbeddedFile(file)
-            }
-
-            return true
-        }
-
-        return false
-    }
-
-
-    fun getCountEntriesGroups(): Int {
-        return entriesGroups.size
-    }
-
-    fun addEntriesGroup(entriesGroup: EntriesGroup): Boolean {
-        return entriesGroups.add(entriesGroup)
-    }
-
-    fun removeEntriesGroup(entriesGroup: EntriesGroup): Boolean {
-        if (entriesGroups.remove(entriesGroup)) {
-            for (entry in ArrayList(entriesGroup.entries)) {
-                entry.removeEntriesGroup(entriesGroup)
-            }
-
-            return true
-        }
-
-        return false
-    }
-
-
-    fun getCountReadLaterArticles(): Int {
-        return readLaterArticles.size
-    }
-
-    fun addReadLaterArticle(readLaterArticle: ReadLaterArticle): Boolean {
-        return readLaterArticles.add(readLaterArticle)
-    }
-
-    fun removeReadLaterArticle(readLaterArticle: ReadLaterArticle): Boolean {
-        return readLaterArticles.remove(readLaterArticle)
     }
 
 }

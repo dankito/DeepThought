@@ -27,7 +27,7 @@ class FileType : ExtensibleEnumeration {
         this.folderName = folderName
     }
 
-    constructor(nameResourceKey: String, folderName: String, isSystemValue: Boolean, isDeletable: Boolean, sortOrder: Int) : super(nameResourceKey, isSystemValue, isDeletable, sortOrder) {
+    constructor(nameResourceKey: String, folderName: String, isSystemValue: Boolean, sortOrder: Int) : super(nameResourceKey, isSystemValue, sortOrder) {
         this.folderName = folderName
     }
 

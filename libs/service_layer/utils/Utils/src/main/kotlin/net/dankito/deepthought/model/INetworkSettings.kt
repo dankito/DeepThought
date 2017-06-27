@@ -5,6 +5,8 @@ interface INetworkSettings {
 
     val localHostDevice: Device
 
+    val localUser: User
+
     var messagePort: Int
 
     var basicDataSynchronizationPort: Int

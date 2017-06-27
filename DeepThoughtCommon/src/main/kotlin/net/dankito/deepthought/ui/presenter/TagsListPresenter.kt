@@ -36,7 +36,7 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private val dat
 
             eventBus.register(eventBusListener)
 
-            calculatedTags.add(AllEntriesCalculatedTag(dataManager))
+            calculatedTags.add(AllEntriesCalculatedTag(searchEngine, eventBus))
             calculatedTags.add(EntriesWithoutTagsCalculatedTag(searchEngine, eventBus))
 
             dataManager.addInitializationListener { tagsListView.updateDisplayedTags() }

@@ -10,6 +10,7 @@ import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.discovery.UdpDevicesDiscoverer
 import net.dankito.deepthought.model.*
+import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.service.synchronization.*
@@ -147,7 +148,7 @@ class CommunicationManagerTest {
 
         localDataManager.addInitializationListener {
             localDevice = localDataManager.localDevice
-            localNetworkSettings = NetworkSettings(localDevice)
+            localNetworkSettings = NetworkSettings(localDevice, localDataManager.localUser)
 
             localClientCommunicator = TcpSocketClientCommunicator(localNetworkSettings, localRegistrationHandler, base64Service, threadPool)
 
@@ -175,7 +176,7 @@ class CommunicationManagerTest {
 
         remoteDataManager.addInitializationListener {
             remoteDevice = remoteDataManager.localDevice
-            remoteNetworkSettings = NetworkSettings(remoteDevice)
+            remoteNetworkSettings = NetworkSettings(remoteDevice, remoteDataManager.localUser)
 
             remoteClientCommunicator = TcpSocketClientCommunicator(remoteNetworkSettings, remoteRegistrationHandler, base64Service, threadPool)
 

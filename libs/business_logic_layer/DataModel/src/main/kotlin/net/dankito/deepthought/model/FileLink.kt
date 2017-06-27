@@ -19,7 +19,7 @@ data class FileLink(
         @Column(name = TableConfig.FileLinkIsFolderColumnName)
         var isFolder: Boolean = false
 
-) : UserDataEntity(), Serializable {
+) : BaseEntity(), Serializable {
 
     // TODO: automatically set name and fileType when uriString gets set
 

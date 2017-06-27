@@ -18,7 +18,7 @@ data class Entry(
         @Lob
         var abstractString: String = "" // field cannot be named 'abstract' as this is a Java Keyword. So i named field abstractString but getter is called getAbstract()
 
-) : UserDataEntity(), Serializable {
+) : BaseEntity(), Serializable {
 
     companion object {
         private const val serialVersionUID = 596730656893495215L

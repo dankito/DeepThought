@@ -17,6 +17,7 @@ import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.TagService
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.IPlatformConfiguration
+import net.dankito.utils.localization.Localization
 import javax.inject.Singleton
 
 
@@ -25,8 +26,8 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideDefaultDataInitializer(platformConfiguration: IPlatformConfiguration) : DefaultDataInitializer {
-        return DefaultDataInitializer(platformConfiguration)
+    fun provideDefaultDataInitializer(platformConfiguration: IPlatformConfiguration, localization: Localization) : DefaultDataInitializer {
+        return DefaultDataInitializer(platformConfiguration, localization)
     }
 
     @Provides
@@ -75,19 +76,16 @@ class CommonDataModule {
         val configuration = EntityManagerConfiguration("data", "deep_thought_db")
 
         configuration.entityClasses = listOf<Class<*>>(
-                DeepThoughtApplication::class.java,
+                DeepThought::class.java,
 
                 ApplicationLanguage::class.java,
+                FileType::class.java,
+                NoteType::class.java,
+
 
                 User::class.java,
                 Device::class.java,
-                UsersGroup::class.java,
 
-
-                DeepThought::class.java,
-
-                FileType::class.java,
-                NoteType::class.java,
 
                 Entry::class.java,
                 Tag::class.java,

@@ -2,7 +2,7 @@ package net.dankito.deepthought.android.service.platform
 
 import android.content.Context
 import android.os.Build
-import net.dankito.deepthought.model.OsType
+import net.dankito.deepthought.model.enums.OsType
 import net.dankito.utils.IPlatformConfiguration
 import java.io.File
 

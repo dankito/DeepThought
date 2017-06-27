@@ -1,14 +1,14 @@
 package net.dankito.deepthought.model.enums
 
 
-import net.dankito.deepthought.model.UserDataEntity
+import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.model.config.TableConfig
 import javax.persistence.Column
 import javax.persistence.MappedSuperclass
 
 
 @MappedSuperclass
-open class ExtensibleEnumeration : UserDataEntity {
+open class ExtensibleEnumeration : BaseEntity, Comparable<ExtensibleEnumeration> {
 
     // TODO: localize nameResourceKey
 
@@ -34,25 +34,24 @@ open class ExtensibleEnumeration : UserDataEntity {
     var isSystemValue: Boolean = false
         protected set
 
-    @Column(name = TableConfig.ExtensibleEnumerationIsDeletableColumnName)
-    var isDeletable: Boolean = false
-        protected set
-
 
     protected constructor() {
         this.isSystemValue = false
-        this.isDeletable = true
     }
 
     constructor(name: String) : this() {
         this.name = name
     }
 
-    constructor(nameResourceKey: String, isSystemValue: Boolean, isDeletable: Boolean, sortOrder: Int) {
+    constructor(nameResourceKey: String, isSystemValue: Boolean, sortOrder: Int) {
         this.nameResourceKey = nameResourceKey
         this.isSystemValue = isSystemValue
-        this.isDeletable = isDeletable
         this.sortOrder = sortOrder
+    }
+
+
+    override fun compareTo(other: ExtensibleEnumeration): Int {
+        return sortOrder.compareTo(other.sortOrder)
     }
 
 }

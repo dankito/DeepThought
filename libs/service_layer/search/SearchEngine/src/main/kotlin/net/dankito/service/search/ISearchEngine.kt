@@ -1,6 +1,7 @@
 package net.dankito.service.search
 
 import net.dankito.service.search.specific.EntriesSearch
+import net.dankito.service.search.specific.TagsSearch
 
 
 interface ISearchEngine {
@@ -9,5 +10,7 @@ interface ISearchEngine {
 
 
     fun searchEntries(search: EntriesSearch)
+
+    fun searchTags(search: TagsSearch)
 
 }

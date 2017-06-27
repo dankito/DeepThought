@@ -125,7 +125,7 @@ class CommonModule {
     @Provides
     @Singleton
     fun provideNetworkSettings(dataManager: DataManager) : INetworkSettings {
-        return NetworkSettings(dataManager.localDevice)
+        return NetworkSettings(dataManager.localDevice, dataManager.localUser)
     }
 
     @Provides

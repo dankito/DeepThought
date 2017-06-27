@@ -120,7 +120,7 @@ class MessageHandler(protected var config: MessageHandlerConfig) : IMessageHandl
     }
 
     private fun isDevicePermittedToSynchronize(remoteDeviceUniqueId: String): Boolean {
-        val synchronizedDevices = networkSettings.localHostDevice.synchronizedDevices
+        val synchronizedDevices = networkSettings.localUser.synchronizedDevices
 
         for (synchronizedDevice in synchronizedDevices) {
             if (synchronizedDevice.uniqueDeviceId.equals(remoteDeviceUniqueId)) {

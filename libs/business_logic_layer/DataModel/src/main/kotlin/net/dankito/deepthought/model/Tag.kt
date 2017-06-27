@@ -11,7 +11,7 @@ open class Tag(
         @Column(name = TableConfig.TagNameColumnName)
         var name: String
 
-): UserDataEntity(), Serializable {
+): BaseEntity(), Serializable {
 
     companion object {
         private const val serialVersionUID = 1204202485407318615L
