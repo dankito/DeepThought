@@ -1,6 +1,5 @@
 package net.dankito.service.search
 
-import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.TagService
@@ -50,12 +49,12 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
 
 
     private fun dataManagerInitialized() {
-        dataManager.currentDeepThought?.let { createDirectoryAndIndexSearcherAndWriterForDeepThought(it) }
+        createDirectoryAndIndexSearcherAndWriterForDeepThought()
     }
 
-    private fun createDirectoryAndIndexSearcherAndWriterForDeepThought(deepThought: DeepThought) {
+    private fun createDirectoryAndIndexSearcherAndWriterForDeepThought() {
         try {
-            val indexBaseDir = File(File(dataManager.dataFolderPath, "index"), deepThought.id)
+            val indexBaseDir = File(dataManager.dataFolderPath, "index")
             val indexDirExists = indexBaseDir.exists()
 
             val defaultIndexDirectoryFile = File(indexBaseDir, "default")
@@ -76,7 +75,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
 
             searchEngineInitialized()
         } catch (ex: Exception) {
-            log.error("Could not open Lucene Index Directory for DeepThought " + deepThought, ex)
+            log.error("Could not open Lucene Index Directory" , ex)
         }
     }
 
