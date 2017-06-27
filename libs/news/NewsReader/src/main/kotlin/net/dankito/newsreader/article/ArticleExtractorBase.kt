@@ -80,4 +80,9 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
         }
     }
 
+
+    protected fun convertNonBreakableSpans(text: String): String {
+        return text.replace("\u00A0", " ") // Converting &nbsp; entities
+    }
+
 }
