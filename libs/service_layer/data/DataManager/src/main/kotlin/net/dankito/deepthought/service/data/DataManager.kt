@@ -54,10 +54,10 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
 
     private fun retrieveBasicData() {
         try {
-            val applicationsQueryResult = entityManager.getAllEntitiesOfType(DeepThought::class.java)
+            val deepThoughtQueryResult = entityManager.getAllEntitiesOfType(DeepThought::class.java)
 
-            if (applicationsQueryResult.size > 0) { // TODO: what to do if there's more than one DeepThought instance persisted?
-                deepThought = applicationsQueryResult[0]
+            if (deepThoughtQueryResult.size > 0) { // TODO: what to do if there's more than one DeepThought instance persisted?
+                deepThought = deepThoughtQueryResult[0]
 
                 loggedOnUser = deepThought.lastLoggedOnUser
                 localDevice = deepThought.localDevice
@@ -66,7 +66,7 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
             }
         } catch (ex: Exception) {
             log.error("Could not deserialize DeepThought", ex)
-            // TODO: determine if this is ok because this is the first Application start or if a severe error occurred?
+            // TODO: determine if this is ok because this is the first app start or if a severe error occurred?
         }
 
 
