@@ -5,10 +5,12 @@ import android.support.v7.app.AppCompatActivity
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorsAdapter
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
+import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
-import net.dankito.deepthought.news.summary.config.ConfigChangedListener
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.service.data.messages.EntitiesOfTypeChanged
+import net.dankito.service.eventbus.IEventBus
+import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 
 
@@ -20,6 +22,12 @@ class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
     @Inject
     protected lateinit var summaryExtractorsManager: ArticleSummaryExtractorConfigManager
 
+    @Inject
+    protected lateinit var eventBus: IEventBus
+
+
+    private val eventBusListener = EventBusListener()
+
     private var adapter: ArticleSummaryExtractorsAdapter
 
 
@@ -27,6 +35,8 @@ class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
         AppComponent.component.inject(this)
 
         adapter = ArticleSummaryExtractorsAdapter(activity, summaryExtractorsManager)
+
+        eventBus.register(eventBusListener)
     }
 
 
@@ -45,17 +55,9 @@ class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
             dialog.dismiss()
         })
 
-        builder.setOnDismissListener { summaryExtractorsManager.removeListener(articleSummaryExtractorConfigChangedListener)  }
+        builder.setOnDismissListener { eventBus.unregister(eventBusListener)  }
 
         builder.create().show()
-
-        summaryExtractorsManager.addListener(articleSummaryExtractorConfigChangedListener)
-    }
-
-    private val articleSummaryExtractorConfigChangedListener = object : ConfigChangedListener {
-        override fun configChanged(config: ArticleSummaryExtractorConfig) {
-            activity.runOnUiThread { adapter.notifyDataSetChanged() }
-        }
     }
 
 
@@ -65,6 +67,17 @@ class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
 
     private fun showAddArticleSummaryExtractorView() {
         router.showAddArticleSummaryExtractorView()
+    }
+
+
+    inner class EventBusListener {
+
+        @Handler
+        fun articleSummaryExtractorsChanged(changed: EntitiesOfTypeChanged) {
+            if(changed.entityType == ArticleSummaryExtractorConfig::class.java) {
+                activity.runOnUiThread { adapter.notifyDataSetChanged() }
+            }
+        }
     }
 
 }
