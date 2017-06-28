@@ -41,8 +41,6 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
 
     private var favorites: MutableList<ArticleSummaryExtractorConfig> = ArrayList()
 
-    private val listeners = mutableListOf<ConfigChangedListener>()
-
 
     init {
         CommonComponent.component.inject(this)
@@ -201,29 +199,10 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
 
     private fun saveConfig(config: ArticleSummaryExtractorConfig) {
         configService.persist(config)
-
-        callListeners(config)
     }
 
     private fun updateConfig(config: ArticleSummaryExtractorConfig) {
         configService.update(config)
-
-        callListeners(config)
-    }
-
-
-    fun addListener(listener: ConfigChangedListener) {
-        listeners.add(listener)
-        log.info("Added: Count listeners now: " + listeners.size)
-    }
-
-    fun removeListener(listener: ConfigChangedListener) {
-        listeners.remove(listener)
-        log.info("Removed: Count listeners now: " + listeners.size)
-    }
-
-    private fun callListeners(config: ArticleSummaryExtractorConfig) {
-        listeners.forEach { it.configChanged(config) }
     }
 
 }
