@@ -11,7 +11,6 @@ import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
-import net.dankito.newsreader.model.EntryExtractionResult
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
@@ -80,13 +79,6 @@ class JavaFXArticleSummaryPresenter(private val articleSummaryExtractor: Article
     fun getAndShowArticle(item: ArticleSummaryItem) {
         getAndShowArticle(item) {
             showArticleExtractionError(item, it)
-        }
-    }
-
-    override fun showArticle(extractionResult: EntryExtractionResult) {
-        runLater {
-            // ensure Window is started on UI thread
-            super.showArticle(extractionResult)
         }
     }
 
