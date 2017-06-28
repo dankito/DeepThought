@@ -19,28 +19,48 @@
         android:layout_height="match_parent"
         android:layout_toRightOf="@+id/imgPreviewImage"
         android:layout_toEndOf="@+id/imgPreviewImage"
-        android:layout_toLeftOf="@+id/chkIsFavorite"
-        android:layout_toStartOf="@+id/chkIsFavorite"
+        android:layout_toLeftOf="@+id/lytIsFavorite"
+        android:layout_toStartOf="@+id/lytIsFavorite"
         android:gravity="center_vertical"
         style="@style/TextAppearance.AppCompat.Large"
     />
 
 
-    <!-- First i wanted to use a RatingBar, but then i got the tipp to style a CheckBox with a star (but image needs up scaling then): https://stackoverflow.com/questions/8930735/how-to-set-the-favorite-star-icon-to-on-when-clicked-and-off-when-again-clicked -->
+    <RelativeLayout
+        android:id="@+id/lytIsFavorite"
+        android:layout_width="@dimen/list_item_article_summary_extractor_is_favorite_width"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/list_item_article_summary_extractor_is_favorite_margin_right"
+        android:layout_marginEnd="@dimen/list_item_article_summary_extractor_is_favorite_margin_right"
+    >
 
-    <CheckBox android:id="@+id/chkIsFavorite"
-              android:layout_width="wrap_content"
-              android:layout_height="match_parent"
-              android:layout_alignParentTop="true"
-              android:layout_alignParentRight="true"
-              android:layout_alignParentEnd="true"
-              android:layout_alignParentBottom="true"
-              android:layout_centerVertical="true"
-              android:layout_marginRight="@dimen/list_item_article_summary_extractor_is_favorite_margin_right"
-              android:layout_marginEnd="@dimen/list_item_article_summary_extractor_is_favorite_margin_right"
-              android:scaleX="@dimen/list_item_article_summary_extractor_is_favorite_scale"
-              android:scaleY="@dimen/list_item_article_summary_extractor_is_favorite_scale"
-              style="?android:attr/starStyle"
-    />
+        <!-- First i wanted to use a RatingBar, but then i got the tip to style a CheckBox with a star (but image needs up scaling then): https://stackoverflow.com/questions/8930735/how-to-set-the-favorite-star-icon-to-on-when-clicked-and-off-when-again-clicked -->
+
+        <CheckBox android:id="@+id/chkIsFavorite"
+                  android:layout_width="wrap_content"
+                  android:layout_height="match_parent"
+                  android:scaleX="@dimen/list_item_article_summary_extractor_is_favorite_scale"
+                  android:scaleY="@dimen/list_item_article_summary_extractor_is_favorite_scale"
+                  android:layout_centerInParent="true"
+                  style="?android:attr/starStyle"
+        />
+
+        <TextView
+            android:id="@+id/txtFavoriteIndex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/list_item_article_summary_extractor_favorite_index_bottom_margin"
+            android:visibility="gone"
+        />
+
+    </RelativeLayout>
 
 </RelativeLayout>

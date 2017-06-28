@@ -55,6 +55,12 @@ class ArticleSummaryExtractorsAdapter(private val activity: AppCompatActivity, p
         }
 
 
+        view.txtFavoriteIndex.visibility = if(extractorConfig.favoriteIndex != null) View.VISIBLE else View.GONE
+        extractorConfig.favoriteIndex?.let {
+            view.txtFavoriteIndex.text = (it + 1).toString()
+        }
+
+
         view.tag = extractorConfig
 
         return view
