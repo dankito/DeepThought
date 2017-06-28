@@ -1,5 +1,7 @@
 package net.dankito.deepthought.javafx.routing
 
+import javafx.scene.Node
+import javafx.scene.image.ImageView
 import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryExtractionResultView
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryView
@@ -32,7 +34,21 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
     }
 
     override fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig) {
-        mainWindowController.find(ArticleSummaryView::class, mapOf(ArticleSummaryView::articleSummaryExtractor to extractor)).openWindow()
+        var icon: Node? = null
+        extractor.iconUrl?.let { iconUrl ->
+            icon = ImageView(iconUrl)
+        }
+
+//        val view = mainWindowController.find(ArticleSummaryView::class, mapOf(ArticleSummaryView::articleSummaryExtractor to extractor))
+//        InternalWindow(icon, false, true, true).open(view, mainWindowController.mainWindow.root)
+
+//        mainWindowController.find(ArticleSummaryView::class, mapOf(ArticleSummaryView::articleSummaryExtractor to extractor)).openWindow()
+
+//        mainWindowController.find(ArticleSummaryView::class, mapOf(ArticleSummaryView::articleSummaryExtractor to extractor)).openWindow(StageStyle.UTILITY, Modality.NONE)
+
+        val dialogView = mainWindowController.find(ArticleSummaryView::class, mapOf(ArticleSummaryView::articleSummaryExtractor to extractor))
+        dialogView.icon = icon
+        dialogView.openWindow()
     }
 
     override fun showReadLaterArticlesView() {
@@ -41,11 +57,11 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
 
 
     override fun showViewEntryView(entry: Entry) {
-        // TODO: show Entry in MainWindow
+        showEditEntryView(entry)
     }
 
     override fun showViewEntryView(extractionResult: EntryExtractionResult) {
-        // nothing like that on JavaFX, directly go to editing
+        showEditEntryView(extractionResult)
     }
 
 
