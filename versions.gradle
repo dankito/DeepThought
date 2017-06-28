@@ -45,13 +45,22 @@ ext {
 
     hamcrestVersion = '1.3'
 
+
+    // Android
+
+    clansFloatingActionButtonVersion = '1.6.4'
+
     picassoVersion = '2.5.2'
+
+
+    // JavaFX
 
     tornadoFXVersion = '1.7.7'
 
     tornadoFXControlsVersion = '1.0.5'
 
     controlsFXVersion = '8.40.12'
+
 
     logbackVersion = '1.2.3'
 

@@ -74,6 +74,8 @@ dependencies {
 
     compile "com.squareup.picasso:picasso:$picassoVersion"
 
+    compile "com.github.clans:fab:$clansFloatingActionButtonVersion"
+
     compile "org.slf4j:slf4j-android:$slf4jVersion"
 
     compile 'com.android.support:multidex:1.0.1'
