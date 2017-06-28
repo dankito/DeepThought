@@ -185,6 +185,7 @@ class ViewEntryActivity : BaseActivity() {
 
     private fun showEntryFromDatabase(entryId: String) {
         entryService.retrieve(entryId)?.let { entry ->
+            this.entry = entry;
             showEntry(entry, entry.reference?.url)
         }
     }
