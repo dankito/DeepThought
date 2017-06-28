@@ -18,7 +18,7 @@ class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
     protected lateinit var router: IRouter
 
     @Inject
-    protected lateinit var summaryExtractors: ArticleSummaryExtractorConfigManager
+    protected lateinit var summaryExtractorsManager: ArticleSummaryExtractorConfigManager
 
     private var adapter: ArticleSummaryExtractorsAdapter
 
@@ -26,7 +26,7 @@ class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
     init {
         AppComponent.component.inject(this)
 
-        adapter = ArticleSummaryExtractorsAdapter(activity, summaryExtractors.getConfigs())
+        adapter = ArticleSummaryExtractorsAdapter(activity, summaryExtractorsManager)
     }
 
 
@@ -45,11 +45,11 @@ class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
             dialog.dismiss()
         })
 
-        builder.setOnDismissListener { summaryExtractors.removeListener(articleSummaryExtractorConfigChangedListener)  }
+        builder.setOnDismissListener { summaryExtractorsManager.removeListener(articleSummaryExtractorConfigChangedListener)  }
 
         builder.create().show()
 
-        summaryExtractors.addListener(articleSummaryExtractorConfigChangedListener)
+        summaryExtractorsManager.addListener(articleSummaryExtractorConfigChangedListener)
     }
 
     private val articleSummaryExtractorConfigChangedListener = object : ConfigChangedListener {
