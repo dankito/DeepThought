@@ -11,6 +11,8 @@ interface IRouter {
     fun showEntriesForTag(tag: Tag, entries: List<Entry>)
 
 
+    fun showArticleSummaryExtractorsView()
+
     fun showAddArticleSummaryExtractorView()
 
     fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig)

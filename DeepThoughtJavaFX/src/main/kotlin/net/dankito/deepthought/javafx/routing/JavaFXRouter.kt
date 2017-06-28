@@ -18,6 +18,10 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
     lateinit var entriesListView: IEntriesListView
 
 
+    override fun showArticleSummaryExtractorsView() {
+        // nothing to do on JavaFX
+    }
+
     override fun showEntriesForTag(tag: Tag, entries: List<Entry>) {
         entriesListView.showEntriesForTag(tag, entries)
     }
