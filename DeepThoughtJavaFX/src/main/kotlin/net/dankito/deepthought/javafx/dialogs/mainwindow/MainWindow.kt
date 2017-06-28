@@ -17,7 +17,7 @@ import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.EntriesListVie
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.TagsListView
 import net.dankito.deepthought.javafx.res.icons.IconPaths
 import net.dankito.deepthought.javafx.util.FXUtils
-import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
+import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.ReadLaterArticleService
 import tornadofx.*
