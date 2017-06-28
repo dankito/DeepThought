@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- set fab:fab_label to any value as if not set Label Text set in code won't be displayed at all -->
+<com.github.clans.fab.FloatingActionButton
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    style="@style/MenuButtonsStyle"
+
+    fab:fab_label=" "
+/>
