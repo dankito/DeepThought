@@ -1,6 +1,8 @@
 package net.dankito.deepthought.android.views
 
 import android.app.Activity
+import android.view.LayoutInflater
+import android.view.View
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import kotlinx.android.synthetic.main.view_floating_action_button_main.view.*
@@ -8,9 +10,17 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.service.data.messages.EntitiesOfTypeChanged
+import net.dankito.service.eventbus.IEventBus
+import net.engio.mbassy.listener.Handler
 
 
-class FloatingActionMenuButton(private val fab: FloatingActionMenu, private val router: IRouter, private val summaryExtractorManager: ArticleSummaryExtractorConfigManager) {
+class FloatingActionMenuButton(private val floatingActionMenu: FloatingActionMenu, private val summaryExtractorManager: ArticleSummaryExtractorConfigManager, private val router: IRouter,
+                               private val eventBus: IEventBus) {
+
+    private val favoriteArticleSummaryExtractorsButtons = ArrayList<FloatingActionButton>()
+
+    private val eventBusListener = EventBusListener()
 
     init {
         setup()
@@ -18,34 +28,77 @@ class FloatingActionMenuButton(private val fab: FloatingActionMenu, private val 
 
 
     private fun setup() {
-        fab.fab_add_entry.setOnClickListener { executeAndCloseMenu { router.showCreateEntryView() } }
-        fab.fab_add_newspaper_article.setOnClickListener { executeAndCloseMenu { router.showArticleSummaryExtractorsView() } }
+        floatingActionMenu.fab_add_entry.setOnClickListener { executeAndCloseMenu { router.showCreateEntryView() } }
+        floatingActionMenu.fab_add_newspaper_article.setOnClickListener { executeAndCloseMenu { router.showArticleSummaryExtractorsView() } }
 
-        setupFavoriteArticleSummaryExtractors()
+        setFavoriteArticleSummaryExtractors()
+
+        setupEventBusListener()
     }
 
-    private fun setupFavoriteArticleSummaryExtractors() {
-        val activity = fab.context as Activity
+    private fun setupEventBusListener() {
+        eventBus.register(eventBusListener)
+
+        floatingActionMenu.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+            override fun onViewDetachedFromWindow(v: View?) {
+                eventBus.unregister(eventBusListener)
+
+                floatingActionMenu.removeOnAttachStateChangeListener(this)
+            }
+
+            override fun onViewAttachedToWindow(v: View?) {
+            }
+
+        })
+    }
+
+
+    private fun setFavoriteArticleSummaryExtractors() {
+        val activity = floatingActionMenu.context as Activity
 
         activity.runOnUiThread { setFavoriteArticleSummaryExtractorsOnUIThread(activity, summaryExtractorManager.getFavorites()) }
     }
 
     private fun setFavoriteArticleSummaryExtractorsOnUIThread(activity: Activity, favoriteArticleSummaryExtractors: List<ArticleSummaryExtractorConfig>) {
+        clearFavoriteArticleSummaryExtractorsButtons()
+
         val layoutInflater = activity.layoutInflater
 
         favoriteArticleSummaryExtractors.forEach { extractorConfig ->
-            val menuButton = layoutInflater.inflate(R.layout.view_floating_action_menu_button, null) as FloatingActionButton
-            menuButton.labelText = activity.getString(R.string.floating_action_button_add_article_of_newspaper, extractorConfig.name)
-
-            menuButton.setOnClickListener { executeAndCloseMenu { router.showArticleSummaryView(extractorConfig) } }
-
-            fab.addMenuButton(menuButton, 0)
+            addFavoriteArticleSummaryExtractorsButton(layoutInflater, activity, extractorConfig)
         }
+    }
+
+    private fun addFavoriteArticleSummaryExtractorsButton(layoutInflater: LayoutInflater, activity: Activity, extractorConfig: ArticleSummaryExtractorConfig) {
+        val menuButton = layoutInflater.inflate(R.layout.view_floating_action_menu_button, null) as FloatingActionButton
+        menuButton.labelText = activity.getString(R.string.floating_action_button_add_article_of_newspaper, extractorConfig.name)
+
+        menuButton.setOnClickListener { executeAndCloseMenu { router.showArticleSummaryView(extractorConfig) } }
+
+        floatingActionMenu.addMenuButton(menuButton, 0)
+
+        favoriteArticleSummaryExtractorsButtons.add(menuButton)
+    }
+
+    private fun clearFavoriteArticleSummaryExtractorsButtons() {
+        favoriteArticleSummaryExtractorsButtons.forEach { floatingActionMenu.removeMenuButton(it) }
+        favoriteArticleSummaryExtractorsButtons.clear()
     }
 
     private fun executeAndCloseMenu(action: () -> Unit) {
         action()
-        fab.close(true)
+        floatingActionMenu.close(true)
+    }
+
+
+    inner class EventBusListener {
+
+        @Handler
+        fun articleSummaryExtractorsChanged(changed: EntitiesOfTypeChanged) {
+            if(changed.entityType == ArticleSummaryExtractorConfig::class.java) {
+                setFavoriteArticleSummaryExtractors()
+            }
+        }
     }
 
 }

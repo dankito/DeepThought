@@ -17,6 +17,7 @@ import net.dankito.deepthought.android.service.ui.BaseActivity
 import net.dankito.deepthought.android.views.FloatingActionMenuButton
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.service.eventbus.IEventBus
 import javax.inject.Inject
 
 
@@ -32,6 +33,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     @Inject
     protected lateinit var router: IRouter
+
+    @Inject
+    protected lateinit var eventBus: IEventBus
 
     @Inject
     protected lateinit var summaryExtractorManager: ArticleSummaryExtractorConfigManager
@@ -60,7 +64,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 //        drawer.addDrawerListener(toggle)
 //        toggle.syncState()
 
-        floatingActionMenuButton = FloatingActionMenuButton(fab_menu, router, summaryExtractorManager)
+        floatingActionMenuButton = FloatingActionMenuButton(fab_menu, summaryExtractorManager, router, eventBus)
 
         val navigationView = findViewById(R.id.nav_view) as NavigationView
         navigationView.setNavigationItemSelectedListener(this)
