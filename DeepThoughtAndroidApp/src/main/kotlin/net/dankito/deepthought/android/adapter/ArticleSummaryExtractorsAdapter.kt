@@ -12,12 +12,13 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.utils.BitmapCache
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
+import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.utils.ImageCache
 import javax.inject.Inject
 
 
-class ArticleSummaryExtractorsAdapter(private val activity: AppCompatActivity, extractors: List<ArticleSummaryExtractorConfig>)
-    : ListAdapter<ArticleSummaryExtractorConfig>(extractors) {
+class ArticleSummaryExtractorsAdapter(private val activity: AppCompatActivity, private val summaryExtractorsManager: ArticleSummaryExtractorConfigManager)
+    : ListAdapter<ArticleSummaryExtractorConfig>(summaryExtractorsManager.getConfigs()) {
 
 
     @Inject
@@ -41,6 +42,16 @@ class ArticleSummaryExtractorsAdapter(private val activity: AppCompatActivity, e
         showExtractorIcon(view, extractorConfig)
 
         view.txtExtractorName.text = extractorConfig.name
+
+
+        view.chkIsFavorite.setOnCheckedChangeListener(null)
+
+        view.chkIsFavorite.isChecked = extractorConfig.isFavorite
+
+        view.chkIsFavorite.setOnCheckedChangeListener { _, isChecked ->
+            summaryExtractorsManager.setFavoriteStatus(extractorConfig, isChecked)
+        }
+
 
         view.tag = extractorConfig
 
