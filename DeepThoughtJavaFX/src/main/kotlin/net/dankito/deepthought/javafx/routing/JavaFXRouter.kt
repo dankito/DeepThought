@@ -11,6 +11,7 @@ import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.IEntriesListView
 import net.dankito.newsreader.model.EntryExtractionResult
+import tornadofx.*
 
 
 class JavaFXRouter(private val mainWindowController: MainWindowController) : IRouter {
@@ -32,11 +33,15 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
     }
 
     override fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig) {
-        mainWindowController.find(ArticleSummaryView::class, mapOf(ArticleSummaryView::articleSummaryExtractor to extractor)).openWindow()
+        runLater {
+            mainWindowController.find(ArticleSummaryView::class, mapOf(ArticleSummaryView::articleSummaryExtractor to extractor)).openWindow()
+        }
     }
 
     override fun showReadLaterArticlesView() {
-        mainWindowController.find(ReadLaterArticleView::class).openWindow()
+        runLater {
+            mainWindowController.find(ReadLaterArticleView::class).openWindow()
+        }
     }
 
 
@@ -54,11 +59,15 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
     }
 
     override fun showEditEntryView(entry: Entry) {
-        mainWindowController.find(EditEntryView::class, mapOf(EditEntryView::entry to entry)).openWindow()
+        runLater {
+            mainWindowController.find(EditEntryView::class, mapOf(EditEntryView::entry to entry)).openWindow()
+        }
     }
 
     override fun showEditEntryView(extractionResult: EntryExtractionResult) {
-        mainWindowController.find(EditEntryExtractionResultView::class, mapOf(EditEntryExtractionResultView::extractionResult to extractionResult)).openWindow()
+        runLater {
+            mainWindowController.find(EditEntryExtractionResultView::class, mapOf(EditEntryExtractionResultView::extractionResult to extractionResult)).openWindow()
+        }
     }
 
 
