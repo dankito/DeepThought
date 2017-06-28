@@ -1,6 +1,5 @@
 package net.dankito.deepthought.news.summary.config
 
-import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.extensions.extractor
@@ -14,19 +13,15 @@ import net.dankito.newsreader.feed.RomeFeedReader
 import net.dankito.newsreader.model.FeedArticleSummary
 import net.dankito.newsreader.summary.ImplementedArticleSummaryExtractors
 import net.dankito.serializer.ISerializer
+import net.dankito.service.data.ArticleSummaryExtractorConfigService
 import net.dankito.utils.IThreadPool
 import org.slf4j.LoggerFactory
-import java.io.FileNotFoundException
-import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 
-class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, private val fileStorageService: IFileStorageService, private val threadPool: IThreadPool) {
+class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, private val configService: ArticleSummaryExtractorConfigService, private val threadPool: IThreadPool) {
 
     companion object {
-        private const val FILE_NAME = "ArticleSummaryExtractorConfigurations.json"
-
         private const val MAX_SIZE = 152
 
         private val log = LoggerFactory.getLogger(ArticleSummaryExtractorConfigManager::class.java)
@@ -52,40 +47,39 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
     init {
         CommonComponent.component.inject(this)
 
-        readPersistedConfigs()
-
-        initImplementedExtractors()
-
-        initAddedExtractors()
+        configService.dataManager.addInitializationListener {
+            readPersistedConfigs()
+        }
     }
 
     private fun readPersistedConfigs() {
-        try {
-            // TODO: only temporarily store in file, use database later on
-            fileStorageService.readFromTextFile(FILE_NAME)?.let { fileContent ->
-                configurations = serializer.deserializeObject(fileContent, LinkedHashMap::class.java, String::class.java, ArticleSummaryExtractorConfig::class.java) as
-                        LinkedHashMap<String, ArticleSummaryExtractorConfig>
+        configService.getAllAsync { summaryExtractorConfigs ->
+            summaryExtractorConfigs.forEach { config ->
+                configurations.put(config.url, config)
 
-                configurations.forEach { (_, config) ->
-                    if(config.iconUrl == null) {
-                        loadIconAsync(config)
-                    }
+                if(config.iconUrl == null) {
+                    loadIconAsync(config)
                 }
+            }
 
-                favorites = configurations.values.filter { it.isFavorite }.sortedBy { it.favoriteIndex }.toMutableList()
-            }
-        } catch(e: Exception) {
-            if(e is FileNotFoundException == false) { // on first start-up file does not exist -> don't log error in this case
-                log.error("Could not deserialize ArticleSummaryExtractorConfigs", e)
-            }
+            favorites = configurations.values.filter { it.isFavorite }.sortedBy { it.favoriteIndex }.toMutableList()
+
+
+            initiallyRetrievedSummaryExtractorConfigs()
         }
+    }
+
+    private fun initiallyRetrievedSummaryExtractorConfigs() {
+        initImplementedExtractors()
+
+        initAddedExtractors()
     }
 
     private fun initImplementedExtractors() {
         ImplementedArticleSummaryExtractors(webClient).getImplementedExtractors().forEach { implementedExtractor ->
             var config = configurations.get(implementedExtractor.getBaseUrl())
 
-            if (config == null) {
+            if (config == null) { // a new, unpersisted ArticleSummaryExtractor
                 config = ArticleSummaryExtractorConfig(implementedExtractor.getBaseUrl(), implementedExtractor.getName())
                 config.extractor = implementedExtractor
                 addConfig(config)
@@ -107,7 +101,7 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
         loadIconAsync(config.url) { bestIconUrl ->
             bestIconUrl?.let {
                 config.iconUrl = it
-                saveConfig(config)
+                updateConfig(config)
             }
         }
     }
@@ -149,7 +143,7 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
             extractorConfig.favoriteIndex = null
         }
 
-        saveConfig(extractorConfig)
+        updateConfig(extractorConfig)
     }
 
 
@@ -206,13 +200,13 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
     }
 
     private fun saveConfig(config: ArticleSummaryExtractorConfig) {
-        try {
-            val serializedConfigurations = serializer.serializeObject(configurations)
+        configService.persist(config)
 
-            fileStorageService.writeToTextFile(serializedConfigurations, FILE_NAME)
-        } catch(e: Exception) {
-            log.error("Could not write configurations to " + FILE_NAME, e)
-        }
+        callListeners(config)
+    }
+
+    private fun updateConfig(config: ArticleSummaryExtractorConfig) {
+        configService.update(config)
 
         callListeners(config)
     }
