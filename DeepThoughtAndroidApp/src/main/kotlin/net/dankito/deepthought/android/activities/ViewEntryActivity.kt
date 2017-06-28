@@ -1,8 +1,10 @@
 package net.dankito.deepthought.android.activities
 
 import android.os.Bundle
+import android.support.v7.widget.PopupMenu
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import kotlinx.android.synthetic.main.activity_view_entry.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
@@ -14,8 +16,7 @@ import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.newsreader.model.EntryExtractionResult
 import net.dankito.serializer.ISerializer
 import net.dankito.service.data.EntryService
-import net.dankito.service.data.ReferenceService
-import net.dankito.service.data.TagService
+import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
@@ -34,6 +35,9 @@ class ViewEntryActivity : BaseActivity() {
     protected lateinit var entryPersister: EntryPersister
 
     @Inject
+    protected lateinit var clipboardService: IClipboardService
+
+    @Inject
     protected lateinit var router: IRouter
 
     @Inject
@@ -49,7 +53,7 @@ class ViewEntryActivity : BaseActivity() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = ViewEntryPresenter(entryPersister, router)
+        presenter = ViewEntryPresenter(entryPersister, clipboardService, router)
     }
 
 
@@ -125,20 +129,57 @@ class ViewEntryActivity : BaseActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId) {
-            android.R.id.home -> {
-                presenter.returnToPreviousView()
-                return true
-            }
+            android.R.id.home -> presenter.returnToPreviousView()
+
+            R.id.mnShareEntry -> showShareEntryPopupMenu(findViewById(R.id.mnShareEntry))
 
             R.id.mnSaveEntry -> {
                 entryExtractionResult?.let { // should actually never be null at this stage as mnSaveEntry is only shown when entryExtractionResult != null
                     presenter.saveEntryExtractionResult(it)
                 }
-                return true
             }
         }
 
-        return super.onOptionsItemSelected(item)
+        return true
+    }
+
+    private fun showShareEntryPopupMenu(clickedView: View) {
+        val popup = PopupMenu(this, clickedView)
+
+        popup.getMenuInflater().inflate(R.menu.share_entry_menu, popup.getMenu())
+
+        popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
+
+            override fun onMenuItemClick(item: MenuItem): Boolean {
+                when(item.itemId) {
+                    R.id.mnShareEntryReferenceUrl -> shareReferenceUrl()
+                    R.id.mnShareEntryContent -> shareEntryContent()
+                }
+                return true
+            }
+        })
+
+        popup.show()
+    }
+
+    private fun shareReferenceUrl() {
+        entry?.reference?.let { reference ->
+            presenter.shareReferenceUrl(reference)
+        }
+
+        entryExtractionResult?.reference?.let { reference ->
+            presenter.shareReferenceUrl(reference)
+        }
+    }
+
+    private fun shareEntryContent() {
+        entry?.let { entry ->
+            presenter.shareEntry(entry, entry.reference)
+        }
+
+        entryExtractionResult?.let { extractionResult ->
+            presenter.shareEntry(extractionResult.entry, extractionResult.reference)
+        }
     }
 
 
