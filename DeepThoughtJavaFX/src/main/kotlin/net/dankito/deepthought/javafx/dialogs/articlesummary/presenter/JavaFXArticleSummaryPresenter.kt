@@ -86,7 +86,7 @@ class JavaFXArticleSummaryPresenter(private val articleSummaryExtractor: Article
     override fun showArticle(extractionResult: EntryExtractionResult) {
         runLater {
             // ensure Window is started on UI thread
-            router.showEditEntryView(extractionResult) // in Java we're not going to ViewEntryView but to EditEntryView
+            super.showArticle(extractionResult)
         }
     }
 
