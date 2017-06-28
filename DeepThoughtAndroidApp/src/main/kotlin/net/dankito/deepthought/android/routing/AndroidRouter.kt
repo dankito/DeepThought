@@ -72,6 +72,10 @@ class AndroidRouter(private val context: Context, private val activityTracker: C
     }
 
 
+    override fun showCreateEntryView() {
+
+    }
+
     override fun showEditEntryView(entry: Entry) {
 
     }

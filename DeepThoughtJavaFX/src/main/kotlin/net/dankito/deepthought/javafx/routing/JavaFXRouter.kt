@@ -48,6 +48,11 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
         // nothing like that on JavaFX, directly go to editing
     }
 
+
+    override fun showCreateEntryView() {
+
+    }
+
     override fun showEditEntryView(entry: Entry) {
         mainWindowController.find(EditEntryView::class, mapOf(EditEntryView::entry to entry)).openWindow()
     }

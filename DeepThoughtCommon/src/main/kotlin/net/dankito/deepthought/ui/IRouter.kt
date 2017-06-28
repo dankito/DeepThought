@@ -24,6 +24,9 @@ interface IRouter {
 
     fun showViewEntryView(extractionResult: EntryExtractionResult)
 
+
+    fun showCreateEntryView()
+
     fun showEditEntryView(entry: Entry)
 
     fun showEditEntryView(extractionResult: EntryExtractionResult)
