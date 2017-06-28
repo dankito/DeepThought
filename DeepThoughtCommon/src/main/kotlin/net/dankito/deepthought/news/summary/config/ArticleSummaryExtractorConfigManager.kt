@@ -41,6 +41,11 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
 
     private var favorites: MutableList<ArticleSummaryExtractorConfig> = ArrayList()
 
+    var isInitialized = false
+        private set
+
+    private val initializationListeners = mutableSetOf<() -> Unit>()
+
 
     init {
         CommonComponent.component.inject(this)
@@ -71,6 +76,8 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
         initImplementedExtractors()
 
         initAddedExtractors()
+
+        configManagerInitialized()
     }
 
     private fun initImplementedExtractors() {
@@ -203,6 +210,30 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
 
     private fun updateConfig(config: ArticleSummaryExtractorConfig) {
         configService.update(config)
+    }
+
+
+    fun addInitializationListener(listener: () -> Unit) {
+        if(isInitialized) {
+            callInitializationListener(listener)
+        }
+        else {
+            initializationListeners.add(listener)
+        }
+    }
+
+    private fun configManagerInitialized() {
+        isInitialized = true
+
+        for(listener in HashSet<() -> Unit>(initializationListeners)) {
+            callInitializationListener(listener)
+        }
+
+        initializationListeners.clear()
+    }
+
+    private fun callInitializationListener(listener: () -> Unit) {
+        listener()
     }
 
 }
