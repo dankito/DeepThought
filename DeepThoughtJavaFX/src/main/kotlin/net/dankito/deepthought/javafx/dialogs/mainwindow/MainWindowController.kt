@@ -5,11 +5,15 @@ import net.dankito.deepthought.javafx.dialogs.mainwindow.model.EntryViewModel
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.javafx.util.LazyLoadingObservableList
 import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
+import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.news.summary.config.ConfigChangedListener
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.data.EntryService
+import net.dankito.service.data.messages.ArticleSummaryExtractorConfigChanged
+import net.dankito.service.data.messages.EntitiesOfTypeChanged
+import net.dankito.service.eventbus.IEventBus
+import net.engio.mbassy.listener.Handler
 import tornadofx.*
 import javax.inject.Inject
 
@@ -31,6 +35,12 @@ class MainWindowController : Controller() {
     @Inject
     protected lateinit var router: IRouter
 
+    @Inject
+    protected lateinit var eventBus: IEventBus
+
+
+    private val eventBusListener = EventBusListener()
+
 
     val mainWindow: MainWindow by inject()
 
@@ -38,16 +48,11 @@ class MainWindowController : Controller() {
     fun init() {
         AppComponent.component.inject(this)
 
-        extractorsConfigManager.addListener(articleSummaryExtractorConfigChangedListener)
         extractorsConfigManager.getConfigs().forEach { mainWindow.addArticleSummaryExtractor(it) }
+
+        eventBus.register(eventBusListener)
     }
 
-
-    private val articleSummaryExtractorConfigChangedListener = object : ConfigChangedListener {
-        override fun configChanged(config: ArticleSummaryExtractorConfig) {
-            FXUtils.runOnUiThread { mainWindow.articleSummaryExtractorUpdated(config) }
-        }
-    }
 
     fun showArticlesSummaryView(articleSummaryExtractorConfig: ArticleSummaryExtractorConfig) {
         router.showArticleSummaryView(articleSummaryExtractorConfig)
@@ -55,6 +60,15 @@ class MainWindowController : Controller() {
 
     fun showReadLaterArticlesView() {
         router.showReadLaterArticlesView()
+    }
+
+
+    inner class EventBusListener {
+
+        @Handler
+        fun articleSummaryExtractorChanged(changed: ArticleSummaryExtractorConfigChanged) {
+            FXUtils.runOnUiThread { mainWindow.articleSummaryExtractorUpdated(changed.entity) }
+        }
     }
 
 }
