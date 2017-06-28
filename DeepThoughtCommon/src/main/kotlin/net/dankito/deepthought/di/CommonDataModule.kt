@@ -11,10 +11,7 @@ import net.dankito.deepthought.model.enums.NoteType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
-import net.dankito.service.data.EntryService
-import net.dankito.service.data.ReadLaterArticleService
-import net.dankito.service.data.ReferenceService
-import net.dankito.service.data.TagService
+import net.dankito.service.data.*
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.localization.Localization
@@ -54,6 +51,12 @@ class CommonDataModule {
     @Singleton
     fun provideTagService(dataManager: DataManager, eventBus: IEventBus) : TagService {
         return TagService(dataManager, eventBus)
+    }
+
+    @Provides
+    @Singleton
+    fun provideArticleSummaryExtractorConfigService(dataManager: DataManager, eventBus: IEventBus) : ArticleSummaryExtractorConfigService {
+        return ArticleSummaryExtractorConfigService(dataManager, eventBus)
     }
 
     @Provides
