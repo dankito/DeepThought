@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.list_item_article_summary_extractor.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.utils.BitmapCache
-import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
+import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.utils.ImageCache
 import javax.inject.Inject

@@ -9,7 +9,7 @@ import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
 import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Tag
-import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
+import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.newsreader.model.EntryExtractionResult
 import net.dankito.serializer.ISerializer
