@@ -33,6 +33,10 @@
     <string name="dialog_ask_extractor_name_enter_name">Enter name:</string>
 
     <string name="action_title_save">Save</string>
+    <string name="action_title_share">Share</string>
+
+    <string name="menu_share_reference_url">Url</string>
+    <string name="menu_share_entry_content">Content</string>
 
     <string name="synchronize_data_with_this_device">Synchronize data with</string>
     <string name="never_ask_again">Never ask again</string>
