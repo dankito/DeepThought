@@ -18,7 +18,7 @@ class EntryService(dataManager: DataManager, eventBus: IEventBus): EntityService
     override fun onPrePersist(entity: Entry) {
         super.onPrePersist(entity)
 
-        dataManager.deepThought?.let { entity.entryIndex = it.increaseNextEntryIndex() }
+        dataManager.deepThought.let { entity.entryIndex = it.increaseNextEntryIndex() }
     }
 
     override fun createEntityChangedMessage(entity: Entry, changeType: EntityChangeType): EntityChanged<out BaseEntity> {
