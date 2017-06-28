@@ -32,6 +32,7 @@ import net.dankito.service.search.LuceneSearchEngine
 import net.dankito.service.synchronization.ConnectedDevicesService
 import net.dankito.service.synchronization.CouchbaseLiteSyncManager
 import net.dankito.service.synchronization.ISyncManager
+import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ImageCache
 import net.dankito.utils.ThreadPool
@@ -133,6 +134,12 @@ class CommonModule {
     fun provideClientCommunicator(networkSettings: INetworkSettings, registrationHandler: IDeviceRegistrationHandler, base64Service: IBase64Service, threadPool: IThreadPool)
             : IClientCommunicator {
         return TcpSocketClientCommunicator(networkSettings, registrationHandler, base64Service, threadPool)
+    }
+
+    @Provides
+    @Singleton
+    fun provideInitialSyncManager(entityManager: IEntityManager, localization: Localization) : InitialSyncManager {
+        return InitialSyncManager(entityManager, localization)
     }
 
     @Provides
