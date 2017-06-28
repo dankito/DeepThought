@@ -31,6 +31,8 @@ class ArticleSummaryExtractorsAdapter(private val activity: AppCompatActivity, p
         AppComponent.component.inject(this)
 
         bitmapCache = BitmapCache(imageCache)
+
+        summaryExtractorsManager.addInitializationListener { activity.runOnUiThread { setItems(summaryExtractorsManager.getConfigs()) } }
     }
 
 
