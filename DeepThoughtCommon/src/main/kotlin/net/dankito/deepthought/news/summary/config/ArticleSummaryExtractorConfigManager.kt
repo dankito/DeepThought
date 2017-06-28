@@ -144,11 +144,23 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
             favorites.add(extractorConfig)
         }
         else {
-            favorites.remove(extractorConfig)
-            extractorConfig.favoriteIndex = null
+            removeFavorite(extractorConfig)
         }
 
         updateConfig(extractorConfig)
+    }
+
+    private fun removeFavorite(extractorConfig: ArticleSummaryExtractorConfig) {
+        favorites.remove(extractorConfig)
+
+        extractorConfig.favoriteIndex?.let {
+            for (i in it..favorites.size - 1) {
+                val favorite = favorites.get(i)
+                favorite.favoriteIndex?.let { favorite.favoriteIndex = it - 1 }
+            }
+        }
+
+        extractorConfig.favoriteIndex = null
     }
 
 
