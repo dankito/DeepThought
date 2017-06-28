@@ -25,6 +25,7 @@ import net.dankito.newsreader.feed.IFeedReader
 import net.dankito.newsreader.feed.RomeFeedReader
 import net.dankito.serializer.ISerializer
 import net.dankito.serializer.JacksonJsonSerializer
+import net.dankito.service.data.ArticleSummaryExtractorConfigService
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
@@ -99,8 +100,8 @@ class CommonModule {
 
     @Provides
     @Singleton
-    fun provideArticleSummaryExtractorConfigManager(webClient: IWebClient, fileStorageService: IFileStorageService, threadPool: IThreadPool) : ArticleSummaryExtractorConfigManager {
-        return ArticleSummaryExtractorConfigManager(webClient, fileStorageService, threadPool)
+    fun provideArticleSummaryExtractorConfigManager(webClient: IWebClient, configService: ArticleSummaryExtractorConfigService, threadPool: IThreadPool) : ArticleSummaryExtractorConfigManager {
+        return ArticleSummaryExtractorConfigManager(webClient, configService, threadPool)
     }
 
     @Provides
