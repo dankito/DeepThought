@@ -2,9 +2,10 @@ package net.dankito.deepthought.ui.presenter
 
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.deepthought.di.CommonComponent
+import net.dankito.deepthought.extensions.extractor
+import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.model.Tag
-import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.newsreader.article.ArticleExtractors

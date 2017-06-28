@@ -223,6 +223,17 @@ class TableConfig {
         const val FileTypeIconColumnName = "icon"
 
 
+        /*          ArticleSummaryExtractorConfig Table Config        */
+
+        const val ArticleSummaryExtractorConfigTableName = "article_summary_extractor_config"
+
+        const val ArticleSummaryExtractorConfigUrlColumnName = "url"
+        const val ArticleSummaryExtractorConfigNameColumnName = "name"
+        const val ArticleSummaryExtractorConfigIconUrlColumnName = "icon_url"
+        const val ArticleSummaryExtractorConfigIsFavoriteColumnName = "is_favorite"
+        const val ArticleSummaryExtractorConfigFavoriteIndexColumnName = "favorite_index"
+
+
         /*          ReadLaterArticle Table Config        */
 
         const val ReadLaterArticleTableName = "read_later_article"

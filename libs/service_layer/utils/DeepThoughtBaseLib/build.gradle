@@ -11,6 +11,7 @@ dependencies {
     compile project(':DataModel')
     compile project(':EventBus')
     compile project(':DataServices')
+    compile project(':NewsReader')
 
     compile project(':DevicesDiscoverer')
     compile project(':TcpSocketClientCommunicator')

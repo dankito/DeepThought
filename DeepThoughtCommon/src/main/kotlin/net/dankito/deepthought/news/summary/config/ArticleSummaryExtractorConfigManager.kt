@@ -3,6 +3,8 @@ package net.dankito.deepthought.news.summary.config
 import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.deepthought.di.CommonComponent
+import net.dankito.deepthought.extensions.extractor
+import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.faviconextractor.Favicon
 import net.dankito.faviconextractor.FaviconComparator
 import net.dankito.faviconextractor.FaviconExtractor
@@ -84,7 +86,8 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
             var config = configurations.get(implementedExtractor.getBaseUrl())
 
             if (config == null) {
-                config = ArticleSummaryExtractorConfig(implementedExtractor, implementedExtractor.getBaseUrl(), implementedExtractor.getName())
+                config = ArticleSummaryExtractorConfig(implementedExtractor.getBaseUrl(), implementedExtractor.getName())
+                config.extractor = implementedExtractor
                 addConfig(config)
             } else {
                 config.extractor = implementedExtractor
@@ -154,7 +157,8 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
         val extractor = FeedArticleSummaryExtractor(feedUrl, createFeedReader())
 
         getIconForFeedAsync(summary) {
-            val config = ArticleSummaryExtractorConfig(extractor, feedUrl, summary.title ?: "", it)
+            val config = ArticleSummaryExtractorConfig(feedUrl, summary.title ?: "", it)
+            config.extractor = extractor
 
             addConfig(config)
 
