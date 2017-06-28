@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="list_item_article_summary_extractor_is_favorite_scale" format="float" type="dimen">1.5</item>
+
+</resources>

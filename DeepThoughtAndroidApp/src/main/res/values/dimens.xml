@@ -26,7 +26,6 @@
     <dimen name="list_item_article_summary_extractor_preview_image_margin_right">6dp</dimen>
     <dimen name="list_item_article_summary_extractor_is_favorite_width">40dp</dimen>
     <dimen name="list_item_article_summary_extractor_is_favorite_margin_right">10dp</dimen>
-    <dimen name="list_item_article_summary_extractor_is_favorite_scale">1.5</dimen>
     <dimen name="list_item_article_summary_extractor_favorite_index_bottom_margin">10dp</dimen>
 
     <dimen name="list_item_article_summary_item_preview_image_size">80dp</dimen>
