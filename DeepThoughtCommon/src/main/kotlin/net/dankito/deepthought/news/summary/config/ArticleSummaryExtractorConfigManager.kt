@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory
 import java.io.FileNotFoundException
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 
 class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, private val fileStorageService: IFileStorageService, private val threadPool: IThreadPool) {
@@ -40,6 +41,8 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
 
     @Inject
     protected lateinit var serializer: ISerializer
+
+    private var favorites: MutableList<ArticleSummaryExtractorConfig> = ArrayList()
 
     private val listeners = mutableListOf<ConfigChangedListener>()
 
@@ -66,6 +69,8 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
                         loadIconAsync(config)
                     }
                 }
+
+                favorites = configurations.values.filter { it.isFavorite }.sortedBy { it.favoriteIndex }.toMutableList()
             }
         } catch(e: Exception) {
             if(e is FileNotFoundException == false) { // on first start-up file does not exist -> don't log error in this case
@@ -122,6 +127,26 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
 
     fun getConfig(url: String) : ArticleSummaryExtractorConfig? {
         return configurations[url]
+    }
+
+
+    fun getFavorites(): List<ArticleSummaryExtractorConfig> {
+        return favorites.toList()
+    }
+
+    fun setFavoriteStatus(extractorConfig: ArticleSummaryExtractorConfig, isFavorite: Boolean) {
+        extractorConfig.isFavorite = isFavorite
+
+        if(isFavorite) {
+            extractorConfig.favoriteIndex = favorites.size
+            favorites.add(extractorConfig)
+        }
+        else {
+            favorites.remove(extractorConfig)
+            extractorConfig.favoriteIndex = null
+        }
+
+        saveConfig(extractorConfig)
     }
 
 
