@@ -2,7 +2,6 @@ package net.dankito.deepthought.android
 
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
-import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewPager
@@ -11,10 +10,14 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.android.synthetic.main.view_floating_action_button_main.*
 import net.dankito.deepthought.android.adapter.MainActivitySectionsPagerAdapter
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
 import net.dankito.deepthought.android.service.ui.BaseActivity
+import net.dankito.deepthought.android.views.FloatingActionMenuButton
+import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
+import net.dankito.deepthought.ui.IRouter
+import javax.inject.Inject
 
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -23,6 +26,15 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private lateinit var sectionsPagerAdapter: MainActivitySectionsPagerAdapter
 
     private var currentlySelectedNavigationItem: MenuItem? = null
+
+    private lateinit var floatingActionMenuButton: FloatingActionMenuButton
+
+
+    @Inject
+    protected lateinit var router: IRouter
+
+    @Inject
+    protected lateinit var summaryExtractorManager: ArticleSummaryExtractorConfigManager
 
 
     init {
@@ -42,14 +54,13 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
-        val fab = findViewById(R.id.fab) as FloatingActionButton
-        fab.setOnClickListener { floatingActionButtonClicked() }
-
 //        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
 //        val toggle = ActionBarDrawerToggle(
 //                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
 //        drawer.addDrawerListener(toggle)
 //        toggle.syncState()
+
+        floatingActionMenuButton = FloatingActionMenuButton(fab_menu, router, summaryExtractorManager)
 
         val navigationView = findViewById(R.id.nav_view) as NavigationView
         navigationView.setNavigationItemSelectedListener(this)
@@ -59,11 +70,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener)
 
         bottomViewNavigation.setOnNavigationItemSelectedListener(bottomViewNavigationItemSelectedListener)
-    }
-
-    private fun floatingActionButtonClicked() {
-        val articleSummaryExtractorsDialog = ArticleSummaryExtractorsDialog(this)
-        articleSummaryExtractorsDialog.showDialog()
     }
 
     override fun onBackPressed() {
