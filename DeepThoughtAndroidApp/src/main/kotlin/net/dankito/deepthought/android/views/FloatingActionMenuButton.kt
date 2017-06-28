@@ -15,7 +15,7 @@ import net.dankito.service.eventbus.IEventBus
 import net.engio.mbassy.listener.Handler
 
 
-class FloatingActionMenuButton(private val floatingActionMenu: FloatingActionMenu, private val summaryExtractorManager: ArticleSummaryExtractorConfigManager, private val router: IRouter,
+class FloatingActionMenuButton(private val floatingActionMenu: FloatingActionMenu, private val summaryExtractorsManager: ArticleSummaryExtractorConfigManager, private val router: IRouter,
                                private val eventBus: IEventBus) {
 
     private val favoriteArticleSummaryExtractorsButtons = ArrayList<FloatingActionButton>()
@@ -24,6 +24,8 @@ class FloatingActionMenuButton(private val floatingActionMenu: FloatingActionMen
 
     init {
         setup()
+
+        summaryExtractorsManager.addInitializationListener { setFavoriteArticleSummaryExtractors() }
     }
 
 
@@ -56,7 +58,7 @@ class FloatingActionMenuButton(private val floatingActionMenu: FloatingActionMen
     private fun setFavoriteArticleSummaryExtractors() {
         val activity = floatingActionMenu.context as Activity
 
-        activity.runOnUiThread { setFavoriteArticleSummaryExtractorsOnUIThread(activity, summaryExtractorManager.getFavorites()) }
+        activity.runOnUiThread { setFavoriteArticleSummaryExtractorsOnUIThread(activity, summaryExtractorsManager.getFavorites()) }
     }
 
     private fun setFavoriteArticleSummaryExtractorsOnUIThread(activity: Activity, favoriteArticleSummaryExtractors: List<ArticleSummaryExtractorConfig>) {
