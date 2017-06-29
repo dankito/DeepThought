@@ -22,7 +22,7 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
     }
 
     private fun showLittleInfoMessageOnUIThread(activity: Activity, infoMessage: CharSequence) {
-        Toast.makeText(activity, infoMessage, Toast.LENGTH_LONG)
+        Toast.makeText(activity, infoMessage, Toast.LENGTH_LONG).show()
     }
 
     override fun showInfoMessage(infoMessage: CharSequence, alertTitle: CharSequence?) {
