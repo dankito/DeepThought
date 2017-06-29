@@ -75,6 +75,7 @@ dependencies {
     compile "com.squareup.picasso:picasso:$picassoVersion"
 
     compile "com.github.clans:fab:$clansFloatingActionButtonVersion"
+    compile "com.daimajia.swipelayout:library:$swipeLayoutVersion"
 
     compile "org.slf4j:slf4j-android:$slf4jVersion"
 
