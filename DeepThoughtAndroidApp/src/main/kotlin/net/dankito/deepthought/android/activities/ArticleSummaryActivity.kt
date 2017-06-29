@@ -30,6 +30,7 @@ import net.dankito.serializer.ISerializer
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
+import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ImageCache
 import org.slf4j.LoggerFactory
 import java.io.File
@@ -72,6 +73,9 @@ class ArticleSummaryActivity : BaseActivity() {
     @Inject
     protected lateinit var router: IRouter
 
+    @Inject
+    protected lateinit var dialogService: IDialogService
+
 
     private var presenter: ArticleSummaryPresenter
 
@@ -89,7 +93,7 @@ class ArticleSummaryActivity : BaseActivity() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = ArticleSummaryPresenter(articleExtractors, entryPersister, readLaterArticleService, tagService, searchEngine, router)
+        presenter = ArticleSummaryPresenter(articleExtractors, entryPersister, readLaterArticleService, tagService, searchEngine, router, dialogService)
     }
 
 

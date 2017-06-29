@@ -11,6 +11,7 @@ import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
+import net.dankito.utils.ui.IDialogService
 import tornadofx.*
 import javax.inject.Inject
 
@@ -35,6 +36,9 @@ class ArticleSummaryView : Fragment() {
     @Inject
     protected lateinit var router: IRouter
 
+    @Inject
+    protected lateinit var dialogService: IDialogService
+
 
     val articleSummaryExtractor: ArticleSummaryExtractorConfig by param()
 
@@ -54,7 +58,7 @@ class ArticleSummaryView : Fragment() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = JavaFXArticleSummaryPresenter(articleSummaryExtractor, articleExtractors, entryPerister, readLaterArticleService, tagService, searchEngine, router)
+        presenter = JavaFXArticleSummaryPresenter(articleSummaryExtractor, articleExtractors, entryPerister, readLaterArticleService, tagService, searchEngine, router, dialogService)
 
         articleSummaryItemsView = ArticleSummaryItemsView(presenter)
         root.center = articleSummaryItemsView.root

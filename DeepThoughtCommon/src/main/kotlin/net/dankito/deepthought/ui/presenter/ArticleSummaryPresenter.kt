@@ -18,13 +18,18 @@ import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.TagsSearch
+import net.dankito.utils.localization.Localization
+import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
 
 
 open class ArticleSummaryPresenter(protected val articleExtractors: ArticleExtractors, protected val entryPersister: EntryPersister,
                                    protected val readLaterArticleService: ReadLaterArticleService, protected val tagService: TagService,
-                                   protected val searchEngine: ISearchEngine, protected val router: IRouter) {
+                                   protected val searchEngine: ISearchEngine, protected val router: IRouter, protected val dialogService: IDialogService) {
 
+
+    @Inject
+    protected lateinit var localization: Localization
 
     @Inject
     protected lateinit var serializer: ISerializer
@@ -61,24 +66,29 @@ open class ArticleSummaryPresenter(protected val articleExtractors: ArticleExtra
 
     fun getAndSaveArticle(item: ArticleSummaryItem, errorCallback: (Exception) -> Unit) {
         getArticle(item) {
-            it.result?.let { saveArticle(it) }
+            it.result?.let { saveArticle(item, it) }
             it.error?.let { errorCallback(it) }
         }
     }
 
-    private fun saveArticle(it: EntryExtractionResult) = entryPersister.saveEntry(it)
+    private fun saveArticle(item: ArticleSummaryItem, extractionResult: EntryExtractionResult) {
+        if(entryPersister.saveEntry(extractionResult)) {
+            dialogService.showLittleInfoMessage(localization.getLocalizedString("article.summary.extractor.article.saved", item.title))
+        }
+    }
 
     fun getAndSaveArticleForLaterReading(item: ArticleSummaryItem, errorCallback: (Exception) -> Unit) {
         getArticle(item) {
-            it.result?.let { saveArticleForLaterReading(it) }
+            it.result?.let { saveArticleForLaterReading(item, it) }
             it.error?.let { errorCallback(it) }
         }
     }
 
-    private fun saveArticleForLaterReading(result: EntryExtractionResult) {
+    private fun saveArticleForLaterReading(item: ArticleSummaryItem, result: EntryExtractionResult) {
         val serializedEntryExtractionResult = serializer.serializeObject(result)
 
         readLaterArticleService.persist(ReadLaterArticle(serializedEntryExtractionResult))
+        dialogService.showLittleInfoMessage(localization.getLocalizedString("article.summary.extractor.article.saved.for.later.reading", item.title))
     }
 
 
