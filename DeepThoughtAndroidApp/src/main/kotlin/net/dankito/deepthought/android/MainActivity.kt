@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.NavigationView
@@ -13,10 +14,12 @@ import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.view_floating_action_button_main.*
 import net.dankito.deepthought.android.adapter.MainActivitySectionsPagerAdapter
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.android.service.IntentHandler
 import net.dankito.deepthought.android.service.ui.BaseActivity
 import net.dankito.deepthought.android.views.FloatingActionMenuButton
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.service.eventbus.IEventBus
 import javax.inject.Inject
 
@@ -40,6 +43,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     @Inject
     protected lateinit var summaryExtractorManager: ArticleSummaryExtractorConfigManager
 
+    @Inject
+    protected lateinit var articleExtractors: ArticleExtractors
+
 
     init {
         AppComponent.component.inject(this)
@@ -49,8 +55,15 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        handleIntent(intent)
+
         setupUI()
     }
+
+    override fun onNewIntent(intent: Intent) {
+        handleIntent(intent)
+    }
+
 
     private fun setupUI() {
         setContentView(R.layout.activity_main)
@@ -127,6 +140,15 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
         drawer.closeDrawer(GravityCompat.START)
         return true
+    }
+
+
+    private fun handleIntent(intent: Intent?) {
+        if(intent == null) {
+            return
+        }
+
+        IntentHandler(articleExtractors, router).handle(intent)
     }
 
 
