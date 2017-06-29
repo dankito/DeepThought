@@ -7,7 +7,7 @@
         android:id="@+id/txtAskExtractorNameLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/dialog_ask_extractor_name_enter_name"
+        android:text="@string/dialog_article_summary_extractor_config_enter_name"
     />
 
     <EditText
