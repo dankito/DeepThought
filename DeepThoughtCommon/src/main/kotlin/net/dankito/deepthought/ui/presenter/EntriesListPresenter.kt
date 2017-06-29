@@ -7,17 +7,20 @@ import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.IEntriesListView
+import net.dankito.service.data.EntryService
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
 import net.dankito.service.search.specific.EntriesSearch
+import net.dankito.utils.ui.IClipboardService
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class EntriesListPresenter(private val entriesListView: IEntriesListView, private var router: IRouter, private var searchEngine: ISearchEngine)
+class EntriesListPresenter(private val entriesListView: IEntriesListView, private var router: IRouter, private var searchEngine: ISearchEngine,
+                           private val entryService: EntryService, private val clipboardService: IClipboardService)
     : IMainViewSectionPresenter {
 
     private var unfilteredEntries: List<Entry> = listOf()
@@ -94,6 +97,17 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
 
     override fun getLastSearchTerm(): String {
         return lastSearchTermProperty
+    }
+
+
+    fun shareReferenceUrl(entry: Entry) {
+        entry.reference?.let {
+            clipboardService.copyReferenceUrlToClipboard(it)
+        }
+    }
+
+    fun deleteEntry(entry: Entry) {
+        entryService.delete(entry)
     }
 
 
