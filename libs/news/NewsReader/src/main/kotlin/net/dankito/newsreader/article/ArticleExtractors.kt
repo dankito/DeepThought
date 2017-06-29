@@ -2,6 +2,9 @@ package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.newsreader.model.ArticleSummaryItem
+import net.dankito.newsreader.model.EntryExtractionResult
+import java.util.*
+import net.dankito.data_access.network.webclient.extractor.AsyncResult
 
 
 class ArticleExtractors(webClient: IWebClient) {
@@ -31,5 +34,10 @@ class ArticleExtractors(webClient: IWebClient) {
     }
 
     fun getExtractorForClass(extractorClass: Class<out IArticleExtractor>) = implementedExtractors[extractorClass]
+
+
+    fun extractArticleAsync(url: String, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
+        getExtractorForUrl(url)?.extractArticleAsync(url, callback)
+    }
 
 }
