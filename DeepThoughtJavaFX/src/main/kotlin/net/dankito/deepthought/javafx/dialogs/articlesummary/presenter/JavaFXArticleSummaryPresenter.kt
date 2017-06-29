@@ -8,7 +8,6 @@ import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
-import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.service.data.ReadLaterArticleService
@@ -23,9 +22,9 @@ import java.util.*
 /**
  * Yeah, i know this is bad design, a Controller deriving from a Presenter ...
  */
-class JavaFXArticleSummaryPresenter(private val articleSummaryExtractor: ArticleSummaryExtractorConfig, articleExtractors: ArticleExtractors, entryPersister: EntryPersister,
+class JavaFXArticleSummaryPresenter(private val articleSummaryExtractor: ArticleSummaryExtractorConfig, entryPersister: EntryPersister,
                                     readLaterArticleService: ReadLaterArticleService, tagService: TagService, searchEngine: ISearchEngine, router: IRouter, dialogService: IDialogService)
-    : ArticleSummaryPresenter(articleExtractors, entryPersister, readLaterArticleService, tagService, searchEngine, router, dialogService) {
+    : ArticleSummaryPresenter(entryPersister, readLaterArticleService, tagService, searchEngine, router, dialogService) {
 
 
     companion object {

@@ -7,7 +7,6 @@ import net.dankito.deepthought.javafx.dialogs.articlesummary.presenter.JavaFXArt
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
-import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
@@ -17,9 +16,6 @@ import javax.inject.Inject
 
 
 class ArticleSummaryView : Fragment() {
-
-    @Inject
-    protected lateinit var articleExtractors: ArticleExtractors
 
     @Inject
     protected lateinit var entryPerister: EntryPersister
@@ -58,7 +54,7 @@ class ArticleSummaryView : Fragment() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = JavaFXArticleSummaryPresenter(articleSummaryExtractor, articleExtractors, entryPerister, readLaterArticleService, tagService, searchEngine, router, dialogService)
+        presenter = JavaFXArticleSummaryPresenter(articleSummaryExtractor, entryPerister, readLaterArticleService, tagService, searchEngine, router, dialogService)
 
         articleSummaryItemsView = ArticleSummaryItemsView(presenter)
         root.center = articleSummaryItemsView.root

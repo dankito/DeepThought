@@ -23,10 +23,13 @@ import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
 
 
-open class ArticleSummaryPresenter(protected val articleExtractors: ArticleExtractors, protected val entryPersister: EntryPersister,
+open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
                                    protected val readLaterArticleService: ReadLaterArticleService, protected val tagService: TagService,
                                    protected val searchEngine: ISearchEngine, protected val router: IRouter, protected val dialogService: IDialogService) {
 
+
+    @Inject
+    protected lateinit var articleExtractors: ArticleExtractors
 
     @Inject
     protected lateinit var localization: Localization

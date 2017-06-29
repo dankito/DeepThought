@@ -23,7 +23,6 @@ import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
-import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.serializer.ISerializer
@@ -48,9 +47,6 @@ class ArticleSummaryActivity : BaseActivity() {
 
     @Inject
     protected lateinit var extractorsConfigManager: ArticleSummaryExtractorConfigManager
-
-    @Inject
-    protected lateinit var articleExtractors: ArticleExtractors
 
     @Inject
     protected lateinit var entryPersister: EntryPersister
@@ -93,7 +89,7 @@ class ArticleSummaryActivity : BaseActivity() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = ArticleSummaryPresenter(articleExtractors, entryPersister, readLaterArticleService, tagService, searchEngine, router, dialogService)
+        presenter = ArticleSummaryPresenter(entryPersister, readLaterArticleService, tagService, searchEngine, router, dialogService)
     }
 
 
