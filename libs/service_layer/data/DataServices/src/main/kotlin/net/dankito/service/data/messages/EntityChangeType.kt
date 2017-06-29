@@ -5,6 +5,7 @@ enum class EntityChangeType {
 
     Created,
     Updated,
+    PreDelete,
     Deleted
 
 }

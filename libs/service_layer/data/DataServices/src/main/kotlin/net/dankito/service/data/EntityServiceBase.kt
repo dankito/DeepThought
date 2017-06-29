@@ -52,6 +52,8 @@ abstract class EntityServiceBase<T : BaseEntity>(val dataManager: DataManager, v
     }
 
     fun delete(entity: T) {
+        callEntitiesUpdatedListeners(entity, EntityChangeType.PreDelete) // as after deleting entity from db entity's id is null -> for services still needing entity's id call PreDelete
+
         entityManager.deleteEntity(entity as Any)
 
         callEntitiesUpdatedListeners(entity, EntityChangeType.Deleted)
