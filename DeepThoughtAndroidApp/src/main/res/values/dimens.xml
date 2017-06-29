@@ -13,6 +13,8 @@
     <dimen name="list_item_entry_preview_text_size">11sp</dimen>
     <dimen name="list_item_entry_tags_height">18dp</dimen>
     <dimen name="list_item_entry_tags_text_size">11sp</dimen>
+    <dimen name="list_item_entry_button_width">80dp</dimen>
+    <dimen name="list_item_entry_all_buttons_width">160dp</dimen>
 
     <dimen name="list_item_tag_height">36dp</dimen>
     <dimen name="list_item_tag_margin_left">12dp</dimen>
