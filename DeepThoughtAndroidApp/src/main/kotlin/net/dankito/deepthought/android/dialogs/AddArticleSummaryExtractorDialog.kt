@@ -149,9 +149,9 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
 
     private fun feedAdded(feedUrl: String, summary: FeedArticleSummary) {
         activity.runOnUiThread {
-            val askExtractorNameDialog = AskExtractorNameDialog()
+            val extractorConfigDialog = ArticleSummaryExtractorConfigDialog()
 
-            askExtractorNameDialog.askForName(activity, summary.title ?: "", false) { didSelectName, selectedName ->
+            extractorConfigDialog.askForName(activity, summary.title ?: "", false) { didSelectName, selectedName ->
                 val selectedExtractorName = if(didSelectName) selectedName ?: "" else summary.title ?: ""
 
                 feedAdded(feedUrl, summary, selectedExtractorName)

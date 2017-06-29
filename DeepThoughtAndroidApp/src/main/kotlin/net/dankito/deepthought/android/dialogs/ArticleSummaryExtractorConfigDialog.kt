@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.dialog_ask_extractor_name.*
 import net.dankito.deepthought.android.R
 
 
-class AskExtractorNameDialog {
+class ArticleSummaryExtractorConfigDialog {
 
     fun askForName(context: Context, currentName: String, showCancelButton: Boolean, callback: (didSelectName: Boolean, selectedName: String?) -> Unit) {
         val builder = AlertDialog.Builder(context)
