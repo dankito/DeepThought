@@ -16,6 +16,10 @@ import java.io.StringWriter
 class JavaFXDialogService : IDialogService {
 
 
+    override fun showLittleInfoMessage(infoMessage: CharSequence) {
+        // nothing to do for JavaFX, was only introduced for showing Android Toasts
+    }
+
     override fun showInfoMessage(infoMessage: CharSequence, alertTitle: CharSequence?) {
         showInfoMessage(infoMessage, alertTitle, null)
     }

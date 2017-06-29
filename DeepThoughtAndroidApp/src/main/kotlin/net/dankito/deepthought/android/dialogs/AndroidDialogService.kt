@@ -7,11 +7,19 @@ import android.support.v7.app.AlertDialog
 import android.text.InputType
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.Toast
 import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
 import net.dankito.utils.ui.IDialogService
 
 
 class AndroidDialogService(private val currentActivityTracker: CurrentActivityTracker) : IDialogService {
+
+
+    override fun showLittleInfoMessage(infoMessage: CharSequence) {
+        currentActivityTracker.currentActivity?.let { currentActivity ->
+            Toast.makeText(currentActivity, infoMessage, Toast.LENGTH_LONG)
+        }
+    }
 
     override fun showInfoMessage(infoMessage: CharSequence, alertTitle: CharSequence?) {
         currentActivityTracker.currentActivity?.let { activity ->

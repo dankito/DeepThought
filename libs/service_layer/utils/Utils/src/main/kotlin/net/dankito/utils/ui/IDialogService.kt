@@ -3,6 +3,8 @@ package net.dankito.utils.ui
 
 interface IDialogService {
 
+    fun showLittleInfoMessage(infoMessage: CharSequence)
+
     fun showInfoMessage(infoMessage: CharSequence, alertTitle: CharSequence? = null)
 
     fun showConfirmationDialog(message: CharSequence, alertTitle: CharSequence? = null, optionSelected: (Boolean) -> Unit)
