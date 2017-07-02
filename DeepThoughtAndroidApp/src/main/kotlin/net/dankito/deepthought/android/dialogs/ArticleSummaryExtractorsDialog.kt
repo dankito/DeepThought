@@ -57,7 +57,22 @@ class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
 
         builder.setOnDismissListener { eventBus.unregister(eventBusListener)  }
 
-        builder.create().show()
+        val dialog = builder.create()
+        dialog.show()
+
+        enableEditingExtractorConfig(dialog)
+    }
+
+    private fun enableEditingExtractorConfig(dialog: AlertDialog) {
+        dialog.listView.setOnItemLongClickListener { _, _, position, _ ->
+            val extractorConfig = adapter.getItem(position)
+            ArticleSummaryExtractorConfigDialog().editConfiguration(activity, extractorConfig) { didEditConfiguration ->
+                if (didEditConfiguration) {
+                    summaryExtractorsManager.configurationUpdated(extractorConfig)
+                }
+            }
+            true
+        }
     }
 
 
