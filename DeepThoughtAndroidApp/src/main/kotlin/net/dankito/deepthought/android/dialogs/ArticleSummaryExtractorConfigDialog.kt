@@ -35,19 +35,17 @@ class ArticleSummaryExtractorConfigDialog {
     }
 
 
-    fun editConfiguration(activity: Activity, config: ArticleSummaryExtractorConfig, showCancelButton: Boolean, callback: (didSelectName: Boolean) -> Unit) {
+    fun editConfiguration(activity: Activity, config: ArticleSummaryExtractorConfig, callback: (didSelectName: Boolean) -> Unit) {
         val builder = AlertDialog.Builder(activity)
         builder.setView(R.layout.dialog_article_summary_extractor_config)
 
         var input: EditText? = null
         var lstIcons: ListView? = null
 
-        if(showCancelButton) {
-            builder.setNegativeButton(android.R.string.cancel, { dialog, _ ->
-                dialog.cancel()
-                callback(false)
-            })
-        }
+        builder.setNegativeButton(android.R.string.cancel, { dialog, _ ->
+            dialog.cancel()
+            callback(false)
+        })
 
         builder.setPositiveButton(android.R.string.ok, { dialog, _ ->
             val selectedIcon = lstIcons?.checkedItemPosition?.let { if(it >= 0) adapter.getItem(it) else null }
