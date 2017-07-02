@@ -8,10 +8,12 @@ import net.dankito.deepthought.javafx.appstart.JavaFXAppInitializer
 import net.dankito.deepthought.javafx.dialogs.JavaFXDialogService
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
+import net.dankito.deepthought.javafx.service.JavaFXClipboardService
 import net.dankito.deepthought.javafx.service.communication.JavaFXDeviceRegistrationHandler
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.localization.Localization
+import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import javax.inject.Singleton
 
@@ -38,6 +40,12 @@ class JavaFXModule(private val mainWindowController: MainWindowController) {
         return JavaFXRouter(mainWindowController)
     }
 
+
+    @Provides
+    @Singleton
+    fun provideClipboardService() : IClipboardService {
+        return JavaFXClipboardService()
+    }
 
     @Provides
     @Singleton
