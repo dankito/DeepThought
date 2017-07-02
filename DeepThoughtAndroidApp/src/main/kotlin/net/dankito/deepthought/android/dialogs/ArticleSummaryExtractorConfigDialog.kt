@@ -63,13 +63,13 @@ class ArticleSummaryExtractorConfigDialog {
         input = dialog.edtxtAskExtractorName
         lstIcons = dialog.lstIcons
 
-        configureEditText(input, dialog, config.name)
+        setupEditTextName(input, dialog, config.name)
 
         setupListIcons(activity, lstIcons, dialog, config)
     }
 
 
-    private fun configureEditText(input: EditText, dialog: AlertDialog, currentName: String) {
+    private fun setupEditTextName(input: EditText, dialog: AlertDialog, currentName: String) {
         input.setText(currentName)
 
         input.selectAll()
