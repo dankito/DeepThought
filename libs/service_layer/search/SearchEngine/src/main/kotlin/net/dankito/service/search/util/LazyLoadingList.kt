@@ -40,9 +40,10 @@ open class LazyLoadingList<T : BaseEntity>(protected var entityManager: IEntityM
 
             val startTime = Date().time
             val idsOfNextEntities = getNextEntityIdsForIndex(index, countEntitiesToQueryOnDatabaseAccess)
+            val loadedEntities = entityManager.getEntitiesById(resultType, idsOfNextEntities, false)
 
             for (i in idsOfNextEntities.indices) {
-                val item = findItemById(entityManager.getEntitiesById(resultType, idsOfNextEntities, false), idsOfNextEntities[i])
+                val item = findItemById(loadedEntities, idsOfNextEntities[i])
                 if (item != null)
                     cachedResults.put(index + i, item)
             }
