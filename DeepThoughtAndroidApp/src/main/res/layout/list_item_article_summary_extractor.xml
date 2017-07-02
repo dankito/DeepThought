@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/list_item_article_summary_extractor_height"
-                android:layout_margin="@dimen/list_item_article_summary_extractor_margin">
+                android:layout_margin="@dimen/list_item_article_summary_extractor_margin"
+                android:descendantFocusability="blocksDescendants"
+>
 
     <ImageView
         android:id="@+id/imgPreviewImage"
@@ -37,6 +39,7 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/list_item_article_summary_extractor_is_favorite_margin_right"
         android:layout_marginEnd="@dimen/list_item_article_summary_extractor_is_favorite_margin_right"
+        android:descendantFocusability="blocksDescendants"
     >
 
         <!-- First i wanted to use a RatingBar, but then i got the tip to style a CheckBox with a star (but image needs up scaling then): https://stackoverflow.com/questions/8930735/how-to-set-the-favorite-star-icon-to-on-when-clicked-and-off-when-again-clicked -->
