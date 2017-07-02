@@ -54,8 +54,10 @@ open class LazyLoadingList<T : BaseEntity>(protected var entityManager: IEntityM
 
     protected fun findItemById(entities: List<T>, id: String): T? {
         for (entity in entities) {
-            if (id == entity.id)
+            if(id == entity.id) {
+                (entities as? MutableList<T>)?.remove(entity)
                 return entity
+            }
         }
 
         return null
