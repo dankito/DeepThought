@@ -63,6 +63,7 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
                 localDevice = deepThought.localDevice
 
                 // TODO: set application language according to user's settings
+                return
             }
         } catch (ex: Exception) {
             log.error("Could not deserialize DeepThought", ex)
