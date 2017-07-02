@@ -10,6 +10,7 @@ import android.widget.ImageView
 import kotlinx.android.synthetic.main.list_item_article_summary_extractor.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorConfigDialog
 import net.dankito.deepthought.android.service.utils.BitmapCache
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
@@ -60,6 +61,11 @@ class ArticleSummaryExtractorsAdapter(private val activity: AppCompatActivity, p
             view.txtFavoriteIndex.text = (it + 1).toString()
         }
 
+
+        view.setOnLongClickListener {
+            ArticleSummaryExtractorConfigDialog().editConfiguration(activity, extractorConfig) { }
+            true
+        }
 
         view.tag = extractorConfig
 
