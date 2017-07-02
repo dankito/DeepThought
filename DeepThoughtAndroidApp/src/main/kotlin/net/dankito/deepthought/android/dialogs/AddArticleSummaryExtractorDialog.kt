@@ -136,14 +136,20 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
     }
 
     private fun handleExtractFeedAddressesResult(feedOrWebsiteUrl: String, asyncResult: AsyncResult<List<FeedAddress>>) {
+        if(isDetached) { // got detached while result has been retrieved
+            return
+        }
+
         if (asyncResult.result != null) {
             val feedAddresses = asyncResult.result as List<FeedAddress>
             if (feedAddresses.isEmpty()) {
                 showNoFeedAddressesFoundError(feedOrWebsiteUrl)
-            } else {
+            }
+            else {
                 showFoundFeedAddresses(feedAddresses)
             }
-        } else {
+        }
+        else {
             asyncResult.error?.let { showError(feedOrWebsiteUrl, it) }
         }
     }
