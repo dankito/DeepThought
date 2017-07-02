@@ -34,9 +34,9 @@ class EntriesListView : MainActivityTabFragment(), IEntriesListView {
     protected lateinit var clipboardService: IClipboardService
 
 
-    private lateinit var presenter: EntriesListPresenter
+    private val presenter: EntriesListPresenter
 
-    private lateinit var entryAdapter: EntryAdapter
+    private val entryAdapter: EntryAdapter
 
 
     init {
