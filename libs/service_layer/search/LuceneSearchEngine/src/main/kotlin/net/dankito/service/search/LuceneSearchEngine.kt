@@ -44,13 +44,9 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
     init {
         indexWritersAndSearchers = listOf(entryIndexWriterAndSearcher, tagIndexWriterAndSearcher)
 
-        dataManager.addInitializationListener { dataManagerInitialized() }
-    }
-
-
-    private fun dataManagerInitialized() {
         createDirectoryAndIndexSearcherAndWriterForDeepThought()
     }
+
 
     private fun createDirectoryAndIndexSearcherAndWriterForDeepThought() {
         try {
