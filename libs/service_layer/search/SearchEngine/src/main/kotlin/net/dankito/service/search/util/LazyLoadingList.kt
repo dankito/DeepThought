@@ -32,13 +32,6 @@ open class LazyLoadingList<T : BaseEntity>(protected var entityManager: IEntityM
         }
 
         try {
-            //      Long id = getEntityIdForIndex(index);
-            //
-            //      T item = Application.getEntityManager().getEntityById(resultType, id);
-            //      cachedResults.put(index, item);
-            //
-            //      return item;
-
             val startTime = Date().time
             val idsOfNextEntities = getNextEntityIdsForIndex(index, countEntitiesToQueryOnDatabaseAccess)
             val loadedEntities = entityManager.getEntitiesById(resultType, idsOfNextEntities, false)
