@@ -63,7 +63,7 @@ class ArticleSummaryExtractorConfigDialog {
 
         setupEditTextName(input, dialog, config.name)
 
-        setupListIcons(activity, lstIcons, dialog, config)
+        setupListIcons(activity, lstIcons, config)
     }
 
 
@@ -80,7 +80,7 @@ class ArticleSummaryExtractorConfigDialog {
     }
 
 
-    private fun setupListIcons(activity: Activity, lstIcons: ListView, dialog: AlertDialog, config: ArticleSummaryExtractorConfig) {
+    private fun setupListIcons(activity: Activity, lstIcons: ListView, config: ArticleSummaryExtractorConfig) {
         adapter = ArticleSummaryExtractorIconsAdapter(activity)
         lstIcons.adapter = adapter
 
