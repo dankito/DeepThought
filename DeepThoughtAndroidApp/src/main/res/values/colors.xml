@@ -7,4 +7,7 @@
 
     <color name="black_semi_transparent">#B2000000</color>
 
+    <color name="list_item_default_background">@android:color/background_light</color>
+    <color name="list_item_selected_background">#4d90fe</color>
+
 </resources>
