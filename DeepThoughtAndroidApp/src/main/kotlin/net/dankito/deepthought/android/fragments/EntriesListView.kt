@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android.fragments
 
+import android.content.Context
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
@@ -37,6 +38,8 @@ class EntriesListView : MainActivityTabFragment(), IEntriesListView {
     private val presenter: EntriesListPresenter
 
     private val entryAdapter: EntryAdapter
+
+    private var entriesToShowOnAttach: List<Entry>? = null
 
 
     init {
@@ -76,11 +79,28 @@ class EntriesListView : MainActivityTabFragment(), IEntriesListView {
     }
 
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+
+        entriesToShowOnAttach?.let {
+            showEntries(it)
+            entriesToShowOnAttach = null
+        }
+    }
+
+
     /*          IEntriesListView implementation            */
 
     override fun showEntries(entries: List<Entry>) {
-        activity?.runOnUiThread {
-            entryAdapter.setItems(entries)
+        val activity = this.activity
+
+        if(activity != null) {
+            activity.runOnUiThread {
+                entryAdapter.setItems(entries)
+            }
+        }
+        else {
+            entriesToShowOnAttach = entries
         }
     }
 
