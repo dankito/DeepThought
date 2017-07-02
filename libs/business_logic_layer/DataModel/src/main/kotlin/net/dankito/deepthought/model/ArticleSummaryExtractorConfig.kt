@@ -17,6 +17,12 @@ data class ArticleSummaryExtractorConfig(
         @Column(name = TableConfig.ArticleSummaryExtractorConfigIconUrlColumnName)
         var iconUrl: String? = null,
 
+        /**
+         * For RSS and Atom Feed Extractors url is the feedUrl, siteUrl then holds the url to the according site
+         */
+        @Column(name = TableConfig.ArticleSummaryExtractorConfigSiteUrlColumnName)
+        val siteUrl: String? = null,
+
         @Column(name = TableConfig.ArticleSummaryExtractorConfigIsFavoriteColumnName)
         var isFavorite: Boolean = false,
 
