@@ -27,8 +27,9 @@ open class LazyLoadingList<T : BaseEntity>(protected var entityManager: IEntityM
     }
 
     override fun get(index: Int): T? {
-        if (cachedResults.containsKey(index))
-            return cachedResults[index]
+        cachedResults[index]?.let {
+            return it
+        }
 
         try {
             //      Long id = getEntityIdForIndex(index);
