@@ -32,38 +32,20 @@ open class LazyLoadingList<T : BaseEntity>(protected var entityManager: IEntityM
         }
 
         try {
-            val startTime = Date().time
-            val idsOfNextEntities = getNextEntityIdsForIndex(index, countEntitiesToQueryOnDatabaseAccess)
-            val loadedEntities = entityManager.getEntitiesById(resultType, idsOfNextEntities, false)
+            val id = getEntityIdForIndex(index)
 
-            for (i in idsOfNextEntities.indices) {
-                val item = findItemById(loadedEntities, idsOfNextEntities[i])
-                if (item != null)
-                    cachedResults.put(index + i, item)
-            }
+            val loadedEntity = entityManager.getEntityById(resultType, id)
+            loadedEntity?.let { cachedResults.put(index, loadedEntity) }
 
-            val elapsed = Date().time - startTime
-            log.debug("Preloaded {} Entities in {} milliseconds", idsOfNextEntities.size, elapsed)
-            return cachedResults[index]
-        } catch (ex: Exception) {
-            log.error("Could not load Result of type $resultType from Lucene search results", ex)
+            return loadedEntity
+        } catch (e: Exception) {
+            log.error("Could not load Result of type $resultType from Lucene search results", e)
         }
 
         return null
     }
 
-    protected fun findItemById(entities: List<T>, id: String): T? {
-        for (entity in entities) {
-            if(id == entity.id) {
-                (entities as? MutableList<T>)?.remove(entity)
-                return entity
-            }
-        }
-
-        return null
-    }
-
-    protected fun getEntityIdForIndex(index: Int): String {
+    private fun getEntityIdForIndex(index: Int): String {
         if (entityIds is List<*> == true)
             return (entityIds as List<String>)[index]
 
@@ -81,14 +63,6 @@ open class LazyLoadingList<T : BaseEntity>(protected var entityManager: IEntityM
         return (entityIds as List<String>)[index]
     }
 
-    protected fun getNextEntityIdsForIndex(index: Int, maxCountIdsToReturn: Int): List<String> {
-        val ids = ArrayList<String>()
-
-        for (i in index..(if (index + maxCountIdsToReturn < size) index + maxCountIdsToReturn else size) - 1)
-            ids.add(getEntityIdForIndex(i))
-
-        return ids
-    }
 
     override fun iterator(): MutableIterator<T> {
         loadAllResults()
