@@ -5,6 +5,7 @@ import net.dankito.deepthought.android.DeepThoughtApplication
 import net.dankito.deepthought.android.MainActivity
 import net.dankito.deepthought.android.activities.ArticleSummaryActivity
 import net.dankito.deepthought.android.activities.ViewEntryActivity
+import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorIconsAdapter
 import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorsAdapter
 import net.dankito.deepthought.android.appstart.AndroidAppInitializer
 import net.dankito.deepthought.android.appstart.CommunicationManagerStarter
@@ -42,6 +43,8 @@ interface AppComponent : CommonComponent {
     fun inject(tagsListView: TagsListView)
 
     fun inject(addArticleSummaryExtractorDialog: AddArticleSummaryExtractorDialog)
+
+    fun inject(articleSummaryExtractorIconsAdapter: ArticleSummaryExtractorIconsAdapter)
 
     fun inject(articleSummaryExtractorsDialog: ArticleSummaryExtractorsDialog)
 
