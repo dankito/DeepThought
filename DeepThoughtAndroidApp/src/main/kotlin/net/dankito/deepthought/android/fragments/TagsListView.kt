@@ -85,13 +85,13 @@ class TagsListView : MainActivityTabFragment(), ITagsListView {
     /*          ITagsListView implementation            */
 
     override fun showTags(tags: List<Tag>) {
-        activity.runOnUiThread {
+        activity?.runOnUiThread {
             adapter.setItems(tags)
         }
     }
 
     override fun updateDisplayedTags() {
-        activity.runOnUiThread  { adapter.notifyDataSetChanged() }
+        activity?.runOnUiThread  { adapter.notifyDataSetChanged() }
     }
 
 }
