@@ -197,6 +197,10 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
         }
     }
 
+    fun configurationUpdated(config: ArticleSummaryExtractorConfig) {
+        updateConfig(config)
+    }
+
     private fun saveConfig(config: ArticleSummaryExtractorConfig) {
         configService.persist(config)
     }
