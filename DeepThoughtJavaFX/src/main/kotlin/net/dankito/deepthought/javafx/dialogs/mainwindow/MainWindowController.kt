@@ -46,7 +46,9 @@ class MainWindowController : Controller() {
     fun init() {
         AppComponent.component.inject(this)
 
-        extractorsConfigManager.getConfigs().forEach { mainWindow.addArticleSummaryExtractor(it) }
+        extractorsConfigManager.addInitializationListener { runLater {
+            extractorsConfigManager.getConfigs().forEach { mainWindow.addArticleSummaryExtractor(it) }
+        } }
 
         eventBus.register(eventBusListener)
     }
