@@ -35,7 +35,7 @@ class ArticleSummaryExtractorConfigDialog {
     }
 
 
-    fun editConfiguration(activity: Activity, config: ArticleSummaryExtractorConfig, callback: (didSelectName: Boolean) -> Unit) {
+    fun editConfiguration(activity: Activity, config: ArticleSummaryExtractorConfig, callback: (didEditConfiguration: Boolean) -> Unit) {
         val builder = AlertDialog.Builder(activity)
         builder.setView(R.layout.dialog_article_summary_extractor_config)
 

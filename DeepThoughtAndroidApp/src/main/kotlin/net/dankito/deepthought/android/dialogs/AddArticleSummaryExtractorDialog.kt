@@ -167,8 +167,8 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
             val config = ArticleSummaryExtractorConfig(feedUrl, summary.title ?: "", summary.imageUrl, summary.siteUrl)
             val extractorConfigDialog = ArticleSummaryExtractorConfigDialog()
 
-            extractorConfigDialog.editConfiguration(activity, config) { didSelectName ->
-                if(didSelectName) {
+            extractorConfigDialog.editConfiguration(activity, config) { didEditConfiguration ->
+                if(didEditConfiguration) {
                     feedAdded(feedUrl, summary, config)
                 }
             }
