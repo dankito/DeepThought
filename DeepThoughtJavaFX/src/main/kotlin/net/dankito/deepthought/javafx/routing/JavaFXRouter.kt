@@ -1,5 +1,7 @@
 package net.dankito.deepthought.javafx.routing
 
+import net.dankito.deepthought.extensions.preview
+import net.dankito.deepthought.extensions.referencePreview
 import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryExtractionResultView
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryView
@@ -35,7 +37,7 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
     override fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig) {
         runLater {
             val dialogView = mainWindowController.find(ArticleSummaryView::class, mapOf(ArticleSummaryView::articleSummaryExtractor to extractor))
-            dialogView.show()
+            dialogView.show(extractor.name)
         }
     }
 
@@ -61,13 +63,15 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
 
     override fun showEditEntryView(entry: Entry) {
         runLater {
-            mainWindowController.find(EditEntryView::class, mapOf(EditEntryView::entry to entry)).show()
+            // TODO: set title when Reference is not set
+            mainWindowController.find(EditEntryView::class, mapOf(EditEntryView::entry to entry)).show(entry.referencePreview)
         }
     }
 
     override fun showEditEntryView(extractionResult: EntryExtractionResult) {
         runLater {
-            mainWindowController.find(EditEntryExtractionResultView::class, mapOf(EditEntryExtractionResultView::extractionResult to extractionResult)).show()
+            // TODO: set title when Reference is not set
+            mainWindowController.find(EditEntryExtractionResultView::class, mapOf(EditEntryExtractionResultView::extractionResult to extractionResult)).show(extractionResult.reference?.preview)
         }
     }
 
