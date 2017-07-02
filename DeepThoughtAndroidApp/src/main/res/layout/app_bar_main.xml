@@ -34,7 +34,6 @@
         android:layout_marginBottom="?attr/actionBarSize"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_above="@+id/bottomViewNavigation"
     />
 
 </android.support.design.widget.CoordinatorLayout>
