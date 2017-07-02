@@ -46,4 +46,6 @@
     <dimen name="dialog_article_summary_extractor_config_icon_label_margin_top">12dp</dimen>
     <dimen name="dialog_article_summary_extractor_config_icon_list_margin_top">6dp</dimen>
 
+    <dimen name="list_item_article_summary_extractor_config_icon_padding">4dp</dimen>
+
 </resources>
