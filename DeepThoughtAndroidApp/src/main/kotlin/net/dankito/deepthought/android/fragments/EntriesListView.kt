@@ -79,7 +79,7 @@ class EntriesListView : MainActivityTabFragment(), IEntriesListView {
     /*          IEntriesListView implementation            */
 
     override fun showEntries(entries: List<Entry>) {
-        activity.runOnUiThread {
+        activity?.runOnUiThread {
             entryAdapter.setItems(entries)
         }
     }
