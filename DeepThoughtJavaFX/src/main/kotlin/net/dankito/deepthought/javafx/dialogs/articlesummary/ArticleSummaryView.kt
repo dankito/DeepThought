@@ -1,6 +1,7 @@
 package net.dankito.deepthought.javafx.dialogs.articlesummary
 
 import net.dankito.deepthought.javafx.di.AppComponent
+import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.javafx.dialogs.articlesummary.controls.ArticleSummaryControlBarView
 import net.dankito.deepthought.javafx.dialogs.articlesummary.controls.ArticleSummaryItemsView
 import net.dankito.deepthought.javafx.dialogs.articlesummary.presenter.JavaFXArticleSummaryPresenter
@@ -15,7 +16,7 @@ import tornadofx.*
 import javax.inject.Inject
 
 
-class ArticleSummaryView : Fragment() {
+class ArticleSummaryView : DialogFragment() {
 
     @Inject
     protected lateinit var entryPerister: EntryPersister

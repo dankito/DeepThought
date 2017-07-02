@@ -5,9 +5,9 @@ import net.dankito.deepthought.javafx.dialogs.entry.EditEntryExtractionResultVie
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryView
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.ReadLaterArticleView
+import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Tag
-import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.IEntriesListView
 import net.dankito.newsreader.model.EntryExtractionResult
@@ -34,7 +34,8 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
 
     override fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig) {
         runLater {
-            mainWindowController.find(ArticleSummaryView::class, mapOf(ArticleSummaryView::articleSummaryExtractor to extractor)).openWindow()
+            val dialogView = mainWindowController.find(ArticleSummaryView::class, mapOf(ArticleSummaryView::articleSummaryExtractor to extractor))
+            dialogView.show()
         }
     }
 
@@ -60,13 +61,13 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
 
     override fun showEditEntryView(entry: Entry) {
         runLater {
-            mainWindowController.find(EditEntryView::class, mapOf(EditEntryView::entry to entry)).openWindow()
+            mainWindowController.find(EditEntryView::class, mapOf(EditEntryView::entry to entry)).show()
         }
     }
 
     override fun showEditEntryView(extractionResult: EntryExtractionResult) {
         runLater {
-            mainWindowController.find(EditEntryExtractionResultView::class, mapOf(EditEntryExtractionResultView::extractionResult to extractionResult)).openWindow()
+            mainWindowController.find(EditEntryExtractionResultView::class, mapOf(EditEntryExtractionResultView::extractionResult to extractionResult)).show()
         }
     }
 
