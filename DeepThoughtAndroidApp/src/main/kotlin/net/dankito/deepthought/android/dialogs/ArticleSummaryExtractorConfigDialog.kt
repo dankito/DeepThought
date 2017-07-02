@@ -113,22 +113,26 @@ class ArticleSummaryExtractorConfigDialog {
                 mergeFavicons(listIcons, favicons, currentIcon)
             }
 
-            currentIcon = faviconComparator.getBestIcon(listIcons, maxSize = ArticleSummaryExtractorConfigManager.MAX_SIZE, returnSquarishOneIfPossible = true)
+            // to retrieve all icon sizes
+            val bestIcon = faviconComparator.getBestIcon(listIcons, maxSize = ArticleSummaryExtractorConfigManager.MAX_SIZE, returnSquarishOneIfPossible = true)
+            if(currentIcon == null) {
+                currentIcon = bestIcon
+            }
 
             callback(listIcons, currentIcon)
         }
     }
 
     private fun mergeFavicons(listIcons: MutableList<Favicon>, retrievedFavicons: List<Favicon>, currentIcon: Favicon?) {
+        listIcons.addAll(retrievedFavicons)
+
         currentIcon?.let { currentIcon -> // check if url of default icon is also contained in favicons
             retrievedFavicons.forEach {
                 if(it.url == currentIcon.url) {
-                    listIcons.remove(currentIcon)
+                    listIcons.remove(it)
                 }
             }
         }
-
-        listIcons.addAll(retrievedFavicons)
     }
 
 }
