@@ -62,10 +62,7 @@ class ArticleSummaryExtractorsAdapter(private val activity: AppCompatActivity, p
         }
 
 
-        view.setOnLongClickListener {
-            ArticleSummaryExtractorConfigDialog().editConfiguration(activity, extractorConfig) { }
-            true
-        }
+        enableEditingExtractorConfig(view, extractorConfig)
 
         view.tag = extractorConfig
 
@@ -96,6 +93,18 @@ class ArticleSummaryExtractorsAdapter(private val activity: AppCompatActivity, p
             activity.runOnUiThread {
                 imageView.setImageBitmap(bitmap)
             }
+        }
+    }
+
+
+    private fun enableEditingExtractorConfig(view: View, extractorConfig: ArticleSummaryExtractorConfig) {
+        view.setOnLongClickListener {
+            ArticleSummaryExtractorConfigDialog().editConfiguration(activity, extractorConfig) { didEditConfiguration ->
+                if (didEditConfiguration) {
+                    summaryExtractorsManager.configurationUpdated(extractorConfig)
+                }
+            }
+            true
         }
     }
 
