@@ -97,6 +97,8 @@ class ViewEntryActivity : BaseActivity() {
 
         val settings = wbEntry.getSettings()
         settings.defaultTextEncodingName = "UTF-8" // otherwise non ASCII text doesn't get displayed correctly
+        println("defaultFontSize = ${settings.defaultFontSize}")
+        settings.defaultFontSize = 18 // default font is too small
         settings.javaScriptEnabled = true // so that embedded videos etc. work
     }
 
