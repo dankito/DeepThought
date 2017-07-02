@@ -12,10 +12,12 @@ import tornadofx.*
 
 abstract class DialogFragment : Fragment() {
 
-    fun show(stageStyle: StageStyle = StageStyle.DECORATED, modality: Modality = Modality.NONE, owner: Window? = null) : Stage {
+    fun show(title: String? = null, stageStyle: StageStyle = StageStyle.DECORATED, modality: Modality = Modality.NONE, owner: Window? = null) : Stage {
         val dialogStage = Stage()
 
         owner?.let { dialogStage.initOwner(it) }
+        dialogStage.title = title
+
         dialogStage.initModality(modality)
         dialogStage.initStyle(stageStyle)
 
