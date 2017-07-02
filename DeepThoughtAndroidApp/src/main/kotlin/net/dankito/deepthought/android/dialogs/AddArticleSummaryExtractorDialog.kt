@@ -17,6 +17,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.ArticleSummaryActivity
 import net.dankito.deepthought.android.adapter.FoundFeedAddressesAdapter
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.feedaddressextractor.FeedAddress
 import net.dankito.feedaddressextractor.FeedAddressExtractor
@@ -149,20 +150,17 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
 
     private fun feedAdded(feedUrl: String, summary: FeedArticleSummary) {
         activity.runOnUiThread {
+            val config = ArticleSummaryExtractorConfig(feedUrl, summary.title ?: "", summary.imageUrl, summary.siteUrl)
             val extractorConfigDialog = ArticleSummaryExtractorConfigDialog()
 
-            extractorConfigDialog.askForName(activity, summary.title ?: "", false) { didSelectName, selectedName ->
-                val selectedExtractorName = if(didSelectName) selectedName ?: "" else summary.title ?: ""
-
-                feedAdded(feedUrl, summary, selectedExtractorName)
+            extractorConfigDialog.askForName(activity, config, false) { didSelectName ->
+                feedAdded(feedUrl, summary, config)
             }
         }
     }
 
-    private fun feedAdded(feedUrl: String, summary: FeedArticleSummary, selectedExtractorName: String) {
-        summary.title = selectedExtractorName
-
-        extractorsConfigManager.addFeed(feedUrl, summary) {
+    private fun feedAdded(feedUrl: String, summary: FeedArticleSummary, config: ArticleSummaryExtractorConfig) {
+        extractorsConfigManager.addFeed(feedUrl, config) {
             activity.runOnUiThread {
                 showArticleSummaryActivity(feedUrl, summary)
 
