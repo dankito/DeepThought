@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android.dialogs
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
@@ -163,29 +164,37 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
     }
 
     private fun addFeed(feedUrl: String, summary: FeedArticleSummary) {
-        activity.runOnUiThread {
-            val config = ArticleSummaryExtractorConfig(feedUrl, summary.title ?: "", summary.imageUrl, summary.siteUrl)
-            val extractorConfigDialog = ArticleSummaryExtractorConfigDialog()
+        activity?.let { activity ->
+            activity.runOnUiThread {
+                addFeedOnUIThread(activity, feedUrl, summary)
+            }
+        }
+    }
 
-            extractorConfigDialog.editConfiguration(activity, config) { didEditConfiguration ->
-                if(didEditConfiguration) {
-                    feedAdded(feedUrl, summary, config)
-                }
+    private fun addFeedOnUIThread(activity: Activity, feedUrl: String, summary: FeedArticleSummary) {
+        val config = ArticleSummaryExtractorConfig(feedUrl, summary.title ?: "", summary.imageUrl, summary.siteUrl)
+        val extractorConfigDialog = ArticleSummaryExtractorConfigDialog()
+
+        extractorConfigDialog.editConfiguration(activity, config) { didEditConfiguration ->
+            if(didEditConfiguration) {
+                feedAdded(feedUrl, summary, config)
             }
         }
     }
 
     private fun feedAdded(feedUrl: String, summary: FeedArticleSummary, config: ArticleSummaryExtractorConfig) {
         extractorsConfigManager.addFeed(feedUrl, config) {
-            activity.runOnUiThread {
-                showArticleSummaryActivity(feedUrl, summary)
+            activity?.let { activity ->
+                activity.runOnUiThread {
+                    showArticleSummaryActivity(activity, feedUrl, summary)
 
-                dismiss()
+                    dismiss()
+                }
             }
         }
     }
 
-    private fun showArticleSummaryActivity(feedUrl: String, summary: FeedArticleSummary) {
+    private fun showArticleSummaryActivity(activity: Activity, feedUrl: String, summary: FeedArticleSummary) {
         val intent = Intent(activity, ArticleSummaryActivity::class.java)
 
         intent.putExtra(ArticleSummaryActivity.EXTRACTOR_URL_INTENT_EXTRA_NAME, feedUrl)
@@ -195,7 +204,7 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
     }
 
     private fun showFoundFeedAddresses(result: List<FeedAddress>) {
-        activity.runOnUiThread {
+        activity?.runOnUiThread {
             feedAddressesAdapter.setItems(result)
 
             txtFeedSearchResultsLabel?.visibility = VISIBLE
@@ -212,10 +221,12 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
     }
 
     private fun showErrorThreadSafe(error: String) {
-        activity.runOnUiThread { showError(error) }
+        activity?.let { activity ->
+            activity.runOnUiThread { showError(activity, error) }
+        }
     }
 
-    private fun showError(error: String) {
+    private fun showError(activity: Activity, error: String) {
         val builder = AlertDialog.Builder(activity)
 
         builder.setMessage(error)
