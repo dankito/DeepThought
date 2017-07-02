@@ -31,6 +31,7 @@
     <string name="dialog_add_article_summary_extractor_found_feeds">Found feeds:</string>
 
     <string name="dialog_article_summary_extractor_config_enter_name">Enter name:</string>
+    <string name="dialog_article_summary_extractor_config_select_icon">Select icon:</string>
 
     <string name="action_title_save">Save</string>
     <string name="action_title_share">Share</string>
