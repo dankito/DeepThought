@@ -22,7 +22,7 @@ import javax.inject.Inject
 class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, private val configService: ArticleSummaryExtractorConfigService, private val threadPool: IThreadPool) {
 
     companion object {
-        private const val MAX_SIZE = 152
+        const val MAX_SIZE = 152
 
         private val log = LoggerFactory.getLogger(ArticleSummaryExtractorConfigManager::class.java)
     }
