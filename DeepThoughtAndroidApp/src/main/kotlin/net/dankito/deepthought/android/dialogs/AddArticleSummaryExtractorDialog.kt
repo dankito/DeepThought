@@ -84,9 +84,17 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
         val feedAddress = feedAddressesAdapter.getItem(position)
 
         feedReader.readFeedAsync(feedAddress.url) {
-            it.result?.let { feedAdded(feedAddress.url, it) }
-            it.error?.let { showError(feedAddress.url, it) }
+            retrievedFeedArticleSummary(feedAddress, it)
         }
+    }
+
+    private fun retrievedFeedArticleSummary(feedAddress: FeedAddress, result: AsyncResult<FeedArticleSummary>) {
+        if(isDetached) { // got detached while result has been retrieved
+            return
+        }
+
+        result.result?.let { feedAdded(feedAddress.url, it) }
+        result.error?.let { showError(feedAddress.url, it) }
     }
 
     private fun checkFeedOrWebsiteUrl(enteredFeedOrWebsiteUrl: String) {
