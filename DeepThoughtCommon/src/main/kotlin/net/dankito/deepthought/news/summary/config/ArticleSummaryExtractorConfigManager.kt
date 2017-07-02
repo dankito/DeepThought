@@ -10,7 +10,6 @@ import net.dankito.faviconextractor.FaviconExtractor
 import net.dankito.newsreader.feed.FeedArticleSummaryExtractor
 import net.dankito.newsreader.feed.IFeedReader
 import net.dankito.newsreader.feed.RomeFeedReader
-import net.dankito.newsreader.model.FeedArticleSummary
 import net.dankito.newsreader.summary.ImplementedArticleSummaryExtractors
 import net.dankito.serializer.ISerializer
 import net.dankito.service.data.ArticleSummaryExtractorConfigService
@@ -164,46 +163,28 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
     }
 
 
-    fun addFeed(feedUrl: String, summary: FeedArticleSummary, callback: (ArticleSummaryExtractorConfig?) -> Unit) {
-        val extractor = FeedArticleSummaryExtractor(feedUrl, createFeedReader())
-
-        getIconForFeedAsync(summary) {
-            val config = ArticleSummaryExtractorConfig(feedUrl, summary.title ?: "", it)
-            config.extractor = extractor
-
-            addConfig(config)
-
-            callback(config)
+    fun addFeed(feedUrl: String, config: ArticleSummaryExtractorConfig, callback: (ArticleSummaryExtractorConfig?) -> Unit) {
+        if(config.iconUrl != null) {
+            addFeed(feedUrl, config, config.iconUrl, callback)
         }
+        else {
+            loadIconAsync(feedUrl) {
+                addFeed(feedUrl, config, it, callback)
+            }
+        }
+    }
+
+    private fun addFeed(feedUrl: String, config: ArticleSummaryExtractorConfig, iconUrl: String?, callback: (ArticleSummaryExtractorConfig?) -> Unit) {
+        config.iconUrl = iconUrl
+        config.extractor = FeedArticleSummaryExtractor(feedUrl, createFeedReader())
+
+        addConfig(config)
+
+        callback(config)
     }
 
     private fun createFeedReader(): IFeedReader {
         return RomeFeedReader()
-    }
-
-    private fun getIconForFeedAsync(summary: FeedArticleSummary, callback: (iconUrl: String?) -> Unit) {
-        threadPool.runAsync {
-            getIconForFeed(summary, callback)
-        }
-    }
-
-    private fun getIconForFeed(summary: FeedArticleSummary, callback: (iconUrl: String?) -> Unit) {
-        // TODO: extract Favicons, add summary.imageUrl to them and then get best one from them. Otherwise a way worse icon could be used then would be possible from Favicons
-        summary.imageUrl?.let { iconUrl ->
-            if(faviconComparator.doesFitSize(iconUrl, mustBeSquarish = true)) {
-                return callback(iconUrl)
-            }
-        }
-
-        val siteUrl = summary.siteUrl
-        if(siteUrl != null) {
-            loadIconAsync(siteUrl) { iconUrl ->
-                callback(iconUrl)
-            }
-        }
-        else {
-            callback(null)
-        }
     }
 
     private fun addConfig(config: ArticleSummaryExtractorConfig) {
