@@ -93,7 +93,7 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
             return
         }
 
-        result.result?.let { feedAdded(feedAddress.url, it) }
+        result.result?.let { addFeed(feedAddress.url, it) }
         result.error?.let { showError(feedAddress.url, it) }
     }
 
@@ -102,7 +102,7 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
 
         feedReader.readFeedAsync(feedOrWebsiteUrl) {
             if(it.result != null) {
-                feedAdded(feedOrWebsiteUrl, it.result as FeedArticleSummary)
+                addFeed(feedOrWebsiteUrl, it.result as FeedArticleSummary)
             }
             else {
                 feedAddressExtractor.extractFeedAddressesAsync(feedOrWebsiteUrl) { asyncResult ->
@@ -162,7 +162,7 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
         }
     }
 
-    private fun feedAdded(feedUrl: String, summary: FeedArticleSummary) {
+    private fun addFeed(feedUrl: String, summary: FeedArticleSummary) {
         activity.runOnUiThread {
             val config = ArticleSummaryExtractorConfig(feedUrl, summary.title ?: "", summary.imageUrl, summary.siteUrl)
             val extractorConfigDialog = ArticleSummaryExtractorConfigDialog()
