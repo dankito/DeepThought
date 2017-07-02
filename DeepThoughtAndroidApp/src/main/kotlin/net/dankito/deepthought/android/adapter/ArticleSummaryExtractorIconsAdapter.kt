@@ -16,7 +16,7 @@ import net.dankito.utils.ImageCache
 import javax.inject.Inject
 
 
-class ArticleSummaryExtractorIconsAdapter(private val activity: Activity, icons: List<Favicon>) : ListAdapter<Favicon>(icons) {
+class ArticleSummaryExtractorIconsAdapter(private val activity: Activity) : ListAdapter<Favicon>() {
 
 
     @Inject
