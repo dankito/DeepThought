@@ -77,13 +77,13 @@ private fun getPlainTextForHtml(htmlString: String): String {
 
 class EntryPreviewCache {
 
-    private val abstractPlainTextCache = ConcurrentHashMap<String, String>()
+    private val abstractPlainTextCache = ConcurrentHashMap<Entry, String>()
 
-    private val contentPlainTextCache = ConcurrentHashMap<String, String>()
+    private val contentPlainTextCache = ConcurrentHashMap<Entry, String>()
 
-    private val entryPreviewCache = ConcurrentHashMap<String, String>()
+    private val entryPreviewCache = ConcurrentHashMap<Entry, String>()
 
-    private val tagsPreviewCache = ConcurrentHashMap<String, String>()
+    private val tagsPreviewCache = ConcurrentHashMap<Entry, String>()
 
 
     @Inject
@@ -100,46 +100,46 @@ class EntryPreviewCache {
 
 
     fun getCachedAbstractPlainText(entry: Entry): String? {
-        return abstractPlainTextCache[entry.id]
+        return abstractPlainTextCache[entry]
     }
 
     fun cacheAbstractPlainText(entry: Entry, abstractPlainText: String) {
-        entry.id?.let { abstractPlainTextCache.put(it, abstractPlainText) }
+        abstractPlainTextCache.put(entry, abstractPlainText)
     }
 
 
     fun getCachedContentPlainText(entry: Entry): String? {
-        return contentPlainTextCache[entry.id]
+        return contentPlainTextCache[entry]
     }
 
     fun cacheContentPlainText(entry: Entry, contentPlainText: String) {
-        entry.id?.let { contentPlainTextCache.put(it, contentPlainText) }
+        contentPlainTextCache.put(entry, contentPlainText)
     }
 
 
     fun getCachedEntryPreview(entry: Entry): String? {
-        return entryPreviewCache[entry.id]
+        return entryPreviewCache[entry]
     }
 
     fun cacheEntryPreview(entry: Entry, entryPreview: String) {
-        entry.id?.let { entryPreviewCache.put(it, entryPreview) }
+        entryPreviewCache.put(entry, entryPreview)
     }
 
 
     fun getCachedTagsPreview(entry: Entry): String? {
-        return tagsPreviewCache[entry.id]
+        return tagsPreviewCache[entry]
     }
 
     fun cacheTagPreview(entry: Entry, tagsPreview: String) {
-        entry.id?.let { tagsPreviewCache.put(it, tagsPreview) }
+        tagsPreviewCache.put(entry, tagsPreview)
     }
 
 
     private fun clearCacheForEntry(entry: Entry) {
-        abstractPlainTextCache.remove(entry.id)
-        contentPlainTextCache.remove(entry.id)
-        entryPreviewCache.remove(entry.id)
-        tagsPreviewCache.remove(entry.id)
+        abstractPlainTextCache.remove(entry)
+        contentPlainTextCache.remove(entry)
+        entryPreviewCache.remove(entry)
+        tagsPreviewCache.remove(entry)
     }
 
 
