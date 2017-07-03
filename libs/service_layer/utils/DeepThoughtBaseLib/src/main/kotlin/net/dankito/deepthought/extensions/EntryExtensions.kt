@@ -44,7 +44,8 @@ val Entry.entryPreview: String
                 preview += " "
             }
 
-            preview += this.contentPlainText
+            val maxContentLength = 200 - preview.length
+            preview += this.contentPlainText.substring(0, maxContentLength)
         }
 
         previewCache.cacheEntryPreview(this, preview)
