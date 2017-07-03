@@ -40,7 +40,7 @@ val Reference?.preview: String
 
 class ReferencePreviewCache {
 
-    private val referencePreviewCache = ConcurrentHashMap<Reference, String>()
+    private val referencePreviewCache = ConcurrentHashMap<String, String>()
 
 
     @Inject
@@ -57,16 +57,16 @@ class ReferencePreviewCache {
 
 
     fun getCachedReferencePreview(reference: Reference): String? {
-        return referencePreviewCache[reference]
+        return referencePreviewCache[reference.id]
     }
 
-    fun cacheReferencePreview(referenc: Reference, referencePreview: String) {
-        referencePreviewCache.put(referenc, referencePreview)
+    fun cacheReferencePreview(reference: Reference, referencePreview: String) {
+        reference.id?.let { referencePreviewCache.put(it, referencePreview) }
     }
 
 
     private fun clearCacheForReference(reference: Reference) {
-        referencePreviewCache.remove(reference)
+        referencePreviewCache.remove(reference.id)
     }
 
 

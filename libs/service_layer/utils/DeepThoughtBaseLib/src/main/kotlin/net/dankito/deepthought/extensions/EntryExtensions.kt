@@ -77,13 +77,13 @@ private fun getPlainTextForHtml(htmlString: String): String {
 
 class EntryPreviewCache {
 
-    private val abstractPlainTextCache = ConcurrentHashMap<Entry, String>()
+    private val abstractPlainTextCache = ConcurrentHashMap<String, String>()
 
-    private val contentPlainTextCache = ConcurrentHashMap<Entry, String>()
+    private val contentPlainTextCache = ConcurrentHashMap<String, String>()
 
     private val entryPreviewCache = ConcurrentHashMap<String, String>()
 
-    private val tagsPreviewCache = ConcurrentHashMap<Entry, String>()
+    private val tagsPreviewCache = ConcurrentHashMap<String, String>()
 
 
     @Inject
@@ -100,20 +100,20 @@ class EntryPreviewCache {
 
 
     fun getCachedAbstractPlainText(entry: Entry): String? {
-        return abstractPlainTextCache[entry]
+        return abstractPlainTextCache[entry.id]
     }
 
     fun cacheAbstractPlainText(entry: Entry, abstractPlainText: String) {
-        abstractPlainTextCache.put(entry, abstractPlainText)
+        entry.id?.let { abstractPlainTextCache.put(it, abstractPlainText) }
     }
 
 
     fun getCachedContentPlainText(entry: Entry): String? {
-        return contentPlainTextCache[entry]
+        return contentPlainTextCache[entry.id]
     }
 
     fun cacheContentPlainText(entry: Entry, contentPlainText: String) {
-        contentPlainTextCache.put(entry, contentPlainText)
+        entry.id?.let { contentPlainTextCache.put(it, contentPlainText) }
     }
 
 
@@ -127,19 +127,19 @@ class EntryPreviewCache {
 
 
     fun getCachedTagsPreview(entry: Entry): String? {
-        return tagsPreviewCache[entry]
+        return tagsPreviewCache[entry.id]
     }
 
     fun cacheTagPreview(entry: Entry, tagsPreview: String) {
-        tagsPreviewCache.put(entry, tagsPreview)
+        entry.id?.let { tagsPreviewCache.put(it, tagsPreview) }
     }
 
 
     private fun clearCacheForEntry(entry: Entry) {
-        abstractPlainTextCache.remove(entry)
-        contentPlainTextCache.remove(entry)
+        abstractPlainTextCache.remove(entry.id)
+        contentPlainTextCache.remove(entry.id)
         entryPreviewCache.remove(entry.id)
-        tagsPreviewCache.remove(entry)
+        tagsPreviewCache.remove(entry.id)
     }
 
 
