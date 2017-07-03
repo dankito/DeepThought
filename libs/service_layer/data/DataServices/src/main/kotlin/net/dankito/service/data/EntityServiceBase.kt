@@ -28,10 +28,12 @@ abstract class EntityServiceBase<T : BaseEntity>(val dataManager: DataManager, v
 
 
     fun persist(entity: T) {
-        onPrePersist(entity)
+        synchronized(this) {
+            onPrePersist(entity)
 
-        // we first have to persist an entity so that it gets an id and than can add it to DeepThought (otherwise it would be added to DeepThought with id null)
-        entityManager.persistEntity(entity as Any)
+            // we first have to persist an entity so that it gets an id and than can add it to DeepThought (otherwise it would be added to DeepThought with id null)
+            entityManager.persistEntity(entity as Any)
+        }
 
         callEntitiesUpdatedListeners(entity, EntityChangeType.Created)
     }
