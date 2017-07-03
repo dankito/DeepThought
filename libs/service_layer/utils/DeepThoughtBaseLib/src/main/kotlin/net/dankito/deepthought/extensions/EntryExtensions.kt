@@ -39,12 +39,12 @@ val Entry.entryPreview: String
 
         var preview = this.abstractPlainText
 
-        if (preview.length < 200) {
+        if (preview.length < 300) {
             if (preview.isNotEmpty()) {
                 preview += " "
             }
 
-            val maxContentLength = 200 - preview.length
+            val maxContentLength = 300 - preview.length
             preview += this.contentPlainText.substring(0, maxContentLength)
         }
 
