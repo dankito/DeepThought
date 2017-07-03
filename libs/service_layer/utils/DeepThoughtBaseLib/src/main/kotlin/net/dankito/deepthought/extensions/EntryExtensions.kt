@@ -40,7 +40,7 @@ val Entry.entryPreview: String
         var preview = this.abstractPlainText
 
         if (preview.length < 200) {
-            if (preview.length > 0) {
+            if (preview.isNotEmpty()) {
                 preview += " "
             }
 
