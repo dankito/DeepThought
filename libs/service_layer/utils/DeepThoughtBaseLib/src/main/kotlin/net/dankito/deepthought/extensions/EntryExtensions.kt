@@ -80,7 +80,7 @@ class EntryPreviewCache {
 
     private val contentPlainTextCache = ConcurrentHashMap<Entry, String>()
 
-    private val entryPreviewCache = ConcurrentHashMap<Entry, String>()
+    private val entryPreviewCache = ConcurrentHashMap<String, String>()
 
     private val tagsPreviewCache = ConcurrentHashMap<Entry, String>()
 
@@ -117,11 +117,11 @@ class EntryPreviewCache {
 
 
     fun getCachedEntryPreview(entry: Entry): String? {
-        return entryPreviewCache[entry]
+        return entryPreviewCache[entry.id]
     }
 
     fun cacheEntryPreview(entry: Entry, entryPreview: String) {
-        entryPreviewCache.put(entry, entryPreview)
+        entry.id?.let { entryPreviewCache.put(it, entryPreview) }
     }
 
 
@@ -137,7 +137,7 @@ class EntryPreviewCache {
     private fun clearCacheForEntry(entry: Entry) {
         abstractPlainTextCache.remove(entry)
         contentPlainTextCache.remove(entry)
-        entryPreviewCache.remove(entry)
+        entryPreviewCache.remove(entry.id)
         tagsPreviewCache.remove(entry)
     }
 
