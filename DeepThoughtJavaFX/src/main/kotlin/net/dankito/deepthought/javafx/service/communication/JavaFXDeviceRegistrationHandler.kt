@@ -5,13 +5,15 @@ import net.dankito.data_access.network.communication.callback.DeviceRegistration
 import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.DiscoveredDevice
+import net.dankito.deepthought.service.data.DataManager
+import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IDialogService
 import tornadofx.*
 
 
-class JavaFXDeviceRegistrationHandler(dialogService: IDialogService, localization: Localization)
-    : DeviceRegistrationHandlerBase(dialogService, localization) {
+class JavaFXDeviceRegistrationHandler(dataManager: DataManager, initialSyncManager: InitialSyncManager, dialogService: IDialogService, localization: Localization)
+    : DeviceRegistrationHandlerBase(dataManager, initialSyncManager, dialogService, localization) {
 
     override fun shouldPermitSynchronizingWithDevice(remoteDeviceInfo: DeviceInfo, callback: (remoteDeviceInfo: DeviceInfo, permitsSynchronization: Boolean) -> Unit) {
         val message = localization.getLocalizedString("alert.message.permit.device.to.synchronize", remoteDeviceInfo);

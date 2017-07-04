@@ -16,6 +16,7 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.serializer.ISerializer
 import net.dankito.service.search.ISearchEngine
+import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
@@ -67,9 +68,9 @@ class ActivitiesModule(private val application: DeepThoughtApplication) {
 
     @Provides
     @Singleton
-    fun provideIsDeviceRegistrationHandler(context: Context, dialogService: IDialogService, localization: Localization, currentActivityTracker: CurrentActivityTracker)
-            : IDeviceRegistrationHandler {
-        return AndroidDeviceRegistrationHandler(context, dialogService, localization, currentActivityTracker)
+    fun provideDeviceRegistrationHandler(context: Context, dataManager: DataManager, initialSyncManager: InitialSyncManager, dialogService: IDialogService,
+                                           localization: Localization, currentActivityTracker: CurrentActivityTracker) : IDeviceRegistrationHandler {
+        return AndroidDeviceRegistrationHandler(context, dataManager, initialSyncManager, dialogService, localization, currentActivityTracker)
     }
 
     @Provides

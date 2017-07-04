@@ -10,8 +10,10 @@ import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
 import net.dankito.deepthought.javafx.service.JavaFXClipboardService
 import net.dankito.deepthought.javafx.service.communication.JavaFXDeviceRegistrationHandler
+import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.search.ISearchEngine
+import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
@@ -56,8 +58,8 @@ class JavaFXModule(private val mainWindowController: MainWindowController) {
 
     @Provides
     @Singleton
-    fun provideDeviceRegistrationHandler(dialogService: IDialogService, localization: Localization) : IDeviceRegistrationHandler {
-        return JavaFXDeviceRegistrationHandler(dialogService, localization)
+    fun provideDeviceRegistrationHandler(dataManager: DataManager, initialSyncManager: InitialSyncManager, dialogService: IDialogService, localization: Localization) : IDeviceRegistrationHandler {
+        return JavaFXDeviceRegistrationHandler(dataManager, initialSyncManager, dialogService, localization)
     }
 
 }

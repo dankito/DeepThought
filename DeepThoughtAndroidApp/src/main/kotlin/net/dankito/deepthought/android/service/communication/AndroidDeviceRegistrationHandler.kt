@@ -14,14 +14,16 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
+import net.dankito.deepthought.service.data.DataManager
+import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IDialogService
 import java.util.concurrent.ConcurrentHashMap
 
 
-class AndroidDeviceRegistrationHandler(private var context: Context, dialogService: IDialogService,
+class AndroidDeviceRegistrationHandler(private var context: Context, dataManager: DataManager, initialSyncManager: InitialSyncManager, dialogService: IDialogService,
                                        localization: Localization, private var currentActivityTracker: CurrentActivityTracker)
-    : DeviceRegistrationHandlerBase(dialogService, localization) {
+    : DeviceRegistrationHandlerBase(dataManager, initialSyncManager, dialogService, localization) {
 
     private var snackbarAskToSyncDataWithDevice: Snackbar? = null
 

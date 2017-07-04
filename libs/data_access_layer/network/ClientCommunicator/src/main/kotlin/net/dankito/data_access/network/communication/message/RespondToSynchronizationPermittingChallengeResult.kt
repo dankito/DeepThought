@@ -5,6 +5,7 @@ enum class RespondToSynchronizationPermittingChallengeResult {
 
     ALLOWED,
     WRONG_CODE,
+    ERROR_OCCURRED,
     DENIED
 
 }
