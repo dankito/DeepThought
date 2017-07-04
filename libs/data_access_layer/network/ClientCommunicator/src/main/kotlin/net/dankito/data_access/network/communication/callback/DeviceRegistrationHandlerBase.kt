@@ -6,7 +6,6 @@ import net.dankito.data_access.network.communication.message.RespondToSynchroniz
 import net.dankito.data_access.network.communication.message.RespondToSynchronizationPermittingChallengeResult
 import net.dankito.data_access.network.communication.message.Response
 import net.dankito.deepthought.model.DiscoveredDevice
-import net.dankito.deepthought.model.enums.ExtensibleEnumeration
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.service.synchronization.initialsync.model.DeepThoughtSyncInfo
@@ -71,18 +70,11 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
     }
 
     private fun createSyncInfo(useCallerDatabaseIds: Boolean? = null, useCallerUserName: Boolean? = null): SyncInfo {
-        val user = dataManager.localUser
-        val userSyncInfo = UserSyncInfo(user.id!!, user.userName, user.universallyUniqueId, user.firstName, user.lastName, user.synchronizedDevices.size, user.ignoredDevices.size)
+        val userSyncInfo = UserSyncInfo(dataManager.localUser)
 
-        val deepThought = dataManager.deepThought
-        val deepThoughtSyncInfo = DeepThoughtSyncInfo(deepThought.id!!, getMapForExtensibleEnumerationList(deepThought.applicationLanguages),
-                getMapForExtensibleEnumerationList(deepThought.noteTypes), getMapForExtensibleEnumerationList(deepThought.noteTypes))
+        val deepThoughtSyncInfo = DeepThoughtSyncInfo(dataManager.deepThought)
 
         return SyncInfo(deepThoughtSyncInfo, userSyncInfo, useCallerDatabaseIds, useCallerUserName)
-    }
-
-    private fun getMapForExtensibleEnumerationList(enumerationSet: Set<ExtensibleEnumeration>): Map<String, String> {
-        return enumerationSet.filter { it.nameResourceKey != null }.associateBy( { it.nameResourceKey!! }, { it.id!! } )
     }
 
 
