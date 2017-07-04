@@ -12,9 +12,7 @@ import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.data_access.network.communication.IClientCommunicator
 import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
-import net.dankito.data_access.network.communication.message.DeviceInfo
-import net.dankito.data_access.network.communication.message.RespondToSynchronizationPermittingChallengeResponseBody
-import net.dankito.data_access.network.communication.message.RespondToSynchronizationPermittingChallengeResult
+import net.dankito.data_access.network.communication.message.*
 import net.dankito.data_access.network.discovery.UdpDevicesDiscoverer
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
@@ -29,8 +27,7 @@ import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.services.hashing.IBase64Service
-import org.hamcrest.CoreMatchers.`is`
-import org.hamcrest.CoreMatchers.notNullValue
+import org.hamcrest.CoreMatchers.*
 import org.hamcrest.number.OrderingComparison.greaterThan
 import org.junit.After
 import org.junit.Assert.assertThat
@@ -283,6 +280,34 @@ class CommunicationManagerTest {
             assertThat(result.result, `is`(RespondToSynchronizationPermittingChallengeResult.ALLOWED))
             assertThat(result.syncInfo, notNullValue())
             assertThat(result.synchronizationPort, greaterThan(1023))
+        }
+    }
+
+
+    @Test
+    fun localDeviceRequestsSynchronization_RemoteDeniesSynchronization() {
+        var responseBody: RequestPermitSynchronizationResponseBody? = null
+        val countDownLatch = CountDownLatch(2)
+
+        whenever(remoteRegistrationHandler.shouldPermitSynchronizingWithDevice(any(), any())).doAnswer { invocation ->
+            val callback = invocation.arguments[1] as (DeviceInfo, Boolean) -> Unit
+            callback(invocation.arguments[0] as DeviceInfo, false)
+        }
+
+        localConnectedDevicesService.addDiscoveredDevicesListener(informWhenRemoteDeviceDiscovered(countDownLatch) { discoveredDevice ->
+            localClientCommunicator.requestPermitSynchronization(discoveredDevice) { permitResponse ->
+                responseBody = permitResponse.body
+                countDownLatch.countDown()
+            }
+        })
+
+        startCommunicationManagersAndWait(countDownLatch)
+
+        assertThat(responseBody, notNullValue())
+
+        responseBody?.let { result ->
+            assertThat(result.result, `is`(RequestPermitSynchronizationResult.DENIED))
+            assertThat(result.nonce, nullValue())
         }
     }
 
