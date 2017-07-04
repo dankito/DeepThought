@@ -1,5 +1,9 @@
 package net.dankito.deepthought.communication
 
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.doAnswer
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.whenever
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.IEntityManager
@@ -8,16 +12,26 @@ import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.data_access.network.communication.IClientCommunicator
 import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
+import net.dankito.data_access.network.communication.message.DeviceInfo
+import net.dankito.data_access.network.communication.message.RespondToSynchronizationPermittingChallengeResponseBody
+import net.dankito.data_access.network.communication.message.RespondToSynchronizationPermittingChallengeResult
 import net.dankito.data_access.network.discovery.UdpDevicesDiscoverer
-import net.dankito.deepthought.model.*
+import net.dankito.deepthought.model.Device
+import net.dankito.deepthought.model.DiscoveredDevice
+import net.dankito.deepthought.model.INetworkSettings
+import net.dankito.deepthought.model.NetworkSettings
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.service.synchronization.*
+import net.dankito.service.synchronization.initialsync.model.SyncInfo
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.ThreadPool
+import net.dankito.utils.localization.Localization
 import net.dankito.utils.services.hashing.IBase64Service
 import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.notNullValue
+import org.hamcrest.number.OrderingComparison.greaterThan
 import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Before
@@ -44,6 +58,8 @@ class CommunicationManagerTest {
 
 
     private val threadPool = ThreadPool()
+
+    private val localization = Mockito.mock(Localization::class.java)
 
     private val base64Service: IBase64Service = Mockito.mock(IBase64Service::class.java)
 
@@ -132,6 +148,8 @@ class CommunicationManagerTest {
         fileStorageService.deleteFolderRecursively(localPlatformConfiguration.getDefaultDataFolder().path)
         fileStorageService.deleteFolderRecursively(remotePlatformConfiguration.getDefaultDataFolder().path)
 
+        whenever(base64Service.encode(any<ByteArray>())).thenReturn("Liebe")
+
         setupLocalDevice()
 
         setupRemoteDevice()
@@ -143,7 +161,7 @@ class CommunicationManagerTest {
         val entityManagerConfiguration = EntityManagerConfiguration(localPlatformConfiguration.getDefaultDataFolder().path, "test")
         localEntityManager = JavaCouchbaseLiteEntityManager(entityManagerConfiguration)
 
-        localDataManager = DataManager(localEntityManager, entityManagerConfiguration, DefaultDataInitializer(localPlatformConfiguration), localPlatformConfiguration)
+        localDataManager = DataManager(localEntityManager, entityManagerConfiguration, DefaultDataInitializer(localPlatformConfiguration, localization), localPlatformConfiguration)
         val initializationLatch = CountDownLatch(1)
 
         localDataManager.addInitializationListener {
@@ -166,12 +184,12 @@ class CommunicationManagerTest {
 
 
     private fun setupRemoteDevice() {
-        remoteRegistrationHandler = Mockito.mock(IDeviceRegistrationHandler::class.java)
+        remoteRegistrationHandler = mock<IDeviceRegistrationHandler>()
 
         val entityManagerConfiguration = EntityManagerConfiguration(remotePlatformConfiguration.getDefaultDataFolder().path, "test")
         remoteEntityManager = JavaCouchbaseLiteEntityManager(entityManagerConfiguration)
 
-        remoteDataManager = DataManager(remoteEntityManager, entityManagerConfiguration, DefaultDataInitializer(remotePlatformConfiguration), remotePlatformConfiguration)
+        remoteDataManager = DataManager(remoteEntityManager, entityManagerConfiguration, DefaultDataInitializer(remotePlatformConfiguration, localization), remotePlatformConfiguration)
         val initializationLatch = CountDownLatch(1)
 
         remoteDataManager.addInitializationListener {
@@ -229,6 +247,52 @@ class CommunicationManagerTest {
     }
 
 
+    @Test
+    fun localDeviceRequestsSynchronization_EnteredResponseIsCorrect_SynchronizationIsAllowed() {
+        var result: RespondToSynchronizationPermittingChallengeResponseBody? = null
+        var correctResponse: String = "not_valid"
+        val countDownLatch = CountDownLatch(2)
+
+        whenever(remoteRegistrationHandler.shouldPermitSynchronizingWithDevice(any(), any())).doAnswer { invocation ->
+            val callback = invocation.arguments[1] as (DeviceInfo, Boolean) -> Unit
+            callback(invocation.arguments[0] as DeviceInfo, true)
+        }
+
+        whenever(remoteRegistrationHandler.showResponseToEnterOnOtherDeviceNonBlocking(any(), any())).then { answer ->
+            correctResponse = answer.getArgument<String>(1)
+            null
+        }
+
+        whenever(remoteRegistrationHandler.deviceHasBeenPermittedToSynchronize(any<DiscoveredDevice>(), any<SyncInfo>())).thenReturn(mock<SyncInfo>())
+
+        localConnectedDevicesService.addDiscoveredDevicesListener(informWhenRemoteDeviceDiscovered(countDownLatch) { discoveredDevice ->
+            localClientCommunicator.requestPermitSynchronization(discoveredDevice) { permitResponse ->
+                permitResponse.body?.let { body ->
+                    localClientCommunicator.respondToSynchronizationPermittingChallenge(discoveredDevice, body.nonce!!, correctResponse, mock<SyncInfo>()) { challengeResponse ->
+                        result = challengeResponse.body
+                        countDownLatch.countDown()
+                    }
+                }
+
+                permitResponse.error?.let { countDownLatch.countDown() }
+            }
+        })
+        localCommunicationManager.startAsync()
+
+        remoteCommunicationManager.startAsync()
+
+        countDownLatch.await(FindRemoteDeviceTimeoutInSeconds, TimeUnit.SECONDS)
+
+        assertThat(result, notNullValue())
+
+        result?.let { result ->
+            assertThat(result.result, `is`(RespondToSynchronizationPermittingChallengeResult.ALLOWED))
+            assertThat(result.syncInfo, notNullValue())
+            assertThat(result.synchronizationPort, greaterThan(1023))
+        }
+    }
+
+
     private fun createDiscoveredDevicesListener(discoveredDevicesList: MutableList<DiscoveredDevice>, latchToCountDownOnDeviceDiscovered: CountDownLatch? = null,
                                                 latchToCountDownOnDeviceDisconnected: CountDownLatch? = null): DiscoveredDevicesListener {
         return object : DiscoveredDevicesListener {
@@ -242,6 +306,20 @@ class CommunicationManagerTest {
                 discoveredDevicesList.remove(disconnectedDevice)
 
                 latchToCountDownOnDeviceDisconnected?.countDown()
+            }
+
+        }
+    }
+
+    private fun informWhenRemoteDeviceDiscovered(latchToCountDownOnDeviceDiscovered: CountDownLatch? = null, callback: (DiscoveredDevice) -> Unit): DiscoveredDevicesListener {
+        return object : DiscoveredDevicesListener {
+            override fun deviceDiscovered(connectedDevice: DiscoveredDevice, type: DiscoveredDeviceType) {
+                callback(connectedDevice)
+
+                latchToCountDownOnDeviceDiscovered?.countDown()
+            }
+
+            override fun disconnectedFromDevice(disconnectedDevice: DiscoveredDevice) {
             }
 
         }
