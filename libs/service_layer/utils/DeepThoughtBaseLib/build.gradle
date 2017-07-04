@@ -27,6 +27,7 @@ dependencies {
 
     testCompile "junit:junit:$junitVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
+    testCompile "com.nhaarman:mockito-kotlin-kt1.1:$mockitoKotlinVersion" // so that Mockito.any() doesn't return null which null-safe Kotlin parameter don't like
 
     testCompile "ch.qos.logback:logback-core:$logbackVersion"
     testCompile "ch.qos.logback:logback-classic:$logbackVersion"
