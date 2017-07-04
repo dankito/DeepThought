@@ -12,9 +12,14 @@ import org.slf4j.LoggerFactory
 import java.net.URL
 
 
-class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityManagerBase, private val networkSettings: INetworkSettings, threadPool: IThreadPool) : ISyncManager {
+
+
+class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityManagerBase, private val networkSettings: INetworkSettings, threadPool: IThreadPool
+                               ) : ISyncManager {
 
     companion object {
+        val PortNotSet = -1
+
         private val log = LoggerFactory.getLogger(CouchbaseLiteSyncManager::class.java)
     }
 
@@ -23,10 +28,13 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
     private val manager = entityManager.manager
 
     private lateinit var basicDataSyncListener: LiteListener
-    private var basicDataSyncPort: Int = 0
+    private var basicDataSyncPort: Int = PortNotSet
     private var basicDataSyncListenerThread: Thread? = null
 
 
+    override fun stop() {
+        stopBasicDataSyncListener()
+    }
 
     override fun startAsync(desiredSynchronizationPort: Int, desiredBasicDataSynchronizationPort: Int, alsoUsePullReplication: Boolean, initializedCallback: (Int) -> Unit) {
         startBasicDataSyncListener(desiredBasicDataSynchronizationPort, null, initializedCallback)
@@ -48,6 +56,18 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
         initializedCallback(basicDataSyncPort)
 
         return basicDataSyncPort > 0 && basicDataSyncPort < 65536
+    }
+
+    private fun stopBasicDataSyncListener() {
+        basicDataSyncListener.stop()
+
+        basicDataSyncListenerThread?.let { basicDataSyncListenerThread ->
+            try { basicDataSyncListenerThread.join(500) } catch(ignored: Exception) { }
+            this.basicDataSyncListenerThread = null
+        }
+
+        basicDataSyncPort = PortNotSet
+        networkSettings.basicDataSynchronizationPort = PortNotSet
     }
 
     override fun syncBasicDataWithDevice(deviceId: String, remoteDeviceAddress: String, basicDataSyncPort: Int, syncDone: (Device) -> Unit) {

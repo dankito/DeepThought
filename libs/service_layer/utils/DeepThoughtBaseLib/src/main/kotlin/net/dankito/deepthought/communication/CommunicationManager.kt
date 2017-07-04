@@ -32,6 +32,8 @@ class CommunicationManager(private val connectedDevicesService: IConnectedDevice
         connectedDevicesService.stop()
 
         clientCommunicator.stop()
+
+        syncManager.stop()
     }
 
 

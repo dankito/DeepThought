@@ -19,4 +19,7 @@ interface ISyncManager {
 
     fun syncBasicDataWithDevice(deviceId: String, remoteDeviceAddress: String, basicDataSyncPort: Int, syncDone: (Device) -> Unit)
 
+
+    fun stop()
+
 }
