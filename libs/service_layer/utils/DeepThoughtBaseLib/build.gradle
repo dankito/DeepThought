@@ -25,7 +25,11 @@ dependencies {
     compileOnly 'javax.annotation:jsr250-api:1.0'
 
 
-    testCompile "junit:junit:$junitVersion"
+    testCompile ("junit:junit:$junitVersion", {
+        exclude group: 'org.hamcrest', module: 'hamcrest-core'
+    })
+    testCompile "org.hamcrest:hamcrest-library:$hamcrestVersion"
+
     testCompile "org.mockito:mockito-core:$mockitoVersion"
     testCompile "com.nhaarman:mockito-kotlin-kt1.1:$mockitoKotlinVersion" // so that Mockito.any() doesn't return null which null-safe Kotlin parameter don't like
     // for how to enable mocking final class (which is standard in Kotlin) with Mockito see https://github.com/mockito/mockito/wiki/What's-new-in-Mockito-2#mock-the-unmockable-opt-in-mocking-of-final-classesmethods
