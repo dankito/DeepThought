@@ -36,7 +36,6 @@ import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito
 import java.io.File
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CountDownLatch
@@ -59,9 +58,9 @@ class CommunicationManagerTest {
 
     private val threadPool = ThreadPool()
 
-    private val localization = Mockito.mock(Localization::class.java)
+    private val localization: Localization = mock()
 
-    private val base64Service: IBase64Service = Mockito.mock(IBase64Service::class.java)
+    private val base64Service: IBase64Service = mock()
 
     private val fileStorageService = JavaFileStorageService()
 
@@ -156,7 +155,7 @@ class CommunicationManagerTest {
     }
 
     private fun setupLocalDevice() {
-        localRegistrationHandler = Mockito.mock(IDeviceRegistrationHandler::class.java)
+        localRegistrationHandler = mock()
 
         val entityManagerConfiguration = EntityManagerConfiguration(localPlatformConfiguration.getDefaultDataFolder().path, "test")
         localEntityManager = JavaCouchbaseLiteEntityManager(entityManagerConfiguration)
