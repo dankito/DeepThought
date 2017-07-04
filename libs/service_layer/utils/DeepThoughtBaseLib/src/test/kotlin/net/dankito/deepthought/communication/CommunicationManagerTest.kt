@@ -1,9 +1,6 @@
 package net.dankito.deepthought.communication
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.doAnswer
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockito_kotlin.*
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.IEntityManager
@@ -11,6 +8,7 @@ import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.data_access.network.communication.IClientCommunicator
 import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
+import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.communication.message.*
 import net.dankito.data_access.network.discovery.UdpDevicesDiscoverer
@@ -18,15 +16,20 @@ import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.deepthought.model.NetworkSettings
+import net.dankito.deepthought.model.enums.ExtensibleEnumeration
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.service.synchronization.*
+import net.dankito.service.synchronization.initialsync.InitialSyncManager
+import net.dankito.service.synchronization.initialsync.model.DeepThoughtSyncInfo
 import net.dankito.service.synchronization.initialsync.model.SyncInfo
+import net.dankito.service.synchronization.initialsync.model.UserSyncInfo
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.services.hashing.IBase64Service
+import net.dankito.utils.ui.IDialogService
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.number.OrderingComparison.greaterThan
 import org.junit.After
@@ -56,7 +59,7 @@ class CommunicationManagerTest {
 
     private val threadPool = ThreadPool()
 
-    private val localization: Localization = mock()
+    private val localization: Localization = Localization()
 
     private val base64Service: IBase64Service = mock()
 
@@ -82,6 +85,10 @@ class CommunicationManagerTest {
     }
 
     private lateinit var localNetworkSettings: INetworkSettings
+
+    private lateinit var localDialogService: IDialogService
+
+    private lateinit var localInitialSyncManager: InitialSyncManager
 
     private lateinit var localRegistrationHandler: IDeviceRegistrationHandler
 
@@ -153,12 +160,15 @@ class CommunicationManagerTest {
     }
 
     private fun setupLocalDevice() {
-        localRegistrationHandler = mock()
-
         val entityManagerConfiguration = EntityManagerConfiguration(localPlatformConfiguration.getDefaultDataFolder().path, "test")
         localEntityManager = JavaCouchbaseLiteEntityManager(entityManagerConfiguration)
 
         localDataManager = DataManager(localEntityManager, entityManagerConfiguration, DefaultDataInitializer(localPlatformConfiguration, localization), localPlatformConfiguration)
+
+        localDialogService = mock<IDialogService>()
+        localInitialSyncManager = InitialSyncManager(localEntityManager, localization)
+        localRegistrationHandler = createDeviceRegistrationHandlerBaseInstance(true, localDataManager, localInitialSyncManager, localDialogService, localization)
+
         val initializationLatch = CountDownLatch(1)
 
         localDataManager.addInitializationListener {
@@ -181,7 +191,7 @@ class CommunicationManagerTest {
 
 
     private fun setupRemoteDevice() {
-        remoteRegistrationHandler = mock<IDeviceRegistrationHandler>()
+        remoteRegistrationHandler = mock<DeviceRegistrationHandlerBase>()
 
         val entityManagerConfiguration = EntityManagerConfiguration(remotePlatformConfiguration.getDefaultDataFolder().path, "test")
         remoteEntityManager = JavaCouchbaseLiteEntityManager(entityManagerConfiguration)
@@ -393,6 +403,73 @@ class CommunicationManagerTest {
     }
 
 
+    @Test
+    fun localDeviceRequestsSynchronization_RemoteInfoIsUsedForInitialSynchronization() {
+        var correctResponse: String = "not_valid"
+        val countDownLatch = CountDownLatch(2)
+
+        whenever(remoteRegistrationHandler.shouldPermitSynchronizingWithDevice(any(), any())).doAnswer { invocation ->
+            val callback = invocation.arguments[1] as (DeviceInfo, Boolean) -> Unit
+            callback(invocation.arguments[0] as DeviceInfo, true)
+        }
+
+        whenever(remoteRegistrationHandler.showResponseToEnterOnOtherDeviceNonBlocking(any(), any())).then { answer ->
+            correctResponse = answer.getArgument<String>(1)
+            null
+        }
+
+        whenever(localDialogService.askForTextInput(any<CharSequence>(), anyOrNull(), anyOrNull(), any())).thenAnswer { invocation ->
+            val callback = invocation.arguments[3] as (Boolean, String?) -> Unit
+            callback(true, correctResponse)
+        }
+
+        whenever(remoteRegistrationHandler.deviceHasBeenPermittedToSynchronize(any<DiscoveredDevice>(), any<SyncInfo>())).thenReturn(createSyncInfo(remoteDataManager, true, true))
+
+
+        startCommunicationManagersAndWait(countDownLatch)
+
+        val localUser = localDataManager.localUser
+        val remoteUser = remoteDataManager.localUser
+
+        assertThat(localUser.universallyUniqueId, `is`(remoteUser.universallyUniqueId))
+        assertThat(localUser.userName, `is`(remoteUser.userName))
+        assertThat(localUser.firstName, `is`(remoteUser.firstName))
+        assertThat(localUser.lastName, `is`(remoteUser.lastName))
+
+
+        val localDeepThought = localDataManager.deepThought
+        val remoteDeepThought = remoteDataManager.deepThought
+
+        assertThat(localUser.id, `is`(remoteUser.id))
+        assertThat(localDeepThought.id, `is`(remoteDeepThought.id))
+
+        testExtensibleEnumeration(localDeepThought.applicationLanguages, remoteDeepThought.applicationLanguages)
+        testExtensibleEnumeration(localDeepThought.fileTypes, remoteDeepThought.fileTypes)
+        testExtensibleEnumeration(localDeepThought.noteTypes, remoteDeepThought.noteTypes)
+    }
+
+    private fun testExtensibleEnumeration(localEnumerations: Collection<ExtensibleEnumeration>, remoteEnumerations: Collection<ExtensibleEnumeration>) {
+        assertThat(localEnumerations.size, `is`(remoteEnumerations.size))
+
+        for(localEnum in localEnumerations) {
+            var foundRemoteEnum: ExtensibleEnumeration? = null
+
+            for(remoteEnum in remoteEnumerations) {
+                if(localEnum.id == remoteEnum.id) {
+                    foundRemoteEnum = remoteEnum
+                    break
+                }
+            }
+
+            assertThat(foundRemoteEnum, notNullValue())
+        }
+    }
+
+    private fun createSyncInfo(dataManager: DataManager, useCallerDatabaseIds: Boolean, useCallerUserName: Boolean): SyncInfo {
+        return SyncInfo(DeepThoughtSyncInfo(dataManager.deepThought), UserSyncInfo(dataManager.localUser), useCallerDatabaseIds, useCallerUserName)
+    }
+
+
     private fun startCommunicationManagersAndWait(countDownLatch: CountDownLatch) {
         startCommunicationManagersAndWait(countDownLatch, FindRemoteDeviceTimeoutInSeconds)
     }
@@ -409,6 +486,24 @@ class CommunicationManagerTest {
         remoteCommunicationManager.startAsync()
     }
 
+
+    private fun createDeviceRegistrationHandlerBaseInstance(likesToRegister: Boolean, dataManager: DataManager, initialSyncManager: InitialSyncManager,
+                                                            dialogService: IDialogService, localization: Localization): DeviceRegistrationHandlerBase {
+        return object : DeviceRegistrationHandlerBase(dataManager, initialSyncManager, dialogService, localization) {
+            override fun showUnknownDeviceDiscoveredView(unknownDevice: DiscoveredDevice, callback: (Boolean, Boolean) -> Unit) {
+                callback(likesToRegister, false)
+            }
+
+            override fun shouldPermitSynchronizingWithDevice(remoteDeviceInfo: DeviceInfo, callback: (remoteDeviceInfo: DeviceInfo, permitsSynchronization: Boolean) -> Unit) {
+            }
+
+            override fun showResponseToEnterOnOtherDeviceNonBlocking(remoteDeviceInfo: DeviceInfo, correctResponse: String) {
+            }
+
+            override fun unknownDeviceDisconnected(disconnectedDevice: DiscoveredDevice) {
+            }
+        }
+    }
 
     private fun createDiscoveredDevicesListener(discoveredDevicesList: MutableList<DiscoveredDevice>, latchToCountDownOnDeviceDiscovered: CountDownLatch? = null,
                                                 latchToCountDownOnDeviceDisconnected: CountDownLatch? = null): DiscoveredDevicesListener {
