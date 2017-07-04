@@ -4,6 +4,7 @@ import net.dankito.data_access.network.communication.callback.IDeviceRegistratio
 import net.dankito.data_access.network.communication.message.*
 import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.model.INetworkSettings
+import net.dankito.service.synchronization.initialsync.model.SyncInfo
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.services.hashing.IBase64Service
 import java.net.InetSocketAddress
@@ -75,11 +76,11 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
             }
     }
 
-    override fun respondToSynchronizationPermittingChallenge(remoteDevice: DiscoveredDevice, nonce: String, challengeResponse: String,
+    override fun respondToSynchronizationPermittingChallenge(remoteDevice: DiscoveredDevice, nonce: String, challengeResponse: String, syncInfo: SyncInfo,
                                                              callback: (Response<RespondToSynchronizationPermittingChallengeResponseBody>) -> Unit) {
         challengeHandler.createChallengeResponse(nonce, challengeResponse)?.let { challengeResponse ->
             val request = Request<RespondToSynchronizationPermittingChallengeRequestBody>(CommunicatorConfig.RESPONSE_TO_SYNCHRONIZATION_PERMITTING_CHALLENGE_METHOD_NAME,
-                    RespondToSynchronizationPermittingChallengeRequestBody(nonce, challengeResponse, networkSettings.synchronizationPort))
+                    RespondToSynchronizationPermittingChallengeRequestBody(nonce, challengeResponse, syncInfo, networkSettings.synchronizationPort))
 
             requestSender.sendRequestAndReceiveResponseAsync(getSocketAddressFromDevice(remoteDevice), request) { response: Response<RespondToSynchronizationPermittingChallengeResponseBody> ->
                         handleRespondToSynchronizationPermittingChallengeResponse(remoteDevice, response)
