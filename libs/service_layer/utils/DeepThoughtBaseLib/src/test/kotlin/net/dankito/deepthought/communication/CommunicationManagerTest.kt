@@ -37,6 +37,7 @@ import java.io.File
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 
 
 class CommunicationManagerTest {
@@ -273,6 +274,86 @@ class CommunicationManagerTest {
         })
 
         startCommunicationManagersAndWait(countDownLatch)
+
+        assertThat(result, notNullValue())
+
+        result?.let { result ->
+            assertThat(result.result, `is`(RespondToSynchronizationPermittingChallengeResult.ALLOWED))
+            assertThat(result.syncInfo, notNullValue())
+            assertThat(result.synchronizationPort, greaterThan(1023))
+        }
+    }
+
+
+    @Test
+    fun localDeviceRequestsSynchronization_EnteredResponseIsWrong_SynchronizationIsAllowed() {
+        var result: RespondToSynchronizationPermittingChallengeResponseBody? = null
+        val wrongResponse: String = "not_valid"
+        var nonce: String = ""
+        var remoteDiscoveredDevice: DiscoveredDevice? = null
+        var correctResponse = wrongResponse
+        val countDownLatch = CountDownLatch(2)
+
+        whenever(remoteRegistrationHandler.shouldPermitSynchronizingWithDevice(any(), any())).doAnswer { invocation ->
+            val callback = invocation.arguments[1] as (DeviceInfo, Boolean) -> Unit
+            callback(invocation.arguments[0] as DeviceInfo, true)
+        }
+
+        whenever(remoteRegistrationHandler.showResponseToEnterOnOtherDeviceNonBlocking(any(), any())).then { answer ->
+            correctResponse = answer.getArgument<String>(1)
+            null
+        }
+
+        whenever(remoteRegistrationHandler.deviceHasBeenPermittedToSynchronize(any<DiscoveredDevice>(), any<SyncInfo>())).thenReturn(mock<SyncInfo>())
+
+        val isSendingWrongResponse = AtomicBoolean(false)
+        whenever(base64Service.encode(any<ByteArray>())).thenAnswer { // really bad workaround
+            if(isSendingWrongResponse.get()) {
+                isSendingWrongResponse.set(false)
+                return@thenAnswer wrongResponse
+            }
+            else {
+                return@thenAnswer "fake_base64_encoded_string"
+            }
+        }
+
+        localConnectedDevicesService.addDiscoveredDevicesListener(informWhenRemoteDeviceDiscovered(countDownLatch) { discoveredDevice ->
+            localClientCommunicator.requestPermitSynchronization(discoveredDevice) { permitResponse ->
+                permitResponse.body?.let { body ->
+                    nonce = body.nonce!!
+                    remoteDiscoveredDevice = discoveredDevice
+                    isSendingWrongResponse.set(true)
+                    localClientCommunicator.respondToSynchronizationPermittingChallenge(discoveredDevice, body.nonce!!, wrongResponse, mock<SyncInfo>()) { challengeResponse ->
+                        result = challengeResponse.body
+                        countDownLatch.countDown()
+                    }
+                }
+
+                permitResponse.error?.let { countDownLatch.countDown() }
+            }
+        })
+
+        startCommunicationManagersAndWait(countDownLatch)
+
+        assertThat(result, notNullValue())
+
+        result?.let { result ->
+            assertThat(result.result, `is`(RespondToSynchronizationPermittingChallengeResult.WRONG_CODE))
+            assertThat(result.countRetriesLeft, `is`(1))
+            assertThat(result.syncInfo, nullValue())
+            assertThat(result.synchronizationPort, `is`(0))
+        }
+
+
+        // now pass correct response and check if synchronization is then permitted
+        val nowPassCorrectResponseLatch = CountDownLatch(1)
+
+        localClientCommunicator.respondToSynchronizationPermittingChallenge(remoteDiscoveredDevice!!, nonce, correctResponse, mock<SyncInfo>()) { challengeResponse ->
+            result = challengeResponse.body
+            nowPassCorrectResponseLatch.countDown()
+        }
+
+        nowPassCorrectResponseLatch.await(5, TimeUnit.SECONDS)
 
         assertThat(result, notNullValue())
 
