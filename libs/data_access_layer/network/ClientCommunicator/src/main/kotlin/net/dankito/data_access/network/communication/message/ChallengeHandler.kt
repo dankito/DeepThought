@@ -6,24 +6,24 @@ import net.dankito.utils.services.hashing.IBase64Service
 import java.util.*
 
 
-class ChallengeHandler(protected var base64Service: IBase64Service) {
+class ChallengeHandler(private val base64Service: IBase64Service) {
 
     companion object {
-        protected val DEFAULT_COUNT_RETRIES = 2
+        private val DEFAULT_COUNT_RETRIES = 2
 
-        protected val CHALLENGE_RESPONSE_HASH_ALGORITHM = HashAlgorithm.SHA512
+        private val CHALLENGE_RESPONSE_HASH_ALGORITHM = HashAlgorithm.SHA512
     }
 
 
-    protected var hashService = HashService()
+    private var hashService = HashService()
 
-    protected var random = Random(System.nanoTime())
+    private var random = Random(System.nanoTime())
 
-    protected var nonceToDeviceInfoMap: MutableMap<String, DeviceInfo> = HashMap()
+    private var nonceToDeviceInfoMap: MutableMap<String, DeviceInfo> = HashMap()
 
-    protected var nonceToCorrectResponsesMap: MutableMap<String, String> = HashMap()
+    private var nonceToCorrectResponsesMap: MutableMap<String, String> = HashMap()
 
-    protected var nonceToCountRetriesMap: MutableMap<String, Int> = HashMap()
+    private var nonceToCountRetriesMap: MutableMap<String, Int> = HashMap()
 
 
     fun createChallengeForDevice(deviceInfo: DeviceInfo): NonceToResponsePair {
@@ -39,7 +39,7 @@ class ChallengeHandler(protected var base64Service: IBase64Service) {
         return NonceToResponsePair(nonce, correctResponse)
     }
 
-    protected fun createCorrectResponse(): String {
+    private fun createCorrectResponse(): String {
         val response = random.nextInt(1000000)
 
         return String.format("%06d", response)
@@ -84,7 +84,7 @@ class ChallengeHandler(protected var base64Service: IBase64Service) {
         return isCorrectResponse
     }
 
-    protected fun isCorrectResponse(nonce: String, base64EncodedChallengeResponse: String): Boolean {
+    private fun isCorrectResponse(nonce: String, base64EncodedChallengeResponse: String): Boolean {
         // check if nonceToCorrectResponsesMap really contains nonce as otherwise (null, null) would be a correct response
         if (nonceToCorrectResponsesMap.containsKey(nonce)) {
             nonceToCorrectResponsesMap[nonce]?.let { correctResponse ->
