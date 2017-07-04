@@ -60,8 +60,8 @@ class ChallengeHandler(protected var base64Service: IBase64Service) {
     }
 
 
-    fun isResponseOk(nonce: String, base64EncodeChallengeResponse: String): Boolean {
-        val isCorrectResponse = isCorrectResponse(nonce, base64EncodeChallengeResponse)
+    fun isResponseOk(nonce: String, base64EncodedChallengeResponse: String): Boolean {
+        val isCorrectResponse = isCorrectResponse(nonce, base64EncodedChallengeResponse)
 
         if (isCorrectResponse) {
             nonceToCountRetriesMap.remove(nonce)
@@ -84,13 +84,13 @@ class ChallengeHandler(protected var base64Service: IBase64Service) {
         return isCorrectResponse
     }
 
-    protected fun isCorrectResponse(nonce: String, base64EncodeChallengeResponse: String): Boolean {
+    protected fun isCorrectResponse(nonce: String, base64EncodedChallengeResponse: String): Boolean {
         // check if nonceToCorrectResponsesMap really contains nonce as otherwise (null, null) would be a correct response
         if (nonceToCorrectResponsesMap.containsKey(nonce)) {
             nonceToCorrectResponsesMap[nonce]?.let { correctResponse ->
                 val correctChallengeResponse = createChallengeResponse(nonce, correctResponse)
 
-                return base64EncodeChallengeResponse == correctChallengeResponse
+                return base64EncodedChallengeResponse == correctChallengeResponse
             }
         }
 
