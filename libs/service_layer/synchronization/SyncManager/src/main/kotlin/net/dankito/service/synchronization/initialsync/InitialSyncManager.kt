@@ -20,6 +20,8 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
         localUser.firstName = remoteUser.firstName
         localUser.lastName = remoteUser.lastName
         // TODO: be aware password gets overwritten on one side during process
+
+        entityManager.updateEntity(localUser)
     }
 
 
