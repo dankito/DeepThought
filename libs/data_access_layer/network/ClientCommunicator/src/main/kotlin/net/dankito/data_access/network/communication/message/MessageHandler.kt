@@ -2,7 +2,9 @@ package net.dankito.data_access.network.communication.message
 
 import net.dankito.data_access.network.communication.CommunicatorConfig
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
+import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.model.INetworkSettings
+import net.dankito.service.synchronization.initialsync.model.SyncInfo
 
 
 class MessageHandler(protected var config: MessageHandlerConfig) : IMessageHandler {
@@ -62,12 +64,17 @@ class MessageHandler(protected var config: MessageHandlerConfig) : IMessageHandl
     private fun handleRespondToSynchronizationPermittingChallengeRequest(request: Request<RespondToSynchronizationPermittingChallengeRequestBody>,
                                                                          callback: (Response<RespondToSynchronizationPermittingChallengeResponseBody>) -> Unit) {
         request.body?.let { body ->
-            var responseBody: RespondToSynchronizationPermittingChallengeResponseBody
+            val responseBody: RespondToSynchronizationPermittingChallengeResponseBody
 
             if (challengeHandler.isResponseOk(body.nonce, body.challengeResponse)) {
-                addToPermittedSynchronizedDevices(body)
+                val initialSyncDetails = addToPermittedSynchronizedDevices(body)
 
-                responseBody = RespondToSynchronizationPermittingChallengeResponseBody(networkSettings.synchronizationPort)
+                if(initialSyncDetails != null) {
+                    responseBody = RespondToSynchronizationPermittingChallengeResponseBody(networkSettings.synchronizationPort, initialSyncDetails)
+                }
+                else {
+                    responseBody = RespondToSynchronizationPermittingChallengeResponseBody(RespondToSynchronizationPermittingChallengeResult.ERROR_OCCURRED)
+                }
             }
             else {
                 responseBody = createWrongCodeResponse(body.nonce)
@@ -77,16 +84,28 @@ class MessageHandler(protected var config: MessageHandlerConfig) : IMessageHandl
         }
     }
 
-    protected fun addToPermittedSynchronizedDevices(requestBody: RespondToSynchronizationPermittingChallengeRequestBody) {
-        challengeHandler.getDeviceInfoForNonce(requestBody.nonce)?.let { deviceInfo ->
+    private fun addToPermittedSynchronizedDevices(body: RespondToSynchronizationPermittingChallengeRequestBody): SyncInfo? {
+        getDiscoveredDevices(body)?.let { discoveredDevice ->
+            discoveredDevice.synchronizationPort = body.synchronizationPort
+
+            networkSettings.addConnectedDevicePermittedToSynchronize(discoveredDevice)
+
+            return config.registrationHandler.deviceHasBeenPermittedToSynchronize(discoveredDevice, body.syncInfo)
+        }
+
+        return null
+    }
+
+    private fun getDiscoveredDevices(body: RespondToSynchronizationPermittingChallengeRequestBody): DiscoveredDevice? {
+        challengeHandler.getDeviceInfoForNonce(body.nonce)?.let { deviceInfo ->
             val deviceUniqueId = deviceInfo.uniqueDeviceId
 
             networkSettings.getDiscoveredDevice(deviceUniqueId)?.let { discoveredDevice ->
-                discoveredDevice.synchronizationPort = requestBody.synchronizationPort
-
-                networkSettings.addConnectedDevicePermittedToSynchronize(discoveredDevice)
+                return discoveredDevice
             }
         }
+
+        return null
     }
 
     private fun createWrongCodeResponse(nonce: String): RespondToSynchronizationPermittingChallengeResponseBody {
