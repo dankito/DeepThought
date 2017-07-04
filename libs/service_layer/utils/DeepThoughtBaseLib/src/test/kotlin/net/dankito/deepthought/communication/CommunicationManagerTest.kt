@@ -231,12 +231,10 @@ class CommunicationManagerTest {
         val countDownLatch = CountDownLatch(2)
 
         localConnectedDevicesService.addDiscoveredDevicesListener(createDiscoveredDevicesListener(localDiscoveredDevicesList, countDownLatch))
-        localCommunicationManager.startAsync()
 
         remoteConnectedDevicesService.addDiscoveredDevicesListener(createDiscoveredDevicesListener(remoteDiscoveredDevicesList, countDownLatch))
-        remoteCommunicationManager.startAsync()
 
-        countDownLatch.await(FindRemoteDeviceTimeoutInSeconds, TimeUnit.SECONDS)
+        startCommunicationManagersAndWait(countDownLatch)
 
         assertThat(localDiscoveredDevicesList.size, `is`(1))
         assertThat(localDiscoveredDevicesList.get(0).device, `is`(remoteDevice))
@@ -276,11 +274,8 @@ class CommunicationManagerTest {
                 permitResponse.error?.let { countDownLatch.countDown() }
             }
         })
-        localCommunicationManager.startAsync()
 
-        remoteCommunicationManager.startAsync()
-
-        countDownLatch.await(FindRemoteDeviceTimeoutInSeconds, TimeUnit.SECONDS)
+        startCommunicationManagersAndWait(countDownLatch)
 
         assertThat(result, notNullValue())
 
@@ -289,6 +284,23 @@ class CommunicationManagerTest {
             assertThat(result.syncInfo, notNullValue())
             assertThat(result.synchronizationPort, greaterThan(1023))
         }
+    }
+
+
+    private fun startCommunicationManagersAndWait(countDownLatch: CountDownLatch) {
+        startCommunicationManagersAndWait(countDownLatch, FindRemoteDeviceTimeoutInSeconds)
+    }
+
+    private fun startCommunicationManagersAndWait(countDownLatch: CountDownLatch, timeoutInMillis: Long) {
+        startCommunicationManagers()
+
+        countDownLatch.await(timeoutInMillis, TimeUnit.SECONDS)
+    }
+
+    private fun startCommunicationManagers() {
+        localCommunicationManager.startAsync()
+
+        remoteCommunicationManager.startAsync()
     }
 
 
