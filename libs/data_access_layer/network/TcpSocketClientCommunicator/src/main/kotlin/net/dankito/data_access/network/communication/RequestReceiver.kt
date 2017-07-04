@@ -82,7 +82,7 @@ class RequestReceiver(private var socketHandler: SocketHandler, private var mess
     }
 
     protected fun waitForArrivingRequests() {
-        while (Thread.currentThread().isInterrupted == false) {
+        while (Thread.currentThread().isInterrupted == false && receiverSocket != null) {
             try {
                 val clientSocket = receiverSocket!!.accept()
 
