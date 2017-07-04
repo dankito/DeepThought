@@ -91,6 +91,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
 
             database.removeChangeListener(databaseChangeListener)
 
+            log.info("Basic synchronization with device $receivedRemoteDevice done")
             syncDone(receivedRemoteDevice)
         }
     }
