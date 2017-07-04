@@ -118,7 +118,7 @@ class NetworkSettings(override val localHostDevice: Device, override val localUs
 
     protected fun callSettingChangedListeners(setting: NetworkSetting, newValue: Any, oldValue: Any?) {
         for (listener in listeners) {
-            listener.settingsChanged(this, setting, newValue, oldValue!!)
+            listener.settingsChanged(this, setting, newValue, oldValue)
         }
     }
 
