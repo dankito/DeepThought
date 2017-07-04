@@ -147,7 +147,7 @@ class CommunicationManagerTest {
         fileStorageService.deleteFolderRecursively(localPlatformConfiguration.getDefaultDataFolder().path)
         fileStorageService.deleteFolderRecursively(remotePlatformConfiguration.getDefaultDataFolder().path)
 
-        whenever(base64Service.encode(any<ByteArray>())).thenReturn("Liebe")
+        whenever(base64Service.encode(any<ByteArray>())).thenReturn("fake_base64_encoded_string")
 
         setupLocalDevice()
 
