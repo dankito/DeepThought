@@ -385,6 +385,41 @@ class CommunicationManagerTest {
         testExtensibleEnumeration(localDeepThought.noteTypes, remoteDeepThought.noteTypes)
     }
 
+
+    @Test
+    fun remoteDeviceRequestsSynchronization_LocalInfoIsUsedForInitialSynchronization() {
+        remoteRegisterAtRemote.set(true)
+        localPermitRemoteToSynchronize.set(true)
+
+        val countDownLatch = CountDownLatch(1)
+
+        mockDialogServiceTextInput(remoteDialogService, localCorrectChallengeResponse)
+
+        waitTillKnownSynchronizedDeviceConnected(remoteConnectedDevicesService, countDownLatch)
+
+
+        startCommunicationManagersAndWait(countDownLatch)
+
+        val localUser = localDataManager.localUser
+        val remoteUser = remoteDataManager.localUser
+
+        assertThat(localUser.universallyUniqueId, `is`(remoteUser.universallyUniqueId))
+        assertThat(localUser.userName, `is`(remoteUser.userName))
+        assertThat(localUser.firstName, `is`(remoteUser.firstName))
+        assertThat(localUser.lastName, `is`(remoteUser.lastName))
+
+
+        val localDeepThought = localDataManager.deepThought
+        val remoteDeepThought = remoteDataManager.deepThought
+
+        assertThat(localUser.id, `is`(remoteUser.id))
+        assertThat(localDeepThought.id, `is`(not(remoteDeepThought.id)))
+
+        testExtensibleEnumeration(localDeepThought.applicationLanguages, remoteDeepThought.applicationLanguages)
+        testExtensibleEnumeration(localDeepThought.fileTypes, remoteDeepThought.fileTypes)
+        testExtensibleEnumeration(localDeepThought.noteTypes, remoteDeepThought.noteTypes)
+    }
+
     private fun testExtensibleEnumeration(localEnumerations: Collection<ExtensibleEnumeration>, remoteEnumerations: Collection<ExtensibleEnumeration>) {
         assertThat(localEnumerations.size, `is`(remoteEnumerations.size))
 
