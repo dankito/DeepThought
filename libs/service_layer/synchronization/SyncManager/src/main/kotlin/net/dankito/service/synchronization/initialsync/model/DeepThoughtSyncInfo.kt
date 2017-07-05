@@ -10,7 +10,7 @@ data class DeepThoughtSyncInfo(val id: String, val applicationLanguageIds: Map<S
     internal constructor() : this("", mapOf(), mapOf(), mapOf()) // for Jackson
 
     constructor(deepThought: DeepThought) : this(deepThought.id!!, getMapForExtensibleEnumerationList(deepThought.applicationLanguages),
-            getMapForExtensibleEnumerationList(deepThought.noteTypes), getMapForExtensibleEnumerationList(deepThought.noteTypes))
+            getMapForExtensibleEnumerationList(deepThought.noteTypes), getMapForExtensibleEnumerationList(deepThought.fileTypes))
 
 
     companion object {
