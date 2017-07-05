@@ -103,7 +103,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
     private fun discoveredDevice(deviceInfoKey: String, address: String) {
         getDeviceIdFromDeviceInfoKey(deviceInfoKey)?.let { deviceId ->
             val messagesPort = getMessagesPortFromDeviceInfoKey(deviceInfoKey)
-            val remoteDevice = getPersistedDeviceForDeviceId(deviceId)
+            val remoteDevice = getPersistedDeviceForRemoteDeviceId(deviceId)
 
             if(remoteDevice != null) {
                 discoveredDevice(deviceInfoKey, remoteDevice, address, messagesPort)
@@ -115,8 +115,12 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
         }
     }
 
-    private fun getPersistedDeviceForDeviceId(deviceId: String): Device? {
-        return entityManager.getEntityById(Device::class.java, deviceId)
+    private fun getPersistedDeviceForRemoteDeviceId(deviceId: String): Device? {
+        // yeah, this is not perfect as does not check if device with this id is already persisted but is a synchronized- or ignoredDevice
+        // the reason is that when remote already started basic synchronization then deviceId is in our database but we wouldn't push our devices to remote as
+        // discoveredDevice(deviceInfoKey: String, address: String) then thinks basic data synchronization is already done with this remote
+        return localUser.synchronizedDevices.filter { it.id == deviceId }.firstOrNull() ?:
+                localUser.ignoredDevices.filter { it.id == deviceId }.firstOrNull()
     }
 
     private fun syncBasicDataWithUnknownDevice(deviceInfoKey: String, deviceId: String, address: String, messagesPort: Int, basicDataSyncPort: Int) {
