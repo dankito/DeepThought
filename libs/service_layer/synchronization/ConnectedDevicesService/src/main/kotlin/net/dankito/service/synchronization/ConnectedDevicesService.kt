@@ -229,7 +229,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
                 MESSAGES_PORT_AND_BASIC_DATA_SYNC_PORT_SEPARATOR + networkSettings.basicDataSynchronizationPort
     }
 
-    private fun getDeviceKeyForLocalStorage(device: DiscoveredDevice): String {
+    private fun getDeviceKeyForDevice(device: DiscoveredDevice): String {
         return device.device.id ?: "" // should actually never be null at this stage
     }
 
@@ -301,7 +301,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
     }
 
     protected fun addDeviceToKnownSynchronizedDevices(device: DiscoveredDevice): Boolean {
-        val deviceInfoKey = getDeviceKeyForLocalStorage(device)
+        val deviceInfoKey = getDeviceKeyForDevice(device)
 
         if (deviceInfoKey != null) {
             unknownDevices.remove(deviceInfoKey)
@@ -328,7 +328,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
     override fun stopSynchronizingWithDevice(device: DiscoveredDevice) {
         localUser.removeSynchronizedDevice(device.device)
 
-        val deviceInfoKey = getDeviceKeyForLocalStorage(device)
+        val deviceInfoKey = getDeviceKeyForDevice(device)
         knownSynchronizedDevices.remove(deviceInfoKey)
         unknownDevices.put(deviceInfoKey, device)
 
@@ -343,7 +343,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
     override fun addDeviceToIgnoreList(device: DiscoveredDevice) {
         if (localUser.addIgnoredDevice(device.device)) {
             if (entityManager.updateEntity(localDevice)) {
-                val deviceInfoKey = getDeviceKeyForLocalStorage(device)
+                val deviceInfoKey = getDeviceKeyForDevice(device)
                 unknownDevices.remove(deviceInfoKey)
                 knownIgnoredDevices.put(deviceInfoKey, device)
 
@@ -356,7 +356,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
     override fun startSynchronizingWithIgnoredDevice(device: DiscoveredDevice) {
         if (localUser.removeIgnoredDevice(device.device)) {
             if (entityManager.updateEntity(localDevice)) {
-                val deviceInfoKey = getDeviceKeyForLocalStorage(device)
+                val deviceInfoKey = getDeviceKeyForDevice(device)
                 knownIgnoredDevices.remove(deviceInfoKey)
 
                 startSynchronizingWithDevice(device)
