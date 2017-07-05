@@ -85,6 +85,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
     }
 
     override fun syncBasicDataWithDevice(deviceId: String, remoteDeviceAddress: String, basicDataSyncPort: Int, syncDone: (Device) -> Unit) {
+        log.info("Starting basic data synchronization with device $deviceId")
         var didSynchronizationStop = false
         var receivedRemoteDevice: Device? = null
         var dataBaseChangeListener: Database.ChangeListener? = null
