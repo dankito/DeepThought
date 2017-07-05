@@ -10,12 +10,9 @@ import net.dankito.data_access.network.communication.IClientCommunicator
 import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
 import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
-import net.dankito.data_access.network.communication.message.*
+import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.data_access.network.discovery.UdpDevicesDiscoverer
-import net.dankito.deepthought.model.Device
-import net.dankito.deepthought.model.DiscoveredDevice
-import net.dankito.deepthought.model.INetworkSettings
-import net.dankito.deepthought.model.NetworkSettings
+import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.enums.ExtensibleEnumeration
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
@@ -32,6 +29,7 @@ import net.dankito.utils.services.hashing.IBase64Service
 import net.dankito.utils.ui.IDialogService
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.number.OrderingComparison.greaterThan
+import org.hamcrest.number.OrderingComparison.lessThanOrEqualTo
 import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Before
@@ -41,6 +39,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 
 
 class CommunicationManagerTest {
@@ -52,12 +51,10 @@ class CommunicationManagerTest {
         const val RemoteDeviceName = "Remote"
         val RemoteOsType = OsType.DESKTOP
 
-        const val InitializationTimeoutInSeconds = 500L
+        const val InitializationTimeoutInSeconds = 5L
         const val FindRemoteDeviceTimeoutInSeconds = 300L
     }
 
-
-    private val threadPool = ThreadPool()
 
     private val localization: Localization = Localization()
 
@@ -84,15 +81,21 @@ class CommunicationManagerTest {
         override fun getDefaultDataFolder(): File { return File(File(File("data"), "test"), "test1") }
     }
 
+    private val localThreadPool = ThreadPool()
+
     private lateinit var localNetworkSettings: INetworkSettings
 
     private lateinit var localDialogService: IDialogService
 
     private lateinit var localInitialSyncManager: InitialSyncManager
 
+    private val localRegisterAtRemote = AtomicBoolean(false)
+    private val localPermitRemoteToSynchronize = AtomicBoolean(false)
+    private val localCorrectChallengeResponse = AtomicReference<String>()
+
     private lateinit var localRegistrationHandler: IDeviceRegistrationHandler
 
-    private val localDevicesDiscoverer = UdpDevicesDiscoverer(threadPool)
+    private val localDevicesDiscoverer = UdpDevicesDiscoverer(localThreadPool)
 
     private lateinit var localEntityManager: IEntityManager
 
@@ -127,11 +130,21 @@ class CommunicationManagerTest {
         override fun getDefaultDataFolder(): File { return File(File(File("data"), "test"), "test2") }
     }
 
+    private val remoteThreadPool = ThreadPool()
+
     private lateinit var remoteNetworkSettings: INetworkSettings
+
+    private lateinit var remoteDialogService: IDialogService
+
+    private lateinit var remoteInitialSyncManager: InitialSyncManager
+
+    private val remoteRegisterAtRemote = AtomicBoolean(false)
+    private val remotePermitRemoteToSynchronize = AtomicBoolean(false)
+    private val remoteCorrectChallengeResponse = AtomicReference<String>()
 
     private lateinit var remoteRegistrationHandler: IDeviceRegistrationHandler
 
-    private val remoteDevicesDiscoverer = UdpDevicesDiscoverer(threadPool)
+    private val remoteDevicesDiscoverer = UdpDevicesDiscoverer(remoteThreadPool)
 
     private lateinit var remoteEntityManager: IEntityManager
 
@@ -167,7 +180,6 @@ class CommunicationManagerTest {
 
         localDialogService = mock<IDialogService>()
         localInitialSyncManager = InitialSyncManager(localEntityManager, localization)
-        localRegistrationHandler = createDeviceRegistrationHandlerBaseInstance(true, localDataManager, localInitialSyncManager, localDialogService, localization)
 
         val initializationLatch = CountDownLatch(1)
 
@@ -175,11 +187,14 @@ class CommunicationManagerTest {
             localDevice = localDataManager.localDevice
             localNetworkSettings = NetworkSettings(localDevice, localDataManager.localUser)
 
-            localClientCommunicator = TcpSocketClientCommunicator(localNetworkSettings, localRegistrationHandler, base64Service, threadPool)
+            localSyncManager = CouchbaseLiteSyncManager(localEntityManager as CouchbaseLiteEntityManagerBase, localNetworkSettings, localThreadPool)
 
-            localSyncManager = CouchbaseLiteSyncManager(localEntityManager as CouchbaseLiteEntityManagerBase, localNetworkSettings, threadPool)
+            localRegistrationHandler = createDeviceRegistrationHandler(localRegisterAtRemote, localPermitRemoteToSynchronize, localCorrectChallengeResponse, localDataManager,
+                    localInitialSyncManager, localDialogService, localization)
 
-            localConnectedDevicesService = ConnectedDevicesService(localDevicesDiscoverer, localClientCommunicator, localSyncManager, localNetworkSettings, localEntityManager)
+            localClientCommunicator = TcpSocketClientCommunicator(localNetworkSettings, localRegistrationHandler, base64Service, localThreadPool)
+
+            localConnectedDevicesService = ConnectedDevicesService(localDevicesDiscoverer, localClientCommunicator, localSyncManager, localRegistrationHandler, localNetworkSettings, localEntityManager)
 
             localCommunicationManager = CommunicationManager(localConnectedDevicesService, localSyncManager, localClientCommunicator, localRegistrationHandler, localNetworkSettings)
 
@@ -191,23 +206,29 @@ class CommunicationManagerTest {
 
 
     private fun setupRemoteDevice() {
-        remoteRegistrationHandler = mock<DeviceRegistrationHandlerBase>()
-
         val entityManagerConfiguration = EntityManagerConfiguration(remotePlatformConfiguration.getDefaultDataFolder().path, "test")
         remoteEntityManager = JavaCouchbaseLiteEntityManager(entityManagerConfiguration)
 
         remoteDataManager = DataManager(remoteEntityManager, entityManagerConfiguration, DefaultDataInitializer(remotePlatformConfiguration, localization), remotePlatformConfiguration)
+
+        remoteDialogService = mock<IDialogService>()
+        remoteInitialSyncManager = InitialSyncManager(remoteEntityManager, localization)
+
         val initializationLatch = CountDownLatch(1)
 
         remoteDataManager.addInitializationListener {
             remoteDevice = remoteDataManager.localDevice
             remoteNetworkSettings = NetworkSettings(remoteDevice, remoteDataManager.localUser)
 
-            remoteClientCommunicator = TcpSocketClientCommunicator(remoteNetworkSettings, remoteRegistrationHandler, base64Service, threadPool)
+            remoteSyncManager = CouchbaseLiteSyncManager(remoteEntityManager as CouchbaseLiteEntityManagerBase, remoteNetworkSettings, remoteThreadPool)
 
-            remoteSyncManager = CouchbaseLiteSyncManager(remoteEntityManager as CouchbaseLiteEntityManagerBase, remoteNetworkSettings, threadPool)
+            val registrationHandlerInstance = createDeviceRegistrationHandler(remoteRegisterAtRemote, remotePermitRemoteToSynchronize, remoteCorrectChallengeResponse, remoteDataManager,
+                    remoteInitialSyncManager, remoteDialogService, localization)
+            remoteRegistrationHandler = spy<IDeviceRegistrationHandler>(registrationHandlerInstance)
 
-            remoteConnectedDevicesService = ConnectedDevicesService(remoteDevicesDiscoverer, remoteClientCommunicator, remoteSyncManager, remoteNetworkSettings, remoteEntityManager)
+            remoteClientCommunicator = TcpSocketClientCommunicator(remoteNetworkSettings, remoteRegistrationHandler, base64Service, remoteThreadPool)
+
+            remoteConnectedDevicesService = ConnectedDevicesService(remoteDevicesDiscoverer, remoteClientCommunicator, remoteSyncManager, remoteRegistrationHandler, remoteNetworkSettings, remoteEntityManager)
 
             remoteCommunicationManager = CommunicationManager(remoteConnectedDevicesService, remoteSyncManager, remoteClientCommunicator, remoteRegistrationHandler, remoteNetworkSettings)
 
@@ -254,176 +275,128 @@ class CommunicationManagerTest {
 
     @Test
     fun localDeviceRequestsSynchronization_EnteredResponseIsCorrect_SynchronizationIsAllowed() {
-        var result: RespondToSynchronizationPermittingChallengeResponseBody? = null
-        var correctResponse: String = "not_valid"
-        val countDownLatch = CountDownLatch(2)
+        localRegisterAtRemote.set(true)
+        remotePermitRemoteToSynchronize.set(true)
 
-        whenever(remoteRegistrationHandler.shouldPermitSynchronizingWithDevice(any(), any())).doAnswer { invocation ->
-            val callback = invocation.arguments[1] as (DeviceInfo, Boolean) -> Unit
-            callback(invocation.arguments[0] as DeviceInfo, true)
+        val countDownLatch = CountDownLatch(1)
+
+        whenever(localDialogService.askForTextInput(any<CharSequence>(), anyOrNull(), anyOrNull(), any())).thenAnswer { invocation ->
+            val callback = invocation.arguments[3] as (Boolean, String?) -> Unit
+            callback(true, remoteCorrectChallengeResponse.get())
         }
 
-        whenever(remoteRegistrationHandler.showResponseToEnterOnOtherDeviceNonBlocking(any(), any())).then { answer ->
-            correctResponse = answer.getArgument<String>(1)
-            null
-        }
-
-        whenever(remoteRegistrationHandler.deviceHasBeenPermittedToSynchronize(any<DiscoveredDevice>(), any<SyncInfo>())).thenReturn(mock<SyncInfo>())
-
-        localConnectedDevicesService.addDiscoveredDevicesListener(informWhenRemoteDeviceDiscovered(countDownLatch) { discoveredDevice ->
-            localClientCommunicator.requestPermitSynchronization(discoveredDevice) { permitResponse ->
-                permitResponse.body?.let { body ->
-                    localClientCommunicator.respondToSynchronizationPermittingChallenge(discoveredDevice, body.nonce!!, correctResponse, mock<SyncInfo>()) { challengeResponse ->
-                        result = challengeResponse.body
-                        countDownLatch.countDown()
-                    }
-                }
-
-                permitResponse.error?.let { countDownLatch.countDown() }
+        localConnectedDevicesService.addKnownSynchronizedDevicesListener(object : KnownSynchronizedDevicesListener {
+            override fun knownSynchronizedDeviceConnected(connectedDevice: DiscoveredDevice) {
+                println("Counting down ...")
+                countDownLatch.countDown()
             }
+
+            override fun knownSynchronizedDeviceDisconnected(disconnectedDevice: DiscoveredDevice) {
+            }
+
         })
 
         startCommunicationManagersAndWait(countDownLatch)
 
-        assertThat(result, notNullValue())
+        assertThat(localNetworkSettings.synchronizationPort, greaterThan(1023))
+        assertThat(localConnectedDevicesService.knownSynchronizedDiscoveredDevices.size, `is`(1))
 
-        result?.let { result ->
-            assertThat(result.result, `is`(RespondToSynchronizationPermittingChallengeResult.ALLOWED))
-            assertThat(result.syncInfo, notNullValue())
-            assertThat(result.synchronizationPort, greaterThan(1023))
-        }
+        assertThat(remoteNetworkSettings.synchronizationPort, greaterThan(1023))
+        assertThat(remoteConnectedDevicesService.knownSynchronizedDiscoveredDevices.size, `is`(1))
     }
 
 
     @Test
     fun localDeviceRequestsSynchronization_EnteredResponseIsWrong_SynchronizationIsAllowed() {
-        var result: RespondToSynchronizationPermittingChallengeResponseBody? = null
         val wrongResponse: String = "not_valid"
-        var nonce: String = ""
-        var remoteDiscoveredDevice: DiscoveredDevice? = null
-        var correctResponse = wrongResponse
-        val countDownLatch = CountDownLatch(2)
 
-        whenever(remoteRegistrationHandler.shouldPermitSynchronizingWithDevice(any(), any())).doAnswer { invocation ->
-            val callback = invocation.arguments[1] as (DeviceInfo, Boolean) -> Unit
-            callback(invocation.arguments[0] as DeviceInfo, true)
-        }
+        localRegisterAtRemote.set(true)
+        remotePermitRemoteToSynchronize.set(true)
 
-        whenever(remoteRegistrationHandler.showResponseToEnterOnOtherDeviceNonBlocking(any(), any())).then { answer ->
-            correctResponse = answer.getArgument<String>(1)
-            null
-        }
+        val countDownLatch = CountDownLatch(1)
+        var countAskForChallenge = 0
 
-        whenever(remoteRegistrationHandler.deviceHasBeenPermittedToSynchronize(any<DiscoveredDevice>(), any<SyncInfo>())).thenReturn(mock<SyncInfo>())
+        whenever(localDialogService.askForTextInput(any<CharSequence>(), anyOrNull(), anyOrNull(), any())).thenAnswer { invocation ->
+            val callback = invocation.arguments[3] as (Boolean, String?) -> Unit
+            countAskForChallenge++
 
-        val isSendingWrongResponse = AtomicBoolean(false)
-        whenever(base64Service.encode(any<ByteArray>())).thenAnswer { // really bad workaround
-            if(isSendingWrongResponse.get()) {
-                isSendingWrongResponse.set(false)
-                return@thenAnswer wrongResponse
+            if(countAskForChallenge == 1) { // at first call return a false response
+                callback(true, wrongResponse)
             }
             else {
-                return@thenAnswer "fake_base64_encoded_string"
+                callback(true, remoteCorrectChallengeResponse.get())
             }
         }
 
-        localConnectedDevicesService.addDiscoveredDevicesListener(informWhenRemoteDeviceDiscovered(countDownLatch) { discoveredDevice ->
-            localClientCommunicator.requestPermitSynchronization(discoveredDevice) { permitResponse ->
-                permitResponse.body?.let { body ->
-                    nonce = body.nonce!!
-                    remoteDiscoveredDevice = discoveredDevice
-                    isSendingWrongResponse.set(true)
-                    localClientCommunicator.respondToSynchronizationPermittingChallenge(discoveredDevice, body.nonce!!, wrongResponse, mock<SyncInfo>()) { challengeResponse ->
-                        result = challengeResponse.body
-                        countDownLatch.countDown()
-                    }
-                }
-
-                permitResponse.error?.let { countDownLatch.countDown() }
+        localConnectedDevicesService.addKnownSynchronizedDevicesListener(object : KnownSynchronizedDevicesListener {
+            override fun knownSynchronizedDeviceConnected(connectedDevice: DiscoveredDevice) {
+                println("Counting down ...")
+                countDownLatch.countDown()
             }
+
+            override fun knownSynchronizedDeviceDisconnected(disconnectedDevice: DiscoveredDevice) {
+            }
+
         })
 
         startCommunicationManagersAndWait(countDownLatch)
 
-        assertThat(result, notNullValue())
+        assertThat(localNetworkSettings.synchronizationPort, greaterThan(1023))
+        assertThat(localConnectedDevicesService.knownSynchronizedDiscoveredDevices.size, `is`(1))
 
-        result?.let { result ->
-            assertThat(result.result, `is`(RespondToSynchronizationPermittingChallengeResult.WRONG_CODE))
-            assertThat(result.countRetriesLeft, `is`(1))
-            assertThat(result.syncInfo, nullValue())
-            assertThat(result.synchronizationPort, `is`(0))
-        }
-
-
-        // now pass correct response and check if synchronization is then permitted
-        val nowPassCorrectResponseLatch = CountDownLatch(1)
-
-        localClientCommunicator.respondToSynchronizationPermittingChallenge(remoteDiscoveredDevice!!, nonce, correctResponse, mock<SyncInfo>()) { challengeResponse ->
-            result = challengeResponse.body
-            nowPassCorrectResponseLatch.countDown()
-        }
-
-        nowPassCorrectResponseLatch.await(5, TimeUnit.SECONDS)
-
-        assertThat(result, notNullValue())
-
-        result?.let { result ->
-            assertThat(result.result, `is`(RespondToSynchronizationPermittingChallengeResult.ALLOWED))
-            assertThat(result.syncInfo, notNullValue())
-            assertThat(result.synchronizationPort, greaterThan(1023))
-        }
+        assertThat(remoteNetworkSettings.synchronizationPort, greaterThan(1023))
+        assertThat(remoteConnectedDevicesService.knownSynchronizedDiscoveredDevices.size, `is`(1))
     }
 
 
     @Test
     fun localDeviceRequestsSynchronization_RemoteDeniesSynchronization() {
-        var responseBody: RequestPermitSynchronizationResponseBody? = null
-        val countDownLatch = CountDownLatch(2)
+        localRegisterAtRemote.set(true)
+        remotePermitRemoteToSynchronize.set(false)
 
-        whenever(remoteRegistrationHandler.shouldPermitSynchronizingWithDevice(any(), any())).doAnswer { invocation ->
-            val callback = invocation.arguments[1] as (DeviceInfo, Boolean) -> Unit
-            callback(invocation.arguments[0] as DeviceInfo, false)
-        }
+        val countDownLatch = CountDownLatch(1)
 
-        localConnectedDevicesService.addDiscoveredDevicesListener(informWhenRemoteDeviceDiscovered(countDownLatch) { discoveredDevice ->
-            localClientCommunicator.requestPermitSynchronization(discoveredDevice) { permitResponse ->
-                responseBody = permitResponse.body
-                countDownLatch.countDown()
+        localNetworkSettings.addListener(object : NetworkSettingsChangedListener {
+            override fun settingsChanged(networkSettings: INetworkSettings, setting: NetworkSetting, newValue: Any, oldValue: Any?) {
+                if(setting == NetworkSetting.REMOVED_DEVICES_ASKED_FOR_PERMITTING_SYNCHRONIZATION) {
+                    println("Counting down ...")
+                    countDownLatch.countDown()
+                }
             }
         })
 
         startCommunicationManagersAndWait(countDownLatch)
 
-        assertThat(responseBody, notNullValue())
+        assertThat(localNetworkSettings.synchronizationPort, lessThanOrEqualTo(0))
+        assertThat(localConnectedDevicesService.knownSynchronizedDiscoveredDevices.size, `is`(0))
 
-        responseBody?.let { result ->
-            assertThat(result.result, `is`(RequestPermitSynchronizationResult.DENIED))
-            assertThat(result.nonce, nullValue())
-        }
+        assertThat(remoteNetworkSettings.synchronizationPort, lessThanOrEqualTo(0))
+        assertThat(remoteConnectedDevicesService.knownSynchronizedDiscoveredDevices.size, `is`(0))
     }
 
 
     @Test
     fun localDeviceRequestsSynchronization_RemoteInfoIsUsedForInitialSynchronization() {
-        var correctResponse: String = "not_valid"
-        val countDownLatch = CountDownLatch(2)
+        localRegisterAtRemote.set(true)
+        remotePermitRemoteToSynchronize.set(true)
 
-        whenever(remoteRegistrationHandler.shouldPermitSynchronizingWithDevice(any(), any())).doAnswer { invocation ->
-            val callback = invocation.arguments[1] as (DeviceInfo, Boolean) -> Unit
-            callback(invocation.arguments[0] as DeviceInfo, true)
-        }
-
-        whenever(remoteRegistrationHandler.showResponseToEnterOnOtherDeviceNonBlocking(any(), any())).then { answer ->
-            correctResponse = answer.getArgument<String>(1)
-            null
-        }
+        val countDownLatch = CountDownLatch(1)
 
         whenever(localDialogService.askForTextInput(any<CharSequence>(), anyOrNull(), anyOrNull(), any())).thenAnswer { invocation ->
             val callback = invocation.arguments[3] as (Boolean, String?) -> Unit
-            callback(true, correctResponse)
+            callback(true, remoteCorrectChallengeResponse.get())
         }
 
-        whenever(remoteRegistrationHandler.deviceHasBeenPermittedToSynchronize(any<DiscoveredDevice>(), any<SyncInfo>())).thenReturn(createSyncInfo(remoteDataManager, true, true))
+        localConnectedDevicesService.addKnownSynchronizedDevicesListener(object : KnownSynchronizedDevicesListener {
+            override fun knownSynchronizedDeviceConnected(connectedDevice: DiscoveredDevice) {
+                println("Counting down ...")
+                countDownLatch.countDown()
+            }
+
+            override fun knownSynchronizedDeviceDisconnected(disconnectedDevice: DiscoveredDevice) {
+            }
+
+        })
 
 
         startCommunicationManagersAndWait(countDownLatch)
@@ -441,7 +414,7 @@ class CommunicationManagerTest {
         val remoteDeepThought = remoteDataManager.deepThought
 
         assertThat(localUser.id, `is`(remoteUser.id))
-        assertThat(localDeepThought.id, `is`(remoteDeepThought.id))
+        assertThat(localDeepThought.id, `is`(not(remoteDeepThought.id)))
 
         testExtensibleEnumeration(localDeepThought.applicationLanguages, remoteDeepThought.applicationLanguages)
         testExtensibleEnumeration(localDeepThought.fileTypes, remoteDeepThought.fileTypes)
@@ -461,7 +434,7 @@ class CommunicationManagerTest {
                 }
             }
 
-            assertThat(foundRemoteEnum, notNullValue())
+            assertThat("No matching enumeration found for $localEnum", foundRemoteEnum, notNullValue())
         }
     }
 
@@ -487,17 +460,20 @@ class CommunicationManagerTest {
     }
 
 
-    private fun createDeviceRegistrationHandlerBaseInstance(likesToRegister: Boolean, dataManager: DataManager, initialSyncManager: InitialSyncManager,
-                                                            dialogService: IDialogService, localization: Localization): DeviceRegistrationHandlerBase {
+    private fun createDeviceRegistrationHandler(registerAtRemote: AtomicBoolean, permitRemoteToSynchronize: AtomicBoolean, correctChallengeResponse: AtomicReference<String>,
+                                                dataManager: DataManager, initialSyncManager: InitialSyncManager,
+                                                dialogService: IDialogService, localization: Localization): DeviceRegistrationHandlerBase {
         return object : DeviceRegistrationHandlerBase(dataManager, initialSyncManager, dialogService, localization) {
             override fun showUnknownDeviceDiscoveredView(unknownDevice: DiscoveredDevice, callback: (Boolean, Boolean) -> Unit) {
-                callback(likesToRegister, false)
+                callback(registerAtRemote.get(), false)
             }
 
             override fun shouldPermitSynchronizingWithDevice(remoteDeviceInfo: DeviceInfo, callback: (remoteDeviceInfo: DeviceInfo, permitsSynchronization: Boolean) -> Unit) {
+                callback(remoteDeviceInfo, permitRemoteToSynchronize.get())
             }
 
             override fun showResponseToEnterOnOtherDeviceNonBlocking(remoteDeviceInfo: DeviceInfo, correctResponse: String) {
+                correctChallengeResponse.set(correctResponse)
             }
 
             override fun unknownDeviceDisconnected(disconnectedDevice: DiscoveredDevice) {
