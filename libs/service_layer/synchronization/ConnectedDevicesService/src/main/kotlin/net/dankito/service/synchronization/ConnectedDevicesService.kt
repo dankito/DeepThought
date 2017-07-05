@@ -58,6 +58,8 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
         registrationHandler.addRequestingToSynchronizeWithRemoteListener { _ -> syncManager.openSynchronizationPort() }
 
         registrationHandler.addNewDeviceRegisteredListener { remoteDevice -> startSynchronizingWithNewlyRegisteredDevice(remoteDevice) }
+
+        clientCommunicator.addRemoteRequestedToStartSynchronizationListener { remoteDevice -> startSynchronizingWithDevice(remoteDevice) }
     }
 
     override fun start() {
