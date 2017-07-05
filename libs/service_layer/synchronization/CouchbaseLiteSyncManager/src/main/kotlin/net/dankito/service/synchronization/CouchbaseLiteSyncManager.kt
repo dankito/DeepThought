@@ -46,6 +46,8 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
         stopBasicDataSyncListener()
 
         stopListener()
+
+        stopSynchronizingWithAllDevices()
     }
 
     override fun startAsync(desiredSynchronizationPort: Int, desiredBasicDataSynchronizationPort: Int, alsoUsePullReplication: Boolean, initializedCallback: (Int) -> Unit) {
@@ -172,10 +174,6 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
 
         synchronizationPort = PortNotSet
         networkSettings.synchronizationPort = PortNotSet
-
-        for(device in pushReplications.keys) {
-            stopSynchronizationWithDevice(device)
-        }
     }
 
 
@@ -211,6 +209,12 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
         }
 
 //        database.addChangeListener(databaseChangeListener)
+    }
+
+    private fun stopSynchronizingWithAllDevices() {
+        for(device in pushReplications.keys) {
+            stopSynchronizationWithDevice(device)
+        }
     }
 
     override fun stopSynchronizationWithDevice(device: DiscoveredDevice) {
