@@ -28,12 +28,14 @@ import net.dankito.serializer.JacksonJsonSerializer
 import net.dankito.service.data.ArticleSummaryExtractorConfigService
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.TagService
+import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.LuceneSearchEngine
 import net.dankito.service.synchronization.ConnectedDevicesService
 import net.dankito.service.synchronization.CouchbaseLiteSyncManager
 import net.dankito.service.synchronization.ISyncManager
+import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ImageCache
@@ -146,8 +148,14 @@ class CommonModule {
 
     @Provides
     @Singleton
-    fun provideSyncManager(entityManager: IEntityManager, networkSettings: INetworkSettings, threadPool: IThreadPool) : ISyncManager {
-        return CouchbaseLiteSyncManager(entityManager as CouchbaseLiteEntityManagerBase, networkSettings, threadPool)
+    fun provideSynchronizedChangesHandler(entityManager: IEntityManager, changesNotifier: EntityChangedNotifier) : SynchronizedChangesHandler {
+        return SynchronizedChangesHandler(entityManager, changesNotifier)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSyncManager(entityManager: IEntityManager, changesHandler: SynchronizedChangesHandler, networkSettings: INetworkSettings) : ISyncManager {
+        return CouchbaseLiteSyncManager(entityManager as CouchbaseLiteEntityManagerBase, changesHandler, networkSettings)
     }
 
     @Provides

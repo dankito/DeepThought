@@ -8,15 +8,15 @@ import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.model.INetworkSettings
-import net.dankito.utils.IThreadPool
+import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import org.slf4j.LoggerFactory
 import java.net.MalformedURLException
 import java.net.URL
 import java.util.concurrent.ConcurrentHashMap
 
 
-class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityManagerBase, private val networkSettings: INetworkSettings, threadPool: IThreadPool,
-                               private val alsoUsePullReplication: Boolean = true) : ISyncManager {
+class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityManagerBase, private val synchronizedChangesHandler: SynchronizedChangesHandler,
+                               private val networkSettings: INetworkSettings, private val alsoUsePullReplication: Boolean = true) : ISyncManager {
 
     companion object {
         val PortNotSet = -1
@@ -148,6 +148,8 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
             listenerThread = Thread(couchbaseLiteListener)
             listenerThread?.start()
 
+            database.addChangeListener(databaseChangeListener)
+
             log.info("Listening now on synchronization port $synchronizationPort")
             return synchronizationPort
         }
@@ -203,8 +205,6 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
 
             pullReplication.start()
         }
-
-//        database.addChangeListener(databaseChangeListener)
     }
 
     private fun stopSynchronizingWithAllDevices() {
@@ -230,6 +230,11 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
 
     private fun createSyncUrl(address: String, syncPort: Int): URL {
         return URL("http://" + address + ":" + syncPort + "/" + database.name)
+    }
+
+
+    private val databaseChangeListener = Database.ChangeListener { event ->
+        synchronizedChangesHandler.handleChange(event)
     }
 
 }
