@@ -6,19 +6,22 @@ import com.couchbase.lite.listener.LiteListener
 import com.couchbase.lite.replicator.Replication
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.deepthought.model.Device
+import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.utils.IThreadPool
 import org.slf4j.LoggerFactory
+import java.net.MalformedURLException
 import java.net.URL
+import java.util.concurrent.ConcurrentHashMap
 
 
-
-
-class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityManagerBase, private val networkSettings: INetworkSettings, threadPool: IThreadPool
-                               ) : ISyncManager {
+class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityManagerBase, private val networkSettings: INetworkSettings, threadPool: IThreadPool,
+                               private val alsoUsePullReplication: Boolean = true) : ISyncManager {
 
     companion object {
         val PortNotSet = -1
+
+        private val SynchronizationDefaultPort = 27387
 
         private val log = LoggerFactory.getLogger(CouchbaseLiteSyncManager::class.java)
     }
@@ -31,9 +34,18 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
     private var basicDataSyncPort: Int = PortNotSet
     private var basicDataSyncListenerThread: Thread? = null
 
+    private var couchbaseLiteListener: LiteListener? = null
+    private var synchronizationPort: Int = PortNotSet
+    private var listenerThread: Thread? = null
+
+    private var pushReplications: MutableMap<DiscoveredDevice, Replication> = ConcurrentHashMap()
+    private var pullReplications: MutableMap<DiscoveredDevice, Replication> = ConcurrentHashMap()
+
 
     override fun stop() {
         stopBasicDataSyncListener()
+
+        stopListener()
     }
 
     override fun startAsync(desiredSynchronizationPort: Int, desiredBasicDataSynchronizationPort: Int, alsoUsePullReplication: Boolean, initializedCallback: (Int) -> Unit) {
@@ -117,8 +129,107 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
     }
 
 
+    @Throws(Exception::class)
+    override fun startListenerAndSynchronizationWithDevice(device: DiscoveredDevice) {
+        startListener()
+
+        startSynchronizationWithDevice(device)
+    }
+
+    @Throws(Exception::class)
+    override fun startListener(): Int? {
+        if(couchbaseLiteListener != null) { // listener already started
+            return synchronizationPort
+        }
+
+        log.info("Starting Couchbase Lite Listener")
+
+        couchbaseLiteListener = LiteListener(manager, SynchronizationDefaultPort, null) // TODO: set allowedCredentials
+        synchronizationPort = couchbaseLiteListener?.listenPort ?: PortNotSet
+
+        if(synchronizationPort > 0 && synchronizationPort < 65536) {
+            networkSettings.synchronizationPort = synchronizationPort
+
+            listenerThread = Thread(couchbaseLiteListener)
+            listenerThread?.start()
+
+            return synchronizationPort
+        }
+
+        return null
+    }
+
+    override fun stopListener() {
+        log.info("Stopping Couchbase Lite Listener")
+
+        couchbaseLiteListener?.stop()
+        couchbaseLiteListener = null
+
+        listenerThread?.let { listenerThread ->
+            try { listenerThread.join(500) } catch (ignored: Exception) { }
+            this.listenerThread = null
+        }
+
+        synchronizationPort = PortNotSet
+        networkSettings.synchronizationPort = PortNotSet
+
+        for(device in pushReplications.keys) {
+            stopSynchronizationWithDevice(device)
+        }
+    }
+
+
+    @Throws(Exception::class)
+    override fun startSynchronizationWithDevice(device: DiscoveredDevice) {
+        if(pullReplications.containsKey(device)) { // synchronization already started with this device
+            return
+        }
+
+        log.info("Starting Replication with Device " + device)
+
+        val syncUrl: URL
+        try {
+            syncUrl = createSyncUrl(device.address, device.synchronizationPort)
+        } catch (e: MalformedURLException) {
+            throw Exception(e)
+        }
+
+        val pushReplication = database.createPushReplication(syncUrl)
+        pushReplication.isContinuous = true
+
+        pushReplications.put(device, pushReplication)
+
+        pushReplication.start()
+
+        if (alsoUsePullReplication) {
+            val pullReplication = database.createPullReplication(syncUrl)
+            pullReplication.isContinuous = true
+
+            pullReplications.put(device, pullReplication)
+
+            pullReplication.start()
+        }
+
+//        database.addChangeListener(databaseChangeListener)
+    }
+
+    override fun stopSynchronizationWithDevice(device: DiscoveredDevice) {
+        synchronized(this) {
+            log.info("Stopping Replication with Device " + device)
+
+            pullReplications.remove(device)?.stop()
+
+            pushReplications.remove(device)?.stop()
+
+            if(pushReplications.isEmpty()) { // no devices connected anymore
+                stopListener()
+            }
+        }
+    }
+
+
     private fun createSyncUrl(address: String, syncPort: Int): URL {
-        return URL("http://" + address + ":" + syncPort + "/" + database.getName());
+        return URL("http://" + address + ":" + syncPort + "/" + database.name)
     }
 
 }
