@@ -50,10 +50,8 @@ class AsyncProducerConsumerQueue<T>(countThreadsToUse: Int, maxItemsToQueue: Int
 
         for (consumerThread in consumerThreads) {
             try {
-                consumerThread.join(100)
-            } catch (ignored: Exception) {
-            }
-
+                consumerThread.interrupt()
+            } catch (ignored: Exception) { }
         }
 
         // TODO: really consume remaining items even though stop() has already been called?
