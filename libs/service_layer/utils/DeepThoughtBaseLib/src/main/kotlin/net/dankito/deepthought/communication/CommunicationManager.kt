@@ -57,8 +57,6 @@ class CommunicationManager(private val connectedDevicesService: IConnectedDevice
     }
 
     private fun successfullyStartedSyncManager(basicDataSyncPort: Int) {
-        networkSettings.basicDataSynchronizationPort = basicDataSyncPort
-
         connectedDevicesService.addDiscoveredDevicesListener(discoveredDevicesListener)
 
         connectedDevicesService.start()
