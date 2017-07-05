@@ -4,6 +4,7 @@ package net.dankito.deepthought.model
 enum class NetworkSetting {
 
     MESSAGES_PORT,
+    BASIC_DATA_SYNCHRONIZATION_PORT,
     SYNCHRONIZATION_PORT,
     ADDED_DISCOVERED_DEVICE,
     REMOVED_DISCOVERED_DEVICE,

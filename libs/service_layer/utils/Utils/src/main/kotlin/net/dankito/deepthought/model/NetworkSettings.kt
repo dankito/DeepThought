@@ -20,7 +20,7 @@ class NetworkSettings(override val localHostDevice: Device, override val localUs
 
             field = value
 
-            callSettingChangedListeners(NetworkSetting.SYNCHRONIZATION_PORT, value, oldValue)
+            callSettingChangedListeners(NetworkSetting.BASIC_DATA_SYNCHRONIZATION_PORT, value, oldValue)
         }
 
     override var synchronizationPort: Int = 0
