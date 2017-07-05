@@ -88,8 +88,6 @@ class MessageHandler(protected var config: MessageHandlerConfig) : IMessageHandl
         getDiscoveredDevices(body)?.let { discoveredDevice ->
             discoveredDevice.synchronizationPort = body.synchronizationPort
 
-            networkSettings.addConnectedDevicePermittedToSynchronize(discoveredDevice)
-
             return config.registrationHandler.deviceHasBeenPermittedToSynchronize(discoveredDevice, body.syncInfo)
         }
 
