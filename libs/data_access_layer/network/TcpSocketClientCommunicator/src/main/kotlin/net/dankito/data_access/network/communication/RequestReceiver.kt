@@ -49,13 +49,13 @@ class RequestReceiver(private var socketHandler: SocketHandler, private var mess
         createReceiverSocketAsync(desiredMessagesReceiverPort, callback)
     }
 
-    protected fun createReceiverSocketAsync(desiredPort: Int, callback: RequestReceiverCallback) {
+    private fun createReceiverSocketAsync(desiredPort: Int, callback: RequestReceiverCallback) {
         receiverThread = Thread(Runnable { createReceiverSocket(desiredPort, callback) })
 
         receiverThread!!.start()
     }
 
-    protected fun createReceiverSocket(desiredPort: Int, callback: RequestReceiverCallback) {
+    private fun createReceiverSocket(desiredPort: Int, callback: RequestReceiverCallback) {
         try {
             receiverSocket = ServerSocket(desiredPort)
 
@@ -73,15 +73,15 @@ class RequestReceiver(private var socketHandler: SocketHandler, private var mess
 
     }
 
-    protected fun creatingReceiverSocketFailed(port: Int, exception: Exception, callback: RequestReceiverCallback) {
+    private fun creatingReceiverSocketFailed(port: Int, exception: Exception, callback: RequestReceiverCallback) {
         callback.started(this, false, port, exception)
     }
 
-    protected fun receiverSocketBoundToPort(port: Int, callback: RequestReceiverCallback) {
+    private fun receiverSocketBoundToPort(port: Int, callback: RequestReceiverCallback) {
         callback.started(this, true, port, null)
     }
 
-    protected fun waitForArrivingRequests() {
+    private fun waitForArrivingRequests() {
         while (Thread.currentThread().isInterrupted == false && receiverSocket != null) {
             try {
                 val clientSocket = receiverSocket!!.accept()
@@ -102,7 +102,7 @@ class RequestReceiver(private var socketHandler: SocketHandler, private var mess
         threadPool.runAsync { receivedRequest(clientSocket) }
     }
 
-    protected fun receivedRequest(clientSocket: Socket) {
+    private fun receivedRequest(clientSocket: Socket) {
         val socketResult = socketHandler.receiveMessage(clientSocket)
 
         if (socketResult.isSuccessful) {
@@ -116,7 +116,7 @@ class RequestReceiver(private var socketHandler: SocketHandler, private var mess
         }
     }
 
-    protected fun receivedRequest(clientSocket: Socket, requestString: String) {
+    private fun receivedRequest(clientSocket: Socket, requestString: String) {
         try {
             val request = messageSerializer.deserializeRequest(requestString)
             receivedRequest(clientSocket, request)
@@ -127,12 +127,12 @@ class RequestReceiver(private var socketHandler: SocketHandler, private var mess
 
     }
 
-    protected fun receivedRequest(clientSocket: Socket, request: Request<*>) {
+    private fun receivedRequest(clientSocket: Socket, request: Request<*>) {
         messageHandler.handleReceivedRequest(request) { response -> dispatchResponseToRequest(clientSocket, request, response) }
     }
 
 
-    protected fun dispatchResponseToRequest(clientSocket: Socket, request: Request<*>?, response: Response<*>) {
+    private fun dispatchResponseToRequest(clientSocket: Socket, request: Request<*>?, response: Response<*>) {
         try {
             val serializedResponse = messageSerializer.serializeResponse(response)
             val (isSuccessful) = socketHandler.sendMessage(clientSocket, serializedResponse)
