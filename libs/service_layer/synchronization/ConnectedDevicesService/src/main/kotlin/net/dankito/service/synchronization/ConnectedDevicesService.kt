@@ -81,8 +81,8 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
         unknownDevices.clear()
 
 
-        for (discoveredDevice in discoveredDevices.values) {
-            callKnownSynchronizedDeviceDisconnected(discoveredDevice)
+        for(discoveredDevice in discoveredDevices.values) {
+            callDiscoveredDeviceDisconnectedListeners(discoveredDevice)
         }
 
         discoveredDevices.clear()
