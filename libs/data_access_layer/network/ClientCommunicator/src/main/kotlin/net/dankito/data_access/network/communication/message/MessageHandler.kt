@@ -9,9 +9,9 @@ import net.dankito.service.synchronization.initialsync.model.SyncInfo
 
 class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler {
 
-    private var networkSettings: INetworkSettings = config.networkSettings
+    private val networkSettings: INetworkSettings = config.networkSettings
 
-    private var challengeHandler: ChallengeHandler = config.challengeHandler
+    private val challengeHandler: ChallengeHandler = config.challengeHandler
 
     private val registrationHandler: IDeviceRegistrationHandler = config.registrationHandler
 
