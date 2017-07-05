@@ -141,7 +141,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
 
             if (type === DiscoveredDeviceType.KNOWN_SYNCHRONIZED_DEVICE) {
                 discoveredKnownSynchronizedDevice(device, deviceInfoKey)
-                knownSynchronizedDevices.put(deviceInfoKey, device)
+                addDeviceToKnownSynchronizedDevices(deviceInfoKey, device)
             } else if (type === DiscoveredDeviceType.KNOWN_IGNORED_DEVICE) {
                 knownIgnoredDevices.put(deviceInfoKey, device)
             } else {
@@ -303,16 +303,20 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
     protected fun addDeviceToKnownSynchronizedDevices(device: DiscoveredDevice): Boolean {
         val deviceInfoKey = getDeviceKeyForDevice(device)
 
-        if (deviceInfoKey != null) {
+        if(deviceInfoKey != null) {
             unknownDevices.remove(deviceInfoKey)
             knownIgnoredDevices.remove(deviceInfoKey)
 
-            knownSynchronizedDevices.put(deviceInfoKey, device)
+            addDeviceToKnownSynchronizedDevices(deviceInfoKey, device)
 
             return true
         }
 
         return false
+    }
+
+    private fun addDeviceToKnownSynchronizedDevices(deviceInfoKey: String, device: DiscoveredDevice) {
+        knownSynchronizedDevices.put(deviceInfoKey, device)
     }
 
     protected fun addDeviceToLocalConfigSynchronizedDevices(device: DiscoveredDevice) {
