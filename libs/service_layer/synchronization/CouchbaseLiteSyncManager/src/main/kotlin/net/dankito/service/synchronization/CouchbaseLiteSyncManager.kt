@@ -147,6 +147,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
             listenerThread = Thread(couchbaseLiteListener)
             listenerThread?.start()
 
+            log.info("Listening now on synchronization port $synchronizationPort")
             return synchronizationPort
         }
 
