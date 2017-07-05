@@ -316,11 +316,15 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
     }
 
     private fun addDeviceToKnownSynchronizedDevices(deviceInfoKey: String, device: DiscoveredDevice) {
+        knownSynchronizedDevices.put(deviceInfoKey, device)
+    }
+
+    private fun startSynchronizingWithDevice(device: DiscoveredDevice) {
         syncManager.startSynchronizationWithDevice(device)
 
         networkSettings.addConnectedDevicePermittedToSynchronize(device)
 
-        knownSynchronizedDevices.put(deviceInfoKey, device)
+        addDeviceToKnownSynchronizedDevices(getDeviceKeyForDevice(device), device)
     }
 
     private fun addDeviceToSynchronizedDevices(device: DiscoveredDevice) {
