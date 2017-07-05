@@ -5,9 +5,11 @@ import com.couchbase.lite.listener.Credentials
 import com.couchbase.lite.listener.LiteListener
 import com.couchbase.lite.replicator.Replication
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
+import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.model.INetworkSettings
+import net.dankito.jpa.couchbaselite.Dao
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import org.slf4j.LoggerFactory
 import java.net.MalformedURLException
@@ -22,6 +24,8 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
         val PortNotSet = -1
 
         private val SynchronizationDefaultPort = 27387
+
+        private val EntitiesFilterName = "Entities_Filter"
 
         private val log = LoggerFactory.getLogger(CouchbaseLiteSyncManager::class.java)
     }
@@ -40,6 +44,21 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
 
     private var pushReplications: MutableMap<DiscoveredDevice, Replication> = ConcurrentHashMap()
     private var pullReplications: MutableMap<DiscoveredDevice, Replication> = ConcurrentHashMap()
+
+
+    init {
+        setReplicationFilter(database)
+    }
+
+    private fun setReplicationFilter(database: Database) {
+        val entitiesToFilter = ArrayList<String>()
+        entitiesToFilter.add(DeepThought::class.java.name)
+
+        database.setFilter(EntitiesFilterName) { revision, params ->
+            val entityType = revision.getProperty(Dao.TYPE_COLUMN_NAME) as String
+            entitiesToFilter.contains(entityType) == false
+        }
+    }
 
 
     override fun stop() {
@@ -191,6 +210,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
         }
 
         val pushReplication = database.createPushReplication(syncUrl)
+        pushReplication.filter = EntitiesFilterName
         pushReplication.isContinuous = true
 
         pushReplications.put(device, pushReplication)
@@ -199,6 +219,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
 
         if (alsoUsePullReplication) {
             val pullReplication = database.createPullReplication(syncUrl)
+            pullReplication.filter = EntitiesFilterName
             pullReplication.isContinuous = true
 
             pullReplications.put(device, pullReplication)
