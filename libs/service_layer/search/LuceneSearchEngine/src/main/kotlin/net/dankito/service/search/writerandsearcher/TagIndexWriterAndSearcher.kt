@@ -3,6 +3,7 @@ package net.dankito.service.search.writerandsearcher
 import net.dankito.deepthought.model.Tag
 import net.dankito.service.data.TagService
 import net.dankito.service.data.messages.TagChanged
+import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.FieldName
 import net.dankito.service.search.SortOption
 import net.dankito.service.search.SortOrder
@@ -18,7 +19,7 @@ import org.apache.lucene.search.*
 import org.slf4j.LoggerFactory
 
 
-class TagIndexWriterAndSearcher(tagService: TagService) : IndexWriterAndSearcher<Tag>(tagService) {
+class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus) : IndexWriterAndSearcher<Tag>(tagService, eventBus) {
 
     companion object {
         private const val TAGS_DEFAULT_COUNT_MAX_SEARCH_RESULTS = 100000

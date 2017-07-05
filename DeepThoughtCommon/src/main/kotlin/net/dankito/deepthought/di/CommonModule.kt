@@ -28,6 +28,7 @@ import net.dankito.serializer.JacksonJsonSerializer
 import net.dankito.service.data.ArticleSummaryExtractorConfigService
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.TagService
+import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.LuceneSearchEngine
 import net.dankito.service.synchronization.ConnectedDevicesService
@@ -80,8 +81,8 @@ class CommonModule {
 
     @Provides
     @Singleton
-    fun provideSearchEngine(dataManager: DataManager, threadPool: IThreadPool, entryService: EntryService, tagService: TagService) : ISearchEngine {
-        return LuceneSearchEngine(dataManager, threadPool, entryService, tagService)
+    fun provideSearchEngine(dataManager: DataManager, threadPool: IThreadPool, eventBus: IEventBus, entryService: EntryService, tagService: TagService) : ISearchEngine {
+        return LuceneSearchEngine(dataManager, threadPool, eventBus, entryService, tagService)
     }
 
 

@@ -3,6 +3,7 @@ package net.dankito.service.search
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.TagService
+import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.specific.EntriesSearch
 import net.dankito.service.search.specific.TagsSearch
 import net.dankito.service.search.writerandsearcher.EntryIndexWriterAndSearcher
@@ -18,7 +19,7 @@ import org.slf4j.LoggerFactory
 import java.io.File
 
 
-class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThreadPool, entryService: EntryService, tagService: TagService)
+class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThreadPool, eventBus: IEventBus, entryService: EntryService, tagService: TagService)
     : SearchEngineBase(threadPool) {
 
     companion object {
@@ -26,9 +27,9 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
     }
 
 
-    private val entryIndexWriterAndSearcher = EntryIndexWriterAndSearcher(entryService)
+    private val entryIndexWriterAndSearcher = EntryIndexWriterAndSearcher(entryService, eventBus)
 
-    private val tagIndexWriterAndSearcher = TagIndexWriterAndSearcher(tagService)
+    private val tagIndexWriterAndSearcher = TagIndexWriterAndSearcher(tagService, eventBus)
 
     private val indexWritersAndSearchers: List<IndexWriterAndSearcher<*>>
 

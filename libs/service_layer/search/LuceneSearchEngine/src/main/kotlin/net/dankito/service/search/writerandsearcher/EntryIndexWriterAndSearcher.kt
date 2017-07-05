@@ -6,6 +6,7 @@ import net.dankito.deepthought.extensions.referencePreview
 import net.dankito.deepthought.model.Entry
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.messages.EntryChanged
+import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.FieldName
 import net.dankito.service.search.FieldValue
 import net.dankito.service.search.FieldValue.NoTagsFieldValue
@@ -19,7 +20,7 @@ import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.*
 
 
-class EntryIndexWriterAndSearcher(entryService: EntryService) : IndexWriterAndSearcher<Entry>(entryService) {
+class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBus) : IndexWriterAndSearcher<Entry>(entryService, eventBus) {
 
     override fun getDirectoryName(): String {
         return "entries"

@@ -4,6 +4,7 @@ import net.dankito.deepthought.model.BaseEntity
 import net.dankito.service.data.EntityServiceBase
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.EntityChanged
+import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.SearchWithCollectionResult
 import net.dankito.service.search.SortOption
 import net.dankito.service.search.results.LazyLoadingLuceneSearchResultsList
@@ -24,7 +25,7 @@ import java.io.File
 import java.util.*
 
 
-abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: EntityServiceBase<TEntity>) {
+abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: EntityServiceBase<TEntity>, eventBus: IEventBus) {
 
     companion object {
         protected const val DEFAULT_COUNT_MAX_SEARCH_RESULTS = 1000
@@ -53,7 +54,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
     init {
         eventBusListener = createEntityChangedListener() // we need to hold on to a reference otherwise MBassador's WeakReference would be garbage collected
 
-        entityService.eventBus.register(eventBusListener)
+        eventBus.register(eventBusListener)
     }
 
     abstract fun createEntityChangedListener(): Any
