@@ -23,25 +23,11 @@ class RequestReceiver(private var socketHandler: SocketHandler, private var mess
 
 
     override fun close() {
-        if (receiverSocket != null) {
-            try {
-                receiverSocket!!.close()
-            } catch (e: Exception) {
-                log.error("Could not close receiver socket", e)
-            }
+        try { receiverSocket?.close() } catch (e: Exception) { log.error("Could not close receiver socket", e) }
+        receiverSocket = null
 
-            receiverSocket = null
-        }
-
-        if (receiverThread != null) {
-            try {
-                receiverThread!!.join(100)
-            } catch (e: Exception) {
-                log.error("Could not stop receiver thread", e)
-            }
-
-            receiverThread = null
-        }
+        try { receiverThread?.interrupt() } catch(e: Exception) { log.error("Could not stop receiver thread", e) }
+        receiverThread = null
     }
 
 
