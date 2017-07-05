@@ -9,17 +9,9 @@ import net.dankito.service.synchronization.initialsync.model.SyncInfo
 
 class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler {
 
-    private var networkSettings: INetworkSettings
+    private var networkSettings: INetworkSettings = config.networkSettings
 
-    private var challengeHandler: ChallengeHandler
-
-
-    init {
-
-        this.networkSettings = config.networkSettings
-
-        this.challengeHandler = config.challengeHandler
-    }
+    private var challengeHandler: ChallengeHandler = config.challengeHandler
 
 
     override fun handleReceivedRequest(request: Request<*>, callback: (Response<out Any>) -> Unit) {
