@@ -309,7 +309,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
             unknownDevices.remove(deviceInfoKey)
             knownIgnoredDevices.remove(deviceInfoKey)
 
-            addDeviceToKnownSynchronizedDevices(deviceInfoKey, device)
+            startSynchronizingWithDevice(deviceInfoKey, device)
 
             return true
         }
@@ -322,11 +322,15 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
     }
 
     private fun startSynchronizingWithDevice(device: DiscoveredDevice) {
+        startSynchronizingWithDevice(getDeviceKeyForDevice(device), device)
+    }
+
+    private fun startSynchronizingWithDevice(deviceInfoKey: String, device: DiscoveredDevice) {
         syncManager.startSynchronizationWithDevice(device)
 
         networkSettings.addConnectedDevicePermittedToSynchronize(device)
 
-        addDeviceToKnownSynchronizedDevices(getDeviceKeyForDevice(device), device)
+        addDeviceToKnownSynchronizedDevices(deviceInfoKey, device)
     }
 
     private fun addDeviceToSynchronizedDevices(device: DiscoveredDevice) {
