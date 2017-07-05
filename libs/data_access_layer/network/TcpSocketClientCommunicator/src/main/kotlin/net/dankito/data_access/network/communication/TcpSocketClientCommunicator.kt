@@ -20,6 +20,8 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
 
     private lateinit var challengeHandler: ChallengeHandler
 
+    private lateinit var messageHandlerConfig: MessageHandlerConfig
+
 
     init {
         setupDependencies(networkSettings, registrationHandler, base64Service, threadPool)
@@ -28,7 +30,7 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
     private fun setupDependencies(networkSettings: INetworkSettings, registrationHandler: IDeviceRegistrationHandler, base64Service: IBase64Service, threadPool: IThreadPool) {
         this.challengeHandler = ChallengeHandler(base64Service)
 
-        val messageHandlerConfig = MessageHandlerConfig(networkSettings, challengeHandler, registrationHandler)
+        messageHandlerConfig = MessageHandlerConfig(networkSettings, challengeHandler, registrationHandler)
 
         val socketHandler = SocketHandler()
         val messageHandler = MessageHandler(messageHandlerConfig)
