@@ -21,4 +21,9 @@ interface IDeviceRegistrationHandler {
 
     fun deviceHasBeenPermittedToSynchronize(device: DiscoveredDevice, remoteSyncInfo: SyncInfo): SyncInfo?
 
+
+    fun addRequestingToSynchronizeWithRemoteListener(listener: (remoteDevice: DiscoveredDevice) -> Unit)
+
+    fun addNewDeviceRegisteredListener(listener: (remoteDevice: DiscoveredDevice) -> Unit)
+
 }

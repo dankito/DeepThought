@@ -18,6 +18,10 @@ import net.dankito.utils.ui.IDialogService
 abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataManager, protected val initialSyncManager: InitialSyncManager, protected val dialogService: IDialogService,
                                              protected val localization: Localization) : IDeviceRegistrationHandler {
 
+    private val requestingToSynchronizeWithRemoteListener = HashSet<(DiscoveredDevice) -> Unit>()
+
+    private val newDeviceRegisteredListeners = HashSet<(DiscoveredDevice) -> Unit>()
+
 
     override fun showUnknownDeviceDiscovered(clientCommunicator: IClientCommunicator, unknownDevice: DiscoveredDevice) {
         showUnknownDeviceDiscoveredView(unknownDevice) { likesToRegister, neverAskAgainForThisDevice ->
@@ -64,8 +68,10 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
     }
 
     protected fun sendChallengeResponseToRemote(clientCommunicator: IClientCommunicator, remoteDevice: DiscoveredDevice, nonce: String, enteredResponse: String) {
+        callRequestingToSynchronizeWithRemoteListeners(remoteDevice) // opens synchronization port needed in respondToSynchronizationPermittingChallenge()
+
         clientCommunicator.respondToSynchronizationPermittingChallenge(remoteDevice, nonce, enteredResponse, createSyncInfo()) { response ->
-                        handleEnteredChallengeResponse(clientCommunicator, remoteDevice, response, nonce)
+            handleEnteredChallengeResponse(clientCommunicator, remoteDevice, response, nonce)
         }
     }
 
@@ -96,10 +102,12 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
             if(syncInfo.useCallerUserName ?: false) {
                 initialSyncManager.syncUserInformationWithRemoteOnes(dataManager.localUser, syncInfo.user)
             }
-            if(syncInfo.useCallerDatabaseIds ?: false) {
+            if(syncInfo.useCallerDatabaseIds ?: false) { // TODO: something is wrong here, see deviceHasBeenPermittedToSynchronize()
                 initialSyncManager.syncLocalDatabaseIdsWithRemoteOnes(dataManager.deepThought, syncInfo)
             }
         }
+
+        callNewDeviceRegisteredListeners(remoteDevice)
     }
 
     private fun showAlertSynchronizingIsNotPermitted(remoteDevice: DiscoveredDevice) {
@@ -121,9 +129,11 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
             if(useCallerUserName) {
                 initialSyncManager.syncUserInformationWithRemoteOnes(localUser, remoteSyncInfo.user)
             }
-            if(useCallerDatabaseIds == false) {
+            if(useCallerDatabaseIds == false) { // TODO: something is wrong here, see remoteAllowedSynchronization()
                 initialSyncManager.syncLocalDatabaseIdsWithRemoteOnes(dataManager.deepThought, remoteSyncInfo)
             }
+
+            callNewDeviceRegisteredListeners(device)
 
             return createSyncInfo(useCallerDatabaseIds, useCallerUserName)
         } catch(e: Exception) {
@@ -132,4 +142,22 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
 
         return null
     }
+
+
+    override fun addRequestingToSynchronizeWithRemoteListener(listener: (remoteDevice: DiscoveredDevice) -> Unit) {
+        requestingToSynchronizeWithRemoteListener.add(listener)
+    }
+
+    private fun callRequestingToSynchronizeWithRemoteListeners(remoteDevice: DiscoveredDevice) {
+        requestingToSynchronizeWithRemoteListener.forEach { it(remoteDevice) }
+    }
+
+    override fun addNewDeviceRegisteredListener(listener: (remoteDevice: DiscoveredDevice) -> Unit) {
+        newDeviceRegisteredListeners.add(listener)
+    }
+
+    private fun callNewDeviceRegisteredListeners(remoteDevice: DiscoveredDevice) {
+        newDeviceRegisteredListeners.forEach { it(remoteDevice) }
+    }
+
 }
