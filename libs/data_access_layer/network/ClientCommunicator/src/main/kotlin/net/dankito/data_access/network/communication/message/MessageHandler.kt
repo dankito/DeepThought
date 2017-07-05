@@ -13,6 +13,8 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
 
     private var challengeHandler: ChallengeHandler = config.challengeHandler
 
+    private val registrationHandler: IDeviceRegistrationHandler = config.registrationHandler
+
 
     override fun handleReceivedRequest(request: Request<*>, callback: (Response<out Any>) -> Unit) {
         when (request.method) {
@@ -31,8 +33,6 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
 
     private fun handleRequestPermitSynchronizationRequest(request: Request<DeviceInfo>, callback: (Response<RequestPermitSynchronizationResponseBody>) -> Unit) {
         request.body?.let { remoteDeviceInfo ->
-            val registrationHandler = config.registrationHandler
-
             registrationHandler.shouldPermitSynchronizingWithDevice(remoteDeviceInfo) { _, permitsSynchronization ->
                 handleShouldPermitSynchronizingWithDeviceResult(remoteDeviceInfo, permitsSynchronization, registrationHandler, callback)
             }
@@ -80,7 +80,7 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
         getDiscoveredDevices(body)?.let { discoveredDevice ->
             discoveredDevice.synchronizationPort = body.synchronizationPort
 
-            return config.registrationHandler.deviceHasBeenPermittedToSynchronize(discoveredDevice, body.syncInfo)
+            return registrationHandler.deviceHasBeenPermittedToSynchronize(discoveredDevice, body.syncInfo)
         }
 
         return null
