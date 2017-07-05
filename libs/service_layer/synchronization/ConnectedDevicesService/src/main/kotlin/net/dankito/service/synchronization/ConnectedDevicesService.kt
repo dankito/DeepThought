@@ -180,7 +180,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
                 if (body.result === RequestStartSynchronizationResult.ALLOWED) {
                     device.synchronizationPort = body.synchronizationPort
 
-                    syncManager.startSynchronizationWithDevice(device)
+                    startSynchronizingWithDevice(deviceInfoKey, device)
 
                     devicesPendingStartSynchronization.remove(deviceInfoKey)
 
