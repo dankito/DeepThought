@@ -120,4 +120,9 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
         return InetSocketAddress(device.address, device.messagesPort)
     }
 
+
+    override fun addRemoteRequestedToStartSynchronizationListener(listener: (DiscoveredDevice) -> Unit) {
+        messageHandlerConfig.addRemoteRequestedToStartSynchronizationListener(listener)
+    }
+
 }

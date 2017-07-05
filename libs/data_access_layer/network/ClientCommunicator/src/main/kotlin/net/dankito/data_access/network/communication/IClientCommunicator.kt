@@ -21,4 +21,7 @@ interface IClientCommunicator {
 
     fun requestStartSynchronization(remoteDevice: DiscoveredDevice, callback: (Response<RequestStartSynchronizationResponseBody>) -> Unit)
 
+
+    fun addRemoteRequestedToStartSynchronizationListener(listener: (DiscoveredDevice) -> Unit)
+
 }
