@@ -57,7 +57,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
     init {
         registrationHandler.addRequestingToSynchronizeWithRemoteListener { _ -> syncManager.openSynchronizationPort() }
 
-        registrationHandler.addNewDeviceRegisteredListener { remoteDevice -> startSynchronizingWithDevice(remoteDevice) }
+        registrationHandler.addNewDeviceRegisteredListener { remoteDevice -> startSynchronizingWithNewlyRegisteredDevice(remoteDevice) }
     }
 
     override fun start() {
@@ -273,7 +273,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
     }
 
 
-    override fun startSynchronizingWithDevice(device: DiscoveredDevice) {
+    override fun startSynchronizingWithNewlyRegisteredDevice(device: DiscoveredDevice) {
         // TODO: the whole process should actually run in a transaction
         addDeviceToKnownSynchronizedDevicesAndCallListeners(device)
     }
@@ -367,7 +367,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
                 val deviceInfoKey = getDeviceKeyForDevice(device)
                 knownIgnoredDevices.remove(deviceInfoKey)
 
-                startSynchronizingWithDevice(device)
+                startSynchronizingWithNewlyRegisteredDevice(device)
             }
         }
     }

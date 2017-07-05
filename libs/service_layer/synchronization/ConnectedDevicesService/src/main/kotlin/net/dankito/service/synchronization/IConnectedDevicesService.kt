@@ -11,7 +11,7 @@ interface IConnectedDevicesService {
     fun stop()
 
 
-    fun startSynchronizingWithDevice(device: DiscoveredDevice)
+    fun startSynchronizingWithNewlyRegisteredDevice(device: DiscoveredDevice)
 
     fun remoteDeviceStartedSynchronizingWithUs(remoteDevice: Device)
 
