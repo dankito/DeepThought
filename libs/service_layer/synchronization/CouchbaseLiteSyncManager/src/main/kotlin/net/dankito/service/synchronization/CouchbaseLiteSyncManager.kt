@@ -76,7 +76,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
         basicDataSyncListener?.stop()
 
         basicDataSyncListenerThread?.let { basicDataSyncListenerThread ->
-            try { basicDataSyncListenerThread.join(500) } catch(ignored: Exception) { }
+            try { basicDataSyncListenerThread.interrupt() } catch(ignored: Exception) { }
             this.basicDataSyncListenerThread = null
         }
 
@@ -162,7 +162,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
         couchbaseLiteListener = null
 
         listenerThread?.let { listenerThread ->
-            try { listenerThread.join(500) } catch (ignored: Exception) { }
+            try { listenerThread.interrupt() } catch (ignored: Exception) { }
             this.listenerThread = null
         }
 
