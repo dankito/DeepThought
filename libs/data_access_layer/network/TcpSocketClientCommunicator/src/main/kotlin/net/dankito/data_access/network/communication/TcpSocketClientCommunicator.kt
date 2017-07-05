@@ -14,22 +14,16 @@ import java.net.SocketAddress
 class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings, registrationHandler: IDeviceRegistrationHandler, base64Service: IBase64Service,
                                   threadPool: IThreadPool) : IClientCommunicator {
 
-    private lateinit var requestSender: IRequestSender
+    private val requestSender: IRequestSender
 
-    private lateinit var requestReceiver: IRequestReceiver
+    private val requestReceiver: IRequestReceiver
 
-    private lateinit var challengeHandler: ChallengeHandler
+    private val challengeHandler: ChallengeHandler = ChallengeHandler(base64Service)
 
-    private lateinit var messageHandlerConfig: MessageHandlerConfig
+    private val messageHandlerConfig: MessageHandlerConfig
 
 
     init {
-        setupDependencies(networkSettings, registrationHandler, base64Service, threadPool)
-    }
-
-    private fun setupDependencies(networkSettings: INetworkSettings, registrationHandler: IDeviceRegistrationHandler, base64Service: IBase64Service, threadPool: IThreadPool) {
-        this.challengeHandler = ChallengeHandler(base64Service)
-
         messageHandlerConfig = MessageHandlerConfig(networkSettings, challengeHandler, registrationHandler)
 
         val socketHandler = SocketHandler()
