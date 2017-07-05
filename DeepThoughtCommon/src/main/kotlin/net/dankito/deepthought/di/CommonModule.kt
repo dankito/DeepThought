@@ -158,10 +158,9 @@ class CommonModule {
 
     @Provides
     @Singleton
-    fun provideCommunicationManager(connectedDevicesService: ConnectedDevicesService, syncManager: ISyncManager, clientCommunicator: IClientCommunicator,
-                                    registrationHandler: IDeviceRegistrationHandler, networkSettings: INetworkSettings)
+    fun provideCommunicationManager(connectedDevicesService: ConnectedDevicesService, syncManager: ISyncManager, clientCommunicator: IClientCommunicator, networkSettings: INetworkSettings)
             : ICommunicationManager {
-        return CommunicationManager(connectedDevicesService, syncManager, clientCommunicator, registrationHandler, networkSettings)
+        return CommunicationManager(connectedDevicesService, syncManager, clientCommunicator, networkSettings)
     }
 
 }

@@ -21,7 +21,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 // TODO: replace IEntityManager with DevicesService
 class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer, private val clientCommunicator: IClientCommunicator, private val syncManager: ISyncManager,
-                              registrationHandler: IDeviceRegistrationHandler, private val networkSettings: INetworkSettings, private val entityManager: IEntityManager)
+                              private val registrationHandler: IDeviceRegistrationHandler, private val networkSettings: INetworkSettings, private val entityManager: IEntityManager)
     : IConnectedDevicesService {
 
     companion object {
@@ -152,6 +152,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
                 knownIgnoredDevices.put(deviceInfoKey, device)
             } else {
                 unknownDevices.put(deviceInfoKey, device)
+                unknownDeviceConnected(device)
             }
 
             callDiscoveredDeviceConnectedListeners(device, type)
@@ -218,9 +219,26 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
                 knownIgnoredDevices.remove(deviceInfo)
             } else {
                 unknownDevices.remove(deviceInfo)
+                unknownDeviceDisconnected(device)
             }
 
             callDiscoveredDeviceDisconnectedListeners(device)
+        }
+    }
+
+
+    private fun unknownDeviceConnected(device: DiscoveredDevice) {
+        synchronized(networkSettings) {
+            if(networkSettings.didShowNotificationToUserForUnknownDevice(device) == false) {
+                networkSettings.addUnknownDeviceNotificationShownToUser(device)
+                registrationHandler.showUnknownDeviceDiscovered(clientCommunicator, device)
+            }
+        }
+    }
+
+    private fun unknownDeviceDisconnected(device: DiscoveredDevice) {
+        if(networkSettings.didShowNotificationToUserForUnknownDevice(device)) {
+            registrationHandler.unknownDeviceDisconnected(device)
         }
     }
 
