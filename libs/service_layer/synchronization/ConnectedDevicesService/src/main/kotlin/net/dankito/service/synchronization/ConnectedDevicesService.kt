@@ -163,6 +163,8 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
     }
 
     private fun discoveredKnownSynchronizedDevice(device: DiscoveredDevice, deviceInfoKey: String) {
+        syncManager.openSynchronizationPort()
+
         devicesPendingStartSynchronization.put(deviceInfoKey, device)
 
         clientCommunicator.requestStartSynchronization(device) { response ->
@@ -172,9 +174,11 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
 
     private fun handleRequestStartSynchronizationResponse(response: Response<RequestStartSynchronizationResponseBody>, device: DiscoveredDevice, deviceInfoKey: String) {
         if (response.isCouldHandleMessage) {
-            (response.body as? RequestStartSynchronizationResponseBody)?.let { body ->
+            response.body?.let { body ->
                 if (body.result === RequestStartSynchronizationResult.ALLOWED) {
                     device.synchronizationPort = body.synchronizationPort
+
+                    syncManager.startSynchronizationWithDevice(device)
 
                     devicesPendingStartSynchronization.remove(deviceInfoKey)
 
