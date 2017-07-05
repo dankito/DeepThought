@@ -120,7 +120,7 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
                 if (permittedSynchronizedDevice != null) {
                     permittedSynchronizedDevice.synchronizationPort = body.synchronizationPort
 
-                    networkSettings.addConnectedDevicePermittedToSynchronize(permittedSynchronizedDevice)
+                    config.callRemoteRequestedToStartSynchronizationListeners(permittedSynchronizedDevice)
                 }
 
                 callback(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.ALLOWED, networkSettings.synchronizationPort)))
