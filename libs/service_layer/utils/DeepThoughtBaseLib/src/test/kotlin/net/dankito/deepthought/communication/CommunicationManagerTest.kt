@@ -19,9 +19,6 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.service.synchronization.*
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
-import net.dankito.service.synchronization.initialsync.model.DeepThoughtSyncInfo
-import net.dankito.service.synchronization.initialsync.model.SyncInfo
-import net.dankito.service.synchronization.initialsync.model.UserSyncInfo
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.localization.Localization
@@ -438,10 +435,6 @@ class CommunicationManagerTest {
         }
     }
 
-    private fun createSyncInfo(dataManager: DataManager, useCallerDatabaseIds: Boolean, useCallerUserName: Boolean): SyncInfo {
-        return SyncInfo(DeepThoughtSyncInfo(dataManager.deepThought), UserSyncInfo(dataManager.localUser), useCallerDatabaseIds, useCallerUserName)
-    }
-
 
     private fun startCommunicationManagersAndWait(countDownLatch: CountDownLatch) {
         startCommunicationManagersAndWait(countDownLatch, FindRemoteDeviceTimeoutInSeconds)
@@ -494,20 +487,6 @@ class CommunicationManagerTest {
                 discoveredDevicesList.remove(disconnectedDevice)
 
                 latchToCountDownOnDeviceDisconnected?.countDown()
-            }
-
-        }
-    }
-
-    private fun informWhenRemoteDeviceDiscovered(latchToCountDownOnDeviceDiscovered: CountDownLatch? = null, callback: (DiscoveredDevice) -> Unit): DiscoveredDevicesListener {
-        return object : DiscoveredDevicesListener {
-            override fun deviceDiscovered(connectedDevice: DiscoveredDevice, type: DiscoveredDeviceType) {
-                callback(connectedDevice)
-
-                latchToCountDownOnDeviceDiscovered?.countDown()
-            }
-
-            override fun disconnectedFromDevice(disconnectedDevice: DiscoveredDevice) {
             }
 
         }
