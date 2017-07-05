@@ -21,9 +21,9 @@ interface ISyncManager {
     fun syncBasicDataWithDevice(deviceId: String, remoteDeviceAddress: String, basicDataSyncPort: Int, syncDone: (Device) -> Unit)
 
     @Throws(Exception::class)
-    fun startListener(): Int?
+    fun openSynchronizationPort(): Int?
 
-    fun stopListener()
+    fun closeSynchronizationPort()
 
     @Throws(Exception::class)
     fun startSynchronizationWithDevice(device: DiscoveredDevice)

@@ -45,7 +45,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
     override fun stop() {
         stopBasicDataSyncListener()
 
-        stopListener()
+        closeSynchronizationPort()
 
         stopSynchronizingWithAllDevices()
     }
@@ -131,7 +131,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
     }
 
     @Throws(Exception::class)
-    override fun startListener(): Int? {
+    override fun openSynchronizationPort(): Int? {
         if(couchbaseLiteListener != null) { // listener already started
             return synchronizationPort
         }
@@ -153,7 +153,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
         return null
     }
 
-    override fun stopListener() {
+    override fun closeSynchronizationPort() {
         log.info("Stopping Couchbase Lite Listener")
 
         couchbaseLiteListener?.stop()
@@ -175,7 +175,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
             return
         }
 
-        startListener() // as at this stage it may not be started yet but is needed for synchronization
+        openSynchronizationPort() // as at this stage it may not be opened yet but is needed for synchronization
 
         log.info("Starting Replication with Device " + device)
 
@@ -220,7 +220,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
             pushReplications.remove(device)?.stop()
 
             if(pushReplications.isEmpty()) { // no devices connected anymore
-                stopListener()
+                closeSynchronizationPort()
             }
         }
     }
