@@ -130,14 +130,6 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
         }
     }
 
-
-    @Throws(Exception::class)
-    override fun startListenerAndSynchronizationWithDevice(device: DiscoveredDevice) {
-        startListener()
-
-        startSynchronizationWithDevice(device)
-    }
-
     @Throws(Exception::class)
     override fun startListener(): Int? {
         if(couchbaseLiteListener != null) { // listener already started
@@ -182,6 +174,8 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
         if(pullReplications.containsKey(device)) { // synchronization already started with this device
             return
         }
+
+        startListener() // as at this stage it may not be started yet but is needed for synchronization
 
         log.info("Starting Replication with Device " + device)
 
