@@ -321,7 +321,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
         }
         localUser.addSynchronizedDevice(device.device)
 
-        entityManager.updateEntity(localDevice)
+        entityManager.updateEntity(localUser)
     }
 
 
