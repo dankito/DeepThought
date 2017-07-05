@@ -289,7 +289,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
         }
     }
 
-    protected fun addDeviceToKnownSynchronizedDevicesAndCallListeners(device: DiscoveredDevice) {
+    private fun addDeviceToKnownSynchronizedDevicesAndCallListeners(device: DiscoveredDevice) {
         if (addDeviceToKnownSynchronizedDevices(device)) {
             addDeviceToLocalConfigSynchronizedDevices(device)
 
@@ -300,7 +300,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
         }
     }
 
-    protected fun addDeviceToKnownSynchronizedDevices(device: DiscoveredDevice): Boolean {
+    private fun addDeviceToKnownSynchronizedDevices(device: DiscoveredDevice): Boolean {
         val deviceInfoKey = getDeviceKeyForDevice(device)
 
         if(deviceInfoKey != null) {
@@ -319,7 +319,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
         knownSynchronizedDevices.put(deviceInfoKey, device)
     }
 
-    protected fun addDeviceToLocalConfigSynchronizedDevices(device: DiscoveredDevice) {
+    private fun addDeviceToLocalConfigSynchronizedDevices(device: DiscoveredDevice) {
         if (localUser.ignoredDevices.contains(device.device)) {
             localUser.removeIgnoredDevice(device.device)
         }
@@ -377,13 +377,13 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
         return discoveredDevicesListeners.remove(listener)
     }
 
-    protected fun callDiscoveredDeviceConnectedListeners(device: DiscoveredDevice, type: DiscoveredDeviceType) {
+    private fun callDiscoveredDeviceConnectedListeners(device: DiscoveredDevice, type: DiscoveredDeviceType) {
         for (listener in discoveredDevicesListeners) {
             listener.deviceDiscovered(device, type)
         }
     }
 
-    protected fun callDiscoveredDeviceDisconnectedListeners(device: DiscoveredDevice) {
+    private fun callDiscoveredDeviceDisconnectedListeners(device: DiscoveredDevice) {
         for (listener in discoveredDevicesListeners) {
             listener.disconnectedFromDevice(device)
         }
@@ -398,13 +398,13 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
         return knownSynchronizedDevicesListeners.remove(listener)
     }
 
-    protected fun callKnownSynchronizedDeviceConnected(device: DiscoveredDevice) {
+    private fun callKnownSynchronizedDeviceConnected(device: DiscoveredDevice) {
         for (listener in knownSynchronizedDevicesListeners) {
             listener.knownSynchronizedDeviceConnected(device)
         }
     }
 
-    protected fun callKnownSynchronizedDeviceDisconnected(device: DiscoveredDevice) {
+    private fun callKnownSynchronizedDeviceDisconnected(device: DiscoveredDevice) {
         for (listener in knownSynchronizedDevicesListeners) {
             listener.knownSynchronizedDeviceDisconnected(device)
         }
