@@ -30,10 +30,9 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
     }
 
     fun syncLocalDatabaseIdsWithRemoteOnes(localDeepThought: DeepThought, localUser: User, remoteDeepThought: DeepThoughtSyncInfo, remoteUser: UserSyncInfo) {
-        entityManager.deleteEntity(localDeepThought)
-        entityManager.deleteEntity(localUser)
+        // do not sync DeepThought as otherwise e.g. localDevice gets overwritten
 
-        localDeepThought.id = remoteDeepThought.id
+        entityManager.deleteEntity(localUser)
 
         localUser.id = remoteUser.id
 
@@ -41,10 +40,12 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
 //        persistSynchronizedDevices(entityManager, user, remoteUser)
 
         entityManager.persistEntity(localUser)
-        entityManager.persistEntity(localDeepThought)
 
 
         updateExtensibleEnumerations(localDeepThought, remoteDeepThought, entityManager)
+
+
+        entityManager.updateEntity(localDeepThought)
     }
 
     private fun persistSynchronizedDevices(entityManager: IEntityManager, loggedOnUser: User, remoteUser: UserSyncInfo) {
@@ -57,8 +58,6 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
         updateExtensibleEnumeration(localDeepThought.noteTypes, remoteDeepThought.noteTypeIds, entityManager)
 
         updateExtensibleEnumeration(localDeepThought.fileTypes, remoteDeepThought.fileTypeIds, entityManager)
-
-        entityManager.updateEntity(localDeepThought)
     }
 
     private fun <T: ExtensibleEnumeration> updateExtensibleEnumeration(localExtensibleEnumerationEntities: MutableCollection<T>,
