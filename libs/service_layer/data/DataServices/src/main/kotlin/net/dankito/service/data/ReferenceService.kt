@@ -3,13 +3,13 @@ package net.dankito.service.data
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.EntityChanged
 import net.dankito.service.data.messages.ReferenceChanged
-import net.dankito.service.eventbus.IEventBus
 
 
-class ReferenceService(dataManager: DataManager, eventBus: IEventBus) : EntityServiceBase<Reference>(dataManager, eventBus) {
+class ReferenceService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : EntityServiceBase<Reference>(dataManager, entityChangedNotifier) {
 
     override fun getEntityClass(): Class<Reference> {
         return Reference::class.java

@@ -12,6 +12,7 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.service.data.*
+import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.localization.Localization
@@ -34,35 +35,41 @@ class CommonDataModule {
         return DataManager(entityManager, configuration, dataInitializer, platformConfiguration)
     }
 
+    @Provides
+    @Singleton
+    fun provideEntityChangedNotifier(eventBus: IEventBus) : EntityChangedNotifier {
+        return EntityChangedNotifier(eventBus)
+    }
+
 
     @Provides
     @Singleton
-    fun provideEntryService(dataManager: DataManager, eventBus: IEventBus) : EntryService {
-        return EntryService(dataManager, eventBus)
+    fun provideEntryService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : EntryService {
+        return EntryService(dataManager, entityChangedNotifier)
     }
 
     @Provides
     @Singleton
-    fun provideReferenceService(dataManager: DataManager, eventBus: IEventBus) : ReferenceService {
-        return ReferenceService(dataManager, eventBus)
+    fun provideReferenceService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : ReferenceService {
+        return ReferenceService(dataManager, entityChangedNotifier)
     }
 
     @Provides
     @Singleton
-    fun provideTagService(dataManager: DataManager, eventBus: IEventBus) : TagService {
-        return TagService(dataManager, eventBus)
+    fun provideTagService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : TagService {
+        return TagService(dataManager, entityChangedNotifier)
     }
 
     @Provides
     @Singleton
-    fun provideArticleSummaryExtractorConfigService(dataManager: DataManager, eventBus: IEventBus) : ArticleSummaryExtractorConfigService {
-        return ArticleSummaryExtractorConfigService(dataManager, eventBus)
+    fun provideArticleSummaryExtractorConfigService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : ArticleSummaryExtractorConfigService {
+        return ArticleSummaryExtractorConfigService(dataManager, entityChangedNotifier)
     }
 
     @Provides
     @Singleton
-    fun provideReadLaterArticleService(dataManager: DataManager, eventBus: IEventBus) : ReadLaterArticleService {
-        return ReadLaterArticleService(dataManager, eventBus)
+    fun provideReadLaterArticleService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : ReadLaterArticleService {
+        return ReadLaterArticleService(dataManager, entityChangedNotifier)
     }
 
 

@@ -2,14 +2,13 @@ package net.dankito.service.data
 
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.service.data.DataManager
-import net.dankito.service.data.messages.EntitiesOfTypeChanged
+import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.EntityChanged
-import net.dankito.service.eventbus.IEventBus
 import kotlin.concurrent.thread
 
 
-abstract class EntityServiceBase<T : BaseEntity>(val dataManager: DataManager, val eventBus: IEventBus) {
+abstract class EntityServiceBase<T : BaseEntity>(val dataManager: DataManager, val entityChangedNotifier: EntityChangedNotifier) {
 
     val entityManager = dataManager.entityManager
 
@@ -63,9 +62,7 @@ abstract class EntityServiceBase<T : BaseEntity>(val dataManager: DataManager, v
 
 
     private fun callEntitiesUpdatedListeners(entity: T, changeType: EntityChangeType) {
-        eventBus.post(createEntityChangedMessage(entity, changeType)) // has to be called synchronized so that LuceneSearchEngine can update its index before any other class  accesses updated index
-
-        eventBus.postAsync(EntitiesOfTypeChanged(getEntityClass()))
+        entityChangedNotifier.notifyListenersOfEntityChange(entity, changeType)
     }
 
     abstract fun createEntityChangedMessage(entity: T, changeType: EntityChangeType): EntityChanged<out BaseEntity>
