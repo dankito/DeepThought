@@ -99,10 +99,10 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
 
     protected fun remoteAllowedSynchronization(remoteDevice: DiscoveredDevice, body: RespondToSynchronizationPermittingChallengeResponseBody) {
         body.syncInfo?.let { syncInfo ->
-            if(syncInfo.useCallerUserName ?: false) {
+            if(syncInfo.useCallerUserName == false) {
                 initialSyncManager.syncUserInformationWithRemoteOnes(dataManager.localUser, syncInfo.user)
             }
-            if(syncInfo.useCallerDatabaseIds ?: false) { // TODO: something is wrong here, see deviceHasBeenPermittedToSynchronize()
+            if(syncInfo.useCallerDatabaseIds == false) {
                 initialSyncManager.syncLocalDatabaseIdsWithRemoteOnes(dataManager.deepThought, syncInfo)
             }
         }
@@ -129,7 +129,7 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
             if(useCallerUserName) {
                 initialSyncManager.syncUserInformationWithRemoteOnes(localUser, remoteSyncInfo.user)
             }
-            if(useCallerDatabaseIds == false) { // TODO: something is wrong here, see remoteAllowedSynchronization()
+            if(useCallerDatabaseIds) {
                 initialSyncManager.syncLocalDatabaseIdsWithRemoteOnes(dataManager.deepThought, remoteSyncInfo)
             }
 
