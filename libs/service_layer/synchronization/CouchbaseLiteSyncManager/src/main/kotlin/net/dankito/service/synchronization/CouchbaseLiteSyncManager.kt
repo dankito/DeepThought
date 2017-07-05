@@ -87,7 +87,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
     override fun syncBasicDataWithDevice(deviceId: String, remoteDeviceAddress: String, basicDataSyncPort: Int, syncDone: (Device) -> Unit) {
         log.info("Starting basic data synchronization with device $deviceId")
         var didSynchronizationStop = false
-        var receivedRemoteDevice: Device? = null
+        var receivedRemoteDevice: Device? = entityManager.getEntityById(Device::class.java, deviceId) // as remote may already push his data to our side but we just haven't pushed our data to remote
         var dataBaseChangeListener: Database.ChangeListener? = null
 
         val push = database.createPushReplication(createSyncUrl(remoteDeviceAddress, basicDataSyncPort))
