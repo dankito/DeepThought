@@ -102,9 +102,8 @@ open class UdpDevicesDiscoverer(protected var threadPool: IThreadPool) : IDevice
             for (broadcastAddress in ArrayList(broadcastThreads.keys)) {
                 broadcastThreads[broadcastAddress]?.let { broadcastThread ->
                     try {
-                        broadcastThread.join(100)
-                    } catch (ignored: Exception) {
-                    }
+                        broadcastThread.interrupt()
+                    } catch (ignored: Exception) { }
 
                     broadcastThreads.remove(broadcastAddress)
                     log.info("Stopped broadcasting for Address " + broadcastAddress)
@@ -127,10 +126,7 @@ open class UdpDevicesDiscoverer(protected var threadPool: IThreadPool) : IDevice
     }
 
     protected fun stopListener() {
-        try {
-            listenerThread?.join(100)
-        } catch (ignored: Exception) { }
-
+        try { listenerThread?.interrupt() } catch (ignored: Exception) { }
         listenerThread = null
 
         if (isListenerSocketOpened) {
