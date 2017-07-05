@@ -34,6 +34,8 @@ class CommunicationManager(private val connectedDevicesService: IConnectedDevice
         clientCommunicator.stop()
 
         syncManager.stop()
+
+        connectedDevicesService.removeDiscoveredDevicesListener(discoveredDevicesListener)
     }
 
 
