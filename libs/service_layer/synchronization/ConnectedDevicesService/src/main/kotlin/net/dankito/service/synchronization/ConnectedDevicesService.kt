@@ -323,6 +323,8 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
 
     private fun startSynchronizingWithDevice(device: DiscoveredDevice) {
         startSynchronizingWithDevice(getDeviceKeyForDevice(device), device)
+
+        callKnownSynchronizedDeviceConnected(device)
     }
 
     private fun startSynchronizingWithDevice(deviceInfoKey: String, device: DiscoveredDevice) {
