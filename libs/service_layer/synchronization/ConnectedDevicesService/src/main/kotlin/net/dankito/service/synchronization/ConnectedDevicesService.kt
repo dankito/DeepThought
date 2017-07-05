@@ -275,10 +275,6 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
 
     override fun startSynchronizingWithDevice(device: DiscoveredDevice) {
         // TODO: the whole process should actually run in a transaction
-        syncManager.startSynchronizationWithDevice(device)
-
-        networkSettings.addConnectedDevicePermittedToSynchronize(device)
-
         addDeviceToKnownSynchronizedDevicesAndCallListeners(device)
     }
 
@@ -320,6 +316,10 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
     }
 
     private fun addDeviceToKnownSynchronizedDevices(deviceInfoKey: String, device: DiscoveredDevice) {
+        syncManager.startSynchronizationWithDevice(device)
+
+        networkSettings.addConnectedDevicePermittedToSynchronize(device)
+
         knownSynchronizedDevices.put(deviceInfoKey, device)
     }
 
