@@ -277,21 +277,9 @@ class CommunicationManagerTest {
 
         val countDownLatch = CountDownLatch(1)
 
-        whenever(localDialogService.askForTextInput(any<CharSequence>(), anyOrNull(), anyOrNull(), any())).thenAnswer { invocation ->
-            val callback = invocation.arguments[3] as (Boolean, String?) -> Unit
-            callback(true, remoteCorrectChallengeResponse.get())
-        }
+        mockDialogServiceTextInput(localDialogService, remoteCorrectChallengeResponse)
 
-        localConnectedDevicesService.addKnownSynchronizedDevicesListener(object : KnownSynchronizedDevicesListener {
-            override fun knownSynchronizedDeviceConnected(connectedDevice: DiscoveredDevice) {
-                println("Counting down ...")
-                countDownLatch.countDown()
-            }
-
-            override fun knownSynchronizedDeviceDisconnected(disconnectedDevice: DiscoveredDevice) {
-            }
-
-        })
+        waitTillKnownSynchronizedDeviceConnected(localConnectedDevicesService, countDownLatch)
 
         startCommunicationManagersAndWait(countDownLatch)
 
@@ -325,16 +313,7 @@ class CommunicationManagerTest {
             }
         }
 
-        localConnectedDevicesService.addKnownSynchronizedDevicesListener(object : KnownSynchronizedDevicesListener {
-            override fun knownSynchronizedDeviceConnected(connectedDevice: DiscoveredDevice) {
-                println("Counting down ...")
-                countDownLatch.countDown()
-            }
-
-            override fun knownSynchronizedDeviceDisconnected(disconnectedDevice: DiscoveredDevice) {
-            }
-
-        })
+        waitTillKnownSynchronizedDeviceConnected(localConnectedDevicesService, countDownLatch)
 
         startCommunicationManagersAndWait(countDownLatch)
 
@@ -379,21 +358,9 @@ class CommunicationManagerTest {
 
         val countDownLatch = CountDownLatch(1)
 
-        whenever(localDialogService.askForTextInput(any<CharSequence>(), anyOrNull(), anyOrNull(), any())).thenAnswer { invocation ->
-            val callback = invocation.arguments[3] as (Boolean, String?) -> Unit
-            callback(true, remoteCorrectChallengeResponse.get())
-        }
+        mockDialogServiceTextInput(localDialogService, remoteCorrectChallengeResponse)
 
-        localConnectedDevicesService.addKnownSynchronizedDevicesListener(object : KnownSynchronizedDevicesListener {
-            override fun knownSynchronizedDeviceConnected(connectedDevice: DiscoveredDevice) {
-                println("Counting down ...")
-                countDownLatch.countDown()
-            }
-
-            override fun knownSynchronizedDeviceDisconnected(disconnectedDevice: DiscoveredDevice) {
-            }
-
-        })
+        waitTillKnownSynchronizedDeviceConnected(localConnectedDevicesService, countDownLatch)
 
 
         startCommunicationManagersAndWait(countDownLatch)
@@ -450,6 +417,26 @@ class CommunicationManagerTest {
         localCommunicationManager.startAsync()
 
         remoteCommunicationManager.startAsync()
+    }
+
+
+    private fun waitTillKnownSynchronizedDeviceConnected(connectedDevicesService: IConnectedDevicesService, countDownLatch: CountDownLatch) {
+        connectedDevicesService.addKnownSynchronizedDevicesListener(object : KnownSynchronizedDevicesListener {
+            override fun knownSynchronizedDeviceConnected(connectedDevice: DiscoveredDevice) {
+                countDownLatch.countDown()
+            }
+
+            override fun knownSynchronizedDeviceDisconnected(disconnectedDevice: DiscoveredDevice) {
+            }
+
+        })
+    }
+
+    private fun mockDialogServiceTextInput(dialogService: IDialogService, textToReturn: AtomicReference<String>) {
+        whenever(dialogService.askForTextInput(any<CharSequence>(), anyOrNull(), anyOrNull(), any())).thenAnswer { invocation ->
+            val callback = invocation.arguments[3] as (Boolean, String?) -> Unit
+            callback(true, textToReturn.get())
+        }
     }
 
 
