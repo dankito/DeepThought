@@ -291,7 +291,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
 
     private fun addDeviceToKnownSynchronizedDevicesAndCallListeners(device: DiscoveredDevice) {
         if (addDeviceToKnownSynchronizedDevices(device)) {
-            addDeviceToLocalConfigSynchronizedDevices(device)
+            addDeviceToSynchronizedDevices(device)
 
             callDiscoveredDeviceDisconnectedListeners(device)
             callDiscoveredDeviceConnectedListeners(device, DiscoveredDeviceType.KNOWN_SYNCHRONIZED_DEVICE)
@@ -319,7 +319,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
         knownSynchronizedDevices.put(deviceInfoKey, device)
     }
 
-    private fun addDeviceToLocalConfigSynchronizedDevices(device: DiscoveredDevice) {
+    private fun addDeviceToSynchronizedDevices(device: DiscoveredDevice) {
         if (localUser.ignoredDevices.contains(device.device)) {
             localUser.removeIgnoredDevice(device.device)
         }
