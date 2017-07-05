@@ -30,7 +30,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
     private val database = entityManager.database
     private val manager = entityManager.manager
 
-    private lateinit var basicDataSyncListener: LiteListener
+    private var basicDataSyncListener: LiteListener? = null
     private var basicDataSyncPort: Int = PortNotSet
     private var basicDataSyncListenerThread: Thread? = null
 
@@ -58,7 +58,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
         log.info("Starting basic data Couchbase Lite sync listener ...")
 
         basicDataSyncListener = LiteListener(manager, desiredPort, allowedCredentials)
-        basicDataSyncPort = basicDataSyncListener.listenPort
+        basicDataSyncPort = basicDataSyncListener?.listenPort ?: PortNotSet
 
 
         networkSettings.basicDataSynchronizationPort = basicDataSyncPort
@@ -73,7 +73,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
     }
 
     private fun stopBasicDataSyncListener() {
-        basicDataSyncListener.stop()
+        basicDataSyncListener?.stop()
 
         basicDataSyncListenerThread?.let { basicDataSyncListenerThread ->
             try { basicDataSyncListenerThread.join(500) } catch(ignored: Exception) { }
