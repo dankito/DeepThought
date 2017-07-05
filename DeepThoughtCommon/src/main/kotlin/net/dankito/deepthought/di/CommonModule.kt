@@ -151,9 +151,9 @@ class CommonModule {
 
     @Provides
     @Singleton
-    fun provideConnectedDevicesService(devicesDiscoverer: IDevicesDiscoverer, clientCommunicator: IClientCommunicator, syncManager: ISyncManager,
+    fun provideConnectedDevicesService(devicesDiscoverer: IDevicesDiscoverer, clientCommunicator: IClientCommunicator, syncManager: ISyncManager, registrationHandler: IDeviceRegistrationHandler,
                                        networkSettings: INetworkSettings, entityManager: IEntityManager) : ConnectedDevicesService {
-        return ConnectedDevicesService(devicesDiscoverer, clientCommunicator, syncManager, networkSettings, entityManager)
+        return ConnectedDevicesService(devicesDiscoverer, clientCommunicator, syncManager, registrationHandler, networkSettings, entityManager)
     }
 
     @Provides

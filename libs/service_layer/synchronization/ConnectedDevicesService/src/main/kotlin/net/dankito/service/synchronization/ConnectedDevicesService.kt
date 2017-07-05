@@ -2,6 +2,7 @@ package net.dankito.service.synchronization
 
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.network.communication.IClientCommunicator
+import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.communication.message.RequestStartSynchronizationResponseBody
 import net.dankito.data_access.network.communication.message.RequestStartSynchronizationResult
 import net.dankito.data_access.network.communication.message.Response
@@ -20,7 +21,8 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 // TODO: replace IEntityManager with DevicesService
 class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer, private val clientCommunicator: IClientCommunicator, private val syncManager: ISyncManager,
-                              private val networkSettings: INetworkSettings, private val entityManager: IEntityManager) : IConnectedDevicesService {
+                              registrationHandler: IDeviceRegistrationHandler, private val networkSettings: INetworkSettings, private val entityManager: IEntityManager)
+    : IConnectedDevicesService {
 
     companion object {
         const val DEVICE_ID_AND_MESSAGES_PORT_SEPARATOR = "|"
@@ -51,6 +53,12 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
 
     private var knownSynchronizedDevicesListeners: MutableList<KnownSynchronizedDevicesListener> = CopyOnWriteArrayList()
 
+
+    init {
+        registrationHandler.addRequestingToSynchronizeWithRemoteListener { _ -> syncManager.openSynchronizationPort() }
+
+        registrationHandler.addNewDeviceRegisteredListener { remoteDevice -> startSynchronizingWithDevice(remoteDevice) }
+    }
 
     override fun start() {
         val localDeviceInfoKey = getDeviceInfoKey(networkSettings)
@@ -263,6 +271,8 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
 
     override fun startSynchronizingWithDevice(device: DiscoveredDevice) {
         // TODO: the whole process should actually run in a transaction
+        syncManager.startSynchronizationWithDevice(device)
+
         networkSettings.addConnectedDevicePermittedToSynchronize(device)
 
         addDeviceToKnownSynchronizedDevicesAndCallListeners(device)
