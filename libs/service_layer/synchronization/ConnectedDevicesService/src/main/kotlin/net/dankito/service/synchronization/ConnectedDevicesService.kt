@@ -352,7 +352,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
         knownSynchronizedDevices.remove(deviceInfoKey)
         unknownDevices.put(deviceInfoKey, device)
 
-        entityManager.updateEntity(localDevice)
+        entityManager.updateEntity(localUser)
 
         callKnownSynchronizedDeviceDisconnected(device)
 
@@ -362,7 +362,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
 
     override fun addDeviceToIgnoreList(device: DiscoveredDevice) {
         if (localUser.addIgnoredDevice(device.device)) {
-            if (entityManager.updateEntity(localDevice)) {
+            if (entityManager.updateEntity(localUser)) {
                 val deviceInfoKey = getDeviceKeyForDevice(device)
                 unknownDevices.remove(deviceInfoKey)
                 knownIgnoredDevices.put(deviceInfoKey, device)
@@ -375,7 +375,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
 
     override fun startSynchronizingWithIgnoredDevice(device: DiscoveredDevice) {
         if (localUser.removeIgnoredDevice(device.device)) {
-            if (entityManager.updateEntity(localDevice)) {
+            if (entityManager.updateEntity(localUser)) {
                 val deviceInfoKey = getDeviceKeyForDevice(device)
                 knownIgnoredDevices.remove(deviceInfoKey)
 
