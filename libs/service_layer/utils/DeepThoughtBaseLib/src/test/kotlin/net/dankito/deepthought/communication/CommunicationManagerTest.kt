@@ -17,7 +17,10 @@ import net.dankito.deepthought.model.enums.ExtensibleEnumeration
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
+import net.dankito.service.data.event.EntityChangedNotifier
+import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.service.synchronization.*
+import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.ThreadPool
@@ -100,6 +103,10 @@ class CommunicationManagerTest {
 
     private lateinit var localClientCommunicator: IClientCommunicator
 
+    private val localEntityChangedNotifier = EntityChangedNotifier(MBassadorEventBus())
+
+    private lateinit var localSynchronizedChangesHandler: SynchronizedChangesHandler
+
     private lateinit var localSyncManager: CouchbaseLiteSyncManager
 
     private lateinit var localConnectedDevicesService: IConnectedDevicesService
@@ -149,6 +156,10 @@ class CommunicationManagerTest {
 
     private lateinit var remoteClientCommunicator: IClientCommunicator
 
+    private val remoteEntityChangedNotifier = EntityChangedNotifier(MBassadorEventBus())
+
+    private lateinit var remoteSynchronizedChangesHandler: SynchronizedChangesHandler
+
     private lateinit var remoteSyncManager: CouchbaseLiteSyncManager
 
     private lateinit var remoteConnectedDevicesService: IConnectedDevicesService
@@ -184,7 +195,9 @@ class CommunicationManagerTest {
             localDevice = localDataManager.localDevice
             localNetworkSettings = NetworkSettings(localDevice, localDataManager.localUser)
 
-            localSyncManager = CouchbaseLiteSyncManager(localEntityManager as CouchbaseLiteEntityManagerBase, localNetworkSettings, localThreadPool)
+            localSynchronizedChangesHandler = SynchronizedChangesHandler(localEntityManager, localEntityChangedNotifier)
+
+            localSyncManager = CouchbaseLiteSyncManager(localEntityManager as CouchbaseLiteEntityManagerBase, localSynchronizedChangesHandler, localNetworkSettings)
 
             localRegistrationHandler = createDeviceRegistrationHandler(localRegisterAtRemote, localPermitRemoteToSynchronize, localCorrectChallengeResponse, localDataManager,
                     localInitialSyncManager, localDialogService, localization)
@@ -217,7 +230,9 @@ class CommunicationManagerTest {
             remoteDevice = remoteDataManager.localDevice
             remoteNetworkSettings = NetworkSettings(remoteDevice, remoteDataManager.localUser)
 
-            remoteSyncManager = CouchbaseLiteSyncManager(remoteEntityManager as CouchbaseLiteEntityManagerBase, remoteNetworkSettings, remoteThreadPool)
+            remoteSynchronizedChangesHandler = SynchronizedChangesHandler(remoteEntityManager, remoteEntityChangedNotifier)
+
+            remoteSyncManager = CouchbaseLiteSyncManager(remoteEntityManager as CouchbaseLiteEntityManagerBase, remoteSynchronizedChangesHandler, remoteNetworkSettings)
 
             val registrationHandlerInstance = createDeviceRegistrationHandler(remoteRegisterAtRemote, remotePermitRemoteToSynchronize, remoteCorrectChallengeResponse, remoteDataManager,
                     remoteInitialSyncManager, remoteDialogService, localization)
