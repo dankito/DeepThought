@@ -79,9 +79,9 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
                     RespondToSynchronizationPermittingChallengeRequestBody(nonce, challengeResponse, syncInfo, networkSettings.synchronizationPort))
 
             requestSender.sendRequestAndReceiveResponseAsync(getSocketAddressFromDevice(remoteDevice), request) { response: Response<RespondToSynchronizationPermittingChallengeResponseBody> ->
-                        handleRespondToSynchronizationPermittingChallengeResponse(remoteDevice, response)
+                handleRespondToSynchronizationPermittingChallengeResponse(remoteDevice, response)
 
-                        callback(response)
+                callback(response)
             }
         }
     }
@@ -94,7 +94,7 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
                 networkSettings.removeDevicesAskedForPermittingSynchronization(remoteDevice)
             }
 
-            if(result === RespondToSynchronizationPermittingChallengeResult.ALLOWED) {
+            if(result == RespondToSynchronizationPermittingChallengeResult.ALLOWED) {
                 remoteDevice.synchronizationPort = body.synchronizationPort
             }
         }
