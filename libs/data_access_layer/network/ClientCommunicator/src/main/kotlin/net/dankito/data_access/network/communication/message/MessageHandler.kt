@@ -7,11 +7,11 @@ import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.service.synchronization.initialsync.model.SyncInfo
 
 
-class MessageHandler(protected var config: MessageHandlerConfig) : IMessageHandler {
+class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler {
 
-    protected var networkSettings: INetworkSettings
+    private var networkSettings: INetworkSettings
 
-    protected var challengeHandler: ChallengeHandler
+    private var challengeHandler: ChallengeHandler
 
 
     init {
