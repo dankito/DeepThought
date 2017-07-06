@@ -119,15 +119,16 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
     @Throws(IllegalStateException::class)
     fun shouldUseLocalDatabaseIds(localDeepThought: DeepThought, localUser: User,
                                   remoteDeepThought: DeepThoughtSyncInfo, remoteUser: UserSyncInfo): Boolean {
-        val countSynchronizingDevices = localUser.synchronizedDevices.size
+        val localCountSynchronizingDevices = localUser.synchronizedDevices.size
+        val remoteCountSynchronizingDevices = remoteUser.synchronizedDevicesIds.size;
 
-        if (countSynchronizingDevices > 0 && remoteUser.countSynchronizedDevices == 0) {
+        if(localCountSynchronizingDevices > 0 && remoteCountSynchronizingDevices == 0) {
             return true
         }
-        if (countSynchronizingDevices == 0 && remoteUser.countSynchronizedDevices > 0) {
+        if(localCountSynchronizingDevices == 0 && remoteCountSynchronizingDevices > 0) {
             return false
         }
-        if (countSynchronizingDevices > 0 && remoteUser.countSynchronizedDevices > 0) {
+        if(localCountSynchronizingDevices > 0 && remoteCountSynchronizingDevices > 0) {
             if (isTheSameUser(localUser, remoteUser, localDeepThought, remoteDeepThought) == false) {
                 // TODO: now we're in a Trap, this has to be urgently resolved:
                 // Both devices have already synchronized their Database Ids with other Devices, so no matter which one we choose,
