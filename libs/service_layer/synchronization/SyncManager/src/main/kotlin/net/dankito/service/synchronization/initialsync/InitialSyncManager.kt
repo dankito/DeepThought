@@ -3,6 +3,7 @@ package net.dankito.service.synchronization.initialsync
 
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.deepthought.model.DeepThought
+import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.User
 import net.dankito.deepthought.model.enums.ExtensibleEnumeration
 import net.dankito.service.synchronization.initialsync.model.DeepThoughtSyncInfo
@@ -20,6 +21,18 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
         localUser.firstName = remoteUser.firstName
         localUser.lastName = remoteUser.lastName
         // TODO: be aware password gets overwritten on one side during process
+
+        entityManager.updateEntity(localUser)
+    }
+
+
+    fun addRemoteDeviceToSynchronizedDevices(localDeepThought: DeepThought, remoteDeepThought: DeepThoughtSyncInfo) {
+        addRemoteDeviceToSynchronizedDevices(localDeepThought, localDeepThought.localUser, remoteDeepThought)
+    }
+
+    fun addRemoteDeviceToSynchronizedDevices(localDeepThought: DeepThought, localUser: User, remoteDeepThought: DeepThoughtSyncInfo) {
+        addSynchronizedDevice(localUser, remoteDeepThought.localDeviceId)
+        addSynchronizedDevice(localUser, localDeepThought.localDevice.id!!) // fix: so that remote also sees us as synchronized device
 
         entityManager.updateEntity(localUser)
     }
@@ -50,6 +63,14 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
 
     private fun persistSynchronizedDevices(entityManager: IEntityManager, loggedOnUser: User, remoteUser: UserSyncInfo) {
         // TODO
+    }
+
+    private fun addSynchronizedDevice(user: User, deviceId: String) {
+        entityManager.getEntityById(Device::class.java, deviceId)?.let { device ->
+            if(user.containsSynchronizedDevice(device) == false) {
+                user.addSynchronizedDevice(device)
+            }
+        }
     }
 
     private fun updateExtensibleEnumerations(localDeepThought: DeepThought, remoteDeepThought: DeepThoughtSyncInfo, entityManager: IEntityManager) {
