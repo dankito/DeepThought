@@ -53,8 +53,12 @@ data class User(
 
 
 
+    fun containsSynchronizedDevice(device: Device): Boolean {
+        return synchronizedDevices.contains(device)
+    }
+
     fun addSynchronizedDevice(device: Device): Boolean {
-        if (synchronizedDevices.contains(device) == false) {
+        if(containsSynchronizedDevice(device) == false) {
             return (synchronizedDevices as? MutableList<Device>)?.add(device) ?: false
         }
 
@@ -62,7 +66,7 @@ data class User(
     }
 
     fun removeSynchronizedDevice(device: Device): Boolean {
-        if (synchronizedDevices.contains(device)) {
+        if(containsSynchronizedDevice(device)) {
             return (synchronizedDevices as? MutableList<Device>)?.remove(device) ?: false
         }
 
@@ -70,8 +74,12 @@ data class User(
     }
 
 
+    fun containsIgnoredDevice(device: Device): Boolean {
+        return ignoredDevices.contains(device)
+    }
+
     fun addIgnoredDevice(device: Device): Boolean {
-        if (ignoredDevices.contains(device) == false) {
+        if(containsIgnoredDevice(device) == false) {
             return (ignoredDevices as? MutableList<Device>)?.add(device) ?: false
         }
 
@@ -79,7 +87,7 @@ data class User(
     }
 
     fun removeIgnoredDevice(device: Device): Boolean {
-        if (ignoredDevices.contains(device)) {
+        if(containsIgnoredDevice(device)) {
             return (ignoredDevices as? MutableList<Device>)?.remove(device) ?: false
         }
 
