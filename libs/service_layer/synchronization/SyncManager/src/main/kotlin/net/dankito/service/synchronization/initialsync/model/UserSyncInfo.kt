@@ -3,7 +3,7 @@ package net.dankito.service.synchronization.initialsync.model
 import net.dankito.deepthought.model.User
 
 
-open class UserSyncInfo(val id: String, val userName: String, val universallyUniqueId: String, val firstName: String, val lastName: String,
+data class UserSyncInfo(val id: String, val userName: String, val universallyUniqueId: String, val firstName: String, val lastName: String,
                         val synchronizedDevicesIds: List<String>, val ignoredDevicesIds: List<String>) {
 
     internal constructor() : this("", "", "", "", "", listOf(), listOf()) // for Jackson
