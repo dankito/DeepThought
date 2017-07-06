@@ -13,10 +13,16 @@ import net.dankito.service.synchronization.initialsync.model.SyncInfo
 import net.dankito.service.synchronization.initialsync.model.UserSyncInfo
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IDialogService
+import org.slf4j.LoggerFactory
 
 
 abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataManager, protected val initialSyncManager: InitialSyncManager, protected val dialogService: IDialogService,
                                              protected val localization: Localization) : IDeviceRegistrationHandler {
+
+    companion object {
+        private val log = LoggerFactory.getLogger(DeviceRegistrationHandlerBase::class.java)
+    }
+
 
     private val requestingToSynchronizeWithRemoteListener = HashSet<(DiscoveredDevice) -> Unit>()
 
@@ -98,6 +104,8 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
     }
 
     protected fun remoteAllowedSynchronization(remoteDevice: DiscoveredDevice, body: RespondToSynchronizationPermittingChallengeResponseBody) {
+        log.info("Remote allowed synchronization: $remoteDevice")
+
         body.syncInfo?.let { syncInfo ->
             // this is kind a dirty hack, newly synchronized device has to be added on both sides as otherwise it may gets overwritten. Don't know how to solve this otherwise
             initialSyncManager.addRemoteDeviceToSynchronizedDevices(dataManager.deepThought, syncInfo)
@@ -123,6 +131,8 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
 
 
     override fun deviceHasBeenPermittedToSynchronize(device: DiscoveredDevice, remoteSyncInfo: SyncInfo): SyncInfo? {
+        log.info("Permitted device to synchronize: $device")
+
         try {
             val localUser = dataManager.deepThought.localUser
 
@@ -143,6 +153,7 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
 
             return createSyncInfo(useCallerDatabaseIds, useCallerUserName)
         } catch(e: Exception) {
+            log.error("Could do initial synchronization with device $device", e)
             dialogService.showErrorMessage("Could not initialize synchronization with device ${device.device.getDisplayText()}", exception = e) // TODO: translate
         }
 
