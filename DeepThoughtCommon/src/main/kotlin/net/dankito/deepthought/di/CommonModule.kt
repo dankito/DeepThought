@@ -149,7 +149,7 @@ class CommonModule {
     @Provides
     @Singleton
     fun provideSynchronizedChangesHandler(entityManager: IEntityManager, changesNotifier: EntityChangedNotifier) : SynchronizedChangesHandler {
-        return SynchronizedChangesHandler(entityManager, changesNotifier)
+        return SynchronizedChangesHandler(entityManager as CouchbaseLiteEntityManagerBase, changesNotifier)
     }
 
     @Provides

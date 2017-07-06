@@ -3,7 +3,7 @@ package net.dankito.service.synchronization.changeshandler
 import com.couchbase.lite.Database
 import com.couchbase.lite.DocumentChange
 import com.couchbase.lite.SavedRevision
-import net.dankito.data_access.database.IEntityManager
+import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.jpa.couchbaselite.Dao
 import net.dankito.service.data.event.EntityChangedNotifier
@@ -13,13 +13,16 @@ import net.dankito.utils.ConsumerListener
 import org.slf4j.LoggerFactory
 
 
-class SynchronizedChangesHandler(private val entityManager: IEntityManager, private val changeNotifier: EntityChangedNotifier) {
+class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityManagerBase, private val changeNotifier: EntityChangedNotifier) {
 
     companion object {
         private val MILLIS_TO_WAIT_BEFORE_PROCESSING_SYNCHRONIZED_ENTITY = 1500
 
         private val log = LoggerFactory.getLogger(SynchronizedChangesHandler::class.java)
     }
+
+
+    private val dataMerger = SynchronizedDataMerger(entityManager)
 
 
     private var synchronizationChangesHandler = object : ConsumerListener<Database.ChangeEvent> {
@@ -45,12 +48,15 @@ class SynchronizedChangesHandler(private val entityManager: IEntityManager, priv
     private fun handleSynchronizedChanges(changes: List<DocumentChange>) {
         for (change in changes) {
             val entityType = getEntityTypeFromDocumentChange(change)
+            val isBaseEntity = entityType != null && BaseEntity::class.java.isAssignableFrom(entityType)
 
-            if(entityType != null) {
-                handleChange(change, entityType)
-            }
-            else if (isEntityDeleted(change)) {
+            if(isBaseEntity) { // sometimes only some Couchbase internal data is synchronized without any user data -> skip these
+                if(entityType != null) {
+                    handleChange(change, entityType)
+                }
+                else if (isEntityDeleted(change)) {
 //                handleDeletedEntity(change)
+                }
             }
         }
     }
@@ -61,8 +67,7 @@ class SynchronizedChangesHandler(private val entityManager: IEntityManager, priv
 //            conflictHandler.handleConflict(change, entityType)
         }
 
-//        var synchronizedEntity = dataMerger.updateCachedSynchronizedEntity(change, entityType)
-        var synchronizedEntity: BaseEntity? = null
+        var synchronizedEntity = dataMerger.updateCachedSynchronizedEntity(change, entityType)
         if (synchronizedEntity == null) { // this entity is new to our side
             synchronizedEntity = entityManager.getEntityById(entityType, change.documentId)
         }
