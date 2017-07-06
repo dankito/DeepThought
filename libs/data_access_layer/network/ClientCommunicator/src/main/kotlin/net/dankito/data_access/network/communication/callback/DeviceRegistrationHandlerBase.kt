@@ -108,7 +108,7 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
 
         body.syncInfo?.let { syncInfo ->
             // this is kind a dirty hack, newly synchronized device has to be added on both sides as otherwise it may gets overwritten. Don't know how to solve this otherwise
-            initialSyncManager.addRemoteDeviceToSynchronizedDevices(dataManager.deepThought, syncInfo)
+            initialSyncManager.syncUserDevices(dataManager.deepThought, syncInfo)
 
             if(syncInfo.useCallerUserName == false) {
                 initialSyncManager.syncUserInformationWithRemoteOnes(dataManager.localUser, syncInfo.user)
@@ -140,7 +140,7 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
             val useCallerUserName = ! initialSyncManager.shouldUseLocalUserName(localUser, remoteSyncInfo.user)
 
             // this is kind a dirty hack, newly synchronized device has to be added on both sides as otherwise it may gets overwritten. Don't know how to solve this otherwise
-            initialSyncManager.addRemoteDeviceToSynchronizedDevices(dataManager.deepThought, remoteSyncInfo)
+            initialSyncManager.syncUserDevices(dataManager.deepThought, remoteSyncInfo)
 
             if(useCallerUserName) {
                 initialSyncManager.syncUserInformationWithRemoteOnes(localUser, remoteSyncInfo.user)

@@ -26,11 +26,11 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
     }
 
 
-    fun addRemoteDeviceToSynchronizedDevices(localDeepThought: DeepThought, remoteSyncInfo: SyncInfo) {
-        addRemoteDeviceToSynchronizedDevices(localDeepThought, localDeepThought.localUser, remoteSyncInfo.deepThought, remoteSyncInfo.user)
+    fun syncUserDevices(localDeepThought: DeepThought, remoteSyncInfo: SyncInfo) {
+        syncUserDevices(localDeepThought, localDeepThought.localUser, remoteSyncInfo.deepThought, remoteSyncInfo.user)
     }
 
-    fun addRemoteDeviceToSynchronizedDevices(localDeepThought: DeepThought, localUser: User, remoteDeepThought: DeepThoughtSyncInfo, remoteUser: UserSyncInfo) {
+    fun syncUserDevices(localDeepThought: DeepThought, localUser: User, remoteDeepThought: DeepThoughtSyncInfo, remoteUser: UserSyncInfo) {
         addSynchronizedDevice(localUser, remoteDeepThought.localDeviceId)
         addSynchronizedDevice(localUser, localDeepThought.localDevice.id!!) // fix: so that remote also sees us as synchronized device
 
