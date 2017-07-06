@@ -26,15 +26,35 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
     }
 
 
-    fun addRemoteDeviceToSynchronizedDevices(localDeepThought: DeepThought, remoteDeepThought: DeepThoughtSyncInfo) {
-        addRemoteDeviceToSynchronizedDevices(localDeepThought, localDeepThought.localUser, remoteDeepThought)
+    fun addRemoteDeviceToSynchronizedDevices(localDeepThought: DeepThought, remoteSyncInfo: SyncInfo) {
+        addRemoteDeviceToSynchronizedDevices(localDeepThought, localDeepThought.localUser, remoteSyncInfo.deepThought, remoteSyncInfo.user)
     }
 
-    fun addRemoteDeviceToSynchronizedDevices(localDeepThought: DeepThought, localUser: User, remoteDeepThought: DeepThoughtSyncInfo) {
+    fun addRemoteDeviceToSynchronizedDevices(localDeepThought: DeepThought, localUser: User, remoteDeepThought: DeepThoughtSyncInfo, remoteUser: UserSyncInfo) {
         addSynchronizedDevice(localUser, remoteDeepThought.localDeviceId)
         addSynchronizedDevice(localUser, localDeepThought.localDevice.id!!) // fix: so that remote also sees us as synchronized device
 
+        remoteUser.synchronizedDevicesIds.forEach { addSynchronizedDevice(localUser, it) }
+
+        remoteUser.ignoredDevicesIds.forEach { addIgnoredDevice(localUser, it) }
+
         entityManager.updateEntity(localUser)
+    }
+
+    private fun addSynchronizedDevice(user: User, deviceId: String) {
+        entityManager.getEntityById(Device::class.java, deviceId)?.let { device ->
+            if(user.containsSynchronizedDevice(device) == false) {
+                user.addSynchronizedDevice(device)
+            }
+        }
+    }
+
+    private fun addIgnoredDevice(user: User, deviceId: String) {
+        entityManager.getEntityById(Device::class.java, deviceId)?.let { device ->
+            if(user.containsIgnoredDevice(device) == false) {
+                user.addIgnoredDevice(device)
+            }
+        }
     }
 
 
@@ -49,9 +69,6 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
 
         localUser.id = remoteUser.id
 
-        // TODO
-//        persistSynchronizedDevices(entityManager, user, remoteUser)
-
         entityManager.persistEntity(localUser)
 
 
@@ -59,18 +76,6 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
 
 
         entityManager.updateEntity(localDeepThought)
-    }
-
-    private fun persistSynchronizedDevices(entityManager: IEntityManager, loggedOnUser: User, remoteUser: UserSyncInfo) {
-        // TODO
-    }
-
-    private fun addSynchronizedDevice(user: User, deviceId: String) {
-        entityManager.getEntityById(Device::class.java, deviceId)?.let { device ->
-            if(user.containsSynchronizedDevice(device) == false) {
-                user.addSynchronizedDevice(device)
-            }
-        }
     }
 
     private fun updateExtensibleEnumerations(localDeepThought: DeepThought, remoteDeepThought: DeepThoughtSyncInfo, entityManager: IEntityManager) {
