@@ -244,11 +244,11 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
 
 
     private fun isKnownSynchronizedDevice(device: DiscoveredDevice): Boolean {
-        return localUser.synchronizedDevices.contains(device.device)
+        return localUser.containsSynchronizedDevice(device.device)
     }
 
     private fun isKnownIgnoredDevice(device: DiscoveredDevice): Boolean {
-        return localUser.ignoredDevices.contains(device.device)
+        return localUser.containsIgnoredDevice(device.device)
     }
 
 
@@ -315,7 +315,6 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
 
     private fun addDeviceToKnownSynchronizedDevicesAndCallListeners(device: DiscoveredDevice) {
         if (addDeviceToKnownSynchronizedDevices(device)) {
-            addDeviceToSynchronizedDevices(device)
 
             callDiscoveredDeviceDisconnectedListeners(device)
             callDiscoveredDeviceConnectedListeners(device, DiscoveredDeviceType.KNOWN_SYNCHRONIZED_DEVICE)
@@ -355,15 +354,6 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
         networkSettings.addConnectedDevicePermittedToSynchronize(device)
 
         addDeviceToKnownSynchronizedDevices(deviceInfoKey, device)
-    }
-
-    private fun addDeviceToSynchronizedDevices(device: DiscoveredDevice) {
-        if (localUser.ignoredDevices.contains(device.device)) {
-            localUser.removeIgnoredDevice(device.device)
-        }
-        localUser.addSynchronizedDevice(device.device)
-
-        entityManager.updateEntity(localUser)
     }
 
 
