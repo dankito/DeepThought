@@ -3,7 +3,6 @@ package net.dankito.deepthought.communication
 import com.nhaarman.mockito_kotlin.*
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.data_access.database.EntityManagerConfiguration
-import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.data_access.network.communication.IClientCommunicator
@@ -18,6 +17,8 @@ import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.service.data.event.EntityChangedNotifier
+import net.dankito.service.data.messages.EntitiesOfTypeChanged
+import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.service.synchronization.*
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
@@ -27,6 +28,9 @@ import net.dankito.utils.ThreadPool
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.services.hashing.IBase64Service
 import net.dankito.utils.ui.IDialogService
+import net.engio.mbassy.listener.Handler
+import net.engio.mbassy.listener.Listener
+import net.engio.mbassy.listener.References
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.number.OrderingComparison.greaterThan
 import org.hamcrest.number.OrderingComparison.lessThanOrEqualTo
@@ -36,11 +40,13 @@ import org.junit.Before
 import org.junit.Test
 import org.slf4j.LoggerFactory
 import java.io.File
+import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import kotlin.concurrent.thread
 
 
 class CommunicationManagerTest {
@@ -100,13 +106,15 @@ class CommunicationManagerTest {
 
     private val localDevicesDiscoverer = UdpDevicesDiscoverer(localThreadPool)
 
-    private lateinit var localEntityManager: IEntityManager
+    private lateinit var localEntityManager: CouchbaseLiteEntityManagerBase
 
     private lateinit var localDataManager: DataManager
 
     private lateinit var localClientCommunicator: IClientCommunicator
 
-    private val localEntityChangedNotifier = EntityChangedNotifier(MBassadorEventBus())
+    private val localEventBus = MBassadorEventBus()
+
+    private val localEntityChangedNotifier = EntityChangedNotifier(localEventBus)
 
     private lateinit var localSynchronizedChangesHandler: SynchronizedChangesHandler
 
@@ -153,13 +161,15 @@ class CommunicationManagerTest {
 
     private val remoteDevicesDiscoverer = UdpDevicesDiscoverer(remoteThreadPool)
 
-    private lateinit var remoteEntityManager: IEntityManager
+    private lateinit var remoteEntityManager: CouchbaseLiteEntityManagerBase
 
     private lateinit var remoteDataManager: DataManager
 
     private lateinit var remoteClientCommunicator: IClientCommunicator
 
-    private val remoteEntityChangedNotifier = EntityChangedNotifier(MBassadorEventBus())
+    private val remoteEventBus = MBassadorEventBus()
+
+    private val remoteEntityChangedNotifier = EntityChangedNotifier(remoteEventBus)
 
     private lateinit var remoteSynchronizedChangesHandler: SynchronizedChangesHandler
 
@@ -456,6 +466,51 @@ class CommunicationManagerTest {
     }
 
 
+    @Test
+    fun localDeviceRequestsSynchronization_SynchronizedAndIgnoredDevicesGetSynchronizedCorrectly() {
+        localRegisterAtRemote.set(true)
+        remotePermitRemoteToSynchronize.set(true)
+
+        val localUser = localDataManager.localUser
+        val remoteUser = remoteDataManager.localUser
+
+        val localSynchronizedDevice1 = Device("Local_Synchronized_1", UUID.randomUUID().toString(), OsType.DESKTOP)
+        val localSynchronizedDevice2 = Device("Local_Synchronized_2", UUID.randomUUID().toString(), OsType.DESKTOP)
+        val localIgnoredDevice1 = Device("Local_Ignored_1", UUID.randomUUID().toString(), OsType.DESKTOP)
+        localEntityManager.persistEntity(localSynchronizedDevice1)
+        localEntityManager.persistEntity(localSynchronizedDevice2)
+        localEntityManager.persistEntity(localIgnoredDevice1)
+        localUser.addSynchronizedDevice(localSynchronizedDevice1)
+        localUser.addSynchronizedDevice(localSynchronizedDevice2)
+        localUser.addIgnoredDevice(localIgnoredDevice1)
+
+        val remoteIgnoredDevice1 = Device("Remote_Ignored_1", UUID.randomUUID().toString(), OsType.DESKTOP)
+        val remoteIgnoredDevice2 = Device("Remote_Ignored_2", UUID.randomUUID().toString(), OsType.DESKTOP)
+        val remoteIgnoredDevice3 = Device("Remote_Ignored_3", UUID.randomUUID().toString(), OsType.DESKTOP)
+        remoteEntityManager.persistEntity(remoteIgnoredDevice1)
+        remoteEntityManager.persistEntity(remoteIgnoredDevice2)
+        remoteEntityManager.persistEntity(remoteIgnoredDevice3)
+        remoteUser.addIgnoredDevice(remoteIgnoredDevice1)
+        remoteUser.addIgnoredDevice(remoteIgnoredDevice2)
+        remoteUser.addIgnoredDevice(remoteIgnoredDevice3)
+
+        val countDownLatch = CountDownLatch(1)
+
+        mockDialogServiceTextInput(localDialogService, remoteCorrectChallengeResponse)
+
+        waitTillFirstSynchronizationIsDone(remoteEventBus, countDownLatch)
+
+        startCommunicationManagersAndWait(countDownLatch)
+
+
+        assertThat(localUser.synchronizedDevices.size, `is`(4))
+        assertThat(remoteUser.synchronizedDevices.size, `is`(4))
+
+        assertThat(localUser.ignoredDevices.size, `is`(4))
+        assertThat(remoteUser.ignoredDevices.size, `is`(4))
+    }
+
+
     private fun startCommunicationManagersAndWait(countDownLatch: CountDownLatch) {
         startCommunicationManagersAndWait(countDownLatch, FindRemoteDeviceTimeoutInSeconds)
     }
@@ -473,6 +528,13 @@ class CommunicationManagerTest {
     }
 
 
+    private fun mockDialogServiceTextInput(dialogService: IDialogService, textToReturn: AtomicReference<String>) {
+        whenever(dialogService.askForTextInput(any<CharSequence>(), anyOrNull(), anyOrNull(), any())).thenAnswer { invocation ->
+            val callback = invocation.arguments[3] as (Boolean, String?) -> Unit
+            callback(true, textToReturn.get())
+        }
+    }
+
     private fun waitTillKnownSynchronizedDeviceConnected(connectedDevicesService: IConnectedDevicesService, countDownLatch: CountDownLatch) {
         connectedDevicesService.addKnownSynchronizedDevicesListener(object : KnownSynchronizedDevicesListener {
             override fun knownSynchronizedDeviceConnected(connectedDevice: DiscoveredDevice) {
@@ -486,11 +548,23 @@ class CommunicationManagerTest {
         })
     }
 
-    private fun mockDialogServiceTextInput(dialogService: IDialogService, textToReturn: AtomicReference<String>) {
-        whenever(dialogService.askForTextInput(any<CharSequence>(), anyOrNull(), anyOrNull(), any())).thenAnswer { invocation ->
-            val callback = invocation.arguments[3] as (Boolean, String?) -> Unit
-            callback(true, textToReturn.get())
+    private fun waitTillFirstSynchronizationIsDone(eventBus: IEventBus, countDownLatch: CountDownLatch) {
+        eventBus.register(WaitTillFirstSynchronizationIsDoneEventBusListener(countDownLatch))
+    }
+
+    @Listener(references = References.Strong)
+    inner class WaitTillFirstSynchronizationIsDoneEventBusListener(private val countDownLatch: CountDownLatch) {
+
+        @Handler
+        fun entitiesOfTypeChanged(changed: EntitiesOfTypeChanged) {
+            if(changed.entityType == User::class.java) { // currently the last synchronized entity is the User
+                thread {
+                    Thread.sleep(10000)
+                    countDownLatch.countDown()
+                }
+            }
         }
+
     }
 
 
