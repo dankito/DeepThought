@@ -34,6 +34,7 @@ import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CountDownLatch
@@ -52,7 +53,9 @@ class CommunicationManagerTest {
         val RemoteOsType = OsType.DESKTOP
 
         const val InitializationTimeoutInSeconds = 5L
-        const val FindRemoteDeviceTimeoutInSeconds = 300L
+        const val FindRemoteDeviceTimeoutInSeconds = 300L // it really takes a long time till Couchbase opens its listener port
+
+        private val log = LoggerFactory.getLogger(CommunicationManagerTest::class.java)
     }
 
 
@@ -473,6 +476,7 @@ class CommunicationManagerTest {
     private fun waitTillKnownSynchronizedDeviceConnected(connectedDevicesService: IConnectedDevicesService, countDownLatch: CountDownLatch) {
         connectedDevicesService.addKnownSynchronizedDevicesListener(object : KnownSynchronizedDevicesListener {
             override fun knownSynchronizedDeviceConnected(connectedDevice: DiscoveredDevice) {
+                log.info("Counting down ...")
                 countDownLatch.countDown()
             }
 
