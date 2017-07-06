@@ -4,7 +4,6 @@ import android.content.Context
 import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
-import net.dankito.deepthought.android.DeepThoughtApplication
 import net.dankito.deepthought.android.appstart.AndroidAppInitializer
 import net.dankito.deepthought.android.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.android.dialogs.AndroidDialogService
@@ -24,12 +23,12 @@ import javax.inject.Singleton
 
 
 @Module
-class ActivitiesModule(private val application: DeepThoughtApplication) {
+class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
     fun provideApplicationContext() : Context {
-        return application
+        return applicationContext
     }
 
 
