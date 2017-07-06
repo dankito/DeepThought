@@ -112,7 +112,12 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
         var dataBaseChangeListener: Database.ChangeListener? = null
 
         val push = database.createPushReplication(createSyncUrl(remoteDeviceAddress, basicDataSyncPort))
-        push.docIds = listOf(networkSettings.localHostDevice.id) // only push local device to remote
+
+        // sync all known devices so that remote also knowns our synchronized and ignored devices
+        val deviceIdsToSync = ArrayList<String>(networkSettings.localUser.synchronizedDevices.map { it.id })
+        deviceIdsToSync.addAll(networkSettings.localUser.ignoredDevices.map { it.id!! })
+        deviceIdsToSync.add(networkSettings.localHostDevice.id!!) // push localDevice.id as last as this is the signal that basic data synchronization is done
+        push.docIds = deviceIdsToSync
 
         val pushChangeListener = object : Replication.ChangeListener {
             override fun changed(event: Replication.ChangeEvent) {
