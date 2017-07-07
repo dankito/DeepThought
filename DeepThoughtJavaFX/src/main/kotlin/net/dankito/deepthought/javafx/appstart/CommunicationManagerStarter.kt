@@ -31,9 +31,7 @@ class CommunicationManagerStarter(searchEngine: ISearchEngine) {
     }
 
     private fun searchEngineInitialized() {
-        val timer = Timer()
-
-        timer.schedule(DefaultWaitTimeBeforeStartingCommunicationManagerMillis) {
+        Timer().schedule(DefaultWaitTimeBeforeStartingCommunicationManagerMillis) {
             startCommunicationManager()
         }
     }
