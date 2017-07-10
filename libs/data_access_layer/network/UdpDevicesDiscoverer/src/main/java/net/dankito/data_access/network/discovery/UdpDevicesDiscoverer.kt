@@ -59,7 +59,7 @@ open class UdpDevicesDiscoverer(protected var threadPool: IThreadPool) : IDevice
 
 
     init {
-        receivedPacketsQueue = AsyncProducerConsumerQueue(3, receivedPacketsHandler)
+        receivedPacketsQueue = AsyncProducerConsumerQueue(3, autoStart = false, consumerListener = receivedPacketsHandler)
     }
 
 
@@ -68,6 +68,8 @@ open class UdpDevicesDiscoverer(protected var threadPool: IThreadPool) : IDevice
 
     override fun startAsync(config: DevicesDiscovererConfig) {
         log.info("Starting UdpDevicesDiscoverer " + config.localDeviceInfo + " ...")
+
+        receivedPacketsQueue.start()
 
         // * 3.5 = from 3 messages one must be received to be still valued as 'connected'
         this.connectionsAliveWatcher = ConnectionsAliveWatcher((config.checkForDevicesIntervalMillis * 10.5).toInt())
