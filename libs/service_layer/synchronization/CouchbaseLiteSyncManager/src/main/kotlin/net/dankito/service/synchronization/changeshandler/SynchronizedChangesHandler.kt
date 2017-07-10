@@ -1,6 +1,7 @@
 package net.dankito.service.synchronization.changeshandler
 
 import com.couchbase.lite.Database
+import com.couchbase.lite.Document
 import com.couchbase.lite.DocumentChange
 import com.couchbase.lite.SavedRevision
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
@@ -51,12 +52,10 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
             val isBaseEntity = entityType != null && BaseEntity::class.java.isAssignableFrom(entityType)
 
             if(isBaseEntity) { // sometimes only some Couchbase internal data is synchronized without any user data -> skip these
-                if(entityType != null) {
-                    handleChange(change, entityType)
-                }
-                else if (isEntityDeleted(change)) {
-//                handleDeletedEntity(change)
-                }
+                handleChange(change, entityType!!) // entityType has to be != null after check above
+            }
+            else if (isEntityDeleted(change)) {
+                handleDeletedEntity(change)
             }
         }
     }
@@ -77,6 +76,51 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
         }
     }
 
+
+    private fun handleDeletedEntity(change: DocumentChange) {
+        val id = change.documentId
+        val document = entityManager.database.getDocument(id)
+        if (document != null) {
+            val lastUndeletedRevision = findLastUndeletedRevision(document)
+
+            if (lastUndeletedRevision != null) {
+                val entityType = getEntityTypeFromRevision(lastUndeletedRevision)
+                if (entityType != null) {
+                    val deletedEntity = entityManager.getEntityById(entityType, id)
+                    if (deletedEntity != null) {
+                        changeNotifier.notifyListenersOfEntityChange(deletedEntity, EntityChangeType.Deleted)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun findLastUndeletedRevision(document: Document): SavedRevision? {
+        try {
+            val leafRevisions = document.getLeafRevisions()
+            if (leafRevisions.size > 0) {
+                var parentId: String? = leafRevisions.get(0).getParentId()
+
+                while(parentId != null) {
+                    val parentRevision = document.getRevision(parentId)
+
+                    if(parentRevision == null) {
+                        return null
+                    }
+
+                    if (parentRevision.isDeletion() == false) {
+                        return parentRevision
+                    }
+
+                    parentId = parentRevision.getParentId()
+                }
+            }
+        } catch (e: Exception) {
+            log.error("Could not get Revision History for deleted Document with id " + document.getId(), e)
+        }
+
+        return null
+    }
 
     private fun isEntityDeleted(change: DocumentChange): Boolean {
         return change.addedRevision.isDeleted
