@@ -70,7 +70,10 @@ class AndroidDeviceRegistrationHandler(private var context: Context, dataManager
     }
 
     private fun askUserToSyncDataWithDeviceOnMainThread(currentActivity: Activity, remoteDevice: DiscoveredDevice, callback: (Boolean, Boolean) -> Unit) {
-        val rootView = currentActivity.findViewById(android.R.id.content)
+        var rootView = currentActivity.findViewById(R.id.content_layout_root) // content_layout_root only works for MainActivity -> find a generic solution
+        if(rootView == null) {
+            rootView = currentActivity.findViewById(android.R.id.content)
+        }
 
         synchronized(this) {
             snackbarAskToSyncDataWithDevice = Snackbar.make(rootView, "", Snackbar.LENGTH_INDEFINITE)
