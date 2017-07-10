@@ -67,13 +67,37 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
         }
 
         var synchronizedEntity = dataMerger.updateCachedSynchronizedEntity(change, entityType)
-        if (synchronizedEntity == null) { // this entity is new to our side
+        var entityChangeType = EntityChangeType.Updated
+        if(synchronizedEntity == null) { // this entity is new to our side or hasn't been in cache
             synchronizedEntity = entityManager.getEntityById(entityType, change.documentId)
+            if(hasEntityBeenCreated(change, synchronizedEntity)) {
+                entityChangeType = EntityChangeType.Created
+            }
         }
 
+
         if(synchronizedEntity != null) {
-            changeNotifier.notifyListenersOfEntityChange(synchronizedEntity, EntityChangeType.Updated) // TODO: determine EntityChangeType
+            changeNotifier.notifyListenersOfEntityChange(synchronizedEntity, entityChangeType)
         }
+    }
+
+    private fun hasEntityBeenCreated(change: DocumentChange, entity: BaseEntity?): Boolean {
+        try {
+            val document = entityManager.database.getDocument(change.documentId)
+            val leafRevisions = document.leafRevisions
+            if(leafRevisions.size == 0) {
+                return true
+            }
+            else if(leafRevisions[0].parentId == null) {
+                return true
+            }
+            else {
+                val parentRevision = document.getRevision(leafRevisions[0].parentId)
+                return parentRevision == null
+            }
+        } catch (ignored: Exception) { }
+
+        return (entity != null && entity.version == 1L)
     }
 
 
@@ -97,9 +121,9 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
 
     private fun findLastUndeletedRevision(document: Document): SavedRevision? {
         try {
-            val leafRevisions = document.getLeafRevisions()
+            val leafRevisions = document.leafRevisions
             if (leafRevisions.size > 0) {
-                var parentId: String? = leafRevisions.get(0).getParentId()
+                var parentId: String? = leafRevisions[0].parentId
 
                 while(parentId != null) {
                     val parentRevision = document.getRevision(parentId)
@@ -108,7 +132,7 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
                         return null
                     }
 
-                    if (parentRevision.isDeletion() == false) {
+                    if (parentRevision.isDeletion == false) {
                         return parentRevision
                     }
 
