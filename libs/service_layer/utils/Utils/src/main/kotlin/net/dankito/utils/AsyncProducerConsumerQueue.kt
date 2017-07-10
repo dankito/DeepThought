@@ -6,7 +6,9 @@ import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
 
-class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItemsToQueue: Int, minimumMillisecondsToWaitBeforeConsumingItem: Int, protected var consumerListener: ConsumerListener<T>) {
+class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItemsToQueue: Int = AsyncProducerConsumerQueue.NO_LIMIT_ITEMS_TO_QUEUE,
+                                    minimumMillisecondsToWaitBeforeConsumingItem: Int = AsyncProducerConsumerQueue.WAITING_BEFORE_CONSUMING_ITEM_DISABLED, autoStart: Boolean = true,
+                                    private val consumerListener: ConsumerListener<T>) {
 
     companion object {
 
@@ -18,26 +20,22 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
     }
 
 
-    protected var producedItemsQueue: BlockingQueue<T>
+    private var producedItemsQueue: BlockingQueue<T>
 
-    protected var minimumMillisecondsToWaitBeforeConsumingItem = WAITING_BEFORE_CONSUMING_ITEM_DISABLED
+    private var minimumMillisecondsToWaitBeforeConsumingItem = WAITING_BEFORE_CONSUMING_ITEM_DISABLED
 
-    protected var waitBeforeConsumingItemTimer = Timer("WaitBeforeConsumingItemTimer")
+    private var waitBeforeConsumingItemTimer = Timer("WaitBeforeConsumingItemTimer")
 
-    protected var consumerThreads: MutableList<Thread> = ArrayList()
+    private var consumerThreads: MutableList<Thread> = ArrayList()
 
-
-    constructor(consumerListener: ConsumerListener<T>) : this(1, consumerListener) {}
-
-    constructor(countThreadsToUse: Int, consumerListener: ConsumerListener<T>) : this(countThreadsToUse, NO_LIMIT_ITEMS_TO_QUEUE, consumerListener) {}
-
-    constructor(countThreadsToUse: Int, maxItemsToQueue: Int, consumerListener: ConsumerListener<T>) : this(countThreadsToUse, maxItemsToQueue, WAITING_BEFORE_CONSUMING_ITEM_DISABLED, consumerListener) {}
 
     init {
         this.producedItemsQueue = LinkedBlockingQueue<T>(maxItemsToQueue)
         this.minimumMillisecondsToWaitBeforeConsumingItem = minimumMillisecondsToWaitBeforeConsumingItem
 
-        startConsumerThreads(countThreadsToUse)
+        if(autoStart) {
+            start()
+        }
     }
 
 
@@ -45,9 +43,9 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
         get() = producedItemsQueue.size
 
     /**
-     * To restart processing after a call to {@link #stop()} call this method.
+     * To restart processing after a call to {@link #stop()} or start processing when constructor flag autoStart has been set to false, call this method.
      */
-    fun restart() {
+    fun start() {
         startConsumerThreads(countThreadsToUse)
     }
 
