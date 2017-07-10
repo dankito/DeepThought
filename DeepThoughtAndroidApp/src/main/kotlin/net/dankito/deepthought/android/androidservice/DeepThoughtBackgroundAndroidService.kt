@@ -62,7 +62,7 @@ class DeepThoughtBackgroundAndroidService : Service() {
 
         BaseComponent.component = component
         CommonComponent.component = component
-        AppComponent.component = component
+        AppComponent.setComponentInstance(component)
 
         component.inject(this)
     }
