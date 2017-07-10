@@ -34,8 +34,8 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
 
     // wait some time before processing synchronized entities as they may have dependent entities which haven't been synchronized yet
     // yeah, i not, it would be better solving this event based instead of simply waiting, but currently i have no clue how this could be solved
-    private var changeQueue = AsyncProducerConsumerQueue<Database.ChangeEvent>(1, AsyncProducerConsumerQueue.NO_LIMIT_ITEMS_TO_QUEUE,
-            MILLIS_TO_WAIT_BEFORE_PROCESSING_SYNCHRONIZED_ENTITY, synchronizationChangesHandler)
+    private var changeQueue = AsyncProducerConsumerQueue<Database.ChangeEvent>(1, minimumMillisecondsToWaitBeforeConsumingItem = MILLIS_TO_WAIT_BEFORE_PROCESSING_SYNCHRONIZED_ENTITY,
+            consumerListener = synchronizationChangesHandler)
 
 
 
