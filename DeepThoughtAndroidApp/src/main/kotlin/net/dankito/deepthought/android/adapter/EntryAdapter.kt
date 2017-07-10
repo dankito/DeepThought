@@ -28,6 +28,15 @@ class EntryAdapter(private val presenter: EntriesListPresenter): ListSwipeAdapte
     override fun fillValues(position: Int, convertView: View) {
         val entry = getItem(position)
 
+        if(entry == null) { // when an entry has been deleted in db on a synchronized device but index hasn't been updated yet
+            convertView.txtReferencePreview.visibility = View.GONE
+            convertView.txtEntryPreview.text = ""
+            convertView.txtEntryTags.visibility = View.GONE
+            convertView.btnShareEntry.setOnClickListener(null)
+            convertView.btnDeleteEntry.setOnClickListener(null)
+            return
+        }
+
         convertView.txtReferencePreview.visibility = if(entry.hasReference()) View.VISIBLE else View.GONE
         convertView.txtReferencePreview.text = entry.referencePreview
 
