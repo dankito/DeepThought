@@ -89,7 +89,7 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
     }
 
     private fun getEntityTypeFromDocumentChange(change: DocumentChange): Class<out BaseEntity>? {
-        val entityTypeString = change.addedRevision.getPropertyForKey(Dao.TYPE_COLUMN_NAME) as String
+        val entityTypeString = change.addedRevision.getPropertyForKey(Dao.TYPE_COLUMN_NAME) as? String
 
         return getEntityTypeFromEntityTypeString(entityTypeString)
     }
