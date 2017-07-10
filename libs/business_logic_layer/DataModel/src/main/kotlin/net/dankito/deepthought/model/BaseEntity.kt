@@ -14,7 +14,6 @@ open class BaseEntity : Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: String? = null
-        private set
 
     @Column(name = TableConfig.BaseEntityCreatedOnColumnName, updatable = false)/*, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"*/
     @Temporal(TemporalType.TIMESTAMP)
