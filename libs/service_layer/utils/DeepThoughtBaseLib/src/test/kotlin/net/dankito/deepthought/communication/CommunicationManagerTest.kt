@@ -1,6 +1,9 @@
 package net.dankito.deepthought.communication
 
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.anyOrNull
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.whenever
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
@@ -32,8 +35,7 @@ import net.engio.mbassy.listener.Handler
 import net.engio.mbassy.listener.Listener
 import net.engio.mbassy.listener.References
 import org.hamcrest.CoreMatchers.*
-import org.hamcrest.number.OrderingComparison.greaterThan
-import org.hamcrest.number.OrderingComparison.lessThanOrEqualTo
+import org.hamcrest.number.OrderingComparison.*
 import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Before
@@ -210,7 +212,7 @@ class CommunicationManagerTest {
 
             localSynchronizedChangesHandler = SynchronizedChangesHandler(localEntityManager, localEntityChangedNotifier)
 
-            localSyncManager = CouchbaseLiteSyncManager(localEntityManager as CouchbaseLiteEntityManagerBase, localSynchronizedChangesHandler, localNetworkSettings)
+            localSyncManager = CouchbaseLiteSyncManager(localEntityManager, localSynchronizedChangesHandler, localNetworkSettings)
 
             localRegistrationHandler = createDeviceRegistrationHandler(localRegisterAtRemote, localPermitRemoteToSynchronize, localCorrectChallengeResponse, localDataManager,
                     localInitialSyncManager, localDialogService, localization)
@@ -249,7 +251,8 @@ class CommunicationManagerTest {
 
             val registrationHandlerInstance = createDeviceRegistrationHandler(remoteRegisterAtRemote, remotePermitRemoteToSynchronize, remoteCorrectChallengeResponse, remoteDataManager,
                     remoteInitialSyncManager, remoteDialogService, localization)
-            remoteRegistrationHandler = spy<IDeviceRegistrationHandler>(registrationHandlerInstance)
+//            remoteRegistrationHandler = spy<IDeviceRegistrationHandler>(registrationHandlerInstance)
+            remoteRegistrationHandler = registrationHandlerInstance
 
             remoteClientCommunicator = TcpSocketClientCommunicator(remoteNetworkSettings, remoteRegistrationHandler, base64Service, remoteThreadPool)
 
@@ -511,6 +514,63 @@ class CommunicationManagerTest {
     }
 
 
+    @Test
+    fun disconnect_CreateEntity_EntityGetSynchronizedCorrectly() {
+        localRegisterAtRemote.set(true)
+        remotePermitRemoteToSynchronize.set(true)
+
+        val countDownLatch = CountDownLatch(1)
+
+        mockDialogServiceTextInput(localDialogService, remoteCorrectChallengeResponse)
+
+        waitTillKnownSynchronizedDeviceConnected(localConnectedDevicesService, countDownLatch)
+
+        startCommunicationManagersAndWait(countDownLatch)
+
+
+        // now disconnect, ...
+        localCommunicationManager.stop()
+        remoteCommunicationManager.stop()
+
+        // create Entities ...
+        val newTag = Tag("New Tag")
+        localEntityManager.persistEntity(newTag)
+
+        val newReference = Reference("New Reference")
+        localEntityManager.persistEntity(newReference)
+
+        val newEntry = Entry("New Entry")
+        newEntry.reference = newReference
+        newEntry.addTag(newTag)
+        localEntityManager.persistEntity(newEntry)
+
+        // and reconnect
+        val collectedChanges = mutableListOf<EntitiesOfTypeChanged>()
+        val syncAfterReconnectLatch = CountDownLatch(1)
+
+        waitTillEntityOfTypeIsSynchronized(remoteEventBus, Entry::class.java, syncAfterReconnectLatch)
+
+        collectSynchronizedChanges(remoteEventBus, collectedChanges)
+
+        startCommunicationManagersAndWait(syncAfterReconnectLatch)
+
+
+        assertThat(collectedChanges.size, greaterThanOrEqualTo(3))
+        assertThat(collectedChanges.filter { it.entityType == Entry::class.java }.firstOrNull(), notNullValue())
+        assertThat(collectedChanges.filter { it.entityType == Reference::class.java }.firstOrNull(), notNullValue())
+        assertThat(collectedChanges.filter { it.entityType == Tag::class.java }.firstOrNull(), notNullValue())
+
+        assertThat(remoteEntityManager.getEntityById(Entry::class.java, newEntry.id!!), notNullValue())
+        assertThat(remoteEntityManager.getEntityById(Entry::class.java, newEntry.id!!)?.modifiedOn, `is`(newEntry.modifiedOn))
+
+        assertThat(remoteEntityManager.getEntityById(Reference::class.java, newReference.id!!), notNullValue())
+        assertThat(remoteEntityManager.getEntityById(Reference::class.java, newReference.id!!)?.modifiedOn, `is`(newReference.modifiedOn))
+
+        assertThat(remoteEntityManager.getEntityById(Tag::class.java, newTag.id!!), notNullValue())
+        assertThat(remoteEntityManager.getEntityById(Tag::class.java, newTag.id!!)?.modifiedOn, `is`(newTag.modifiedOn))
+    }
+
+
     private fun startCommunicationManagersAndWait(countDownLatch: CountDownLatch) {
         startCommunicationManagersAndWait(countDownLatch, FindRemoteDeviceTimeoutInSeconds)
     }
@@ -549,20 +609,40 @@ class CommunicationManagerTest {
     }
 
     private fun waitTillFirstSynchronizationIsDone(eventBus: IEventBus, countDownLatch: CountDownLatch) {
-        eventBus.register(WaitTillFirstSynchronizationIsDoneEventBusListener(countDownLatch))
+        eventBus.register(WaitTillEntityOfTypeIsSynchronizedEventBusListener(User::class.java, countDownLatch)) // currently the last synchronized entity is the User
+    }
+
+    private fun waitTillEntityOfTypeIsSynchronized(eventBus: IEventBus, entityType: Class<out Any>, countDownLatch: CountDownLatch) {
+        eventBus.register(WaitTillEntityOfTypeIsSynchronizedEventBusListener(entityType, countDownLatch))
     }
 
     @Listener(references = References.Strong)
-    inner class WaitTillFirstSynchronizationIsDoneEventBusListener(private val countDownLatch: CountDownLatch) {
+    inner class WaitTillEntityOfTypeIsSynchronizedEventBusListener(private val entityType: Class<out Any>, private val countDownLatch: CountDownLatch) {
 
         @Handler
         fun entitiesOfTypeChanged(changed: EntitiesOfTypeChanged) {
-            if(changed.entityType == User::class.java) { // currently the last synchronized entity is the User
+            log.info("Synchronized entity of type ${changed.entityType}")
+            if(changed.entityType == entityType) {
                 thread {
                     Thread.sleep(10000)
                     countDownLatch.countDown()
                 }
             }
+        }
+
+    }
+
+
+    private fun collectSynchronizedChanges(eventBus: IEventBus, collectedChanges: MutableList<EntitiesOfTypeChanged>) {
+        eventBus.register(CollectSynchronizedChangesEventBusListener(collectedChanges))
+    }
+
+    @Listener(references = References.Strong)
+    inner class CollectSynchronizedChangesEventBusListener(private val collectedChanges: MutableList<EntitiesOfTypeChanged>) {
+
+        @Handler
+        fun entitiesOfTypeChanged(changed: EntitiesOfTypeChanged) {
+            collectedChanges.add(changed)
         }
 
     }
