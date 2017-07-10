@@ -21,6 +21,7 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
+import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.service.synchronization.*
@@ -568,6 +569,59 @@ class CommunicationManagerTest {
 
         assertThat(remoteEntityManager.getEntityById(Tag::class.java, newTag.id!!), notNullValue())
         assertThat(remoteEntityManager.getEntityById(Tag::class.java, newTag.id!!)?.modifiedOn, `is`(newTag.modifiedOn))
+    }
+
+
+    @Test
+    fun disconnect_DeleteEntity_EntityGetSynchronizedCorrectly() {
+        localRegisterAtRemote.set(true)
+        remotePermitRemoteToSynchronize.set(true)
+
+        // create Entities
+        val newTag = Tag("New Tag")
+        localEntityManager.persistEntity(newTag)
+
+        val newReference = Reference("New Reference")
+        localEntityManager.persistEntity(newReference)
+
+        val newEntry = Entry("New Entry")
+        newEntry.reference = newReference
+        newEntry.addTag(newTag)
+        localEntityManager.persistEntity(newEntry)
+        val entryId = newEntry.id!!
+
+        val countDownLatch = CountDownLatch(1)
+
+        mockDialogServiceTextInput(localDialogService, remoteCorrectChallengeResponse)
+
+        waitTillEntityOfTypeIsSynchronized(remoteEventBus, Entry::class.java, countDownLatch)
+
+        startCommunicationManagersAndWait(countDownLatch)
+
+
+        // now disconnect, ...
+        localCommunicationManager.stop()
+        remoteCommunicationManager.stop()
+
+        // delete entity
+        localEntityManager.deleteEntity(newEntry)
+
+        // and reconnect
+        val collectedChanges = mutableListOf<EntitiesOfTypeChanged>()
+        val syncAfterReconnectLatch = CountDownLatch(1)
+
+        waitTillEntityOfTypeIsSynchronized(remoteEventBus, Entry::class.java, syncAfterReconnectLatch)
+
+        collectSynchronizedChanges(remoteEventBus, collectedChanges)
+
+        startCommunicationManagersAndWait(syncAfterReconnectLatch)
+
+
+        assertThat(collectedChanges.size, greaterThanOrEqualTo(1))
+        assertThat(collectedChanges.filter { it.entityType == Entry::class.java }.firstOrNull(), notNullValue())
+        assertThat(collectedChanges.filter { it.entityType == Entry::class.java }.firstOrNull()?.changeType, `is`(EntityChangeType.Deleted))
+
+        assertThat(remoteEntityManager.database.getDocument(entryId).isDeleted, `is`(true))
     }
 
 
