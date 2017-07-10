@@ -15,7 +15,7 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
             eventBus.post(message) // has to be called synchronized so that LuceneSearchEngine can update its index before any other class accesses updated index
         }
 
-        eventBus.postAsync(EntitiesOfTypeChanged(entityClass))
+        eventBus.postAsync(EntitiesOfTypeChanged(entityClass, changeType))
     }
 
     private fun createEntityChangedMessage(entityClass: Class<BaseEntity>, entity: BaseEntity, changeType: EntityChangeType): IEventBusMessage? {
