@@ -557,9 +557,15 @@ class CommunicationManagerTest {
 
 
         assertThat(collectedChanges.size, greaterThanOrEqualTo(3))
+
         assertThat(collectedChanges.filter { it.entityType == Entry::class.java }.firstOrNull(), notNullValue())
+        assertThat(collectedChanges.filter { it.entityType == Entry::class.java }.firstOrNull()?.changeType, `is`(EntityChangeType.Created))
+
         assertThat(collectedChanges.filter { it.entityType == Reference::class.java }.firstOrNull(), notNullValue())
+        assertThat(collectedChanges.filter { it.entityType == Reference::class.java }.firstOrNull()?.changeType, `is`(EntityChangeType.Created))
+
         assertThat(collectedChanges.filter { it.entityType == Tag::class.java }.firstOrNull(), notNullValue())
+        assertThat(collectedChanges.filter { it.entityType == Tag::class.java }.firstOrNull()?.changeType, `is`(EntityChangeType.Created))
 
         assertThat(remoteEntityManager.getEntityById(Entry::class.java, newEntry.id!!), notNullValue())
         assertThat(remoteEntityManager.getEntityById(Entry::class.java, newEntry.id!!)?.modifiedOn, `is`(newEntry.modifiedOn))
