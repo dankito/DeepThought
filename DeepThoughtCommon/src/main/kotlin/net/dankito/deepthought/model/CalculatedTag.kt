@@ -1,6 +1,7 @@
 package net.dankito.deepthought.model
 
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
+import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.EntryChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
@@ -24,7 +25,7 @@ abstract class CalculatedTag(name: String, protected val searchEngine: ISearchEn
             this.entries = it
 
             if(informUIOfUpdate) {
-                eventBus.postAsync(EntitiesOfTypeChanged(Tag::class.java))
+                eventBus.postAsync(EntitiesOfTypeChanged(Tag::class.java, EntityChangeType.Updated))
             }
         }
     }
