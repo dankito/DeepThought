@@ -7,6 +7,7 @@ import net.dankito.deepthought.android.activities.ArticleSummaryActivity
 import net.dankito.deepthought.android.activities.ViewEntryActivity
 import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorIconsAdapter
 import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorsAdapter
+import net.dankito.deepthought.android.androidservice.DeepThoughtBackgroundAndroidService
 import net.dankito.deepthought.android.appstart.AndroidAppInitializer
 import net.dankito.deepthought.android.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
@@ -30,6 +31,8 @@ interface AppComponent : CommonComponent {
         lateinit var component: AppComponent
     }
 
+
+    fun inject(backgroundService: DeepThoughtBackgroundAndroidService)
 
     fun inject(app: DeepThoughtApplication)
 
