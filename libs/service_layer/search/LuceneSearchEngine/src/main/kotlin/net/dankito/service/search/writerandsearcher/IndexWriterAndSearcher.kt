@@ -152,7 +152,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
             removeEntityFromIndex(entityChanged.entity)
             indexEntity(entityChanged.entity)
         }
-        else if(entityChanged.changeType == EntityChangeType.PreDelete) {
+        else if(entityChanged.changeType == EntityChangeType.PreDelete || (entityChanged.changeType == EntityChangeType.Deleted && entityChanged.entity.id != null)) {
             removeEntityFromIndex(entityChanged.entity)
         }
     }
