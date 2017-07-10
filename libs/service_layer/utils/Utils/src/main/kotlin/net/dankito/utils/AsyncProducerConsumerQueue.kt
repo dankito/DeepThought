@@ -6,7 +6,7 @@ import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
 
-class AsyncProducerConsumerQueue<T>(countThreadsToUse: Int, maxItemsToQueue: Int, minimumMillisecondsToWaitBeforeConsumingItem: Int, protected var consumerListener: ConsumerListener<T>) {
+class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItemsToQueue: Int, minimumMillisecondsToWaitBeforeConsumingItem: Int, protected var consumerListener: ConsumerListener<T>) {
 
     companion object {
 
@@ -43,6 +43,10 @@ class AsyncProducerConsumerQueue<T>(countThreadsToUse: Int, maxItemsToQueue: Int
 
     val queuedItemsCount: Int
         get() = producedItemsQueue.size
+
+    fun restart() {
+        startConsumerThreads(countThreadsToUse)
+    }
 
     fun stop() {
         val remainingItemsInQueue = ArrayList(producedItemsQueue)
