@@ -48,14 +48,12 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
 
     init {
-        AppComponent.component.inject(this)
+        AppComponent.addInitializationListener { appComponentInitialized() }
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        handleIntent(intent)
 
         setupUI()
     }
@@ -77,17 +75,32 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 //        drawer.addDrawerListener(toggle)
 //        toggle.syncState()
 
-        floatingActionMenuButton = FloatingActionMenuButton(fab_menu, summaryExtractorManager, router, eventBus)
-
         val navigationView = findViewById(R.id.nav_view) as NavigationView
         navigationView.setNavigationItemSelectedListener(this)
 
-        sectionsPagerAdapter = MainActivitySectionsPagerAdapter(supportFragmentManager)
-        viewPager.adapter = sectionsPagerAdapter
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener)
 
         bottomViewNavigation.setOnNavigationItemSelectedListener(bottomViewNavigationItemSelectedListener)
     }
+
+
+    private fun appComponentInitialized() {
+        AppComponent.component.inject(this)
+
+        currentActivityTracker?.currentActivity = this
+
+        runOnUiThread { setupDependentUIParts() }
+
+        handleIntent(intent)
+    }
+
+    private fun setupDependentUIParts() {
+        floatingActionMenuButton = FloatingActionMenuButton(fab_menu, summaryExtractorManager, router, eventBus)
+
+        sectionsPagerAdapter = MainActivitySectionsPagerAdapter(supportFragmentManager)
+        viewPager.adapter = sectionsPagerAdapter
+    }
+
 
     override fun onBackPressed() {
         val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
