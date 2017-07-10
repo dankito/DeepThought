@@ -44,10 +44,17 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
     val queuedItemsCount: Int
         get() = producedItemsQueue.size
 
+    /**
+     * To restart processing after a call to {@link #stop()} call this method.
+     */
     fun restart() {
         startConsumerThreads(countThreadsToUse)
     }
 
+    /**
+     * Stops processing.
+     * If processing should be restarted, call method {@link #restart()}.
+     */
     fun stop() {
         val remainingItemsInQueue = ArrayList(producedItemsQueue)
         producedItemsQueue.clear()
