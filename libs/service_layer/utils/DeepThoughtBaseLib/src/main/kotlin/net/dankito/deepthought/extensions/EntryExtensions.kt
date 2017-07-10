@@ -44,7 +44,10 @@ val Entry.entryPreview: String
                 preview += " "
             }
 
-            val maxContentLength = 300 - preview.length
+            var maxContentLength = 300 - preview.length
+            if(maxContentLength > this.contentPlainText.length) {
+                maxContentLength = this.contentPlainText.length
+            }
             preview += this.contentPlainText.substring(0, maxContentLength)
         }
 
