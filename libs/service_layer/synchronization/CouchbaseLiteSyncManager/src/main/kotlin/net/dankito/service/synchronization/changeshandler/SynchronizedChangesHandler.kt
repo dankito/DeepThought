@@ -110,19 +110,25 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
             if (lastUndeletedRevision != null) {
                 val entityType = getEntityTypeFromRevision(lastUndeletedRevision)
                 if (entityType != null) {
-                    val deletedEntity = entityManager.getEntityById(entityType, id)
-                    if(deletedEntity != null) {
+                    getDeletedEntity(id, entityType, document)?.let { deletedEntity ->
                         changeNotifier.notifyListenersOfEntityChange(deletedEntity, EntityChangeType.Deleted)
-                    }
-                    else {
-                        val dao = entityManager.getDaoForClass(entityType)
-                        dao?.createObjectFromDocument(document, id, entityType)?.let { deletedEntity ->
-                            changeNotifier.notifyListenersOfEntityChange(deletedEntity as BaseEntity, EntityChangeType.Deleted)
-                        }
                     }
                 }
             }
         }
+    }
+
+    private fun getDeletedEntity(id: String, entityType: Class<out BaseEntity>, document: Document): BaseEntity? {
+        entityManager.getEntityById(entityType, id)?.let {
+            return it
+        }
+
+        val dao = entityManager.getDaoForClass(entityType)
+        dao?.createObjectFromDocument(document, id, entityType)?.let {
+            return it as? BaseEntity
+        }
+
+        return null
     }
 
     private fun findLastUndeletedRevision(document: Document): SavedRevision? {
