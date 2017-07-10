@@ -110,9 +110,15 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
             if (lastUndeletedRevision != null) {
                 val entityType = getEntityTypeFromRevision(lastUndeletedRevision)
                 if (entityType != null) {
-                    val dao = entityManager.getDaoForClass(entityType)
-                    dao?.createObjectFromDocument(document, id, entityType)?.let { deletedEntity ->
-                        changeNotifier.notifyListenersOfEntityChange(deletedEntity as BaseEntity, EntityChangeType.Deleted)
+                    val deletedEntity = entityManager.getEntityById(entityType, id)
+                    if(deletedEntity != null) {
+                        changeNotifier.notifyListenersOfEntityChange(deletedEntity, EntityChangeType.Deleted)
+                    }
+                    else {
+                        val dao = entityManager.getDaoForClass(entityType)
+                        dao?.createObjectFromDocument(document, id, entityType)?.let { deletedEntity ->
+                            changeNotifier.notifyListenersOfEntityChange(deletedEntity as BaseEntity, EntityChangeType.Deleted)
+                        }
                     }
                 }
             }
