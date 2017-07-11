@@ -6,8 +6,8 @@ import net.dankito.data_access.network.webclient.RequestParameters
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
-import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.newsreader.model.ArticleSummaryItem
 import org.jsoup.nodes.Document
 import org.slf4j.LoggerFactory
 import kotlin.concurrent.thread
@@ -40,7 +40,7 @@ class DefaultArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
         extractContent(item).let { content ->
             val entry = Entry(content, item.summary)
             // TODO: handle item.previewImageUrl
-            val reference = Reference(item.url, item.title, item.publishedDate)
+            val reference = Reference(item.url, item.title, item.publishedDate, item.articleSummaryExtractorConfig?.name)
 
             return EntryExtractionResult(entry, reference)
         }
