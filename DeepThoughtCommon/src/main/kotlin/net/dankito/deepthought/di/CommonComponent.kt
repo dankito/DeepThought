@@ -2,10 +2,7 @@ package net.dankito.deepthought.di
 
 import dagger.Component
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
-import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
-import net.dankito.deepthought.ui.presenter.EntriesListPresenter
-import net.dankito.deepthought.ui.presenter.ReadLaterArticlePresenter
-import net.dankito.deepthought.ui.presenter.TagsListPresenter
+import net.dankito.deepthought.ui.presenter.*
 import javax.inject.Singleton
 
 
@@ -21,6 +18,8 @@ interface CommonComponent : BaseComponent {
     fun inject(entriesListPresenter: EntriesListPresenter)
 
     fun inject(tagsListPresenter: TagsListPresenter)
+
+    fun inject(referencesListPresenter: ReferencesListPresenter)
 
     fun inject(articleSummaryExtractorConfigManager: ArticleSummaryExtractorConfigManager)
 
