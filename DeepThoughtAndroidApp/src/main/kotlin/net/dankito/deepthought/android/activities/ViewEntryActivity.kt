@@ -10,12 +10,14 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.ui.BaseActivity
 import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.ReadLaterArticle
+import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ViewEntryPresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
-import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.serializer.ISerializer
 import net.dankito.service.data.EntryService
+import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
@@ -24,12 +26,16 @@ class ViewEntryActivity : BaseActivity() {
 
     companion object {
         const val ENTRY_ID_INTENT_EXTRA_NAME = "ENTRY_ID"
+        const val READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME = "ENTRY_ID"
         const val ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ENTRY_EXTRACTION_RESULT"
     }
 
 
     @Inject
     protected lateinit var entryService: EntryService
+
+    @Inject
+    protected lateinit var readLaterArticleService: ReadLaterArticleService
 
     @Inject
     protected lateinit var entryPersister: EntryPersister
@@ -44,6 +50,8 @@ class ViewEntryActivity : BaseActivity() {
     protected lateinit var serializer: ISerializer
 
     private var entry: Entry? = null
+
+    private var readLaterArticle: ReadLaterArticle? = null
 
     private var entryExtractionResult: EntryExtractionResult? = null
 
@@ -65,11 +73,13 @@ class ViewEntryActivity : BaseActivity() {
         savedInstanceState?.let { restoreState(it) }
 
         intent.getStringExtra(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)?.let { showSerializedEntryExtractionResult(it) }
+        intent.getStringExtra(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME)?.let { readLaterArticleId -> showReadLaterArticleFromDatabase(readLaterArticleId) }
         intent.getStringExtra(ENTRY_ID_INTENT_EXTRA_NAME)?.let { entryId -> showEntryFromDatabase(entryId) }
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
         savedInstanceState.getString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)?.let { showSerializedEntryExtractionResult(it) }
+        savedInstanceState.getString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME)?.let { readLaterArticleId -> showReadLaterArticleFromDatabase(readLaterArticleId) }
         savedInstanceState.getString(ENTRY_ID_INTENT_EXTRA_NAME)?.let { entryId -> showEntryFromDatabase(entryId) }
     }
 
@@ -79,6 +89,9 @@ class ViewEntryActivity : BaseActivity() {
         outState?.let { outState ->
             outState.putString(ENTRY_ID_INTENT_EXTRA_NAME, null)
             entry?.id?.let { entryId -> outState.putString(ENTRY_ID_INTENT_EXTRA_NAME, entryId) }
+
+            outState.putString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME, null)
+            readLaterArticle?.id?.let { readLaterArticleId -> outState.putString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME, readLaterArticleId) }
 
             outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, null)
             entryExtractionResult?.let { outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, serializer.serializeObject(it)) }
@@ -123,7 +136,7 @@ class ViewEntryActivity : BaseActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.view_entry_activity_menu, menu)
 
-        menu?.findItem(R.id.mnSaveEntry)?.isVisible = entryExtractionResult != null
+        menu?.findItem(R.id.mnSaveEntry)?.isVisible = (readLaterArticle != null || entryExtractionResult != null)
 
         return true
     }
@@ -135,13 +148,22 @@ class ViewEntryActivity : BaseActivity() {
             R.id.mnShareEntry -> showShareEntryPopupMenu(findViewById(R.id.mnShareEntry))
 
             R.id.mnSaveEntry -> {
-                entryExtractionResult?.let { // should actually never be null at this stage as mnSaveEntry is only shown when entryExtractionResult != null
-                    presenter.saveEntryExtractionResult(it)
-                }
+                saveEntry()
             }
         }
 
         return true
+    }
+
+    private fun saveEntry() {
+        entryExtractionResult?.let {
+            presenter.saveEntryExtractionResult(it)
+        }
+
+        readLaterArticle?.let {
+            presenter.saveEntryExtractionResult(it.entryExtractionResult)
+            readLaterArticleService.delete(it)
+        }
     }
 
     private fun showShareEntryPopupMenu(clickedView: View) {
@@ -188,6 +210,13 @@ class ViewEntryActivity : BaseActivity() {
         entryService.retrieve(entryId)?.let { entry ->
             this.entry = entry;
             showEntry(entry, entry.reference?.url)
+        }
+    }
+
+    private fun showReadLaterArticleFromDatabase(readLaterArticleId: String) {
+        readLaterArticleService.retrieve(readLaterArticleId)?.let { readLaterArticle ->
+            this.readLaterArticle = readLaterArticle
+            showEntry(readLaterArticle.entryExtractionResult.entry, readLaterArticle.entryExtractionResult.reference?.url)
         }
     }
 
