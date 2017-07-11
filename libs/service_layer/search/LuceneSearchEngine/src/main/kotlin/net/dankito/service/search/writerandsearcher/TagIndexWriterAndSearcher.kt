@@ -1,5 +1,6 @@
 package net.dankito.service.search.writerandsearcher
 
+import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Tag
 import net.dankito.service.data.TagService
 import net.dankito.service.data.messages.TagChanged
@@ -8,8 +9,12 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.FieldName
 import net.dankito.service.search.SortOption
 import net.dankito.service.search.SortOrder
+import net.dankito.service.search.results.FilteredTagsLazyLoadingLuceneSearchResultsList
+import net.dankito.service.search.specific.FilteredTagsSearch
+import net.dankito.service.search.specific.FilteredTagsSearchResult
 import net.dankito.service.search.specific.TagsSearch
 import net.dankito.service.search.specific.TagsSearchResult
+import net.dankito.service.search.util.LazyLoadingList
 import net.engio.mbassy.listener.Handler
 import org.apache.lucene.document.Document
 import org.apache.lucene.document.Field
@@ -20,7 +25,7 @@ import org.apache.lucene.search.*
 import org.slf4j.LoggerFactory
 
 
-class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus) : IndexWriterAndSearcher<Tag>(tagService, eventBus) {
+class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, private val entryIndexWriterAndSearcher: EntryIndexWriterAndSearcher) : IndexWriterAndSearcher<Tag>(tagService, eventBus) {
 
     companion object {
         private const val TAGS_DEFAULT_COUNT_MAX_SEARCH_RESULTS = 100000
@@ -143,6 +148,59 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus) : I
 
     private fun executeSearchTagsQuery(query: Query): List<Tag> {
         return executeQuery(query, Tag::class.java, TAGS_DEFAULT_COUNT_MAX_SEARCH_RESULTS, SortOption(FieldName.TagName, SortOrder.Ascending, SortField.Type.STRING))
+    }
+
+
+    fun searchFilteredTags(search: FilteredTagsSearch, termsToSearchFor: List<String>) {
+        var entriesHavingFilteredTags: List<Entry> = listOf()
+        var tagsOnEntriesContainingFilteredTags: List<Tag> = listOf()
+        val query = BooleanQuery()
+
+        search.tagsToFilterFor.forEach { tag ->
+            query.add(BooleanClause(TermQuery(Term(FieldName.EntryTagsIds, tag.id)), BooleanClause.Occur.MUST))
+        }
+
+        try {
+            entryIndexWriterAndSearcher.executeQuery(query, 10000, SortOption(FieldName.EntryCreated, SortOrder.Descending, SortField.Type.LONG))?.let { (searcher, hits) ->
+                val entries = FilteredTagsLazyLoadingLuceneSearchResultsList(entityService.entityManager, searcher, hits)
+                entriesHavingFilteredTags = entries
+
+                val tagIdsOnEntriesContainingFilteredTags: Collection<String> = entries.tagIdsOnResultEntries
+
+                val sortedTagIdsOnEntriesContainingFilteredTags = searchInGivenTags(tagIdsOnEntriesContainingFilteredTags, termsToSearchFor)
+
+                tagsOnEntriesContainingFilteredTags = LazyLoadingList<Tag>(entityService.entityManager, Tag::class.java, sortedTagIdsOnEntriesContainingFilteredTags.toMutableList())
+            }
+        } catch (ex: Exception) {
+            log.error("Could not execute Query " + query.toString(), ex)
+        }
+
+        search.completedListener(FilteredTagsSearchResult(entriesHavingFilteredTags, tagsOnEntriesContainingFilteredTags))
+    }
+
+    private fun searchInGivenTags(givenTagIds: Collection<String>, tagNamesToSearchFor: List<String>): List<String> {
+        val searchTermQuery = BooleanQuery()
+        if(tagNamesToSearchFor.isEmpty()) {
+            searchTermQuery.add(WildcardQuery(Term(FieldName.TagName, "*")), BooleanClause.Occur.SHOULD)
+        }
+        else {
+            for (tagName in tagNamesToSearchFor) {
+                searchTermQuery.add(WildcardQuery(Term(FieldName.TagName, "*$tagName*")), BooleanClause.Occur.SHOULD)
+            }
+        }
+
+        executeQuery(searchTermQuery, TAGS_DEFAULT_COUNT_MAX_SEARCH_RESULTS, SortOption(FieldName.TagName, SortOrder.Ascending, SortField.Type.STRING))?.let { (searcher, hits) ->
+            val tagIdsWithSearchTermIds = hits.map {
+                val hitDoc = searcher.doc(it.doc)
+                hitDoc.getField(getIdFieldName()).stringValue()
+            }.toMutableList() // TODO: does this keep sort ordering?
+
+            tagIdsWithSearchTermIds.retainAll(givenTagIds)
+
+            return tagIdsWithSearchTermIds
+        }
+
+        return listOf()
     }
 
 
