@@ -20,6 +20,9 @@ class DefaultArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
     }
 
 
+    private val metaDataExtractor = WebPageMetaDataExtractor()
+
+
     override fun getName(): String? {
         return null
     }
@@ -61,7 +64,11 @@ class DefaultArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
     }
 
     override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
-        return EntryExtractionResult(Entry(extractContent(document)), Reference(url, document.title()))
+        val extractionResult = EntryExtractionResult(Entry(extractContent(document)), Reference(url, document.title()))
+
+        metaDataExtractor.extractMetaData(extractionResult, document)
+
+        return extractionResult
     }
 
 
