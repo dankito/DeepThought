@@ -7,7 +7,7 @@ import net.dankito.service.data.messages.EntityChangeType
 import kotlin.concurrent.thread
 
 
-abstract class EntityServiceBase<T : BaseEntity>(val dataManager: DataManager, val entityChangedNotifier: EntityChangedNotifier) {
+abstract class EntityServiceBase<T : BaseEntity>(val entityClass: Class<T>, val dataManager: DataManager, val entityChangedNotifier: EntityChangedNotifier) {
 
     val entityManager = dataManager.entityManager
 
@@ -19,10 +19,8 @@ abstract class EntityServiceBase<T : BaseEntity>(val dataManager: DataManager, v
     }
 
     fun getAll() : List<T> {
-        return entityManager.getAllEntitiesOfType(getEntityClass())
+        return entityManager.getAllEntitiesOfType(entityClass)
     }
-
-    abstract fun getEntityClass(): Class<T>
 
 
     fun persist(entity: T) {
@@ -42,7 +40,7 @@ abstract class EntityServiceBase<T : BaseEntity>(val dataManager: DataManager, v
 
 
     fun retrieve(id: String): T? {
-        return entityManager.getEntityById(getEntityClass(), id)
+        return entityManager.getEntityById(entityClass, id)
     }
 
     fun update(entity: T) {

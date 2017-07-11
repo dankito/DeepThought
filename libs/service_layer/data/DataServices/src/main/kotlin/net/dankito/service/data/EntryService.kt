@@ -5,11 +5,7 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.event.EntityChangedNotifier
 
 
-class EntryService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier): EntityServiceBase<Entry>(dataManager, entityChangedNotifier) {
-
-    override fun getEntityClass(): Class<Entry> {
-        return Entry::class.java
-    }
+class EntryService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier): EntityServiceBase<Entry>(Entry::class.java, dataManager, entityChangedNotifier) {
 
     override fun onPrePersist(entity: Entry) {
         super.onPrePersist(entity)

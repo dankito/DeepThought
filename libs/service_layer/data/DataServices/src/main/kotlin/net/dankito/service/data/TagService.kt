@@ -5,10 +5,4 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.event.EntityChangedNotifier
 
 
-class TagService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : EntityServiceBase<Tag>(dataManager, entityChangedNotifier) {
-
-    override fun getEntityClass(): Class<Tag> {
-        return Tag::class.java
-    }
-
-}
+class TagService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : EntityServiceBase<Tag>(Tag::class.java, dataManager, entityChangedNotifier)
