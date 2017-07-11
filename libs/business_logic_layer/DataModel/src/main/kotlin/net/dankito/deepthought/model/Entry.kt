@@ -53,10 +53,6 @@ data class Entry(
     var embeddedFiles: MutableSet<FileLink> = HashSet()
         private set
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST))
-    @JoinColumn(name = TableConfig.EntryPreviewImageJoinColumnName)
-    var previewImage: FileLink? = null // TODO: may remove
-
     @Column(name = TableConfig.EntryPreviewImageUrlColumnName)
     var previewImageUrl: String? = null
 
