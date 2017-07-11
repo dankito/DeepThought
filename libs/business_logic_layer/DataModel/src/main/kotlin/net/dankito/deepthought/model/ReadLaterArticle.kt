@@ -1,6 +1,7 @@
 package net.dankito.deepthought.model
 
 import net.dankito.deepthought.model.config.TableConfig
+import net.dankito.deepthought.model.util.EntryExtractionResult
 import javax.persistence.Column
 import javax.persistence.Entity
 
@@ -8,8 +9,9 @@ import javax.persistence.Entity
 @Entity(name = TableConfig.ReadLaterArticleTableName)
 class ReadLaterArticle(
 
-        @Column(name = TableConfig.ReadLaterArticleEntryExtractionResultColumnName)
-        var serializedEntryExtractionResult: String
+        @Transient
+        @javax.persistence.Transient
+        var entryExtractionResult: EntryExtractionResult // do not try to persist EntryExtractionResult as this would persist an unpersisted entry (and may reference)
 
 ) : BaseEntity() {
 
@@ -18,6 +20,10 @@ class ReadLaterArticle(
     }
 
 
-    private constructor() : this("")
+    private constructor() : this(EntryExtractionResult(Entry("")))
+
+
+    @Column(name = TableConfig.ReadLaterArticleEntryExtractionResultColumnName)
+    var serializedEntryExtractionResult: String = ""
 
 }
