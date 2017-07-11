@@ -28,8 +28,6 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
 
     companion object {
         const val MAX_SIZE = 152
-
-        private val log = LoggerFactory.getLogger(ArticleSummaryExtractorConfigManager::class.java)
     }
 
 
