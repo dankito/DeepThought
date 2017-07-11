@@ -10,7 +10,6 @@ import javax.persistence.Entity
 class ReadLaterArticle(
 
         @Transient
-        @javax.persistence.Transient
         var entryExtractionResult: EntryExtractionResult // do not try to persist EntryExtractionResult as this would persist an unpersisted entry (and may reference)
 
 ) : BaseEntity() {
