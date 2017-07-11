@@ -4,13 +4,12 @@ import net.dankito.data_access.database.IEntityManager
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.service.search.util.LazyLoadingList
 import org.apache.lucene.search.IndexSearcher
-import org.apache.lucene.search.Query
 import org.apache.lucene.search.ScoreDoc
 import org.slf4j.LoggerFactory
 import java.util.*
 
 
-open class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEntityManager, protected var searcher: IndexSearcher, query: Query, resultType: Class<T>,
+open class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEntityManager, protected var searcher: IndexSearcher, resultType: Class<T>,
                             protected var idFieldName: String, hits: Array<ScoreDoc>)
     : LazyLoadingList<T>(entityManager, resultType) {
 
@@ -23,7 +22,7 @@ open class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEn
         try {
             this.entityIds = retrieveEntityIds(hits)
         } catch (ex: Exception) {
-            log.error("Could not execute Query " + query, ex)
+            log.error("Could not retrieve results from hits", ex)
         }
 
     }

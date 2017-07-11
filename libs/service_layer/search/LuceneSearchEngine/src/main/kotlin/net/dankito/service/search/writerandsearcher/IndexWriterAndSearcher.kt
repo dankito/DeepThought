@@ -268,7 +268,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
     protected fun executeQuery(query: Query, resultEntityClass: Class<TEntity>, countMaxSearchResults: Int = DEFAULT_COUNT_MAX_SEARCH_RESULTS, vararg sortOptions: SortOption): List<TEntity> {
         executeQuery(query, countMaxSearchResults, *sortOptions)?.let { (searcher, hits) ->
-            return LazyLoadingLuceneSearchResultsList<TEntity>(entityService.entityManager, searcher, query, resultEntityClass, getIdFieldName(), hits)
+            return LazyLoadingLuceneSearchResultsList<TEntity>(entityService.entityManager, searcher, resultEntityClass, getIdFieldName(), hits)
         }
 
         return listOf()
