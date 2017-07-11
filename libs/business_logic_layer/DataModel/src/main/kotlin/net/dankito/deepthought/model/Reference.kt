@@ -48,9 +48,6 @@ data class Reference(
     @Temporal(TemporalType.TIMESTAMP)
     var lastAccessDate: Date? = null
 
-    @Column(name = TableConfig.ReferenceNotesColumnName)
-    var notes: String? = null
-
 
     @Column(name = TableConfig.ReferenceTableOfContentsColumnName)
     @Lob
@@ -58,6 +55,9 @@ data class Reference(
 
     @Column(name = TableConfig.ReferenceIsbnOrIssnColumnName)
     var isbnOrIssn: String? = null
+
+    @Column(name = TableConfig.ReferenceNotesColumnName)
+    var notes: String? = null
 
 
 
