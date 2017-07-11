@@ -63,7 +63,7 @@ class ReferencesListView: MainActivityTabFragment(R.layout.fragment_tab_referenc
     /*      IReferencesListView implementation      */
 
     override fun showReferences(references: List<Reference>) {
-        activity.runOnUiThread { adapter.setItems(references) }
+        activity?.runOnUiThread { adapter.setItems(references) }
     }
 
 }
