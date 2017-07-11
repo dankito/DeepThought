@@ -7,11 +7,12 @@ import net.dankito.deepthought.android.activities.ViewEntryActivity
 import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
 import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
-import net.dankito.deepthought.ui.IRouter
+import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.ReadLaterArticle
+import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.ui.IRouter
 import net.dankito.serializer.ISerializer
 
 
@@ -56,6 +57,10 @@ class AndroidRouter(private val context: Context, private val activityTracker: C
         entry.id?.let { entryId -> showEntryView(ViewEntryActivity.ENTRY_ID_INTENT_EXTRA_NAME, entryId) }
     }
 
+    override fun showViewEntryView(article: ReadLaterArticle) {
+        article.id?.let { articleId -> showEntryView(ViewEntryActivity.READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME, articleId) }
+    }
+
     override fun showViewEntryView(extractionResult: EntryExtractionResult) {
         val serializedExtractionResult = serializer.serializeObject(extractionResult)
 
@@ -77,6 +82,10 @@ class AndroidRouter(private val context: Context, private val activityTracker: C
     }
 
     override fun showEditEntryView(entry: Entry) {
+
+    }
+
+    override fun showEditEntryView(article: ReadLaterArticle) {
 
     }
 

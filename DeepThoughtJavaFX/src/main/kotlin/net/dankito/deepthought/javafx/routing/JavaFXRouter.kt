@@ -5,14 +5,16 @@ import net.dankito.deepthought.extensions.referencePreview
 import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryExtractionResultView
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryView
+import net.dankito.deepthought.javafx.dialogs.entry.EditReadLaterArticleView
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.ReadLaterArticleView
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.IEntriesListView
-import net.dankito.deepthought.model.util.EntryExtractionResult
 import tornadofx.*
 
 
@@ -52,6 +54,10 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
         showEditEntryView(entry)
     }
 
+    override fun showViewEntryView(article: ReadLaterArticle) {
+        showEditEntryView(article)
+    }
+
     override fun showViewEntryView(extractionResult: EntryExtractionResult) {
         showEditEntryView(extractionResult)
     }
@@ -65,6 +71,13 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
         runLater {
             // TODO: set title when Reference is not set
             mainWindowController.find(EditEntryView::class, mapOf(EditEntryView::entry to entry)).show(entry.referencePreview)
+        }
+    }
+
+    override fun showEditEntryView(article: ReadLaterArticle) {
+        runLater {
+            // TODO: set title when Reference is not set
+            mainWindowController.find(EditReadLaterArticleView::class, mapOf(EditReadLaterArticleView::article to article)).show(article.entryExtractionResult.reference?.preview)
         }
     }
 
