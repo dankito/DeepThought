@@ -10,13 +10,14 @@ import net.dankito.serializer.ISerializer
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.messages.ReadLaterArticleChanged
 import net.dankito.service.eventbus.IEventBus
+import net.dankito.service.search.Search
 import net.dankito.utils.IThreadPool
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 
 
 class ReadLaterArticlePresenter(private val view: IReadLaterArticleView, private val readLaterArticleService: ReadLaterArticleService, private val entryPersister: EntryPersister,
-                                private val router: IRouter) {
+                                private val router: IRouter) : IMainViewSectionPresenter {
 
 
     @Inject
@@ -29,6 +30,8 @@ class ReadLaterArticlePresenter(private val view: IReadLaterArticleView, private
     protected lateinit var threadPool: IThreadPool
 
 
+    private var lastSearchTermProperty = Search.EmptySearchTerm
+
     private val eventBusListener = EventBusListener()
 
 
@@ -39,12 +42,16 @@ class ReadLaterArticlePresenter(private val view: IReadLaterArticleView, private
     }
 
 
-    fun cleanUp() {
+    override fun cleanUp() {
         eventBus.unregister(eventBusListener)
     }
 
 
-    fun getReadLaterArticlesAsync() {
+    override fun getLastSearchTerm(): String {
+        return lastSearchTermProperty
+    }
+
+    override fun getAndShowAllEntities() {
         threadPool.runAsync { getReadLaterArticles() }
     }
 
@@ -94,7 +101,7 @@ class ReadLaterArticlePresenter(private val view: IReadLaterArticleView, private
 
         @Handler
         fun readLaterArticleChanged(readLaterArticleChanged: ReadLaterArticleChanged) {
-            getReadLaterArticlesAsync()
+            getAndShowAllEntities()
         }
 
     }

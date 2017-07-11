@@ -36,7 +36,7 @@ class ReadLaterArticleView : View(), IReadLaterArticleView {
 
         presenter = ReadLaterArticlePresenter(this, readLaterArticleService, entryPersister, router)
 
-        presenter.getReadLaterArticlesAsync()
+        presenter.getAndShowAllEntities()
     }
 
 
