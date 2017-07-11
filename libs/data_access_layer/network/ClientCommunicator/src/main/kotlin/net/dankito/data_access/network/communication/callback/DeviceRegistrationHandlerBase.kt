@@ -5,6 +5,7 @@ import net.dankito.data_access.network.communication.message.RequestPermitSynchr
 import net.dankito.data_access.network.communication.message.RespondToSynchronizationPermittingChallengeResponseBody
 import net.dankito.data_access.network.communication.message.RespondToSynchronizationPermittingChallengeResult
 import net.dankito.data_access.network.communication.message.Response
+import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
@@ -86,7 +87,9 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
 
         val deepThoughtSyncInfo = DeepThoughtSyncInfo(dataManager.deepThought)
 
-        return SyncInfo(deepThoughtSyncInfo, userSyncInfo, useCallerDatabaseIds, useCallerUserName)
+        val articleSummaryExtractorConfigs = dataManager.entityManager.getAllEntitiesOfType(ArticleSummaryExtractorConfig::class.java)
+
+        return SyncInfo(deepThoughtSyncInfo, userSyncInfo, articleSummaryExtractorConfigs, useCallerDatabaseIds, useCallerUserName)
     }
 
 
