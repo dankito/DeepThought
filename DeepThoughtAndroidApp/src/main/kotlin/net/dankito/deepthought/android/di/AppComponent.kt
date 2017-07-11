@@ -39,7 +39,9 @@ interface AppComponent : CommonComponent {
             appComponentInitialized()
         }
 
-        private var isInitialized = false
+        var isInitialized = false
+            private set
+
         private val initializationListeners = mutableSetOf<() -> Unit>()
 
         fun addInitializationListener(listener: () -> Unit) {
