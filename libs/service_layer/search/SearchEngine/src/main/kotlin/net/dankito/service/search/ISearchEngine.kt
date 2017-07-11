@@ -1,6 +1,7 @@
 package net.dankito.service.search
 
 import net.dankito.service.search.specific.EntriesSearch
+import net.dankito.service.search.specific.ReferenceSearch
 import net.dankito.service.search.specific.TagsSearch
 
 
@@ -18,9 +19,8 @@ interface ISearchEngine {
 //    fun findAllEntriesHavingTheseTags(tagsToFilterFor: Collection<Tag>, listener: SearchCompletedListener<FindAllEntriesHavingTheseTagsResult>)
 //    fun findAllEntriesHavingTheseTags(tagsToFilterFor: Collection<Tag>, searchTerm: String, listener: SearchCompletedListener<FindAllEntriesHavingTheseTagsResult>)
 
-//    fun searchReferenceBases(search: ReferenceSearch)
-//    fun searchForReferenceOfDate(optionalSeriesTitleTitle: String, search: Search<Reference>)
-//
+    fun searchReferences(search: ReferenceSearch)
+
 //    fun searchFiles(search: FilesSearch)
 //
 //

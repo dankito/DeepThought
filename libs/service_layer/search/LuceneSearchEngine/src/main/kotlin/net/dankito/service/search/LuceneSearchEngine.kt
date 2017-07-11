@@ -2,12 +2,15 @@ package net.dankito.service.search
 
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.EntryService
+import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.TagService
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.specific.EntriesSearch
+import net.dankito.service.search.specific.ReferenceSearch
 import net.dankito.service.search.specific.TagsSearch
 import net.dankito.service.search.writerandsearcher.EntryIndexWriterAndSearcher
 import net.dankito.service.search.writerandsearcher.IndexWriterAndSearcher
+import net.dankito.service.search.writerandsearcher.ReferenceIndexWriterAndSearcher
 import net.dankito.service.search.writerandsearcher.TagIndexWriterAndSearcher
 import net.dankito.utils.IThreadPool
 import org.apache.lucene.analysis.Analyzer
@@ -19,7 +22,7 @@ import org.slf4j.LoggerFactory
 import java.io.File
 
 
-class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThreadPool, eventBus: IEventBus, entryService: EntryService, tagService: TagService)
+class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThreadPool, eventBus: IEventBus, entryService: EntryService, tagService: TagService, referenceService: ReferenceService)
     : SearchEngineBase(threadPool) {
 
     companion object {
@@ -30,6 +33,8 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
     private val entryIndexWriterAndSearcher = EntryIndexWriterAndSearcher(entryService, eventBus)
 
     private val tagIndexWriterAndSearcher = TagIndexWriterAndSearcher(tagService, eventBus)
+
+    private val referenceIndexWriterAndSearcher = ReferenceIndexWriterAndSearcher(referenceService, eventBus)
 
     private val indexWritersAndSearchers: List<IndexWriterAndSearcher<*>>
 
@@ -43,7 +48,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
 
 
     init {
-        indexWritersAndSearchers = listOf(entryIndexWriterAndSearcher, tagIndexWriterAndSearcher)
+        indexWritersAndSearchers = listOf(entryIndexWriterAndSearcher, tagIndexWriterAndSearcher, referenceIndexWriterAndSearcher)
 
         createDirectoryAndIndexSearcherAndWriterForDeepThoughtAsync()
     }
@@ -171,6 +176,10 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
 
     override fun searchTags(search: TagsSearch, termsToSearchFor: List<String>) {
         tagIndexWriterAndSearcher.searchTags(search, termsToSearchFor)
+    }
+
+    override fun searchReferences(search: ReferenceSearch, termsToSearchFor: List<String>) {
+        referenceIndexWriterAndSearcher.searchReferences(search, termsToSearchFor)
     }
 
 }
