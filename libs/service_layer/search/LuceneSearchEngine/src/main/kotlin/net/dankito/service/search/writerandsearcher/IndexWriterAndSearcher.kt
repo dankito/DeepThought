@@ -7,6 +7,7 @@ import net.dankito.service.data.messages.EntityChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.SearchWithCollectionResult
 import net.dankito.service.search.SortOption
+import net.dankito.service.search.SortOrder
 import net.dankito.service.search.results.LazyLoadingLuceneSearchResultsList
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.document.Document
@@ -16,6 +17,8 @@ import org.apache.lucene.index.IndexWriterConfig
 import org.apache.lucene.index.Term
 import org.apache.lucene.search.IndexSearcher
 import org.apache.lucene.search.Query
+import org.apache.lucene.search.Sort
+import org.apache.lucene.search.SortField
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.FSDirectory
 import org.apache.lucene.store.LockObtainFailedException
@@ -111,7 +114,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
         indexSearcher = IndexSearcher(directoryReader)
     }
 
-    private fun getIndexSearcher(): IndexSearcher? {
+    protected fun getIndexSearcher(): IndexSearcher? {
         if (indexSearcher == null) {
             try {
                 createIndexSearcher(isReadOnly)
@@ -259,10 +262,29 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
         log.debug("Executing Query " + query)
 
         getIndexSearcher()?.let {
-            return LazyLoadingLuceneSearchResultsList<TEntity>(entityService.entityManager, it, query, resultEntityClass, getIdFieldName(), countMaxSearchResults, sortOptions.asList())
+            return LazyLoadingLuceneSearchResultsList<TEntity>(entityService.entityManager, it, query, resultEntityClass, getIdFieldName(), countMaxSearchResults,
+                    getSorting(sortOptions.asList()))
         }
 
         return listOf()
+    }
+
+    protected fun getSorting(sortOptions: List<SortOption>): Sort {
+        val sort = Sort()
+
+        if (sortOptions.isNotEmpty()) {
+            val sortFields = arrayOfNulls<SortField>(sortOptions.size)
+
+            for(i in sortOptions.indices) {
+                val (fieldName, order, type) = sortOptions[i]
+
+                sortFields[i] = SortField(fieldName, type, order === SortOrder.Descending)
+            }
+
+            sort.setSort(*sortFields)
+        }
+
+        return sort
     }
 
     protected fun executeQueryForSearchWithCollectionResult(search: SearchWithCollectionResult<TEntity>, query: Query, resultEntityClass: Class<TEntity>,
