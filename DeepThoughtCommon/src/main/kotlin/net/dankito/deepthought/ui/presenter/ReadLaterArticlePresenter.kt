@@ -9,14 +9,16 @@ import net.dankito.serializer.ISerializer
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.messages.ReadLaterArticleChanged
 import net.dankito.service.eventbus.IEventBus
+import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
+import net.dankito.service.search.specific.ReadLaterArticleSearch
 import net.dankito.utils.IThreadPool
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 
 
-class ReadLaterArticlePresenter(private val view: IReadLaterArticleView, private val readLaterArticleService: ReadLaterArticleService, private val entryPersister: EntryPersister,
-                                private val router: IRouter) : IMainViewSectionPresenter {
+class ReadLaterArticlePresenter(private val view: IReadLaterArticleView, private val searchEngine: ISearchEngine, private val readLaterArticleService: ReadLaterArticleService,
+                                private val entryPersister: EntryPersister, private val router: IRouter) : IMainViewSectionPresenter {
 
 
     @Inject
@@ -51,13 +53,17 @@ class ReadLaterArticlePresenter(private val view: IReadLaterArticleView, private
     }
 
     override fun getAndShowAllEntities() {
-        threadPool.runAsync { getReadLaterArticles() }
+        getReadLaterArticles(Search.EmptySearchTerm)
     }
 
     private fun getReadLaterArticles() {
-        readLaterArticleService.getAllAsync {
+        getReadLaterArticles(lastSearchTermProperty)
+    }
+
+    fun getReadLaterArticles(searchTerm: String) {
+        searchEngine.searchReadLaterArticles(ReadLaterArticleSearch(searchTerm) {
             view.showArticles(it)
-        }
+        })
     }
 
 
@@ -88,7 +94,7 @@ class ReadLaterArticlePresenter(private val view: IReadLaterArticleView, private
 
         @Handler
         fun readLaterArticleChanged(readLaterArticleChanged: ReadLaterArticleChanged) {
-            getAndShowAllEntities()
+            getReadLaterArticles()
         }
 
     }

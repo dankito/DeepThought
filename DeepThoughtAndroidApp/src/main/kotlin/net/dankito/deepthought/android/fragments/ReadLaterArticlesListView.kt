@@ -11,11 +11,15 @@ import net.dankito.deepthought.ui.presenter.ReadLaterArticlePresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.deepthought.ui.view.IReadLaterArticleView
 import net.dankito.service.data.ReadLaterArticleService
+import net.dankito.service.search.ISearchEngine
 import javax.inject.Inject
 
 
 class ReadLaterArticlesListView : MainActivityTabFragment(R.layout.fragment_tab_read_later_articles, R.id.lstReadLaterArticles, R.menu.fragment_tab_read_later_articles_menu), IReadLaterArticleView {
 
+
+    @Inject
+    protected lateinit var searchEngine: ISearchEngine
 
     @Inject
     protected lateinit var readLaterArticleService: ReadLaterArticleService
@@ -35,7 +39,7 @@ class ReadLaterArticlesListView : MainActivityTabFragment(R.layout.fragment_tab_
     init {
         AppComponent.component.inject(this)
 
-        presenter = ReadLaterArticlePresenter(this, readLaterArticleService, entryPersister, router)
+        presenter = ReadLaterArticlePresenter(this, searchEngine, readLaterArticleService, entryPersister, router)
     }
 
 
@@ -54,7 +58,7 @@ class ReadLaterArticlesListView : MainActivityTabFragment(R.layout.fragment_tab_
     override fun getQueryHint() = activity.getString(R.string.search_hint_read_later_articles)
 
     override fun searchEntities(query: String) {
-        presenter.getAndShowAllEntities()
+        presenter.getReadLaterArticles(query)
     }
 
 
