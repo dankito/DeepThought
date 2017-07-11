@@ -19,7 +19,7 @@ abstract class EntityServiceBase<T : BaseEntity>(val entityClass: Class<T>, val 
         }
     }
 
-    fun getAll() : List<T> {
+    open fun getAll() : List<T> {
         return entityManager.getAllEntitiesOfType(entityClass)
     }
 
@@ -40,7 +40,7 @@ abstract class EntityServiceBase<T : BaseEntity>(val entityClass: Class<T>, val 
     }
 
 
-    fun retrieve(id: String): T? {
+    open fun retrieve(id: String): T? {
         return entityManager.getEntityById(entityClass, id)
     }
 
