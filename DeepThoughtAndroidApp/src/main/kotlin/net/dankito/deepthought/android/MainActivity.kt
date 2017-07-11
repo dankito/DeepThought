@@ -56,6 +56,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         super.onCreate(savedInstanceState)
 
         setupUI()
+
+        if(AppComponent.isInitialized) {
+            handleIntent(intent)
+        }
     }
 
     override fun onNewIntent(intent: Intent) {
