@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory
 import java.util.*
 
 
-open class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEntityManager, private var searcher: IndexSearcher, query: Query, resultType: Class<T>,
-                            private var idFieldName: String, countMaxSearchResults: Int = 1000, sortOptions: List<SortOption> = ArrayList<SortOption>(0))
+open class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEntityManager, protected var searcher: IndexSearcher, query: Query, resultType: Class<T>,
+                            protected var idFieldName: String, countMaxSearchResults: Int = 1000, sortOptions: List<SortOption> = ArrayList<SortOption>(0))
     : LazyLoadingList<T>(entityManager, resultType) {
 
     companion object {
@@ -54,8 +54,7 @@ open class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEn
 
         try {
             for(index in hits.indices) {
-                val hitDoc = searcher.doc(hits[index].doc)
-                val entityId = hitDoc.getField(idFieldName).stringValue()
+                val entityId = getEntityIdFromHit(hits, index)
 
                 ids.add(entityId)
             }
@@ -64,6 +63,13 @@ open class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEn
         }
 
         return ids
+    }
+
+    protected open fun getEntityIdFromHit(hits: Array<ScoreDoc>, index: Int): String {
+        val hitDoc = searcher.doc(hits[index].doc)
+        val entityId = hitDoc.getField(idFieldName).stringValue()
+
+        return entityId
     }
 
 }
