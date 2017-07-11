@@ -9,6 +9,7 @@ import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
+import net.dankito.service.search.specific.FilteredTagsSearch
 import net.dankito.service.search.specific.TagsSearch
 import net.dankito.service.search.util.CombinedLazyLoadingList
 import net.engio.mbassy.listener.Handler
@@ -68,6 +69,14 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private val dat
             }
 
             tagsListView.showTags(tags)
+        })
+    }
+
+    fun searchFilteredTags(searchTerm: String, tagsFilter: List<Tag>) {
+        lastSearchTermProperty = searchTerm
+
+        searchEngine.searchFilteredTags(FilteredTagsSearch(tagsFilter, searchTerm) { result ->
+            tagsListView.showTags(result.tagsOnEntriesContainingFilteredTags)
         })
     }
 
