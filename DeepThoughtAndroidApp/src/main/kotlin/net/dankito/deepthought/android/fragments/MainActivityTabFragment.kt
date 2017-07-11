@@ -42,7 +42,7 @@ abstract class MainActivityTabFragment : Fragment() {
 
     }
 
-    protected open fun getQueryHint() = ""
+    protected open fun getQueryHint(): String = ""
 
     protected open fun searchEntities(query: String) {
 
