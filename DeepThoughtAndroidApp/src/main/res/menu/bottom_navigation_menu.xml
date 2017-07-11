@@ -14,4 +14,11 @@
         android:orderInCategory="1"
     />
 
+    <item
+        android:id="@+id/btnvReferences"
+        android:title="@string/tab_references_title"
+        android:icon="@drawable/ic_book_white_48dp"
+        android:orderInCategory="2"
+    />
+
 </menu>
