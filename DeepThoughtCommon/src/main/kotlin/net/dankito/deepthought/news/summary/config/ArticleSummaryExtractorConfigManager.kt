@@ -16,6 +16,7 @@ import net.dankito.service.data.ArticleSummaryExtractorConfigService
 import net.dankito.utils.IThreadPool
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
+import kotlin.concurrent.thread
 
 
 class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, private val configService: ArticleSummaryExtractorConfigService, private val threadPool: IThreadPool) {
@@ -50,25 +51,28 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
         CommonComponent.component.inject(this)
 
         configService.dataManager.addInitializationListener {
-            readPersistedConfigs()
+            thread {
+                readPersistedConfigs()
+                initiallyRetrievedSummaryExtractorConfigs()
+            }
         }
     }
 
-    private fun readPersistedConfigs() {
-        configService.getAllAsync { summaryExtractorConfigs ->
-            summaryExtractorConfigs.forEach { config ->
-                configurations.put(config.url, config)
+    private fun readPersistedConfigs() { // for EventBusListener ArticleSummaryExtractorConfigs have to be retrieved synchronous so that all other listeners are aware of changes done in this method
+        val summaryExtractorConfigs = configService.getAll()
 
-                if(config.iconUrl == null) {
-                    loadIconAsync(config)
-                }
+        configurations.clear()
+        favorites.clear()
+
+        summaryExtractorConfigs.forEach { config ->
+            configurations.put(config.url, config)
+
+            if(config.iconUrl == null) {
+                loadIconAsync(config)
             }
-
-            favorites = configurations.values.filter { it.isFavorite }.sortedBy { it.favoriteIndex }.toMutableList()
-
-
-            initiallyRetrievedSummaryExtractorConfigs()
         }
+
+        favorites = configurations.values.filter { it.isFavorite }.sortedBy { it.favoriteIndex }.toMutableList()
     }
 
     private fun initiallyRetrievedSummaryExtractorConfigs() {
