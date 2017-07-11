@@ -121,8 +121,8 @@ class CommonModule {
 
     @Provides
     @Singleton
-    fun provideFeedReader() : IFeedReader {
-        return RomeFeedReader()
+    fun provideFeedReader(webClient: IWebClient) : IFeedReader {
+        return RomeFeedReader(webClient)
     }
 
 

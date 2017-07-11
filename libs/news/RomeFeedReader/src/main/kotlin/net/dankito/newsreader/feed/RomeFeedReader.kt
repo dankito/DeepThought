@@ -4,16 +4,17 @@ import com.rometools.rome.feed.synd.SyndEntry
 import com.rometools.rome.feed.synd.SyndFeed
 import com.rometools.rome.io.SyndFeedInput
 import com.rometools.rome.io.XmlReader
+import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.data_access.network.webclient.RequestParameters
+import net.dankito.data_access.network.webclient.ResponseType
+import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.newsreader.model.FeedArticleSummary
-import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import org.jsoup.Jsoup
 import org.slf4j.LoggerFactory
-import java.net.URL
-import kotlin.concurrent.thread
 
 
-class RomeFeedReader : IFeedReader {
+class RomeFeedReader(private val webClient: IWebClient) : IFeedReader {
 
     companion object {
         private val log = LoggerFactory.getLogger(RomeFeedReader::class.java)
@@ -24,25 +25,32 @@ class RomeFeedReader : IFeedReader {
 
 
     override fun readFeedAsync(feedUrl: String, callback: (AsyncResult<FeedArticleSummary>) -> Unit) {
-        thread {
-            try {
-                callback(AsyncResult(true, result = readFeed(feedUrl)))
-            } catch(e: Exception) {
-                log.error("Could not read feed from url " + feedUrl, e)
-                callback(AsyncResult(false, e))
+        webClient.getAsync(RequestParameters(feedUrl, responseType = ResponseType.Stream)) { response ->
+            response.responseStream?.let {
+                try {
+                    input.build(XmlReader(it)).let { retrievedFeed ->
+                        retrievedFeed(retrievedFeed, callback)
+                    }
+                } catch(e: Exception) {
+                    log.error("Could not read feed from url " + feedUrl, e)
+                    callback(AsyncResult(false, e))
+                }
+            }
+
+            response.error?.let {
+                log.error("Could not read feed from url " + feedUrl, it)
+                callback(AsyncResult(false, it))
             }
         }
     }
 
-    private fun readFeed(feedUrl: String) : FeedArticleSummary? {
-        input.build(XmlReader(URL(feedUrl))).let { retrievedFeed ->
-            val siteUrl = retrievedFeed.link ?: retrievedFeed.uri
-            val summary = FeedArticleSummary(title = retrievedFeed.title, siteUrl = siteUrl, imageUrl = retrievedFeed.image?.url, publishedDate = retrievedFeed.publishedDate)
+    private fun retrievedFeed(retrievedFeed: SyndFeed, callback: (AsyncResult<FeedArticleSummary>) -> Unit) {
+        val siteUrl = retrievedFeed.link ?: retrievedFeed.uri
+        val summary = FeedArticleSummary(title = retrievedFeed.title, siteUrl = siteUrl, imageUrl = retrievedFeed.image?.url, publishedDate = retrievedFeed.publishedDate)
 
-            mapEntries(summary, retrievedFeed)
+        mapEntries(summary, retrievedFeed)
 
-            return summary
-        }
+        callback(AsyncResult(true, result = summary))
     }
 
     private fun mapEntries(summary: FeedArticleSummary, retrievedFeed: SyndFeed) {
