@@ -73,7 +73,7 @@ class ReferencePreviewCache {
     inner class EventBusListener {
 
         @Handler()
-        fun entriesChanged(referenceChanged: ReferenceChanged) {
+        fun referenceChanged(referenceChanged: ReferenceChanged) {
             clearCacheForReference(referenceChanged.entity)
         }
 
