@@ -4,7 +4,7 @@ import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.data_access.network.webclient.extractor.ExtractorBase
 import net.dankito.newsreader.model.ArticleSummaryItem
-import net.dankito.newsreader.model.EntryExtractionResult
+import net.dankito.deepthought.model.util.EntryExtractionResult
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory

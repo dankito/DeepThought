@@ -7,7 +7,7 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ReadLaterArticlePresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.deepthought.ui.view.IReadLaterArticleView
-import net.dankito.newsreader.model.EntryExtractionResult
+import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.service.data.ReadLaterArticleService
 import tornadofx.*
 import javax.inject.Inject

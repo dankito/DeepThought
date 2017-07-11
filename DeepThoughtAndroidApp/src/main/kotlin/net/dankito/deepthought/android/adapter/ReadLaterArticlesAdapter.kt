@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.list_item_article_summary_item.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.extensions.entryPreview
 import net.dankito.deepthought.extensions.preview
-import net.dankito.newsreader.model.EntryExtractionResult
+import net.dankito.deepthought.model.util.EntryExtractionResult
 
 
 class ReadLaterArticlesAdapter : ListAdapter<EntryExtractionResult>() {

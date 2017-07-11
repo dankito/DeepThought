@@ -12,7 +12,7 @@ import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.IEntriesListView
-import net.dankito.newsreader.model.EntryExtractionResult
+import net.dankito.deepthought.model.util.EntryExtractionResult
 import tornadofx.*
 
 

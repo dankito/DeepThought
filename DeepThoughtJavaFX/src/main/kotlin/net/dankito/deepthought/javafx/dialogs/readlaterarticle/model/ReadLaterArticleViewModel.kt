@@ -3,7 +3,7 @@ package net.dankito.deepthought.javafx.dialogs.readlaterarticle.model
 import javafx.beans.property.SimpleStringProperty
 import net.dankito.deepthought.extensions.entryPreview
 import net.dankito.deepthought.extensions.preview
-import net.dankito.newsreader.model.EntryExtractionResult
+import net.dankito.deepthought.model.util.EntryExtractionResult
 import tornadofx.*
 
 

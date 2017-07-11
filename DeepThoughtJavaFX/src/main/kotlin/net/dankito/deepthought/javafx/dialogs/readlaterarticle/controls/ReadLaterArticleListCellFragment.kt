@@ -5,7 +5,7 @@ import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.model.ReadLaterArticleViewModel
 import net.dankito.deepthought.javafx.util.FXUtils
-import net.dankito.newsreader.model.EntryExtractionResult
+import net.dankito.deepthought.model.util.EntryExtractionResult
 import tornadofx.*
 
 

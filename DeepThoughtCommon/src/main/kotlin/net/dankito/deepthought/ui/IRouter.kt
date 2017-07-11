@@ -3,7 +3,7 @@ package net.dankito.deepthought.ui
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
-import net.dankito.newsreader.model.EntryExtractionResult
+import net.dankito.deepthought.model.util.EntryExtractionResult
 
 
 interface IRouter {

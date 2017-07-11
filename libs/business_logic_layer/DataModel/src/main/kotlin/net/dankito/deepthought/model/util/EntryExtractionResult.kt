@@ -1,4 +1,4 @@
-package net.dankito.newsreader.model
+package net.dankito.deepthought.model.util
 
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference

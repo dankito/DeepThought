@@ -1,7 +1,7 @@
 package net.dankito.deepthought.ui.view
 
 import net.dankito.deepthought.model.ReadLaterArticle
-import net.dankito.newsreader.model.EntryExtractionResult
+import net.dankito.deepthought.model.util.EntryExtractionResult
 
 
 interface IReadLaterArticleView {

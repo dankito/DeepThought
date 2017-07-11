@@ -5,12 +5,12 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ReadLaterArticlesAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.ReadLaterArticle
+import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.deepthought.ui.presenter.ReadLaterArticlePresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.deepthought.ui.view.IReadLaterArticleView
-import net.dankito.newsreader.model.EntryExtractionResult
 import net.dankito.service.data.ReadLaterArticleService
 import javax.inject.Inject
 

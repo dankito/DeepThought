@@ -13,7 +13,7 @@ import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ViewEntryPresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
-import net.dankito.newsreader.model.EntryExtractionResult
+import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.serializer.ISerializer
 import net.dankito.service.data.EntryService
 import net.dankito.utils.ui.IClipboardService
