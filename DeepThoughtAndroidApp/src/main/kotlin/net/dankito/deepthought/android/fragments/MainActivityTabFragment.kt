@@ -6,47 +6,54 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.SearchView
 import android.view.*
+import android.widget.BaseAdapter
+import android.widget.ListView
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.service.search.Search
 
 
-abstract class MainActivityTabFragment : Fragment() {
+abstract class MainActivityTabFragment(private val layoutResourceId: Int, private val listViewResourceId: Int, private val optionsMenuResourceId: Int) : Fragment() {
 
     private lateinit var presenter: IMainViewSectionPresenter
 
-    protected var searchView: SearchView? = null
+    private var searchView: SearchView? = null
+
+
+    protected open fun setupUI(rootView: View?) { }
+
+    abstract fun initPresenter(): IMainViewSectionPresenter
+
+
+    abstract fun getListAdapter(): BaseAdapter
+
+    abstract fun listItemClicked(position: Int, selectedItem: Any)
+
+
+    protected open fun getQueryHint(): String = ""
+
+    abstract fun searchEntities(query: String)
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater?.inflate(getLayoutResourceId(), container, false)
+        val rootView = inflater?.inflate(layoutResourceId, container, false)
+
+        rootView?.let { setupListView(it) }
+
+        setHasOptionsMenu(true)
 
         setupUI(rootView)
-
-        setHasOptionsMenu(getHasOptionsMenu())
 
         return rootView
     }
 
-    protected abstract fun getLayoutResourceId(): Int
+    private fun setupListView(rootView: View) {
+        val listView = rootView.findViewById(listViewResourceId) as ListView
 
-    protected abstract fun setupUI(rootView: View?)
-
-    abstract fun initPresenter(): IMainViewSectionPresenter
-
-    protected open fun getHasOptionsMenu(): Boolean {
-        return false // may be overwritten in sub class
+        listView.adapter = getListAdapter()
+        listView.setOnItemClickListener { _, _, position, _ -> listItemClicked(position, getListAdapter().getItem(position)) }
     }
 
-    protected open fun initOptionsMenu(menu: Menu, inflater: MenuInflater) {
-
-    }
-
-    protected open fun getQueryHint(): String = ""
-
-    protected open fun searchEntities(query: String) {
-
-    }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -74,17 +81,15 @@ abstract class MainActivityTabFragment : Fragment() {
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if(getHasOptionsMenu()) {
-            initOptionsMenu(menu, inflater)
+        inflater.inflate(optionsMenuResourceId, menu)
 
-            // Associate searchable configuration with the SearchView if available
-            val searchItem = menu.findItem(R.id.search)
+        // Associate searchable configuration with the SearchView if available
+        val searchItem = menu.findItem(R.id.search)
 
-            (searchItem?.actionView as? SearchView)?.let { searchView ->
-                this.searchView = searchView
+        (searchItem?.actionView as? SearchView)?.let { searchView ->
+            this.searchView = searchView
 
-                initSearchView(searchView)
-            }
+            initSearchView(searchView)
         }
 
         super.onCreateOptionsMenu(menu, inflater)

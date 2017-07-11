@@ -1,10 +1,7 @@
 package net.dankito.deepthought.android.fragments
 
 import android.content.Context
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.View
-import kotlinx.android.synthetic.main.fragment_tab_entries.view.*
+import android.widget.BaseAdapter
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.EntryAdapter
 import net.dankito.deepthought.android.di.AppComponent
@@ -20,7 +17,7 @@ import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class EntriesListView : MainActivityTabFragment(), IEntriesListView {
+class EntriesListView : MainActivityTabFragment(R.layout.fragment_tab_entries, R.id.lstEntries, R.menu.fragment_tab_entries_menu), IEntriesListView {
 
     @Inject
     protected lateinit var entryService: EntryService
@@ -50,27 +47,18 @@ class EntriesListView : MainActivityTabFragment(), IEntriesListView {
     }
 
 
-    override fun getLayoutResourceId(): Int {
-        return R.layout.fragment_tab_entries
-    }
-
-    override fun setupUI(rootView: View?) {
-        rootView?.lstEntries?.adapter = entryAdapter
-        rootView?.lstEntries?.setOnItemClickListener { _, _, position, _ -> presenter.showEntry(entryAdapter.getItem(position)) }
-    }
-
     override fun initPresenter(): IMainViewSectionPresenter {
         return presenter
     }
 
-
-    override fun getHasOptionsMenu(): Boolean {
-        return true
+    override fun getListAdapter(): BaseAdapter {
+        return entryAdapter
     }
 
-    override fun initOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.fragment_tab_entries_menu, menu)
+    override fun listItemClicked(position: Int, selectedItem: Any) {
+        (selectedItem as? Entry)?.let { presenter.showEntry(it) }
     }
+
 
     override fun getQueryHint() = activity.getString(R.string.search_hint_entries)
 

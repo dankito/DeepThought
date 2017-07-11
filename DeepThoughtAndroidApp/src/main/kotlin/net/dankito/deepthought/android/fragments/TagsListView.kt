@@ -1,9 +1,6 @@
 package net.dankito.deepthought.android.fragments
 
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.View
-import kotlinx.android.synthetic.main.fragment_tab_tags.view.*
+import android.widget.BaseAdapter
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.TagAdapter
 import net.dankito.deepthought.android.di.AppComponent
@@ -17,7 +14,7 @@ import net.dankito.service.search.ISearchEngine
 import javax.inject.Inject
 
 
-class TagsListView : MainActivityTabFragment(), ITagsListView {
+class TagsListView : MainActivityTabFragment(R.layout.fragment_tab_tags, R.id.lstTags, R.menu.fragment_tab_tags_menu), ITagsListView {
 
     @Inject
     protected lateinit var dataManager: DataManager
@@ -39,30 +36,20 @@ class TagsListView : MainActivityTabFragment(), ITagsListView {
     }
 
 
-
-    override fun getLayoutResourceId(): Int {
-        return R.layout.fragment_tab_tags
-    }
-
-    override fun setupUI(rootView: View?) {
-        rootView?.lstTags?.adapter = adapter
-        rootView?.lstTags?.setOnItemClickListener { _, _, position, _ -> tagSelected(adapter.getItem(position)) }
-    }
-
     override fun initPresenter(): IMainViewSectionPresenter {
         presenter = TagsListPresenter(this, dataManager, searchEngine, router)
 
         return presenter
     }
 
-
-    override fun getHasOptionsMenu(): Boolean {
-        return true
+    override fun getListAdapter(): BaseAdapter {
+        return adapter
     }
 
-    override fun initOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.fragment_tab_tags_menu, menu)
+    override fun listItemClicked(position: Int, selectedItem: Any) {
+        tagSelected(selectedItem as? Tag)
     }
+
 
     override fun getQueryHint() = activity.getString(R.string.search_hint_tags)
 
