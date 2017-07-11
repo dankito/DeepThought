@@ -38,6 +38,8 @@ object FieldName {
     val ReferenceId = "reference_id"
 
     val ReferenceTitle = "reference_title"
+    val ReferenceSubTitle = "reference_subtitle"
+    val ReferenceSeries = "reference_series"
     val ReferenceIssueOrPublishingDate = "reference_issue_or_publishing_date"
     val ReferencePublishingDate = "reference_publishing_date"
 
