@@ -53,7 +53,7 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private val dat
     }
 
     private fun retrieveAndShowTags() {
-        searchTags(Search.EmptySearchTerm)
+        searchTags(lastSearchTermProperty)
     }
 
 
