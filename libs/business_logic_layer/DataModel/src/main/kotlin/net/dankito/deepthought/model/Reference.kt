@@ -16,8 +16,7 @@ data class Reference(
 
 ) : BaseEntity() {
 
-    // TODO: reset preview on changes to title, publishingDate or issueOrPublishingDate
-    // TODO: reproduces setting publishingDate with tryToParseIssueOrPublishingDateToDate() when issueOrPublishingDate gets set
+    // TODO: reproduce setting publishingDate with tryToParseIssueOrPublishingDateToDate() when issueOrPublishingDate gets set
 
 
     companion object {
