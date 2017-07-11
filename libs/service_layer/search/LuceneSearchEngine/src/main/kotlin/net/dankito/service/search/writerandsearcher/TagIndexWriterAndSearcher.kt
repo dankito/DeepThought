@@ -3,6 +3,7 @@ package net.dankito.service.search.writerandsearcher
 import net.dankito.deepthought.model.Tag
 import net.dankito.service.data.TagService
 import net.dankito.service.data.messages.TagChanged
+import net.dankito.service.eventbus.EventBusPriorities
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.FieldName
 import net.dankito.service.search.SortOption
@@ -140,7 +141,7 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus) : I
     override fun createEntityChangedListener(): Any {
         return object {
 
-            @Handler(priority = Int.MAX_VALUE)
+            @Handler(priority = EventBusPriorities.Indexer)
             fun entityChanged(tagChanged: TagChanged) {
                 handleEntityChange(tagChanged)
             }

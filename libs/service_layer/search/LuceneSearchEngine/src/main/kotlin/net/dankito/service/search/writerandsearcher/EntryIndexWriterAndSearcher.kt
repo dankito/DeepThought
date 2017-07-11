@@ -6,6 +6,7 @@ import net.dankito.deepthought.extensions.referencePreview
 import net.dankito.deepthought.model.Entry
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.messages.EntryChanged
+import net.dankito.service.eventbus.EventBusPriorities
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.FieldName
 import net.dankito.service.search.FieldValue
@@ -117,7 +118,7 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
     override fun createEntityChangedListener(): Any {
         return object {
 
-            @Handler(priority = Int.MAX_VALUE)
+            @Handler(priority = EventBusPriorities.Indexer)
             fun entityChanged(entryChanged: EntryChanged) {
                 handleEntityChange(entryChanged)
             }
