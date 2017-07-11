@@ -4,6 +4,7 @@
     <item
         android:id="@+id/btnvEntries"
         android:title="@string/tab_entries_title"
+        android:icon="@drawable/ic_description_white_48dp"
         android:orderInCategory="0"
         />
 
