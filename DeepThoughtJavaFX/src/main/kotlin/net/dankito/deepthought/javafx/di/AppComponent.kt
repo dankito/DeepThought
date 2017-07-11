@@ -11,6 +11,7 @@ import net.dankito.deepthought.javafx.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.javafx.appstart.JavaFXAppInitializer
 import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryViewBase
+import net.dankito.deepthought.javafx.dialogs.entry.EditReadLaterArticleView
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindow
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.EntriesListView
@@ -48,5 +49,7 @@ interface AppComponent : CommonComponent {
     fun inject(readLaterArticleView: ReadLaterArticleView)
 
     fun inject(editEntryViewBase: EditEntryViewBase)
+
+    fun inject(editReadLaterArticleView: EditReadLaterArticleView)
 
 }
