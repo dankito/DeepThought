@@ -7,7 +7,7 @@ data class RequestParameters(val url: String, var body: String? = null,
                              var cookieHandling: CookieHandling = CookieHandling.ACCEPT_NONE,
                              var connectionTimeoutMillis: Int = RequestParameters.DEFAULT_CONNECTION_TIMEOUT_MILLIS,
                              var countConnectionRetries: Int = RequestParameters.DEFAULT_COUNT_CONNECTION_RETRIES,
-                             var hasStringResponse: Boolean = true,
+                             var responseType: ResponseType = ResponseType.String,
                              var downloadBufferSize: Int = RequestParameters.DEFAULT_DOWNLOAD_BUFFER_SIZE,
                              var downloadProgressListener: ((progress: Float, downloadedChunk: ByteArray) -> Unit)? = null) {
 

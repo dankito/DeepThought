@@ -228,9 +228,13 @@ class OkHttpWebClient : IWebClient {
 
     @Throws(IOException::class)
     protected fun getResponse(parameters: RequestParameters, response: Response): WebClientResponse {
-        if (parameters.hasStringResponse) {
+        if (parameters.responseType == ResponseType.String) {
             return WebClientResponse(true, body = response.body().string())
-        } else {
+        }
+        else if(parameters.responseType == ResponseType.Stream) {
+            return WebClientResponse(true, responseStream = response.body().byteStream())
+        }
+        else {
             return streamBinaryResponse(parameters, response)
         }
     }

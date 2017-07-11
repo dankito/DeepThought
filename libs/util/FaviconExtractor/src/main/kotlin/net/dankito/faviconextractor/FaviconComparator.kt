@@ -2,6 +2,7 @@ package net.dankito.faviconextractor
 
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.RequestParameters
+import net.dankito.data_access.network.webclient.ResponseType
 import org.slf4j.LoggerFactory
 
 
@@ -97,7 +98,7 @@ class FaviconComparator(val webClient : IWebClient) {
             val downloadedBytes = mutableListOf<Byte>()
 
             val parameters = RequestParameters(iconUrl)
-            parameters.hasStringResponse = false
+            parameters.responseType = ResponseType.Bytes
             parameters.downloadProgressListener = { _, downloadedChunk -> downloadedBytes.addAll(downloadedChunk.toList()) }
 
             val response = webClient.get(parameters)

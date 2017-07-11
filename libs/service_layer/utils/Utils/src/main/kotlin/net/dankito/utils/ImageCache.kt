@@ -3,6 +3,7 @@ package net.dankito.utils
 import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.RequestParameters
+import net.dankito.data_access.network.webclient.ResponseType
 import net.dankito.data_access.network.webclient.WebClientResponse
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.serializer.ISerializer
@@ -79,7 +80,7 @@ class ImageCache(private val webClient: IWebClient, private val serializer: ISer
         val fileStream = fileStorageService.createFileOutputStream(file.name)
 
         val parameters = RequestParameters(url)
-        parameters.hasStringResponse = false
+        parameters.responseType = ResponseType.Bytes
         parameters.downloadProgressListener = { progress, downloadedChunk -> fileStream.write(downloadedChunk) }
 
         webClient.getAsync(parameters) { response ->

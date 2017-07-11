@@ -2,6 +2,7 @@ package net.dankito.faviconextractor
 
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.RequestParameters
+import net.dankito.data_access.network.webclient.ResponseType
 import net.dankito.data_access.network.webclient.WebClientResponse
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.data_access.network.webclient.extractor.ExtractorBase
@@ -60,7 +61,7 @@ class FaviconExtractor(webClient : IWebClient) : ExtractorBase(webClient) {
     private fun tryToFindDefaultFavicon(url: String, extractedFavicons: MutableList<Favicon>) {
         val urlInstance = URL(url)
         val defaultFaviconUrl = urlInstance.protocol + "://" + urlInstance.host + "/favicon.ico"
-        webClient.get(RequestParameters(defaultFaviconUrl, hasStringResponse = false)).let { response ->
+        webClient.get(RequestParameters(defaultFaviconUrl, responseType = ResponseType.Bytes)).let { response ->
             if (response.isSuccessful) {
                 extractedFavicons.add(Favicon(defaultFaviconUrl, FaviconType.ShortcutIcon))
             }
