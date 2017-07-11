@@ -127,6 +127,10 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
                 callback(listOf(extractorTag))
             })
         }
+
+        if(extractor.getName() == null) {
+            callback(listOf())
+        }
     }
 
 }
