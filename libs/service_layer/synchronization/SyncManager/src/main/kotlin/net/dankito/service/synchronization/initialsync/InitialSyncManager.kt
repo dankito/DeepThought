@@ -2,6 +2,7 @@ package net.dankito.service.synchronization.initialsync
 
 
 import net.dankito.data_access.database.IEntityManager
+import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.User
@@ -59,24 +60,25 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
 
 
     fun syncLocalDatabaseIdsWithRemoteOnes(localDeepThought: DeepThought, remoteSyncInfo: SyncInfo) {
-        syncLocalDatabaseIdsWithRemoteOnes(localDeepThought, localDeepThought.localUser, remoteSyncInfo.deepThought, remoteSyncInfo.user)
-    }
-
-    fun syncLocalDatabaseIdsWithRemoteOnes(localDeepThought: DeepThought, localUser: User, remoteDeepThought: DeepThoughtSyncInfo, remoteUser: UserSyncInfo) {
         // do not sync DeepThought as otherwise e.g. localDevice gets overwritten
+
+        val localUser = localDeepThought.localUser
 
         entityManager.deleteEntity(localUser)
 
-        localUser.id = remoteUser.id
+        localUser.id = remoteSyncInfo.user.id
 
         entityManager.persistEntity(localUser)
 
 
-        updateExtensibleEnumerations(localDeepThought, remoteDeepThought, entityManager)
+        updateExtensibleEnumerations(localDeepThought, remoteSyncInfo.deepThought, entityManager)
+
+        updateArticleSummaryExtractorConfigs(remoteSyncInfo)
 
 
         entityManager.updateEntity(localDeepThought)
     }
+
 
     private fun updateExtensibleEnumerations(localDeepThought: DeepThought, remoteDeepThought: DeepThoughtSyncInfo, entityManager: IEntityManager) {
         updateExtensibleEnumeration(localDeepThought.applicationLanguages, remoteDeepThought.applicationLanguageIds, entityManager)
@@ -111,6 +113,49 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
         enumerationEntity.id = id
 
         entityManager.persistEntity(enumerationEntity)
+    }
+
+
+    private fun updateArticleSummaryExtractorConfigs(remoteSyncInfo: SyncInfo) {
+        val localConfigs = entityManager.getAllEntitiesOfType(ArticleSummaryExtractorConfig::class.java)
+
+        remoteSyncInfo.articleSummaryExtractorConfigs.forEach { remoteConfig ->
+            val localConfig = localConfigs.filter { it.url == remoteConfig.url }.firstOrNull()
+
+            if(localConfig == null) {
+                entityManager.persistEntity(remoteConfig)
+            }
+            else {
+                entityManager.deleteEntity(localConfig)
+                mergeArticleSummaryExtractorConfigs(localConfig, remoteConfig)
+                entityManager.persistEntity(localConfig)
+            }
+        }
+
+        sortArticleSummaryExtractorConfigFavorites()
+    }
+
+    private fun mergeArticleSummaryExtractorConfigs(localConfig: ArticleSummaryExtractorConfig, remoteConfig: ArticleSummaryExtractorConfig) {
+        localConfig.id = remoteConfig.id
+
+        if(remoteConfig.iconUrl != null) {
+            localConfig.iconUrl = remoteConfig.iconUrl
+        }
+
+        if(remoteConfig.isFavorite) {
+            localConfig.isFavorite = remoteConfig.isFavorite
+            localConfig.favoriteIndex = remoteConfig.favoriteIndex
+        }
+    }
+
+    private fun sortArticleSummaryExtractorConfigFavorites() {
+        val favorites = entityManager.getAllEntitiesOfType(ArticleSummaryExtractorConfig::class.java).filter { it.isFavorite }.sortedBy { it.favoriteIndex }
+
+        for(i in 0..favorites.size - 1) {
+            val favorite = favorites[i]
+            favorite.favoriteIndex = i
+            entityManager.updateEntity(favorite)
+        }
     }
 
 
