@@ -6,6 +6,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.data_access.database.EntityManagerConfiguration
+import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.data_access.network.communication.IClientCommunicator
@@ -14,11 +15,13 @@ import net.dankito.data_access.network.communication.callback.DeviceRegistration
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.data_access.network.discovery.UdpDevicesDiscoverer
+import net.dankito.data_access.network.webclient.OkHttpWebClient
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.enums.ExtensibleEnumeration
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
+import net.dankito.newsreader.summary.ImplementedArticleSummaryExtractors
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.data.messages.EntityChangeType
@@ -512,6 +515,80 @@ class CommunicationManagerTest {
 
         assertThat(localUser.ignoredDevices.size, `is`(4))
         assertThat(remoteUser.ignoredDevices.size, `is`(4))
+    }
+
+
+    @Test
+    fun localDeviceRequestsSynchronization_ArticleSummaryExtractorConfigsGetSynchronizedCorrectly() {
+        localRegisterAtRemote.set(true)
+        remotePermitRemoteToSynchronize.set(true)
+
+        // add ArticleSummaryExtractorConfig for ImplementedArticleSummaryExtractors
+        ImplementedArticleSummaryExtractors(OkHttpWebClient()).getImplementedExtractors().forEach { implementedExtractor ->
+            val localConfig = ArticleSummaryExtractorConfig(implementedExtractor.getBaseUrl(), implementedExtractor.getName())
+            localEntityManager.persistEntity(localConfig)
+
+            val remoteConfig = ArticleSummaryExtractorConfig(implementedExtractor.getBaseUrl(), implementedExtractor.getName())
+            remoteEntityManager.persistEntity(remoteConfig)
+        }
+
+        // create feeds
+        val localAddedFeedsCount = 2
+        for(i in 1..localAddedFeedsCount) {
+            localEntityManager.persistEntity(ArticleSummaryExtractorConfig("http://www.example.com/local/" + i, "local_feed_" + i))
+        }
+        val remoteAddedFeedsCount = 1
+        for(i in 1..remoteAddedFeedsCount) {
+            remoteEntityManager.persistEntity(ArticleSummaryExtractorConfig("http://www.example.com/remote/" + i, "remote_feed_" + i))
+        }
+
+        // set favorites
+        val localConfigs = localEntityManager.getAllEntitiesOfType(ArticleSummaryExtractorConfig::class.java)
+        val remoteConfigs = remoteEntityManager.getAllEntitiesOfType(ArticleSummaryExtractorConfig::class.java)
+
+        val localFavorites = localConfigs.filterIndexed { index, articleSummaryExtractorConfig -> index % 2 == 0 }
+        val remoteFavorites = remoteConfigs.filter { remoteConfig -> localFavorites.filter { it.url == remoteConfig.url }.firstOrNull() == null }.subList(0, 2)
+
+        setFavoriteIndices(localFavorites, localEntityManager)
+        setFavoriteIndices(remoteFavorites, remoteEntityManager)
+
+        val countDownLatch = CountDownLatch(1)
+
+        mockDialogServiceTextInput(localDialogService, remoteCorrectChallengeResponse)
+
+        waitTillFirstSynchronizationIsDone(remoteEventBus, countDownLatch)
+
+        startCommunicationManagersAndWait(countDownLatch)
+
+
+        val synchronizedLocalConfigs = localEntityManager.getAllEntitiesOfType(ArticleSummaryExtractorConfig::class.java)
+        val synchronizedRemoteConfigs = remoteEntityManager.getAllEntitiesOfType(ArticleSummaryExtractorConfig::class.java)
+
+        assertThat(synchronizedLocalConfigs.size, `is`(localConfigs.size + remoteAddedFeedsCount))
+        assertThat(synchronizedRemoteConfigs.size, `is`(remoteConfigs.size + localAddedFeedsCount))
+
+        val synchronizedLocalFavorites = synchronizedLocalConfigs.filter { it.isFavorite }.sortedBy { it.favoriteIndex }
+        val synchronizedRemoteFavorites = synchronizedRemoteConfigs.filter { it.isFavorite }.sortedBy { it.favoriteIndex }
+
+        assertThat(synchronizedLocalFavorites.size, `is`(synchronizedRemoteFavorites.size))
+
+        for(i in 0..synchronizedLocalFavorites.size - 1) { // assert that the have the same ordering by favoriteIndex on both sides
+            val localFavorite = synchronizedLocalFavorites[i]
+            val remoteFavorite = synchronizedRemoteFavorites[i]
+
+            assertThat(localFavorite.url, `is`(remoteFavorite.url))
+        }
+    }
+
+    private fun setFavoriteIndices(favorites: List<ArticleSummaryExtractorConfig>, entityManager: IEntityManager) {
+        for(i in 0..favorites.size - 1) {
+            val favorite = favorites[i]
+
+            favorite.isFavorite = true
+            favorite.favoriteIndex = i
+
+            entityManager.updateEntity(favorite)
+        }
     }
 
 
