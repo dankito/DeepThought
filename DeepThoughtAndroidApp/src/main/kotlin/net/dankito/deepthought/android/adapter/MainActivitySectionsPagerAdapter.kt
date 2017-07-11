@@ -2,10 +2,7 @@ package net.dankito.deepthought.android.adapter
 
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import net.dankito.deepthought.android.fragments.EntriesListView
-import net.dankito.deepthought.android.fragments.MainActivityTabFragment
-import net.dankito.deepthought.android.fragments.ReferencesListView
-import net.dankito.deepthought.android.fragments.TagsListView
+import net.dankito.deepthought.android.fragments.*
 
 
 class MainActivitySectionsPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
@@ -17,9 +14,11 @@ class MainActivitySectionsPagerAdapter(fragmentManager: FragmentManager) : Fragm
 
     private val referencesListView = ReferencesListView()
 
+    private val readLaterArticlesListView = ReadLaterArticlesListView()
+
 
     override fun getCount(): Int {
-        return 3
+        return 4
     }
 
     override fun getItem(position: Int): MainActivityTabFragment {
@@ -27,6 +26,7 @@ class MainActivitySectionsPagerAdapter(fragmentManager: FragmentManager) : Fragm
             0 -> return entriesListView
             1 -> return tagsListView
             2 -> return referencesListView
+            3 -> return readLaterArticlesListView
             else -> return entriesListView // to make compiler happy
         }
     }

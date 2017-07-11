@@ -22,4 +22,11 @@
         android:orderInCategory="2"
     />
 
+    <item
+        android:id="@+id/btnvReadLaterArticles"
+        android:title="@string/tab_read_later_articles_title"
+        android:icon="@android:drawable/ic_menu_view"
+        android:orderInCategory="3"
+    />
+
 </menu>
