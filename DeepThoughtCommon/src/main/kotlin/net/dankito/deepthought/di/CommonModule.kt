@@ -102,8 +102,8 @@ class CommonModule {
 
     @Provides
     @Singleton
-    fun provideArticleSummaryExtractorConfigManager(webClient: IWebClient, configService: ArticleSummaryExtractorConfigService, threadPool: IThreadPool) : ArticleSummaryExtractorConfigManager {
-        return ArticleSummaryExtractorConfigManager(webClient, configService, threadPool)
+    fun provideArticleSummaryExtractorConfigManager(webClient: IWebClient, configService: ArticleSummaryExtractorConfigService) : ArticleSummaryExtractorConfigManager {
+        return ArticleSummaryExtractorConfigManager(webClient, configService)
     }
 
     @Provides

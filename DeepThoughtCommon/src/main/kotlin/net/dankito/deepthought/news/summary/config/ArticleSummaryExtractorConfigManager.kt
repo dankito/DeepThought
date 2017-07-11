@@ -24,7 +24,7 @@ import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, private val configService: ArticleSummaryExtractorConfigService, private val threadPool: IThreadPool) {
+class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, private val configService: ArticleSummaryExtractorConfigService) {
 
     companion object {
         const val MAX_SIZE = 152
