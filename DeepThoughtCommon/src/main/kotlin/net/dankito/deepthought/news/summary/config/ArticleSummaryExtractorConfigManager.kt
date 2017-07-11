@@ -13,7 +13,12 @@ import net.dankito.newsreader.feed.RomeFeedReader
 import net.dankito.newsreader.summary.ImplementedArticleSummaryExtractors
 import net.dankito.serializer.ISerializer
 import net.dankito.service.data.ArticleSummaryExtractorConfigService
+import net.dankito.service.data.messages.ArticleSummaryExtractorConfigChanged
+import net.dankito.service.data.messages.EntityChangeSource
+import net.dankito.service.eventbus.EventBusPriorities
+import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.IThreadPool
+import net.engio.mbassy.listener.Handler
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 import kotlin.concurrent.thread
@@ -39,12 +44,17 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
     @Inject
     protected lateinit var serializer: ISerializer
 
+    @Inject
+    protected lateinit var eventBus: IEventBus
+
     private var favorites: MutableList<ArticleSummaryExtractorConfig> = ArrayList()
 
     var isInitialized = false
         private set
 
     private val initializationListeners = mutableSetOf<() -> Unit>()
+
+    private val eventBusListener = EventBusListener()
 
 
     init {
@@ -56,6 +66,8 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
                 initiallyRetrievedSummaryExtractorConfigs()
             }
         }
+
+        eventBus.register(eventBusListener)
     }
 
     private fun readPersistedConfigs() { // for EventBusListener ArticleSummaryExtractorConfigs have to be retrieved synchronous so that all other listeners are aware of changes done in this method
@@ -235,6 +247,18 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
 
     private fun callInitializationListener(listener: () -> Unit) {
         listener()
+    }
+
+
+    inner class EventBusListener {
+
+        @Handler(priority = EventBusPriorities.EntityService)
+        fun configChanged(change: ArticleSummaryExtractorConfigChanged) {
+            if(change.source == EntityChangeSource.Synchronization) {
+                readPersistedConfigs()
+            }
+        }
+
     }
 
 }
