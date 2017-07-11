@@ -94,7 +94,7 @@ data class Entry(
     val countTags: Int
         get() = tags.size
 
-    fun setTags(tags: Collection<Tag>) {
+    fun setAllTags(tags: Collection<Tag>) { // don't name it setTags(), would cause conflicts in Java (e.g. for deserializing with Jackson)
         for(previousTag in ArrayList(this.tags)) {
             removeTag(previousTag)
         }
