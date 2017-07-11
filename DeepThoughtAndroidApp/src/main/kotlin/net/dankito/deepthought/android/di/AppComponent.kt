@@ -14,6 +14,7 @@ import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorConfigDialog
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
 import net.dankito.deepthought.android.fragments.EntriesListView
+import net.dankito.deepthought.android.fragments.ReferencesListView
 import net.dankito.deepthought.android.fragments.TagsListView
 import net.dankito.deepthought.android.service.di.AndroidCommonModule
 import net.dankito.deepthought.di.BaseModule
@@ -78,6 +79,8 @@ interface AppComponent : CommonComponent {
     fun inject(entriesListView: EntriesListView)
 
     fun inject(tagsListView: TagsListView)
+
+    fun inject(referencesListView: ReferencesListView)
 
     fun inject(addArticleSummaryExtractorDialog: AddArticleSummaryExtractorDialog)
 
