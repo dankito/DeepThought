@@ -255,7 +255,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
 
     protected fun executeQuery(query: Query, countMaxSearchResults: Int = DEFAULT_COUNT_MAX_SEARCH_RESULTS, vararg sortOptions: SortOption): Pair<IndexSearcher, Array<ScoreDoc>>? {
-        log.debug("Executing Query " + query)
+        log.info("Executing Query " + query)
 
         getIndexSearcher()?.let { searcher ->
             val hits = searcher.search(query, countMaxSearchResults, getSorting(sortOptions.asList())).scoreDocs
