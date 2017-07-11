@@ -65,7 +65,7 @@ class ReadLaterArticlesListView : MainActivityTabFragment(R.layout.fragment_tab_
     /*      IReadLaterArticleView implementation        */
 
     override fun showArticles(readLaterArticles: List<ReadLaterArticle>) {
-        activity.runOnUiThread {
+        activity?.runOnUiThread {
             adapter.setItems(readLaterArticles)
         }
     }
