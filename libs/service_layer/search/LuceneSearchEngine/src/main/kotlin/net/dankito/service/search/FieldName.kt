@@ -35,16 +35,11 @@ object FieldName {
 
     /*      References      */
 
-    val ReferenceBaseId = "reference_base_id"
-    val ReferenceBaseType = "reference_base_type"
-
-    val SeriesTitleTitle = "series_title_title"
+    val ReferenceId = "reference_id"
 
     val ReferenceTitle = "reference_title"
     val ReferenceIssueOrPublishingDate = "reference_issue_or_publishing_date"
     val ReferencePublishingDate = "reference_publishing_date"
-
-    val ReferenceSubDivisionTitle = "reference_sub_division_title"
 
 
     /*      Notes      */
