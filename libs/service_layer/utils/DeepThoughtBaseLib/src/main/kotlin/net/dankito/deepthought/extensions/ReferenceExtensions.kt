@@ -25,12 +25,16 @@ val Reference?.preview: String
 
         var preview = title
 
+        if(subTitle.isNotBlank()) {
+            preview = subTitle + ": " + preview
+        }
+
         var publisherAndDate = series ?: ""
 
         publishingDate?.let { publisherAndDate += " " + PublishingDateFormat.format(it) }
 
         if(publisherAndDate.isNullOrBlank() == false) {
-            preview = publisherAndDate.trim() + " - " + preview
+            preview = publisherAndDate.trim() + " " + preview
         }
 
         previewCache.cacheReferencePreview(this, preview)
