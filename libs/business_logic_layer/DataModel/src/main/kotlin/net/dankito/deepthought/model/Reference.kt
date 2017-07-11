@@ -24,17 +24,25 @@ data class Reference(
     }
 
 
-    @Column(name = TableConfig.ReferenceAbstractColumnName)
-    var abstractString: String? = null
-
-    @Column(name = TableConfig.ReferenceLengthColumnName)
-    var length: String? = null
-
     @Column(name = TableConfig.ReferenceUrlColumnName)
     var url: String? = null
 
     @Column(name = TableConfig.ReferenceSeriesColumnName)
     var series: String? = null
+
+    @Column(name = TableConfig.ReferenceIssueOrPublishingDateColumnName)
+    var issueOrPublishingDate: String? = null
+
+    @Column(name = TableConfig.ReferencePublishingDateColumnName)
+    @Temporal(TemporalType.TIMESTAMP)
+    var publishingDate: Date? = null
+
+
+    @Column(name = TableConfig.ReferenceAbstractColumnName)
+    var abstractString: String? = null
+
+    @Column(name = TableConfig.ReferenceLengthColumnName)
+    var length: String? = null
 
     @Column(name = TableConfig.ReferenceLastAccessDateColumnName)
     @Temporal(TemporalType.TIMESTAMP)
@@ -48,15 +56,8 @@ data class Reference(
     @Lob
     var tableOfContents: String? = null
 
-    @Column(name = TableConfig.ReferenceIssueOrPublishingDateColumnName)
-    var issueOrPublishingDate: String? = null
-
     @Column(name = TableConfig.ReferenceIsbnOrIssnColumnName)
     var isbnOrIssn: String? = null
-
-    @Column(name = TableConfig.ReferencePublishingDateColumnName)
-    @Temporal(TemporalType.TIMESTAMP)
-    var publishingDate: Date? = null
 
 
 
