@@ -2,16 +2,15 @@ package net.dankito.service.search
 
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.EntryService
+import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.TagService
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.specific.EntriesSearch
+import net.dankito.service.search.specific.ReadLaterArticleSearch
 import net.dankito.service.search.specific.ReferenceSearch
 import net.dankito.service.search.specific.TagsSearch
-import net.dankito.service.search.writerandsearcher.EntryIndexWriterAndSearcher
-import net.dankito.service.search.writerandsearcher.IndexWriterAndSearcher
-import net.dankito.service.search.writerandsearcher.ReferenceIndexWriterAndSearcher
-import net.dankito.service.search.writerandsearcher.TagIndexWriterAndSearcher
+import net.dankito.service.search.writerandsearcher.*
 import net.dankito.utils.IThreadPool
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.analysis.standard.StandardAnalyzer
@@ -22,7 +21,8 @@ import org.slf4j.LoggerFactory
 import java.io.File
 
 
-class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThreadPool, eventBus: IEventBus, entryService: EntryService, tagService: TagService, referenceService: ReferenceService)
+class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThreadPool, eventBus: IEventBus, entryService: EntryService, tagService: TagService,
+                         referenceService: ReferenceService, readLaterArticleService: ReadLaterArticleService)
     : SearchEngineBase(threadPool) {
 
     companion object {
@@ -36,6 +36,8 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
 
     private val referenceIndexWriterAndSearcher = ReferenceIndexWriterAndSearcher(referenceService, eventBus)
 
+    private val readLaterArticleIndexWriterAndSearcher = ReadLaterArticleIndexWriterAndSearcher(readLaterArticleService, eventBus)
+
     private val indexWritersAndSearchers: List<IndexWriterAndSearcher<*>>
 
     private lateinit var defaultIndexDirectory: Directory
@@ -48,7 +50,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
 
 
     init {
-        indexWritersAndSearchers = listOf(entryIndexWriterAndSearcher, tagIndexWriterAndSearcher, referenceIndexWriterAndSearcher)
+        indexWritersAndSearchers = listOf(entryIndexWriterAndSearcher, tagIndexWriterAndSearcher, referenceIndexWriterAndSearcher, readLaterArticleIndexWriterAndSearcher)
 
         createDirectoryAndIndexSearcherAndWriterForDeepThoughtAsync()
     }
@@ -180,6 +182,10 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
 
     override fun searchReferences(search: ReferenceSearch, termsToSearchFor: List<String>) {
         referenceIndexWriterAndSearcher.searchReferences(search, termsToSearchFor)
+    }
+
+    override fun searchReadLaterArticles(search: ReadLaterArticleSearch, termsToSearchFor: List<String>) {
+        readLaterArticleIndexWriterAndSearcher.searchReadLaterArticles(search, termsToSearchFor)
     }
 
 }

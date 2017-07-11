@@ -25,10 +25,7 @@ import net.dankito.newsreader.feed.IFeedReader
 import net.dankito.newsreader.feed.RomeFeedReader
 import net.dankito.serializer.ISerializer
 import net.dankito.serializer.JacksonJsonSerializer
-import net.dankito.service.data.ArticleSummaryExtractorConfigService
-import net.dankito.service.data.EntryService
-import net.dankito.service.data.ReferenceService
-import net.dankito.service.data.TagService
+import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
@@ -84,8 +81,9 @@ class CommonModule {
 
     @Provides
     @Singleton
-    fun provideSearchEngine(dataManager: DataManager, threadPool: IThreadPool, eventBus: IEventBus, entryService: EntryService, tagService: TagService, referenceService: ReferenceService) : ISearchEngine {
-        return LuceneSearchEngine(dataManager, threadPool, eventBus, entryService, tagService, referenceService)
+    fun provideSearchEngine(dataManager: DataManager, threadPool: IThreadPool, eventBus: IEventBus, entryService: EntryService, tagService: TagService,
+                            referenceService: ReferenceService, readLaterArticleService: ReadLaterArticleService) : ISearchEngine {
+        return LuceneSearchEngine(dataManager, threadPool, eventBus, entryService, tagService, referenceService, readLaterArticleService)
     }
 
 

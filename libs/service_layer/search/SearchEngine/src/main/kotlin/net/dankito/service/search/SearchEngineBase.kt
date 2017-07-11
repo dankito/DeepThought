@@ -1,6 +1,7 @@
 package net.dankito.service.search
 
 import net.dankito.service.search.specific.EntriesSearch
+import net.dankito.service.search.specific.ReadLaterArticleSearch
 import net.dankito.service.search.specific.ReferenceSearch
 import net.dankito.service.search.specific.TagsSearch
 import net.dankito.utils.IThreadPool
@@ -44,6 +45,15 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
     }
 
     abstract fun searchReferences(search: ReferenceSearch, termsToSearchFor: List<String>)
+
+
+    override fun searchReadLaterArticles(search: ReadLaterArticleSearch) {
+        val termsToSearchFor = getSingleSearchTerms(search.searchTerm, " ")
+
+        threadPool.runAsync { searchReadLaterArticles(search, termsToSearchFor) }
+    }
+
+    abstract fun searchReadLaterArticles(search: ReadLaterArticleSearch, termsToSearchFor: List<String>)
 
 
     private fun getSingleSearchTerms(overallSearchTerm: String, separator: String): List<String> {

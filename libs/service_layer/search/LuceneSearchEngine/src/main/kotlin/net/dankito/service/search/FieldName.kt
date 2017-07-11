@@ -44,6 +44,15 @@ object FieldName {
     val ReferencePublishingDate = "reference_publishing_date"
 
 
+    /*      ReadLaterArticles      */
+
+    val ReadLaterArticleId = "read_later_article_id"
+
+    val ReadLaterArticleEntry = "read_later_article_entry"
+    val ReadLaterArticleReference = "read_later_article_reference"
+    val ReadLaterArticleCreated = "read_later_article_created"
+
+
     /*      Notes      */
 
     val NoteId = "note_id"
