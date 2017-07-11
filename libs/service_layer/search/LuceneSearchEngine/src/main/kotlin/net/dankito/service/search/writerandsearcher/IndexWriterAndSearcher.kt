@@ -15,10 +15,7 @@ import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.index.IndexWriter
 import org.apache.lucene.index.IndexWriterConfig
 import org.apache.lucene.index.Term
-import org.apache.lucene.search.IndexSearcher
-import org.apache.lucene.search.Query
-import org.apache.lucene.search.Sort
-import org.apache.lucene.search.SortField
+import org.apache.lucene.search.*
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.FSDirectory
 import org.apache.lucene.store.LockObtainFailedException
@@ -257,12 +254,20 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
     }
 
 
-    @Throws(Exception::class)
-    protected fun executeQuery(query: Query, resultEntityClass: Class<TEntity>, countMaxSearchResults: Int = DEFAULT_COUNT_MAX_SEARCH_RESULTS, vararg sortOptions: SortOption): List<TEntity> {
+    protected fun executeQuery(query: Query, countMaxSearchResults: Int = DEFAULT_COUNT_MAX_SEARCH_RESULTS, vararg sortOptions: SortOption): Pair<IndexSearcher, Array<ScoreDoc>>? {
         log.debug("Executing Query " + query)
 
         getIndexSearcher()?.let { searcher ->
             val hits = searcher.search(query, countMaxSearchResults, getSorting(sortOptions.asList())).scoreDocs
+
+            return Pair(searcher, hits)
+        }
+
+        return null
+    }
+
+    protected fun executeQuery(query: Query, resultEntityClass: Class<TEntity>, countMaxSearchResults: Int = DEFAULT_COUNT_MAX_SEARCH_RESULTS, vararg sortOptions: SortOption): List<TEntity> {
+        executeQuery(query, countMaxSearchResults, *sortOptions)?.let { (searcher, hits) ->
             return LazyLoadingLuceneSearchResultsList<TEntity>(entityService.entityManager, searcher, query, resultEntityClass, getIdFieldName(), hits)
         }
 
