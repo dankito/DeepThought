@@ -9,7 +9,6 @@ import net.dankito.faviconextractor.FaviconComparator
 import net.dankito.faviconextractor.FaviconExtractor
 import net.dankito.newsreader.feed.FeedArticleSummaryExtractor
 import net.dankito.newsreader.feed.IFeedReader
-import net.dankito.newsreader.feed.RomeFeedReader
 import net.dankito.newsreader.summary.ImplementedArticleSummaryExtractors
 import net.dankito.serializer.ISerializer
 import net.dankito.service.data.ArticleSummaryExtractorConfigService
@@ -17,14 +16,12 @@ import net.dankito.service.data.messages.ArticleSummaryExtractorConfigChanged
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.eventbus.EventBusPriorities
 import net.dankito.service.eventbus.IEventBus
-import net.dankito.utils.IThreadPool
 import net.engio.mbassy.listener.Handler
-import org.slf4j.LoggerFactory
 import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, private val configService: ArticleSummaryExtractorConfigService) {
+class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, private val configService: ArticleSummaryExtractorConfigService, private val feedReader: IFeedReader) {
 
     companion object {
         const val MAX_SIZE = 152
@@ -110,7 +107,7 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
     private fun initAddedExtractors() {
         configurations.forEach { (_, config) ->
             if(config.extractor == null) {
-                config.extractor = FeedArticleSummaryExtractor(config.url, createFeedReader())
+                config.extractor = FeedArticleSummaryExtractor(config.url, feedReader)
             }
         }
     }
@@ -190,15 +187,11 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
 
     private fun addFeed(feedUrl: String, config: ArticleSummaryExtractorConfig, iconUrl: String?, callback: (ArticleSummaryExtractorConfig?) -> Unit) {
         config.iconUrl = iconUrl
-        config.extractor = FeedArticleSummaryExtractor(feedUrl, createFeedReader())
+        config.extractor = FeedArticleSummaryExtractor(feedUrl, feedReader)
 
         addConfig(config)
 
         callback(config)
-    }
-
-    private fun createFeedReader(): IFeedReader {
-        return RomeFeedReader()
     }
 
     private fun addConfig(config: ArticleSummaryExtractorConfig) {
