@@ -71,35 +71,43 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus) : I
     }
 
     private fun executeSearchForNonEmptySearchTerm(search: TagsSearch, tagNamesToSearchFor: List<String>) {
-        for (tagNameToFilterFor in tagNamesToSearchFor) {
+        for (tagNameToSearchFor in tagNamesToSearchFor) {
             if (search.isInterrupted) {
                 return
             }
 
             try {
-                val searchTerm = QueryParser.escape(tagNameToFilterFor)
-                if (search.isInterrupted) {
+                val interrupted = searchForSingleTagName(search, tagNameToSearchFor)
+                if(interrupted) {
                     return
                 }
-
-                val exactMatches = getExactMatches(searchTerm)
-
-                val query = WildcardQuery(Term(FieldName.TagName, "*$searchTerm*"))
-                if (search.isInterrupted) {
-                    return
-                }
-
-                search.addResult(TagsSearchResult(tagNameToFilterFor, executeSearchTagsQuery(query), exactMatches))
             } catch (e: Exception) {
-                log.error("Could not parse query for $tagNameToFilterFor (overall search term was ${search.searchTerm}", e)
+                log.error("Could not parse query for $tagNameToSearchFor (overall search term was ${search.searchTerm}", e)
                 search.errorOccurred(e)
             }
-
         }
 
         getAllRelevantTagsSorted(search)
 
         search.fireSearchCompleted()
+    }
+
+    private fun searchForSingleTagName(search: TagsSearch, tagNameToSearchFor: String): Boolean {
+        val searchTerm = QueryParser.escape(tagNameToSearchFor)
+        if (search.isInterrupted) {
+            return true
+        }
+
+        val exactMatches = getExactMatches(searchTerm)
+
+        val query = WildcardQuery(Term(FieldName.TagName, "*$searchTerm*"))
+        if (search.isInterrupted) {
+            return true
+        }
+
+        search.addResult(TagsSearchResult(tagNameToSearchFor, executeSearchTagsQuery(query), exactMatches))
+
+        return false
     }
 
     private fun getExactMatches(searchTerm: String): List<Tag> {
