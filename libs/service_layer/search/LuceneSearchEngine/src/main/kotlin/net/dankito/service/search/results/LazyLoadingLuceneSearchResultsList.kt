@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory
 import java.util.*
 
 
-class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEntityManager, private var searcher: IndexSearcher, query: Query, resultType: Class<T>,
+open class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEntityManager, private var searcher: IndexSearcher, query: Query, resultType: Class<T>,
                             private var idFieldName: String, countMaxSearchResults: Int = 1000, sortOptions: List<SortOption> = ArrayList<SortOption>(0))
     : LazyLoadingList<T>(entityManager, resultType) {
 
@@ -31,7 +31,7 @@ class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEntityM
 
     }
 
-    private fun getSorting(sortOptions: List<SortOption>): Sort {
+    protected open fun getSorting(sortOptions: List<SortOption>): Sort {
         val sort = Sort()
 
         if (sortOptions.isNotEmpty()) {
@@ -49,7 +49,7 @@ class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEntityM
         return sort
     }
 
-    private fun retrieveEntityIds(hits: Array<ScoreDoc>): MutableCollection<String> {
+    protected open fun retrieveEntityIds(hits: Array<ScoreDoc>): MutableCollection<String> {
         val ids = LinkedHashSet<String>()
 
         try {
