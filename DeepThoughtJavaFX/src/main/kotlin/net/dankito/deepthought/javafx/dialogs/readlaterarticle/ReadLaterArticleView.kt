@@ -1,7 +1,7 @@
 package net.dankito.deepthought.javafx.dialogs.readlaterarticle
 
 import net.dankito.deepthought.javafx.di.AppComponent
-import net.dankito.deepthought.javafx.dialogs.articlesummary.controls.ReadLaterArticleListCellFragment
+import net.dankito.deepthought.javafx.dialogs.readlaterarticle.controls.ReadLaterArticleListCellFragment
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ReadLaterArticlePresenter

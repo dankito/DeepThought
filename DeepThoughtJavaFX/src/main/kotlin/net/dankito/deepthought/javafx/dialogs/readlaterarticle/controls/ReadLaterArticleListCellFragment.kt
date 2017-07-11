@@ -1,4 +1,4 @@
-package net.dankito.deepthought.javafx.dialogs.articlesummary.controls
+package net.dankito.deepthought.javafx.dialogs.readlaterarticle.controls
 
 import javafx.geometry.Pos
 import javafx.scene.layout.Priority
