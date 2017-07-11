@@ -19,6 +19,7 @@
     <string name="search_title">Search</string>
     <string name="search_hint_entries">Search Entries</string>
     <string name="search_hint_tags">Search Tags</string>
+    <string name="search_hint_references">Search References</string>
 
     <string name="activity_article_summary_menu_view">View</string>
     <string name="activity_article_summary_menu_save_for_later_reading">Read later</string>

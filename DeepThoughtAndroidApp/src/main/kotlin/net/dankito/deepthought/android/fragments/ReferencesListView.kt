@@ -53,6 +53,8 @@ class ReferencesListView: MainActivityTabFragment(R.layout.fragment_tab_referenc
     override fun listItemClicked(position: Int, selectedItem: Any) {
     }
 
+    override fun getQueryHint() = activity.getString(R.string.search_hint_references)
+
     override fun searchEntities(query: String) {
         presenter.searchReferences(query)
     }
