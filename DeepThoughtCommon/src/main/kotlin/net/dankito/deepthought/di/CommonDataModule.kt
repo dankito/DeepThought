@@ -11,6 +11,7 @@ import net.dankito.deepthought.model.enums.NoteType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
+import net.dankito.serializer.ISerializer
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
@@ -68,8 +69,8 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideReadLaterArticleService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : ReadLaterArticleService {
-        return ReadLaterArticleService(dataManager, entityChangedNotifier)
+    fun provideReadLaterArticleService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier, serializer: ISerializer) : ReadLaterArticleService {
+        return ReadLaterArticleService(dataManager, entityChangedNotifier, serializer)
     }
 
 
