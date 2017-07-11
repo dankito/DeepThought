@@ -10,13 +10,13 @@ import kotlinx.android.synthetic.main.list_item_article_summary_item.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.extensions.entryPreview
 import net.dankito.deepthought.extensions.preview
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.ReadLaterArticle
 
 
-class ReadLaterArticlesAdapter : ListAdapter<EntryExtractionResult>() {
+class ReadLaterArticlesAdapter : ListAdapter<ReadLaterArticle>() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val extractionResult = getItem(position)
+        val extractionResult = getItem(position).entryExtractionResult
 
         val view = convertView ?: LayoutInflater.from(parent?.context).inflate(R.layout.list_item_article_summary_item, parent, false)
 

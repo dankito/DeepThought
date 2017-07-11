@@ -7,7 +7,6 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ReadLaterArticlePresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.deepthought.ui.view.IReadLaterArticleView
-import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.service.data.ReadLaterArticleService
 import tornadofx.*
 import javax.inject.Inject
@@ -28,8 +27,6 @@ class ReadLaterArticleView : View(), IReadLaterArticleView {
 
     private val presenter: ReadLaterArticlePresenter
 
-    private var extractionResultToArticlesToMap: Map<EntryExtractionResult, ReadLaterArticle> = mapOf()
-
 
     init {
         AppComponent.component.inject(this)
@@ -47,7 +44,7 @@ class ReadLaterArticleView : View(), IReadLaterArticleView {
     }
 
 
-    override val root = listview<EntryExtractionResult> {
+    override val root = listview<ReadLaterArticle> {
 
         prefWidth = 800.0
         prefHeight = 400.0
@@ -61,7 +58,7 @@ class ReadLaterArticleView : View(), IReadLaterArticleView {
         contextmenu {
             item(messages["context.menu.read.later.article.save"]) {
                 action {
-                    selectedItem?.let { presenter.saveAndDeleteReadLaterArticle(it, extractionResultToArticlesToMap[it]) }
+                    selectedItem?.let { presenter.saveAndDeleteReadLaterArticle(it) }
                 }
             }
 
@@ -77,7 +74,7 @@ class ReadLaterArticleView : View(), IReadLaterArticleView {
 
             item(messages["context.menu.read.later.article.delete"]) {
                 action {
-                    selectedItem?.let { presenter.deleteReadLaterArticle(extractionResultToArticlesToMap[it]) }
+                    selectedItem?.let { presenter.deleteReadLaterArticle(it) }
                 }
             }
         }
@@ -85,10 +82,9 @@ class ReadLaterArticleView : View(), IReadLaterArticleView {
     }
 
 
-    override fun showArticles(extractionResultToArticlesToMap: Map<EntryExtractionResult, ReadLaterArticle>) {
+    override fun showArticles(readLaterArticles: List<ReadLaterArticle>) {
         runLater {
-            this.extractionResultToArticlesToMap = extractionResultToArticlesToMap
-            root.items.setAll(extractionResultToArticlesToMap.keys)
+            root.items.setAll(readLaterArticles)
         }
     }
 

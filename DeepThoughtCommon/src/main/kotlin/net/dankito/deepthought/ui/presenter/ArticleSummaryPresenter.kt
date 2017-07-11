@@ -13,7 +13,6 @@ import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.newsreader.article.IArticleExtractor
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
-import net.dankito.serializer.ISerializer
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
@@ -33,9 +32,6 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
     @Inject
     protected lateinit var localization: Localization
-
-    @Inject
-    protected lateinit var serializer: ISerializer
 
 
     init {
@@ -88,9 +84,8 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
     }
 
     private fun saveArticleForLaterReading(item: ArticleSummaryItem, result: EntryExtractionResult) {
-        val serializedEntryExtractionResult = serializer.serializeObject(result)
+        readLaterArticleService.persist(ReadLaterArticle(result))
 
-        readLaterArticleService.persist(ReadLaterArticle(serializedEntryExtractionResult))
         dialogService.showLittleInfoMessage(localization.getLocalizedString("article.summary.extractor.article.saved.for.later.reading", item.title))
     }
 

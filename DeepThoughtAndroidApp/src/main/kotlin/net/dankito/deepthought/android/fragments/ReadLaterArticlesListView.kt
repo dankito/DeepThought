@@ -5,7 +5,6 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ReadLaterArticlesAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.ReadLaterArticle
-import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.deepthought.ui.presenter.ReadLaterArticlePresenter
@@ -49,7 +48,7 @@ class ReadLaterArticlesListView : MainActivityTabFragment(R.layout.fragment_tab_
     }
 
     override fun listItemClicked(position: Int, selectedItem: Any) {
-        (selectedItem as? EntryExtractionResult)?.let { presenter.showArticle(it) }
+        (selectedItem as? ReadLaterArticle)?.let { presenter.showArticle(it) }
     }
 
     override fun getQueryHint() = activity.getString(R.string.search_hint_read_later_articles)
@@ -61,9 +60,9 @@ class ReadLaterArticlesListView : MainActivityTabFragment(R.layout.fragment_tab_
 
     /*      IReadLaterArticleView implementation        */
 
-    override fun showArticles(extractionResultToArticlesToMap: Map<EntryExtractionResult, ReadLaterArticle>) {
+    override fun showArticles(readLaterArticles: List<ReadLaterArticle>) {
         activity.runOnUiThread {
-            adapter.setItems(extractionResultToArticlesToMap.keys.toList())
+            adapter.setItems(readLaterArticles)
         }
     }
 

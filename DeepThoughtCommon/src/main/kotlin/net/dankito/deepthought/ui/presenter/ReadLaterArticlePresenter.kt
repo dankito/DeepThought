@@ -2,7 +2,6 @@ package net.dankito.deepthought.ui.presenter
 
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.ReadLaterArticle
-import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.deepthought.ui.view.IReadLaterArticleView
@@ -57,34 +56,22 @@ class ReadLaterArticlePresenter(private val view: IReadLaterArticleView, private
 
     private fun getReadLaterArticles() {
         readLaterArticleService.getAllAsync {
-            readLaterArticlesRetrieved(it)
+            view.showArticles(it)
         }
     }
 
-    private fun readLaterArticlesRetrieved(articles: List<ReadLaterArticle>) {
-        val extractionResultToArticlesToMap = LinkedHashMap<EntryExtractionResult, ReadLaterArticle>()
 
-        articles.forEach { extractionResultToArticlesToMap.put(mapReadLaterArticleToEntryExtractionResult(it), it) }
-
-        view.showArticles(extractionResultToArticlesToMap)
+    fun showArticle(article: ReadLaterArticle) {
+        router.showViewEntryView(article.entryExtractionResult)
     }
 
-    private fun mapReadLaterArticleToEntryExtractionResult(readLaterArticle: ReadLaterArticle): EntryExtractionResult {
-        return serializer.deserializeObject(readLaterArticle.serializedEntryExtractionResult, EntryExtractionResult::class.java)
-    }
-
-
-    fun showArticle(extractionResult: EntryExtractionResult) {
-        router.showViewEntryView(extractionResult)
-    }
-
-    fun saveAndDeleteReadLaterArticle(extractionResult: EntryExtractionResult, article: ReadLaterArticle?) {
-        saveReadLaterArticle(extractionResult)
+    fun saveAndDeleteReadLaterArticle(article: ReadLaterArticle) {
+        saveReadLaterArticle(article)
 
         deleteReadLaterArticle(article)
     }
 
-    fun saveReadLaterArticle(extractionResult: EntryExtractionResult) = entryPersister.saveEntry(extractionResult)
+    fun saveReadLaterArticle(article: ReadLaterArticle) = entryPersister.saveEntry(article.entryExtractionResult)
 
     fun deleteReadLaterArticle(article: ReadLaterArticle?) {
         article?.let {
@@ -92,7 +79,7 @@ class ReadLaterArticlePresenter(private val view: IReadLaterArticleView, private
         }
     }
 
-    fun  copyUrlToClipboard(extractionResult: EntryExtractionResult) {
+    fun  copyUrlToClipboard(article: ReadLaterArticle) {
         // TODO
     }
 
