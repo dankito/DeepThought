@@ -1,15 +1,17 @@
 package net.dankito.service.search
 
-import net.dankito.service.search.specific.EntriesSearch
-import net.dankito.service.search.specific.ReadLaterArticleSearch
-import net.dankito.service.search.specific.ReferenceSearch
-import net.dankito.service.search.specific.TagsSearch
+import net.dankito.service.search.specific.*
 import net.dankito.utils.IThreadPool
 
 
 
 
 abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearchEngine {
+
+    companion object {
+        const val TagsSearchTermSeparator = ","
+    }
+
 
     private var isInitialized = false
 
@@ -29,13 +31,26 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
         var tagNamesToFilterFor: List<String> = ArrayList<String>()
 
         if (search.searchTerm.isNullOrBlank() == false) {
-            tagNamesToFilterFor = getSingleSearchTerms(search.searchTerm, ",")
+            tagNamesToFilterFor = getSingleSearchTerms(search.searchTerm, TagsSearchTermSeparator)
         }
 
         threadPool.runAsync { searchTags(search, tagNamesToFilterFor) }
     }
 
     abstract fun searchTags(search: TagsSearch, termsToSearchFor: List<String>)
+
+
+    override fun searchFilteredTags(search: FilteredTagsSearch) {
+        var tagNamesToFilterFor: List<String> = ArrayList<String>()
+
+        if (search.searchTerm.isNullOrBlank() == false) {
+            tagNamesToFilterFor = getSingleSearchTerms(search.searchTerm, TagsSearchTermSeparator)
+        }
+
+        threadPool.runAsync { searchFilteredTags(search, tagNamesToFilterFor) }
+    }
+
+    abstract fun searchFilteredTags(search: FilteredTagsSearch, termsToSearchFor: List<String>)
 
 
     override fun searchReferences(search: ReferenceSearch) {

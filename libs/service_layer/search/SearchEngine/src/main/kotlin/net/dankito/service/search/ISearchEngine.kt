@@ -1,9 +1,6 @@
 package net.dankito.service.search
 
-import net.dankito.service.search.specific.EntriesSearch
-import net.dankito.service.search.specific.ReadLaterArticleSearch
-import net.dankito.service.search.specific.ReferenceSearch
-import net.dankito.service.search.specific.TagsSearch
+import net.dankito.service.search.specific.*
 
 
 interface ISearchEngine {
@@ -17,8 +14,7 @@ interface ISearchEngine {
 
 //    fun getEntriesForTagAsync(tag: Tag, listener: SearchCompletedListener<Collection<Entry>>)
 
-//    fun findAllEntriesHavingTheseTags(tagsToFilterFor: Collection<Tag>, listener: SearchCompletedListener<FindAllEntriesHavingTheseTagsResult>)
-//    fun findAllEntriesHavingTheseTags(tagsToFilterFor: Collection<Tag>, searchTerm: String, listener: SearchCompletedListener<FindAllEntriesHavingTheseTagsResult>)
+    fun searchFilteredTags(search: FilteredTagsSearch)
 
     fun searchReferences(search: ReferenceSearch)
 

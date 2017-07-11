@@ -6,10 +6,7 @@ import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.TagService
 import net.dankito.service.eventbus.IEventBus
-import net.dankito.service.search.specific.EntriesSearch
-import net.dankito.service.search.specific.ReadLaterArticleSearch
-import net.dankito.service.search.specific.ReferenceSearch
-import net.dankito.service.search.specific.TagsSearch
+import net.dankito.service.search.specific.*
 import net.dankito.service.search.writerandsearcher.*
 import net.dankito.utils.IThreadPool
 import org.apache.lucene.analysis.Analyzer
@@ -32,7 +29,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
 
     private val entryIndexWriterAndSearcher = EntryIndexWriterAndSearcher(entryService, eventBus)
 
-    private val tagIndexWriterAndSearcher = TagIndexWriterAndSearcher(tagService, eventBus)
+    private val tagIndexWriterAndSearcher = TagIndexWriterAndSearcher(tagService, eventBus, entryIndexWriterAndSearcher)
 
     private val referenceIndexWriterAndSearcher = ReferenceIndexWriterAndSearcher(referenceService, eventBus)
 
@@ -178,6 +175,10 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
 
     override fun searchTags(search: TagsSearch, termsToSearchFor: List<String>) {
         tagIndexWriterAndSearcher.searchTags(search, termsToSearchFor)
+    }
+
+    override fun searchFilteredTags(search: FilteredTagsSearch, termsToSearchFor: List<String>) {
+        tagIndexWriterAndSearcher.searchFilteredTags(search, termsToSearchFor)
     }
 
     override fun searchReferences(search: ReferenceSearch, termsToSearchFor: List<String>) {
