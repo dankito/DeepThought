@@ -8,23 +8,23 @@ import net.dankito.service.eventbus.messages.IEventBusMessage
 
 class EntityChangedNotifier(private val eventBus: IEventBus) {
 
-    fun notifyListenersOfEntityChange(entity: BaseEntity, changeType: EntityChangeType) {
+    fun notifyListenersOfEntityChange(entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource) {
         val entityClass = entity.javaClass
 
-        createEntityChangedMessage(entityClass, entity, changeType)?.let { message -> // if entity has no extra EntityChanged message, return value is null
+        createEntityChangedMessage(entityClass, entity, changeType, source)?.let { message -> // if entity has no extra EntityChanged message, return value is null
             eventBus.post(message) // has to be called synchronized so that LuceneSearchEngine can update its index before any other class accesses updated index
         }
 
-        eventBus.postAsync(EntitiesOfTypeChanged(entityClass, changeType))
+        eventBus.postAsync(EntitiesOfTypeChanged(entityClass, changeType, source))
     }
 
-    private fun createEntityChangedMessage(entityClass: Class<BaseEntity>, entity: BaseEntity, changeType: EntityChangeType): IEventBusMessage? {
+    private fun createEntityChangedMessage(entityClass: Class<BaseEntity>, entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource): IEventBusMessage? {
         when(entityClass) {
-            Entry::class.java -> return EntryChanged(entity as Entry, changeType)
-            Tag::class.java -> return TagChanged(entity as Tag, changeType)
-            Reference::class.java -> return ReferenceChanged(entity as Reference, changeType)
-            ReadLaterArticle::class.java -> return ReadLaterArticleChanged(entity as ReadLaterArticle, changeType)
-            ArticleSummaryExtractorConfig::class.java -> return ArticleSummaryExtractorConfigChanged(entity as ArticleSummaryExtractorConfig, changeType)
+            Entry::class.java -> return EntryChanged(entity as Entry, changeType, source)
+            Tag::class.java -> return TagChanged(entity as Tag, changeType, source)
+            Reference::class.java -> return ReferenceChanged(entity as Reference, changeType, source)
+            ReadLaterArticle::class.java -> return ReadLaterArticleChanged(entity as ReadLaterArticle, changeType, source)
+            ArticleSummaryExtractorConfig::class.java -> return ArticleSummaryExtractorConfigChanged(entity as ArticleSummaryExtractorConfig, changeType, source)
             else -> return null
         }
     }

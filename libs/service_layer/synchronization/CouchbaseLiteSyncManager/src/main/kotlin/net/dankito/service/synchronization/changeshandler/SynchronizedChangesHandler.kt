@@ -8,6 +8,7 @@ import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.jpa.couchbaselite.Dao
 import net.dankito.service.data.event.EntityChangedNotifier
+import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.utils.AsyncProducerConsumerQueue
 import net.dankito.utils.ConsumerListener
@@ -77,7 +78,7 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
 
 
         if(synchronizedEntity != null) {
-            changeNotifier.notifyListenersOfEntityChange(synchronizedEntity, entityChangeType)
+            changeNotifier.notifyListenersOfEntityChange(synchronizedEntity, entityChangeType, EntityChangeSource.Synchronization)
         }
     }
 
@@ -111,7 +112,7 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
                 val entityType = getEntityTypeFromRevision(lastUndeletedRevision)
                 if (entityType != null) {
                     getDeletedEntity(id, entityType, document)?.let { deletedEntity ->
-                        changeNotifier.notifyListenersOfEntityChange(deletedEntity, EntityChangeType.Deleted)
+                        changeNotifier.notifyListenersOfEntityChange(deletedEntity, EntityChangeType.Deleted, EntityChangeSource.Synchronization)
                     }
                 }
             }

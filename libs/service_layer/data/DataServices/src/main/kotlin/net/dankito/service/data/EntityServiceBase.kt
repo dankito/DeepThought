@@ -3,6 +3,7 @@ package net.dankito.service.data
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.event.EntityChangedNotifier
+import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntityChangeType
 import kotlin.concurrent.thread
 
@@ -59,7 +60,7 @@ abstract class EntityServiceBase<T : BaseEntity>(val entityClass: Class<T>, val 
 
 
     private fun callEntitiesUpdatedListeners(entity: T, changeType: EntityChangeType) {
-        entityChangedNotifier.notifyListenersOfEntityChange(entity, changeType)
+        entityChangedNotifier.notifyListenersOfEntityChange(entity, changeType, EntityChangeSource.Local)
     }
 
 }
