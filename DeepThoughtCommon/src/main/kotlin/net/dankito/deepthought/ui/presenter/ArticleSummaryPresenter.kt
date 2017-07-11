@@ -41,14 +41,22 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
     fun extractArticlesSummary(extractorConfig: ArticleSummaryExtractorConfig?, callback: (AsyncResult<out ArticleSummary>) -> Unit) {
         extractorConfig?.extractor?.extractSummaryAsync {
+            setArticleSummaryExtractorConfigOnItems(it, extractorConfig)
+
             callback(it)
         }
     }
 
     fun loadMoreItems(extractorConfig: ArticleSummaryExtractorConfig?, callback: (AsyncResult<out ArticleSummary>) -> Unit) {
         extractorConfig?.extractor?.loadMoreItemsAsync {
+            setArticleSummaryExtractorConfigOnItems(it, extractorConfig)
+
             callback(it)
         }
+    }
+
+    private fun setArticleSummaryExtractorConfigOnItems(result: AsyncResult<out ArticleSummary>, extractorConfig: ArticleSummaryExtractorConfig?) {
+        result.result?.articles?.forEach { it.articleSummaryExtractorConfig = extractorConfig }
     }
 
 
@@ -101,31 +109,39 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
     private fun retrievedArticle(extractor: IArticleExtractor, item: ArticleSummaryItem, asyncResult: AsyncResult<EntryExtractionResult>,
                                  extractionResult: EntryExtractionResult, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
-        getDefaultTagsForExtractor(extractor) { tags ->
+        getDefaultTagsForExtractor(extractor, item) { tags ->
             extractionResult.tags.addAll(tags)
             callback(asyncResult)
         }
     }
 
-    private fun getDefaultTagsForExtractor(extractor: IArticleExtractor, callback: (List<Tag>) -> Unit) {
+    private fun getDefaultTagsForExtractor(extractor: IArticleExtractor, item: ArticleSummaryItem, callback: (List<Tag>) -> Unit) {
         extractor.getName()?.let { extractorName ->
-            searchEngine.searchTags(TagsSearch(extractorName) { tagsSearchResults ->
-                if(tagsSearchResults.exactMatchesOfLastResult.isNotEmpty()) {
-                    callback(tagsSearchResults.exactMatchesOfLastResult)
-                    return@TagsSearch
-                }
-
-                val extractorTag = Tag(extractorName) // no tag with name 'extractorName' found -> create new one
-
-                tagService.persist(extractorTag)
-
-                callback(listOf(extractorTag))
-            })
+            getTagForExtractorName(extractorName, callback)
         }
 
-        if(extractor.getName() == null) {
+        if(extractor.getName() == null && item.articleSummaryExtractorConfig?.name != null) {
+            item.articleSummaryExtractorConfig?.name?.let { getTagForExtractorName(it, callback) }
+        }
+
+        if(extractor.getName() == null && item.articleSummaryExtractorConfig?.name == null) {
             callback(listOf())
         }
+    }
+
+    private fun getTagForExtractorName(extractorName: String, callback: (List<Tag>) -> Unit) {
+        searchEngine.searchTags(TagsSearch(extractorName) { tagsSearchResults ->
+            if(tagsSearchResults.exactMatchesOfLastResult.isNotEmpty()) {
+                callback(tagsSearchResults.exactMatchesOfLastResult)
+                return@TagsSearch
+            }
+
+            val extractorTag = Tag(extractorName) // no tag with name 'extractorName' found -> create new one
+
+            tagService.persist(extractorTag)
+
+            callback(listOf(extractorTag))
+        })
     }
 
 }
