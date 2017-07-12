@@ -144,6 +144,23 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
     }
 
 
+    fun close() {
+        indexSearcher = null
+
+        writer?.let { writer ->
+            writer.commit()
+            writer.close()
+        }
+        writer = null
+
+        directoryReader?.close()
+        directoryReader = null
+
+        directory?.close()
+        directory = null
+    }
+
+
     fun handleEntityChange(entityChanged: EntityChanged<TEntity>) {
         if(entityChanged.changeType == EntityChangeType.Created) {
             indexEntity(entityChanged.entity)

@@ -21,8 +21,8 @@ interface ISearchEngine {
     fun searchReadLaterArticles(search: ReadLaterArticleSearch)
 
 //    fun searchFiles(search: FilesSearch)
-//
-//
-//    fun close()
+
+
+    fun close()
 
 }

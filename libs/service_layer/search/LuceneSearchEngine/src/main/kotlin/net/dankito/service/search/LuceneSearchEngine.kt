@@ -131,6 +131,13 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
     }
 
 
+    override fun close() {
+        for(writerAndSearcher in indexWritersAndSearchers) {
+            writerAndSearcher.close()
+        }
+    }
+
+
     private fun rebuildIndex() {
         if (isReadOnly == true || isIndexReady == false) {
             return
