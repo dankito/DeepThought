@@ -1,5 +1,7 @@
 package net.dankito.deepthought.model
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo
+import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import net.dankito.deepthought.model.config.TableConfig
 import java.io.Serializable
 import java.util.*
@@ -7,6 +9,9 @@ import javax.persistence.*
 
 
 @MappedSuperclass
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator::class,
+        property = "id")
 open class BaseEntity : Serializable {
 
 
