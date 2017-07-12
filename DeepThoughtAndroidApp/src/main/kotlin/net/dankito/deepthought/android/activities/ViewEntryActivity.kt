@@ -115,10 +115,10 @@ class ViewEntryActivity : BaseActivity() {
     }
 
 
-    override fun onPause() {
+    override fun onDestroy() {
         pauseWebView()
 
-        super.onPause()
+        super.onDestroy()
     }
 
     private fun pauseWebView() {
