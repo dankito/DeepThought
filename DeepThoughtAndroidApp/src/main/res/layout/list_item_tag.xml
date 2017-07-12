@@ -4,14 +4,30 @@
                 android:layout_height="@dimen/list_item_tag_height"
 >
 
+    <!-- Without setting focusable to false ImageView would receive focus and list item would therefore not be clickable (but receives on click events anyway) -->
+    <ImageView
+        android:id="@+id/imgFilter"
+        android:layout_width="@dimen/list_item_tag_filter_icon_width"
+        android:layout_height="@dimen/list_item_tag_filter_icon_height"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="@dimen/list_item_tag_margin_left"
+        android:layout_marginStart="@dimen/list_item_tag_margin_left"
+        android:layout_marginRight="@dimen/list_item_tag_filter_icon_margin_right"
+        android:layout_marginEnd="@dimen/list_item_tag_filter_icon_margin_right"
+        android:focusable="false"
+        android:background="@drawable/filter"
+    />
+
     <TextView
         android:id="@+id/txtTagDisplayText"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/imgFilter"
+        android:layout_toEndOf="@+id/imgFilter"
         android:layout_toLeftOf="@+id/imgShowTagEntries"
         android:layout_toStartOf="@+id/imgShowTagEntries"
         android:layout_marginLeft="@dimen/list_item_tag_margin_left"
