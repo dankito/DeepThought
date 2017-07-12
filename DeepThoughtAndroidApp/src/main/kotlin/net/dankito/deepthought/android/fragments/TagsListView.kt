@@ -28,7 +28,7 @@ class TagsListView : MainActivityTabFragment(R.layout.fragment_tab_tags, R.id.ls
 
     private lateinit var presenter: TagsListPresenter
 
-    private val adapter = TagAdapter()
+    private lateinit var adapter: TagAdapter
 
 
     init {
@@ -38,6 +38,8 @@ class TagsListView : MainActivityTabFragment(R.layout.fragment_tab_tags, R.id.ls
 
     override fun initPresenter(): IMainViewSectionPresenter {
         presenter = TagsListPresenter(this, dataManager, searchEngine, router)
+
+        adapter = TagAdapter(presenter)
 
         return presenter
     }
