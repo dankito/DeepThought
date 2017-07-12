@@ -22,6 +22,8 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private val dat
 
     private var lastSearchTermProperty = Search.EmptySearchTerm
 
+    private val tagsFilter = ArrayList<Tag>()
+
     private val calculatedTags = ArrayList<CalculatedTag>()
 
 
@@ -50,17 +52,26 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private val dat
 
 
     override fun getAndShowAllEntities() {
-        searchEngine.addInitializationListener { retrieveAndShowTags() }
+        searchEngine.addInitializationListener { searchTags() }
     }
 
-    private fun retrieveAndShowTags() {
+
+    private fun searchTags() {
         searchTags(lastSearchTermProperty)
     }
-
 
     fun searchTags(searchTerm: String) {
         lastSearchTermProperty = searchTerm
 
+        if(isTagFilterApplied()) {
+            searchFilteredTags(lastSearchTermProperty, tagsFilter)
+        }
+        else {
+            searchTagsWithoutFilter(lastSearchTermProperty)
+        }
+    }
+
+    private fun searchTagsWithoutFilter(searchTerm: String) {
         searchEngine.searchTags(TagsSearch(searchTerm) { result ->
             var tags = result.getRelevantMatchesSorted()
 
@@ -80,6 +91,27 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private val dat
         })
     }
 
+
+    fun isTagFilterApplied(): Boolean {
+        return tagsFilter.isNotEmpty()
+    }
+
+    fun isTagFiltered(tag: Tag): Boolean {
+        return tagsFilter.contains(tag)
+    }
+
+    fun toggleFilterTag(tag: Tag) {
+        if(isTagFiltered(tag)) {
+            tagsFilter.remove(tag)
+        }
+        else {
+            tagsFilter.add(tag)
+        }
+
+        searchTags()
+    }
+
+
     override fun getLastSearchTerm(): String {
         return lastSearchTermProperty
     }
@@ -95,7 +127,7 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private val dat
         @Handler()
         fun entityChanged(entitiesOfTypeChanged: EntitiesOfTypeChanged) {
             when(entitiesOfTypeChanged.entityType) {
-                Tag::class.java -> retrieveAndShowTags()
+                Tag::class.java -> searchTags()
                 Entry::class.java -> tagsListView.updateDisplayedTags() // count entries on tag(s) may have changed
             }
         }
