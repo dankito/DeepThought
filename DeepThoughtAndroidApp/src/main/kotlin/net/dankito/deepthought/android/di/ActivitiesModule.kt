@@ -14,7 +14,6 @@ import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.serializer.ISerializer
-import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IClipboardService
@@ -74,8 +73,8 @@ class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
-    fun provideCommunicationManagerStarter(searchEngine: ISearchEngine) : CommunicationManagerStarter {
-        return CommunicationManagerStarter(searchEngine)
+    fun provideCommunicationManagerStarter(dataManager: DataManager) : CommunicationManagerStarter {
+        return CommunicationManagerStarter(dataManager)
     }
 
 }

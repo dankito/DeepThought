@@ -2,7 +2,7 @@ package net.dankito.deepthought.android.appstart
 
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.communication.ICommunicationManager
-import net.dankito.service.search.ISearchEngine
+import net.dankito.deepthought.service.data.DataManager
 import java.util.*
 import javax.inject.Inject
 import kotlin.concurrent.schedule
@@ -15,7 +15,7 @@ import kotlin.concurrent.schedule
  * Therefore after SearchEngine is initialized we give application some time to show initial data
  * before we start communicator classes like @see DevicesDiscoverer, @see IClientCommunicator, @see ISyncManager, ...
  */
-class CommunicationManagerStarter(searchEngine: ISearchEngine) {
+class CommunicationManagerStarter(dataManager: DataManager) {
 
     companion object {
         const val DefaultWaitTimeBeforeStartingCommunicationManagerMillis = 5000L
@@ -27,10 +27,10 @@ class CommunicationManagerStarter(searchEngine: ISearchEngine) {
 
 
     init {
-        searchEngine.addInitializationListener { searchEngineInitialized() }
+        dataManager.addInitializationListener { dataManagerInitialized() }
     }
 
-    private fun searchEngineInitialized() {
+    private fun dataManagerInitialized() {
         val timer = Timer()
 
         timer.schedule(DefaultWaitTimeBeforeStartingCommunicationManagerMillis) {
