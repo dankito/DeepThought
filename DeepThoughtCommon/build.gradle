@@ -4,6 +4,12 @@ sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
 
 
+sourceSets {
+    main.java.srcDirs += [ 'src/main/kotlin', 'build/generated/source/kapt/main' ]
+    test.java.srcDirs += [ 'src/test/kotlin', 'build/generated/source/kapt/test' ]
+}
+
+
 dependencies {
     compile project(':DeepThoughtBaseLib')
     compile project(':EntityManager')
