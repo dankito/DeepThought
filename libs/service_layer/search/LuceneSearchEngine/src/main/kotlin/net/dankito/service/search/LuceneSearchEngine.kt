@@ -152,7 +152,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
      * We hope you know what you are doing.
      *
      */
-    fun deleteIndex() {
+    private fun deleteIndex() {
         log.info("Going to delete Lucene Index ...")
 
         try {
