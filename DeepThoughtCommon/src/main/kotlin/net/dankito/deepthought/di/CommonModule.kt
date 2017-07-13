@@ -17,6 +17,7 @@ import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.deepthought.model.NetworkSettings
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.deepthought.ui.html.HtmlEditorExtractor
 import net.dankito.deepthought.util.OsHelper
 import net.dankito.faviconextractor.FaviconComparator
 import net.dankito.faviconextractor.FaviconExtractor
@@ -78,6 +79,12 @@ class CommonModule {
     @Singleton
     fun provideOsHelper(platformConfiguration: IPlatformConfiguration) : OsHelper {
         return OsHelper(platformConfiguration)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHtmlEditorExtractor(dataManager: DataManager, osHelper: OsHelper) : HtmlEditorExtractor {
+        return HtmlEditorExtractor(dataManager, osHelper)
     }
 
     @Provides
