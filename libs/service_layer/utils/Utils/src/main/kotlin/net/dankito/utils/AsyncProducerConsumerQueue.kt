@@ -99,7 +99,7 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
 
         }
 
-        log.debug("consumerThread() stopped")
+        log.info("consumerThread() stopped")
     }
 
     protected fun consumeItem(nextItemToConsume: T) {
