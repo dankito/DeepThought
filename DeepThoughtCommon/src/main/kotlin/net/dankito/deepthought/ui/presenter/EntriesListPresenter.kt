@@ -56,6 +56,10 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
         router.showViewEntryView(entry)
     }
 
+    fun editEntry(entry: Entry) {
+        router.showEditEntryView(entry)
+    }
+
 
     override fun getAndShowAllEntities() {
         searchEngine.addInitializationListener {
