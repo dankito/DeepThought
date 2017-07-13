@@ -17,6 +17,7 @@ import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.deepthought.model.NetworkSettings
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.deepthought.util.OsHelper
 import net.dankito.faviconextractor.FaviconComparator
 import net.dankito.faviconextractor.FaviconExtractor
 import net.dankito.feedaddressextractor.FeedAddressExtractor
@@ -35,6 +36,7 @@ import net.dankito.service.synchronization.CouchbaseLiteSyncManager
 import net.dankito.service.synchronization.ISyncManager
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
+import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ImageCache
 import net.dankito.utils.ThreadPool
@@ -70,6 +72,12 @@ class CommonModule {
     @Singleton
     fun provideThreadPool() : IThreadPool {
         return ThreadPool()
+    }
+
+    @Provides
+    @Singleton
+    fun provideOsHelper(platformConfiguration: IPlatformConfiguration) : OsHelper {
+        return OsHelper(platformConfiguration)
     }
 
     @Provides

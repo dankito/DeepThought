@@ -1,9 +1,9 @@
-package net.dankito.deepthought.android.util
+package net.dankito.deepthought.util
 
-import android.os.Build
+import net.dankito.utils.IPlatformConfiguration
 
 
-object OsHelper {
+class OsHelper(private val platformConfiguration: IPlatformConfiguration) {
 
     val isRunningOnAndroid = determineIfIsRunningOnAndroid()
 
@@ -13,15 +13,15 @@ object OsHelper {
     }
 
     fun isRunningOnAndroidApiLevel(apiLevel: Int): Boolean {
-        return isRunningOnAndroid && getAndroidOsVersion() == apiLevel
+        return isRunningOnAndroid && getOsVersion() == apiLevel
     }
 
     fun isRunningOnAndroidAtLeastOfApiLevel(minimumApiLevel: Int): Boolean {
-        return isRunningOnAndroid && getAndroidOsVersion() >= minimumApiLevel
+        return isRunningOnAndroid && getOsVersion() >= minimumApiLevel
     }
 
-    fun getAndroidOsVersion(): Int {
-        return Build.VERSION.SDK_INT
+    fun getOsVersion(): Int {
+        return platformConfiguration.getOsVersion()
     }
 
 
