@@ -29,8 +29,6 @@ class HtmlEditorExtractor(private val dataManager: DataManager, private val osHe
     }
 
     fun extractHtmlEditorIfNeeded(): String? {
-        log.info("extractHtmlEditorIfNeeded() ...")
-
         val htmlEditorDirectory = File(dataManager.dataFolderPath, HtmlEditorCommon.HtmlEditorFolderName)
         JavaFileStorageService().deleteFolderRecursively(htmlEditorDirectory.path) // if CKEditor_start.html has been updated
 
@@ -46,7 +44,6 @@ class HtmlEditorExtractor(private val dataManager: DataManager, private val osHe
             // TODO: what to do in error case?
         }
 
-        log.info("extractHtmlEditorIfNeeded() done, unzippedHtmlEditorFilePath = $unzippedHtmlEditorFilePath")
         return unzippedHtmlEditorFilePath
     }
 
@@ -55,10 +52,8 @@ class HtmlEditorExtractor(private val dataManager: DataManager, private val osHe
 
         try {
             val htmlEditorDirectory = dataManager.dataFolderPath
-            log.info("Going to extract html editor to $htmlEditorDirectory")
 
             getJarFileForHtmlEditor()?.let { jar ->
-                log.info("Jar file is $jar")
                 val enumEntries = jar.entries()
 
                 while (enumEntries.hasMoreElements()) {
