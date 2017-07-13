@@ -62,6 +62,12 @@ class ReferencesListPresenter(private var view: IReferencesListView, private var
         return lastSearchTermProperty
     }
 
+
+    fun showEntriesForReference(reference: Reference) {
+        router.showEntriesForReference(reference)
+    }
+
+
     override fun cleanUp() {
         eventBus.unregister(eventBusListener)
     }
