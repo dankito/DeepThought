@@ -38,11 +38,6 @@ data class Entry(
     var notes: MutableSet<Note> = HashSet()
         private set
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
-    @JoinTable(name = TableConfig.EntryEntriesGroupJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.EntryEntriesGroupJoinTableEntryIdColumnName)/*, referencedColumnName = "id"*/), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.EntryEntriesGroupJoinTableEntriesGroupIdColumnName)/*, referencedColumnName = "id"*/))
-    var entryGroups: MutableSet<EntriesGroup> = HashSet()
-        private set
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = TableConfig.EntryAttachedFilesJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.EntryAttachedFilesJoinTableEntryIdColumnName)/*, referencedColumnName = "id"*/), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.EntryAttachedFilesJoinTableFileLinkIdColumnName)/*, referencedColumnName = "id"*/))
     var attachedFiles: MutableSet<FileLink> = HashSet()
@@ -143,31 +138,6 @@ data class Entry(
     fun removeNote(note: Note): Boolean {
         if (notes.remove(note)) {
             note.entry = null
-
-            return true
-        }
-
-        return false
-    }
-
-
-    fun hasEntriesGroups(): Boolean {
-        return entryGroups.size > 0
-    }
-
-    fun addEntriesGroup(group: EntriesGroup): Boolean {
-        if (entryGroups.add(group)) {
-            group.addEntryToGroup(this)
-
-            return true
-        }
-
-        return false
-    }
-
-    fun removeEntriesGroup(group: EntriesGroup): Boolean {
-        if (entryGroups.remove(group)) {
-            group.removeEntryFromGroup(this)
 
             return true
         }
