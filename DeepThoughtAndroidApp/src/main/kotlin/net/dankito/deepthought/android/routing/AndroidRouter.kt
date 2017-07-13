@@ -6,6 +6,7 @@ import net.dankito.deepthought.android.activities.ArticleSummaryActivity
 import net.dankito.deepthought.android.activities.ViewEntryActivity
 import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
+import net.dankito.deepthought.android.dialogs.EntriesListDialog
 import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.model.Entry
@@ -20,7 +21,10 @@ class AndroidRouter(private val context: Context, private val activityTracker: C
 
 
     override fun showEntriesForTag(tag: Tag, entries: List<Entry>) {
-        // TODO: what to do on Android?
+        activityTracker.currentActivity?.let { currentActivity ->
+            val dialog = EntriesListDialog()
+            dialog.showDialogForEntries(currentActivity.supportFragmentManager, entries)
+        }
     }
 
 
