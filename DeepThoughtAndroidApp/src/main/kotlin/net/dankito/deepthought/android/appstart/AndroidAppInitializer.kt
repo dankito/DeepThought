@@ -2,6 +2,7 @@ package net.dankito.deepthought.android.appstart
 
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.deepthought.ui.html.HtmlEditorExtractor
 import net.dankito.service.search.ISearchEngine
 import javax.inject.Inject
 
@@ -19,10 +20,15 @@ class AndroidAppInitializer {
     protected lateinit var searchEngine: ISearchEngine
 
     @Inject
+    protected lateinit var htmlEditorExtractor: HtmlEditorExtractor
+
+    @Inject
     protected lateinit var communicationManagerStarter: CommunicationManagerStarter
 
 
     fun initializeApp() {
         AppComponent.component.inject(this)
+
+        htmlEditorExtractor.extractHtmlEditorIfNeededAsync()
     }
 }
