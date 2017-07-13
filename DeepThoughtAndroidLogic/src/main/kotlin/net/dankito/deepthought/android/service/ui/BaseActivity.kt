@@ -11,19 +11,19 @@ open class BaseActivity : AppCompatActivity() {
     protected var currentActivityTracker: CurrentActivityTracker? = null
 
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
 
         // in MainActivity first DeepThoughtBackgroundAndroidService has to be started before dependencies can be injected -> currentActivityTracker is not set yet in onResume()
         currentActivityTracker?.currentActivity = this
     }
 
-    override fun onPause() {
+    override fun onStop() {
         if(currentActivityTracker?.currentActivity == this) {
             currentActivityTracker?.currentActivity = null
         }
 
-        super.onPause()
+        super.onStop()
     }
 
 }
