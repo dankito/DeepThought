@@ -5,6 +5,7 @@ import net.dankito.data_access.network.communication.callback.IDeviceRegistratio
 import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.service.synchronization.initialsync.model.SyncInfo
+import kotlin.concurrent.thread
 
 
 class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler {
@@ -34,7 +35,9 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
     private fun handleRequestPermitSynchronizationRequest(request: Request<DeviceInfo>, callback: (Response<RequestPermitSynchronizationResponseBody>) -> Unit) {
         request.body?.let { remoteDeviceInfo ->
             registrationHandler.shouldPermitSynchronizingWithDevice(remoteDeviceInfo) { _, permitsSynchronization ->
-                handleShouldPermitSynchronizingWithDeviceResult(remoteDeviceInfo, permitsSynchronization, registrationHandler, callback)
+                thread { // callback mostly is executed on UI thread -> get off UI thread to avoid NetworkOnMainThreadException
+                    handleShouldPermitSynchronizingWithDeviceResult(remoteDeviceInfo, permitsSynchronization, registrationHandler, callback)
+                }
             }
         }
     }
