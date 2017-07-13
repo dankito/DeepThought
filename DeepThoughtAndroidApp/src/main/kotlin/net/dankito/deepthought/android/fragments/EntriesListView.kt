@@ -11,7 +11,7 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EntriesListPresenter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.deepthought.ui.view.IEntriesListView
-import net.dankito.service.data.EntryService
+import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class EntriesListView : MainActivityTabFragment(R.layout.fragment_tab_entries, R.id.lstEntries, R.menu.fragment_tab_entries_menu), IEntriesListView {
 
     @Inject
-    protected lateinit var entryService: EntryService
+    protected lateinit var deleteEntityService: DeleteEntityService
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
@@ -42,7 +42,7 @@ class EntriesListView : MainActivityTabFragment(R.layout.fragment_tab_entries, R
     init {
         AppComponent.component.inject(this)
 
-        presenter = EntriesListPresenter(this, router, searchEngine, entryService, clipboardService)
+        presenter = EntriesListPresenter(this, router, searchEngine, deleteEntityService, clipboardService)
         entryAdapter = EntryAdapter(presenter)
     }
 

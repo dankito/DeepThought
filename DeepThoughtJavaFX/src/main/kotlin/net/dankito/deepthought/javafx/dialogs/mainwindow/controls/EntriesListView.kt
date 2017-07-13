@@ -11,7 +11,7 @@ import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EntriesListPresenter
 import net.dankito.deepthought.ui.view.IEntriesListView
-import net.dankito.service.data.EntryService
+import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.ui.IClipboardService
 import tornadofx.*
@@ -33,7 +33,7 @@ class EntriesListView : View(), IEntriesListView {
 
 
     @Inject
-    protected lateinit var entryService: EntryService
+    protected lateinit var deleteEntityService: DeleteEntityService
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
@@ -48,7 +48,7 @@ class EntriesListView : View(), IEntriesListView {
     init {
         AppComponent.component.inject(this)
 
-        presenter = EntriesListPresenter(this, router, searchEngine, entryService, clipboardService)
+        presenter = EntriesListPresenter(this, router, searchEngine, deleteEntityService, clipboardService)
         searchBar = EntriesSearchBar(presenter)
 
         (router as? JavaFXRouter)?.entriesListView = this // TODO: this is bad code design

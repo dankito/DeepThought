@@ -7,7 +7,7 @@ import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.IEntriesListView
-import net.dankito.service.data.EntryService
+import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
@@ -20,7 +20,7 @@ import kotlin.concurrent.thread
 
 
 class EntriesListPresenter(private val entriesListView: IEntriesListView, private var router: IRouter, private var searchEngine: ISearchEngine,
-                           private val entryService: EntryService, private val clipboardService: IClipboardService)
+                           private val deleteEntityService: DeleteEntityService, private val clipboardService: IClipboardService)
     : IMainViewSectionPresenter {
 
     private var unfilteredEntries: List<Entry> = listOf()
@@ -107,7 +107,7 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
     }
 
     fun deleteEntry(entry: Entry) {
-        entryService.delete(entry)
+        deleteEntityService.deleteEntryAsync(entry)
     }
 
 
