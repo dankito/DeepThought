@@ -8,10 +8,7 @@ import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
 import net.dankito.deepthought.android.dialogs.EntriesListDialog
 import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
-import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.ReadLaterArticle
-import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.serializer.ISerializer
@@ -21,6 +18,14 @@ class AndroidRouter(private val context: Context, private val activityTracker: C
 
 
     override fun showEntriesForTag(tag: Tag, entries: List<Entry>) {
+        showEntriesListDialog(entries)
+    }
+
+    override fun showEntriesForReference(reference: Reference) {
+        showEntriesListDialog(reference.entries.toList())
+    }
+
+    private fun showEntriesListDialog(entries: List<Entry>) {
         activityTracker.currentActivity?.let { currentActivity ->
             val dialog = EntriesListDialog()
             dialog.showDialogForEntries(currentActivity.supportFragmentManager, entries)
