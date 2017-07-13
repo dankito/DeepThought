@@ -203,4 +203,10 @@ data class Entry(
         return indication.isNotBlank()
     }
 
+
+    override fun toString(): String {
+        val contentLength = if(content.length > 100) 100 else content.length
+        return "" + entryIndex + ", " + id + ": " + content.substring(0, contentLength)
+    }
+
 }
