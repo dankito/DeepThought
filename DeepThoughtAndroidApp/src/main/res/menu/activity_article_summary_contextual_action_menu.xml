@@ -10,7 +10,7 @@
     <item
         android:id="@+id/mnSaveArticleForLaterReading"
         android:title="@string/activity_article_summary_menu_save_for_later_reading"
-        android:icon="@android:drawable/ic_menu_save"
+        android:icon="@drawable/ic_read_later"
     />
 
     <item
