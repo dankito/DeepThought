@@ -109,8 +109,7 @@ class CommonDataModule {
                 Tag::class.java,
                 Reference::class.java,
                 FileLink::class.java,
-                Note::class.java,
-                EntriesGroup::class.java
+                Note::class.java
         )
 
         return configuration
