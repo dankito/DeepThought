@@ -24,7 +24,7 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
     lateinit var localUser: User
     lateinit var localDevice: Device
 
-    var dataFolderPath: File
+    var dataFolderPath: File = platformConfiguration.getDefaultDataFolder()
 
     var isInitialized = false
         private set
@@ -33,8 +33,6 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
 
 
     init {
-        dataFolderPath = platformConfiguration.getDefaultDataFolder()
-
         thread {
             initializeDataManager()
         }
