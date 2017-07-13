@@ -26,7 +26,7 @@ class ViewEntryActivity : BaseActivity() {
 
     companion object {
         const val ENTRY_ID_INTENT_EXTRA_NAME = "ENTRY_ID"
-        const val READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME = "ENTRY_ID"
+        const val READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME = "READ_LATER_ARTICLE_ID"
         const val ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ENTRY_EXTRACTION_RESULT"
     }
 
