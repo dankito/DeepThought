@@ -22,6 +22,8 @@ ext {
 
     slf4jVersion = '1.7.25'
 
+    commonsLangVersion = '3.6'
+
     okHttpVersion = '2.5.0'
 
     jsoupVersion = '1.10.2'
