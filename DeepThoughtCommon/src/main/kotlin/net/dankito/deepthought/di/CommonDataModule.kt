@@ -16,6 +16,7 @@ import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.IPlatformConfiguration
+import net.dankito.utils.IThreadPool
 import net.dankito.utils.localization.Localization
 import javax.inject.Singleton
 
@@ -63,14 +64,20 @@ class CommonDataModule {
 
     @Provides
     @Singleton
+    fun provideReadLaterArticleService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier, serializer: ISerializer) : ReadLaterArticleService {
+        return ReadLaterArticleService(dataManager, entityChangedNotifier, serializer)
+    }
+
+    @Provides
+    @Singleton
     fun provideArticleSummaryExtractorConfigService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : ArticleSummaryExtractorConfigService {
         return ArticleSummaryExtractorConfigService(dataManager, entityChangedNotifier)
     }
 
     @Provides
     @Singleton
-    fun provideReadLaterArticleService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier, serializer: ISerializer) : ReadLaterArticleService {
-        return ReadLaterArticleService(dataManager, entityChangedNotifier, serializer)
+    fun provideDeleteEntityService(entryService: EntryService, tagService: TagService, referenceService: ReferenceService, threadPool: IThreadPool) : DeleteEntityService {
+        return DeleteEntityService(entryService, tagService, referenceService, threadPool)
     }
 
 
