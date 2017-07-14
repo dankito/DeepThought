@@ -10,6 +10,7 @@ import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import tornadofx.*
@@ -41,11 +42,14 @@ abstract class EditEntryViewBase : DialogFragment() {
     @Inject
     protected lateinit var entryPersister: EntryPersister
 
+    @Inject
+    protected lateinit var router: IRouter
+
 
     init {
         AppComponent.component.inject(this)
 
-        presenter = EditEntryPresenter(entryPersister)
+        presenter = EditEntryPresenter(entryPersister, router)
     }
 
 
