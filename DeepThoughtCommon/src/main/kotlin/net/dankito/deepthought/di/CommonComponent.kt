@@ -27,4 +27,6 @@ interface CommonComponent : BaseComponent {
 
     fun inject(readLaterArticlePresenter: ReadLaterArticlePresenter)
 
+    fun inject(editEntryPresenter: EditEntryPresenter)
+
 }
