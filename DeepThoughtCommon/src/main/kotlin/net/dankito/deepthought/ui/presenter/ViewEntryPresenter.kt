@@ -1,10 +1,11 @@
 package net.dankito.deepthought.ui.presenter
 
 import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
-import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.utils.ui.IClipboardService
 
 
@@ -15,6 +16,19 @@ class ViewEntryPresenter(private val entryPersister: EntryPersister, private val
         entryPersister.saveEntry(result)
 
         returnToPreviousView()
+    }
+
+
+    fun editEntry(entry: Entry) {
+        router.showEditEntryView(entry)
+    }
+
+    fun editEntry(article: ReadLaterArticle) {
+        router.showEditEntryView(article)
+    }
+
+    fun editEntry(extractionResult: EntryExtractionResult) {
+        router.showEditEntryView(extractionResult)
     }
 
 
