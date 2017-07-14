@@ -14,12 +14,26 @@
     >
 
         <ImageButton
-            android:id="@+id/btnShareEntry"
+            android:id="@+id/btnEditEntry"
             android:layout_width="@dimen/list_item_entry_button_width"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:src="@android:drawable/ic_menu_edit"
+            android:scaleType="fitCenter"
+        />
+
+        <ImageButton
+            android:id="@+id/btnShareEntry"
+            android:layout_width="@dimen/list_item_entry_button_width"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/btnEditEntry"
+            android:layout_toEndOf="@+id/btnEditEntry"
+            android:layout_toLeftOf="@+id/btnDeleteEntry"
+            android:layout_toStartOf="@+id/btnDeleteEntry"
             android:layout_alignParentBottom="true"
             android:src="@android:drawable/ic_menu_share"
             android:scaleType="fitCenter"
@@ -29,8 +43,6 @@
             android:id="@+id/btnDeleteEntry"
             android:layout_width="@dimen/list_item_entry_button_width"
             android:layout_height="match_parent"
-            android:layout_toRightOf="@+id/btnShareEntry"
-            android:layout_toEndOf="@+id/btnShareEntry"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
