@@ -108,10 +108,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
                     disableProperty().bind(hasUnsavedChanges)
 
-                    action {
-                        saveEntry()
-                        closeDialog()
-                    }
+                    action { saveEntryAndCloseDialog() }
                 }
             }
         }
@@ -134,8 +131,16 @@ abstract class EditEntryViewBase : DialogFragment() {
     }
 
 
-    protected open fun saveEntry() {
-        presenter.saveEntry(getEntryForSaving(), getReferenceForSaving(), getTagsForSaving())
+    protected open fun saveEntryAndCloseDialog() {
+        presenter.saveEntryAsync(getEntryForSaving(), getReferenceForSaving(), getTagsForSaving()) {
+            entrySaved()
+
+            runLater { closeDialog() }
+        }
+    }
+
+    protected open fun entrySaved() {
+
     }
 
     protected open fun closeDialog() {

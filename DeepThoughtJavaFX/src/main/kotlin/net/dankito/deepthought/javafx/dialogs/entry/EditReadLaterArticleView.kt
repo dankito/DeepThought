@@ -41,8 +41,8 @@ class EditReadLaterArticleView : EditEntryViewBase() {
     }
 
 
-    override fun saveEntry() {
-        super.saveEntry()
+    override fun entrySaved() {
+        super.entrySaved()
 
         readLaterArticleService.delete(article)
     }
