@@ -23,6 +23,32 @@ class HtmlEditorExtractor(private val dataManager: DataManager, private val osHe
 
     var unzippedHtmlEditorFilePath: String? = null
 
+    private var isHtmlEditorExtracted = false
+
+    private val htmlEditorExtractedListeners = mutableSetOf<(String) -> Unit>()
+
+
+    fun addHtmlEditorExtractedListener(listener: (String) -> Unit) {
+        if(isHtmlEditorExtracted) {
+            unzippedHtmlEditorFilePath?.let { callHtmlEditorExtractedListener(listener, it)}
+        }
+        else {
+            htmlEditorExtractedListeners.add(listener)
+        }
+    }
+
+    private fun htmlEditorExtracted(unzippedHtmlEditorFilePath: String) {
+        isHtmlEditorExtracted = true
+
+        htmlEditorExtractedListeners.forEach { callHtmlEditorExtractedListener(it, unzippedHtmlEditorFilePath) }
+
+        htmlEditorExtractedListeners.clear()
+    }
+
+    private fun callHtmlEditorExtractedListener(listener: (String) -> Unit, unzippedHtmlEditorFilePath: String) {
+        listener(unzippedHtmlEditorFilePath)
+    }
+
 
     fun extractHtmlEditorIfNeededAsync() {
         thread { extractHtmlEditorIfNeeded() }
@@ -43,6 +69,8 @@ class HtmlEditorExtractor(private val dataManager: DataManager, private val osHe
             }
             // TODO: what to do in error case?
         }
+
+        unzippedHtmlEditorFilePath?.let { htmlEditorExtracted(it) }
 
         return unzippedHtmlEditorFilePath
     }
