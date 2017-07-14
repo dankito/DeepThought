@@ -4,6 +4,7 @@ import dagger.Component
 import net.dankito.deepthought.android.DeepThoughtApplication
 import net.dankito.deepthought.android.MainActivity
 import net.dankito.deepthought.android.activities.ArticleSummaryActivity
+import net.dankito.deepthought.android.activities.EditEntryActivity
 import net.dankito.deepthought.android.activities.ViewEntryActivity
 import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorIconsAdapter
 import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorsAdapter
@@ -104,6 +105,8 @@ interface AppComponent : CommonComponent {
     fun inject(articleSummaryActivity: ArticleSummaryActivity)
 
     fun inject(viewEntryActivity: ViewEntryActivity)
+
+    fun inject(editEntryActivity: EditEntryActivity)
 
     fun inject(htmlEditor: AndroidHtmlEditor)
 
