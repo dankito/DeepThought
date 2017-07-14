@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_item_tag_on_entry_height">
+
+    <CheckedTextView
+        android:id="@+id/chktxtvwTag"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:checkMark="?android:attr/textCheckMark"
+        android:gravity="start|center_vertical"
+        android:clickable="true"
+        android:focusable="true"
+        android:longClickable="true"
+    />
+    <!-- clickable and focusable are needed so that list item receives click events -->
+    <!-- longClickable is activated so that i can show Popup ContextMenu -->
+
+</RelativeLayout>

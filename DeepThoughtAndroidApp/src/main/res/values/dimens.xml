@@ -63,4 +63,6 @@
 
     <dimen name="list_item_article_summary_extractor_config_icon_padding">4dp</dimen>
 
+    <dimen name="list_item_tag_on_entry_height">40dp</dimen>
+
 </resources>
