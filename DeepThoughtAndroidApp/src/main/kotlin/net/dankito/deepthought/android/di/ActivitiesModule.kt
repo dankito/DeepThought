@@ -11,6 +11,7 @@ import net.dankito.deepthought.android.routing.AndroidRouter
 import net.dankito.deepthought.android.service.AndroidClipboardService
 import net.dankito.deepthought.android.service.communication.AndroidDeviceRegistrationHandler
 import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
+import net.dankito.deepthought.android.views.html.AndroidHtmlEditorPool
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.serializer.ISerializer
@@ -54,6 +55,12 @@ class ActivitiesModule(private val applicationContext: Context) {
     @Singleton
     fun provideDialogService(currentActivityTracker: CurrentActivityTracker) : IDialogService {
         return AndroidDialogService(currentActivityTracker)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAndroidHtmlEditorPool() : AndroidHtmlEditorPool {
+        return AndroidHtmlEditorPool()
     }
 
 
