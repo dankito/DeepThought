@@ -19,6 +19,7 @@ import net.dankito.deepthought.android.fragments.ReadLaterArticlesListView
 import net.dankito.deepthought.android.fragments.ReferencesListView
 import net.dankito.deepthought.android.fragments.TagsListView
 import net.dankito.deepthought.android.service.di.AndroidCommonModule
+import net.dankito.deepthought.android.views.html.AndroidHtmlEditor
 import net.dankito.deepthought.di.BaseModule
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.di.CommonDataModule
@@ -103,5 +104,7 @@ interface AppComponent : CommonComponent {
     fun inject(articleSummaryActivity: ArticleSummaryActivity)
 
     fun inject(viewEntryActivity: ViewEntryActivity)
+
+    fun inject(htmlEditor: AndroidHtmlEditor)
 
 }
