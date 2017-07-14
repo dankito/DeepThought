@@ -40,6 +40,7 @@
     <string name="dialog_article_summary_extractor_config_select_icon">Select icon:</string>
 
     <string name="action_title_save">Save</string>
+    <string name="action_title_edit">Edit</string>
     <string name="action_title_share">Share</string>
 
     <string name="menu_share_reference_url">Url</string>

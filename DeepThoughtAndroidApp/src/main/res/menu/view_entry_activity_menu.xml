@@ -9,6 +9,13 @@
     />
 
     <item
+        android:id="@+id/mnEditEntry"
+        app:showAsAction="always"
+        android:title="@string/action_title_edit"
+        android:icon="@android:drawable/ic_menu_edit"
+    />
+
+    <item
         android:id="@+id/mnSaveEntry"
         app:showAsAction="always"
         android:title="@string/action_title_save"

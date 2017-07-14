@@ -37,7 +37,8 @@
     <string name="dialog_article_summary_extractor_config_enter_name">Name:</string>
     <string name="dialog_article_summary_extractor_config_select_icon">Icon auswählen:</string>
 
-    <string name="action_title_save">Save</string>
+    <string name="action_title_save">Speichern</string>
+    <string name="action_title_edit">Bearbeiten</string>
     <string name="action_title_share">Teilen</string>
 
     <string name="menu_share_reference_url">Link</string>
