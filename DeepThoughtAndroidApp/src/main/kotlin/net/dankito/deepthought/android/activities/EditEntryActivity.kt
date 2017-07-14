@@ -8,6 +8,7 @@ import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.activity_edit_entry.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.service.ui.BaseActivity
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditor
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditorPool
@@ -60,6 +61,9 @@ class EditEntryActivity : BaseActivity() {
     private var readLaterArticle: ReadLaterArticle? = null
 
     private var entryExtractionResult: EntryExtractionResult? = null
+
+
+    private val tagsOnEntry: MutableList<Tag> = ArrayList()
 
 
     private val presenter: EditEntryPresenter
@@ -124,7 +128,32 @@ class EditEntryActivity : BaseActivity() {
             actionBar.setDisplayShowHomeEnabled(true)
         }
 
+        lytTagsOnEntry.setOnClickListener { editTagsOnEntry() }
+        setTagsOnEntryPreviewOnUIThread()
+
         setupEntryContentView()
+    }
+
+    private fun editTagsOnEntry() {
+        val tagsOnEntryDialog = TagsOnEntryDialogFragment()
+
+        tagsOnEntryDialog.show(supportFragmentManager, tagsOnEntry) {
+            tagsOnEntry.clear()
+            tagsOnEntry.addAll(it)
+
+            runOnUiThread {
+                enableMenuSaveEntryOnUIThread()
+                setTagsOnEntryPreviewOnUIThread()
+            }
+        }
+    }
+
+    private fun enableMenuSaveEntryOnUIThread() {
+        mnSaveEntry?.isEnabled = true
+    }
+
+    private fun setTagsOnEntryPreviewOnUIThread() {
+        txtTagsOnEntry.text = tagsOnEntry.toString()
     }
 
     private fun setupEntryContentView() {
@@ -186,19 +215,19 @@ class EditEntryActivity : BaseActivity() {
 
             entry?.let { entry ->
                 updateEntry(entry, content)
-                presenter.saveEntryAsync(entry, entry.reference, entry.tags, callback)
+                presenter.saveEntryAsync(entry, entry.reference, tagsOnEntry, callback)
             }
 
             entryExtractionResult?.let { extractionResult ->
                 updateEntry(extractionResult.entry, content)
-                presenter.saveEntryAsync(extractionResult.entry, extractionResult.reference, extractionResult.tags, callback)
+                presenter.saveEntryAsync(extractionResult.entry, extractionResult.reference, tagsOnEntry, callback)
             }
 
             readLaterArticle?.let { readLaterArticle ->
                 val extractionResult = readLaterArticle.entryExtractionResult
                 updateEntry(extractionResult.entry, content)
 
-                presenter.saveEntryAsync(extractionResult.entry, extractionResult.reference, extractionResult.tags) {
+                presenter.saveEntryAsync(extractionResult.entry, extractionResult.reference, tagsOnEntry) {
                     readLaterArticleService.delete(readLaterArticle)
                     callback(it)
                 }
@@ -237,6 +266,11 @@ class EditEntryActivity : BaseActivity() {
 
     private fun editEntry(entry: Entry?, reference: Reference?, tags: Collection<Tag>?) {
         entry?.let { contentHtmlEditor.setHtml(entry.content) }
+
+        tags?.let {
+            tagsOnEntry.addAll(tags)
+            setTagsOnEntryPreviewOnUIThread()
+        }
     }
 
 
@@ -246,7 +280,7 @@ class EditEntryActivity : BaseActivity() {
         }
 
         override fun htmlCodeUpdated() {
-            runOnUiThread { mnSaveEntry?.isEnabled = true }
+            runOnUiThread { enableMenuSaveEntryOnUIThread() }
         }
 
         override fun htmlCodeHasBeenReset() {
