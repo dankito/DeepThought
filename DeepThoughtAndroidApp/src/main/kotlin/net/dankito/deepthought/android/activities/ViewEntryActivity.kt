@@ -147,6 +147,8 @@ class ViewEntryActivity : BaseActivity() {
 
             R.id.mnShareEntry -> showShareEntryPopupMenu(findViewById(R.id.mnShareEntry))
 
+            R.id.mnEditEntry -> editEntry()
+
             R.id.mnSaveEntry -> {
                 saveEntry()
             }
@@ -164,6 +166,14 @@ class ViewEntryActivity : BaseActivity() {
             presenter.saveEntryExtractionResult(it.entryExtractionResult)
             readLaterArticleService.delete(it)
         }
+    }
+
+    private fun editEntry() {
+        entry?.let { presenter.editEntry(it) }
+
+        readLaterArticle?.let { presenter.editEntry(it) }
+
+        entryExtractionResult?.let { presenter.editEntry(it) }
     }
 
     private fun showShareEntryPopupMenu(clickedView: View) {
