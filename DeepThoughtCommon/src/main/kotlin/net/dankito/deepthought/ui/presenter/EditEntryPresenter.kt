@@ -10,7 +10,7 @@ import net.dankito.deepthought.ui.presenter.util.EntryPersister
 class EditEntryPresenter(private val entryPersister: EntryPersister, private val router: IRouter) {
 
 
-    fun saveEntry(entry: Entry, reference: Reference? = null, tags: List<Tag> = ArrayList()): Boolean {
+    fun saveEntry(entry: Entry, reference: Reference? = null, tags: Collection<Tag> = ArrayList()): Boolean {
         return entryPersister.saveEntry(entry, reference, tags)
     }
 
