@@ -3,6 +3,7 @@ package net.dankito.deepthought.android.routing
 import android.content.Context
 import android.content.Intent
 import net.dankito.deepthought.android.activities.ArticleSummaryActivity
+import net.dankito.deepthought.android.activities.EditEntryActivity
 import net.dankito.deepthought.android.activities.ViewEntryActivity
 import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
@@ -87,19 +88,30 @@ class AndroidRouter(private val context: Context, private val activityTracker: C
 
 
     override fun showCreateEntryView() {
-
+        showEditEntryView()
     }
 
     override fun showEditEntryView(entry: Entry) {
-
+        showEditEntryView(EditEntryActivity.ENTRY_ID_INTENT_EXTRA_NAME, entry.id)
     }
 
     override fun showEditEntryView(article: ReadLaterArticle) {
-
+        showEditEntryView(EditEntryActivity.READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME, article.id)
     }
 
     override fun showEditEntryView(extractionResult: EntryExtractionResult) {
+        val serializedExtractionResult = serializer.serializeObject(extractionResult)
 
+        showEditEntryView(EditEntryActivity.ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, serializedExtractionResult)
+    }
+
+    private fun showEditEntryView(intentExtraName: String? = null, intentExtraValue: String? = null) {
+        val editEntryIntent = Intent(context, EditEntryActivity::class.java)
+        editEntryIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        intentExtraName?.let { editEntryIntent.putExtra(intentExtraName, intentExtraValue) }
+
+        context.startActivity(editEntryIntent)
     }
 
 
