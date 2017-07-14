@@ -11,10 +11,7 @@ import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorsAdapter
 import net.dankito.deepthought.android.androidservice.DeepThoughtBackgroundAndroidService
 import net.dankito.deepthought.android.appstart.AndroidAppInitializer
 import net.dankito.deepthought.android.appstart.CommunicationManagerStarter
-import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
-import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorConfigDialog
-import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
-import net.dankito.deepthought.android.dialogs.EntriesListDialog
+import net.dankito.deepthought.android.dialogs.*
 import net.dankito.deepthought.android.fragments.EntriesListView
 import net.dankito.deepthought.android.fragments.ReadLaterArticlesListView
 import net.dankito.deepthought.android.fragments.ReferencesListView
@@ -107,6 +104,8 @@ interface AppComponent : CommonComponent {
     fun inject(viewEntryActivity: ViewEntryActivity)
 
     fun inject(editEntryActivity: EditEntryActivity)
+
+    fun inject(tagsOnEntryDialogFragment: TagsOnEntryDialogFragment)
 
     fun inject(htmlEditor: AndroidHtmlEditor)
 
