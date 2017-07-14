@@ -5,10 +5,40 @@
                 android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/lytEntryContent"
+        android:id="@+id/lytTagsOnEntry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+    >
+
+        <TextView
+            android:id="@+id/txtTagsOnEntryLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/txtTagsOnEntry"
+            android:layout_alignBottom="@+id/txtTagsOnEntry"
+            android:text="@string/activity_edit_entry_tags_label"
+        />
+
+        <TextView
+            android:id="@+id/txtTagsOnEntry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_toRightOf="@+id/txtTagsOnEntryLabel"
+            android:layout_toEndOf="@+id/txtTagsOnEntryLabel"
+        />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/lytEntryContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lytTagsOnEntry"
         android:layout_above="@+id/toolbar"
         />
 

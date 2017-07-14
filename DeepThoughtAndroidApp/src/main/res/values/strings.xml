@@ -46,6 +46,8 @@
     <string name="menu_share_reference_url">Url</string>
     <string name="menu_share_entry_content">Content</string>
 
+    <string name="activity_edit_entry_tags_label">Tags:</string>
+
     <string name="dialog_tags_on_entry_tags_label">Tags:</string>
     <string name="dialog_tags_on_entry_create_tag">New</string>
     <string name="dialog_tags_on_entry_toggle_tags">Toggle</string>
