@@ -94,7 +94,7 @@ abstract class EditEntryViewBase : DialogFragment() {
                     minHeight = 40.0
                     maxHeight = 40.0
                     prefWidth = 150.0
-                    action { close() }
+                    action { closeDialog() }
 
                     hboxConstraints {
                         marginRight = 12.0
@@ -110,7 +110,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
                     action {
                         saveEntry()
-                        close()
+                        closeDialog()
                     }
                 }
             }
@@ -118,8 +118,30 @@ abstract class EditEntryViewBase : DialogFragment() {
     }
 
 
+    private fun cleanUp() {
+        contentHtml.onChange { }
+        wbContent.prefWidthProperty().unbind()
+
+        // Delete cache for navigate back
+        wbContent.engine.load("about:blank")
+        wbContent.engine.history.entries.clear()
+        // Delete cookies
+        java.net.CookieHandler.setDefault(java.net.CookieManager())
+
+        root.getChildren().remove(wbContent)
+
+        System.gc()
+    }
+
+
     protected open fun saveEntry() {
         presenter.saveEntry(getEntryForSaving(), getReferenceForSaving(), getTagsForSaving())
+    }
+
+    protected open fun closeDialog() {
+        cleanUp()
+
+        close()
     }
 
     protected abstract fun getEntryForSaving(): Entry
