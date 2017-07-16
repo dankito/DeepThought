@@ -1,5 +1,6 @@
 package net.dankito.service.search.writerandsearcher
 
+import net.dankito.deepthought.model.CalculatedTag
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Tag
 import net.dankito.service.data.TagService
@@ -209,7 +210,9 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, pri
 
             @Handler(priority = EventBusPriorities.Indexer)
             fun entityChanged(tagChanged: TagChanged) {
-                handleEntityChange(tagChanged)
+                if(tagChanged.entity is CalculatedTag == false) { // do not index CalculatedTags
+                    handleEntityChange(tagChanged)
+                }
             }
 
         }
