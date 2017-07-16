@@ -39,27 +39,23 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
     }
 
     private fun extractTopArticles(url: String, document: Document): Collection<ArticleSummaryItem> {
-        val topArticleElements = document.select(".multiple")
+        val topArticleElements = document.select("a.the_content_url")
 
         return topArticleElements.filterNotNull().map { parseTopArticle(it, url) }.filterNotNull()
     }
 
-    private fun parseTopArticle(topArticleElement: Element, url: String): ArticleSummaryItem? {
-        topArticleElement.select("a.the_content_url").firstOrNull()?.let { contentUrlElement ->
-            val article = ArticleSummaryItem(makeLinkAbsolute(contentUrlElement.attr("href"), url), contentUrlElement.attr("title"), HeiseNewsAndDeveloperArticleExtractor::class.java)
+    private fun parseTopArticle(contentUrlElement: Element, url: String): ArticleSummaryItem? {
+        val article = ArticleSummaryItem(makeLinkAbsolute(contentUrlElement.attr("href"), url), contentUrlElement.attr("title"), HeiseNewsAndDeveloperArticleExtractor::class.java)
 
-            extractDachzeile(contentUrlElement, article)
+        extractDachzeile(contentUrlElement, article)
 
-            topArticleElement.select(".img_clip img").first()?.let {
-                article.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
-            }
-
-            topArticleElement.select("p").first()?.let { article.summary = it.text() }
-
-            return article
+        contentUrlElement.select(".img_clip img").first()?.let {
+            article.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
         }
 
-        return null
+        contentUrlElement.select("p").first()?.let { article.summary = it.text() }
+
+        return article
     }
 
     open protected fun extractDachzeile(contentUrlElement: Element, article: ArticleSummaryItem) {
