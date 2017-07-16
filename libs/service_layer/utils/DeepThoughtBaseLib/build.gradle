@@ -17,6 +17,7 @@ dependencies {
     compile project(':DataModel')
     compile project(':EventBus')
     compile project(':JacksonJsonSerializer')
+    compile project(':SearchEngine')
     compile project(':DataServices')
     compile project(':NewsReader')
 
