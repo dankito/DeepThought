@@ -118,7 +118,7 @@ class TagsOnEntryDialogFragment : DialogFragment() {
     }
 
     private fun setTagsOnEntryPreviewOnUIThread(tagsOnEntry: MutableList<Tag>) {
-        txtTagsPreview?.text = tagsOnEntry.toString()
+        txtTagsPreview?.text = tagsOnEntry.joinToString { it.name }
     }
 
 
