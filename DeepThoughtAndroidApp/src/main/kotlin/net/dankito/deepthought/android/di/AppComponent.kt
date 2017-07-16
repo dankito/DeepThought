@@ -87,7 +87,7 @@ interface AppComponent : CommonComponent {
 
     fun inject(readLaterArticlesListView: ReadLaterArticlesListView)
 
-    fun inject(entriesListDialog: EntriesListDialog)
+    fun inject(entriesListDialogBase: EntriesListDialogBase)
 
     fun inject(addArticleSummaryExtractorDialog: AddArticleSummaryExtractorDialog)
 

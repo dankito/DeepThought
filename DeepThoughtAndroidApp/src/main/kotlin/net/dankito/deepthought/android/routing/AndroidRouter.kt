@@ -7,7 +7,8 @@ import net.dankito.deepthought.android.activities.EditEntryActivity
 import net.dankito.deepthought.android.activities.ViewEntryActivity
 import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
-import net.dankito.deepthought.android.dialogs.EntriesListDialog
+import net.dankito.deepthought.android.dialogs.ReferenceEntriesListDialog
+import net.dankito.deepthought.android.dialogs.TagEntriesListDialog
 import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.EntryExtractionResult
@@ -19,17 +20,16 @@ class AndroidRouter(private val context: Context, private val activityTracker: C
 
 
     override fun showEntriesForTag(tag: Tag, entries: List<Entry>) {
-        showEntriesListDialog(entries)
+        activityTracker.currentActivity?.let { currentActivity ->
+            val dialog = TagEntriesListDialog()
+            dialog.showDialog(currentActivity.supportFragmentManager, tag)
+        }
     }
 
     override fun showEntriesForReference(reference: Reference) {
-        showEntriesListDialog(reference.entries.toList())
-    }
-
-    private fun showEntriesListDialog(entries: List<Entry>) {
         activityTracker.currentActivity?.let { currentActivity ->
-            val dialog = EntriesListDialog()
-            dialog.showDialogForEntries(currentActivity.supportFragmentManager, entries)
+            val dialog = ReferenceEntriesListDialog()
+            dialog.showDialog(currentActivity.supportFragmentManager, reference)
         }
     }
 

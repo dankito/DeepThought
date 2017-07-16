@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android.dialogs
 
+import android.content.Context
 import android.support.v4.app.FragmentManager
 import android.view.View
 import kotlinx.android.synthetic.main.dialog_entries_list.view.*
@@ -7,21 +8,20 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.EntryAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.presenter.EntriesListPresenter
-import net.dankito.deepthought.ui.view.IEntriesListView
+import net.dankito.deepthought.ui.presenter.EntityEntriesListPresenter
 import net.dankito.service.data.DeleteEntityService
+import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class EntriesListDialog : FullscreenDialogFragment(), IEntriesListView {
+abstract class EntriesListDialogBase : FullscreenDialogFragment() {
 
-    private val presenter: EntriesListPresenter
+    protected val presenter: EntityEntriesListPresenter
 
-    private val adapter: EntryAdapter
+    protected val adapter: EntryAdapter
 
 
     @Inject
@@ -29,6 +29,9 @@ class EntriesListDialog : FullscreenDialogFragment(), IEntriesListView {
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
+
+    @Inject
+    protected lateinit var eventBus: IEventBus
 
     @Inject
     protected lateinit var clipboardService: IClipboardService
@@ -40,7 +43,7 @@ class EntriesListDialog : FullscreenDialogFragment(), IEntriesListView {
     init {
         AppComponent.component.inject(this)
 
-        presenter = EntriesListPresenter(this, router, searchEngine, deleteEntityService, clipboardService)
+        presenter = EntityEntriesListPresenter(deleteEntityService, clipboardService, router)
 
         adapter = EntryAdapter(presenter)
     }
@@ -55,18 +58,25 @@ class EntriesListDialog : FullscreenDialogFragment(), IEntriesListView {
     }
 
 
-    override fun showEntries(entries: List<Entry>) {
-        // don't react to search results, we have a fixed set of entries to show
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+
+        retrieveAndShowEntries()
     }
 
-    override fun showEntriesForTag(tag: Tag, entries: List<Entry>) {
-        showEntries(entries)
+
+    protected fun retrieveAndShowEntries() {
+        retrieveEntries { showEntries(it) }
     }
 
+    private fun showEntries(entries: List<Entry>) {
+        activity?.runOnUiThread { adapter.setItems(entries) }
+    }
 
-    fun showDialogForEntries(fragmentManager: FragmentManager, entries: List<Entry>) {
-        adapter.setItems(entries)
+    protected abstract fun retrieveEntries(callback: (List<Entry>) -> Unit)
 
+
+    fun showDialog(fragmentManager: FragmentManager) {
         showInFullscreen(fragmentManager, false)
     }
 
