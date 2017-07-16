@@ -11,4 +11,5 @@ dependencies {
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion"
 
     compile project(':Utils')
+    compile project(':DataServices')
 }
