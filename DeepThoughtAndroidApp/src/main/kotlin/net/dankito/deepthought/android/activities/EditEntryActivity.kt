@@ -12,6 +12,8 @@ import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.service.ui.BaseActivity
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditor
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditorPool
+import net.dankito.deepthought.extensions.abstractPlainText
+import net.dankito.deepthought.extensions.preview
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.model.Reference
@@ -128,10 +130,36 @@ class EditEntryActivity : BaseActivity() {
             actionBar.setDisplayShowHomeEnabled(true)
         }
 
+        lytAbstract.setOnClickListener { editAbstract() }
+
+        lytReference.setOnClickListener { editReference() }
+
         lytTagsOnEntry.setOnClickListener { editTagsOnEntry() }
-        setTagsOnEntryPreviewOnUIThread()
 
         setupEntryContentView()
+    }
+
+    private fun setupEntryContentView() {
+        contentHtmlEditor = htmlEditorPool.getHtmlEditor(this, contentListener)
+
+        lytEntryContent.addView(contentHtmlEditor, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+
+        val contentEditorParams = contentHtmlEditor.layoutParams as RelativeLayout.LayoutParams
+        contentEditorParams.addRule(RelativeLayout.ALIGN_PARENT_TOP)
+        contentEditorParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
+        contentEditorParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
+        contentEditorParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+
+        contentHtmlEditor.layoutParams = contentEditorParams
+    }
+
+
+    private fun editAbstract() {
+        // TODO
+    }
+
+    private fun editReference() {
+        // TODO
     }
 
     private fun editTagsOnEntry() {
@@ -152,22 +180,25 @@ class EditEntryActivity : BaseActivity() {
         mnSaveEntry?.isEnabled = true
     }
 
-    private fun setTagsOnEntryPreviewOnUIThread() {
-        txtTagsOnEntry.text = tagsOnEntry.toString()
+
+    private fun setAbstractPreviewOnUIThread() {
+        entry?.let { txtEntryAbstract.text = it.abstractPlainText }
+
+        readLaterArticle?.entryExtractionResult?.entry?.let { txtEntryAbstract.text = it.abstractPlainText }
+
+        entryExtractionResult?.entry?.let { txtEntryAbstract.text = it.abstractPlainText }
     }
 
-    private fun setupEntryContentView() {
-        contentHtmlEditor = htmlEditorPool.getHtmlEditor(this, contentListener)
+    private fun setReferencePreviewOnUIThread() {
+        entry?.reference?.let { txtEntryReference.text = it.preview }
 
-        lytEntryContent.addView(contentHtmlEditor, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+        readLaterArticle?.entryExtractionResult?.reference?.let { txtEntryReference.text = it.preview }
 
-        val contentEditorParams = contentHtmlEditor.layoutParams as RelativeLayout.LayoutParams
-        contentEditorParams.addRule(RelativeLayout.ALIGN_PARENT_TOP)
-        contentEditorParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
-        contentEditorParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
-        contentEditorParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+        entryExtractionResult?.reference?.let { txtEntryReference.text = it.preview }
+    }
 
-        contentHtmlEditor.layoutParams = contentEditorParams
+    private fun setTagsOnEntryPreviewOnUIThread() {
+        txtTagsOnEntry.text = tagsOnEntry.joinToString { it.name }
     }
 
 
@@ -266,6 +297,10 @@ class EditEntryActivity : BaseActivity() {
 
     private fun editEntry(entry: Entry?, reference: Reference?, tags: Collection<Tag>?) {
         entry?.let { contentHtmlEditor.setHtml(entry.content) }
+
+        setAbstractPreviewOnUIThread()
+
+        setReferencePreviewOnUIThread()
 
         tags?.let {
             tagsOnEntry.addAll(tags)
