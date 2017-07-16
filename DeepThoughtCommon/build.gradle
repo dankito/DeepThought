@@ -24,7 +24,7 @@ dependencies {
     compile project(':RomeFeedReader')
     compile project(':FaviconExtractor')
 
-    compile project(':Serializer')
+    compile project(':JacksonJsonSerializer')
     compile project(':DevicesDiscoverer')
     compile project(':FileStorageService')
 

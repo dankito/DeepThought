@@ -4,9 +4,14 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.PropertyAccessor
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.module.SimpleModule
+import net.dankito.deepthought.model.Tag
+import net.dankito.service.data.TagService
+import net.dankito.utils.serialization.serializer.PersistedTagDeserializer
+import net.dankito.utils.serialization.serializer.PersistedTagSerializer
 
 
-class JacksonJsonSerializer : ISerializer {
+class JacksonJsonSerializer(tagService: TagService) : ISerializer {
 
     private val objectMapper = ObjectMapper()
 
@@ -16,6 +21,13 @@ class JacksonJsonSerializer : ISerializer {
         // only serialize fields
         objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE)
         objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
+
+        val module = SimpleModule()
+
+        module.addSerializer(Tag::class.java, PersistedTagSerializer())
+        module.addDeserializer(Tag::class.java, PersistedTagDeserializer(tagService))
+
+        objectMapper.registerModule(module)
     }
 
 

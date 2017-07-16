@@ -25,8 +25,6 @@ import net.dankito.feedaddressextractor.FeedAddressExtractor
 import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.newsreader.feed.IFeedReader
 import net.dankito.newsreader.feed.RomeFeedReader
-import net.dankito.utils.serialization.ISerializer
-import net.dankito.utils.serialization.JacksonJsonSerializer
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
@@ -42,6 +40,7 @@ import net.dankito.utils.IThreadPool
 import net.dankito.utils.ImageCache
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.localization.Localization
+import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.services.hashing.IBase64Service
 import javax.inject.Singleton
 
@@ -60,12 +59,6 @@ class CommonModule {
     @Singleton
     fun provideWebClient() : IWebClient {
         return OkHttpWebClient()
-    }
-
-    @Provides
-    @Singleton
-    fun provideSerializer() : ISerializer {
-        return JacksonJsonSerializer()
     }
 
 
@@ -117,8 +110,9 @@ class CommonModule {
 
     @Provides
     @Singleton
-    fun provideArticleSummaryExtractorConfigManager(webClient: IWebClient, configService: ArticleSummaryExtractorConfigService, feedReader: IFeedReader) : ArticleSummaryExtractorConfigManager {
-        return ArticleSummaryExtractorConfigManager(webClient, configService, feedReader)
+    fun provideArticleSummaryExtractorConfigManager(webClient: IWebClient, configService: ArticleSummaryExtractorConfigService, feedReader: IFeedReader, serializer: ISerializer)
+            : ArticleSummaryExtractorConfigManager {
+        return ArticleSummaryExtractorConfigManager(webClient, configService, feedReader, serializer)
     }
 
     @Provides

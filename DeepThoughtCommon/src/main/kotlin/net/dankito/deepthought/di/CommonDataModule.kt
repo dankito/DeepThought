@@ -11,13 +11,14 @@ import net.dankito.deepthought.model.enums.NoteType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
-import net.dankito.utils.serialization.ISerializer
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.localization.Localization
+import net.dankito.utils.serialization.ISerializer
+import net.dankito.utils.serialization.JacksonJsonSerializer
 import javax.inject.Singleton
 
 
@@ -80,6 +81,12 @@ class CommonDataModule {
         return DeleteEntityService(entryService, tagService, referenceService, threadPool)
     }
 
+
+    @Provides
+    @Singleton
+    fun provideSerializer(tagService: TagService) : ISerializer {
+        return JacksonJsonSerializer(tagService)
+    }
 
     @Provides
     @Singleton
