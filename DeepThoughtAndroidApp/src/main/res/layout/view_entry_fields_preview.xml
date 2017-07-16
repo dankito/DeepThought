@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/lytAbstract"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+    >
+
+        <TextView
+            android:id="@+id/txtEntryAbstractLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/txtEntryAbstract"
+            android:layout_alignBottom="@+id/txtEntryAbstract"
+            android:layout_marginRight="2dp"
+            android:layout_marginEnd="2dp"
+            android:text="@string/activity_edit_entry_abstract_label"
+        />
+
+        <TextView
+            android:id="@+id/txtEntryAbstract"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_toRightOf="@+id/txtEntryAbstractLabel"
+            android:layout_toEndOf="@+id/txtEntryAbstractLabel"
+            android:maxLines="3"
+            android:ellipsize="end"
+        />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/lytReference"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lytAbstract"
+    >
+
+        <TextView
+            android:id="@+id/txtEntryReferenceLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/txtEntryReference"
+            android:layout_alignBottom="@+id/txtEntryReference"
+            android:layout_marginRight="@dimen/activity_edit_entry_label_margin_right"
+            android:layout_marginEnd="@dimen/activity_edit_entry_label_margin_right"
+            android:text="@string/activity_edit_entry_reference_label"
+        />
+
+        <TextView
+            android:id="@+id/txtEntryReference"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_toRightOf="@+id/txtEntryReferenceLabel"
+            android:layout_toEndOf="@+id/txtEntryReferenceLabel"
+            android:maxLines="1"
+            android:ellipsize="end"
+        />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/lytTagsOnEntry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lytReference"
+    >
+
+        <TextView
+            android:id="@+id/txtTagsOnEntryLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/txtTagsOnEntry"
+            android:layout_alignBottom="@+id/txtTagsOnEntry"
+            android:layout_marginRight="@dimen/activity_edit_entry_label_margin_right"
+            android:layout_marginEnd="@dimen/activity_edit_entry_label_margin_right"
+            android:text="@string/activity_edit_entry_tags_label"
+        />
+
+        <TextView
+            android:id="@+id/txtTagsOnEntry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_toRightOf="@+id/txtTagsOnEntryLabel"
+            android:layout_toEndOf="@+id/txtTagsOnEntryLabel"
+            android:maxLines="1"
+            android:ellipsize="end"
+        />
+
+    </RelativeLayout>
+
+</RelativeLayout>
