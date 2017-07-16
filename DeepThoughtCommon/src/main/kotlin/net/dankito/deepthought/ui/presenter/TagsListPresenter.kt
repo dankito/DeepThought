@@ -13,6 +13,7 @@ import net.dankito.service.search.Search
 import net.dankito.service.search.specific.FilteredTagsSearch
 import net.dankito.service.search.specific.TagsSearch
 import net.dankito.service.search.util.CombinedLazyLoadingList
+import net.dankito.utils.localization.Localization
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 import kotlin.concurrent.thread
@@ -34,6 +35,9 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private val dat
     @Inject
     protected lateinit var entityChangedNotifier: EntityChangedNotifier
 
+    @Inject
+    protected lateinit var localization: Localization
+
 
     private val eventBusListener = EventBusListener()
 
@@ -44,8 +48,8 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private val dat
 
             eventBus.register(eventBusListener)
 
-            calculatedTags.add(AllEntriesCalculatedTag(searchEngine, eventBus, entityChangedNotifier))
-            calculatedTags.add(EntriesWithoutTagsCalculatedTag(searchEngine, eventBus, entityChangedNotifier))
+            calculatedTags.add(AllEntriesCalculatedTag(searchEngine, eventBus, entityChangedNotifier, localization))
+            calculatedTags.add(EntriesWithoutTagsCalculatedTag(searchEngine, eventBus, entityChangedNotifier, localization))
 
             dataManager.addInitializationListener { tagsListView.updateDisplayedTags() }
         }
