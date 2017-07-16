@@ -14,7 +14,7 @@ import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditorPool
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.serializer.ISerializer
+import net.dankito.utils.serialization.ISerializer
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IClipboardService

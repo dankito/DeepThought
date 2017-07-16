@@ -8,6 +8,5 @@ dependencies {
     compile project(':DataModel')
 
     compile project(':WebClient')
-    compile project(':Serializer')
     compile project(':FileStorageService')
 }

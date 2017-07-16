@@ -10,7 +10,7 @@ import net.dankito.faviconextractor.FaviconExtractor
 import net.dankito.newsreader.feed.FeedArticleSummaryExtractor
 import net.dankito.newsreader.feed.IFeedReader
 import net.dankito.newsreader.summary.ImplementedArticleSummaryExtractors
-import net.dankito.serializer.ISerializer
+import net.dankito.utils.serialization.ISerializer
 import net.dankito.service.data.ArticleSummaryExtractorConfigService
 import net.dankito.service.data.messages.ArticleSummaryExtractorConfigChanged
 import net.dankito.service.data.messages.EntityChangeSource

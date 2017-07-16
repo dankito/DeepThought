@@ -1,4 +1,4 @@
-package net.dankito.serializer
+package net.dankito.utils.serialization
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.PropertyAccessor
@@ -24,9 +24,10 @@ class JacksonJsonSerializer : ISerializer {
     }
 
     override fun <T> deserializeObject(serializedObject: String, objectClass: Class<T>, vararg genericParameterTypes: Class<*>): T {
-        if (genericParameterTypes.size == 0) {
+        if(genericParameterTypes.isEmpty()) {
             return objectMapper.readValue(serializedObject, objectClass)
-        } else {
+        }
+        else {
             return objectMapper.readValue<T>(serializedObject, objectMapper.typeFactory.constructParametricType(objectClass, *genericParameterTypes))
         }
     }

@@ -24,7 +24,7 @@ import net.dankito.feedaddressextractor.FeedAddress
 import net.dankito.feedaddressextractor.FeedAddressExtractor
 import net.dankito.newsreader.feed.IFeedReader
 import net.dankito.newsreader.model.FeedArticleSummary
-import net.dankito.serializer.ISerializer
+import net.dankito.utils.serialization.ISerializer
 import java.net.URI
 import javax.inject.Inject
 

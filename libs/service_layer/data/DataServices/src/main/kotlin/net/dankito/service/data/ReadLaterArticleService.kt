@@ -3,8 +3,8 @@ package net.dankito.service.data
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.service.data.DataManager
-import net.dankito.serializer.ISerializer
 import net.dankito.service.data.event.EntityChangedNotifier
+import net.dankito.utils.serialization.ISerializer
 
 
 class ReadLaterArticleService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier, private val serializer: ISerializer)

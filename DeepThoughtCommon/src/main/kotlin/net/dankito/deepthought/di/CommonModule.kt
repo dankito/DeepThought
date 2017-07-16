@@ -25,8 +25,8 @@ import net.dankito.feedaddressextractor.FeedAddressExtractor
 import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.newsreader.feed.IFeedReader
 import net.dankito.newsreader.feed.RomeFeedReader
-import net.dankito.serializer.ISerializer
-import net.dankito.serializer.JacksonJsonSerializer
+import net.dankito.utils.serialization.ISerializer
+import net.dankito.utils.serialization.JacksonJsonSerializer
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus

@@ -12,7 +12,7 @@ import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.serializer.ISerializer
+import net.dankito.utils.serialization.ISerializer
 
 
 class AndroidRouter(private val context: Context, private val activityTracker: CurrentActivityTracker, private val serializer: ISerializer) : IRouter {

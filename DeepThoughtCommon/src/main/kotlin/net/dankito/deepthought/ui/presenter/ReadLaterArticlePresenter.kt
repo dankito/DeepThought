@@ -5,7 +5,7 @@ import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.deepthought.ui.view.IReadLaterArticleView
-import net.dankito.serializer.ISerializer
+import net.dankito.utils.serialization.ISerializer
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.messages.ReadLaterArticleChanged
 import net.dankito.service.eventbus.IEventBus
