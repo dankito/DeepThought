@@ -67,6 +67,8 @@ class EditEntryActivity : BaseActivity() {
 
     private val tagsOnEntry: MutableList<Tag> = ArrayList()
 
+    private var canEntryBeSaved = false
+
 
     private val presenter: EditEntryPresenter
 
@@ -177,14 +179,20 @@ class EditEntryActivity : BaseActivity() {
             tagsOnEntry.addAll(it)
 
             runOnUiThread {
-                enableMenuSaveEntryOnUIThread()
+                updateCanEntryBeSavedOnUIThread(true)
                 setTagsOnEntryPreviewOnUIThread()
             }
         }
     }
 
-    private fun enableMenuSaveEntryOnUIThread() {
-        mnSaveEntry?.isEnabled = true
+    private fun updateCanEntryBeSavedOnUIThread(canEntryBeSaved: Boolean) {
+        this.canEntryBeSaved = canEntryBeSaved
+
+        setMenuSaveEntryEnabledStateOnUIThread()
+    }
+
+    private fun setMenuSaveEntryEnabledStateOnUIThread() {
+        mnSaveEntry?.isEnabled = canEntryBeSaved
     }
 
 
@@ -213,7 +221,7 @@ class EditEntryActivity : BaseActivity() {
 
         mnSaveEntry = menu.findItem(R.id.mnSaveEntry)
 
-        mnSaveEntry?.isEnabled = (readLaterArticle != null || entryExtractionResult != null)
+        setMenuSaveEntryEnabledStateOnUIThread()
 
         return true
     }
@@ -287,6 +295,7 @@ class EditEntryActivity : BaseActivity() {
         readLaterArticleService.retrieve(readLaterArticleId)?.let { readLaterArticle ->
             this.readLaterArticle = readLaterArticle
             entryFieldsPreview.readLaterArticle = readLaterArticle
+            canEntryBeSaved = true
 
             editEntry(readLaterArticle.entryExtractionResult.entry, readLaterArticle.entryExtractionResult.reference, readLaterArticle.entryExtractionResult.tags)
         }
@@ -295,6 +304,7 @@ class EditEntryActivity : BaseActivity() {
     private fun editEntryExtractionResult(serializedExtractionResult: String) {
         this.entryExtractionResult = serializer.deserializeObject(serializedExtractionResult, EntryExtractionResult::class.java)
         entryFieldsPreview.entryExtractionResult = this.entryExtractionResult
+        canEntryBeSaved = true
 
         editEntry(entryExtractionResult?.entry, entryExtractionResult?.reference, entryExtractionResult?.tags)
     }
@@ -321,7 +331,7 @@ class EditEntryActivity : BaseActivity() {
         }
 
         override fun htmlCodeUpdated() {
-            runOnUiThread { enableMenuSaveEntryOnUIThread() }
+            runOnUiThread { updateCanEntryBeSavedOnUIThread(true) }
         }
 
         override fun htmlCodeHasBeenReset() {
