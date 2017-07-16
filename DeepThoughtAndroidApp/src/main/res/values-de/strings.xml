@@ -2,37 +2,37 @@
 
     <string name="app_name">DeepThought</string>
 
-    <string name="tab_entries_title">Entries</string>
-    <string name="tab_tags_title">Tags</string>
+    <string name="tab_entries_title">Einträge</string>
+    <string name="tab_tags_title">Schlagworte</string>
     <string name="tab_references_title">Quellen</string>
     <string name="tab_read_later_articles_title">Später lesen</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Navigation Drawer öffnen</string> <!-- TODO -->
+    <string name="navigation_drawer_close">Navigation Drawer schließen</string> <!-- TODO -->
 
     <string name="floating_action_menu_add_entry">Eintrag</string>
     <string name="floating_action_menu_add_tag">Schlagwort</string>
     <string name="floating_action_menu_add_newspaper_article">Zeitungsartikel</string>
     <string name="floating_action_button_add_article_of_newspaper">%s Artikel</string>
 
-    <string name="search_title">Search</string>
-    <string name="search_hint_entries">Search Entries</string>
-    <string name="search_hint_tags">Search Tags</string>
-    <string name="search_hint_references">Search References</string>
-    <string name="search_hint_read_later_articles">Search Read later Articles</string>
+    <string name="search_title">Suche</string>
+    <string name="search_hint_entries">Einträge finden</string>
+    <string name="search_hint_tags">Schlagworte finden</string>
+    <string name="search_hint_references">Quellen finden</string>
+    <string name="search_hint_read_later_articles">Artikel zum später Lesen finden</string>
 
-    <string name="activity_article_summary_menu_view">View</string>
-    <string name="activity_article_summary_menu_save_for_later_reading">Read later</string>
-    <string name="activity_article_summary_menu_save">Save</string>
-    <string name="activity_article_summary_menu_count_articles_selected">%d articles</string>
-    <string name="activity_article_summary_menu_reload">Reload</string>
-    <string name="activity_article_summary_menu_load_more">Load more</string>
+    <string name="activity_article_summary_menu_view">Anzeigen</string>
+    <string name="activity_article_summary_menu_save_for_later_reading">Später lesen</string>
+    <string name="activity_article_summary_menu_save">Speichern</string>
+    <string name="activity_article_summary_menu_count_articles_selected">%d Artikel</string>
+    <string name="activity_article_summary_menu_reload">Neu laden</string>
+    <string name="activity_article_summary_menu_load_more">Mehr laden</string>
 
-    <string name="dialog_article_summary_extractors_add_extractor">Add</string>
+    <string name="dialog_article_summary_extractors_add_extractor">Hinzufügen</string>
 
-    <string name="dialog_add_article_summary_extractor_feed_or_website_url">Feed or website url</string>
-    <string name="dialog_add_article_summary_extractor_check_feed_or_website_url">Check</string>
-    <string name="dialog_add_article_summary_extractor_found_feeds">Found feeds:</string>
+    <string name="dialog_add_article_summary_extractor_feed_or_website_url">URL der Webseite oder des Feeds</string>
+    <string name="dialog_add_article_summary_extractor_check_feed_or_website_url">Überprüfen</string>
+    <string name="dialog_add_article_summary_extractor_found_feeds">Gefundene Feeds:</string>
 
     <string name="dialog_article_summary_extractor_config_enter_name">Name:</string>
     <string name="dialog_article_summary_extractor_config_select_icon">Icon auswählen:</string>
@@ -60,10 +60,10 @@
     <string name="alert_title_enter_response_code_for_permitting_synchronization" formatted="false">Geben Sie den Code ein, der auf %s angezeigt wird:</string>
     <string name="alert_title_entered_response_code_was_wrong">Eingegebener Code war falsch.\r\nGeben Sie den Code ein, der auf %s angezeigt wird:</string>
 
-    <string formatted="false" name="error_no_rss_or_atom_feed_found_for_url">No RSS or Atom feed found for url %s</string>
-    <string formatted="false" name="error_cannot_read_feed_or_extract_feed_addresses_from_url">Cannot read feed or extract feed addresses from url %s: %s</string>
+    <string formatted="false" name="error_no_rss_or_atom_feed_found_for_url">Kein RSS oder Atom Feed gefunden für URL %s</string>
+    <string formatted="false" name="error_cannot_read_feed_or_extract_feed_addresses_from_url">Konnte Feed nicht lesen oder Feed Adressen nicht extrahieren von URL %s: %s</string>
 
-    <string formatted="false" name="error_could_not_extract_article_from_url">Could not extract article from url %s: %s</string>
+    <string formatted="false" name="error_could_not_extract_article_from_url">Konnte Artikel nicht extrahieren von URL %s: %s</string>
 
     <string name="bild_easter_egg">Wir achten selbstverständlich die Meinungsfreiheit, bei Bild kennt unsere Toleranz jedoch Grenzen.\nWir wollen nicht, dass unsere App für
         solch ein hetzerisches Machwerk verwendet wird.\nDie App wird deshalb nun abstürzen.
