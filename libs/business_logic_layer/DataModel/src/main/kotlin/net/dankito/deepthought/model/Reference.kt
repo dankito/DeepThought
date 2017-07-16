@@ -3,6 +3,7 @@ package net.dankito.deepthought.model
 import net.dankito.deepthought.model.config.TableConfig
 import java.util.*
 import javax.persistence.*
+import kotlin.collections.ArrayList
 
 
 @Entity(name = TableConfig.ReferenceTableName)
@@ -62,17 +63,17 @@ data class Reference(
 
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "reference")
-    var entries: MutableSet<Entry> = HashSet()
+    var entries: MutableList<Entry> = ArrayList() // TODO: don't expose a mutable list to the outside
         private set
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = TableConfig.ReferenceBaseAttachedFileJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.ReferenceBaseAttachedFileJoinTableReferenceBaseIdColumnName)), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.ReferenceBaseAttachedFileJoinTableFileLinkIdColumnName)))
-    var attachedFiles: MutableSet<FileLink> = HashSet()
+    var attachedFiles: MutableList<FileLink> = ArrayList()
         private set
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = TableConfig.ReferenceBaseEmbeddedFileJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.ReferenceBaseEmbeddedFileJoinTableReferenceBaseIdColumnName)), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.ReferenceBaseEmbeddedFileJoinTableFileLinkIdColumnName)))
-    var embeddedFiles: MutableSet<FileLink> = HashSet()
+    var embeddedFiles: MutableList<FileLink> = ArrayList()
         private set
 
     @OneToOne(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
