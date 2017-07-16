@@ -5,6 +5,7 @@ import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.ITagsListView
+import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
@@ -30,6 +31,10 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private val dat
     @Inject
     protected lateinit var eventBus: IEventBus
 
+    @Inject
+    protected lateinit var entityChangedNotifier: EntityChangedNotifier
+
+
     private val eventBusListener = EventBusListener()
 
 
@@ -39,8 +44,8 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private val dat
 
             eventBus.register(eventBusListener)
 
-            calculatedTags.add(AllEntriesCalculatedTag(searchEngine, eventBus))
-            calculatedTags.add(EntriesWithoutTagsCalculatedTag(searchEngine, eventBus))
+            calculatedTags.add(AllEntriesCalculatedTag(searchEngine, eventBus, entityChangedNotifier))
+            calculatedTags.add(EntriesWithoutTagsCalculatedTag(searchEngine, eventBus, entityChangedNotifier))
 
             dataManager.addInitializationListener { tagsListView.updateDisplayedTags() }
         }

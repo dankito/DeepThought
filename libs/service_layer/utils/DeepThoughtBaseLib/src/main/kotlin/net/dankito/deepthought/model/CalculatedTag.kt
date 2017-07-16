@@ -1,6 +1,6 @@
 package net.dankito.deepthought.model
 
-import net.dankito.service.data.messages.EntitiesOfTypeChanged
+import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.EntryChanged
@@ -9,7 +9,8 @@ import net.dankito.service.search.ISearchEngine
 import net.engio.mbassy.listener.Handler
 
 
-abstract class CalculatedTag(name: String, protected val searchEngine: ISearchEngine, protected val eventBus: IEventBus) : Tag(name) {
+abstract class CalculatedTag(name: String, protected val searchEngine: ISearchEngine, protected val eventBus: IEventBus, protected val entityChangedNotifier: EntityChangedNotifier)
+    : Tag(name) {
 
     private val eventBusListener = EventBusListener()
 
@@ -26,7 +27,7 @@ abstract class CalculatedTag(name: String, protected val searchEngine: ISearchEn
             this.entries = it
 
             if(informUIOfUpdate) {
-                eventBus.postAsync(EntitiesOfTypeChanged(Tag::class.java, EntityChangeType.Updated, EntityChangeSource.Local))
+                entityChangedNotifier.notifyListenersOfEntityChange(this, EntityChangeType.Updated, EntityChangeSource.Local)
             }
         }
     }
