@@ -51,6 +51,7 @@ class EntryAdapter(private val presenter: EntriesListPresenterBase): ListSwipeAd
             (convertView as? SwipeLayout)?.close()
         }
 
+        convertView.btnShareEntry.visibility = if(entry.reference != null) View.VISIBLE else View.GONE
         convertView.btnShareEntry.setOnClickListener {
             presenter.shareReferenceUrl(entry)
             (convertView as? SwipeLayout)?.close()
