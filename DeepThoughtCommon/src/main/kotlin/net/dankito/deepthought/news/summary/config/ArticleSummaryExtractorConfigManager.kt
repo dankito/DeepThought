@@ -10,7 +10,6 @@ import net.dankito.faviconextractor.FaviconExtractor
 import net.dankito.newsreader.feed.FeedArticleSummaryExtractor
 import net.dankito.newsreader.feed.IFeedReader
 import net.dankito.newsreader.summary.ImplementedArticleSummaryExtractors
-import net.dankito.utils.serialization.ISerializer
 import net.dankito.service.data.ArticleSummaryExtractorConfigService
 import net.dankito.service.data.messages.ArticleSummaryExtractorConfigChanged
 import net.dankito.service.data.messages.EntityChangeSource
@@ -35,9 +34,6 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
 
     @Inject
     protected lateinit var faviconComparator: FaviconComparator
-
-    @Inject
-    protected lateinit var serializer: ISerializer
 
     @Inject
     protected lateinit var eventBus: IEventBus
