@@ -63,6 +63,8 @@
 
     <dimen name="list_item_article_summary_extractor_config_icon_padding">4dp</dimen>
 
+    <dimen name="activity_edit_entry_label_margin_right">4dp</dimen>
+
     <dimen name="dialog_tags_on_entry_tag_preview_text_size">13sp</dimen>
     <dimen name="dialog_tags_on_entry_tag_preview_label_margin_left_right">4dp</dimen>
     <dimen name="dialog_tags_on_entry_tag_search_tags_height">44dp</dimen>

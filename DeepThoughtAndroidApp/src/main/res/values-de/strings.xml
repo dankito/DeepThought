@@ -44,6 +44,8 @@
     <string name="menu_share_reference_url">Link</string>
     <string name="menu_share_entry_content">Inhalt</string>
 
+    <string name="activity_edit_entry_abstract_label">Zusammenfassung:</string>
+    <string name="activity_edit_entry_reference_label">Quelle:</string>
     <string name="activity_edit_entry_tags_label">Schlagworte:</string>
 
     <string name="dialog_tags_on_entry_tags_label">Schlagworte:</string>

@@ -46,6 +46,8 @@
     <string name="menu_share_reference_url">Url</string>
     <string name="menu_share_entry_content">Content</string>
 
+    <string name="activity_edit_entry_abstract_label">Abstract:</string>
+    <string name="activity_edit_entry_reference_label">Reference:</string>
     <string name="activity_edit_entry_tags_label">Tags:</string>
 
     <string name="dialog_tags_on_entry_tags_label">Tags:</string>
