@@ -7,11 +7,17 @@
     android:layout_height="match_parent"
     tools:context="net.dankito.deepthought.android.activities.ViewEntryActivity">
 
+    <net.dankito.deepthought.android.views.EntryFieldsPreview
+        android:id="@+id/lytEntryFieldsPreview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+    />
+
     <WebView
         android:id="@+id/wbEntry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/lytEntryFieldsPreview"
         android:layout_above="@+id/appBarLayout"
         />
 

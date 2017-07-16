@@ -9,8 +9,11 @@ import kotlinx.android.synthetic.main.activity_view_entry.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.ui.BaseActivity
+import net.dankito.deepthought.android.views.EntryFieldsPreview
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.ReadLaterArticle
+import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ViewEntryPresenter
@@ -49,13 +52,17 @@ class ViewEntryActivity : BaseActivity() {
     @Inject
     protected lateinit var serializer: ISerializer
 
+
     private var entry: Entry? = null
 
     private var readLaterArticle: ReadLaterArticle? = null
 
     private var entryExtractionResult: EntryExtractionResult? = null
 
+
     private var presenter: ViewEntryPresenter
+
+    private lateinit var entryFieldsPreview: EntryFieldsPreview
 
 
     init {
@@ -107,6 +114,9 @@ class ViewEntryActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         supportActionBar?.title = ""
+
+        this.entryFieldsPreview = lytEntryFieldsPreview
+        entryFieldsPreview.fieldClickedListener = { field -> editEntry()}
 
         val settings = wbEntry.getSettings()
         settings.defaultTextEncodingName = "UTF-8" // otherwise non ASCII text doesn't get displayed correctly
@@ -218,26 +228,32 @@ class ViewEntryActivity : BaseActivity() {
 
     private fun showEntryFromDatabase(entryId: String) {
         entryService.retrieve(entryId)?.let { entry ->
-            this.entry = entry;
-            showEntry(entry, entry.reference?.url)
+            this.entry = entry
+            entryFieldsPreview.entry = entry
+
+            showEntry(entry, entry.reference, entry.tags)
         }
     }
 
     private fun showReadLaterArticleFromDatabase(readLaterArticleId: String) {
         readLaterArticleService.retrieve(readLaterArticleId)?.let { readLaterArticle ->
             this.readLaterArticle = readLaterArticle
-            showEntry(readLaterArticle.entryExtractionResult.entry, readLaterArticle.entryExtractionResult.reference?.url)
+            entryFieldsPreview.readLaterArticle = readLaterArticle
+
+            showEntry(readLaterArticle.entryExtractionResult.entry, readLaterArticle.entryExtractionResult.reference, readLaterArticle.entryExtractionResult.tags)
         }
     }
 
     private fun showSerializedEntryExtractionResult(serializedExtractionResult: String) {
         this.entryExtractionResult = serializer.deserializeObject(serializedExtractionResult, EntryExtractionResult::class.java)
+        entryFieldsPreview.entryExtractionResult = this.entryExtractionResult
 
-        showEntry(entryExtractionResult?.entry, entryExtractionResult?.reference?.url)
+        showEntry(entryExtractionResult?.entry, entryExtractionResult?.reference, entryExtractionResult?.tags)
     }
 
-    private fun showEntry(entry: Entry?, url: String?) {
+    private fun showEntry(entry: Entry?, reference: Reference?, tags: Collection<Tag>?) {
         val content = entry?.content
+        val url = reference?.url
 
         if(url != null) {
             wbEntry.loadDataWithBaseURL(url, content, "text/html; charset=UTF-8", null, null)
@@ -245,6 +261,12 @@ class ViewEntryActivity : BaseActivity() {
         else {
             wbEntry.loadData(content, "text/html; charset=UTF-8", null)
         }
+
+        tags?.let { entryFieldsPreview.tagsOnEntry = it }
+
+        entryFieldsPreview.setAbstractPreviewOnUIThread()
+        entryFieldsPreview.setReferencePreviewOnUIThread()
+        entryFieldsPreview.setTagsOnEntryPreviewOnUIThread()
     }
 
 }
