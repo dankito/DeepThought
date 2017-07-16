@@ -25,7 +25,14 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
             Reference::class.java -> return ReferenceChanged(entity as Reference, changeType, source)
             ReadLaterArticle::class.java -> return ReadLaterArticleChanged(entity as ReadLaterArticle, changeType, source)
             ArticleSummaryExtractorConfig::class.java -> return ArticleSummaryExtractorConfigChanged(entity as ArticleSummaryExtractorConfig, changeType, source)
-            else -> return null
+            else -> {
+                if(Tag::class.java.isAssignableFrom(entityClass)) {
+                    return TagChanged(entity as Tag, changeType, source)
+                }
+                else {
+                    return null
+                }
+            }
         }
     }
 
