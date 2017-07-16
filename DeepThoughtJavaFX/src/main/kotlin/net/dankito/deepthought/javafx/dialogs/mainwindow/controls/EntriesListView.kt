@@ -52,6 +52,8 @@ class EntriesListView : View(), IEntriesListView {
         searchBar = EntriesSearchBar(presenter)
 
         (router as? JavaFXRouter)?.entriesListView = this // TODO: this is bad code design
+
+        presenter.getAndShowAllEntities()
     }
 
     override fun onUndock() {
