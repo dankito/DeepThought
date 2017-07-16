@@ -28,7 +28,7 @@ include ':LuceneSearchEngine'
 
 include ':EventBus'
 
-include ':Serializer'
+include ':JacksonJsonSerializer'
 include ':Utils'
 
 
@@ -80,7 +80,7 @@ project(':LuceneSearchEngine').projectDir = "$rootDir/libs/service_layer/search/
 
 project(':EventBus').projectDir = "$rootDir/libs/service_layer/eventbus/EventBus" as File
 
-project(':Serializer').projectDir = "$rootDir/libs/service_layer/serializer/Serializer" as File
+project(':JacksonJsonSerializer').projectDir = "$rootDir/libs/service_layer/serializer/JacksonJsonSerializer" as File
 project(':Utils').projectDir = "$rootDir/libs/service_layer/utils/Utils" as File
 project(':DeepThoughtBaseLib').projectDir = "$rootDir/libs/service_layer/utils/DeepThoughtBaseLib" as File
 
