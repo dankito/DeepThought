@@ -41,9 +41,6 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
             CommonComponent.component.inject(this)
 
             eventBus.register(eventBusListener)
-
-            // EntriesListPresenter is the big exception. As it's first displayed at app start no lazy data retrieval is needed for it, get all entries as soon as SearchEngine is initialized
-            searchEngine.addInitializationListener { getAndShowAllEntities() }
         }
     }
 
