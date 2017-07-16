@@ -78,10 +78,6 @@ class ViewEntryActivity : BaseActivity() {
         setupUI()
 
         savedInstanceState?.let { restoreState(it) }
-
-        intent.getStringExtra(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)?.let { showSerializedEntryExtractionResult(it) }
-        intent.getStringExtra(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME)?.let { readLaterArticleId -> showReadLaterArticleFromDatabase(readLaterArticleId) }
-        intent.getStringExtra(ENTRY_ID_INTENT_EXTRA_NAME)?.let { entryId -> showEntryFromDatabase(entryId) }
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
@@ -124,6 +120,14 @@ class ViewEntryActivity : BaseActivity() {
         settings.javaScriptEnabled = true // so that embedded videos etc. work
     }
 
+
+    override fun onResume() {
+        super.onResume()
+
+        intent.getStringExtra(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)?.let { showSerializedEntryExtractionResult(it) }
+        intent.getStringExtra(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME)?.let { readLaterArticleId -> showReadLaterArticleFromDatabase(readLaterArticleId) }
+        intent.getStringExtra(ENTRY_ID_INTENT_EXTRA_NAME)?.let { entryId -> showEntryFromDatabase(entryId) }
+    }
 
     override fun onDestroy() {
         pauseWebView()
