@@ -10,10 +10,10 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.service.ui.BaseActivity
+import net.dankito.deepthought.android.views.EntryField
+import net.dankito.deepthought.android.views.EntryFieldsPreview
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditor
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditorPool
-import net.dankito.deepthought.extensions.abstractPlainText
-import net.dankito.deepthought.extensions.preview
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.model.Reference
@@ -69,6 +69,8 @@ class EditEntryActivity : BaseActivity() {
 
 
     private val presenter: EditEntryPresenter
+
+    private lateinit var entryFieldsPreview: EntryFieldsPreview
 
     private lateinit var contentHtmlEditor: AndroidHtmlEditor
 
@@ -130,11 +132,8 @@ class EditEntryActivity : BaseActivity() {
             actionBar.setDisplayShowHomeEnabled(true)
         }
 
-        lytAbstract.setOnClickListener { editAbstract() }
-
-        lytReference.setOnClickListener { editReference() }
-
-        lytTagsOnEntry.setOnClickListener { editTagsOnEntry() }
+        this.entryFieldsPreview = lytEntryFieldsPreview
+        entryFieldsPreview.fieldClickedListener = { field -> entryFieldClicked(field)}
 
         setupEntryContentView()
     }
@@ -153,6 +152,14 @@ class EditEntryActivity : BaseActivity() {
         contentHtmlEditor.layoutParams = contentEditorParams
     }
 
+
+    private fun entryFieldClicked(field: EntryField) {
+        when(field) {
+            EntryField.Abstract -> editAbstract()
+            EntryField.Reference -> editReference()
+            EntryField.Tags -> editTagsOnEntry()
+        }
+    }
 
     private fun editAbstract() {
         // TODO
@@ -182,23 +189,15 @@ class EditEntryActivity : BaseActivity() {
 
 
     private fun setAbstractPreviewOnUIThread() {
-        entry?.let { txtEntryAbstract.text = it.abstractPlainText }
-
-        readLaterArticle?.entryExtractionResult?.entry?.let { txtEntryAbstract.text = it.abstractPlainText }
-
-        entryExtractionResult?.entry?.let { txtEntryAbstract.text = it.abstractPlainText }
+        entryFieldsPreview.setAbstractPreviewOnUIThread()
     }
 
     private fun setReferencePreviewOnUIThread() {
-        entry?.reference?.let { txtEntryReference.text = it.preview }
-
-        readLaterArticle?.entryExtractionResult?.reference?.let { txtEntryReference.text = it.preview }
-
-        entryExtractionResult?.reference?.let { txtEntryReference.text = it.preview }
+        entryFieldsPreview.setReferencePreviewOnUIThread()
     }
 
     private fun setTagsOnEntryPreviewOnUIThread() {
-        txtTagsOnEntry.text = tagsOnEntry.joinToString { it.name }
+        entryFieldsPreview.setTagsOnEntryPreviewOnUIThread()
     }
 
 
@@ -277,7 +276,9 @@ class EditEntryActivity : BaseActivity() {
 
     private fun editEntry(entryId: String) {
         entryService.retrieve(entryId)?.let { entry ->
-            this.entry = entry;
+            this.entry = entry
+            entryFieldsPreview.entry = entry
+
             editEntry(entry, entry.reference, entry.tags)
         }
     }
@@ -285,12 +286,15 @@ class EditEntryActivity : BaseActivity() {
     private fun editReadLaterArticle(readLaterArticleId: String) {
         readLaterArticleService.retrieve(readLaterArticleId)?.let { readLaterArticle ->
             this.readLaterArticle = readLaterArticle
+            entryFieldsPreview.readLaterArticle = readLaterArticle
+
             editEntry(readLaterArticle.entryExtractionResult.entry, readLaterArticle.entryExtractionResult.reference, readLaterArticle.entryExtractionResult.tags)
         }
     }
 
     private fun editEntryExtractionResult(serializedExtractionResult: String) {
         this.entryExtractionResult = serializer.deserializeObject(serializedExtractionResult, EntryExtractionResult::class.java)
+        entryFieldsPreview.entryExtractionResult = this.entryExtractionResult
 
         editEntry(entryExtractionResult?.entry, entryExtractionResult?.reference, entryExtractionResult?.tags)
     }
@@ -304,6 +308,8 @@ class EditEntryActivity : BaseActivity() {
 
         tags?.let {
             tagsOnEntry.addAll(tags)
+            entryFieldsPreview.tagsOnEntry = tagsOnEntry
+
             setTagsOnEntryPreviewOnUIThread()
         }
     }
