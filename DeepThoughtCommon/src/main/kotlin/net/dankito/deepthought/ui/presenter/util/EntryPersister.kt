@@ -17,7 +17,13 @@ class EntryPersister(private val entryService: EntryService, private val referen
 
     fun saveEntry(entry: Entry, reference: Reference? = null, tags: Collection<Tag> = ArrayList<Tag>()): Boolean {
         // by design at this stage there's no unpersisted tag -> set them directly on entry so that their ids get saved on entry with persist(entry) / update(entry)
+        val removedTags = ArrayList(entry.tags)
+        removedTags.removeAll(tags)
+
         entry.setAllTags(tags)
+
+        removedTags.forEach { tagService.update(it) }
+
 
         reference?.let { reference ->
             if(reference.isPersisted() == false) {
@@ -25,7 +31,12 @@ class EntryPersister(private val entryService: EntryService, private val referen
             }
         }
 
+        val previousReference = reference
+
         entry.reference = reference
+
+        previousReference?.let { referenceService.update(it) }
+
 
         if(entry.isPersisted() == false) {
             entryService.persist(entry)
