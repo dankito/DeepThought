@@ -9,4 +9,6 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion"
+
+    compile project(':Utils')
 }
