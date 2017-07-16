@@ -11,10 +11,10 @@ import net.dankito.deepthought.extensions.entryPreview
 import net.dankito.deepthought.extensions.referencePreview
 import net.dankito.deepthought.extensions.tagsPreview
 import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.ui.presenter.EntriesListPresenter
+import net.dankito.deepthought.ui.presenter.EntriesListPresenterBase
 
 
-class EntryAdapter(private val presenter: EntriesListPresenter): ListSwipeAdapter<Entry>() {
+class EntryAdapter(private val presenter: EntriesListPresenterBase): ListSwipeAdapter<Entry>() {
 
 
     override fun getSwipeLayoutResourceId(position: Int): Int {

@@ -19,9 +19,9 @@ import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class EntriesListPresenter(private val entriesListView: IEntriesListView, private var router: IRouter, private var searchEngine: ISearchEngine,
-                           private val deleteEntityService: DeleteEntityService, private val clipboardService: IClipboardService)
-    : IMainViewSectionPresenter {
+class EntriesListPresenter(private val entriesListView: IEntriesListView, router: IRouter, private var searchEngine: ISearchEngine,
+                           deleteEntityService: DeleteEntityService, clipboardService: IClipboardService)
+    : EntriesListPresenterBase(deleteEntityService, clipboardService, router), IMainViewSectionPresenter {
 
     private var unfilteredEntries: List<Entry> = listOf()
 
@@ -46,15 +46,6 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
 
     override fun cleanUp() {
         eventBus.unregister(eventBusListener)
-    }
-
-
-    fun showEntry(entry: Entry) {
-        router.showViewEntryView(entry)
-    }
-
-    fun editEntry(entry: Entry) {
-        router.showEditEntryView(entry)
     }
 
 
@@ -98,17 +89,6 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
 
     override fun getLastSearchTerm(): String {
         return lastSearchTermProperty
-    }
-
-
-    fun shareReferenceUrl(entry: Entry) {
-        entry.reference?.let {
-            clipboardService.copyReferenceUrlToClipboard(it)
-        }
-    }
-
-    fun deleteEntry(entry: Entry) {
-        deleteEntityService.deleteEntryAsync(entry)
     }
 
 
