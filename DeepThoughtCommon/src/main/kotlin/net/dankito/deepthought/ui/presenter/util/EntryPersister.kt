@@ -22,8 +22,6 @@ class EntryPersister(private val entryService: EntryService, private val referen
 
         entry.setAllTags(tags)
 
-        removedTags.forEach { tagService.update(it) }
-
 
         reference?.let { reference ->
             if(reference.isPersisted() == false) {
@@ -34,8 +32,6 @@ class EntryPersister(private val entryService: EntryService, private val referen
         val previousReference = reference
 
         entry.reference = reference
-
-        previousReference?.let { referenceService.update(it) }
 
 
         if(entry.isPersisted() == false) {
@@ -48,9 +44,13 @@ class EntryPersister(private val entryService: EntryService, private val referen
 
         reference?.let { referenceService.update(reference) }
 
-        for(tag in tags) {
-            tagService.update(tag) // TODO: check if tag needs an update
-        }
+        previousReference?.let { referenceService.update(it) }
+
+
+        tags.forEach { tagService.update(it) } // TODO: check if tag needs an update
+
+        removedTags.forEach { tagService.update(it) }
+
 
         return true
     }
