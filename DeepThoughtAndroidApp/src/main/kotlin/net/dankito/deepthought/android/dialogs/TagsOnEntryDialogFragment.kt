@@ -152,7 +152,10 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
     private fun deleteTag(tag: Tag) {
         if(adapter.tagsOnEntry.contains(tag)) {
             adapter.tagsOnEntry.remove(tag)
-            activity?.runOnUiThread { adapter.notifyDataSetChanged() }
+            activity?.runOnUiThread {
+                adapter.notifyDataSetChanged()
+                setTagsOnEntryPreviewOnUIThread(adapter.tagsOnEntry)
+            }
         }
 
         presenter.deleteTag(tag)
