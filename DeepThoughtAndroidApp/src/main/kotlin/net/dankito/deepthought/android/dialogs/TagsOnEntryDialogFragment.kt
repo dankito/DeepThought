@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.EditorInfo
+import android.widget.Button
 import android.widget.TextView
 import kotlinx.android.synthetic.main.dialog_tags_on_entry.*
 import kotlinx.android.synthetic.main.dialog_tags_on_entry.view.*
@@ -16,6 +17,7 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.presenter.TagsOnEntryListPresenter
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
+import net.dankito.deepthought.ui.tags.TagsSearcherButtonState
 import net.dankito.deepthought.ui.view.ITagsListView
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
@@ -42,6 +44,10 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
     private var tagsChangedCallback: ((MutableList<Tag>) -> Unit)? = null
 
     private var txtTagsPreview: TextView? = null
+
+    private var btnEditEntryCreateOrToggleTags: Button? = null
+
+    private var btnEditEntryCreateOrToggleTagsState: TagsSearcherButtonState = TagsSearcherButtonState.DISABLED
 
 
     init {
@@ -76,6 +82,7 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
 
         txtTagsPreview = rootView.txtTagsPreview
 
+        btnEditEntryCreateOrToggleTags = rootView.btnEditEntryCreateOrToggleTags
         rootView.btnEditEntryCreateOrToggleTags.setOnClickListener { handleCreateNewTagOrToggleTagsAction() }
 
         rootView.edtxtEditEntrySearchTag.addTextChangedListener(edtxtEditEntrySearchTagTextWatcher)
@@ -99,9 +106,34 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
     }
 
 
+    private fun setButtonState() {
+        val buttonState = presenter.getButtonStateForSearchResult()
+
+        applyButtonState(buttonState)
+    }
+
+    private fun applyButtonState(state: TagsSearcherButtonState) {
+        this.btnEditEntryCreateOrToggleTagsState = state
+
+        btnEditEntryCreateOrToggleTags?.let { button ->
+            button.isEnabled = state != TagsSearcherButtonState.DISABLED
+
+            if(state == TagsSearcherButtonState.CREATE_TAG) {
+                button.setText(R.string.dialog_tags_on_entry_create_tag)
+            }
+            else if(state == TagsSearcherButtonState.TOGGLE_TAGS) {
+                button.setText(R.string.dialog_tags_on_entry_toggle_tags)
+            }
+        }
+    }
+
     private fun handleCreateNewTagOrToggleTagsAction() {
-        // TODO: check if we should create a new tag or toggle existing tags
-        createNewTag()
+        if(btnEditEntryCreateOrToggleTagsState == TagsSearcherButtonState.CREATE_TAG) {
+            createNewTag()
+        }
+        else {
+            toggleTagsOnEntry()
+        }
     }
 
     private fun createNewTag() {
@@ -117,8 +149,17 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
         searchTags(enteredText)
     }
 
+    private fun toggleTagsOnEntry() {
+        presenter.toggleTagsOnEntry(adapter.tagsOnEntry)
+
+        activity?.runOnUiThread {
+            adapter.notifyDataSetChanged()
+            setTagsOnEntryPreviewOnUIThread(adapter.tagsOnEntry)
+        }
+    }
+
     private fun handleEditEntrySearchTagAction(actionId: Int, keyEvent: KeyEvent): Boolean {
-        if (actionId == EditorInfo.IME_NULL && keyEvent.action == KeyEvent.ACTION_DOWN) {
+        if(actionId == EditorInfo.IME_NULL && keyEvent.action == KeyEvent.ACTION_DOWN) {
             handleCreateNewTagOrToggleTagsAction()
             return true
         }
@@ -168,7 +209,10 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
     /*      ITagListView implementation         */
 
     override fun showTags(tags: List<Tag>) {
-        activity?.runOnUiThread { adapter.setItems(tags) }
+        activity?.runOnUiThread {
+            adapter.setItems(tags)
+            setButtonState()
+        }
     }
 
     override fun updateDisplayedTags() {
