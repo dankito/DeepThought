@@ -67,7 +67,6 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
     fun getAndShowArticle(item: ArticleSummaryItem) {
         getArticle(item) {
             it.result?.let { showArticle(it) }
-            it.error?.let { showError("alert.message.could.not.load.article", it, item.url, it.localizedMessage) }
         }
     }
 
@@ -78,7 +77,6 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
     fun getAndSaveArticle(item: ArticleSummaryItem) {
         getArticle(item) {
             it.result?.let { saveArticle(item, it) }
-            it.error?.let { showError("alert.message.could.not.load.article", it, item.url, it.localizedMessage) }
         }
     }
 
@@ -91,7 +89,6 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
     fun getAndSaveArticleForLaterReading(item: ArticleSummaryItem) {
         getArticle(item) {
             it.result?.let { saveArticleForLaterReading(item, it) }
-            it.error?.let { showError("alert.message.could.not.load.article", it, item.url, it.localizedMessage) }
         }
     }
 
@@ -106,7 +103,10 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
         articleExtractors.getExtractorForItem(item)?.let { extractor ->
             extractor.extractArticleAsync(item) { asyncResult ->
                 asyncResult.result?.let { retrievedArticle(extractor, item, asyncResult, it, callback) }
-                asyncResult.error?.let { callback(asyncResult) }
+                asyncResult.error?.let {
+                    callback(asyncResult)
+                    showError("alert.message.could.not.load.article", it, item.url, it.localizedMessage)
+                }
             }
         }
     }
