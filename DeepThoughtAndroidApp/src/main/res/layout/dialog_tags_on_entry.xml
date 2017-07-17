@@ -64,6 +64,7 @@
             android:layout_alignBottom="@+id/edtxtEditEntrySearchTag"
             android:textSize="@dimen/dialog_tags_on_entry_tag_search_tags_text_size"
             android:text="@string/dialog_tags_on_entry_create_tag"
+            android:enabled="false"
         />
 
         <ListView
