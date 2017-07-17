@@ -89,8 +89,8 @@ class EntriesListView : View(), IEntriesListView {
         runLater { controller.entries.setAll(entries) }
     }
 
-    override fun showEntriesForTag(tag: Tag, entries: List<Entry>) {
-        presenter.showEntriesForTag(tag, entries)
+    override fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {
+        presenter.showEntriesForTag(tag, tagsFilter)
     }
 
 }

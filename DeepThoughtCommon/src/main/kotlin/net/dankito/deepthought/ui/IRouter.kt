@@ -6,7 +6,7 @@ import net.dankito.deepthought.model.util.EntryExtractionResult
 
 interface IRouter {
 
-    fun showEntriesForTag(tag: Tag, entries: List<Entry>)
+    fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>)
 
     fun showEntriesForReference(reference: Reference)
 

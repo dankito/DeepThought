@@ -15,14 +15,14 @@ class TagEntriesListDialog : EntriesListDialogBase() {
 
     private lateinit var tag: Tag
 
-    private var restrictToEntries: List<Entry>? = null
+    private lateinit var tagsFilter: List<Tag>
 
     private val eventBusListener = EventBusListener()
 
 
-    fun showDialog(fragmentManager: FragmentManager, tag: Tag, restrictToEntries: List<Entry>? = null) {
+    fun showDialog(fragmentManager: FragmentManager, tag: Tag, tagsFilter: List<Tag> = listOf()) {
         this.tag = tag
-        this.restrictToEntries = restrictToEntries
+        this.tagsFilter = tagsFilter
 
         eventBus.register(eventBusListener)
 
@@ -42,7 +42,7 @@ class TagEntriesListDialog : EntriesListDialogBase() {
             callback(tag.entries)
         }
         else {
-            searchEngine.searchEntries(EntriesSearch(entriesMustHaveTheseTags = mutableListOf(tag)) {
+            searchEngine.searchEntries(EntriesSearch(entriesMustHaveTheseTags = mutableListOf(tag, *tagsFilter.toTypedArray())) {
                 callback(it)
             })
         }

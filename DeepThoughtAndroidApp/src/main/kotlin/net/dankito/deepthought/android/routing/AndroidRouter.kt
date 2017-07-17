@@ -19,10 +19,10 @@ import net.dankito.utils.serialization.ISerializer
 class AndroidRouter(private val context: Context, private val activityTracker: CurrentActivityTracker, private val serializer: ISerializer) : IRouter {
 
 
-    override fun showEntriesForTag(tag: Tag, entries: List<Entry>) {
+    override fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {
         activityTracker.currentActivity?.let { currentActivity ->
             val dialog = TagEntriesListDialog()
-            dialog.showDialog(currentActivity.supportFragmentManager, tag)
+            dialog.showDialog(currentActivity.supportFragmentManager, tag, tagsFilter)
         }
     }
 

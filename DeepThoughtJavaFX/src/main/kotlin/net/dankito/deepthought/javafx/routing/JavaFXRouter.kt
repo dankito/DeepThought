@@ -24,8 +24,8 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
         // nothing to do on JavaFX
     }
 
-    override fun showEntriesForTag(tag: Tag, entries: List<Entry>) {
-        entriesListView.showEntriesForTag(tag, entries)
+    override fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {
+        entriesListView.showEntriesForTag(tag, tagsFilter)
     }
 
     override fun showEntriesForReference(reference: Reference) {

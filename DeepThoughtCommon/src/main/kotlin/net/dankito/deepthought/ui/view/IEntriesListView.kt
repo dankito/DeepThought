@@ -8,6 +8,6 @@ interface IEntriesListView {
 
     fun showEntries(entries: List<Entry>)
 
-    fun showEntriesForTag(tag: Tag, entries: List<Entry>)
+    fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>)
 
 }

@@ -23,7 +23,7 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, router
                            deleteEntityService: DeleteEntityService, clipboardService: IClipboardService)
     : EntriesListPresenterBase(deleteEntityService, clipboardService, router), IMainViewSectionPresenter {
 
-    private var unfilteredEntries: List<Entry> = listOf()
+    private var tagsFilter: List<Tag> = listOf()
 
     private var selectedTag: Tag? = null
 
@@ -52,14 +52,14 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, router
     override fun getAndShowAllEntities() {
         searchEngine.addInitializationListener {
             searchEntries(Search.EmptySearchTerm) {
-                unfilteredEntries = it
+
             }
         }
     }
 
-    fun showEntriesForTag(tag: Tag, entries: List<Entry>) {
+    fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {
         selectedTag = tag
-        unfilteredEntries = entries
+        this.tagsFilter = tagsFilter
 
         searchEntries(lastSearchTermProperty) // apply lastSearchTerm on unfilteredEntries
     }
@@ -69,7 +69,7 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, router
        lastSearchTermProperty = searchTerm
 
         var filterOnlyEntriesWithoutTags = false
-        val entriesMustHaveTheseTags = mutableListOf<Tag>()
+        val entriesMustHaveTheseTags = ArrayList(tagsFilter)
 
         selectedTag?.let {
             if(it is CalculatedTag == false) {

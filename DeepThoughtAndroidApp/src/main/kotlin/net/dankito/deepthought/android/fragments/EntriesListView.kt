@@ -94,8 +94,8 @@ class EntriesListView : MainActivityTabFragment(R.layout.fragment_tab_entries, R
         }
     }
 
-    override fun showEntriesForTag(tag: Tag, entries: List<Entry>) {
-        presenter.showEntriesForTag(tag, entries)
+    override fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {
+        presenter.showEntriesForTag(tag, tagsFilter)
     }
 
 }
