@@ -1,41 +1,25 @@
 package net.dankito.deepthought.ui.presenter
 
 import net.dankito.deepthought.di.CommonComponent
-import net.dankito.deepthought.model.*
+import net.dankito.deepthought.model.AllEntriesCalculatedTag
+import net.dankito.deepthought.model.EntriesWithoutTagsCalculatedTag
+import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.tags.TagSearchResultState
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.view.ITagsListView
 import net.dankito.service.data.event.EntityChangedNotifier
-import net.dankito.service.data.messages.EntitiesOfTypeChanged
-import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
-import net.dankito.service.search.Search
-import net.dankito.service.search.specific.FilteredTagsSearch
-import net.dankito.service.search.specific.TagsSearch
 import net.dankito.service.search.specific.TagsSearchResults
 import net.dankito.service.search.util.CombinedLazyLoadingList
 import net.dankito.utils.localization.Localization
-import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class TagsListPresenter(private val tagsListView: ITagsListView, private val dataManager: DataManager, private val searchEngine: ISearchEngine,
-                        private val searchResultsUtil: TagsSearchResultsUtil, private val router: IRouter) : IMainViewSectionPresenter {
+class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: DataManager, searchEngine: ISearchEngine, searchResultsUtil: TagsSearchResultsUtil,
+                        private val router: IRouter) : TagsListPresenterBase(tagsListView, searchEngine, searchResultsUtil), IMainViewSectionPresenter {
 
-    private var lastSearchTermProperty = Search.EmptySearchTerm
-
-    private var lastTagsSearchResults: TagsSearchResults? = null
-
-    private val tagsFilter = ArrayList<Tag>()
-
-    private val calculatedTags = ArrayList<CalculatedTag>()
-
-
-    @Inject
-    protected lateinit var eventBus: IEventBus
 
     @Inject
     protected lateinit var entityChangedNotifier: EntityChangedNotifier
@@ -44,14 +28,11 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private val dat
     protected lateinit var localization: Localization
 
 
-    private val eventBusListener = EventBusListener()
-
-
     init {
         thread {
             CommonComponent.component.inject(this)
 
-            eventBus.register(eventBusListener)
+            initialized()
 
             calculatedTags.add(AllEntriesCalculatedTag(searchEngine, eventBus, entityChangedNotifier, localization))
             calculatedTags.add(EntriesWithoutTagsCalculatedTag(searchEngine, eventBus, entityChangedNotifier, localization))
@@ -61,7 +42,7 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private val dat
     }
 
     override fun cleanUp() {
-        eventBus.unregister(eventBusListener)
+        destroy()
     }
 
 
@@ -70,48 +51,14 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private val dat
     }
 
 
-    private fun searchTags() {
-        searchTags(lastSearchTermProperty)
-    }
-
-    fun searchTags(searchTerm: String) {
-        lastSearchTermProperty = searchTerm
-
-        if(isTagFilterApplied()) {
-            searchFilteredTags(lastSearchTermProperty, tagsFilter)
+    override fun getTagsFromSearchTagsWithoutFilterResult(result: TagsSearchResults): List<Tag> {
+        if(result.hasEmptySearchTerm) {
+            return CombinedLazyLoadingList<Tag>(calculatedTags, result.getRelevantMatchesSorted())
         }
-        else {
-            searchTagsWithoutFilter(lastSearchTermProperty)
-        }
+
+        return super.getTagsFromSearchTagsWithoutFilterResult(result)
     }
 
-    private fun searchTagsWithoutFilter(searchTerm: String) {
-        searchEngine.searchTags(TagsSearch(searchTerm) { result ->
-            var tags = result.getRelevantMatchesSorted()
-            this.lastTagsSearchResults = result
-
-            if(searchTerm == Search.EmptySearchTerm) {
-                tags = CombinedLazyLoadingList<Tag>(calculatedTags, result.getRelevantMatchesSorted())
-            }
-
-            tagsListView.showTags(tags)
-        })
-    }
-
-    fun searchFilteredTags(searchTerm: String, tagsFilter: List<Tag>) {
-        lastSearchTermProperty = searchTerm
-
-        searchEngine.searchFilteredTags(FilteredTagsSearch(tagsFilter, searchTerm) { result ->
-            this.lastTagsSearchResults = null
-
-            tagsListView.showTags(result.tagsOnEntriesContainingFilteredTags)
-        })
-    }
-
-
-    fun isTagFilterApplied(): Boolean {
-        return tagsFilter.isNotEmpty()
-    }
 
     fun isTagFiltered(tag: Tag): Boolean {
         return tagsFilter.contains(tag)
@@ -134,26 +81,8 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private val dat
     }
 
 
-    fun getTagSearchResultState(tag: Tag): TagSearchResultState {
-        return searchResultsUtil.getTagSearchResultState(tag, lastTagsSearchResults)
-    }
-
-
     fun showEntriesForTag(tag: Tag) {
         router.showEntriesForTag(tag, tagsFilter)
-    }
-
-
-    inner class EventBusListener {
-
-        @Handler()
-        fun entityChanged(entitiesOfTypeChanged: EntitiesOfTypeChanged) {
-            when(entitiesOfTypeChanged.entityType) {
-                Tag::class.java -> searchTags()
-                Entry::class.java -> tagsListView.updateDisplayedTags() // count entries on tag(s) may have changed
-            }
-        }
-
     }
 
 }
