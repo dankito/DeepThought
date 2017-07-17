@@ -159,7 +159,7 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
     }
 
     private fun handleEditEntrySearchTagAction(actionId: Int, keyEvent: KeyEvent?): Boolean {
-        if(actionId == EditorInfo.IME_NULL && keyEvent?.action == KeyEvent.ACTION_DOWN) {
+        if(actionId == EditorInfo.IME_ACTION_DONE || (actionId == EditorInfo.IME_NULL && keyEvent?.action == KeyEvent.ACTION_DOWN)) {
             handleCreateNewTagOrToggleTagsAction()
             return true
         }
