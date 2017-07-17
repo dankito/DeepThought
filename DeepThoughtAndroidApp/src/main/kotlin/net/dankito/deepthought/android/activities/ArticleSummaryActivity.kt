@@ -25,12 +25,12 @@ import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
-import net.dankito.utils.serialization.ISerializer
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
-import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ImageCache
+import net.dankito.utils.serialization.ISerializer
+import net.dankito.utils.ui.IDialogService
 import org.slf4j.LoggerFactory
 import java.io.File
 import javax.inject.Inject
@@ -116,6 +116,8 @@ class ArticleSummaryActivity : BaseActivity() {
 
         if(serializedLastLoadedSummary != null) {
             val summary = serializer.deserializeObject(serializedLastLoadedSummary, ArticleSummary::class.java)
+            presenter.setArticleSummaryExtractorConfigOnItems(summary, this.extractorConfig) // set extractorConfig on restored ArticleSummaryItems
+
             showArticleSummary(summary, false) // TODO: this is wrong as it only shows last loaded items but not all loaded items
         }
         else {

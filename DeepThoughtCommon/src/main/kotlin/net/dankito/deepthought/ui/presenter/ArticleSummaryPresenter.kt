@@ -56,7 +56,11 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
     }
 
     private fun setArticleSummaryExtractorConfigOnItems(result: AsyncResult<out ArticleSummary>, extractorConfig: ArticleSummaryExtractorConfig?) {
-        result.result?.articles?.forEach { it.articleSummaryExtractorConfig = extractorConfig }
+        result.result?.let { setArticleSummaryExtractorConfigOnItems(it, extractorConfig) }
+    }
+
+    fun setArticleSummaryExtractorConfigOnItems(articleSummary: ArticleSummary, extractorConfig: ArticleSummaryExtractorConfig?) {
+        articleSummary.articles.forEach { it.articleSummaryExtractorConfig = extractorConfig }
     }
 
 
