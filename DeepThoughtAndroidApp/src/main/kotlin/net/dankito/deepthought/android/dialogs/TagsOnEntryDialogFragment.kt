@@ -135,7 +135,7 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
                     return true
                 }
                 R.id.mnDeleteTag -> {
-                    presenter.deleteTag(selectedTag)
+                    deleteTag(selectedTag)
                     return true
                 }
                 else -> return super.onContextItemSelected(item)
@@ -143,6 +143,15 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
         }
 
         return super.onContextItemSelected(item)
+    }
+
+    private fun deleteTag(tag: Tag) {
+        if(adapter.tagsOnEntry.contains(tag)) {
+            adapter.tagsOnEntry.remove(tag)
+            activity?.runOnUiThread { adapter.notifyDataSetChanged() }
+        }
+
+        presenter.deleteTag(tag)
     }
 
 
