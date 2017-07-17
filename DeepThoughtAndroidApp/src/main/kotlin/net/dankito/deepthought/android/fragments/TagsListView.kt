@@ -1,6 +1,11 @@
 package net.dankito.deepthought.android.fragments
 
+import android.view.ContextMenu
+import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
 import android.widget.BaseAdapter
+import kotlinx.android.synthetic.main.fragment_tab_tags.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.TagAdapter
 import net.dankito.deepthought.android.di.AppComponent
@@ -62,6 +67,41 @@ class TagsListView : MainActivityTabFragment(R.layout.fragment_tab_tags, R.id.ls
 
     override fun listItemClicked(position: Int, selectedItem: Any) {
         tagSelected(selectedItem as? Tag)
+    }
+
+
+    override fun setupUI(rootView: View?) {
+        super.setupUI(rootView)
+
+        rootView?.let {
+            registerForContextMenu(rootView.lstTags)
+        }
+    }
+
+    override fun onCreateContextMenu(menu: ContextMenu, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+
+        activity?.menuInflater?.inflate(R.menu.list_item_tag_menu, menu)
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        (item.menuInfo as? AdapterView.AdapterContextMenuInfo)?.position?.let { position ->
+            val selectedTag = adapter.getItem(position)
+
+            when(item.itemId) {
+                R.id.mnEditTag -> {
+                    presenter.editTag(selectedTag)
+                    return true
+                }
+                R.id.mnDeleteTag -> {
+                    presenter.deleteTag(selectedTag)
+                    return true
+                }
+                else -> return super.onContextItemSelected(item)
+            }
+        }
+
+        return super.onContextItemSelected(item)
     }
 
 

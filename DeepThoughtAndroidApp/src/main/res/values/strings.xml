@@ -17,6 +17,9 @@
     <string name="floating_action_menu_add_newspaper_article">Newspaper Article</string>
     <string name="floating_action_button_add_article_of_newspaper">%s Article</string>
 
+    <string name="action_edit">Edit</string>
+    <string name="action_delete">Delete</string>
+
     <string name="search_title">Search</string>
     <string name="search_hint_entries">Search Entries</string>
     <string name="search_hint_tags">Search Tags</string>
