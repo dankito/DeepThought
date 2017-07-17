@@ -81,6 +81,7 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
         rootView.lstTags.adapter = adapter
 
         txtTagsPreview = rootView.txtTagsPreview
+        setTagsOnEntryPreviewOnUIThread(adapter.tagsOnEntry)
 
         btnEditEntryCreateOrToggleTags = rootView.btnEditEntryCreateOrToggleTags
         rootView.btnEditEntryCreateOrToggleTags.setOnClickListener { handleCreateNewTagOrToggleTagsAction() }
