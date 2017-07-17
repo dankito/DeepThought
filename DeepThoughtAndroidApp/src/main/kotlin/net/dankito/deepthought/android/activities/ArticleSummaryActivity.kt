@@ -115,7 +115,7 @@ class ArticleSummaryActivity : BaseActivity() {
             val summary = serializer.deserializeObject(serializedLastLoadedSummary, ArticleSummary::class.java)
             presenter.setArticleSummaryExtractorConfigOnItems(summary, this.extractorConfig) // set extractorConfig on restored ArticleSummaryItems
 
-            showArticleSummary(summary)
+            showArticleSummaryOnUIThread(summary)
         }
         else {
             extractArticlesSummary()
@@ -231,10 +231,10 @@ class ArticleSummaryActivity : BaseActivity() {
     }
 
     private fun showArticleSummaryThreadSafe(summary: ArticleSummary) {
-        runOnUiThread { showArticleSummary(summary) }
+        runOnUiThread { showArticleSummaryOnUIThread(summary) }
     }
 
-    private fun showArticleSummary(summary: ArticleSummary) {
+    private fun showArticleSummaryOnUIThread(summary: ArticleSummary) {
         mnLoadMore?.isEnabled = true // disable so that button cannot be pressed till loadMoreItems() result is received
         mnLoadMore?.isVisible = summary.canLoadMoreItems
 
