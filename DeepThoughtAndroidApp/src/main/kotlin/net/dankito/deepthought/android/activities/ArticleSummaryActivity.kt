@@ -76,8 +76,6 @@ class ArticleSummaryActivity : BaseActivity() {
 
     private var extractorConfig: ArticleSummaryExtractorConfig? = null
 
-    private var lastLoadedSummary: ArticleSummary? = null
-
     private val adapter = ArticleSummaryAdapter()
 
     private val selectedArticlesInContextualActionMode = LinkedHashSet<ArticleSummaryItem>()
@@ -117,7 +115,7 @@ class ArticleSummaryActivity : BaseActivity() {
             val summary = serializer.deserializeObject(serializedLastLoadedSummary, ArticleSummary::class.java)
             presenter.setArticleSummaryExtractorConfigOnItems(summary, this.extractorConfig) // set extractorConfig on restored ArticleSummaryItems
 
-            showArticleSummary(summary, false) // TODO: this is wrong as it only shows last loaded items but not all loaded items
+            showArticleSummary(summary)
         }
         else {
             extractArticlesSummary()
@@ -130,7 +128,7 @@ class ArticleSummaryActivity : BaseActivity() {
         outState?.putString(EXTRACTOR_URL_INTENT_EXTRA_NAME, extractorConfig?.url)
 
         outState?.putString(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME, null) // fallback
-        lastLoadedSummary?.let { outState?.putString(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME, serializer.serializeObject(it)) } // if not null
+        presenter.lastLoadedSummary?.let { outState?.putString(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME, serializer.serializeObject(it)) }
     }
 
 
@@ -214,35 +212,33 @@ class ArticleSummaryActivity : BaseActivity() {
 
     private fun extractArticlesSummary() {
         presenter.extractArticlesSummary(extractorConfig) {
-            articleSummaryReceived(it, false)
+            articleSummaryReceived(it)
         }
     }
 
     private fun loadMoreItems() {
-        presenter.loadMoreItems(extractorConfig) {
-            articleSummaryReceived(it, true)
+        presenter.lastLoadedSummary?.let { summary ->
+            mnLoadMore?.isEnabled = false
+
+            presenter.loadMoreItems(extractorConfig) {
+                articleSummaryReceived(it)
+            }
         }
     }
 
-    private fun articleSummaryReceived(result: AsyncResult<out ArticleSummary>, hasLoadedMoreItems: Boolean) {
-        result.result?.let { showArticleSummaryThreadSafe(it, hasLoadedMoreItems)  }
+    private fun articleSummaryReceived(result: AsyncResult<out ArticleSummary>) {
+        result.result?.let { showArticleSummaryThreadSafe(it)  }
     }
 
-    private fun showArticleSummaryThreadSafe(summary: ArticleSummary, hasLoadedMoreItems: Boolean) {
-        runOnUiThread { showArticleSummary(summary, hasLoadedMoreItems) }
+    private fun showArticleSummaryThreadSafe(summary: ArticleSummary) {
+        runOnUiThread { showArticleSummary(summary) }
     }
 
-    private fun showArticleSummary(summary: ArticleSummary, hasLoadedMoreItems: Boolean) {
-        this.lastLoadedSummary = summary
-
+    private fun showArticleSummary(summary: ArticleSummary) {
+        mnLoadMore?.isEnabled = true // disable so that button cannot be pressed till loadMoreItems() result is received
         mnLoadMore?.isVisible = summary.canLoadMoreItems
 
-        if(hasLoadedMoreItems) {
-            adapter.moreItemsHaveBeenLoaded(summary)
-        }
-        else {
-            adapter.setArticleSummary(summary)
-        }
+        adapter.setArticleSummary(summary)
     }
 
     private fun articleClicked(item: ArticleSummaryItem) {

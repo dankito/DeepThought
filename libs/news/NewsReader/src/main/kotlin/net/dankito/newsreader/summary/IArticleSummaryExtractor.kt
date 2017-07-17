@@ -1,13 +1,13 @@
 package net.dankito.newsreader.summary
 
-import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
+import net.dankito.newsreader.model.ArticleSummary
 
 
 interface IArticleSummaryExtractor {
 
     fun extractSummaryAsync(callback: (AsyncResult<out ArticleSummary>) -> Unit)
 
-    fun loadMoreItemsAsync(callback: (AsyncResult<ArticleSummary>) -> Unit)
+    fun loadMoreItemsAsync(articleSummary: ArticleSummary, callback: (AsyncResult<ArticleSummary>) -> Unit)
 
 }

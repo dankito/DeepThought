@@ -14,6 +14,6 @@ class FeedArticleSummaryExtractor(private val feedUrl : String, private val feed
         }
     }
 
-    override fun loadMoreItemsAsync(callback: (AsyncResult<ArticleSummary>) -> Unit) {
+    override fun loadMoreItemsAsync(articleSummary: ArticleSummary, callback: (AsyncResult<ArticleSummary>) -> Unit) {
     }
 }

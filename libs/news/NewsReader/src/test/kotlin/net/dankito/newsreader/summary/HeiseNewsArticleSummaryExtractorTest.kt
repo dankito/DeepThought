@@ -1,7 +1,7 @@
 package net.dankito.newsreader.summary
 
-import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.newsreader.model.ArticleSummary
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.startsWith
 import org.junit.Assert.assertThat
@@ -29,10 +29,12 @@ class HeiseNewsArticleSummaryExtractorTest : ArticleSummaryExtractorTestBase() {
         val countDownLatch = CountDownLatch(1)
 
         underTest.extractSummaryAsync {
-            underTest.loadMoreItemsAsync {
-                summary = it.result
+            it.result?.let { extractSummaryResult ->
+                underTest.loadMoreItemsAsync(extractSummaryResult) {
+                    summary = it.result
 
-                countDownLatch.countDown()
+                    countDownLatch.countDown()
+                }
             }
         }
 

@@ -1,9 +1,9 @@
 package net.dankito.newsreader.summary
 
-import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.data_access.network.webclient.extractor.ExtractorBase
+import net.dankito.newsreader.model.ArticleSummary
 import org.jsoup.nodes.Document
 import org.slf4j.LoggerFactory
 import kotlin.concurrent.thread
@@ -16,21 +16,31 @@ abstract class ArticleSummaryExtractorBase(webClient: IWebClient) : ExtractorBas
     }
 
 
-    private var loadNextItemsUrl: String? = null
-
-
     override fun extractSummaryAsync(callback: (AsyncResult<out ArticleSummary>) -> Unit) {
         extractSummaryAsync(getBaseUrl(), false, callback)
     }
 
-    override fun loadMoreItemsAsync(callback: (AsyncResult<ArticleSummary>) -> Unit) {
-        val loadNextItemsUrl = this.loadNextItemsUrl
+    override fun loadMoreItemsAsync(articleSummary: ArticleSummary, callback: (AsyncResult<ArticleSummary>) -> Unit) {
+        val loadNextItemsUrl = articleSummary.nextItemsUrl
 
         if(loadNextItemsUrl == null) {
             callback(AsyncResult(false)) // TODO: add error
         }
         else {
-            extractSummaryAsync(loadNextItemsUrl, true, callback)
+            extractSummaryAsync(loadNextItemsUrl, true) { result ->
+                nextItemsLoaded(articleSummary, result, callback)
+            }
+        }
+    }
+
+    private fun nextItemsLoaded(articleSummary: ArticleSummary, result: AsyncResult<ArticleSummary>, callback: (AsyncResult<ArticleSummary>) -> Unit) {
+        val extractedSummary = result.result
+
+        if (extractedSummary != null) {
+            articleSummary.nextItemsLoaded(extractedSummary)
+            callback(AsyncResult(true, result = articleSummary))
+        } else {
+            callback(result)
         }
     }
 
@@ -47,11 +57,7 @@ abstract class ArticleSummaryExtractorBase(webClient: IWebClient) : ExtractorBas
 
     private fun extractSummary(url: String, isForLoadingMoreItems: Boolean): ArticleSummary {
         requestUrl(url).let { document ->
-            val summary = parseHtmlToArticleSummary(url, document, isForLoadingMoreItems)
-
-            loadNextItemsUrl = summary.nextItemsUrl
-
-            return summary
+            return parseHtmlToArticleSummary(url, document, isForLoadingMoreItems)
         }
     }
 

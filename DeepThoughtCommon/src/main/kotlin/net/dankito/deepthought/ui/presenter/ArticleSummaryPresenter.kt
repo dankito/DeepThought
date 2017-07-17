@@ -34,6 +34,9 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
     protected lateinit var localization: Localization
 
 
+    var lastLoadedSummary: ArticleSummary? = null
+
+
     init {
         CommonComponent.component.inject(this)
     }
@@ -46,13 +49,18 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
     }
 
     fun loadMoreItems(extractorConfig: ArticleSummaryExtractorConfig?, callback: (AsyncResult<out ArticleSummary>) -> Unit) {
-        extractorConfig?.extractor?.loadMoreItemsAsync {
-            retrievedArticleSummary(it, extractorConfig, callback)
+        lastLoadedSummary?.let { articleSummary ->
+            extractorConfig?.extractor?.loadMoreItemsAsync(articleSummary) {
+                retrievedArticleSummary(it, extractorConfig, callback)
+            }
         }
     }
 
     private fun retrievedArticleSummary(result: AsyncResult<out ArticleSummary>, extractorConfig: ArticleSummaryExtractorConfig?, callback: (AsyncResult<out ArticleSummary>) -> Unit) {
-        result.result?.let { summary -> setArticleSummaryExtractorConfigOnItems(summary, extractorConfig) }
+        result.result?.let { summary ->
+            this.lastLoadedSummary = summary
+            setArticleSummaryExtractorConfigOnItems(summary, extractorConfig)
+        }
 
         result.error?.let { error -> showError("alert.message.could.not.load.article.summary", error, error.localizedMessage) }
 

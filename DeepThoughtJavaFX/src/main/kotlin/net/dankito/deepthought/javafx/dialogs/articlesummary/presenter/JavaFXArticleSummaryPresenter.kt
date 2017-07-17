@@ -53,19 +53,18 @@ class JavaFXArticleSummaryPresenter(private val articleSummaryExtractor: Article
     }
 
     fun loadMoreItems() {
-        loadMoreItems(articleSummaryExtractor) {
-            it.result?.let { articleSummaryReceived(it, true) }
+        lastLoadedSummary?.let { summary ->
+            canLoadMoreItems.set(false)
+
+            loadMoreItems(articleSummaryExtractor) {
+                it.result?.let { articleSummaryReceived(it, true) }
+            }
         }
     }
 
     private fun articleSummaryReceived(articleSummary: ArticleSummary, hasLoadedMoreItems: Boolean) {
         runLater {
-            if(hasLoadedMoreItems) {
-                items.addAll(articleSummary.articles)
-            }
-            else {
-                items.setAll(articleSummary.articles)
-            }
+            items.setAll(articleSummary.articles)
 
             canLoadMoreItems.set(articleSummary.canLoadMoreItems)
 
