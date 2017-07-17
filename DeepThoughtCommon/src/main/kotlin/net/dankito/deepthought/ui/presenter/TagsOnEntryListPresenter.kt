@@ -16,7 +16,10 @@ class TagsOnEntryListPresenter(tagsListView: ITagsListView, searchEngine: ISearc
 
     init {
         CommonComponent.component.inject(this)
+
+        initialized()
     }
+
 
     fun getButtonStateForSearchResult(): TagsSearcherButtonState {
         return searchResultsUtil.getButtonStateForSearchResult(lastTagsSearchResults)
