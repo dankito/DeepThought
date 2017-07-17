@@ -22,6 +22,7 @@ import net.dankito.deepthought.ui.view.ITagsListView
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
+import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
 
 
@@ -35,6 +36,9 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
 
     @Inject
     protected lateinit var searchResultsUtil: TagsSearchResultsUtil
+
+    @Inject
+    protected lateinit var dialogService: IDialogService
 
 
     private val presenter: TagsOnEntryListPresenter
@@ -53,7 +57,7 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
     init {
         AppComponent.component.inject(this)
 
-        presenter = TagsOnEntryListPresenter(this, searchEngine, searchResultsUtil)
+        presenter = TagsOnEntryListPresenter(this, searchEngine, tagService, searchResultsUtil, dialogService)
 
         adapter = TagsOnEntryAdapter(presenter) { activity?.runOnUiThread { setTagsOnEntryPreviewOnUIThread(it) } }
     }

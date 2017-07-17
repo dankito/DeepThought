@@ -4,13 +4,13 @@ import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.tags.TagsSearcherButtonState
 import net.dankito.deepthought.ui.view.ITagsListView
+import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
+import net.dankito.utils.ui.IDialogService
 
 
-
-
-class TagsOnEntryListPresenter(tagsListView: ITagsListView, searchEngine: ISearchEngine, searchResultsUtil: TagsSearchResultsUtil)
-    : TagsListPresenterBase(tagsListView, searchEngine, searchResultsUtil) {
+class TagsOnEntryListPresenter(tagsListView: ITagsListView, searchEngine: ISearchEngine, tagService: TagService, searchResultsUtil: TagsSearchResultsUtil, dialogService: IDialogService)
+    : TagsListPresenterBase(tagsListView, searchEngine, tagService, searchResultsUtil, dialogService) {
 
     fun getButtonStateForSearchResult(): TagsSearcherButtonState {
         return searchResultsUtil.getButtonStateForSearchResult(lastTagsSearchResults)

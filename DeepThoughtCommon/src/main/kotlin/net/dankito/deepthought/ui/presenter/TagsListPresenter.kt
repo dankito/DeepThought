@@ -8,24 +8,23 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.view.ITagsListView
+import net.dankito.service.data.TagService
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.TagsSearchResults
 import net.dankito.service.search.util.CombinedLazyLoadingList
-import net.dankito.utils.localization.Localization
+import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: DataManager, searchEngine: ISearchEngine, searchResultsUtil: TagsSearchResultsUtil,
-                        private val router: IRouter) : TagsListPresenterBase(tagsListView, searchEngine, searchResultsUtil), IMainViewSectionPresenter {
+class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: DataManager, searchEngine: ISearchEngine, searchResultsUtil: TagsSearchResultsUtil, tagService: TagService,
+                        dialogService: IDialogService, private val router: IRouter)
+    : TagsListPresenterBase(tagsListView, searchEngine, tagService, searchResultsUtil, dialogService), IMainViewSectionPresenter {
 
 
     @Inject
     protected lateinit var entityChangedNotifier: EntityChangedNotifier
-
-    @Inject
-    protected lateinit var localization: Localization
 
 
     init {
