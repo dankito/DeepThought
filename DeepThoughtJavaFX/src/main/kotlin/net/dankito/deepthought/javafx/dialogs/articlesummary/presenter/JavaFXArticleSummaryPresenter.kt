@@ -48,7 +48,7 @@ class JavaFXArticleSummaryPresenter(private val articleSummaryExtractor: Article
 
     fun extractArticlesSummary() {
         extractArticlesSummary(articleSummaryExtractor) {
-            it.result?.let { articleSummaryReceived(it, false) }
+            it.result?.let { articleSummaryReceived(it) }
         }
     }
 
@@ -57,12 +57,12 @@ class JavaFXArticleSummaryPresenter(private val articleSummaryExtractor: Article
             canLoadMoreItems.set(false)
 
             loadMoreItems(articleSummaryExtractor) {
-                it.result?.let { articleSummaryReceived(it, true) }
+                it.result?.let { articleSummaryReceived(it) }
             }
         }
     }
 
-    private fun articleSummaryReceived(articleSummary: ArticleSummary, hasLoadedMoreItems: Boolean) {
+    private fun articleSummaryReceived(articleSummary: ArticleSummary) {
         runLater {
             items.setAll(articleSummary.articles)
 
