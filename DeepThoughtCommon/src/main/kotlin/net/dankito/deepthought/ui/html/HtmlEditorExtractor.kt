@@ -1,6 +1,5 @@
 package net.dankito.deepthought.ui.html
 
-import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.util.OsHelper
 import org.slf4j.LoggerFactory
@@ -56,7 +55,7 @@ class HtmlEditorExtractor(private val dataManager: DataManager, private val osHe
 
     fun extractHtmlEditorIfNeeded(): String? {
         val htmlEditorDirectory = File(dataManager.dataFolderPath, HtmlEditorCommon.HtmlEditorFolderName)
-        JavaFileStorageService().deleteFolderRecursively(htmlEditorDirectory.path) // if CKEditor_start.html has been updated
+//        JavaFileStorageService().deleteFolderRecursively(htmlEditorDirectory.path) // if CKEditor_start.html has been updated
 
         if (htmlEditorDirectory.exists() == false /*|| htmlEditorDirectory.*/) { // TODO: check if folder has correct size
             unzippedHtmlEditorFilePath = extractCKEditorToHtmlEditorFolder()
