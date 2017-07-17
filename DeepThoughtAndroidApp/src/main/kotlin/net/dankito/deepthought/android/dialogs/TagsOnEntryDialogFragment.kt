@@ -207,7 +207,7 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
     }
 
     private fun setTagsOnEntryPreviewOnUIThread(tagsOnEntry: MutableList<Tag>) {
-        txtTagsPreview?.text = tagsOnEntry.sortedBy { it.name }.joinToString { it.name }
+        txtTagsPreview?.text = tagsOnEntry.sortedBy { it.name.toLowerCase() }.joinToString { it.name }
     }
 
 

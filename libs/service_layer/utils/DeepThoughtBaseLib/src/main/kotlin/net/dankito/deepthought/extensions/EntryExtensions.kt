@@ -66,7 +66,7 @@ val Entry.tagsPreview: String
     get() {
         previewCache.getCachedTagsPreview(this)?.let { return it }
 
-        val preview = this.tags.sortedBy { it.name }.joinToString { it.name }
+        val preview = this.tags.sortedBy { it.name.toLowerCase() }.joinToString { it.name }
 
         previewCache.cacheTagPreview(this, preview)
         return preview
