@@ -37,7 +37,7 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
 
     private val presenter: TagsOnEntryListPresenter
 
-    private val adapter = TagsOnEntryAdapter { activity?.runOnUiThread { setTagsOnEntryPreviewOnUIThread(it) } }
+    private val adapter: TagsOnEntryAdapter
 
     private var tagsChangedCallback: ((MutableList<Tag>) -> Unit)? = null
 
@@ -48,6 +48,8 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
         AppComponent.component.inject(this)
 
         presenter = TagsOnEntryListPresenter(this, searchEngine, searchResultsUtil)
+
+        adapter = TagsOnEntryAdapter(presenter) { activity?.runOnUiThread { setTagsOnEntryPreviewOnUIThread(it) } }
     }
 
 
