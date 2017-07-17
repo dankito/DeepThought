@@ -18,6 +18,7 @@ import net.dankito.deepthought.model.NetworkSettings
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.html.HtmlEditorExtractor
+import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.util.OsHelper
 import net.dankito.faviconextractor.FaviconComparator
 import net.dankito.faviconextractor.FaviconExtractor
@@ -84,6 +85,12 @@ class CommonModule {
     @Singleton
     fun provideImageCache(webClient: IWebClient, serializer: ISerializer, fileStorageService: IFileStorageService) : ImageCache {
         return ImageCache(webClient,serializer, fileStorageService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTagsSearchResultsUtil() : TagsSearchResultsUtil {
+        return TagsSearchResultsUtil()
     }
 
 
