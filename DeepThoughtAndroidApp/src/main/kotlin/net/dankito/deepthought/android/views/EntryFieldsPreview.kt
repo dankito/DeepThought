@@ -87,7 +87,7 @@ class EntryFieldsPreview : RelativeLayout {
 
     fun setTagsOnEntryPreviewOnUIThread() {
         if(txtTagsOnEntry != null) {
-            txtTagsOnEntry.text = tagsOnEntry.joinToString { it.name }
+            txtTagsOnEntry.text = tagsOnEntry.sortedBy { it.name }.joinToString { it.name }
         }
     }
 
