@@ -14,6 +14,7 @@ import net.dankito.service.synchronization.initialsync.model.SyncInfo
 import net.dankito.service.synchronization.initialsync.model.UserSyncInfo
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.InputType
 import org.slf4j.LoggerFactory
 
 
@@ -64,7 +65,7 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
             questionText = localization.getLocalizedString("alert.title.entered.response.code.was.wrong", remoteDevice.device.getDisplayText())
         }
 
-        dialogService.askForTextInput(questionText) { didEnterText, enteredResponse ->
+        dialogService.askForTextInput(questionText, type = InputType.Numbers) { didEnterText, enteredResponse ->
             enteredResponse?.let { enteredResponse ->
                 sendChallengeResponseToRemote(clientCommunicator, remoteDevice, nonce, enteredResponse);
             }

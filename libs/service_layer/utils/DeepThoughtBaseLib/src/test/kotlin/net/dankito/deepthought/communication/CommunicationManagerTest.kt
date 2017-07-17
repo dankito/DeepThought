@@ -336,7 +336,7 @@ class CommunicationManagerTest {
         val countDownLatch = CountDownLatch(1)
         var countAskForChallenge = 0
 
-        whenever(localDialogService.askForTextInput(any<CharSequence>(), anyOrNull(), anyOrNull(), any())).thenAnswer { invocation ->
+        whenever(localDialogService.askForTextInput(any<CharSequence>(), anyOrNull(), anyOrNull(), any(), any())).thenAnswer { invocation ->
             val callback = invocation.arguments[3] as (Boolean, String?) -> Unit
             countAskForChallenge++
 
@@ -726,7 +726,7 @@ class CommunicationManagerTest {
 
 
     private fun mockDialogServiceTextInput(dialogService: IDialogService, textToReturn: AtomicReference<String>) {
-        whenever(dialogService.askForTextInput(any<CharSequence>(), anyOrNull(), anyOrNull(), any())).thenAnswer { invocation ->
+        whenever(dialogService.askForTextInput(any<CharSequence>(), anyOrNull(), anyOrNull(), any(), any())).thenAnswer { invocation ->
             val callback = invocation.arguments[3] as (Boolean, String?) -> Unit
             callback(true, textToReturn.get())
         }

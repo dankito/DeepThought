@@ -11,6 +11,7 @@ interface IDialogService {
 
     fun showErrorMessage(errorMessage: CharSequence, alertTitle: CharSequence? = null, exception: Exception? = null)
 
-    fun askForTextInput(questionText: CharSequence, alertTitleText: CharSequence? = null, defaultValue: CharSequence? = null, callback: (Boolean, String?) -> Unit)
+    fun askForTextInput(questionText: CharSequence, alertTitleText: CharSequence? = null, defaultValue: CharSequence? = null, type: InputType = InputType.Text,
+                        callback: (Boolean, String?) -> Unit)
 
 }

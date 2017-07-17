@@ -9,6 +9,7 @@ import javafx.stage.Screen
 import javafx.stage.Stage
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.InputType
 import java.io.PrintWriter
 import java.io.StringWriter
 
@@ -140,7 +141,7 @@ class JavaFXDialogService : IDialogService {
     }
 
 
-    override fun askForTextInput(questionText: CharSequence, alertTitleText: CharSequence?, defaultValue: CharSequence?, callback: (Boolean, String?) -> Unit) {
+    override fun askForTextInput(questionText: CharSequence, alertTitleText: CharSequence?, defaultValue: CharSequence?, type: InputType, callback: (Boolean, String?) -> Unit) {
         FXUtils.runOnUiThread { askForTextInputOnUiThread(questionText, alertTitleText, defaultValue, callback) }
     }
 

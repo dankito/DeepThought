@@ -8,7 +8,7 @@ import android.text.InputType
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
-import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
+import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.utils.ui.IDialogService
 
 
@@ -72,17 +72,17 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
         builder.create().show()
     }
 
-    override fun askForTextInput(questionText: CharSequence, alertTitleText: CharSequence?, defaultValue: CharSequence?, callback: (Boolean, String?) -> Unit) {
+    override fun askForTextInput(questionText: CharSequence, alertTitleText: CharSequence?, defaultValue: CharSequence?, type: net.dankito.utils.ui.InputType, callback: (Boolean, String?) -> Unit) {
         currentActivityTracker.currentActivity?.let { activity ->
-            activity.runOnUiThread { askForTextInputOnUIThread(activity, questionText, alertTitleText, defaultValue, callback) }
+            activity.runOnUiThread { askForTextInputOnUIThread(activity, questionText, alertTitleText, defaultValue, type, callback) }
         }
     }
 
-    private fun askForTextInputOnUIThread(activity: Activity, questionText: CharSequence, alertTitleText: CharSequence?, defaultValue: CharSequence?, callback: (Boolean, String?) -> Unit) {
+    private fun askForTextInputOnUIThread(activity: Activity, questionText: CharSequence, alertTitleText: CharSequence?, defaultValue: CharSequence?, type: net.dankito.utils.ui.InputType, callback: (Boolean, String?) -> Unit) {
         val builder = createDialog(activity, questionText, alertTitleText)
 
         val input = EditText(activity)
-        input.inputType = InputType.TYPE_CLASS_NUMBER
+        input.inputType = if(type == net.dankito.utils.ui.InputType.Numbers) InputType.TYPE_CLASS_NUMBER else InputType.TYPE_CLASS_TEXT
         defaultValue?.let { input.setText(it) }
         builder.setView(input)
 
