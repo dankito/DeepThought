@@ -22,9 +22,9 @@ import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
 
 
-open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
-                                   protected val readLaterArticleService: ReadLaterArticleService, protected val tagService: TagService,
-                                   protected val searchEngine: ISearchEngine, protected val router: IRouter, protected val dialogService: IDialogService) {
+open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister, protected val readLaterArticleService: ReadLaterArticleService,
+                                   protected val tagService: TagService, protected val searchEngine: ISearchEngine, protected val router: IRouter,
+                                   protected val dialogService: IDialogService) {
 
 
     @Inject
