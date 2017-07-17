@@ -41,22 +41,20 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
     fun extractArticlesSummary(extractorConfig: ArticleSummaryExtractorConfig?, callback: (AsyncResult<out ArticleSummary>) -> Unit) {
         extractorConfig?.extractor?.extractSummaryAsync {
-            setArticleSummaryExtractorConfigOnItems(it, extractorConfig)
-
-            callback(it)
+            retrievedArticleSummary(it, extractorConfig, callback)
         }
     }
 
     fun loadMoreItems(extractorConfig: ArticleSummaryExtractorConfig?, callback: (AsyncResult<out ArticleSummary>) -> Unit) {
         extractorConfig?.extractor?.loadMoreItemsAsync {
-            setArticleSummaryExtractorConfigOnItems(it, extractorConfig)
-
-            callback(it)
+            retrievedArticleSummary(it, extractorConfig, callback)
         }
     }
 
-    private fun setArticleSummaryExtractorConfigOnItems(result: AsyncResult<out ArticleSummary>, extractorConfig: ArticleSummaryExtractorConfig?) {
+    private fun retrievedArticleSummary(result: AsyncResult<out ArticleSummary>, extractorConfig: ArticleSummaryExtractorConfig?, callback: (AsyncResult<out ArticleSummary>) -> Unit) {
         result.result?.let { setArticleSummaryExtractorConfigOnItems(it, extractorConfig) }
+
+        callback(result)
     }
 
     fun setArticleSummaryExtractorConfigOnItems(articleSummary: ArticleSummary, extractorConfig: ArticleSummaryExtractorConfig?) {
