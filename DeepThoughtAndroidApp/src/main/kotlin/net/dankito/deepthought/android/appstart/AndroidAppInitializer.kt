@@ -40,9 +40,11 @@ class AndroidAppInitializer {
         htmlEditorExtractor.extractHtmlEditorIfNeededAsync()
 
         htmlEditorExtractor.addHtmlEditorExtractedListener {
-            // TODO: if currentActivity is null, set a (one shot) listener on activityTracker to get notified when next activity has been created?
-            activityTracker.currentActivity?.let { activity ->
-                activity.runOnUiThread { htmlEditorPool.preloadHtmlEditors(activity, 2) }
+            searchEngine.addInitializationListener {
+                // TODO: if currentActivity is null, set a (one shot) listener on activityTracker to get notified when next activity has been created?
+                activityTracker.currentActivity?.let { activity ->
+                    activity.runOnUiThread { htmlEditorPool.preloadHtmlEditors(activity, 2) }
+                }
             }
         }
     }
