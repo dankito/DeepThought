@@ -9,6 +9,7 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.view.ITagsListView
 import net.dankito.service.data.TagService
+import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.TagsSearchResults
@@ -19,8 +20,8 @@ import kotlin.concurrent.thread
 
 
 class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: DataManager, searchEngine: ISearchEngine, searchResultsUtil: TagsSearchResultsUtil, tagService: TagService,
-                        dialogService: IDialogService, private val router: IRouter)
-    : TagsListPresenterBase(tagsListView, searchEngine, tagService, searchResultsUtil, dialogService), IMainViewSectionPresenter {
+                        deleteEntityService: DeleteEntityService, dialogService: IDialogService, private val router: IRouter)
+    : TagsListPresenterBase(tagsListView, searchEngine, tagService, deleteEntityService, searchResultsUtil, dialogService), IMainViewSectionPresenter {
 
 
     @Inject

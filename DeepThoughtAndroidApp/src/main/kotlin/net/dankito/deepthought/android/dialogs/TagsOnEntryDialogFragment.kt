@@ -20,6 +20,7 @@ import net.dankito.deepthought.ui.presenter.TagsOnEntryListPresenter
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.tags.TagsSearcherButtonState
 import net.dankito.deepthought.ui.view.ITagsListView
+import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
@@ -31,6 +32,9 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
 
     @Inject
     protected lateinit var tagService: TagService
+
+    @Inject
+    protected lateinit var deleteEntityService: DeleteEntityService
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
@@ -58,7 +62,7 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
     init {
         AppComponent.component.inject(this)
 
-        presenter = TagsOnEntryListPresenter(this, searchEngine, tagService, searchResultsUtil, dialogService)
+        presenter = TagsOnEntryListPresenter(this, searchEngine, tagService, deleteEntityService, searchResultsUtil, dialogService)
 
         adapter = TagsOnEntryAdapter(presenter) { activity?.runOnUiThread { setTagsOnEntryPreviewOnUIThread(it) } }
     }

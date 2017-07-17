@@ -6,6 +6,7 @@ import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.tags.TagSearchResultState
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.view.ITagsListView
+import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.eventbus.IEventBus
@@ -21,7 +22,7 @@ import javax.inject.Inject
 
 
 abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, protected val searchEngine: ISearchEngine, protected val tagService: TagService,
-                                     protected val searchResultsUtil: TagsSearchResultsUtil, protected val dialogService: IDialogService) {
+                                     protected val deleteEntityService: DeleteEntityService, protected val searchResultsUtil: TagsSearchResultsUtil, protected val dialogService: IDialogService) {
 
     protected var lastSearchTermProperty = Search.EmptySearchTerm
 
@@ -113,7 +114,7 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
     }
 
     fun deleteTag(tag: Tag) {
-        tagService.delete(tag)
+        deleteEntityService.deleteTag(tag)
     }
 
 
