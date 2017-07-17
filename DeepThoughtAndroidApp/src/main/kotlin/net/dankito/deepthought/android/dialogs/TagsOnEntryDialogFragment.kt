@@ -76,6 +76,12 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
         return rootView
     }
 
+    override fun onDestroy() {
+        presenter.destroy()
+
+        super.onDestroy()
+    }
+
     private fun setupUI(rootView: View) {
         rootView.toolbar.inflateMenu(R.menu.dialog_tags_on_entry_menu)
         rootView.toolbar.setOnMenuItemClickListener { item -> menuItemClicked(item) }

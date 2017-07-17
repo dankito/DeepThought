@@ -47,7 +47,7 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
         eventBus.register(eventBusListener)
     }
 
-    protected fun destroy() {
+    fun destroy() {
         eventBus.unregister(eventBusListener)
     }
 
