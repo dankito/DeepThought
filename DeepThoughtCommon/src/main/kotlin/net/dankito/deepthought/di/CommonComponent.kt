@@ -29,4 +29,6 @@ interface CommonComponent : BaseComponent {
 
     fun inject(editEntryPresenter: EditEntryPresenter)
 
+    fun inject(tagsOnEntryListPresenter: TagsOnEntryListPresenter)
+
 }

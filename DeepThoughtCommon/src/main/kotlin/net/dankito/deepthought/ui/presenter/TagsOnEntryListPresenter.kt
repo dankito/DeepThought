@@ -1,5 +1,6 @@
 package net.dankito.deepthought.ui.presenter
 
+import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.tags.TagsSearcherButtonState
@@ -11,6 +12,11 @@ import net.dankito.utils.ui.IDialogService
 
 class TagsOnEntryListPresenter(tagsListView: ITagsListView, searchEngine: ISearchEngine, tagService: TagService, searchResultsUtil: TagsSearchResultsUtil, dialogService: IDialogService)
     : TagsListPresenterBase(tagsListView, searchEngine, tagService, searchResultsUtil, dialogService) {
+
+
+    init {
+        CommonComponent.component.inject(this)
+    }
 
     fun getButtonStateForSearchResult(): TagsSearcherButtonState {
         return searchResultsUtil.getButtonStateForSearchResult(lastTagsSearchResults)
