@@ -150,7 +150,7 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
 
     private fun showError(errorMessageResourceKey: String, error: Exception, vararg errorMessageArguments: String) {
-        dialogService.showErrorMessage(localization.getLocalizedString(errorMessageResourceKey, errorMessageArguments), exception = error)
+        dialogService.showErrorMessage(localization.getLocalizedString(errorMessageResourceKey, *errorMessageArguments), exception = error)
     }
 
 }
