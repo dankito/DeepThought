@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 
 class ArticleSummaryExtractorsAdapter(private val activity: AppCompatActivity, private val summaryExtractorsManager: ArticleSummaryExtractorConfigManager)
-    : ListAdapter<ArticleSummaryExtractorConfig>(summaryExtractorsManager.getConfigs()) {
+    : ListAdapter<ArticleSummaryExtractorConfig>() {
 
 
     @Inject
