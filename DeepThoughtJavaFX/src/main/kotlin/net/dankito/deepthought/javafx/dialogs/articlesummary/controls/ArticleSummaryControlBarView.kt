@@ -125,7 +125,7 @@ class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPr
                 contentDisplay = ContentDisplay.GRAPHIC_ONLY
                 graphic = ImageView(IconPaths.UpdateIconPath)
 
-                action { presenter.extractArticlesSummary() }
+                action { presenter.extractArticlesSummary(articleSummaryItemsView.root) }
 
                 hboxConstraints {
                     marginLeft = 6.0
@@ -145,7 +145,7 @@ class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPr
                 contentDisplay = ContentDisplay.GRAPHIC_ONLY
                 graphic = ImageView(IconPaths.LoadNextItemsIconPath)
 
-                action { presenter.loadMoreItems() }
+                action { presenter.loadMoreItems(articleSummaryItemsView.root) }
 
                 hboxConstraints {
                     marginLeft = ButtonsLeftMargin

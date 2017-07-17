@@ -239,6 +239,11 @@ class ArticleSummaryActivity : BaseActivity() {
         mnLoadMore?.isVisible = summary.canLoadMoreItems
 
         adapter.setArticleSummary(summary)
+
+        if(summary.indexOfAddedItems > 0) {
+            val centerOffset = (lstArticleSummaryItems.height - resources.getDimension(R.dimen.list_item_article_summary_item_min_height)) / 2
+            lstArticleSummaryItems.smoothScrollToPositionFromTop(summary.indexOfAddedItems, centerOffset.toInt())
+        }
     }
 
     private fun articleClicked(item: ArticleSummaryItem) {

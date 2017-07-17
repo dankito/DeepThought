@@ -3,6 +3,7 @@ package net.dankito.deepthought.javafx.dialogs.articlesummary.presenter
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
+import javafx.scene.control.ListView
 import net.dankito.deepthought.javafx.dialogs.articlesummary.model.ArticleSummaryItemViewModel
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.IRouter
@@ -46,29 +47,31 @@ class JavaFXArticleSummaryPresenter(private val articleSummaryExtractor: Article
     }
 
 
-    fun extractArticlesSummary() {
+    fun extractArticlesSummary(listView: ListView<ArticleSummaryItem>? = null) {
         extractArticlesSummary(articleSummaryExtractor) {
-            it.result?.let { articleSummaryReceived(it) }
+            it.result?.let { articleSummaryReceived(it, listView) }
         }
     }
 
-    fun loadMoreItems() {
+    fun loadMoreItems(listView: ListView<ArticleSummaryItem>? = null) {
         lastLoadedSummary?.let { summary ->
             canLoadMoreItems.set(false)
 
             loadMoreItems(articleSummaryExtractor) {
-                it.result?.let { articleSummaryReceived(it) }
+                it.result?.let { articleSummaryReceived(it, listView) }
             }
         }
     }
 
-    private fun articleSummaryReceived(articleSummary: ArticleSummary) {
+    private fun articleSummaryReceived(articleSummary: ArticleSummary, listView: ListView<ArticleSummaryItem>? = null) {
         runLater {
             items.setAll(articleSummary.articles)
 
             canLoadMoreItems.set(articleSummary.canLoadMoreItems)
 
             lastUpdateTime.set(LastUpdateTimeDateFormat.format(Date()))
+
+            listView?.let { it.scrollTo(articleSummary.indexOfAddedItems) }
         }
     }
 
