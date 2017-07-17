@@ -62,8 +62,7 @@ class TagsListView : MainActivityTabFragment(R.layout.fragment_tab_tags, R.id.ls
 
     private fun tagSelected(selectedTag: Tag?) {
         if(selectedTag != null) {
-            // TODO: when tag filter is applied only pass filtered entries to showEntriesForTag()
-            presenter.showEntriesForTag(selectedTag, selectedTag.entries)
+            presenter.showEntriesForTag(selectedTag)
         }
         else {
 //            presenter.clearSelectedTag() // TODO

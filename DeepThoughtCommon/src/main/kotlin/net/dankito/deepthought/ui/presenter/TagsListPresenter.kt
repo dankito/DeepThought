@@ -126,7 +126,7 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private val dat
     }
 
 
-    fun showEntriesForTag(tag: Tag, entries: List<Entry>) {
+    fun showEntriesForTag(tag: Tag) {
         router.showEntriesForTag(tag, tagsFilter)
     }
 
