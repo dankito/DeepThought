@@ -3,8 +3,8 @@ package net.dankito.newsreader.article
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.data_access.network.webclient.extractor.ExtractorBase
-import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.newsreader.model.ArticleSummaryItem
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
@@ -37,22 +37,16 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
                 extractionResult?.reference?.url = url // explicitly set reference's url as for multipage articles article may gets extracted from a url different than url parameter
                 callback(AsyncResult(true, result = extractionResult))
             } catch(e: Exception) {
-                log.error("Could not get article for " + url, e)
+                log.error("Could not extract article from " + url, e)
                 callback(AsyncResult(false, e))
             }
         }
     }
 
     protected open fun extractArticle(url: String): EntryExtractionResult? {
-        try {
-            requestUrl(url).let { document ->
-                return parseHtmlToArticle(document, url)
-            }
-        } catch (e: Exception) {
-            log.error("Could not extract article from " + url, e)
+        requestUrl(url).let { document ->
+            return parseHtmlToArticle(document, url)
         }
-
-        return null
     }
 
     protected open fun extractArticleWithPost(url: String, body: String? = null): EntryExtractionResult? {
