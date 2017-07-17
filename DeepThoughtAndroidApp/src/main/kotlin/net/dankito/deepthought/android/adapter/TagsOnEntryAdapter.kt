@@ -40,7 +40,6 @@ class TagsOnEntryAdapter(private val presenter: TagsOnEntryListPresenter, val li
         }
         else {
             tagsOnEntry.add(tag)
-//            Collections.sort(tagsOnEntry) // TODO
         }
 
         notifyDataSetChanged()
