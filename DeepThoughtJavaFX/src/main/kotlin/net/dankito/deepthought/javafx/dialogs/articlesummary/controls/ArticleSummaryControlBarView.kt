@@ -158,25 +158,19 @@ class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPr
 
     private fun viewSelectedItems() {
         performActionOnSelectedItemsAndClearSelection { item ->
-            presenter.getAndShowArticle(item) {
-                // TODO
-            }
+            presenter.getAndShowArticle(item)
         }
     }
 
     private fun saveSelectedItemsForLaterReading() {
         performActionOnSelectedItemsAndClearSelection { item ->
-            presenter.getAndSaveArticleForLaterReading(item) {
-                // TODO
-            }
+            presenter.getAndSaveArticleForLaterReading(item)
         }
     }
 
     private fun saveSelectedItems() {
         performActionOnSelectedItemsAndClearSelection { item ->
-            presenter.getAndSaveArticle(item) {
-                // TODO
-            }
+            presenter.getAndSaveArticle(item)
         }
     }
 

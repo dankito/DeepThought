@@ -27,17 +27,13 @@ class ArticleSummaryItemsView(private val presenter: JavaFXArticleSummaryPresent
         contextmenu {
             item(messages["context.menu.article.summary.item.save"]) {
                 action {
-                    selectedItem?.let { presenter.getAndSaveArticle(it) {
-                        // TODO: show error message
-                    } }
+                    selectedItem?.let { presenter.getAndSaveArticle(it) }
                 }
             }
 
             item(messages["context.menu.article.summary.item.save.for.later.reading"]) {
                 action {
-                    selectedItem?.let { presenter.getAndSaveArticleForLaterReading(it) {
-                        // TODO: show error message
-                    } }
+                    selectedItem?.let { presenter.getAndSaveArticleForLaterReading(it) }
                 }
             }
 

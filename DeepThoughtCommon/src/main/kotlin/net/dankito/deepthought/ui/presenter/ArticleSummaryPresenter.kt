@@ -52,7 +52,9 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
     }
 
     private fun retrievedArticleSummary(result: AsyncResult<out ArticleSummary>, extractorConfig: ArticleSummaryExtractorConfig?, callback: (AsyncResult<out ArticleSummary>) -> Unit) {
-        result.result?.let { setArticleSummaryExtractorConfigOnItems(it, extractorConfig) }
+        result.result?.let { summary -> setArticleSummaryExtractorConfigOnItems(summary, extractorConfig) }
+
+        result.error?.let { error -> showError("alert.message.could.not.load.article.summary", error, error.localizedMessage) }
 
         callback(result)
     }
@@ -62,10 +64,10 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
     }
 
 
-    fun getAndShowArticle(item: ArticleSummaryItem, errorCallback: (Exception) -> Unit) {
+    fun getAndShowArticle(item: ArticleSummaryItem) {
         getArticle(item) {
             it.result?.let { showArticle(it) }
-            it.error?.let { errorCallback(it) }
+            it.error?.let { showError("alert.message.could.not.load.article", it, item.url, it.localizedMessage) }
         }
     }
 
@@ -73,10 +75,10 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
         router.showViewEntryView(extractionResult)
     }
 
-    fun getAndSaveArticle(item: ArticleSummaryItem, errorCallback: (Exception) -> Unit) {
+    fun getAndSaveArticle(item: ArticleSummaryItem) {
         getArticle(item) {
             it.result?.let { saveArticle(item, it) }
-            it.error?.let { errorCallback(it) }
+            it.error?.let { showError("alert.message.could.not.load.article", it, item.url, it.localizedMessage) }
         }
     }
 
@@ -86,10 +88,10 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
         }
     }
 
-    fun getAndSaveArticleForLaterReading(item: ArticleSummaryItem, errorCallback: (Exception) -> Unit) {
+    fun getAndSaveArticleForLaterReading(item: ArticleSummaryItem) {
         getArticle(item) {
             it.result?.let { saveArticleForLaterReading(item, it) }
-            it.error?.let { errorCallback(it) }
+            it.error?.let { showError("alert.message.could.not.load.article", it, item.url, it.localizedMessage) }
         }
     }
 
@@ -144,6 +146,11 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
             callback(listOf(extractorTag))
         })
+    }
+
+
+    private fun showError(errorMessageResourceKey: String, error: Exception, vararg errorMessageArguments: String) {
+        dialogService.showErrorMessage(localization.getLocalizedString(errorMessageResourceKey, errorMessageArguments), exception = error)
     }
 
 }

@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
 import android.util.TypedValue
 import android.view.ActionMode
 import android.view.Menu
@@ -227,7 +226,6 @@ class ArticleSummaryActivity : BaseActivity() {
 
     private fun articleSummaryReceived(result: AsyncResult<out ArticleSummary>, hasLoadedMoreItems: Boolean) {
         result.result?.let { showArticleSummaryThreadSafe(it, hasLoadedMoreItems)  }
-        result.error?.let { /* TODO: show error */ }
     }
 
     private fun showArticleSummaryThreadSafe(summary: ArticleSummary, hasLoadedMoreItems: Boolean) {
@@ -248,23 +246,7 @@ class ArticleSummaryActivity : BaseActivity() {
     }
 
     private fun articleClicked(item: ArticleSummaryItem) {
-        presenter.getAndShowArticle(item) {
-            showArticleExtractionError(item, it)
-        }
-    }
-
-    private fun showArticleExtractionError(item: ArticleSummaryItem, extractionError: Exception) {
-        val errorMessage = getString(R.string.error_could_not_extract_article_from_url, item.url, extractionError.localizedMessage)
-
-        runOnUiThread {
-            val builder = AlertDialog.Builder(this)
-
-            builder.setMessage(errorMessage)
-
-            builder.setNegativeButton(android.R.string.ok, null)
-
-            builder.create().show()
-        }
+        presenter.getAndShowArticle(item)
     }
 
 
@@ -321,25 +303,19 @@ class ArticleSummaryActivity : BaseActivity() {
     }
 
     private fun showSelectedArticles(): Boolean {
-        selectedArticlesInContextualActionMode.forEach { presenter.getAndShowArticle(it) {
-            // TODO: show error message
-        } }
+        selectedArticlesInContextualActionMode.forEach { presenter.getAndShowArticle(it) }
 
         return true
     }
 
     private fun saveSelectedArticlesForLaterReading(): Boolean {
-        selectedArticlesInContextualActionMode.forEach { presenter.getAndSaveArticleForLaterReading(it) {
-            // TODO: show error message
-        } }
+        selectedArticlesInContextualActionMode.forEach { presenter.getAndSaveArticleForLaterReading(it) }
 
         return true
     }
 
     private fun saveSelectedArticles(): Boolean {
-        selectedArticlesInContextualActionMode.forEach { presenter.getAndSaveArticle(it) {
-            // TODO: show error message
-        } }
+        selectedArticlesInContextualActionMode.forEach { presenter.getAndSaveArticle(it) }
 
         return true
     }

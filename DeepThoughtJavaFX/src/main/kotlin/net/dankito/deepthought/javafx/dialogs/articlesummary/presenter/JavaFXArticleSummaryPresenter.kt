@@ -49,14 +49,12 @@ class JavaFXArticleSummaryPresenter(private val articleSummaryExtractor: Article
     fun extractArticlesSummary() {
         extractArticlesSummary(articleSummaryExtractor) {
             it.result?.let { articleSummaryReceived(it, false) }
-            // TODO: show error elsewise
         }
     }
 
     fun loadMoreItems() {
         loadMoreItems(articleSummaryExtractor) {
             it.result?.let { articleSummaryReceived(it, true) }
-            // TODO: show error elsewise
         }
     }
 
@@ -73,17 +71,6 @@ class JavaFXArticleSummaryPresenter(private val articleSummaryExtractor: Article
 
             lastUpdateTime.set(LastUpdateTimeDateFormat.format(Date()))
         }
-    }
-
-
-    fun getAndShowArticle(item: ArticleSummaryItem) {
-        getAndShowArticle(item) {
-            showArticleExtractionError(item, it)
-        }
-    }
-
-    private fun showArticleExtractionError(item: ArticleSummaryItem, exception: Exception) {
-
     }
 
 
