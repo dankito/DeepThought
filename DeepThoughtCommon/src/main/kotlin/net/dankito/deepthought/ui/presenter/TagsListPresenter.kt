@@ -4,6 +4,8 @@ import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.deepthought.ui.tags.TagSearchResultState
+import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.view.ITagsListView
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
@@ -12,6 +14,7 @@ import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
 import net.dankito.service.search.specific.FilteredTagsSearch
 import net.dankito.service.search.specific.TagsSearch
+import net.dankito.service.search.specific.TagsSearchResults
 import net.dankito.service.search.util.CombinedLazyLoadingList
 import net.dankito.utils.localization.Localization
 import net.engio.mbassy.listener.Handler
@@ -19,10 +22,12 @@ import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class TagsListPresenter(private val tagsListView: ITagsListView, private val dataManager: DataManager, private val searchEngine: ISearchEngine, private val router: IRouter)
-    : IMainViewSectionPresenter {
+class TagsListPresenter(private val tagsListView: ITagsListView, private val dataManager: DataManager, private val searchEngine: ISearchEngine,
+                        private val searchResultsUtil: TagsSearchResultsUtil, private val router: IRouter) : IMainViewSectionPresenter {
 
     private var lastSearchTermProperty = Search.EmptySearchTerm
+
+    private var lastTagsSearchResults: TagsSearchResults? = null
 
     private val tagsFilter = ArrayList<Tag>()
 
@@ -83,6 +88,7 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private val dat
     private fun searchTagsWithoutFilter(searchTerm: String) {
         searchEngine.searchTags(TagsSearch(searchTerm) { result ->
             var tags = result.getRelevantMatchesSorted()
+            this.lastTagsSearchResults = result
 
             if(searchTerm == Search.EmptySearchTerm) {
                 tags = CombinedLazyLoadingList<Tag>(calculatedTags, result.getRelevantMatchesSorted())
@@ -96,6 +102,8 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private val dat
         lastSearchTermProperty = searchTerm
 
         searchEngine.searchFilteredTags(FilteredTagsSearch(tagsFilter, searchTerm) { result ->
+            this.lastTagsSearchResults = null
+
             tagsListView.showTags(result.tagsOnEntriesContainingFilteredTags)
         })
     }
@@ -123,6 +131,11 @@ class TagsListPresenter(private val tagsListView: ITagsListView, private val dat
 
     override fun getLastSearchTerm(): String {
         return lastSearchTermProperty
+    }
+
+
+    fun getTagSearchResultState(tag: Tag): TagSearchResultState {
+        return searchResultsUtil.getTagSearchResultState(tag, lastTagsSearchResults)
     }
 
 

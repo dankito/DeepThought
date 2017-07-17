@@ -9,6 +9,7 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.deepthought.ui.presenter.TagsListPresenter
+import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.view.ITagsListView
 import net.dankito.service.search.ISearchEngine
 import javax.inject.Inject
@@ -21,6 +22,9 @@ class TagsListView : MainActivityTabFragment(R.layout.fragment_tab_tags, R.id.ls
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
+
+    @Inject
+    protected lateinit var searchResultsUtil: TagsSearchResultsUtil
 
     @Inject
     protected lateinit var router: IRouter
@@ -37,7 +41,7 @@ class TagsListView : MainActivityTabFragment(R.layout.fragment_tab_tags, R.id.ls
 
 
     override fun initPresenter(): IMainViewSectionPresenter {
-        presenter = TagsListPresenter(this, dataManager, searchEngine, router)
+        presenter = TagsListPresenter(this, dataManager, searchEngine, searchResultsUtil, router)
 
         adapter = TagAdapter(presenter)
 

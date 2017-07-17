@@ -10,6 +10,7 @@ import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.TagsListPresenter
+import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.view.ITagsListView
 import net.dankito.service.search.ISearchEngine
 import tornadofx.*
@@ -37,12 +38,15 @@ class TagsListView : View(), ITagsListView {
     protected lateinit var searchEngine: ISearchEngine
 
     @Inject
+    protected lateinit var searchResultsUtil: TagsSearchResultsUtil
+
+    @Inject
     protected lateinit var router: IRouter
 
     init {
         AppComponent.component.inject(this)
 
-        presenter = TagsListPresenter(this, dataManager, searchEngine, router)
+        presenter = TagsListPresenter(this, dataManager, searchEngine, searchResultsUtil, router)
         searchBar = TagsSearchBar(presenter)
 
         presenter.getAndShowAllEntities()
