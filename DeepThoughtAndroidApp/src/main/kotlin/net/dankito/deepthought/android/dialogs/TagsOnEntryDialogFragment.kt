@@ -14,14 +14,16 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.TagsOnEntryAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.ui.presenter.TagsOnEntryListPresenter
+import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
+import net.dankito.deepthought.ui.view.ITagsListView
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
-import net.dankito.service.search.specific.TagsSearch
 import javax.inject.Inject
 
 
-class TagsOnEntryDialogFragment : DialogFragment() {
+class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
 
     @Inject
     protected lateinit var tagService: TagService
@@ -29,6 +31,11 @@ class TagsOnEntryDialogFragment : DialogFragment() {
     @Inject
     protected lateinit var searchEngine: ISearchEngine
 
+    @Inject
+    protected lateinit var searchResultsUtil: TagsSearchResultsUtil
+
+
+    private val presenter: TagsOnEntryListPresenter
 
     private val adapter = TagsOnEntryAdapter { activity?.runOnUiThread { setTagsOnEntryPreviewOnUIThread(it) } }
 
@@ -39,6 +46,8 @@ class TagsOnEntryDialogFragment : DialogFragment() {
 
     init {
         AppComponent.component.inject(this)
+
+        presenter = TagsOnEntryListPresenter(this, searchEngine, searchResultsUtil)
     }
 
 
@@ -84,9 +93,7 @@ class TagsOnEntryDialogFragment : DialogFragment() {
 
 
     private fun searchTags(searchTerm: String) {
-        searchEngine.searchTags(TagsSearch(searchTerm) { result ->
-            activity?.runOnUiThread { adapter.setItems(result.getRelevantMatchesSorted()) }
-        })
+        presenter.searchTags(searchTerm)
     }
 
 
@@ -153,6 +160,17 @@ class TagsOnEntryDialogFragment : DialogFragment() {
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
 
+    }
+
+
+    /*      ITagListView implementation         */
+
+    override fun showTags(tags: List<Tag>) {
+        activity?.runOnUiThread { adapter.setItems(tags) }
+    }
+
+    override fun updateDisplayedTags() {
+        activity?.runOnUiThread { adapter.notifyDataSetChanged() }
     }
 
 }
