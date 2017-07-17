@@ -12,6 +12,7 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.TagsListPresenter
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.view.ITagsListView
+import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.ui.IDialogService
@@ -46,6 +47,9 @@ class TagsListView : View(), ITagsListView {
     protected lateinit var tagService: TagService
 
     @Inject
+    protected lateinit var deleteEntityService: DeleteEntityService
+
+    @Inject
     protected lateinit var dialogService: IDialogService
 
     @Inject
@@ -54,7 +58,7 @@ class TagsListView : View(), ITagsListView {
     init {
         AppComponent.component.inject(this)
 
-        presenter = TagsListPresenter(this, dataManager, searchEngine, searchResultsUtil, tagService, dialogService, router)
+        presenter = TagsListPresenter(this, dataManager, searchEngine, searchResultsUtil, tagService, deleteEntityService, dialogService, router)
         searchBar = TagsSearchBar(presenter)
 
         presenter.getAndShowAllEntities()
