@@ -1,6 +1,7 @@
 package net.dankito.deepthought.ui.tags
 
 import net.dankito.deepthought.model.Tag
+import net.dankito.service.search.SearchEngineBase
 import net.dankito.service.search.specific.TagsSearchResults
 
 
@@ -26,4 +27,18 @@ class TagsSearchResultsUtil {
             return TagSearchResultState.DEFAULT
         }
     }
+
+
+    fun getButtonStateForSearchResult(searchResults: TagsSearchResults?): TagsSearcherButtonState {
+        if (searchResults == null || searchResults.overAllSearchTerm.isBlank()) {
+            return TagsSearcherButtonState.DISABLED
+        }
+
+        if(searchResults.getExactMatches().isEmpty() && searchResults.overAllSearchTerm.contains(SearchEngineBase.TagsSearchTermSeparator) == false) {
+            return TagsSearcherButtonState.CREATE_TAG
+        }
+
+        return TagsSearcherButtonState.TOGGLE_TAGS
+    }
+
 }
