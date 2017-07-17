@@ -130,7 +130,7 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
 
 
     fun getConfigs() : List<ArticleSummaryExtractorConfig> {
-        return configurations.values.toList()
+        return configurations.values.sortedBy { it.name }
     }
 
     fun getConfig(url: String) : ArticleSummaryExtractorConfig? {
