@@ -10,7 +10,7 @@ import net.dankito.deepthought.android.dialogs.AndroidDialogService
 import net.dankito.deepthought.android.routing.AndroidRouter
 import net.dankito.deepthought.android.service.AndroidClipboardService
 import net.dankito.deepthought.android.service.communication.AndroidDeviceRegistrationHandler
-import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
+import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditorPool
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter

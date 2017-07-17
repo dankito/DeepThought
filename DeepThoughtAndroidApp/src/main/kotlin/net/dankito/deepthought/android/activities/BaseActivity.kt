@@ -1,6 +1,7 @@
-package net.dankito.deepthought.android.service.ui
+package net.dankito.deepthought.android.activities
 
 import android.support.v7.app.AppCompatActivity
+import net.dankito.deepthought.android.service.CurrentActivityTracker
 import javax.inject.Inject
 
 

@@ -1,7 +1,7 @@
 package net.dankito.deepthought.android.appstart
 
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
+import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditorPool
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.html.HtmlEditorExtractor

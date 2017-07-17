@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.view_floating_action_button_main.*
 import net.dankito.deepthought.android.adapter.MainActivitySectionsPagerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.IntentHandler
-import net.dankito.deepthought.android.service.ui.BaseActivity
+import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.views.FloatingActionMenuButton
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.ui.IRouter

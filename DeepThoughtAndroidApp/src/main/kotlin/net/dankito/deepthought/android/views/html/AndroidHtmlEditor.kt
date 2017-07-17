@@ -6,7 +6,7 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.webkit.*
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
+import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.ui.html.*
 import net.dankito.deepthought.util.OsHelper
 import org.slf4j.LoggerFactory

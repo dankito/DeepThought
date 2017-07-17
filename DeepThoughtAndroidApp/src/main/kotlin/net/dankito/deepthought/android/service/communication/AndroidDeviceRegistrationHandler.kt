@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.snackbar_ask_sync_data_with_device.view.*
 import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
 import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
+import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.service.data.DataManager

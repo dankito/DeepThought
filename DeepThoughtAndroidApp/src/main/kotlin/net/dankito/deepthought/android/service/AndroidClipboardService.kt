@@ -3,7 +3,6 @@ package net.dankito.deepthought.android.service
 import android.content.Intent
 import android.os.Build
 import android.support.v7.widget.ShareActionProvider
-import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
 import net.dankito.deepthought.extensions.abstractPlainText
 import net.dankito.deepthought.extensions.contentPlainText
 import net.dankito.deepthought.extensions.preview
