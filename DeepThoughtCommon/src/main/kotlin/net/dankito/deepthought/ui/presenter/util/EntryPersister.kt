@@ -1,5 +1,6 @@
 package net.dankito.deepthought.ui.presenter.util
 
+import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Tag
@@ -7,12 +8,30 @@ import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.TagService
+import net.dankito.utils.IThreadPool
+import javax.inject.Inject
 
 
 class EntryPersister(private val entryService: EntryService, private val referenceService: ReferenceService, private val tagService: TagService) {
 
+    @Inject
+    protected lateinit var threadPool: IThreadPool
+
+
+    init {
+        CommonComponent.component.inject(this)
+    }
+
+
     fun saveEntry(result: EntryExtractionResult): Boolean {
         return saveEntry(result.entry, result.reference, result.tags)
+    }
+
+
+    fun saveEntryAsync(entry: Entry, reference: Reference? = null, tags: Collection<Tag> = ArrayList(), callback: (Boolean) -> Unit) {
+        threadPool.runAsync {
+            callback(saveEntry(entry, reference, tags))
+        }
     }
 
     fun saveEntry(entry: Entry, reference: Reference? = null, tags: Collection<Tag> = ArrayList<Tag>()): Boolean {
