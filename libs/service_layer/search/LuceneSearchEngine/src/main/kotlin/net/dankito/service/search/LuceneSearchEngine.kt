@@ -51,10 +51,10 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
 
 
     private fun createDirectoryAndIndexSearcherAndWriterForDeepThoughtAsync() {
-        thread(priority = Thread.MAX_PRIORITY) { createDirectoryAndIndexSearcherAndWriterForDeepThought() }
+        thread(priority = Thread.MAX_PRIORITY) { initializeDirectoriesAndIndexSearcherAndWriters() }
     }
 
-    private fun createDirectoryAndIndexSearcherAndWriterForDeepThought() {
+    private fun initializeDirectoriesAndIndexSearcherAndWriters() {
         try {
             val indexBaseDir = File(dataManager.dataFolderPath, "index")
             val indexDirExists = indexBaseDir.exists()
@@ -66,7 +66,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
                 writerAndSearcher.createDirectory(indexBaseDir)
             }
 
-            createIndexSearchersAndWriters()
+            initializeIndexSearchersAndWriters()
 
             if (indexDirExists == false) {
                 // TODO: inform user that index is going to be rebuilt and that this takes some time
@@ -79,7 +79,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
         }
     }
 
-    private fun createIndexSearchersAndWriters() {
+    private fun initializeIndexSearchersAndWriters() {
 //        defaultAnalyzer = DeepThoughtAnalyzer()
         defaultAnalyzer = StandardAnalyzer(Version.LUCENE_47)
 
