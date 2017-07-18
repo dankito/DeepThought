@@ -42,8 +42,6 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
 
     private lateinit var defaultAnalyzer: Analyzer
 
-    private var isIndexReady = false
-
 
     init {
         indexWritersAndSearchers = listOf(entryIndexWriterAndSearcher, tagIndexWriterAndSearcher, referenceIndexWriterAndSearcher, readLaterArticleIndexWriterAndSearcher)
@@ -67,8 +65,6 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
             for(writerAndSearcher in indexWritersAndSearchers) {
                 writerAndSearcher.createDirectory(indexBaseDir)
             }
-
-            isIndexReady = true
 
             createIndexSearchersAndWriters()
 
@@ -101,10 +97,6 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
 
 
     private fun rebuildIndex() {
-        if (isIndexReady == false) {
-            return
-        }
-
         deleteIndex()
 
         log.info("Going to rebuild Lucene index ...")
