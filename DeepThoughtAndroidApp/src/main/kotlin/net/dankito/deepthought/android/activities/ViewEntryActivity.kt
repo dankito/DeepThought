@@ -8,7 +8,6 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_view_entry.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.service.ui.BaseActivity
 import net.dankito.deepthought.android.views.EntryFieldsPreview
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.ReadLaterArticle
@@ -18,9 +17,9 @@ import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ViewEntryPresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
-import net.dankito.serializer.ISerializer
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.ReadLaterArticleService
+import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
@@ -164,21 +163,24 @@ class ViewEntryActivity : BaseActivity() {
             R.id.mnEditEntry -> editEntry()
 
             R.id.mnSaveEntry -> {
-                saveEntry()
+                saveEntryAsync()
             }
         }
 
         return true
     }
 
-    private fun saveEntry() {
+    private fun saveEntryAsync() {
         entryExtractionResult?.let {
-            presenter.saveEntryExtractionResult(it)
+            presenter.saveEntryExtractionResultAsync(it)
         }
 
-        readLaterArticle?.let {
-            presenter.saveEntryExtractionResult(it.entryExtractionResult)
-            readLaterArticleService.delete(it)
+        readLaterArticle?.let { article ->
+            presenter.saveEntryExtractionResultAsync(article.entryExtractionResult) { successful ->
+                if(successful) {
+                    readLaterArticleService.delete(article)
+                }
+            }
         }
     }
 
