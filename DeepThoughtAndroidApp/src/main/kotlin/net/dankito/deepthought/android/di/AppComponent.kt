@@ -35,36 +35,6 @@ interface AppComponent : CommonComponent {
 
         fun setComponentInstance(component: AppComponent) {
             AppComponent.component = component
-
-            appComponentInitialized()
-        }
-
-        var isInitialized = false
-            private set
-
-        private val initializationListeners = mutableSetOf<() -> Unit>()
-
-        fun addInitializationListener(listener: () -> Unit) {
-            if(isInitialized) {
-                callInitializationListener(listener)
-            }
-            else {
-                initializationListeners.add(listener)
-            }
-        }
-
-        private fun appComponentInitialized() {
-            isInitialized = true
-
-            for(listener in HashSet<() -> Unit>(initializationListeners)) {
-                callInitializationListener(listener)
-            }
-
-            initializationListeners.clear()
-        }
-
-        private fun callInitializationListener(listener: () -> Unit) {
-            listener()
         }
     }
 
