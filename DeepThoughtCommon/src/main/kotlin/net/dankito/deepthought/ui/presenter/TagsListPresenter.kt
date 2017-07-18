@@ -8,8 +8,8 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.view.ITagsListView
-import net.dankito.service.data.TagService
 import net.dankito.service.data.DeleteEntityService
+import net.dankito.service.data.TagService
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.TagsSearchResults
@@ -36,8 +36,6 @@ class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: Da
 
             calculatedTags.add(AllEntriesCalculatedTag(searchEngine, eventBus, entityChangedNotifier, localization))
             calculatedTags.add(EntriesWithoutTagsCalculatedTag(searchEngine, eventBus, entityChangedNotifier, localization))
-
-            dataManager.addInitializationListener { tagsListView.updateDisplayedTags() }
         }
     }
 
