@@ -18,7 +18,6 @@ import org.apache.lucene.index.Term
 import org.apache.lucene.search.*
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.FSDirectory
-import org.apache.lucene.store.LockObtainFailedException
 import org.apache.lucene.util.Version
 import org.slf4j.LoggerFactory
 import java.io.File
@@ -101,9 +100,9 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
             this.writer = IndexWriter(directory, config)
         } catch(e: Exception) {
-            if (e is LockObtainFailedException) { // TODO: really only on LockObtainFailedException?
+//            if (e is LockObtainFailedException) { // TODO: really only on LockObtainFailedException?
                 isReadOnly = true
-            }
+//            }
 
             log.error("Could not create IndexWriter for $this, index is now marked as readOnly", e)
             throw e
