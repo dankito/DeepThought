@@ -10,6 +10,11 @@ import javax.inject.Inject
 
 open class BaseActivity : AppCompatActivity() {
 
+    companion object {
+        val ParametersId = "BASE_ACTIVITY_PARAMETERS_ID"
+    }
+
+
     @Inject
     protected lateinit var currentActivityTracker: CurrentActivityTracker
 
@@ -35,6 +40,27 @@ open class BaseActivity : AppCompatActivity() {
         }
 
         super.onStop()
+    }
+
+    override fun onDestroy() {
+        getParametersId()?.let { parametersId ->
+            parameterHolder.clearParameters(parametersId)
+        }
+
+        super.onDestroy()
+    }
+
+
+    protected fun getParameters(): Any? {
+        getParametersId()?.let { parametersId ->
+            return parameterHolder.getParameters(parametersId) // we're done with activity. remove parameters from cache to not waste any memory
+        }
+
+        return null
+    }
+
+    private fun getParametersId(): String? {
+        return intent?.getStringExtra(ParametersId)
     }
 
 }
