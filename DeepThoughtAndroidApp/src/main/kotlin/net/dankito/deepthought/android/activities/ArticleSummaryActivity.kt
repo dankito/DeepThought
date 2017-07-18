@@ -278,18 +278,21 @@ class ArticleSummaryActivity : BaseActivity() {
         override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
             when(item.itemId) {
                 R.id.mnViewArticle -> {
-                    showSelectedArticles()
-                    mode.finish()
+                    presenter.getAndShowArticlesAsync(selectedArticlesInContextualActionMode) {
+                        runOnUiThread { mode.finish() }
+                    }
                     return true
                 }
                 R.id.mnSaveArticleForLaterReading -> {
-                    saveSelectedArticlesForLaterReading()
-                    mode.finish()
+                    presenter.getAndSaveArticlesForLaterReadingAsync(selectedArticlesInContextualActionMode) {
+                        runOnUiThread { mode.finish() }
+                    }
                     return true
                 }
                 R.id.mnSaveArticle -> {
-                    saveSelectedArticles()
-                    mode.finish()
+                    presenter.getAndSaveArticlesAsync(selectedArticlesInContextualActionMode) {
+                        runOnUiThread { mode.finish() }
+                    }
                     return true
                 }
                 else -> return false
@@ -300,24 +303,6 @@ class ArticleSummaryActivity : BaseActivity() {
             selectedArticlesInContextualActionMode.clear()
         }
 
-    }
-
-    private fun showSelectedArticles(): Boolean {
-        selectedArticlesInContextualActionMode.forEach { presenter.getAndShowArticle(it) }
-
-        return true
-    }
-
-    private fun saveSelectedArticlesForLaterReading(): Boolean {
-        selectedArticlesInContextualActionMode.forEach { presenter.getAndSaveArticleForLaterReading(it) }
-
-        return true
-    }
-
-    private fun saveSelectedArticles(): Boolean {
-        selectedArticlesInContextualActionMode.forEach { presenter.getAndSaveArticle(it) }
-
-        return true
     }
 
 }
