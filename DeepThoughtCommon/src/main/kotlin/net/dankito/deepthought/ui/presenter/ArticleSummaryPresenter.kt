@@ -17,6 +17,7 @@ import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.TagsSearch
+import net.dankito.utils.IThreadPool
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
@@ -32,6 +33,9 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
     @Inject
     protected lateinit var localization: Localization
+
+    @Inject
+    protected lateinit var threadPool: IThreadPool
 
 
     var lastLoadedSummary: ArticleSummary? = null
@@ -72,6 +76,14 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
     }
 
 
+    fun getAndShowArticlesAsync(items: Collection<ArticleSummaryItem>, done: (() -> Unit)?) {
+        threadPool.runAsync {
+            items.forEach { getAndShowArticle(it) }
+
+            done?.invoke()
+        }
+    }
+
     fun getAndShowArticle(item: ArticleSummaryItem) {
         getArticle(item) {
             it.result?.let { showArticle(it) }
@@ -80,6 +92,15 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
     protected open fun showArticle(extractionResult: EntryExtractionResult) {
         router.showViewEntryView(extractionResult)
+    }
+
+
+    fun getAndSaveArticlesAsync(items: Collection<ArticleSummaryItem>, done: (() -> Unit)?) {
+        threadPool.runAsync {
+            items.forEach { getAndSaveArticle(it) }
+
+            done?.invoke()
+        }
     }
 
     fun getAndSaveArticle(item: ArticleSummaryItem) {
@@ -91,6 +112,15 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
     private fun saveArticle(item: ArticleSummaryItem, extractionResult: EntryExtractionResult) {
         if(entryPersister.saveEntry(extractionResult)) {
             dialogService.showLittleInfoMessage(localization.getLocalizedString("article.summary.extractor.article.saved", item.title))
+        }
+    }
+
+
+    fun getAndSaveArticlesForLaterReadingAsync(items: Collection<ArticleSummaryItem>, done: (() -> Unit)?) {
+        threadPool.runAsync {
+            items.forEach { getAndSaveArticleForLaterReading(it) }
+
+            done?.invoke()
         }
     }
 
