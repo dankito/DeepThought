@@ -213,10 +213,10 @@ class EditEntryActivity : BaseActivity() {
     }
 
 
-    override fun onStop() {
+    override fun onDestroy() {
         htmlEditorPool.htmlEditorReleased(contentHtmlEditor)
 
-        super.onStop()
+        super.onDestroy()
     }
 
 
