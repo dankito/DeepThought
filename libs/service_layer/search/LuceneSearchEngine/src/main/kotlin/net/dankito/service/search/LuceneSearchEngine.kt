@@ -90,44 +90,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
         defaultAnalyzer = StandardAnalyzer(Version.LUCENE_47)
 
         for(writerAndSearcher in indexWritersAndSearchers) {
-            createIndexWriter(writerAndSearcher, defaultAnalyzer)
-
-            createIndexSearcherOnOpeningDirectory(writerAndSearcher)
-        }
-    }
-
-    private fun createIndexWriter(writerAndSearcher: IndexWriterAndSearcher<*>, defaultAnalyzer: Analyzer) {
-        if (isReadOnly == false) { // it is better that when once isReadOnly has been set to true not to unset it again even though write access would not be possible again
-            try { // as otherwise all changes done till index becomes writable again would be lost which could lead to data inconsistency
-                writerAndSearcher.createIndexWriter(defaultAnalyzer)
-            } catch (e: Exception) {
-                if (writerAndSearcher.isReadOnly) {
-                    if (isReadOnly == false) { // TODO
-//                        Application.notifyUser(Notification(NotificationType.HasOnlyReadOnlyAccessToData)) // TODO: add message
-                    }
-                    isReadOnly = true
-                }
-
-                isIndexReady = false
-            }
-        }
-    }
-
-    /**
-     *
-     *
-     * On opening an index directory there are no new changes yet
-     * so on first call call this simple method to create an IndexSearcher.
-     *
-     * @return
-     * *
-     * @param writerAndSearcher
-     */
-    protected fun createIndexSearcherOnOpeningDirectory(writerAndSearcher: IndexWriterAndSearcher<*>) {
-        try {
-            writerAndSearcher.createIndexSearcher(isReadOnly)
-        } catch (ex: Exception) {
-            log.error("Could not create IndexSearcher for EntityClass " + writerAndSearcher, ex)
+            writerAndSearcher.initialize(defaultAnalyzer)
         }
     }
 

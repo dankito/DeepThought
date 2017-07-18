@@ -32,11 +32,15 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
         private const val WAIT_TIME_BEFORE_COMMITTING_INDICES_MILLIS = 1500L
 
+        private const val InstanceLock = "LOCK"
+
         private val log = LoggerFactory.getLogger(IndexWriterAndSearcher::class.java)
     }
 
 
     var isReadOnly = false
+
+    private lateinit var defaultAnalyzer: Analyzer
 
     private var directory: Directory? = null
 
@@ -60,6 +64,17 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
     abstract fun createEntityChangedListener(): Any
 
 
+    /**
+     * Call this method on app start.
+     * On app start we don't want to create an IndexWriter as this consumes a lot of time.
+     * What we want on app start is a quick start-up, so on first access only create an IndexSearcher on a readOnly Directory.
+     * Later on, when IndexWriter is needed for first write operation, we re-create Directory and IndexSearcher
+     */
+    fun initialize(defaultAnalyzer: Analyzer) {
+        this.defaultAnalyzer = defaultAnalyzer
+    }
+
+
     fun createDirectory(indexBaseDir: File) : Directory? {
         val indexDirectory = File(indexBaseDir, getDirectoryName())
 
@@ -79,22 +94,32 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
      * @return Created IndexWriter or null on failure!
      */
     @Throws(Exception::class)
-    fun createIndexWriter(defaultAnalyzer: Analyzer): IndexWriter? {
+    private fun createIndexWriter(defaultAnalyzer: Analyzer): IndexWriter? {
         try {
             val config = IndexWriterConfig(Version.LUCENE_47, defaultAnalyzer)
             config.openMode = IndexWriterConfig.OpenMode.CREATE_OR_APPEND
 
             this.writer = IndexWriter(directory, config)
         } catch(e: Exception) {
-            if (e is LockObtainFailedException) {
+            if (e is LockObtainFailedException) { // TODO: really only on LockObtainFailedException?
                 isReadOnly = true
             }
 
-            log.error("Could not create IndexWriter for $this", e)
+            log.error("Could not create IndexWriter for $this, index is now marked as readOnly", e)
             throw e
         }
 
         return writer
+    }
+
+    protected fun getWriter(): IndexWriter? {
+        synchronized(InstanceLock) {
+            if(writer == null) {
+                writer = createIndexWriter(defaultAnalyzer)
+            }
+
+            return writer
+        }
     }
 
     /**
@@ -105,33 +130,35 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
      *
      * @return
      */
-    fun createIndexSearcher(isReadOnly: Boolean) {
+    private fun createIndexSearcher(isReadOnly: Boolean) {
         directoryReader = createDirectoryReader(isReadOnly)
 
         indexSearcher = IndexSearcher(directoryReader)
     }
 
     protected fun getIndexSearcher(): IndexSearcher? {
-        if (indexSearcher == null) {
-            try {
-                createIndexSearcher(isReadOnly)
-            } catch (e: Exception) {
-                log.error("Could not create IndexSearcher for $this", e)
+        synchronized(InstanceLock) {
+            if(indexSearcher == null) {
+                try {
+                    createIndexSearcher(isReadOnly)
+                } catch (e: Exception) {
+                    log.error("Could not create IndexSearcher for $this", e)
+                }
+
             }
 
+            return indexSearcher
         }
-
-        return indexSearcher
     }
 
     private fun createDirectoryReader(isReadOnly: Boolean): DirectoryReader? {
-        if (isReadOnly) {
+        if(isReadOnly || writer == null) { // on app start writer is null as opening an index read only speeds up app start. Later on, when writer is needed, we re-create directory and indexSearcher
             return DirectoryReader.open(directory) // open readonly
         }
-        else if (directoryReader == null) { // on startup
+        else if(directoryReader == null) {
             return DirectoryReader.open(writer, true)
         }
-        else {
+        else { // index has changed
             val newDirectoryReader = DirectoryReader.openIfChanged(directoryReader, writer, true)
 
             if (newDirectoryReader != null) {
@@ -197,7 +224,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
     protected fun indexDocument(doc: Document) {
         try {
-            writer?.let { writer ->
+            getWriter()?.let { writer ->
                 log.info("Indexing document {}", doc)
                 writer.addDocument(doc)
 
@@ -217,7 +244,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
         }
 
         try {
-            writer?.let { writer ->
+            getWriter()?.let { writer ->
                 log.info("Removing Entity {} from index", removedEntity)
 
                 writer.deleteDocuments(Term(getIdFieldName(), removedEntity.id))
@@ -235,7 +262,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
 
     fun deleteIndex() {
-        writer?.let { writer ->
+        getWriter()?.let { writer ->
             writer.deleteAll()
             writer.prepareCommit()
             writer.commit()
@@ -260,7 +287,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
             override fun run() {
                 commitIndicesTimer = null
 
-                writer?.commit()
+                getWriter()?.commit()
             }
         }, WAIT_TIME_BEFORE_COMMITTING_INDICES_MILLIS)
     }
