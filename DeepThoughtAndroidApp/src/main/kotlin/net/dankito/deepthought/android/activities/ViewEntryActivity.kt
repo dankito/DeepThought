@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import kotlinx.android.synthetic.main.activity_view_entry.*
 import net.dankito.deepthought.android.R
+import net.dankito.deepthought.android.activities.arguments.EditEntryActivityResult
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.views.EntryFieldsPreview
 import net.dankito.deepthought.model.Entry
@@ -77,6 +78,10 @@ class ViewEntryActivity : BaseActivity() {
         setupUI()
 
         savedInstanceState?.let { restoreState(it) }
+
+        intent.getStringExtra(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)?.let { showSerializedEntryExtractionResult(it) }
+        intent.getStringExtra(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME)?.let { readLaterArticleId -> showReadLaterArticleFromDatabase(readLaterArticleId) }
+        intent.getStringExtra(ENTRY_ID_INTENT_EXTRA_NAME)?.let { entryId -> showEntryFromDatabase(entryId) }
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
@@ -123,9 +128,18 @@ class ViewEntryActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
 
-        intent.getStringExtra(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)?.let { showSerializedEntryExtractionResult(it) }
-        intent.getStringExtra(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME)?.let { readLaterArticleId -> showReadLaterArticleFromDatabase(readLaterArticleId) }
-        intent.getStringExtra(ENTRY_ID_INTENT_EXTRA_NAME)?.let { entryId -> showEntryFromDatabase(entryId) }
+        (parameterHolder.getActivityResult(EditEntryActivity.ResultId) as? EditEntryActivityResult)?.let { result ->
+            if(result.didSaveReadLaterArticle) {
+                this.readLaterArticle = null
+            }
+            if(result.didSaveEntryExtractionResult) {
+                this.entryExtractionResult = null
+            }
+
+            result.savedEntry?.let { savedEntry ->
+                showEntry(savedEntry)
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -234,11 +248,15 @@ class ViewEntryActivity : BaseActivity() {
 
     private fun showEntryFromDatabase(entryId: String) {
         entryService.retrieve(entryId)?.let { entry ->
-            this.entry = entry
-            entryFieldsPreview.entry = entry
-
-            showEntry(entry, entry.reference, entry.tags)
+            showEntry(entry)
         }
+    }
+
+    private fun showEntry(entry: Entry) {
+        this.entry = entry
+        entryFieldsPreview.entry = entry
+
+        showEntry(entry, entry.reference, entry.tags)
     }
 
     private fun showReadLaterArticleFromDatabase(readLaterArticleId: String) {
