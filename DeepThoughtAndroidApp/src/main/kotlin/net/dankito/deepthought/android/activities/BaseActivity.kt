@@ -8,20 +8,18 @@ import javax.inject.Inject
 open class BaseActivity : AppCompatActivity() {
 
     @Inject
-    @JvmField
-    protected var currentActivityTracker: CurrentActivityTracker? = null
+    protected lateinit var currentActivityTracker: CurrentActivityTracker
 
 
     override fun onStart() {
         super.onStart()
 
-        // in MainActivity first DeepThoughtBackgroundAndroidService has to be started before dependencies can be injected -> currentActivityTracker is not set yet in onResume()
-        currentActivityTracker?.currentActivity = this
+        currentActivityTracker.currentActivity = this
     }
 
     override fun onStop() {
-        if(currentActivityTracker?.currentActivity == this) {
-            currentActivityTracker?.currentActivity = null
+        if(currentActivityTracker.currentActivity == this) {
+            currentActivityTracker.currentActivity = null
         }
 
         super.onStop()

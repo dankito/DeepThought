@@ -12,10 +12,10 @@ import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.view_floating_action_button_main.*
+import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.adapter.MainActivitySectionsPagerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.IntentHandler
-import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.views.FloatingActionMenuButton
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.ui.IRouter
@@ -48,7 +48,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
 
     init {
-        AppComponent.addInitializationListener { appComponentInitialized() }
+        AppComponent.component.inject(this)
     }
 
 
@@ -57,9 +57,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         setupUI()
 
-        if(AppComponent.isInitialized) {
-            handleIntent(intent)
-        }
+        handleIntent(intent)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -83,26 +81,12 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         navigationView.setNavigationItemSelectedListener(this)
 
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener)
-
-        bottomViewNavigation.setOnNavigationItemSelectedListener(bottomViewNavigationItemSelectedListener)
-    }
-
-
-    private fun appComponentInitialized() {
-        AppComponent.component.inject(this)
-
-        currentActivityTracker?.currentActivity = this
-
-        runOnUiThread { setupDependentUIParts() }
-
-        handleIntent(intent)
-    }
-
-    private fun setupDependentUIParts() {
-        floatingActionMenuButton = FloatingActionMenuButton(fab_menu, summaryExtractorManager, router, eventBus)
-
         sectionsPagerAdapter = MainActivitySectionsPagerAdapter(supportFragmentManager)
         viewPager.adapter = sectionsPagerAdapter
+
+        bottomViewNavigation.setOnNavigationItemSelectedListener(bottomViewNavigationItemSelectedListener)
+
+        floatingActionMenuButton = FloatingActionMenuButton(fab_menu, summaryExtractorManager, router, eventBus)
     }
 
 
