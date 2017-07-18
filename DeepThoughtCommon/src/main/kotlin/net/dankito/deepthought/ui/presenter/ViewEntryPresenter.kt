@@ -12,10 +12,14 @@ import net.dankito.utils.ui.IClipboardService
 class ViewEntryPresenter(private val entryPersister: EntryPersister, private val clipboardService: IClipboardService, private var router: IRouter) {
 
 
-    fun saveEntryExtractionResult(result: EntryExtractionResult) {
-        entryPersister.saveEntry(result)
+    fun saveEntryExtractionResultAsync(result: EntryExtractionResult, callback: ((Boolean) -> Unit)? = null) {
+        entryPersister.saveEntryAsync(result) { successful ->
+            if(successful) {
+                returnToPreviousView()
+            }
 
-        returnToPreviousView()
+            callback?.invoke(successful)
+        }
     }
 
 

@@ -110,8 +110,10 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
     }
 
     private fun saveArticle(item: ArticleSummaryItem, extractionResult: EntryExtractionResult) {
-        if(entryPersister.saveEntry(extractionResult)) {
-            dialogService.showLittleInfoMessage(localization.getLocalizedString("article.summary.extractor.article.saved", item.title))
+        entryPersister.saveEntryAsync(extractionResult) { successful ->
+            if(successful) {
+                dialogService.showLittleInfoMessage(localization.getLocalizedString("article.summary.extractor.article.saved", item.title))
+            }
         }
     }
 

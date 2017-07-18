@@ -71,12 +71,12 @@ class ReadLaterArticlePresenter(private val view: IReadLaterArticleView, private
     }
 
     fun saveAndDeleteReadLaterArticle(article: ReadLaterArticle) {
-        saveReadLaterArticle(article)
-
-        deleteReadLaterArticle(article)
+        entryPersister.saveEntryAsync(article.entryExtractionResult) { successful ->
+            if(successful) {
+                deleteReadLaterArticle(article)
+            }
+        }
     }
-
-    fun saveReadLaterArticle(article: ReadLaterArticle) = entryPersister.saveEntry(article.entryExtractionResult)
 
     fun deleteReadLaterArticle(article: ReadLaterArticle?) {
         article?.let {
