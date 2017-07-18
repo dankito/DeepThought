@@ -27,11 +27,13 @@ class CurrentActivityTracker {
     }
 
     private fun callAndClearNextActivitySetListeners(activity: BaseActivity) {
-        Timer().schedule(500) { // wait some time till activity is initialized
-            synchronized(nextActivitySetListeners) {
-                nextActivitySetListeners.forEach { it(activity) }
+        synchronized(nextActivitySetListeners) {
+            val listenersCopy = ArrayList(nextActivitySetListeners)
 
-                nextActivitySetListeners.clear()
+            nextActivitySetListeners.clear()
+
+            Timer().schedule(500) { // wait some time till activity is initialized
+                listenersCopy.forEach { it(activity) }
             }
         }
     }
