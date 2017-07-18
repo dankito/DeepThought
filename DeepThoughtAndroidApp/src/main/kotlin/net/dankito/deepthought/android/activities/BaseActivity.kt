@@ -34,6 +34,12 @@ open class BaseActivity : AppCompatActivity() {
         currentActivityTracker.currentActivity = this
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        currentActivityTracker.currentActivity = this
+    }
+
     override fun onStop() {
         if(currentActivityTracker.currentActivity == this) {
             currentActivityTracker.currentActivity = null
