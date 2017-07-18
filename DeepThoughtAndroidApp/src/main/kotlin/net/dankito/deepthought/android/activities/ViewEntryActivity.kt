@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android.activities
 
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.widget.PopupMenu
 import android.view.Menu
@@ -283,7 +284,7 @@ class ViewEntryActivity : BaseActivity() {
             content = "<body style=\"font-family: serif, Georgia, Roboto, Helvetica, Arial; font-size:17;\"" + content + "</body>"
         }
 
-        if(url != null) {
+        if(url != null && Build.VERSION.SDK_INT > 16) {
             wbEntry.loadDataWithBaseURL(url, content, "text/html; charset=UTF-8", "utf-8", null)
         }
         else {
