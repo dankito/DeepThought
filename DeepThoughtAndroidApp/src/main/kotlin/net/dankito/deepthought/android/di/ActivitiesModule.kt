@@ -8,15 +8,16 @@ import net.dankito.deepthought.android.appstart.AndroidAppInitializer
 import net.dankito.deepthought.android.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.android.dialogs.AndroidDialogService
 import net.dankito.deepthought.android.routing.AndroidRouter
+import net.dankito.deepthought.android.service.ActivityParameterHolder
 import net.dankito.deepthought.android.service.AndroidClipboardService
-import net.dankito.deepthought.android.service.communication.AndroidDeviceRegistrationHandler
 import net.dankito.deepthought.android.service.CurrentActivityTracker
+import net.dankito.deepthought.android.service.communication.AndroidDeviceRegistrationHandler
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditorPool
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.utils.serialization.ISerializer
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.localization.Localization
+import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import javax.inject.Singleton
@@ -43,6 +44,12 @@ class ActivitiesModule(private val applicationContext: Context) {
     @Singleton
     fun provideCurrentActivityTracker() : CurrentActivityTracker {
         return CurrentActivityTracker()
+    }
+
+    @Provides
+    @Singleton
+    fun provideActivityParameterHolder() : ActivityParameterHolder {
+        return ActivityParameterHolder()
     }
 
     @Provides
