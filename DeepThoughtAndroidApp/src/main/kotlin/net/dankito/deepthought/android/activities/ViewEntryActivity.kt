@@ -9,6 +9,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_view_entry.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditEntryActivityResult
+import net.dankito.deepthought.android.activities.arguments.EntryActivityParameters
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.views.EntryFieldsPreview
 import net.dankito.deepthought.model.Entry
@@ -29,9 +30,9 @@ import javax.inject.Inject
 class ViewEntryActivity : BaseActivity() {
 
     companion object {
-        const val ENTRY_ID_INTENT_EXTRA_NAME = "ENTRY_ID"
-        const val READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME = "READ_LATER_ARTICLE_ID"
-        const val ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ENTRY_EXTRACTION_RESULT"
+        private const val ENTRY_ID_INTENT_EXTRA_NAME = "ENTRY_ID"
+        private const val READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME = "READ_LATER_ARTICLE_ID"
+        private const val ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ENTRY_EXTRACTION_RESULT"
     }
 
 
@@ -80,9 +81,7 @@ class ViewEntryActivity : BaseActivity() {
 
         savedInstanceState?.let { restoreState(it) }
 
-        intent.getStringExtra(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)?.let { showSerializedEntryExtractionResult(it) }
-        intent.getStringExtra(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME)?.let { readLaterArticleId -> showReadLaterArticleFromDatabase(readLaterArticleId) }
-        intent.getStringExtra(ENTRY_ID_INTENT_EXTRA_NAME)?.let { entryId -> showEntryFromDatabase(entryId) }
+        showParameters(getParameters() as? EntryActivityParameters)
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
@@ -247,6 +246,16 @@ class ViewEntryActivity : BaseActivity() {
     }
 
 
+    private fun showParameters(parameters: EntryActivityParameters?) {
+        if(parameters != null) {
+            parameters.entry?.let { showEntry(it) }
+
+            parameters.readLaterArticle?.let { showReadLaterArticle(it) }
+
+            parameters.entryExtractionResult?.let { showEntryExtractionResult(it) }
+        }
+    }
+
     private fun showEntryFromDatabase(entryId: String) {
         entryService.retrieve(entryId)?.let { entry ->
             showEntry(entry)
@@ -262,15 +271,24 @@ class ViewEntryActivity : BaseActivity() {
 
     private fun showReadLaterArticleFromDatabase(readLaterArticleId: String) {
         readLaterArticleService.retrieve(readLaterArticleId)?.let { readLaterArticle ->
-            this.readLaterArticle = readLaterArticle
-            entryFieldsPreview.readLaterArticle = readLaterArticle
-
-            showEntry(readLaterArticle.entryExtractionResult.entry, readLaterArticle.entryExtractionResult.reference, readLaterArticle.entryExtractionResult.tags)
+            showReadLaterArticle(readLaterArticle)
         }
     }
 
+    private fun showReadLaterArticle(readLaterArticle: ReadLaterArticle) {
+        this.readLaterArticle = readLaterArticle
+        entryFieldsPreview.readLaterArticle = readLaterArticle
+
+        showEntry(readLaterArticle.entryExtractionResult.entry, readLaterArticle.entryExtractionResult.reference, readLaterArticle.entryExtractionResult.tags)
+    }
+
     private fun showSerializedEntryExtractionResult(serializedExtractionResult: String) {
-        this.entryExtractionResult = serializer.deserializeObject(serializedExtractionResult, EntryExtractionResult::class.java)
+        val entryExtractionResult = serializer.deserializeObject(serializedExtractionResult, EntryExtractionResult::class.java)
+        showEntryExtractionResult(entryExtractionResult)
+    }
+
+    private fun showEntryExtractionResult(extractionResult: EntryExtractionResult) {
+        this.entryExtractionResult = extractionResult
         entryFieldsPreview.entryExtractionResult = this.entryExtractionResult
 
         showEntry(entryExtractionResult?.entry, entryExtractionResult?.reference, entryExtractionResult?.tags)

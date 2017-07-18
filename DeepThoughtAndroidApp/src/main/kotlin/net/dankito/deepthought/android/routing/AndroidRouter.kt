@@ -67,24 +67,23 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
 
 
     override fun showViewEntryView(entry: Entry) {
-        entry.id?.let { entryId -> showViewEntryView(ViewEntryActivity.ENTRY_ID_INTENT_EXTRA_NAME, entryId) }
+        showViewEntryView(EntryActivityParameters(entry))
     }
 
     override fun showViewEntryView(article: ReadLaterArticle) {
-        article.id?.let { articleId -> showViewEntryView(ViewEntryActivity.READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME, articleId) }
+        showViewEntryView(EntryActivityParameters(readLaterArticle = article))
     }
 
     override fun showViewEntryView(extractionResult: EntryExtractionResult) {
-        val serializedExtractionResult = serializer.serializeObject(extractionResult)
-
-        showViewEntryView(ViewEntryActivity.ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, serializedExtractionResult)
+        showViewEntryView(EntryActivityParameters(entryExtractionResult = extractionResult))
     }
 
-    private fun showViewEntryView(intentExtraName: String, intentExtraValue: String) {
+    private fun showViewEntryView(parameters: EntryActivityParameters) {
         val viewArticleIntent = Intent(context, ViewEntryActivity::class.java)
         viewArticleIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-        viewArticleIntent.putExtra(intentExtraName, intentExtraValue)
+        val id = parameterHolder.setParameters(parameters)
+        viewArticleIntent.putExtra(BaseActivity.ParametersId, id)
 
         context.startActivity(viewArticleIntent)
     }
