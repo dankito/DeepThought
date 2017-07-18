@@ -16,6 +16,7 @@ import org.apache.lucene.store.FSDirectory
 import org.apache.lucene.util.Version
 import org.slf4j.LoggerFactory
 import java.io.File
+import kotlin.concurrent.thread
 
 
 class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThreadPool, eventBus: IEventBus, entryService: EntryService, tagService: TagService,
@@ -54,7 +55,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
 
 
     private fun createDirectoryAndIndexSearcherAndWriterForDeepThoughtAsync() {
-        threadPool.runAsync { createDirectoryAndIndexSearcherAndWriterForDeepThought() }
+        thread(priority = Thread.MAX_PRIORITY) { createDirectoryAndIndexSearcherAndWriterForDeepThought() }
     }
 
     private fun createDirectoryAndIndexSearcherAndWriterForDeepThought() {

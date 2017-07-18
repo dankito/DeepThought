@@ -33,7 +33,7 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
 
 
     init {
-        thread {
+        thread(priority = Thread.MAX_PRIORITY) {
             initializeDataManager()
         }
     }
