@@ -12,7 +12,6 @@ import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.deepthought.ui.view.IReadLaterArticleView
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.search.ISearchEngine
-import net.dankito.utils.serialization.ISerializer
 import javax.inject.Inject
 
 
@@ -31,9 +30,6 @@ class ReadLaterArticlesListView : MainActivityTabFragment(R.layout.fragment_tab_
     @Inject
     protected lateinit var router: IRouter
 
-    @Inject
-    protected lateinit var serializer: ISerializer
-
 
     private val presenter: ReadLaterArticlePresenter
 
@@ -43,7 +39,7 @@ class ReadLaterArticlesListView : MainActivityTabFragment(R.layout.fragment_tab_
     init {
         AppComponent.component.inject(this)
 
-        presenter = ReadLaterArticlePresenter(this, searchEngine, readLaterArticleService, entryPersister, router, serializer)
+        presenter = ReadLaterArticlePresenter(this, searchEngine, readLaterArticleService, entryPersister, router)
     }
 
 

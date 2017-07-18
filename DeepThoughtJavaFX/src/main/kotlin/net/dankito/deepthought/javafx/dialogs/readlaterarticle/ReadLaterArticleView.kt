@@ -9,7 +9,6 @@ import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.deepthought.ui.view.IReadLaterArticleView
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.search.ISearchEngine
-import net.dankito.utils.serialization.ISerializer
 import tornadofx.*
 import javax.inject.Inject
 
@@ -29,9 +28,6 @@ class ReadLaterArticleView : View(), IReadLaterArticleView {
     @Inject
     protected lateinit var router: IRouter
 
-    @Inject
-    protected lateinit var serializer: ISerializer
-
 
     private val presenter: ReadLaterArticlePresenter
 
@@ -39,7 +35,7 @@ class ReadLaterArticleView : View(), IReadLaterArticleView {
     init {
         AppComponent.component.inject(this)
 
-        presenter = ReadLaterArticlePresenter(this, searchEngine, readLaterArticleService, entryPersister, router, serializer)
+        presenter = ReadLaterArticlePresenter(this, searchEngine, readLaterArticleService, entryPersister, router)
 
         presenter.getAndShowAllEntities()
     }

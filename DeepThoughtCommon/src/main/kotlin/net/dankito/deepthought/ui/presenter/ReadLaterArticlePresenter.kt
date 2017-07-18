@@ -12,13 +12,12 @@ import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
 import net.dankito.service.search.specific.ReadLaterArticleSearch
 import net.dankito.utils.IThreadPool
-import net.dankito.utils.serialization.ISerializer
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 
 
 class ReadLaterArticlePresenter(private val view: IReadLaterArticleView, private val searchEngine: ISearchEngine, private val readLaterArticleService: ReadLaterArticleService,
-                                private val entryPersister: EntryPersister, private val router: IRouter, private val serializer: ISerializer) : IMainViewSectionPresenter {
+                                private val entryPersister: EntryPersister, private val router: IRouter) : IMainViewSectionPresenter {
 
 
     @Inject
