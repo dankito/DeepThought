@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.activity_edit_entry.*
 import net.dankito.deepthought.android.R
+import net.dankito.deepthought.android.activities.arguments.EntryActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditEntryActivityResult
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
@@ -33,9 +34,9 @@ import javax.inject.Inject
 class EditEntryActivity : BaseActivity() {
 
     companion object {
-        const val ENTRY_ID_INTENT_EXTRA_NAME = "ENTRY_ID"
-        const val READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME = "READ_LATER_ARTICLE_ID"
-        const val ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ENTRY_EXTRACTION_RESULT"
+        private const val ENTRY_ID_INTENT_EXTRA_NAME = "ENTRY_ID"
+        private const val READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME = "READ_LATER_ARTICLE_ID"
+        private const val ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ENTRY_EXTRACTION_RESULT"
 
         const val ResultId = "EDIT_ENTRY_ACTIVITY_RESULT"
     }
@@ -97,13 +98,7 @@ class EditEntryActivity : BaseActivity() {
 
         savedInstanceState?.let { restoreState(it) }
 
-        intent.getStringExtra(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)?.let { editEntryExtractionResult(it) }
-        intent.getStringExtra(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME)?.let { readLaterArticleId -> editReadLaterArticle(readLaterArticleId) }
-        intent.getStringExtra(ENTRY_ID_INTENT_EXTRA_NAME)?.let { entryId -> editEntry(entryId) }
-
-        if(entry == null && readLaterArticle == null && entryExtractionResult == null) { // create Entry
-            entry = Entry("")
-        }
+        showParameters(getParameters() as? EntryActivityParameters)
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
@@ -305,27 +300,60 @@ class EditEntryActivity : BaseActivity() {
     }
 
 
+    private fun showParameters(parameters: EntryActivityParameters?) {
+        if(parameters == null) { // create entry
+            createEntry()
+        }
+        else {
+            parameters.entry?.let { editEntry(it) }
+
+            parameters.readLaterArticle?.let { editReadLaterArticle(it) }
+
+            parameters.entryExtractionResult?.let { editEntryExtractionResult(it) }
+        }
+    }
+
+    private fun createEntry() {
+        canEntryBeSaved = true
+
+        editEntry(Entry(""))
+    }
+
     private fun editEntry(entryId: String) {
         entryService.retrieve(entryId)?.let { entry ->
-            this.entry = entry
-            entryFieldsPreview.entry = entry
-
-            editEntry(entry, entry.reference, entry.tags)
+            editEntry(entry)
         }
+    }
+
+    private fun editEntry(entry: Entry) {
+        this.entry = entry
+        entryFieldsPreview.entry = entry
+
+        editEntry(entry, entry.reference, entry.tags)
     }
 
     private fun editReadLaterArticle(readLaterArticleId: String) {
         readLaterArticleService.retrieve(readLaterArticleId)?.let { readLaterArticle ->
-            this.readLaterArticle = readLaterArticle
-            entryFieldsPreview.readLaterArticle = readLaterArticle
-            canEntryBeSaved = true
-
-            editEntry(readLaterArticle.entryExtractionResult.entry, readLaterArticle.entryExtractionResult.reference, readLaterArticle.entryExtractionResult.tags)
+            editReadLaterArticle(readLaterArticle)
         }
     }
 
+    private fun editReadLaterArticle(readLaterArticle: ReadLaterArticle) {
+        this.readLaterArticle = readLaterArticle
+        entryFieldsPreview.readLaterArticle = readLaterArticle
+        canEntryBeSaved = true
+
+        editEntry(readLaterArticle.entryExtractionResult.entry, readLaterArticle.entryExtractionResult.reference, readLaterArticle.entryExtractionResult.tags)
+    }
+
     private fun editEntryExtractionResult(serializedExtractionResult: String) {
-        this.entryExtractionResult = serializer.deserializeObject(serializedExtractionResult, EntryExtractionResult::class.java)
+        val extractionResult = serializer.deserializeObject(serializedExtractionResult, EntryExtractionResult::class.java)
+
+        editEntryExtractionResult(extractionResult)
+    }
+
+    private fun editEntryExtractionResult(extractionResult: EntryExtractionResult) {
+        this.entryExtractionResult = extractionResult
         entryFieldsPreview.entryExtractionResult = this.entryExtractionResult
         canEntryBeSaved = true
 

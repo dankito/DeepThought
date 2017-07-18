@@ -3,20 +3,23 @@ package net.dankito.deepthought.android.routing
 import android.content.Context
 import android.content.Intent
 import net.dankito.deepthought.android.activities.ArticleSummaryActivity
+import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.activities.EditEntryActivity
 import net.dankito.deepthought.android.activities.ViewEntryActivity
+import net.dankito.deepthought.android.activities.arguments.EntryActivityParameters
 import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
 import net.dankito.deepthought.android.dialogs.ReferenceEntriesListDialog
 import net.dankito.deepthought.android.dialogs.TagEntriesListDialog
-import net.dankito.deepthought.android.service.ui.CurrentActivityTracker
+import net.dankito.deepthought.android.service.ActivityParameterHolder
+import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.utils.serialization.ISerializer
 
 
-class AndroidRouter(private val context: Context, private val activityTracker: CurrentActivityTracker, private val serializer: ISerializer) : IRouter {
+class AndroidRouter(private val context: Context, private val parameterHolder: ActivityParameterHolder, private val activityTracker: CurrentActivityTracker, private val serializer: ISerializer) : IRouter {
 
 
     override fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {
@@ -92,24 +95,25 @@ class AndroidRouter(private val context: Context, private val activityTracker: C
     }
 
     override fun showEditEntryView(entry: Entry) {
-        showEditEntryView(EditEntryActivity.ENTRY_ID_INTENT_EXTRA_NAME, entry.id)
+        showEditEntryView(EntryActivityParameters(entry))
     }
 
     override fun showEditEntryView(article: ReadLaterArticle) {
-        showEditEntryView(EditEntryActivity.READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME, article.id)
+        showEditEntryView(EntryActivityParameters(readLaterArticle = article))
     }
 
     override fun showEditEntryView(extractionResult: EntryExtractionResult) {
-        val serializedExtractionResult = serializer.serializeObject(extractionResult)
-
-        showEditEntryView(EditEntryActivity.ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, serializedExtractionResult)
+        showEditEntryView(EntryActivityParameters(entryExtractionResult = extractionResult))
     }
 
-    private fun showEditEntryView(intentExtraName: String? = null, intentExtraValue: String? = null) {
+    private fun showEditEntryView(parameters: EntryActivityParameters? = null) {
         val editEntryIntent = Intent(context, EditEntryActivity::class.java)
         editEntryIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-        intentExtraName?.let { editEntryIntent.putExtra(intentExtraName, intentExtraValue) }
+        parameters?.let {
+            val id = parameterHolder.setParameters(parameters)
+            editEntryIntent.putExtra(BaseActivity.ParametersId, id)
+        }
 
         context.startActivity(editEntryIntent)
     }

@@ -73,8 +73,8 @@ class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
-    fun provideRouter(context: Context, activityTracker: CurrentActivityTracker, serializer: ISerializer) : IRouter {
-        return AndroidRouter(context, activityTracker, serializer)
+    fun provideRouter(context: Context, parameterHolder: ActivityParameterHolder, activityTracker: CurrentActivityTracker, serializer: ISerializer) : IRouter {
+        return AndroidRouter(context, parameterHolder, activityTracker, serializer)
     }
 
 
