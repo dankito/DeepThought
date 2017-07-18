@@ -42,8 +42,6 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
 
     private lateinit var defaultAnalyzer: Analyzer
 
-    private var isReadOnly = false
-
     private var isIndexReady = false
 
 
@@ -103,7 +101,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
 
 
     private fun rebuildIndex() {
-        if (isReadOnly == true || isIndexReady == false) {
+        if (isIndexReady == false) {
             return
         }
 
