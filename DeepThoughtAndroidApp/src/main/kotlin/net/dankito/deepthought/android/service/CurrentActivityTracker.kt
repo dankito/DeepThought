@@ -1,7 +1,9 @@
 package net.dankito.deepthought.android.service
 
 import net.dankito.deepthought.android.activities.BaseActivity
+import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.concurrent.schedule
 
 
 class CurrentActivityTracker {
@@ -25,10 +27,12 @@ class CurrentActivityTracker {
     }
 
     private fun callAndClearNextActivitySetListeners(activity: BaseActivity) {
-        synchronized(nextActivitySetListeners) {
-            nextActivitySetListeners.forEach { it(activity) }
+        Timer().schedule(500) { // wait some time till activity is initialized
+            synchronized(nextActivitySetListeners) {
+                nextActivitySetListeners.forEach { it(activity) }
 
-            nextActivitySetListeners.clear()
+                nextActivitySetListeners.clear()
+            }
         }
     }
 
