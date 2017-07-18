@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android.appstart
 
+import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditorPool
@@ -41,11 +42,20 @@ class AndroidAppInitializer {
 
         htmlEditorExtractor.addHtmlEditorExtractedListener {
             searchEngine.addInitializationListener {
-                // TODO: if currentActivity is null, set a (one shot) listener on activityTracker to get notified when next activity has been created?
-                activityTracker.currentActivity?.let { activity ->
-                    activity.runOnUiThread { htmlEditorPool.preloadHtmlEditors(activity, 2) }
+                val currentActivity = activityTracker.currentActivity
+
+                if(currentActivity != null) {
+                    preloadHtmlEditors(currentActivity)
+                }
+                else {
+                    activityTracker.addNextActivitySetListener { preloadHtmlEditors(it) }
                 }
             }
         }
     }
+
+    private fun preloadHtmlEditors(currentActivity: BaseActivity) {
+        currentActivity.runOnUiThread { htmlEditorPool.preloadHtmlEditors(currentActivity, 2) }
+    }
+
 }
