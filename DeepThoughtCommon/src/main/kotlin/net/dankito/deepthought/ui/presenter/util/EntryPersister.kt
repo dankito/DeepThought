@@ -23,7 +23,11 @@ class EntryPersister(private val entryService: EntryService, private val referen
     }
 
 
-    fun saveEntry(result: EntryExtractionResult): Boolean {
+    fun saveEntryAsync(result: EntryExtractionResult, callback: (Boolean) -> Unit) {
+        callback(saveEntry(result))
+    }
+
+    private fun saveEntry(result: EntryExtractionResult): Boolean {
         return saveEntry(result.entry, result.reference, result.tags)
     }
 
@@ -34,7 +38,7 @@ class EntryPersister(private val entryService: EntryService, private val referen
         }
     }
 
-    fun saveEntry(entry: Entry, reference: Reference? = null, tags: Collection<Tag> = ArrayList<Tag>()): Boolean {
+    private fun saveEntry(entry: Entry, reference: Reference? = null, tags: Collection<Tag> = ArrayList<Tag>()): Boolean {
         // by design at this stage there's no unpersisted tag -> set them directly on entry so that their ids get saved on entry with persist(entry) / update(entry)
         val removedTags = ArrayList(entry.tags)
         removedTags.removeAll(tags)
