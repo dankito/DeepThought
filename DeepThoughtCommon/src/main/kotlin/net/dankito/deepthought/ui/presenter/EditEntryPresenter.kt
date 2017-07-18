@@ -22,13 +22,7 @@ class EditEntryPresenter(private val entryPersister: EntryPersister, private val
 
 
     fun saveEntryAsync(entry: Entry, reference: Reference? = null, tags: Collection<Tag> = ArrayList(), callback: (Boolean) -> Unit) {
-        threadPool.runAsync {
-            callback(saveEntry(entry, reference, tags))
-        }
-    }
-
-    fun saveEntry(entry: Entry, reference: Reference? = null, tags: Collection<Tag> = ArrayList()): Boolean {
-        return entryPersister.saveEntry(entry, reference, tags)
+        entryPersister.saveEntryAsync(entry, reference, tags, callback)
     }
 
 
