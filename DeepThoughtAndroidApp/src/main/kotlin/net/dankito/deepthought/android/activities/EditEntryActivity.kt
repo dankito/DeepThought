@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.activity_edit_entry.*
 import net.dankito.deepthought.android.R
+import net.dankito.deepthought.android.activities.arguments.EditEntryActivityResult
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
-import net.dankito.deepthought.android.service.ui.BaseActivity
 import net.dankito.deepthought.android.views.EntryField
 import net.dankito.deepthought.android.views.EntryFieldsPreview
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditor
@@ -24,9 +24,9 @@ import net.dankito.deepthought.ui.html.HtmlEditorCommon
 import net.dankito.deepthought.ui.html.IHtmlEditorListener
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
-import net.dankito.serializer.ISerializer
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.ReadLaterArticleService
+import net.dankito.utils.serialization.ISerializer
 import javax.inject.Inject
 
 
@@ -36,6 +36,8 @@ class EditEntryActivity : BaseActivity() {
         const val ENTRY_ID_INTENT_EXTRA_NAME = "ENTRY_ID"
         const val READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME = "READ_LATER_ARTICLE_ID"
         const val ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ENTRY_EXTRACTION_RESULT"
+
+        const val ResultId = "EDIT_ENTRY_ACTIVITY_RESULT"
     }
 
 
@@ -88,6 +90,8 @@ class EditEntryActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        parameterHolder.setActivityResult(ResultId, EditEntryActivityResult())
 
         setupUI()
 
@@ -243,8 +247,10 @@ class EditEntryActivity : BaseActivity() {
 
 
     private fun saveEntryAndCloseDialog() {
-        saveEntryAsync {
-            runOnUiThread { closeDialog() }
+        saveEntryAsync { successful ->
+            if(successful) {
+                runOnUiThread { closeDialog() }
+            }
         }
     }
 
@@ -253,24 +259,41 @@ class EditEntryActivity : BaseActivity() {
 
             entry?.let { entry ->
                 updateEntry(entry, content)
-                presenter.saveEntryAsync(entry, entry.reference, tagsOnEntry, callback)
+                presenter.saveEntryAsync(entry, entry.reference, tagsOnEntry) { successful ->
+                    if(successful) {
+                        setActivityResult(EditEntryActivityResult(didSaveEntry = true, savedEntry = entry))
+                    }
+                    callback(successful)
+                }
             }
 
             entryExtractionResult?.let { extractionResult ->
                 updateEntry(extractionResult.entry, content)
-                presenter.saveEntryAsync(extractionResult.entry, extractionResult.reference, tagsOnEntry, callback)
+                presenter.saveEntryAsync(extractionResult.entry, extractionResult.reference, tagsOnEntry) { successful ->
+                    if(successful) {
+                        setActivityResult(EditEntryActivityResult(didSaveEntryExtractionResult = true, savedEntry = entry))
+                    }
+                    callback(successful)
+                }
             }
 
             readLaterArticle?.let { readLaterArticle ->
                 val extractionResult = readLaterArticle.entryExtractionResult
                 updateEntry(extractionResult.entry, content)
 
-                presenter.saveEntryAsync(extractionResult.entry, extractionResult.reference, tagsOnEntry) {
-                    readLaterArticleService.delete(readLaterArticle)
-                    callback(it)
+                presenter.saveEntryAsync(extractionResult.entry, extractionResult.reference, tagsOnEntry) { successful ->
+                    if(successful) {
+                        readLaterArticleService.delete(readLaterArticle)
+                        setActivityResult(EditEntryActivityResult(didSaveReadLaterArticle = true, savedEntry = entry))
+                    }
+                    callback(successful)
                 }
             }
         }
+    }
+
+    private fun setActivityResult(result: EditEntryActivityResult) {
+        parameterHolder.setActivityResult(ResultId, result)
     }
 
     private fun updateEntry(entry: Entry, content: String) {
