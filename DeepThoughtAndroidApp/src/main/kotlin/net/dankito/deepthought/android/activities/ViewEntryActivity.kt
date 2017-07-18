@@ -276,11 +276,15 @@ class ViewEntryActivity : BaseActivity() {
     }
 
     private fun showEntry(entry: Entry?, reference: Reference?, tags: Collection<Tag>?) {
-        val content = entry?.content
+        var content = entry?.content
         val url = reference?.url
 
+        if(content?.startsWith("<html") == false && content?.startsWith("<body") == false) {
+            content = "<body style=\"font-family: serif, Georgia, Roboto, Helvetica, Arial; font-size:17;\"" + content + "</body>"
+        }
+
         if(url != null) {
-            wbEntry.loadDataWithBaseURL(url, content, "text/html; charset=UTF-8", null, null)
+            wbEntry.loadDataWithBaseURL(url, content, "text/html; charset=UTF-8", "utf-8", null)
         }
         else {
             wbEntry.loadData(content, "text/html; charset=UTF-8", null)
