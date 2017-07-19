@@ -2,7 +2,6 @@ package net.dankito.data_access.network.communication
 
 import org.slf4j.LoggerFactory
 import java.io.*
-
 import java.net.Socket
 
 
@@ -73,16 +72,31 @@ open class SocketHandler {
 
     @Throws(IOException::class)
     protected fun receiveMessage(inputStream: InputStream): SocketResult {
-        val buffer = ByteArray(CommunicationConfig.MAX_MESSAGE_SIZE)
+        val buffer = ByteArray(CommunicationConfig.BUFFER_SIZE)
+        val receivedMessageBytes = ArrayList<Byte>()
 
-        val receivedMessageSize = inputStream.read(buffer)
+        var receivedChunkSize: Int
+        var receivedMessageSize: Int = 0
 
-        if (receivedMessageSize > 0 && receivedMessageSize < CommunicationConfig.MAX_MESSAGE_SIZE) {
-            val responseString = buffer.toString(CommunicationConfig.MESSAGE_CHARSET)
-            return SocketResult(true, receivedMessage = responseString)
+        do {
+            receivedChunkSize = inputStream.read(buffer, 0, buffer.size)
+            receivedMessageSize += receivedChunkSize
+
+            if(receivedChunkSize > 0) {
+                receivedMessageBytes.addAll(buffer.take(receivedChunkSize))
+
+                if(buffer[receivedChunkSize - 1] == CommunicationConfig.MESSAGE_END_CHAR.toByte()) {
+                    break
+                }
+            }
+        } while(receivedChunkSize > -1)
+
+        if (receivedChunkSize > 0 && receivedChunkSize < CommunicationConfig.MAX_MESSAGE_SIZE) {
+            val receivedMessage = String(receivedMessageBytes.toByteArray(), CommunicationConfig.MESSAGE_CHARSET)
+            return SocketResult(true, receivedMessage = receivedMessage)
         }
         else {
-            if (receivedMessageSize <= 0) {
+            if (receivedChunkSize <= 0) {
                 return SocketResult(false, Exception("Could not receive any bytes"))
             }
             else {
