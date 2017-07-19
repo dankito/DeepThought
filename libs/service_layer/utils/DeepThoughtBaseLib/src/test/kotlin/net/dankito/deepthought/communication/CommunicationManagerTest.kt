@@ -727,7 +727,7 @@ class CommunicationManagerTest {
 
     private fun mockDialogServiceTextInput(dialogService: IDialogService, textToReturn: AtomicReference<String>) {
         whenever(dialogService.askForTextInput(any<CharSequence>(), anyOrNull(), anyOrNull(), any(), any())).thenAnswer { invocation ->
-            val callback = invocation.arguments[3] as (Boolean, String?) -> Unit
+            val callback = invocation.arguments[4] as (Boolean, String?) -> Unit
             callback(true, textToReturn.get())
         }
     }
