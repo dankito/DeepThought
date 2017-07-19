@@ -1,7 +1,11 @@
 package net.dankito.data_access.network.communication
 
+import okio.Okio
 import org.slf4j.LoggerFactory
-import java.io.*
+import java.io.BufferedInputStream
+import java.io.ByteArrayInputStream
+import java.io.IOException
+import java.io.InputStream
 import java.net.Socket
 
 
@@ -13,46 +17,19 @@ open class SocketHandler {
 
 
     fun sendMessage(socket: Socket, message: ByteArray): SocketResult {
-        var inputStream: InputStream? = null
-        var outputStream: OutputStream? = null
-
         try {
-            inputStream = BufferedInputStream(ByteArrayInputStream(message))
-            outputStream = BufferedOutputStream(socket.getOutputStream())
+            val sink = Okio.buffer(Okio.sink(socket))
+            val source = Okio.buffer(Okio.source(BufferedInputStream(ByteArrayInputStream(message))))
 
-            return sendMessage(inputStream, outputStream)
-        } catch (e: Exception) {
-            log.error("Could not send message to client " + socket.inetAddress, e)
+            sink.writeAll(source)
+            sink.flush()
+
+            source.close()
+
+            return SocketResult(true)
+        } catch(e: Exception) {
             return SocketResult(false, e)
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close()
-                } catch (e: Exception) {
-                    log.warn("Could not close input stream", e)
-                }
-
-            }
-
-            if (outputStream != null) {
-                try {
-                    outputStream.flush()
-                } catch (e: Exception) {
-                    log.warn("Could not flush output stream", e)
-                }
-
-                // do not close outputStream, otherwise socket gets closed as well
-            }
         }
-    }
-
-    @Throws(IOException::class)
-    internal fun sendMessage(inputStream: InputStream, outputStream: OutputStream): SocketResult {
-        inputStream.copyTo(outputStream, CommunicationConfig.BUFFER_SIZE)
-
-        outputStream.flush()
-
-        return SocketResult(true)
     }
 
 
