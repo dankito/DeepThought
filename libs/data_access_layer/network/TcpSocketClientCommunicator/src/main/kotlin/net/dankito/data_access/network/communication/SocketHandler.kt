@@ -22,6 +22,7 @@ open class SocketHandler {
             val source = Okio.buffer(Okio.source(BufferedInputStream(ByteArrayInputStream(message))))
 
             sink.writeAll(source)
+            sink.writeUtf8(CommunicationConfig.MESSAGE_END_CHAR.toString()) // to signal receiver that message ends here
             sink.flush()
 
             source.close()

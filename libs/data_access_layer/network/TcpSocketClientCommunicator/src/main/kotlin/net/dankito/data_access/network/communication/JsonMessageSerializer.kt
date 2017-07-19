@@ -110,7 +110,7 @@ class JsonMessageSerializer(protected var messageHandler: IMessageHandler) : IMe
     }
 
     protected fun addMessageEndStringAndGetBytesFromString(string: String): ByteArray {
-        return getBytesFromString(string + CommunicationConfig.MESSAGE_END_CHAR)
+        return getBytesFromString(string)
     }
 
     protected fun getBytesFromString(string: String): ByteArray {
