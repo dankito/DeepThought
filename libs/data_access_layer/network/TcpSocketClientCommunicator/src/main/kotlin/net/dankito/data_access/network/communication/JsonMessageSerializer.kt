@@ -35,7 +35,7 @@ class JsonMessageSerializer(protected var messageHandler: IMessageHandler) : IMe
         }
 
         val requestString = createRequestString(request.method, requestBodyString)
-        return getBytesFromString(requestString)
+        return addMessageEndStringAndGetBytesFromString(requestString)
     }
 
     protected fun createRequestString(methodName: String, body: String?): String {
@@ -79,7 +79,7 @@ class JsonMessageSerializer(protected var messageHandler: IMessageHandler) : IMe
     @Throws(Exception::class)
     override fun serializeResponse(response: Response<*>): ByteArray {
         val serializedResponse = serializeObject(response)
-        return getBytesFromString(serializedResponse)
+        return addMessageEndStringAndGetBytesFromString(serializedResponse)
     }
 
 
@@ -107,6 +107,10 @@ class JsonMessageSerializer(protected var messageHandler: IMessageHandler) : IMe
         } else {
             return objectMapper.readValue<T>(serializedObject, objectMapper.typeFactory.constructParametricType(objectClass, *genericParameterTypes))
         }
+    }
+
+    protected fun addMessageEndStringAndGetBytesFromString(string: String): ByteArray {
+        return getBytesFromString(string + CommunicationConfig.MESSAGE_END_CHAR)
     }
 
     protected fun getBytesFromString(string: String): ByteArray {
