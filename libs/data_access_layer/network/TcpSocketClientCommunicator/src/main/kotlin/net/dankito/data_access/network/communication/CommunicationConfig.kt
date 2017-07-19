@@ -17,6 +17,8 @@ class CommunicationConfig {
 
         const val METHOD_NAME_AND_BODY_SEPARATOR = ":"
 
+        const val MESSAGE_END_CHAR = '\n'
+
     }
 
 }
