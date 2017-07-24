@@ -25,6 +25,7 @@ class EditReferenceActivity : BaseActivity() {
         private const val REFERENCE_SERIES_BUNDLE_EXTRA_NAME = "REFERENCE_SERIES"
         private const val REFERENCE_ISSUE_BUNDLE_EXTRA_NAME = "REFERENCE_ISSUE"
         private const val REFERENCE_PUBLISHING_DATE_BUNDLE_EXTRA_NAME = "REFERENCE_PUBLISHING_DATE"
+        private const val REFERENCE_URL_BUNDLE_EXTRA_NAME = "REFERENCE_URL"
 
         const val ResultId = "EDIT_REFERENCE_ACTIVITY_RESULT"
     }
@@ -69,6 +70,7 @@ class EditReferenceActivity : BaseActivity() {
         savedInstanceState.getString(REFERENCE_SERIES_BUNDLE_EXTRA_NAME)?.let { edtxtSeries.setText(it) }
         savedInstanceState.getString(REFERENCE_ISSUE_BUNDLE_EXTRA_NAME)?.let { edtxtIssue.setText(it) }
         savedInstanceState.getString(REFERENCE_PUBLISHING_DATE_BUNDLE_EXTRA_NAME)?.let { edtxtPublishingDate.setText(it) }
+        savedInstanceState.getString(REFERENCE_URL_BUNDLE_EXTRA_NAME)?.let { edtxtUrl.setText(it) }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -81,6 +83,7 @@ class EditReferenceActivity : BaseActivity() {
             outState.putString(REFERENCE_SERIES_BUNDLE_EXTRA_NAME, edtxtSeries.text.toString())
             outState.putString(REFERENCE_ISSUE_BUNDLE_EXTRA_NAME, edtxtIssue.text.toString())
             outState.putString(REFERENCE_PUBLISHING_DATE_BUNDLE_EXTRA_NAME, edtxtPublishingDate.text.toString())
+            outState.putString(REFERENCE_URL_BUNDLE_EXTRA_NAME, edtxtUrl.text.toString())
         }
     }
 
@@ -144,6 +147,7 @@ class EditReferenceActivity : BaseActivity() {
             reference.series = edtxtSeries.text.toString()
             reference.issue = edtxtIssue.text.toString()
             reference.publishingDate = currentlySetPublishingDate
+            reference.url = edtxtUrl.text.toString()
 
             presenter.saveReferenceAsync(reference) { successful ->
                 if(successful) {
@@ -210,6 +214,8 @@ class EditReferenceActivity : BaseActivity() {
         edtxtIssue.setText(reference.issue)
 
         showPublishingDate(reference.publishingDate)
+
+        edtxtUrl.setText(reference.url)
     }
 
     private fun showPublishingDate(publishingDate: Date?) {

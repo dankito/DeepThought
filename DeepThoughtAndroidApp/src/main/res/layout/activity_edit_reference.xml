@@ -113,6 +113,26 @@
                 android:src="@android:drawable/ic_menu_my_calendar"
             />
 
+            <TextView
+                android:id="@+id/txtUrlLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_edit_reference_url_label"
+                android:layout_below="@+id/edtxtPublishingDate"
+                android:layout_marginTop="@dimen/activity_edit_reference_section_top_margin"
+            />
+
+            <EditText
+                android:id="@+id/edtxtUrl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtUrlLabel"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+            />
+
         </RelativeLayout>
 
     </ScrollView>
