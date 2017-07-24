@@ -11,6 +11,7 @@ import net.dankito.deepthought.model.enums.NoteType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
+import net.dankito.deepthought.ui.presenter.util.ReferencePersister
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
@@ -92,6 +93,12 @@ class CommonDataModule {
     @Singleton
     fun provideEntryPersister(entryService: EntryService, referenceService: ReferenceService, tagService: TagService): EntryPersister {
         return EntryPersister(entryService, referenceService, tagService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideReferencePersister(referenceService: ReferenceService): ReferencePersister {
+        return ReferencePersister(referenceService)
     }
 
 
