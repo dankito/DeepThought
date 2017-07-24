@@ -8,6 +8,7 @@ import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.activity_edit_entry.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditEntryActivityResult
+import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
 import net.dankito.deepthought.android.activities.arguments.EntryActivityParameters
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
@@ -147,6 +148,25 @@ class EditEntryActivity : BaseActivity() {
         contentEditorParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
 
         contentHtmlEditor.layoutParams = contentEditorParams
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+
+        (parameterHolder.getActivityResult(EditReferenceActivity.ResultId) as? EditReferenceActivityResult)?.let { result ->
+            if(result.didSaveReference) {
+                result.savedReference?.let { savedReference(it) }
+            }
+        }
+    }
+
+    private fun savedReference(reference: Reference) {
+        entry?.let { it.reference = reference }
+
+        entryExtractionResult?.let { it.reference = reference }
+
+        setReferencePreviewOnUIThread()
     }
 
 
