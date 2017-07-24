@@ -123,7 +123,7 @@ class EditReferenceActivity : BaseActivity() {
         reference?.let { reference ->
             reference.title = edtxtTitle.text.toString()
             reference.series = edtxtSeries.text.toString()
-            reference.issueOrPublishingDate = edtxtSeries.text.toString()
+            reference.issueOrPublishingDate = edtxtIssueOrPublishingDate.text.toString()
 
             presenter.saveReferenceAsync(reference) { successful ->
                 if(successful) {
