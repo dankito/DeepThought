@@ -6,6 +6,7 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_edit_reference.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityParameters
+import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.ui.presenter.EditReferencePresenter
@@ -21,6 +22,8 @@ class EditReferenceActivity : BaseActivity() {
         private const val REFERENCE_TITLE_BUNDLE_EXTRA_NAME = "REFERENCE_TITLE"
         private const val REFERENCE_SERIES_BUNDLE_EXTRA_NAME = "REFERENCE_SERIES"
         private const val REFERENCE_ISSUE_OR_PUBLISHING_DATE_BUNDLE_EXTRA_NAME = "REFERENCE_ISSUE_OR_PUBLISHING_DATE"
+
+        const val ResultId = "EDIT_REFERENCE_ACTIVITY_RESULT"
     }
 
 
@@ -123,9 +126,16 @@ class EditReferenceActivity : BaseActivity() {
             reference.issueOrPublishingDate = edtxtSeries.text.toString()
 
             presenter.saveReferenceAsync(reference) { successful ->
+                if(successful) {
+                    setActivityResult(EditReferenceActivityResult(didSaveReference = true, savedReference = reference))
+                }
                 callback(successful)
             }
         }
+    }
+
+    private fun setActivityResult(result: EditReferenceActivityResult) {
+        parameterHolder.setActivityResult(ResultId, result)
     }
 
     private fun closeDialog() {
