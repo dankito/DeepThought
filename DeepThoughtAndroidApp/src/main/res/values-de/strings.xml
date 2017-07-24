@@ -59,6 +59,7 @@
     <string name="activity_edit_reference_series_label">Reihe</string>
     <string name="activity_edit_reference_issue_label">Ausgabe</string>
     <string name="activity_edit_reference_publishing_date_label">Veröffentlichungsdatum</string>
+    <string name="activity_edit_reference_error_could_not_parse_publishing_date" formatted="false">Kann %s nicht in ein Datum umwandeln</string>
 
     <string name="synchronize_data_with_this_device">Daten synchronisieren mit</string>
     <string name="never_ask_again">Nicht mehr fragen</string>
