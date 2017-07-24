@@ -63,6 +63,10 @@ class ReferencesListPresenter(private var view: IReferencesListView, private var
     }
 
 
+    fun editReference(reference: Reference) {
+        router.showEditReferenceView(reference)
+    }
+
     fun showEntriesForReference(reference: Reference) {
         router.showEntriesForReference(reference)
     }
