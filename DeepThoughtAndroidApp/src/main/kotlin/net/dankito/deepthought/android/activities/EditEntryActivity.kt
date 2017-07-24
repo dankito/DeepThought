@@ -11,14 +11,10 @@ import net.dankito.deepthought.android.activities.arguments.EditEntryActivityRes
 import net.dankito.deepthought.android.activities.arguments.EntryActivityParameters
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
-import net.dankito.deepthought.model.EntryField
 import net.dankito.deepthought.android.views.EntryFieldsPreview
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditor
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditorPool
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.ReadLaterArticle
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.html.HtmlEditorCommon
@@ -317,6 +313,8 @@ class EditEntryActivity : BaseActivity() {
             parameters.readLaterArticle?.let { editReadLaterArticle(it) }
 
             parameters.entryExtractionResult?.let { editEntryExtractionResult(it) }
+
+            parameters.field?.let { entryFieldClicked(it) }
         }
     }
 
