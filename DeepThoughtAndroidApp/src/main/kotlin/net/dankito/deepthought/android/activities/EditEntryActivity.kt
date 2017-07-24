@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.activity_edit_entry.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.activities.arguments.EntryActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditEntryActivityResult
+import net.dankito.deepthought.android.activities.arguments.EntryActivityParameters
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.views.EntryField
@@ -167,7 +167,11 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun editReference() {
-        // TODO
+        val reference = entry?.reference ?: readLaterArticle?.entryExtractionResult?.reference ?: entryExtractionResult?.reference
+
+        if(reference != null) {
+            presenter.editReference(reference)
+        }
     }
 
     private fun editTagsOnEntry() {
