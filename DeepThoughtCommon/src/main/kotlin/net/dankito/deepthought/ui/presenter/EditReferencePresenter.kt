@@ -10,8 +10,17 @@ class EditReferencePresenter(private val referencePersister: ReferencePersister)
 
 
     fun convertPublishingDateToText(publishingDate: Date): String {
-        return getLongDateFormat().format(publishingDate)
+        return getBestDateFormatForLanguage().format(publishingDate)
     }
+
+    private fun getBestDateFormatForLanguage(): DateFormat {
+        if(Locale.getDefault().language == "de") {
+            return getMediumDateFormat()
+        }
+
+        return getShortDateFormat()
+    }
+
 
     fun parsePublishingDate(dateString: String): Date? {
         try { return getShortDateFormat().parse(dateString) } catch(ignored: Exception) { }
