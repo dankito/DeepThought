@@ -8,6 +8,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.android.dialogs.PickDateDialog
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.ui.presenter.EditReferencePresenter
 import net.dankito.deepthought.ui.presenter.util.ReferencePersister
@@ -92,6 +93,8 @@ class EditReferenceActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         supportActionBar?.title = ""
+
+        btnSelectPublishingDate.setOnClickListener { showDatePickerDialog() }
     }
 
 
@@ -147,6 +150,17 @@ class EditReferenceActivity : BaseActivity() {
 
     private fun closeDialog() {
         finish()
+    }
+
+
+    private fun showDatePickerDialog() {
+        reference?.let { reference ->
+            val pickDateDialog = PickDateDialog()
+
+            pickDateDialog.show(supportFragmentManager, reference.publishingDate) { selectedDate ->
+                showPublishingDate(selectedDate)
+            }
+        }
     }
 
 
