@@ -10,6 +10,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.extensions.abstractPlainText
 import net.dankito.deepthought.extensions.preview
 import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.EntryField
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.util.EntryExtractionResult

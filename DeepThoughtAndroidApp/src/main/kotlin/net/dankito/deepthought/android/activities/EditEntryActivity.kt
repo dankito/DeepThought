@@ -11,7 +11,7 @@ import net.dankito.deepthought.android.activities.arguments.EditEntryActivityRes
 import net.dankito.deepthought.android.activities.arguments.EntryActivityParameters
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
-import net.dankito.deepthought.android.views.EntryField
+import net.dankito.deepthought.model.EntryField
 import net.dankito.deepthought.android.views.EntryFieldsPreview
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditor
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditorPool

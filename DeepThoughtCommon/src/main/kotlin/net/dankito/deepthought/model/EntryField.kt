@@ -1,4 +1,4 @@
-package net.dankito.deepthought.android.views
+package net.dankito.deepthought.model
 
 
 enum class EntryField {
