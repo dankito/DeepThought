@@ -166,6 +166,7 @@ class EditEntryActivity : BaseActivity() {
 
         entryExtractionResult?.let { it.reference = reference }
 
+        updateCanEntryBeSavedOnUIThread(true)
         setReferencePreviewOnUIThread()
     }
 
