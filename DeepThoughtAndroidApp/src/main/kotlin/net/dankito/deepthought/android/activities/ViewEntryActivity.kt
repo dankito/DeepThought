@@ -12,10 +12,7 @@ import net.dankito.deepthought.android.activities.arguments.EditEntryActivityRes
 import net.dankito.deepthought.android.activities.arguments.EntryActivityParameters
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.views.EntryFieldsPreview
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.ReadLaterArticle
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ViewEntryPresenter
@@ -116,7 +113,7 @@ class ViewEntryActivity : BaseActivity() {
         supportActionBar?.title = ""
 
         this.entryFieldsPreview = lytEntryFieldsPreview
-        entryFieldsPreview.fieldClickedListener = { field -> editEntry()}
+        entryFieldsPreview.fieldClickedListener = { field -> editEntry(field)}
 
         val settings = wbEntry.getSettings()
         settings.defaultTextEncodingName = "UTF-8" // otherwise non ASCII text doesn't get displayed correctly
@@ -198,12 +195,12 @@ class ViewEntryActivity : BaseActivity() {
         }
     }
 
-    private fun editEntry() {
-        entry?.let { presenter.editEntry(it) }
+    private fun editEntry(field: EntryField? = null) {
+        entry?.let { presenter.editEntry(it, field) }
 
-        readLaterArticle?.let { presenter.editEntry(it) }
+        readLaterArticle?.let { presenter.editEntry(it, field) }
 
-        entryExtractionResult?.let { presenter.editEntry(it) }
+        entryExtractionResult?.let { presenter.editEntry(it, field) }
     }
 
     private fun showShareEntryPopupMenu(clickedView: View) {
