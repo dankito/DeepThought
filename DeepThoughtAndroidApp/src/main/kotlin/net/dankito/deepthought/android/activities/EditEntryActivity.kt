@@ -172,6 +172,9 @@ class EditEntryActivity : BaseActivity() {
         if(reference != null) {
             presenter.editReference(reference)
         }
+        else {
+            presenter.createReference()
+        }
     }
 
     private fun editTagsOnEntry() {
