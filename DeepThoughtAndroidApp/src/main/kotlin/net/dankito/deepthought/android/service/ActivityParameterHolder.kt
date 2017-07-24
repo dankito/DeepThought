@@ -35,6 +35,10 @@ class ActivityParameterHolder {
         return resultHolder[id]
     }
 
+    fun clearActivityResults(vararg resultIdsToClear: String) {
+        resultIdsToClear.forEach { resultHolder.remove(it) }
+    }
+
     fun clearActivityResults() {
         resultHolder.clear()
     }
