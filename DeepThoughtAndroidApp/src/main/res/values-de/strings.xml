@@ -64,7 +64,7 @@
 
     <string name="synchronize_data_with_this_device">Daten synchronisieren mit</string>
     <string name="never_ask_again">Nicht mehr fragen</string>
-    <string name="alert_title_permit_device_to_synchronize">Geräte frägt um Erlaubnis</string>
+    <string name="alert_title_permit_device_to_synchronize">Gerät frägt um Erlaubnis</string>
     <string name="alert_message_permit_device_to_synchronize" formatted="false">%s erlauben sich zu synchronisieren?</string>
     <string name="alert_message_enter_this_code_on_remote_device" formatted="false">Geben sie diesen Code auf %s ein:&lt;br/>&lt;br/>&lt;b>%s&lt;/b></string>
     <string name="alert_title_enter_response_code_for_permitting_synchronization" formatted="false">Geben Sie den Code ein, der auf %s angezeigt wird:</string>
