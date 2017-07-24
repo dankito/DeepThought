@@ -59,8 +59,8 @@ class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
-    fun provideDialogService(currentActivityTracker: CurrentActivityTracker) : IDialogService {
-        return AndroidDialogService(currentActivityTracker)
+    fun provideDialogService(currentActivityTracker: CurrentActivityTracker, localization: Localization) : IDialogService {
+        return AndroidDialogService(currentActivityTracker, localization)
     }
 
     @Provides

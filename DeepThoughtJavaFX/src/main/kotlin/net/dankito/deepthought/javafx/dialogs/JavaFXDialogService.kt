@@ -8,13 +8,18 @@ import javafx.scene.layout.VBox
 import javafx.stage.Screen
 import javafx.stage.Stage
 import net.dankito.deepthought.javafx.util.FXUtils
+import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.InputType
 import java.io.PrintWriter
 import java.io.StringWriter
 
 
-class JavaFXDialogService : IDialogService {
+class JavaFXDialogService(private val localizationProperty: Localization) : IDialogService {
+
+    override fun getLocalization(): Localization {
+        return localizationProperty
+    }
 
 
     override fun showLittleInfoMessage(infoMessage: CharSequence) {

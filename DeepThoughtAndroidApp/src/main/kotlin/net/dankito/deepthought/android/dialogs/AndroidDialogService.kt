@@ -9,10 +9,15 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import net.dankito.deepthought.android.service.CurrentActivityTracker
+import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IDialogService
 
 
-class AndroidDialogService(private val currentActivityTracker: CurrentActivityTracker) : IDialogService {
+class AndroidDialogService(private val currentActivityTracker: CurrentActivityTracker, private val localizationProperty: Localization) : IDialogService {
+
+    override fun getLocalization(): Localization {
+        return localizationProperty
+    }
 
 
     override fun showLittleInfoMessage(infoMessage: CharSequence) {

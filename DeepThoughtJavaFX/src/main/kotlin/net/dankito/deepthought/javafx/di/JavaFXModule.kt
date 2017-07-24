@@ -51,8 +51,8 @@ class JavaFXModule(private val mainWindowController: MainWindowController) {
 
     @Provides
     @Singleton
-    fun provideDialogService() : IDialogService {
-        return JavaFXDialogService()
+    fun provideDialogService(localization: Localization) : IDialogService {
+        return JavaFXDialogService(localization)
     }
 
 
