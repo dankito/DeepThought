@@ -13,6 +13,24 @@ class EditReferencePresenter(private val referencePersister: ReferencePersister)
         return getLongDateFormat().format(publishingDate)
     }
 
+    fun parsePublishingDate(dateString: String): Date? {
+        try { return getShortDateFormat().parse(dateString) } catch(ignored: Exception) { }
+
+        try { return getMediumDateFormat().parse(dateString) } catch(ignored: Exception) { }
+
+        try { return getLongDateFormat().parse(dateString) } catch(ignored: Exception) { }
+
+        return null
+    }
+
+    private fun getShortDateFormat(): DateFormat {
+        return DateFormat.getDateInstance(DateFormat.SHORT)
+    }
+
+    private fun getMediumDateFormat(): DateFormat {
+        return DateFormat.getDateInstance(DateFormat.MEDIUM)
+    }
+
     private fun getLongDateFormat(): DateFormat {
         return DateFormat.getDateInstance(DateFormat.LONG)
     }
