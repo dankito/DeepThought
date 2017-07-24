@@ -17,9 +17,6 @@ data class Reference(
 
 ) : BaseEntity() {
 
-    // TODO: reproduce setting publishingDate with tryToParseIssueOrPublishingDateToDate() when issueOrPublishingDate gets set
-
-
     companion object {
         private const val serialVersionUID = -7176298227016698447L
     }
@@ -31,8 +28,8 @@ data class Reference(
     @Column(name = TableConfig.ReferenceSeriesColumnName)
     var series: String? = null
 
-    @Column(name = TableConfig.ReferenceIssueOrPublishingDateColumnName)
-    var issueOrPublishingDate: String? = null
+    @Column(name = TableConfig.ReferenceIssueColumnName)
+    var issue: String? = null
 
     @Column(name = TableConfig.ReferencePublishingDateColumnName)
     @Temporal(TemporalType.TIMESTAMP)
