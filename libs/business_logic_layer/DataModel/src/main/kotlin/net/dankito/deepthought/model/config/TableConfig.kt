@@ -148,7 +148,7 @@ class TableConfig {
 
         const val ReferenceSeriesColumnName = "series"
         const val ReferenceTableOfContentsColumnName = "table_of_contents"
-        const val ReferenceIssueOrPublishingDateColumnName = "issue_or_publishing_date"
+        const val ReferenceIssueColumnName = "issue"
         const val ReferenceIsbnOrIssnColumnName = "isbn_or_issn"
         const val ReferencePublishingDateColumnName = "publishing_date"
 

@@ -60,8 +60,9 @@ class WebPageMetaDataExtractor {
 
     private fun extractDateString(extractionResult: EntryExtractionResult, document: Document) {
         extractionResult.reference?.let { reference ->
-            if(reference.issueOrPublishingDate == null) {
-                reference.issueOrPublishingDate = extractDateString(document)
+            if(reference.issue == null) {
+                // TODO: try to parse DateString and set publishingDate instead
+                reference.issue = extractDateString(document)
             }
         }
     }

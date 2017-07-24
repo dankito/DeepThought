@@ -46,7 +46,7 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
             }
         }
 
-        entity.issueOrPublishingDate?.let { issue ->
+        entity.issue?.let { issue ->
             if(issue.isNotEmpty()) {
                 doc.add(StringField(FieldName.ReferenceIssueOrPublishingDate, issue.toLowerCase(), Field.Store.NO))
             }

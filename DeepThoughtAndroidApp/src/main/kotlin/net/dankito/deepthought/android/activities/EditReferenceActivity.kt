@@ -62,7 +62,7 @@ class EditReferenceActivity : BaseActivity() {
 
         savedInstanceState.getString(REFERENCE_TITLE_BUNDLE_EXTRA_NAME)?.let { edtxtTitle.setText(it) }
         savedInstanceState.getString(REFERENCE_SERIES_BUNDLE_EXTRA_NAME)?.let { edtxtSeries.setText(it) }
-        savedInstanceState.getString(REFERENCE_ISSUE_OR_PUBLISHING_DATE_BUNDLE_EXTRA_NAME)?.let { edtxtIssueOrPublishingDate.setText(it) }
+        savedInstanceState.getString(REFERENCE_ISSUE_OR_PUBLISHING_DATE_BUNDLE_EXTRA_NAME)?.let { edtxtIssue.setText(it) }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -73,7 +73,7 @@ class EditReferenceActivity : BaseActivity() {
 
             outState.putString(REFERENCE_TITLE_BUNDLE_EXTRA_NAME, edtxtTitle.text.toString())
             outState.putString(REFERENCE_SERIES_BUNDLE_EXTRA_NAME, edtxtSeries.text.toString())
-            outState.putString(REFERENCE_ISSUE_OR_PUBLISHING_DATE_BUNDLE_EXTRA_NAME, edtxtIssueOrPublishingDate.text.toString())
+            outState.putString(REFERENCE_ISSUE_OR_PUBLISHING_DATE_BUNDLE_EXTRA_NAME, edtxtIssue.text.toString())
         }
     }
 
@@ -123,7 +123,7 @@ class EditReferenceActivity : BaseActivity() {
         reference?.let { reference ->
             reference.title = edtxtTitle.text.toString()
             reference.series = edtxtSeries.text.toString()
-            reference.issueOrPublishingDate = edtxtIssueOrPublishingDate.text.toString()
+            reference.issue = edtxtIssue.text.toString()
 
             presenter.saveReferenceAsync(reference) { successful ->
                 if(successful) {
@@ -165,7 +165,7 @@ class EditReferenceActivity : BaseActivity() {
 
         edtxtTitle.setText(reference.title)
         edtxtSeries.setText(reference.series)
-        edtxtIssueOrPublishingDate.setText(reference.issueOrPublishingDate)
+        edtxtIssue.setText(reference.issue)
     }
 
 }

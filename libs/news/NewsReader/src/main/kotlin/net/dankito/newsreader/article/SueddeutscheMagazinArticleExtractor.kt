@@ -103,10 +103,10 @@ class SueddeutscheMagazinArticleExtractor(webClient: IWebClient) : ArticleExtrac
                 reference?.subTitle = labelElement.text()
 
                 classificationElement.select("a.heft").first()?.let {
-                    reference?.issueOrPublishingDate = it.text().replace("Heft", "").trim()
+                    reference?.issue = it.text().replace("Heft", "").trim()
                 }
                 if (labelElement.nextElementSibling() != null) {
-                    reference?.issueOrPublishingDate = labelElement.nextElementSibling().text()
+                    reference?.issue = labelElement.nextElementSibling().text()
                 }
             }
         }
