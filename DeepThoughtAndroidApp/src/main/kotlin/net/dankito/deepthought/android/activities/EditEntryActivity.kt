@@ -234,6 +234,8 @@ class EditEntryActivity : BaseActivity() {
     override fun onDestroy() {
         htmlEditorPool.htmlEditorReleased(contentHtmlEditor)
 
+        parameterHolder.clearActivityResults(EditReferenceActivity.ResultId)
+
         super.onDestroy()
     }
 
