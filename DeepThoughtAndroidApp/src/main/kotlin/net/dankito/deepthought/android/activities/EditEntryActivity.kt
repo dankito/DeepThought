@@ -128,6 +128,8 @@ class EditEntryActivity : BaseActivity() {
         supportActionBar?.let { actionBar ->
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.setDisplayShowHomeEnabled(true)
+
+            actionBar.title = ""
         }
 
         this.entryFieldsPreview = lytEntryFieldsPreview
