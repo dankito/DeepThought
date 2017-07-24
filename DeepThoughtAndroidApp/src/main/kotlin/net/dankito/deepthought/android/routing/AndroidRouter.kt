@@ -81,8 +81,7 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
         val viewArticleIntent = Intent(context, ViewEntryActivity::class.java)
         viewArticleIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-        val id = parameterHolder.setParameters(parameters)
-        viewArticleIntent.putExtra(BaseActivity.ParametersId, id)
+        addParametersToIntent(viewArticleIntent, parameters)
 
         context.startActivity(viewArticleIntent)
     }
@@ -119,6 +118,13 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
 
     override fun returnToPreviousView() {
         activityTracker.currentActivity?.onBackPressed()
+    }
+
+
+    private fun addParametersToIntent(intent: Intent, parameters: Any) {
+        val id = parameterHolder.setParameters(parameters)
+
+        intent.putExtra(BaseActivity.ParametersId, id)
     }
 
 }
