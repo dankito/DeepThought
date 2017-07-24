@@ -63,19 +63,39 @@
             />
 
             <TextView
-                android:id="@+id/txtIssueOrPublishingDateLabel"
+                android:id="@+id/txtIssueLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/activity_edit_reference_issue_or_publishing_date_label"
+                android:text="@string/activity_edit_reference_issue_label"
                 android:layout_below="@+id/edtxtSeries"
                 android:layout_marginTop="@dimen/activity_edit_reference_section_top_margin"
             />
 
             <EditText
-                android:id="@+id/edtxtIssueOrPublishingDate"
+                android:id="@+id/edtxtIssue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/txtIssueOrPublishingDateLabel"
+                android:layout_below="@id/txtIssueLabel"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+            />
+
+            <TextView
+                android:id="@+id/txtPublishingDateLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_edit_reference_publishing_date_label"
+                android:layout_below="@+id/edtxtIssue"
+                android:layout_marginTop="@dimen/activity_edit_reference_section_top_margin"
+            />
+
+            <EditText
+                android:id="@+id/edtxtPublishingDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtPublishingDateLabel"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_toLeftOf="@+id/btnSelectPublishingDate"
@@ -88,8 +108,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/edtxtIssueOrPublishingDate"
-                android:layout_alignBottom="@+id/edtxtIssueOrPublishingDate"
+                android:layout_alignTop="@+id/edtxtPublishingDate"
+                android:layout_alignBottom="@+id/edtxtPublishingDate"
                 android:src="@android:drawable/ic_menu_my_calendar"
             />
 

@@ -59,7 +59,8 @@
 
     <string name="activity_edit_reference_title_label">Title</string>
     <string name="activity_edit_reference_series_label">Series</string>
-    <string name="activity_edit_reference_issue_or_publishing_date_label">Issue or publishing date</string>
+    <string name="activity_edit_reference_issue_label">Issue</string>
+    <string name="activity_edit_reference_publishing_date_label">Publishing date</string>
 
     <string name="synchronize_data_with_this_device">Synchronize data with</string>
     <string name="never_ask_again">Never ask again</string>

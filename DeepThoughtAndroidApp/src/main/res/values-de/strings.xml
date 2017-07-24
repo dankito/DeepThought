@@ -57,7 +57,8 @@
 
     <string name="activity_edit_reference_title_label">Titel</string>
     <string name="activity_edit_reference_series_label">Reihe</string>
-    <string name="activity_edit_reference_issue_or_publishing_date_label">Ausgabe oder Veröffentlichungsdatum</string>
+    <string name="activity_edit_reference_issue_label">Ausgabe</string>
+    <string name="activity_edit_reference_publishing_date_label">Veröffentlichungsdatum</string>
 
     <string name="synchronize_data_with_this_device">Daten synchronisieren mit</string>
     <string name="never_ask_again">Nicht mehr fragen</string>

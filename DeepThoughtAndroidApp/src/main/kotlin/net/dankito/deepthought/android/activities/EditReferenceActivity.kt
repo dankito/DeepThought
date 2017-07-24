@@ -12,6 +12,7 @@ import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.ui.presenter.EditReferencePresenter
 import net.dankito.deepthought.ui.presenter.util.ReferencePersister
 import net.dankito.service.data.ReferenceService
+import java.util.*
 import javax.inject.Inject
 
 
@@ -21,7 +22,8 @@ class EditReferenceActivity : BaseActivity() {
         private const val REFERENCE_ID_BUNDLE_EXTRA_NAME = "REFERENCE_ID"
         private const val REFERENCE_TITLE_BUNDLE_EXTRA_NAME = "REFERENCE_TITLE"
         private const val REFERENCE_SERIES_BUNDLE_EXTRA_NAME = "REFERENCE_SERIES"
-        private const val REFERENCE_ISSUE_OR_PUBLISHING_DATE_BUNDLE_EXTRA_NAME = "REFERENCE_ISSUE_OR_PUBLISHING_DATE"
+        private const val REFERENCE_ISSUE_BUNDLE_EXTRA_NAME = "REFERENCE_ISSUE"
+        private const val REFERENCE_PUBLISHING_DATE_BUNDLE_EXTRA_NAME = "REFERENCE_PUBLISHING_DATE"
 
         const val ResultId = "EDIT_REFERENCE_ACTIVITY_RESULT"
     }
@@ -38,6 +40,8 @@ class EditReferenceActivity : BaseActivity() {
     private val presenter: EditReferencePresenter
 
     private var reference: Reference? = null
+
+    private var currentlySetPublishingDate: Date? = null
 
 
     init {
@@ -62,7 +66,8 @@ class EditReferenceActivity : BaseActivity() {
 
         savedInstanceState.getString(REFERENCE_TITLE_BUNDLE_EXTRA_NAME)?.let { edtxtTitle.setText(it) }
         savedInstanceState.getString(REFERENCE_SERIES_BUNDLE_EXTRA_NAME)?.let { edtxtSeries.setText(it) }
-        savedInstanceState.getString(REFERENCE_ISSUE_OR_PUBLISHING_DATE_BUNDLE_EXTRA_NAME)?.let { edtxtIssue.setText(it) }
+        savedInstanceState.getString(REFERENCE_ISSUE_BUNDLE_EXTRA_NAME)?.let { edtxtIssue.setText(it) }
+        savedInstanceState.getString(REFERENCE_PUBLISHING_DATE_BUNDLE_EXTRA_NAME)?.let { edtxtPublishingDate.setText(it) }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -73,7 +78,8 @@ class EditReferenceActivity : BaseActivity() {
 
             outState.putString(REFERENCE_TITLE_BUNDLE_EXTRA_NAME, edtxtTitle.text.toString())
             outState.putString(REFERENCE_SERIES_BUNDLE_EXTRA_NAME, edtxtSeries.text.toString())
-            outState.putString(REFERENCE_ISSUE_OR_PUBLISHING_DATE_BUNDLE_EXTRA_NAME, edtxtIssue.text.toString())
+            outState.putString(REFERENCE_ISSUE_BUNDLE_EXTRA_NAME, edtxtIssue.text.toString())
+            outState.putString(REFERENCE_PUBLISHING_DATE_BUNDLE_EXTRA_NAME, edtxtPublishingDate.text.toString())
         }
     }
 
@@ -124,6 +130,7 @@ class EditReferenceActivity : BaseActivity() {
             reference.title = edtxtTitle.text.toString()
             reference.series = edtxtSeries.text.toString()
             reference.issue = edtxtIssue.text.toString()
+            reference.publishingDate = currentlySetPublishingDate
 
             presenter.saveReferenceAsync(reference) { successful ->
                 if(successful) {
@@ -144,7 +151,7 @@ class EditReferenceActivity : BaseActivity() {
 
 
     private fun showParameters(parameters: EditReferenceActivityParameters?) {
-        parameters?.let { parameters ->
+        parameters?.let {
             if(parameters.reference != null) {
                 showReference(parameters.reference)
             }
@@ -166,6 +173,14 @@ class EditReferenceActivity : BaseActivity() {
         edtxtTitle.setText(reference.title)
         edtxtSeries.setText(reference.series)
         edtxtIssue.setText(reference.issue)
+
+        showPublishingDate(reference.publishingDate)
+    }
+
+    private fun showPublishingDate(publishingDate: Date?) {
+        this.currentlySetPublishingDate = publishingDate
+
+        publishingDate?.let { edtxtPublishingDate.setText(presenter.convertPublishingDateToText(it)) }
     }
 
 }
