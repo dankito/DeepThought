@@ -20,6 +20,7 @@ import net.dankito.utils.IThreadPool
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.serialization.JacksonJsonSerializer
+import net.dankito.utils.ui.IDialogService
 import javax.inject.Singleton
 
 
@@ -78,8 +79,9 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideDeleteEntityService(entryService: EntryService, tagService: TagService, referenceService: ReferenceService, threadPool: IThreadPool) : DeleteEntityService {
-        return DeleteEntityService(entryService, tagService, referenceService, threadPool)
+    fun provideDeleteEntityService(entryService: EntryService, tagService: TagService, referenceService: ReferenceService, dialogService: IDialogService,
+                                   threadPool: IThreadPool) : DeleteEntityService {
+        return DeleteEntityService(entryService, tagService, referenceService, dialogService, threadPool)
     }
 
 

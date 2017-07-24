@@ -4,19 +4,22 @@ import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Tag
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.ui.IDialogService
 
 
 /**
  * When simply calling <entityServiceBase>.delete() entity's references aren't updated and still keep a reference to deleted entity.
  * This service first removes all references and updates them and then deletes the entity with its EntityService.
  */
-class DeleteEntityService(private val entryService: EntryService, private val tagService: TagService, private val referenceService: ReferenceService, private val threadPool: IThreadPool) {
+class DeleteEntityService(private val entryService: EntryService, private val tagService: TagService, private val referenceService: ReferenceService,
+                          private val dialogService: IDialogService, private val threadPool: IThreadPool) {
 
     fun deleteEntryAsync(entry: Entry) {
         threadPool.runAsync { deleteEntry(entry) }
     }
 
     fun deleteEntry(entry: Entry) {
+        val entryReference = entry.reference
         entry.reference?.let { reference ->
             entry.reference = null
             referenceService.update(reference)
@@ -43,6 +46,19 @@ class DeleteEntityService(private val entryService: EntryService, private val ta
         }
 
         entryService.delete(entry)
+
+        mayAlsoDeleteReference(entryReference)
+    }
+
+    private fun mayAlsoDeleteReference(reference: Reference?) {
+        if (reference?.hasEntries() == false) { // this was the only Entry on which Reference has been set -> ask user if we should delete Reference as well?
+            val localizedMessage = dialogService.getLocalization().getLocalizedString("alert.message.entry.was.only.entry.on.reference.delete.as.well", reference.title)
+            dialogService.showConfirmationDialog(localizedMessage) { shouldAlsoDeleteReference ->
+                if(shouldAlsoDeleteReference) {
+                    deleteReference(reference)
+                }
+            }
+        }
     }
 
 
