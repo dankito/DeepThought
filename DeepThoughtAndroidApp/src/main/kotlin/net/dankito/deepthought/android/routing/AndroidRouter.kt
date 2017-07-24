@@ -2,10 +2,8 @@ package net.dankito.deepthought.android.routing
 
 import android.content.Context
 import android.content.Intent
-import net.dankito.deepthought.android.activities.ArticleSummaryActivity
-import net.dankito.deepthought.android.activities.BaseActivity
-import net.dankito.deepthought.android.activities.EditEntryActivity
-import net.dankito.deepthought.android.activities.ViewEntryActivity
+import net.dankito.deepthought.android.activities.*
+import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EntryActivityParameters
 import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
@@ -113,6 +111,24 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
         }
 
         context.startActivity(editEntryIntent)
+    }
+
+
+    override fun showCreateReferenceView() {
+        showEditReferenceView(EditReferenceActivityParameters(null))
+    }
+
+    override fun showEditReferenceView(reference: Reference) {
+        showEditReferenceView(EditReferenceActivityParameters(reference))
+    }
+
+    private fun showEditReferenceView(parameters: EditReferenceActivityParameters) {
+        val editReferenceIntent = Intent(context, EditReferenceActivity::class.java)
+        editReferenceIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        addParametersToIntent(editReferenceIntent, parameters)
+
+        context.startActivity(editReferenceIntent)
     }
 
 

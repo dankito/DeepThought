@@ -90,6 +90,15 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
     }
 
 
+    override fun showCreateReferenceView() {
+        // TODO
+    }
+
+    override fun showEditReferenceView(reference: Reference) {
+        // TODO
+    }
+
+
     override fun returnToPreviousView() {
         // there's no such thing as go to previous view in JavaFX, simply close the dialog
     }

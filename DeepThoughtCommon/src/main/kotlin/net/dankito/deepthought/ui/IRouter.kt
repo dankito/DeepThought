@@ -36,6 +36,11 @@ interface IRouter {
     fun showEditEntryView(extractionResult: EntryExtractionResult)
 
 
+    fun showCreateReferenceView()
+
+    fun showEditReferenceView(reference: Reference)
+
+
     fun returnToPreviousView()
 
 }
