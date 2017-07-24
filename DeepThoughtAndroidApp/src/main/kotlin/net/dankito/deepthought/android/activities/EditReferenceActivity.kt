@@ -95,6 +95,12 @@ class EditReferenceActivity : BaseActivity() {
         supportActionBar?.title = ""
 
         btnSelectPublishingDate.setOnClickListener { showDatePickerDialog() }
+
+        edtxtPublishingDate.setOnFocusChangeListener { _, hasFocus ->
+            if(hasFocus == false) {
+                edtxtPublishingDateLostFocus(edtxtPublishingDate.text.toString())
+            }
+        }
     }
 
 
@@ -121,6 +127,10 @@ class EditReferenceActivity : BaseActivity() {
 
 
     private fun saveReferenceAndCloseDialog() {
+        if(edtxtPublishingDate.hasFocus()) { // OnFocusChangeListener doesn't get called when save action gets pressed
+            edtxtPublishingDateLostFocus(edtxtPublishingDate.text.toString())
+        }
+
         saveReferenceAsync { successful ->
             if(successful) {
                 runOnUiThread { closeDialog() }
@@ -152,6 +162,17 @@ class EditReferenceActivity : BaseActivity() {
         finish()
     }
 
+
+    private fun edtxtPublishingDateLostFocus(enteredText: String) {
+        val parsedDate = presenter.parsePublishingDate(enteredText)
+
+        if(parsedDate != null) {
+            showPublishingDate(parsedDate)
+        }
+        else {
+            edtxtPublishingDate.error = getString(R.string.activity_edit_reference_error_could_not_parse_publishing_date, enteredText)
+        }
+    }
 
     private fun showDatePickerDialog() {
         reference?.let { reference ->
