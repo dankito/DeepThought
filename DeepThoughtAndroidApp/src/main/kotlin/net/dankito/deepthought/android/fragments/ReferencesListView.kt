@@ -32,13 +32,15 @@ class ReferencesListView: MainActivityTabFragment(R.layout.fragment_tab_referenc
 
     private val presenter: ReferencesListPresenter
 
-    private val adapter = ReferencesAdapter()
+    private val adapter: ReferencesAdapter
 
 
     init {
         AppComponent.component.inject(this)
 
         presenter = ReferencesListPresenter(this, router, searchEngine, referenceService, clipboardService)
+
+        adapter = ReferencesAdapter(presenter)
     }
 
 
