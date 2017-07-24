@@ -55,6 +55,10 @@
     <string name="dialog_tags_on_entry_create_tag">Neu</string>
     <string name="dialog_tags_on_entry_toggle_tags">Tauschen</string>
 
+    <string name="activity_edit_reference_title_label">Titel</string>
+    <string name="activity_edit_reference_series_label">Reihe</string>
+    <string name="activity_edit_reference_issue_or_publishing_date_label">Ausgabe oder Veröffentlichungsdatum</string>
+
     <string name="synchronize_data_with_this_device">Daten synchronisieren mit</string>
     <string name="never_ask_again">Nicht mehr fragen</string>
     <string name="alert_title_permit_device_to_synchronize">Geräte frägt um Erlaubnis</string>

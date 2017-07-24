@@ -57,6 +57,10 @@
     <string name="dialog_tags_on_entry_create_tag">New</string>
     <string name="dialog_tags_on_entry_toggle_tags">Toggle</string>
 
+    <string name="activity_edit_reference_title_label">Title</string>
+    <string name="activity_edit_reference_series_label">Series</string>
+    <string name="activity_edit_reference_issue_or_publishing_date_label">Issue or publishing date</string>
+
     <string name="synchronize_data_with_this_device">Synchronize data with</string>
     <string name="never_ask_again">Never ask again</string>
     <string name="alert_title_permit_device_to_synchronize">Device asks for Permission</string>
