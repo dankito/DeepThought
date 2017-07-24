@@ -29,11 +29,11 @@ interface IRouter {
 
     fun showCreateEntryView()
 
-    fun showEditEntryView(entry: Entry)
+    fun showEditEntryView(entry: Entry, field: EntryField? = null)
 
-    fun showEditEntryView(article: ReadLaterArticle)
+    fun showEditEntryView(article: ReadLaterArticle, field: EntryField? = null)
 
-    fun showEditEntryView(extractionResult: EntryExtractionResult)
+    fun showEditEntryView(extractionResult: EntryExtractionResult, field: EntryField? = null)
 
 
     fun showCreateReferenceView()

@@ -1,6 +1,7 @@
 package net.dankito.deepthought.ui.presenter
 
 import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.EntryField
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.util.EntryExtractionResult
@@ -23,16 +24,16 @@ class ViewEntryPresenter(private val entryPersister: EntryPersister, private val
     }
 
 
-    fun editEntry(entry: Entry) {
-        router.showEditEntryView(entry)
+    fun editEntry(entry: Entry, field: EntryField? = null) {
+        router.showEditEntryView(entry, field)
     }
 
-    fun editEntry(article: ReadLaterArticle) {
-        router.showEditEntryView(article)
+    fun editEntry(article: ReadLaterArticle, field: EntryField? = null) {
+        router.showEditEntryView(article, field)
     }
 
-    fun editEntry(extractionResult: EntryExtractionResult) {
-        router.showEditEntryView(extractionResult)
+    fun editEntry(extractionResult: EntryExtractionResult, field: EntryField? = null) {
+        router.showEditEntryView(extractionResult, field)
     }
 
 

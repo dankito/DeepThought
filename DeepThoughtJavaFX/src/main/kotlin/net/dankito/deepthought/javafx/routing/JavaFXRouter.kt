@@ -68,21 +68,21 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
 
     }
 
-    override fun showEditEntryView(entry: Entry) {
+    override fun showEditEntryView(entry: Entry, field: EntryField?) {
         runLater {
             // TODO: set title when Reference is not set
             mainWindowController.find(EditEntryView::class, mapOf(EditEntryView::entry to entry)).show(entry.referencePreview)
         }
     }
 
-    override fun showEditEntryView(article: ReadLaterArticle) {
+    override fun showEditEntryView(article: ReadLaterArticle, field: EntryField?) {
         runLater {
             // TODO: set title when Reference is not set
             mainWindowController.find(EditReadLaterArticleView::class, mapOf(EditReadLaterArticleView::article to article)).show(article.entryExtractionResult.reference?.preview)
         }
     }
 
-    override fun showEditEntryView(extractionResult: EntryExtractionResult) {
+    override fun showEditEntryView(extractionResult: EntryExtractionResult, field: EntryField?) {
         runLater {
             // TODO: set title when Reference is not set
             mainWindowController.find(EditEntryExtractionResultView::class, mapOf(EditEntryExtractionResultView::extractionResult to extractionResult)).show(extractionResult.reference?.preview)
