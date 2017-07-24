@@ -72,6 +72,11 @@
             android:theme="@style/AppTheme.NoActionBar"
         />
 
+        <activity
+            android:name=".activities.EditReferenceActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+        />
+
     </application>
 
 </manifest>
