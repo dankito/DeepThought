@@ -144,8 +144,13 @@ class EditReferenceActivity : BaseActivity() {
 
 
     private fun showParameters(parameters: EditReferenceActivityParameters?) {
-        parameters?.reference?.let { reference ->
-            showReference(reference)
+        parameters?.let { parameters ->
+            if(parameters.reference != null) {
+                showReference(parameters.reference)
+            }
+            else { // create reference
+                showReference(Reference(""))
+            }
         }
     }
 
