@@ -199,7 +199,10 @@ class ArticleSummaryActivity : BaseActivity() {
             val icon = BitmapFactory.decodeFile(iconPath.path)
             val scaledSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24.toFloat(), resources.displayMetrics).toInt()
             val scaledIcon = Bitmap.createScaledBitmap(icon, scaledSize, scaledSize, false)
-            icon.recycle()
+
+            if(icon != scaledIcon) { // if icon didn't get scaled scaledIcon equals icon -> recycling would cause an app crash
+                icon.recycle()
+            }
 
             runOnUiThread {
                 supportActionBar?.setIcon(BitmapDrawable(resources, scaledIcon))
