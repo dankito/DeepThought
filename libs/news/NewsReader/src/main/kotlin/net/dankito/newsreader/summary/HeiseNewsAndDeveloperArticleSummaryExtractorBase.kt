@@ -94,7 +94,8 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
 
 
     private fun extractHeiseDeveloperArticles(url: String, document: Document): Collection<ArticleSummaryItem> {
-        return document.body().select("article a").map { parseHeiseDeveloperArticle(it, url) }.filterNotNull()
+        val articleContainers = document.body().select("#mitte_links, aside.blogs_aktuell")
+        return articleContainers.select("article a").map { parseHeiseDeveloperArticle(it, url) }.filterNotNull()
     }
 
     private fun parseHeiseDeveloperArticle(articleElement: Element, url: String): ArticleSummaryItem? {
