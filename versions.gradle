@@ -1,8 +1,8 @@
 ext {
 
-    versionName = '0.2'
+    appVersionName = '0.2'
 
-    versionCode = 1
+    appVersionCode = 1
 
     kotlinVersion = '1.1.3-2'
 
