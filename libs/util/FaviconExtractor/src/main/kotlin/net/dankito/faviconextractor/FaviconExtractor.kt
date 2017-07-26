@@ -51,9 +51,7 @@ class FaviconExtractor(webClient : IWebClient) : ExtractorBase(webClient) {
     fun extractFavicons(document: Document, url: String): List<Favicon> {
         val extractedFavicons = document.head().select("link, meta").map { mapElementToFavicon(it, url) }.filterNotNull().toMutableList()
 
-        if(extractedFavicons.isEmpty()) {
-            tryToFindDefaultFavicon(url, extractedFavicons)
-        }
+        tryToFindDefaultFavicon(url, extractedFavicons)
 
         return extractedFavicons
     }
@@ -62,10 +60,20 @@ class FaviconExtractor(webClient : IWebClient) : ExtractorBase(webClient) {
         val urlInstance = URL(url)
         val defaultFaviconUrl = urlInstance.protocol + "://" + urlInstance.host + "/favicon.ico"
         webClient.get(RequestParameters(defaultFaviconUrl, responseType = ResponseType.Bytes)).let { response ->
-            if (response.isSuccessful) {
+            if(response.isSuccessful && containsIconWithUrl(extractedFavicons, defaultFaviconUrl) == false) {
                 extractedFavicons.add(Favicon(defaultFaviconUrl, FaviconType.ShortcutIcon))
             }
         }
+    }
+
+    private fun containsIconWithUrl(extractedFavicons: MutableList<Favicon>, faviconUrl: String): Boolean {
+        extractedFavicons.forEach {
+            if(it.url == faviconUrl) {
+                return true
+            }
+        }
+
+        return false
     }
 
     /**
