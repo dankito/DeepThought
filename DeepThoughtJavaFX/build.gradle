@@ -44,12 +44,18 @@ dependencies {
     compile "org.controlsfx:controlsfx:$controlsFXVersion"
 }
 
+compileJava {
+    configurations.compile.each {
+//        compile it
+    }
+}
+
 
 jar {
     manifest {
         attributes  'Main-Class': mainClassName,
                     'Implementation-Title': title,
-                    'Implementation-Version': versionName
+                    'Implementation-Version': appVersionName
     }
 
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
