@@ -1,7 +1,7 @@
 package net.dankito.newsreader.summary
 
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.newsreader.article.HeiseNewsAndDeveloperArticleExtractor
+import net.dankito.newsreader.article.HeiseNewsAndDeveloperArticleExtractorBase
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import org.jsoup.nodes.Document
@@ -9,6 +9,9 @@ import org.jsoup.nodes.Element
 
 
 abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebClient) : ArticleSummaryExtractorBase(webClient), IArticleSummaryExtractor {
+
+    protected abstract fun getArticleExtractorClass(): Class<out HeiseNewsAndDeveloperArticleExtractorBase>
+
 
     override fun parseHtmlToArticleSummary(url: String, document: Document, forLoadingMoreItems: Boolean) : ArticleSummary {
         val summary = ArticleSummary(extractArticles(url, document))
@@ -33,7 +36,8 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
         val articles = mutableListOf<ArticleSummaryItem>()
 
         articles.addAll(extractTopArticles(url, document))
-        articles.addAll(extractIndexItems(url, document))
+        articles.addAll(extractIndexItems(url, document)) // now Heise News only
+        articles.addAll(extractHeiseDeveloperArticles(url, document)) // now Heise Developer
 
         return articles
     }
@@ -45,7 +49,7 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
     }
 
     private fun parseTopArticle(contentUrlElement: Element, url: String): ArticleSummaryItem? {
-        val article = ArticleSummaryItem(makeLinkAbsolute(contentUrlElement.attr("href"), url), contentUrlElement.attr("title"), HeiseNewsAndDeveloperArticleExtractor::class.java)
+        val article = ArticleSummaryItem(makeLinkAbsolute(contentUrlElement.attr("href"), url), contentUrlElement.attr("title"), getArticleExtractorClass())
 
         extractDachzeile(contentUrlElement, article)
 
@@ -74,7 +78,7 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
 
     private fun parseIndexItem(item: Element, url: String): ArticleSummaryItem? {
         item.select("header a").firstOrNull()?.let { headerElement ->
-            val article = ArticleSummaryItem(makeLinkAbsolute(headerElement.attr("href") ?: "", url), headerElement.text() ?: "", HeiseNewsAndDeveloperArticleExtractor::class.java)
+            val article = ArticleSummaryItem(makeLinkAbsolute(headerElement.attr("href") ?: "", url), headerElement.text() ?: "", getArticleExtractorClass())
 
             item.select(".indexlist_text").first()?.let { textElement ->
                 article.summary = textElement.text()
@@ -83,6 +87,28 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
             }
 
             return article
+        }
+
+        return null
+    }
+
+
+    private fun extractHeiseDeveloperArticles(url: String, document: Document): Collection<ArticleSummaryItem> {
+        return document.body().select("article a").map { parseHeiseDeveloperArticle(it, url) }.filterNotNull()
+    }
+
+    private fun parseHeiseDeveloperArticle(articleElement: Element, url: String): ArticleSummaryItem? {
+        articleElement.select(".akwa-article-teaser__synopsis").first()?.text()?.let { summary ->
+            val articleUrl = makeLinkAbsolute(articleElement.attr("href"), url)
+            val title = articleElement.select("header")?.first()?.text() ?: ""
+
+            var previewImageUrl = articleElement.select("figure img").first()?.attr("src")
+            if(previewImageUrl != null) {
+                previewImageUrl = makeLinkAbsolute(previewImageUrl, url)
+            }
+
+
+            return ArticleSummaryItem(articleUrl, title, getArticleExtractorClass(), summary, previewImageUrl)
         }
 
         return null

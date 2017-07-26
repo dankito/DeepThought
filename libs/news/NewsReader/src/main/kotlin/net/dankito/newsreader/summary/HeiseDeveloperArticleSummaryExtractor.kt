@@ -1,7 +1,9 @@
 package net.dankito.newsreader.summary
 
-import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.newsreader.article.HeiseDeveloperArticleExtractor
+import net.dankito.newsreader.article.HeiseNewsAndDeveloperArticleExtractorBase
+import net.dankito.newsreader.model.ArticleSummaryItem
 import org.jsoup.nodes.Element
 
 
@@ -14,6 +16,10 @@ class HeiseDeveloperArticleSummaryExtractor(webClient: IWebClient) : HeiseNewsAn
 
     override fun getBaseUrl() : String {
         return "https://www.heise.de/developer/"
+    }
+
+    override fun getArticleExtractorClass(): Class<out HeiseNewsAndDeveloperArticleExtractorBase> {
+        return HeiseDeveloperArticleExtractor::class.java
     }
 
 
