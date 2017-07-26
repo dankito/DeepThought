@@ -1,6 +1,7 @@
 package net.dankito.newsreader.summary
 
 import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.newsreader.article.NetzPolitikOrgArticleExtractor
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import org.jsoup.nodes.Document
@@ -31,7 +32,7 @@ class NetzPolitikOrgArticleSummaryExtractor(webClient: IWebClient) : ArticleSumm
             val summary = articleElement.select(".teaser__excerpt").firstOrNull()?.text() ?: ""
             val previewImageUrl = articleElement.select("img.wp-post-image").firstOrNull()?.attr("src")
 
-            return ArticleSummaryItem(articleUrl, title, null, summary, previewImageUrl)
+            return ArticleSummaryItem(articleUrl, title, NetzPolitikOrgArticleExtractor::class.java, summary, previewImageUrl)
         }
 
         return null
