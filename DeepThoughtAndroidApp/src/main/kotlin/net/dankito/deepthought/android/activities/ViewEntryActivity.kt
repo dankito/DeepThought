@@ -36,6 +36,23 @@ class ViewEntryActivity : BaseActivity() {
         private const val ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ENTRY_EXTRACTION_RESULT"
 
         private const val MAX_CLICK_DURATION = 200
+
+        private const val NON_READER_MODE_SYSTEM_UI_FLAGS = 0
+        private val READER_MODE_SYSTEM_UI_FLAGS: Int
+
+        init {
+            var flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                flags = flags or View.SYSTEM_UI_FLAG_FULLSCREEN
+            }
+
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+                flags = flags or View.SYSTEM_UI_FLAG_IMMERSIVE
+            }
+
+            READER_MODE_SYSTEM_UI_FLAGS = flags
+        }
     }
 
 
@@ -121,6 +138,8 @@ class ViewEntryActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         supportActionBar?.title = ""
+
+        wbEntry.setOnSystemUiVisibilityChangeListener { flags -> systemUiVisibilityChanged(flags) }
         
         wbEntry.setOnTouchListener { _, event -> handleWebViewTouch(event) }
         wbEntry.setOnClickListener { handleWebViewClick() }
@@ -256,6 +275,12 @@ class ViewEntryActivity : BaseActivity() {
     }
 
 
+    private fun systemUiVisibilityChanged(flags: Int) {
+        if(flags == NON_READER_MODE_SYSTEM_UI_FLAGS) {
+            leaveReaderMode()
+        }
+    }
+
     /**
      * WebView doesn't fire click event, so we had to implement this our self
      */
@@ -287,33 +312,37 @@ class ViewEntryActivity : BaseActivity() {
 
     private fun toggleReaderMode() {
         if(isInReaderMode) {
-            isInReaderMode = false
-
             leaveReaderMode()
         }
         else {
-            isInReaderMode = true
-
             goToReaderMode()
         }
     }
 
     private fun leaveReaderMode() {
+        isInReaderMode = false
+
         entryFieldsPreview.visibility = View.VISIBLE
         appBarLayout.visibility = View.VISIBLE
 
         val layoutParams = wbEntry.layoutParams as RelativeLayout.LayoutParams
         layoutParams.alignWithParent = false
         wbEntry.layoutParams = layoutParams
+
+        wbEntry.systemUiVisibility = NON_READER_MODE_SYSTEM_UI_FLAGS
     }
 
     private fun goToReaderMode() {
+        isInReaderMode = true
+
         entryFieldsPreview.visibility = View.GONE
         appBarLayout.visibility = View.GONE
 
         val layoutParams = wbEntry.layoutParams as RelativeLayout.LayoutParams
         layoutParams.alignWithParent = true
         wbEntry.layoutParams = layoutParams
+
+        wbEntry.systemUiVisibility = READER_MODE_SYSTEM_UI_FLAGS
     }
 
 
