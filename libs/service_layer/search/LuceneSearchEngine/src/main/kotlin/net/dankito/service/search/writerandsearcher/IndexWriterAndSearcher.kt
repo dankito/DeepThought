@@ -352,4 +352,11 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
         search.fireSearchCompleted()
     }
 
+    protected fun getIdsFromHits(searcher: IndexSearcher, hits: Array<ScoreDoc>): MutableList<String> {
+        return hits.map {
+            val hitDoc = searcher.doc(it.doc)
+            hitDoc.getField(getIdFieldName()).stringValue()
+        }.toMutableList()
+    }
+
 }

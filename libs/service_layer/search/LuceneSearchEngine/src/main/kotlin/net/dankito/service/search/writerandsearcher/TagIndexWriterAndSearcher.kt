@@ -191,10 +191,7 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, pri
         }
 
         executeQuery(searchTermQuery, TAGS_DEFAULT_COUNT_MAX_SEARCH_RESULTS, SortOption(FieldName.TagName, SortOrder.Ascending, SortField.Type.STRING))?.let { (searcher, hits) ->
-            val tagIdsWithSearchTermIds = hits.map {
-                val hitDoc = searcher.doc(it.doc)
-                hitDoc.getField(getIdFieldName()).stringValue()
-            }.toMutableList() // TODO: does this keep sort ordering?
+            val tagIdsWithSearchTermIds = getIdsFromHits(searcher, hits) // TODO: does this keep sort ordering?
 
             tagIdsWithSearchTermIds.retainAll(givenTagIds)
 
