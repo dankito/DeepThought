@@ -181,7 +181,12 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
     private fun handleRequestStartSynchronizationResponse(response: Response<RequestStartSynchronizationResponseBody>, device: DiscoveredDevice, deviceInfoKey: String) {
         if (response.isCouldHandleMessage) {
             response.body?.let { body ->
-                if(body.result === RequestStartSynchronizationResult.ALLOWED) {
+                if(body.result == RequestStartSynchronizationResult.DO_NOT_KNOW_YOU) {
+                    syncManager.syncBasicDataWithDevice(device.device.id!!, device.address, getBasicDataSyncPortFromDeviceInfoKey(deviceInfoKey), { remoteDevice ->
+                        discoveredDevice(deviceInfoKey, remoteDevice, device.address, getMessagesPortFromDeviceInfoKey(deviceInfoKey))
+                    })
+                }
+                else if(body.result === RequestStartSynchronizationResult.ALLOWED) {
                     handleStartSynchronizationResultAllowed(body, device, deviceInfoKey)
                 }
             }
