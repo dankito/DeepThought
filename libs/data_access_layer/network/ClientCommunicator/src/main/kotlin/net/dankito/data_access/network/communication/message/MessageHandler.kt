@@ -105,11 +105,14 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
     private fun createWrongCodeResponse(nonce: String): RespondToSynchronizationPermittingChallengeResponseBody {
         val responseBody: RespondToSynchronizationPermittingChallengeResponseBody
         val countRetriesLeft = challengeHandler.getCountRetriesLeftForNonce(nonce)
+
         if (countRetriesLeft > 0) {
             responseBody = RespondToSynchronizationPermittingChallengeResponseBody(RespondToSynchronizationPermittingChallengeResult.WRONG_CODE, countRetriesLeft)
-        } else {
+        }
+        else {
             responseBody = RespondToSynchronizationPermittingChallengeResponseBody(RespondToSynchronizationPermittingChallengeResult.DENIED)
         }
+
         return responseBody
     }
 
@@ -117,26 +120,35 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
     private fun handleRequestStartSynchronizationRequest(request: Request<RequestStartSynchronizationRequestBody>, callback: (Response<RequestStartSynchronizationResponseBody>) -> Unit) {
         request.body?.let { body ->
             if(isDevicePermittedToSynchronize(body.uniqueDeviceId) == false) {
-                val isRemoteDeviceKnown = config.entityManager.getAllEntitiesOfType(Device::class.java).filter { it.uniqueDeviceId == body.uniqueDeviceId }.isNotEmpty()
-
-                if(isRemoteDeviceKnown) {
-                    callback(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.DENIED)))
-                }
-                else { // mostly because remote synchronized with a device we also are synchronizing with, but there hasn't been a connection to this synchronized device till then
-                    callback(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.DO_NOT_KNOW_YOU)))
-                }
+                handleRemoteIsDeniedToSynchronize(body, callback)
             }
             else {
-                val permittedSynchronizedDevice = networkSettings.getDiscoveredDevice(body.uniqueDeviceId)
-                if (permittedSynchronizedDevice != null) {
-                    permittedSynchronizedDevice.synchronizationPort = body.synchronizationPort
-
-                    config.callRemoteRequestedToStartSynchronizationListeners(permittedSynchronizedDevice)
-                }
-
-                callback(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.ALLOWED, networkSettings.synchronizationPort)))
+                handleRemoteIsPermittedToSynchronize(body, callback)
             }
         }
+    }
+
+    private fun handleRemoteIsDeniedToSynchronize(body: RequestStartSynchronizationRequestBody, callback: (Response<RequestStartSynchronizationResponseBody>) -> Unit) {
+        val isRemoteDeviceKnown = config.entityManager.getAllEntitiesOfType(Device::class.java).filter { it.uniqueDeviceId == body.uniqueDeviceId }.isNotEmpty()
+
+        if(isRemoteDeviceKnown) {
+            callback(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.DENIED)))
+        }
+        else { // mostly because remote synchronized with a device we also are synchronizing with, but there hasn't been a connection to this synchronized device till then
+            callback(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.DO_NOT_KNOW_YOU)))
+        }
+    }
+
+    private fun handleRemoteIsPermittedToSynchronize(body: RequestStartSynchronizationRequestBody, callback: (Response<RequestStartSynchronizationResponseBody>) -> Unit) {
+        val permittedSynchronizedDevice = networkSettings.getDiscoveredDevice(body.uniqueDeviceId)
+
+        if(permittedSynchronizedDevice != null) {
+            permittedSynchronizedDevice.synchronizationPort = body.synchronizationPort
+
+            config.callRemoteRequestedToStartSynchronizationListeners(permittedSynchronizedDevice)
+        }
+
+        callback(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.ALLOWED, networkSettings.synchronizationPort)))
     }
 
     private fun isDevicePermittedToSynchronize(remoteDeviceUniqueId: String): Boolean {
