@@ -166,6 +166,8 @@ class EditEntryActivity : BaseActivity() {
     private fun savedReference(reference: Reference) {
         entry?.let { it.reference = reference }
 
+        readLaterArticle?.entryExtractionResult?.let { it.reference = reference }
+
         entryExtractionResult?.let { it.reference = reference }
 
         updateCanEntryBeSavedOnUIThread(true)
