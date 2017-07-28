@@ -86,7 +86,7 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
         }
     }
 
-    protected fun searchEngineInitialized() {
+    protected open fun searchEngineInitialized() {
         isInitialized = true
 
         for(listener in HashSet<() -> Unit>(initializationListeners)) {
