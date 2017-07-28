@@ -5,7 +5,10 @@ import android.os.Bundle
 import android.support.v7.widget.PopupMenu
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
+import android.webkit.WebView
+import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.activity_view_entry.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditEntryActivityResult
@@ -21,6 +24,7 @@ import net.dankito.service.data.EntryService
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.ui.IClipboardService
+import java.util.*
 import javax.inject.Inject
 
 
@@ -30,6 +34,8 @@ class ViewEntryActivity : BaseActivity() {
         private const val ENTRY_ID_INTENT_EXTRA_NAME = "ENTRY_ID"
         private const val READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME = "READ_LATER_ARTICLE_ID"
         private const val ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ENTRY_EXTRACTION_RESULT"
+
+        private const val MAX_CLICK_DURATION = 200
     }
 
 
@@ -60,6 +66,10 @@ class ViewEntryActivity : BaseActivity() {
 
 
     private var presenter: ViewEntryPresenter
+
+    private var isInReaderMode = false
+
+    private var webViewClickStartTime: Long = 0
 
     private lateinit var entryFieldsPreview: EntryFieldsPreview
 
@@ -111,6 +121,9 @@ class ViewEntryActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         supportActionBar?.title = ""
+        
+        wbEntry.setOnTouchListener { _, event -> handleWebViewTouch(event) }
+        wbEntry.setOnClickListener { handleWebViewClick() }
 
         this.entryFieldsPreview = lytEntryFieldsPreview
         entryFieldsPreview.fieldClickedListener = { field -> editEntry(field)}
@@ -240,6 +253,67 @@ class ViewEntryActivity : BaseActivity() {
         entryExtractionResult?.let { extractionResult ->
             presenter.shareEntry(extractionResult.entry, extractionResult.reference)
         }
+    }
+
+
+    /**
+     * WebView doesn't fire click event, so we had to implement this our self
+     */
+    private fun handleWebViewTouch(event: MotionEvent): Boolean {
+        when(event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                webViewClickStartTime = Calendar.getInstance().timeInMillis
+            }
+            MotionEvent.ACTION_UP -> {
+                val clickDuration = Calendar.getInstance().timeInMillis - webViewClickStartTime
+                if(clickDuration < MAX_CLICK_DURATION) {
+                    wbEntry.performClick()
+                }
+            }
+        }
+
+        return false
+    }
+
+    private fun handleWebViewClick() {
+        val hitResult = wbEntry.hitTestResult
+        val type = hitResult.type
+
+        // leave the functionality for clicking on links, phone numbers, geo coordinates, ... Only go to reader mode when clicked somewhere else in the WebView or on an image
+        if(type == WebView.HitTestResult.UNKNOWN_TYPE || type == WebView.HitTestResult.IMAGE_TYPE) {
+            toggleReaderMode()
+        }
+    }
+
+    private fun toggleReaderMode() {
+        if(isInReaderMode) {
+            isInReaderMode = false
+
+            leaveReaderMode()
+        }
+        else {
+            isInReaderMode = true
+
+            goToReaderMode()
+        }
+    }
+
+    private fun leaveReaderMode() {
+        entryFieldsPreview.visibility = View.VISIBLE
+        appBarLayout.visibility = View.VISIBLE
+
+        val layoutParams = wbEntry.layoutParams as RelativeLayout.LayoutParams
+        layoutParams.alignWithParent = true
+        wbEntry.layoutParams = layoutParams
+    }
+
+    private fun goToReaderMode() {
+        entryFieldsPreview.visibility = View.GONE
+        appBarLayout.visibility = View.GONE
+
+        val layoutParams = wbEntry.layoutParams as RelativeLayout.LayoutParams
+        layoutParams.alignWithParent = false
+        wbEntry.layoutParams = layoutParams
     }
 
 
