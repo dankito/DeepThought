@@ -12,11 +12,14 @@ import net.dankito.deepthought.android.service.ActivityParameterHolder
 import net.dankito.deepthought.android.service.AndroidClipboardService
 import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.android.service.communication.AndroidDeviceRegistrationHandler
+import net.dankito.deepthought.android.service.network.AndroidNetworkConnectivityManager
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditorPool
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.localization.Localization
+import net.dankito.utils.services.network.INetworkConnectivityManager
+import net.dankito.utils.services.network.NetworkHelper
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import javax.inject.Singleton
@@ -82,6 +85,12 @@ class ActivitiesModule(private val applicationContext: Context) {
     fun provideDeviceRegistrationHandler(context: Context, dataManager: DataManager, initialSyncManager: InitialSyncManager, dialogService: IDialogService,
                                            localization: Localization, currentActivityTracker: CurrentActivityTracker) : IDeviceRegistrationHandler {
         return AndroidDeviceRegistrationHandler(context, dataManager, initialSyncManager, dialogService, localization, currentActivityTracker)
+    }
+
+    @Provides
+    @Singleton
+    fun provideNetworkConnectivityManager(networkHelper: NetworkHelper) : INetworkConnectivityManager {
+        return AndroidNetworkConnectivityManager(networkHelper)
     }
 
     @Provides
