@@ -98,8 +98,8 @@ class WebPageMetaDataExtractor {
     }
 
     private fun extractPreviewImageUrl(extractionResult: EntryExtractionResult, document: Document) {
-        if(extractionResult.entry.previewImageUrl == null) {
-            extractionResult.entry.previewImageUrl = document.head().select("meta[name=\"og:image\"]").first()?.attr("content")
+        if(extractionResult.reference?.previewImageUrl == null) {
+            extractionResult.reference?.previewImageUrl = document.head().select("meta[name=\"og:image\"]").first()?.attr("content")
         }
     }
 

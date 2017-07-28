@@ -68,6 +68,9 @@ data class Reference(
     var attachedFiles: MutableList<FileLink> = ArrayList()
         private set
 
+    @Column(name = TableConfig.ReferencePreviewImageUrlColumnName)
+    var previewImageUrl: String? = null
+
     @OneToOne(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     @JoinColumn(name = TableConfig.ReferencePreviewImageJoinColumnName)
     var previewImage: FileLink? = null

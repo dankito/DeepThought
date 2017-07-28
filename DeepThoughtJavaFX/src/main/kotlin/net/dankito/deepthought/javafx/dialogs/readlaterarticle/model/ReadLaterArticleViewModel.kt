@@ -9,7 +9,7 @@ import tornadofx.*
 
 class ReadLaterArticleViewModel : ItemViewModel<ReadLaterArticle>() {
 
-    val previewImageUrl = bind { SimpleStringProperty(item?.entryExtractionResult?.entry?.previewImageUrl) }
+    val previewImageUrl = bind { SimpleStringProperty(item?.entryExtractionResult?.reference?.previewImageUrl) }
 
     val reference = bind { SimpleStringProperty(item?.entryExtractionResult?.reference?.preview ?: "") }
 

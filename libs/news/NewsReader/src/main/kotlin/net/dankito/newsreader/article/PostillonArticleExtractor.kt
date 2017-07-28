@@ -42,7 +42,7 @@ class PostillonArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
 
                     val reference = Reference(url, titleElement.text(), extractPublishingDate(postElement), getName())
 
-                    bodyElement.select(".separator a img").first()?.let { entry.previewImageUrl = it.attr("src") }
+                    bodyElement.select(".separator a img").first()?.let { reference.previewImageUrl = it.attr("src") }
 
                     return EntryExtractionResult(entry, reference)
                 }

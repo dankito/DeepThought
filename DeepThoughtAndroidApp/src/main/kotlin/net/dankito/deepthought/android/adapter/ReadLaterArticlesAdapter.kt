@@ -27,7 +27,7 @@ class ReadLaterArticlesAdapter : ListAdapter<ReadLaterArticle>() {
         view.txtSummary.text = extractionResult.entry.entryPreview
 
         Picasso.with(view?.context)
-                .load(extractionResult.entry.previewImageUrl)
+                .load(extractionResult.reference?.previewImageUrl)
                 .into(view.imgPreviewImage)
 
         return view

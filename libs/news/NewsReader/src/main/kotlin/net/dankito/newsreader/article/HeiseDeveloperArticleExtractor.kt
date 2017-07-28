@@ -19,9 +19,9 @@ class HeiseDeveloperArticleExtractor(webClient: IWebClient) : HeiseNewsAndDevelo
             val entry = Entry(extractContent(articleElement, url))
             contentElement.select(".article-content__lead").first()?.text()?.let { entry.abstractString = it }
 
-            entry.previewImageUrl = makeLinkAbsolute(contentElement.select(".aufmacherbild img").first()?.attr("src") ?: "", url)
             val publishingDate = extractPublishingDate(header)
             val reference = Reference(url, title, publishingDate, getName())
+            reference.previewImageUrl = makeLinkAbsolute(contentElement.select(".aufmacherbild img").first()?.attr("src") ?: "", url)
 
             return EntryExtractionResult(entry, reference)
         }

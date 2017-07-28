@@ -43,9 +43,6 @@ data class Entry(
     var attachedFiles: MutableSet<FileLink> = HashSet()
         private set
 
-    @Column(name = TableConfig.EntryPreviewImageUrlColumnName)
-    var previewImageUrl: String? = null
-
     @ManyToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.MERGE))
     @JoinColumn(name = TableConfig.EntryReferenceJoinColumnName)
     var reference: Reference? = null

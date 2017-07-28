@@ -64,7 +64,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
             val entry = Entry(content, abstract)
 
-            siteContent.select(".topenrichment figure img").first()?.let { entry.previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(it, "src", siteUrl) }
+            siteContent.select(".topenrichment figure img").first()?.let { reference?.previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(it, "src", siteUrl) }
 
             return EntryExtractionResult(entry, reference)
         }

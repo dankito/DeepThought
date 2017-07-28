@@ -28,11 +28,11 @@ class NetzPolitikOrgArticleExtractor(webClient: IWebClient) : ArticleExtractorBa
         document.body().select("article").first()?.let { articleElement ->
             val title = articleElement.select(".entry-title").first()?.text() ?: ""
             val reference = Reference(url, title, parsePublishingDate(articleElement), getName())
+            reference.previewImageUrl = articleElement.select("figure img").first()?.attr("src")
 
             val abstract = articleElement.select(".entry-excerpt").first()?.html() ?: ""
 
             val entry = Entry(extractContent(articleElement), abstract)
-            entry.previewImageUrl = articleElement.select("figure img").first()?.attr("src")
 
             return EntryExtractionResult(entry, reference)
         }

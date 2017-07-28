@@ -23,8 +23,9 @@ class SueddeutscheMagazinArticleExtractor(webClient: IWebClient) : ArticleExtrac
 
             contentElement.select(".maincontent").first()?.let { mainContent ->
                 val entry = Entry(extractContent(mainContent), referenceAndAbstract?.second ?: "")
+
                 mainContent.select(".text-image-container img, .img-text-fullwidth-container img").first()?.let {
-                    entry.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
+                    referenceAndAbstract?.first?.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
                 }
 
                 return EntryExtractionResult(entry, referenceAndAbstract?.first)

@@ -74,7 +74,6 @@ class TableConfig {
         const val EntryContentColumnName = "content"
         const val EntryReferenceJoinColumnName = "reference_id"
         const val EntryIndicationColumnName = "indication"
-        const val EntryPreviewImageUrlColumnName = "preview_image_url"
 
         const val EntryEntryIndexColumnName = "entry_index"
         const val EntryLanguageJoinColumnName = "language_id"
@@ -136,6 +135,7 @@ class TableConfig {
         const val ReferenceUrlColumnName = "url"
         const val ReferenceLastAccessDateColumnName = "last_access_date"
         const val ReferenceNotesColumnName = "notes"
+        const val ReferencePreviewImageUrlColumnName = "preview_image_url"
         const val ReferencePreviewImageJoinColumnName = "preview_image_id"
 
         const val ReferenceSeriesColumnName = "series"
