@@ -294,7 +294,7 @@ class EditEntryActivity : BaseActivity() {
                 updateEntry(extractionResult.entry, content)
                 presenter.saveEntryAsync(extractionResult.entry, extractionResult.reference, tagsOnEntry) { successful ->
                     if(successful) {
-                        setActivityResult(EditEntryActivityResult(didSaveEntryExtractionResult = true, savedEntry = entry))
+                        setActivityResult(EditEntryActivityResult(didSaveEntryExtractionResult = true, savedEntry = extractionResult.entry))
                     }
                     callback(successful)
                 }
@@ -307,7 +307,7 @@ class EditEntryActivity : BaseActivity() {
                 presenter.saveEntryAsync(extractionResult.entry, extractionResult.reference, tagsOnEntry) { successful ->
                     if(successful) {
                         readLaterArticleService.delete(readLaterArticle)
-                        setActivityResult(EditEntryActivityResult(didSaveReadLaterArticle = true, savedEntry = entry))
+                        setActivityResult(EditEntryActivityResult(didSaveReadLaterArticle = true, savedEntry = extractionResult.entry))
                     }
                     callback(successful)
                 }
