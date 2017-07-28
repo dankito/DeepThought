@@ -2,6 +2,7 @@ package net.dankito.data_access.network.communication.message
 
 import net.dankito.data_access.network.communication.CommunicatorConfig
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
+import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.service.synchronization.initialsync.model.SyncInfo
@@ -116,7 +117,14 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
     private fun handleRequestStartSynchronizationRequest(request: Request<RequestStartSynchronizationRequestBody>, callback: (Response<RequestStartSynchronizationResponseBody>) -> Unit) {
         request.body?.let { body ->
             if(isDevicePermittedToSynchronize(body.uniqueDeviceId) == false) {
-                callback(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.DENIED)))
+                val isRemoteDeviceKnown = config.entityManager.getAllEntitiesOfType(Device::class.java).filter { it.uniqueDeviceId == body.uniqueDeviceId }.isNotEmpty()
+
+                if(isRemoteDeviceKnown) {
+                    callback(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.DENIED)))
+                }
+                else { // mostly because remote synchronized with a device we also are synchronizing with, but there hasn't been a connection to this synchronized device till then
+                    callback(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.DO_NOT_KNOW_YOU)))
+                }
             }
             else {
                 val permittedSynchronizedDevice = networkSettings.getDiscoveredDevice(body.uniqueDeviceId)
