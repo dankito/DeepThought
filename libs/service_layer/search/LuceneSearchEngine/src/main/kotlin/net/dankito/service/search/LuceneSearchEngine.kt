@@ -16,6 +16,8 @@ import org.apache.lucene.store.FSDirectory
 import org.apache.lucene.util.Version
 import org.slf4j.LoggerFactory
 import java.io.File
+import java.util.*
+import kotlin.concurrent.schedule
 import kotlin.concurrent.thread
 
 
@@ -85,6 +87,15 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
 
         for(writerAndSearcher in indexWritersAndSearchers) {
             writerAndSearcher.initialize(defaultAnalyzer)
+        }
+    }
+
+    override fun searchEngineInitialized() {
+        super.searchEngineInitialized()
+
+        // there are many reasons why the index isn't in sync anymore with database (e.g. an entity got synchronized but app gets closed before it gets indexed)
+        Timer().schedule(30 * 1000L) {
+            indexWritersAndSearchers.forEach { it.updateIndex() }
         }
     }
 
