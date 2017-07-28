@@ -62,6 +62,12 @@ class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: Da
         return tagsFilter.contains(tag)
     }
 
+    fun clearTagFilter() {
+        tagsFilter.clear()
+
+        searchTags()
+    }
+
     fun toggleFilterTag(tag: Tag) {
         if(isTagFiltered(tag)) {
             tagsFilter.remove(tag)
