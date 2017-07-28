@@ -12,24 +12,6 @@ import kotlin.collections.ArrayList
 class NetworkHelper {
 
     // in IPv6 there's no such thing as broadcast
-    val broadcastAddresses: List<InetAddress>
-        get() {
-            val broadcastAddresses = ArrayList<InetAddress>()
-
-            for(address in getIPAddresses(true)) {
-                try {
-                    if(address is Inet4Address) {
-                        getBroadcastAddress(address)?.let { broadcastAddresses.add(it) }
-                    }
-                } catch (e: Exception) {
-                    log.error("Could not determine Broadcast Address of " + address.hostAddress, e)
-                }
-
-            }
-
-            return broadcastAddresses
-        }
-
     fun getBroadcastAddress(networkInterface: NetworkInterface): Inet4Address? {
         for(address in networkInterface.inetAddresses) {
             if(address is Inet4Address) {
