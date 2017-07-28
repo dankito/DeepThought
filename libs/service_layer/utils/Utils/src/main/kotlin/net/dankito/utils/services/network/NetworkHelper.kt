@@ -102,20 +102,20 @@ class NetworkHelper {
     }
 
     @Throws(SocketException::class)
-    protected fun shouldInterfaceBeIgnored(networkInterface: NetworkInterface): Boolean {
+    private fun shouldInterfaceBeIgnored(networkInterface: NetworkInterface): Boolean {
         return networkInterface.isLoopback || networkInterface.isUp == false || isCellularOrUsbInterface(networkInterface) ||
                 isDockerInterface(networkInterface) || isDummyInterface(networkInterface)
     }
 
-    protected fun isCellularOrUsbInterface(networkInterface: NetworkInterface): Boolean {
+    private fun isCellularOrUsbInterface(networkInterface: NetworkInterface): Boolean {
         return networkInterface.name.startsWith("rmnet") // see for example https://stackoverflow.com/a/33748594
     }
 
-    protected fun isDockerInterface(networkInterface: NetworkInterface): Boolean {
+    private fun isDockerInterface(networkInterface: NetworkInterface): Boolean {
         return networkInterface.name.startsWith("docker")
     }
 
-    protected fun isDummyInterface(networkInterface: NetworkInterface): Boolean {
+    private fun isDummyInterface(networkInterface: NetworkInterface): Boolean {
         return networkInterface.name.startsWith("dummy")
     }
 
