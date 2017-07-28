@@ -53,7 +53,7 @@ class ViewEntryActivity : BaseActivity() {
             var flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
 
             if(Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-                flags = flags or View.SYSTEM_UI_FLAG_FULLSCREEN
+                flags = flags or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
             }
 
             if(Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
