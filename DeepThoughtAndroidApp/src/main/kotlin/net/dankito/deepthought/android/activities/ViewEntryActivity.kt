@@ -26,6 +26,7 @@ import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.ui.IClipboardService
 import java.util.*
 import javax.inject.Inject
+import kotlin.concurrent.schedule
 
 
 class ViewEntryActivity : BaseActivity() {
@@ -36,6 +37,8 @@ class ViewEntryActivity : BaseActivity() {
         private const val ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ENTRY_EXTRACTION_RESULT"
 
         private const val MAX_CLICK_DURATION = 200
+
+        private const val PERIOD_AFTER_TO_SHOW_READER_MODE_ON_START_MILLIS = 2 * 1000L
 
         private const val NON_READER_MODE_SYSTEM_UI_FLAGS = 0
         private val READER_MODE_SYSTEM_UI_FLAGS: Int
@@ -151,6 +154,8 @@ class ViewEntryActivity : BaseActivity() {
         settings.defaultTextEncodingName = "UTF-8" // otherwise non ASCII text doesn't get displayed correctly
         settings.defaultFontSize = 18 // default font is too small
         settings.javaScriptEnabled = true // so that embedded videos etc. work
+
+        Timer().schedule(PERIOD_AFTER_TO_SHOW_READER_MODE_ON_START_MILLIS) { runOnUiThread { goToReaderMode() } } // go to reader mode after some seconds
     }
 
 
