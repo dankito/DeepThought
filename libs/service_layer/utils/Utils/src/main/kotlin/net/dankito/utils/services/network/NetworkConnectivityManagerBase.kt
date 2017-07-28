@@ -3,7 +3,7 @@ package net.dankito.utils.services.network
 import java.net.Inet4Address
 import java.net.NetworkInterface
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ConcurrentSkipListSet
+import java.util.concurrent.CopyOnWriteArrayList
 
 
 abstract class NetworkConnectivityManagerBase(protected val networkHelper: NetworkHelper) : INetworkConnectivityManager {
@@ -11,7 +11,7 @@ abstract class NetworkConnectivityManagerBase(protected val networkHelper: Netwo
 
     val networkInterfaces = ConcurrentHashMap<String, NetworkInterfaceState>()
 
-    val listeners = ConcurrentSkipListSet<(NetworkInterfaceState) -> Unit>()
+    val listeners = CopyOnWriteArrayList<(NetworkInterfaceState) -> Unit>()
 
 
     init {
