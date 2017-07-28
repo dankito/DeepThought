@@ -129,7 +129,7 @@ class NetworkHelper {
 
     @Throws(SocketException::class)
     private fun shouldInterfaceBeIgnored(networkInterface: NetworkInterface): Boolean {
-        return networkInterface.isLoopback || networkInterface.isUp == false || isCellularOrUsbInterface(networkInterface) ||
+        return networkInterface.isLoopback || isCellularOrUsbInterface(networkInterface) ||
                 isDockerInterface(networkInterface) || isDummyInterface(networkInterface)
     }
 
