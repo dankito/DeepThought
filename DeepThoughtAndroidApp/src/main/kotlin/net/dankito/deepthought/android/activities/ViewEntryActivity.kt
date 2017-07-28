@@ -43,7 +43,13 @@ class ViewEntryActivity : BaseActivity() {
         private const val NON_READER_MODE_SYSTEM_UI_FLAGS = 0
         private val READER_MODE_SYSTEM_UI_FLAGS: Int
 
+
         init {
+            READER_MODE_SYSTEM_UI_FLAGS = createReaderModeSystemUiFlags()
+        }
+
+        private fun createReaderModeSystemUiFlags(): Int {
+            // see https://developer.android.com/training/system-ui/immersive.html
             var flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
 
             if(Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
@@ -54,7 +60,7 @@ class ViewEntryActivity : BaseActivity() {
                 flags = flags or View.SYSTEM_UI_FLAG_IMMERSIVE
             }
 
-            READER_MODE_SYSTEM_UI_FLAGS = flags
+            return flags
         }
     }
 
