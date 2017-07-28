@@ -1,18 +1,18 @@
 package net.dankito.deepthought.android.appstart
 
 import android.content.Context
+import android.content.IntentFilter
+import android.net.ConnectivityManager
+import android.net.wifi.WifiManager
 import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.CurrentActivityTracker
+import net.dankito.deepthought.android.service.network.NetworkConnectivityChangeBroadcastReceiver
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditorPool
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.html.HtmlEditorExtractor
 import net.dankito.service.search.ISearchEngine
 import javax.inject.Inject
-import android.net.wifi.WifiManager
-import android.net.ConnectivityManager
-import android.content.IntentFilter
-import net.dankito.deepthought.android.service.network.NetworkConnectivityChangeBroadcastReceiver
 
 
 class AndroidAppInitializer {
@@ -69,7 +69,7 @@ class AndroidAppInitializer {
         // Apps will still receive broadcasts if they register their BroadcastReceiver with Context.registerReceiver() and that context is still valid.
         val intentFilter = IntentFilter()
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
-        intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION)
+        intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION) // TODO: not equal to AndroidManifest and not handled in NetworkConnectivityChangeBroadcastReceiver
 
         context.registerReceiver(NetworkConnectivityChangeBroadcastReceiver(), intentFilter)
     }
