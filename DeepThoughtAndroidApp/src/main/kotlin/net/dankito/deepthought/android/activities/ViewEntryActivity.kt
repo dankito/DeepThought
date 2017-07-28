@@ -249,7 +249,12 @@ class ViewEntryActivity : BaseActivity() {
     private fun showShareEntryPopupMenu(clickedView: View) {
         val popup = PopupMenu(this, clickedView)
 
-        popup.menuInflater.inflate(R.menu.share_entry_menu, popup.getMenu())
+        popup.menuInflater.inflate(R.menu.share_entry_menu, popup.menu)
+
+        val reference = getCurrentReference()
+        if(reference == null || reference.url == null) {
+            popup.menu.findItem(R.id.mnShareEntryReferenceUrl).isVisible = false
+        }
 
         popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
 
@@ -425,6 +430,17 @@ class ViewEntryActivity : BaseActivity() {
         entryFieldsPreview.setAbstractPreviewOnUIThread()
         entryFieldsPreview.setReferencePreviewOnUIThread()
         entryFieldsPreview.setTagsOnEntryPreviewOnUIThread()
+    }
+
+
+    private fun getCurrentReference(): Reference? {
+        entry?.let { return it.reference }
+
+        readLaterArticle?.let { return it.entryExtractionResult.reference }
+
+        entryExtractionResult?.let { return it.reference }
+
+        return null
     }
 
 }
