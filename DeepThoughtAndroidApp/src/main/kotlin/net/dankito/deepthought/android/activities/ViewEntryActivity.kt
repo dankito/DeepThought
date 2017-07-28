@@ -268,11 +268,7 @@ class ViewEntryActivity : BaseActivity() {
     }
 
     private fun shareReferenceUrl() {
-        entry?.reference?.let { reference ->
-            presenter.shareReferenceUrl(reference)
-        }
-
-        entryExtractionResult?.reference?.let { reference ->
+        getCurrentReference()?.let { reference ->
             presenter.shareReferenceUrl(reference)
         }
     }
@@ -280,6 +276,10 @@ class ViewEntryActivity : BaseActivity() {
     private fun shareEntryContent() {
         entry?.let { entry ->
             presenter.shareEntry(entry, entry.reference)
+        }
+
+        readLaterArticle?.entryExtractionResult?.let {  extractionResult ->
+            presenter.shareEntry(extractionResult.entry, extractionResult.reference)
         }
 
         entryExtractionResult?.let { extractionResult ->
