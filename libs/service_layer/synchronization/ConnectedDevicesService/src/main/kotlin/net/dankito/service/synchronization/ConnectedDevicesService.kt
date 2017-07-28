@@ -147,7 +147,6 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
 
             if (type === DiscoveredDeviceType.KNOWN_SYNCHRONIZED_DEVICE) {
                 discoveredKnownSynchronizedDevice(device, deviceInfoKey)
-                addDeviceToKnownSynchronizedDevices(deviceInfoKey, device)
             } else if (type === DiscoveredDeviceType.KNOWN_IGNORED_DEVICE) {
                 knownIgnoredDevices.put(deviceInfoKey, device)
             } else {
