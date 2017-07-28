@@ -3,9 +3,11 @@ package net.dankito.data_access.network.discovery
 import android.content.Context
 import android.net.wifi.WifiManager
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.services.network.INetworkConnectivityManager
 
 
-class AndroidUdpDevicesDiscoverer(private var context: Context, threadPool: IThreadPool) : UdpDevicesDiscoverer(threadPool) {
+class AndroidUdpDevicesDiscoverer(private var context: Context, networkConnectivityManager: INetworkConnectivityManager, threadPool: IThreadPool)
+    : UdpDevicesDiscoverer(networkConnectivityManager, threadPool) {
 
     companion object {
         private const val MULTICAST_LOCK_NAME = "AndroidUdpDevicesDiscoverer"

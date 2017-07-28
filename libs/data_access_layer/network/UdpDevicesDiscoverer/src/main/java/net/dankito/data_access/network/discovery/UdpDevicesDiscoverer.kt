@@ -3,7 +3,9 @@ package net.dankito.data_access.network.discovery
 import net.dankito.utils.AsyncProducerConsumerQueue
 import net.dankito.utils.ConsumerListener
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.services.network.INetworkConnectivityManager
 import net.dankito.utils.services.network.NetworkHelper
+import net.dankito.utils.services.network.NetworkInterfaceState
 import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.net.*
@@ -13,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
 
-open class UdpDevicesDiscoverer(protected var threadPool: IThreadPool) : IDevicesDiscoverer {
+open class UdpDevicesDiscoverer(val networkConnectivityManager: INetworkConnectivityManager, protected var threadPool: IThreadPool) : IDevicesDiscoverer {
 
     companion object {
 
@@ -102,15 +104,20 @@ open class UdpDevicesDiscoverer(protected var threadPool: IThreadPool) : IDevice
             openedBroadcastSockets.clear()
 
             for (broadcastAddress in ArrayList(broadcastThreads.keys)) {
-                broadcastThreads[broadcastAddress]?.let { broadcastThread ->
-                    try {
-                        broadcastThread.interrupt()
-                    } catch (ignored: Exception) { }
-
-                    broadcastThreads.remove(broadcastAddress)
-                    log.info("Stopped broadcasting for Address " + broadcastAddress)
-                }
+                stopBroadcast(broadcastAddress)
             }
+        }
+    }
+
+    private fun stopBroadcast(broadcastAddress: String) {
+        broadcastThreads[broadcastAddress]?.let { broadcastThread ->
+            try {
+                broadcastThread.interrupt()
+            } catch (ignored: Exception) {
+            }
+
+            broadcastThreads.remove(broadcastAddress)
+            log.info("Stopped broadcasting for Address " + broadcastAddress)
         }
     }
 
@@ -267,8 +274,25 @@ open class UdpDevicesDiscoverer(protected var threadPool: IThreadPool) : IDevice
     }
 
     protected fun startBroadcast(config: DevicesDiscovererConfig) {
-        for (broadcastAddress in networkHelper.broadcastAddresses) {
+        networkConnectivityManager.addNetworkInterfaceConnectivityChangedListener { networkInterfaceConnectivityChanged(it, config) }
+
+        for (broadcastAddress in networkConnectivityManager.getBroadcastAddresses()) {
             startBroadcastForBroadcastAddressAsync(broadcastAddress, config)
+        }
+    }
+
+    private fun networkInterfaceConnectivityChanged(state: NetworkInterfaceState, config: DevicesDiscovererConfig) {
+        synchronized(broadcastThreads) {
+            state.broadcastAddress?.hostAddress?.let { broadcastAddress ->
+                if(broadcastThreads.containsKey(broadcastAddress)) {
+                    if(state.isUp == false) {
+                        stopBroadcast(broadcastAddress)
+                    }
+                }
+                else if(state.isUp) {
+                    state.broadcastAddress?.let { startBroadcastForBroadcastAddressAsync(it, config) }
+                }
+            }
         }
     }
 
@@ -284,6 +308,7 @@ open class UdpDevicesDiscoverer(protected var threadPool: IThreadPool) : IDevice
 
     protected fun startBroadcastForBroadcastAddress(broadcastAddress: InetAddress, config: DevicesDiscovererConfig) {
         try {
+            log.info("Starting broadcast for address ${broadcastAddress.hostAddress}")
             val broadcastSocket = DatagramSocket()
 
             synchronized(broadcastThreads) {
@@ -310,8 +335,8 @@ open class UdpDevicesDiscoverer(protected var threadPool: IThreadPool) : IDevice
                 }
 
             }
-        } catch (ex: Exception) {
-            log.error("An error occurred trying to find Devices", ex)
+        } catch (e: Exception) {
+            log.error("Could not start broadcast for address ${broadcastAddress.hostAddress}", e)
         }
 
     }

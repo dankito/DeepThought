@@ -14,6 +14,7 @@ import net.dankito.deepthought.java.service.platform.JavaPlatformConfiguration
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.services.hashing.IBase64Service
+import net.dankito.utils.services.network.INetworkConnectivityManager
 import javax.inject.Singleton
 
 
@@ -35,8 +36,8 @@ class JavaCommonModule {
 
     @Provides
     @Singleton
-    fun provideDevicesDiscoverer(threadPool: IThreadPool) : IDevicesDiscoverer {
-        return UdpDevicesDiscoverer(threadPool)
+    fun provideDevicesDiscoverer(networkConnectivityManager: INetworkConnectivityManager, threadPool: IThreadPool) : IDevicesDiscoverer {
+        return UdpDevicesDiscoverer(networkConnectivityManager, threadPool)
     }
 
     @Provides

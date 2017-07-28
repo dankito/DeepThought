@@ -15,6 +15,7 @@ import net.dankito.deepthought.android.service.platform.AndroidPlatformConfigura
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.services.hashing.IBase64Service
+import net.dankito.utils.services.network.INetworkConnectivityManager
 import javax.inject.Singleton
 
 
@@ -36,8 +37,8 @@ class AndroidCommonModule {
 
     @Provides
     @Singleton
-    fun provideDevicesDiscoverer(context: Context, threadPool: IThreadPool) : IDevicesDiscoverer {
-        return AndroidUdpDevicesDiscoverer(context, threadPool)
+    fun provideDevicesDiscoverer(context: Context, networkConnectivityManager: INetworkConnectivityManager, threadPool: IThreadPool) : IDevicesDiscoverer {
+        return AndroidUdpDevicesDiscoverer(context, networkConnectivityManager, threadPool)
     }
 
     @Provides
