@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.view_floating_action_button_main.*
 import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.adapter.MainActivitySectionsPagerAdapter
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.android.fragments.MainActivityTabFragment
 import net.dankito.deepthought.android.service.IntentHandler
 import net.dankito.deepthought.android.views.FloatingActionMenuButton
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
@@ -30,6 +31,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private lateinit var sectionsPagerAdapter: MainActivitySectionsPagerAdapter
 
     private var currentlySelectedNavigationItem: MenuItem? = null
+
+    private var currentlyVisibleFragment: MainActivityTabFragment? = null
 
     private lateinit var floatingActionMenuButton: FloatingActionMenuButton
 
@@ -178,7 +181,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             currentItem.isChecked = true
             currentlySelectedNavigationItem = currentItem
 
-            sectionsPagerAdapter.getItem(position).viewCameIntoView()
+            currentlyVisibleFragment = sectionsPagerAdapter.getItem(position)
+            currentlyVisibleFragment?.viewCameIntoView()
         }
 
         override fun onPageScrollStateChanged(state: Int) {
