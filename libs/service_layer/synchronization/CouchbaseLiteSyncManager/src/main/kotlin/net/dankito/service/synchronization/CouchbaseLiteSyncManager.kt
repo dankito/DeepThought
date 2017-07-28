@@ -111,13 +111,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
         var receivedRemoteDevice: Device? = entityManager.getEntityById(Device::class.java, deviceId) // as remote may already push his data to our side but we just haven't pushed our data to remote
         var dataBaseChangeListener: Database.ChangeListener? = null
 
-        val push = database.createPushReplication(createSyncUrl(remoteDeviceAddress, basicDataSyncPort))
-
-        // sync all known devices so that remote also knowns our synchronized and ignored devices
-        val deviceIdsToSync = ArrayList<String>(networkSettings.localUser.synchronizedDevices.map { it.id })
-        deviceIdsToSync.addAll(networkSettings.localUser.ignoredDevices.map { it.id!! })
-        deviceIdsToSync.add(networkSettings.localHostDevice.id!!) // push localDevice.id as last as this is the signal that basic data synchronization is done
-        push.docIds = deviceIdsToSync
+        val push = createPushForBasicDataSync(remoteDeviceAddress, basicDataSyncPort)
 
         val pushChangeListener = object : Replication.ChangeListener {
             override fun changed(event: Replication.ChangeEvent) {
@@ -142,6 +136,18 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
         push.addChangeListener(pushChangeListener)
 
         push.start()
+    }
+
+    private fun createPushForBasicDataSync(remoteDeviceAddress: String, basicDataSyncPort: Int): Replication {
+        val push = database.createPushReplication(createSyncUrl(remoteDeviceAddress, basicDataSyncPort))
+
+        // sync all known devices so that remote also knows our synchronized and ignored devices
+        val deviceIdsToSync = ArrayList<String>(networkSettings.localUser.synchronizedDevices.map { it.id })
+        deviceIdsToSync.addAll(networkSettings.localUser.ignoredDevices.map { it.id!! })
+        deviceIdsToSync.add(networkSettings.localHostDevice.id!!) // push localDevice.id as last as this is the signal that basic data synchronization is done
+        push.docIds = deviceIdsToSync
+
+        return push
     }
 
     private fun checkIfBasicDataSynchronizationIsDone(didSynchronizationStop: Boolean, receivedRemoteDevice: Device?, push: Replication,
