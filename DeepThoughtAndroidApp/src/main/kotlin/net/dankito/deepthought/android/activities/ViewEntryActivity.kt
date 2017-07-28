@@ -256,16 +256,13 @@ class ViewEntryActivity : BaseActivity() {
             popup.menu.findItem(R.id.mnShareEntryReferenceUrl).isVisible = false
         }
 
-        popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
-
-            override fun onMenuItemClick(item: MenuItem): Boolean {
-                when(item.itemId) {
-                    R.id.mnShareEntryReferenceUrl -> shareReferenceUrl()
-                    R.id.mnShareEntryContent -> shareEntryContent()
-                }
-                return true
+        popup.setOnMenuItemClickListener { item ->
+            when(item.itemId) {
+                R.id.mnShareEntryReferenceUrl -> shareReferenceUrl()
+                R.id.mnShareEntryContent -> shareEntryContent()
             }
-        })
+            true
+        }
 
         popup.show()
     }
