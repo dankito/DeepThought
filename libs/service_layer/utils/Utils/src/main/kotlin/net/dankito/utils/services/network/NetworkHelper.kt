@@ -76,17 +76,24 @@ class NetworkHelper {
 
         try {
             for(networkInterface in getConnectedRealNetworkInterfaces()) {
-                val interfaceAddresses = Collections.list(networkInterface.inetAddresses)
-
-                for(address in interfaceAddresses) {
-                    if(address.isLoopbackAddress == false) {
-                        if(onlyIPv4 == false || address is Inet4Address) {
-                            addresses.add(address)
-                        }
-                    }
-                }
+                addresses.addAll(getIPAddresses(networkInterface, onlyIPv4))
             }
         } catch (ignored: Exception) { } // for now eat exceptions
+
+        return addresses
+    }
+
+    fun getIPAddresses(networkInterface: NetworkInterface, onlyIPv4: Boolean): List<InetAddress> {
+        val addresses = ArrayList<InetAddress>()
+        val interfaceAddresses = Collections.list(networkInterface.inetAddresses)
+
+        for(address in interfaceAddresses) {
+            if(address.isLoopbackAddress == false) {
+                if(onlyIPv4 == false || address is Inet4Address) {
+                    addresses.add(address)
+                }
+            }
+        }
 
         return addresses
     }
