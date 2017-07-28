@@ -3,6 +3,8 @@ package net.dankito.data_access.network.discovery
 
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ThreadPool
+import net.dankito.utils.services.network.NetworkConnectivityManagerBase
+import net.dankito.utils.services.network.NetworkHelper
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
@@ -42,8 +44,8 @@ class UdpDevicesDiscovererTest {
     fun setUp() {
         threadPool = ThreadPool()
 
-        firstDiscoverer = UdpDevicesDiscoverer(threadPool)
-        secondDiscoverer = UdpDevicesDiscoverer(threadPool)
+        firstDiscoverer = UdpDevicesDiscoverer(object : NetworkConnectivityManagerBase(NetworkHelper()) { }, threadPool)
+        secondDiscoverer = UdpDevicesDiscoverer(object : NetworkConnectivityManagerBase(NetworkHelper()) { }, threadPool)
     }
 
     @After
@@ -108,7 +110,7 @@ class UdpDevicesDiscovererTest {
         val createdDiscoverers = CopyOnWriteArrayList<IDevicesDiscoverer>()
 
         for (i in 0..10) {
-            val discoverer = UdpDevicesDiscoverer(threadPool)
+            val discoverer = UdpDevicesDiscoverer(object : NetworkConnectivityManagerBase(NetworkHelper()) { }, threadPool)
             createdDiscoverers.add(discoverer)
 
             val deviceId = "" + (i + 1)
@@ -194,7 +196,7 @@ class UdpDevicesDiscovererTest {
         val createdDiscoverers = CopyOnWriteArrayList<IDevicesDiscoverer>()
 
         for (i in 0..10) {
-            val discoverer = UdpDevicesDiscoverer(threadPool)
+            val discoverer = UdpDevicesDiscoverer(object : NetworkConnectivityManagerBase(NetworkHelper()) { }, threadPool)
             createdDiscoverers.add(discoverer)
             discoveredDevices.put(discoverer, CopyOnWriteArrayList<String>())
 
