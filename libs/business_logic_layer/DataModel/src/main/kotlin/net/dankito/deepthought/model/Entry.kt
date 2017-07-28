@@ -43,11 +43,6 @@ data class Entry(
     var attachedFiles: MutableSet<FileLink> = HashSet()
         private set
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = TableConfig.EntryEmbeddedFilesJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.EntryEmbeddedFilesJoinTableEntryIdColumnName)/*, referencedColumnName = "id"*/), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.EntryEmbeddedFilesJoinTableFileLinkIdColumnName)/*, referencedColumnName = "id"*/))
-    var embeddedFiles: MutableSet<FileLink> = HashSet()
-        private set
-
     @Column(name = TableConfig.EntryPreviewImageUrlColumnName)
     var previewImageUrl: String? = null
 
@@ -170,34 +165,6 @@ data class Entry(
         return false
     }
 
-
-    fun hasEmbeddedFiles(): Boolean {
-        return embeddedFiles.size > 0
-    }
-
-    fun containsEmbeddedFile(file: FileLink): Boolean {
-        return embeddedFiles.contains(file)
-    }
-
-    fun addEmbeddedFile(file: FileLink): Boolean {
-        if (embeddedFiles.add(file)) {
-            file.addAsEmbeddingToEntry(this)
-
-            return true
-        }
-
-        return false
-    }
-
-    fun removeEmbeddedFile(file: FileLink): Boolean {
-        if (embeddedFiles.remove(file)) {
-            file.removeAsEmbeddingFromEntry(this)
-
-            return true
-        }
-
-        return false
-    }
 
     fun hasIndication() : Boolean {
         return indication.isNotBlank()

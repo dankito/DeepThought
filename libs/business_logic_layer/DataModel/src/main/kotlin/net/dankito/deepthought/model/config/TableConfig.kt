@@ -96,14 +96,6 @@ class TableConfig {
         const val EntryAttachedFilesJoinTableFileLinkIdColumnName = "file_id"
 
 
-        /*          Entry Embedded Files Join Table Config        */
-
-        const val EntryEmbeddedFilesJoinTableName = "entry_embedded_files_join_table"
-
-        const val EntryEmbeddedFilesJoinTableEntryIdColumnName = "entry_id"
-        const val EntryEmbeddedFilesJoinTableFileLinkIdColumnName = "file_id"
-
-
         /*          Tag Table Config        */
 
         const val TagTableName = "tag"
