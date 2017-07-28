@@ -34,6 +34,8 @@ import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.services.hashing.IBase64Service
+import net.dankito.utils.services.network.NetworkConnectivityManagerBase
+import net.dankito.utils.services.network.NetworkHelper
 import net.dankito.utils.ui.IDialogService
 import net.engio.mbassy.listener.Handler
 import net.engio.mbassy.listener.Listener
@@ -110,7 +112,7 @@ class CommunicationManagerTest {
 
     private lateinit var localRegistrationHandler: IDeviceRegistrationHandler
 
-    private val localDevicesDiscoverer = UdpDevicesDiscoverer(localThreadPool)
+    private val localDevicesDiscoverer = UdpDevicesDiscoverer(object : NetworkConnectivityManagerBase(NetworkHelper()) { }, localThreadPool)
 
     private lateinit var localEntityManager: CouchbaseLiteEntityManagerBase
 
@@ -165,7 +167,7 @@ class CommunicationManagerTest {
 
     private lateinit var remoteRegistrationHandler: IDeviceRegistrationHandler
 
-    private val remoteDevicesDiscoverer = UdpDevicesDiscoverer(remoteThreadPool)
+    private val remoteDevicesDiscoverer = UdpDevicesDiscoverer(object : NetworkConnectivityManagerBase(NetworkHelper()) { }, remoteThreadPool)
 
     private lateinit var remoteEntityManager: CouchbaseLiteEntityManagerBase
 
@@ -221,7 +223,7 @@ class CommunicationManagerTest {
             localRegistrationHandler = createDeviceRegistrationHandler(localRegisterAtRemote, localPermitRemoteToSynchronize, localCorrectChallengeResponse, localDataManager,
                     localInitialSyncManager, localDialogService, localization)
 
-            localClientCommunicator = TcpSocketClientCommunicator(localNetworkSettings, localRegistrationHandler, base64Service, localThreadPool)
+            localClientCommunicator = TcpSocketClientCommunicator(localNetworkSettings, localRegistrationHandler, localEntityManager, base64Service, localThreadPool)
 
             localConnectedDevicesService = ConnectedDevicesService(localDevicesDiscoverer, localClientCommunicator, localSyncManager, localRegistrationHandler, localNetworkSettings, localEntityManager)
 
@@ -258,7 +260,7 @@ class CommunicationManagerTest {
 //            remoteRegistrationHandler = spy<IDeviceRegistrationHandler>(registrationHandlerInstance)
             remoteRegistrationHandler = registrationHandlerInstance
 
-            remoteClientCommunicator = TcpSocketClientCommunicator(remoteNetworkSettings, remoteRegistrationHandler, base64Service, remoteThreadPool)
+            remoteClientCommunicator = TcpSocketClientCommunicator(remoteNetworkSettings, remoteRegistrationHandler, remoteEntityManager, base64Service, remoteThreadPool)
 
             remoteConnectedDevicesService = ConnectedDevicesService(remoteDevicesDiscoverer, remoteClientCommunicator, remoteSyncManager, remoteRegistrationHandler, remoteNetworkSettings, remoteEntityManager)
 
