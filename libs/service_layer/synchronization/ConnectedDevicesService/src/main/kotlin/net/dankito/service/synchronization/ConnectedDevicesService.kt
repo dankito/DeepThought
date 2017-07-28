@@ -222,6 +222,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
             if (isKnownSynchronizedDevice(device)) {
                 knownSynchronizedDevices.remove(deviceInfo)
                 networkSettings.removeConnectedDevicePermittedToSynchronize(device)
+                syncManager.stopSynchronizationWithDevice(device)
                 callKnownSynchronizedDeviceDisconnected(device)
             } else if (isKnownIgnoredDevice(device)) {
                 knownIgnoredDevices.remove(deviceInfo)
