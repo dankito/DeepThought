@@ -79,6 +79,10 @@ abstract class MainActivityTabFragment(private val layoutResourceId: Int, privat
         }
     }
 
+    open fun onBackPressed(): Boolean {
+        return false
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(optionsMenuResourceId, menu)
