@@ -115,23 +115,6 @@ class NetworkHelper {
         return networkInterface.name.startsWith("dummy")
     }
 
-    // TODO: try to get rid of this method as it's not reliable (see above)
-    fun getIPAddressString(useIPv4: Boolean): String {
-        val address = getIPAddress(useIPv4)
-        if (address != null) {
-            val addressString = address.hostAddress.toUpperCase()
-
-            if (useIPv4)
-                return addressString
-            else {
-                val delim = addressString.indexOf('%') // drop ip6 port suffix
-                return if (delim < 0) addressString else addressString.substring(0, delim)
-            }
-        }
-
-        return ""
-    }
-
 
     fun isSocketCloseException(exception: Exception): Boolean {
         return exception is SocketException && "Socket closed" == exception.message
