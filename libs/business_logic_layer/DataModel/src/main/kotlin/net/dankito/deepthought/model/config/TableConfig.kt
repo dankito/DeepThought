@@ -187,7 +187,6 @@ class TableConfig {
         const val FileTypeTableName = "file_type"
 
         const val FileTypeFolderNameColumnName = "folder"
-        const val FileTypeIconColumnName = "icon"
 
 
         /*          ArticleSummaryExtractorConfig Table Config        */

@@ -3,7 +3,6 @@ package net.dankito.deepthought.model.enums
 import net.dankito.deepthought.model.config.TableConfig
 import javax.persistence.Column
 import javax.persistence.Entity
-import javax.persistence.Lob
 
 @Entity(name = TableConfig.FileTypeTableName)
 class FileType : ExtensibleEnumeration {
@@ -15,10 +14,6 @@ class FileType : ExtensibleEnumeration {
 
     @Column(name = TableConfig.FileTypeFolderNameColumnName)
     var folderName: String
-
-    @Column(name = TableConfig.FileTypeIconColumnName)
-    @Lob
-    var icon: ByteArray? = null
 
 
     private constructor() : this("", "")
