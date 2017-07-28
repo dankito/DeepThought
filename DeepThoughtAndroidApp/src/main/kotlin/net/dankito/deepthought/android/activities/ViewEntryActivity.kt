@@ -126,7 +126,7 @@ class ViewEntryActivity : BaseActivity() {
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
 
-        outState?.let { outState ->
+        outState?.let {
             outState.putString(ENTRY_ID_INTENT_EXTRA_NAME, null)
             entry?.id?.let { entryId -> outState.putString(ENTRY_ID_INTENT_EXTRA_NAME, entryId) }
 
@@ -249,7 +249,7 @@ class ViewEntryActivity : BaseActivity() {
     private fun showShareEntryPopupMenu(clickedView: View) {
         val popup = PopupMenu(this, clickedView)
 
-        popup.getMenuInflater().inflate(R.menu.share_entry_menu, popup.getMenu())
+        popup.menuInflater.inflate(R.menu.share_entry_menu, popup.getMenu())
 
         popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
 
