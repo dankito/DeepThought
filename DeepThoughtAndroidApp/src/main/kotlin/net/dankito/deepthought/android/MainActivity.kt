@@ -95,10 +95,12 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onBackPressed() {
         val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
+        }
+        else {
+            currentlyVisibleFragment?.onBackPressed() ?: super.onBackPressed()
         }
     }
 
