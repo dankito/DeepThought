@@ -86,11 +86,6 @@ class DeleteEntityService(private val entryService: EntryService, private val ta
             entryService.update(entry)
         }
 
-        ArrayList(reference.embeddedFiles).forEach { file ->
-            reference.removeEmbeddedFile(file)
-            referenceService.entityManager.updateEntity(file)
-        }
-
         ArrayList(reference.attachedFiles).forEach { file ->
             reference.removeAttachedFile(file)
             referenceService.entityManager.updateEntity(file)

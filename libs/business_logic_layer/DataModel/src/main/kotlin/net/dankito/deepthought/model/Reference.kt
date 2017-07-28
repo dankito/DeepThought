@@ -68,11 +68,6 @@ data class Reference(
     var attachedFiles: MutableList<FileLink> = ArrayList()
         private set
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = TableConfig.ReferenceBaseEmbeddedFileJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.ReferenceBaseEmbeddedFileJoinTableReferenceBaseIdColumnName)), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.ReferenceBaseEmbeddedFileJoinTableFileLinkIdColumnName)))
-    var embeddedFiles: MutableList<FileLink> = ArrayList()
-        private set
-
     @OneToOne(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     @JoinColumn(name = TableConfig.ReferencePreviewImageJoinColumnName)
     var previewImage: FileLink? = null
@@ -117,31 +112,6 @@ data class Reference(
     fun removeAttachedFile(file: FileLink): Boolean {
         if (attachedFiles.remove(file)) {
             file.removeAsAttachmentFromReference(this)
-
-            return true
-        }
-
-        return false
-    }
-
-
-    fun hasEmbeddedFiles(): Boolean {
-        return embeddedFiles.size > 0
-    }
-
-    fun addEmbeddedFile(file: FileLink): Boolean {
-        if (embeddedFiles.add(file)) {
-            file.addAsEmbeddingToReference(this)
-
-            return true
-        }
-
-        return false
-    }
-
-    fun removeEmbeddedFile(file: FileLink): Boolean {
-        if (embeddedFiles.remove(file)) {
-            file.removeAsEmbeddingFromReference(this)
 
             return true
         }

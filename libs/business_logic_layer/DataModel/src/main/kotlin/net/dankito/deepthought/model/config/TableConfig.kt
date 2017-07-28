@@ -161,14 +161,6 @@ class TableConfig {
         const val ReferenceBaseAttachedFileJoinTableFileLinkIdColumnName = "file_id"
 
 
-        /*          Reference Embedded Files Join Table Config        */
-
-        const val ReferenceBaseEmbeddedFileJoinTableName = "reference_base_embedded_files_join_table"
-
-        const val ReferenceBaseEmbeddedFileJoinTableReferenceBaseIdColumnName = "reference_base_id"
-        const val ReferenceBaseEmbeddedFileJoinTableFileLinkIdColumnName = "file_id"
-
-
         /*          ExtensibleEnumeration Table Config        */
 
         const val ExtensibleEnumerationNameColumnName = "name"
