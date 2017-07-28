@@ -43,6 +43,7 @@ import net.dankito.utils.ThreadPool
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.services.hashing.IBase64Service
+import net.dankito.utils.services.network.NetworkHelper
 import javax.inject.Singleton
 
 
@@ -60,6 +61,12 @@ class CommonModule {
     @Singleton
     fun provideWebClient() : IWebClient {
         return OkHttpWebClient()
+    }
+
+    @Provides
+    @Singleton
+    fun provideNetworkHelper() : NetworkHelper {
+        return NetworkHelper()
     }
 
 
