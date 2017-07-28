@@ -10,4 +10,6 @@ interface INetworkConnectivityManager {
 
     fun addNetworkInterfaceConnectivityChangedListener(listener: (NetworkInterfaceState) -> Unit)
 
+    fun removeNetworkInterfaceConnectivityChangedListener(listener: (NetworkInterfaceState) -> Unit)
+
 }

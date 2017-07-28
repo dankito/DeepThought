@@ -93,6 +93,10 @@ abstract class NetworkConnectivityManagerBase(protected val networkHelper: Netwo
         listeners.add(listener)
     }
 
+    override fun removeNetworkInterfaceConnectivityChangedListener(listener: (NetworkInterfaceState) -> Unit) {
+        listeners.remove(listener)
+    }
+
     private fun callNetworkInterfaceConnectivityChangedListeners(state: NetworkInterfaceState) {
         listeners.forEach { it.invoke(state) }
     }
