@@ -303,7 +303,7 @@ class ViewEntryActivity : BaseActivity() {
         appBarLayout.visibility = View.VISIBLE
 
         val layoutParams = wbEntry.layoutParams as RelativeLayout.LayoutParams
-        layoutParams.alignWithParent = true
+        layoutParams.alignWithParent = false
         wbEntry.layoutParams = layoutParams
     }
 
@@ -312,7 +312,7 @@ class ViewEntryActivity : BaseActivity() {
         appBarLayout.visibility = View.GONE
 
         val layoutParams = wbEntry.layoutParams as RelativeLayout.LayoutParams
-        layoutParams.alignWithParent = false
+        layoutParams.alignWithParent = true
         wbEntry.layoutParams = layoutParams
     }
 
