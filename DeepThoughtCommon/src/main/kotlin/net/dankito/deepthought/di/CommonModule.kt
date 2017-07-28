@@ -157,9 +157,9 @@ class CommonModule {
 
     @Provides
     @Singleton
-    fun provideClientCommunicator(networkSettings: INetworkSettings, registrationHandler: IDeviceRegistrationHandler, base64Service: IBase64Service, threadPool: IThreadPool)
-            : IClientCommunicator {
-        return TcpSocketClientCommunicator(networkSettings, registrationHandler, base64Service, threadPool)
+    fun provideClientCommunicator(networkSettings: INetworkSettings, registrationHandler: IDeviceRegistrationHandler, entityManager: IEntityManager,
+                                  base64Service: IBase64Service, threadPool: IThreadPool) : IClientCommunicator {
+        return TcpSocketClientCommunicator(networkSettings, registrationHandler, entityManager, base64Service, threadPool)
     }
 
     @Provides
