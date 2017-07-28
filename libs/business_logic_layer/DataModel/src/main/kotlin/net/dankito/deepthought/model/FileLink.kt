@@ -43,16 +43,8 @@ data class FileLink(
     var entriesAttachedTo: MutableSet<Entry> = HashSet()
         private set
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "embeddedFiles")
-    var entriesEmbeddedIn: MutableSet<Entry> = HashSet()
-        private set
-
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "attachedFiles")
     var referencesAttachedTo: MutableSet<Reference> = HashSet()
-        private set
-
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "embeddedFiles")
-    var referencesEmbeddedIn: MutableSet<Reference> = HashSet()
         private set
 
 
@@ -76,17 +68,6 @@ data class FileLink(
         return entriesAttachedTo.remove(entry)
     }
 
-    val isEmbeddedInEntries: Boolean
-        get() = entriesEmbeddedIn.size > 0
-
-    internal fun addAsEmbeddingToEntry(entry: Entry): Boolean {
-        return entriesEmbeddedIn.add(entry)
-    }
-
-    internal fun removeAsEmbeddingFromEntry(entry: Entry): Boolean {
-        return entriesEmbeddedIn.remove(entry)
-    }
-
 
     val isAttachedToReferences: Boolean
         get() = referencesAttachedTo.size > 0
@@ -97,17 +78,6 @@ data class FileLink(
 
     internal fun removeAsAttachmentFromReference(reference: Reference): Boolean {
         return referencesAttachedTo.remove(reference)
-    }
-
-    val isEmbeddedInReferences: Boolean
-        get() = referencesEmbeddedIn.size > 0
-
-    internal fun addAsEmbeddingToReference(reference: Reference): Boolean {
-        return referencesEmbeddedIn.add(reference)
-    }
-
-    internal fun removeAsEmbeddingFromReference(reference: Reference): Boolean {
-        return referencesEmbeddedIn.remove(reference)
     }
 
 }
