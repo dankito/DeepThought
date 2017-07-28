@@ -42,6 +42,8 @@ open class UdpDevicesDiscoverer(val networkConnectivityManager: INetworkConnecti
 
     private var broadcastThreads: MutableMap<String, Thread> = ConcurrentHashMap()
 
+    private var networkInterfaceConnectivityChangedListener: ((NetworkInterfaceState) -> Unit)? = null
+
     private var openedBroadcastSockets: MutableList<DatagramSocket> = ArrayList()
     private var areBroadcastSocketsOpened = false
 
@@ -95,6 +97,8 @@ open class UdpDevicesDiscoverer(val networkConnectivityManager: INetworkConnecti
 
     protected fun stopBroadcast() {
         synchronized(broadcastThreads) {
+            networkInterfaceConnectivityChangedListener?.let { networkConnectivityManager.removeNetworkInterfaceConnectivityChangedListener(it) }
+
             areBroadcastSocketsOpened = false
 
             for (clientSocket in openedBroadcastSockets) {
@@ -274,7 +278,9 @@ open class UdpDevicesDiscoverer(val networkConnectivityManager: INetworkConnecti
     }
 
     protected fun startBroadcast(config: DevicesDiscovererConfig) {
-        networkConnectivityManager.addNetworkInterfaceConnectivityChangedListener { networkInterfaceConnectivityChanged(it, config) }
+        networkInterfaceConnectivityChangedListener = { networkInterfaceConnectivityChanged(it, config) }
+
+        networkInterfaceConnectivityChangedListener?.let { networkConnectivityManager.addNetworkInterfaceConnectivityChangedListener(it) }
 
         for (broadcastAddress in networkConnectivityManager.getBroadcastAddresses()) {
             startBroadcastForBroadcastAddressAsync(broadcastAddress, config)
