@@ -1,7 +1,6 @@
 package net.dankito.deepthought.android.activities
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
 import net.dankito.deepthought.android.service.ActivityParameterHolder
 import net.dankito.deepthought.android.service.CurrentActivityTracker
@@ -22,8 +21,8 @@ open class BaseActivity : AppCompatActivity() {
     protected lateinit var parameterHolder: ActivityParameterHolder
 
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         parameterHolder.clearActivityResults() // a new Activity is started -> clear all results of previous activities
     }
