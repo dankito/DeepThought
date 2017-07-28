@@ -100,7 +100,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             drawer.closeDrawer(GravityCompat.START)
         }
         else {
-            currentlyVisibleFragment?.onBackPressed() ?: super.onBackPressed()
+            if(currentlyVisibleFragment?.onBackPressed() == false) {
+                super.onBackPressed() // when not handling by fragment call default back button press handling
+            }
         }
     }
 
