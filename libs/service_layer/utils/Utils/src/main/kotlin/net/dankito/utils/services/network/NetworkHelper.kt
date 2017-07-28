@@ -16,19 +16,38 @@ class NetworkHelper {
         get() {
             val broadcastAddresses = ArrayList<InetAddress>()
 
-            for (address in getIPAddresses(true)) {
+            for(address in getIPAddresses(true)) {
                 try {
-                    val broadcastAddress = address.address
-                    broadcastAddress[broadcastAddress.size - 1] = 255.toByte()
-                    broadcastAddresses.add(Inet4Address.getByAddress(broadcastAddress))
-                } catch (ex: Exception) {
-                    log.error("Could not determine Broadcast Address of " + address.hostAddress, ex)
+                    if(address is Inet4Address) {
+                        getBroadcastAddress(address)?.let { broadcastAddresses.add(it) }
+                    }
+                } catch (e: Exception) {
+                    log.error("Could not determine Broadcast Address of " + address.hostAddress, e)
                 }
 
             }
 
             return broadcastAddresses
         }
+
+    fun getBroadcastAddress(networkInterface: NetworkInterface): Inet4Address? {
+        for(address in networkInterface.inetAddresses) {
+            if(address is Inet4Address) {
+                try {
+                    return getBroadcastAddress(address)
+                } catch(e: Exception) { log.error("Could not determine Broadcast Address of " + address.hostAddress, e)}
+            }
+        }
+
+        return null
+    }
+
+    fun getBroadcastAddress(address: Inet4Address): Inet4Address? {
+        val broadcastAddress = address.address
+        broadcastAddress[broadcastAddress.size - 1] = 255.toByte()
+
+        return Inet4Address.getByAddress(broadcastAddress) as? Inet4Address
+    }
 
     /**
      * Returns MAC address of the given interface name.
