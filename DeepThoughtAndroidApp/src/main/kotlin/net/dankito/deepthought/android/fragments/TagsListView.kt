@@ -126,6 +126,17 @@ class TagsListView : MainActivityTabFragment(R.layout.fragment_tab_tags, R.id.ls
     }
 
 
+    override fun onBackPressed(): Boolean {
+        if(presenter.isTagFilterApplied()) {
+            presenter.clearTagFilter()
+
+            return true
+        }
+
+        return super.onBackPressed()
+    }
+
+
     /*          ITagsListView implementation            */
 
     override fun showTags(tags: List<Tag>) {
