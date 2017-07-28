@@ -6,6 +6,7 @@ import java.net.InetAddress
 import java.net.NetworkInterface
 import java.net.SocketException
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class NetworkHelper {
@@ -74,27 +75,30 @@ class NetworkHelper {
         val addresses = ArrayList<InetAddress>()
 
         try {
-            val interfaces = Collections.list(NetworkInterface.getNetworkInterfaces())
-            for (networkInterface in interfaces) {
-                if (shouldInterfaceBeIgnored(networkInterface)) {
-                    continue
-                }
-
+            for(networkInterface in getConnectedRealNetworkInterfaces()) {
                 val interfaceAddresses = Collections.list(networkInterface.inetAddresses)
 
-                for (address in interfaceAddresses) {
-                    if (address.isLoopbackAddress == false) {
-                        if (onlyIPv4 == false || address is Inet4Address) {
+                for(address in interfaceAddresses) {
+                    if(address.isLoopbackAddress == false) {
+                        if(onlyIPv4 == false || address is Inet4Address) {
                             addresses.add(address)
                         }
                     }
                 }
             }
-        } catch (ignored: Exception) {
-        }
-        // for now eat exceptions
+        } catch (ignored: Exception) { } // for now eat exceptions
 
         return addresses
+    }
+
+    fun getRealNetworkInterfaces(): Collection<NetworkInterface> {
+        val allInterfaces = Collections.list(NetworkInterface.getNetworkInterfaces())
+
+        return allInterfaces.filter { shouldInterfaceBeIgnored(it) == false }
+    }
+
+    fun getConnectedRealNetworkInterfaces(): Collection<NetworkInterface> {
+        return getRealNetworkInterfaces().filter { it.isUp }
     }
 
     @Throws(SocketException::class)
