@@ -4,7 +4,7 @@ package net.dankito.data_access.network.discovery
 class DevicesDiscovererConfig {
 
     companion object {
-        val DEFAULT_DISCOVERY_MESSAGE_PREFIX = "DevicesDiscovery"
+        val DEFAULT_DISCOVERY_MESSAGE_PREFIX = "DT_Disc"
     }
 
 
