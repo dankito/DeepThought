@@ -22,6 +22,7 @@ import org.apache.lucene.util.Version
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: EntityServiceBase<TEntity>, eventBus: IEventBus) {
@@ -192,14 +193,32 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
             indexEntity(entityChanged.entity)
         }
         else if(entityChanged.changeType == EntityChangeType.Updated) {
-            removeEntityFromIndex(entityChanged.entity)
-            indexEntity(entityChanged.entity)
+            updateEntityInIndex(entityChanged.entity)
         }
         else if(entityChanged.changeType == EntityChangeType.PreDelete || (entityChanged.changeType == EntityChangeType.Deleted && entityChanged.entity.id != null)) {
             removeEntityFromIndex(entityChanged.entity)
         }
     }
 
+
+    fun updateIndex() {
+        try {
+            val deletedButStillIndexedEntitiesIds = ArrayList<String>()
+            executeQuery(WildcardQuery(Term(getIdFieldName(), "*")))?.let { (searcher, hits) ->
+                deletedButStillIndexedEntitiesIds.addAll(getIdsFromHits(searcher, hits))
+            }
+
+            for(entity in entityService.getAll()) {
+                deletedButStillIndexedEntitiesIds.remove(entity.id)
+
+                updateEntityInIndex(entity)
+            }
+
+            writer?.let { writer ->
+                deletedButStillIndexedEntitiesIds.forEach { removeEntityFromIndex(writer, it) }
+            }
+        } catch(e: Exception) { log.error("Could not update index for ${javaClass.simpleName}", e) }
+    }
 
     fun indexAllEntities() {
         try {
@@ -237,6 +256,11 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
     }
 
 
+    protected fun updateEntityInIndex(entity: TEntity) {
+        removeEntityFromIndex(entity)
+        indexEntity(entity)
+    }
+
     protected fun removeEntityFromIndex(removedEntity: TEntity) {
         if(isReadOnly) {
             return
@@ -246,15 +270,19 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
             getWriter()?.let { writer ->
                 log.info("Removing Entity {} from index", removedEntity)
 
-                writer.deleteDocuments(Term(getIdFieldName(), removedEntity.id))
-
-                startCommitIndicesTimer()
-
-                markIndexHasBeenUpdated() // so that on next search updates are reflected
+                removedEntity.id?.let { removeEntityFromIndex(writer, it) }
             }
         } catch (e: Exception) {
             log.error("Could not delete Document for removed entity " + removedEntity, e)
         }
+    }
+
+    private fun removeEntityFromIndex(writer: IndexWriter, entityId: String) {
+        writer.deleteDocuments(Term(getIdFieldName(), entityId))
+
+        startCommitIndicesTimer()
+
+        markIndexHasBeenUpdated() // so that on next search updates are reflected
     }
 
     abstract fun getIdFieldName(): String
