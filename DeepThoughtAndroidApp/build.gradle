@@ -56,12 +56,16 @@ android {
         beta {
 
         }
+        extended {
+
+        }
     }
 
     sourceSets {
         main.java.srcDirs += [ 'src/main/kotlin' ]
         standard.java.srcDirs += [ 'src/standard/kotlin', 'src/common/kotlin' ]
         beta.java.srcDirs += [ 'src/beta/kotlin' ]
+        extended.java.srcDirs += [ 'src/extended/kotlin' ]
     }
 
     signingConfigs {
