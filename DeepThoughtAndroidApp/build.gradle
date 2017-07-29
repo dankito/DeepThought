@@ -9,6 +9,9 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 apply plugin: 'testfairy'
 
+apply from: '../keys.gradle'
+
+
 repositories {
     maven { url 'https://maven.fabric.io/public' }
     maven { url 'https://www.testfairy.com/maven' }
@@ -99,6 +102,10 @@ android {
         abortOnError false
         // if true, only report errors
         ignoreWarnings false
+    }
+
+    testfairyConfig {
+        apiKey testfairyApiKey
     }
 
     packagingOptions {
