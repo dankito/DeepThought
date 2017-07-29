@@ -48,21 +48,9 @@ class AndroidAppInitializer {
 
         initializeNetworkConnectivityChangeBroadcastReceiver()
 
-        htmlEditorExtractor.extractHtmlEditorIfNeededAsync()
-
-        htmlEditorExtractor.addHtmlEditorExtractedListener {
-            searchEngine.addInitializationListener {
-                val currentActivity = activityTracker.currentActivity
-
-                if(currentActivity != null) {
-                    preloadHtmlEditors(currentActivity)
-                }
-                else {
-                    activityTracker.addNextActivitySetListener { preloadHtmlEditors(it) }
-                }
-            }
-        }
+        initializeHtmlEditorExtractor()
     }
+
 
     private fun initializeNetworkConnectivityChangeBroadcastReceiver() {
         // Apps targeting Android 7.0 (API level 24) and higher do not receive this broadcast if they declare the broadcast receiver in their manifest.
@@ -72,6 +60,23 @@ class AndroidAppInitializer {
         intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION) // TODO: not equal to AndroidManifest and not handled in NetworkConnectivityChangeBroadcastReceiver
 
         context.registerReceiver(NetworkConnectivityChangeBroadcastReceiver(), intentFilter)
+    }
+
+
+    private fun initializeHtmlEditorExtractor() {
+        htmlEditorExtractor.extractHtmlEditorIfNeededAsync()
+
+        htmlEditorExtractor.addHtmlEditorExtractedListener {
+            searchEngine.addInitializationListener {
+                val currentActivity = activityTracker.currentActivity
+
+                if (currentActivity != null) {
+                    preloadHtmlEditors(currentActivity)
+                } else {
+                    activityTracker.addNextActivitySetListener { preloadHtmlEditors(it) }
+                }
+            }
+        }
     }
 
     private fun preloadHtmlEditors(currentActivity: BaseActivity) {
