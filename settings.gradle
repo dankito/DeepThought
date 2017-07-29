@@ -10,6 +10,7 @@ include ':DeepThoughtBaseLib'
 include ':FaviconExtractor'
 
 include ':NewsReader'
+include ':ArticleSummaryExtractors'
 include ':RomeFeedReader'
 include ':FeedAddressExtractor'
 
@@ -64,6 +65,7 @@ include ':JPAAnnotationProcessor'
 project(':FaviconExtractor').projectDir = "$rootDir/libs/util/FaviconExtractor" as File
 
 project(':NewsReader').projectDir = "$rootDir/libs/news/NewsReader" as File
+project(':ArticleSummaryExtractors').projectDir = "$rootDir/libs/news/ArticleSummaryExtractors" as File
 project(':RomeFeedReader').projectDir = "$rootDir/libs/news/RomeFeedReader" as File
 project(':FeedAddressExtractor').projectDir = "$rootDir/libs/news/FeedAddressExtractor" as File
 
