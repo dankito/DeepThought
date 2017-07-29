@@ -152,7 +152,9 @@ dependencies {
     betaCompile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
-    compile 'testfairy:testfairy-android-sdk:1.+@aar'
+    betaCompile 'testfairy:testfairy-android-sdk:1.+@aar'
+
+    extendedCompile project(':ArticleSummaryExtractors') // not published to Play Store
 
     testCompile "junit:junit:$junitVersion"
 

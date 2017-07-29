@@ -5,6 +5,8 @@ import dagger.Provides
 import net.dankito.deepthought.android.reporting.FabricCrashReporter
 import net.dankito.deepthought.android.reporting.TestFairyCrashReporter
 import net.dankito.deepthought.android.service.reporting.ICrashReporter
+import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractorsManager
+import net.dankito.newsreader.summary.NoOpImplementedArticleSummaryExtractorsManager
 import javax.inject.Singleton
 
 
@@ -15,6 +17,12 @@ class FlavorModule {
     @Singleton
     fun provideCrashReporter() : ICrashReporter {
         return TestFairyCrashReporter()
+    }
+
+    @Provides
+    @Singleton
+    fun provideImplementedArticleSummaryExtractorsManager() : IImplementedArticleSummaryExtractorsManager {
+        return NoOpImplementedArticleSummaryExtractorsManager()
     }
 
 }

@@ -2,10 +2,11 @@ package net.dankito.deepthought.android.di
 
 import dagger.Module
 import dagger.Provides
+import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.deepthought.android.service.reporting.ICrashReporter
 import net.dankito.deepthought.android.service.reporting.NoOpCrashReporter
 import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractorsManager
-import net.dankito.newsreader.summary.NoOpImplementedArticleSummaryExtractorsManager
+import net.dankito.newsreader.summary.ImplementedArticleSummaryExtractorsManager
 import javax.inject.Singleton
 
 
@@ -20,8 +21,8 @@ class FlavorModule {
 
     @Provides
     @Singleton
-    fun provideImplementedArticleSummaryExtractorsManager() : IImplementedArticleSummaryExtractorsManager {
-        return NoOpImplementedArticleSummaryExtractorsManager()
+    fun provideImplementedArticleSummaryExtractorsManager(webClient: IWebClient) : IImplementedArticleSummaryExtractorsManager {
+        return ImplementedArticleSummaryExtractorsManager(webClient)
     }
 
 }
