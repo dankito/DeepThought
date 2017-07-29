@@ -81,7 +81,7 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
     private fun initiallyRetrievedSummaryExtractorConfigs() {
         initImplementedExtractors()
 
-        initAddedExtractors()
+        initFeedExtractors()
 
         configManagerInitialized()
     }
@@ -100,7 +100,7 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
         }
     }
 
-    private fun initAddedExtractors() {
+    private fun initFeedExtractors() {
         configurations.forEach { (_, config) ->
             if(config.extractor == null) {
                 config.extractor = FeedArticleSummaryExtractor(config.url, feedReader)
