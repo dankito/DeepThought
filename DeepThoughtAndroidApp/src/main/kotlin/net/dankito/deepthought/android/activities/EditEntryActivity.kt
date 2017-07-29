@@ -156,7 +156,7 @@ class EditEntryActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
 
-        (parameterHolder.getActivityResult(EditReferenceActivity.ResultId) as? EditReferenceActivityResult)?.let { result ->
+        (getAndClearResult(EditReferenceActivity.ResultId) as? EditReferenceActivityResult)?.let { result ->
             if(result.didSaveReference) {
                 result.savedReference?.let { savedReference(it) }
             }
@@ -188,6 +188,8 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun editReference() {
+        setWaitingForResult(EditReferenceActivity.ResultId)
+
         val reference = entry?.reference ?: readLaterArticle?.entryExtractionResult?.reference ?: entryExtractionResult?.reference
 
         if(reference != null) {

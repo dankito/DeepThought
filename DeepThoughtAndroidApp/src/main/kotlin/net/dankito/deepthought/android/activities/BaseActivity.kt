@@ -11,7 +11,9 @@ import javax.inject.Inject
 open class BaseActivity : AppCompatActivity() {
 
     companion object {
-        val ParametersId = "BASE_ACTIVITY_PARAMETERS_ID"
+        const val ParametersId = "BASE_ACTIVITY_PARAMETERS_ID"
+
+        const val WaitingForResultForIdBundleExtraName = "WAITING_FOR_RESULT_FOR_ID"
 
         private val log = LoggerFactory.getLogger(BaseActivity::class.java)
     }
@@ -24,11 +26,16 @@ open class BaseActivity : AppCompatActivity() {
     protected lateinit var parameterHolder: ActivityParameterHolder
 
 
+    private var waitingForResultWithId: String? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         log.info("Creating Activity $javaClass")
         super.onCreate(savedInstanceState)
 
-        parameterHolder.clearActivityResults() // a new Activity is started -> clear all results of previous activities
+        savedInstanceState?.let {
+            this.waitingForResultWithId = savedInstanceState.getString(WaitingForResultForIdBundleExtraName)
+        }
     }
 
     override fun onStart() {
@@ -71,6 +78,16 @@ open class BaseActivity : AppCompatActivity() {
     }
 
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+
+        outState?.let {
+            outState.putString(WaitingForResultForIdBundleExtraName, null)
+            waitingForResultWithId?.let { outState.putString(WaitingForResultForIdBundleExtraName, it) }
+        }
+    }
+
+
     protected fun getParameters(): Any? {
         getParametersId()?.let { parametersId ->
             return parameterHolder.getParameters(parametersId) // we're done with activity. remove parameters from cache to not waste any memory
@@ -81,6 +98,21 @@ open class BaseActivity : AppCompatActivity() {
 
     private fun getParametersId(): String? {
         return intent?.getStringExtra(ParametersId)
+    }
+
+
+    protected fun setWaitingForResult(targetResultId: String) {
+        waitingForResultWithId = targetResultId
+
+        parameterHolder.clearActivityResults(targetResultId)
+    }
+
+    protected fun getAndClearResult(targetResultId: String): Any? {
+        val result = parameterHolder.getActivityResult(targetResultId)
+
+        parameterHolder.clearActivityResults(targetResultId)
+
+        return result
     }
 
 }

@@ -168,7 +168,7 @@ class ViewEntryActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
 
-        (parameterHolder.getActivityResult(EditEntryActivity.ResultId) as? EditEntryActivityResult)?.let { result ->
+        (getAndClearResult(EditEntryActivity.ResultId) as? EditEntryActivityResult)?.let { result ->
             if(result.didSaveReadLaterArticle) {
                 this.readLaterArticle = null
             }
@@ -239,6 +239,8 @@ class ViewEntryActivity : BaseActivity() {
     }
 
     private fun editEntry(field: EntryField? = null) {
+        setWaitingForResult(EditEntryActivity.ResultId)
+
         entry?.let { presenter.editEntry(it, field) }
 
         readLaterArticle?.let { presenter.editEntry(it, field) }
