@@ -24,6 +24,8 @@ import net.dankito.deepthought.ui.presenter.EditEntryPresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.ReadLaterArticleService
+import net.dankito.service.data.TagService
+import net.dankito.utils.IThreadPool
 import net.dankito.utils.serialization.ISerializer
 import javax.inject.Inject
 
@@ -34,6 +36,7 @@ class EditEntryActivity : BaseActivity() {
         private const val ENTRY_ID_INTENT_EXTRA_NAME = "ENTRY_ID"
         private const val READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME = "READ_LATER_ARTICLE_ID"
         private const val ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ENTRY_EXTRACTION_RESULT"
+        private const val TAGS_ON_ENTRY_INTENT_EXTRA_NAME = "TAGS_ON_ENTRY"
 
         const val ResultId = "EDIT_ENTRY_ACTIVITY_RESULT"
     }
@@ -46,10 +49,16 @@ class EditEntryActivity : BaseActivity() {
     protected lateinit var readLaterArticleService: ReadLaterArticleService
 
     @Inject
+    protected lateinit var tagService: TagService
+
+    @Inject
     protected lateinit var entryPersister: EntryPersister
 
     @Inject
     protected lateinit var router: IRouter
+
+    @Inject
+    protected lateinit var threadPool: IThreadPool
 
     @Inject
     protected lateinit var serializer: ISerializer
@@ -102,6 +111,8 @@ class EditEntryActivity : BaseActivity() {
         savedInstanceState.getString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)?.let { editEntryExtractionResult(it) }
         savedInstanceState.getString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME)?.let { readLaterArticleId -> editReadLaterArticle(readLaterArticleId) }
         savedInstanceState.getString(ENTRY_ID_INTENT_EXTRA_NAME)?.let { entryId -> editEntry(entryId) }
+
+        savedInstanceState.getString(TAGS_ON_ENTRY_INTENT_EXTRA_NAME)?.let { tagsOnEntryIds -> restoreTagsOnEntryAsync(tagsOnEntryIds) }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -116,6 +127,8 @@ class EditEntryActivity : BaseActivity() {
 
             outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, null)
             entryExtractionResult?.let { outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, serializer.serializeObject(it)) }
+
+            outState.putString(TAGS_ON_ENTRY_INTENT_EXTRA_NAME, serializer.serializeObject(tagsOnEntry))
         }
     }
 
@@ -409,6 +422,20 @@ class EditEntryActivity : BaseActivity() {
 
             setTagsOnEntryPreviewOnUIThread()
         }
+    }
+
+
+    private fun restoreTagsOnEntryAsync(tagsOnEntryIdsString: String) {
+        threadPool.runAsync { restoreTagsOnEntry(tagsOnEntryIdsString) }
+    }
+
+    private fun restoreTagsOnEntry(tagsOnEntryIdsString: String) {
+        val restoredTagsOnEntry = serializer.deserializeObject(tagsOnEntryIdsString, List::class.java, Tag::class.java) as List<Tag>
+
+        tagsOnEntry.clear()
+        tagsOnEntry.addAll(restoredTagsOnEntry)
+
+        runOnUiThread { setTagsOnEntryPreviewOnUIThread() }
     }
 
 
