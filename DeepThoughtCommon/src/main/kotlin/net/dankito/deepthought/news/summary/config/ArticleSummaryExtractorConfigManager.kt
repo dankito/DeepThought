@@ -83,6 +83,8 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
 
         initFeedExtractors()
 
+        handleConfigsWithoutExtractors()
+
         configManagerInitialized()
     }
 
@@ -102,8 +104,19 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
 
     private fun initFeedExtractors() {
         configurations.forEach { (_, config) ->
-            if(config.extractor == null) {
+            if(config.siteUrl != null) { // currently only Feeds have siteUrl set
                 config.extractor = FeedArticleSummaryExtractor(config.url, feedReader)
+            }
+        }
+    }
+
+    /**
+     * Handles ArticleSummaryExtractorConfig which's ArticleSummaryExtractor hasn't been found (e.g. a synchronized device knows this extractor but we don't)
+     */
+    private fun handleConfigsWithoutExtractors() {
+        ArrayList(configurations.values).forEach { config ->
+            if(config.extractor == null) { // currently only Feed have siteUrl set
+                configurations.remove(config.url)
             }
         }
     }
