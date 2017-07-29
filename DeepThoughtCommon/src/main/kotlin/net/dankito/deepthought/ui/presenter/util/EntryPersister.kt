@@ -46,7 +46,7 @@ class EntryPersister(private val entryService: EntryService, private val referen
         entry.setAllTags(tags)
 
 
-        reference?.let { reference ->
+        reference?.let {
             if(reference.isPersisted() == false) {
                 referenceService.persist(reference)
             }
