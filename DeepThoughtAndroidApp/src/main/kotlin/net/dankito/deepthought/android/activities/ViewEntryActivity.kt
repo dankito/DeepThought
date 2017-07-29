@@ -160,8 +160,6 @@ class ViewEntryActivity : BaseActivity() {
         settings.defaultTextEncodingName = "UTF-8" // otherwise non ASCII text doesn't get displayed correctly
         settings.defaultFontSize = 18 // default font is too small
         settings.javaScriptEnabled = true // so that embedded videos etc. work
-
-        Timer().schedule(PERIOD_AFTER_TO_SHOW_READER_MODE_ON_START_MILLIS) { runOnUiThread { goToReaderMode() } } // go to reader mode after some seconds
     }
 
 
@@ -180,6 +178,12 @@ class ViewEntryActivity : BaseActivity() {
                 showEntry(savedEntry)
             }
         }
+
+        goToReaderModeOnActivityStart() // go to reader mode after some seconds
+    }
+
+    private fun goToReaderModeOnActivityStart() {
+        Timer().schedule(PERIOD_AFTER_TO_SHOW_READER_MODE_ON_START_MILLIS) { runOnUiThread { goToReaderMode() } }
     }
 
     override fun onDestroy() {
