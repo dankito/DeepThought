@@ -15,13 +15,15 @@ import net.dankito.data_access.network.communication.callback.DeviceRegistration
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.data_access.network.discovery.UdpDevicesDiscoverer
-import net.dankito.data_access.network.webclient.OkHttpWebClient
+import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.enums.ExtensibleEnumeration
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
-import net.dankito.newsreader.summary.ImplementedArticleSummaryExtractors
+import net.dankito.newsreader.model.ArticleSummary
+import net.dankito.newsreader.summary.ArticleSummaryExtractorBase
+import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractor
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.data.messages.EntityChangeType
@@ -42,10 +44,12 @@ import net.engio.mbassy.listener.Listener
 import net.engio.mbassy.listener.References
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.number.OrderingComparison.*
+import org.jsoup.nodes.Document
 import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mockito
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.*
@@ -54,6 +58,7 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import kotlin.collections.ArrayList
 import kotlin.concurrent.thread
 
 
@@ -525,8 +530,7 @@ class CommunicationManagerTest {
         localRegisterAtRemote.set(true)
         remotePermitRemoteToSynchronize.set(true)
 
-        // add ArticleSummaryExtractorConfig for ImplementedArticleSummaryExtractors
-        ImplementedArticleSummaryExtractors(OkHttpWebClient()).getImplementedExtractors().forEach { implementedExtractor ->
+        createImplementedExtractors(Mockito.mock(IWebClient::class.java)).forEach { implementedExtractor ->
             val localConfig = ArticleSummaryExtractorConfig(implementedExtractor.getBaseUrl(), implementedExtractor.getName())
             localEntityManager.persistEntity(localConfig)
 
@@ -579,6 +583,27 @@ class CommunicationManagerTest {
             val remoteFavorite = synchronizedRemoteFavorites[i]
 
             assertThat(localFavorite.url, `is`(remoteFavorite.url))
+        }
+    }
+
+    private fun createImplementedExtractors(webClient: IWebClient): Collection<IImplementedArticleSummaryExtractor> {
+        val extractors = ArrayList<IImplementedArticleSummaryExtractor>()
+
+        extractors.add(createImplementedArticleSummaryExtractor("New York Times", "https://www.nytimes.com", webClient))
+        extractors.add(createImplementedArticleSummaryExtractor("The Guardian", "https://www.guardian.co.uk", webClient))
+        extractors.add(createImplementedArticleSummaryExtractor("Le Monde", "http://www.lemonde.fr", webClient))
+        extractors.add(createImplementedArticleSummaryExtractor("SZ", "http://www.sz.de", webClient))
+
+        return extractors
+    }
+
+    private fun createImplementedArticleSummaryExtractor(name: String, baseUrl: String, webClient: IWebClient): IImplementedArticleSummaryExtractor {
+        return object : ArticleSummaryExtractorBase(webClient) {
+            override fun getName(): String { return name  }
+
+            override fun getBaseUrl(): String { return baseUrl }
+
+            override fun parseHtmlToArticleSummary(url: String, document: Document, forLoadingMoreItems: Boolean): ArticleSummary { return Mockito.mock(ArticleSummary::class.java) }
         }
     }
 
