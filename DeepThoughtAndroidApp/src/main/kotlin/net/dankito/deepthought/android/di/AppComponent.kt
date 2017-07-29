@@ -28,7 +28,7 @@ import javax.inject.Singleton
 
 
 @Singleton
-@Component(modules = arrayOf(ActivitiesModule::class, AndroidCommonModule::class, CommonModule::class, CommonDataModule::class, BaseModule::class))
+@Component(modules = arrayOf(ActivitiesModule::class, FlavorModule::class, AndroidCommonModule::class, CommonModule::class, CommonDataModule::class, BaseModule::class))
 interface AppComponent : CommonComponent {
 
     companion object {
