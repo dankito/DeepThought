@@ -16,6 +16,7 @@ buildscript {
         }
 
         maven { url 'https://maven.fabric.io/public' }
+        maven { url 'https://www.testfairy.com/maven' }
     }
 
     dependencies {
@@ -23,6 +24,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         classpath 'io.fabric.tools:gradle:1.23.0'
+        classpath 'com.testfairy.plugins.gradle:testfairy:1.+'
 
         // for SonarQube
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.5"

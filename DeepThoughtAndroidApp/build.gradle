@@ -7,6 +7,12 @@ apply plugin: 'kotlin-kapt'
 
 // Put Fabric plugin after Android plugin
 apply plugin: 'io.fabric'
+apply plugin: 'testfairy'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+    maven { url 'https://www.testfairy.com/maven' }
+}
 
 
 android {
@@ -135,6 +141,7 @@ dependencies {
     betaCompile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
+    compile 'testfairy:testfairy-android-sdk:1.+@aar'
 
     testCompile "junit:junit:$junitVersion"
 
