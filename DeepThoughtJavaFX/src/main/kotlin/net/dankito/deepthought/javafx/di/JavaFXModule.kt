@@ -3,6 +3,7 @@ package net.dankito.deepthought.javafx.di
 import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
+import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.deepthought.javafx.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.javafx.appstart.JavaFXAppInitializer
 import net.dankito.deepthought.javafx.dialogs.JavaFXDialogService
@@ -13,6 +14,8 @@ import net.dankito.deepthought.javafx.service.communication.JavaFXDeviceRegistra
 import net.dankito.deepthought.javafx.service.network.JavaFXNetworkConnectivityManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractorsManager
+import net.dankito.newsreader.summary.NoOpImplementedArticleSummaryExtractorsManager
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.localization.Localization
@@ -69,6 +72,13 @@ class JavaFXModule(private val mainWindowController: MainWindowController) {
     @Singleton
     fun provideNetworkConnectivityManager(networkHelper: NetworkHelper) : INetworkConnectivityManager {
         return JavaFXNetworkConnectivityManager(networkHelper)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideImplementedArticleSummaryExtractorsManager(webClient: IWebClient) : IImplementedArticleSummaryExtractorsManager {
+        return NoOpImplementedArticleSummaryExtractorsManager()
     }
 
 }
