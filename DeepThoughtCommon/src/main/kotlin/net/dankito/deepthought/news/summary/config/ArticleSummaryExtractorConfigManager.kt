@@ -74,8 +74,6 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
                 loadIconAsync(config)
             }
         }
-
-        favorites = configurations.values.filter { it.isFavorite }.sortedBy { it.favoriteIndex }.toMutableList()
     }
 
     private fun initiallyRetrievedSummaryExtractorConfigs() {
@@ -84,6 +82,8 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
         initFeedExtractors()
 
         handleConfigsWithoutExtractors()
+
+        favorites = configurations.values.filter { it.isFavorite }.sortedBy { it.favoriteIndex }.toMutableList()
 
         configManagerInitialized()
     }
