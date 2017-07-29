@@ -35,8 +35,19 @@ android {
         }
     }
 
+    productFlavors {
+        standard {
+
+        }
+        beta {
+
+        }
+    }
+
     sourceSets {
         main.java.srcDirs += [ 'src/main/kotlin' ]
+        standard.java.srcDirs += [ 'src/standard/kotlin', 'src/common/kotlin' ]
+        beta.java.srcDirs += [ 'src/beta/kotlin' ]
     }
 
     signingConfigs {
