@@ -222,6 +222,10 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
             throw Exception(e)
         }
 
+        startReplication(syncUrl, device)
+    }
+
+    private fun startReplication(syncUrl: URL, device: DiscoveredDevice) {
         val pushReplication = database.createPushReplication(syncUrl)
         pushReplication.filter = EntitiesFilterName
         pushReplication.isContinuous = true
