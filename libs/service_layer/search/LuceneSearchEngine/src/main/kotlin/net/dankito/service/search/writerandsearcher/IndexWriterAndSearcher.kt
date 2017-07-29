@@ -10,6 +10,7 @@ import net.dankito.service.search.results.LazyLoadingLuceneSearchResultsList
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.document.Document
 import org.apache.lucene.document.Field
+import org.apache.lucene.document.LongField
 import org.apache.lucene.document.StringField
 import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.index.IndexWriter
@@ -232,6 +233,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
             val doc = Document()
 
             doc.add(StringField(getIdFieldName(), entity.id, Field.Store.YES)) // id and modifiedOn are added to all documents
+            doc.add(LongField(FieldName.ModifiedOn, entity.modifiedOn.time, Field.Store.YES))
 
             addEntityFieldsToDocument(entity, doc)
 
