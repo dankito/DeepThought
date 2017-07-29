@@ -22,7 +22,7 @@ class JavaFXAppInitializer {
     protected lateinit var searchEngine: ISearchEngine
 
     @Inject
-    protected lateinit var communicationManagerStarter: CommunicationManagerStarter
+    protected lateinit var communicationManagerStarter: CommunicationManagerStarter // same here: just create instance, CommunicationManagerStarter initializes itself
 
 
     fun initializeApp() {
