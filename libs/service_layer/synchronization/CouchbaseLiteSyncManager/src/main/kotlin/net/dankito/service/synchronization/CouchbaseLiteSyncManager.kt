@@ -207,22 +207,22 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
 
     @Throws(Exception::class)
     override fun startSynchronizationWithDevice(device: DiscoveredDevice) {
+        if(pullReplications.containsKey(device)) { // synchronization already started with this device
+            return
+        }
+
+        openSynchronizationPort() // as at this stage it may not be opened yet but is needed for synchronization
+
+        log.info("Starting Replication with Device " + device)
+
+        val syncUrl: URL
+        try {
+            syncUrl = createSyncUrl(device.address, device.synchronizationPort)
+        } catch (e: MalformedURLException) {
+            throw Exception(e)
+        }
+
         synchronized(this) {
-            if(pullReplications.containsKey(device)) { // synchronization already started with this device
-                return
-            }
-
-            openSynchronizationPort() // as at this stage it may not be opened yet but is needed for synchronization
-
-            log.info("Starting Replication with Device " + device)
-
-            val syncUrl: URL
-            try {
-                syncUrl = createSyncUrl(device.address, device.synchronizationPort)
-            } catch (e: MalformedURLException) {
-                throw Exception(e)
-            }
-
             startReplication(syncUrl, device)
         }
     }
