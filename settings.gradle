@@ -31,6 +31,7 @@ include ':EventBus'
 
 include ':JacksonJsonSerializer'
 include ':Utils'
+include ':NorconexLanguageDetector'
 
 
 /*      Business logic Layer       */
@@ -84,6 +85,7 @@ project(':EventBus').projectDir = "$rootDir/libs/service_layer/eventbus/EventBus
 
 project(':JacksonJsonSerializer').projectDir = "$rootDir/libs/service_layer/serializer/JacksonJsonSerializer" as File
 project(':Utils').projectDir = "$rootDir/libs/service_layer/utils/Utils" as File
+project(':NorconexLanguageDetector').projectDir = "$rootDir/libs/service_layer/utils/NorconexLanguageDetector" as File
 project(':DeepThoughtBaseLib').projectDir = "$rootDir/libs/service_layer/utils/DeepThoughtBaseLib" as File
 
 
