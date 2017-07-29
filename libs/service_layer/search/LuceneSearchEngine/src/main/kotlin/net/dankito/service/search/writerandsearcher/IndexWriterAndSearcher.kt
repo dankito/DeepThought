@@ -5,6 +5,7 @@ import net.dankito.service.data.EntityServiceBase
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.EntityChanged
 import net.dankito.service.eventbus.IEventBus
+import net.dankito.service.search.LanguageDependentAnalyzer
 import net.dankito.service.search.SearchWithCollectionResult
 import net.dankito.service.search.SortOption
 import net.dankito.service.search.SortOrder
@@ -40,7 +41,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
     var isReadOnly = false
 
-    private lateinit var defaultAnalyzer: Analyzer
+    protected lateinit var defaultAnalyzer: LanguageDependentAnalyzer
 
     private var directory: Directory? = null
 
@@ -70,7 +71,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
      * What we want on app start is a quick start-up, so on first access only create an IndexSearcher on a readOnly Directory.
      * Later on, when IndexWriter is needed for first write operation, we re-create Directory and IndexSearcher
      */
-    fun initialize(defaultAnalyzer: Analyzer) {
+    fun initialize(defaultAnalyzer: LanguageDependentAnalyzer) {
         this.defaultAnalyzer = defaultAnalyzer
     }
 

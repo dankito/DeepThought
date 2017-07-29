@@ -9,11 +9,9 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.specific.*
 import net.dankito.service.search.writerandsearcher.*
 import net.dankito.utils.IThreadPool
-import org.apache.lucene.analysis.Analyzer
-import org.apache.lucene.analysis.standard.StandardAnalyzer
+import net.dankito.utils.language.ILanguageDetector
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.FSDirectory
-import org.apache.lucene.util.Version
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.*
@@ -21,8 +19,8 @@ import kotlin.concurrent.schedule
 import kotlin.concurrent.thread
 
 
-class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThreadPool, eventBus: IEventBus, entryService: EntryService, tagService: TagService,
-                         referenceService: ReferenceService, readLaterArticleService: ReadLaterArticleService)
+class LuceneSearchEngine(private val dataManager: DataManager, private val languageDetector: ILanguageDetector, threadPool: IThreadPool, eventBus: IEventBus, entryService: EntryService,
+                         tagService: TagService, referenceService: ReferenceService, readLaterArticleService: ReadLaterArticleService)
     : SearchEngineBase(threadPool) {
 
     companion object {
@@ -41,8 +39,6 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
     private val indexWritersAndSearchers: List<IndexWriterAndSearcher<*>>
 
     private lateinit var defaultIndexDirectory: Directory
-
-    private lateinit var defaultAnalyzer: Analyzer
 
 
     init {
@@ -70,7 +66,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
 
             initializeIndexSearchersAndWriters()
 
-            if (indexDirExists == false) {
+            if(indexDirExists == false) {
                 // TODO: inform user that index is going to be rebuilt and that this takes some time
                 rebuildIndex() // do not rebuild index asynchronously as Application depends on some functions of SearchEngine (like Entries without Tags)
             }
@@ -82,8 +78,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, threadPool: IThre
     }
 
     private fun initializeIndexSearchersAndWriters() {
-//        defaultAnalyzer = DeepThoughtAnalyzer()
-        defaultAnalyzer = StandardAnalyzer(Version.LUCENE_47)
+        val defaultAnalyzer = LanguageDependentAnalyzer(languageDetector)
 
         for(writerAndSearcher in indexWritersAndSearchers) {
             writerAndSearcher.initialize(defaultAnalyzer)

@@ -41,6 +41,7 @@ import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ImageCache
 import net.dankito.utils.ThreadPool
+import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.services.hashing.IBase64Service
@@ -104,9 +105,9 @@ class CommonModule {
 
     @Provides
     @Singleton
-    fun provideSearchEngine(dataManager: DataManager, threadPool: IThreadPool, eventBus: IEventBus, entryService: EntryService, tagService: TagService,
+    fun provideSearchEngine(dataManager: DataManager, languageDetector: ILanguageDetector, threadPool: IThreadPool, eventBus: IEventBus, entryService: EntryService, tagService: TagService,
                             referenceService: ReferenceService, readLaterArticleService: ReadLaterArticleService) : ISearchEngine {
-        return LuceneSearchEngine(dataManager, threadPool, eventBus, entryService, tagService, referenceService, readLaterArticleService)
+        return LuceneSearchEngine(dataManager, languageDetector, threadPool, eventBus, entryService, tagService, referenceService, readLaterArticleService)
     }
 
 

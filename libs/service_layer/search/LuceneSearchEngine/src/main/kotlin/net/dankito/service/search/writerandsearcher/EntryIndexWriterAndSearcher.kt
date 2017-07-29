@@ -62,6 +62,8 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
             doc.add(StringField(FieldName.EntryNoReference, FieldValue.NoReferenceFieldValue, Field.Store.NO))
         }
 
+        defaultAnalyzer.setNextEntryToBeAnalyzed(entity)
+
         return doc
     }
 
