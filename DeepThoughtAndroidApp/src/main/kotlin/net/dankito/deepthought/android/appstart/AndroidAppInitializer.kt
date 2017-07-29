@@ -8,6 +8,7 @@ import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.android.service.network.NetworkConnectivityChangeBroadcastReceiver
+import net.dankito.deepthought.android.service.reporting.ICrashReporter
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditorPool
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.html.HtmlEditorExtractor
@@ -42,13 +43,22 @@ class AndroidAppInitializer {
     @Inject
     protected lateinit var communicationManagerStarter: CommunicationManagerStarter // same here: just create instance, CommunicationManagerStarter initializes itself
 
+    @Inject
+    protected lateinit var crashReporter: ICrashReporter
+
 
     fun initializeApp() {
         AppComponent.component.inject(this)
 
+        initializeCrashReporter()
+
         initializeNetworkConnectivityChangeBroadcastReceiver()
 
         initializeHtmlEditorExtractor()
+    }
+
+    private fun initializeCrashReporter() {
+        crashReporter.init(context, dataManager)
     }
 
 
