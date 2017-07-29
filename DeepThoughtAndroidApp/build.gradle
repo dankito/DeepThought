@@ -5,6 +5,9 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
+// Put Fabric plugin after Android plugin
+apply plugin: 'io.fabric'
+
 
 android {
     compileSdkVersion androidCompileSdkVersion
@@ -28,6 +31,8 @@ android {
             applicationIdSuffix = ".test"
 
             testCoverageEnabled = true
+
+            ext.enableCrashlytics = false
         }
         release {
             minifyEnabled false
@@ -37,7 +42,7 @@ android {
 
     productFlavors {
         standard {
-
+            ext.enableCrashlytics = false
         }
         beta {
 
@@ -126,6 +131,10 @@ dependencies {
     compile "com.android.support:appcompat-v7:$androidAppCompatVersion"
     compile "com.android.support:design:$androidDesignVersion"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    betaCompile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
 
     testCompile "junit:junit:$junitVersion"
 
