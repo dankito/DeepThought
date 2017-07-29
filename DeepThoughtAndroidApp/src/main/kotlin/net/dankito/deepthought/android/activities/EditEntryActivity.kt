@@ -27,7 +27,11 @@ import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.TagService
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.serialization.ISerializer
+import java.util.*
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.concurrent.schedule
 
 
 class EditEntryActivity : BaseActivity() {
@@ -36,6 +40,9 @@ class EditEntryActivity : BaseActivity() {
         private const val ENTRY_ID_INTENT_EXTRA_NAME = "ENTRY_ID"
         private const val READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME = "READ_LATER_ARTICLE_ID"
         private const val ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ENTRY_EXTRACTION_RESULT"
+
+        private const val CONTENT_INTENT_EXTRA_NAME = "CONTENT"
+        private const val ABSTRACT_INTENT_EXTRA_NAME = "ABSTRACT"
         private const val TAGS_ON_ENTRY_INTENT_EXTRA_NAME = "TAGS_ON_ENTRY"
 
         const val ResultId = "EDIT_ENTRY_ACTIVITY_RESULT"
@@ -112,6 +119,10 @@ class EditEntryActivity : BaseActivity() {
         savedInstanceState.getString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME)?.let { readLaterArticleId -> editReadLaterArticle(readLaterArticleId) }
         savedInstanceState.getString(ENTRY_ID_INTENT_EXTRA_NAME)?.let { entryId -> editEntry(entryId) }
 
+        savedInstanceState.getString(CONTENT_INTENT_EXTRA_NAME)?.let { content ->
+            Timer().schedule(100L) { contentHtmlEditor.setHtml(content) } // set delayed otherwise setHtml() from editEntry() wins
+        }
+        // TODO: restore abstract
         savedInstanceState.getString(TAGS_ON_ENTRY_INTENT_EXTRA_NAME)?.let { tagsOnEntryIds -> restoreTagsOnEntryAsync(tagsOnEntryIds) }
     }
 
@@ -129,6 +140,15 @@ class EditEntryActivity : BaseActivity() {
             entryExtractionResult?.let { outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, serializer.serializeObject(it)) }
 
             outState.putString(TAGS_ON_ENTRY_INTENT_EXTRA_NAME, serializer.serializeObject(tagsOnEntry))
+
+            outState.putString(CONTENT_INTENT_EXTRA_NAME, null)
+
+            val countDownLatch = CountDownLatch(1)
+            contentHtmlEditor.getHtmlAsync { content ->
+                outState.putString(CONTENT_INTENT_EXTRA_NAME, content)
+                countDownLatch.countDown()
+            }
+            try { countDownLatch.await(1, TimeUnit.SECONDS) } catch(ignored: Exception) { }
         }
     }
 
