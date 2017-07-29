@@ -242,7 +242,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
     }
 
     private fun stopSynchronizingWithAllDevices() {
-        for(device in pushReplications.keys) {
+        for(device in ArrayList(pushReplications.keys)) {
             stopSynchronizationWithDevice(device)
         }
     }
