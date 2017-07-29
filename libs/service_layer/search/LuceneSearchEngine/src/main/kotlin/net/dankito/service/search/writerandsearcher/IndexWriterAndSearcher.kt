@@ -203,21 +203,43 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
     fun updateIndex() {
         try {
-            val deletedButStillIndexedEntitiesIds = ArrayList<String>()
-            executeQuery(WildcardQuery(Term(getIdFieldName(), "*")))?.let { (searcher, hits) ->
-                deletedButStillIndexedEntitiesIds.addAll(getIdsFromHits(searcher, hits))
-            }
+            val indexedEntities = getIndexedEntities()
 
             for(entity in entityService.getAll()) {
-                deletedButStillIndexedEntitiesIds.remove(entity.id)
-
-                updateEntityInIndex(entity)
+                handleIfEntityShouldBeUpdated(indexedEntities, entity)
             }
 
             writer?.let { writer ->
-                deletedButStillIndexedEntitiesIds.forEach { removeEntityFromIndex(writer, it) }
+                indexedEntities.forEach { removeEntityFromIndex(writer, it.key) }
             }
         } catch(e: Exception) { log.error("Could not update index for ${javaClass.simpleName}", e) }
+    }
+
+    private fun handleIfEntityShouldBeUpdated(indexedEntities: HashMap<String, Long?>, entity: TEntity) {
+        val modifiedOn = indexedEntities.remove(entity.id)
+
+        if(modifiedOn == null) {
+            indexEntity(entity)
+        }
+        else if(modifiedOn != entity.modifiedOn.time) {
+            updateEntityInIndex(entity)
+        }
+    }
+
+    private fun getIndexedEntities(): HashMap<String, Long?> {
+        val indexedEntities = HashMap<String, Long?>()
+
+        executeQuery(WildcardQuery(Term(getIdFieldName(), "*")))?.let { (searcher, hits) ->
+            hits.forEach {
+                val hitDoc = searcher.doc(it.doc)
+                val id = hitDoc.getField(getIdFieldName()).stringValue()
+                val modifiedOn = hitDoc.getField(FieldName.ModifiedOn)?.numericValue()?.toLong()
+
+                indexedEntities.put(id, modifiedOn)
+            }
+        }
+
+        return indexedEntities
     }
 
     fun indexAllEntities() {
