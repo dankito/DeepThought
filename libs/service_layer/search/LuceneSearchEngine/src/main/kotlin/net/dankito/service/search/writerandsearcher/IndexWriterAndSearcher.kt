@@ -5,13 +5,12 @@ import net.dankito.service.data.EntityServiceBase
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.EntityChanged
 import net.dankito.service.eventbus.IEventBus
-import net.dankito.service.search.LanguageDependentAnalyzer
-import net.dankito.service.search.SearchWithCollectionResult
-import net.dankito.service.search.SortOption
-import net.dankito.service.search.SortOrder
+import net.dankito.service.search.*
 import net.dankito.service.search.results.LazyLoadingLuceneSearchResultsList
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.document.Document
+import org.apache.lucene.document.Field
+import org.apache.lucene.document.StringField
 import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.index.IndexWriter
 import org.apache.lucene.index.IndexWriterConfig
@@ -23,7 +22,6 @@ import org.apache.lucene.util.Version
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: EntityServiceBase<TEntity>, eventBus: IEventBus) {
@@ -231,7 +229,11 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
     fun indexEntity(entity: TEntity) {
         try {
-            val doc = createDocumentForEntity(entity)
+            val doc = Document()
+
+            doc.add(StringField(getIdFieldName(), entity.id, Field.Store.YES)) // id and modifiedOn are added to all documents
+
+            addEntityFieldsToDocument(entity, doc)
 
             indexDocument(doc)
         } catch (e: Exception) {
@@ -239,7 +241,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
         }
     }
 
-    abstract fun createDocumentForEntity(entity: TEntity): Document
+    abstract fun addEntityFieldsToDocument(entity: TEntity, doc: Document)
 
     protected fun indexDocument(doc: Document) {
         try {

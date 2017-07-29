@@ -44,14 +44,9 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, pri
     }
 
 
-    override fun createDocumentForEntity(entity: Tag): Document {
-        val doc = Document()
-
-        doc.add(StringField(getIdFieldName(), entity.id, Field.Store.YES))
+    override fun addEntityFieldsToDocument(entity: Tag, doc: Document) {
         // for an not analyzed String it's important to index it lower case as only then lower case search finds it
         doc.add(StringField(FieldName.TagName, entity.name.toLowerCase(), Field.Store.NO))
-
-        return doc
     }
 
 

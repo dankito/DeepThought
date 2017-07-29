@@ -12,7 +12,10 @@ import net.dankito.service.search.SortOption
 import net.dankito.service.search.SortOrder
 import net.dankito.service.search.specific.ReadLaterArticleSearch
 import net.engio.mbassy.listener.Handler
-import org.apache.lucene.document.*
+import org.apache.lucene.document.Document
+import org.apache.lucene.document.Field
+import org.apache.lucene.document.LongField
+import org.apache.lucene.document.TextField
 import org.apache.lucene.index.Term
 import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.*
@@ -30,11 +33,7 @@ class ReadLaterArticleIndexWriterAndSearcher(readLaterArticleService: ReadLaterA
     }
 
 
-    override fun createDocumentForEntity(entity: ReadLaterArticle): Document {
-        val doc = Document()
-
-        doc.add(StringField(getIdFieldName(), entity.id, Field.Store.YES))
-
+    override fun addEntityFieldsToDocument(entity: ReadLaterArticle, doc: Document) {
         doc.add(LongField(FieldName.ReadLaterArticleCreated, entity.createdOn.time, Field.Store.YES))
 
         val entry = entity.entryExtractionResult.entry
@@ -47,8 +46,6 @@ class ReadLaterArticleIndexWriterAndSearcher(readLaterArticleService: ReadLaterA
                 doc.add(Field(FieldName.ReadLaterArticleReference, reference.preview, TextField.TYPE_NOT_STORED))
             }
         }
-
-        return doc
     }
 
     fun searchReadLaterArticles(search: ReadLaterArticleSearch, termsToSearchFor: List<String>) {

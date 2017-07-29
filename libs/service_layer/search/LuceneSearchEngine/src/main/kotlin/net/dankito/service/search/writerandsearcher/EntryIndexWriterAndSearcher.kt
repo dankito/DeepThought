@@ -32,11 +32,7 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
     }
 
 
-    override fun createDocumentForEntity(entity: Entry): Document {
-        val doc = Document()
-
-        doc.add(StringField(getIdFieldName(), entity.id, Field.Store.YES))
-
+    override fun addEntityFieldsToDocument(entity: Entry, doc: Document) {
         doc.add(Field(FieldName.EntryAbstract, entity.abstractPlainText, TextField.TYPE_NOT_STORED))
         doc.add(Field(FieldName.EntryContent, entity.contentPlainText, TextField.TYPE_NOT_STORED))
 
@@ -63,8 +59,6 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
         }
 
         defaultAnalyzer.setNextEntryToBeAnalyzed(entity)
-
-        return doc
     }
 
 

@@ -27,11 +27,7 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
     }
 
 
-    override fun createDocumentForEntity(entity: Reference): Document {
-        val doc = Document()
-
-        doc.add(StringField(getIdFieldName(), entity.id, Field.Store.YES))
-
+    override fun addEntityFieldsToDocument(entity: Reference, doc: Document) {
         if(entity.title.isNotEmpty()) { // Lucene crashes when trying to index empty strings
             doc.add(Field(FieldName.ReferenceTitle, entity.title, TextField.TYPE_NOT_STORED))
         }
@@ -53,8 +49,6 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
         }
 
         entity.publishingDate?.let { publishingDate -> doc.add(LongField(FieldName.ReferencePublishingDate, publishingDate.time, Field.Store.YES)) }
-
-        return doc
     }
 
     fun searchReferences(search: ReferenceSearch, termsToSearchFor: List<String>) {

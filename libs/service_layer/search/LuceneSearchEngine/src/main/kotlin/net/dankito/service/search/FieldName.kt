@@ -3,6 +3,11 @@ package net.dankito.service.search
 
 object FieldName {
 
+    /*      Common      */
+
+    val ModifiedOn = "modified_on"
+
+
     /*      Entries      */
 
     val EntryId = "entry_id"
