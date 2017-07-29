@@ -19,7 +19,6 @@ object FieldName {
     val EntryIndex = "entry_index"
 
     val EntryCreated = "created"
-    val EntryModified = "modified"
 
     val EntryTagsIds = "tags_ids"
     val EntryNoTags = "no_tags"
@@ -55,7 +54,6 @@ object FieldName {
 
     val ReadLaterArticleEntry = "read_later_article_entry"
     val ReadLaterArticleReference = "read_later_article_reference"
-    val ReadLaterArticleCreated = "read_later_article_created"
 
 
     /*      Notes      */

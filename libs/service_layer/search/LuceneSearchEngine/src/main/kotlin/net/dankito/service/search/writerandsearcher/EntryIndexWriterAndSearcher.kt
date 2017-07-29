@@ -39,7 +39,6 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
         doc.add(LongField(FieldName.EntryIndex, entity.entryIndex, Field.Store.YES))
 
         doc.add(LongField(FieldName.EntryCreated, entity.createdOn.time, Field.Store.YES))
-        doc.add(LongField(FieldName.EntryModified, entity.modifiedOn.time, Field.Store.YES))
 
         if (entity.hasTags()) {
             for(tag in entity.tags) {

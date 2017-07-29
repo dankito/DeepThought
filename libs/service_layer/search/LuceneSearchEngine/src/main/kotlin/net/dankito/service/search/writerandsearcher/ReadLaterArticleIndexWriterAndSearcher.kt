@@ -14,7 +14,6 @@ import net.dankito.service.search.specific.ReadLaterArticleSearch
 import net.engio.mbassy.listener.Handler
 import org.apache.lucene.document.Document
 import org.apache.lucene.document.Field
-import org.apache.lucene.document.LongField
 import org.apache.lucene.document.TextField
 import org.apache.lucene.index.Term
 import org.apache.lucene.queryparser.classic.QueryParser
@@ -34,8 +33,6 @@ class ReadLaterArticleIndexWriterAndSearcher(readLaterArticleService: ReadLaterA
 
 
     override fun addEntityFieldsToDocument(entity: ReadLaterArticle, doc: Document) {
-        doc.add(LongField(FieldName.ReadLaterArticleCreated, entity.createdOn.time, Field.Store.YES))
-
         val entry = entity.entryExtractionResult.entry
         if(entry.entryPreview.isNotEmpty()) { // Lucene crashing when trying to index empty strings
             doc.add(Field(FieldName.ReadLaterArticleEntry, entry.entryPreview, TextField.TYPE_NOT_STORED))
@@ -54,7 +51,7 @@ class ReadLaterArticleIndexWriterAndSearcher(readLaterArticleService: ReadLaterA
         addQueryForSearchTerm(termsToSearchFor, query)
 
         executeQueryForSearchWithCollectionResult(search, query, ReadLaterArticle::class.java, sortOptions =
-                SortOption(FieldName.ReadLaterArticleCreated, SortOrder.Descending, SortField.Type.LONG)
+                SortOption(FieldName.ModifiedOn, SortOrder.Descending, SortField.Type.LONG)
         )
     }
 
