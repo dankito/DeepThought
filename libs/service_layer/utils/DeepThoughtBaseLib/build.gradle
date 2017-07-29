@@ -25,6 +25,7 @@ dependencies {
     compile project(':TcpSocketClientCommunicator')
     compile project(':ConnectedDevicesService')
     compile project(':SyncManager')
+    compile project(':NorconexLanguageDetector')
 
     compile "org.slf4j:slf4j-api:$slf4jVersion"
 
