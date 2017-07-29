@@ -46,7 +46,7 @@ class AndroidAppInitializer {
     fun initializeApp() {
         AppComponent.component.inject(this)
 
-        initialize()
+        initializeNetworkConnectivityChangeBroadcastReceiver()
 
         htmlEditorExtractor.extractHtmlEditorIfNeededAsync()
 
@@ -64,7 +64,7 @@ class AndroidAppInitializer {
         }
     }
 
-    private fun initialize() {
+    private fun initializeNetworkConnectivityChangeBroadcastReceiver() {
         // Apps targeting Android 7.0 (API level 24) and higher do not receive this broadcast if they declare the broadcast receiver in their manifest.
         // Apps will still receive broadcasts if they register their BroadcastReceiver with Context.registerReceiver() and that context is still valid.
         val intentFilter = IntentFilter()
