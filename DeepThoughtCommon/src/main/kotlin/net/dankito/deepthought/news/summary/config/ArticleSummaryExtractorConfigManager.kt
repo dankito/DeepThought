@@ -1,6 +1,5 @@
 package net.dankito.deepthought.news.summary.config
 
-import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.extensions.extractor
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
@@ -9,7 +8,7 @@ import net.dankito.faviconextractor.FaviconComparator
 import net.dankito.faviconextractor.FaviconExtractor
 import net.dankito.newsreader.feed.FeedArticleSummaryExtractor
 import net.dankito.newsreader.feed.IFeedReader
-import net.dankito.newsreader.summary.ImplementedArticleSummaryExtractors
+import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractorsManager
 import net.dankito.service.data.ArticleSummaryExtractorConfigService
 import net.dankito.service.data.messages.ArticleSummaryExtractorConfigChanged
 import net.dankito.service.data.messages.EntityChangeSource
@@ -20,7 +19,8 @@ import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, private val configService: ArticleSummaryExtractorConfigService, private val feedReader: IFeedReader) {
+class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplementedArticleSummaryExtractorsManager, private val configService: ArticleSummaryExtractorConfigService,
+                                           private val feedReader: IFeedReader) {
 
     companion object {
         const val MAX_SIZE = 152
@@ -87,7 +87,7 @@ class ArticleSummaryExtractorConfigManager(private val webClient: IWebClient, pr
     }
 
     private fun initImplementedExtractors() {
-        ImplementedArticleSummaryExtractors(webClient).getImplementedExtractors().forEach { implementedExtractor ->
+        extractorManager.getImplementedExtractors().forEach { implementedExtractor ->
             var config = configurations.get(implementedExtractor.getBaseUrl())
 
             if (config == null) { // a new, unpersisted ArticleSummaryExtractor
