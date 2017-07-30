@@ -27,7 +27,12 @@ class AndroidHtmlEditorPool {
             return editor
         }
 
+        return createHtmlEditorOnUIThread(context, listener)
+    }
+
+    private fun createHtmlEditorOnUIThread(context: Context, listener: IHtmlEditorListener): AndroidHtmlEditor {
         log.info("Creating new HtmlEditor")
+
         return AndroidHtmlEditor(context, listener)
     }
 
