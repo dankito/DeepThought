@@ -45,7 +45,7 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
 
     private fun handleShouldPermitSynchronizingWithDeviceResult(remoteDeviceInfo: DeviceInfo, permitsSynchronization: Boolean, registrationHandler: IDeviceRegistrationHandler,
                                                                 callback: (Response<RequestPermitSynchronizationResponseBody>) -> Unit) {
-        if (permitsSynchronization) {
+        if(permitsSynchronization) {
             val (nonce, correctResponse) = challengeHandler.createChallengeForDevice(remoteDeviceInfo)
             registrationHandler.showResponseToEnterOnOtherDeviceNonBlocking(remoteDeviceInfo, correctResponse)
 
@@ -119,7 +119,7 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
 
     private fun handleRequestStartSynchronizationRequest(request: Request<RequestStartSynchronizationRequestBody>, callback: (Response<RequestStartSynchronizationResponseBody>) -> Unit) {
         request.body?.let { body ->
-            if(isDevicePermittedToSynchronize(body.uniqueDeviceId) == false) {
+            if(isDevicePermittedToSynchronize(body.deviceInfo.uniqueDeviceId) == false) {
                 handleRemoteIsDeniedToSynchronize(body, callback)
             }
             else {
@@ -129,7 +129,7 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
     }
 
     private fun handleRemoteIsDeniedToSynchronize(body: RequestStartSynchronizationRequestBody, callback: (Response<RequestStartSynchronizationResponseBody>) -> Unit) {
-        val isRemoteDeviceKnown = config.entityManager.getAllEntitiesOfType(Device::class.java).filter { it.uniqueDeviceId == body.uniqueDeviceId }.isNotEmpty()
+        val isRemoteDeviceKnown = config.entityManager.getAllEntitiesOfType(Device::class.java).filter { it.uniqueDeviceId == body.deviceInfo.uniqueDeviceId }.isNotEmpty()
 
         if(isRemoteDeviceKnown) {
             callback(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.DENIED)))
@@ -140,7 +140,7 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
     }
 
     private fun handleRemoteIsPermittedToSynchronize(body: RequestStartSynchronizationRequestBody, callback: (Response<RequestStartSynchronizationResponseBody>) -> Unit) {
-        val permittedSynchronizedDevice = networkSettings.getDiscoveredDevice(body.uniqueDeviceId)
+        val permittedSynchronizedDevice = networkSettings.getDiscoveredDevice(body.deviceInfo.uniqueDeviceId)
 
         if(permittedSynchronizedDevice != null) {
             permittedSynchronizedDevice.synchronizationPort = body.synchronizationPort
