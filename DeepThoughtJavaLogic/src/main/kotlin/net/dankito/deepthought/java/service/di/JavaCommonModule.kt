@@ -15,6 +15,7 @@ import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.services.hashing.IBase64Service
 import net.dankito.utils.services.network.INetworkConnectivityManager
+import net.dankito.utils.settings.ILocalSettingsStore
 import javax.inject.Singleton
 
 
@@ -30,8 +31,8 @@ class JavaCommonModule {
 
     @Provides
     @Singleton
-    fun provideEntityManager(configuration: EntityManagerConfiguration) : IEntityManager {
-        return JavaCouchbaseLiteEntityManager(configuration)
+    fun provideEntityManager(configuration: EntityManagerConfiguration, localSettingsStore: ILocalSettingsStore) : IEntityManager {
+        return JavaCouchbaseLiteEntityManager(configuration, localSettingsStore)
     }
 
     @Provides

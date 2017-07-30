@@ -10,4 +10,5 @@ dependencies {
     compile project(':JPAAnnotationReaderAPI')
 
     compile project(':DataModel')
+    compile project(':Utils')
 }

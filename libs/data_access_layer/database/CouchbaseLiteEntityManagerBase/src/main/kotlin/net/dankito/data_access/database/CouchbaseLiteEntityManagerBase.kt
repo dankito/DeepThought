@@ -6,12 +6,14 @@ import net.dankito.jpa.apt.config.JPAEntityConfiguration
 import net.dankito.jpa.cache.DaoCache
 import net.dankito.jpa.cache.ObjectCache
 import net.dankito.jpa.couchbaselite.Dao
+import net.dankito.utils.settings.ILocalSettingsStore
+import net.dankito.utils.version.Versions
 import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.util.*
 
 
-abstract class CouchbaseLiteEntityManagerBase(protected var context: Context) : IEntityManager {
+abstract class CouchbaseLiteEntityManagerBase(protected var context: Context, private val localSettingsStore: ILocalSettingsStore) : IEntityManager {
 
     companion object {
         private val log = LoggerFactory.getLogger(CouchbaseLiteEntityManagerBase::class.java)
@@ -42,6 +44,8 @@ abstract class CouchbaseLiteEntityManagerBase(protected var context: Context) : 
         val result = loadGeneratedModel()
 
         createDaos(result)
+
+        checkDataModelVersion()
     }
 
     private fun loadGeneratedModel(): JPAEntityConfiguration {
@@ -84,6 +88,22 @@ abstract class CouchbaseLiteEntityManagerBase(protected var context: Context) : 
 
     protected fun createDaoForEntity(entityConfig: EntityConfig): Dao {
         return Dao(database, entityConfig, objectCache, daoCache)
+    }
+
+
+    private fun checkDataModelVersion() {
+        val databaseDataModelVersion = localSettingsStore.getDatabaseDataModelVersion()
+        val appDataModelVersion = Versions.DataModelVersion
+
+        if(appDataModelVersion != databaseDataModelVersion) {
+            adjustEntitiesToDataModelVersion(databaseDataModelVersion, appDataModelVersion)
+
+            localSettingsStore.setDatabaseDataModelVersion(appDataModelVersion)
+        }
+    }
+
+    private fun adjustEntitiesToDataModelVersion(databaseDataModelVersion: Int, appDataModelVersion: Int) {
+        // implement as soon as we have first data model incompatibilities
     }
 
 

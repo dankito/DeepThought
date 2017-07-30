@@ -1,11 +1,13 @@
 package net.dankito.data_access.database
 
 import com.couchbase.lite.Context
+import net.dankito.utils.settings.ILocalSettingsStore
 
 import java.io.File
 
 
-class JavaCouchbaseLiteEntityManager(configuration: EntityManagerConfiguration) : CouchbaseLiteEntityManagerBase(DeepThoughtJavaContext(configuration.dataFolder)) {
+class JavaCouchbaseLiteEntityManager(configuration: EntityManagerConfiguration, localSettingsStore: ILocalSettingsStore)
+    : CouchbaseLiteEntityManagerBase(DeepThoughtJavaContext(configuration.dataFolder), localSettingsStore) {
 
     override fun adjustDatabasePath(context: Context, configuration: EntityManagerConfiguration): String {
         // TODO: implement this in a better way as this uses implementation internal details
