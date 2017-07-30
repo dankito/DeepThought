@@ -16,7 +16,6 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractorsManager
 import net.dankito.newsreader.summary.NoOpImplementedArticleSummaryExtractorsManager
-import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.services.network.INetworkConnectivityManager
@@ -37,8 +36,8 @@ class JavaFXModule(private val mainWindowController: MainWindowController) {
 
     @Provides
     @Singleton
-    fun provideCommunicationManagerStarter(searchEngine: ISearchEngine) : CommunicationManagerStarter {
-        return CommunicationManagerStarter(searchEngine)
+    fun provideCommunicationManagerStarter(dataManager: DataManager) : CommunicationManagerStarter {
+        return CommunicationManagerStarter(dataManager)
     }
 
 

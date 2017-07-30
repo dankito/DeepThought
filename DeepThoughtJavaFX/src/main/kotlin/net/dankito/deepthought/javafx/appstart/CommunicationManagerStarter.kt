@@ -2,7 +2,7 @@ package net.dankito.deepthought.javafx.appstart
 
 import net.dankito.deepthought.communication.ICommunicationManager
 import net.dankito.deepthought.javafx.di.AppComponent
-import net.dankito.service.search.ISearchEngine
+import net.dankito.deepthought.service.data.DataManager
 import java.util.*
 import javax.inject.Inject
 import kotlin.concurrent.schedule
@@ -12,10 +12,10 @@ import kotlin.concurrent.schedule
  * Local device isn't available right at start, we have to wait at least till DataManager is initialized.
  *
  * To provide a more smooth application start up, we wait till all base data is retrieved.
- * Therefore after SearchEngine is initialized we give application some time to show initial data
+ * Therefore after DataManager is initialized we give application some time to show initial data
  * before we start communicator classes like @see DevicesDiscoverer, @see IClientCommunicator, @see ISyncManager, ...
  */
-class CommunicationManagerStarter(searchEngine: ISearchEngine) {
+class CommunicationManagerStarter(dataManager: DataManager) {
 
     companion object {
         const val DefaultWaitTimeBeforeStartingCommunicationManagerMillis = 5000L
@@ -27,10 +27,10 @@ class CommunicationManagerStarter(searchEngine: ISearchEngine) {
 
 
     init {
-        searchEngine.addInitializationListener { searchEngineInitialized() }
+        dataManager.addInitializationListener { dataManagerInitialized() }
     }
 
-    private fun searchEngineInitialized() {
+    private fun dataManagerInitialized() {
         Timer().schedule(DefaultWaitTimeBeforeStartingCommunicationManagerMillis) {
             startCommunicationManager()
         }
