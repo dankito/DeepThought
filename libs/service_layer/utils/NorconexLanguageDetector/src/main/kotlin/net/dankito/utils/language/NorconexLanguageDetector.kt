@@ -1,7 +1,10 @@
 package net.dankito.utils.language
 
 import com.norconex.language.detector.LanguageDetector
+import net.dankito.deepthought.service.data.DataManager
 import org.slf4j.LoggerFactory
+import java.util.*
+import kotlin.concurrent.schedule
 
 
 /**
@@ -12,10 +15,12 @@ import org.slf4j.LoggerFactory
  *  So i used the Norconex Wrapper, which already did this job for me, and this way saved me a lot of time.
  * </p>
  */
-class NorconexLanguageDetector(private val supportedLanguages: SupportedLanguages) : ILanguageDetector {
+class NorconexLanguageDetector(dataManager: DataManager, private val supportedLanguages: SupportedLanguages) : ILanguageDetector {
 
     companion object {
         private val MinProbability = 0.75
+
+        private val LoadLanguageDetectorAfterMillis = 5 * 1000L
 
         private val log = LoggerFactory.getLogger(NorconexLanguageDetector::class.java)
     }
@@ -23,6 +28,15 @@ class NorconexLanguageDetector(private val supportedLanguages: SupportedLanguage
 
     private var detector: LanguageDetector? = null
 
+
+    init {
+        // TODO: but the way better solution would be that LanguageDetector loads its profiles on demand and not all profiles right in constructor if they are needed at runtime or not
+        dataManager.addInitializationListener {
+            Timer().schedule(LoadLanguageDetectorAfterMillis) {
+                detector() // to ensure that LanguageDetector gets loaded some time after app start and not on first access as loading takes approximately 10 seconds!
+            }
+        }
+    }
 
     /**
      * Do not initialize LanguageDetector right at start as it reads many files from file system which slows down app start by seconds
@@ -63,13 +77,18 @@ class NorconexLanguageDetector(private val supportedLanguages: SupportedLanguage
         return null
     }
 
+    /**
+     * On first access loads LanguageDetector, on all subsequent calls simply return created instance.
+     */
     private fun detector(): LanguageDetector {
-        detector?.let { return it }
+        synchronized(this) {
+            detector?.let { return it }
 
-        val detector = initializeLanguageDetector()
-        this.detector = detector
+            val detector = initializeLanguageDetector()
+            this.detector = detector
 
-        return detector
+            return detector
+        }
     }
 
 }

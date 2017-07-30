@@ -6,6 +6,7 @@ targetCompatibility = "1.7"
 
 dependencies {
     compile project(':Utils')
+    compile project(':DataManager')
 
     compile "com.norconex.language:langdetect:$norconexVersion"
 }

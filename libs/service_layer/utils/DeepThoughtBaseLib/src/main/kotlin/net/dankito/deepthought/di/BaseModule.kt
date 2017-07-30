@@ -2,6 +2,7 @@ package net.dankito.deepthought.di
 
 import dagger.Module
 import dagger.Provides
+import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.utils.language.ILanguageDetector
@@ -27,8 +28,8 @@ class BaseModule {
 
     @Provides
     @Singleton
-    fun provideLanguageDetector(supportedLanguages: SupportedLanguages) : ILanguageDetector {
-        return NorconexLanguageDetector(supportedLanguages)
+    fun provideLanguageDetector(dataManager: DataManager, supportedLanguages: SupportedLanguages) : ILanguageDetector {
+        return NorconexLanguageDetector(dataManager, supportedLanguages)
     }
 
 
