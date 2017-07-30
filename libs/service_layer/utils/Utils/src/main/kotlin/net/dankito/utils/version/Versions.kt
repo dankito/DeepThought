@@ -10,6 +10,8 @@ class Versions {
 
         const val DataIndexVersion = 1
 
+        const val CommunicationProtocolVersion = 1
+
         const val HtmlEditorVersion = 1
     }
 
