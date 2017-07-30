@@ -140,15 +140,21 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
     }
 
     private fun handleRemoteIsPermittedToSynchronize(body: RequestStartSynchronizationRequestBody, callback: (Response<RequestStartSynchronizationResponseBody>) -> Unit) {
-        val permittedSynchronizedDevice = networkSettings.getDiscoveredDevice(body.deviceInfo.uniqueDeviceId)
+        if(isVersionCompatible(body.deviceInfo)) {
+            val permittedSynchronizedDevice = networkSettings.getDiscoveredDevice(body.deviceInfo.uniqueDeviceId)
 
-        if(permittedSynchronizedDevice != null) {
-            permittedSynchronizedDevice.synchronizationPort = body.synchronizationPort
+            if(permittedSynchronizedDevice != null) {
+                permittedSynchronizedDevice.synchronizationPort = body.synchronizationPort
 
-            config.callRemoteRequestedToStartSynchronizationListeners(permittedSynchronizedDevice)
+                config.callRemoteRequestedToStartSynchronizationListeners(permittedSynchronizedDevice)
+            }
+
+            callback(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.ALLOWED, networkSettings.synchronizationPort)))
         }
-
-        callback(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.ALLOWED, networkSettings.synchronizationPort)))
+        else {
+            callback(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.INCOMPATIBLE_VERSION,
+                    deviceInfo = DeviceInfo.fromDevice(networkSettings.localHostDevice))))
+        }
     }
 
     private fun isDevicePermittedToSynchronize(remoteDeviceUniqueId: String): Boolean {
@@ -161,6 +167,10 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
         }
 
         return false
+    }
+
+    private fun isVersionCompatible(remoteDeviceInfo: DeviceInfo): Boolean {
+        return true // TODO: add check as soon as version compatibilities occur
     }
 
 
