@@ -106,7 +106,7 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
         networkSettings.addDevicesAskedForPermittingSynchronization(remoteDevice)
 
         val request = Request(CommunicatorConfig.REQUEST_START_SYNCHRONIZATION_METHOD_NAME,
-                RequestStartSynchronizationRequestBody(networkSettings.localHostDevice.uniqueDeviceId, networkSettings.synchronizationPort))
+                RequestStartSynchronizationRequestBody(DeviceInfo.fromDevice(networkSettings.localHostDevice), networkSettings.synchronizationPort))
 
         requestSender.sendRequestAndReceiveResponseAsync<RequestStartSynchronizationRequestBody, RequestStartSynchronizationResponseBody>(
                 getSocketAddressFromDevice(remoteDevice), request) { response ->
