@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android.views.html
 
+import android.app.Activity
 import android.content.Context
 import android.view.ViewGroup
 import net.dankito.deepthought.ui.html.HtmlEditorCommon
@@ -51,30 +52,38 @@ class AndroidHtmlEditorPool {
         log.info("Released HtmlEditor. There are now " + availableHtmlEditors.size + " available HtmlEditors in Pool.")
     }
 
-    fun preloadHtmlEditors(context: Context, numberOfHtmlEditors: Int) {
+
+    fun preloadHtmlEditors(activity: Activity, numberOfHtmlEditors: Int) {
         val preloadedHtmlEditors = HashMap<Int, AndroidHtmlEditor>(numberOfHtmlEditors)
 
-        for (i in 0..numberOfHtmlEditors - 1) {
-            val instance = i
-            val htmlEditor = getHtmlEditor(context, object : IHtmlEditorListener {
-                override fun editorHasLoaded(editor: HtmlEditorCommon) {
-                    // Editor is loaded now
-                    preloadedHtmlEditors.remove(instance)?.let { htmlEditor ->
-                        htmlEditorReleased(htmlEditor)
-                    }
+        preloadHtmlEditorSequentially(activity, preloadedHtmlEditors, numberOfHtmlEditors)
+    }
+
+    private fun preloadHtmlEditorSequentially(activity: Activity, preloadedHtmlEditors: HashMap<Int, AndroidHtmlEditor>, numberOfInstance: Int) {
+        val htmlEditor = createHtmlEditorOnUIThread(activity, object : IHtmlEditorListener {
+            override fun editorHasLoaded(editor: HtmlEditorCommon) {
+                // Editor is loaded now
+                preloadedHtmlEditors.remove(numberOfInstance)?.let { htmlEditor ->
+                    htmlEditorReleased(htmlEditor)
                 }
 
-                override fun htmlCodeUpdated() { }
+                if(numberOfInstance > 1) {
+                    activity.runOnUiThread {
+                        preloadHtmlEditorSequentially(activity, preloadedHtmlEditors, numberOfInstance - 1) // load next html editor
+                    }
+                }
+            }
 
-                override fun htmlCodeHasBeenReset() { }
-            })
+            override fun htmlCodeUpdated() {}
 
-            preloadedHtmlEditors.put(instance, htmlEditor)
-        }
+            override fun htmlCodeHasBeenReset() {}
+        })
+
+        preloadedHtmlEditors.put(numberOfInstance, htmlEditor)
     }
 
     fun cleanUp() {
-        for (editor in availableHtmlEditors) {
+        for(editor in availableHtmlEditors) {
             editor.cleanUp()
         }
 
