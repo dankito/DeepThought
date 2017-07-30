@@ -21,12 +21,15 @@ class NorconexLanguageDetector(private val supportedLanguages: SupportedLanguage
     }
 
 
-    private val detector: LanguageDetector
+    private var detector: LanguageDetector? = null
 
 
-    init {
+    /**
+     * Do not initialize LanguageDetector right at start as it reads many files from file system which slows down app start by seconds
+     */
+    private fun initializeLanguageDetector(): LanguageDetector {
         try {
-            detector = LanguageDetector(true)
+            return LanguageDetector(true)
         } catch (e: Exception) {
             log.error("Could not create LanguageDetector", e)
             throw e
@@ -46,7 +49,7 @@ class NorconexLanguageDetector(private val supportedLanguages: SupportedLanguage
 
     private fun getLanguageTagOfText(text: String): String? {
         try {
-            val detectedLanguages = detector.detect(text)
+            val detectedLanguages = detector().detect(text)
 
             for(probableLanguage in detectedLanguages) {
                 if(probableLanguage.probability > MinProbability) {
@@ -58,6 +61,15 @@ class NorconexLanguageDetector(private val supportedLanguages: SupportedLanguage
         }
 
         return null
+    }
+
+    private fun detector(): LanguageDetector {
+        detector?.let { return it }
+
+        val detector = initializeLanguageDetector()
+        this.detector = detector
+
+        return detector
     }
 
 }
