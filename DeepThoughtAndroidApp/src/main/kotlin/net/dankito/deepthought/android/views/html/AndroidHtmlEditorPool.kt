@@ -63,15 +63,7 @@ class AndroidHtmlEditorPool {
 
         htmlEditorReference.set(createHtmlEditorOnUIThread(activity, object : IHtmlEditorListener {
             override fun editorHasLoaded(editor: HtmlEditorCommon) {
-                // Editor is loaded now
-                val htmlEditor = htmlEditorReference.get()
-                htmlEditorReleased(htmlEditor)
-
-                if(numberOfInstance > 1) {
-                    activity.runOnUiThread {
-                        preloadHtmlEditorsSequentially(activity, numberOfInstance - 1) // load next html editor
-                    }
-                }
+                htmlEditorPreloaded(activity, htmlEditorReference.get(), numberOfInstance)
             }
 
             override fun htmlCodeUpdated() {}
@@ -79,6 +71,17 @@ class AndroidHtmlEditorPool {
             override fun htmlCodeHasBeenReset() {}
         }))
     }
+
+    private fun htmlEditorPreloaded(activity: Activity, htmlEditor: AndroidHtmlEditor, numberOfInstance: Int) {
+        htmlEditorReleased(htmlEditor)
+
+        if(numberOfInstance > 1) {
+            activity.runOnUiThread {
+                preloadHtmlEditorsSequentially(activity, numberOfInstance - 1) // load next html editor
+            }
+        }
+    }
+
 
     fun cleanUp() {
         for(editor in availableHtmlEditors) {
