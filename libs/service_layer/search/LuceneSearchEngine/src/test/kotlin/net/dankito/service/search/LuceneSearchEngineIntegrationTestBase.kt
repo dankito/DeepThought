@@ -8,7 +8,6 @@ import net.dankito.deepthought.di.DaggerBaseComponent
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
-import net.dankito.serializer.JacksonJsonSerializer
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.ReferenceService
@@ -17,7 +16,12 @@ import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.ThreadPool
+import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.utils.localization.Localization
+import net.dankito.utils.serialization.JacksonJsonSerializer
+import net.dankito.utils.settings.ILocalSettingsStore
+import net.dankito.utils.settings.LocalSettingsStoreBase
+import net.dankito.utils.version.Versions
 import org.junit.After
 import org.junit.Before
 import java.io.File
@@ -62,7 +66,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
 
         val localization = Localization()
         val entityManagerConfiguration = EntityManagerConfiguration(platformConfiguration.getDefaultDataFolder().path, "lucene_test")
-        val entityManager = JavaCouchbaseLiteEntityManager(entityManagerConfiguration)
+        val entityManager = JavaCouchbaseLiteEntityManager(entityManagerConfiguration, createLocalSettingsStore())
         val dataManager = DataManager(entityManager, entityManagerConfiguration, DefaultDataInitializer(platformConfiguration, localization), platformConfiguration)
         initDataManager(dataManager)
 
@@ -72,9 +76,9 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         entryService = EntryService(dataManager, entityChangedNotifier)
         tagService = TagService(dataManager, entityChangedNotifier)
         referenceService = ReferenceService(dataManager, entityChangedNotifier)
-        readLaterArticleService = ReadLaterArticleService(dataManager, entityChangedNotifier, JacksonJsonSerializer())
+        readLaterArticleService = ReadLaterArticleService(dataManager, entityChangedNotifier, JacksonJsonSerializer(tagService))
 
-        underTest = LuceneSearchEngine(dataManager, ThreadPool(), eventBus, entryService, tagService, referenceService, readLaterArticleService)
+        underTest = LuceneSearchEngine(dataManager, NoOpLanguageDetector(), ThreadPool(), eventBus, entryService, tagService, referenceService, readLaterArticleService)
         initLuceneSearchEngine(underTest)
     }
 
@@ -96,6 +100,24 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         underTest.close()
 
         fileStorageService.deleteFolderRecursively(platformConfiguration.getDefaultDataFolder().path)
+    }
+
+
+    private fun createLocalSettingsStore(): ILocalSettingsStore {
+        return object : ILocalSettingsStore {
+            override fun getDataFolder(): String {
+                return LocalSettingsStoreBase.DefaultDataFolder
+            }
+
+            override fun setDataFolder(dataFolder: String) { }
+
+            override fun getDatabaseDataModelVersion(): Int {
+                return Versions.DataModelVersion
+            }
+
+            override fun setDatabaseDataModelVersion(newDataModelVersion: Int) { }
+
+        }
     }
 
 }
