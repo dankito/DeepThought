@@ -4,10 +4,6 @@ import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.IEntityManager
-import net.dankito.deepthought.model.*
-import net.dankito.deepthought.model.enums.ApplicationLanguage
-import net.dankito.deepthought.model.enums.FileType
-import net.dankito.deepthought.model.enums.NoteType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
@@ -108,28 +104,7 @@ class CommonDataModule {
     @Provides
     @Singleton
     fun provideEntityManagerConfiguration(localSettingsStore: ILocalSettingsStore) : EntityManagerConfiguration {
-        val configuration = EntityManagerConfiguration(localSettingsStore.getDataFolder(), "deep_thought_db")
-
-        configuration.entityClasses = listOf<Class<*>>(
-                DeepThought::class.java,
-
-                ApplicationLanguage::class.java,
-                FileType::class.java,
-                NoteType::class.java,
-
-
-                User::class.java,
-                Device::class.java,
-
-
-                Entry::class.java,
-                Tag::class.java,
-                Reference::class.java,
-                FileLink::class.java,
-                Note::class.java
-        )
-
-        return configuration
+        return EntityManagerConfiguration(localSettingsStore.getDataFolder(), "deep_thought_db")
     }
 
 }
