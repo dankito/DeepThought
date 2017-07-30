@@ -76,7 +76,6 @@ class TableConfig {
         const val EntryIndicationColumnName = "indication"
 
         const val EntryEntryIndexColumnName = "entry_index"
-        const val EntryLanguageJoinColumnName = "language_id"
 
 
         /*          Entry Tag Join Table Config        */
@@ -167,14 +166,6 @@ class TableConfig {
         const val ApplicationLanguageTableName = "application_language"
 
         const val ApplicationLanguageLanguageKeyColumnName = "language_key"
-
-
-        /*          Language Table Config        */
-
-        const val LanguageTableName = "language"
-
-        const val LanguageLanguageKeyColumnName = "language_key"
-        const val LanguageNameInLanguageColumnName = "name_in_language"
 
 
         /*          NoteType Table Config        */
