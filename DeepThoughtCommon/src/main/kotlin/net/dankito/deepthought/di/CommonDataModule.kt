@@ -20,6 +20,7 @@ import net.dankito.utils.IThreadPool
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.serialization.JacksonJsonSerializer
+import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.ui.IDialogService
 import javax.inject.Singleton
 
@@ -106,8 +107,8 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideEntityManagerConfiguration() : EntityManagerConfiguration {
-        val configuration = EntityManagerConfiguration("data", "deep_thought_db")
+    fun provideEntityManagerConfiguration(localSettingsStore: ILocalSettingsStore) : EntityManagerConfiguration {
+        val configuration = EntityManagerConfiguration(localSettingsStore.getDataFolder(), "deep_thought_db")
 
         configuration.entityClasses = listOf<Class<*>>(
                 DeepThought::class.java,
