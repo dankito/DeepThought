@@ -27,6 +27,9 @@ class OnSwipeTouchListener(context: Context, private val swipeDetectedListener: 
     }
 
 
+    var singleTapListener: (() -> Unit)? = null
+    var doubleTapListener: (() -> Unit)? = null
+
     private val gestureDetector: GestureDetector
 
     init {
@@ -42,6 +45,18 @@ class OnSwipeTouchListener(context: Context, private val swipeDetectedListener: 
 
         override fun onDown(e: MotionEvent): Boolean {
             return true
+        }
+
+        override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
+            singleTapListener?.invoke()
+
+            return super.onSingleTapConfirmed(e)
+        }
+
+        override fun onDoubleTap(e: MotionEvent?): Boolean {
+            doubleTapListener?.invoke()
+
+            return super.onDoubleTap(e)
         }
 
         override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
