@@ -166,7 +166,7 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
             return createSyncInfo(useCallerDatabaseIds, useCallerUserName)
         } catch(e: Exception) {
             log.error("Could do initial synchronization with device $device", e)
-            dialogService.showErrorMessage(localization.getLocalizedString("alert.message.message.could.not.initialize.synchronization.with.device",
+            dialogService.showErrorMessage(localization.getLocalizedString("alert.message.could.not.initialize.synchronization.with.device",
                     device.device.getDisplayText()), exception = e)
         }
 

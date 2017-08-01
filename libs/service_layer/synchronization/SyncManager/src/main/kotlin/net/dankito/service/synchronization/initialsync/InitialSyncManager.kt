@@ -204,7 +204,7 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
                 // TODO: now we're in a Trap, this has to be urgently resolved:
                 // Both devices have already synchronized their Database Ids with other Devices, so no matter which one we choose,
                 // these already synchronized devices must update their Database Ids as well
-                throw IllegalStateException(localization.getLocalizedString("alert.message.message.both.devices.already.synchronized.with.other.devices"))
+                throw IllegalStateException(localization.getLocalizedString("alert.message.both.devices.already.synchronized.with.other.devices"))
             }
         }
 
