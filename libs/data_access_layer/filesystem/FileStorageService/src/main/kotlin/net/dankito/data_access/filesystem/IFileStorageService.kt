@@ -12,23 +12,23 @@ interface IFileStorageService {
 
 
     @Throws(Exception::class)
-    fun readFromTextFile(filename: String): String?
+    fun readFromTextFile(file: File): String?
 
     @Throws(Exception::class)
-    fun readFromBinaryFile(filename: String): ByteArray?
+    fun readFromBinaryFile(file: File): ByteArray?
 
     @Throws(FileNotFoundException::class)
-    fun createFileInputStream(filename: String): InputStream
+    fun createFileInputStream(file: File): InputStream
 
 
     @Throws(Exception::class)
-    fun writeToTextFile(fileContent: String, filename: String)
+    fun writeToTextFile(fileContent: String, file: File)
 
     @Throws(Exception::class)
-    fun writeToBinaryFile(fileContent: ByteArray, filename: String)
+    fun writeToBinaryFile(fileContent: ByteArray, file: File)
 
     @Throws(FileNotFoundException::class)
-    fun createFileOutputStream(filename: String): OutputStream
+    fun createFileOutputStream(file: File): OutputStream
 
 
     fun deleteFolderRecursively(path: String)

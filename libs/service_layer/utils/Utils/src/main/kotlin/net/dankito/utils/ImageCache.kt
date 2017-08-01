@@ -24,15 +24,19 @@ class ImageCache(private val webClient: IWebClient, private val serializer: ISer
 
     private var imageCache: MutableMap<String, File> = hashMapOf()
 
+    private val cacheFile: File
+
 
     init {
+        cacheFile = fileStorageService.getFileInDataFolder(CACHE_FILE_NAME)
+
         readImageCache()
     }
 
 
     private fun readImageCache() {
         try {
-            fileStorageService.readFromTextFile(CACHE_FILE_NAME)?.let { fileContent ->
+            fileStorageService.readFromTextFile(cacheFile)?.let { fileContent ->
                 imageCache = serializer.deserializeObject(fileContent, HashMap::class.java, String::class.java, File::class.java) as
                         HashMap<String, File>
             }
@@ -46,7 +50,7 @@ class ImageCache(private val webClient: IWebClient, private val serializer: ISer
     private fun saveImageCache() {
         try {
             val serializedCache = serializer.serializeObject(imageCache)
-            fileStorageService.writeToTextFile(serializedCache, CACHE_FILE_NAME)
+            fileStorageService.writeToTextFile(serializedCache, cacheFile)
         } catch(e: Exception) {
             log.error("Could not save ImageCache", e)
         }
@@ -77,7 +81,7 @@ class ImageCache(private val webClient: IWebClient, private val serializer: ISer
 
     private fun retrieveAndCacheImage(url: String, callback: (AsyncResult<File>) -> Unit) {
         val file = getUniqueFilenameFromUrl(url)
-        val fileStream = fileStorageService.createFileOutputStream(file.name)
+        val fileStream = fileStorageService.createFileOutputStream(file)
 
         val parameters = RequestParameters(url)
         parameters.responseType = ResponseType.Bytes

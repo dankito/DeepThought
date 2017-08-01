@@ -16,8 +16,8 @@ open class JavaFileStorageService : IFileStorageService {
 
 
     @Throws(Exception::class)
-    override fun writeToTextFile(fileContent: String, filename: String) {
-        val outputStreamWriter = OutputStreamWriter(createFileOutputStream(filename))
+    override fun writeToTextFile(fileContent: String, file: File) {
+        val outputStreamWriter = OutputStreamWriter(createFileOutputStream(file))
 
         outputStreamWriter.write(fileContent)
 
@@ -26,8 +26,8 @@ open class JavaFileStorageService : IFileStorageService {
     }
 
     @Throws(Exception::class)
-    override fun writeToBinaryFile(fileContent: ByteArray, filename: String) {
-        val outputStream = createFileOutputStream(filename)
+    override fun writeToBinaryFile(fileContent: ByteArray, file: File) {
+        val outputStream = createFileOutputStream(file)
 
         outputStream.write(fileContent)
 
@@ -36,14 +36,14 @@ open class JavaFileStorageService : IFileStorageService {
     }
 
     @Throws(FileNotFoundException::class)
-    override fun createFileOutputStream(filename: String): OutputStream {
-        return FileOutputStream(filename)
+    override fun createFileOutputStream(file: File): OutputStream {
+        return FileOutputStream(file)
     }
 
 
     @Throws(Exception::class)
-    override fun readFromTextFile(filename: String): String? {
-        val inputStream = createFileInputStream(filename)
+    override fun readFromTextFile(file: File): String? {
+        val inputStream = createFileInputStream(file)
 
         val inputStreamReader = InputStreamReader(inputStream)
         val bufferedReader = BufferedReader(inputStreamReader)
@@ -57,8 +57,8 @@ open class JavaFileStorageService : IFileStorageService {
     }
 
     @Throws(Exception::class)
-    override fun readFromBinaryFile(filename: String): ByteArray? {
-        val inputStream = createFileInputStream(filename)
+    override fun readFromBinaryFile(file: File): ByteArray? {
+        val inputStream = createFileInputStream(file)
 
         val buffer = ByteArrayOutputStream()
 
@@ -71,8 +71,8 @@ open class JavaFileStorageService : IFileStorageService {
     }
 
     @Throws(FileNotFoundException::class)
-    override fun createFileInputStream(filename: String): InputStream {
-        return FileInputStream(filename)
+    override fun createFileInputStream(file: File): InputStream {
+        return FileInputStream(file)
     }
 
 
