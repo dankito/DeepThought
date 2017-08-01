@@ -70,9 +70,12 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
     }
 
     private fun showErrorMessageOnUIThread(activity: Activity, errorMessage: CharSequence, alertTitle: CharSequence?, exception: Exception?) {
-        val builder = createDialog(activity, errorMessage, alertTitle, android.R.drawable.ic_dialog_alert)
+        var message = errorMessage.toString()
+        exception?.let {
+            message += ":\r\n\r\n" + exception.localizedMessage
+        }
 
-        // TODO: show exception
+        val builder = createDialog(activity, message, alertTitle, android.R.drawable.ic_dialog_alert)
 
         builder.create().show()
     }
