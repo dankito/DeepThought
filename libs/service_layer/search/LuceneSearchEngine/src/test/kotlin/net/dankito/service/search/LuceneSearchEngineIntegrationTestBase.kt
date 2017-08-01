@@ -62,7 +62,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         val component = DaggerBaseComponent.builder().build()
         BaseComponent.component = component
 
-        fileStorageService.deleteFolderRecursively(platformConfiguration.getDefaultDataFolder().path)
+        fileStorageService.deleteFolderRecursively(platformConfiguration.getDefaultDataFolder())
 
         val localization = Localization()
         val entityManagerConfiguration = EntityManagerConfiguration(platformConfiguration.getDefaultDataFolder().path, "lucene_test")
@@ -99,7 +99,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
     fun tearDown() {
         underTest.close()
 
-        fileStorageService.deleteFolderRecursively(platformConfiguration.getDefaultDataFolder().path)
+        fileStorageService.deleteFolderRecursively(platformConfiguration.getDefaultDataFolder())
     }
 
 

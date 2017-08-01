@@ -199,8 +199,8 @@ class CommunicationManagerTest {
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        fileStorageService.deleteFolderRecursively(localPlatformConfiguration.getDefaultDataFolder().path)
-        fileStorageService.deleteFolderRecursively(remotePlatformConfiguration.getDefaultDataFolder().path)
+        fileStorageService.deleteFolderRecursively(localPlatformConfiguration.getDefaultDataFolder())
+        fileStorageService.deleteFolderRecursively(remotePlatformConfiguration.getDefaultDataFolder())
 
         whenever(base64Service.encode(any<ByteArray>())).thenReturn("fake_base64_encoded_string")
 
@@ -290,8 +290,8 @@ class CommunicationManagerTest {
         remoteCommunicationManager.stop()
         remoteEntityManager.close()
 
-        fileStorageService.deleteFolderRecursively(localPlatformConfiguration.getDefaultDataFolder().path)
-        fileStorageService.deleteFolderRecursively(remotePlatformConfiguration.getDefaultDataFolder().path)
+        fileStorageService.deleteFolderRecursively(localPlatformConfiguration.getDefaultDataFolder())
+        fileStorageService.deleteFolderRecursively(remotePlatformConfiguration.getDefaultDataFolder())
     }
 
 
@@ -425,7 +425,6 @@ class CommunicationManagerTest {
         assertThat(localUser.id, `is`(remoteUser.id))
         assertThat(localDeepThought.id, `is`(not(remoteDeepThought.id)))
 
-        testExtensibleEnumeration(localDeepThought.applicationLanguages, remoteDeepThought.applicationLanguages)
         testExtensibleEnumeration(localDeepThought.fileTypes, remoteDeepThought.fileTypes)
         testExtensibleEnumeration(localDeepThought.noteTypes, remoteDeepThought.noteTypes)
     }
@@ -460,7 +459,6 @@ class CommunicationManagerTest {
         assertThat(localUser.id, `is`(remoteUser.id))
         assertThat(localDeepThought.id, `is`(not(remoteDeepThought.id)))
 
-        testExtensibleEnumeration(localDeepThought.applicationLanguages, remoteDeepThought.applicationLanguages)
         testExtensibleEnumeration(localDeepThought.fileTypes, remoteDeepThought.fileTypes)
         testExtensibleEnumeration(localDeepThought.noteTypes, remoteDeepThought.noteTypes)
     }

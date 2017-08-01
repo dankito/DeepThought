@@ -31,6 +31,6 @@ interface IFileStorageService {
     fun createFileOutputStream(file: File): OutputStream
 
 
-    fun deleteFolderRecursively(path: String)
+    fun deleteFolderRecursively(path: File)
 
 }

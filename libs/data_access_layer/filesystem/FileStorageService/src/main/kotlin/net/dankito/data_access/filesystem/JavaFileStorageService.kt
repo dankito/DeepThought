@@ -76,8 +76,8 @@ open class JavaFileStorageService : IFileStorageService {
     }
 
 
-    override fun deleteFolderRecursively(path: String) {
-        deleteRecursively(File(path))
+    override fun deleteFolderRecursively(path: File) {
+        deleteRecursively(path)
     }
 
     protected fun deleteRecursively(file: File) {
