@@ -10,7 +10,7 @@ import org.jsoup.nodes.Element
 
 abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebClient) : ArticleSummaryExtractorBase(webClient), IArticleSummaryExtractor {
 
-    protected abstract fun getArticleExtractorClass(): Class<out HeiseNewsAndDeveloperArticleExtractorBase>
+    protected abstract fun getArticleExtractorClass(url: String): Class<out HeiseNewsAndDeveloperArticleExtractorBase>
 
 
     override fun parseHtmlToArticleSummary(url: String, document: Document, forLoadingMoreItems: Boolean) : ArticleSummary {
@@ -49,7 +49,7 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
     }
 
     private fun parseTopArticle(contentUrlElement: Element, url: String): ArticleSummaryItem? {
-        val article = ArticleSummaryItem(makeLinkAbsolute(contentUrlElement.attr("href"), url), contentUrlElement.attr("title"), getArticleExtractorClass())
+        val article = ArticleSummaryItem(makeLinkAbsolute(contentUrlElement.attr("href"), url), contentUrlElement.attr("title"), getArticleExtractorClass(url))
 
         extractDachzeile(contentUrlElement, article)
 
@@ -78,7 +78,8 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
 
     private fun parseIndexItem(item: Element, url: String): ArticleSummaryItem? {
         item.select("header a").firstOrNull()?.let { headerElement ->
-            val article = ArticleSummaryItem(makeLinkAbsolute(headerElement.attr("href") ?: "", url), headerElement.text() ?: "", getArticleExtractorClass())
+            val articleUrl = makeLinkAbsolute(headerElement.attr("href") ?: "", url)
+            val article = ArticleSummaryItem(articleUrl, headerElement.text() ?: "", getArticleExtractorClass(articleUrl))
 
             item.select(".indexlist_text").first()?.let { textElement ->
                 article.summary = textElement.text()
@@ -109,7 +110,7 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
             }
 
 
-            return ArticleSummaryItem(articleUrl, title, getArticleExtractorClass(), summary, previewImageUrl)
+            return ArticleSummaryItem(articleUrl, title, getArticleExtractorClass(articleUrl), summary, previewImageUrl)
         }
 
         return null

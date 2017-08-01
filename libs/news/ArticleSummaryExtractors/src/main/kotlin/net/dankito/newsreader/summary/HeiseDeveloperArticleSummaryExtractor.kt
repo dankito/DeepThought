@@ -18,7 +18,7 @@ class HeiseDeveloperArticleSummaryExtractor(webClient: IWebClient) : HeiseNewsAn
         return "https://www.heise.de/developer/"
     }
 
-    override fun getArticleExtractorClass(): Class<out HeiseNewsAndDeveloperArticleExtractorBase> {
+    override fun getArticleExtractorClass(url: String): Class<out HeiseNewsAndDeveloperArticleExtractorBase> {
         return HeiseDeveloperArticleExtractor::class.java
     }
 
