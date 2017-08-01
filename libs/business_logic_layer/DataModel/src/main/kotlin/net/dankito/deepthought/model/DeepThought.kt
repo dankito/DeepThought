@@ -1,7 +1,6 @@
 package net.dankito.deepthought.model
 
 import net.dankito.deepthought.model.config.TableConfig
-import net.dankito.deepthought.model.enums.ApplicationLanguage
 import net.dankito.deepthought.model.enums.FileType
 import net.dankito.deepthought.model.enums.NoteType
 import java.io.Serializable
@@ -34,11 +33,6 @@ data class DeepThought(
 
     @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     @OrderBy(value = "sortOrder")
-    var applicationLanguages: MutableSet<ApplicationLanguage> = TreeSet<ApplicationLanguage>() // these are the Languages the UI can display
-        private set
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
-    @OrderBy(value = "sortOrder")
     var noteTypes: MutableSet<NoteType> = TreeSet<NoteType>()
         private set
 
@@ -54,19 +48,6 @@ data class DeepThought(
 
 
     private constructor() : this(User(), Device())
-
-
-    fun addApplicationLanguage(applicationLanguage: ApplicationLanguage): Boolean {
-        return applicationLanguages.add(applicationLanguage)
-    }
-
-    fun removeApplicationLanguage(applicationLanguage: ApplicationLanguage): Boolean {
-        if (applicationLanguage.isSystemValue) {
-            return false
-        }
-
-        return applicationLanguages.remove(applicationLanguage)
-    }
 
 
     fun addNoteType(noteType: NoteType): Boolean {

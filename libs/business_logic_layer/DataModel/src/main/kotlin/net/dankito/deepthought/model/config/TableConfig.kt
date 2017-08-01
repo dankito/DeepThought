@@ -161,13 +161,6 @@ class TableConfig {
         const val ExtensibleEnumerationIsSystemValueColumnName = "is_system_value"
 
 
-        /*          ApplicationLanguage Table Config        */
-
-        const val ApplicationLanguageTableName = "application_language"
-
-        const val ApplicationLanguageLanguageKeyColumnName = "language_key"
-
-
         /*          NoteType Table Config        */
 
         const val NoteTypeTableName = "note_type"

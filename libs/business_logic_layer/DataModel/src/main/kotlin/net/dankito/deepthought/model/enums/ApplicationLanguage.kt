@@ -1,12 +1,6 @@
 package net.dankito.deepthought.model.enums
 
 
-import net.dankito.deepthought.model.config.TableConfig
-
-import javax.persistence.Column
-import javax.persistence.Entity
-
-@Entity(name = TableConfig.ApplicationLanguageTableName)
 class ApplicationLanguage : ExtensibleEnumeration {
 
     companion object {
@@ -14,7 +8,6 @@ class ApplicationLanguage : ExtensibleEnumeration {
     }
 
 
-    @Column(name = TableConfig.ApplicationLanguageLanguageKeyColumnName)
     var languageKey: String = ""
         private set
 

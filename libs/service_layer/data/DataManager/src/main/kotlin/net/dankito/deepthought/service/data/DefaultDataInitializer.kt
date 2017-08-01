@@ -3,7 +3,6 @@ package net.dankito.deepthought.service.data
 import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.User
-import net.dankito.deepthought.model.enums.ApplicationLanguage
 import net.dankito.deepthought.model.enums.FileType
 import net.dankito.deepthought.model.enums.FileTypeDefaultFolderName
 import net.dankito.deepthought.model.enums.NoteType
@@ -65,14 +64,8 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
 
 
     protected open fun createEnumerationsDefaultValues(deepThought: DeepThought) {
-        createDefaultApplicationLanguages(deepThought)
         createDefaultNoteTypes(deepThought)
         createDefaultFileTypes(deepThought)
-    }
-
-    protected open fun createDefaultApplicationLanguages(deepThought: DeepThought) {
-        deepThought.addApplicationLanguage(ApplicationLanguage("application.language.english", "en", true, 1))
-        deepThought.addApplicationLanguage(ApplicationLanguage("application.language.german", "de", true, 2))
     }
 
     protected open fun createDefaultNoteTypes(deepThought: DeepThought) {
