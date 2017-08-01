@@ -49,7 +49,8 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
     }
 
     private fun parseTopArticle(contentUrlElement: Element, url: String): ArticleSummaryItem? {
-        val article = ArticleSummaryItem(makeLinkAbsolute(contentUrlElement.attr("href"), url), contentUrlElement.attr("title"), getArticleExtractorClass(url))
+        val articleUrl = makeLinkAbsolute(contentUrlElement.attr("href"), url)
+        val article = ArticleSummaryItem(articleUrl, contentUrlElement.attr("title"), getArticleExtractorClass(articleUrl))
 
         extractDachzeile(contentUrlElement, article)
 
