@@ -54,7 +54,7 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
             }
 
             response.error?.let { error ->
-                showErrorMessage(response)
+                showErrorMessage(error)
             }
         }
     }
@@ -95,13 +95,13 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
 
 
     protected fun handleEnteredChallengeResponse(clientCommunicator: IClientCommunicator, remoteDevice: DiscoveredDevice, response: Response<RespondToSynchronizationPermittingChallengeResponseBody>, nonce: String) {
-        response.error?.let { showErrorMessage(response) }
+        response.error?.let { showErrorMessage(it) }
 
         response.body?.let { body ->
             when(body.result) {
                 RespondToSynchronizationPermittingChallengeResult.ALLOWED -> remoteAllowedSynchronization(remoteDevice, body)
                 RespondToSynchronizationPermittingChallengeResult.WRONG_CODE -> getChallengeResponseFromUser(clientCommunicator, remoteDevice, nonce, true)
-                RespondToSynchronizationPermittingChallengeResult.ERROR_OCCURRED -> showErrorMessage(response)
+                RespondToSynchronizationPermittingChallengeResult.ERROR_OCCURRED -> showErrorMessage()
                 else -> showAlertSynchronizingIsNotPermitted(remoteDevice)
             }
         }
@@ -139,8 +139,8 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
         dialogService.showInfoMessage(remoteDidNotAllowSynchronization)
     }
 
-    private fun showErrorMessage(response: Response<out Any>) {
-        // TODO
+    private fun showErrorMessage(error: Exception? = null) {
+        dialogService.showErrorMessage(localization.getLocalizedString("alert.message.an.error.occurred"), exception = error)
     }
 
 
