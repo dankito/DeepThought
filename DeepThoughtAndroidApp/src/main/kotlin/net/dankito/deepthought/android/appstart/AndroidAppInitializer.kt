@@ -74,16 +74,19 @@ class AndroidAppInitializer {
 
 
     private fun initializeHtmlEditorExtractor() {
-        htmlEditorExtractor.extractHtmlEditorIfNeededAsync()
+        // start extracting HtmlEditor only after DataManager is initialized as both to a lot of disk i/o
+        dataManager.addInitializationListener {
+            htmlEditorExtractor.extractHtmlEditorIfNeededAsync()
 
-        htmlEditorExtractor.addHtmlEditorExtractedListener {
-            searchEngine.addInitializationListener {
-                val currentActivity = activityTracker.currentActivity
+            htmlEditorExtractor.addHtmlEditorExtractedListener {
+                searchEngine.addInitializationListener {
+                    val currentActivity = activityTracker.currentActivity
 
-                if (currentActivity != null) {
-                    preloadHtmlEditors(currentActivity)
-                } else {
-                    activityTracker.addNextActivitySetListener { preloadHtmlEditors(it) }
+                    if (currentActivity != null) {
+                        preloadHtmlEditors(currentActivity)
+                    } else {
+                        activityTracker.addNextActivitySetListener { preloadHtmlEditors(it) }
+                    }
                 }
             }
         }
