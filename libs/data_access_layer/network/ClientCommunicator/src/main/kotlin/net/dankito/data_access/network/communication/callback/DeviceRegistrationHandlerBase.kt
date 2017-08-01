@@ -61,7 +61,7 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
 
     protected fun getChallengeResponseFromUser(clientCommunicator: IClientCommunicator, remoteDevice: DiscoveredDevice, nonce: String, wasCodePreviouslyWronglyEntered: Boolean) {
         var questionText = localization.getLocalizedString("alert.title.enter.response.code.for.permitting.synchronization", remoteDevice.device.getDisplayText())
-        if (wasCodePreviouslyWronglyEntered) {
+        if(wasCodePreviouslyWronglyEntered) {
             questionText = localization.getLocalizedString("alert.title.entered.response.code.was.wrong", remoteDevice.device.getDisplayText())
         }
 
@@ -123,6 +123,14 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
         }
 
         callNewDeviceRegisteredListeners(remoteDevice)
+
+        showDeviceRegistrationHasBeenSuccessfulMessage(remoteDevice)
+    }
+
+    private fun showDeviceRegistrationHasBeenSuccessfulMessage(remoteDevice: DiscoveredDevice) {
+        val successMessage = localization.getLocalizedString("alert.message.registering.at.device.successful", remoteDevice.device.getDisplayText())
+
+        dialogService.showInfoMessage(successMessage)
     }
 
     private fun showAlertSynchronizingIsNotPermitted(remoteDevice: DiscoveredDevice) {
@@ -159,7 +167,7 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
         } catch(e: Exception) {
             log.error("Could do initial synchronization with device $device", e)
             dialogService.showErrorMessage(localization.getLocalizedString("alert.message.message.could.not.initialize.synchronization.with.device",
-                    "${device.device.getDisplayText()}"), exception = e)
+                    device.device.getDisplayText()), exception = e)
         }
 
         return null
