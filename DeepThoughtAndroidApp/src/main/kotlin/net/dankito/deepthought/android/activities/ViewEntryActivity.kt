@@ -155,9 +155,10 @@ class ViewEntryActivity : BaseActivity() {
         wbEntry.setOnSystemUiVisibilityChangeListener { flags -> systemUiVisibilityChanged(flags) }
 
         swipeTouchListener = OnSwipeTouchListener(this) { handleWebViewSwipe(it) }
+        swipeTouchListener.singleTapListener = { handleWebViewClick() }
+        swipeTouchListener.doubleTapListener = { handleWebViewDoubleTap() }
         
         wbEntry.setOnTouchListener { _, event -> handleWebViewTouch(event) }
-        wbEntry.setOnClickListener { handleWebViewClick() }
 
         this.entryFieldsPreview = lytEntryFieldsPreview
         entryFieldsPreview.fieldClickedListener = { field -> editEntry(field)}
@@ -310,18 +311,6 @@ class ViewEntryActivity : BaseActivity() {
      * WebView doesn't fire click event, so we had to implement this our self
      */
     private fun handleWebViewTouch(event: MotionEvent): Boolean {
-        when(event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                webViewClickStartTime = Calendar.getInstance().timeInMillis
-            }
-            MotionEvent.ACTION_UP -> {
-                val clickDuration = Calendar.getInstance().timeInMillis - webViewClickStartTime
-                if(clickDuration < MAX_CLICK_DURATION) {
-                    wbEntry.performClick()
-                }
-            }
-        }
-
         swipeTouchListener.onTouch(wbEntry, event)
 
         return false // don't consume event as otherwise scrolling won't work anymore
@@ -335,6 +324,10 @@ class ViewEntryActivity : BaseActivity() {
         if(type == WebView.HitTestResult.UNKNOWN_TYPE || type == WebView.HitTestResult.IMAGE_TYPE) {
             toggleReaderMode()
         }
+    }
+
+    private fun handleWebViewDoubleTap() {
+        saveEntryAsync()
     }
 
     private fun handleWebViewSwipe(swipeDirection: OnSwipeTouchListener.SwipeDirection) {
