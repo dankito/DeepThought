@@ -155,13 +155,13 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
     private fun retrievedArticle(extractor: IArticleExtractor, item: ArticleSummaryItem, asyncResult: AsyncResult<EntryExtractionResult>,
                                  extractionResult: EntryExtractionResult, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
-        getDefaultTagsForExtractor(extractor, item) { tags ->
-            extractionResult.tags.addAll(tags)
+        getDefaultTagsForExtractor(extractor, item) { tag ->
+            tag?.let { extractionResult.tags.add(tag) }
             callback(asyncResult)
         }
     }
 
-    private fun getDefaultTagsForExtractor(extractor: IArticleExtractor, item: ArticleSummaryItem, callback: (List<Tag>) -> Unit) {
+    private fun getDefaultTagsForExtractor(extractor: IArticleExtractor, item: ArticleSummaryItem, callback: (Tag?) -> Unit) {
         extractor.getName()?.let { extractorName ->
             getTagForExtractorNameSynchronized(extractorName, callback)
         }
@@ -171,14 +171,14 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
         }
 
         if(extractor.getName() == null && item.articleSummaryExtractorConfig?.name == null) {
-            callback(listOf())
+            callback(null)
         }
     }
 
     /**
      * To avoid that when multiple entries get fetched in parallel that multiple tags get created for one extractor this method synchronizes access to getTagForExtractorName()
      */
-    private fun getTagForExtractorNameSynchronized(extractorName: String, callback: (List<Tag>) -> Unit) {
+    private fun getTagForExtractorNameSynchronized(extractorName: String, callback: (Tag) -> Unit) {
         synchronized(this) {
             val countDownLatch = CountDownLatch(1)
 
@@ -192,10 +192,10 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
         }
     }
 
-    private fun getTagForExtractorName(extractorName: String, callback: (List<Tag>) -> Unit) {
+    private fun getTagForExtractorName(extractorName: String, callback: (Tag) -> Unit) {
         searchEngine.searchTags(TagsSearch(extractorName) { tagsSearchResults ->
             if(tagsSearchResults.exactMatchesOfLastResult.isNotEmpty()) {
-                callback(tagsSearchResults.exactMatchesOfLastResult)
+                callback(tagsSearchResults.exactMatchesOfLastResult.first())
                 return@TagsSearch
             }
 
@@ -203,7 +203,7 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
             tagService.persist(extractorTag)
 
-            callback(listOf(extractorTag))
+            callback(extractorTag)
         })
     }
 
