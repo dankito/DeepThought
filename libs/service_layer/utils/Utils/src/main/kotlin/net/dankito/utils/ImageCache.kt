@@ -16,6 +16,8 @@ import java.net.URI
 class ImageCache(private val webClient: IWebClient, private val serializer: ISerializer, private val fileStorageService: IFileStorageService) {
 
     companion object {
+        private const val CACHE_FOLDER_NAME = "ImageCache"
+
         private const val CACHE_FILE_NAME = "ImageCache.json"
 
         private val log = LoggerFactory.getLogger(ImageCache::class.java)
@@ -28,7 +30,7 @@ class ImageCache(private val webClient: IWebClient, private val serializer: ISer
 
 
     init {
-        cacheFile = fileStorageService.getFileInDataFolder(CACHE_FILE_NAME)
+        cacheFile = fileStorageService.getFileInDataFolder(CACHE_FILE_NAME, CACHE_FOLDER_NAME)
 
         readImageCache()
     }
@@ -107,7 +109,7 @@ class ImageCache(private val webClient: IWebClient, private val serializer: ISer
     private fun getUniqueFilenameFromUrl(url: String): File {
         val uri = URI(url)
 
-        return fileStorageService.getFileInDataFolder(uri.host + "_" + uri.path.replace('/', '_'))
+        return fileStorageService.getFileInDataFolder(uri.host + "_" + uri.path.replace('/', '_'), CACHE_FOLDER_NAME)
     }
 
 }
