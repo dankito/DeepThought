@@ -24,12 +24,12 @@ class IntentHandler(private val articleExtractors: ArticleExtractors, private va
 
 
     private fun handleActionSendIntent(type: String?, intent: Intent) {
-        if ("text/plain" == type) {
+        if("text/plain" == type) {
             handleReceivedPlainText(intent)
         }
-//            else if ("text/html" == type) {
-//                handleReceivedHtmlText(intent)
-//            }
+        else if("text/html" == type) {
+            handleReceivedText(intent)
+        }
     }
 
     private fun handleReceivedPlainText(intent: Intent) {
@@ -41,14 +41,24 @@ class IntentHandler(private val articleExtractors: ArticleExtractors, private va
                 }
             }
             else {
-                var abstractPlain: String? = intent.getStringExtra(Intent.EXTRA_SUBJECT) // e.g. Firefox also sends Page Title
-                if (abstractPlain == null && intent.hasExtra(Intent.EXTRA_TITLE)) {
-                    abstractPlain = intent.getStringExtra(Intent.EXTRA_TITLE)
-                }
-
-                router.showEditEntryView(Entry("<p>$sharedText</p>", "<p>$abstractPlain</p>"))
+                handleReceivedText(intent, sharedText)
             }
         }
+    }
+
+    private fun handleReceivedText(intent: Intent) {
+        intent.getStringExtra(Intent.EXTRA_TEXT)?.let { sharedText ->
+            handleReceivedText(intent, sharedText)
+        }
+    }
+
+    private fun handleReceivedText(intent: Intent, sharedText: String) {
+        var abstractPlain: String? = intent.getStringExtra(Intent.EXTRA_SUBJECT) // e.g. Firefox also sends Page Title
+        if(abstractPlain == null && intent.hasExtra(Intent.EXTRA_TITLE)) {
+            abstractPlain = intent.getStringExtra(Intent.EXTRA_TITLE)
+        }
+
+        router.showEditEntryView(Entry("<p>$sharedText</p>", "<p>$abstractPlain</p>"))
     }
 
     private fun isReceivedTextAnUri(sharedText: String): Boolean {
