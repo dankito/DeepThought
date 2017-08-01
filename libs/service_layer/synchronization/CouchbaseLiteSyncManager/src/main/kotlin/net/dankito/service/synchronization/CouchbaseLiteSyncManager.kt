@@ -257,9 +257,15 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
         synchronized(this) {
             log.info("Stopping Replication with Device " + device)
 
-            pullReplications.remove(device)?.stop()
+            pullReplications.remove(device)?.let { pullReplication ->
+                pullReplication.goOffline()
+//                pullReplication.stop() // stop() sometimes lets application crash (ConcurrentModificationException in serve())
+            }
 
-            pushReplications.remove(device)?.stop()
+            pushReplications.remove(device)?.let { pushReplication ->
+                pushReplication.goOffline()
+//                pushReplication.stop() // stop() sometimes lets application crash (ConcurrentModificationException in serve())
+            }
 
             if(pushReplications.isEmpty()) { // no devices connected anymore
                 closeSynchronizationPort()
