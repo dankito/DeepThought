@@ -8,7 +8,7 @@ import java.io.OutputStream
 
 interface IFileStorageService {
 
-    fun getFileInDataFolder(filename: String) : File
+    fun getFileInDataFolder(filename: String, folderName: String? = null) : File
 
 
     @Throws(Exception::class)

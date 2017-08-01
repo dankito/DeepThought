@@ -10,8 +10,17 @@ open class JavaFileStorageService : IFileStorageService {
     }
 
 
-    override fun getFileInDataFolder(filename: String) : File {
-        return File(DATA_FOLDER_NAME, filename)
+    override fun getFileInDataFolder(filename: String, folderName: String?) : File {
+        return ensureFolderInDataFolderExists(File(DATA_FOLDER_NAME), filename, folderName)
+    }
+
+    protected fun ensureFolderInDataFolderExists(dataFolder: File, filename: String, folderName: String?): File {
+        var folder = dataFolder
+        folderName?.let { folder = File(dataFolder, folderName) }
+
+        folder.mkdirs()
+
+        return File(folder, filename)
     }
 
 
