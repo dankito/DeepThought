@@ -25,6 +25,10 @@ class PostillonArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
         return "Postillon"
     }
 
+    override fun canExtractEntryFromUrl(url: String): Boolean {
+        return url.startsWith("http://www.der-postillon.com/") && url.length > "http://www.der-postillon.com/".length
+    }
+
 
     override fun extractArticleAsync(item: ArticleSummaryItem, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
         super.extractArticleAsync(item) {

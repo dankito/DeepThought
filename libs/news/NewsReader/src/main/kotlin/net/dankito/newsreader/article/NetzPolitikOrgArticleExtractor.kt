@@ -24,6 +24,11 @@ class NetzPolitikOrgArticleExtractor(webClient: IWebClient) : ArticleExtractorBa
         return "netzpolitik.org"
     }
 
+    override fun canExtractEntryFromUrl(url: String): Boolean {
+        return url.startsWith("https://netzpolitik.org/") && url.length > "https://netzpolitik.org/".length
+    }
+
+
     override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
         document.body().select("article").first()?.let { articleElement ->
             val title = articleElement.select(".entry-title").first()?.text() ?: ""

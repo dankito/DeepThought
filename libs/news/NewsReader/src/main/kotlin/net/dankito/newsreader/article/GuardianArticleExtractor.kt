@@ -15,6 +15,17 @@ class GuardianArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(web
         return "The Guardian"
     }
 
+    override fun canExtractEntryFromUrl(url: String): Boolean {
+        if(url.startsWith("https://www.theguardian.com/") && url.length > "https://www.theguardian.com/".length) {
+            return true
+        }
+        if(url.startsWith("https://www.theguardian.co.uk/") && url.length > "https://www.theguardian.co.uk/".length) {
+            return true
+        }
+
+        return false
+    }
+
 
     override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
         document.body().select("#article").first()?.let { articleElement ->

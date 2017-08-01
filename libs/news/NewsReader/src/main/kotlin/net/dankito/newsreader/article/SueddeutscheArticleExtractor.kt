@@ -22,6 +22,10 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         return "SZ"
     }
 
+    override fun canExtractEntryFromUrl(url: String): Boolean {
+        return url.startsWith("http://www.sueddeutsche.de/") && url.length > "http://www.sueddeutsche.de/".length
+    }
+
 
     override fun extractArticle(url: String): EntryExtractionResult? {
         var siteUrl = url

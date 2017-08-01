@@ -13,6 +13,10 @@ class HeiseDeveloperArticleExtractor(webClient: IWebClient) : HeiseNewsAndDevelo
         return "Heise Developer"
     }
 
+    override fun canExtractEntryFromUrl(url: String): Boolean {
+        return url.startsWith("https://www.heise.de/developer/meldung/")
+    }
+
 
     override fun parseArticle(header: Element, articleElement: Element, url: String, title: String): EntryExtractionResult? {
         articleElement.select(".article-content").first()?.let { contentElement ->

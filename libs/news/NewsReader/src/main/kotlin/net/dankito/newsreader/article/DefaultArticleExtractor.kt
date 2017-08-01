@@ -27,6 +27,11 @@ class DefaultArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
         return null
     }
 
+    override fun canExtractEntryFromUrl(url: String): Boolean {
+        return true
+    }
+
+
     override fun extractArticleAsync(item: ArticleSummaryItem, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
         thread {
             try {

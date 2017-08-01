@@ -16,6 +16,11 @@ class SueddeutscheMagazinArticleExtractor(webClient: IWebClient) : ArticleExtrac
         return "SZ Magazin"
     }
 
+    override fun canExtractEntryFromUrl(url: String): Boolean {
+        return url.startsWith("http://sz-magazin.sueddeutsche.de/texte/")
+    }
+
+
     override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
         val referenceAndAbstract = extractReferenceAndAbstract(document, url)
 
