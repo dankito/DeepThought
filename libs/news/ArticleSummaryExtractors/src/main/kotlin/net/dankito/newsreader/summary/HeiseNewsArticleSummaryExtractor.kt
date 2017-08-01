@@ -11,7 +11,7 @@ class HeiseNewsArticleSummaryExtractor(webClient: IWebClient) : HeiseNewsAndDeve
         return "Heise News"
     }
 
-    override fun getBaseUrl(): String {
+    override fun getUrl(): String {
         return "https://www.heise.de/"
     }
 

@@ -17,7 +17,7 @@ abstract class ArticleSummaryExtractorBase(webClient: IWebClient) : ExtractorBas
 
 
     override fun extractSummaryAsync(callback: (AsyncResult<out ArticleSummary>) -> Unit) {
-        extractSummaryAsync(getBaseUrl(), false, callback)
+        extractSummaryAsync(getUrl(), false, callback)
     }
 
     override fun loadMoreItemsAsync(articleSummary: ArticleSummary, callback: (AsyncResult<ArticleSummary>) -> Unit) {

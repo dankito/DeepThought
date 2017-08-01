@@ -16,7 +16,7 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
         return "SZ"
     }
 
-    override fun getBaseUrl(): String {
+    override fun getUrl(): String {
         return "http://www.sueddeutsche.de/"
     }
 

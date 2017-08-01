@@ -38,7 +38,10 @@ import net.dankito.utils.localization.Localization
 import net.dankito.utils.services.hashing.IBase64Service
 import net.dankito.utils.services.network.NetworkConnectivityManagerBase
 import net.dankito.utils.services.network.NetworkHelper
+import net.dankito.utils.settings.ILocalSettingsStore
+import net.dankito.utils.settings.LocalSettingsStoreBase
 import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.version.Versions
 import net.engio.mbassy.listener.Handler
 import net.engio.mbassy.listener.Listener
 import net.engio.mbassy.listener.References
@@ -208,7 +211,7 @@ class CommunicationManagerTest {
 
     private fun setupLocalDevice() {
         val entityManagerConfiguration = EntityManagerConfiguration(localPlatformConfiguration.getDefaultDataFolder().path, "test")
-        localEntityManager = JavaCouchbaseLiteEntityManager(entityManagerConfiguration)
+        localEntityManager = JavaCouchbaseLiteEntityManager(entityManagerConfiguration, createLocalSettingsStore())
 
         localDataManager = DataManager(localEntityManager, entityManagerConfiguration, DefaultDataInitializer(localPlatformConfiguration, localization), localPlatformConfiguration)
 
@@ -243,7 +246,7 @@ class CommunicationManagerTest {
 
     private fun setupRemoteDevice() {
         val entityManagerConfiguration = EntityManagerConfiguration(remotePlatformConfiguration.getDefaultDataFolder().path, "test")
-        remoteEntityManager = JavaCouchbaseLiteEntityManager(entityManagerConfiguration)
+        remoteEntityManager = JavaCouchbaseLiteEntityManager(entityManagerConfiguration, createLocalSettingsStore())
 
         remoteDataManager = DataManager(remoteEntityManager, entityManagerConfiguration, DefaultDataInitializer(remotePlatformConfiguration, localization), remotePlatformConfiguration)
 
@@ -531,10 +534,10 @@ class CommunicationManagerTest {
         remotePermitRemoteToSynchronize.set(true)
 
         createImplementedExtractors(Mockito.mock(IWebClient::class.java)).forEach { implementedExtractor ->
-            val localConfig = ArticleSummaryExtractorConfig(implementedExtractor.getBaseUrl(), implementedExtractor.getName())
+            val localConfig = ArticleSummaryExtractorConfig(implementedExtractor.getUrl(), implementedExtractor.getName())
             localEntityManager.persistEntity(localConfig)
 
-            val remoteConfig = ArticleSummaryExtractorConfig(implementedExtractor.getBaseUrl(), implementedExtractor.getName())
+            val remoteConfig = ArticleSummaryExtractorConfig(implementedExtractor.getUrl(), implementedExtractor.getName())
             remoteEntityManager.persistEntity(remoteConfig)
         }
 
@@ -601,7 +604,7 @@ class CommunicationManagerTest {
         return object : ArticleSummaryExtractorBase(webClient) {
             override fun getName(): String { return name  }
 
-            override fun getBaseUrl(): String { return baseUrl }
+            override fun getUrl(): String { return baseUrl }
 
             override fun parseHtmlToArticleSummary(url: String, document: Document, forLoadingMoreItems: Boolean): ArticleSummary { return Mockito.mock(ArticleSummary::class.java) }
         }
@@ -751,6 +754,23 @@ class CommunicationManagerTest {
         remoteCommunicationManager.startAsync()
     }
 
+
+    private fun createLocalSettingsStore(): ILocalSettingsStore {
+        return object : ILocalSettingsStore {
+            override fun getDataFolder(): String {
+                return LocalSettingsStoreBase.DefaultDataFolder
+            }
+
+            override fun setDataFolder(dataFolder: String) { }
+
+            override fun getDatabaseDataModelVersion(): Int {
+                return Versions.DataModelVersion
+            }
+
+            override fun setDatabaseDataModelVersion(newDataModelVersion: Int) { }
+
+        }
+    }
 
     private fun mockDialogServiceTextInput(dialogService: IDialogService, textToReturn: AtomicReference<String>) {
         whenever(dialogService.askForTextInput(any<CharSequence>(), anyOrNull(), anyOrNull(), any(), any())).thenAnswer { invocation ->

@@ -90,10 +90,10 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
 
     private fun initImplementedExtractors() {
         extractorManager.getImplementedExtractors().forEach { implementedExtractor ->
-            var config = configurations.get(implementedExtractor.getBaseUrl())
+            var config = configurations.get(implementedExtractor.getUrl())
 
             if (config == null) { // a new, unpersisted ArticleSummaryExtractor
-                config = ArticleSummaryExtractorConfig(implementedExtractor.getBaseUrl(), implementedExtractor.getName())
+                config = ArticleSummaryExtractorConfig(implementedExtractor.getUrl(), implementedExtractor.getName())
                 config.extractor = implementedExtractor
                 addConfig(config)
             } else {

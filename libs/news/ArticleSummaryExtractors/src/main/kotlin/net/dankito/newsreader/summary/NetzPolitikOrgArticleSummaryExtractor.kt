@@ -14,7 +14,7 @@ class NetzPolitikOrgArticleSummaryExtractor(webClient: IWebClient) : ArticleSumm
         return "netzpolitik.org"
     }
 
-    override fun getBaseUrl(): String {
+    override fun getUrl(): String {
         return "https://netzpolitik.org/"
     }
 

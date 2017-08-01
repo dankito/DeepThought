@@ -14,7 +14,7 @@ class GuardianArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryExt
         return "The Guardian"
     }
 
-    override fun getBaseUrl(): String {
+    override fun getUrl(): String {
         return "https://www.theguardian.com"
     }
 

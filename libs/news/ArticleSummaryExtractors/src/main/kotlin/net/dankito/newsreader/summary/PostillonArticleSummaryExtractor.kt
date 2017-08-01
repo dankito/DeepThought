@@ -14,7 +14,7 @@ class PostillonArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
         return "Der Postillon"
     }
 
-    override fun getBaseUrl(): String {
+    override fun getUrl(): String {
         return "http://www.der-postillon.com"
     }
 
