@@ -68,7 +68,7 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
             setArticleSummaryExtractorConfigOnItems(summary, extractorConfig)
         }
 
-        result.error?.let { error -> showError("alert.message.could.not.load.article.summary", error, error.localizedMessage) }
+        result.error?.let { error -> showError("alert.message.could.not.load.article.summary", error) }
 
         callback(result)
     }
@@ -147,7 +147,7 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
                 asyncResult.result?.let { retrievedArticle(extractor, item, asyncResult, it, callback) }
                 asyncResult.error?.let {
                     callback(asyncResult)
-                    showError("alert.message.could.not.load.article", it, item.url, it.localizedMessage)
+                    showError("alert.message.could.not.load.article", it)
                 }
             }
         }
