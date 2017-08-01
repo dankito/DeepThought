@@ -4,12 +4,11 @@ import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.model.enums.ExtensibleEnumeration
 
 
-data class DeepThoughtSyncInfo(val id: String, val localDeviceId: String, val applicationLanguageIds: Map<String, String>,
-                               val noteTypeIds: Map<String, String>, val fileTypeIds: Map<String, String>) {
+data class DeepThoughtSyncInfo(val id: String, val localDeviceId: String, val noteTypeIds: Map<String, String>, val fileTypeIds: Map<String, String>) {
 
-    internal constructor() : this("", "", mapOf(), mapOf(), mapOf()) // for Jackson
+    internal constructor() : this("", "", mapOf(), mapOf()) // for Jackson
 
-    constructor(deepThought: DeepThought) : this(deepThought.id!!, deepThought.localDevice.id!!, getMapForExtensibleEnumerationList(deepThought.applicationLanguages),
+    constructor(deepThought: DeepThought) : this(deepThought.id!!, deepThought.localDevice.id!!,
             getMapForExtensibleEnumerationList(deepThought.noteTypes), getMapForExtensibleEnumerationList(deepThought.fileTypes))
 
 

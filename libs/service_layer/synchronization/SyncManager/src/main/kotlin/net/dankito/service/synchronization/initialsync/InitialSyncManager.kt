@@ -81,8 +81,6 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
 
 
     private fun updateExtensibleEnumerations(localDeepThought: DeepThought, remoteDeepThought: DeepThoughtSyncInfo, entityManager: IEntityManager) {
-        updateExtensibleEnumeration(localDeepThought.applicationLanguages, remoteDeepThought.applicationLanguageIds, entityManager)
-
         updateExtensibleEnumeration(localDeepThought.noteTypes, remoteDeepThought.noteTypeIds, entityManager)
 
         updateExtensibleEnumeration(localDeepThought.fileTypes, remoteDeepThought.fileTypeIds, entityManager)
