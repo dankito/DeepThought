@@ -30,7 +30,7 @@ open class BaseActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        log.info("Creating Activity $javaClass")
+        log.info("Creating Activity $this")
         super.onCreate(savedInstanceState)
 
         savedInstanceState?.let {
@@ -43,7 +43,7 @@ open class BaseActivity : AppCompatActivity() {
 
         currentActivityTracker.currentActivity = this
 
-        log.info("Started Activity $javaClass")
+        log.info("Started Activity $this")
     }
 
     override fun onResume() {
@@ -51,12 +51,12 @@ open class BaseActivity : AppCompatActivity() {
 
         currentActivityTracker.currentActivity = this
 
-        log.info("Resumed Activity $javaClass")
+        log.info("Resumed Activity $this")
     }
 
     override fun onPause() {
         super.onPause()
-        log.info("Paused Activity $javaClass")
+        log.info("Paused Activity $this")
     }
 
     override fun onStop() {
@@ -65,7 +65,7 @@ open class BaseActivity : AppCompatActivity() {
         }
 
         super.onStop()
-        log.info("Stopped Activity $javaClass")
+        log.info("Stopped Activity $this")
     }
 
     override fun onDestroy() {
@@ -74,7 +74,7 @@ open class BaseActivity : AppCompatActivity() {
         }
 
         super.onDestroy()
-        log.info("Destroyed Activity $javaClass")
+        log.info("Destroyed Activity $this")
     }
 
 
