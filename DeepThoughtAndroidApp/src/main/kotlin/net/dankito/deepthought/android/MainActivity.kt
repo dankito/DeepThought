@@ -22,6 +22,7 @@ import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.service.eventbus.IEventBus
+import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
 
 
@@ -48,6 +49,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     @Inject
     protected lateinit var articleExtractors: ArticleExtractors
+
+    @Inject
+    protected lateinit var dialogService: IDialogService
 
 
     init {
@@ -156,7 +160,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             return
         }
 
-        IntentHandler(articleExtractors, router).handle(intent)
+        IntentHandler(articleExtractors, router, dialogService).handle(intent)
     }
 
 

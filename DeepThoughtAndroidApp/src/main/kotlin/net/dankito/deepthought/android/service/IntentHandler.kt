@@ -3,10 +3,11 @@ package net.dankito.deepthought.android.service
 import android.content.Intent
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.newsreader.article.ArticleExtractors
+import net.dankito.utils.ui.IDialogService
 import java.net.URI
 
 
-class IntentHandler(private val articleExtractors: ArticleExtractors, private val router: IRouter) {
+class IntentHandler(private val articleExtractors: ArticleExtractors, private val router: IRouter, private val dialogService: IDialogService) {
 
     fun handle(intent: Intent) {
         val action = intent.action
@@ -36,6 +37,7 @@ class IntentHandler(private val articleExtractors: ArticleExtractors, private va
             if (isReceivedTextAnUri(sharedText)) {
                 articleExtractors.extractArticleAsync(sharedText) {
                     it.result?.let { router.showViewEntryView(it) }
+                    it.error?.let { showErrorMessage(it) }
                 }
             }
             else {
@@ -63,6 +65,11 @@ class IntentHandler(private val articleExtractors: ArticleExtractors, private va
         //            if (type.startsWith("image/")) {
         //                handleReceivedMultipleImages(intent)
         //            }
+    }
+
+
+    private fun showErrorMessage(error: Exception) {
+        dialogService.showErrorMessage(dialogService.getLocalization().getLocalizedString("alert.message.could.not.extract.entry.from.url"), exception = error)
     }
 
 }
