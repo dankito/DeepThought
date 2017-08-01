@@ -34,8 +34,14 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
         thread {
             try {
                 val extractionResult = extractArticle(url)
-                extractionResult?.reference?.url = url // explicitly set reference's url as for multipage articles article may gets extracted from a url different than url parameter
-                callback(AsyncResult(true, result = extractionResult))
+
+                if(extractionResult != null) {
+                    extractionResult.reference?.url = url // explicitly set reference's url as for multipage articles article may gets extracted from a url different than url parameter
+                    callback(AsyncResult(true, result = extractionResult))
+                }
+                else {
+                    callback(AsyncResult(false, Exception("Could not extract article from url $url"))) // TODO: localize
+                }
             } catch(e: Exception) {
                 log.error("Could not extract article from " + url, e)
                 callback(AsyncResult(false, e))
