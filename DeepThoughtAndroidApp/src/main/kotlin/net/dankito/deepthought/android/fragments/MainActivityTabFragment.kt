@@ -15,7 +15,7 @@ import net.dankito.service.search.Search
 
 abstract class MainActivityTabFragment(private val layoutResourceId: Int, private val listViewResourceId: Int, private val optionsMenuResourceId: Int) : Fragment() {
 
-    private lateinit var presenter: IMainViewSectionPresenter
+    private var presenter: IMainViewSectionPresenter? = null
 
     private var searchView: SearchView? = null
 
@@ -62,20 +62,26 @@ abstract class MainActivityTabFragment(private val layoutResourceId: Int, privat
     }
 
     override fun onDestroy() {
-        presenter.cleanUp()
+        presenter?.cleanUp()
 
         super.onDestroy()
     }
 
 
     fun viewCameIntoView() {
-        val lastSearchTerm = presenter.getLastSearchTerm()
-
-        if(lastSearchTerm == Search.EmptySearchTerm) {
-            presenter.getAndShowAllEntities()
+        if(presenter == null) { // in some cases viewCameIntoView() gets called before onAttach() -> ensure presenter then gets initialized anyway
+            presenter = initPresenter()
         }
-        else {
 
+        presenter?.let { presenter ->
+            val lastSearchTerm = presenter.getLastSearchTerm()
+
+            if(lastSearchTerm == Search.EmptySearchTerm) {
+                presenter.getAndShowAllEntities()
+            }
+            else {
+
+            }
         }
     }
 
@@ -105,10 +111,11 @@ abstract class MainActivityTabFragment(private val layoutResourceId: Int, privat
         searchView.queryHint = getQueryHint()
         searchView.setOnQueryTextListener(entriesQueryTextListener)
 
-        val lastSearchTerm = presenter.getLastSearchTerm()
-        if(lastSearchTerm != Search.EmptySearchTerm) {
-            searchView.isIconified = false
-            searchView.setQuery(lastSearchTerm, true)
+        presenter?.getLastSearchTerm()?.let { lastSearchTerm ->
+            if(lastSearchTerm != Search.EmptySearchTerm) {
+                searchView.isIconified = false
+                searchView.setQuery(lastSearchTerm, true)
+            }
         }
     }
 
