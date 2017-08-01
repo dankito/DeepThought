@@ -20,6 +20,8 @@ import net.dankito.service.search.specific.TagsSearch
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IDialogService
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -161,15 +163,32 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
     private fun getDefaultTagsForExtractor(extractor: IArticleExtractor, item: ArticleSummaryItem, callback: (List<Tag>) -> Unit) {
         extractor.getName()?.let { extractorName ->
-            getTagForExtractorName(extractorName, callback)
+            getTagForExtractorNameSynchronized(extractorName, callback)
         }
 
         if(extractor.getName() == null && item.articleSummaryExtractorConfig?.name != null) {
-            item.articleSummaryExtractorConfig?.name?.let { getTagForExtractorName(it, callback) }
+            item.articleSummaryExtractorConfig?.name?.let { getTagForExtractorNameSynchronized(it, callback) }
         }
 
         if(extractor.getName() == null && item.articleSummaryExtractorConfig?.name == null) {
             callback(listOf())
+        }
+    }
+
+    /**
+     * To avoid that when multiple entries get fetched in parallel that multiple tags get created for one extractor this method synchronizes access to getTagForExtractorName()
+     */
+    private fun getTagForExtractorNameSynchronized(extractorName: String, callback: (List<Tag>) -> Unit) {
+        synchronized(this) {
+            val countDownLatch = CountDownLatch(1)
+
+            getTagForExtractorName(extractorName) {
+                countDownLatch.countDown()
+
+                callback(it)
+            }
+
+            try { countDownLatch.await(1, TimeUnit.SECONDS) } catch(ignored: Exception) { }
         }
     }
 
