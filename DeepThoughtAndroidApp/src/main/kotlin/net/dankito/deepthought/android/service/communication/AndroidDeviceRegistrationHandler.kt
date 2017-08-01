@@ -16,6 +16,7 @@ import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
+import net.dankito.service.synchronization.initialsync.model.SyncInfo
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IDialogService
 import java.util.concurrent.ConcurrentHashMap
@@ -51,7 +52,11 @@ class AndroidDeviceRegistrationHandler(private var context: Context, dataManager
 
 
     override fun unknownDeviceDisconnected(disconnectedDevice: DiscoveredDevice) {
-        if(deviceIdShowingSnackbarFor == disconnectedDevice.device.id) {
+        checkIfSnackbarForDeviceShouldBeDismissed(disconnectedDevice)
+    }
+
+    private fun checkIfSnackbarForDeviceShouldBeDismissed(device: DiscoveredDevice) {
+        if (deviceIdShowingSnackbarFor == device.device.id) {
             currentActivityTracker.currentActivity?.let { activity ->
                 snackbarAskToSyncDataWithDevice?.dismiss()
             }
@@ -167,6 +172,15 @@ class AndroidDeviceRegistrationHandler(private var context: Context, dataManager
                 }
             }
         }
+    }
+
+
+    override fun deviceHasBeenPermittedToSynchronize(device: DiscoveredDevice, remoteSyncInfo: SyncInfo): SyncInfo? {
+        val result = super.deviceHasBeenPermittedToSynchronize(device, remoteSyncInfo)
+
+        checkIfSnackbarForDeviceShouldBeDismissed(device)
+
+        return result
     }
 
 }
