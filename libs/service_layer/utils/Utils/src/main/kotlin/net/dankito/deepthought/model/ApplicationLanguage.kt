@@ -1,4 +1,6 @@
-package net.dankito.deepthought.model.enums
+package net.dankito.deepthought.model
+
+import net.dankito.deepthought.model.enums.ExtensibleEnumeration
 
 
 class ApplicationLanguage : ExtensibleEnumeration {
