@@ -202,6 +202,8 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
 
     fun updateIndex() {
+        log.info("Updating index of $this ...")
+
         try {
             val indexedEntities = getIndexedEntities()
 
