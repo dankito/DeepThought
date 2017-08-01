@@ -134,7 +134,9 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
     }
 
     private fun showAlertSynchronizingIsNotPermitted(remoteDevice: DiscoveredDevice) {
-        // TODO
+        val remoteDidNotAllowSynchronization = localization.getLocalizedString("alert.message.remote.did.not.allow.synchronization", remoteDevice.device.getDisplayText())
+
+        dialogService.showInfoMessage(remoteDidNotAllowSynchronization)
     }
 
     private fun showErrorMessage(response: Response<out Any>) {
