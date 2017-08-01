@@ -14,6 +14,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditEntryActivityResult
 import net.dankito.deepthought.android.activities.arguments.EntryActivityParameters
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import net.dankito.deepthought.android.views.EntryFieldsPreview
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.EntryExtractionResult
@@ -100,6 +101,9 @@ class ViewEntryActivity : BaseActivity() {
     private lateinit var entryFieldsPreview: EntryFieldsPreview
 
 
+    private lateinit var swipeTouchListener: OnSwipeTouchListener
+
+
     init {
         AppComponent.component.inject(this)
 
@@ -149,6 +153,8 @@ class ViewEntryActivity : BaseActivity() {
         supportActionBar?.title = ""
 
         wbEntry.setOnSystemUiVisibilityChangeListener { flags -> systemUiVisibilityChanged(flags) }
+
+        swipeTouchListener = OnSwipeTouchListener(this) { handleWebViewSwipe(it) }
         
         wbEntry.setOnTouchListener { _, event -> handleWebViewTouch(event) }
         wbEntry.setOnClickListener { handleWebViewClick() }
@@ -316,7 +322,9 @@ class ViewEntryActivity : BaseActivity() {
             }
         }
 
-        return false
+        swipeTouchListener.onTouch(wbEntry, event)
+
+        return false // don't consume event as otherwise scrolling won't work anymore
     }
 
     private fun handleWebViewClick() {
@@ -326,6 +334,15 @@ class ViewEntryActivity : BaseActivity() {
         // leave the functionality for clicking on links, phone numbers, geo coordinates, ... Only go to reader mode when clicked somewhere else in the WebView or on an image
         if(type == WebView.HitTestResult.UNKNOWN_TYPE || type == WebView.HitTestResult.IMAGE_TYPE) {
             toggleReaderMode()
+        }
+    }
+
+    private fun handleWebViewSwipe(swipeDirection: OnSwipeTouchListener.SwipeDirection) {
+        if(isInReaderMode) {
+            when(swipeDirection) {
+                OnSwipeTouchListener.SwipeDirection.Left -> presenter.returnToPreviousView()
+                OnSwipeTouchListener.SwipeDirection.Right -> editEntry()
+            }
         }
     }
 
