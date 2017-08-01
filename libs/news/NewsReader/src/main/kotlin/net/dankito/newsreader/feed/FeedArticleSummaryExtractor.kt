@@ -7,6 +7,10 @@ import net.dankito.newsreader.summary.IArticleSummaryExtractor
 
 class FeedArticleSummaryExtractor(private val feedUrl : String, private val feedReader: IFeedReader) : IArticleSummaryExtractor {
 
+    override fun getUrl(): String {
+        return feedUrl
+    }
+
 
     override fun extractSummaryAsync(callback: (AsyncResult<out ArticleSummary>) -> Unit) {
         feedReader.readFeedAsync(feedUrl) {
