@@ -5,16 +5,16 @@ import android.support.v4.app.FragmentPagerAdapter
 import net.dankito.deepthought.android.fragments.*
 
 
-class MainActivitySectionsPagerAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
+class MainActivitySectionsPagerAdapter(private val fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
 
 
     private val entriesListView = EntriesListView()
 
-    private val tagsListView = TagsListView()
+    private var tagsListView: TagsListView? = null
 
-    private val referencesListView = ReferencesListView()
+    private var referencesListView: ReferencesListView? = null
 
-    private val readLaterArticlesListView = ReadLaterArticlesListView()
+    private var readLaterArticlesListView: ReadLaterArticlesListView? = null
 
 
     override fun getCount(): Int {
@@ -23,12 +23,75 @@ class MainActivitySectionsPagerAdapter(fragmentManager: FragmentManager) : Fragm
 
     override fun getItem(position: Int): MainActivityTabFragment {
         when(position) {
-            0 -> return entriesListView
-            1 -> return tagsListView
-            2 -> return referencesListView
-            3 -> return readLaterArticlesListView
+            0 -> return entriesListView // EntriesListView always seems to work
+            1 -> return getTagsListView()
+            2 -> return getReferencesListView()
+            3 -> return getReadLaterArticlesListView()
             else -> return entriesListView // to make compiler happy
         }
+    }
+
+    /**
+     * I couldn't figure out the issue yet: When you navigate away from MainActivity, e.g. to ViewEntryActivity, and MainActivity gets destroyed in the meantime,
+     * some fragments get created by system - completely independent from MainActivitySectionsPagerAdapter -, then MainActivity gets created and therefor in
+     * MainActivitySectionsPagerAdapter creates another instance of these fragments. But the issue with the ladder ones is, that their activity property doesn't get set
+     * -> no entities can be displayed.
+     * Therefor i now check via FragmentManager first if fragments of this instance already exist. If so i use these, if not then i create a new one.
+     * Makes the code much more complex but works.
+     */
+
+    private fun getTagsListView(): TagsListView {
+        tagsListView?.let {
+            return it
+        }
+
+        fragmentManager.fragments.forEach { fragment ->
+            if(fragment is TagsListView) {
+                tagsListView = fragment
+            }
+        }
+
+        if(tagsListView == null) {
+            tagsListView = TagsListView()
+        }
+
+        return tagsListView!!
+    }
+
+    private fun getReferencesListView(): ReferencesListView {
+        referencesListView?.let {
+            return it
+        }
+
+        fragmentManager.fragments.forEach { fragment ->
+            if(fragment is ReferencesListView) {
+                referencesListView = fragment
+            }
+        }
+
+        if(referencesListView == null) {
+            referencesListView = ReferencesListView()
+        }
+
+        return referencesListView!!
+    }
+
+    private fun getReadLaterArticlesListView(): ReadLaterArticlesListView {
+        readLaterArticlesListView?.let {
+            return it
+        }
+
+        fragmentManager.fragments.forEach { fragment ->
+            if(fragment is ReadLaterArticlesListView) {
+                readLaterArticlesListView = fragment
+            }
+        }
+
+        if(readLaterArticlesListView == null) {
+            readLaterArticlesListView = ReadLaterArticlesListView()
+        }
+
+        return readLaterArticlesListView!!
     }
 
 }
