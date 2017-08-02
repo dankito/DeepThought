@@ -172,7 +172,7 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
     }
 
     private fun addFeedOnUIThread(activity: Activity, feedUrl: String, summary: FeedArticleSummary) {
-        val config = ArticleSummaryExtractorConfig(feedUrl, summary.title ?: "", summary.imageUrl, summary.siteUrl)
+        val config = ArticleSummaryExtractorConfig(feedUrl, summary.title ?: "", summary.imageUrl, siteUrl = summary.siteUrl)
         val extractorConfigDialog = ArticleSummaryExtractorConfigDialog()
 
         extractorConfigDialog.editConfiguration(activity, config) { didEditConfiguration ->
