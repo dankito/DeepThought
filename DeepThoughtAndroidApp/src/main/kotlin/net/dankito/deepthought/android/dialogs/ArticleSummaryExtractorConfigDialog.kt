@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.dialog_article_summary_extractor_config.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorIconsAdapter
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.extensions.extractor
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.ui.presenter.ArticleSummaryExtractorConfigPresenter
@@ -17,6 +18,7 @@ import net.dankito.faviconextractor.Favicon
 import net.dankito.faviconextractor.FaviconComparator
 import net.dankito.faviconextractor.FaviconExtractor
 import net.dankito.faviconextractor.FaviconType
+import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractor
 import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
 
@@ -67,8 +69,10 @@ class ArticleSummaryExtractorConfigDialog {
             saveConfig(config, dialog, activity, callback)
         }
 
-        builder.setNeutralButton(R.string.action_delete) { dialog, _ ->
-            deleteConfig(config, dialog, activity)
+        if(config.extractor is IImplementedArticleSummaryExtractor == false) {
+            builder.setNeutralButton(R.string.action_delete) { dialog, _ ->
+                deleteConfig(config, dialog, activity)
+            }
         }
 
         val dialog = builder.create()
