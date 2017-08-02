@@ -23,6 +23,7 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
             Entry::class.java -> return EntryChanged(entity as Entry, changeType, source)
             Tag::class.java -> return TagChanged(entity as Tag, changeType, source)
             Reference::class.java -> return ReferenceChanged(entity as Reference, changeType, source)
+            Series::class.java -> return SeriesChanged(entity as Series, changeType, source)
             ReadLaterArticle::class.java -> return ReadLaterArticleChanged(entity as ReadLaterArticle, changeType, source)
             ArticleSummaryExtractorConfig::class.java -> return ArticleSummaryExtractorConfigChanged(entity as ArticleSummaryExtractorConfig, changeType, source)
             else -> {
