@@ -9,6 +9,7 @@ import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.service.data.ReadLaterArticleService
+import net.dankito.service.data.SeriesService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.ui.IDialogService
@@ -26,6 +27,9 @@ class ArticleSummaryView : DialogFragment() {
 
     @Inject
     protected lateinit var tagService: TagService
+
+    @Inject
+    protected lateinit var seriesService: SeriesService
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
@@ -55,7 +59,7 @@ class ArticleSummaryView : DialogFragment() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = JavaFXArticleSummaryPresenter(articleSummaryExtractor, entryPerister, readLaterArticleService, tagService, searchEngine, router, dialogService)
+        presenter = JavaFXArticleSummaryPresenter(articleSummaryExtractor, entryPerister, readLaterArticleService, tagService, seriesService, searchEngine, router, dialogService)
 
         articleSummaryItemsView = ArticleSummaryItemsView(presenter)
         root.center = articleSummaryItemsView.root
