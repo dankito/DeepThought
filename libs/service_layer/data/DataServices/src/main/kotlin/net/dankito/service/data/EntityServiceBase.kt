@@ -29,7 +29,7 @@ abstract class EntityServiceBase<T : BaseEntity>(val entityClass: Class<T>, val 
             onPrePersist(entity)
 
             // we first have to persist an entity so that it gets an id and than can add it to DeepThought (otherwise it would be added to DeepThought with id null)
-            entityManager.persistEntity(entity as Any)
+            entityManager.persistEntity(entity)
         }
 
         callEntitiesUpdatedListeners(entity, EntityChangeType.Created)
@@ -45,7 +45,7 @@ abstract class EntityServiceBase<T : BaseEntity>(val entityClass: Class<T>, val 
     }
 
     fun update(entity: T) {
-        entityManager.updateEntity(entity as Any)
+        entityManager.updateEntity(entity)
 
         callEntitiesUpdatedListeners(entity, EntityChangeType.Updated)
     }
@@ -53,7 +53,7 @@ abstract class EntityServiceBase<T : BaseEntity>(val entityClass: Class<T>, val 
     fun delete(entity: T) {
         callEntitiesUpdatedListeners(entity, EntityChangeType.PreDelete) // as after deleting entity from db entity's id is null -> for services still needing entity's id call PreDelete
 
-        entityManager.deleteEntity(entity as Any)
+        entityManager.deleteEntity(entity)
 
         callEntitiesUpdatedListeners(entity, EntityChangeType.Deleted)
     }
