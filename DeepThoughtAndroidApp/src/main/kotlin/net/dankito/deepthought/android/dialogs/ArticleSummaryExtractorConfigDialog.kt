@@ -64,8 +64,7 @@ class ArticleSummaryExtractorConfigDialog {
             val selectedIcon = lstIcons?.checkedItemPosition?.let { if(it >= 0) adapter.getItem(it) else null }
             config.name = input?.text?.toString() ?: config.name
             config.iconUrl = selectedIcon?.url
-            dialog.cancel()
-            presenter.saveAsync(config, callback) // TODO: may wait till callback is called before dismissing dialog
+            saveConfig(config, dialog, activity, callback)
         }
 
         builder.setNeutralButton(R.string.action_delete) { dialog, _ ->
@@ -81,16 +80,6 @@ class ArticleSummaryExtractorConfigDialog {
         setupEditTextName(input, dialog, config.name)
 
         setupListIcons(activity, lstIcons, config)
-    }
-
-    private fun deleteConfig(config: ArticleSummaryExtractorConfig, dialog: DialogInterface, activity: Activity) {
-        dialogService.showConfirmationDialog(activity.getString(R.string.dialog_article_summary_extractor_alert_message_delete_config, config.name)) { shouldDeleteConfig ->
-            if(shouldDeleteConfig) {
-                presenter.deleteConfigAsync(config) {
-                    activity.runOnUiThread { dialog.cancel() }
-                }
-            }
-        }
     }
 
 
@@ -157,6 +146,25 @@ class ArticleSummaryExtractorConfigDialog {
             retrievedFavicons.forEach {
                 if(it.url == currentIcon.url) {
                     listIcons.remove(it)
+                }
+            }
+        }
+    }
+
+
+    private fun saveConfig(config: ArticleSummaryExtractorConfig, dialog: DialogInterface, activity: Activity, callback: (didEditConfiguration: Boolean) -> Unit) {
+        presenter.saveAsync(config) {
+            activity.runOnUiThread { dialog.cancel() }
+
+            callback(it)
+        }
+    }
+
+    private fun deleteConfig(config: ArticleSummaryExtractorConfig, dialog: DialogInterface, activity: Activity) {
+        dialogService.showConfirmationDialog(activity.getString(R.string.dialog_article_summary_extractor_alert_message_delete_config, config.name)) { shouldDeleteConfig ->
+            if(shouldDeleteConfig) {
+                presenter.deleteConfigAsync(config) {
+                    activity.runOnUiThread { dialog.cancel() }
                 }
             }
         }
