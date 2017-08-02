@@ -1,5 +1,6 @@
 package net.dankito.newsreader.article
 
+import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import org.jsoup.nodes.Document
 
@@ -49,11 +50,11 @@ class WebPageMetaDataExtractor {
             if(reference.series == null) {
                 var siteName = document.head().select("meta[name=\"publisher\"]").first()?.attr("content")
 
-                if (siteName == null) {
+                if(siteName == null) {
                     siteName = document.head().select("meta[name=\"og:site_name\"]").first()?.attr("content")
                 }
 
-                reference.series = siteName
+                siteName?.let { reference.series = Series(it) }
             }
         }
     }

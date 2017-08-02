@@ -137,7 +137,7 @@ class TableConfig {
         const val ReferencePreviewImageUrlColumnName = "preview_image_url"
         const val ReferencePreviewImageJoinColumnName = "preview_image_id"
 
-        const val ReferenceSeriesColumnName = "series"
+        const val ReferenceSeriesJoinColumnName = "series_id"
         const val ReferenceTableOfContentsColumnName = "table_of_contents"
         const val ReferenceIssueColumnName = "issue"
         const val ReferenceIsbnOrIssnColumnName = "isbn_or_issn"

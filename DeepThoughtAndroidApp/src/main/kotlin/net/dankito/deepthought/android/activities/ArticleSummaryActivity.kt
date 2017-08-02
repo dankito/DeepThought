@@ -24,6 +24,7 @@ import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.service.data.ReadLaterArticleService
+import net.dankito.service.data.SeriesService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.ImageCache
@@ -56,6 +57,9 @@ class ArticleSummaryActivity : BaseActivity() {
     protected lateinit var tagService: TagService
 
     @Inject
+    protected lateinit var seriesService: SeriesService
+
+    @Inject
     protected lateinit var searchEngine: ISearchEngine
 
     @Inject
@@ -85,7 +89,7 @@ class ArticleSummaryActivity : BaseActivity() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = ArticleSummaryPresenter(entryPersister, readLaterArticleService, tagService, searchEngine, router, dialogService)
+        presenter = ArticleSummaryPresenter(entryPersister, readLaterArticleService, tagService, seriesService, searchEngine, router, dialogService)
     }
 
 

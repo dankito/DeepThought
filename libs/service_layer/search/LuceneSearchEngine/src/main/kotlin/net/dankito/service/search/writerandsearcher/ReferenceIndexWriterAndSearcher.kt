@@ -36,9 +36,9 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
         }
 
         entity.series?.let { series ->
-            if(series.isNotEmpty()) {
+            if(series.title.isNotEmpty()) {
                 // for an not analyzed String it's important to index it lower case as only then lower case search finds it
-                doc.add(StringField(FieldName.ReferenceSeries, series.toLowerCase(), Field.Store.NO))
+                doc.add(StringField(FieldName.ReferenceSeries, series.title.toLowerCase(), Field.Store.NO))
             }
         }
 

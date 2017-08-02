@@ -29,7 +29,7 @@ val Reference?.preview: String
             preview = subTitle + ": " + preview
         }
 
-        var publisherAndDate = series ?: ""
+        var publisherAndDate = series?.title ?: ""
 
         publishingDate?.let { publisherAndDate += " " + PublishingDateFormat.format(it) }
 

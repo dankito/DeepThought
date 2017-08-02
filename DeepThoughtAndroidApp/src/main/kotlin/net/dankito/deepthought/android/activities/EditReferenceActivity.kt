@@ -169,7 +169,7 @@ class EditReferenceActivity : BaseActivity() {
     private fun saveReferenceAsync(callback: (Boolean) -> Unit) {
         reference?.let { reference ->
             reference.title = edtxtTitle.text.toString()
-            reference.series = edtxtSeries.text.toString()
+//            reference.series = edtxtSeries.text.toString()
             reference.issue = edtxtIssue.text.toString()
             reference.publishingDate = currentlySetPublishingDate
             reference.url = edtxtUrl.text.toString()
@@ -235,7 +235,7 @@ class EditReferenceActivity : BaseActivity() {
         this.reference = reference
 
         edtxtTitle.setText(reference.title)
-        edtxtSeries.setText(reference.series)
+        reference.series?.let { edtxtSeries.setText(it.title) }
         edtxtIssue.setText(reference.issue)
 
         showPublishingDate(reference.publishingDate)

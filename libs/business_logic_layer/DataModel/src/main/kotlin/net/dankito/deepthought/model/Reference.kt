@@ -25,8 +25,8 @@ data class Reference(
     @Column(name = TableConfig.ReferenceUrlColumnName)
     var url: String? = null
 
-    @Column(name = TableConfig.ReferenceSeriesColumnName)
-    var series: String? = null
+    @Column(name = TableConfig.ReferenceSeriesJoinColumnName)
+    var series: Series? = null
 
     @Column(name = TableConfig.ReferenceIssueColumnName)
     var issue: String? = null
@@ -78,7 +78,7 @@ data class Reference(
 
     private constructor() : this("")
 
-    constructor(url: String, title: String, publishingDate: Date? = null, series: String? = null, subTitle: String = "") : this(title, subTitle) {
+    constructor(url: String, title: String, publishingDate: Date? = null, series: Series? = null, subTitle: String = "") : this(title, subTitle) {
         this.url = url
         this.publishingDate = publishingDate
         this.series = series
