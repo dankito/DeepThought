@@ -58,6 +58,12 @@ class CommonDataModule {
 
     @Provides
     @Singleton
+    fun provideSeriesService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : SeriesService {
+        return SeriesService(dataManager, entityChangedNotifier)
+    }
+
+    @Provides
+    @Singleton
     fun provideTagService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : TagService {
         return TagService(dataManager, entityChangedNotifier)
     }
@@ -76,9 +82,9 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideDeleteEntityService(entryService: EntryService, tagService: TagService, referenceService: ReferenceService, dialogService: IDialogService,
-                                   threadPool: IThreadPool) : DeleteEntityService {
-        return DeleteEntityService(entryService, tagService, referenceService, dialogService, threadPool)
+    fun provideDeleteEntityService(entryService: EntryService, tagService: TagService, referenceService: ReferenceService, seriesService: SeriesService,
+                                   dialogService: IDialogService, threadPool: IThreadPool) : DeleteEntityService {
+        return DeleteEntityService(entryService, tagService, referenceService, seriesService, dialogService, threadPool)
     }
 
 

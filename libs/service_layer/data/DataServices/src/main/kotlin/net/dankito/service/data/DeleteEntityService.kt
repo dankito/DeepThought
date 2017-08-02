@@ -11,7 +11,7 @@ import net.dankito.utils.ui.IDialogService
  * When simply calling <entityServiceBase>.delete() entity's references aren't updated and still keep a reference to deleted entity.
  * This service first removes all references and updates them and then deletes the entity with its EntityService.
  */
-class DeleteEntityService(private val entryService: EntryService, private val tagService: TagService, private val referenceService: ReferenceService,
+class DeleteEntityService(private val entryService: EntryService, private val tagService: TagService, private val referenceService: ReferenceService, seriesService: SeriesService,
                           private val dialogService: IDialogService, private val threadPool: IThreadPool) {
 
     fun deleteEntryAsync(entry: Entry) {
