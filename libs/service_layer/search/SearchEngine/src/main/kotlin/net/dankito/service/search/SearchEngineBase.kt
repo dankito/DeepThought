@@ -62,6 +62,15 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
     abstract fun searchReferences(search: ReferenceSearch, termsToSearchFor: List<String>)
 
 
+    override fun searchSeries(search: SeriesSearch) {
+        val termsToSearchFor = getSingleSearchTerms(search.searchTerm, " ")
+
+        threadPool.runAsync { searchSeries(search, termsToSearchFor) }
+    }
+
+    abstract fun searchSeries(search: SeriesSearch, termsToSearchFor: List<String>)
+
+
     override fun searchReadLaterArticles(search: ReadLaterArticleSearch) {
         val termsToSearchFor = getSingleSearchTerms(search.searchTerm, " ")
 

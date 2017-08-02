@@ -8,10 +8,7 @@ import net.dankito.deepthought.di.DaggerBaseComponent
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
-import net.dankito.service.data.EntryService
-import net.dankito.service.data.ReadLaterArticleService
-import net.dankito.service.data.ReferenceService
-import net.dankito.service.data.TagService
+import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.utils.IPlatformConfiguration
@@ -38,6 +35,8 @@ abstract class LuceneSearchEngineIntegrationTestBase {
     protected lateinit var tagService: TagService
 
     protected lateinit var referenceService: ReferenceService
+
+    protected lateinit var seriesService: SeriesService
 
     protected lateinit var readLaterArticleService: ReadLaterArticleService
 
@@ -76,9 +75,10 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         entryService = EntryService(dataManager, entityChangedNotifier)
         tagService = TagService(dataManager, entityChangedNotifier)
         referenceService = ReferenceService(dataManager, entityChangedNotifier)
+        seriesService = SeriesService(dataManager, entityChangedNotifier)
         readLaterArticleService = ReadLaterArticleService(dataManager, entityChangedNotifier, JacksonJsonSerializer(tagService))
 
-        underTest = LuceneSearchEngine(dataManager, NoOpLanguageDetector(), ThreadPool(), eventBus, entryService, tagService, referenceService, readLaterArticleService)
+        underTest = LuceneSearchEngine(dataManager, NoOpLanguageDetector(), ThreadPool(), eventBus, entryService, tagService, referenceService, seriesService, readLaterArticleService)
         initLuceneSearchEngine(underTest)
     }
 

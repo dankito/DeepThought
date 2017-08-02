@@ -18,6 +18,8 @@ interface ISearchEngine {
 
     fun searchReferences(search: ReferenceSearch)
 
+    fun searchSeries(search: SeriesSearch)
+
     fun searchReadLaterArticles(search: ReadLaterArticleSearch)
 
 //    fun searchFiles(search: FilesSearch)

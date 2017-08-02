@@ -30,7 +30,7 @@ object FieldName {
     val EntryNoNotes = "no_notes"
 
 
-    /*      EntryTags      */
+    /*      Tags      */
 
     val TagId = "tag_id"
 
@@ -46,6 +46,13 @@ object FieldName {
     val ReferenceSeries = "reference_series"
     val ReferenceIssueOrPublishingDate = "reference_issue_or_publishing_date"
     val ReferencePublishingDate = "reference_publishing_date"
+
+
+    /*      Series      */
+
+    val SeriesId = "series_id"
+
+    val SeriesTitle = "series_title"
 
 
     /*      ReadLaterArticles      */

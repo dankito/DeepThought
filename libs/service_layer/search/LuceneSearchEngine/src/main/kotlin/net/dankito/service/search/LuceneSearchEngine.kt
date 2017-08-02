@@ -1,10 +1,7 @@
 package net.dankito.service.search
 
 import net.dankito.deepthought.service.data.DataManager
-import net.dankito.service.data.EntryService
-import net.dankito.service.data.ReadLaterArticleService
-import net.dankito.service.data.ReferenceService
-import net.dankito.service.data.TagService
+import net.dankito.service.data.*
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.specific.*
 import net.dankito.service.search.writerandsearcher.*
@@ -20,7 +17,7 @@ import kotlin.concurrent.thread
 
 
 class LuceneSearchEngine(private val dataManager: DataManager, private val languageDetector: ILanguageDetector, threadPool: IThreadPool, eventBus: IEventBus, entryService: EntryService,
-                         tagService: TagService, referenceService: ReferenceService, readLaterArticleService: ReadLaterArticleService)
+                         tagService: TagService, referenceService: ReferenceService, seriesService: SeriesService, readLaterArticleService: ReadLaterArticleService)
     : SearchEngineBase(threadPool) {
 
     companion object {
@@ -34,6 +31,8 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
     private val referenceIndexWriterAndSearcher = ReferenceIndexWriterAndSearcher(referenceService, eventBus)
 
+    private val seriesIndexWriterAndSearcher = SeriesIndexWriterAndSearcher(seriesService, eventBus)
+
     private val readLaterArticleIndexWriterAndSearcher = ReadLaterArticleIndexWriterAndSearcher(readLaterArticleService, eventBus)
 
     private val indexWritersAndSearchers: List<IndexWriterAndSearcher<*>>
@@ -42,7 +41,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
 
     init {
-        indexWritersAndSearchers = listOf(entryIndexWriterAndSearcher, tagIndexWriterAndSearcher, referenceIndexWriterAndSearcher, readLaterArticleIndexWriterAndSearcher)
+        indexWritersAndSearchers = listOf(entryIndexWriterAndSearcher, tagIndexWriterAndSearcher, referenceIndexWriterAndSearcher, seriesIndexWriterAndSearcher, readLaterArticleIndexWriterAndSearcher)
 
         createDirectoryAndIndexSearcherAndWritersAsync()
     }
@@ -150,6 +149,10 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
     override fun searchReferences(search: ReferenceSearch, termsToSearchFor: List<String>) {
         referenceIndexWriterAndSearcher.searchReferences(search, termsToSearchFor)
+    }
+
+    override fun searchSeries(search: SeriesSearch, termsToSearchFor: List<String>) {
+        seriesIndexWriterAndSearcher.searchSeries(search, termsToSearchFor)
     }
 
     override fun searchReadLaterArticles(search: ReadLaterArticleSearch, termsToSearchFor: List<String>) {
