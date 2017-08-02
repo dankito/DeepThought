@@ -11,6 +11,7 @@ import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorIconsAdapt
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
+import net.dankito.deepthought.ui.presenter.ArticleSummaryExtractorConfigPresenter
 import net.dankito.faviconextractor.Favicon
 import net.dankito.faviconextractor.FaviconComparator
 import net.dankito.faviconextractor.FaviconExtractor
@@ -21,6 +22,9 @@ import javax.inject.Inject
 class ArticleSummaryExtractorConfigDialog {
 
     @Inject
+    protected lateinit var extractorsConfigManager: ArticleSummaryExtractorConfigManager
+
+    @Inject
     protected lateinit var faviconExtractor: FaviconExtractor
 
     @Inject
@@ -29,9 +33,13 @@ class ArticleSummaryExtractorConfigDialog {
 
     private lateinit var adapter: ArticleSummaryExtractorIconsAdapter
 
+    private val presenter: ArticleSummaryExtractorConfigPresenter
+
 
     init {
         AppComponent.component.inject(this)
+
+        presenter = ArticleSummaryExtractorConfigPresenter(extractorsConfigManager)
     }
 
 
@@ -42,18 +50,18 @@ class ArticleSummaryExtractorConfigDialog {
         var input: EditText? = null
         var lstIcons: ListView? = null
 
-        builder.setNegativeButton(android.R.string.cancel, { dialog, _ ->
+        builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
             dialog.cancel()
             callback(false)
-        })
+        }
 
-        builder.setPositiveButton(android.R.string.ok, { dialog, _ ->
+        builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
             val selectedIcon = lstIcons?.checkedItemPosition?.let { if(it >= 0) adapter.getItem(it) else null }
             config.name = input?.text?.toString() ?: config.name
             config.iconUrl = selectedIcon?.url
             dialog.cancel()
-            callback(true)
-        })
+            presenter.saveAsync(config, callback) // TODO: may wait till callback is called before dismissing dialog
+        }
 
         val dialog = builder.create()
         dialog.show()

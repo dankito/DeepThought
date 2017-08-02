@@ -183,13 +183,11 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
     }
 
     private fun feedAdded(feedUrl: String, summary: FeedArticleSummary, config: ArticleSummaryExtractorConfig) {
-        extractorsConfigManager.addFeed(feedUrl, config) {
-            activity?.let { activity ->
-                activity.runOnUiThread {
-                    showArticleSummaryActivity(activity, feedUrl, summary)
+        activity?.let { activity ->
+            activity.runOnUiThread {
+                showArticleSummaryActivity(activity, feedUrl, summary)
 
-                    dismiss()
-                }
+                dismiss()
             }
         }
     }

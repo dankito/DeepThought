@@ -66,11 +66,7 @@ class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
     private fun enableEditingExtractorConfig(dialog: AlertDialog) {
         dialog.listView.setOnItemLongClickListener { _, _, position, _ ->
             val extractorConfig = adapter.getItem(position)
-            ArticleSummaryExtractorConfigDialog().editConfiguration(activity, extractorConfig) { didEditConfiguration ->
-                if (didEditConfiguration) {
-                    summaryExtractorsManager.configurationUpdated(extractorConfig)
-                }
-            }
+            ArticleSummaryExtractorConfigDialog().editConfiguration(activity, extractorConfig) { }
             true
         }
     }
