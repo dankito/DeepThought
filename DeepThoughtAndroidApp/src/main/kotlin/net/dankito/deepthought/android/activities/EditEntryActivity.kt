@@ -289,6 +289,8 @@ class EditEntryActivity : BaseActivity() {
 
         parameterHolder.clearActivityResults(EditReferenceActivity.ResultId)
 
+        unregisterEventBusListener()
+
         super.onDestroy()
     }
 
@@ -379,8 +381,6 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun closeDialog() {
-        unregisterEventBusListener()
-
         finish()
     }
 
