@@ -27,6 +27,8 @@ interface CommonComponent : BaseComponent {
 
     fun inject(articleSummaryPresenter: ArticleSummaryPresenter)
 
+    fun inject(articleSummaryExtractorConfigPresenter: ArticleSummaryExtractorConfigPresenter)
+
     fun inject(readLaterArticlePresenter: ReadLaterArticlePresenter)
 
     fun inject(editEntryPresenter: EditEntryPresenter)
