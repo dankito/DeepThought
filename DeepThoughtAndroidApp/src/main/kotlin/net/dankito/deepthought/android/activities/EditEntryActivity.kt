@@ -25,8 +25,12 @@ import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.TagService
+import net.dankito.service.data.messages.EntryChanged
+import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.serialization.ISerializer
+import net.dankito.utils.ui.IDialogService
+import net.engio.mbassy.listener.Handler
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -71,6 +75,12 @@ class EditEntryActivity : BaseActivity() {
     protected lateinit var serializer: ISerializer
 
     @Inject
+    protected lateinit var dialogService: IDialogService
+
+    @Inject
+    protected lateinit var eventBus: IEventBus
+
+    @Inject
     protected lateinit var htmlEditorPool: AndroidHtmlEditorPool
 
 
@@ -93,6 +103,9 @@ class EditEntryActivity : BaseActivity() {
     private lateinit var contentHtmlEditor: AndroidHtmlEditor
 
     private var mnSaveEntry: MenuItem? = null
+
+
+    private var eventBusListener: EventBusListener? = null
 
 
     init {
@@ -307,9 +320,14 @@ class EditEntryActivity : BaseActivity() {
 
 
     private fun saveEntryAndCloseDialog() {
+        unregisterEventBusListener()
+
         saveEntryAsync { successful ->
             if(successful) {
                 runOnUiThread { closeDialog() }
+            }
+            else {
+                mayRegisterEventBusListener()
             }
         }
     }
@@ -361,6 +379,8 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun closeDialog() {
+        unregisterEventBusListener()
+
         finish()
     }
 
@@ -442,6 +462,8 @@ class EditEntryActivity : BaseActivity() {
 
             setTagsOnEntryPreviewOnUIThread()
         }
+
+        mayRegisterEventBusListener()
     }
 
 
@@ -471,6 +493,47 @@ class EditEntryActivity : BaseActivity() {
         override fun htmlCodeHasBeenReset() {
         }
 
+    }
+
+
+    private fun mayRegisterEventBusListener() {
+        if(entry?.isPersisted() ?: false) {
+            synchronized(this) {
+                val eventBusListenerInit = EventBusListener()
+
+                eventBus.register(eventBusListenerInit)
+
+                this.eventBusListener = eventBusListenerInit
+            }
+        }
+    }
+
+    private fun unregisterEventBusListener() {
+        synchronized(this) {
+            eventBusListener?.let {
+                eventBus.unregister(it)
+            }
+
+            this.eventBusListener = null
+        }
+    }
+
+    private fun entryHasBeenEdited(entry: Entry) {
+        unregisterEventBusListener() // message now gets shown, don't display it a second time
+
+        runOnUiThread {
+            dialogService.showInfoMessage(getString(R.string.activity_edit_entry_alert_message_entry_has_been_edited))
+        }
+    }
+
+    inner class EventBusListener {
+
+        @Handler
+        fun entryChanged(change: EntryChanged) {
+            if(change.entity == entry) {
+                entryHasBeenEdited(change.entity)
+            }
+        }
     }
 
 }

@@ -53,6 +53,9 @@
     <string name="activity_edit_entry_abstract_label">Abstract:</string>
     <string name="activity_edit_entry_reference_label">Reference:</string>
     <string name="activity_edit_entry_tags_label">Tags:</string>
+    <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
+    <string name="activity_edit_entry_alert_message_entry_has_been_edited">Entry has been edited (probably on a synchronized device).\r\n\r\nWhen
+        you now save the entry the other changes get overwritten.</string>
 
     <string name="dialog_tags_on_entry_tags_label">Tags:</string>
     <string name="dialog_tags_on_entry_create_tag">New</string>

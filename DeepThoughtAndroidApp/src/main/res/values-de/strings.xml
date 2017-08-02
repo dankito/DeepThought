@@ -51,6 +51,9 @@
     <string name="activity_edit_entry_abstract_label">Zusammenfassung:</string>
     <string name="activity_edit_entry_reference_label">Quelle:</string>
     <string name="activity_edit_entry_tags_label">Schlagworte:</string>
+    <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
+    <string name="activity_edit_entry_alert_message_entry_has_been_edited">Eintrag wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\r\n\r\nWenn
+        Sie den Eintrag nun speichern, werden diese anderen Änderungen überschrieben.</string>
 
     <string name="dialog_tags_on_entry_tags_label">Schlagworte:</string>
     <string name="dialog_tags_on_entry_create_tag">Neu</string>
