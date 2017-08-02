@@ -61,6 +61,8 @@ class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
         dialog.show()
 
         enableEditingExtractorConfig(dialog)
+
+        showAddArticleSummaryExtractorDialogIfNoneExists()
     }
 
     private fun enableEditingExtractorConfig(dialog: AlertDialog) {
@@ -68,6 +70,13 @@ class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
             val extractorConfig = adapter.getItem(position)
             ArticleSummaryExtractorConfigDialog().editConfiguration(activity, extractorConfig) { }
             true
+        }
+    }
+
+
+    private fun showAddArticleSummaryExtractorDialogIfNoneExists() {
+        if(summaryExtractorsManager.getConfigs().isEmpty()) {
+            router.showAddArticleSummaryExtractorView()
         }
     }
 
