@@ -28,7 +28,7 @@ class HeiseNewsArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
             contentElement.select(".meldung_anrisstext").first()?.text()?.let { entry.abstractString = it }
 
             val publishingDate = extractPublishingDate(header)
-            val reference = Reference(url, title, publishingDate, getName())
+            val reference = Reference(url, title, publishingDate)
             reference.previewImageUrl = makeLinkAbsolute(contentElement.select(".aufmacherbild img").first()?.attr("src") ?: "", url)
 
             return EntryExtractionResult(entry, reference)

@@ -47,7 +47,7 @@ class GuardianArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(web
         articleElement.select(".content__standfirst").first()?.let { entry.abstractString = it.text() }
 
 
-        val reference = Reference(url, titleElement.text(), extractPublishingDate(contentMainElement), getName())
+        val reference = Reference(url, titleElement.text(), extractPublishingDate(contentMainElement))
 
         contentMainElement.select(".media-primary").first()?.let { reference.previewImageUrl = extractUrlFromFigureElement(it) }
 

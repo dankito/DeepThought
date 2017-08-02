@@ -155,6 +155,8 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
     private fun retrievedArticle(extractor: IArticleExtractor, item: ArticleSummaryItem, asyncResult: AsyncResult<EntryExtractionResult>,
                                  extractionResult: EntryExtractionResult, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
+        setSeries(extractionResult, extractor, item)
+
         getDefaultTagsForExtractor(extractor, item) { tag ->
             tag?.let { extractionResult.tags.add(tag) }
             callback(asyncResult)
@@ -205,6 +207,19 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
             callback(extractorTag)
         })
+    }
+
+
+    private fun setSeries(extractionResult: EntryExtractionResult, extractor: IArticleExtractor, item: ArticleSummaryItem) {
+        extractionResult.reference?.let { reference ->
+            if (reference.series == null) {
+                if (extractor.getName() != null) {
+                    reference.series = extractor.getName()
+                } else if (item.articleSummaryExtractorConfig?.name != null) {
+                    reference.series = item.articleSummaryExtractorConfig?.name
+                }
+            }
+        }
     }
 
 

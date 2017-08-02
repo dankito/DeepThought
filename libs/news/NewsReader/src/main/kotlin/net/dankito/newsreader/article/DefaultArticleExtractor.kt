@@ -48,7 +48,7 @@ class DefaultArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
         extractContent(item).let { content ->
             val entry = Entry(content, item.summary)
 
-            val reference = Reference(item.url, item.title, item.publishedDate, item.articleSummaryExtractorConfig?.name)
+            val reference = Reference(item.url, item.title, item.publishedDate)
             reference.previewImageUrl = item.previewImageUrl
 
             return EntryExtractionResult(entry, reference)

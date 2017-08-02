@@ -160,7 +160,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
                 val publishingDate = extractPublishingDate(headerElement)
 
-                return Reference(url, heading.text(), publishingDate, getName(), subTitle)
+                return Reference(url, heading.text(), publishingDate, subTitle = subTitle)
             }
         }
 
