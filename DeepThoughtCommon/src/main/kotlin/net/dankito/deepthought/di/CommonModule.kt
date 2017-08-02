@@ -106,8 +106,8 @@ class CommonModule {
     @Provides
     @Singleton
     fun provideSearchEngine(dataManager: DataManager, languageDetector: ILanguageDetector, threadPool: IThreadPool, eventBus: IEventBus, entryService: EntryService, tagService: TagService,
-                            referenceService: ReferenceService, readLaterArticleService: ReadLaterArticleService) : ISearchEngine {
-        return LuceneSearchEngine(dataManager, languageDetector, threadPool, eventBus, entryService, tagService, referenceService, readLaterArticleService)
+                            referenceService: ReferenceService, seriesService: SeriesService, readLaterArticleService: ReadLaterArticleService) : ISearchEngine {
+        return LuceneSearchEngine(dataManager, languageDetector, threadPool, eventBus, entryService, tagService, referenceService, seriesService, readLaterArticleService)
     }
 
 
