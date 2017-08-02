@@ -322,6 +322,7 @@ class EditEntryActivity : BaseActivity() {
 
 
     private fun saveEntryAndCloseDialog() {
+        mnSaveEntry?.isEnabled = false // disable to that save cannot be pressed a second time
         unregisterEventBusListener()
 
         saveEntryAsync { successful ->
@@ -329,6 +330,7 @@ class EditEntryActivity : BaseActivity() {
                 runOnUiThread { closeDialog() }
             }
             else {
+                mnSaveEntry?.isEnabled = true
                 mayRegisterEventBusListener()
             }
         }
