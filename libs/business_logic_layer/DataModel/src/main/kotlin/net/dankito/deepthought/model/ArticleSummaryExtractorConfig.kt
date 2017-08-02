@@ -17,6 +17,9 @@ data class ArticleSummaryExtractorConfig(
         @Column(name = TableConfig.ArticleSummaryExtractorConfigIconUrlColumnName)
         var iconUrl: String? = null,
 
+        @Column(name = TableConfig.ArticleSummaryExtractorConfigSortOrderColumnName)
+        var sortOrder: Int = Int.MAX_VALUE,
+
         /**
          * For RSS and Atom Feed Extractors url is the feedUrl, siteUrl then holds the url to the according site
          */

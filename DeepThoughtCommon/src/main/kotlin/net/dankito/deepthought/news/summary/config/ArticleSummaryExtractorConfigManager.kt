@@ -40,6 +40,8 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
 
     private var favorites: MutableList<ArticleSummaryExtractorConfig> = ArrayList()
 
+    private var highestSortOrder = -1
+
     var isInitialized = false
         private set
 
@@ -73,6 +75,10 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
             if(config.iconUrl == null) {
                 loadIconAsync(config)
             }
+
+            if(config.sortOrder > highestSortOrder) {
+                highestSortOrder = config.sortOrder
+            }
         }
     }
 
@@ -92,11 +98,12 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
         extractorManager.getImplementedExtractors().forEach { implementedExtractor ->
             var config = configurations.get(implementedExtractor.getUrl())
 
-            if (config == null) { // a new, unpersisted ArticleSummaryExtractor
+            if(config == null) { // a new, unpersisted ArticleSummaryExtractor
                 config = ArticleSummaryExtractorConfig(implementedExtractor.getUrl(), implementedExtractor.getName())
                 config.extractor = implementedExtractor
                 addConfig(config)
-            } else {
+            }
+            else {
                 config.extractor = implementedExtractor
             }
         }
@@ -143,7 +150,7 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
 
 
     fun getConfigs() : List<ArticleSummaryExtractorConfig> {
-        return configurations.values.sortedBy { it.name }
+        return configurations.values.sortedBy { it.sortOrder }
     }
 
     fun getConfig(url: String) : ArticleSummaryExtractorConfig? {
@@ -204,6 +211,8 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
     }
 
     private fun addConfig(config: ArticleSummaryExtractorConfig) {
+        config.sortOrder = ++highestSortOrder
+
         configurations.put(config.url, config)
 
         saveConfig(config)
