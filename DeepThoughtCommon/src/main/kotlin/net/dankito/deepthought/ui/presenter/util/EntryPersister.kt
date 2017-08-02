@@ -24,7 +24,9 @@ class EntryPersister(private val entryService: EntryService, private val referen
 
 
     fun saveEntryAsync(result: EntryExtractionResult, callback: (Boolean) -> Unit) {
-        callback(saveEntry(result))
+        threadPool.runAsync {
+            callback(saveEntry(result))
+        }
     }
 
     private fun saveEntry(result: EntryExtractionResult): Boolean {
