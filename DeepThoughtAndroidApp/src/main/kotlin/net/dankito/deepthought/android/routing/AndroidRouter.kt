@@ -133,7 +133,9 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
 
 
     override fun returnToPreviousView() {
-        activityTracker.currentActivity?.onBackPressed()
+        activityTracker.currentActivity?.let { activity ->
+            activity.runOnUiThread { activity.onBackPressed() }
+        }
     }
 
 
