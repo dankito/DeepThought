@@ -226,6 +226,15 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
     }
 
 
+    fun deleteConfig(config: ArticleSummaryExtractorConfig) {
+        configurations.remove(config.url)
+
+        favorites.remove(config)
+
+        configService.delete(config)
+    }
+
+
     fun addInitializationListener(listener: () -> Unit) {
         if(isInitialized) {
             callInitializationListener(listener)

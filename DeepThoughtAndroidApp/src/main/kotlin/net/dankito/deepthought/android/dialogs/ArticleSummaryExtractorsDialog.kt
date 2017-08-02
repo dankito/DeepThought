@@ -86,7 +86,7 @@ class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
         @Handler
         fun articleSummaryExtractorsChanged(changed: EntitiesOfTypeChanged) {
             if(changed.entityType == ArticleSummaryExtractorConfig::class.java) {
-                activity.runOnUiThread { adapter.notifyDataSetChanged() }
+                adapter.updateConfigs()
             }
         }
     }

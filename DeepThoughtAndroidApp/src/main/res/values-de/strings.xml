@@ -39,6 +39,7 @@
 
     <string name="dialog_article_summary_extractor_config_enter_name">Name:</string>
     <string name="dialog_article_summary_extractor_config_select_icon">Icon auswählen:</string>
+    <string name="dialog_article_summary_extractor_alert_message_delete_config" formatted="false">Nachrichtenseite %s wirklich löschen?</string>
 
     <string name="action_title_save">Speichern</string>
     <string name="action_title_edit">Bearbeiten</string>

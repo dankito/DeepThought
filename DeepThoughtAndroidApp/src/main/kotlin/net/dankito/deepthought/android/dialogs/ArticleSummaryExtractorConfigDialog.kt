@@ -1,6 +1,7 @@
 package net.dankito.deepthought.android.dialogs
 
 import android.app.Activity
+import android.content.DialogInterface
 import android.support.v7.app.AlertDialog
 import android.view.WindowManager
 import android.widget.EditText
@@ -16,6 +17,7 @@ import net.dankito.faviconextractor.Favicon
 import net.dankito.faviconextractor.FaviconComparator
 import net.dankito.faviconextractor.FaviconExtractor
 import net.dankito.faviconextractor.FaviconType
+import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
 
 
@@ -29,6 +31,9 @@ class ArticleSummaryExtractorConfigDialog {
 
     @Inject
     protected lateinit var faviconComparator: FaviconComparator
+
+    @Inject
+    protected lateinit var dialogService: IDialogService
 
 
     private lateinit var adapter: ArticleSummaryExtractorIconsAdapter
@@ -63,6 +68,10 @@ class ArticleSummaryExtractorConfigDialog {
             presenter.saveAsync(config, callback) // TODO: may wait till callback is called before dismissing dialog
         }
 
+        builder.setNeutralButton(R.string.action_delete) { dialog, _ ->
+            deleteConfig(config, dialog, activity)
+        }
+
         val dialog = builder.create()
         dialog.show()
 
@@ -72,6 +81,16 @@ class ArticleSummaryExtractorConfigDialog {
         setupEditTextName(input, dialog, config.name)
 
         setupListIcons(activity, lstIcons, config)
+    }
+
+    private fun deleteConfig(config: ArticleSummaryExtractorConfig, dialog: DialogInterface, activity: Activity) {
+        dialogService.showConfirmationDialog(activity.getString(R.string.dialog_article_summary_extractor_alert_message_delete_config, config.name)) { shouldDeleteConfig ->
+            if(shouldDeleteConfig) {
+                presenter.deleteConfigAsync(config) {
+                    activity.runOnUiThread { dialog.cancel() }
+                }
+            }
+        }
     }
 
 

@@ -40,4 +40,13 @@ class ArticleSummaryExtractorConfigPresenter(private val extractorsConfigManager
         }
     }
 
+
+    fun deleteConfigAsync(config: ArticleSummaryExtractorConfig, callback: () -> Unit) {
+        threadPool.runAsync {
+            extractorsConfigManager.deleteConfig(config)
+
+            callback()
+        }
+    }
+
 }

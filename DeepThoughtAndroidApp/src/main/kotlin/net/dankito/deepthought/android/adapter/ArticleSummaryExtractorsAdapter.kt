@@ -32,7 +32,7 @@ class ArticleSummaryExtractorsAdapter(private val activity: AppCompatActivity, p
 
         bitmapCache = BitmapCache(imageCache)
 
-        summaryExtractorsManager.addInitializationListener { activity.runOnUiThread { setItems(summaryExtractorsManager.getConfigs()) } }
+        summaryExtractorsManager.addInitializationListener { updateConfigs() }
     }
 
 
@@ -90,6 +90,15 @@ class ArticleSummaryExtractorsAdapter(private val activity: AppCompatActivity, p
                 imageView.setImageBitmap(bitmap)
             }
         }
+    }
+
+
+    fun updateConfigs() {
+        activity.runOnUiThread { updateConfigsOnUIThread() }
+    }
+
+    private fun updateConfigsOnUIThread() {
+        setItems(summaryExtractorsManager.getConfigs())
     }
 
 }
