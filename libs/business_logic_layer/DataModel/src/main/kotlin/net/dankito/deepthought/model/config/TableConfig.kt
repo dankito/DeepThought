@@ -144,6 +144,13 @@ class TableConfig {
         const val ReferencePublishingDateColumnName = "publishing_date"
 
 
+        /*          Reference Table Config        */
+
+        const val SeriesTableName = "series"
+
+        const val SeriesTitleColumnName = "title"
+
+
         /*          Reference Attached Files Join Table Config        */
 
         const val ReferenceBaseAttachedFileJoinTableName = "reference_base_attached_files_join_table"
