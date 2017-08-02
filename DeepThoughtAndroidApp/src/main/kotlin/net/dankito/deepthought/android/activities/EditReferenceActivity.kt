@@ -13,6 +13,10 @@ import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.ui.presenter.EditReferencePresenter
 import net.dankito.deepthought.ui.presenter.util.ReferencePersister
 import net.dankito.service.data.ReferenceService
+import net.dankito.service.data.messages.ReferenceChanged
+import net.dankito.service.eventbus.IEventBus
+import net.dankito.utils.ui.IDialogService
+import net.engio.mbassy.listener.Handler
 import java.util.*
 import javax.inject.Inject
 
@@ -38,12 +42,21 @@ class EditReferenceActivity : BaseActivity() {
     @Inject
     protected lateinit var referencePersister: ReferencePersister
 
+    @Inject
+    protected lateinit var dialogService: IDialogService
+
+    @Inject
+    protected lateinit var eventBus: IEventBus
+
 
     private val presenter: EditReferencePresenter
 
     private var reference: Reference? = null
 
     private var currentlySetPublishingDate: Date? = null
+
+
+    private var eventBusListener: EventBusListener? = null
 
 
     init {
@@ -107,6 +120,13 @@ class EditReferenceActivity : BaseActivity() {
     }
 
 
+    override fun onDestroy() {
+        unregisterEventBusListener()
+
+        super.onDestroy()
+    }
+
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.activity_edit_reference_menu, menu)
 
@@ -130,6 +150,8 @@ class EditReferenceActivity : BaseActivity() {
 
 
     private fun saveReferenceAndCloseDialog() {
+        unregisterEventBusListener()
+
         if(edtxtPublishingDate.hasFocus()) { // OnFocusChangeListener doesn't get called when save action gets pressed
             edtxtPublishingDateLostFocus(edtxtPublishingDate.text.toString())
         }
@@ -137,6 +159,9 @@ class EditReferenceActivity : BaseActivity() {
         saveReferenceAsync { successful ->
             if(successful) {
                 runOnUiThread { closeDialog() }
+            }
+            else {
+                mayRegisterEventBusListener()
             }
         }
     }
@@ -216,12 +241,55 @@ class EditReferenceActivity : BaseActivity() {
         showPublishingDate(reference.publishingDate)
 
         edtxtUrl.setText(reference.url)
+
+        mayRegisterEventBusListener()
     }
 
     private fun showPublishingDate(publishingDate: Date?) {
         this.currentlySetPublishingDate = publishingDate
 
         publishingDate?.let { edtxtPublishingDate.setText(presenter.convertPublishingDateToText(it)) }
+    }
+
+
+    private fun mayRegisterEventBusListener() {
+        if(reference?.isPersisted() ?: false) {
+            synchronized(this) {
+                val eventBusListenerInit = EventBusListener()
+
+                eventBus.register(eventBusListenerInit)
+
+                this.eventBusListener = eventBusListenerInit
+            }
+        }
+    }
+
+    private fun unregisterEventBusListener() {
+        synchronized(this) {
+            eventBusListener?.let {
+                eventBus.unregister(it)
+            }
+
+            this.eventBusListener = null
+        }
+    }
+
+    private fun referenceHasBeenEdited(reference: Reference) {
+        unregisterEventBusListener() // message now gets shown, don't display it a second time
+
+        runOnUiThread {
+            dialogService.showInfoMessage(getString(R.string.activity_edit_reference_alert_message_reference_has_been_edited))
+        }
+    }
+
+    inner class EventBusListener {
+
+        @Handler
+        fun entryChanged(change: ReferenceChanged) {
+            if(change.entity == reference) {
+                referenceHasBeenEdited(change.entity)
+            }
+        }
     }
 
 }
