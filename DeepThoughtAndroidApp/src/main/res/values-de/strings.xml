@@ -51,6 +51,8 @@
     <string name="activity_edit_entry_abstract_label">Zusammenfassung:</string>
     <string name="activity_edit_entry_reference_label">Quelle:</string>
     <string name="activity_edit_entry_tags_label">Schlagworte:</string>
+    <string name="activity_edit_entry_alert_message_entry_contains_unsaved_changes">Eintrag enthält nicht gespeicherte Änderungen.\r\n\r\nSollen diese Änderungen nun
+        gespeichert werden?</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
     <string name="activity_edit_entry_alert_message_entry_has_been_edited">Eintrag wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\r\n\r\nWenn
         Sie den Eintrag nun speichern, werden diese anderen Änderungen überschrieben.</string>
@@ -65,6 +67,9 @@
     <string name="activity_edit_reference_publishing_date_label">Veröffentlichungsdatum</string>
     <string name="activity_edit_reference_url_label">URL</string>
     <string name="activity_edit_reference_error_could_not_parse_publishing_date" formatted="false">Kann %s nicht in ein Datum umwandeln</string>
+    <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
+    <string name="activity_edit_reference_alert_message_reference_has_been_edited">Quelle wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\r\n\r\nWenn
+        Sie die Quelle nun speichern, werden diese anderen Änderungen überschrieben.</string>
 
     <string name="synchronize_data_with_this_device">Daten synchronisieren mit</string>
     <string name="never_ask_again">Nicht mehr fragen</string>

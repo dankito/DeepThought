@@ -95,6 +95,8 @@ class EditEntryActivity : BaseActivity() {
 
     private var canEntryBeSaved = false
 
+    private var entryHasBeenEdited = false
+
 
     private val presenter: EditEntryPresenter
 
@@ -253,6 +255,8 @@ class EditEntryActivity : BaseActivity() {
             tagsOnEntry.clear()
             tagsOnEntry.addAll(it)
 
+            entryHasBeenEdited()
+
             runOnUiThread {
                 updateCanEntryBeSavedOnUIThread(true)
                 setTagsOnEntryPreviewOnUIThread()
@@ -294,6 +298,10 @@ class EditEntryActivity : BaseActivity() {
         super.onDestroy()
     }
 
+    override fun onBackPressed() {
+        askIfUnsavedChangesShouldBeSavedAndCloseDialog()
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.activity_edit_entry_menu, menu)
@@ -308,7 +316,7 @@ class EditEntryActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             android.R.id.home -> {
-                closeDialog()
+                askIfUnsavedChangesShouldBeSavedAndCloseDialog()
                 return true
             }
             R.id.mnSaveEntry -> {
@@ -380,6 +388,29 @@ class EditEntryActivity : BaseActivity() {
 
     private fun updateEntry(entry: Entry, content: String) {
         entry.content = content
+    }
+
+
+    private fun askIfUnsavedChangesShouldBeSavedAndCloseDialog() {
+        if(entryHasBeenEdited) {
+            askIfUnsavedChangesShouldBeSaved()
+        }
+        else {
+            closeDialog()
+        }
+    }
+
+    private fun askIfUnsavedChangesShouldBeSaved() {
+        dialogService.showConfirmationDialog(getString(R.string.activity_edit_entry_alert_message_entry_contains_unsaved_changes)) { shouldChangedGetSaved ->
+            runOnUiThread {
+                if(shouldChangedGetSaved) {
+                    saveEntryAndCloseDialog()
+                }
+                else {
+                    closeDialog()
+                }
+            }
+        }
     }
 
     private fun closeDialog() {
@@ -483,13 +514,23 @@ class EditEntryActivity : BaseActivity() {
     }
 
 
+    private fun contentHasBeenEdited() {
+        entryHasBeenEdited()
+        runOnUiThread { updateCanEntryBeSavedOnUIThread(true) }
+    }
+
+    private fun entryHasBeenEdited() {
+        entryHasBeenEdited = true
+    }
+
+
     private val contentListener = object : IHtmlEditorListener {
 
         override fun editorHasLoaded(editor: HtmlEditorCommon) {
         }
 
         override fun htmlCodeUpdated() {
-            runOnUiThread { updateCanEntryBeSavedOnUIThread(true) }
+            contentHasBeenEdited()
         }
 
         override fun htmlCodeHasBeenReset() {

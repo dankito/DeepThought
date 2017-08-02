@@ -53,6 +53,7 @@
     <string name="activity_edit_entry_abstract_label">Abstract:</string>
     <string name="activity_edit_entry_reference_label">Reference:</string>
     <string name="activity_edit_entry_tags_label">Tags:</string>
+    <string name="activity_edit_entry_alert_message_entry_contains_unsaved_changes">Entry contains unsaved changes.\r\n\r\nShould these changes now be saved?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
     <string name="activity_edit_entry_alert_message_entry_has_been_edited">Entry has been edited (probably on a synchronized device).\r\n\r\nWhen
         you now save the entry the other changes get overwritten.</string>
@@ -67,6 +68,9 @@
     <string name="activity_edit_reference_publishing_date_label">Publishing date</string>
     <string name="activity_edit_reference_url_label">Url</string>
     <string name="activity_edit_reference_error_could_not_parse_publishing_date" formatted="false">Cannot parse %s to date</string>
+    <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
+    <string name="activity_edit_reference_alert_message_reference_has_been_edited">Reference has been edited (probably on a synchronized device).\r\n\r\nWhen
+        you now save the reference the other changes get overwritten.</string>
 
     <string name="synchronize_data_with_this_device">Synchronize data with</string>
     <string name="never_ask_again">Never ask again</string>
