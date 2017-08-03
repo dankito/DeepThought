@@ -28,6 +28,7 @@ class OnSwipeTouchListener(context: Context, private val swipeDetectedListener: 
 
 
     private var swipeThreshold: Int
+    private var swipeVelocityThreshold: Int
 
     var singleTapListener: (() -> Unit)? = null
     var doubleTapListener: (() -> Unit)? = null
@@ -42,6 +43,8 @@ class OnSwipeTouchListener(context: Context, private val swipeDetectedListener: 
         windowManager.defaultDisplay.getMetrics(displayMetrics)
 
         swipeThreshold = (displayMetrics.widthPixels * 0.5).toInt()
+
+        swipeVelocityThreshold = displayMetrics.widthPixels * 5
     }
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
@@ -72,8 +75,9 @@ class OnSwipeTouchListener(context: Context, private val swipeDetectedListener: 
             try {
                 val diffY = e2.y - e1.y
                 val diffX = e2.x - e1.x
+
                 if(Math.abs(diffX) > Math.abs(diffY)) {
-                    if(Math.abs(diffX) > swipeThreshold && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                    if(Math.abs(diffX) > swipeThreshold && Math.abs(velocityX) > swipeVelocityThreshold) {
                         if(diffX > 0) {
                             onSwipeRight()
                         }
@@ -83,7 +87,7 @@ class OnSwipeTouchListener(context: Context, private val swipeDetectedListener: 
                         result = true
                     }
                 }
-                else if(Math.abs(diffY) > swipeThreshold && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                else if(Math.abs(diffY) > swipeThreshold && Math.abs(velocityY) > swipeVelocityThreshold) {
                     if(diffY > 0) {
                         onSwipeBottom()
                     }
