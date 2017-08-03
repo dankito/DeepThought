@@ -13,6 +13,11 @@ data class Series(
 
 ) : BaseEntity() {
 
+        companion object {
+                private const val serialVersionUID = -7176298227016698448L
+        }
+
+
         private constructor() : this("")
 
 }
