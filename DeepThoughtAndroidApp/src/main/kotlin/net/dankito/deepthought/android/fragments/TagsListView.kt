@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.fragment_tab_tags.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.TagAdapter
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.android.dialogs.FullscreenDialogFragment
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
@@ -127,6 +128,10 @@ class TagsListView : MainActivityTabFragment(R.layout.fragment_tab_tags, R.id.ls
 
 
     override fun onBackPressed(): Boolean {
+        if(isTagEntriesListDialogVisible()) { // let TagEntriesListDialog handle back button press
+            return false
+        }
+
         if(presenter.isTagFilterApplied()) {
             presenter.clearTagFilter()
 
@@ -134,6 +139,10 @@ class TagsListView : MainActivityTabFragment(R.layout.fragment_tab_tags, R.id.ls
         }
 
         return super.onBackPressed()
+    }
+
+    private fun isTagEntriesListDialogVisible(): Boolean {
+        return fragmentManager.findFragmentByTag(FullscreenDialogFragment.getTag()) != null
     }
 
 
