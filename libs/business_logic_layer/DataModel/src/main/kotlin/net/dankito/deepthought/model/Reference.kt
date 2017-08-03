@@ -28,6 +28,13 @@ data class Reference(
     @ManyToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.MERGE))
     @JoinColumn(name = TableConfig.EntryReferenceJoinColumnName)
     var series: Series? = null
+        set(series) {
+            field?.removeReference(this)
+
+            field = series
+
+            series?.addReference(this)
+        }
 
     @Column(name = TableConfig.ReferenceIssueColumnName)
     var issue: String? = null
