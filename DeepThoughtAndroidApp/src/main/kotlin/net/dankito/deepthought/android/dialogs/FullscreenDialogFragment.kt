@@ -32,7 +32,7 @@ abstract class FullscreenDialogFragment : DialogFragment() {
         val rootView = inflater.inflate(getLayoutId(), container, false)
 
         if(hideStatusBar) {
-            hideStatusBar(activity)
+            activity?.let { hideStatusBar(it) }
         }
         else {
             adjustDialogToShowStatusBar(rootView)
