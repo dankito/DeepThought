@@ -38,7 +38,7 @@ class OnSwipeTouchListener(context: Context, private val swipeDetectedListener: 
         val rotation = windowManager.defaultDisplay.rotation
         val displayWidth = if(rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180) displayMetrics.widthPixels else displayMetrics.heightPixels
 
-        swipeThreshold = (displayWidth * 0.5).toInt()
+        swipeThreshold = (displayWidth * 0.4).toInt()
 
         swipeVelocityThreshold = displayWidth * 5
     }
