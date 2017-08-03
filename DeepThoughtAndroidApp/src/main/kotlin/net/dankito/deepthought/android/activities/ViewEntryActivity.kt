@@ -94,8 +94,6 @@ class ViewEntryActivity : BaseActivity() {
 
     private var isInReaderMode = false
 
-    private var webViewClickStartTime: Long = 0
-
     private lateinit var entryFieldsPreview: EntryFieldsPreview
 
 
