@@ -5,15 +5,12 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
-// Put Fabric plugin after Android plugin
-apply plugin: 'io.fabric'
 apply plugin: 'testfairy'
 
 apply from: '../keys.gradle'
 
 
 repositories {
-    maven { url 'https://maven.fabric.io/public' }
     maven { url 'https://www.testfairy.com/maven' }
 }
 
@@ -149,9 +146,6 @@ dependencies {
     compile "com.android.support:design:$androidDesignVersion"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
-    betaCompile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true;
-    }
     betaCompile 'testfairy:testfairy-android-sdk:1.+@aar'
 
     extendedCompile project(':ArticleSummaryExtractors') // not published to Play Store
