@@ -13,6 +13,13 @@ import net.dankito.deepthought.android.R
 
 abstract class FullscreenDialogFragment : DialogFragment() {
 
+    companion object {
+        fun getTag(): String {
+            return javaClass.name
+        }
+    }
+
+
     private var hideStatusBar = false
 
 
@@ -114,7 +121,7 @@ abstract class FullscreenDialogFragment : DialogFragment() {
 
         // To make it fullscreen, use the 'content' root view as the container
         // for the fragment, which is always the root view for the activity
-        transaction.add(android.R.id.content, this, javaClass.name)
+        transaction.add(android.R.id.content, this, Companion.getTag())
 
         this.setStyle(DialogFragment.STYLE_NORMAL, R.style.FullscreenDialog)
 
