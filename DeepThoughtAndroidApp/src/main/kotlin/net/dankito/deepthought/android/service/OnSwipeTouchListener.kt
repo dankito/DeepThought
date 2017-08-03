@@ -2,12 +2,9 @@ package net.dankito.deepthought.android.service
 
 import android.content.Context
 import android.util.DisplayMetrics
-import android.view.GestureDetector
+import android.view.*
 import android.view.GestureDetector.SimpleOnGestureListener
-import android.view.MotionEvent
-import android.view.View
 import android.view.View.OnTouchListener
-import android.view.WindowManager
 
 
 /**
@@ -42,9 +39,12 @@ class OnSwipeTouchListener(context: Context, private val swipeDetectedListener: 
         val windowManager = context.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager // the results will be higher than using the activity context or the getWindowManager() shortcut
         windowManager.defaultDisplay.getMetrics(displayMetrics)
 
-        swipeThreshold = (displayMetrics.widthPixels * 0.5).toInt()
+        val rotation = windowManager.defaultDisplay.rotation
+        val displayWidth = if(rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180) displayMetrics.widthPixels else displayMetrics.heightPixels
 
-        swipeVelocityThreshold = displayMetrics.widthPixels * 5
+        swipeThreshold = (displayWidth * 0.5).toInt()
+
+        swipeVelocityThreshold = displayWidth * 5
     }
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
