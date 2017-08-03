@@ -86,6 +86,14 @@ abstract class MainActivityTabFragment(private val layoutResourceId: Int, privat
     }
 
     open fun onBackPressed(): Boolean {
+        searchView?.let { searchView ->
+            if(searchView.isIconified == false) { // close search view again
+                searchView.setQuery("", false)
+                searchView.isIconified = true
+                return true
+            }
+        }
+
         return false
     }
 
