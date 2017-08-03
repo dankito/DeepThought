@@ -14,9 +14,9 @@ import android.view.View.OnTouchListener
 class OnSwipeTouchListener(context: Context, private val swipeDetectedListener: (SwipeDirection) -> Unit) : OnTouchListener {
 
     companion object {
-        private val SWIPE_THRESHOLD = 100
+        private val SWIPE_THRESHOLD = 400
 
-        private val SWIPE_VELOCITY_THRESHOLD = 100
+        private val SWIPE_VELOCITY_THRESHOLD = 10000
     }
 
     enum class SwipeDirection {
