@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android.dialogs
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentManager
@@ -7,6 +8,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.TextView
@@ -104,6 +106,12 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
 
         rootView.edtxtEditEntrySearchTag.addTextChangedListener(edtxtEditEntrySearchTagTextWatcher)
         rootView.edtxtEditEntrySearchTag.setOnEditorActionListener { _, actionId, keyEvent -> handleEditEntrySearchTagAction(actionId, keyEvent) }
+
+        rootView.edtxtEditEntrySearchTag.requestFocus()
+        rootView.edtxtEditEntrySearchTag.postDelayed({
+            val keyboard = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            keyboard.showSoftInput(rootView.edtxtEditEntrySearchTag, 0)
+        }, 1000)
     }
 
     private fun menuItemClicked(item: MenuItem): Boolean {
