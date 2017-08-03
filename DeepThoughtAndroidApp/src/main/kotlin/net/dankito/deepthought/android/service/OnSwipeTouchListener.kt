@@ -1,11 +1,13 @@
 package net.dankito.deepthought.android.service
 
 import android.content.Context
+import android.util.DisplayMetrics
 import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
+import android.view.WindowManager
 
 
 /**
@@ -14,8 +16,6 @@ import android.view.View.OnTouchListener
 class OnSwipeTouchListener(context: Context, private val swipeDetectedListener: (SwipeDirection) -> Unit) : OnTouchListener {
 
     companion object {
-        private val SWIPE_THRESHOLD = 400
-
         private val SWIPE_VELOCITY_THRESHOLD = 10000
     }
 
@@ -27,6 +27,8 @@ class OnSwipeTouchListener(context: Context, private val swipeDetectedListener: 
     }
 
 
+    private var swipeThreshold: Int
+
     var singleTapListener: (() -> Unit)? = null
     var doubleTapListener: (() -> Unit)? = null
 
@@ -34,6 +36,12 @@ class OnSwipeTouchListener(context: Context, private val swipeDetectedListener: 
 
     init {
         gestureDetector = GestureDetector(context, GestureListener())
+
+        val displayMetrics = DisplayMetrics()
+        val windowManager = context.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager // the results will be higher than using the activity context or the getWindowManager() shortcut
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+        swipeThreshold = (displayMetrics.widthPixels * 0.5).toInt()
     }
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
@@ -64,19 +72,22 @@ class OnSwipeTouchListener(context: Context, private val swipeDetectedListener: 
             try {
                 val diffY = e2.y - e1.y
                 val diffX = e2.x - e1.x
-                if (Math.abs(diffX) > Math.abs(diffY)) {
-                    if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                        if (diffX > 0) {
+                if(Math.abs(diffX) > Math.abs(diffY)) {
+                    if(Math.abs(diffX) > swipeThreshold && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                        if(diffX > 0) {
                             onSwipeRight()
-                        } else {
+                        }
+                        else {
                             onSwipeLeft()
                         }
                         result = true
                     }
-                } else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
-                    if (diffY > 0) {
+                }
+                else if(Math.abs(diffY) > swipeThreshold && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                    if(diffY > 0) {
                         onSwipeBottom()
-                    } else {
+                    }
+                    else {
                         onSwipeTop()
                     }
                     result = true
