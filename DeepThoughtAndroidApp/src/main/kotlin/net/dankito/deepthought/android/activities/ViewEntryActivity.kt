@@ -299,7 +299,8 @@ class ViewEntryActivity : BaseActivity() {
 
 
     private fun systemUiVisibilityChanged(flags: Int) {
-        if(flags == NON_READER_MODE_SYSTEM_UI_FLAGS) {
+        // as immersive fullscreen is only available for KitKat and above leave immersive fullscreen mode by swiping from screen top or bottom is also only available on these  devices
+        if(flags == NON_READER_MODE_SYSTEM_UI_FLAGS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             leaveReaderMode()
         }
     }
