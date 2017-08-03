@@ -336,7 +336,7 @@ class ViewEntryActivity : BaseActivity() {
         if(isInReaderMode) {
             when(swipeDirection) {
                 OnSwipeTouchListener.SwipeDirection.Left -> presenter.returnToPreviousView()
-                OnSwipeTouchListener.SwipeDirection.Right -> editEntry()
+                OnSwipeTouchListener.SwipeDirection.Right -> editEntry(EntryField.Tags)
             }
         }
     }
