@@ -52,11 +52,12 @@ class ViewEntryActivity : BaseActivity() {
             var flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
 
             if(Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-                flags = flags or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                // even thought View.SYSTEM_UI_FLAG_FULLSCREEN is also available from SDK 16 and above, to my experience it doesn't work reliable (at least not on Android 4.1)
+                flags = flags or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
             }
 
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-                flags = flags or View.SYSTEM_UI_FLAG_IMMERSIVE
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                flags = flags or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE
             }
 
             return flags
