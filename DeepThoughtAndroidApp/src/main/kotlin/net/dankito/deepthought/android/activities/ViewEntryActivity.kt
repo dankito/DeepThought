@@ -181,6 +181,10 @@ class ViewEntryActivity : BaseActivity() {
             result.savedEntry?.let { savedEntry ->
                 showEntry(savedEntry)
             }
+
+            if(result.didSaveEntry || result.didSaveReadLaterArticle || result.didSaveEntryExtractionResult) {
+                presenter.returnToPreviousView()
+            }
         }
 
         goToReaderModeOnActivityStart() // go to reader mode after some seconds
