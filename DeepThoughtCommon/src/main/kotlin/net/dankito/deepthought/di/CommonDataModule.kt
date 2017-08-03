@@ -96,8 +96,8 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideEntryPersister(entryService: EntryService, referenceService: ReferenceService, tagService: TagService): EntryPersister {
-        return EntryPersister(entryService, referenceService, tagService)
+    fun provideEntryPersister(entryService: EntryService, referencePersister: ReferencePersister, tagService: TagService): EntryPersister {
+        return EntryPersister(entryService, referencePersister, tagService)
     }
 
     @Provides

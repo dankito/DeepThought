@@ -6,13 +6,12 @@ import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.service.data.EntryService
-import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.TagService
 import net.dankito.utils.IThreadPool
 import javax.inject.Inject
 
 
-class EntryPersister(private val entryService: EntryService, private val referenceService: ReferenceService, private val tagService: TagService) {
+class EntryPersister(private val entryService: EntryService, private val referencePersister: ReferencePersister, private val tagService: TagService) {
 
     @Inject
     protected lateinit var threadPool: IThreadPool
@@ -50,7 +49,7 @@ class EntryPersister(private val entryService: EntryService, private val referen
 
         reference?.let {
             if(reference.isPersisted() == false) {
-                referenceService.persist(reference)
+                referencePersister.saveReference(reference)
             }
         }
 
@@ -67,9 +66,9 @@ class EntryPersister(private val entryService: EntryService, private val referen
         }
 
 
-        reference?.let { referenceService.update(reference) }
+        reference?.let { referencePersister.saveReference(reference) }
 
-        previousReference?.let { referenceService.update(it) }
+        previousReference?.let { referencePersister.saveReference(it) }
 
 
         tags.forEach { tagService.update(it) } // TODO: check if tag needs an update
