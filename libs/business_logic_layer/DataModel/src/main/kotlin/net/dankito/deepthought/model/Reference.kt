@@ -25,7 +25,8 @@ data class Reference(
     @Column(name = TableConfig.ReferenceUrlColumnName)
     var url: String? = null
 
-    @Column(name = TableConfig.ReferenceSeriesJoinColumnName)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.MERGE))
+    @JoinColumn(name = TableConfig.EntryReferenceJoinColumnName)
     var series: Series? = null
 
     @Column(name = TableConfig.ReferenceIssueColumnName)
