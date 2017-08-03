@@ -9,10 +9,7 @@ import kotlinx.android.synthetic.main.view_entry_fields_preview.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.extensions.abstractPlainText
 import net.dankito.deepthought.extensions.preview
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.EntryField
-import net.dankito.deepthought.model.ReadLaterArticle
-import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.EntryExtractionResult
 
 
@@ -23,6 +20,8 @@ class EntryFieldsPreview : RelativeLayout {
     var readLaterArticle: ReadLaterArticle? = null
 
     var entryExtractionResult: EntryExtractionResult? = null
+
+    var reference: Reference? = null
 
     var tagsOnEntry: Collection<Tag> = ArrayList()
 
@@ -79,11 +78,7 @@ class EntryFieldsPreview : RelativeLayout {
     }
 
     fun setReferencePreviewOnUIThread() {
-        entry?.reference?.let { txtEntryReference.text = it.preview }
-
-        readLaterArticle?.entryExtractionResult?.reference?.let { txtEntryReference.text = it.preview }
-
-        entryExtractionResult?.reference?.let { txtEntryReference.text = it.preview }
+        this.reference?.let { txtEntryReference.text = it.preview }
     }
 
     fun setTagsOnEntryPreviewOnUIThread() {

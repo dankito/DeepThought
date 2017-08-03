@@ -212,11 +212,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun savedReference(reference: Reference) {
-        entry?.let { it.reference = reference }
-
-        readLaterArticle?.entryExtractionResult?.let { it.reference = reference }
-
-        entryExtractionResult?.let { it.reference = reference }
+        entryFieldsPreview.reference = reference // do not set reference directly on entry as if entry is not saved get adding it to reference.entries causes an error
 
         updateCanEntryBeSavedOnUIThread(true)
         setReferencePreviewOnUIThread()
@@ -349,7 +345,7 @@ class EditEntryActivity : BaseActivity() {
 
             entry?.let { entry ->
                 updateEntry(entry, content)
-                presenter.saveEntryAsync(entry, entry.reference, tagsOnEntry) { successful ->
+                presenter.saveEntryAsync(entry, entryFieldsPreview.reference, tagsOnEntry) { successful ->
                     if(successful) {
                         setActivityResult(EditEntryActivityResult(didSaveEntry = true, savedEntry = entry))
                     }
@@ -359,7 +355,7 @@ class EditEntryActivity : BaseActivity() {
 
             entryExtractionResult?.let { extractionResult ->
                 updateEntry(extractionResult.entry, content)
-                presenter.saveEntryAsync(extractionResult.entry, extractionResult.reference, tagsOnEntry) { successful ->
+                presenter.saveEntryAsync(extractionResult.entry, entryFieldsPreview.reference, tagsOnEntry) { successful ->
                     if(successful) {
                         setActivityResult(EditEntryActivityResult(didSaveEntryExtractionResult = true, savedEntry = extractionResult.entry))
                     }
@@ -371,7 +367,7 @@ class EditEntryActivity : BaseActivity() {
                 val extractionResult = readLaterArticle.entryExtractionResult
                 updateEntry(extractionResult.entry, content)
 
-                presenter.saveEntryAsync(extractionResult.entry, extractionResult.reference, tagsOnEntry) { successful ->
+                presenter.saveEntryAsync(extractionResult.entry, entryFieldsPreview.reference, tagsOnEntry) { successful ->
                     if(successful) {
                         readLaterArticleService.delete(readLaterArticle)
                         setActivityResult(EditEntryActivityResult(didSaveReadLaterArticle = true, savedEntry = extractionResult.entry))
@@ -484,6 +480,8 @@ class EditEntryActivity : BaseActivity() {
 
     private fun editEntry(entry: Entry?, reference: Reference?, tags: Collection<Tag>?) {
         entry?.let { contentHtmlEditor.setHtml(entry.content) }
+
+        entryFieldsPreview.reference = reference
 
         setAbstractPreviewOnUIThread()
 
