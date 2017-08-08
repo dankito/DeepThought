@@ -27,6 +27,8 @@ android {
         versionCode appVersionCode
         versionName appVersionName
 
+        resValue "string", "app_name", "DeepThought"
+
         multiDexEnabled true
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -35,6 +37,7 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix = ".test"
+            resValue "string", "app_name", "DeepThought Debug"
 
             testCoverageEnabled = true
 

@@ -1,7 +1,5 @@
 <resources>
 
-    <string name="app_name">DeepThought</string>
-
     <string name="tab_entries_title">Einträge</string>
     <string name="tab_tags_title">Schlagworte</string>
     <string name="tab_references_title">Quellen</string>

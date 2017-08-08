@@ -1,7 +1,5 @@
 <resources>
 
-    <string name="app_name">DeepThought</string>
-
     <string name="move_upward_behaviour" translatable="false">net.dankito.deepthought.android.views.MoveUpwardBehavior</string>
 
     <string name="tab_entries_title">Entries</string>
