@@ -83,6 +83,9 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
     private fun cleanArticleBody(articleBody: Element) {
         articleBody.select(".entry-summary, #article-sidebar-wrapper, .ad, .authors, .teaserable-layout").remove()
+
+        // remove scripts with try{window.performance.mark('monitor_articleTeaser');}catch(e){};
+        articleBody.select("script").filter { it.html().contains("window.performance.mark") }.forEach { it.remove() }
     }
 
     private fun loadLazyLoadingElementsAndGetContent(element: Element): String {
