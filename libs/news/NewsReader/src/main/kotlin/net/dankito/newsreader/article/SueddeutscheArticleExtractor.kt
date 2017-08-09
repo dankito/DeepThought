@@ -64,11 +64,16 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
             val abstract = articleBody.select(".entry-summary").first()?.html() ?: ""
 
             cleanArticleBody(articleBody)
-            val content = loadLazyLoadingElementsAndGetContent(articleBody)
+            var content = loadLazyLoadingElementsAndGetContent(articleBody)
+
+            siteContent.select(".topenrichment figure img").first()?.let { previewImage ->
+                val previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(previewImage, "src", siteUrl)
+                reference?.previewImageUrl = previewImageUrl
+                previewImage.attr("src", previewImageUrl)
+                content = "<p>" + previewImage.outerHtml() + "</p>" + content
+            }
 
             val entry = Entry(content, abstract)
-
-            siteContent.select(".topenrichment figure img").first()?.let { reference?.previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(it, "src", siteUrl) }
 
             return EntryExtractionResult(entry, reference)
         }
