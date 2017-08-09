@@ -14,11 +14,12 @@ class HeiseNewsArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
     }
 
     override fun canExtractEntryFromUrl(url: String): Boolean {
-        return url.startsWith("https://www.heise.de/newsticker/meldung/") ||
-                url.startsWith("https://www.heise.de/ix/meldung/") ||
-                url.startsWith("https://www.heise.de/security/meldung/") ||
-                url.startsWith("https://www.heise.de/make/meldung/") ||
-                url.startsWith("https://www.heise.de/mac-and-i/meldung/")
+        return url.startsWith("http") && url.contains("://www.heise.de/") && (
+                url.contains("://www.heise.de/newsticker/meldung/") ||
+                url.contains("://www.heise.de/ix/meldung/") ||
+                url.contains("://www.heise.de/security/meldung/") ||
+                url.contains("://www.heise.de/make/meldung/") ||
+                url.contains("://www.heise.de/mac-and-i/meldung/") )
     }
 
 
