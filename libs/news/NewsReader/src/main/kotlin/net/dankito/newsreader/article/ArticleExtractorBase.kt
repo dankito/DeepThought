@@ -8,6 +8,7 @@ import net.dankito.newsreader.model.ArticleSummaryItem
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
+import java.util.*
 import kotlin.concurrent.thread
 
 
@@ -37,6 +38,8 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
 
                 if(extractionResult != null) {
                     extractionResult.reference?.url = url // explicitly set reference's url as for multipage articles article may gets extracted from a url different than url parameter
+                    extractionResult.reference?.lastAccessDate = Date()
+
                     callback(AsyncResult(true, result = extractionResult))
                 }
                 else {
