@@ -77,6 +77,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
     fun createDirectory(indexBaseDir: File) : Directory? {
         val indexDirectory = File(indexBaseDir, getDirectoryName())
+        indexDirectory.mkdirs() // necessary?
 
         directory = FSDirectory.open(indexDirectory)
 
