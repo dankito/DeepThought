@@ -10,7 +10,7 @@ import org.jsoup.nodes.Element
 class HeiseNewsArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperArticleExtractorBase(webClient) {
 
     override fun getName(): String? {
-        return "Heise News"
+        return "Heise"
     }
 
     override fun canExtractEntryFromUrl(url: String): Boolean {
