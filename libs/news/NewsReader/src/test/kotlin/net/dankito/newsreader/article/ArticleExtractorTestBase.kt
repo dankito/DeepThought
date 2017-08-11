@@ -46,7 +46,7 @@ abstract class ArticleExtractorTestBase {
     protected open fun testArticle(extractionResult: EntryExtractionResult?, url: String, title: String, abstract: String?, previewImageUrl: String? = null, minContentLength: Int? = null, canPublishingDateBeNull: Boolean = false, subTitle: String?) {
         assertThat(extractionResult, notNullValue())
 
-        extractionResult?.let { extractionResult ->
+        extractionResult?.let {
             assertThat(extractionResult.entry.content.isNullOrBlank(), `is`(false))
             assertThat(extractionResult.entry.abstractString, `is`(abstract))
 
