@@ -170,7 +170,7 @@ data class Entry(
 
     override fun toString(): String {
         val contentLength = if(content.length > 100) 100 else content.length
-        return "" + entryIndex + ", " + id + ": " + content.substring(0, contentLength)
+        return "" + entryIndex + ", " + id + ": " + content.substring(0, contentLength) + "; " + reference
     }
 
 }
