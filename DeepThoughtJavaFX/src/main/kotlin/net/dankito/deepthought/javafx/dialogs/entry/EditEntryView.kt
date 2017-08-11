@@ -12,10 +12,10 @@ class EditEntryView : EditEntryViewBase() {
 
 
     init {
-        hasAbstract.value = entry.hasAbstract()
         abstractPlainText.value = Jsoup.parseBodyFragment(entry.abstractString).text()
         contentHtml.value = entry.content
-        showTags(entry.tags)
+        showReferencePreview(entry.reference)
+        showTagsPreview(entry.tags)
 
         hasUnsavedChanges.value = false
     }

@@ -22,10 +22,10 @@ class EditReadLaterArticleView : EditEntryViewBase() {
     init {
         AppComponent.component.inject(this)
 
-        hasAbstract.value = article.entryExtractionResult.entry.hasAbstract()
         abstractPlainText.value = Jsoup.parseBodyFragment(article.entryExtractionResult.entry.abstractString).text()
         contentHtml.value = article.entryExtractionResult.entry.content
-        showTags(article.entryExtractionResult.tags)
+        showReferencePreview(article.entryExtractionResult.reference)
+        showTagsPreview(article.entryExtractionResult.tags)
     }
 
 

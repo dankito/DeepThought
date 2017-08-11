@@ -2,9 +2,11 @@ package net.dankito.deepthought.javafx.dialogs.entry
 
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
+import javafx.scene.control.Control
 import javafx.scene.control.Label
 import javafx.scene.layout.Priority
 import javafx.scene.web.WebView
+import net.dankito.deepthought.extensions.preview
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.model.Entry
@@ -22,9 +24,9 @@ abstract class EditEntryViewBase : DialogFragment() {
     // param values for Entry and EntryExtractionResult are evaluated after root has been initialized -> Entry is null at root initialization stage.
     // so i had to find a way to mitigate that Entry / EntryExtractionResult is not initialized yet
 
-    protected val hasAbstract = SimpleBooleanProperty()
-
     protected val abstractPlainText = SimpleStringProperty()
+
+    protected val referencePreview = SimpleStringProperty()
 
     protected val tagsPreview = SimpleStringProperty()
 
@@ -34,6 +36,8 @@ abstract class EditEntryViewBase : DialogFragment() {
 
 
     private var txtAbstract: Label by singleAssign()
+
+    private var txtReference: Label by singleAssign()
 
     private var txtTags: Label by singleAssign()
 
@@ -61,15 +65,23 @@ abstract class EditEntryViewBase : DialogFragment() {
         prefWidth = 905.0
         prefHeight = 650.0
 
-        txtAbstract = label {
+        hbox {
             prefHeight = 50.0
-            maxHeight = 70.0
-            isWrapText = true
-
-            textProperty().bind(abstractPlainText)
-            visibleProperty().bind(hasAbstract)
-
+            maxHeight = 100.0
             prefWidthProperty().bind(this@vbox.widthProperty())
+
+            label(messages["edit.entry.abstract.label"]) {
+                minWidth = Control.USE_PREF_SIZE // guarantee that label keeps its calculated size
+                useMaxWidth = true
+            }
+
+            txtAbstract = label {
+                prefHeight = 50.0
+                maxHeight = 100.0
+                isWrapText = true
+
+                textProperty().bind(abstractPlainText)
+            }
 
             vboxConstraints {
                 marginBottom = 6.0
@@ -81,7 +93,33 @@ abstract class EditEntryViewBase : DialogFragment() {
             maxHeight = 70.0
             prefWidthProperty().bind(this@vbox.widthProperty())
 
-            label(messages["edit.entry.tags.label"])
+            label(messages["edit.entry.reference.label"]) {
+                minWidth = Control.USE_PREF_SIZE
+                useMaxWidth = true
+            }
+
+            txtReference = label {
+                isWrapText = false
+
+                textProperty().bind(referencePreview)
+
+                hgrow = Priority.ALWAYS
+            }
+
+            vboxConstraints {
+                marginBottom = 6.0
+            }
+        }
+
+        hbox {
+            prefHeight = 50.0
+            maxHeight = 70.0
+            prefWidthProperty().bind(this@vbox.widthProperty())
+
+            label(messages["edit.entry.tags.label"]) {
+                minWidth = Control.USE_PREF_SIZE
+                useMaxWidth = true
+            }
 
             txtTags = label {
                 isWrapText = false
@@ -155,7 +193,11 @@ abstract class EditEntryViewBase : DialogFragment() {
     }
 
 
-    protected fun showTags(tags: Collection<Tag>) {
+    protected fun showReferencePreview(reference: Reference?) {
+        this.referencePreview.value = reference?.preview ?: ""
+    }
+
+    protected fun showTagsPreview(tags: Collection<Tag>) {
         this.tagsPreview.value = tags.sortedBy { it.name.toLowerCase() }.joinToString { it.name }
     }
 
