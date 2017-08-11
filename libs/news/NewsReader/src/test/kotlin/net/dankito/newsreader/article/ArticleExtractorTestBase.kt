@@ -21,10 +21,11 @@ abstract class ArticleExtractorTestBase {
     abstract fun createArticleExtractor(webClient: IWebClient): IArticleExtractor
 
 
-    protected open fun getAndTestArticle(url: String, title: String, abstract: String?, previewImageUrl: String? = null, minContentLength: Int? = null, canPublishingDateBeNull: Boolean = false) {
+    protected open fun getAndTestArticle(url: String, title: String, abstract: String?, previewImageUrl: String? = null, minContentLength: Int? = null,
+                                         canPublishingDateBeNull: Boolean = false, subTitle: String? = null) {
         val article = getArticle(url)
 
-        testArticle(article, url, title, abstract, previewImageUrl, minContentLength, canPublishingDateBeNull)
+        testArticle(article, url, title, abstract, previewImageUrl, minContentLength, canPublishingDateBeNull, subTitle)
     }
 
     protected open fun getArticle(url: String) : EntryExtractionResult? {
@@ -42,7 +43,7 @@ abstract class ArticleExtractorTestBase {
         return extractionResult
     }
 
-    protected open fun testArticle(extractionResult: EntryExtractionResult?, url: String, title: String, abstract: String?, previewImageUrl: String? = null, minContentLength: Int? = null, canPublishingDateBeNull: Boolean = false) {
+    protected open fun testArticle(extractionResult: EntryExtractionResult?, url: String, title: String, abstract: String?, previewImageUrl: String? = null, minContentLength: Int? = null, canPublishingDateBeNull: Boolean = false, subTitle: String?) {
         assertThat(extractionResult, notNullValue())
 
         extractionResult?.let { extractionResult ->
@@ -60,6 +61,8 @@ abstract class ArticleExtractorTestBase {
                 if(canPublishingDateBeNull == false) {
                     assertThat(reference.publishingDate, notNullValue())
                 }
+
+                subTitle?.let { assertThat(reference.subTitle, `is`(subTitle)) }
             }
         }
     }
