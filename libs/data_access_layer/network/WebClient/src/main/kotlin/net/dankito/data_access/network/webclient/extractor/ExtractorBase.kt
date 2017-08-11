@@ -6,10 +6,19 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.net.URI
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 // TODO: find a better library
 abstract class ExtractorBase(val webClient : IWebClient) {
+
+    companion object {
+        protected val isoDateTimeFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+
+        protected val isoDateTimeFormatWithoutTimezone: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+    }
 
 
     protected fun requestUrl(url: String): Document {
@@ -112,6 +121,29 @@ abstract class ExtractorBase(val webClient : IWebClient) {
         }
 
         return makeLinkAbsolute(element.attr(attributeName), siteUrl)
+    }
+
+
+    protected fun parseIsoDateTimeString(isoDateTimeString: String): Date? {
+        var editableIsoDateTimeString = isoDateTimeString
+
+        if(editableIsoDateTimeString.length > 18 && ':' == editableIsoDateTimeString[editableIsoDateTimeString.length - 3]) { // remove colon from time zone, Java DateFormat is  not able to parse it
+            editableIsoDateTimeString = editableIsoDateTimeString.substring(0, editableIsoDateTimeString.length - 3) + editableIsoDateTimeString.substring(editableIsoDateTimeString.length - 2)
+        }
+
+        try {
+            return isoDateTimeFormat.parse(editableIsoDateTimeString)
+        } catch (e: Exception) { }
+
+        return null
+    }
+
+    protected fun parseIsoDateTimeStringWithoutTimezone(isoDateTimeString: String): Date? {
+        try {
+            return isoDateTimeFormatWithoutTimezone.parse(isoDateTimeString)
+        } catch (e: Exception) { }
+
+        return null
     }
 
 
