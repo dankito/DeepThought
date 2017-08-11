@@ -16,6 +16,7 @@ class EditEntryExtractionResultView : EditEntryViewBase() {
         hasAbstract.value = extractionResult.entry.hasAbstract()
         abstractPlainText.value = Jsoup.parseBodyFragment(extractionResult.entry.abstractString).text()
         contentHtml.value = extractionResult.entry.content
+        showTags(extractionResult.tags)
     }
 
 

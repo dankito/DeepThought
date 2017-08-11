@@ -15,6 +15,7 @@ class EditEntryView : EditEntryViewBase() {
         hasAbstract.value = entry.hasAbstract()
         abstractPlainText.value = Jsoup.parseBodyFragment(entry.abstractString).text()
         contentHtml.value = entry.content
+        showTags(entry.tags)
 
         hasUnsavedChanges.value = false
     }

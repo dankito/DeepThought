@@ -26,12 +26,16 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     protected val abstractPlainText = SimpleStringProperty()
 
+    protected val tagsPreview = SimpleStringProperty()
+
     protected val contentHtml = SimpleStringProperty()
 
     protected val hasUnsavedChanges = SimpleBooleanProperty()
 
 
     private var txtAbstract: Label by singleAssign()
+
+    private var txtTags: Label by singleAssign()
 
     private var wbContent: WebView by singleAssign()
 
@@ -66,6 +70,26 @@ abstract class EditEntryViewBase : DialogFragment() {
             visibleProperty().bind(hasAbstract)
 
             prefWidthProperty().bind(this@vbox.widthProperty())
+
+            vboxConstraints {
+                marginBottom = 6.0
+            }
+        }
+
+        hbox {
+            prefHeight = 50.0
+            maxHeight = 70.0
+            prefWidthProperty().bind(this@vbox.widthProperty())
+
+            label(messages["edit.entry.tags.label"])
+
+            txtTags = label {
+                isWrapText = false
+
+                textProperty().bind(tagsPreview)
+
+                hgrow = Priority.ALWAYS
+            }
 
             vboxConstraints {
                 marginBottom = 6.0
@@ -128,6 +152,11 @@ abstract class EditEntryViewBase : DialogFragment() {
         root.getChildren().remove(wbContent)
 
         System.gc()
+    }
+
+
+    protected fun showTags(tags: Collection<Tag>) {
+        this.tagsPreview.value = tags.sortedBy { it.name.toLowerCase() }.joinToString { it.name }
     }
 
 
