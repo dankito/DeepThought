@@ -74,12 +74,23 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
 
 
     protected fun makeLinksAbsolute(element: Element, url: String) {
-        element.select("a").forEach { anchor ->
-            anchor.attr("href", makeLinkAbsolute(anchor.attr("href"), url))
+        element.select("[href]").forEach { hrefElement ->
+            hrefElement.attr("href", makeLinkAbsolute(hrefElement.attr("href"), url))
         }
 
-        element.select("img").forEach { anchor ->
-            anchor.attr("src", makeLinkAbsolute(anchor.attr("src"), url))
+        element.select("[src]").forEach { srcElement ->
+            srcElement.attr("src", makeLinkAbsolute(srcElement.attr("src"), url))
+        }
+
+        element.select("[data-zoom-src]").forEach { srcElement ->
+            srcElement.attr("data-zoom-src", makeLinkAbsolute(srcElement.attr("data-zoom-src"), url))
+        }
+    }
+
+
+    protected fun adjustSourceElements(element: Element) {
+        for (sourceElement in element.select("span.source")) {
+            sourceElement.parent().appendChild(Element(org.jsoup.parser.Tag.valueOf("br"), element.baseUri()))
         }
     }
 
