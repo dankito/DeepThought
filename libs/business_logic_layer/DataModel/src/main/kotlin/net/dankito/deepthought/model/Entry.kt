@@ -78,11 +78,13 @@ data class Entry(
         get() = tags.size
 
     fun setAllTags(tags: Collection<Tag>) { // don't name it setTags(), would cause conflicts in Java (e.g. for deserializing with Jackson)
+        val copy = ArrayList(tags)  // make a copy. if tags equal this.tags, all tags would get removed by removeTag() otherwise
+
         for(previousTag in ArrayList(this.tags)) {
             removeTag(previousTag)
         }
 
-        for(newTag in tags) {
+        for(newTag in copy) {
             addTag(newTag)
         }
     }
