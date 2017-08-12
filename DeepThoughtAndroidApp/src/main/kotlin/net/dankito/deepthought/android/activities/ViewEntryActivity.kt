@@ -440,6 +440,8 @@ class ViewEntryActivity : BaseActivity() {
             wbEntry.loadData(content, "text/html; charset=UTF-8", null)
         }
 
+        entryFieldsPreview.reference = reference
+
         tags?.let { entryFieldsPreview.tagsOnEntry = it }
 
         entryFieldsPreview.setAbstractPreviewOnUIThread()
