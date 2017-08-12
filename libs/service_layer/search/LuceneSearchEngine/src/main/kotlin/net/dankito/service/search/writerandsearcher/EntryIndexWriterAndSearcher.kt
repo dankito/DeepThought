@@ -23,6 +23,11 @@ import org.apache.lucene.search.*
 
 class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBus) : IndexWriterAndSearcher<Entry>(entryService, eventBus) {
 
+    companion object {
+        private val MaxEntriesSearchResults = 1000000 // e.g. for AllEntriesCalculatedTag all entries must be returned
+    }
+
+
     override fun getDirectoryName(): String {
         return "entries"
     }
@@ -68,7 +73,7 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
 
         addQueryForSearchTerm(termsToFilterFor, query, search)
 
-        executeQueryForSearchWithCollectionResult(search, query, Entry::class.java, sortOptions = SortOption(FieldName.EntryCreated, SortOrder.Descending, SortField.Type.LONG))
+        executeQueryForSearchWithCollectionResult(search, query, Entry::class.java, MaxEntriesSearchResults, SortOption(FieldName.EntryCreated, SortOrder.Descending, SortField.Type.LONG))
     }
 
     private fun addQueryForOptions(search: EntriesSearch, query: BooleanQuery) {
