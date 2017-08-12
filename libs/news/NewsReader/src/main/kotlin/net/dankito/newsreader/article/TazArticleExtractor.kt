@@ -31,7 +31,7 @@ class TazArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClien
             var abstract = ""
             bodyElement.select("p.intro").first()?.let { abstract = it.text().trim() }
 
-            bodyElement.select("h1, h4, .intro, .picture, .caption, .ad_bin, .contentad, .sold").remove()
+            bodyElement.select("h1, h4, .intro, .caption, .rack, .ad_bin, .contentad, .sold").remove()
             val content = bodyElement.children().joinToString("") { it.outerHtml() }
 
             val entry = Entry(content, abstract)
