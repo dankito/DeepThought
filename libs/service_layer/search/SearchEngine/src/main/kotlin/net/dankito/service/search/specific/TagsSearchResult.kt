@@ -8,24 +8,26 @@ import java.util.*
 class TagsSearchResult {
 
     var searchTerm: String
-        protected set
+        private set
 
-    protected var hasExactMatches: Boolean = false
+    private var hasExactMatches: Boolean = false
 
     var exactMatches: List<Tag> = ArrayList()
         private set
 
-    protected var singleMatchProperty: Tag? = null
+    private var singleMatchProperty: Tag? = null
 
     var allMatches: List<Tag>
-        protected set
+        private set
 
 
     constructor(searchTerm: String, allMatches: List<Tag>) {
         this.searchTerm = searchTerm
         this.allMatches = allMatches
 
-        findExactMatch(searchTerm, allMatches)
+        if(searchTerm.isNullOrBlank() == false) { // don't call findExactMatch() for an empty search term, would load all tags
+            findExactMatch(searchTerm, allMatches)
+        }
     }
 
     constructor(searchTerm: String, allMatches: List<Tag>, exactMatches: List<Tag>) {
@@ -36,8 +38,8 @@ class TagsSearchResult {
     }
 
 
-    protected fun findExactMatch(searchTerm: String, allMatches: List<Tag>) {
-        for (match in allMatches) {
+    private fun findExactMatch(searchTerm: String, allMatches: List<Tag>) {
+        for(match in allMatches) {
             if (searchTerm == match.name.toLowerCase()) {
                 this.hasExactMatches = true
                 (this.exactMatches as MutableList).add(match)
