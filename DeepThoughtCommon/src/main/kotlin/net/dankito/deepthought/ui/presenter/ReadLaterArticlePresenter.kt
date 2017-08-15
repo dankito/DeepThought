@@ -12,12 +12,13 @@ import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
 import net.dankito.service.search.specific.ReadLaterArticleSearch
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.ui.IClipboardService
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 
 
 class ReadLaterArticlePresenter(private val view: IReadLaterArticleView, private val searchEngine: ISearchEngine, private val readLaterArticleService: ReadLaterArticleService,
-                                private val entryPersister: EntryPersister, private val router: IRouter) : IMainViewSectionPresenter {
+                                private val entryPersister: EntryPersister, private val clipboardService: IClipboardService, private val router: IRouter) : IMainViewSectionPresenter {
 
 
     @Inject
@@ -83,8 +84,10 @@ class ReadLaterArticlePresenter(private val view: IReadLaterArticleView, private
         }
     }
 
-    fun  copyUrlToClipboard(article: ReadLaterArticle) {
-        // TODO
+    fun copyUrlToClipboard(article: ReadLaterArticle) {
+        article.entryExtractionResult.reference?.let { reference ->
+            clipboardService.copyReferenceUrlToClipboard(reference)
+        }
     }
 
 

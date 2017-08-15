@@ -17,6 +17,7 @@ import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.deepthought.ui.view.IReadLaterArticleView
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.search.ISearchEngine
+import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
@@ -33,6 +34,9 @@ class ReadLaterArticlesListView : MainActivityTabFragment(R.layout.fragment_tab_
     protected lateinit var entryPersister: EntryPersister
 
     @Inject
+    protected lateinit var clipboardService: IClipboardService
+
+    @Inject
     protected lateinit var router: IRouter
 
 
@@ -44,7 +48,7 @@ class ReadLaterArticlesListView : MainActivityTabFragment(R.layout.fragment_tab_
     init {
         AppComponent.component.inject(this)
 
-        presenter = ReadLaterArticlePresenter(this, searchEngine, readLaterArticleService, entryPersister, router)
+        presenter = ReadLaterArticlePresenter(this, searchEngine, readLaterArticleService, entryPersister, clipboardService, router)
     }
 
 
