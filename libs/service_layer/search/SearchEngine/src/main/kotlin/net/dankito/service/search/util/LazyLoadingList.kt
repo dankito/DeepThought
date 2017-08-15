@@ -45,7 +45,7 @@ open class LazyLoadingList<T : BaseEntity>(protected var entityManager: IEntityM
         return null
     }
 
-    private fun getEntityIdForIndex(index: Int): String {
+    protected open fun getEntityIdForIndex(index: Int): String {
         if (entityIds is List<*> == true)
             return (entityIds as List<String>)[index]
 
