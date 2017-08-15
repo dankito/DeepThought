@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android.fragments
 
+import android.app.Activity
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
@@ -108,7 +109,7 @@ class ReadLaterArticlesListView : MainActivityTabFragment(R.layout.fragment_tab_
     }
 
 
-    override fun getQueryHint() = activity.getString(R.string.search_hint_read_later_articles)
+    override fun getQueryHint(activity: Activity) = activity.getString(R.string.search_hint_read_later_articles)
 
     override fun searchEntities(query: String) {
         presenter.getReadLaterArticles(query)

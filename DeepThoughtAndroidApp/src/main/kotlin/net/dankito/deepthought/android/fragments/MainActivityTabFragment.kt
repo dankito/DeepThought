@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android.fragments
 
+import android.app.Activity
 import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
@@ -30,7 +31,7 @@ abstract class MainActivityTabFragment(private val layoutResourceId: Int, privat
     abstract fun listItemClicked(position: Int, selectedItem: Any)
 
 
-    protected open fun getQueryHint(): String = ""
+    protected open fun getQueryHint(activity: Activity): String = ""
 
     abstract fun searchEntities(query: String)
 
@@ -114,15 +115,17 @@ abstract class MainActivityTabFragment(private val layoutResourceId: Int, privat
     }
 
     protected open fun initSearchView(searchView: SearchView) {
-        val searchManager = activity.getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.componentName))
-        searchView.queryHint = getQueryHint()
-        searchView.setOnQueryTextListener(entriesQueryTextListener)
+        activity?.let { activity ->
+            val searchManager = activity.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.componentName))
+            searchView.queryHint = getQueryHint(activity)
+            searchView.setOnQueryTextListener(entriesQueryTextListener)
 
-        presenter?.getLastSearchTerm()?.let { lastSearchTerm ->
-            if(lastSearchTerm != Search.EmptySearchTerm) {
-                searchView.isIconified = false
-                searchView.setQuery(lastSearchTerm, true)
+            presenter?.getLastSearchTerm()?.let { lastSearchTerm ->
+                if(lastSearchTerm != Search.EmptySearchTerm) {
+                    searchView.isIconified = false
+                    searchView.setQuery(lastSearchTerm, true)
+                }
             }
         }
     }

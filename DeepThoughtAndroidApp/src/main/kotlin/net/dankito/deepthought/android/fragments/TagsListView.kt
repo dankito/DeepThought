@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android.fragments
 
+import android.app.Activity
 import android.support.v7.widget.SearchView
 import android.view.ContextMenu
 import android.view.MenuItem
@@ -124,7 +125,7 @@ class TagsListView : MainActivityTabFragment(R.layout.fragment_tab_tags, R.id.ls
         searchView.imeOptions = EditorInfo.IME_ACTION_GO
     }
 
-    override fun getQueryHint() = activity.getString(R.string.search_hint_tags)
+    override fun getQueryHint(activity: Activity) = activity.getString(R.string.search_hint_tags)
 
     override fun searchEntities(query: String) {
         presenter.searchTags(query)

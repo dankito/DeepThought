@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android.fragments
 
+import android.app.Activity
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
@@ -107,7 +108,7 @@ class ReferencesListView: MainActivityTabFragment(R.layout.fragment_tab_referenc
     }
 
 
-    override fun getQueryHint() = activity.getString(R.string.search_hint_references)
+    override fun getQueryHint(activity: Activity) = activity.getString(R.string.search_hint_references)
 
     override fun searchEntities(query: String) {
         presenter.searchReferences(query)

@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android.fragments
 
+import android.app.Activity
 import android.content.Context
 import android.widget.BaseAdapter
 import net.dankito.deepthought.android.R
@@ -62,7 +63,7 @@ class EntriesListView : MainActivityTabFragment(R.layout.fragment_tab_entries, R
     }
 
 
-    override fun getQueryHint() = activity.getString(R.string.search_hint_entries)
+    override fun getQueryHint(activity: Activity) = activity.getString(R.string.search_hint_entries)
 
     override fun searchEntities(query: String) {
         presenter.searchEntries(query)
