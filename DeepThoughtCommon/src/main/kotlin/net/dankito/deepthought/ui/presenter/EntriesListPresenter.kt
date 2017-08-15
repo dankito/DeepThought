@@ -81,9 +81,7 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, router
         searchEngine.searchEntries(EntriesSearch(searchTerm, searchInContent, searchInAbstract, searchInReference, filterOnlyEntriesWithoutTags, entriesMustHaveTheseTags) { result ->
             entriesListView.showEntries(result)
 
-            if(searchCompleted != null) {
-                searchCompleted(result)
-            }
+            searchCompleted?.invoke(result)
         })
     }
 
