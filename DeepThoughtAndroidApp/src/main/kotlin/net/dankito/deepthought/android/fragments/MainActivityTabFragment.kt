@@ -113,7 +113,7 @@ abstract class MainActivityTabFragment(private val layoutResourceId: Int, privat
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    private fun initSearchView(searchView: SearchView) {
+    protected open fun initSearchView(searchView: SearchView) {
         val searchManager = activity.getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.componentName))
         searchView.queryHint = getQueryHint()
