@@ -71,6 +71,10 @@ class ReferencesListPresenter(private var view: IReferencesListView, private var
         router.showEntriesForReference(reference)
     }
 
+    fun deleteReference(reference: Reference) {
+        referenceService.delete(reference)
+    }
+
 
     override fun cleanUp() {
         eventBus.unregister(eventBusListener)
