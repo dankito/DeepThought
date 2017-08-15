@@ -3,6 +3,7 @@ package net.dankito.newsreader.summary
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.newsreader.article.ArticleExtractorBase
 import net.dankito.newsreader.article.SueddeutscheArticleExtractor
+import net.dankito.newsreader.article.SueddeutscheJetztArticleExtractor
 import net.dankito.newsreader.article.SueddeutscheMagazinArticleExtractor
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
@@ -106,8 +107,11 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
     }
 
     private fun getArticleExtractorClass(articleUrl: String): Class<out ArticleExtractorBase> {
-        if(articleUrl.contains("//sz-magazin.sueddeutsche.de/")) {
+        if(articleUrl.contains("://sz-magazin.sueddeutsche.de/")) {
             return SueddeutscheMagazinArticleExtractor::class.java
+        }
+        else if(articleUrl.contains("://www.jetzt.de/") || articleUrl.contains("://jetzt.sueddeutsche.de/")) {
+            return SueddeutscheJetztArticleExtractor::class.java
         }
 
         return SueddeutscheArticleExtractor::class.java
