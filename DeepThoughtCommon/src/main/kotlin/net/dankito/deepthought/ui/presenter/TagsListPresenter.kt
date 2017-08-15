@@ -69,12 +69,7 @@ class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: Da
     }
 
     fun toggleFilterTag(tag: Tag) {
-        if(isTagFiltered(tag)) {
-            tagsFilter.remove(tag)
-        }
-        else {
-            tagsFilter.add(tag)
-        }
+        doToggleFilterTag(tag)
 
         searchTags()
     }
@@ -82,12 +77,7 @@ class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: Da
     fun toggleFilterTags(tags: List<Tag>) {
         if(tags.isNotEmpty()) {
             tags.forEach { tag ->
-                if(isTagFiltered(tag)) {
-                    tagsFilter.remove(tag)
-                }
-                else {
-                    tagsFilter.add(tag)
-                }
+                doToggleFilterTag(tag)
             }
         }
         else {
@@ -97,6 +87,15 @@ class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: Da
         }
 
         searchTags()
+    }
+
+    private fun doToggleFilterTag(tag: Tag) {
+        if(isTagFiltered(tag)) {
+            tagsFilter.remove(tag)
+        }
+        else {
+            tagsFilter.add(tag)
+        }
     }
 
 
