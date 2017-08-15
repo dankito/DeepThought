@@ -1,8 +1,10 @@
 package net.dankito.deepthought.android.fragments
 
+import android.support.v7.widget.SearchView
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.BaseAdapter
 import kotlinx.android.synthetic.main.fragment_tab_tags.view.*
@@ -116,10 +118,21 @@ class TagsListView : MainActivityTabFragment(R.layout.fragment_tab_tags, R.id.ls
     }
 
 
+    override fun initSearchView(searchView: SearchView) {
+        super.initSearchView(searchView)
+
+        searchView.imeOptions = EditorInfo.IME_ACTION_GO
+    }
+
     override fun getQueryHint() = activity.getString(R.string.search_hint_tags)
 
     override fun searchEntities(query: String) {
         presenter.searchTags(query)
+    }
+
+    override fun querySubmitted(query: String): Boolean {
+        presenter.toggleFilterTags(adapter.getItems())
+        return true
     }
 
 

@@ -79,6 +79,26 @@ class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: Da
         searchTags()
     }
 
+    fun toggleFilterTags(tags: List<Tag>) {
+        if(tags.isNotEmpty()) {
+            tags.forEach { tag ->
+                if(isTagFiltered(tag)) {
+                    tagsFilter.remove(tag)
+                }
+                else {
+                    tagsFilter.add(tag)
+                }
+            }
+        }
+        else {
+            if(isTagFilterApplied()) { // after tags filter has applied no tags are shown anymore (there are no entries having these tags) -> clear tag filter
+                clearTagFilter()
+            }
+        }
+
+        searchTags()
+    }
+
 
     override fun getLastSearchTerm(): String {
         return lastSearchTermProperty
