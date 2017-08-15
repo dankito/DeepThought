@@ -25,7 +25,7 @@ val Reference?.preview: String
 
         var preview = title
 
-        if(subTitle.isNotBlank()) {
+        if(subTitle.isNullOrBlank() == false) {
             preview = subTitle + ": " + preview
         }
 

@@ -31,7 +31,7 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
         if(entity.title.isNotEmpty()) { // Lucene crashes when trying to index empty strings
             doc.add(Field(FieldName.ReferenceTitle, entity.title, TextField.TYPE_NOT_STORED))
         }
-        if(entity.subTitle.isNotEmpty()) {
+        if(entity.subTitle.isNullOrEmpty() == false) {
             doc.add(Field(FieldName.ReferenceSubTitle, entity.title, TextField.TYPE_NOT_STORED))
         }
 
