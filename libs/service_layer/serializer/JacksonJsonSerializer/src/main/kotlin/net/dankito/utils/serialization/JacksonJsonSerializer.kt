@@ -5,13 +5,17 @@ import com.fasterxml.jackson.annotation.PropertyAccessor
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
+import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Tag
+import net.dankito.service.data.SeriesService
 import net.dankito.service.data.TagService
+import net.dankito.utils.serialization.serializer.PersistedSeriesDeserializer
+import net.dankito.utils.serialization.serializer.PersistedSeriesSerializer
 import net.dankito.utils.serialization.serializer.PersistedTagDeserializer
 import net.dankito.utils.serialization.serializer.PersistedTagSerializer
 
 
-class JacksonJsonSerializer(tagService: TagService) : ISerializer {
+class JacksonJsonSerializer(tagService: TagService, seriesService: SeriesService) : ISerializer {
 
     private val objectMapper = ObjectMapper()
 
@@ -26,6 +30,8 @@ class JacksonJsonSerializer(tagService: TagService) : ISerializer {
 
         module.addSerializer(Tag::class.java, PersistedTagSerializer())
         module.addDeserializer(Tag::class.java, PersistedTagDeserializer(tagService))
+        module.addSerializer(Series::class.java, PersistedSeriesSerializer())
+        module.addDeserializer(Series::class.java, PersistedSeriesDeserializer(seriesService))
 
         objectMapper.registerModule(module)
     }

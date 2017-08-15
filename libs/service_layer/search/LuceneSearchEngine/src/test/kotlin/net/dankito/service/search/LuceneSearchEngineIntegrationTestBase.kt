@@ -76,7 +76,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         tagService = TagService(dataManager, entityChangedNotifier)
         referenceService = ReferenceService(dataManager, entityChangedNotifier)
         seriesService = SeriesService(dataManager, entityChangedNotifier)
-        readLaterArticleService = ReadLaterArticleService(dataManager, entityChangedNotifier, JacksonJsonSerializer(tagService))
+        readLaterArticleService = ReadLaterArticleService(dataManager, entityChangedNotifier, JacksonJsonSerializer(tagService, seriesService))
 
         underTest = LuceneSearchEngine(dataManager, NoOpLanguageDetector(), ThreadPool(), eventBus, entryService, tagService, referenceService, seriesService, readLaterArticleService)
         initLuceneSearchEngine(underTest)

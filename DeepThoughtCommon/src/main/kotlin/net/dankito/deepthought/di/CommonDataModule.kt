@@ -90,8 +90,8 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideSerializer(tagService: TagService) : ISerializer {
-        return JacksonJsonSerializer(tagService)
+    fun provideSerializer(tagService: TagService, seriesService: SeriesService) : ISerializer {
+        return JacksonJsonSerializer(tagService, seriesService)
     }
 
     @Provides
