@@ -211,11 +211,15 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
     }
 
     private fun showNoFeedAddressesFoundError(feedOrWebsiteUrl: String) {
-        showErrorThreadSafe(getString(R.string.error_no_rss_or_atom_feed_found_for_url, feedOrWebsiteUrl))
+        activity?.let {
+            showErrorThreadSafe(getString(R.string.error_no_rss_or_atom_feed_found_for_url, feedOrWebsiteUrl))
+        }
     }
 
     private fun showError(feedOrWebsiteUrl: String, error: Exception) {
-        showErrorThreadSafe(getString(R.string.error_cannot_read_feed_or_extract_feed_addresses_from_url, feedOrWebsiteUrl, error.localizedMessage))
+        activity?.let { // it happened that activity was not set -> getString() throws an exception
+            showErrorThreadSafe(getString(R.string.error_cannot_read_feed_or_extract_feed_addresses_from_url, feedOrWebsiteUrl, error.localizedMessage))
+        }
     }
 
     private fun showErrorThreadSafe(error: String) {
