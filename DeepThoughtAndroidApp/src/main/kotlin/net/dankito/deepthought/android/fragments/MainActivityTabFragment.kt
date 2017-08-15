@@ -129,14 +129,18 @@ abstract class MainActivityTabFragment(private val layoutResourceId: Int, privat
 
 
     private val entriesQueryTextListener: SearchView.OnQueryTextListener = object : SearchView.OnQueryTextListener {
-        override fun onQueryTextSubmit(query: String): Boolean {
-            return onQueryTextChange(query)
-        }
-
         override fun onQueryTextChange(query: String): Boolean {
             searchEntities(query)
             return true
         }
+
+        override fun onQueryTextSubmit(query: String): Boolean {
+            return querySubmitted(query)
+        }
+    }
+
+    protected open fun querySubmitted(query: String): Boolean {
+        return true
     }
 
 }
