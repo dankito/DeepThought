@@ -74,7 +74,7 @@ class ReadLaterArticleView : View(), IReadLaterArticleView {
                 isDisable = true
 
                 action {
-                    selectedItem?.let { presenter.copyUrlToClipboard(it) }
+                    selectedItem?.let { presenter.copyReferenceUrlToClipboard(it) }
                 }
             }
 

@@ -89,7 +89,7 @@ class ReadLaterArticlesListView : MainActivityTabFragment(R.layout.fragment_tab_
                     return true
                 }
                 R.id.mnShareReadLaterArticle -> { // TODO: actually there should also be the option to share article's text
-                    presenter.copyUrlToClipboard(selectedReadLaterArticle)
+                    presenter.copyReferenceUrlToClipboard(selectedReadLaterArticle)
                     return true
                 }
                 R.id.mnDeleteReadLaterArticle -> {
