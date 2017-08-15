@@ -1,6 +1,11 @@
 package net.dankito.deepthought.android.fragments
 
+import android.view.ContextMenu
+import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
 import android.widget.BaseAdapter
+import kotlinx.android.synthetic.main.fragment_tab_read_later_articles.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ReadLaterArticlesAdapter
 import net.dankito.deepthought.android.di.AppComponent
@@ -54,6 +59,46 @@ class ReadLaterArticlesListView : MainActivityTabFragment(R.layout.fragment_tab_
     override fun listItemClicked(position: Int, selectedItem: Any) {
         (selectedItem as? ReadLaterArticle)?.let { presenter.showArticle(it) }
     }
+
+
+    override fun setupUI(rootView: View?) {
+        super.setupUI(rootView)
+
+        rootView?.let {
+            registerForContextMenu(rootView.lstReadLaterArticles)
+        }
+    }
+
+    override fun onCreateContextMenu(menu: ContextMenu, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+
+        activity?.menuInflater?.inflate(R.menu.list_item_read_later_article_menu, menu)
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        (item.menuInfo as? AdapterView.AdapterContextMenuInfo)?.position?.let { position ->
+            val selectedReadLaterArticle = adapter.getItem(position)
+
+            when(item.itemId) {
+                R.id.mnSaveReadLaterArticle -> {
+                    presenter.saveAndDeleteReadLaterArticle(selectedReadLaterArticle)
+                    return true
+                }
+                R.id.mnShareReadLaterArticle -> { // TODO: actually there should also be the option to share article's text
+                    presenter.copyUrlToClipboard(selectedReadLaterArticle)
+                    return true
+                }
+                R.id.mnDeleteReadLaterArticle -> {
+                    presenter.deleteReadLaterArticle(selectedReadLaterArticle)
+                    return true
+                }
+                else -> return super.onContextItemSelected(item)
+            }
+        }
+
+        return super.onContextItemSelected(item)
+    }
+
 
     override fun getQueryHint() = activity.getString(R.string.search_hint_read_later_articles)
 
