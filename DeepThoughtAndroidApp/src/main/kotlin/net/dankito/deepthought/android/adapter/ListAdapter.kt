@@ -20,6 +20,10 @@ abstract class ListAdapter<T>() : BaseAdapter() {
     override fun getItemId(position: Int) = position.toLong()
 
 
+    fun getItems(): List<T> {
+        return list
+    }
+
     fun setItems(items: List<T>) {
         this.list = items
 
