@@ -135,4 +135,27 @@ data class Reference(
         return previewImage != null
     }
 
+
+    override fun toString(): String {
+        var description = title
+
+        if(subTitle.isNullOrBlank() == false) {
+            description = description + " - " + subTitle
+        }
+
+        if(url.isNullOrBlank() == false) {
+            description = description + "; " + url
+        }
+
+        if(issue.isNullOrBlank() == false || publishingDate != null) {
+            description = issue + " " + publishingDate + ": " + description
+        }
+
+        if(series != null) {
+            description = "" + series + " " + description
+        }
+
+        return description
+    }
+
 }
