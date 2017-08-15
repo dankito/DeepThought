@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item android:id="@+id/mnEditReference"
+          android:title="@string/action_edit"
+          android:icon="@android:drawable/ic_menu_edit"
+    />
+
+    <item android:id="@+id/mnShareReferenceUrl"
+          android:title="@string/action_title_share"
+          android:icon="@android:drawable/ic_menu_share"
+    />
+
+    <item android:id="@+id/mnDeleteReference"
+          android:title="@string/action_delete"
+          android:icon="@android:drawable/ic_menu_delete"
+    />
+
+
+</menu>
