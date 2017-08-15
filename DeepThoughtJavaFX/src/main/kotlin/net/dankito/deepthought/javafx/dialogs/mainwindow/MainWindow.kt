@@ -19,7 +19,8 @@ import net.dankito.deepthought.javafx.res.icons.IconPaths
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.service.data.DataManager
-import net.dankito.service.data.ReadLaterArticleService
+import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.specific.ReadLaterArticleSearch
 import tornadofx.*
 import javax.inject.Inject
 
@@ -38,7 +39,7 @@ class MainWindow : View() {
     protected lateinit var dataManager: DataManager
 
     @Inject
-    protected lateinit var readLaterArticleService: ReadLaterArticleService
+    protected lateinit var searchEngine: ISearchEngine
 
 
     override val root: BorderPane by fxml()
@@ -100,11 +101,11 @@ class MainWindow : View() {
         FXUtils.ensureNodeOnlyUsesSpaceIfVisible(btnArticleExtractors)
 
         dataManager.addInitializationListener {
-            readLaterArticleService.getAllAsync {
+            searchEngine.searchReadLaterArticles(ReadLaterArticleSearch {
                 if(it.isNotEmpty()) {
                     runLater { addShowReadLaterArticlesMenuItem() }
                 }
-            }
+            })
         }
     }
 
