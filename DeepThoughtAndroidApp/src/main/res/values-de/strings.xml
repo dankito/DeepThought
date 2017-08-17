@@ -16,6 +16,8 @@
     <string name="action_edit">Bearbeiten</string>
     <string name="action_save">Speichern</string>
     <string name="action_share">Teilen</string>
+    <string name="action_view">Anzeigen</string>
+    <string name="action_read_article_later">Später leseb</string>
     <string name="action_delete">Löschen</string>
 
     <string name="search_title">Suche</string>

@@ -6,6 +6,12 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
+    <dimen name="action_item_width">64dp</dimen>
+    <dimen name="action_title_height">12dp</dimen>
+    <dimen name="action_title_text_size">10sp</dimen>
+    <dimen name="action_padding_top_bottom">6dp</dimen>
+    <dimen name="action_padding_right">12dp</dimen>
+
     <dimen name="list_item_entry_height">80dp</dimen>
     <dimen name="list_item_entry_reference_preview_height">18dp</dimen>
     <dimen name="list_item_entry_reference_preview_text_size">11sp</dimen>

@@ -262,6 +262,15 @@ class ArticleSummaryActivity : BaseActivity() {
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
             mode.menuInflater.inflate(R.menu.activity_article_summary_contextual_action_menu, menu)
 
+            val viewArticleItem = menu.findItem(R.id.mnViewArticle)
+            viewArticleItem?.actionView?.setOnClickListener { onActionItemClicked(mode, viewArticleItem) }
+
+            val saveArticleForLaterReadingItem = menu.findItem(R.id.mnSaveArticleForLaterReading)
+            saveArticleForLaterReadingItem?.actionView?.setOnClickListener { onActionItemClicked(mode, saveArticleForLaterReadingItem) }
+
+            val saveArticleItem = menu.findItem(R.id.mnSaveArticle)
+            saveArticleItem?.actionView?.setOnClickListener { onActionItemClicked(mode, saveArticleItem) }
+
             return true
         }
 
