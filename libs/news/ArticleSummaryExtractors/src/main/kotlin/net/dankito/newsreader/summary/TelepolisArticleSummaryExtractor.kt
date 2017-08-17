@@ -31,6 +31,8 @@ class TelepolisArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
 
         articles.addAll(extractTeaserItems(siteUrl, document))
 
+        articles.addAll(extractMostCommentedAndMostReadArticles(siteUrl, document))
+
         return articles
     }
 
@@ -101,6 +103,19 @@ class TelepolisArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
             }
 
             return item
+        }
+
+        return null
+    }
+
+
+    private fun extractMostCommentedAndMostReadArticles(siteUrl: String, document: Document): Collection<ArticleSummaryItem> {
+        return document.body().select("ul.top_beitraege_list > li").map { mapMostCommentedOrMostReadListItemToArticleSummaryItem(siteUrl, it) }.filterNotNull()
+    }
+
+    private fun mapMostCommentedOrMostReadListItemToArticleSummaryItem(siteUrl: String, listItem: Element): ArticleSummaryItem? {
+        listItem.select("a").first()?.let { anchorElement ->
+            return ArticleSummaryItem(makeLinkAbsolute(anchorElement.attr("href"), siteUrl), anchorElement.text().trim(), getArticleExtractor())
         }
 
         return null
