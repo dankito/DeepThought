@@ -18,6 +18,9 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
 
+    private var triedToResolveMultiPageArticle = false
+
+
     override fun getName(): String? {
         return "SZ"
     }
@@ -37,9 +40,12 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
     override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
-        if(isMultiPageArticle(document)) {
-            return extractArticleWithPost(url, "article.singlePage=true")
+        if(isMultiPageArticle(document) && triedToResolveMultiPageArticle == false) { // some multi page articles after fetching read all on one page still have the read all on  page link
+            triedToResolveMultiPageArticle = true
+            return extractArticleWithPost(url, "article.singlePage=true") // -> extractArticleWithPost() would be called endlessly. that's what triedToResolveMultiPageArticle is there for to avoid this
         }
+
+        triedToResolveMultiPageArticle = false
 
         document.body().select("#sitecontent").first()?.let { siteContent ->
             return extractArticle(siteContent, url)
