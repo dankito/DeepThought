@@ -14,21 +14,22 @@ class HeiseNewsArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
     }
 
     override fun canExtractEntryFromUrl(url: String): Boolean {
-        return url.startsWith("http") && url.contains("://www.heise.de/") && (
-                url.contains("://www.heise.de/newsticker/meldung/") ||
-                url.contains("://www.heise.de/ix/meldung/") ||
-                url.contains("://www.heise.de/security/meldung/") ||
-                url.contains("://www.heise.de/make/meldung/") ||
-                url.contains("://www.heise.de/mac-and-i/meldung/") )
+        return url.startsWith("http") && ( url.contains("://www.heise.de/") || url.contains("://m.heise.de/") ) && (
+                url.contains(".heise.de/newsticker/meldung/") ||
+                url.contains(".heise.de/ix/meldung/") ||
+                url.contains(".heise.de/security/meldung/") ||
+                url.contains(".heise.de/security/artikel/") ||
+                url.contains(".heise.de/make/meldung/") ||
+                url.contains(".heise.de/mac-and-i/meldung/") )
     }
 
 
-    override fun parseArticle(header: Element, articleElement: Element, url: String, title: String) : EntryExtractionResult? {
+    override fun parseArticle(headerElement: Element, articleElement: Element, url: String, title: String) : EntryExtractionResult? {
         articleElement.select(".meldung_wrapper").first()?.let { contentElement ->
             val entry = Entry(extractContent(articleElement, url))
             contentElement.select(".meldung_anrisstext").first()?.text()?.let { entry.abstractString = it }
 
-            val publishingDate = extractPublishingDate(header)
+            val publishingDate = extractPublishingDate(headerElement)
             val reference = Reference(url, title, publishingDate)
             reference.previewImageUrl = makeLinkAbsolute(contentElement.select(".aufmacherbild img").first()?.attr("src") ?: "", url)
 
