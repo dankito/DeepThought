@@ -2,6 +2,7 @@ package net.dankito.newsreader.summary
 
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.newsreader.article.DerFreitagArticleExtractor
+import net.dankito.newsreader.article.IArticleExtractor
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import org.jsoup.nodes.Document
@@ -36,7 +37,8 @@ class DerFreitagArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryE
 
     private fun mapCardElementToArticleSummaryItem(articleCardElement: Element): ArticleSummaryItem? {
         articleCardElement.select(".c-article-card__title a").first()?.let { titleAnchor ->
-            val item = ArticleSummaryItem(titleAnchor.attr("href"), titleAnchor.text().trim(), DerFreitagArticleExtractor::class.java)
+            val articleUrl = titleAnchor.attr("href")
+            val item = ArticleSummaryItem(articleUrl, titleAnchor.text().trim(), getExtractorClassForUrl(articleUrl))
 
             articleCardElement.select(".c-article-card__teaser").first()?.let { teaserElement ->
                 item.summary = teaserElement.text().trim()
@@ -51,6 +53,14 @@ class DerFreitagArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryE
             }
 
             return item
+        }
+
+        return null
+    }
+
+    private fun getExtractorClassForUrl(articleUrl: String): Class<out IArticleExtractor>? {
+        if(articleUrl.contains(".freitag.de/")) {
+            return DerFreitagArticleExtractor::class.java
         }
 
         return null
