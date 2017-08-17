@@ -82,19 +82,75 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
 
         val abstract = articleElement.ownerDocument().head().select("meta[property=og:description]").first()?.attr("content")?.trim() ?: ""
 
+        var content = extractContentForPringVersion(articleElement, url)
+
+        return EntryExtractionResult(Entry(content, abstract), reference)
+    }
+
+    private fun extractContentForPringVersion(articleElement: Element, url: String): String {
         var content = ""
+
         articleElement.select(".content").first()?.let { contentElement ->
             makeLinksAbsolute(contentElement, url)
-            content = contentElement.outerHtml()
+            tryToReplaceReferencesWithLinks(contentElement, articleElement)
 
-            articleElement.select("p > strong").forEach { // TODO: replace references to links in content with <a>
-                if(it.text().trim() == "Links in diesem Artikel:") {
-                    content += it.parent().outerHtml()
+            content = contentElement.outerHtml()
+        }
+
+        return content
+    }
+
+    private fun tryToReplaceReferencesWithLinks(contentElement: Element, articleElement: Element) {
+        val references = extractPrintVersionReferenceNumbers(articleElement)
+
+        contentElement.select("b").forEach { boldElement ->
+            getReferenceNumber(boldElement)?.let { number ->
+                references[number]?.let { referenceUrl ->
+                    val anchorElement = Element("a")
+                    anchorElement.attr("href", referenceUrl)
+                    anchorElement.text(boldElement.text())
+
+                    boldElement.replaceWith(anchorElement)
                 }
             }
         }
+    }
 
-        return EntryExtractionResult(Entry(content, abstract), reference)
+    private fun extractPrintVersionReferenceNumbers(articleElement: Element): HashMap<Int, String> {
+        val references = HashMap<Int, String>()
+
+        articleElement.select("p > strong").forEach {
+            if(it.text().trim() == "Links in diesem Artikel:") {
+                it.parent().select("small").forEach { smallElement ->
+                    getReferenceNumber(smallElement)?.let { referenceNumber ->
+                        references.put(referenceNumber, smallElement.text().trim())
+                    }
+                }
+            }
+        }
+        return references
+    }
+
+    private fun getReferenceNumber(element: Element): Int? {
+        val text = element.text().trim()
+        val endIndex = text.indexOf(']')
+
+        if(endIndex > 0) {
+            val startIndex = text.indexOf('[')
+
+            if(startIndex >= 0 && startIndex < endIndex) {
+                try {
+                    val referenceNumberString = text.substring(startIndex + 1, endIndex)
+                    val referenceNumber = Integer.parseInt(referenceNumberString)
+
+                    element.text(text.replace("[" + referenceNumberString + "]", ""))
+
+                    return referenceNumber
+                } catch(ignored: Exception) { }
+            }
+        }
+
+        return null
     }
 
     private fun extractReferenceForPrintVersion(articleElement: Element, url: String): Reference {
