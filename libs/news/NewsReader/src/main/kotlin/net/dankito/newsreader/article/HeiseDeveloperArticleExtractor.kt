@@ -18,12 +18,12 @@ class HeiseDeveloperArticleExtractor(webClient: IWebClient) : HeiseNewsAndDevelo
     }
 
 
-    override fun parseArticle(header: Element, articleElement: Element, url: String, title: String): EntryExtractionResult? {
+    override fun parseArticle(headerElement: Element, articleElement: Element, url: String, title: String): EntryExtractionResult? {
         articleElement.select(".article-content").first()?.let { contentElement ->
             val entry = Entry(extractContent(articleElement, url))
             contentElement.select(".article-content__lead").first()?.text()?.let { entry.abstractString = it }
 
-            val publishingDate = extractPublishingDate(header)
+            val publishingDate = extractPublishingDate(headerElement)
             val reference = Reference(url, title, publishingDate)
             reference.previewImageUrl = makeLinkAbsolute(contentElement.select(".aufmacherbild img").first()?.attr("src") ?: "", url)
 

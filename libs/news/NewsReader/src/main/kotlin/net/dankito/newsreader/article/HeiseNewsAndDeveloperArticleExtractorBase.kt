@@ -17,7 +17,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
     }
 
 
-    abstract protected fun parseArticle(header: Element, article: Element, url: String, title: String) : EntryExtractionResult?
+    abstract protected fun parseArticle(headerElement: Element, articleElement: Element, url: String, title: String) : EntryExtractionResult?
 
 
     override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
