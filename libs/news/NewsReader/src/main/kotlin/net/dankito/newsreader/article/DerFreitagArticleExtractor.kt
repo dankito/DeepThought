@@ -59,6 +59,7 @@ class DerFreitagArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
         // or .x-article-text ?
         articleElement.select(".s-article-text").first()?.let { textElement ->
             makeLinksAbsolute(textElement, url)
+            loadLazyLoadingElements(textElement)
             adjustSourceElements(textElement)
 
             var content = textElement.outerHtml()
