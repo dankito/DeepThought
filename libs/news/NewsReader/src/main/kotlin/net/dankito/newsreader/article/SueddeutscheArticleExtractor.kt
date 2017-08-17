@@ -137,7 +137,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         }
 
         articleBody.select(".caption").first()?.let { caption ->
-            caption.select(".article-sidebar-wrapper, .date-copy").remove()
+            caption.select("#article-sidebar-wrapper, .article-sidebar-wrapper, .date-copy").remove()
             imageHtml.append("<br/>" + caption.html())
         }
 
