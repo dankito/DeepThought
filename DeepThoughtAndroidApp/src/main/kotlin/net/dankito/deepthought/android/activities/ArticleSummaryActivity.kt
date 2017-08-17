@@ -284,7 +284,7 @@ class ArticleSummaryActivity : BaseActivity() {
                 }
             }
 
-            mode.title = getString(R.string.activity_article_summary_menu_count_articles_selected, selectedArticlesInContextualActionMode.size)
+            mode.title = getString(R.string.activity_article_summary_menu_count_articles_selected, selectedArticlesInContextualActionMode.size, adapter.count)
         }
 
         override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
