@@ -8,7 +8,7 @@
     />
 
     <item android:id="@+id/mnShareReferenceUrl"
-          android:title="@string/action_title_share"
+          android:title="@string/action_share"
           android:icon="@android:drawable/ic_menu_share"
     />
 

@@ -16,6 +16,8 @@
     <string name="floating_action_button_add_article_of_newspaper">%s Article</string>
 
     <string name="action_edit">Edit</string>
+    <string name="action_save">Save</string>
+    <string name="action_share">Share</string>
     <string name="action_delete">Delete</string>
 
     <string name="search_title">Search</string>
@@ -40,10 +42,6 @@
     <string name="dialog_article_summary_extractor_config_enter_name">Enter name:</string>
     <string name="dialog_article_summary_extractor_config_select_icon">Select icon:</string>
     <string name="dialog_article_summary_extractor_alert_message_delete_config" formatted="false">Really delete news site %s?</string>
-
-    <string name="action_title_save">Save</string>
-    <string name="action_title_edit">Edit</string>
-    <string name="action_title_share">Share</string>
 
     <string name="menu_share_reference_url">Url</string>
     <string name="menu_share_entry_content">Content</string>

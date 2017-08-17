@@ -14,6 +14,8 @@
     <string name="floating_action_button_add_article_of_newspaper">%s Artikel</string>
 
     <string name="action_edit">Bearbeiten</string>
+    <string name="action_save">Speichern</string>
+    <string name="action_share">Teilen</string>
     <string name="action_delete">Löschen</string>
 
     <string name="search_title">Suche</string>
@@ -38,10 +40,6 @@
     <string name="dialog_article_summary_extractor_config_enter_name">Name:</string>
     <string name="dialog_article_summary_extractor_config_select_icon">Icon auswählen:</string>
     <string name="dialog_article_summary_extractor_alert_message_delete_config" formatted="false">Nachrichtenseite %s wirklich löschen?</string>
-
-    <string name="action_title_save">Speichern</string>
-    <string name="action_title_edit">Bearbeiten</string>
-    <string name="action_title_share">Teilen</string>
 
     <string name="menu_share_reference_url">Link</string>
     <string name="menu_share_entry_content">Inhalt</string>
