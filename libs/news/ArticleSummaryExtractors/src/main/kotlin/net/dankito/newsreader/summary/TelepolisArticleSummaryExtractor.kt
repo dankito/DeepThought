@@ -1,6 +1,7 @@
 package net.dankito.newsreader.summary
 
 import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.newsreader.article.TelepolisArticleExtractor
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import org.jsoup.nodes.Document
@@ -41,7 +42,7 @@ class TelepolisArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
 
     private fun mapTopTeaserElementToArticleSummaryItem(siteUrl: String, topTeaserElement: Element): ArticleSummaryItem? {
         topTeaserElement.select("h2").first()?.let { titleAnchor ->
-            val item = ArticleSummaryItem(makeLinkAbsolute(topTeaserElement.attr("href"), siteUrl), titleAnchor.text().trim(), null)
+            val item = ArticleSummaryItem(makeLinkAbsolute(topTeaserElement.attr("href"), siteUrl), titleAnchor.text().trim(), getArticleExtractor())
 
             topTeaserElement.select("p").first()?.let { summaryElement ->
                 item.summary = summaryElement.text().trim()
@@ -65,7 +66,7 @@ class TelepolisArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
 
     private fun mapArticleElementToArticleSummaryItem(siteUrl: String, articleElement: Element): ArticleSummaryItem? {
         articleElement.select(".tp_title").first()?.let { titleAnchor ->
-            val item = ArticleSummaryItem(makeLinkAbsolute(articleElement.parent().attr("href"), siteUrl), titleAnchor.text().trim(), null)
+            val item = ArticleSummaryItem(makeLinkAbsolute(articleElement.parent().attr("href"), siteUrl), titleAnchor.text().trim(), getArticleExtractor())
 
             articleElement.select("p").first()?.let { summaryElement ->
                 item.summary = summaryElement.text().trim()
@@ -89,7 +90,7 @@ class TelepolisArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
 
     private fun mapTeaserElementToArticleSummaryItem(siteUrl: String, teaserElement: Element): ArticleSummaryItem? {
         teaserElement.select(".tp_title").first()?.let { titleAnchor ->
-            val item = ArticleSummaryItem(makeLinkAbsolute(teaserElement.parent().attr("href"), siteUrl), titleAnchor.text().trim(), null)
+            val item = ArticleSummaryItem(makeLinkAbsolute(teaserElement.parent().attr("href"), siteUrl), titleAnchor.text().trim(), getArticleExtractor())
 
             teaserElement.select("p").first()?.let { summaryElement ->
                 item.summary = summaryElement.text().trim()
@@ -104,6 +105,9 @@ class TelepolisArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
 
         return null
     }
+
+
+    private fun getArticleExtractor() = TelepolisArticleExtractor::class.java
 
 
 }
