@@ -16,10 +16,10 @@ class GuardianArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(web
     }
 
     override fun canExtractEntryFromUrl(url: String): Boolean {
-        if(url.startsWith("https://www.theguardian.com/") && url.length > "https://www.theguardian.com/".length) {
+        if(url.startsWith("://www.theguardian.com/") && url.length > "https://www.theguardian.com/".length + 5) {
             return true
         }
-        if(url.startsWith("https://www.theguardian.co.uk/") && url.length > "https://www.theguardian.co.uk/".length) {
+        if(url.startsWith("://www.theguardian.co.uk/") && url.length > "https://www.theguardian.co.uk/".length + 5) {
             return true
         }
 
