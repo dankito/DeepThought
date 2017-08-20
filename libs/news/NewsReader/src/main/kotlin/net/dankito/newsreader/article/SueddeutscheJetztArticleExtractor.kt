@@ -66,10 +66,8 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
     private fun parseContent(articleContentElement: Element): String {
         var content = ""
 
-        val itemsContainers = articleContentElement.select(".apos-item[data-type=\"richText\"]")
-        for (itemsContainer in itemsContainers) {
-            val paragraphs = itemsContainer.getElementsByTag("p")
-            for (paragraph in paragraphs) {
+        articleContentElement.select(".apos-item[data-type=\"richText\"]").forEach { itemsContainer ->
+            itemsContainer.select("p, h3").forEach { paragraph ->
                 content += parseParagraph(paragraph)
             }
         }
