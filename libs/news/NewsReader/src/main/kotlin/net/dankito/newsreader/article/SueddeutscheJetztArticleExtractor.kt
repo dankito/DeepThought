@@ -84,12 +84,12 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
     }
 
     private fun isEmptyParagraph(paragraph: Element?): Boolean {
-        if (paragraph == null || paragraph.text() == null) {
+        if(paragraph == null || paragraph.text().trim().isBlank()) {
             return true
         }
 
-        val text = paragraph.text().replace(160.toChar(), ' ') // replace non breakable spaces
-        return text.trim { it <= ' ' }.length == 0
+        val text = paragraph.text().replace(160.toChar(), ' ').replace(8234.toChar(), ' ') // replace non breakable spaces
+        return text.trim().isBlank()
     }
 
 
