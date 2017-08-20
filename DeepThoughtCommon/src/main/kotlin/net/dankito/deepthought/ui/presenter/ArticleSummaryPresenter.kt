@@ -23,6 +23,7 @@ import net.dankito.service.search.specific.TagsSearch
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IDialogService
+import java.net.URL
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -158,35 +159,45 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
     private fun retrievedArticle(extractor: IArticleExtractor, item: ArticleSummaryItem, asyncResult: AsyncResult<EntryExtractionResult>,
                                  extractionResult: EntryExtractionResult, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
-        getDefaultTagsForExtractor(extractor, item) { tag ->
-            tag?.let { extractionResult.tags.add(tag) }
+        val siteName = getSiteName(extractor, item)
 
-            setSeries(extractionResult, extractor, item, asyncResult, callback)
+        if(siteName == null) {
+            callback(asyncResult)
+        }
+        else {
+            getTagForSiteNameSynchronized(siteName) { tag ->
+                extractionResult.tags.add(tag)
+
+                setSeries(extractionResult, siteName, asyncResult, callback)
+            }
         }
     }
 
-    private fun getDefaultTagsForExtractor(extractor: IArticleExtractor, item: ArticleSummaryItem, callback: (Tag?) -> Unit) {
-        extractor.getName()?.let { extractorName ->
-            getTagForExtractorNameSynchronized(extractorName, callback)
+    private fun getSiteName(extractor: IArticleExtractor, item: ArticleSummaryItem): String? {
+        var siteName = extractor.getName()
+
+        if(siteName == null) { // when extractor is default article extractor, use host name for default tag and series
+            try {
+                val url = URL(item.url)
+                siteName = url.host
+            } catch(ignored: Exception) { }
         }
 
-        if(extractor.getName() == null && item.articleSummaryExtractorConfig?.name != null) {
-            item.articleSummaryExtractorConfig?.name?.let { getTagForExtractorNameSynchronized(it, callback) }
+        if(siteName == null) {
+            siteName = item.articleSummaryExtractorConfig?.name
         }
 
-        if(extractor.getName() == null && item.articleSummaryExtractorConfig?.name == null) {
-            callback(null)
-        }
+        return siteName
     }
 
     /**
      * To avoid that when multiple entries get fetched in parallel that multiple tags get created for one extractor this method synchronizes access to getTagForExtractorName()
      */
-    private fun getTagForExtractorNameSynchronized(extractorName: String, callback: (Tag) -> Unit) {
+    private fun getTagForSiteNameSynchronized(siteName: String, callback: (Tag) -> Unit) {
         synchronized(this) {
             val countDownLatch = CountDownLatch(1)
 
-            getTagForExtractorName(extractorName) {
+            getTagForSiteName(siteName) {
                 countDownLatch.countDown()
 
                 callback(it)
@@ -196,14 +207,14 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
         }
     }
 
-    private fun getTagForExtractorName(extractorName: String, callback: (Tag) -> Unit) {
-        searchEngine.searchTags(TagsSearch(extractorName) { tagsSearchResults ->
+    private fun getTagForSiteName(siteName: String, callback: (Tag) -> Unit) {
+        searchEngine.searchTags(TagsSearch(siteName) { tagsSearchResults ->
             if(tagsSearchResults.exactMatchesOfLastResult.isNotEmpty()) {
                 callback(tagsSearchResults.exactMatchesOfLastResult.first())
                 return@TagsSearch
             }
 
-            val extractorTag = Tag(extractorName) // no tag with name 'extractorName' found -> create new one
+            val extractorTag = Tag(siteName) // no tag with name 'extractorName' found -> create new one
 
             tagService.persist(extractorTag)
 
@@ -212,19 +223,17 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
     }
 
 
-    private fun setSeries(extractionResult: EntryExtractionResult, extractor: IArticleExtractor, item: ArticleSummaryItem, asyncResult: AsyncResult<EntryExtractionResult>, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
+    private fun setSeries(extractionResult: EntryExtractionResult, siteName: String, asyncResult: AsyncResult<EntryExtractionResult>, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
         extractionResult.reference?.let { reference ->
             if(reference.series == null || reference.series?.isPersisted() == false) { // series not set to a persisted Series -> try to find an existing one or create and persist a new one
-                val seriesTitle = reference.series?.title ?: extractor.getName() ?: item.articleSummaryExtractorConfig?.name
+                val seriesTitle = reference.series?.title ?: siteName
 
-                if(seriesTitle != null) {
-                    getSeriesForTitleSynchronized(seriesTitle) {
-                        reference.series = it
-                        callback(asyncResult)
-                    }
-
-                    return // avoid that callback() at end of this method gets called
+                getSeriesForTitleSynchronized(seriesTitle) {
+                    reference.series = it
+                    callback(asyncResult)
                 }
+
+                return // avoid that callback() at end of this method gets called
             }
         }
 
