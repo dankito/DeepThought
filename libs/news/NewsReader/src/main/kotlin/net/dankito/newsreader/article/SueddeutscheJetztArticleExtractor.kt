@@ -16,8 +16,6 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
     companion object {
         private val sueddeutscheJetztDateTimeFormat: DateFormat = SimpleDateFormat("dd.MM.yyyy")
 
-        private val sueddeutscheJetztDateTimeFormatOldVersion: DateFormat = SimpleDateFormat("dd.MM.yyyy - HH:mm", Locale.GERMAN)
-
         private val log = LoggerFactory.getLogger(SueddeutscheJetztArticleExtractor::class.java)
     }
 
