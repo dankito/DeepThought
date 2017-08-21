@@ -28,6 +28,7 @@ class ArticleExtractors(webClient: IWebClient) {
         implementedExtractors.put(NetzPolitikOrgArticleExtractor::class.java, NetzPolitikOrgArticleExtractor(webClient))
         implementedExtractors.put(GuardianArticleExtractor::class.java, GuardianArticleExtractor(webClient))
         implementedExtractors.put(PostillonArticleExtractor::class.java, PostillonArticleExtractor(webClient))
+        implementedExtractors.put(TagesschauArticleExtractor::class.java, TagesschauArticleExtractor(webClient))
     }
 
 
@@ -47,7 +48,7 @@ class ArticleExtractors(webClient: IWebClient) {
 
     private fun findImplementedExtractorThatCanExtractEntryFromUrl(url: String): IArticleExtractor? {
         implementedExtractors.forEach { (_, extractor) ->
-            if (extractor.canExtractEntryFromUrl(url)) {
+            if(extractor.canExtractEntryFromUrl(url)) {
                 return extractor
             }
         }
