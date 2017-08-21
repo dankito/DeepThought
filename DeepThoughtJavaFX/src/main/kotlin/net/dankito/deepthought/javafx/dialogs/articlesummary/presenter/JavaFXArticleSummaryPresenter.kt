@@ -6,15 +6,13 @@ import javafx.collections.FXCollections
 import javafx.scene.control.ListView
 import net.dankito.deepthought.javafx.dialogs.articlesummary.model.ArticleSummaryItemViewModel
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
+import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.service.data.ReadLaterArticleService
-import net.dankito.service.data.SeriesService
-import net.dankito.service.data.TagService
-import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.ui.IDialogService
 import tornadofx.*
 import java.text.DateFormat
@@ -25,9 +23,8 @@ import java.util.*
  * Yeah, i know this is bad design, a Controller deriving from a Presenter ...
  */
 class JavaFXArticleSummaryPresenter(private val articleSummaryExtractor: ArticleSummaryExtractorConfig, entryPersister: EntryPersister,
-                                    readLaterArticleService: ReadLaterArticleService, tagService: TagService, seriesService: SeriesService, searchEngine: ISearchEngine,
-                                    router: IRouter, dialogService: IDialogService)
-    : ArticleSummaryPresenter(entryPersister, readLaterArticleService, tagService, seriesService, searchEngine, router, dialogService) {
+                                    readLaterArticleService: ReadLaterArticleService, articleExtractorManager: ArticleExtractorManager, router: IRouter, dialogService: IDialogService)
+    : ArticleSummaryPresenter(entryPersister, readLaterArticleService, articleExtractorManager, router, dialogService) {
 
 
     companion object {

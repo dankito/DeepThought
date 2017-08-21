@@ -15,6 +15,7 @@ import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
 import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.deepthought.model.NetworkSettings
+import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.html.HtmlEditorExtractor
@@ -123,6 +124,12 @@ class CommonModule {
         return FaviconComparator(webClient)
     }
 
+
+    @Provides
+    @Singleton
+    fun provideArticleExtractorManager(tagService: TagService, seriesService: SeriesService, searchEngine: ISearchEngine) : ArticleExtractorManager {
+        return ArticleExtractorManager(tagService, seriesService, searchEngine)
+    }
 
     @Provides
     @Singleton

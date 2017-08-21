@@ -1,6 +1,7 @@
 package net.dankito.deepthought.di
 
 import dagger.Component
+import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.ui.presenter.*
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
@@ -38,5 +39,7 @@ interface CommonComponent : BaseComponent {
     fun inject(entryPersister: EntryPersister)
 
     fun inject(referencePersister: ReferencePersister)
+
+    fun inject(articleExtractorManager: ArticleExtractorManager)
 
 }

@@ -5,37 +5,22 @@ import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.extensions.extractor
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.model.ReadLaterArticle
-import net.dankito.deepthought.model.Series
-import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
-import net.dankito.newsreader.article.ArticleExtractors
-import net.dankito.newsreader.article.IArticleExtractor
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.service.data.ReadLaterArticleService
-import net.dankito.service.data.SeriesService
-import net.dankito.service.data.TagService
-import net.dankito.service.search.ISearchEngine
-import net.dankito.service.search.specific.SeriesSearch
-import net.dankito.service.search.specific.TagsSearch
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IDialogService
-import java.net.URL
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
 open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister, protected val readLaterArticleService: ReadLaterArticleService,
-                                   protected val tagService: TagService, protected val seriesService: SeriesService, protected val searchEngine: ISearchEngine, protected val router: IRouter,
-                                   protected val dialogService: IDialogService) {
+                                   protected val articleExtractorManager: ArticleExtractorManager, protected val router: IRouter, protected val dialogService: IDialogService) {
 
-
-    @Inject
-    protected lateinit var articleExtractors: ArticleExtractors
 
     @Inject
     protected lateinit var localization: Localization
@@ -146,130 +131,13 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
 
     private fun getArticle(item: ArticleSummaryItem, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
-        articleExtractors.getExtractorForItem(item)?.let { extractor ->
-            extractor.extractArticleAsync(item) { asyncResult ->
-                asyncResult.result?.let { retrievedArticle(extractor, item, asyncResult, it, callback) }
-                asyncResult.error?.let {
-                    callback(asyncResult)
-                    showError("alert.message.could.not.load.article", it)
-                }
+        articleExtractorManager.extractArticleAndAddDefaultDataAsync(item) { asyncResult ->
+            asyncResult.error?.let {
+                showError("alert.message.could.not.load.article", it)
             }
-        }
-    }
 
-    private fun retrievedArticle(extractor: IArticleExtractor, item: ArticleSummaryItem, asyncResult: AsyncResult<EntryExtractionResult>,
-                                 extractionResult: EntryExtractionResult, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
-        val siteName = getSiteName(extractor, item)
-
-        if(siteName == null) {
             callback(asyncResult)
         }
-        else {
-            getTagForSiteNameSynchronized(siteName) { tag ->
-                extractionResult.tags.add(tag)
-
-                setSeries(extractionResult, siteName, asyncResult, callback)
-            }
-        }
-    }
-
-    private fun getSiteName(extractor: IArticleExtractor, item: ArticleSummaryItem): String? {
-        var siteName = extractor.getName()
-
-        if(siteName == null) { // when extractor is default article extractor, use host name for default tag and series
-            try {
-                val url = URL(item.url)
-                siteName = url.host
-            } catch(ignored: Exception) { }
-        }
-
-        if(siteName == null) {
-            siteName = item.articleSummaryExtractorConfig?.name
-        }
-
-        return siteName
-    }
-
-    /**
-     * To avoid that when multiple entries get fetched in parallel that multiple tags get created for one extractor this method synchronizes access to getTagForExtractorName()
-     */
-    private fun getTagForSiteNameSynchronized(siteName: String, callback: (Tag) -> Unit) {
-        synchronized(this) {
-            val countDownLatch = CountDownLatch(1)
-
-            getTagForSiteName(siteName) {
-                countDownLatch.countDown()
-
-                callback(it)
-            }
-
-            try { countDownLatch.await(1, TimeUnit.SECONDS) } catch(ignored: Exception) { }
-        }
-    }
-
-    private fun getTagForSiteName(siteName: String, callback: (Tag) -> Unit) {
-        searchEngine.searchTags(TagsSearch(siteName) { tagsSearchResults ->
-            if(tagsSearchResults.exactMatchesOfLastResult.isNotEmpty()) {
-                callback(tagsSearchResults.exactMatchesOfLastResult.first())
-                return@TagsSearch
-            }
-
-            val extractorTag = Tag(siteName) // no tag with name 'extractorName' found -> create new one
-
-            tagService.persist(extractorTag)
-
-            callback(extractorTag)
-        })
-    }
-
-
-    private fun setSeries(extractionResult: EntryExtractionResult, siteName: String, asyncResult: AsyncResult<EntryExtractionResult>, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
-        extractionResult.reference?.let { reference ->
-            if(reference.series == null || reference.series?.isPersisted() == false) { // series not set to a persisted Series -> try to find an existing one or create and persist a new one
-                val seriesTitle = reference.series?.title ?: siteName
-
-                getSeriesForTitleSynchronized(seriesTitle) {
-                    reference.series = it
-                    callback(asyncResult)
-                }
-
-                return // avoid that callback() at end of this method gets called
-            }
-        }
-
-        callback(asyncResult)
-    }
-
-    /**
-     * To avoid that when multiple entries get fetched in parallel that multiple tags get created for one extractor this method synchronizes access to getTagForExtractorName()
-     */
-    private fun getSeriesForTitleSynchronized(seriesTitle: String, callback: (Series) -> Unit) {
-        synchronized(this) {
-            val countDownLatch = CountDownLatch(1)
-
-            getSeriesForTitle(seriesTitle) {
-                countDownLatch.countDown()
-
-                callback(it)
-            }
-
-            try { countDownLatch.await(1, TimeUnit.SECONDS) } catch(ignored: Exception) { }
-        }
-    }
-
-    private fun getSeriesForTitle(seriesTitle: String, callback: (Series) -> Unit) {
-        searchEngine.searchSeries(SeriesSearch(seriesTitle) { searchResults ->
-            if(searchResults.isNotEmpty()) {
-                callback(searchResults.first())
-                return@SeriesSearch
-            }
-
-            val series = Series(seriesTitle) // no Series with name 'seriesTitle' found -> create new one
-
-            seriesService.persist(series)
-
-            callback(series)
-        })
     }
 
 

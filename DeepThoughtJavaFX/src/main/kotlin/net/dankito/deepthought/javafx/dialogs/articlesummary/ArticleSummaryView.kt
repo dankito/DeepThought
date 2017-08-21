@@ -6,12 +6,10 @@ import net.dankito.deepthought.javafx.dialogs.articlesummary.controls.ArticleSum
 import net.dankito.deepthought.javafx.dialogs.articlesummary.controls.ArticleSummaryItemsView
 import net.dankito.deepthought.javafx.dialogs.articlesummary.presenter.JavaFXArticleSummaryPresenter
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
+import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.service.data.ReadLaterArticleService
-import net.dankito.service.data.SeriesService
-import net.dankito.service.data.TagService
-import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.ui.IDialogService
 import tornadofx.*
 import javax.inject.Inject
@@ -26,13 +24,7 @@ class ArticleSummaryView : DialogFragment() {
     protected lateinit var readLaterArticleService: ReadLaterArticleService
 
     @Inject
-    protected lateinit var tagService: TagService
-
-    @Inject
-    protected lateinit var seriesService: SeriesService
-
-    @Inject
-    protected lateinit var searchEngine: ISearchEngine
+    protected lateinit var articleExtractorManager: ArticleExtractorManager
 
     @Inject
     protected lateinit var router: IRouter
@@ -59,7 +51,7 @@ class ArticleSummaryView : DialogFragment() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = JavaFXArticleSummaryPresenter(articleSummaryExtractor, entryPerister, readLaterArticleService, tagService, seriesService, searchEngine, router, dialogService)
+        presenter = JavaFXArticleSummaryPresenter(articleSummaryExtractor, entryPerister, readLaterArticleService, articleExtractorManager, router, dialogService)
 
         articleSummaryItemsView = ArticleSummaryItemsView(presenter)
         root.center = articleSummaryItemsView.root
