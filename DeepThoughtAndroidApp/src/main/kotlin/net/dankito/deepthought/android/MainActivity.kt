@@ -18,9 +18,9 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.fragments.MainActivityTabFragment
 import net.dankito.deepthought.android.service.IntentHandler
 import net.dankito.deepthought.android.views.FloatingActionMenuButton
+import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
@@ -48,7 +48,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     protected lateinit var summaryExtractorManager: ArticleSummaryExtractorConfigManager
 
     @Inject
-    protected lateinit var articleExtractors: ArticleExtractors
+    protected lateinit var articleExtractorManager: ArticleExtractorManager
 
     @Inject
     protected lateinit var dialogService: IDialogService
@@ -160,7 +160,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             return
         }
 
-        IntentHandler(articleExtractors, router, dialogService).handle(intent)
+        IntentHandler(articleExtractorManager, router, dialogService).handle(intent)
     }
 
 
