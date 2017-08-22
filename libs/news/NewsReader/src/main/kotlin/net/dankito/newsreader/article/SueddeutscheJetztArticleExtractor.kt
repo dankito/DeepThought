@@ -66,8 +66,9 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
     private fun parseContent(articleContentElement: Element): String {
         var content = ""
 
-        articleContentElement.select(".apos-item[data-type=\"richText\"]").forEach { itemsContainer ->
-            itemsContainer.select("p, h3").forEach { paragraph ->
+        // data-type=html and iframe e.g. for WhatsApp Kolumne
+        articleContentElement.select(".apos-item[data-type=\"richText\"], .apos-item[data-type=\"html\"]").forEach { itemsContainer ->
+            itemsContainer.select("p, h3, iframe").forEach { paragraph ->
                 content += parseParagraph(paragraph)
             }
         }
@@ -76,6 +77,10 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
     }
 
     private fun parseParagraph(paragraph: Element): String {
+        if(paragraph?.tagName() == "iframe") {
+            return paragraph.parent().parent().outerHtml()
+        }
+
         if (isEmptyParagraph(paragraph)) {
             return ""
         }
