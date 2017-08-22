@@ -34,7 +34,7 @@ import javax.inject.Inject
 class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
 
     companion object {
-        private val DoubleTapMaxDelayMillis = 500
+        private val DoubleTapMaxDelayMillis = 500L
     }
 
 
