@@ -20,11 +20,15 @@ class TagsOnEntryAdapter(private val presenter: TagsOnEntryListPresenter, val li
 
         val tag = getItem(position)
 
-        view.chktxtvwTag.text = tag.displayText
+        view.chktxtvwTag.visibility = if(tag == null) View.INVISIBLE else View.VISIBLE
 
-        view.chktxtvwTag.isChecked = tagsOnEntry.contains(tag)
+        if(tag != null) {
+            view.chktxtvwTag.text = tag.displayText
 
-        view.chktxtvwTag.setOnClickListener { toggleTagOnEntryOnUIThread(position) }
+            view.chktxtvwTag.isChecked = tagsOnEntry.contains(tag)
+
+            view.chktxtvwTag.setOnClickListener { toggleTagOnEntryOnUIThread(position) }
+        }
 
         setBackgroundColor(view, tag)
 

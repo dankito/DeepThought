@@ -19,7 +19,10 @@ class TagAdapter(private val presenter: TagsListPresenter) : ListAdapter<Tag>() 
 
         val tag = getItem(position)
 
-        view.txtTagDisplayText.text = tag.displayText
+        view.txtTagDisplayText.visibility = if (tag == null) View.INVISIBLE else View.VISIBLE
+        if(tag != null) {
+            view.txtTagDisplayText.text = tag.displayText
+        }
 
         setFilterIconDependingOnTagState(tag, view.imgFilter)
         view.imgFilter.setOnClickListener { presenter.toggleFilterTag(tag) }
@@ -31,7 +34,7 @@ class TagAdapter(private val presenter: TagsListPresenter) : ListAdapter<Tag>() 
 
 
     private fun setFilterIconDependingOnTagState(tag: Tag, imgFilter: ImageView) {
-        if(tag is CalculatedTag) {
+        if(tag is CalculatedTag || tag == null) {
             imgFilter.visibility = View.INVISIBLE
         }
         else {

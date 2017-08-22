@@ -40,7 +40,7 @@ class TagsSearchResult {
 
     private fun findExactMatch(searchTerm: String, allMatches: List<Tag>) {
         for(match in allMatches) {
-            if (searchTerm == match.name.toLowerCase()) {
+            if(match != null && searchTerm == match.name.toLowerCase()) {
                 this.hasExactMatches = true
                 (this.exactMatches as MutableList).add(match)
             }

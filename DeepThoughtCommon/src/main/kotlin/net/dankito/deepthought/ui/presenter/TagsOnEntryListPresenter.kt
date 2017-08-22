@@ -34,7 +34,7 @@ class TagsOnEntryListPresenter(tagsListView: ITagsListView, searchEngine: ISearc
                     result.exactMatches.forEach { toggleTagAffiliation(it, tagsOnEntry) }
                 }
                 else {
-                    result.allMatches.forEach { toggleTagAffiliation(it, tagsOnEntry) }
+                    result.allMatches.filterNotNull().forEach { toggleTagAffiliation(it, tagsOnEntry) }
                 }
             }
         }
