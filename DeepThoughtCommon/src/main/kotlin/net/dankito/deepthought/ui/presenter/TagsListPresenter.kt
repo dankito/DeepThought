@@ -102,18 +102,13 @@ class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: Da
 
     fun getCountEntriesForFilteredTag(tag: Tag): Int {
         lastFilteredTagsSearchResults?.let {
-            var count = 0
             val allFilteredEntryIds = (it.entriesHavingFilteredTags as FilteredTagsLazyLoadingLuceneSearchResultsList).entityIds // TODO: this is bad code, uses knowledge of  implementation details
 
             (tag.entries as? LazyLoadingEntitiesCollection)?.let { // TODO: here as well
-                it.targetEntitiesIds.forEach {
-                    if(allFilteredEntryIds.contains(it)) {
-                        count++
-                    }
-                }
+                val filteredEntriesOnTag = ArrayList(it.targetEntitiesIds)
+                filteredEntriesOnTag.retainAll(allFilteredEntryIds)
+                return filteredEntriesOnTag.size
             }
-
-            return count
         }
 
         return tag.countEntries
