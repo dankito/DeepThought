@@ -119,7 +119,6 @@ abstract class MainActivityTabFragment(private val layoutResourceId: Int, privat
             val searchManager = activity.getSystemService(Context.SEARCH_SERVICE) as SearchManager
             searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.componentName))
             searchView.queryHint = getQueryHint(activity)
-            searchView.setOnQueryTextListener(entriesQueryTextListener)
 
             presenter?.getLastSearchTerm()?.let { lastSearchTerm ->
                 if(lastSearchTerm != Search.EmptySearchTerm) {
@@ -127,6 +126,9 @@ abstract class MainActivityTabFragment(private val layoutResourceId: Int, privat
                     searchView.setQuery(lastSearchTerm, true)
                 }
             }
+
+            searchView.setOnQueryTextListener(entriesQueryTextListener) // move setOnQueryTextListener() behind searchView.setQuery() (in presenter?.getLastSearchTerm()?.let {})
+            // as otherwise when lastSearchTerm != null onQuerySubmit gets called (and therefore e.g. tag filter applied)
         }
     }
 
