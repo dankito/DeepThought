@@ -119,7 +119,7 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
         rootView.edtxtEditEntrySearchTag.postDelayed({
             val keyboard = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             keyboard.showSoftInput(rootView.edtxtEditEntrySearchTag, 0)
-        }, 1000)
+        }, 50)
     }
 
     private fun menuItemClicked(item: MenuItem): Boolean {
