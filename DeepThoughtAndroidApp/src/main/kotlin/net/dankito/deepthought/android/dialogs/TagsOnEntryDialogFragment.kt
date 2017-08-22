@@ -27,10 +27,16 @@ import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
 import net.dankito.utils.ui.IDialogService
+import java.util.*
 import javax.inject.Inject
 
 
 class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
+
+    companion object {
+        private val DoubleTapMaxDelayMillis = 500
+    }
+
 
     @Inject
     protected lateinit var tagService: TagService
@@ -51,6 +57,8 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
     private val presenter: TagsOnEntryListPresenter
 
     private val adapter: TagsOnEntryAdapter
+
+    private var lastActionPressTime = Date()
 
     private var tagsChangedCallback: ((MutableList<Tag>) -> Unit)? = null
 
@@ -229,11 +237,30 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
 
     private fun handleEditEntrySearchTagAction(actionId: Int, keyEvent: KeyEvent?): Boolean {
         if(actionId == EditorInfo.IME_ACTION_DONE || (actionId == EditorInfo.IME_NULL && keyEvent?.action == KeyEvent.ACTION_DOWN)) {
-            handleCreateNewTagOrToggleTagsAction()
+            val previousActionPressTime = lastActionPressTime
+            lastActionPressTime = Date()
+
+            if(wasDoubleTap(lastActionPressTime, previousActionPressTime)) {
+                hideKeyboard()
+                applyChangesAndCloseDialog()
+            }
+            else {
+                handleCreateNewTagOrToggleTagsAction()
+            }
+
             return true
         }
 
         return false
+    }
+
+    private fun wasDoubleTap(currentActionPressTime: Date, previousActionPressTime: Date): Boolean {
+        return currentActionPressTime.time - previousActionPressTime.time <= DoubleTapMaxDelayMillis
+    }
+
+    private fun hideKeyboard() {
+        val keyboard = (activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+        keyboard.hideSoftInputFromInputMethod(edtxtEditEntrySearchTag.windowToken, 0)
     }
 
     private fun setTagsOnEntryPreviewOnUIThread(tagsOnEntry: MutableList<Tag>) {
