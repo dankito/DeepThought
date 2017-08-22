@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory
 import java.util.*
 
 
-open class LazyLoadingList<T : BaseEntity>(protected var entityManager: IEntityManager, protected var resultType: Class<T>, protected var entityIds: MutableCollection<String> = HashSet<String>()) : AbstractList<T>() {
+open class LazyLoadingList<T : BaseEntity>(protected var entityManager: IEntityManager, protected var resultType: Class<T>, var entityIds: MutableCollection<String> = HashSet<String>()) : AbstractList<T>() {
 
     companion object {
         private val log = LoggerFactory.getLogger(LazyLoadingList::class.java)
