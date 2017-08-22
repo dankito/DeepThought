@@ -7,7 +7,7 @@ import net.dankito.service.search.specific.TagsSearchResults
 
 class TagsSearchResultsUtil {
 
-    fun getTagSearchResultState(tag: Tag, results: TagsSearchResults?): TagSearchResultState {
+    fun getTagSearchResultState(tag: Tag?, results: TagsSearchResults?): TagSearchResultState {
         if(results == null || tag == null) {
             return TagSearchResultState.DEFAULT
         }

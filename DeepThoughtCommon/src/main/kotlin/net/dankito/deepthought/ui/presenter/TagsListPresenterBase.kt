@@ -104,7 +104,7 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
     }
 
 
-    fun getTagSearchResultState(tag: Tag): TagSearchResultState {
+    fun getTagSearchResultState(tag: Tag?): TagSearchResultState {
         return searchResultsUtil.getTagSearchResultState(tag, lastTagsSearchResults)
     }
 
