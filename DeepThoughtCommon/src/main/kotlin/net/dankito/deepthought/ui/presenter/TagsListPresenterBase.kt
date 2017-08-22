@@ -13,6 +13,7 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
 import net.dankito.service.search.specific.FilteredTagsSearch
+import net.dankito.service.search.specific.FilteredTagsSearchResult
 import net.dankito.service.search.specific.TagsSearch
 import net.dankito.service.search.specific.TagsSearchResults
 import net.dankito.utils.localization.Localization
@@ -27,6 +28,8 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
     protected var lastSearchTermProperty = Search.EmptySearchTerm
 
     protected var lastTagsSearchResults: TagsSearchResults? = null
+
+    protected var lastFilteredTagsSearchResults: FilteredTagsSearchResult? = null
 
     protected val tagsFilter = ArrayList<Tag>()
 
@@ -71,6 +74,7 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
     private fun searchTagsWithoutFilter(searchTerm: String) {
         searchEngine.searchTags(TagsSearch(searchTerm) { result ->
             this.lastTagsSearchResults = result
+            this.lastFilteredTagsSearchResults = null
 
             val tags = getTagsFromSearchTagsWithoutFilterResult(result)
 
@@ -88,6 +92,7 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
 
         searchEngine.searchFilteredTags(FilteredTagsSearch(tagsFilter, searchTerm) { result ->
             this.lastTagsSearchResults = null
+            this.lastFilteredTagsSearchResults = result
 
             tagsListView.showTags(result.tagsOnEntriesContainingFilteredTags)
         })

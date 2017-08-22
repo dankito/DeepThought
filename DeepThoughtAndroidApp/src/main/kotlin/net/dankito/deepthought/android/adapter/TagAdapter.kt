@@ -19,10 +19,7 @@ class TagAdapter(private val presenter: TagsListPresenter) : ListAdapter<Tag>() 
 
         val tag = getItem(position)
 
-        view.txtTagDisplayText.visibility = if (tag == null) View.INVISIBLE else View.VISIBLE
-        if(tag != null) {
-            view.txtTagDisplayText.text = tag.displayText
-        }
+        setTagDisplayText(view, tag)
 
         setFilterIconDependingOnTagState(tag, view.imgFilter)
         view.imgFilter.setOnClickListener { presenter.toggleFilterTag(tag) }
@@ -30,6 +27,19 @@ class TagAdapter(private val presenter: TagsListPresenter) : ListAdapter<Tag>() 
         setBackgroundColor(view, tag)
 
         return view
+    }
+
+    private fun setTagDisplayText(view: View, tag: Tag) {
+        view.txtTagDisplayText.visibility = if (tag == null) View.INVISIBLE else View.VISIBLE
+
+        if(tag != null) {
+            if(presenter.isTagFilterApplied()) {
+                view.txtTagDisplayText.text = "${tag.name} (${presenter.getCountEntriesForFilteredTag(tag)} / ${tag.countEntries})"
+            }
+            else {
+                view.txtTagDisplayText.text = tag.displayText
+            }
+        }
     }
 
 

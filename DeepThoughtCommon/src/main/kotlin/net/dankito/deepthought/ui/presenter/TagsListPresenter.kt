@@ -8,10 +8,12 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.view.ITagsListView
+import net.dankito.jpa.relationship.collections.LazyLoadingEntitiesCollection
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.results.FilteredTagsLazyLoadingLuceneSearchResultsList
 import net.dankito.service.search.specific.TagsSearchResults
 import net.dankito.service.search.util.CombinedLazyLoadingList
 import net.dankito.utils.ui.IDialogService
@@ -96,6 +98,25 @@ class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: Da
         else {
             tagsFilter.add(tag)
         }
+    }
+
+    fun getCountEntriesForFilteredTag(tag: Tag): Int {
+        lastFilteredTagsSearchResults?.let {
+            var count = 0
+            val allFilteredEntryIds = (it.entriesHavingFilteredTags as FilteredTagsLazyLoadingLuceneSearchResultsList).entityIds // TODO: this is bad code, uses knowledge of  implementation details
+
+            (tag.entries as? LazyLoadingEntitiesCollection)?.let { // TODO: here as well
+                it.targetEntitiesIds.forEach {
+                    if(allFilteredEntryIds.contains(it)) {
+                        count++
+                    }
+                }
+            }
+
+            return count
+        }
+
+        return tag.countEntries
     }
 
 
