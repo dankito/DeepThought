@@ -74,7 +74,11 @@ val Entry.tagsPreview: String
 
 
 private fun getPlainTextForHtml(htmlString: String): String {
-    return Jsoup.parseBodyFragment(htmlString).text()
+    if(htmlString != null) { // to be on the safe side, happened sometimes
+        return Jsoup.parseBodyFragment(htmlString).text()
+    }
+
+    return ""
 }
 
 
