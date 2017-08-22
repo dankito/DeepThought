@@ -37,7 +37,7 @@ class ViewEntryActivity : BaseActivity() {
         private const val READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME = "READ_LATER_ARTICLE_ID"
         private const val ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ENTRY_EXTRACTION_RESULT"
 
-        private const val PERIOD_AFTER_TO_SHOW_READER_MODE_ON_START_MILLIS = 2 * 1000L
+        private const val PERIOD_AFTER_TO_SHOW_READER_MODE_ON_START_MILLIS = 1 * 1000L
 
         private const val NON_READER_MODE_SYSTEM_UI_FLAGS = 0
         private val READER_MODE_SYSTEM_UI_FLAGS: Int
