@@ -49,11 +49,11 @@ class TagAdapter(private val presenter: TagsListPresenter) : ListAdapter<Tag>() 
         }
         else {
             imgFilter.visibility = View.VISIBLE
-        }
 
-        when(presenter.isTagFiltered(tag)) {
-            true -> imgFilter.setImageResource(R.drawable.filter)
-            false -> imgFilter.setImageResource(R.drawable.filter_disabled)
+            when(presenter.isTagFiltered(tag)) {
+                true -> imgFilter.setImageResource(R.drawable.filter)
+                false -> imgFilter.setImageResource(R.drawable.filter_disabled)
+            }
         }
     }
 
