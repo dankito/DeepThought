@@ -107,8 +107,10 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
 
         rootView.edtxtEditEntrySearchTag.requestFocus()
         rootView.edtxtEditEntrySearchTag.postDelayed({
-            val keyboard = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            keyboard.showSoftInput(rootView.edtxtEditEntrySearchTag, 0)
+            activity?.let { activity -> // in rare cases activity was null
+                val keyboard = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                keyboard.showSoftInput(rootView.edtxtEditEntrySearchTag, 0)
+            }
         }, 50)
 
         setHasOptionsMenu(true)
