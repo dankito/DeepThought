@@ -98,7 +98,7 @@ abstract class FullscreenDialogFragment : DialogFragment() {
     }
 
 
-    protected fun closeDialog() {
+    protected open fun closeDialog() {
         activity?.let { activity ->
             val fragmentManager = activity.supportFragmentManager
 
