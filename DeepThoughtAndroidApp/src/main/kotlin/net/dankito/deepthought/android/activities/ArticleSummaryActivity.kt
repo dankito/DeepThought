@@ -6,9 +6,7 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.TypedValue
-import android.view.ActionMode
-import android.view.Menu
-import android.view.MenuItem
+import android.view.*
 import android.widget.AbsListView
 import android.widget.ListView
 import kotlinx.android.synthetic.main.activity_article_summary.*
@@ -263,6 +261,8 @@ class ArticleSummaryActivity : BaseActivity() {
             val saveArticleItem = menu.findItem(R.id.mnSaveArticle)
             saveArticleItem?.actionView?.setOnClickListener { onActionItemClicked(mode, saveArticleItem) }
 
+            placeActionModeBarInAppBarLayout()
+
             return true
         }
 
@@ -308,9 +308,22 @@ class ArticleSummaryActivity : BaseActivity() {
         }
 
         override fun onDestroyActionMode(mode: ActionMode) {
+            findViewById(android.support.v7.appcompat.R.id.action_mode_bar)?.visibility = View.GONE // hide action_mode_bar here as otherwise it will be displayed together with toolbar
+            toolbar.visibility = View.VISIBLE
+
             selectedArticlesInContextualActionMode.clear()
         }
 
+    }
+
+    private fun placeActionModeBarInAppBarLayout() {
+        findViewById(android.support.v7.appcompat.R.id.action_mode_bar)?.let { actionModeBar ->
+            (actionModeBar.parent as? ViewGroup)?.let { parent ->
+                parent.removeView(actionModeBar)
+                appBarLayout.addView(actionModeBar)
+                toolbar.visibility = View.GONE
+            }
+        }
     }
 
 }
