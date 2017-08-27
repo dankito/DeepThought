@@ -11,6 +11,7 @@ import net.dankito.deepthought.android.activities.arguments.EditEntryActivityRes
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
 import net.dankito.deepthought.android.activities.arguments.EntryActivityParameters
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.android.dialogs.EditHtmlTextDialog
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.views.EntryFieldsPreview
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditor
@@ -228,7 +229,20 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun editAbstract() {
-        // TODO
+        entry?.let { entry ->
+            val editHtmlTextDialog = EditHtmlTextDialog()
+
+            editHtmlTextDialog.showDialog(supportFragmentManager, entry.abstractString) {
+                entry.abstractString = it
+
+                entryHasBeenEdited()
+
+                runOnUiThread {
+                    updateCanEntryBeSavedOnUIThread(true)
+                    setAbstractPreviewOnUIThread()
+                }
+            }
+        }
     }
 
     private fun editReference() {
