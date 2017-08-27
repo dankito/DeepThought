@@ -273,7 +273,6 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
     protected fun indexDocument(doc: Document) {
         try {
             getWriter()?.let { writer ->
-                log.info("Indexing document {}", doc)
                 writer.addDocument(doc)
 
                 startCommitIndicesTimer()
@@ -298,8 +297,6 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
         try {
             getWriter()?.let { writer ->
-                log.info("Removing Entity {} from index", removedEntity)
-
                 removedEntity.id?.let { removeEntityFromIndex(writer, it) }
             }
         } catch (e: Exception) {
