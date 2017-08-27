@@ -1,8 +1,7 @@
 package net.dankito.deepthought.android.dialogs
 
 import android.content.Context
-import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.text.Editable
 import android.text.TextWatcher
@@ -31,7 +30,7 @@ import java.util.*
 import javax.inject.Inject
 
 
-class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
+class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
 
     companion object {
         private val DoubleTapMaxDelayMillis = 500L
@@ -78,25 +77,9 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
     }
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.dialog_tags_on_entry, container, false)
+    override fun getLayoutId() = R.layout.dialog_tags_on_entry
 
-        setupUI(rootView)
-
-        setHasOptionsMenu(true)
-
-        searchTags(Search.EmptySearchTerm)
-
-        return rootView
-    }
-
-    override fun onDestroy() {
-        presenter.destroy()
-
-        super.onDestroy()
-    }
-
-    private fun setupUI(rootView: View) {
+    override fun setupUI(rootView: View) {
         rootView.toolbar.inflateMenu(R.menu.dialog_tags_on_entry_menu)
         rootView.toolbar.setOnMenuItemClickListener { item -> menuItemClicked(item) }
 
@@ -120,7 +103,18 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
             val keyboard = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             keyboard.showSoftInput(rootView.edtxtEditEntrySearchTag, 0)
         }, 50)
+
+        setHasOptionsMenu(true)
+
+        searchTags(Search.EmptySearchTerm)
     }
+
+    override fun onDestroy() {
+        presenter.destroy()
+
+        super.onDestroy()
+    }
+
 
     private fun menuItemClicked(item: MenuItem): Boolean {
         when(item.itemId) {
@@ -241,7 +235,6 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
             lastActionPressTime = Date()
 
             if(wasDoubleTap(lastActionPressTime, previousActionPressTime)) {
-                hideKeyboard()
                 applyChangesAndCloseDialog()
             }
             else {
@@ -258,11 +251,6 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
         return currentActionPressTime.time - previousActionPressTime.time <= DoubleTapMaxDelayMillis
     }
 
-    private fun hideKeyboard() {
-        val keyboard = (activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-        keyboard.hideSoftInputFromInputMethod(edtxtEditEntrySearchTag.windowToken, 0)
-    }
-
     private fun setTagsOnEntryPreviewOnUIThread(tagsOnEntry: MutableList<Tag>) {
         txtTagsPreview?.text = tagsOnEntry.sortedBy { it.name.toLowerCase() }.joinToString { it.name }
     }
@@ -274,7 +262,7 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
         adapter.tagsOnEntry = ArrayList(tagsOnEntry) // make a copy so that original collection doesn't get manipulated
         setTagsOnEntryPreviewOnUIThread(tagsOnEntry)
 
-        show(fragmentManager, javaClass.name)
+        showInFullscreen(fragmentManager, false)
     }
 
     private fun applyChangesAndCloseDialog() {
@@ -283,10 +271,15 @@ class TagsOnEntryDialogFragment : DialogFragment(), ITagsListView {
         closeDialog()
     }
 
-    private fun closeDialog() {
+    override fun closeDialogOnUiThread(activity: FragmentActivity) {
         tagsChangedCallback = null
 
-        dismiss()
+        edtxtEditEntrySearchTag?.let { edtxtEditEntrySearchTag ->
+            val keyboard = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            keyboard.hideSoftInputFromWindow(edtxtEditEntrySearchTag.windowToken, 0)
+        }
+
+        super.closeDialogOnUiThread(activity)
     }
 
 
