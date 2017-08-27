@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
+import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.widget.Toolbar
@@ -101,15 +102,19 @@ abstract class FullscreenDialogFragment : DialogFragment() {
 
     protected open fun closeDialog() {
         activity?.let { activity ->
-            val fragmentManager = activity.supportFragmentManager
-
-            val transaction = fragmentManager.beginTransaction()
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
-
-            transaction.remove(this)
-
-            transaction.commit()
+            closeDialogOnUiThread(activity)
         }
+    }
+
+    protected open fun closeDialogOnUiThread(activity: FragmentActivity) {
+        val fragmentManager = activity.supportFragmentManager
+
+        val transaction = fragmentManager.beginTransaction()
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+
+        transaction.remove(this)
+
+        transaction.commit()
     }
 
 
