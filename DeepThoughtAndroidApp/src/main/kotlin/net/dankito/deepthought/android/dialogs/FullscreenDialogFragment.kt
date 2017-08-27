@@ -44,7 +44,15 @@ abstract class FullscreenDialogFragment : DialogFragment() {
 
         setupUI(rootView)
 
+        savedInstanceState?.let {
+            restoreState(savedInstanceState)
+        }
+
         return rootView
+    }
+
+    protected open fun restoreState(savedInstanceState: Bundle) {
+        // may be overwritten in sub class
     }
 
     private fun hideStatusBar(activity: Activity) {
