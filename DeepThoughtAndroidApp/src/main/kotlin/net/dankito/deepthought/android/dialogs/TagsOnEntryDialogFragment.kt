@@ -1,11 +1,15 @@
 package net.dankito.deepthought.android.dialogs
 
 import android.content.Context
+import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.*
+import android.view.ContextMenu
+import android.view.KeyEvent
+import android.view.MenuItem
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
@@ -34,6 +38,9 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
 
     companion object {
         private val DoubleTapMaxDelayMillis = 500L
+
+        private val TAGS_INTENT_EXTRA_NAME = "TAGS_ON_ENTRY"
+        private val TAGS_SEPARATOR = ","
     }
 
 
@@ -113,6 +120,27 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
         presenter.destroy()
 
         super.onDestroy()
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+
+        outState?.let {
+            outState.putString(TAGS_INTENT_EXTRA_NAME, adapter.tagsOnEntry.joinToString(TAGS_SEPARATOR) { it.id ?: "" })
+        }
+    }
+
+    override fun restoreState(savedInstanceState: Bundle) {
+        savedInstanceState.getString(TAGS_INTENT_EXTRA_NAME)?.let { tagsString ->
+            val tagIds = tagsString.split(TAGS_SEPARATOR)
+
+            tagIds.forEach { id ->
+                tagService.retrieve(id)?.let { tag ->
+                    adapter.tagsOnEntry.add(tag)
+                }
+            }
+        }
     }
 
 
