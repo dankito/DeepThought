@@ -3,7 +3,7 @@
     <string name="tab_entries_title">Einträge</string>
     <string name="tab_tags_title">Schlagworte</string>
     <string name="tab_references_title">Quellen</string>
-    <string name="tab_read_later_articles_title">Später lesen</string>
+    <string name="tab_read_later_articles_title">Gemerkt</string>
 
     <string name="navigation_drawer_open">Navigation Drawer öffnen</string> <!-- TODO -->
     <string name="navigation_drawer_close">Navigation Drawer schließen</string> <!-- TODO -->
@@ -17,7 +17,7 @@
     <string name="action_save">Speichern</string>
     <string name="action_share">Teilen</string>
     <string name="action_view">Anzeigen</string>
-    <string name="action_read_article_later">Später leseb</string>
+    <string name="action_read_article_later">Vormerken</string>
     <string name="action_delete">Löschen</string>
 
     <string name="search_title">Suche</string>
@@ -27,7 +27,7 @@
     <string name="search_hint_read_later_articles">Artikel zum später Lesen finden</string>
 
     <string name="activity_article_summary_menu_view">Anzeigen</string>
-    <string name="activity_article_summary_menu_save_for_later_reading">Später lesen</string>
+    <string name="activity_article_summary_menu_save_for_later_reading">Vormerken</string>
     <string name="activity_article_summary_menu_save">Speichern</string>
     <string name="activity_article_summary_menu_count_articles_selected" formatted="false">%d / %d</string>
     <string name="activity_article_summary_menu_reload">Neu laden</string>
