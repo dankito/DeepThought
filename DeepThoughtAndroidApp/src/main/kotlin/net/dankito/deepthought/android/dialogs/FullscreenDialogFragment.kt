@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.widget.Toolbar
 import android.view.*
+import net.dankito.deepthought.android.MainActivity
 import net.dankito.deepthought.android.R
 
 
@@ -34,7 +35,7 @@ abstract class FullscreenDialogFragment : DialogFragment() {
         if(hideStatusBar) {
             activity?.let { hideStatusBar(it) }
         }
-        else {
+        else if(activity is MainActivity) {
             adjustDialogToShowStatusBar(rootView)
         }
 
