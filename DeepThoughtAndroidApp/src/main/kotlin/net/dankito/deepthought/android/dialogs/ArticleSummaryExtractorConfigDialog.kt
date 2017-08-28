@@ -84,6 +84,8 @@ class ArticleSummaryExtractorConfigDialog {
         setupEditTextName(input, dialog, config.name)
 
         setupListIcons(activity, lstIcons, config)
+
+        setupButtons(activity, dialog)
     }
 
 
@@ -96,6 +98,16 @@ class ArticleSummaryExtractorConfigDialog {
             if(hasFocus) {
                 dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
             }
+        }
+    }
+
+    private fun setupButtons(activity: Activity, dialog: AlertDialog) {
+        dialog.getButton(DialogInterface.BUTTON_NEGATIVE)?.let { negativeButton ->
+            negativeButton.setTextColor(activity.resources.getColor(R.color.alert_cancel_button_text_color))
+        }
+
+        dialog.getButton(DialogInterface.BUTTON_NEUTRAL)?.let { neutralButton ->
+            neutralButton.setTextColor(activity.resources.getColor(R.color.alert_delete_button_text_color))
         }
     }
 
