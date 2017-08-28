@@ -21,15 +21,26 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
 
     override fun extractArticleAsync(item : ArticleSummaryItem, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
         extractArticleAsync(item.url) { extractionResult ->
-            extractionResult.result?.reference?.let { reference ->
-                if(reference.previewImageUrl == null) {
-                    reference.previewImageUrl = item.previewImageUrl
-                }
+            extractionResult.result?.let {
+                setInfoFromArticleSummaryItemOnExtractionResult(item, it)
             }
 
             callback(extractionResult)
         }
     }
+
+    private fun setInfoFromArticleSummaryItemOnExtractionResult(item: ArticleSummaryItem, extractionResult: EntryExtractionResult) {
+        if(extractionResult.entry.abstractString.isNullOrBlank()) {
+            extractionResult.entry.abstractString = item.summary
+        }
+
+        extractionResult.reference?.let { reference ->
+            if (reference.previewImageUrl == null) {
+                reference.previewImageUrl = item.previewImageUrl
+            }
+        }
+    }
+
 
     override fun extractArticleAsync(url : String, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
         thread {
