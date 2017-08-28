@@ -15,6 +15,7 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.deepthought.ui.presenter.ReferencesListPresenter
 import net.dankito.deepthought.ui.view.IReferencesListView
+import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReferenceService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.ui.IClipboardService
@@ -35,6 +36,9 @@ class ReferencesListView: MainActivityTabFragment(R.layout.fragment_tab_referenc
     @Inject
     protected lateinit var clipboardService: IClipboardService
 
+    @Inject
+    protected lateinit var deleteEntityService: DeleteEntityService
+
 
     private val presenter: ReferencesListPresenter
 
@@ -44,7 +48,7 @@ class ReferencesListView: MainActivityTabFragment(R.layout.fragment_tab_referenc
     init {
         AppComponent.component.inject(this)
 
-        presenter = ReferencesListPresenter(this, router, searchEngine, referenceService, clipboardService)
+        presenter = ReferencesListPresenter(this, router, searchEngine, referenceService, clipboardService, deleteEntityService)
 
         adapter = ReferencesAdapter(presenter)
     }

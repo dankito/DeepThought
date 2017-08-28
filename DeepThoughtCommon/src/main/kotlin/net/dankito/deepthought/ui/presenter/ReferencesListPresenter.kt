@@ -4,6 +4,7 @@ import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.IReferencesListView
+import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.eventbus.IEventBus
@@ -17,7 +18,7 @@ import kotlin.concurrent.thread
 
 
 class ReferencesListPresenter(private var view: IReferencesListView, private var router: IRouter, private var searchEngine: ISearchEngine,
-                              private val referenceService: ReferenceService, private val clipboardService: IClipboardService)
+                              private val referenceService: ReferenceService, private val clipboardService: IClipboardService, private val deleteEntityService: DeleteEntityService)
     : IMainViewSectionPresenter {
 
     private var lastSearchTermProperty = Search.EmptySearchTerm
@@ -76,7 +77,7 @@ class ReferencesListPresenter(private var view: IReferencesListView, private var
     }
 
     fun deleteReference(reference: Reference) {
-        referenceService.delete(reference)
+        deleteEntityService.deleteReference(reference)
     }
 
 
