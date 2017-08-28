@@ -6,7 +6,6 @@ import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import org.jsoup.select.Elements
 import java.util.*
 
 
@@ -23,7 +22,7 @@ class TechStageArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
 
     override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
         document.body().select("#content > article").first()?.let { articleElement ->
-            articleElement.select("#article_content").let { contentElement ->
+            articleElement.select("#article_content").first()?.let { contentElement ->
                 val reference = extractReference(articleElement, contentElement, url)
 
                 val abstract = extractAbstract(contentElement)
@@ -37,7 +36,7 @@ class TechStageArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
         return null
     }
 
-    private fun extractAbstract(contentElement: Elements): String {
+    private fun extractAbstract(contentElement: Element): String {
         var abstract = ""
         val abstractParagraph = contentElement.select("p > strong").first()
         abstractParagraph?.let {
@@ -47,12 +46,20 @@ class TechStageArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
         return abstract
     }
 
-    private fun cleanContent(contentElement: Elements) {
-        contentElement.select("#article_comments, #article_navigation, .meta, .rectangle_ad, #pvg-deals-anchor, .article_tags_hl, .article_tags").remove()
+    private fun cleanContent(contentElement: Element) {
+        contentElement.select("#article_comments, #article_navigation, .meta, .rectangle_ad, #pvg-deals-anchor, .pvgs, .article_tags_hl, .article_tags").remove()
+
+        contentElement.parent().select("#article_content > aside").first()?.let { asideElement ->
+            ArrayList(asideElement.children()).forEach { childElement ->
+                if(childElement.hasClass("pvg-redaktion") == false) {
+                    childElement.remove()
+                }
+            }
+        }
     }
 
 
-    private fun extractReference(articleElement: Element, contentElement: Elements, url: String): Reference {
+    private fun extractReference(articleElement: Element, contentElement: Element, url: String): Reference {
         val title = articleElement.select("h1").first()?.text()?.trim() ?: ""
 
         var previewImageUrl: String? = null
