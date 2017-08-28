@@ -69,7 +69,7 @@ class ArticleSummaryExtractorConfigDialog {
             saveConfig(config, dialog, activity, callback)
         }
 
-        if(config.extractor is IImplementedArticleSummaryExtractor == false) {
+        if(config.extractor is IImplementedArticleSummaryExtractor == false && config.isPersisted() == true) {
             builder.setNeutralButton(R.string.action_delete) { dialog, _ ->
                 deleteConfig(config, dialog, activity)
             }
