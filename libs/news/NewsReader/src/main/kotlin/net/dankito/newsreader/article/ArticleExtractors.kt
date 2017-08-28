@@ -25,6 +25,7 @@ class ArticleExtractors(webClient: IWebClient) {
         implementedExtractors.put(HeiseDeveloperArticleExtractor::class.java, HeiseDeveloperArticleExtractor(webClient))
         implementedExtractors.put(CtArticleExtractor::class.java, CtArticleExtractor(webClient))
         implementedExtractors.put(TelepolisArticleExtractor::class.java, TelepolisArticleExtractor(webClient))
+        implementedExtractors.put(TechStageArticleExtractor::class.java, TechStageArticleExtractor(webClient))
         implementedExtractors.put(NetzPolitikOrgArticleExtractor::class.java, NetzPolitikOrgArticleExtractor(webClient))
         implementedExtractors.put(GuardianArticleExtractor::class.java, GuardianArticleExtractor(webClient))
         implementedExtractors.put(PostillonArticleExtractor::class.java, PostillonArticleExtractor(webClient))

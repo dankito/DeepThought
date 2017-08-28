@@ -1,7 +1,7 @@
 package net.dankito.newsreader.summary
 
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.newsreader.article.HeiseNewsAndDeveloperArticleExtractorBase
+import net.dankito.newsreader.article.ArticleExtractorBase
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import org.jsoup.nodes.Document
@@ -10,7 +10,7 @@ import org.jsoup.nodes.Element
 
 abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebClient) : ArticleSummaryExtractorBase(webClient), IArticleSummaryExtractor {
 
-    protected abstract fun getArticleExtractorClass(url: String): Class<out HeiseNewsAndDeveloperArticleExtractorBase>
+    protected abstract fun getArticleExtractorClass(url: String): Class<out ArticleExtractorBase>
 
 
     override fun parseHtmlToArticleSummary(url: String, document: Document, forLoadingMoreItems: Boolean) : ArticleSummary {
