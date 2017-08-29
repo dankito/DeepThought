@@ -16,6 +16,7 @@ import net.dankito.deepthought.android.activities.arguments.EntryActivityParamet
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import net.dankito.deepthought.android.views.EntryFieldsPreview
+import net.dankito.deepthought.android.views.FullScreenWebView
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
@@ -25,9 +26,7 @@ import net.dankito.service.data.EntryService
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.ui.IClipboardService
-import java.util.*
 import javax.inject.Inject
-import kotlin.concurrent.schedule
 
 
 class ViewEntryActivity : BaseActivity() {
@@ -36,8 +35,6 @@ class ViewEntryActivity : BaseActivity() {
         private const val ENTRY_ID_INTENT_EXTRA_NAME = "ENTRY_ID"
         private const val READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME = "READ_LATER_ARTICLE_ID"
         private const val ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ENTRY_EXTRACTION_RESULT"
-
-        private const val PERIOD_AFTER_TO_SHOW_READER_MODE_ON_START_MILLIS = 1 * 1000L
 
         private const val NON_READER_MODE_SYSTEM_UI_FLAGS = 0
         private val READER_MODE_SYSTEM_UI_FLAGS: Int
@@ -150,6 +147,7 @@ class ViewEntryActivity : BaseActivity() {
         supportActionBar?.title = ""
 
         wbEntry.setOnSystemUiVisibilityChangeListener { flags -> systemUiVisibilityChanged(flags) }
+        wbEntry.changeFullScreenModeListener = { mode -> handleChangeFullScreenModeEvent(mode) }
 
         swipeTouchListener = OnSwipeTouchListener(this) { handleWebViewSwipe(it) }
         swipeTouchListener.singleTapListener = { handleWebViewClick() }
@@ -187,12 +185,6 @@ class ViewEntryActivity : BaseActivity() {
                 presenter.returnToPreviousView()
             }
         }
-
-        goToReaderModeOnActivityStart() // go to reader mode after some seconds
-    }
-
-    private fun goToReaderModeOnActivityStart() {
-        Timer().schedule(PERIOD_AFTER_TO_SHOW_READER_MODE_ON_START_MILLIS) { runOnUiThread { enterReaderMode() } }
     }
 
     override fun onDestroy() {
@@ -325,12 +317,23 @@ class ViewEntryActivity : BaseActivity() {
 
         // leave the functionality for clicking on links, phone numbers, geo coordinates, ... Only go to reader mode when clicked somewhere else in the WebView or on an image
         if(type == WebView.HitTestResult.UNKNOWN_TYPE || type == WebView.HitTestResult.IMAGE_TYPE) {
-            toggleReaderMode()
+            if(isInReaderMode) {
+                leaveReaderMode()
+            }
+        }
+    }
+
+    private fun handleChangeFullScreenModeEvent(mode: FullScreenWebView.FullScreenMode) {
+        when(mode) {
+            FullScreenWebView.FullScreenMode.Enter -> enterReaderMode()
+            FullScreenWebView.FullScreenMode.Leave -> leaveReaderMode()
         }
     }
 
     private fun handleWebViewDoubleTap() {
-        saveEntryAsync()
+        if(isInReaderMode) {
+            saveEntryAsync()
+        }
     }
 
     private fun handleWebViewSwipe(swipeDirection: OnSwipeTouchListener.SwipeDirection) {
@@ -339,15 +342,6 @@ class ViewEntryActivity : BaseActivity() {
                 OnSwipeTouchListener.SwipeDirection.Left -> presenter.returnToPreviousView()
                 OnSwipeTouchListener.SwipeDirection.Right -> editEntry(EntryField.Tags)
             }
-        }
-    }
-
-    private fun toggleReaderMode() {
-        if(isInReaderMode) {
-            leaveReaderMode()
-        }
-        else {
-            enterReaderMode()
         }
     }
 

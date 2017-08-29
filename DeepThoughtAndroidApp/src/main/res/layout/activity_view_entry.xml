@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
     />
 
-    <WebView
+    <net.dankito.deepthought.android.views.FullScreenWebView
         android:id="@+id/wbEntry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
