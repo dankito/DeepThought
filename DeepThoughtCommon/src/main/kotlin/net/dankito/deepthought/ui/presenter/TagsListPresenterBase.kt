@@ -1,6 +1,5 @@
 package net.dankito.deepthought.ui.presenter
 
-import net.dankito.deepthought.model.CalculatedTag
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.tags.TagSearchResultState
@@ -32,8 +31,6 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
     protected var lastFilteredTagsSearchResults: FilteredTagsSearchResult? = null
 
     protected val tagsFilter = ArrayList<Tag>()
-
-    protected val calculatedTags = ArrayList<CalculatedTag>()
 
 
     @Inject

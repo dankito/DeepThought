@@ -2,6 +2,7 @@ package net.dankito.deepthought.ui.presenter
 
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.AllEntriesCalculatedTag
+import net.dankito.deepthought.model.CalculatedTag
 import net.dankito.deepthought.model.EntriesWithoutTagsCalculatedTag
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.service.data.DataManager
@@ -26,6 +27,11 @@ class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: Da
     : TagsListPresenterBase(tagsListView, searchEngine, tagService, deleteEntityService, searchResultsUtil, dialogService), IMainViewSectionPresenter {
 
 
+    private var hasInitializedCalculatedTags = false
+
+    protected val calculatedTags = ArrayList<CalculatedTag>()
+
+
     @Inject
     protected lateinit var entityChangedNotifier: EntityChangedNotifier
 
@@ -35,9 +41,6 @@ class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: Da
             CommonComponent.component.inject(this)
 
             initialized()
-
-            calculatedTags.add(AllEntriesCalculatedTag(searchEngine, eventBus, entityChangedNotifier, localization))
-            calculatedTags.add(EntriesWithoutTagsCalculatedTag(searchEngine, eventBus, entityChangedNotifier, localization))
         }
     }
 
@@ -53,10 +56,21 @@ class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: Da
 
     override fun getTagsFromSearchTagsWithoutFilterResult(result: TagsSearchResults): List<Tag> {
         if(result.hasEmptySearchTerm) {
+            if(hasInitializedCalculatedTags == false) {
+                initCalculatedTags()
+            }
+
             return CombinedLazyLoadingList<Tag>(calculatedTags, result.getRelevantMatchesSorted())
         }
 
         return super.getTagsFromSearchTagsWithoutFilterResult(result)
+    }
+
+    private fun initCalculatedTags() {
+        calculatedTags.add(AllEntriesCalculatedTag(searchEngine, eventBus, entityChangedNotifier, localization))
+        calculatedTags.add(EntriesWithoutTagsCalculatedTag(searchEngine, eventBus, entityChangedNotifier, localization))
+
+        hasInitializedCalculatedTags = true
     }
 
 
