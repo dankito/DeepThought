@@ -28,9 +28,8 @@ data class Entry(
     @Column(name = TableConfig.EntryEntryIndexColumnName)
     var entryIndex: Long = 0
 
-    @ManyToMany(fetch = FetchType.LAZY)/*, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }*/
-    @JoinTable(name = TableConfig.EntryTagJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.EntryTagJoinTableEntryIdColumnName)/*, referencedColumnName = "id"*/), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.EntryTagJoinTableTagIdColumnName)/*, referencedColumnName = "id"*/))
-    //  @OrderBy("name ASC")
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = TableConfig.EntryTagJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.EntryTagJoinTableEntryIdColumnName)), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.EntryTagJoinTableTagIdColumnName)))
     var tags: MutableSet<Tag> = HashSet()
         private set
 
@@ -39,7 +38,7 @@ data class Entry(
         private set
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = TableConfig.EntryAttachedFilesJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.EntryAttachedFilesJoinTableEntryIdColumnName)/*, referencedColumnName = "id"*/), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.EntryAttachedFilesJoinTableFileLinkIdColumnName)/*, referencedColumnName = "id"*/))
+    @JoinTable(name = TableConfig.EntryAttachedFilesJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.EntryAttachedFilesJoinTableEntryIdColumnName)), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.EntryAttachedFilesJoinTableFileLinkIdColumnName)))
     var attachedFiles: MutableSet<FileLink> = HashSet()
         private set
 
