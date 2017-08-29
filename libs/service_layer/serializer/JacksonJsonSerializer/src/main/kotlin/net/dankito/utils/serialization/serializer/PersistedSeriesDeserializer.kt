@@ -7,10 +7,16 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.databind.node.ObjectNode
 import net.dankito.deepthought.model.Series
 import net.dankito.service.data.SeriesService
+import org.slf4j.LoggerFactory
 import java.io.IOException
 
 
 class PersistedSeriesDeserializer(private val seriesService: SeriesService) : StdDeserializer<Series>(Series::class.java) {
+
+    companion object {
+        private val log = LoggerFactory.getLogger(PersistedSeriesDeserializer::class.java)
+    }
+
 
     @Throws(JsonProcessingException::class, IOException::class)
     override fun deserialize(p: JsonParser?, ctxt: DeserializationContext?): Series? {
@@ -28,7 +34,8 @@ class PersistedSeriesDeserializer(private val seriesService: SeriesService) : St
 
                 return null
             } catch(e: Exception) {
-                throw IOException("Could not deserialize Series", e)
+                log.info("Could not deserialize Series", e)
+                return null
             }
         }
 
