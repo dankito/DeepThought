@@ -36,6 +36,15 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun extractArticleWithInlineIFrame() {
+        getAndTestArticle("http://www.sueddeutsche.de/stil/test-nicht-nur-fuer-oma-1.3644869",
+                "Nicht nur für Omas: Das ist das beste Trockenshampoo",
+                "Sie sind besser für die Kopfhaut und sparen Zeit: Trockenshampoos feiern gerade ein Revival. Wir haben acht Produkte getestet.",
+                null,
+                2000) // first page has a length of little more than 2900
+    }
+
+    @Test
     fun extractMultiPageArticle() {
         getAndTestArticle("http://www.sueddeutsche.de/medien/im-visier-der-nachbarn-al-jazeera-gefuerchtete-stimme-der-massen-1.3558089",
                 "Al Jazeera - gefürchtete Stimme der Massen",

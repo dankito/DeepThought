@@ -70,7 +70,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
             val abstract = articleBody.select(".entry-summary").first()?.html() ?: ""
 
             cleanArticleBody(articleBody)
-            var content = loadLazyLoadingElementsAndGetContent(articleBody)
+            var content = loadLazyLoadingElementsAndGetContent(siteContent, articleBody)
 
             siteContent.select(".topenrichment figure img").first()?.let { previewImage ->
                 val previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(previewImage, "src", siteUrl)
@@ -88,22 +88,31 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
     private fun cleanArticleBody(articleBody: Element) {
-        articleBody.select(".entry-summary, #article-sidebar-wrapper, .ad, .authors, .teaserable-layout").remove()
+        articleBody.select(".entry-summary, #article-sidebar-wrapper, #sharingbaranchor, .ad, .authors, .teaserable-layout").remove()
 
         // remove scripts with try{window.performance.mark('monitor_articleTeaser');}catch(e){};
         articleBody.select("script").filter { it.html().contains("window.performance.mark") }.forEach { it.remove() }
     }
 
-    private fun loadLazyLoadingElementsAndGetContent(element: Element): String {
-        extractInlineGalleries(element)
+    private fun loadLazyLoadingElementsAndGetContent(siteContent: Element, articleBody: Element): String {
+        extractInlineGalleries(articleBody)
 
-        super.loadLazyLoadingElements(element)
+        super.loadLazyLoadingElements(articleBody)
 
-        return element.html()
+        var content = articleBody.html()
+
+        siteContent.select(".topenrichment").first()?.let { topEnrichment ->
+            topEnrichment.select("iframe").first()?.let { topEnrichmentIFrame ->
+                loadLazyLoadingElement(topEnrichmentIFrame)
+                content = topEnrichment.outerHtml() + content
+            }
+        }
+
+        return content
     }
 
-    private fun extractInlineGalleries(element: Element) {
-        element.select("figure.gallery.inline").forEach { inlineGallery ->
+    private fun extractInlineGalleries(articleBody: Element) {
+        articleBody.select("figure.gallery.inline").forEach { inlineGallery ->
             inlineGallery.select(".navigation").remove()
 
             inlineGallery.select("li").forEach { imageListElement ->
