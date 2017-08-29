@@ -193,6 +193,14 @@ class TableConfig {
         const val ArticleSummaryExtractorConfigFavoriteIndexColumnName = "favorite_index"
 
 
+        /*          ArticleSummaryExtractorConfig Tag Join Table Config        */
+
+        const val ArticleSummaryExtractorConfigTagsToAddJoinTableName = "article_summary_extractor_config_tags_to_add_join_table"
+
+        const val ArticleSummaryExtractorConfigTagsToAddJoinTableArticleSummaryExtractorConfigIdColumnName = "article_summary_extractor_config_id"
+        const val ArticleSummaryExtractorConfigTagsToAddJoinTableTagIdColumnName = "tag_id"
+
+
         /*          ReadLaterArticle Table Config        */
 
         const val ReadLaterArticleTableName = "read_later_article"

@@ -1,8 +1,8 @@
 package net.dankito.deepthought.model
 
 import net.dankito.deepthought.model.config.TableConfig
-import javax.persistence.Column
-import javax.persistence.Entity
+import java.util.*
+import javax.persistence.*
 
 
 @Entity(name = TableConfig.ArticleSummaryExtractorConfigTableName)
@@ -35,5 +35,22 @@ data class ArticleSummaryExtractorConfig(
 ) :BaseEntity() {
 
     private constructor() : this("", "")
+
+
+        @ManyToMany(fetch = FetchType.LAZY)
+        @JoinTable(name = TableConfig.ArticleSummaryExtractorConfigTagsToAddJoinTableName,
+                joinColumns = arrayOf(JoinColumn(name = TableConfig.ArticleSummaryExtractorConfigTagsToAddJoinTableArticleSummaryExtractorConfigIdColumnName)),
+                inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.ArticleSummaryExtractorConfigTagsToAddJoinTableTagIdColumnName)))
+        var tagsToAddOnExtractedArticles: MutableSet<Tag> = HashSet() // TODO: don't expose a mutable set to the outside
+                private set
+
+
+        fun addTagToAddOnExtractedArticles(tag: Tag): Boolean {
+            return tagsToAddOnExtractedArticles.add(tag)
+        }
+
+        fun removeTagToAddOnExtractedArticles(tag: Tag): Boolean {
+            return tagsToAddOnExtractedArticles.remove(tag)
+        }
 
 }
