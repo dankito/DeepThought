@@ -3,7 +3,6 @@ package net.dankito.deepthought.news.article
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.Series
-import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.newsreader.article.IArticleExtractor
@@ -12,7 +11,6 @@ import net.dankito.service.data.SeriesService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.SeriesSearch
-import net.dankito.service.search.specific.TagsSearch
 import java.net.URL
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -53,6 +51,10 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
         val siteName = getSiteName(extractor, item)
 
         addDefaultDataForSiteName(siteName, callback, asyncResult, extractionResult)
+
+        item.articleSummaryExtractorConfig?.tagsToAddOnExtractedArticles?.forEach {
+            extractionResult.tags.add(it)
+        }
     }
 
     private fun addDefaultData(extractor: IArticleExtractor, url: String, asyncResult: AsyncResult<EntryExtractionResult>,
@@ -67,11 +69,7 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
             callback(asyncResult)
         }
         else {
-            getTagForSiteNameSynchronized(siteName) { tag ->
-                extractionResult.tags.add(tag)
-
-                setSeries(extractionResult, siteName, asyncResult, callback)
-            }
+            setSeries(extractionResult, siteName, asyncResult, callback)
         }
     }
 
@@ -96,38 +94,6 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
         }
 
         return siteName
-    }
-
-    /**
-     * To avoid that when multiple entries get fetched in parallel that multiple tags get created for one extractor this method synchronizes access to getTagForExtractorName()
-     */
-    private fun getTagForSiteNameSynchronized(siteName: String, callback: (Tag) -> Unit) {
-        synchronized(this) {
-            val countDownLatch = CountDownLatch(1)
-
-            getTagForSiteName(siteName) {
-                countDownLatch.countDown()
-
-                callback(it)
-            }
-
-            try { countDownLatch.await(1, TimeUnit.SECONDS) } catch(ignored: Exception) { }
-        }
-    }
-
-    private fun getTagForSiteName(siteName: String, callback: (Tag) -> Unit) {
-        searchEngine.searchTags(TagsSearch(siteName) { tagsSearchResults ->
-            if(tagsSearchResults.exactMatchesOfLastResult.isNotEmpty()) {
-                callback(tagsSearchResults.exactMatchesOfLastResult.first())
-                return@TagsSearch
-            }
-
-            val extractorTag = Tag(siteName) // no tag with name 'extractorName' found -> create new one
-
-            tagService.persist(extractorTag)
-
-            callback(extractorTag)
-        })
     }
 
 
