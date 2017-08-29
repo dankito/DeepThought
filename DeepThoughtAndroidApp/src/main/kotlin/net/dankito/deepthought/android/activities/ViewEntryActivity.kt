@@ -192,7 +192,7 @@ class ViewEntryActivity : BaseActivity() {
     }
 
     private fun goToReaderModeOnActivityStart() {
-        Timer().schedule(PERIOD_AFTER_TO_SHOW_READER_MODE_ON_START_MILLIS) { runOnUiThread { goToReaderMode() } }
+        Timer().schedule(PERIOD_AFTER_TO_SHOW_READER_MODE_ON_START_MILLIS) { runOnUiThread { enterReaderMode() } }
     }
 
     override fun onDestroy() {
@@ -347,7 +347,7 @@ class ViewEntryActivity : BaseActivity() {
             leaveReaderMode()
         }
         else {
-            goToReaderMode()
+            enterReaderMode()
         }
     }
 
@@ -364,7 +364,7 @@ class ViewEntryActivity : BaseActivity() {
         wbEntry.systemUiVisibility = NON_READER_MODE_SYSTEM_UI_FLAGS
     }
 
-    private fun goToReaderMode() {
+    private fun enterReaderMode() {
         isInReaderMode = true
 
         entryFieldsPreview.visibility = View.GONE
