@@ -11,6 +11,7 @@ import net.dankito.service.search.FieldName
 import net.dankito.service.search.SortOption
 import net.dankito.service.search.SortOrder
 import net.dankito.service.search.specific.ReadLaterArticleSearch
+import net.dankito.utils.IThreadPool
 import net.engio.mbassy.listener.Handler
 import org.apache.lucene.document.Document
 import org.apache.lucene.document.Field
@@ -20,8 +21,8 @@ import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.*
 
 
-class ReadLaterArticleIndexWriterAndSearcher(readLaterArticleService: ReadLaterArticleService, eventBus: IEventBus)
-    : IndexWriterAndSearcher<ReadLaterArticle>(readLaterArticleService, eventBus) {
+class ReadLaterArticleIndexWriterAndSearcher(readLaterArticleService: ReadLaterArticleService, eventBus: IEventBus, threadPool: IThreadPool)
+    : IndexWriterAndSearcher<ReadLaterArticle>(readLaterArticleService, eventBus, threadPool) {
 
     override fun getDirectoryName(): String {
         return "read_later_articles"

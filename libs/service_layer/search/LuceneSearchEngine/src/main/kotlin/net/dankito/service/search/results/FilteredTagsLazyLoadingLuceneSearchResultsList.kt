@@ -3,14 +3,15 @@ package net.dankito.service.search.results
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.deepthought.model.Entry
 import net.dankito.service.search.FieldName
+import net.dankito.utils.IThreadPool
 import org.apache.lucene.document.Document
 import org.apache.lucene.search.IndexSearcher
 import org.apache.lucene.search.ScoreDoc
 import org.slf4j.LoggerFactory
 
 
-class FilteredTagsLazyLoadingLuceneSearchResultsList(entityManager: IEntityManager, searcher: IndexSearcher, hits: Array<ScoreDoc>)
-    : LazyLoadingLuceneSearchResultsList<Entry>(entityManager, searcher, Entry::class.java, FieldName.EntryId, hits) {
+class FilteredTagsLazyLoadingLuceneSearchResultsList(entityManager: IEntityManager, searcher: IndexSearcher, hits: Array<ScoreDoc>, threadPool: IThreadPool)
+    : LazyLoadingLuceneSearchResultsList<Entry>(entityManager, searcher, Entry::class.java, FieldName.EntryId, hits, threadPool) {
 
     companion object {
         private val log = LoggerFactory.getLogger(FilteredTagsLazyLoadingLuceneSearchResultsList::class.java)

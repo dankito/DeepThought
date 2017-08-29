@@ -9,6 +9,7 @@ import net.dankito.service.search.FieldName
 import net.dankito.service.search.SortOption
 import net.dankito.service.search.SortOrder
 import net.dankito.service.search.specific.SeriesSearch
+import net.dankito.utils.IThreadPool
 import net.engio.mbassy.listener.Handler
 import org.apache.lucene.document.Document
 import org.apache.lucene.document.Field
@@ -18,7 +19,7 @@ import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.*
 
 
-class SeriesIndexWriterAndSearcher(seriesService: SeriesService, eventBus: IEventBus) : IndexWriterAndSearcher<Series>(seriesService, eventBus) {
+class SeriesIndexWriterAndSearcher(seriesService: SeriesService, eventBus: IEventBus, threadPool: IThreadPool) : IndexWriterAndSearcher<Series>(seriesService, eventBus, threadPool) {
 
 
     override fun getDirectoryName(): String {

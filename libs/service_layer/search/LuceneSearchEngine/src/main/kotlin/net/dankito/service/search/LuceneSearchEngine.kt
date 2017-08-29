@@ -25,15 +25,15 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
     }
 
 
-    private val entryIndexWriterAndSearcher = EntryIndexWriterAndSearcher(entryService, eventBus)
+    private val entryIndexWriterAndSearcher = EntryIndexWriterAndSearcher(entryService, eventBus, threadPool)
 
-    private val tagIndexWriterAndSearcher = TagIndexWriterAndSearcher(tagService, eventBus, entryIndexWriterAndSearcher)
+    private val tagIndexWriterAndSearcher = TagIndexWriterAndSearcher(tagService, eventBus, threadPool, entryIndexWriterAndSearcher)
 
-    private val referenceIndexWriterAndSearcher = ReferenceIndexWriterAndSearcher(referenceService, eventBus)
+    private val referenceIndexWriterAndSearcher = ReferenceIndexWriterAndSearcher(referenceService, eventBus, threadPool)
 
-    private val seriesIndexWriterAndSearcher = SeriesIndexWriterAndSearcher(seriesService, eventBus)
+    private val seriesIndexWriterAndSearcher = SeriesIndexWriterAndSearcher(seriesService, eventBus, threadPool)
 
-    private val readLaterArticleIndexWriterAndSearcher = ReadLaterArticleIndexWriterAndSearcher(readLaterArticleService, eventBus)
+    private val readLaterArticleIndexWriterAndSearcher = ReadLaterArticleIndexWriterAndSearcher(readLaterArticleService, eventBus, threadPool)
 
     private val indexWritersAndSearchers: List<IndexWriterAndSearcher<*>>
 
