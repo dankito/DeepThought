@@ -45,8 +45,6 @@ class EntriesListView : MainActivityTabFragment(R.layout.fragment_tab_entries, R
 
         presenter = EntriesListPresenter(this, router, searchEngine, deleteEntityService, clipboardService)
         entryAdapter = EntryAdapter(presenter)
-
-        presenter.getAndShowAllEntities()
     }
 
 

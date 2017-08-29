@@ -93,6 +93,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         bottomViewNavigation.setOnNavigationItemSelectedListener(bottomViewNavigationItemSelectedListener)
 
+        currentlyVisibleFragment = sectionsPagerAdapter.getItem(0) // set currentlyVisibleFragment on start otherwise back button won't work on first displayed fragment
+        currentlyVisibleFragment?.viewCameIntoView()
+
         floatingActionMenuButton = FloatingActionMenuButton(fab_menu, summaryExtractorManager, router, eventBus)
     }
 
