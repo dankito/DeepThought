@@ -7,16 +7,22 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.databind.node.ObjectNode
 import net.dankito.deepthought.model.Tag
 import net.dankito.service.data.TagService
+import org.slf4j.LoggerFactory
 import java.io.IOException
 
 
 class PersistedTagDeserializer(private val tagService: TagService) : StdDeserializer<Tag>(Tag::class.java) {
 
+    companion object {
+        private val log = LoggerFactory.getLogger(PersistedTagDeserializer::class.java)
+    }
+
+
     @Throws(JsonProcessingException::class, IOException::class)
     override fun deserialize(p: JsonParser?, ctxt: DeserializationContext?): Tag? {
         p?.let { jsonParser ->
             try {
-                val node = jsonParser.getCodec().readTree<ObjectNode>(jsonParser)
+                val node = jsonParser.codec.readTree<ObjectNode>(jsonParser)
 
                 val tagIdNode = node.get(SerializerConfig.TagIdFieldName)
 
@@ -28,7 +34,8 @@ class PersistedTagDeserializer(private val tagService: TagService) : StdDeserial
 
                 return null
             } catch(e: Exception) {
-                throw IOException("Could not deserialize Tag", e)
+                log.info("Could not deserialize Tag", e)
+                return null
             }
         }
 
