@@ -7,16 +7,25 @@ import net.dankito.deepthought.model.Reference
 
 class ReferenceEntriesListDialog: EntriesListDialogBase() {
 
-    private lateinit var reference: Reference
+    private var reference: Reference? = null
 
 
     fun showDialog(fragmentManager: FragmentManager, reference: Reference) {
         this.reference = reference
 
         showDialog(fragmentManager)
+
+        retrieveAndShowEntries()
     }
 
     override fun retrieveEntries(callback: (List<Entry>) -> Unit) {
-        callback(reference.entries) // TODO: currently no sorting is applied
+        reference?.let { reference ->
+            callback(reference.entries) // TODO: currently no sorting is applied
+        }
+
+        if(reference == null) { // sometimes onAttach() is called before reference is set (how can this ever be?)
+            callback(emptyList())
+        }
     }
+
 }
