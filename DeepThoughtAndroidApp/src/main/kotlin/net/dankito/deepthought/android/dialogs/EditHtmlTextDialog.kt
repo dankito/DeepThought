@@ -26,6 +26,8 @@ import kotlin.concurrent.schedule
 class EditHtmlTextDialog : FullscreenDialogFragment() {
 
     companion object {
+        val TAG: String = javaClass.name
+
         private const val HTML_INTENT_EXTRA_NAME = "HTML"
     }
 
@@ -45,6 +47,8 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         AppComponent.component.inject(this)
     }
 
+
+    override fun getDialogTag() = TAG
 
     override fun getLayoutId() = R.layout.dialog_edit_html_text
 

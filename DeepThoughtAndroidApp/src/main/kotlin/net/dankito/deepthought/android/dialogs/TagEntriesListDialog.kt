@@ -13,11 +13,19 @@ import net.engio.mbassy.listener.Handler
 
 class TagEntriesListDialog : EntriesListDialogBase() {
 
+    companion object {
+        val TAG: String = javaClass.name
+    }
+
+
     private lateinit var tag: Tag
 
     private lateinit var tagsFilter: List<Tag>
 
     private val eventBusListener = EventBusListener()
+
+
+    override fun getDialogTag() = TAG
 
 
     fun showDialog(fragmentManager: FragmentManager, tag: Tag, tagsFilter: List<Tag> = listOf()) {

@@ -7,7 +7,15 @@ import net.dankito.deepthought.model.Reference
 
 class ReferenceEntriesListDialog: EntriesListDialogBase() {
 
+    companion object {
+        val TAG: String = javaClass.name
+    }
+
+
     private var reference: Reference? = null
+
+
+    override fun getDialogTag() = TAG
 
 
     fun showDialog(fragmentManager: FragmentManager, reference: Reference) {

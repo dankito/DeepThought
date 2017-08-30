@@ -37,6 +37,8 @@ import javax.inject.Inject
 class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
 
     companion object {
+        val TAG: String = javaClass.name
+
         private val DoubleTapMaxDelayMillis = 500L
 
         private val TAGS_INTENT_EXTRA_NAME = "TAGS_ON_ENTRY"
@@ -83,6 +85,8 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
         adapter = TagsOnEntryAdapter(presenter) { activity?.runOnUiThread { setTagsOnEntryPreviewOnUIThread(it) } }
     }
 
+
+    override fun getDialogTag() = TAG
 
     override fun getLayoutId() = R.layout.dialog_tags_on_entry
 

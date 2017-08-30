@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.TagAdapter
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.dialogs.FullscreenDialogFragment
+import net.dankito.deepthought.android.dialogs.TagEntriesListDialog
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.model.CalculatedTag
 import net.dankito.deepthought.model.Tag
@@ -165,7 +165,7 @@ class TagsListView : MainActivityTabFragment(R.menu.fragment_tab_tags_menu, R.st
     }
 
     private fun isTagEntriesListDialogVisible(): Boolean {
-        return fragmentManager.findFragmentByTag(FullscreenDialogFragment.getTag()) != null
+        return fragmentManager.findFragmentByTag(TagEntriesListDialog.TAG) != null
     }
 
 
