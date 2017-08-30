@@ -6,7 +6,6 @@ import net.dankito.deepthought.android.MainActivity
 import net.dankito.deepthought.android.activities.ArticleSummaryActivity
 import net.dankito.deepthought.android.activities.EditEntryActivity
 import net.dankito.deepthought.android.activities.EditReferenceActivity
-import net.dankito.deepthought.android.activities.ViewEntryActivity
 import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorIconsAdapter
 import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorsAdapter
 import net.dankito.deepthought.android.androidservice.DeepThoughtBackgroundAndroidService
@@ -74,8 +73,6 @@ interface AppComponent : CommonComponent {
     fun inject(articleSummaryExtractorConfigDialog: ArticleSummaryExtractorConfigDialog)
 
     fun inject(articleSummaryActivity: ArticleSummaryActivity)
-
-    fun inject(viewEntryActivity: ViewEntryActivity)
 
     fun inject(editEntryActivity: EditEntryActivity)
 
