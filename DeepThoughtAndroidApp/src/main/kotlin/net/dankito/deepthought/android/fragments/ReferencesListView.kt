@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ReferencesAdapter
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.android.dialogs.FullscreenDialogFragment
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
@@ -116,6 +117,19 @@ class ReferencesListView: MainActivityTabFragment(R.menu.fragment_tab_references
 
     override fun searchEntities(query: String) {
         presenter.searchReferences(query)
+    }
+
+
+    override fun onBackPressed(): Boolean {
+        if(isReferenceEntriesListDialogVisible()) { // let ReferenceEntriesListDialog handle back button press
+            return false
+        }
+
+        return super.onBackPressed()
+    }
+
+    private fun isReferenceEntriesListDialogVisible(): Boolean {
+        return fragmentManager.findFragmentByTag(FullscreenDialogFragment.getTag()) != null
     }
 
 
