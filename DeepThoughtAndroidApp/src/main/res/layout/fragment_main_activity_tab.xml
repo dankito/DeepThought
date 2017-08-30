@@ -10,4 +10,26 @@
         android:layout_alignParentTop="true"
     />
 
+    <RelativeLayout
+        android:id="@+id/lytOnboardingText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/lstEntities"
+        android:layout_alignParentBottom="true"
+    >
+
+        <TextView
+            android:id="@+id/txtOnboardingText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/fragment_tab_entries_onboarding_left_right_margin"
+            android:layout_marginStart="@dimen/fragment_tab_entries_onboarding_left_right_margin"
+            android:layout_marginRight="@dimen/fragment_tab_entries_onboarding_left_right_margin"
+            android:layout_marginEnd="@dimen/fragment_tab_entries_onboarding_left_right_margin"
+            android:textAlignment="center"
+        />
+
+    </RelativeLayout>
+
 </RelativeLayout>

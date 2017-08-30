@@ -3,22 +3,28 @@ package net.dankito.deepthought.android.fragments
 import android.app.Activity
 import android.app.SearchManager
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.SearchView
+import android.text.Html
 import android.view.*
 import android.widget.BaseAdapter
 import android.widget.ListView
+import android.widget.TextView
 import net.dankito.deepthought.android.R
+import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.service.search.Search
 
 
-abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int) : Fragment() {
+abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, private val onboardingTextResourceId: Int) : Fragment() {
 
     private var presenter: IMainViewSectionPresenter? = null
 
     protected var listView: ListView? = null
+
+    private var entitiesToCheckForOnboardingOnViewCreation: List<BaseEntity>? = null
 
     private var searchView: SearchView? = null
 
@@ -55,6 +61,11 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int) :
 
         listView?.adapter = getListAdapter()
         listView?.setOnItemClickListener { _, _, position, _ -> listItemClicked(position, getListAdapter().getItem(position)) }
+
+        entitiesToCheckForOnboardingOnViewCreation?.let {
+            retrievedEntitiesOnUiThread(it)
+            entitiesToCheckForOnboardingOnViewCreation = null
+        }
     }
 
 
@@ -91,6 +102,44 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int) :
         }
 
         return false
+    }
+
+
+    protected fun retrievedEntitiesOnUiThread(entities: List<BaseEntity>) {
+        if(listView == null) { // view not initialized yet
+            entitiesToCheckForOnboardingOnViewCreation = entities
+            return
+        }
+
+        if(shouldShowOnboardingView(entities, presenter?.getLastSearchTerm() ?: Search.EmptySearchTerm)) {
+            showOnboardingView()
+        }
+        else {
+            hideOnboardingView()
+        }
+    }
+
+    protected open fun shouldShowOnboardingView(entities: List<BaseEntity>, searchTerm: String): Boolean {
+        return entities.isEmpty() && searchTerm == Search.EmptySearchTerm
+    }
+
+    protected open fun showOnboardingView() {
+        listView?.visibility = View.GONE
+
+        (listView?.parent as? View)?.findViewById(R.id.txtOnboardingText)?.let { view ->
+            (view as? TextView)?.let { txtOnboardingText ->
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(onboardingTextResourceId).toString(), Html.FROM_HTML_MODE_LEGACY)
+                }
+                else {
+                    txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(onboardingTextResourceId).toString())
+                }
+            }
+        }
+    }
+
+    protected open fun hideOnboardingView() {
+        listView?.visibility = View.VISIBLE
     }
 
 

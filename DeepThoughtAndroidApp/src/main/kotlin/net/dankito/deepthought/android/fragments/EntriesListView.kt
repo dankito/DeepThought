@@ -2,6 +2,7 @@ package net.dankito.deepthought.android.fragments
 
 import android.app.Activity
 import android.content.Context
+import android.view.View
 import android.widget.BaseAdapter
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.EntryAdapter
@@ -18,7 +19,7 @@ import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class EntriesListView : MainActivityTabFragment(R.menu.fragment_tab_entries_menu), IEntriesListView {
+class EntriesListView : MainActivityTabFragment(R.menu.fragment_tab_entries_menu, R.string.tab_entries_onboarding_text), IEntriesListView {
 
     @Inject
     protected lateinit var deleteEntityService: DeleteEntityService
@@ -86,6 +87,8 @@ class EntriesListView : MainActivityTabFragment(R.menu.fragment_tab_entries_menu
         if(activity != null) {
             activity.runOnUiThread {
                 entryAdapter.setItems(entities)
+
+                retrievedEntitiesOnUiThread(entities)
             }
         }
         else {

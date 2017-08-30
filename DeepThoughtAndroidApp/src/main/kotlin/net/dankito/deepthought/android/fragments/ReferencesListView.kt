@@ -22,7 +22,7 @@ import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class ReferencesListView: MainActivityTabFragment(R.menu.fragment_tab_references_menu), IReferencesListView {
+class ReferencesListView: MainActivityTabFragment(R.menu.fragment_tab_references_menu, R.string.tab_reference_onboarding_text), IReferencesListView {
 
     @Inject
     protected lateinit var referenceService: ReferenceService
@@ -122,7 +122,11 @@ class ReferencesListView: MainActivityTabFragment(R.menu.fragment_tab_references
     /*      IReferencesListView implementation      */
 
     override fun showEntities(entities: List<Reference>) {
-        activity?.runOnUiThread { adapter.setItems(entities) }
+        activity?.runOnUiThread {
+            adapter.setItems(entities)
+
+            retrievedEntitiesOnUiThread(entities)
+        }
     }
 
 }

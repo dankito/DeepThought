@@ -28,6 +28,30 @@
     <string name="search_hint_references">Search References</string>
     <string name="search_hint_read_later_articles">Search Read later Articles</string>
 
+    <string name="tab_entries_onboarding_text"><![CDATA[
+        <p>To add a new entry, press the + button at the bottom right corner and select \'Entry\'.</p>
+        <p>To add a newspaper article, press the + button at the bottom right corner, select \'Newspaper Article\' and enter the url of a newspaper site or a RSS feed url.</p>
+    ]]>
+    </string>
+    <string name="tab_tags_onboarding_text"><![CDATA[
+        <p>Tags are used to organize your entries.</p>
+        <p>To add a tag to an entry, select an entry in tab \'Entries\' and press on \'Tags\'. Enter the name of your new tag and press \'New\'.</p>
+    ]]>
+    </string>
+    <string name="tab_reference_onboarding_text"><![CDATA[
+        <p>You can add references to your entries to remember where you found that entry.</p>
+        <p>To add a reference to an entry, select an entry in tab \'Entries\' and press on \'Reference\'. <br /> Enter the title of your new reference and press the save icon.</p>
+    ]]>
+    </string>
+    <string name="tab_read_later_articles_onboarding_text"><![CDATA[
+        <p>If you don\'t have time to read an article now or will come soon to an area with bad internet
+        connection you can save an article for later reading.</p>
+        <p>Articles for later reading are stored offline so that you can read them without internet connection, but are not saved yet to your entries collection.</p>
+        <p>To add an article for later reading, press the + button at the bottom right corner, press \'Newspaper Article\', select a newspaper site and in the new window with all
+            articles of that newspaper site, long press an article and select \'Read later\' at the bottom.</p>
+    ]]>
+    </string>
+
     <string name="activity_article_summary_menu_view">View</string>
     <string name="activity_article_summary_menu_save_for_later_reading">Read later</string>
     <string name="activity_article_summary_menu_save">Save</string>

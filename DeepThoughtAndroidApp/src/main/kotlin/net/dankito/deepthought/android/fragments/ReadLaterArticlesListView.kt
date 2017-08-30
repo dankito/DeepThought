@@ -22,7 +22,7 @@ import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class ReadLaterArticlesListView : MainActivityTabFragment(R.menu.fragment_tab_read_later_articles_menu), IReadLaterArticleView {
+class ReadLaterArticlesListView : MainActivityTabFragment(R.menu.fragment_tab_read_later_articles_menu, R.string.tab_read_later_articles_onboarding_text), IReadLaterArticleView {
 
 
     @Inject
@@ -121,6 +121,8 @@ class ReadLaterArticlesListView : MainActivityTabFragment(R.menu.fragment_tab_re
     override fun showEntities(entities: List<ReadLaterArticle>) {
         activity?.runOnUiThread {
             adapter.setItems(entities)
+
+            retrievedEntitiesOnUiThread(entities)
         }
     }
 

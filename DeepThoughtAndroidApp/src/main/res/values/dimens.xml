@@ -13,6 +13,8 @@
     <dimen name="action_padding_top_bottom">6dp</dimen>
     <dimen name="action_padding_right">12dp</dimen>
 
+    <dimen name="fragment_tab_entries_onboarding_left_right_margin">20dp</dimen>
+
     <dimen name="list_item_entry_height">80dp</dimen>
     <dimen name="list_item_entry_reference_preview_height">18dp</dimen>
     <dimen name="list_item_entry_reference_preview_text_size">11sp</dimen>

@@ -13,6 +13,8 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.TagAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.FullscreenDialogFragment
+import net.dankito.deepthought.model.BaseEntity
+import net.dankito.deepthought.model.CalculatedTag
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
@@ -23,11 +25,12 @@ import net.dankito.deepthought.ui.view.ITagsListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.Search
 import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
 
 
-class TagsListView : MainActivityTabFragment(R.menu.fragment_tab_tags_menu), ITagsListView {
+class TagsListView : MainActivityTabFragment(R.menu.fragment_tab_tags_menu, R.string.tab_tags_onboarding_text), ITagsListView {
 
     @Inject
     protected lateinit var dataManager: DataManager
@@ -166,11 +169,25 @@ class TagsListView : MainActivityTabFragment(R.menu.fragment_tab_tags_menu), ITa
     }
 
 
+    override fun shouldShowOnboardingView(entities: List<BaseEntity>, searchTerm: String): Boolean {
+        return searchTerm == Search.EmptySearchTerm && presenter.isTagFilterApplied() == false &&
+                entities.size <= 2 && entities.filter { it is CalculatedTag == false }.isEmpty() // 2 = count of calculated tags; check first so that not over all tags is iterated
+    }
+
+    override fun showOnboardingView() {
+        super.showOnboardingView()
+
+        listView?.visibility = View.VISIBLE
+    }
+
+
     /*          ITagsListView implementation            */
 
     override fun showEntities(entities: List<Tag>) {
         activity?.runOnUiThread {
             adapter.setItems(entities)
+
+            retrievedEntitiesOnUiThread(entities)
         }
     }
 
