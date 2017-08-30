@@ -8,7 +8,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.BaseAdapter
-import kotlinx.android.synthetic.main.fragment_tab_tags.view.*
+import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.TagAdapter
 import net.dankito.deepthought.android.di.AppComponent
@@ -27,7 +27,7 @@ import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
 
 
-class TagsListView : MainActivityTabFragment(R.layout.fragment_tab_tags, R.id.lstTags, R.menu.fragment_tab_tags_menu), ITagsListView {
+class TagsListView : MainActivityTabFragment(R.menu.fragment_tab_tags_menu), ITagsListView {
 
     @Inject
     protected lateinit var dataManager: DataManager
@@ -82,7 +82,7 @@ class TagsListView : MainActivityTabFragment(R.layout.fragment_tab_tags, R.id.ls
         super.setupUI(rootView)
 
         rootView?.let {
-            registerForContextMenu(rootView.lstTags)
+            registerForContextMenu(rootView.lstEntities)
         }
     }
 

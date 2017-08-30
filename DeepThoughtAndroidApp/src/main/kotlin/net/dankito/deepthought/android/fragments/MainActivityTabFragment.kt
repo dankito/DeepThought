@@ -14,9 +14,11 @@ import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.service.search.Search
 
 
-abstract class MainActivityTabFragment(private val layoutResourceId: Int, private val listViewResourceId: Int, private val optionsMenuResourceId: Int) : Fragment() {
+abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int) : Fragment() {
 
     private var presenter: IMainViewSectionPresenter? = null
+
+    protected var listView: ListView? = null
 
     private var searchView: SearchView? = null
 
@@ -37,7 +39,7 @@ abstract class MainActivityTabFragment(private val layoutResourceId: Int, privat
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater?.inflate(layoutResourceId, container, false)
+        val rootView = inflater?.inflate(R.layout.fragment_main_activity_tab, container, false)
 
         rootView?.let { setupListView(it) }
 
@@ -49,10 +51,10 @@ abstract class MainActivityTabFragment(private val layoutResourceId: Int, privat
     }
 
     private fun setupListView(rootView: View) {
-        val listView = rootView.findViewById(listViewResourceId) as ListView
+        listView = rootView.findViewById(R.id.lstEntities) as ListView
 
-        listView.adapter = getListAdapter()
-        listView.setOnItemClickListener { _, _, position, _ -> listItemClicked(position, getListAdapter().getItem(position)) }
+        listView?.adapter = getListAdapter()
+        listView?.setOnItemClickListener { _, _, position, _ -> listItemClicked(position, getListAdapter().getItem(position)) }
     }
 
 

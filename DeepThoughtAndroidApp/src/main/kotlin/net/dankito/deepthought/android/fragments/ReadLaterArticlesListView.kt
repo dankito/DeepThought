@@ -6,7 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.BaseAdapter
-import kotlinx.android.synthetic.main.fragment_tab_read_later_articles.view.*
+import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ReadLaterArticlesAdapter
 import net.dankito.deepthought.android.di.AppComponent
@@ -22,7 +22,7 @@ import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class ReadLaterArticlesListView : MainActivityTabFragment(R.layout.fragment_tab_read_later_articles, R.id.lstReadLaterArticles, R.menu.fragment_tab_read_later_articles_menu), IReadLaterArticleView {
+class ReadLaterArticlesListView : MainActivityTabFragment(R.menu.fragment_tab_read_later_articles_menu), IReadLaterArticleView {
 
 
     @Inject
@@ -70,7 +70,7 @@ class ReadLaterArticlesListView : MainActivityTabFragment(R.layout.fragment_tab_
         super.setupUI(rootView)
 
         rootView?.let {
-            registerForContextMenu(rootView.lstReadLaterArticles)
+            registerForContextMenu(rootView.lstEntities)
         }
     }
 

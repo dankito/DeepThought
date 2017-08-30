@@ -6,7 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.BaseAdapter
-import kotlinx.android.synthetic.main.fragment_tab_references.view.*
+import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ReferencesAdapter
 import net.dankito.deepthought.android.di.AppComponent
@@ -22,7 +22,7 @@ import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class ReferencesListView: MainActivityTabFragment(R.layout.fragment_tab_references, R.id.lstReferences, R.menu.fragment_tab_references_menu), IReferencesListView {
+class ReferencesListView: MainActivityTabFragment(R.menu.fragment_tab_references_menu), IReferencesListView {
 
     @Inject
     protected lateinit var referenceService: ReferenceService
@@ -73,7 +73,7 @@ class ReferencesListView: MainActivityTabFragment(R.layout.fragment_tab_referenc
         super.setupUI(rootView)
 
         rootView?.let {
-            registerForContextMenu(rootView.lstReferences)
+            registerForContextMenu(rootView.lstEntities)
         }
     }
 
