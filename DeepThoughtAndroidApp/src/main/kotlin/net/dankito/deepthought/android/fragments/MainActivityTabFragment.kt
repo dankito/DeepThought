@@ -12,6 +12,7 @@ import android.view.*
 import android.widget.BaseAdapter
 import android.widget.ListView
 import android.widget.TextView
+import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
@@ -23,6 +24,8 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
     private var presenter: IMainViewSectionPresenter? = null
 
     protected var listView: ListView? = null
+
+    protected var txtOnboardingText: TextView? = null
 
     private var entitiesToCheckForOnboardingOnViewCreation: List<BaseEntity>? = null
 
@@ -47,7 +50,10 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater?.inflate(R.layout.fragment_main_activity_tab, container, false)
 
-        rootView?.let { setupListView(it) }
+        rootView?.let {
+            txtOnboardingText = rootView.txtOnboardingText
+            setupListView(it)
+        }
 
         setHasOptionsMenu(true)
 
@@ -57,7 +63,7 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
     }
 
     private fun setupListView(rootView: View) {
-        listView = rootView.findViewById(R.id.lstEntities) as ListView
+        listView = rootView.lstEntities
 
         listView?.adapter = getListAdapter()
         listView?.setOnItemClickListener { _, _, position, _ -> listItemClicked(position, getListAdapter().getItem(position)) }
@@ -126,20 +132,24 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
     protected open fun showOnboardingView() {
         listView?.visibility = View.GONE
 
-        (listView?.parent as? View)?.findViewById(R.id.txtOnboardingText)?.let { view ->
-            (view as? TextView)?.let { txtOnboardingText ->
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(onboardingTextResourceId).toString(), Html.FROM_HTML_MODE_LEGACY)
-                }
-                else {
-                    txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(onboardingTextResourceId).toString())
-                }
+        txtOnboardingText?.let { txtOnboardingText ->
+            txtOnboardingText.visibility = View.VISIBLE
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(onboardingTextResourceId).toString(), Html.FROM_HTML_MODE_LEGACY)
+            }
+            else {
+                txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(onboardingTextResourceId).toString())
             }
         }
     }
 
     protected open fun hideOnboardingView() {
         listView?.visibility = View.VISIBLE
+        
+        txtOnboardingText?.let { txtOnboardingText ->
+            txtOnboardingText.visibility = View.GONE
+        }
     }
 
 
