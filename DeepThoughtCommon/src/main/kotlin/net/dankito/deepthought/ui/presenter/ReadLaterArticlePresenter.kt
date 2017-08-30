@@ -49,10 +49,6 @@ class ReadLaterArticlePresenter(private val view: IReadLaterArticleView, private
         return lastSearchTermProperty
     }
 
-    override fun getAndShowAllEntities() {
-        getReadLaterArticles(Search.EmptySearchTerm)
-    }
-
     private fun getReadLaterArticles() {
         getReadLaterArticles(lastSearchTermProperty)
     }

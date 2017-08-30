@@ -39,12 +39,6 @@ class ReferencesListPresenter(private var view: IReferencesListView, private var
     }
 
 
-    override fun getAndShowAllEntities() {
-        searchEngine.addInitializationListener {
-            searchReferences(Search.EmptySearchTerm)
-        }
-    }
-
     private fun retrieveAndShowReferences() {
         searchReferences(lastSearchTermProperty)
     }

@@ -49,14 +49,6 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, router
     }
 
 
-    override fun getAndShowAllEntities() {
-        searchEngine.addInitializationListener {
-            searchEntries(Search.EmptySearchTerm) {
-
-            }
-        }
-    }
-
     fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {
         selectedTag = tag
         this.tagsFilter = tagsFilter

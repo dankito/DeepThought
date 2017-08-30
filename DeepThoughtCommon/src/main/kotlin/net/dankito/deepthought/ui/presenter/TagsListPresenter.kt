@@ -49,11 +49,6 @@ class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: Da
     }
 
 
-    override fun getAndShowAllEntities() {
-        searchEngine.addInitializationListener { searchTags() }
-    }
-
-
     override fun getTagsFromSearchTagsWithoutFilterResult(result: TagsSearchResults): List<Tag> {
         if(result.hasEmptySearchTerm) {
             if(hasInitializedCalculatedTags == false) {
