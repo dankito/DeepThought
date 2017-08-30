@@ -75,7 +75,7 @@ abstract class MainActivityTabFragment(private val layoutResourceId: Int, privat
         }
 
         presenter?.let { presenter ->
-            searchEntities(presenter.getLastSearchTerm())
+            searchEntities(presenter.getLastSearchTerm()) // TODO: may add a searchEngine.initializationListener
         }
     }
 
