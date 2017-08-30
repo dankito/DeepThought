@@ -472,7 +472,16 @@ class EditEntryActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
+        if(isEditEntryFieldDialogVisible()) { // let TagEntriesListDialog handle back button press
+            super.onBackPressed()
+            return
+        }
+
         askIfUnsavedChangesShouldBeSavedAndCloseDialog()
+    }
+
+    private fun isEditEntryFieldDialogVisible(): Boolean {
+        return supportFragmentManager.findFragmentByTag(EditHtmlTextDialog.TAG) != null || supportFragmentManager.findFragmentByTag(TagsOnEntryDialogFragment.TAG) != null
     }
 
 
