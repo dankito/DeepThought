@@ -1,6 +1,7 @@
 package net.dankito.service.search.writerandsearcher
 
-import net.dankito.deepthought.extensions.entryPreview
+import net.dankito.deepthought.extensions.abstractPlainText
+import net.dankito.deepthought.extensions.contentPlainText
 import net.dankito.deepthought.extensions.preview
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.service.data.ReadLaterArticleService
@@ -35,8 +36,10 @@ class ReadLaterArticleIndexWriterAndSearcher(readLaterArticleService: ReadLaterA
 
     override fun addEntityFieldsToDocument(entity: ReadLaterArticle, doc: Document) {
         val entry = entity.entryExtractionResult.entry
-        if(entry.entryPreview.isNotEmpty()) { // Lucene crashing when trying to index empty strings
-            doc.add(Field(FieldName.ReadLaterArticleEntry, entry.entryPreview, TextField.TYPE_NOT_STORED))
+
+        val textToIndex = entry.abstractPlainText + " " + entry.contentPlainText
+        if(textToIndex.isNotBlank()) { // Lucene crashes when trying to index empty strings
+            doc.add(Field(FieldName.ReadLaterArticleEntry, textToIndex, TextField.TYPE_NOT_STORED))
         }
 
         entity.entryExtractionResult.reference?.let { reference ->
