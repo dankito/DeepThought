@@ -6,20 +6,21 @@
     <RelativeLayout
         android:id="@+id/lytAbstract"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/activity_edit_entry_field_height"
+        android:layout_marginLeft="@dimen/activity_edit_entry_field_margin_left"
+        android:layout_marginStart="@dimen/activity_edit_entry_field_margin_left"
+        android:layout_marginRight="@dimen/activity_edit_entry_field_margin_right"
+        android:layout_marginEnd="@dimen/activity_edit_entry_field_margin_right"
         android:layout_alignParentTop="true"
+        android:gravity="center_vertical"
     >
 
         <TextView
             android:id="@+id/txtEntryAbstractLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignTop="@+id/txtEntryAbstract"
-            android:layout_alignBottom="@+id/txtEntryAbstract"
-            android:layout_marginRight="2dp"
-            android:layout_marginEnd="2dp"
+            android:layout_alignParentTop="true"
+            style="@style/EntryFieldName"
             android:text="@string/activity_edit_entry_abstract_label"
         />
 
@@ -27,45 +28,37 @@
             android:id="@+id/txtEntryAbstract"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/txtEntryAbstractLabel"
-            android:layout_toEndOf="@+id/txtEntryAbstractLabel"
-            android:layout_toLeftOf="@+id/imgEditEntryAbstract"
-            android:layout_toStartOf="@+id/imgEditEntryAbstract"
-            android:maxLines="3"
+            android:layout_below="@+id/txtEntryAbstractLabel"
+            android:maxLines="2"
             android:ellipsize="end"
-        />
-
-        <ImageView
-            android:id="@+id/imgEditEntryAbstract"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/txtEntryAbstract"
-            android:layout_alignBottom="@+id/txtEntryAbstract"
-            android:scaleType="fitCenter"
-            android:src="@android:drawable/ic_menu_edit"
         />
 
     </RelativeLayout>
 
+    <View
+        android:id="@+id/dvAbstractDivider"
+        android:layout_below="@+id/lytAbstract"
+        style="@style/DividerStyle"
+    />
+
     <RelativeLayout
         android:id="@+id/lytReference"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/lytAbstract"
+        android:layout_height="@dimen/activity_edit_entry_field_height"
+        android:layout_marginLeft="@dimen/activity_edit_entry_field_margin_left"
+        android:layout_marginStart="@dimen/activity_edit_entry_field_margin_left"
+        android:layout_marginRight="@dimen/activity_edit_entry_field_margin_right"
+        android:layout_marginEnd="@dimen/activity_edit_entry_field_margin_right"
+        android:layout_below="@+id/dvAbstractDivider"
+        android:gravity="center_vertical"
     >
 
         <TextView
             android:id="@+id/txtEntryReferenceLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignTop="@+id/txtEntryReference"
-            android:layout_alignBottom="@+id/txtEntryReference"
-            android:layout_marginRight="@dimen/activity_edit_entry_label_margin_right"
-            android:layout_marginEnd="@dimen/activity_edit_entry_label_margin_right"
+            android:layout_alignParentTop="true"
+            style="@style/EntryFieldName"
             android:text="@string/activity_edit_entry_reference_label"
         />
 
@@ -73,45 +66,38 @@
             android:id="@+id/txtEntryReference"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/txtEntryReferenceLabel"
-            android:layout_toEndOf="@+id/txtEntryReferenceLabel"
-            android:layout_toLeftOf="@+id/imgEditEntryReference"
-            android:layout_toStartOf="@+id/imgEditEntryReference"
+            android:layout_below="@+id/txtEntryReferenceLabel"
             android:maxLines="1"
             android:ellipsize="end"
-        />
-
-        <ImageView
-            android:id="@+id/imgEditEntryReference"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/txtEntryReference"
-            android:layout_alignBottom="@+id/txtEntryReference"
-            android:scaleType="fitCenter"
-            android:src="@android:drawable/ic_menu_edit"
+            style="@style/EntryFieldValue"
         />
 
     </RelativeLayout>
 
+    <View
+        android:id="@+id/dvReferenceDivider"
+        android:layout_below="@+id/lytReference"
+        style="@style/DividerStyle"
+    />
+
     <RelativeLayout
         android:id="@+id/lytTagsOnEntry"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/lytReference"
+        android:layout_height="@dimen/activity_edit_entry_field_height"
+        android:layout_marginLeft="@dimen/activity_edit_entry_field_margin_left"
+        android:layout_marginStart="@dimen/activity_edit_entry_field_margin_left"
+        android:layout_marginRight="@dimen/activity_edit_entry_field_margin_right"
+        android:layout_marginEnd="@dimen/activity_edit_entry_field_margin_right"
+        android:layout_below="@+id/dvReferenceDivider"
+        android:gravity="center_vertical"
     >
 
         <TextView
             android:id="@+id/txtTagsOnEntryLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignTop="@+id/txtTagsOnEntry"
-            android:layout_alignBottom="@+id/txtTagsOnEntry"
-            android:layout_marginRight="@dimen/activity_edit_entry_label_margin_right"
-            android:layout_marginEnd="@dimen/activity_edit_entry_label_margin_right"
+            android:layout_alignParentTop="true"
+            style="@style/EntryFieldName"
             android:text="@string/activity_edit_entry_tags_label"
         />
 
@@ -119,26 +105,10 @@
             android:id="@+id/txtTagsOnEntry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/txtTagsOnEntryLabel"
-            android:layout_toEndOf="@+id/txtTagsOnEntryLabel"
-            android:layout_toLeftOf="@+id/imgEditTagsOnEntry"
-            android:layout_toStartOf="@+id/imgEditTagsOnEntry"
-            android:layout_marginRight="@dimen/activity_edit_entry_label_margin_right"
-            android:layout_marginEnd="@dimen/activity_edit_entry_label_margin_right"
+            android:layout_below="@+id/txtTagsOnEntryLabel"
             android:maxLines="1"
             android:ellipsize="end"
-        />
-
-        <ImageView
-            android:id="@+id/imgEditTagsOnEntry"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/txtTagsOnEntry"
-            android:layout_alignBottom="@+id/txtTagsOnEntry"
-            android:scaleType="fitCenter"
-            android:src="@android:drawable/ic_menu_edit"
+            style="@style/EntryFieldValue"
         />
 
     </RelativeLayout>

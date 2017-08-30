@@ -64,4 +64,26 @@
         <item name="android:src">@drawable/fab_add</item>
     </style>
 
+
+    <!-- Text styles -->
+
+    <style name="EntryFieldName">
+        <item name="android:textColor">#AAAAAA</item>
+    </style>
+
+    <style name="EntryFieldValue">
+        <item name="android:textColor">#000000</item>
+    </style>
+
+
+    <style name="DividerStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/divider_height</item>
+        <item name="android:background">@color/divider_line_color</item>
+        <item name="android:layout_marginLeft">@dimen/divider_margin_left_right</item>
+        <item name="android:layout_marginStart">@dimen/divider_margin_left_right</item>
+        <item name="android:layout_marginRight">@dimen/divider_margin_left_right</item>
+        <item name="android:layout_marginEnd">@dimen/divider_margin_left_right</item>
+    </style>
+
 </resources>
