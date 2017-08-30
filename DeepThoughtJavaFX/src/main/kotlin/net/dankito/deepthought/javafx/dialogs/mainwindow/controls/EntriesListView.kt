@@ -14,13 +14,14 @@ import net.dankito.deepthought.ui.presenter.EntriesListPresenter
 import net.dankito.deepthought.ui.view.IEntriesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.Search
 import net.dankito.utils.ui.IClipboardService
 import tornadofx.*
 import java.text.DateFormat
 import javax.inject.Inject
 
 
-class EntriesListView : View(), IEntriesListView {
+class EntriesListView : EntitiesListView(), IEntriesListView {
 
     companion object {
         private val dateTimeFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG)
@@ -50,11 +51,13 @@ class EntriesListView : View(), IEntriesListView {
         AppComponent.component.inject(this)
 
         presenter = EntriesListPresenter(this, router, searchEngine, deleteEntityService, clipboardService)
-        searchBar = EntriesSearchBar(presenter)
+        searchBar = EntriesSearchBar(this)
 
         (router as? JavaFXRouter)?.entriesListView = this // TODO: this is bad code design
 
-        presenter.getAndShowAllEntities()
+        searchEngine.addInitializationListener {
+            searchEntities(Search.EmptySearchTerm)
+        }
     }
 
     override fun onUndock() {
@@ -82,6 +85,11 @@ class EntriesListView : View(), IEntriesListView {
 
             onDoubleClick { router.showEditEntryView(selectionModel.selectedItem) }
         }
+    }
+
+
+    override fun searchEntities(query: String) {
+        presenter.searchEntries(query)
     }
 
 

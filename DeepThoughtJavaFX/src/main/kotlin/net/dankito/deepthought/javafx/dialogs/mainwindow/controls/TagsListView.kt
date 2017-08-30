@@ -15,12 +15,13 @@ import net.dankito.deepthought.ui.view.ITagsListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.Search
 import net.dankito.utils.ui.IDialogService
 import tornadofx.*
 import javax.inject.Inject
 
 
-class TagsListView : View(), ITagsListView {
+class TagsListView : EntitiesListView(), ITagsListView {
 
     private val presenter: TagsListPresenter
 
@@ -59,9 +60,11 @@ class TagsListView : View(), ITagsListView {
         AppComponent.component.inject(this)
 
         presenter = TagsListPresenter(this, dataManager, searchEngine, searchResultsUtil, tagService, deleteEntityService, dialogService, router)
-        searchBar = TagsSearchBar(presenter)
+        searchBar = TagsSearchBar(this)
 
-        presenter.getAndShowAllEntities()
+        searchEngine.addInitializationListener {
+            searchEntities(Search.EmptySearchTerm)
+        }
     }
 
     override fun onUndock() {
@@ -104,6 +107,7 @@ class TagsListView : View(), ITagsListView {
         }
     }
 
+
     private fun tagSelected(selectedTag: Tag?) {
         if(selectedTag != null) {
             presenter.showEntriesForTag(selectedTag)
@@ -111,6 +115,10 @@ class TagsListView : View(), ITagsListView {
         else {
 //            presenter.clearSelectedTag() // TODO
         }
+    }
+
+    override fun searchEntities(query: String) {
+        presenter.searchTags(query)
     }
 
 

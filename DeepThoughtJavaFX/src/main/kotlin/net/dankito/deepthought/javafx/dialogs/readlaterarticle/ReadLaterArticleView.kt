@@ -1,6 +1,7 @@
 package net.dankito.deepthought.javafx.dialogs.readlaterarticle
 
 import net.dankito.deepthought.javafx.di.AppComponent
+import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.EntitiesListView
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.controls.ReadLaterArticleListCellFragment
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.ui.IRouter
@@ -9,12 +10,13 @@ import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.deepthought.ui.view.IReadLaterArticleView
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.Search
 import net.dankito.utils.ui.IClipboardService
 import tornadofx.*
 import javax.inject.Inject
 
 
-class ReadLaterArticleView : View(), IReadLaterArticleView {
+class ReadLaterArticleView : EntitiesListView(), IReadLaterArticleView {
 
 
     @Inject
@@ -41,7 +43,7 @@ class ReadLaterArticleView : View(), IReadLaterArticleView {
 
         presenter = ReadLaterArticlePresenter(this, searchEngine, readLaterArticleService, entryPersister, clipboardService, router)
 
-        presenter.getAndShowAllEntities()
+        searchEntities(Search.EmptySearchTerm)
     }
 
 
@@ -89,6 +91,10 @@ class ReadLaterArticleView : View(), IReadLaterArticleView {
 
     }
 
+
+    override fun searchEntities(query: String) {
+        presenter.getReadLaterArticles(query)
+    }
 
     override fun showArticles(readLaterArticles: List<ReadLaterArticle>) {
         runLater {

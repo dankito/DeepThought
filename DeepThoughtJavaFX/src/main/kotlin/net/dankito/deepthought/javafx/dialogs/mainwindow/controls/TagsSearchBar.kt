@@ -3,11 +3,10 @@ package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 import javafx.geometry.Pos
 import javafx.scene.input.KeyCode
 import javafx.scene.layout.Priority
-import net.dankito.deepthought.ui.presenter.TagsListPresenter
 import tornadofx.*
 
 
-class TagsSearchBar(private val presenter: TagsListPresenter) : View() {
+class TagsSearchBar(private val tagsListView: TagsListView) : View() {
 
     override val root = hbox {
         prefHeight = 40.0
@@ -24,7 +23,7 @@ class TagsSearchBar(private val presenter: TagsListPresenter) : View() {
 
             promptText = messages["search.tags.prompt.text"]
 
-            textProperty().addListener { _, _, newValue -> presenter.searchTags(newValue) }
+            textProperty().addListener { _, _, newValue -> tagsListView.searchEntities(newValue) }
             setOnKeyReleased { event ->
                 if(event.code == KeyCode.ESCAPE) {
                     clear()
