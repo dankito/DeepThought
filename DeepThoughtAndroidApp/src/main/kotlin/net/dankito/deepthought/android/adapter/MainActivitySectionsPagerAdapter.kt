@@ -8,7 +8,7 @@ import net.dankito.deepthought.android.fragments.*
 class MainActivitySectionsPagerAdapter(private val fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
 
 
-    private val entriesListView = EntriesListView()
+    private var entriesListView: EntriesListView? = null
 
     private var tagsListView: TagsListView? = null
 
@@ -23,11 +23,11 @@ class MainActivitySectionsPagerAdapter(private val fragmentManager: FragmentMana
 
     override fun getItem(position: Int): MainActivityTabFragment {
         when(position) {
-            0 -> return entriesListView // EntriesListView always seems to work
+            0 -> return getEntriesListView() // EntriesListView always seems to work
             1 -> return getTagsListView()
             2 -> return getReferencesListView()
             3 -> return getReadLaterArticlesListView()
-            else -> return entriesListView // to make compiler happy
+            else -> return getEntriesListView() // to make compiler happy
         }
     }
 
@@ -39,6 +39,24 @@ class MainActivitySectionsPagerAdapter(private val fragmentManager: FragmentMana
      * Therefor i now check via FragmentManager first if fragments of this instance already exist. If so i use these, if not then i create a new one.
      * Makes the code much more complex but works.
      */
+
+    private fun getEntriesListView(): EntriesListView {
+        entriesListView?.let {
+            return it
+        }
+
+        fragmentManager.fragments.forEach { fragment ->
+            if(fragment is EntriesListView) {
+                entriesListView = fragment
+            }
+        }
+
+        if(entriesListView == null) {
+            entriesListView = EntriesListView()
+        }
+
+        return entriesListView!!
+    }
 
     private fun getTagsListView(): TagsListView {
         tagsListView?.let {
