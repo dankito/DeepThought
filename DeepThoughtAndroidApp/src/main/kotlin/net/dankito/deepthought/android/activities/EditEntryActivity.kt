@@ -1,9 +1,12 @@
 package net.dankito.deepthought.android.activities
 
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.ViewGroup
+import android.view.MotionEvent
+import android.view.View
+import android.webkit.WebView
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.activity_edit_entry.*
 import net.dankito.deepthought.android.R
@@ -13,9 +16,9 @@ import net.dankito.deepthought.android.activities.arguments.EntryActivityParamet
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.EditHtmlTextDialog
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
+import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import net.dankito.deepthought.android.views.EntryFieldsPreview
-import net.dankito.deepthought.android.views.html.AndroidHtmlEditor
-import net.dankito.deepthought.android.views.html.AndroidHtmlEditorPool
+import net.dankito.deepthought.android.views.FullScreenWebView
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
@@ -33,10 +36,7 @@ import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.ui.IDialogService
 import net.engio.mbassy.listener.Handler
 import java.util.*
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import kotlin.concurrent.schedule
 
 
 class EditEntryActivity : BaseActivity() {
@@ -51,6 +51,30 @@ class EditEntryActivity : BaseActivity() {
         private const val TAGS_ON_ENTRY_INTENT_EXTRA_NAME = "TAGS_ON_ENTRY"
 
         const val ResultId = "EDIT_ENTRY_ACTIVITY_RESULT"
+
+        private const val NON_READER_MODE_SYSTEM_UI_FLAGS = 0
+        private val READER_MODE_SYSTEM_UI_FLAGS: Int
+
+
+        init {
+            READER_MODE_SYSTEM_UI_FLAGS = createReaderModeSystemUiFlags()
+        }
+
+        private fun createReaderModeSystemUiFlags(): Int {
+            // see https://developer.android.com/training/system-ui/immersive.html
+            var flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                // even thought View.SYSTEM_UI_FLAG_FULLSCREEN is also available from SDK 16 and above, to my experience it doesn't work reliable (at least not on Android 4.1)
+                flags = flags or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            }
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                flags = flags or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE
+            }
+
+            return flags
+        }
     }
 
 
@@ -81,9 +105,6 @@ class EditEntryActivity : BaseActivity() {
     @Inject
     protected lateinit var eventBus: IEventBus
 
-    @Inject
-    protected lateinit var htmlEditorPool: AndroidHtmlEditorPool
-
 
     private var entry: Entry? = null
 
@@ -91,6 +112,12 @@ class EditEntryActivity : BaseActivity() {
 
     private var entryExtractionResult: EntryExtractionResult? = null
 
+
+    private var contentToEdit: String? = null
+
+    private var abstractToEdit: String? = null
+
+    private var referenceToEdit: Reference? = null
 
     private val tagsOnEntry: MutableList<Tag> = ArrayList()
 
@@ -101,9 +128,12 @@ class EditEntryActivity : BaseActivity() {
 
     private val presenter: EditEntryPresenter
 
-    private lateinit var entryFieldsPreview: EntryFieldsPreview
+    private var isInReaderMode = false
 
-    private lateinit var contentHtmlEditor: AndroidHtmlEditor
+    private lateinit var swipeTouchListener: OnSwipeTouchListener
+
+
+    private lateinit var entryFieldsPreview: EntryFieldsPreview
 
     private var mnSaveEntry: MenuItem? = null
 
@@ -136,16 +166,22 @@ class EditEntryActivity : BaseActivity() {
         savedInstanceState.getString(ENTRY_ID_INTENT_EXTRA_NAME)?.let { entryId -> editEntry(entryId) }
 
         savedInstanceState.getString(CONTENT_INTENT_EXTRA_NAME)?.let { content ->
-            Timer().schedule(100L) { contentHtmlEditor.setHtml(content) } // set delayed otherwise setHtml() from editEntry() wins
+            contentToEdit = content
+            setContentPreviewOnUIThread()
         }
-        // TODO: restore abstract
+
+        savedInstanceState.getString(ABSTRACT_INTENT_EXTRA_NAME)?.let { abstract ->
+            abstractToEdit = abstract
+            setAbstractPreviewOnUIThread()
+        }
+
         savedInstanceState.getString(TAGS_ON_ENTRY_INTENT_EXTRA_NAME)?.let { tagsOnEntryIds -> restoreTagsOnEntryAsync(tagsOnEntryIds) }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
 
-        outState?.let { outState ->
+        outState?.let {
             outState.putString(ENTRY_ID_INTENT_EXTRA_NAME, null)
             entry?.id?.let { entryId -> outState.putString(ENTRY_ID_INTENT_EXTRA_NAME, entryId) }
 
@@ -157,14 +193,9 @@ class EditEntryActivity : BaseActivity() {
 
             outState.putString(TAGS_ON_ENTRY_INTENT_EXTRA_NAME, serializer.serializeObject(tagsOnEntry))
 
-            outState.putString(CONTENT_INTENT_EXTRA_NAME, null)
+            outState.putString(CONTENT_INTENT_EXTRA_NAME, contentToEdit)
 
-            val countDownLatch = CountDownLatch(1)
-            contentHtmlEditor.getHtmlAsync { content ->
-                outState.putString(CONTENT_INTENT_EXTRA_NAME, content)
-                countDownLatch.countDown()
-            }
-            try { countDownLatch.await(1, TimeUnit.SECONDS) } catch(ignored: Exception) { }
+            outState.putString(ABSTRACT_INTENT_EXTRA_NAME, abstractToEdit)
         }
     }
 
@@ -188,17 +219,20 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setupEntryContentView() {
-        contentHtmlEditor = htmlEditorPool.getHtmlEditor(this, contentListener)
+        wbEntry.setOnSystemUiVisibilityChangeListener { flags -> systemUiVisibilityChanged(flags) }
+        wbEntry.changeFullScreenModeListener = { mode -> handleChangeFullScreenModeEvent(mode) }
 
-        lytEntryContent.addView(contentHtmlEditor, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+        swipeTouchListener = OnSwipeTouchListener(this) { handleWebViewSwipe(it) }
+        swipeTouchListener.singleTapListener = { handleWebViewClick() }
+        swipeTouchListener.doubleTapListener = { handleWebViewDoubleTap() }
 
-        val contentEditorParams = contentHtmlEditor.layoutParams as RelativeLayout.LayoutParams
-        contentEditorParams.addRule(RelativeLayout.ALIGN_PARENT_TOP)
-        contentEditorParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
-        contentEditorParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
-        contentEditorParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+        wbEntry.setOnTouchListener { _, event -> handleWebViewTouch(event) }
 
-        contentHtmlEditor.layoutParams = contentEditorParams
+        val settings = wbEntry.getSettings()
+        settings.defaultTextEncodingName = "UTF-8" // otherwise non ASCII text doesn't get displayed correctly
+        settings.defaultFontSize = 18 // default font is too small
+        settings.domStorageEnabled = true // otherwise images may not load, see https://stackoverflow.com/questions/29888395/images-not-loading-in-android-webview
+        settings.javaScriptEnabled = true // so that embedded videos etc. work
     }
 
 
@@ -213,7 +247,8 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun savedReference(reference: Reference) {
-        entryFieldsPreview.reference = reference // do not set reference directly on entry as if entry is not saved get adding it to reference.entries causes an error
+        referenceToEdit = reference // do not set reference directly on entry as if entry is not saved yet adding it to reference.entries causes an error
+        entryFieldsPreview.reference = reference
 
         updateCanEntryBeSavedOnUIThread(true)
         setReferencePreviewOnUIThread()
@@ -228,12 +263,29 @@ class EditEntryActivity : BaseActivity() {
         }
     }
 
-    private fun editAbstract() {
-        entry?.let { entry ->
+    private fun editContent() {
+        contentToEdit?.let { content ->
             val editHtmlTextDialog = EditHtmlTextDialog()
 
-            editHtmlTextDialog.showDialog(supportFragmentManager, entry.abstractString) {
-                entry.abstractString = it
+            editHtmlTextDialog.showDialog(supportFragmentManager, content) {
+                contentToEdit = it
+
+                entryHasBeenEdited()
+
+                runOnUiThread {
+                    updateCanEntryBeSavedOnUIThread(true)
+                    setContentPreviewOnUIThread()
+                }
+            }
+        }
+    }
+
+    private fun editAbstract() {
+        abstractToEdit?.let { abstract ->
+            val editHtmlTextDialog = EditHtmlTextDialog()
+
+            editHtmlTextDialog.showDialog(supportFragmentManager, abstract) {
+                abstractToEdit = it
 
                 entryHasBeenEdited()
 
@@ -248,7 +300,7 @@ class EditEntryActivity : BaseActivity() {
     private fun editReference() {
         setWaitingForResult(EditReferenceActivity.ResultId)
 
-        val reference = entry?.reference ?: readLaterArticle?.entryExtractionResult?.reference ?: entryExtractionResult?.reference
+        val reference = referenceToEdit
 
         if(reference != null) {
             presenter.editReference(reference)
@@ -285,6 +337,26 @@ class EditEntryActivity : BaseActivity() {
     }
 
 
+    private fun setContentPreviewOnUIThread() {
+        setContentPreviewOnUIThread(referenceToEdit)
+    }
+
+    private fun setContentPreviewOnUIThread(reference: Reference?) {
+        var content = contentToEdit
+        val url = reference?.url
+
+        if(content?.startsWith("<html") == false && content?.startsWith("<body") == false) {
+            content = "<body style=\"font-family: serif, Georgia, Roboto, Helvetica, Arial; font-size:17;\"" + content + "</body>"
+        }
+
+        if(url != null && Build.VERSION.SDK_INT > 16) {
+            wbEntry.loadDataWithBaseURL(url, content, "text/html; charset=UTF-8", "utf-8", null)
+        }
+        else {
+            wbEntry.loadData(content, "text/html; charset=UTF-8", null)
+        }
+    }
+
     private fun setAbstractPreviewOnUIThread() {
         entryFieldsPreview.setAbstractPreviewOnUIThread()
     }
@@ -298,14 +370,105 @@ class EditEntryActivity : BaseActivity() {
     }
 
 
+    private fun systemUiVisibilityChanged(flags: Int) {
+        // as immersive fullscreen is only available for KitKat and above leave immersive fullscreen mode by swiping from screen top or bottom is also only available on these  devices
+        if(flags == NON_READER_MODE_SYSTEM_UI_FLAGS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            leaveReaderMode()
+        }
+    }
+
+    /**
+     * WebView doesn't fire click event, so we had to implement this our self
+     */
+    private fun handleWebViewTouch(event: MotionEvent): Boolean {
+        swipeTouchListener.onTouch(wbEntry, event)
+
+        return false // don't consume event as otherwise scrolling won't work anymore
+    }
+
+    private fun handleWebViewClick() {
+        val hitResult = wbEntry.hitTestResult
+        val type = hitResult.type
+
+        // leave the functionality for clicking on links, phone numbers, geo coordinates, ... Only go to reader mode when clicked somewhere else in the WebView or on an image
+        if(type == WebView.HitTestResult.UNKNOWN_TYPE || type == WebView.HitTestResult.IMAGE_TYPE) {
+            if(isInReaderMode) {
+                leaveReaderMode()
+            }
+            else {
+                editContent()
+            }
+        }
+    }
+
+    private fun handleChangeFullScreenModeEvent(mode: FullScreenWebView.FullScreenMode) {
+        when(mode) {
+            FullScreenWebView.FullScreenMode.Enter -> enterReaderMode()
+            FullScreenWebView.FullScreenMode.Leave -> leaveReaderMode()
+        }
+    }
+
+    private fun handleWebViewDoubleTap() {
+        if(isInReaderMode) {
+            saveEntryAndCloseDialog()
+        }
+    }
+
+    private fun handleWebViewSwipe(swipeDirection: OnSwipeTouchListener.SwipeDirection) {
+        if(isInReaderMode) {
+            when(swipeDirection) {
+                OnSwipeTouchListener.SwipeDirection.Left -> presenter.returnToPreviousView()
+                OnSwipeTouchListener.SwipeDirection.Right -> editTagsOnEntry()
+            }
+        }
+    }
+
+    private fun leaveReaderMode() {
+        isInReaderMode = false
+
+        entryFieldsPreview.visibility = View.VISIBLE
+        appBarLayout.visibility = View.VISIBLE
+
+        val layoutParams = wbEntry.layoutParams as RelativeLayout.LayoutParams
+        layoutParams.alignWithParent = false
+        wbEntry.layoutParams = layoutParams
+
+        wbEntry.systemUiVisibility = NON_READER_MODE_SYSTEM_UI_FLAGS
+    }
+
+    private fun enterReaderMode() {
+        isInReaderMode = true
+
+        entryFieldsPreview.visibility = View.GONE
+        appBarLayout.visibility = View.GONE
+
+        val layoutParams = wbEntry.layoutParams as RelativeLayout.LayoutParams
+        layoutParams.alignWithParent = true
+        wbEntry.layoutParams = layoutParams
+
+        wbEntry.systemUiVisibility = READER_MODE_SYSTEM_UI_FLAGS
+    }
+
+
     override fun onDestroy() {
-        htmlEditorPool.htmlEditorReleased(contentHtmlEditor)
+        pauseWebView()
 
         parameterHolder.clearActivityResults(EditReferenceActivity.ResultId)
 
         unregisterEventBusListener()
 
         super.onDestroy()
+    }
+
+    private fun pauseWebView() {
+        // to prevent that a video keeps on playing in WebView when navigating away from ViewEntryActivity
+        // see https://stackoverflow.com/a/6230902
+        try {
+            Class.forName("android.webkit.WebView")
+                    .getMethod("onPause")
+                    .invoke(wbEntry)
+
+        } catch(ignored: Exception) { }
     }
 
     override fun onBackPressed() {
@@ -355,39 +518,39 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun saveEntryAsync(callback: (Boolean) -> Unit) {
-        contentHtmlEditor.getHtmlAsync { content ->
+        val content = contentToEdit ?: ""
+        val abstract = abstractToEdit ?: ""
 
-            entry?.let { entry ->
-                updateEntry(entry, content)
-                presenter.saveEntryAsync(entry, entryFieldsPreview.reference, tagsOnEntry) { successful ->
-                    if(successful) {
-                        setActivityResult(EditEntryActivityResult(didSaveEntry = true, savedEntry = entry))
-                    }
-                    callback(successful)
+        entry?.let { entry ->
+            updateEntry(entry, content, abstract)
+            presenter.saveEntryAsync(entry, referenceToEdit, tagsOnEntry) { successful ->
+                if(successful) {
+                    setActivityResult(EditEntryActivityResult(didSaveEntry = true, savedEntry = entry))
                 }
+                callback(successful)
             }
+        }
 
-            entryExtractionResult?.let { extractionResult ->
-                updateEntry(extractionResult.entry, content)
-                presenter.saveEntryAsync(extractionResult.entry, entryFieldsPreview.reference, tagsOnEntry) { successful ->
-                    if(successful) {
-                        setActivityResult(EditEntryActivityResult(didSaveEntryExtractionResult = true, savedEntry = extractionResult.entry))
-                    }
-                    callback(successful)
+        entryExtractionResult?.let { extractionResult ->
+            updateEntry(extractionResult.entry, content, abstract)
+            presenter.saveEntryAsync(extractionResult.entry, referenceToEdit, tagsOnEntry) { successful ->
+                if(successful) {
+                    setActivityResult(EditEntryActivityResult(didSaveEntryExtractionResult = true, savedEntry = extractionResult.entry))
                 }
+                callback(successful)
             }
+        }
 
-            readLaterArticle?.let { readLaterArticle ->
-                val extractionResult = readLaterArticle.entryExtractionResult
-                updateEntry(extractionResult.entry, content)
+        readLaterArticle?.let { readLaterArticle ->
+            val extractionResult = readLaterArticle.entryExtractionResult
+            updateEntry(extractionResult.entry, content, abstract)
 
-                presenter.saveEntryAsync(extractionResult.entry, entryFieldsPreview.reference, tagsOnEntry) { successful ->
-                    if(successful) {
-                        readLaterArticleService.delete(readLaterArticle)
-                        setActivityResult(EditEntryActivityResult(didSaveReadLaterArticle = true, savedEntry = extractionResult.entry))
-                    }
-                    callback(successful)
+            presenter.saveEntryAsync(extractionResult.entry, referenceToEdit, tagsOnEntry) { successful ->
+                if(successful) {
+                    readLaterArticleService.delete(readLaterArticle)
+                    setActivityResult(EditEntryActivityResult(didSaveReadLaterArticle = true, savedEntry = extractionResult.entry))
                 }
+                callback(successful)
             }
         }
     }
@@ -396,8 +559,9 @@ class EditEntryActivity : BaseActivity() {
         parameterHolder.setActivityResult(ResultId, result)
     }
 
-    private fun updateEntry(entry: Entry, content: String) {
+    private fun updateEntry(entry: Entry, content: String, abstract: String) {
         entry.content = content
+        entry.abstractString = abstract
     }
 
 
@@ -493,9 +657,13 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun editEntry(entry: Entry?, reference: Reference?, tags: Collection<Tag>?) {
-        entry?.let { contentHtmlEditor.setHtml(entry.content) }
+        contentToEdit = entry?.content
+        abstractToEdit = entry?.abstractString
+        referenceToEdit = reference
 
         entryFieldsPreview.reference = reference
+
+        setContentPreviewOnUIThread(reference)
 
         setAbstractPreviewOnUIThread()
 

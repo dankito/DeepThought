@@ -11,22 +11,28 @@
         android:layout_alignParentTop="true"
     />
 
-    <RelativeLayout
-        android:id="@+id/lytEntryContent"
+    <net.dankito.deepthought.android.views.FullScreenWebView
+        android:id="@+id/wbEntry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/lytEntryFieldsPreview"
-        android:layout_above="@+id/toolbar"
-        />
+        android:layout_above="@+id/appBarLayout"
+    />
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="?attr/colorPrimary"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        app:popupTheme="@style/AppTheme.PopupOverlay"
-        />
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+    </android.support.design.widget.AppBarLayout>
 
 </RelativeLayout>
