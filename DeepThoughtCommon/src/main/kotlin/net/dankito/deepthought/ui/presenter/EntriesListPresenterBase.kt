@@ -13,10 +13,6 @@ abstract class EntriesListPresenterBase(private val deleteEntityService: DeleteE
         router.showEditEntryView(entry)
     }
 
-    fun editEntry(entry: Entry) {
-        router.showEditEntryView(entry)
-    }
-
     fun copyReferenceUrlToClipboard(entry: Entry) {
         entry.reference?.let {
             clipboardService.copyReferenceUrlToClipboard(it)

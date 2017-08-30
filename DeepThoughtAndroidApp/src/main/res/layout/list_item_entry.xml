@@ -15,14 +15,6 @@
     >
 
         <ImageButton
-            android:id="@+id/btnEditEntry"
-            android:layout_width="@dimen/list_item_entry_button_width"
-            android:layout_height="match_parent"
-            android:src="@android:drawable/ic_menu_edit"
-            android:scaleType="fitCenter"
-        />
-
-        <ImageButton
             android:id="@+id/btnShareEntry"
             android:layout_width="@dimen/list_item_entry_button_width"
             android:layout_height="match_parent"

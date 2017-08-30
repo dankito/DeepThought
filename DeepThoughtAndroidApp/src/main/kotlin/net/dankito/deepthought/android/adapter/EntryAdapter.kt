@@ -46,11 +46,6 @@ class EntryAdapter(private val presenter: EntriesListPresenterBase): ListSwipeAd
         convertView.txtEntryTags.visibility = if(entry.hasTags()) View.VISIBLE else View.GONE
         convertView.txtEntryTags.text = entry.tagsPreview
 
-        convertView.btnEditEntry.setOnClickListener {
-            presenter.editEntry(entry)
-            (convertView as? SwipeLayout)?.close()
-        }
-
         convertView.btnShareEntry.visibility = if(entry.reference != null) View.VISIBLE else View.GONE
         convertView.btnShareEntry.setOnClickListener {
             presenter.copyReferenceUrlToClipboard(entry)
