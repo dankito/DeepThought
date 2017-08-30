@@ -2,8 +2,8 @@ package net.dankito.deepthought.android.service
 
 import android.content.Intent
 import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.news.article.ArticleExtractorManager
+import net.dankito.deepthought.ui.IRouter
 import net.dankito.utils.ui.IDialogService
 import java.net.URI
 
@@ -36,7 +36,7 @@ class IntentHandler(private val articleExtractorManager: ArticleExtractorManager
         intent.getStringExtra(Intent.EXTRA_TEXT)?.let { sharedText ->
             if(isReceivedTextAnUri(sharedText)) {
                 articleExtractorManager.extractArticleAndAddDefaultDataAsync(sharedText) {
-                    it.result?.let { router.showViewEntryView(it) }
+                    it.result?.let { router.showEditEntryView(it) }
                     it.error?.let { showErrorMessage(it, sharedText) }
                 }
             }

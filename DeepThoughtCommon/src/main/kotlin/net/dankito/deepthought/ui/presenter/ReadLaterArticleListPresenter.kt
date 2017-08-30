@@ -63,7 +63,7 @@ class ReadLaterArticleListPresenter(private val view: IReadLaterArticleView, pri
 
 
     fun showArticle(article: ReadLaterArticle) {
-        router.showViewEntryView(article)
+        router.showEditEntryView(article)
     }
 
     fun saveAndDeleteReadLaterArticle(article: ReadLaterArticle) {

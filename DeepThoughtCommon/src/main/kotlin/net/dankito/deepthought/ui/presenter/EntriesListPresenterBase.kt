@@ -10,7 +10,7 @@ abstract class EntriesListPresenterBase(private val deleteEntityService: DeleteE
 
 
     fun showEntry(entry: Entry) {
-        router.showViewEntryView(entry)
+        router.showEditEntryView(entry)
     }
 
     fun editEntry(entry: Entry) {

@@ -82,7 +82,7 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
     }
 
     protected open fun showArticle(extractionResult: EntryExtractionResult) {
-        router.showViewEntryView(extractionResult)
+        router.showEditEntryView(extractionResult)
     }
 
 

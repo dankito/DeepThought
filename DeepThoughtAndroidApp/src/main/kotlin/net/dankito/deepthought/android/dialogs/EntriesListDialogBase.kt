@@ -54,7 +54,7 @@ abstract class EntriesListDialogBase : FullscreenDialogFragment() {
     override fun setupUI(rootView: View) {
         rootView.lstEntries.adapter = adapter
 
-        rootView.lstEntries.setOnItemClickListener { _, _, position, _ -> router.showViewEntryView(adapter.getItem(position)) }
+        rootView.lstEntries.setOnItemClickListener { _, _, position, _ -> router.showEditEntryView(adapter.getItem(position)) }
     }
 
 
