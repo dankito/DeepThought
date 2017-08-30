@@ -20,13 +20,6 @@ interface IRouter {
     fun showReadLaterArticlesView()
 
 
-    fun showViewEntryView(entry: Entry)
-
-    fun showViewEntryView(article: ReadLaterArticle)
-
-    fun showViewEntryView(extractionResult: EntryExtractionResult)
-
-
     fun showCreateEntryView()
 
     fun showEditEntryView(entry: Entry, field: EntryField? = null)

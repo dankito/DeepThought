@@ -2,7 +2,10 @@ package net.dankito.deepthought.android.routing
 
 import android.content.Context
 import android.content.Intent
-import net.dankito.deepthought.android.activities.*
+import net.dankito.deepthought.android.activities.ArticleSummaryActivity
+import net.dankito.deepthought.android.activities.BaseActivity
+import net.dankito.deepthought.android.activities.EditEntryActivity
+import net.dankito.deepthought.android.activities.EditReferenceActivity
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EntryActivityParameters
 import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
@@ -60,28 +63,6 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
 
     override fun showReadLaterArticlesView() {
         // is a tab on main screen in Android, no need for routing
-    }
-
-
-    override fun showViewEntryView(entry: Entry) {
-        showViewEntryView(EntryActivityParameters(entry))
-    }
-
-    override fun showViewEntryView(article: ReadLaterArticle) {
-        showViewEntryView(EntryActivityParameters(readLaterArticle = article))
-    }
-
-    override fun showViewEntryView(extractionResult: EntryExtractionResult) {
-        showViewEntryView(EntryActivityParameters(entryExtractionResult = extractionResult))
-    }
-
-    private fun showViewEntryView(parameters: EntryActivityParameters) {
-        val viewArticleIntent = Intent(context, ViewEntryActivity::class.java)
-        viewArticleIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
-        addParametersToIntent(viewArticleIntent, parameters)
-
-        context.startActivity(viewArticleIntent)
     }
 
 

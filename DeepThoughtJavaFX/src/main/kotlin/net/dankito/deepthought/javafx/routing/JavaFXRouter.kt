@@ -51,19 +51,6 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
     }
 
 
-    override fun showViewEntryView(entry: Entry) {
-        showEditEntryView(entry)
-    }
-
-    override fun showViewEntryView(article: ReadLaterArticle) {
-        showEditEntryView(article)
-    }
-
-    override fun showViewEntryView(extractionResult: EntryExtractionResult) {
-        showEditEntryView(extractionResult)
-    }
-
-
     override fun showCreateEntryView() {
 
     }
