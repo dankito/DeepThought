@@ -37,7 +37,7 @@ class AdvancedBottomNavigationView : BottomNavigationView {
             shiftingMode.setBoolean(menuView, false)
             shiftingMode.isAccessible = false
 
-            for (i in 0..menuView.childCount - 1) {
+            for(i in 0..menuView.childCount - 1) {
                 val item = menuView.getChildAt(i) as BottomNavigationItemView
 
                 item.setShiftingMode(false)
@@ -48,6 +48,31 @@ class AdvancedBottomNavigationView : BottomNavigationView {
         } catch (e: Exception) {
             log.error("Could not disable shift mode", e)
         }
+    }
 
+
+    /**
+     * Calling setEnabled() an a BottomNavigationView has no effect (seems to me like a bug).
+     * We have to call setEnabled() on all MenuItems explicitly.
+     */
+    override fun setEnabled(enabled: Boolean) {
+        super.setEnabled(enabled)
+
+        try {
+            val mMenuViewField = BottomNavigationView::class.java.getDeclaredField("mMenuView")
+            mMenuViewField.isAccessible = true
+            val menuView = mMenuViewField.get(this) as BottomNavigationMenuView
+            mMenuViewField.isAccessible = false
+
+            menuView.isEnabled = enabled
+
+            for(i in 0..menuView.childCount - 1) {
+                val item = menuView.getChildAt(i) as BottomNavigationItemView
+
+                item.isEnabled = enabled
+            }
+        } catch (e: Exception) {
+            log.error("Could not set enabled to $enabled", e)
+        }
     }
 }
