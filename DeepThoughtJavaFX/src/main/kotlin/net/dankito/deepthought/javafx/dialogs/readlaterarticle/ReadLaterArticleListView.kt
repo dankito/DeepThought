@@ -5,7 +5,7 @@ import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.EntitiesListVi
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.controls.ReadLaterArticleListCellFragment
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.presenter.ReadLaterArticlePresenter
+import net.dankito.deepthought.ui.presenter.ReadLaterArticleListPresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.deepthought.ui.view.IReadLaterArticleView
 import net.dankito.service.data.ReadLaterArticleService
@@ -35,13 +35,13 @@ class ReadLaterArticleListView : EntitiesListView(), IReadLaterArticleView {
     protected lateinit var router: IRouter
 
 
-    private val presenter: ReadLaterArticlePresenter
+    private val presenter: ReadLaterArticleListPresenter
 
 
     init {
         AppComponent.component.inject(this)
 
-        presenter = ReadLaterArticlePresenter(this, searchEngine, readLaterArticleService, entryPersister, clipboardService, router)
+        presenter = ReadLaterArticleListPresenter(this, searchEngine, readLaterArticleService, entryPersister, clipboardService, router)
 
         searchEntities(Search.EmptySearchTerm)
     }

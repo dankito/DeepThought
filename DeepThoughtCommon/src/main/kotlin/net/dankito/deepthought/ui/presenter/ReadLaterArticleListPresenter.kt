@@ -17,7 +17,7 @@ import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 
 
-class ReadLaterArticlePresenter(private val view: IReadLaterArticleView, private val searchEngine: ISearchEngine, private val readLaterArticleService: ReadLaterArticleService,
+class ReadLaterArticleListPresenter(private val view: IReadLaterArticleView, private val searchEngine: ISearchEngine, private val readLaterArticleService: ReadLaterArticleService,
                                 private val entryPersister: EntryPersister, private val clipboardService: IClipboardService, private val router: IRouter) : IMainViewSectionPresenter {
 
 

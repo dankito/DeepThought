@@ -30,7 +30,7 @@ interface CommonComponent : BaseComponent {
 
     fun inject(articleSummaryExtractorConfigPresenter: ArticleSummaryExtractorConfigPresenter)
 
-    fun inject(readLaterArticlePresenter: ReadLaterArticlePresenter)
+    fun inject(readLaterArticleListPresenter: ReadLaterArticleListPresenter)
 
     fun inject(editEntryPresenter: EditEntryPresenter)
 
