@@ -96,9 +96,9 @@ class ReadLaterArticleView : EntitiesListView(), IReadLaterArticleView {
         presenter.getReadLaterArticles(query)
     }
 
-    override fun showArticles(readLaterArticles: List<ReadLaterArticle>) {
+    override fun showEntities(entities: List<ReadLaterArticle>) {
         runLater {
-            root.items.setAll(readLaterArticles)
+            root.items.setAll(entities)
         }
     }
 

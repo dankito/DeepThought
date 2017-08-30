@@ -121,8 +121,8 @@ class ReferencesListView: MainActivityTabFragment(R.layout.fragment_tab_referenc
 
     /*      IReferencesListView implementation      */
 
-    override fun showReferences(references: List<Reference>) {
-        activity?.runOnUiThread { adapter.setItems(references) }
+    override fun showEntities(entities: List<Reference>) {
+        activity?.runOnUiThread { adapter.setItems(entities) }
     }
 
 }

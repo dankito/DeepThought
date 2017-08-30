@@ -72,7 +72,7 @@ class EntriesListView : MainActivityTabFragment(R.layout.fragment_tab_entries, R
         super.onAttach(context)
 
         entriesToShowOnAttach?.let {
-            showEntries(it)
+            showEntities(it)
             entriesToShowOnAttach = null
         }
     }
@@ -80,16 +80,16 @@ class EntriesListView : MainActivityTabFragment(R.layout.fragment_tab_entries, R
 
     /*          IEntriesListView implementation            */
 
-    override fun showEntries(entries: List<Entry>) {
+    override fun showEntities(entities: List<Entry>) {
         val activity = this.activity
 
         if(activity != null) {
             activity.runOnUiThread {
-                entryAdapter.setItems(entries)
+                entryAdapter.setItems(entities)
             }
         }
         else {
-            entriesToShowOnAttach = entries
+            entriesToShowOnAttach = entities
         }
     }
 

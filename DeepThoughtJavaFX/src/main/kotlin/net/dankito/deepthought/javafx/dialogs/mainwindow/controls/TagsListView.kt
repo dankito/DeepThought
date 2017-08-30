@@ -124,8 +124,8 @@ class TagsListView : EntitiesListView(), ITagsListView {
 
     /*          ITagsListView implementation            */
 
-    override fun showTags(tags: List<Tag>) {
-        runLater { this.tags.setAll(tags) }
+    override fun showEntities(entities: List<Tag>) {
+        runLater { this.tags.setAll(entities) }
     }
 
     override fun updateDisplayedTags() {

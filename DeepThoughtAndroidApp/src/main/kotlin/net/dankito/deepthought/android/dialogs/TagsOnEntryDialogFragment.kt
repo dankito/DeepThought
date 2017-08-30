@@ -327,9 +327,9 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
 
     /*      ITagListView implementation         */
 
-    override fun showTags(tags: List<Tag>) {
+    override fun showEntities(entities: List<Tag>) {
         activity?.runOnUiThread {
-            adapter.setItems(tags)
+            adapter.setItems(entities)
             setButtonState()
         }
     }

@@ -168,9 +168,9 @@ class TagsListView : MainActivityTabFragment(R.layout.fragment_tab_tags, R.id.ls
 
     /*          ITagsListView implementation            */
 
-    override fun showTags(tags: List<Tag>) {
+    override fun showEntities(entities: List<Tag>) {
         activity?.runOnUiThread {
-            adapter.setItems(tags)
+            adapter.setItems(entities)
         }
     }
 

@@ -71,7 +71,7 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, router
         }
 
         searchEngine.searchEntries(EntriesSearch(searchTerm, searchInContent, searchInAbstract, searchInReference, filterOnlyEntriesWithoutTags, entriesMustHaveTheseTags) { result ->
-            entriesListView.showEntries(result)
+            entriesListView.showEntities(result)
 
             searchCompleted?.invoke(result)
         })

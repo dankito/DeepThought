@@ -47,7 +47,7 @@ class ReferencesListPresenter(private var view: IReferencesListView, private var
         lastSearchTermProperty = searchTerm
 
         searchEngine.searchReferences(ReferenceSearch(searchTerm) { result ->
-            view.showReferences(result)
+            view.showEntities(result)
 
             searchCompleted?.invoke(result)
         })

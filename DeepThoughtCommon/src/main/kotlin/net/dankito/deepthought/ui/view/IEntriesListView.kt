@@ -4,9 +4,7 @@ import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Tag
 
 
-interface IEntriesListView {
-
-    fun showEntries(entries: List<Entry>)
+interface IEntriesListView : IEntitiesListView<Entry> {
 
     fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>)
 

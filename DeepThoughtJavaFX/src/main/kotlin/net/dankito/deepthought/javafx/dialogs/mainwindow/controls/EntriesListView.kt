@@ -95,8 +95,8 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
 
     /*          IEntriesListView implementation            */
 
-    override fun showEntries(entries: List<Entry>) {
-        runLater { controller.entries.setAll(entries) }
+    override fun showEntities(entities: List<Entry>) {
+        runLater { controller.entries.setAll(entities) }
     }
 
     override fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {

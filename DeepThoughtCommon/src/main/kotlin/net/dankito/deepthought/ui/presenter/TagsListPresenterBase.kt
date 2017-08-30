@@ -75,7 +75,7 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
 
             val tags = getTagsFromSearchTagsWithoutFilterResult(result)
 
-            tagsListView.showTags(tags)
+            tagsListView.showEntities(tags)
         })
     }
 
@@ -91,7 +91,7 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
             this.lastTagsSearchResults = null
             this.lastFilteredTagsSearchResults = result
 
-            tagsListView.showTags(result.tagsOnEntriesContainingFilteredTags)
+            tagsListView.showEntities(result.tagsOnEntriesContainingFilteredTags)
         })
     }
 
