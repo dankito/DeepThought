@@ -91,6 +91,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         sectionsPagerAdapter = MainActivitySectionsPagerAdapter(supportFragmentManager)
         viewPager.adapter = sectionsPagerAdapter
 
+        bottomViewNavigation.disableShiftMode()
         bottomViewNavigation.setOnNavigationItemSelectedListener(bottomViewNavigationItemSelectedListener)
 
         currentlyVisibleFragment = sectionsPagerAdapter.getItem(0) // set currentlyVisibleFragment on start otherwise back button won't work on first displayed fragment
