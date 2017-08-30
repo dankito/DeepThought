@@ -93,6 +93,7 @@ class EntriesListView : MainActivityTabFragment(R.layout.fragment_tab_entries, R
         }
     }
 
+    // TODO: this is only used for JavaFX, remove it
     override fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {
         presenter.showEntriesForTag(tag, tagsFilter)
     }
