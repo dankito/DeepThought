@@ -75,14 +75,7 @@ abstract class MainActivityTabFragment(private val layoutResourceId: Int, privat
         }
 
         presenter?.let { presenter ->
-            val lastSearchTerm = presenter.getLastSearchTerm()
-
-            if(lastSearchTerm == Search.EmptySearchTerm) {
-                presenter.getAndShowAllEntities()
-            }
-            else {
-
-            }
+            searchEntities(presenter.getLastSearchTerm())
         }
     }
 
