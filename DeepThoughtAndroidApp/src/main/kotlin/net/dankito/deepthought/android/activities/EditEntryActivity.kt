@@ -622,6 +622,7 @@ class EditEntryActivity : BaseActivity() {
         canEntryBeSaved = true
 
         editEntry(Entry(""))
+        editContent() // go directly to edit content dialog, there's absolutely nothing to see on this almost empty screen
     }
 
     private fun editEntry(entryId: String) {
