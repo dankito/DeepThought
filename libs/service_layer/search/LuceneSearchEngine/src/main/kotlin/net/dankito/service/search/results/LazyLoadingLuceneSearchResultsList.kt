@@ -10,7 +10,7 @@ import org.apache.lucene.search.ScoreDoc
 
 
 open class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEntityManager, protected var searcher: IndexSearcher, resultType: Class<T>,
-                            protected var idFieldName: String, private val hits: Array<ScoreDoc>, threadPool: IThreadPool)
+                            protected var idFieldName: String, private val hits: Array<ScoreDoc>, private val threadPool: IThreadPool)
     : LazyLoadingList<T>(entityManager, resultType) {
 
     companion object {
@@ -19,17 +19,7 @@ open class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEn
 
 
     init {
-        preloadForSureDisplayedItemsAsync(threadPool)
-    }
-
-    private fun preloadForSureDisplayedItemsAsync(threadPool: IThreadPool) {
-        threadPool.runAsync {
-            val maxItemsToPreload = if(hits.size < MaxItemsToPreload) hits.size else MaxItemsToPreload
-
-            for(i in 0..maxItemsToPreload) {
-                get(i) // preload items that for sure gonna get displayed
-            }
-        }
+        preloadItemsAsync(0) // preload items that for sure gonna get displayed off the UI thread
     }
 
 
@@ -43,6 +33,33 @@ open class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEn
 
     protected open fun getEntityIdFromHit(hitDoc: Document): String {
         return hitDoc.getField(idFieldName).stringValue()
+    }
+
+
+    /**
+     * This method is presumably called on UI thread, so load the items, that quite sure gonna get displayed next, off UI thread.
+     * Provides a smoother scrolling experience.
+     */
+    override fun retrieveEntityFromDatabaseAndCache(index: Int): T? {
+        if(index > MaxItemsToPreload) { // MaxItemsToPreload: that many items get already loaded when initializing LazyLoadingList
+            preloadItemsAsync(index + 1)
+        }
+
+        return super.retrieveEntityFromDatabaseAndCache(index)
+    }
+
+    private fun preloadItemsAsync(startIndex: Int) {
+        threadPool.runAsync {
+            preloadItems(startIndex)
+        }
+    }
+
+    private fun preloadItems(startIndex: Int) {
+        val maxItemsToPreload = startIndex + if(hits.size < startIndex + MaxItemsToPreload) hits.size else MaxItemsToPreload
+
+        for(i in startIndex..maxItemsToPreload) {
+            super.retrieveEntityFromDatabaseAndCache(i)
+        }
     }
 
 }

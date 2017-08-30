@@ -31,6 +31,10 @@ open class LazyLoadingList<T : BaseEntity>(protected var entityManager: IEntityM
             return it
         }
 
+        return retrieveEntityFromDatabaseAndCache(index)
+    }
+
+    protected open fun retrieveEntityFromDatabaseAndCache(index: Int): T? {
         try {
             val id = getEntityIdForIndex(index)
 
