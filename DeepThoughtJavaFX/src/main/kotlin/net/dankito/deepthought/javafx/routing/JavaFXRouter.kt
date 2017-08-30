@@ -7,7 +7,7 @@ import net.dankito.deepthought.javafx.dialogs.entry.EditEntryExtractionResultVie
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryView
 import net.dankito.deepthought.javafx.dialogs.entry.EditReadLaterArticleView
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
-import net.dankito.deepthought.javafx.dialogs.readlaterarticle.ReadLaterArticleView
+import net.dankito.deepthought.javafx.dialogs.readlaterarticle.ReadLaterArticleListView
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
@@ -46,7 +46,7 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
 
     override fun showReadLaterArticlesView() {
         runLater {
-            mainWindowController.find(ReadLaterArticleView::class).openWindow()
+            mainWindowController.find(ReadLaterArticleListView::class).openWindow()
         }
     }
 

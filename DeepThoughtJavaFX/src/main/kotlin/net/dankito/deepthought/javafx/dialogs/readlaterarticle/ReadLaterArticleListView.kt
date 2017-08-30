@@ -16,7 +16,7 @@ import tornadofx.*
 import javax.inject.Inject
 
 
-class ReadLaterArticleView : EntitiesListView(), IReadLaterArticleView {
+class ReadLaterArticleListView : EntitiesListView(), IReadLaterArticleView {
 
 
     @Inject
