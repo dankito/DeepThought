@@ -1,11 +1,12 @@
 package net.dankito.deepthought.android.adapter
 
+import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import net.dankito.deepthought.android.fragments.*
 
 
-class MainActivitySectionsPagerAdapter(private val fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
+class MainActivitySectionsPagerAdapter(private val fragmentManager: FragmentManager, private val bottomViewNavigation: BottomNavigationView) : FragmentPagerAdapter(fragmentManager) {
 
 
     private var entriesListView: EntriesListView? = null
@@ -54,6 +55,8 @@ class MainActivitySectionsPagerAdapter(private val fragmentManager: FragmentMana
         if(entriesListView == null) {
             entriesListView = EntriesListView()
         }
+
+        entriesListView?.mainNavigationView = bottomViewNavigation
 
         return entriesListView!!
     }

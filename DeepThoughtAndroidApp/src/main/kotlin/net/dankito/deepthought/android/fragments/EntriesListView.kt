@@ -40,6 +40,8 @@ class EntriesListView : MainActivityTabFragment(R.menu.fragment_tab_entries_menu
 
     private var entriesToShowOnAttach: List<Entry>? = null
 
+    var mainNavigationView: View? = null
+
 
     init {
         AppComponent.component.inject(this)
@@ -76,6 +78,19 @@ class EntriesListView : MainActivityTabFragment(R.menu.fragment_tab_entries_menu
             showEntities(it)
             entriesToShowOnAttach = null
         }
+    }
+
+
+    override fun showOnboardingView() {
+        super.showOnboardingView()
+
+        mainNavigationView?.isEnabled = false
+    }
+
+    override fun hideOnboardingView() {
+        super.hideOnboardingView()
+
+        mainNavigationView?.isEnabled = true
     }
 
 

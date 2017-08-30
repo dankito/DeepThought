@@ -88,7 +88,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         navigationView.setNavigationItemSelectedListener(this)
 
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener)
-        sectionsPagerAdapter = MainActivitySectionsPagerAdapter(supportFragmentManager)
+        sectionsPagerAdapter = MainActivitySectionsPagerAdapter(supportFragmentManager, bottomViewNavigation)
         viewPager.adapter = sectionsPagerAdapter
 
         bottomViewNavigation.disableShiftMode()
