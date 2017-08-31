@@ -3,6 +3,7 @@ package net.dankito.deepthought.android.views
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.view_entry_fields_preview.view.*
@@ -22,6 +23,10 @@ class EntryFieldsPreview : RelativeLayout {
     var entryExtractionResult: EntryExtractionResult? = null
 
     var reference: Reference? = null
+        set(value) {
+            field = value
+            btnClearEntryReference.visibility = if(value == null) View.GONE else View.VISIBLE
+        }
 
     var tagsOnEntry: Collection<Tag> = ArrayList()
 
