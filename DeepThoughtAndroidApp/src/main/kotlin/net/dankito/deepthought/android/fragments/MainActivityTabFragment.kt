@@ -14,6 +14,7 @@ import android.widget.ListView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
 import net.dankito.deepthought.android.R
+import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.service.search.Search
@@ -184,6 +185,11 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
             searchView.setOnQueryTextListener(entriesQueryTextListener) // move setOnQueryTextListener() behind searchView.setQuery() (in presenter?.getLastSearchTerm()?.let {})
             // as otherwise when lastSearchTerm != null onQuerySubmit gets called (and therefore e.g. tag filter applied)
         }
+    }
+
+    protected fun hideSearchViewKeyboard() {
+        searchView?.clearFocus()
+        searchView?.hideKeyboard()
     }
 
 

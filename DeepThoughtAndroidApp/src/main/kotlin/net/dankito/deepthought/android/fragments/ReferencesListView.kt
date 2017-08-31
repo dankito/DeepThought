@@ -65,6 +65,7 @@ class ReferencesListView: MainActivityTabFragment(R.menu.fragment_tab_references
 
     override fun listItemClicked(position: Int, selectedItem: Any) {
         (selectedItem as? Reference)?.let { reference ->
+            hideSearchViewKeyboard()
             presenter.showEntriesForReference(reference)
         }
     }

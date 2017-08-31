@@ -142,6 +142,7 @@ class TagsListView : MainActivityTabFragment(R.menu.fragment_tab_tags_menu, R.st
 
     private fun tagSelected(selectedTag: Tag?) {
         if(selectedTag != null) {
+            hideSearchViewKeyboard()
             presenter.showEntriesForTag(selectedTag)
         }
         else {
