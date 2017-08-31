@@ -303,7 +303,7 @@ class EditEntryActivity : BaseActivity() {
         val reference = referenceToEdit
 
         if(reference != null) {
-            presenter.editReference(reference)
+            presenter.editReference(reference, entry ?: readLaterArticle?.entryExtractionResult?.entry ?: entryExtractionResult?.entry)
         }
         else {
             presenter.createReference()

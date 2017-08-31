@@ -103,6 +103,10 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
         showEditReferenceView(EditReferenceActivityParameters(reference))
     }
 
+    override fun showEditEntryReferenceView(reference: Reference, ofEntry: Entry?) {
+        showEditReferenceView(EditReferenceActivityParameters(reference, ofEntry))
+    }
+
     private fun showEditReferenceView(parameters: EditReferenceActivityParameters) {
         val editReferenceIntent = Intent(context, EditReferenceActivity::class.java)
         editReferenceIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
