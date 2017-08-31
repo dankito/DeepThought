@@ -18,13 +18,15 @@ class FullScreenWebView : WebView {
 
 
     companion object {
-        private const val DefaultScrollDifferenceYThreshold = 10
+        private const val DefaultScrollDownDifferenceYThreshold = 3
+        private const val DefaultScrollUpDifferenceYThreshold = -200
 
         private const val AfterTogglingNotHandleScrollEventsForMillis = 500
     }
 
 
-    var scrollDifferenceYThreshold = DefaultScrollDifferenceYThreshold
+    var scrollUpDifferenceYThreshold = DefaultScrollUpDifferenceYThreshold
+    var scrollDownDifferenceYThreshold = DefaultScrollDownDifferenceYThreshold
 
     var changeFullScreenModeListener: ((FullScreenMode) -> Unit)? = null
 
@@ -59,7 +61,7 @@ class FullScreenWebView : WebView {
     }
 
     private fun checkShouldLeaveFullScreenMode(differenceY: Int) {
-        if (differenceY < -scrollDifferenceYThreshold) {
+        if (differenceY < scrollUpDifferenceYThreshold) {
             changeFullScreenModeListener?.invoke(FullScreenMode.Leave)
             hasEnteredFullScreenMode = false
             lastOnScrollReaderModeTogglingTimestamp = Date()
@@ -67,7 +69,7 @@ class FullScreenWebView : WebView {
     }
 
     private fun checkShouldEnterFullScreenMode(differenceY: Int) {
-        if (differenceY > scrollDifferenceYThreshold) {
+        if (differenceY > scrollDownDifferenceYThreshold) {
             changeFullScreenModeListener?.invoke(FullScreenMode.Enter)
             hasEnteredFullScreenMode = true
             lastOnScrollReaderModeTogglingTimestamp = Date()
