@@ -83,6 +83,9 @@
     <string name="dialog_tags_on_entry_create_tag">Neu</string>
     <string name="dialog_tags_on_entry_toggle_tags">Tauschen</string>
 
+    <string name="activity_edit_reference_use_existing_label">Bestehende verwenden:</string>
+    <string name="activity_edit_reference_create_reference">Neu …</string>
+    <string name="activity_edit_reference_create_reference_from_isbn">Von ISBN …</string>
     <string name="activity_edit_reference_title_label">Titel</string>
     <string name="activity_edit_reference_series_label">Reihe</string>
     <string name="activity_edit_reference_issue_label">Ausgabe</string>

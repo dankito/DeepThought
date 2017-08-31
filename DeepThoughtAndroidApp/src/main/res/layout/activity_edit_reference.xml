@@ -10,7 +10,7 @@
 
 
     <RelativeLayout
-        android:id="@+id/lytSearchExistingReference"
+        android:id="@+id/lytSetEntryReferenceControls"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -50,11 +50,43 @@
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/lytEditEntryReferenceControls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lytExistingReferencesSearchBar"
+        >
+
+            <Button
+                android:id="@+id/btnCreateNewReference"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/activity_edit_reference_create_buttons_min_width"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="@dimen/activity_edit_reference_create_buttons_text_size"
+                android:text="@string/activity_edit_reference_create_reference"
+            />
+
+            <Button
+                android:id="@+id/btnCreateReferenceFromIsbn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/activity_edit_reference_create_buttons_min_width"
+                android:layout_toRightOf="@+id/btnCreateNewReference"
+                android:layout_toEndOf="@+id/btnCreateNewReference"
+                android:textSize="@dimen/activity_edit_reference_create_buttons_text_size"
+                android:text="@string/activity_edit_reference_create_reference_from_isbn"
+                android:enabled="false"
+            />
+
+        </RelativeLayout>
+
         <ListView
             android:id="@+id/lstExistingReferencesSearchResults"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/lytExistingReferencesSearchBar"
+            android:layout_below="@+id/lytEditEntryReferenceControls"
             android:layout_alignParentBottom="true"
             android:visibility="gone"
         />
@@ -65,7 +97,7 @@
         android:id="@+id/scrEditReference"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/lytSearchExistingReference"
+        android:layout_below="@+id/lytSetEntryReferenceControls"
         android:layout_above="@id/toolbar"
     >
 

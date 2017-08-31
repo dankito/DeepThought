@@ -123,6 +123,8 @@ class EditReferenceActivity : BaseActivity() {
 
         supportActionBar?.title = ""
 
+        btnCreateNewReference.setOnClickListener { createReference() } // TODO: check if previous reference contains unsaved changes
+
         lstExistingReferencesSearchResults.adapter = existingReferencesSearchResultsAdapter
         lstExistingReferencesSearchResults.setOnItemClickListener { _, _, position, _ -> existingReferenceSelected(existingReferencesSearchResultsAdapter.getItem(position)) }
 
@@ -237,14 +239,18 @@ class EditReferenceActivity : BaseActivity() {
             if(parameters.reference != null) {
                 showReference(parameters.reference)
             }
-            else { // create reference
-                showReference(Reference(""))
+            else {
+                createReference()
             }
 
             if(parameters.ofEntry != null) {
-                lytSearchExistingReference.visibility = View.VISIBLE
+                lytSetEntryReferenceControls.visibility = View.VISIBLE
             }
         }
+    }
+
+    private fun createReference() {
+        showReference(Reference(""))
     }
 
     private fun showReference(referenceId: String) {
@@ -317,7 +323,7 @@ class EditReferenceActivity : BaseActivity() {
         lstExistingReferencesSearchResults.visibility = View.VISIBLE
         scrEditReference.visibility = View.GONE
 
-        (lytSearchExistingReference.layoutParams as? RelativeLayout.LayoutParams)?.let { layoutParams ->
+        (lytSetEntryReferenceControls.layoutParams as? RelativeLayout.LayoutParams)?.let { layoutParams ->
             layoutParams.addRule(RelativeLayout.ABOVE, toolbar.id)
         }
     }
@@ -328,7 +334,7 @@ class EditReferenceActivity : BaseActivity() {
         lstExistingReferencesSearchResults.visibility = View.GONE
         scrEditReference.visibility = View.VISIBLE
 
-        (lytSearchExistingReference.layoutParams as? RelativeLayout.LayoutParams)?.let { layoutParams ->
+        (lytSetEntryReferenceControls.layoutParams as? RelativeLayout.LayoutParams)?.let { layoutParams ->
             layoutParams.addRule(RelativeLayout.ABOVE, 0)
         }
 
