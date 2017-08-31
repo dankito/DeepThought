@@ -1,14 +1,13 @@
 package net.dankito.deepthought.android.dialogs
 
 import android.app.Activity
-import android.content.Context
 import android.os.Looper
 import android.support.v7.app.AlertDialog
 import android.text.InputType
-import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import net.dankito.deepthought.android.service.CurrentActivityTracker
+import net.dankito.deepthought.android.service.showKeyboardDelayed
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IDialogService
 
@@ -108,11 +107,7 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
 
         builder.show()
 
-        input.requestFocus()
-        input.postDelayed({
-            val keyboard = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            keyboard.showSoftInput(input, 0)
-        }, 50)
+        input.showKeyboardDelayed()
     }
 
 

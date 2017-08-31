@@ -1,17 +1,16 @@
 package net.dankito.deepthought.android.dialogs
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.dialog_edit_html_text.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditor
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditorPool
 import net.dankito.deepthought.ui.html.HtmlEditorCommon
@@ -137,10 +136,7 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     override fun closeDialogOnUiThread(activity: FragmentActivity) {
         htmlChangedCallback = null
 
-        this.view?.let { view ->
-            val keyboard = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            keyboard.hideSoftInputFromWindow(view.windowToken, 0)
-        }
+        this.view?.hideKeyboard()
 
         super.closeDialogOnUiThread(activity)
     }

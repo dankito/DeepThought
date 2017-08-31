@@ -1,6 +1,5 @@
 package net.dankito.deepthought.android.dialogs
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
@@ -11,7 +10,6 @@ import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.TextView
@@ -20,6 +18,8 @@ import kotlinx.android.synthetic.main.dialog_tags_on_entry.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.TagsOnEntryAdapter
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.android.service.hideKeyboard
+import net.dankito.deepthought.android.service.showKeyboardDelayed
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.presenter.TagsOnEntryListPresenter
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
@@ -109,13 +109,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
         rootView.edtxtEditEntrySearchTag.addTextChangedListener(edtxtEditEntrySearchTagTextWatcher)
         rootView.edtxtEditEntrySearchTag.setOnEditorActionListener { _, actionId, keyEvent -> handleEditEntrySearchTagAction(actionId, keyEvent) }
 
-        rootView.edtxtEditEntrySearchTag.requestFocus()
-        rootView.edtxtEditEntrySearchTag.postDelayed({
-            activity?.let { activity -> // in rare cases activity was null
-                val keyboard = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                keyboard.showSoftInput(rootView.edtxtEditEntrySearchTag, 0)
-            }
-        }, 50)
+        rootView.edtxtEditEntrySearchTag.showKeyboardDelayed()
 
         setHasOptionsMenu(true)
 
@@ -308,10 +302,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
     override fun closeDialogOnUiThread(activity: FragmentActivity) {
         tagsChangedCallback = null
 
-        edtxtEditEntrySearchTag?.let { edtxtEditEntrySearchTag ->
-            val keyboard = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            keyboard.hideSoftInputFromWindow(edtxtEditEntrySearchTag.windowToken, 0)
-        }
+        edtxtEditEntrySearchTag?.hideKeyboard()
 
         super.closeDialogOnUiThread(activity)
     }
