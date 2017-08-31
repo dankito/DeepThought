@@ -21,6 +21,8 @@ class FullScreenWebView : WebView {
         private const val DefaultScrollDownDifferenceYThreshold = 3
         private const val DefaultScrollUpDifferenceYThreshold = -200
 
+        private const val LeaveReaderModeWhenScrolledToTopThreshold = 5
+
         private const val AfterTogglingNotHandleScrollEventsForMillis = 500
     }
 
@@ -53,23 +55,27 @@ class FullScreenWebView : WebView {
         val differenceY = scrollY - oldScrollY
 
         if(hasEnteredFullScreenMode) {
-            checkShouldLeaveFullScreenMode(differenceY)
+            checkShouldLeaveFullScreenMode(scrollY, differenceY)
         }
         else {
             checkShouldEnterFullScreenMode(differenceY)
         }
     }
 
-    private fun checkShouldLeaveFullScreenMode(differenceY: Int) {
-        if (differenceY < scrollUpDifferenceYThreshold) {
+    private fun checkShouldLeaveFullScreenMode(scrollY: Int, differenceY: Int) {
+        if(differenceY < scrollUpDifferenceYThreshold || hasScrolledToTop(scrollY, differenceY)) {
             changeFullScreenModeListener?.invoke(FullScreenMode.Leave)
             hasEnteredFullScreenMode = false
             lastOnScrollReaderModeTogglingTimestamp = Date()
         }
     }
 
+    private fun hasScrolledToTop(scrollY: Int, differenceY: Int): Boolean {
+        return scrollY < LeaveReaderModeWhenScrolledToTopThreshold && differenceY < 0 // scrolled up and reached almost top
+    }
+
     private fun checkShouldEnterFullScreenMode(differenceY: Int) {
-        if (differenceY > scrollDownDifferenceYThreshold) {
+        if(differenceY > scrollDownDifferenceYThreshold) {
             changeFullScreenModeListener?.invoke(FullScreenMode.Enter)
             hasEnteredFullScreenMode = true
             lastOnScrollReaderModeTogglingTimestamp = Date()
