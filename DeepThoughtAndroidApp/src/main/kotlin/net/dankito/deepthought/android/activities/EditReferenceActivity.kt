@@ -277,6 +277,9 @@ class EditReferenceActivity : BaseActivity() {
         this.currentlySetPublishingDate = publishingDate
 
         publishingDate?.let { edtxtPublishingDate.setText(presenter.convertPublishingDateToText(it)) }
+        if(publishingDate == null) {
+            edtxtPublishingDate.setText("")
+        }
     }
 
 
