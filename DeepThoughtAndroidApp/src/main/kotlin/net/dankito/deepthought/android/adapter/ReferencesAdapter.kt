@@ -19,8 +19,6 @@ class ReferencesAdapter(private val presenter: ReferencesListPresenter) : ListAd
 
         view.txtReferencePreview.text = reference.preview
 
-        view.imgEditReference.setOnClickListener { presenter.editReference(reference) }
-
         return view
     }
 

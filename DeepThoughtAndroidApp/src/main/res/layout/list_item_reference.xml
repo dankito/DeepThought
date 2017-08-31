@@ -12,26 +12,14 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/imgEditReference"
-        android:layout_toStartOf="@+id/imgEditReference"
+        android:layout_toLeftOf="@+id/imgShowReferenceEntries"
+        android:layout_toStartOf="@+id/imgShowReferenceEntries"
         android:layout_marginLeft="@dimen/list_item_reference_margin_left"
         android:layout_marginStart="@dimen/list_item_reference_margin_left"
         android:layout_centerVertical="true"
         android:gravity="center_vertical"
         style="@android:style/TextAppearance.Medium"
         android:textSize="@dimen/list_item_reference_preview_text_size"
-    />
-
-    <ImageView
-        android:id="@+id/imgEditReference"
-        android:layout_width="@dimen/list_item_reference_image_edit_reference_width"
-        android:layout_height="@dimen/list_item_reference_image_edit_reference_height"
-        android:layout_toLeftOf="@+id/imgShowReferenceEntries"
-        android:layout_toStartOf="@+id/imgShowReferenceEntries"
-        android:layout_marginLeft="@dimen/list_item_reference_margin_left"
-        android:layout_marginStart="@dimen/list_item_reference_margin_left"
-        android:layout_centerVertical="true"
-        android:src="@android:drawable/ic_menu_edit"
     />
 
     <ImageView
