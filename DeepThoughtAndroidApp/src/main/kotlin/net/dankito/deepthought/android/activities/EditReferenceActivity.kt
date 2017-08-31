@@ -1,20 +1,28 @@
 package net.dankito.deepthought.android.activities
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.activity_edit_reference.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
+import net.dankito.deepthought.android.adapter.ReferencesAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.PickDateDialog
+import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.ui.presenter.EditReferencePresenter
 import net.dankito.deepthought.ui.presenter.util.ReferencePersister
 import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.messages.ReferenceChanged
 import net.dankito.service.eventbus.IEventBus
+import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.specific.ReferenceSearch
 import net.dankito.utils.ui.IDialogService
 import net.engio.mbassy.listener.Handler
 import java.util.*
@@ -43,6 +51,9 @@ class EditReferenceActivity : BaseActivity() {
     protected lateinit var referencePersister: ReferencePersister
 
     @Inject
+    protected lateinit var searchEngine: ISearchEngine
+
+    @Inject
     protected lateinit var dialogService: IDialogService
 
     @Inject
@@ -55,6 +66,8 @@ class EditReferenceActivity : BaseActivity() {
 
     private var currentlySetPublishingDate: Date? = null
 
+
+    private val existingReferencesSearchResultsAdapter = ReferencesAdapter()
 
     private var eventBusListener: EventBusListener? = null
 
@@ -109,6 +122,11 @@ class EditReferenceActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         supportActionBar?.title = ""
+
+        lstExistingReferencesSearchResults.adapter = existingReferencesSearchResultsAdapter
+        lstExistingReferencesSearchResults.setOnItemClickListener { _, _, position, _ -> existingReferenceSelected(existingReferencesSearchResultsAdapter.getItem(position)) }
+
+        edtxtFindReferences.addTextChangedListener(edtxtFindReferencesTextWatcher)
 
         btnSelectPublishingDate.setOnClickListener { showDatePickerDialog() }
 
@@ -222,6 +240,10 @@ class EditReferenceActivity : BaseActivity() {
             else { // create reference
                 showReference(Reference(""))
             }
+
+            if(parameters.ofEntry != null) {
+                lytSearchExistingReference.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -281,6 +303,50 @@ class EditReferenceActivity : BaseActivity() {
             dialogService.showInfoMessage(getString(R.string.activity_edit_reference_alert_message_reference_has_been_edited))
         }
     }
+
+
+    private fun searchExistingReferences(query: String) {
+        searchEngine.searchReferences(ReferenceSearch(query) {
+            runOnUiThread { retrievedExistingReferencesSearchResultsOnUiThread(it) }
+        })
+    }
+
+    private fun retrievedExistingReferencesSearchResultsOnUiThread(searchResults: List<Reference>) {
+        existingReferencesSearchResultsAdapter.setItems(searchResults)
+
+        lstExistingReferencesSearchResults.visibility = View.VISIBLE
+        scrEditReference.visibility = View.GONE
+
+        (lytSearchExistingReference.layoutParams as? RelativeLayout.LayoutParams)?.let { layoutParams ->
+            layoutParams.addRule(RelativeLayout.ABOVE, toolbar.id)
+        }
+    }
+
+    private fun existingReferenceSelected(reference: Reference) {
+        edtxtFindReferences.hideKeyboard()
+
+        lstExistingReferencesSearchResults.visibility = View.GONE
+        scrEditReference.visibility = View.VISIBLE
+
+        (lytSearchExistingReference.layoutParams as? RelativeLayout.LayoutParams)?.let { layoutParams ->
+            layoutParams.addRule(RelativeLayout.ABOVE, 0)
+        }
+
+        // TODO: check if previous reference has unsaved changes
+        showReference(reference)
+    }
+
+    private val edtxtFindReferencesTextWatcher = object : TextWatcher {
+        override fun afterTextChanged(editable: Editable) {
+            searchExistingReferences(editable.toString())
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+
+    }
+
 
     inner class EventBusListener {
 

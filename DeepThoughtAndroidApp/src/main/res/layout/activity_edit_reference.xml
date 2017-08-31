@@ -4,10 +4,63 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <ScrollView
+    <RelativeLayout
+        android:id="@+id/lytSearchExistingReference"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/activity_edit_reference_find_existing_controls_margin_bottom"
+        android:visibility="gone"
+    >
+
+        <RelativeLayout
+            android:id="@+id/lytExistingReferencesSearchBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+        >
+
+            <TextView
+                android:id="@+id/txtFindReferenceLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignBaseline="@+id/edtxtFindReferences"
+                android:text="@string/activity_edit_reference_use_existing_label"
+            />
+
+            <EditText
+                android:id="@+id/edtxtFindReferences"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dialog_tags_on_entry_tag_search_tags_height"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_toRightOf="@+id/txtFindReferenceLabel"
+                android:layout_toEndOf="@+id/txtFindReferenceLabel"
+                android:layout_marginLeft="@dimen/activity_edit_reference_find_existing_margin_left"
+                android:layout_marginStart="@dimen/activity_edit_reference_find_existing_margin_left"
+                android:inputType="text"
+            />
+
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/lstExistingReferencesSearchResults"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lytExistingReferencesSearchBar"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"
+        />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/scrEditReference"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/lytSearchExistingReference"
         android:layout_above="@id/toolbar"
     >
 
