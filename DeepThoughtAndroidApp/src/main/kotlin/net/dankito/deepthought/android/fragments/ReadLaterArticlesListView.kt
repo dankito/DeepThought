@@ -82,7 +82,7 @@ class ReadLaterArticlesListView : MainActivityTabFragment(R.menu.fragment_tab_re
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         (item.menuInfo as? AdapterView.AdapterContextMenuInfo)?.position?.let { position ->
-            if(position > adapter.count) {
+            if(position >= adapter.count) {
                 return super.onContextItemSelected(item)
             }
 

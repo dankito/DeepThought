@@ -97,7 +97,7 @@ class TagsListView : MainActivityTabFragment(R.menu.fragment_tab_tags_menu, R.st
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         (item.menuInfo as? AdapterView.AdapterContextMenuInfo)?.position?.let { position ->
-            if(position > adapter.count) { // couldn't believe it: if ReferenceListView is selected before TagsListView is loaded and a context menu item is selected in
+            if(position >= adapter.count) { // couldn't believe it: if ReferenceListView is selected before TagsListView is loaded and a context menu item is selected in
                 // ReferencesListView, FragmentManager.dispatchContextItemSelected()  routes onContextItemSelected() first to TagsListView -> adapter is empty, calling
                 // adapter.getItem(position) crashes application
                 return super.onContextItemSelected(item)

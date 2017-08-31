@@ -85,7 +85,7 @@ class ReferencesListView: MainActivityTabFragment(R.menu.fragment_tab_references
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         (item.menuInfo as? AdapterView.AdapterContextMenuInfo)?.position?.let { position ->
-            if(position > adapter.count) {
+            if(position >= adapter.count) {
                 return super.onContextItemSelected(item)
             }
 
