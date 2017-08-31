@@ -7,10 +7,9 @@ import kotlinx.android.synthetic.main.list_item_reference.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.extensions.preview
 import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.ui.presenter.ReferencesListPresenter
 
 
-class ReferencesAdapter(private val presenter: ReferencesListPresenter) : ListAdapter<Reference>() {
+class ReferencesAdapter() : ListAdapter<Reference>() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = convertView ?: LayoutInflater.from(parent?.context).inflate(R.layout.list_item_reference, parent, false)

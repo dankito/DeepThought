@@ -43,15 +43,13 @@ class ReferencesListView: MainActivityTabFragment(R.menu.fragment_tab_references
 
     private val presenter: ReferencesListPresenter
 
-    private val adapter: ReferencesAdapter
+    private val adapter = ReferencesAdapter()
 
 
     init {
         AppComponent.component.inject(this)
 
         presenter = ReferencesListPresenter(this, router, searchEngine, referenceService, clipboardService, deleteEntityService)
-
-        adapter = ReferencesAdapter(presenter)
     }
 
 
