@@ -35,6 +35,8 @@ class EntryFieldsPreview : RelativeLayout {
 
     var fieldClickedListener: ((EntryField) -> Unit)? = null
 
+    var referenceClearedListener: (() -> Unit)? = null
+
 
 
     constructor(context: Context) : super(context) {
@@ -60,8 +62,17 @@ class EntryFieldsPreview : RelativeLayout {
         txtEntryReference = rootView.txtEntryReference
         rootView.lytReference.setOnClickListener { callFieldClickedListener(EntryField.Reference) }
 
+        btnClearEntryReference.setOnClickListener { clearEntryReference() }
+
 //        txtTagsOnEntry = rootView.txtTagsOnEntry
         rootView.lytTagsOnEntry.setOnClickListener { callFieldClickedListener(EntryField.Tags) }
+    }
+
+    private fun clearEntryReference() {
+        reference = null
+        setReferencePreviewOnUIThread()
+
+        referenceClearedListener?.invoke()
     }
 
     private fun callFieldClickedListener(field: EntryField) {
@@ -79,6 +90,10 @@ class EntryFieldsPreview : RelativeLayout {
 
     fun setReferencePreviewOnUIThread() {
         this.reference?.let { txtEntryReference.text = it.preview }
+
+        if(reference == null) {
+            txtEntryReference.text = ""
+        }
     }
 
     fun setTagsOnEntryPreviewOnUIThread() {

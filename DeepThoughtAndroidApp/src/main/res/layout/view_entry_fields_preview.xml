@@ -5,8 +5,10 @@
 
     <RelativeLayout
         android:id="@+id/lytReference"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/activity_edit_entry_field_height"
+        android:layout_toLeftOf="@+id/btnClearEntryReference"
+        android:layout_toStartOf="@+id/btnClearEntryReference"
         android:layout_marginLeft="@dimen/activity_edit_entry_field_margin_left"
         android:layout_marginStart="@dimen/activity_edit_entry_field_margin_left"
         android:layout_marginRight="@dimen/activity_edit_entry_field_margin_right"
@@ -19,7 +21,6 @@
             android:id="@+id/txtEntryReferenceLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             style="@style/EntryFieldName"
             android:text="@string/activity_edit_entry_reference_label"
         />
@@ -35,6 +36,18 @@
         />
 
     </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/btnClearEntryReference"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/lytReference"
+        android:layout_alignBottom="@+id/lytReference"
+        android:background="@android:color/transparent"
+        android:src="@android:drawable/ic_delete"
+    />
 
     <View
         android:id="@+id/dvReferenceDivider"
@@ -58,7 +71,6 @@
             android:id="@+id/txtTagsOnEntryLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             style="@style/EntryFieldName"
             android:text="@string/activity_edit_entry_tags_label"
         />
@@ -97,7 +109,6 @@
             android:id="@+id/txtEntryAbstractLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             style="@style/EntryFieldName"
             android:text="@string/activity_edit_entry_abstract_label"
         />

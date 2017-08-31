@@ -214,8 +214,15 @@ class EditEntryActivity : BaseActivity() {
 
         this.entryFieldsPreview = lytEntryFieldsPreview
         entryFieldsPreview.fieldClickedListener = { field -> entryFieldClicked(field)}
+        entryFieldsPreview.referenceClearedListener = { referenceCleared() }
 
         setupEntryContentView()
+    }
+
+    private fun referenceCleared() {
+        referenceToEdit = null
+
+        updateCanEntryBeSavedOnUIThread(true)
     }
 
     private fun setupEntryContentView() {
