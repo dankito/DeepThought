@@ -75,9 +75,9 @@
     <string name="activity_edit_entry_abstract_label">Abstract:</string>
     <string name="activity_edit_entry_reference_label">Reference:</string>
     <string name="activity_edit_entry_tags_label">Tags:</string>
-    <string name="activity_edit_entry_alert_message_entry_contains_unsaved_changes">Entry contains unsaved changes.\r\n\r\nShould these changes now be saved?</string>
+    <string name="activity_edit_entry_alert_message_entry_contains_unsaved_changes">Entry contains unsaved changes.\n\nShould these changes now be saved?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
-    <string name="activity_edit_entry_alert_message_entry_has_been_edited">Entry has been edited (probably on a synchronized device).\r\n\r\nWhen
+    <string name="activity_edit_entry_alert_message_entry_has_been_edited">Entry has been edited (probably on a synchronized device).\n\nWhen
         you now save the entry the other changes get overwritten.</string>
 
     <string name="dialog_tags_on_entry_tags_label">Tags:</string>
@@ -94,7 +94,7 @@
     <string name="activity_edit_reference_url_label">Url</string>
     <string name="activity_edit_reference_error_could_not_parse_publishing_date" formatted="false">Cannot parse %s to date</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
-    <string name="activity_edit_reference_alert_message_reference_has_been_edited">Reference has been edited (probably on a synchronized device).\r\n\r\nWhen
+    <string name="activity_edit_reference_alert_message_reference_has_been_edited">Reference has been edited (probably on a synchronized device).\n\nWhen
         you now save the reference the other changes get overwritten.</string>
 
     <string name="synchronize_data_with_this_device">Synchronize data with</string>
@@ -103,7 +103,7 @@
     <string name="alert_message_permit_device_to_synchronize" formatted="false">Permit %s to synchronize?</string>
     <string name="alert_message_enter_this_code_on_remote_device" formatted="false">Enter this code on %s:&lt;br/>&lt;br/>&lt;b>%s&lt;/b></string>
     <string name="alert_title_enter_response_code_for_permitting_synchronization" formatted="false">Enter Code shown on %s:</string>
-    <string name="alert_title_entered_response_code_was_wrong">Entered Code was wrong.\r\nEnter Code shown on %s:</string>
+    <string name="alert_title_entered_response_code_was_wrong">Entered Code was wrong.\nEnter Code shown on %s:</string>
 
     <string name="error_no_rss_or_atom_feed_found_for_url" formatted="false">No RSS or Atom feed found for url %s</string>
     <string name="error_cannot_read_feed_or_extract_feed_addresses_from_url" formatted="false">Cannot read feed or extract feed addresses from url %s: %s</string>
