@@ -18,7 +18,7 @@ class EntryAdapter(private val presenter: EntriesListPresenterBase): ListSwipeAd
 
 
     override fun getSwipeLayoutResourceId(position: Int): Int {
-        return R.id.swipe
+        return R.id.entrySwipeLayout
     }
 
     override fun generateView(position: Int, parent: ViewGroup?): View {
