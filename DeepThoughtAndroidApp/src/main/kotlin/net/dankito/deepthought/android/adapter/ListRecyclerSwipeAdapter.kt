@@ -6,6 +6,9 @@ import com.daimajia.swipe.adapters.RecyclerSwipeAdapter
 
 abstract class ListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(protected var list: List<T> = ArrayList<T>()) : RecyclerSwipeAdapter<THolder>() {
 
+    var itemClickListener: ((item: T) -> Unit)? = null
+
+
     override fun getItemCount() = list.size
 
     override fun getItemId(position: Int) = position.toLong()
@@ -24,6 +27,13 @@ abstract class ListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(pr
         newList.addAll(items)
 
         setItems(newList)
+    }
+
+
+    protected fun itemBound(viewHolder: RecyclerView.ViewHolder, item: T) {
+        viewHolder.itemView.setOnClickListener {
+            itemClickListener?.invoke(item)
+        }
     }
 
 }

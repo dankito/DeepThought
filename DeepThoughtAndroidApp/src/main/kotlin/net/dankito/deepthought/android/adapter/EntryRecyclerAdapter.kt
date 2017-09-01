@@ -35,6 +35,7 @@ class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): Lis
         }
         else {
             bindEntryToView(viewHolder, entry)
+            itemBound(viewHolder, entry)
         }
     }
 
