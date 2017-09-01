@@ -32,6 +32,7 @@ import net.dankito.service.search.Search
 import net.dankito.utils.ui.IDialogService
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 
 class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
@@ -66,9 +67,13 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
 
     private val adapter: TagsOnEntryAdapter
 
+    private val unmodifiedTagsOnEntry = ArrayList<Tag>()
+
     private var lastActionPressTime = Date()
 
     private var tagsChangedCallback: ((MutableList<Tag>) -> Unit)? = null
+
+    private var mnApplyTagsOnEntryChanges: MenuItem? = null
 
     private var txtTagsPreview: TextView? = null
 
@@ -93,6 +98,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
     override fun setupUI(rootView: View) {
         rootView.toolbar.inflateMenu(R.menu.dialog_tags_on_entry_menu)
         rootView.toolbar.setOnMenuItemClickListener { item -> menuItemClicked(item) }
+        mnApplyTagsOnEntryChanges = rootView.toolbar.menu.findItem(R.id.mnApplyTagsOnEntryChanges)
 
         rootView.toolbar.setNavigationIcon(android.R.drawable.ic_menu_close_clear_cancel)
         rootView.toolbar.setNavigationOnClickListener { closeDialog() }
@@ -281,12 +287,25 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
 
     private fun setTagsOnEntryPreviewOnUIThread(tagsOnEntry: MutableList<Tag>) {
         txtTagsPreview?.text = tagsOnEntry.sortedBy { it.name.toLowerCase() }.joinToString { it.name }
+
+        mnApplyTagsOnEntryChanges?.isVisible = didTagsOnEntryChange(tagsOnEntry)
+    }
+
+    private fun didTagsOnEntryChange(tagsOnEntry: MutableList<Tag>): Boolean {
+        if(unmodifiedTagsOnEntry.size != tagsOnEntry.size) {
+            return true
+        }
+
+        val copy = ArrayList(tagsOnEntry)
+        copy.removeAll(unmodifiedTagsOnEntry)
+        return copy.size > 0
     }
 
 
     fun show(fragmentManager: FragmentManager, tagsOnEntry: MutableList<Tag>, tagsChangedCallback: ((MutableList<Tag>) -> Unit)?) {
         this.tagsChangedCallback = tagsChangedCallback
 
+        unmodifiedTagsOnEntry.addAll(tagsOnEntry)
         adapter.tagsOnEntry = ArrayList(tagsOnEntry) // make a copy so that original collection doesn't get manipulated
         setTagsOnEntryPreviewOnUIThread(tagsOnEntry)
 
