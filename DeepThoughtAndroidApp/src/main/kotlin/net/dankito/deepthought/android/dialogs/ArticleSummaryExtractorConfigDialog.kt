@@ -78,6 +78,8 @@ class ArticleSummaryExtractorConfigDialog {
         val dialog = builder.create()
         dialog.show()
 
+        dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE) // so that keyboard doesn't cover OK and Cancel buttons
+
         input = dialog.edtxtAskExtractorName
         lstIcons = dialog.lstIcons
 
