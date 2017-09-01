@@ -41,6 +41,15 @@ class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
 
 
     fun showDialog() {
+        if(summaryExtractorsManager.getConfigs().isEmpty()) { // no ArticleSummaryExtractorConfig exists -> show AddArticleSummaryExtractorDialog instead
+            showAddArticleSummaryExtractorDialog()
+        }
+        else { // really show ArticleSummaryExtractorsDialog
+            showArticleSummaryExtractorsDialog()
+        }
+    }
+
+    private fun showArticleSummaryExtractorsDialog() {
         var builder = AlertDialog.Builder(activity)
         builder = builder.setAdapter(adapter, { dialog, which ->
             val selectedExtractor = adapter.getItem(which)
@@ -61,8 +70,6 @@ class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
         dialog.show()
 
         enableEditingExtractorConfig(dialog)
-
-        showAddArticleSummaryExtractorDialogIfNoneExists()
     }
 
     private fun enableEditingExtractorConfig(dialog: AlertDialog) {
@@ -74,10 +81,8 @@ class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
     }
 
 
-    private fun showAddArticleSummaryExtractorDialogIfNoneExists() {
-        if(summaryExtractorsManager.getConfigs().isEmpty()) {
-            router.showAddArticleSummaryExtractorView()
-        }
+    private fun showAddArticleSummaryExtractorDialog() {
+        router.showAddArticleSummaryExtractorView()
     }
 
 
