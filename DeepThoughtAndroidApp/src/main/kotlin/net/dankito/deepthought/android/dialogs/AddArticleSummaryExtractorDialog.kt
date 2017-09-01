@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
@@ -12,6 +14,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ListView
 import android.widget.TextView
+import kotlinx.android.synthetic.main.dialog_add_article_summary_extractor.*
 import kotlinx.android.synthetic.main.dialog_add_article_summary_extractor.view.*
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.deepthought.android.R
@@ -62,7 +65,7 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater?.inflate(R.layout.dialog_add_article_summary_extractor, container)
 
-        view?.let { view ->
+        view?.let {
             view.btnCheckFeedOrWebsiteUrl?.setOnClickListener { checkFeedOrWebsiteUrl(view.edtxtFeedOrWebsiteUrl.text.toString()) }
 
             txtFeedSearchResultsLabel = view.txtFeedSearchResultsLabel
@@ -71,9 +74,10 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
             view.lstFeedSearchResults.adapter = feedAddressesAdapter
             view.lstFeedSearchResults.setOnItemClickListener { _, _, position, _ -> foundFeedAddressSelected(position) }
 
+            view.edtxtFeedOrWebsiteUrl.addTextChangedListener(edtxtFeedOrWebsiteUrlTextWatcher)
             view.edtxtFeedOrWebsiteUrl.setOnFocusChangeListener { _, hasFocus ->
                 if(hasFocus) {
-                    dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+                    dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
                 }
             }
         }
@@ -236,6 +240,19 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
         builder.setNegativeButton(android.R.string.ok, null)
 
         builder.create().show()
+    }
+
+
+    private val edtxtFeedOrWebsiteUrlTextWatcher = object : TextWatcher {
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+
+        override fun afterTextChanged(editable: Editable) {
+            btnCheckFeedOrWebsiteUrl.isEnabled = editable.toString().isNullOrBlank() == false
+        }
+
     }
 
 }
