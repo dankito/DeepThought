@@ -33,6 +33,8 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
 
     private lateinit var htmlEditor: AndroidHtmlEditor
 
+    private lateinit var mnApplyHtmlChanges: MenuItem
+
     private var htmlToSetOnStart: String? = null
 
     private var htmlChangedCallback: ((String) -> Unit)? = null
@@ -54,6 +56,7 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     override fun setupUI(rootView: View) {
         rootView.toolbar.inflateMenu(R.menu.dialog_edit_html_text_menu)
         rootView.toolbar.setOnMenuItemClickListener { item -> menuItemClicked(item) }
+        mnApplyHtmlChanges = rootView.toolbar.menu.findItem(R.id.mnApplyHtmlChanges)
 
         rootView.toolbar.setNavigationIcon(android.R.drawable.ic_menu_close_clear_cancel)
         rootView.toolbar.setNavigationOnClickListener { closeDialog() }
@@ -148,9 +151,11 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         }
 
         override fun htmlCodeUpdated() {
+            activity?.runOnUiThread { mnApplyHtmlChanges.isVisible = true }
         }
 
         override fun htmlCodeHasBeenReset() {
+            activity?.runOnUiThread { mnApplyHtmlChanges.isVisible = false }
         }
 
     }
