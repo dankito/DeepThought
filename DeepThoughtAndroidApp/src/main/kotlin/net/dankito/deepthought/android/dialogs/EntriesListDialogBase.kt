@@ -5,7 +5,8 @@ import android.support.v4.app.FragmentManager
 import android.view.View
 import kotlinx.android.synthetic.main.dialog_entries_list.view.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.adapter.EntryAdapter
+import net.dankito.deepthought.android.adapter.EntryRecyclerAdapter
+import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.ui.IRouter
@@ -21,7 +22,7 @@ abstract class EntriesListDialogBase : FullscreenDialogFragment() {
 
     protected val presenter: EntityEntriesListPresenter
 
-    protected val adapter: EntryAdapter
+    protected val adapter: EntryRecyclerAdapter
 
 
     @Inject
@@ -45,16 +46,18 @@ abstract class EntriesListDialogBase : FullscreenDialogFragment() {
 
         presenter = EntityEntriesListPresenter(deleteEntityService, clipboardService, router)
 
-        adapter = EntryAdapter(presenter)
+        adapter = EntryRecyclerAdapter(presenter)
     }
 
 
     override fun getLayoutId() = R.layout.dialog_entries_list
 
     override fun setupUI(rootView: View) {
-        rootView.lstEntries.adapter = adapter
+        val context = rootView.context
+        rootView.rcyEntries.addItemDecoration(HorizontalDividerItemDecoration(context))
+        rootView.rcyEntries.adapter = adapter
 
-        rootView.lstEntries.setOnItemClickListener { _, _, position, _ -> router.showEditEntryView(adapter.getItem(position)) }
+        adapter.itemClickListener = { entry -> router.showEditEntryView(entry) }
     }
 
 
@@ -70,7 +73,7 @@ abstract class EntriesListDialogBase : FullscreenDialogFragment() {
     }
 
     private fun showEntries(entries: List<Entry>) {
-        activity?.runOnUiThread { adapter.setItems(entries) }
+        activity?.runOnUiThread { adapter.items = entries }
     }
 
     protected abstract fun retrieveEntries(callback: (List<Entry>) -> Unit)

@@ -5,11 +5,12 @@
                 android:layout_height="match_parent"
                 android:background="#FFFFFF">
 
-    <ListView
-        android:id="@+id/lstEntries"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rcyEntries"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         android:layout_above="@+id/appBarLayout"
         />
 
