@@ -7,10 +7,11 @@ import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class EditEntryPresenter(private val entryPersister: EntryPersister, private val router: IRouter) {
+class EditEntryPresenter(private val entryPersister: EntryPersister, private val clipboardService: IClipboardService, private val router: IRouter) {
 
     @Inject
     protected lateinit var threadPool: IThreadPool
@@ -27,6 +28,15 @@ class EditEntryPresenter(private val entryPersister: EntryPersister, private val
 
     fun saveEntryAsync(entry: Entry, reference: Reference? = null, tags: Collection<Tag> = ArrayList(), callback: (Boolean) -> Unit) {
         entryPersister.saveEntryAsync(entry, reference, tags, callback)
+    }
+
+
+    fun shareReferenceUrl(reference: Reference) {
+        clipboardService.copyReferenceUrlToClipboard(reference)
+    }
+
+    fun shareEntry(entry: Entry, reference: Reference?) {
+        clipboardService.copyEntryToClipboard(entry, reference)
     }
 
 

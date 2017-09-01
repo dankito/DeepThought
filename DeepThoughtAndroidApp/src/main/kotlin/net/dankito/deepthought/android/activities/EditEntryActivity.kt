@@ -2,6 +2,7 @@ package net.dankito.deepthought.android.activities
 
 import android.os.Build
 import android.os.Bundle
+import android.support.v7.widget.PopupMenu
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -33,6 +34,7 @@ import net.dankito.service.data.messages.EntryChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.serialization.ISerializer
+import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import net.engio.mbassy.listener.Handler
 import java.util.*
@@ -91,6 +93,9 @@ class EditEntryActivity : BaseActivity() {
     protected lateinit var entryPersister: EntryPersister
 
     @Inject
+    protected lateinit var clipboardService: IClipboardService
+
+    @Inject
     protected lateinit var router: IRouter
 
     @Inject
@@ -144,7 +149,7 @@ class EditEntryActivity : BaseActivity() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = EditEntryPresenter(entryPersister, router)
+        presenter = EditEntryPresenter(entryPersister, clipboardService, router)
     }
 
 
@@ -508,9 +513,54 @@ class EditEntryActivity : BaseActivity() {
                 saveEntryAndCloseDialog()
                 return true
             }
+            R.id.mnShareEntry -> {
+                showShareEntryPopupMenu(findViewById(R.id.mnShareEntry))
+                return true
+            }
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showShareEntryPopupMenu(clickedView: View) {
+        val popup = PopupMenu(this, clickedView)
+
+        popup.menuInflater.inflate(R.menu.share_entry_menu, popup.menu)
+
+        val reference = referenceToEdit
+        if(reference == null || reference.url.isNullOrBlank()) {
+            popup.menu.findItem(R.id.mnShareEntryReferenceUrl).isVisible = false
+        }
+
+        popup.setOnMenuItemClickListener { item ->
+            when(item.itemId) {
+                R.id.mnShareEntryReferenceUrl -> shareReferenceUrl()
+                R.id.mnShareEntryContent -> shareEntryContent()
+            }
+            true
+        }
+
+        popup.show()
+    }
+
+    private fun shareReferenceUrl() {
+        referenceToEdit?.let { reference ->
+            presenter.shareReferenceUrl(reference)
+        }
+    }
+
+    private fun shareEntryContent() {
+        entry?.let { entry ->
+            presenter.shareEntry(entry, entry.reference)
+        }
+
+        readLaterArticle?.entryExtractionResult?.let {  extractionResult ->
+            presenter.shareEntry(extractionResult.entry, extractionResult.reference)
+        }
+
+        entryExtractionResult?.let { extractionResult ->
+            presenter.shareEntry(extractionResult.entry, extractionResult.reference)
+        }
     }
 
 
