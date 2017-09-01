@@ -1,16 +1,17 @@
 package net.dankito.deepthought.android.fragments
 
 import android.app.Activity
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
-import android.widget.BaseAdapter
 import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.adapter.TagAdapter
+import net.dankito.deepthought.android.adapter.ListRecyclerSwipeAdapter
+import net.dankito.deepthought.android.adapter.TagRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.TagEntriesListDialog
 import net.dankito.deepthought.model.BaseEntity
@@ -56,7 +57,7 @@ class TagsListView : MainActivityTabFragment(R.menu.fragment_tab_tags_menu, R.st
 
     private lateinit var presenter: TagsListPresenter
 
-    private lateinit var adapter: TagAdapter
+    private lateinit var adapter: TagRecyclerAdapter
 
 
     init {
@@ -67,16 +68,16 @@ class TagsListView : MainActivityTabFragment(R.menu.fragment_tab_tags_menu, R.st
     override fun initPresenter(): IMainViewSectionPresenter {
         presenter = TagsListPresenter(this, dataManager, searchEngine, searchResultsUtil, tagService, deleteEntityService, dialogService, router)
 
-        adapter = TagAdapter(presenter)
+        adapter = TagRecyclerAdapter(presenter)
 
         return presenter
     }
 
-    override fun getListAdapter(): BaseAdapter {
+    override fun getListAdapter(): ListRecyclerSwipeAdapter<out BaseEntity, out RecyclerView.ViewHolder> {
         return adapter
     }
 
-    override fun listItemClicked(position: Int, selectedItem: Any) {
+    override fun listItemClicked(selectedItem: BaseEntity) {
         tagSelected(selectedItem as? Tag)
     }
 
@@ -85,7 +86,7 @@ class TagsListView : MainActivityTabFragment(R.menu.fragment_tab_tags_menu, R.st
         super.setupUI(rootView)
 
         rootView?.let {
-            registerForContextMenu(rootView.lstEntities)
+            registerForContextMenu(rootView.rcyEntities)
         }
     }
 
@@ -97,7 +98,7 @@ class TagsListView : MainActivityTabFragment(R.menu.fragment_tab_tags_menu, R.st
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         (item.menuInfo as? AdapterView.AdapterContextMenuInfo)?.position?.let { position ->
-            if(position >= adapter.count) { // couldn't believe it: if ReferenceListView is selected before TagsListView is loaded and a context menu item is selected in
+            if(position >= adapter.itemCount) { // couldn't believe it: if ReferenceListView is selected before TagsListView is loaded and a context menu item is selected in
                 // ReferencesListView, FragmentManager.dispatchContextItemSelected()  routes onContextItemSelected() first to TagsListView -> adapter is empty, calling
                 // adapter.getItem(position) crashes application
                 return super.onContextItemSelected(item)
@@ -135,7 +136,7 @@ class TagsListView : MainActivityTabFragment(R.menu.fragment_tab_tags_menu, R.st
     }
 
     override fun querySubmitted(query: String): Boolean {
-        presenter.toggleFilterTags(adapter.getItems())
+        presenter.toggleFilterTags(adapter.items)
         return true
     }
 
@@ -178,7 +179,7 @@ class TagsListView : MainActivityTabFragment(R.menu.fragment_tab_tags_menu, R.st
     override fun showOnboardingView() {
         super.showOnboardingView()
 
-        listView?.visibility = View.VISIBLE
+        recyclerView?.visibility = View.VISIBLE
     }
 
 
@@ -186,7 +187,7 @@ class TagsListView : MainActivityTabFragment(R.menu.fragment_tab_tags_menu, R.st
 
     override fun showEntities(entities: List<Tag>) {
         activity?.runOnUiThread {
-            adapter.setItems(entities)
+            adapter.items = entities
 
             retrievedEntitiesOnUiThread(entities)
         }

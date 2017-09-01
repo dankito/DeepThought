@@ -6,14 +6,15 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.text.Html
 import android.view.*
-import android.widget.BaseAdapter
-import android.widget.ListView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
 import net.dankito.deepthought.android.R
+import net.dankito.deepthought.android.adapter.ListRecyclerSwipeAdapter
+import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
@@ -24,7 +25,7 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
 
     private var presenter: IMainViewSectionPresenter? = null
 
-    protected var listView: ListView? = null
+    protected var recyclerView: RecyclerView? = null
 
     protected var txtOnboardingText: TextView? = null
 
@@ -38,9 +39,9 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
     abstract fun initPresenter(): IMainViewSectionPresenter
 
 
-    abstract fun getListAdapter(): BaseAdapter
+    abstract fun getListAdapter(): ListRecyclerSwipeAdapter<out BaseEntity, out RecyclerView.ViewHolder>
 
-    abstract fun listItemClicked(position: Int, selectedItem: Any)
+    abstract fun listItemClicked(selectedItem: BaseEntity)
 
 
     protected open fun getQueryHint(activity: Activity): String = ""
@@ -64,10 +65,12 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
     }
 
     private fun setupListView(rootView: View) {
-        listView = rootView.lstEntities
+        recyclerView = rootView.rcyEntities
+        recyclerView?.addItemDecoration(HorizontalDividerItemDecoration(rootView.context))
 
-        listView?.adapter = getListAdapter()
-        listView?.setOnItemClickListener { _, _, position, _ -> listItemClicked(position, getListAdapter().getItem(position)) }
+        val adapter = getListAdapter()
+        recyclerView?.adapter = adapter
+        adapter.itemClickListener = { item -> listItemClicked(item)}
 
         entitiesToCheckForOnboardingOnViewCreation?.let {
             retrievedEntitiesOnUiThread(it)
@@ -113,7 +116,7 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
 
 
     protected fun retrievedEntitiesOnUiThread(entities: List<BaseEntity>) {
-        if(listView == null) { // view not initialized yet
+        if(recyclerView == null) { // view not initialized yet
             entitiesToCheckForOnboardingOnViewCreation = entities
             return
         }
@@ -131,7 +134,7 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
     }
 
     protected open fun showOnboardingView() {
-        listView?.visibility = View.GONE
+        recyclerView?.visibility = View.GONE
 
         txtOnboardingText?.let { txtOnboardingText ->
             txtOnboardingText.visibility = View.VISIBLE
@@ -146,7 +149,7 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
     }
 
     protected open fun hideOnboardingView() {
-        listView?.visibility = View.VISIBLE
+        recyclerView?.visibility = View.VISIBLE
         
         txtOnboardingText?.let { txtOnboardingText ->
             txtOnboardingText.visibility = View.GONE

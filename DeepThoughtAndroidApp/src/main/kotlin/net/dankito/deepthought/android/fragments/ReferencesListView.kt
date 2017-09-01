@@ -1,16 +1,18 @@
 package net.dankito.deepthought.android.fragments
 
 import android.app.Activity
+import android.support.v7.widget.RecyclerView
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
-import android.widget.BaseAdapter
 import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.adapter.ReferencesAdapter
+import net.dankito.deepthought.android.adapter.ListRecyclerSwipeAdapter
+import net.dankito.deepthought.android.adapter.ReferenceRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.ReferenceEntriesListDialog
+import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
@@ -43,13 +45,15 @@ class ReferencesListView: MainActivityTabFragment(R.menu.fragment_tab_references
 
     private val presenter: ReferencesListPresenter
 
-    private val adapter = ReferencesAdapter()
+    private val adapter: ReferenceRecyclerAdapter
 
 
     init {
         AppComponent.component.inject(this)
 
         presenter = ReferencesListPresenter(this, router, searchEngine, referenceService, clipboardService, deleteEntityService)
+
+        adapter = ReferenceRecyclerAdapter(presenter)
     }
 
 
@@ -57,11 +61,11 @@ class ReferencesListView: MainActivityTabFragment(R.menu.fragment_tab_references
         return presenter
     }
 
-    override fun getListAdapter(): BaseAdapter {
+    override fun getListAdapter(): ListRecyclerSwipeAdapter<out BaseEntity, out RecyclerView.ViewHolder> {
         return adapter
     }
 
-    override fun listItemClicked(position: Int, selectedItem: Any) {
+    override fun listItemClicked(selectedItem: BaseEntity) {
         (selectedItem as? Reference)?.let { reference ->
             hideSearchViewKeyboard()
             presenter.showEntriesForReference(reference)
@@ -73,7 +77,7 @@ class ReferencesListView: MainActivityTabFragment(R.menu.fragment_tab_references
         super.setupUI(rootView)
 
         rootView?.let {
-            registerForContextMenu(rootView.lstEntities)
+            registerForContextMenu(rootView.rcyEntities)
         }
     }
 
@@ -85,7 +89,7 @@ class ReferencesListView: MainActivityTabFragment(R.menu.fragment_tab_references
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         (item.menuInfo as? AdapterView.AdapterContextMenuInfo)?.position?.let { position ->
-            if(position >= adapter.count) {
+            if(position >= adapter.itemCount) {
                 return super.onContextItemSelected(item)
             }
 
@@ -136,7 +140,7 @@ class ReferencesListView: MainActivityTabFragment(R.menu.fragment_tab_references
 
     override fun showEntities(entities: List<Reference>) {
         activity?.runOnUiThread {
-            adapter.setItems(entities)
+            adapter.items = entities
 
             retrievedEntitiesOnUiThread(entities)
         }

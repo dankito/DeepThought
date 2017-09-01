@@ -2,11 +2,13 @@ package net.dankito.deepthought.android.fragments
 
 import android.app.Activity
 import android.content.Context
+import android.support.v7.widget.RecyclerView
 import android.view.View
-import android.widget.BaseAdapter
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.adapter.EntryAdapter
+import net.dankito.deepthought.android.adapter.EntryRecyclerAdapter
+import net.dankito.deepthought.android.adapter.ListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
@@ -36,7 +38,7 @@ class EntriesListView : MainActivityTabFragment(R.menu.fragment_tab_entries_menu
 
     private val presenter: EntriesListPresenter
 
-    private val entryAdapter: EntryAdapter
+    private val entryAdapter: EntryRecyclerAdapter
 
     private var entriesToShowOnAttach: List<Entry>? = null
 
@@ -47,7 +49,7 @@ class EntriesListView : MainActivityTabFragment(R.menu.fragment_tab_entries_menu
         AppComponent.component.inject(this)
 
         presenter = EntriesListPresenter(this, router, searchEngine, deleteEntityService, clipboardService)
-        entryAdapter = EntryAdapter(presenter)
+        entryAdapter = EntryRecyclerAdapter(presenter)
     }
 
 
@@ -55,11 +57,11 @@ class EntriesListView : MainActivityTabFragment(R.menu.fragment_tab_entries_menu
         return presenter
     }
 
-    override fun getListAdapter(): BaseAdapter {
+    override fun getListAdapter(): ListRecyclerSwipeAdapter<out BaseEntity, out RecyclerView.ViewHolder> {
         return entryAdapter
     }
 
-    override fun listItemClicked(position: Int, selectedItem: Any) {
+    override fun listItemClicked(selectedItem: BaseEntity) {
         (selectedItem as? Entry)?.let { presenter.showEntry(it) }
     }
 
@@ -101,7 +103,7 @@ class EntriesListView : MainActivityTabFragment(R.menu.fragment_tab_entries_menu
 
         if(activity != null) {
             activity.runOnUiThread {
-                entryAdapter.setItems(entities)
+                entryAdapter.items = entities
 
                 retrievedEntitiesOnUiThread(entities)
             }

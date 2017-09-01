@@ -1,15 +1,17 @@
 package net.dankito.deepthought.android.fragments
 
 import android.app.Activity
+import android.support.v7.widget.RecyclerView
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
-import android.widget.BaseAdapter
 import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.adapter.ReadLaterArticlesAdapter
+import net.dankito.deepthought.android.adapter.ListRecyclerSwipeAdapter
+import net.dankito.deepthought.android.adapter.ReadLaterArticleRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
@@ -43,13 +45,15 @@ class ReadLaterArticlesListView : MainActivityTabFragment(R.menu.fragment_tab_re
 
     private val presenter: ReadLaterArticleListPresenter
 
-    private val adapter = ReadLaterArticlesAdapter()
+    private val adapter: ReadLaterArticleRecyclerAdapter
 
 
     init {
         AppComponent.component.inject(this)
 
         presenter = ReadLaterArticleListPresenter(this, searchEngine, readLaterArticleService, entryPersister, clipboardService, router)
+
+        adapter = ReadLaterArticleRecyclerAdapter(presenter)
     }
 
 
@@ -57,11 +61,11 @@ class ReadLaterArticlesListView : MainActivityTabFragment(R.menu.fragment_tab_re
         return presenter
     }
 
-    override fun getListAdapter(): BaseAdapter {
+    override fun getListAdapter(): ListRecyclerSwipeAdapter<out BaseEntity, out RecyclerView.ViewHolder> {
         return adapter
     }
 
-    override fun listItemClicked(position: Int, selectedItem: Any) {
+    override fun listItemClicked(selectedItem: BaseEntity) {
         (selectedItem as? ReadLaterArticle)?.let { presenter.showArticle(it) }
     }
 
@@ -70,7 +74,7 @@ class ReadLaterArticlesListView : MainActivityTabFragment(R.menu.fragment_tab_re
         super.setupUI(rootView)
 
         rootView?.let {
-            registerForContextMenu(rootView.lstEntities)
+            registerForContextMenu(rootView.rcyEntities)
         }
     }
 
@@ -82,7 +86,7 @@ class ReadLaterArticlesListView : MainActivityTabFragment(R.menu.fragment_tab_re
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         (item.menuInfo as? AdapterView.AdapterContextMenuInfo)?.position?.let { position ->
-            if(position >= adapter.count) {
+            if(position >= adapter.itemCount) {
                 return super.onContextItemSelected(item)
             }
 
@@ -120,7 +124,7 @@ class ReadLaterArticlesListView : MainActivityTabFragment(R.menu.fragment_tab_re
 
     override fun showEntities(entities: List<ReadLaterArticle>) {
         activity?.runOnUiThread {
-            adapter.setItems(entities)
+            adapter.items = entities
 
             retrievedEntitiesOnUiThread(entities)
         }
