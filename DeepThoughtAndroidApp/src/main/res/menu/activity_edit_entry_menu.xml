@@ -15,6 +15,7 @@
         android:orderInCategory="200"
         android:title="@string/action_save"
         android:icon="@android:drawable/ic_menu_save"
+        android:visible="false"
     />
 
 </menu>

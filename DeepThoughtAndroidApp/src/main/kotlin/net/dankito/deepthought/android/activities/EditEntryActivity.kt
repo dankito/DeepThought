@@ -337,11 +337,11 @@ class EditEntryActivity : BaseActivity() {
     private fun updateCanEntryBeSavedOnUIThread(canEntryBeSaved: Boolean) {
         this.canEntryBeSaved = canEntryBeSaved
 
-        setMenuSaveEntryEnabledStateOnUIThread()
+        setMenuSaveEntryVisibleStateOnUIThread()
     }
 
-    private fun setMenuSaveEntryEnabledStateOnUIThread() {
-        mnSaveEntry?.isEnabled = canEntryBeSaved
+    private fun setMenuSaveEntryVisibleStateOnUIThread() {
+        mnSaveEntry?.isVisible = canEntryBeSaved
     }
 
 
@@ -498,7 +498,7 @@ class EditEntryActivity : BaseActivity() {
 
         mnSaveEntry = menu.findItem(R.id.mnSaveEntry)
 
-        setMenuSaveEntryEnabledStateOnUIThread()
+        setMenuSaveEntryVisibleStateOnUIThread()
 
         return true
     }
