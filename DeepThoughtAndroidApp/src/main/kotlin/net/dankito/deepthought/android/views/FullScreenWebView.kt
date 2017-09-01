@@ -45,6 +45,14 @@ class FullScreenWebView : WebView {
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
 
+    override fun onWindowSystemUiVisibilityChanged(visible: Int) {
+        if(visible == 0) {
+            hasEnteredFullScreenMode = false // otherwise hasEnteredFullScreenMode stays true and full screen mode isn't entered anymore on resume
+        }
+
+        super.onWindowSystemUiVisibilityChanged(visible)
+    }
+
     override fun onScrollChanged(scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int) {
         super.onScrollChanged(scrollX, scrollY, oldScrollX, oldScrollY)
 
