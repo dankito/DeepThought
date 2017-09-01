@@ -29,11 +29,9 @@ interface IRouter {
     fun showEditEntryView(extractionResult: EntryExtractionResult, field: EntryField? = null)
 
 
-    fun showCreateReferenceView()
-
     fun showEditReferenceView(reference: Reference)
 
-    fun showEditEntryReferenceView(reference: Reference, ofEntry: Entry?)
+    fun showEditEntryReferenceView(forEntry: Entry, reference: Reference?)
 
 
     fun returnToPreviousView()

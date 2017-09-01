@@ -308,13 +308,9 @@ class EditEntryActivity : BaseActivity() {
         setWaitingForResult(EditReferenceActivity.ResultId)
 
         val reference = referenceToEdit
+        val entry = entry ?: readLaterArticle?.entryExtractionResult?.entry ?: entryExtractionResult?.entry ?: Entry("") // should never be the case that entry is null, just to make compiler happy
 
-        if(reference != null) {
-            presenter.editReference(reference, entry ?: readLaterArticle?.entryExtractionResult?.entry ?: entryExtractionResult?.entry)
-        }
-        else {
-            presenter.createReference()
-        }
+        presenter.editReference(reference, entry)
     }
 
     private fun editTagsOnEntry() {
