@@ -1,7 +1,6 @@
 package net.dankito.deepthought.android.dialogs
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
@@ -18,16 +17,15 @@ import kotlinx.android.synthetic.main.dialog_add_article_summary_extractor.*
 import kotlinx.android.synthetic.main.dialog_add_article_summary_extractor.view.*
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.activities.ArticleSummaryActivity
 import net.dankito.deepthought.android.adapter.FoundFeedAddressesAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
+import net.dankito.deepthought.ui.IRouter
 import net.dankito.feedaddressextractor.FeedAddress
 import net.dankito.feedaddressextractor.FeedAddressExtractor
 import net.dankito.newsreader.feed.IFeedReader
 import net.dankito.newsreader.model.FeedArticleSummary
-import net.dankito.utils.serialization.ISerializer
 import java.net.URI
 import javax.inject.Inject
 
@@ -49,7 +47,7 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
     protected lateinit var feedAddressExtractor:FeedAddressExtractor
 
     @Inject
-    protected lateinit var serializer: ISerializer
+    protected lateinit var router: IRouter
 
     private val feedAddressesAdapter = FoundFeedAddressesAdapter()
 
@@ -191,20 +189,15 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
     private fun feedAdded(feedUrl: String, summary: FeedArticleSummary, config: ArticleSummaryExtractorConfig) {
         activity?.let { activity ->
             activity.runOnUiThread {
-                showArticleSummaryActivity(activity, feedUrl, summary)
+                showArticleSummaryActivity(config, summary)
 
                 dismiss()
             }
         }
     }
 
-    private fun showArticleSummaryActivity(activity: Activity, feedUrl: String, summary: FeedArticleSummary) {
-        val intent = Intent(activity, ArticleSummaryActivity::class.java)
-
-        intent.putExtra(ArticleSummaryActivity.EXTRACTOR_URL_INTENT_EXTRA_NAME, feedUrl)
-        intent.putExtra(ArticleSummaryActivity.LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME, serializer.serializeObject(summary))
-
-        startActivity(intent)
+    private fun showArticleSummaryActivity(config: ArticleSummaryExtractorConfig, summary: FeedArticleSummary) {
+        router.showArticleSummaryView(config, summary)
     }
 
     private fun showFoundFeedAddresses(result: List<FeedAddress>) {

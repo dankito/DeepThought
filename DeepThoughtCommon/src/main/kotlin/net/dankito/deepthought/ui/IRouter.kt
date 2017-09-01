@@ -2,6 +2,7 @@ package net.dankito.deepthought.ui
 
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.newsreader.model.ArticleSummary
 
 
 interface IRouter {
@@ -15,7 +16,7 @@ interface IRouter {
 
     fun showAddArticleSummaryExtractorView()
 
-    fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig)
+    fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig, summary: ArticleSummary? = null)
 
     fun showReadLaterArticlesView()
 

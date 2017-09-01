@@ -17,9 +17,11 @@ import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.newsreader.model.ArticleSummary
+import net.dankito.utils.serialization.ISerializer
 
 
-class AndroidRouter(private val context: Context, private val parameterHolder: ActivityParameterHolder, private val activityTracker: CurrentActivityTracker) : IRouter {
+class AndroidRouter(private val context: Context, private val parameterHolder: ActivityParameterHolder, private val activityTracker: CurrentActivityTracker, private val serializer: ISerializer) : IRouter {
 
 
     override fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {
@@ -52,11 +54,15 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
         }
     }
 
-    override fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig) {
+    override fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig, summary: ArticleSummary?) {
         val articleSummaryActivityIntent = Intent(context, ArticleSummaryActivity::class.java)
         articleSummaryActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
         articleSummaryActivityIntent.putExtra(ArticleSummaryActivity.EXTRACTOR_URL_INTENT_EXTRA_NAME, extractor.url)
+
+        summary?.let {
+            articleSummaryActivityIntent.putExtra(ArticleSummaryActivity.LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME, serializer.serializeObject(summary))
+        }
 
         context.startActivity(articleSummaryActivityIntent)
     }

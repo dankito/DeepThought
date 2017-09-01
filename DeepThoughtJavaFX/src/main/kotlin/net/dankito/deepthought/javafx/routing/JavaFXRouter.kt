@@ -12,6 +12,7 @@ import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.IEntriesListView
+import net.dankito.newsreader.model.ArticleSummary
 import tornadofx.*
 
 
@@ -37,8 +38,9 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
         // TODO
     }
 
-    override fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig) {
+    override fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig, summary: ArticleSummary?) {
         runLater {
+            // TODO: may also pass summary
             val dialogView = mainWindowController.find(ArticleSummaryView::class, mapOf(ArticleSummaryView::articleSummaryExtractor to extractor))
             dialogView.show(extractor.name, extractor.iconUrl)
         }
