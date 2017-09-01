@@ -66,6 +66,8 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
         val view = inflater?.inflate(R.layout.dialog_add_article_summary_extractor, container)
 
         view?.let {
+            view.btnCancel.setOnClickListener { dismiss() }
+
             view.btnCheckFeedOrWebsiteUrl?.setOnClickListener { checkFeedOrWebsiteUrl(view.edtxtFeedOrWebsiteUrl.text.toString()) }
 
             txtFeedSearchResultsLabel = view.txtFeedSearchResultsLabel
