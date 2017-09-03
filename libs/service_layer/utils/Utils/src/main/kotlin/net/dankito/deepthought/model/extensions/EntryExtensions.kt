@@ -4,7 +4,7 @@ import net.dankito.deepthought.model.Entry
 import org.jsoup.Jsoup
 
 
-private const val MaxPreviewLength = 300
+private const val MaxPreviewLength = 400
 
 
 val Entry.abstractPlainText: String
