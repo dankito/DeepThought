@@ -8,7 +8,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.view_entry_fields_preview.view.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.extensions.abstractPlainText
+import net.dankito.deepthought.model.extensions.abstractPlainText
 import net.dankito.deepthought.extensions.preview
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.EntryExtractionResult

@@ -7,9 +7,9 @@ import android.widget.TextView
 import com.daimajia.swipe.SwipeLayout
 import kotlinx.android.synthetic.main.list_item_entry.view.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.extensions.entryPreview
-import net.dankito.deepthought.extensions.referencePreview
-import net.dankito.deepthought.extensions.tagsPreview
+import net.dankito.deepthought.model.extensions.entryPreview
+import net.dankito.deepthought.model.extensions.referencePreview
+import net.dankito.deepthought.model.extensions.tagsPreview
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.ui.presenter.EntriesListPresenterBase
 
