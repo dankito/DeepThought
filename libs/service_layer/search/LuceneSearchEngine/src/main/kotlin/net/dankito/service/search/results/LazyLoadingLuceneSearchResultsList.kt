@@ -19,7 +19,10 @@ open class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEn
 
 
     init {
-        preloadItemsAsync(0) // preload items that for sure gonna get displayed off the UI thread
+        if(hits.size > 0) {
+            super.retrieveEntityFromDatabaseAndCache(0) // load first item directly as otherwise UI may already tries to display it while it's not fully loaded yet (and therefore not all data gets displayed)
+            preloadItemsAsync(1) // preload items that for sure gonna get displayed off the UI thread
+        }
     }
 
 
