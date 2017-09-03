@@ -22,6 +22,19 @@ val Reference?.preview: String
         return preview
     }
 
+val Reference?.seriesAndPublishingDatePreview: String
+    get() {
+        if(this == null) {
+            return ""
+        }
+
+        var preview = series?.title ?: ""
+
+        publishingDate?.let { preview += " " + PublishingDateFormat.format(it) }
+
+        return preview.trim()
+    }
+
 val Reference?.previewWithSeriesAndPublishingDate: String
     get() {
         if(this == null) {
@@ -30,9 +43,7 @@ val Reference?.previewWithSeriesAndPublishingDate: String
 
         var preview = this.preview
 
-        var publisherAndDate = series?.title ?: ""
-
-        publishingDate?.let { publisherAndDate += " " + PublishingDateFormat.format(it) }
+        var publisherAndDate = seriesAndPublishingDatePreview
 
         if(publisherAndDate.isNullOrBlank() == false) {
             preview = publisherAndDate.trim() + " " + preview
