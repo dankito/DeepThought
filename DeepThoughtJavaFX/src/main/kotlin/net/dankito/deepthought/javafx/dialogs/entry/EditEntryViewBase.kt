@@ -6,12 +6,12 @@ import javafx.scene.control.Control
 import javafx.scene.control.Label
 import javafx.scene.layout.Priority
 import javafx.scene.web.WebView
-import net.dankito.deepthought.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister

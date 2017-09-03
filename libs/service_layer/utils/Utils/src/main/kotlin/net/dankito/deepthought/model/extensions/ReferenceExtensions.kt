@@ -1,4 +1,4 @@
-package net.dankito.deepthought.extensions
+package net.dankito.deepthought.model.extensions
 
 import net.dankito.deepthought.model.Reference
 import java.text.DateFormat

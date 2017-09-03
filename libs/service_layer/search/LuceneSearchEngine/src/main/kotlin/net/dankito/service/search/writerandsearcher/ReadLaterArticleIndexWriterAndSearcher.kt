@@ -1,6 +1,6 @@
 package net.dankito.service.search.writerandsearcher
 
-import net.dankito.deepthought.extensions.previewWithSeriesAndPublishingDate
+import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.model.extensions.abstractPlainText
 import net.dankito.deepthought.model.extensions.contentPlainText

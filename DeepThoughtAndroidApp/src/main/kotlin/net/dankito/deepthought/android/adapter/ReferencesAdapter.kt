@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.list_item_reference.view.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.extensions.preview
+import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.Reference
 
 

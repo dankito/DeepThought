@@ -9,7 +9,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_item_article_summary_item.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.model.extensions.entryPreview
-import net.dankito.deepthought.extensions.preview
+import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.ReadLaterArticle
 
 

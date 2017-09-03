@@ -5,7 +5,7 @@ import android.os.Build
 import android.support.v7.widget.ShareActionProvider
 import net.dankito.deepthought.model.extensions.abstractPlainText
 import net.dankito.deepthought.model.extensions.contentPlainText
-import net.dankito.deepthought.extensions.previewWithSeriesAndPublishingDate
+import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
 import net.dankito.utils.ui.IClipboardService

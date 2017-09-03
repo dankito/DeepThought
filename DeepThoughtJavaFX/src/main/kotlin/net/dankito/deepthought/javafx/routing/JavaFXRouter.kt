@@ -1,7 +1,7 @@
 package net.dankito.deepthought.javafx.routing
 
-import net.dankito.deepthought.extensions.preview
-import net.dankito.deepthought.extensions.previewWithSeriesAndPublishingDate
+import net.dankito.deepthought.model.extensions.preview
+import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryExtractionResultView
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryView

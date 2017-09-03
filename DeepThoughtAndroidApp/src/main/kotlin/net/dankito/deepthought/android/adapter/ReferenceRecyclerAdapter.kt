@@ -5,12 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.ReferenceViewHolder
-import net.dankito.deepthought.extensions.preview
+import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.ui.presenter.ReferencesListPresenter
 
 
-class ReferenceRecyclerAdapter(private val presenter: ReferencesListPresenter): ListRecyclerSwipeAdapter<Reference, ReferenceViewHolder>() {
+class ReferenceRecyclerAdapter(/*private val presenter: ReferencesListPresenter*/): ListRecyclerSwipeAdapter<Reference, ReferenceViewHolder>() {
 
     override fun getSwipeLayoutResourceId(position: Int) = 0
 

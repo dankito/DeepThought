@@ -1,7 +1,7 @@
 package net.dankito.deepthought.javafx.dialogs.readlaterarticle.model
 
 import javafx.beans.property.SimpleStringProperty
-import net.dankito.deepthought.extensions.previewWithSeriesAndPublishingDate
+import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.ReadLaterArticle
 import tornadofx.*
 

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.ReadLaterArticleViewHolder
-import net.dankito.deepthought.extensions.preview
+import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.presenter.ReadLaterArticleListPresenter

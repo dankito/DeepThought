@@ -1,9 +1,9 @@
 package net.dankito.service.search.writerandsearcher
 
-import net.dankito.deepthought.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.extensions.abstractPlainText
 import net.dankito.deepthought.model.extensions.contentPlainText
+import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.messages.EntryChanged
 import net.dankito.service.eventbus.EventBusPriorities

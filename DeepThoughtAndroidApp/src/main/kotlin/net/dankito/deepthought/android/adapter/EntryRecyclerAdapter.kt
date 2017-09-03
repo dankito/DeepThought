@@ -7,7 +7,7 @@ import android.widget.TextView
 import com.daimajia.swipe.SwipeLayout
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.EntryViewHolder
-import net.dankito.deepthought.extensions.previewWithSeriesAndPublishingDate
+import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.extensions.tagsPreview
 import net.dankito.deepthought.ui.presenter.EntriesListPresenterBase
