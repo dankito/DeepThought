@@ -8,9 +8,8 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_item_article_summary_item.view.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.model.extensions.entryPreview
-import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.ReadLaterArticle
+import net.dankito.deepthought.model.extensions.preview
 
 
 class ReadLaterArticlesAdapter : ListAdapter<ReadLaterArticle>() {
@@ -24,7 +23,7 @@ class ReadLaterArticlesAdapter : ListAdapter<ReadLaterArticle>() {
         view.txtTitle.visibility = if(referencePreview?.isBlank() ?: true) { GONE } else { VISIBLE }
         view.txtTitle.text = referencePreview
 
-        view.txtSummary.text = extractionResult.entry.entryPreview
+        view.txtSummary.text = extractionResult.entry.preview
 
         Picasso.with(view?.context)
                 .load(extractionResult.reference?.previewImageUrl)
