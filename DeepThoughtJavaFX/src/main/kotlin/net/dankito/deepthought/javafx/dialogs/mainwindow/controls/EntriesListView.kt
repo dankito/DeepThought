@@ -1,9 +1,8 @@
 package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 
 import javafx.scene.layout.Priority
-import net.dankito.deepthought.extensions.entryPreview
-import net.dankito.deepthought.extensions.referencePreview
-import net.dankito.deepthought.extensions.tagsPreview
+import net.dankito.deepthought.model.extensions.referencePreview
+import net.dankito.deepthought.model.extensions.tagsPreview
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
@@ -72,7 +71,7 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
         tableview<Entry>(controller.entries) {
             column(messages["entry.column.header.index"], Entry::entryIndex).prefWidth(46.0)
             column(messages["entry.column.header.reference"], Entry::referencePreview).weigthedWidth(4.0)
-            column(messages["entry.column.header.preview"], Entry::entryPreview).weigthedWidth(4.0)
+            column(messages["entry.column.header.preview"], Entry::preview).weigthedWidth(4.0)
             column(messages["entry.column.header.tags"], Entry::tagsPreview).weigthedWidth(2.0)
     //        column(messages["entry.column.header.created"], stringBinding(Entry::createdOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
     //        column(messages["entry.column.header.modified"], stringBinding(Entry::modifiedOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)

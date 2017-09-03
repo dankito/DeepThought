@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.ReadLaterArticleViewHolder
-import net.dankito.deepthought.extensions.entryPreview
 import net.dankito.deepthought.extensions.preview
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.model.util.EntryExtractionResult
@@ -50,7 +49,7 @@ class ReadLaterArticleRecyclerAdapter(private val presenter: ReadLaterArticleLis
         viewHolder.txtTitle.text = referencePreview
 
         viewHolder.txtSummary.visibility = View.VISIBLE
-        viewHolder.txtSummary.text = extractionResult.entry.entryPreview
+        viewHolder.txtSummary.text = extractionResult.entry.preview
 
         viewHolder.imgPreviewImage.visibility = View.VISIBLE
 
