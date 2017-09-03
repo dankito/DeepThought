@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#4CAF50</color>
-    <color name="colorPrimaryDark">#2E7D32</color>
-    <color name="colorAccent">#4CAF50</color>
+    <color name="colorPrimary">#359e7d</color>
+    <color name="colorPrimaryDark">#22685d</color>
+    <color name="colorAccent">#309c7c</color>
+
+    <color name="colorPrimaryGradientStart">#078176</color>
+    <color name="colorPrimaryGradientEnd">#309c7c</color>
 
     <color name="toolbar_background_color">@color/colorPrimary</color>
 
     <color name="black_semi_transparent">#B2000000</color>
 
     <color name="list_item_default_background">@android:color/background_light</color>
-    <color name="list_item_selected_background">#4d90fe</color>
+    <color name="list_item_selected_background">@color/colorAccent</color>
 
 
     <color name="alert_cancel_button_text_color">#888888</color>

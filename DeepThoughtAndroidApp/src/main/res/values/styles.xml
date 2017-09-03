@@ -21,7 +21,7 @@
 
     <style name="ToolbarStyle">
         <item name="android:layout_height">?attr/actionBarSize</item>
-        <item name="android:background">@color/toolbar_background_color</item>
+        <item name="android:background">@drawable/primary_color_gradient</item>
         <item name="android:popupTheme">@style/AppTheme.PopupOverlay</item>
         <item name="android:theme">@style/AppTheme.AppBarOverlay</item>
     </style>
