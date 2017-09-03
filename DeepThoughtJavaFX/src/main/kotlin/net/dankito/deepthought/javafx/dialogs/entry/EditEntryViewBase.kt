@@ -6,7 +6,7 @@ import javafx.scene.control.Control
 import javafx.scene.control.Label
 import javafx.scene.layout.Priority
 import javafx.scene.web.WebView
-import net.dankito.deepthought.extensions.preview
+import net.dankito.deepthought.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.model.Entry
@@ -198,7 +198,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
 
     protected fun showReferencePreview(reference: Reference?) {
-        this.referencePreview.value = reference?.preview ?: ""
+        this.referencePreview.value = reference?.previewWithSeriesAndPublishingDate ?: ""
     }
 
     protected fun showTagsPreview(tags: Collection<Tag>) {

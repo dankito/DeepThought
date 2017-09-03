@@ -1,7 +1,7 @@
 package net.dankito.deepthought.javafx.routing
 
 import net.dankito.deepthought.extensions.preview
-import net.dankito.deepthought.model.extensions.referencePreview
+import net.dankito.deepthought.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryExtractionResultView
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryView
@@ -60,7 +60,7 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
     override fun showEditEntryView(entry: Entry, field: EntryField?) {
         runLater {
             // TODO: set title when Reference is not set
-            mainWindowController.find(EditEntryView::class, mapOf(EditEntryView::entry to entry)).show(entry.referencePreview)
+            mainWindowController.find(EditEntryView::class, mapOf(EditEntryView::entry to entry)).show(entry.reference.previewWithSeriesAndPublishingDate)
         }
     }
 

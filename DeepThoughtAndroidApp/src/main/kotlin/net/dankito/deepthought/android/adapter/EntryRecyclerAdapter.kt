@@ -7,8 +7,8 @@ import android.widget.TextView
 import com.daimajia.swipe.SwipeLayout
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.EntryViewHolder
+import net.dankito.deepthought.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.extensions.referencePreview
 import net.dankito.deepthought.model.extensions.tagsPreview
 import net.dankito.deepthought.ui.presenter.EntriesListPresenterBase
 
@@ -48,7 +48,7 @@ class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): Lis
 
     private fun bindEntryToView(viewHolder: EntryViewHolder, entry: Entry) {
         viewHolder.txtReferencePreview.visibility = if (entry.hasReference()) View.VISIBLE else View.GONE
-        viewHolder.txtReferencePreview.text = entry.referencePreview
+        viewHolder.txtReferencePreview.text = entry.reference.previewWithSeriesAndPublishingDate
 
         viewHolder.txtEntryPreview.text = entry.preview
         setTxtEntryPreviewMaxLines(viewHolder.txtEntryPreview, entry)

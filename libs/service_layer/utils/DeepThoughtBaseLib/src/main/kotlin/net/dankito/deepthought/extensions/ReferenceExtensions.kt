@@ -19,6 +19,17 @@ val Reference?.preview: String
             preview = subTitle + ": " + preview
         }
 
+        return preview
+    }
+
+val Reference?.previewWithSeriesAndPublishingDate: String
+    get() {
+        if(this == null) {
+            return ""
+        }
+
+        var preview = this.preview
+
         var publisherAndDate = series?.title ?: ""
 
         publishingDate?.let { publisherAndDate += " " + PublishingDateFormat.format(it) }
