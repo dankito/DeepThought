@@ -11,7 +11,8 @@ import kotlinx.android.synthetic.main.activity_edit_reference.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
-import net.dankito.deepthought.android.adapter.ReferencesAdapter
+import net.dankito.deepthought.android.adapter.ReferenceRecyclerAdapter
+import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.PickDateDialog
 import net.dankito.deepthought.android.service.hideKeyboard
@@ -67,7 +68,7 @@ class EditReferenceActivity : BaseActivity() {
     private var currentlySetPublishingDate: Date? = null
 
 
-    private val existingReferencesSearchResultsAdapter = ReferencesAdapter()
+    private val existingReferencesSearchResultsAdapter: ReferenceRecyclerAdapter
 
     private var eventBusListener: EventBusListener? = null
 
@@ -76,6 +77,8 @@ class EditReferenceActivity : BaseActivity() {
         AppComponent.component.inject(this)
 
         presenter = EditReferencePresenter(referencePersister)
+
+        existingReferencesSearchResultsAdapter = ReferenceRecyclerAdapter()
     }
 
 
@@ -125,8 +128,9 @@ class EditReferenceActivity : BaseActivity() {
 
         btnCreateNewReference.setOnClickListener { createReference() } // TODO: check if previous reference contains unsaved changes
 
-        lstExistingReferencesSearchResults.adapter = existingReferencesSearchResultsAdapter
-        lstExistingReferencesSearchResults.setOnItemClickListener { _, _, position, _ -> existingReferenceSelected(existingReferencesSearchResultsAdapter.getItem(position)) }
+        rcyExistingReferencesSearchResults.addItemDecoration(HorizontalDividerItemDecoration(this))
+        rcyExistingReferencesSearchResults.adapter = existingReferencesSearchResultsAdapter
+        existingReferencesSearchResultsAdapter.itemClickListener = { item -> existingReferenceSelected(item) }
 
         edtxtFindReferences.addTextChangedListener(edtxtFindReferencesTextWatcher)
 
@@ -326,7 +330,7 @@ class EditReferenceActivity : BaseActivity() {
     }
 
     private fun retrievedExistingReferencesSearchResultsOnUiThread(searchResults: List<Reference>) {
-        existingReferencesSearchResultsAdapter.setItems(searchResults)
+        existingReferencesSearchResultsAdapter.items = searchResults
 
         showRecyclerViewExistingReferencesSearchResults()
     }
@@ -341,7 +345,7 @@ class EditReferenceActivity : BaseActivity() {
     }
 
     private fun showRecyclerViewExistingReferencesSearchResults() {
-        lstExistingReferencesSearchResults.visibility = View.VISIBLE
+        rcyExistingReferencesSearchResults.visibility = View.VISIBLE
         scrEditReference.visibility = View.GONE
 
         (lytSetEntryReferenceControls.layoutParams as? RelativeLayout.LayoutParams)?.let { layoutParams ->
@@ -350,7 +354,7 @@ class EditReferenceActivity : BaseActivity() {
     }
 
     private fun hideRecyclerViewExistingReferencesSearchResults() {
-        lstExistingReferencesSearchResults.visibility = View.GONE
+        rcyExistingReferencesSearchResults.visibility = View.GONE
         scrEditReference.visibility = View.VISIBLE
 
         (lytSetEntryReferenceControls.layoutParams as? RelativeLayout.LayoutParams)?.let { layoutParams ->

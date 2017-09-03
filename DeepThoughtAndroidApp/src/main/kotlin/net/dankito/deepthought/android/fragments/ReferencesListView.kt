@@ -53,7 +53,7 @@ class ReferencesListView: MainActivityTabFragment(R.menu.fragment_tab_references
 
         presenter = ReferencesListPresenter(this, router, searchEngine, referenceService, clipboardService, deleteEntityService)
 
-        adapter = ReferenceRecyclerAdapter(presenter)
+        adapter = ReferenceRecyclerAdapter()
     }
 
 
