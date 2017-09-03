@@ -1,9 +1,9 @@
 package net.dankito.service.search.writerandsearcher
 
-import net.dankito.deepthought.extensions.abstractPlainText
-import net.dankito.deepthought.extensions.contentPlainText
-import net.dankito.deepthought.extensions.preview
+import net.dankito.deepthought.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.ReadLaterArticle
+import net.dankito.deepthought.model.extensions.abstractPlainText
+import net.dankito.deepthought.model.extensions.contentPlainText
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.messages.ReadLaterArticleChanged
 import net.dankito.service.eventbus.EventBusPriorities
@@ -43,8 +43,9 @@ class ReadLaterArticleIndexWriterAndSearcher(readLaterArticleService: ReadLaterA
         }
 
         entity.entryExtractionResult.reference?.let { reference ->
-            if(reference.preview.isNotEmpty()) {
-                doc.add(Field(FieldName.ReadLaterArticleReference, reference.preview, TextField.TYPE_NOT_STORED))
+            val referencePreview = reference.previewWithSeriesAndPublishingDate
+            if(referencePreview.isNotEmpty()) {
+                doc.add(Field(FieldName.ReadLaterArticleReference, referencePreview, TextField.TYPE_NOT_STORED))
             }
         }
     }

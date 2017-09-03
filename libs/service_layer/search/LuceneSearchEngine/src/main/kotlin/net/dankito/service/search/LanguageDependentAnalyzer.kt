@@ -1,7 +1,7 @@
 package net.dankito.service.search
 
-import net.dankito.deepthought.extensions.abstractPlainText
-import net.dankito.deepthought.extensions.contentPlainText
+import net.dankito.deepthought.model.extensions.abstractPlainText
+import net.dankito.deepthought.model.extensions.contentPlainText
 import net.dankito.deepthought.model.Entry
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.language.Language

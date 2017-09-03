@@ -1,9 +1,9 @@
 package net.dankito.service.search.writerandsearcher
 
-import net.dankito.deepthought.extensions.abstractPlainText
-import net.dankito.deepthought.extensions.contentPlainText
-import net.dankito.deepthought.extensions.referencePreview
+import net.dankito.deepthought.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.extensions.abstractPlainText
+import net.dankito.deepthought.model.extensions.contentPlainText
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.messages.EntryChanged
 import net.dankito.service.eventbus.EventBusPriorities
@@ -57,7 +57,7 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
 
         val reference = entity.reference
         if(reference != null) {
-            doc.add(Field(FieldName.EntryReference, entity.referencePreview, TextField.TYPE_NOT_STORED))
+            doc.add(Field(FieldName.EntryReference, reference.previewWithSeriesAndPublishingDate, TextField.TYPE_NOT_STORED))
         }
         else {
             doc.add(StringField(FieldName.EntryNoReference, FieldValue.NoReferenceFieldValue, Field.Store.NO))
