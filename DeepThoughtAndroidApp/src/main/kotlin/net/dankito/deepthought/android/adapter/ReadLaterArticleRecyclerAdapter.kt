@@ -27,7 +27,7 @@ class ReadLaterArticleRecyclerAdapter(private val presenter: ReadLaterArticleLis
         val readLaterArticle = getItem(position)
         val extractionResult = readLaterArticle?.entryExtractionResult
 
-        if(readLaterArticle == null) {
+        if(extractionResult == null) {
             bindViewForNullValue(viewHolder)
         }
         else {
