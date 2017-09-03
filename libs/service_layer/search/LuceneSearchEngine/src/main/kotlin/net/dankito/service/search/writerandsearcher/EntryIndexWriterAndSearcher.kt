@@ -39,8 +39,11 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
 
 
     override fun addEntityFieldsToDocument(entity: Entry, doc: Document) {
-        doc.add(Field(FieldName.EntryAbstract, entity.abstractPlainText, TextField.TYPE_NOT_STORED))
-        doc.add(Field(FieldName.EntryContent, entity.contentPlainText, TextField.TYPE_NOT_STORED))
+        val contentPlainText = entity.contentPlainText
+        val abstractPlainText = entity.abstractPlainText
+
+        doc.add(Field(FieldName.EntryAbstract, abstractPlainText, TextField.TYPE_NOT_STORED))
+        doc.add(Field(FieldName.EntryContent, contentPlainText, TextField.TYPE_NOT_STORED))
 
         doc.add(LongField(FieldName.EntryIndex, entity.entryIndex, Field.Store.YES))
 
@@ -63,7 +66,7 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
             doc.add(StringField(FieldName.EntryNoReference, FieldValue.NoReferenceFieldValue, Field.Store.NO))
         }
 
-        defaultAnalyzer.setNextEntryToBeAnalyzed(entity)
+        defaultAnalyzer.setNextEntryToBeAnalyzed(entity, contentPlainText, abstractPlainText)
     }
 
 

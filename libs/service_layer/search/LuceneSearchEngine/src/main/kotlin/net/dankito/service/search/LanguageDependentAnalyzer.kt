@@ -1,7 +1,5 @@
 package net.dankito.service.search
 
-import net.dankito.deepthought.model.extensions.abstractPlainText
-import net.dankito.deepthought.model.extensions.contentPlainText
 import net.dankito.deepthought.model.Entry
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.language.Language
@@ -144,8 +142,8 @@ class LanguageDependentAnalyzer(private val languageDetector: ILanguageDetector)
      *
      * @param entry
      */
-    fun setNextEntryToBeAnalyzed(entry: Entry) {
-        currentLanguageAnalyzer = getAnalyzerForTextLanguage(entry.abstractPlainText + " " + entry.contentPlainText)
+    fun setNextEntryToBeAnalyzed(entry: Entry, contentPlainText: String, abstractPlainText: String) {
+        currentLanguageAnalyzer = getAnalyzerForTextLanguage(abstractPlainText + " " + contentPlainText)
     }
 
 }
