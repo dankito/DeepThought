@@ -1,7 +1,6 @@
 package net.dankito.deepthought.di
 
 import dagger.Component
-import net.dankito.deepthought.extensions.EntryPreviewCache
 import net.dankito.deepthought.extensions.ReferencePreviewCache
 import javax.inject.Singleton
 
@@ -14,8 +13,6 @@ interface BaseComponent {
         lateinit var component: BaseComponent
     }
 
-
-    fun inject(entryPreviewCache: EntryPreviewCache)
 
     fun inject(referencePreviewCache: ReferencePreviewCache)
 
