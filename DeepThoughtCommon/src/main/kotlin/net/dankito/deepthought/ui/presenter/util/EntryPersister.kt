@@ -53,7 +53,7 @@ class EntryPersister(private val entryService: EntryService, private val referen
             }
         }
 
-        val previousReference = reference
+        val previousReference = entry.reference
 
         entry.reference = reference
 
