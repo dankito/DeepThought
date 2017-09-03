@@ -315,14 +315,32 @@ class EditReferenceActivity : BaseActivity() {
 
 
     private fun searchExistingReferences(query: String) {
-        searchEngine.searchReferences(ReferenceSearch(query) {
-            runOnUiThread { retrievedExistingReferencesSearchResultsOnUiThread(it) }
-        })
+        if(query.isNullOrBlank()) {
+            hideRecyclerViewExistingReferencesSearchResults()
+        }
+        else {
+            searchEngine.searchReferences(ReferenceSearch(query) {
+                runOnUiThread { retrievedExistingReferencesSearchResultsOnUiThread(it) }
+            })
+        }
     }
 
     private fun retrievedExistingReferencesSearchResultsOnUiThread(searchResults: List<Reference>) {
         existingReferencesSearchResultsAdapter.setItems(searchResults)
 
+        showRecyclerViewExistingReferencesSearchResults()
+    }
+
+    private fun existingReferenceSelected(reference: Reference) {
+        edtxtFindReferences.hideKeyboard()
+
+        hideRecyclerViewExistingReferencesSearchResults()
+
+        // TODO: check if previous reference has unsaved changes
+        showReference(reference)
+    }
+
+    private fun showRecyclerViewExistingReferencesSearchResults() {
         lstExistingReferencesSearchResults.visibility = View.VISIBLE
         scrEditReference.visibility = View.GONE
 
@@ -331,18 +349,13 @@ class EditReferenceActivity : BaseActivity() {
         }
     }
 
-    private fun existingReferenceSelected(reference: Reference) {
-        edtxtFindReferences.hideKeyboard()
-
+    private fun hideRecyclerViewExistingReferencesSearchResults() {
         lstExistingReferencesSearchResults.visibility = View.GONE
         scrEditReference.visibility = View.VISIBLE
 
         (lytSetEntryReferenceControls.layoutParams as? RelativeLayout.LayoutParams)?.let { layoutParams ->
             layoutParams.addRule(RelativeLayout.ABOVE, 0)
         }
-
-        // TODO: check if previous reference has unsaved changes
-        showReference(reference)
     }
 
     private val edtxtFindReferencesTextWatcher = object : TextWatcher {
