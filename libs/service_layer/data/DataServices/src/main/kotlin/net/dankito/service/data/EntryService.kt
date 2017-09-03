@@ -1,6 +1,7 @@
 package net.dankito.service.data
 
 import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.extensions.entryPreview
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.event.EntityChangedNotifier
 
@@ -14,6 +15,18 @@ class EntryService(dataManager: DataManager, entityChangedNotifier: EntityChange
             entity.entryIndex = deepThought.increaseNextEntryIndex()
             dataManager.entityManager.updateEntity(deepThought) // update DeepThought in Db as otherwise new nextEntryIndex doesn't get saved
         }
+
+        updatePreview(entity)
+    }
+
+    override fun update(entity: Entry) {
+        updatePreview(entity)
+
+        super.update(entity)
+    }
+
+    private fun updatePreview(entity: Entry) {
+        entity.preview = entity.entryPreview
     }
 
 }
