@@ -5,6 +5,8 @@
     <color name="colorPrimaryDark">#2E7D32</color>
     <color name="colorAccent">#4CAF50</color>
 
+    <color name="toolbar_background_color">@color/colorPrimary</color>
+
     <color name="black_semi_transparent">#B2000000</color>
 
     <color name="list_item_default_background">@android:color/background_light</color>
