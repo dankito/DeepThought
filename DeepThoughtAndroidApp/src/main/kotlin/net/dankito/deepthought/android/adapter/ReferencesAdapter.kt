@@ -5,8 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.list_item_reference.view.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.extensions.preview
 
 
 class ReferencesAdapter() : ListAdapter<Reference>() {
@@ -16,7 +16,7 @@ class ReferencesAdapter() : ListAdapter<Reference>() {
 
         val reference = getItem(position)
 
-        view.txtReferencePreview.text = reference.preview
+        view.txtReferenceTitle.text = reference.preview
 
         return view
     }

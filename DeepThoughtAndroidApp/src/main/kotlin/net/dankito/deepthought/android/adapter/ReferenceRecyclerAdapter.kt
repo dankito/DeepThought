@@ -5,8 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.ReferenceViewHolder
-import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.extensions.preview
+import net.dankito.deepthought.model.extensions.seriesAndPublishingDatePreview
 
 
 class ReferenceRecyclerAdapter(/*private val presenter: ReferencesListPresenter*/): ListRecyclerSwipeAdapter<Reference, ReferenceViewHolder>() {
@@ -33,13 +34,17 @@ class ReferenceRecyclerAdapter(/*private val presenter: ReferencesListPresenter*
     }
 
     private fun bindViewForNullValue(viewHolder: ReferenceViewHolder) {
-        viewHolder.txtReferencePreview.visibility = View.INVISIBLE
+        viewHolder.txtReferenceTitle.visibility = View.INVISIBLE
+        viewHolder.txtReferenceSeriesAndPublishingDate.visibility = View.INVISIBLE
     }
 
     private fun bindTagToView(viewHolder: ReferenceViewHolder, reference: Reference) {
-        viewHolder.txtReferencePreview.visibility = View.VISIBLE
+        viewHolder.txtReferenceTitle.visibility = View.VISIBLE
+        viewHolder.txtReferenceTitle.text = reference.preview
 
-        viewHolder.txtReferencePreview.text = reference.preview
+        val seriesPreview = reference.seriesAndPublishingDatePreview
+        viewHolder.txtReferenceSeriesAndPublishingDate.text = seriesPreview
+        viewHolder.txtReferenceSeriesAndPublishingDate.visibility = if(seriesPreview.isNullOrBlank()) View.GONE else View.VISIBLE
 
     }
 

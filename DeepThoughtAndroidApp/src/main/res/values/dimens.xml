@@ -31,23 +31,16 @@
     <dimen name="list_item_entry_tags_margin_top">4dp</dimen>
     <dimen name="list_item_entry_button_width">80dp</dimen>
 
-    <dimen name="list_item_tag_height">36dp</dimen>
+    <dimen name="list_item_tag_height">44dp</dimen>
     <dimen name="list_item_tag_margin_left">12dp</dimen>
-    <dimen name="list_item_tag_margin_right">4dp</dimen>
     <dimen name="list_item_tag_filter_icon_width">26dp</dimen>
     <dimen name="list_item_tag_filter_icon_height">26dp</dimen>
     <dimen name="list_item_tag_filter_icon_margin_right">4dp</dimen>
-    <dimen name="list_item_tag_image_show_tag_entries_width">30dp</dimen>
-    <dimen name="list_item_tag_image_show_tag_entries_height">30dp</dimen>
 
     <dimen name="list_item_reference_height">72dp</dimen>
     <dimen name="list_item_reference_margin_left">12dp</dimen>
     <dimen name="list_item_reference_margin_right">4dp</dimen>
-    <dimen name="list_item_reference_preview_text_size">16sp</dimen>
-    <dimen name="list_item_reference_image_edit_reference_width">30dp</dimen>
-    <dimen name="list_item_reference_image_edit_reference_height">30dp</dimen>
-    <dimen name="list_item_reference_image_show_reference_entries_width">30dp</dimen>
-    <dimen name="list_item_reference_image_show_reference_entries_height">30dp</dimen>
+    <dimen name="list_item_reference_series_preview_margin_top">2dp</dimen>
 
     <dimen name="list_item_article_summary_extractor_height">70dp</dimen>
     <dimen name="list_item_article_summary_extractor_margin">4dp</dimen>
