@@ -55,9 +55,9 @@ open class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEn
     }
 
     private fun preloadItems(startIndex: Int) {
-        val maxItemsToPreload = if(hits.size < startIndex + MaxItemsToPreload) hits.size - 1 else startIndex + MaxItemsToPreload
+        val maxItemsToPreload = if(hits.size < startIndex + MaxItemsToPreload) hits.size else startIndex + MaxItemsToPreload
 
-        for(i in startIndex..maxItemsToPreload) {
+        for(i in startIndex..maxItemsToPreload - 1) {
             super.retrieveEntityFromDatabaseAndCache(i)
         }
     }
