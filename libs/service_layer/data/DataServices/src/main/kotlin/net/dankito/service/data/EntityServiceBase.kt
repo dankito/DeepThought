@@ -24,7 +24,7 @@ abstract class EntityServiceBase<T : BaseEntity>(val entityClass: Class<T>, val 
     }
 
 
-    fun persist(entity: T) {
+    open fun persist(entity: T) {
         synchronized(this) {
             onPrePersist(entity)
 
@@ -44,13 +44,13 @@ abstract class EntityServiceBase<T : BaseEntity>(val entityClass: Class<T>, val 
         return entityManager.getEntityById(entityClass, id)
     }
 
-    fun update(entity: T) {
+    open fun update(entity: T) {
         entityManager.updateEntity(entity)
 
         callEntitiesUpdatedListeners(entity, EntityChangeType.Updated)
     }
 
-    fun delete(entity: T) {
+    open fun delete(entity: T) {
         callEntitiesUpdatedListeners(entity, EntityChangeType.PreDelete) // as after deleting entity from db entity's id is null -> for services still needing entity's id call PreDelete
 
         entityManager.deleteEntity(entity)
