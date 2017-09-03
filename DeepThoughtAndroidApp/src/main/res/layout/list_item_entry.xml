@@ -38,21 +38,22 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"
-                    android:gravity="center_vertical"
+                  android:gravity="center_vertical"
         >
 
         <TextView
             android:id="@+id/txtReferencePreview"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/list_item_entry_reference_preview_height"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/list_item_entry_reference_preview_min_height"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="@dimen/list_item_entry_reference_preview_margin_bottom"
-            android:singleLine="true"
-            android:maxLines="1"
+            android:maxLines="2"
+            android:ellipsize="end"
             style="@style/Header1Style"
             />
 
