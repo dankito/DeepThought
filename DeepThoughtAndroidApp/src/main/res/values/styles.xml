@@ -108,6 +108,8 @@
         <item name="android:layout_alignParentEnd">true</item>
         <item name="android:layout_centerInParent">true</item>
         <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_marginLeft">@dimen/chevron_right_margin_left</item>
+        <item name="android:layout_marginStart">@dimen/chevron_right_margin_left</item>
         <item name="android:textSize">@dimen/chevron_right_text_size</item>
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:text">❯</item>

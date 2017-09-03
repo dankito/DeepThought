@@ -17,6 +17,7 @@
 
     <dimen name="chevron_right_width">15dp</dimen>
     <dimen name="chevron_right_text_size">20sp</dimen>
+    <dimen name="chevron_right_margin_left">8dp</dimen>
 
     <dimen name="list_item_entry_height">118dp</dimen>
     <dimen name="list_item_entry_padding">8dp</dimen>
