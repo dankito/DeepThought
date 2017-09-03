@@ -66,9 +66,11 @@ class EntryPersister(private val entryService: EntryService, private val referen
         }
 
 
-        reference?.let { referencePersister.saveReference(reference) }
+        if(reference != previousReference) { // only update reference if it really changed
+            reference?.let { referencePersister.saveReference(reference) }
 
-        previousReference?.let { referencePersister.saveReference(it) }
+            previousReference?.let { referencePersister.saveReference(it) }
+        }
 
 
         tags.forEach { tagService.update(it) } // TODO: check if tag needs an update
