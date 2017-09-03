@@ -4,6 +4,8 @@ import net.dankito.deepthought.model.Entry
 import org.jsoup.Jsoup
 
 
+private const val MaxPreviewLength = 300
+
 
 val Entry.abstractPlainText: String
     get() {
@@ -21,18 +23,16 @@ val Entry.entryPreview: String
     get() {
         var preview = this.abstractPlainText
 
-        if(preview.length < 300) {
+        if(preview.length < MaxPreviewLength) {
             if(preview.isNotEmpty()) {
                 preview += " "
             }
 
-            val contentPlainText = this.contentPlainText
-            var maxContentLength = 300 - preview.length
-            if(maxContentLength > contentPlainText.length) {
-                maxContentLength = contentPlainText.length
-            }
+            preview += this.contentPlainText
+        }
 
-            preview += contentPlainText.substring(0, maxContentLength)
+        if(preview.length > MaxPreviewLength) {
+            preview = preview.substring(0, MaxPreviewLength) + "..."
         }
 
         return preview
