@@ -56,6 +56,9 @@ data class Entry(
     @Column(name = TableConfig.EntryIndicationColumnName)
     var indication: String = ""
 
+    @Column(name = TableConfig.EntryPreviewColumnName)
+    var preview: String = ""
+
 
     private constructor() : this("")
 

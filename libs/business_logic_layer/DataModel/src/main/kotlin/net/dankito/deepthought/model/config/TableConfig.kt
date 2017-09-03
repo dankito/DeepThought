@@ -74,6 +74,7 @@ class TableConfig {
         const val EntryContentColumnName = "content"
         const val EntryReferenceJoinColumnName = "reference_id"
         const val EntryIndicationColumnName = "indication"
+        const val EntryPreviewColumnName = "preview"
 
         const val EntryEntryIndexColumnName = "entry_index"
 
