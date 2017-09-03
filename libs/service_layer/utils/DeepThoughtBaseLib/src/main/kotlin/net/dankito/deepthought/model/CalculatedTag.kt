@@ -16,7 +16,7 @@ abstract class CalculatedTag(name: String, protected val searchEngine: ISearchEn
 
 
     init {
-        searchEngine.addInitializationListener { retrieveAndUpdateEntriesAsync(false) }
+        searchEngine.addInitializationListener { retrieveAndUpdateEntriesAsync(true) }
 
         eventBus.register(eventBusListener)
     }

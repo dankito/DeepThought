@@ -1,5 +1,7 @@
 package net.dankito.deepthought.ui.presenter
 
+import net.dankito.deepthought.model.AllEntriesCalculatedTag
+import net.dankito.deepthought.model.EntriesWithoutTagsCalculatedTag
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.tags.TagSearchResultState
@@ -126,6 +128,8 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
         fun entityChanged(entitiesOfTypeChanged: EntitiesOfTypeChanged) {
             when(entitiesOfTypeChanged.entityType) {
                 Tag::class.java -> searchTags()
+                AllEntriesCalculatedTag::class.java -> tagsListView.updateDisplayedTags()
+                EntriesWithoutTagsCalculatedTag::class.java -> tagsListView.updateDisplayedTags()
                 Entry::class.java -> tagsListView.updateDisplayedTags() // count entries on tag(s) may have changed
             }
         }
