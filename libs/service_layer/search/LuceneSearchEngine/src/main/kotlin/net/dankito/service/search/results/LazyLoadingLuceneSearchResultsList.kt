@@ -14,14 +14,15 @@ open class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEn
     : LazyLoadingList<T>(entityManager, resultType) {
 
     companion object {
-        private val MaxItemsToPreload = 6
+        private val MaxItemsToPreloadOnStart = 6
+        private val MaxItemsToPreloadWhileScrolling = 20
     }
 
 
     init {
         if(hits.size > 0) {
             super.retrieveEntityFromDatabaseAndCache(0) // load first item directly as otherwise UI may already tries to display it while it's not fully loaded yet (and therefore not all data gets displayed)
-            preloadItemsAsync(1) // preload items that for sure gonna get displayed off the UI thread
+            preloadItemsAsync(1, MaxItemsToPreloadOnStart) // preload items that for sure gonna get displayed off the UI thread
         }
     }
 
@@ -44,23 +45,23 @@ open class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEn
      * Provides a smoother scrolling experience.
      */
     override fun retrieveEntityFromDatabaseAndCache(index: Int): T? {
-        if(index > MaxItemsToPreload) { // MaxItemsToPreload: that many items get already loaded when initializing LazyLoadingList
-            preloadItemsAsync(index + 1)
+        if(index > MaxItemsToPreloadOnStart) { // MaxItemsToPreload: that many items get already loaded when initializing LazyLoadingList
+            preloadItemsAsync(index + 1, MaxItemsToPreloadWhileScrolling)
         }
 
         return super.retrieveEntityFromDatabaseAndCache(index)
     }
 
-    private fun preloadItemsAsync(startIndex: Int) {
+    private fun preloadItemsAsync(startIndex: Int, maxItemsToPreload: Int) {
         threadPool.runAsync {
-            preloadItems(startIndex)
+            preloadItems(startIndex, maxItemsToPreload)
         }
     }
 
-    private fun preloadItems(startIndex: Int) {
-        val maxItemsToPreload = if(hits.size < startIndex + MaxItemsToPreload) hits.size else startIndex + MaxItemsToPreload
+    private fun preloadItems(startIndex: Int, maxItemsToPreload: Int) {
+        val maxIndexToPreload = if(hits.size < startIndex + maxItemsToPreload) hits.size else startIndex + maxItemsToPreload
 
-        for(i in startIndex..maxItemsToPreload - 1) {
+        for(i in startIndex..maxIndexToPreload - 1) {
             super.retrieveEntityFromDatabaseAndCache(i)
         }
     }
