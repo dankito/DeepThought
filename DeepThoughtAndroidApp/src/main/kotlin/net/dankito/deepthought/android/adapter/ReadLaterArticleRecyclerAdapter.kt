@@ -45,7 +45,7 @@ class ReadLaterArticleRecyclerAdapter(private val presenter: ReadLaterArticleLis
     private fun bindTagToView(viewHolder: ReadLaterArticleViewHolder, extractionResult: EntryExtractionResult) {
         val referencePreview = extractionResult.reference?.preview
 
-        viewHolder.txtTitle.visibility = View.VISIBLE
+        viewHolder.txtTitle.visibility = if(referencePreview.isNullOrBlank()) View.GONE else View.VISIBLE
         viewHolder.txtTitle.text = referencePreview
 
         viewHolder.txtSummary.visibility = View.VISIBLE
