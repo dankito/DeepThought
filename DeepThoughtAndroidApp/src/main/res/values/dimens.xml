@@ -15,9 +15,12 @@
 
     <dimen name="fragment_tab_entries_onboarding_left_right_margin">20dp</dimen>
 
-    <dimen name="list_item_entry_height">94dp</dimen>
+    <dimen name="chevron_right_width">15dp</dimen>
+    <dimen name="chevron_right_text_size">20sp</dimen>
+
+    <dimen name="list_item_entry_height">118dp</dimen>
     <dimen name="list_item_entry_padding">8dp</dimen>
-    <dimen name="list_item_entry_reference_preview_height">18dp</dimen>
+    <dimen name="list_item_entry_reference_preview_min_height">18dp</dimen>
     <dimen name="list_item_entry_reference_preview_text_size">11sp</dimen>
     <dimen name="list_item_entry_reference_preview_margin_bottom">6dp</dimen>
     <dimen name="list_item_entry_preview_height">50dp</dimen>
