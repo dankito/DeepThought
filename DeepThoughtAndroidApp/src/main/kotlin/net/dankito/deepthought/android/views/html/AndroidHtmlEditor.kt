@@ -103,6 +103,8 @@ class AndroidHtmlEditor : WebView, IJavaScriptBridge, IJavaScriptExecutor {
         htmlEditor.getHtmlEditorPath { path ->
             activityTracker.currentActivity?.runOnUiThread { loadUrl(path) }
         }
+
+        requestFocus()
     }
 
 

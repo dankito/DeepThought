@@ -18,6 +18,7 @@ function initializeCKEditor() {
 	   	width : '100%',
 	   	height : '100%',
 	   	allowedContent: true,
+	   	startupFocus : true,
 
         on: {
 			pluginsLoaded: function() {
@@ -33,6 +34,7 @@ function initializeCKEditor() {
 		}
 
 		resizeEditorToFitWindow();
+		editor.focus();
 
 		<!--$(editor.editable).click( function(evt) {-->
 			<!--if(typeof app !== 'undefined') {-->
@@ -49,6 +51,9 @@ function initializeCKEditor() {
 				if(resetUndoStack == true) {
 					editor.resetUndo();
 				}
+
+                editor.focus();
+
 				return;
 			}
 

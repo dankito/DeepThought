@@ -77,6 +77,8 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
 
         htmlEditor.layoutParams = contentEditorParams
 
+        htmlEditor.requestFocus()
+
         htmlToSetOnStart?.let {
             htmlEditor.setHtml(it, true)
         }
