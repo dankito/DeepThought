@@ -25,17 +25,17 @@ class DeleteEntityService(private val entryService: EntryService, private val ta
             referenceService.update(reference)
         }
 
-        ArrayList(entry.tags).forEach { tag ->
+        ArrayList(entry.tags).filterNotNull().filter { it.id != null }.forEach { tag ->
             entry.removeTag(tag)
             tagService.update(tag)
         }
 
-        ArrayList(entry.notes).forEach { note ->
+        ArrayList(entry.notes).filterNotNull().filter { it.id != null }.forEach { note ->
             entry.removeNote(note)
             entryService.entityManager.updateEntity(note)
         }
 
-        ArrayList(entry.attachedFiles).forEach { file ->
+        ArrayList(entry.attachedFiles).filterNotNull().filter { it.id != null }.forEach { file ->
             entry.removeAttachedFile(file)
             entryService.entityManager.updateEntity(file)
         }
