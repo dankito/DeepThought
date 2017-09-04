@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import com.daimajia.swipe.SwipeLayout
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.TagViewHolder
 import net.dankito.deepthought.model.CalculatedTag
@@ -14,7 +15,7 @@ import net.dankito.deepthought.ui.tags.TagSearchResultState
 
 class TagRecyclerAdapter(private val presenter: TagsListPresenter): ListRecyclerSwipeAdapter<Tag, TagViewHolder>() {
 
-    override fun getSwipeLayoutResourceId(position: Int) = 0
+    override fun getSwipeLayoutResourceId(position: Int) = R.id.tagSwipeLayout
 
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TagViewHolder {
@@ -33,12 +34,18 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): ListRecycler
             bindTagToView(viewHolder, tag)
             itemBound(viewHolder, tag, position)
         }
+
+        (viewHolder.itemView as? SwipeLayout)?.isSwipeEnabled = tag is CalculatedTag == false && tag != null
     }
 
     private fun bindViewForNullValue(viewHolder: TagViewHolder) {
         viewHolder.txtTagDisplayText.visibility = View.INVISIBLE
 
         viewHolder.imgFilter.visibility = View.INVISIBLE
+
+        viewHolder.btnEditTag.setOnClickListener {  }
+
+        viewHolder.btnDeleteTag.setOnClickListener {  }
 
         viewHolder.itemView.setBackgroundResource(getDefaultBackgroundColor())
     }
@@ -55,6 +62,10 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): ListRecycler
 
         setFilterIconDependingOnTagState(tag, viewHolder.imgFilter)
         viewHolder.imgFilter.setOnClickListener { presenter.toggleFilterTag(tag) }
+
+        viewHolder.btnEditTag.setOnClickListener { presenter.editTag(tag) }
+
+        viewHolder.btnDeleteTag.setOnClickListener { presenter.deleteTagAsync(tag) }
 
         setBackgroundColor(viewHolder.itemView, tag)
     }

@@ -1,45 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/list_item_tag_height"
+<com.daimajia.swipe.SwipeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tagSwipeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/list_item_tag_height"
 >
 
-    <!-- Without setting focusable to false ImageView would receive focus and list item would therefore not be clickable (but receives on click events anyway) -->
-    <ImageView
-        android:id="@+id/imgFilter"
-        android:layout_width="@dimen/list_item_tag_filter_icon_width"
-        android:layout_height="@dimen/list_item_tag_filter_icon_height"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="@dimen/list_item_tag_margin_left"
-        android:layout_marginStart="@dimen/list_item_tag_margin_left"
-        android:layout_marginRight="@dimen/list_item_tag_filter_icon_margin_right"
-        android:layout_marginEnd="@dimen/list_item_tag_filter_icon_margin_right"
-        android:focusable="false"
-        android:background="@drawable/filter"
-    />
+    <!-- Bottom View Start (the view that gets displayed when the user swipes from right to left. for explanation see https://github.com/daimajia/AndroidSwipeLayout/wiki/usage) -->
 
-    <TextView
-        android:id="@+id/txtTagDisplayText"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/imgFilter"
-        android:layout_toEndOf="@+id/imgFilter"
-        android:layout_toLeftOf="@+id/txtChevronRight"
-        android:layout_toStartOf="@+id/txtChevronRight"
-        android:layout_marginLeft="@dimen/list_item_tag_margin_left"
-        android:layout_marginStart="@dimen/list_item_tag_margin_left"
-        android:layout_centerVertical="true"
-        android:gravity="center_vertical"
-        style="@android:style/TextAppearance.Medium"
-    />
+        android:orientation="horizontal"
+    >
 
-    <TextView
-        android:id="@+id/txtChevronRight"
-        style="@style/ChevronRightStyle"
-    />
+        <ImageButton
+            android:id="@+id/btnEditTag"
+            android:layout_width="@dimen/list_item_tag_button_width"
+            android:layout_height="match_parent"
+            android:src="@android:drawable/ic_menu_edit"
+            android:scaleType="fitCenter"
+        />
 
-</RelativeLayout>
+        <ImageButton
+            android:id="@+id/btnDeleteTag"
+            android:layout_width="@dimen/list_item_tag_button_width"
+            android:layout_height="match_parent"
+            android:src="@android:drawable/ic_menu_delete"
+            android:scaleType="fitXY"
+        />
+
+    </LinearLayout>
+
+
+    <!-- Surface View Start (the view that's displayed by default) -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical">
+
+        <!-- Without setting focusable to false ImageView would receive focus and list item would therefore not be clickable (but receives on click events anyway) -->
+        <ImageView
+            android:id="@+id/imgFilter"
+            android:layout_width="@dimen/list_item_tag_filter_icon_width"
+            android:layout_height="@dimen/list_item_tag_filter_icon_height"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="@dimen/list_item_tag_margin_left"
+            android:layout_marginStart="@dimen/list_item_tag_margin_left"
+            android:layout_marginRight="@dimen/list_item_tag_filter_icon_margin_right"
+            android:layout_marginEnd="@dimen/list_item_tag_filter_icon_margin_right"
+            android:focusable="false"
+            android:background="@drawable/filter"
+        />
+
+        <TextView
+            android:id="@+id/txtTagDisplayText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/imgFilter"
+            android:layout_toEndOf="@+id/imgFilter"
+            android:layout_toLeftOf="@+id/txtChevronRight"
+            android:layout_toStartOf="@+id/txtChevronRight"
+            android:layout_marginLeft="@dimen/list_item_tag_margin_left"
+            android:layout_marginStart="@dimen/list_item_tag_margin_left"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            style="@android:style/TextAppearance.Medium"
+        />
+
+        <TextView
+            android:id="@+id/txtChevronRight"
+            style="@style/ChevronRightStyle"
+        />
+
+    </RelativeLayout>
+
+</com.daimajia.swipe.SwipeLayout>
