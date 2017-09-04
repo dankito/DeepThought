@@ -14,9 +14,9 @@ import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class ReferencesListPresenter(private var view: IReferencesListView, private var router: IRouter, searchEngine: ISearchEngine,
+class ReferencesListPresenter(private var view: IReferencesListView, router: IRouter, searchEngine: ISearchEngine,
                               clipboardService: IClipboardService, deleteEntityService: DeleteEntityService)
-    : ReferencesPresenterBase(searchEngine, clipboardService, deleteEntityService), IMainViewSectionPresenter {
+    : ReferencesPresenterBase(searchEngine, router, clipboardService, deleteEntityService), IMainViewSectionPresenter {
 
 
     @Inject
@@ -49,9 +49,6 @@ class ReferencesListPresenter(private var view: IReferencesListView, private var
     }
 
 
-    fun editReference(reference: Reference) {
-        router.showEditReferenceView(reference)
-    }
 
     fun showEntriesForReference(reference: Reference) {
         router.showEntriesForReference(reference)

@@ -17,6 +17,7 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.PickDateDialog
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditReferencePresenter
 import net.dankito.deepthought.ui.presenter.util.ReferencePersister
 import net.dankito.service.data.DeleteEntityService
@@ -57,6 +58,9 @@ class EditReferenceActivity : BaseActivity() {
     protected lateinit var searchEngine: ISearchEngine
 
     @Inject
+    protected lateinit var router: IRouter
+
+    @Inject
     protected lateinit var clipboardService: IClipboardService
 
     @Inject
@@ -84,7 +88,7 @@ class EditReferenceActivity : BaseActivity() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = EditReferencePresenter(searchEngine, clipboardService, deleteEntityService, referencePersister)
+        presenter = EditReferencePresenter(searchEngine, router, clipboardService, deleteEntityService, referencePersister)
 
         existingReferencesSearchResultsAdapter = ReferenceRecyclerAdapter()
     }
