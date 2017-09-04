@@ -23,6 +23,10 @@
     <string name="action_delete">Delete</string>
 
     <string name="search_title">Search</string>
+    <plurals name="search_count_results">
+        <item quantity="one">%d result</item>
+        <item quantity="other">%d results</item>
+    </plurals>
     <string name="search_hint_entries">Search Entries</string>
     <string name="search_hint_tags">Search Tags</string>
     <string name="search_hint_references">Search References</string>

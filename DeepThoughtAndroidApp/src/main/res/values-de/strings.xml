@@ -21,6 +21,10 @@
     <string name="action_delete">Löschen</string>
 
     <string name="search_title">Suche</string>
+    <plurals name="search_count_results">
+        <item quantity="one">%d Ergebnis</item>
+        <item quantity="other">%d Ergebnisse</item>
+    </plurals>
     <string name="search_hint_entries">Einträge finden</string>
     <string name="search_hint_tags">Schlagworte finden</string>
     <string name="search_hint_references">Quellen finden</string>
