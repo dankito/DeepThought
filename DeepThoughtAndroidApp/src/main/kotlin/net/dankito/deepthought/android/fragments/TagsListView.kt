@@ -112,7 +112,7 @@ class TagsListView : MainActivityTabFragment(R.menu.fragment_tab_tags_menu, R.st
                     return true
                 }
                 R.id.mnDeleteTag -> {
-                    presenter.deleteTag(selectedTag)
+                    presenter.deleteTagAsync(selectedTag)
                     return true
                 }
                 else -> return super.onContextItemSelected(item)

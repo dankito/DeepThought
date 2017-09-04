@@ -202,7 +202,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
             }
         }
 
-        presenter.deleteTag(tag)
+        presenter.deleteTagAsync(tag)
     }
 
 

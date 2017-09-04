@@ -17,6 +17,7 @@ import net.dankito.service.search.specific.FilteredTagsSearch
 import net.dankito.service.search.specific.FilteredTagsSearchResult
 import net.dankito.service.search.specific.TagsSearch
 import net.dankito.service.search.specific.TagsSearchResults
+import net.dankito.utils.IThreadPool
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IDialogService
 import net.engio.mbassy.listener.Handler
@@ -40,6 +41,9 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
 
     @Inject
     protected lateinit var localization: Localization
+
+    @Inject
+    protected lateinit var threadPool: IThreadPool
 
 
     private val eventBusListener = EventBusListener()
@@ -115,6 +119,10 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
                 tagService.update(tag)
             }
         }
+    }
+
+    fun deleteTagAsync(tag: Tag) {
+        threadPool.runAsync { deleteTag(tag) }
     }
 
     fun deleteTag(tag: Tag) {
