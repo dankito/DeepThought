@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.text.Html
 import android.view.*
+import android.widget.LinearLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
 import net.dankito.deepthought.android.R
@@ -32,6 +33,8 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
     private var entitiesToCheckForOnboardingOnViewCreation: List<BaseEntity>? = null
 
     private var searchView: SearchView? = null
+
+    private var searchResultTextView: TextView? = null
 
 
     protected open fun setupUI(rootView: View?) { }
@@ -127,6 +130,10 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
         else {
             hideOnboardingView()
         }
+
+        if(searchView?.isIconified == false) { // retrieved entities due to entered text in searchView
+            showCountSearchResults(entities)
+        }
     }
 
     protected open fun shouldShowOnboardingView(entities: List<BaseEntity>, searchTerm: String): Boolean {
@@ -153,6 +160,38 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
         
         txtOnboardingText?.let { txtOnboardingText ->
             txtOnboardingText.visibility = View.GONE
+        }
+    }
+
+    private fun showCountSearchResults(entities: List<BaseEntity>) {
+        searchView?.let { searchView ->
+            if(searchResultTextView == null) {
+                addSearchResultTextViewToSearchView(searchView)
+            }
+
+            searchResultTextView?.text = resources.getQuantityString(R.plurals.search_count_results, entities.size, entities.size)
+        }
+    }
+
+    private fun addSearchResultTextViewToSearchView(searchView: SearchView) {
+        searchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn)?.let { searchCloseButton ->
+            (searchCloseButton.parent as? LinearLayout)?.let { searchLayout ->
+                val index = searchLayout.indexOfChild(searchCloseButton)
+
+                searchResultTextView = TextView(searchLayout.context)
+
+                searchResultTextView?.setLines(1)
+                searchResultTextView?.gravity = Gravity.CENTER_VERTICAL
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    searchResultTextView?.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+                }
+
+                val layoutParams = searchCloseButton.layoutParams
+                (layoutParams as? LinearLayout.LayoutParams)?.gravity = Gravity.CENTER_VERTICAL
+                layoutParams?.height = ViewGroup.LayoutParams.WRAP_CONTENT
+
+                searchLayout.addView(searchResultTextView, index, layoutParams)
+            }
         }
     }
 
