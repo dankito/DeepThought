@@ -8,11 +8,12 @@
     android:layout_height="match_parent"
     tools:context="net.dankito.deepthought.android.activities.ArticleSummaryActivity">
 
-    <ListView
-        android:id="@+id/lstArticleSummaryItems"
+    <net.dankito.deepthought.android.views.FullScreenRecyclerView
+        android:id="@+id/rcyArticleSummaryItems"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="?attr/actionBarSize"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         app:layout_behavior="@string/move_upward_behaviour"
     />
 

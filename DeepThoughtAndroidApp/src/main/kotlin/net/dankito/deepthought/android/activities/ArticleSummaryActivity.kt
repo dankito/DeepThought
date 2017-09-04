@@ -5,14 +5,14 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.util.TypedValue
 import android.view.*
-import android.widget.AbsListView
-import android.widget.ListView
 import kotlinx.android.synthetic.main.activity_article_summary.*
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.adapter.ArticleSummaryAdapter
+import net.dankito.deepthought.android.adapter.ArticleSummaryItemRecyclerAdapter
+import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.article.ArticleExtractorManager
@@ -69,7 +69,9 @@ class ArticleSummaryActivity : BaseActivity() {
 
     private var extractorConfig: ArticleSummaryExtractorConfig? = null
 
-    private val adapter = ArticleSummaryAdapter()
+    private val adapter: ArticleSummaryItemRecyclerAdapter
+
+    private var recyclerViewMarginBottom: Int = -1
 
     private val selectedArticlesInContextualActionMode = LinkedHashSet<ArticleSummaryItem>()
 
@@ -80,6 +82,8 @@ class ArticleSummaryActivity : BaseActivity() {
         AppComponent.component.inject(this)
 
         presenter = ArticleSummaryPresenter(entryPersister, readLaterArticleService, articleExtractorManager, router, dialogService)
+
+        adapter = ArticleSummaryItemRecyclerAdapter(this, presenter)
     }
 
 
@@ -133,10 +137,69 @@ class ArticleSummaryActivity : BaseActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        lstArticleSummaryItems.adapter = adapter
-        lstArticleSummaryItems.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
-        lstArticleSummaryItems.setMultiChoiceModeListener(lstArticleSummaryItemsMultiChoiceListener)
-        lstArticleSummaryItems.setOnItemClickListener { _, _, position, _ -> articleClicked(adapter.getItem(position)) }
+        rcyArticleSummaryItems.addItemDecoration(HorizontalDividerItemDecoration(this))
+        rcyArticleSummaryItems.enterFullscreenModeListener = { recyclerViewEnteredFullscreenMode() }
+        rcyArticleSummaryItems.leaveFullscreenModeListener = { recyclerViewLeftFullscreenMode() }
+
+        rcyArticleSummaryItems.adapter = adapter
+        adapter.itemClickListener = { item -> articleClicked(item) }
+        adapter.actionItemClickListener = { mode, actionItem, selectedItems -> actionItemSelected(mode, actionItem, selectedItems) }
+    }
+
+    private fun recyclerViewEnteredFullscreenMode() {
+        if(adapter.isInMultiSelectMode()) {
+            findViewById(android.support.v7.appcompat.R.id.action_mode_bar)?.visibility = View.GONE
+        }
+        else {
+            findViewById(R.id.toolbar)?.visibility = View.GONE
+        }
+
+        recyclerViewMarginBottom = (rcyArticleSummaryItems.layoutParams as? ViewGroup.MarginLayoutParams)?.bottomMargin ?: -1
+
+        (rcyArticleSummaryItems.layoutParams as? ViewGroup.MarginLayoutParams)?.let { layoutParams ->
+            layoutParams.bottomMargin = 0
+            rcyArticleSummaryItems.layoutParams = layoutParams
+        }
+    }
+
+    private fun recyclerViewLeftFullscreenMode() {
+        if(adapter.isInMultiSelectMode()) {
+            findViewById(android.support.v7.appcompat.R.id.action_mode_bar)?.visibility = View.VISIBLE
+        }
+        else {
+            findViewById(R.id.toolbar)?.visibility = View.VISIBLE
+        }
+
+        if(recyclerViewMarginBottom >= 0) {
+            (rcyArticleSummaryItems.layoutParams as? ViewGroup.MarginLayoutParams)?.let { layoutParams ->
+                layoutParams.bottomMargin = recyclerViewMarginBottom
+                rcyArticleSummaryItems.layoutParams = layoutParams
+            }
+        }
+    }
+
+    private fun actionItemSelected(mode: ActionMode, actionItem: MenuItem, selectedItems: Set<ArticleSummaryItem>): Boolean {
+        when(actionItem.itemId) {
+            R.id.mnViewArticle -> {
+                presenter.getAndShowArticlesAsync(selectedItems) {
+                    runOnUiThread { mode.finish() }
+                }
+                return true
+            }
+            R.id.mnSaveArticleForLaterReading -> {
+                presenter.getAndSaveArticlesForLaterReadingAsync(selectedItems) {
+                    runOnUiThread { mode.finish() }
+                }
+                return true
+            }
+            R.id.mnSaveArticle -> {
+                presenter.getAndSaveArticlesAsync(selectedItems) {
+                    runOnUiThread { mode.finish() }
+                }
+                return true
+            }
+            else -> return false
+        }
     }
 
 
@@ -234,96 +297,16 @@ class ArticleSummaryActivity : BaseActivity() {
         mnLoadMore?.isEnabled = true // disable so that button cannot be pressed till loadMoreItems() result is received
         mnLoadMore?.isVisible = summary.canLoadMoreItems
 
-        adapter.setArticleSummary(summary)
+        adapter.items = summary.articles
 
         if(summary.indexOfAddedItems > 0) {
-            val centerOffset = (lstArticleSummaryItems.height - resources.getDimension(R.dimen.list_item_article_summary_item_min_height)) / 2
-            lstArticleSummaryItems.smoothScrollToPositionFromTop(summary.indexOfAddedItems, centerOffset.toInt())
+            val centerOffset = (rcyArticleSummaryItems.height - resources.getDimension(R.dimen.list_item_article_summary_item_min_height)) / 2
+            (rcyArticleSummaryItems.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(summary.indexOfAddedItems, centerOffset.toInt())
         }
     }
 
     private fun articleClicked(item: ArticleSummaryItem) {
         presenter.getAndShowArticle(item)
-    }
-
-
-    private val lstArticleSummaryItemsMultiChoiceListener = object: AbsListView.MultiChoiceModeListener {
-
-        override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-            mode.menuInflater.inflate(R.menu.activity_article_summary_contextual_action_menu, menu)
-
-            val viewArticleItem = menu.findItem(R.id.mnViewArticle)
-            viewArticleItem?.actionView?.setOnClickListener { onActionItemClicked(mode, viewArticleItem) }
-
-            val saveArticleForLaterReadingItem = menu.findItem(R.id.mnSaveArticleForLaterReading)
-            saveArticleForLaterReadingItem?.actionView?.setOnClickListener { onActionItemClicked(mode, saveArticleForLaterReadingItem) }
-
-            val saveArticleItem = menu.findItem(R.id.mnSaveArticle)
-            saveArticleItem?.actionView?.setOnClickListener { onActionItemClicked(mode, saveArticleItem) }
-
-            placeActionModeBarInAppBarLayout()
-
-            return true
-        }
-
-        override fun onItemCheckedStateChanged(mode: ActionMode, position: Int, id: Long, checked: Boolean) {
-            adapter.getItem(position)?.let { item ->
-                if(checked) {
-                    selectedArticlesInContextualActionMode.add(item)
-                }
-                else {
-                    selectedArticlesInContextualActionMode.remove(item)
-                }
-            }
-
-            mode.title = getString(R.string.activity_article_summary_menu_count_articles_selected, selectedArticlesInContextualActionMode.size, adapter.count)
-        }
-
-        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
-            return false
-        }
-
-        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
-            when(item.itemId) {
-                R.id.mnViewArticle -> {
-                    presenter.getAndShowArticlesAsync(selectedArticlesInContextualActionMode) {
-                        runOnUiThread { mode.finish() }
-                    }
-                    return true
-                }
-                R.id.mnSaveArticleForLaterReading -> {
-                    presenter.getAndSaveArticlesForLaterReadingAsync(selectedArticlesInContextualActionMode) {
-                        runOnUiThread { mode.finish() }
-                    }
-                    return true
-                }
-                R.id.mnSaveArticle -> {
-                    presenter.getAndSaveArticlesAsync(selectedArticlesInContextualActionMode) {
-                        runOnUiThread { mode.finish() }
-                    }
-                    return true
-                }
-                else -> return false
-            }
-        }
-
-        override fun onDestroyActionMode(mode: ActionMode) {
-            findViewById(android.support.v7.appcompat.R.id.action_mode_bar)?.visibility = View.GONE // hide action_mode_bar here as otherwise it will be displayed together with toolbar
-            toolbar.visibility = View.VISIBLE
-
-            selectedArticlesInContextualActionMode.clear()
-        }
-
-    }
-
-    private fun placeActionModeBarInAppBarLayout() {
-        findViewById(android.support.v7.appcompat.R.id.action_mode_bar)?.let { actionModeBar ->
-            (actionModeBar.parent as? ViewGroup)?.let { parent ->
-                parent.removeView(actionModeBar)
-                appBarLayout.addView(actionModeBar)
-                toolbar.visibility = View.GONE
-            }
-        }
     }
 
 }
