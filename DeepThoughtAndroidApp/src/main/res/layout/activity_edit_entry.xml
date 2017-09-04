@@ -19,6 +19,36 @@
         android:layout_above="@+id/appBarLayout"
     />
 
+    <RelativeLayout
+        android:id="@+id/lytOnboardingText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lytEntryFieldsPreview"
+        android:layout_above="@+id/appBarLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginLeft="@dimen/activity_edit_entry_onboarding_left_right_margin"
+        android:layout_marginStart="@dimen/activity_edit_entry_onboarding_left_right_margin"
+        android:layout_marginRight="@dimen/activity_edit_entry_onboarding_left_right_margin"
+        android:layout_marginEnd="@dimen/activity_edit_entry_onboarding_left_right_margin"
+    >
+
+        <TextView
+            android:id="@+id/txtOnboardingText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"
+            android:textAlignment="center"
+            android:ellipsize="end"
+            android:minLines="2"
+            android:visibility="gone"
+        />
+
+    </RelativeLayout>
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"

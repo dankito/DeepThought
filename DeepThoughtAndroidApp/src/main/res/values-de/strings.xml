@@ -54,6 +54,13 @@
     ]]>
     </string>
 
+
+    <string name="activity_edit_entry_edit_content_onboarding_text"><![CDATA[
+        <p>Click here to set entry\'s content.</p>
+        <p>(Click on the fields above to edit entry\'s abstract, reference and tags.)</p>
+    ]]>
+    </string>
+
     <string name="activity_article_summary_menu_view">Anzeigen</string>
     <string name="activity_article_summary_menu_save_for_later_reading">Vormerken</string>
     <string name="activity_article_summary_menu_save">Speichern</string>

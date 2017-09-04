@@ -3,6 +3,7 @@ package net.dankito.deepthought.android.activities
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.widget.PopupMenu
+import android.text.Html
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -255,6 +256,24 @@ class EditEntryActivity : BaseActivity() {
             if(result.didSaveReference) {
                 result.savedReference?.let { savedReference(it) }
             }
+        }
+
+        if(contentToEdit.isNullOrBlank()) {
+            wbEntry.visibility = View.GONE
+            txtOnboardingText.visibility = View.VISIBLE
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(R.string.activity_edit_entry_edit_content_onboarding_text).toString(), Html.FROM_HTML_MODE_LEGACY)
+            }
+            else {
+                txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(R.string.activity_edit_entry_edit_content_onboarding_text).toString())
+            }
+
+            txtOnboardingText.setOnClickListener { editContent() }
+        }
+        else {
+            wbEntry.visibility = View.VISIBLE
+            txtOnboardingText.visibility = View.GONE
         }
     }
 
