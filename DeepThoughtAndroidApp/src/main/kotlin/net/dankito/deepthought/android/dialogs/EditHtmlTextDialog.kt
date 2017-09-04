@@ -78,7 +78,7 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         htmlEditor.layoutParams = contentEditorParams
 
         htmlToSetOnStart?.let {
-            htmlEditor.setHtml(it)
+            htmlEditor.setHtml(it, true)
         }
     }
 
@@ -104,7 +104,7 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
 
     override fun restoreState(savedInstanceState: Bundle) {
         savedInstanceState.getString(HTML_INTENT_EXTRA_NAME)?.let { content ->
-            Timer().schedule(100L) { htmlEditor.setHtml(content) } // set delayed otherwise setHtml() from editEntry() wins
+            Timer().schedule(100L) { htmlEditor.setHtml(content, true) } // set delayed otherwise setHtml() from editEntry() wins
         }
     }
 
