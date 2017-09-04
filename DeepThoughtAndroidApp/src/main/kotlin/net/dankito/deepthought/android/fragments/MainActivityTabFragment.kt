@@ -18,6 +18,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.service.hideKeyboard
+import net.dankito.deepthought.android.views.FullScreenRecyclerView
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.service.search.Search
@@ -27,7 +28,7 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
 
     private var presenter: IMainViewSectionPresenter? = null
 
-    protected var recyclerView: RecyclerView? = null
+    protected var recyclerView: FullScreenRecyclerView? = null
 
     protected var txtOnboardingText: TextView? = null
 
@@ -36,6 +37,8 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
     private var searchView: SearchView? = null
 
     private var searchResultTextView: TextView? = null
+
+    private var layoutRootOriginalTopMargin = -1
 
 
     protected open fun setupUI(rootView: View?) { }
@@ -72,6 +75,9 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
         recyclerView = rootView.rcyEntities
         recyclerView?.addItemDecoration(HorizontalDividerItemDecoration(rootView.context))
 
+        recyclerView?.hideOtherViewsListener = { recyclerViewEnteredFullScreenMode() }
+        recyclerView?.showOtherViewsListener = { recyclerViewLeftFullScreenMode() }
+
         val adapter = getListAdapter()
         recyclerView?.adapter = adapter
         adapter.itemClickListener = { item -> listItemClicked(item)}
@@ -79,6 +85,35 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
         entitiesToCheckForOnboardingOnViewCreation?.let {
             retrievedEntitiesOnUiThread(it)
             entitiesToCheckForOnboardingOnViewCreation = null
+        }
+    }
+
+    private fun recyclerViewEnteredFullScreenMode() {
+        activity?.let { activity ->
+            layoutRootOriginalTopMargin = activity.findViewById(R.id.appBarLayout)?.height ?: 0
+
+            setLayoutForTogglingFullscreenMode(activity, View.GONE, 0)
+        }
+    }
+
+    private fun recyclerViewLeftFullScreenMode() {
+        activity?.let { activity ->
+            setLayoutForTogglingFullscreenMode(activity, View.VISIBLE, layoutRootOriginalTopMargin)
+        }
+    }
+
+    private fun setLayoutForTogglingFullscreenMode(activity: Activity, viewVisibility: Int, topMargin: Int) {
+        activity.findViewById(R.id.appBarLayout)?.visibility = viewVisibility
+        activity.findViewById(R.id.bottomViewNavigation)?.visibility = viewVisibility
+        activity.findViewById(R.id.fab_menu)?.visibility = viewVisibility
+
+        if(topMargin >= 0) {
+            (activity.findViewById(R.id.content_layout_root) as? ViewGroup)?.let { layoutRoot ->
+                val layoutParams = layoutRoot.layoutParams as? ViewGroup.MarginLayoutParams
+
+                layoutParams?.topMargin = topMargin
+                layoutRoot.layoutParams = layoutParams
+            }
         }
     }
 
