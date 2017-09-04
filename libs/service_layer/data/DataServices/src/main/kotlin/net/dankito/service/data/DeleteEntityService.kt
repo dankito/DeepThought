@@ -62,7 +62,7 @@ class DeleteEntityService(private val entryService: EntryService, private val ta
     }
 
     fun deleteTag(tag: Tag) {
-        ArrayList(tag.entries).forEach { entry ->
+        ArrayList(tag.entries).filterNotNull().forEach { entry ->
             entry.removeTag(tag)
             entryService.update(entry)
         }
