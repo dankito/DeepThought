@@ -34,12 +34,14 @@
     <dimen name="list_item_entry_button_width">80dp</dimen>
 
     <dimen name="list_item_tag_height">44dp</dimen>
+    <dimen name="list_item_tag_button_width">66dp</dimen>
     <dimen name="list_item_tag_margin_left">12dp</dimen>
     <dimen name="list_item_tag_filter_icon_width">26dp</dimen>
     <dimen name="list_item_tag_filter_icon_height">26dp</dimen>
     <dimen name="list_item_tag_filter_icon_margin_right">4dp</dimen>
 
     <dimen name="list_item_reference_height">72dp</dimen>
+    <dimen name="list_item_reference_button_width">72dp</dimen>
     <dimen name="list_item_reference_margin_left">12dp</dimen>
     <dimen name="list_item_reference_margin_right">4dp</dimen>
     <dimen name="list_item_reference_series_preview_margin_top">2dp</dimen>

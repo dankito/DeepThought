@@ -51,9 +51,9 @@ class ReferencesListView: MainActivityTabFragment(R.menu.fragment_tab_references
     init {
         AppComponent.component.inject(this)
 
-        presenter = ReferencesListPresenter(this, router, searchEngine, referenceService, clipboardService, deleteEntityService)
+        presenter = ReferencesListPresenter(this, router, searchEngine, clipboardService, deleteEntityService)
 
-        adapter = ReferenceRecyclerAdapter()
+        adapter = ReferenceRecyclerAdapter(presenter)
     }
 
 

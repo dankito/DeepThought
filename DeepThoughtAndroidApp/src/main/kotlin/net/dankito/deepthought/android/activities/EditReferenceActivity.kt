@@ -90,7 +90,7 @@ class EditReferenceActivity : BaseActivity() {
 
         presenter = EditReferencePresenter(searchEngine, router, clipboardService, deleteEntityService, referencePersister)
 
-        existingReferencesSearchResultsAdapter = ReferenceRecyclerAdapter()
+        existingReferencesSearchResultsAdapter = ReferenceRecyclerAdapter(presenter)
     }
 
 
