@@ -31,7 +31,7 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): ListRecycler
         }
         else {
             bindTagToView(viewHolder, tag)
-            itemBound(viewHolder, tag)
+            itemBound(viewHolder, tag, position)
         }
     }
 

@@ -11,6 +11,8 @@ abstract class ListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(li
 
     var itemClickListener: ((item: T) -> Unit)? = null
 
+    var itemLongClickListener: ((item: T) -> Unit)? = null
+
 
     var items: List<T> = list
         set(value) {
@@ -34,27 +36,41 @@ abstract class ListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(li
     }
 
 
-    protected fun itemBound(viewHolder: RecyclerView.ViewHolder, item: T) {
+    protected open fun itemBound(viewHolder: RecyclerView.ViewHolder, item: T, position: Int) {
         viewHolder.itemView.isLongClickable = true // otherwise context menu won't trigger / pop up
 
-        itemClickListener?.let { // use a GestureDetector as item clickListener also triggers when swiping or long pressing an item
-            val gestureDetector = GestureDetectorCompat(viewHolder.itemView.context, SingleTapUpGestureDetector<T>(itemClickListener, item))
+        if(itemClickListener != null || itemLongClickListener != null) { // use a GestureDetector as item clickListener also triggers when swiping or long pressing an item
+            val gestureDetector = GestureDetectorCompat(viewHolder.itemView.context, TapGestureDetector<T>(item, { itemClicked(item, position) }, { itemLongClicked(item, position) }))
 
             viewHolder.itemView.setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event) }
+        }
+        else {
+            viewHolder.itemView.setOnTouchListener(null)
         }
     }
 
 
-    class SingleTapUpGestureDetector<T>(private val itemClickListener: ((item: T) -> Unit)?, private val item: T) : GestureDetector.OnGestureListener {
-        override fun onShowPress(e: MotionEvent?) { }
+    protected open fun itemClicked(item: T, position: Int): Boolean {
+        itemClickListener?.let {
+            it.invoke(item)
+            return true
+        }
+
+        return false
+    }
+
+    protected open fun itemLongClicked(item: T, position: Int) {
+        itemLongClickListener?.invoke(item)
+    }
+
+    class TapGestureDetector<T>(private val item: T, private val itemClickListener: (item: T) -> Boolean, private val itemLongClickListener: (item: T) -> Unit) : GestureDetector.OnGestureListener {
 
         override fun onSingleTapUp(e: MotionEvent?): Boolean {
-            itemClickListener?.let {
-                it.invoke(item)
-                return true
-            }
+            return itemClickListener.invoke(item)
+        }
 
-            return false
+        override fun onLongPress(e: MotionEvent?) {
+            itemLongClickListener.invoke(item)
         }
 
         override fun onDown(e: MotionEvent?): Boolean {
@@ -69,7 +85,7 @@ abstract class ListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(li
             return false
         }
 
-        override fun onLongPress(e: MotionEvent?) { }
+        override fun onShowPress(e: MotionEvent?) { }
     }
 
 }

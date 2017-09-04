@@ -29,7 +29,7 @@ class ReferenceRecyclerAdapter(/*private val presenter: ReferencesListPresenter*
         }
         else {
             bindTagToView(viewHolder, reference)
-            itemBound(viewHolder, reference)
+            itemBound(viewHolder, reference, position)
         }
     }
 
@@ -45,7 +45,6 @@ class ReferenceRecyclerAdapter(/*private val presenter: ReferencesListPresenter*
         val seriesPreview = reference.seriesAndPublishingDatePreview
         viewHolder.txtReferenceSeriesAndPublishingDate.text = seriesPreview
         viewHolder.txtReferenceSeriesAndPublishingDate.visibility = if(seriesPreview.isNullOrBlank()) View.GONE else View.VISIBLE
-
     }
 
 }
