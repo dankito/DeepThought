@@ -62,7 +62,7 @@ class DeleteEntityService(private val entryService: EntryService, private val ta
     }
 
     fun deleteTag(tag: Tag) {
-        ArrayList(tag.entries).filterNotNull().forEach { entry ->
+        ArrayList(tag.entries).filterNotNull().filter { it.id != null }.forEach { entry ->
             entry.removeTag(tag)
             entryService.update(entry)
         }
@@ -72,16 +72,16 @@ class DeleteEntityService(private val entryService: EntryService, private val ta
 
 
     fun deleteReferenceAsync(reference: Reference) {
-        deleteReference(reference)
+        threadPool.runAsync { deleteReference(reference) }
     }
 
     fun deleteReference(reference: Reference) {
-        ArrayList(reference.entries).forEach { entry ->
+        ArrayList(reference.entries).filterNotNull().filter { it.id != null }.forEach { entry ->
             entry.reference = null
             entryService.update(entry)
         }
 
-        ArrayList(reference.attachedFiles).forEach { file ->
+        ArrayList(reference.attachedFiles).filterNotNull().filter { it.id != null }.forEach { file ->
             reference.removeAttachedFile(file)
             referenceService.entityManager.updateEntity(file)
         }
