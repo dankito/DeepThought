@@ -1,7 +1,10 @@
 package net.dankito.deepthought.android.views.html
 
 import android.annotation.TargetApi
+import android.content.ClipDescription
+import android.content.ClipboardManager
 import android.content.Context
+import android.os.Build
 import android.os.Looper
 import android.util.AttributeSet
 import android.webkit.*
@@ -278,7 +281,32 @@ class AndroidHtmlEditor : WebView, IJavaScriptBridge, IJavaScriptExecutor {
             result = result and bridge.beforeCommandExecution(commandName)
         }
 
+        if(commandName == "paste") {
+            result = pasteDataFromClipboard()
+        }
+
         return result
+    }
+
+    private fun pasteDataFromClipboard(): Boolean {
+        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+
+        if(clipboard.hasPrimaryClip()) { // clipboard contains data
+            var text: String = ""
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && clipboard.primaryClipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
+                text = clipboard.primaryClip.getItemAt(0).htmlText
+            }
+            else if(clipboard.primaryClipDescription.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
+                text = clipboard.primaryClip.getItemAt(0).text.toString()
+            }
+
+            if(text.isNullOrBlank() == false) {
+                insertHtml(text)
+            }
+        }
+
+        return false // default implementation does nothing
     }
 
     val isLoaded: Boolean
