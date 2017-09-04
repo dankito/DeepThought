@@ -8,6 +8,8 @@ import kotlinx.android.synthetic.main.list_item_reference.view.*
 
 class ReferenceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    val txtReferencePreview: TextView = itemView.txtReferencePreview
+    val txtReferenceTitle: TextView = itemView.txtReferenceTitle
+
+    val txtReferenceSeriesAndPublishingDate: TextView = itemView.txtReferenceSeriesAndPublishingDate
 
 }
