@@ -75,8 +75,8 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
         recyclerView = rootView.rcyEntities
         recyclerView?.addItemDecoration(HorizontalDividerItemDecoration(rootView.context))
 
-        recyclerView?.hideOtherViewsListener = { recyclerViewEnteredFullScreenMode() }
-        recyclerView?.showOtherViewsListener = { recyclerViewLeftFullScreenMode() }
+        recyclerView?.enterFullscreenModeListener = { recyclerViewEnteredFullScreenMode() }
+        recyclerView?.leaveFullscreenModeListener = { recyclerViewLeftFullScreenMode() }
 
         val adapter = getListAdapter()
         recyclerView?.adapter = adapter

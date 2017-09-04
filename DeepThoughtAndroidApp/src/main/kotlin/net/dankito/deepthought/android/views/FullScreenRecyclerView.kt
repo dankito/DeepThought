@@ -42,8 +42,8 @@ class FullScreenRecyclerView : RecyclerView {
     }
 
 
-    var hideOtherViewsListener: (() -> Unit)? = null
-    var showOtherViewsListener: (() -> Unit)? = null
+    var enterFullscreenModeListener: (() -> Unit)? = null
+    var leaveFullscreenModeListener: (() -> Unit)? = null
 
 
     private var isInFullScreenMode = false
@@ -87,7 +87,7 @@ class FullScreenRecyclerView : RecyclerView {
 
         isInFullScreenMode = false
 
-        showOtherViewsListener?.invoke()
+        leaveFullscreenModeListener?.invoke()
 
         // currently it's not possible to see the last two items as when we're scrolling down it goes to fullscreen, when it snaps back to non fullscreen,
         // last two items are covered again by other views -> when scrolled to end in fullscreen mode show last item after leaving fullscreen
@@ -111,7 +111,7 @@ class FullScreenRecyclerView : RecyclerView {
 
         isInFullScreenMode = true
 
-        hideOtherViewsListener?.invoke()
+        enterFullscreenModeListener?.invoke()
     }
 
 
