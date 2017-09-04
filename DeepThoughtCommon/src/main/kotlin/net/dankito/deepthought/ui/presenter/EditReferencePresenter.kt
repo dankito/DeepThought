@@ -1,12 +1,16 @@
 package net.dankito.deepthought.ui.presenter
 
 import net.dankito.deepthought.model.Reference
+import net.dankito.service.data.DeleteEntityService
 import net.dankito.deepthought.ui.presenter.util.ReferencePersister
+import net.dankito.service.search.ISearchEngine
+import net.dankito.utils.ui.IClipboardService
 import java.text.DateFormat
 import java.util.*
 
 
-class EditReferencePresenter(private val referencePersister: ReferencePersister) {
+class EditReferencePresenter(searchEngine: ISearchEngine, clipboardService: IClipboardService, deleteEntityService: DeleteEntityService,
+                             private val referencePersister: ReferencePersister) : ReferencesPresenterBase(searchEngine, clipboardService, deleteEntityService) {
 
 
     fun convertPublishingDateToText(publishingDate: Date): String {

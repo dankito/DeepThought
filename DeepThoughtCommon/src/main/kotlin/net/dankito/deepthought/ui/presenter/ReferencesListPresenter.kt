@@ -5,23 +5,18 @@ import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.IReferencesListView
 import net.dankito.service.data.DeleteEntityService
-import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
-import net.dankito.service.search.Search
-import net.dankito.service.search.specific.ReferenceSearch
 import net.dankito.utils.ui.IClipboardService
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class ReferencesListPresenter(private var view: IReferencesListView, private var router: IRouter, private var searchEngine: ISearchEngine,
-                              private val referenceService: ReferenceService, private val clipboardService: IClipboardService, private val deleteEntityService: DeleteEntityService)
-    : IMainViewSectionPresenter {
-
-    private var lastSearchTermProperty = Search.EmptySearchTerm
+class ReferencesListPresenter(private var view: IReferencesListView, private var router: IRouter, searchEngine: ISearchEngine,
+                              clipboardService: IClipboardService, deleteEntityService: DeleteEntityService)
+    : ReferencesPresenterBase(searchEngine, clipboardService, deleteEntityService), IMainViewSectionPresenter {
 
 
     @Inject
@@ -43,14 +38,10 @@ class ReferencesListPresenter(private var view: IReferencesListView, private var
         searchReferences(lastSearchTermProperty)
     }
 
-    fun searchReferences(searchTerm: String, searchCompleted: ((List<Reference>) -> Unit)? = null) {
-        lastSearchTermProperty = searchTerm
+    override fun retrievedSearchResults(result: List<Reference>) {
+        super.retrievedSearchResults(result)
 
-        searchEngine.searchReferences(ReferenceSearch(searchTerm) { result ->
-            view.showEntities(result)
-
-            searchCompleted?.invoke(result)
-        })
+        view.showEntities(result)
     }
 
     override fun getLastSearchTerm(): String {
@@ -64,14 +55,6 @@ class ReferencesListPresenter(private var view: IReferencesListView, private var
 
     fun showEntriesForReference(reference: Reference) {
         router.showEntriesForReference(reference)
-    }
-
-    fun copyReferenceUrlToClipboard(reference: Reference) {
-        clipboardService.copyReferenceUrlToClipboard(reference)
-    }
-
-    fun deleteReference(reference: Reference) {
-        deleteEntityService.deleteReference(reference)
     }
 
 
