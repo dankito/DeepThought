@@ -16,7 +16,7 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.dialog_tags_on_entry.*
 import kotlinx.android.synthetic.main.dialog_tags_on_entry.view.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.adapter.TagsOnEntryAdapter
+import net.dankito.deepthought.android.adapter.TagsOnEntryRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.service.showKeyboardDelayed
@@ -65,7 +65,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
 
     private val presenter: TagsOnEntryListPresenter
 
-    private val adapter: TagsOnEntryAdapter
+    private val adapter: TagsOnEntryRecyclerAdapter
 
     private val unmodifiedTagsOnEntry = ArrayList<Tag>()
 
@@ -87,7 +87,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
 
         presenter = TagsOnEntryListPresenter(this, searchEngine, tagService, deleteEntityService, searchResultsUtil, dialogService)
 
-        adapter = TagsOnEntryAdapter(presenter) { activity?.runOnUiThread { setTagsOnEntryPreviewOnUIThread(it) } }
+        adapter = TagsOnEntryRecyclerAdapter(presenter) { activity?.runOnUiThread { setTagsOnEntryPreviewOnUIThread(it) } }
     }
 
 
@@ -103,8 +103,8 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
         rootView.toolbar.setNavigationIcon(android.R.drawable.ic_menu_close_clear_cancel)
         rootView.toolbar.setNavigationOnClickListener { closeDialog() }
 
-        rootView.lstTags.adapter = adapter
-        registerForContextMenu(rootView.lstTags)
+        rootView.rcyTags.adapter = adapter
+        registerForContextMenu(rootView.rcyTags)
 
         txtTagsPreview = rootView.txtTagsPreview
         setTagsOnEntryPreviewOnUIThread(adapter.tagsOnEntry)
@@ -343,7 +343,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
 
     override fun showEntities(entities: List<Tag>) {
         activity?.runOnUiThread {
-            adapter.setItems(entities)
+            adapter.items = entities
             setButtonState()
         }
     }

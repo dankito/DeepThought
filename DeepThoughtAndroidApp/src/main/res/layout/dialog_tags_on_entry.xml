@@ -67,8 +67,8 @@
             android:enabled="false"
         />
 
-        <ListView
-            android:id="@+id/lstTags"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcyTags"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/edtxtEditEntrySearchTag"
@@ -76,6 +76,7 @@
             android:layout_marginLeft="@dimen/dialog_tags_on_entry_tag_list_tags_margin"
             android:layout_marginRight="@dimen/dialog_tags_on_entry_tag_list_tags_margin"
             android:layout_marginBottom="@dimen/dialog_tags_on_entry_tag_list_tags_margin"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         />
 
     </RelativeLayout>
