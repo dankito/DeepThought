@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.text.Html
 import android.view.*
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
@@ -210,7 +209,7 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
     }
 
     private fun addSearchResultTextViewToSearchView(searchView: SearchView) {
-        (searchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn) as? Button)?.let { searchCloseButton ->
+        (searchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn) as? View)?.let { searchCloseButton ->
             (searchCloseButton.parent as? LinearLayout)?.let { searchLayout ->
                 val index = searchLayout.indexOfChild(searchCloseButton)
 
@@ -219,7 +218,7 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
         }
     }
 
-    private fun addSearchResultTextViewToSearchView(searchLayout: LinearLayout, searchCloseButton: Button, index: Int): TextView {
+    private fun addSearchResultTextViewToSearchView(searchLayout: LinearLayout, searchCloseButton: View, index: Int): TextView {
         val searchResultTextView = TextView(searchLayout.context)
 
         searchResultTextView.setLines(1)
