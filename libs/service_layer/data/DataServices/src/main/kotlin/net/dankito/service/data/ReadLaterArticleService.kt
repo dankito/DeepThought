@@ -6,10 +6,15 @@ import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.utils.serialization.ISerializer
+import org.slf4j.LoggerFactory
 
 
 class ReadLaterArticleService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier, private val serializer: ISerializer)
     : EntityServiceBase<ReadLaterArticle>(ReadLaterArticle::class.java, dataManager, entityChangedNotifier) {
+
+    companion object {
+        private val log = LoggerFactory.getLogger(ReadLaterArticleService::class.java)
+    }
 
 
     override fun onPrePersist(entity: ReadLaterArticle) {
@@ -39,7 +44,11 @@ class ReadLaterArticleService(dataManager: DataManager, entityChangedNotifier: E
 
     fun deserializeEntryExtractionResult(readLaterArticle: ReadLaterArticle) {
         if(readLaterArticle.entryExtractionResult.entry.content.isBlank()) { // entryExtractionResult not deserialized yet
-            readLaterArticle.entryExtractionResult = serializer.deserializeObject(readLaterArticle.serializedEntryExtractionResult, EntryExtractionResult::class.java)
+            try {
+                readLaterArticle.entryExtractionResult = serializer.deserializeObject(readLaterArticle.serializedEntryExtractionResult, EntryExtractionResult::class.java)
+            } catch(e: Exception) {
+                log.error("Could not deserialize ReadLaterArticle $readLaterArticle", e)
+            }
         }
     }
 
