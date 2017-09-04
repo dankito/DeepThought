@@ -57,7 +57,7 @@ val Entry.referencePreview: String
 
 val Entry.tagsPreview: String
     get() {
-        return this.tags.sortedBy { it.name.toLowerCase() }.joinToString { it.name }
+        return this.tags.filterNotNull().sortedBy { it.name.toLowerCase() }.joinToString { it.name }
     }
 
 
