@@ -50,7 +50,7 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
         doc.add(LongField(FieldName.EntryCreated, entity.createdOn.time, Field.Store.YES))
 
         if (entity.hasTags()) {
-            for(tag in entity.tags.filterNotNull()) {
+            for(tag in entity.tags.filterNotNull().filter { it.id != null }) {
                 doc.add(StringField(FieldName.EntryTagsIds, tag.id, Field.Store.YES))
             }
         }
