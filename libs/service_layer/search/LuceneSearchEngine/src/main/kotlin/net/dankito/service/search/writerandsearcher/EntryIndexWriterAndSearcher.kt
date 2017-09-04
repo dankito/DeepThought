@@ -50,7 +50,7 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
         doc.add(LongField(FieldName.EntryCreated, entity.createdOn.time, Field.Store.YES))
 
         if (entity.hasTags()) {
-            for(tag in entity.tags) {
+            for(tag in entity.tags.filterNotNull()) {
                 doc.add(StringField(FieldName.EntryTagsIds, tag.id, Field.Store.YES))
             }
         }
@@ -86,7 +86,7 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
         }
         else if (search.entriesMustHaveTheseTags.isNotEmpty()) {
             val filterEntriesQuery = BooleanQuery()
-            for (tag in search.entriesMustHaveTheseTags) {
+            for (tag in search.entriesMustHaveTheseTags.filterNotNull().filter { it.id != null }) {
                 filterEntriesQuery.add(TermQuery(Term(FieldName.EntryTagsIds, tag.id)), BooleanClause.Occur.MUST)
             }
 
