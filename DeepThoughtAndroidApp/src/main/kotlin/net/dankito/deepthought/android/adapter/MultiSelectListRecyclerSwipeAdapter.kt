@@ -144,6 +144,7 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
 
     private fun placeActionModeBarInAppBarLayout(actionModeBar: ActionBarContextView) {
         this.actionModeBar = actionModeBar
+        actionModeBar.setBackgroundResource(R.drawable.primary_color_gradient)
 
         (actionModeBar.parent as? ViewGroup)?.let { parent ->
             parent.removeView(actionModeBar)
