@@ -140,8 +140,8 @@ class ArticleSummaryActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         rcyArticleSummaryItems.addItemDecoration(HorizontalDividerItemDecoration(this))
-        rcyArticleSummaryItems.enterFullscreenModeListener = { recyclerViewEnteredFullscreenMode() }
-        rcyArticleSummaryItems.leaveFullscreenModeListener = { recyclerViewLeftFullscreenMode() }
+//        rcyArticleSummaryItems.enterFullscreenModeListener = { recyclerViewEnteredFullscreenMode() }
+//        rcyArticleSummaryItems.leaveFullscreenModeListener = { recyclerViewLeftFullscreenMode() }
 
         rcyArticleSummaryItems.adapter = adapter
         adapter.itemClickListener = { item -> articleClicked(item) }
