@@ -209,7 +209,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
     }
 
     private fun createNewTag() {
-        val enteredText = edtxtEditEntrySearchTag.editableText.toString()
+        val enteredText = edtxtEditEntrySearchTag.editableText.toString().trim()
         val newTag = Tag(enteredText)
 
         tagService.persist(newTag)
