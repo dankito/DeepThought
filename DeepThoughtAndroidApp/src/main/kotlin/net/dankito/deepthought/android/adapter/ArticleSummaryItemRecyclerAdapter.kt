@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.daimajia.swipe.SwipeLayout
 import com.squareup.picasso.Picasso
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.ArticleSummaryItemViewHolder
@@ -14,7 +15,7 @@ import net.dankito.newsreader.model.ArticleSummaryItem
 class ArticleSummaryItemRecyclerAdapter(activity: AppCompatActivity, private val presenter: ArticleSummaryPresenter):
         MultiSelectListRecyclerSwipeAdapter<ArticleSummaryItem, ArticleSummaryItemViewHolder>(activity) {
 
-    override fun getSwipeLayoutResourceId(position: Int) = 0
+    override fun getSwipeLayoutResourceId(position: Int) = R.id.readLaterArticleSwipeLayout
 
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ArticleSummaryItemViewHolder {
@@ -30,7 +31,7 @@ class ArticleSummaryItemRecyclerAdapter(activity: AppCompatActivity, private val
             bindViewForNullValue(viewHolder)
         }
         else {
-            bindTagToView(viewHolder, item)
+            bindItemToView(viewHolder, item)
             itemBound(viewHolder, item, position)
         }
     }
@@ -41,9 +42,11 @@ class ArticleSummaryItemRecyclerAdapter(activity: AppCompatActivity, private val
         viewHolder.txtSummary.visibility = View.INVISIBLE
 
         viewHolder.imgPreviewImage.visibility = View.INVISIBLE
+
+        (viewHolder.itemView as? SwipeLayout)?.isSwipeEnabled = false
     }
 
-    private fun bindTagToView(viewHolder: ArticleSummaryItemViewHolder, item: ArticleSummaryItem) {
+    private fun bindItemToView(viewHolder: ArticleSummaryItemViewHolder, item: ArticleSummaryItem) {
         viewHolder.txtTitle.visibility = if(item.title.isBlank()) View.GONE else View.VISIBLE
         viewHolder.txtTitle.text = item.title
 
@@ -55,6 +58,16 @@ class ArticleSummaryItemRecyclerAdapter(activity: AppCompatActivity, private val
         Picasso.with(viewHolder.itemView.context)
                 .load(item.previewImageUrl)
                 .into(viewHolder.imgPreviewImage)
+
+        (viewHolder.itemView as? SwipeLayout)?.isSwipeEnabled = true
+
+        viewHolder.btnSaveArticleSummaryItemForLaterReading.visibility = View.VISIBLE
+        viewHolder.btnSaveArticleSummaryItem.visibility = View.VISIBLE
+//        viewHolder.btnShareArticleSummaryItem.visibility = if(item.url.isNullOrBlank()) View.GONE else View.VISIBLE
+
+        viewHolder.btnSaveArticleSummaryItemForLaterReading.setOnClickListener { presenter.getAndSaveArticleForLaterReading(item) }
+        viewHolder.btnSaveArticleSummaryItem.setOnClickListener { presenter.getAndSaveArticle(item) }
+//        viewHolder.btnShareArticleSummaryItem.setOnClickListener { presenter.copyReferenceUrlToClipboard(item) } // TODO: actually there should also be the option to share article's text
 
     }
 

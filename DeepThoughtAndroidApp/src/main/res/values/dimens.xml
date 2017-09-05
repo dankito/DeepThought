@@ -56,6 +56,7 @@
     <dimen name="list_item_article_summary_extractor_favorite_index_bottom_margin">10dp</dimen>
 
     <dimen name="list_item_article_summary_item_min_height">84dp</dimen>
+    <dimen name="list_item_article_summary_item_button_width">84dp</dimen>
     <dimen name="list_item_article_summary_item_preview_image_size">80dp</dimen>
     <dimen name="list_item_article_summary_item_preview_image_margin_right">6dp</dimen>
     <dimen name="list_item_article_summary_item_title_text_size">12sp</dimen>

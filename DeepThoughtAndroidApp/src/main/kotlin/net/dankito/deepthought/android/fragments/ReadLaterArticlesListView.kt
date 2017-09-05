@@ -2,11 +2,6 @@ package net.dankito.deepthought.android.fragments
 
 import android.app.Activity
 import android.support.v7.widget.RecyclerView
-import android.view.ContextMenu
-import android.view.MenuItem
-import android.view.View
-import android.widget.AdapterView
-import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.ReadLaterArticleRecyclerAdapter
@@ -67,49 +62,6 @@ class ReadLaterArticlesListView : MainActivityTabFragment(R.menu.fragment_tab_re
 
     override fun listItemClicked(selectedItem: BaseEntity) {
         (selectedItem as? ReadLaterArticle)?.let { presenter.showArticle(it) }
-    }
-
-
-    override fun setupUI(rootView: View?) {
-        super.setupUI(rootView)
-
-        rootView?.let {
-            registerForContextMenu(rootView.rcyEntities)
-        }
-    }
-
-    override fun onCreateContextMenu(menu: ContextMenu, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
-        super.onCreateContextMenu(menu, v, menuInfo)
-
-        activity?.menuInflater?.inflate(R.menu.list_item_read_later_article_menu, menu)
-    }
-
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        (item.menuInfo as? AdapterView.AdapterContextMenuInfo)?.position?.let { position ->
-            if(position >= adapter.itemCount) {
-                return super.onContextItemSelected(item)
-            }
-
-            val selectedReadLaterArticle = adapter.getItem(position)
-
-            when(item.itemId) {
-                R.id.mnSaveReadLaterArticle -> {
-                    presenter.saveAndDeleteReadLaterArticle(selectedReadLaterArticle)
-                    return true
-                }
-                R.id.mnShareReadLaterArticle -> { // TODO: actually there should also be the option to share article's text
-                    presenter.copyReferenceUrlToClipboard(selectedReadLaterArticle)
-                    return true
-                }
-                R.id.mnDeleteReadLaterArticle -> {
-                    presenter.deleteReadLaterArticle(selectedReadLaterArticle)
-                    return true
-                }
-                else -> return super.onContextItemSelected(item)
-            }
-        }
-
-        return super.onContextItemSelected(item)
     }
 
 

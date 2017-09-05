@@ -3,6 +3,7 @@ package net.dankito.deepthought.android.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.daimajia.swipe.SwipeLayout
 import com.squareup.picasso.Picasso
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.ReadLaterArticleViewHolder
@@ -14,7 +15,7 @@ import net.dankito.deepthought.ui.presenter.ReadLaterArticleListPresenter
 
 class ReadLaterArticleRecyclerAdapter(private val presenter: ReadLaterArticleListPresenter): ListRecyclerSwipeAdapter<ReadLaterArticle, ReadLaterArticleViewHolder>() {
 
-    override fun getSwipeLayoutResourceId(position: Int) = 0
+    override fun getSwipeLayoutResourceId(position: Int) = R.id.readLaterArticleSwipeLayout
 
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ReadLaterArticleViewHolder {
@@ -31,7 +32,7 @@ class ReadLaterArticleRecyclerAdapter(private val presenter: ReadLaterArticleLis
             bindViewForNullValue(viewHolder)
         }
         else {
-            bindTagToView(viewHolder, extractionResult)
+            bindArticleToView(viewHolder, readLaterArticle, extractionResult)
             itemBound(viewHolder, readLaterArticle, position)
         }
     }
@@ -40,9 +41,11 @@ class ReadLaterArticleRecyclerAdapter(private val presenter: ReadLaterArticleLis
         viewHolder.txtTitle.visibility = View.INVISIBLE
         viewHolder.txtSummary.visibility = View.INVISIBLE
         viewHolder.imgPreviewImage.visibility = View.INVISIBLE
+
+        (viewHolder.itemView as? SwipeLayout)?.isSwipeEnabled = false
     }
 
-    private fun bindTagToView(viewHolder: ReadLaterArticleViewHolder, extractionResult: EntryExtractionResult) {
+    private fun bindArticleToView(viewHolder: ReadLaterArticleViewHolder, article: ReadLaterArticle, extractionResult: EntryExtractionResult) {
         val referencePreview = extractionResult.reference?.preview
 
         viewHolder.txtTitle.visibility = if(referencePreview.isNullOrBlank()) View.GONE else View.VISIBLE
@@ -56,6 +59,16 @@ class ReadLaterArticleRecyclerAdapter(private val presenter: ReadLaterArticleLis
         Picasso.with(viewHolder.itemView.context)
                 .load(extractionResult.reference?.previewImageUrl)
                 .into(viewHolder.imgPreviewImage)
+
+        (viewHolder.itemView as? SwipeLayout)?.isSwipeEnabled = true
+
+        viewHolder.btnSaveReadLaterArticle.visibility = View.VISIBLE
+        viewHolder.btnShareReadLaterArticle.visibility = if(extractionResult.reference?.url?.isNullOrBlank() ?: false) View.GONE else View.VISIBLE
+        viewHolder.btnDeleteReadLaterArticle.visibility = View.VISIBLE
+
+        viewHolder.btnSaveReadLaterArticle.setOnClickListener { presenter.saveAndDeleteReadLaterArticle(article) }
+        viewHolder.btnShareReadLaterArticle.setOnClickListener { presenter.copyReferenceUrlToClipboard(article) } // TODO: actually there should also be the option to share article's text
+        viewHolder.btnDeleteReadLaterArticle.setOnClickListener { presenter.deleteReadLaterArticle(article) }
 
     }
 
