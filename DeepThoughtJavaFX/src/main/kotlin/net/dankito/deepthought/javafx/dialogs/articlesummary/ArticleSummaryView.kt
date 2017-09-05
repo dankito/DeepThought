@@ -10,6 +10,7 @@ import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.service.data.ReadLaterArticleService
+import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import tornadofx.*
 import javax.inject.Inject
@@ -28,6 +29,9 @@ class ArticleSummaryView : DialogFragment() {
 
     @Inject
     protected lateinit var router: IRouter
+
+    @Inject
+    protected lateinit var clipboardService: IClipboardService
 
     @Inject
     protected lateinit var dialogService: IDialogService
@@ -51,7 +55,7 @@ class ArticleSummaryView : DialogFragment() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = JavaFXArticleSummaryPresenter(articleSummaryExtractor, entryPerister, readLaterArticleService, articleExtractorManager, router, dialogService)
+        presenter = JavaFXArticleSummaryPresenter(articleSummaryExtractor, entryPerister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService)
 
         articleSummaryItemsView = ArticleSummaryItemsView(presenter)
         root.center = articleSummaryItemsView.root

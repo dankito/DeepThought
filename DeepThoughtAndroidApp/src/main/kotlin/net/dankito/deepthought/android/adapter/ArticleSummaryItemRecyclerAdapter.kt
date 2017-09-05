@@ -63,11 +63,11 @@ class ArticleSummaryItemRecyclerAdapter(activity: AppCompatActivity, private val
 
         viewHolder.btnSaveArticleSummaryItemForLaterReading.visibility = View.VISIBLE
         viewHolder.btnSaveArticleSummaryItem.visibility = View.VISIBLE
-//        viewHolder.btnShareArticleSummaryItem.visibility = if(item.url.isNullOrBlank()) View.GONE else View.VISIBLE
+        viewHolder.btnShareArticleSummaryItem.visibility = if(item.url.isNullOrBlank()) View.GONE else View.VISIBLE
 
         viewHolder.btnSaveArticleSummaryItemForLaterReading.setOnClickListener { presenter.getAndSaveArticleForLaterReading(item) }
         viewHolder.btnSaveArticleSummaryItem.setOnClickListener { presenter.getAndSaveArticle(item) }
-//        viewHolder.btnShareArticleSummaryItem.setOnClickListener { presenter.copyReferenceUrlToClipboard(item) } // TODO: actually there should also be the option to share article's text
+        viewHolder.btnShareArticleSummaryItem.setOnClickListener { presenter.copyReferenceUrlToClipboard(item) } // TODO: actually there should also be the option to share article's text
 
     }
 

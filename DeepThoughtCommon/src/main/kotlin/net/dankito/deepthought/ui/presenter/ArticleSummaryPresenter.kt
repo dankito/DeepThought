@@ -14,12 +14,13 @@ import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.localization.Localization
+import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
 
 
-open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister, protected val readLaterArticleService: ReadLaterArticleService,
-                                   protected val articleExtractorManager: ArticleExtractorManager, protected val router: IRouter, protected val dialogService: IDialogService) {
+open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister, protected val readLaterArticleService: ReadLaterArticleService, protected val articleExtractorManager: ArticleExtractorManager,
+                                   protected val router: IRouter, private val clipboardService: IClipboardService, protected val dialogService: IDialogService) {
 
 
     @Inject
@@ -138,6 +139,11 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
             callback(asyncResult)
         }
+    }
+
+
+    fun copyReferenceUrlToClipboard(item: ArticleSummaryItem) {
+        clipboardService.copyUrlToClipboard(item.url)
     }
 
 

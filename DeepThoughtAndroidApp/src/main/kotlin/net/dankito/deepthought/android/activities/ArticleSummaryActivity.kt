@@ -25,6 +25,7 @@ import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.utils.ImageCache
 import net.dankito.utils.serialization.ISerializer
+import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import org.slf4j.LoggerFactory
 import java.io.File
@@ -62,6 +63,9 @@ class ArticleSummaryActivity : BaseActivity() {
     protected lateinit var router: IRouter
 
     @Inject
+    protected lateinit var clipboardService: IClipboardService
+
+    @Inject
     protected lateinit var dialogService: IDialogService
 
 
@@ -81,7 +85,7 @@ class ArticleSummaryActivity : BaseActivity() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = ArticleSummaryPresenter(entryPersister, readLaterArticleService, articleExtractorManager, router, dialogService)
+        presenter = ArticleSummaryPresenter(entryPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService)
 
         adapter = ArticleSummaryItemRecyclerAdapter(this, presenter)
     }

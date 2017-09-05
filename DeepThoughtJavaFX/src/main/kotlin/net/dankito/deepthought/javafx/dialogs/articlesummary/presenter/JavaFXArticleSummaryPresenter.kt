@@ -13,6 +13,7 @@ import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.service.data.ReadLaterArticleService
+import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import tornadofx.*
 import java.text.DateFormat
@@ -22,9 +23,9 @@ import java.util.*
 /**
  * Yeah, i know this is bad design, a Controller deriving from a Presenter ...
  */
-class JavaFXArticleSummaryPresenter(private val articleSummaryExtractor: ArticleSummaryExtractorConfig, entryPersister: EntryPersister,
-                                    readLaterArticleService: ReadLaterArticleService, articleExtractorManager: ArticleExtractorManager, router: IRouter, dialogService: IDialogService)
-    : ArticleSummaryPresenter(entryPersister, readLaterArticleService, articleExtractorManager, router, dialogService) {
+class JavaFXArticleSummaryPresenter(private val articleSummaryExtractor: ArticleSummaryExtractorConfig, entryPersister: EntryPersister, readLaterArticleService: ReadLaterArticleService,
+                                    articleExtractorManager: ArticleExtractorManager, router: IRouter, clipboardService: IClipboardService, dialogService: IDialogService)
+    : ArticleSummaryPresenter(entryPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService) {
 
 
     companion object {
