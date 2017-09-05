@@ -77,8 +77,6 @@ class ArticleSummaryActivity : BaseActivity() {
 
     private var recyclerViewMarginBottom: Int = -1
 
-    private val selectedArticlesInContextualActionMode = LinkedHashSet<ArticleSummaryItem>()
-
     private var mnLoadMore: MenuItem? = null
 
 
