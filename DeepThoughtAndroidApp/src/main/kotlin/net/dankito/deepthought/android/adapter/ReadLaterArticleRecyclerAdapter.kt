@@ -59,6 +59,7 @@ class ReadLaterArticleRecyclerAdapter(private val presenter: ReadLaterArticleLis
             preview = seriesAndPublishingDate + " | " + preview
         }
         viewHolder.txtSummary.text = preview
+        viewHolder.txtSummary.maxLines = 5
 
         viewHolder.imgPreviewImage.visibility = View.VISIBLE
 
