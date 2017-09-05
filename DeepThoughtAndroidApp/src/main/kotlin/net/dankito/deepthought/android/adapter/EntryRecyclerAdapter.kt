@@ -58,7 +58,7 @@ class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): Lis
             preview = seriesAndPublishingDate + " | " + preview
         }
         viewHolder.txtEntryPreview.text = preview
-        setTxtEntryPreviewMaxLines(viewHolder.txtEntryPreview, entry)
+        setTxtEntryPreviewMaxLines(viewHolder.txtEntryPreview, viewHolder.txtReferencePreview, entry)
 
         viewHolder.txtEntryTags.visibility = if (entry.hasTags()) View.VISIBLE else View.GONE
         viewHolder.txtEntryTags.text = entry.tagsPreview
@@ -76,11 +76,15 @@ class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): Lis
     }
 
 
-    private fun setTxtEntryPreviewMaxLines(txtEntryPreview: TextView, entry: Entry) {
-        var countPreviewLines = if(entry.hasReference()) 3 else 4
+    private fun setTxtEntryPreviewMaxLines(txtEntryPreview: TextView, txtReferencePreview: TextView, entry: Entry) {
+        var countPreviewLines = if(entry.hasReference()) 4 else 5
 
-        if(entry.hasTags() == false) {
-            countPreviewLines++
+        if(txtReferencePreview.lineCount == 2 || txtReferencePreview.text.length >= 50) {
+            countPreviewLines--
+        }
+
+        if(entry.hasTags()) {
+            countPreviewLines--
         }
 
         txtEntryPreview.setLines(countPreviewLines)
