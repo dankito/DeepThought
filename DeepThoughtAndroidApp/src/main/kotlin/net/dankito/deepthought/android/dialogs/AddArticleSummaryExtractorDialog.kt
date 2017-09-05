@@ -6,11 +6,9 @@ import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
+import android.view.*
 import android.view.View.VISIBLE
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
 import android.widget.ListView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.dialog_add_article_summary_extractor.*
@@ -75,6 +73,7 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
             view.lstFeedSearchResults.setOnItemClickListener { _, _, position, _ -> foundFeedAddressSelected(position) }
 
             view.edtxtFeedOrWebsiteUrl.addTextChangedListener(edtxtFeedOrWebsiteUrlTextWatcher)
+            view.edtxtFeedOrWebsiteUrl.setOnEditorActionListener { _, actionId, keyEvent -> handleEditFeedOrWebsiteUrlAction(actionId, keyEvent) }
             view.edtxtFeedOrWebsiteUrl.setOnFocusChangeListener { _, hasFocus ->
                 if(hasFocus) {
                     dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
@@ -237,6 +236,16 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
         builder.create().show()
     }
 
+
+    private fun handleEditFeedOrWebsiteUrlAction(actionId: Int, keyEvent: KeyEvent?): Boolean {
+        if(actionId == EditorInfo.IME_ACTION_SEARCH || (actionId == EditorInfo.IME_NULL && keyEvent?.action == KeyEvent.ACTION_DOWN)) {
+            checkFeedOrWebsiteUrl(edtxtFeedOrWebsiteUrl.text.toString())
+
+            return true
+        }
+
+        return false
+    }
 
     private val edtxtFeedOrWebsiteUrlTextWatcher = object : TextWatcher {
 
