@@ -1,7 +1,7 @@
 package net.dankito.deepthought.android.adapter
 
+import android.app.Activity
 import android.support.design.widget.AppBarLayout
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.ActionBarContextView
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
@@ -13,7 +13,7 @@ import android.widget.LinearLayout
 import net.dankito.deepthought.android.R
 
 
-abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(private val activity: AppCompatActivity, list: List<T> = ArrayList<T>()) :
+abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(private val activity: Activity, private val menuResourceId: Int, list: List<T> = ArrayList<T>()) :
         ListRecyclerSwipeAdapter<T, THolder>(list) {
 
     private var actionMode: android.view.ActionMode? = null
@@ -86,16 +86,12 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
     private val actionModeCallback = object : AbsListView.MultiChoiceModeListener {
 
         override fun onCreateActionMode(mode: android.view.ActionMode, menu: Menu): Boolean {
-            mode.menuInflater.inflate(R.menu.activity_article_summary_contextual_action_menu, menu)
+            mode.menuInflater.inflate(menuResourceId, menu)
 
-            val viewArticleItem = menu.findItem(R.id.mnViewArticle)
-            viewArticleItem?.actionView?.setOnClickListener { onActionItemClicked(mode, viewArticleItem) }
-
-            val saveArticleForLaterReadingItem = menu.findItem(R.id.mnSaveArticleForLaterReading)
-            saveArticleForLaterReadingItem?.actionView?.setOnClickListener { onActionItemClicked(mode, saveArticleForLaterReadingItem) }
-
-            val saveArticleItem = menu.findItem(R.id.mnSaveArticle)
-            saveArticleItem?.actionView?.setOnClickListener { onActionItemClicked(mode, saveArticleItem) }
+            for(i in 0..menu.size() - 1) {
+                val menuItem = menu.getItem(i)
+                menuItem?.actionView?.setOnClickListener { onActionItemClicked(mode, menuItem) }
+            }
 
             placeActionModeBarInAppBarLayout()
 
