@@ -35,10 +35,10 @@
 
 
     <!-- Surface View Start (the view that's displayed by default) -->
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:gravity="center_vertical"
+    <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:gravity="center_vertical"
         >
 
         <TextView
@@ -72,6 +72,7 @@
             android:minLines="3"
             android:ellipsize="end"
             android:gravity="center_vertical"
+            style="@style/TextBodyStyle"
             />
 
         <TextView
