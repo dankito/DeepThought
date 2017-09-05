@@ -128,7 +128,10 @@ class ArticleSummaryExtractorConfigDialog {
 
         activity.runOnUiThread {
             adapter.setItems(icons)
-            currentIcon?.let { lstIcons.setItemChecked(icons.indexOf(it), true) } // select current icon
+            currentIcon?.let {
+                lstIcons.setItemChecked(icons.indexOf(it), true)
+                lstIcons.smoothScrollToPosition(icons.indexOf(currentIcon))
+            }
         }
     }
 
