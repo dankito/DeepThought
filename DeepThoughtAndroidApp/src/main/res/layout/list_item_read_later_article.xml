@@ -55,9 +55,9 @@
 
     <!-- Surface View Start (the view that's displayed by default) -->
     <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/list_item_background">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/list_item_background">
 
         <ImageView
             android:id="@+id/imgPreviewImage"
@@ -85,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:maxLines="2"
                 android:ellipsize="end"
-                android:textSize="@dimen/list_item_read_later_article_title_text_size"
+                style="@style/Header1Style"
             />
 
             <TextView
@@ -95,7 +95,8 @@
                 android:layout_below="@+id/txtTitle"
                 android:layout_gravity="center_vertical"
                 android:gravity="center|start"
-                android:textSize="@dimen/list_item_read_later_article_summary_text_size"
+                android:ellipsize="end"
+                style="@style/TextBodyStyle"
             />
 
         </RelativeLayout>
