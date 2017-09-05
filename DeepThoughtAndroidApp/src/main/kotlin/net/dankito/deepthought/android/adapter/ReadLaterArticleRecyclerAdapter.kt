@@ -9,6 +9,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.ReadLaterArticleViewHolder
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.model.extensions.preview
+import net.dankito.deepthought.model.extensions.seriesAndPublishingDatePreview
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.presenter.ReadLaterArticleListPresenter
 
@@ -52,7 +53,12 @@ class ReadLaterArticleRecyclerAdapter(private val presenter: ReadLaterArticleLis
         viewHolder.txtTitle.text = referencePreview
 
         viewHolder.txtSummary.visibility = View.VISIBLE
-        viewHolder.txtSummary.text = extractionResult.entry.preview
+        var preview = extractionResult.entry.preview
+        val seriesAndPublishingDate = extractionResult.reference.seriesAndPublishingDatePreview
+        if(seriesAndPublishingDate.isNullOrBlank() == false) {
+            preview = seriesAndPublishingDate + " | " + preview
+        }
+        viewHolder.txtSummary.text = preview
 
         viewHolder.imgPreviewImage.visibility = View.VISIBLE
 
