@@ -3,6 +3,7 @@ package net.dankito.deepthought.android.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.daimajia.swipe.SwipeLayout
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.TagsOnEntryViewHolder
 import net.dankito.deepthought.model.Tag
@@ -14,8 +15,10 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
 
     var tagsOnEntry: MutableList<Tag> = mutableListOf()
 
+    var deleteTagListener: ((Tag) -> Unit)? = null
 
-    override fun getSwipeLayoutResourceId(position: Int) = 0
+
+    override fun getSwipeLayoutResourceId(position: Int) = R.id.tagOnEntrySwipeLayout
 
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TagsOnEntryViewHolder {
@@ -29,6 +32,7 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
 
         if(tag == null) {
             viewHolder.chktxtvwTag.visibility = View.INVISIBLE
+            (viewHolder.itemView as? SwipeLayout)?.isSwipeEnabled = false
         }
         else {
             viewHolder.chktxtvwTag.visibility = View.VISIBLE
@@ -39,6 +43,10 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
             viewHolder.chktxtvwTag.setOnClickListener { toggleTagOnEntryOnUIThread(position) }
 
             itemBound(viewHolder, tag, position)
+
+            (viewHolder.itemView as? SwipeLayout)?.isSwipeEnabled = true
+            viewHolder.btnEditTag.setOnClickListener { presenter.editTag(tag) }
+            viewHolder.btnDeleteTag.setOnClickListener { deleteTagListener?.invoke(tag) }
         }
 
         setBackgroundColor(viewHolder.itemView, tag)

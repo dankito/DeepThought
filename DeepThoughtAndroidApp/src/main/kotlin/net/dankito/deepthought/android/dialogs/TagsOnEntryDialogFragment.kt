@@ -5,12 +5,10 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.ContextMenu
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.AdapterView
 import android.widget.Button
 import android.widget.TextView
 import kotlinx.android.synthetic.main.dialog_tags_on_entry.*
@@ -104,7 +102,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
         rootView.toolbar.setNavigationOnClickListener { closeDialog() }
 
         rootView.rcyTags.adapter = adapter
-        registerForContextMenu(rootView.rcyTags)
+        adapter.deleteTagListener = { tag -> deleteTag(tag) }
 
         txtTagsPreview = rootView.txtTagsPreview
         setTagsOnEntryPreviewOnUIThread(adapter.tagsOnEntry)
@@ -161,37 +159,6 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
         return false
     }
 
-
-    override fun onCreateContextMenu(menu: ContextMenu, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
-        super.onCreateContextMenu(menu, v, menuInfo)
-
-        activity?.menuInflater?.inflate(R.menu.list_item_tag_menu, menu)
-
-        // workaround as onContextItemSelected() doesn't get called in Fragment
-        for(i in 0..menu.size() - 1) {
-            menu.getItem(i).setOnMenuItemClickListener { item -> onContextItemSelected(item) }
-        }
-    }
-
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        (item.menuInfo as? AdapterView.AdapterContextMenuInfo)?.position?.let { position ->
-            val selectedTag = adapter.getItem(position)
-
-            when(item.itemId) {
-                R.id.mnEditTag -> {
-                    presenter.editTag(selectedTag)
-                    return true
-                }
-                R.id.mnDeleteTag -> {
-                    deleteTag(selectedTag)
-                    return true
-                }
-                else -> return super.onContextItemSelected(item)
-            }
-        }
-
-        return super.onContextItemSelected(item)
-    }
 
     private fun deleteTag(tag: Tag) {
         if(adapter.tagsOnEntry.contains(tag)) {
