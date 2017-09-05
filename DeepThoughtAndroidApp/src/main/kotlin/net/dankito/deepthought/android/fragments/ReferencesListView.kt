@@ -2,11 +2,6 @@ package net.dankito.deepthought.android.fragments
 
 import android.app.Activity
 import android.support.v7.widget.RecyclerView
-import android.view.ContextMenu
-import android.view.MenuItem
-import android.view.View
-import android.widget.AdapterView
-import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.ReferenceRecyclerAdapter
@@ -70,49 +65,6 @@ class ReferencesListView: MainActivityTabFragment(R.menu.fragment_tab_references
             hideSearchViewKeyboard()
             presenter.showEntriesForReference(reference)
         }
-    }
-
-
-    override fun setupUI(rootView: View?) {
-        super.setupUI(rootView)
-
-        rootView?.let {
-            registerForContextMenu(rootView.rcyEntities)
-        }
-    }
-
-    override fun onCreateContextMenu(menu: ContextMenu, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
-        super.onCreateContextMenu(menu, v, menuInfo)
-
-        activity?.menuInflater?.inflate(R.menu.list_item_reference_menu, menu)
-    }
-
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        (item.menuInfo as? AdapterView.AdapterContextMenuInfo)?.position?.let { position ->
-            if(position >= adapter.itemCount) {
-                return super.onContextItemSelected(item)
-            }
-
-            val selectedReference = adapter.getItem(position)
-
-            when(item.itemId) {
-                R.id.mnEditReference -> {
-                    presenter.editReference(selectedReference)
-                    return true
-                }
-                R.id.mnShareReferenceUrl -> {
-                    presenter.copyReferenceUrlToClipboard(selectedReference)
-                    return true
-                }
-                R.id.mnDeleteReference -> {
-                    presenter.deleteReference(selectedReference)
-                    return true
-                }
-                else -> return super.onContextItemSelected(item)
-            }
-        }
-
-        return super.onContextItemSelected(item)
     }
 
 

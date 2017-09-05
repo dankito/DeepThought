@@ -3,12 +3,8 @@ package net.dankito.deepthought.android.fragments
 import android.app.Activity
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
-import android.view.ContextMenu
-import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.AdapterView
-import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.TagRecyclerAdapter
@@ -79,47 +75,6 @@ class TagsListView : MainActivityTabFragment(R.menu.fragment_tab_tags_menu, R.st
 
     override fun listItemClicked(selectedItem: BaseEntity) {
         tagSelected(selectedItem as? Tag)
-    }
-
-
-    override fun setupUI(rootView: View?) {
-        super.setupUI(rootView)
-
-        rootView?.let {
-            registerForContextMenu(rootView.rcyEntities)
-        }
-    }
-
-    override fun onCreateContextMenu(menu: ContextMenu, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
-        super.onCreateContextMenu(menu, v, menuInfo)
-
-        activity?.menuInflater?.inflate(R.menu.list_item_tag_menu, menu)
-    }
-
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        (item.menuInfo as? AdapterView.AdapterContextMenuInfo)?.position?.let { position ->
-            if(position >= adapter.itemCount) { // couldn't believe it: if ReferenceListView is selected before TagsListView is loaded and a context menu item is selected in
-                // ReferencesListView, FragmentManager.dispatchContextItemSelected()  routes onContextItemSelected() first to TagsListView -> adapter is empty, calling
-                // adapter.getItem(position) crashes application
-                return super.onContextItemSelected(item)
-            }
-
-            val selectedTag = adapter.getItem(position)
-
-            when(item.itemId) {
-                R.id.mnEditTag -> {
-                    presenter.editTag(selectedTag)
-                    return true
-                }
-                R.id.mnDeleteTag -> {
-                    presenter.deleteTagAsync(selectedTag)
-                    return true
-                }
-                else -> return super.onContextItemSelected(item)
-            }
-        }
-
-        return super.onContextItemSelected(item)
     }
 
 
