@@ -16,11 +16,11 @@ class AndroidClipboardService(private val activityTracker: CurrentActivityTracke
     private var shareActionProvider: ShareActionProvider? = null
 
 
-    override fun copyReferenceUrlToClipboard(reference: Reference) {
+    override fun copyUrlToClipboard(url: String) {
         val shareIntent = Intent()
         shareIntent.action = Intent.ACTION_SEND
 
-        shareIntent.putExtra(Intent.EXTRA_TEXT, reference.url)
+        shareIntent.putExtra(Intent.EXTRA_TEXT, url)
 
         shareIntent.type = "text/plain"
 

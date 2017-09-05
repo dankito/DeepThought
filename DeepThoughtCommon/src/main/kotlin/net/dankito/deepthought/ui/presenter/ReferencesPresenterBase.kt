@@ -35,7 +35,7 @@ abstract class ReferencesPresenterBase(private var searchEngine: ISearchEngine, 
     }
 
     fun copyReferenceUrlToClipboard(reference: Reference) {
-        clipboardService.copyReferenceUrlToClipboard(reference)
+        reference.url?.let { clipboardService.copyUrlToClipboard(it) }
     }
 
     fun deleteReference(reference: Reference) {

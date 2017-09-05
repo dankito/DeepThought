@@ -32,7 +32,7 @@ class EditEntryPresenter(private val entryPersister: EntryPersister, private val
 
 
     fun shareReferenceUrl(reference: Reference) {
-        clipboardService.copyReferenceUrlToClipboard(reference)
+        reference.url?.let { clipboardService.copyUrlToClipboard(it) }
     }
 
     fun shareEntry(entry: Entry, reference: Reference?) {

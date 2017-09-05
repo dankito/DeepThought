@@ -81,8 +81,8 @@ class ReadLaterArticleListPresenter(private val view: IReadLaterArticleView, pri
     }
 
     fun copyReferenceUrlToClipboard(article: ReadLaterArticle) {
-        article.entryExtractionResult.reference?.let { reference ->
-            clipboardService.copyReferenceUrlToClipboard(reference)
+        article.entryExtractionResult.reference?.url?.let { url ->
+            clipboardService.copyUrlToClipboard(url)
         }
     }
 

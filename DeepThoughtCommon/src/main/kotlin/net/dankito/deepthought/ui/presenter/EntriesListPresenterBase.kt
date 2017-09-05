@@ -14,8 +14,8 @@ abstract class EntriesListPresenterBase(private val deleteEntityService: DeleteE
     }
 
     fun copyReferenceUrlToClipboard(entry: Entry) {
-        entry.reference?.let {
-            clipboardService.copyReferenceUrlToClipboard(it)
+        entry.reference?.url?.let {
+            clipboardService.copyUrlToClipboard(it)
         }
     }
 

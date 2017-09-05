@@ -7,7 +7,7 @@ import net.dankito.utils.ui.IClipboardService
 
 class JavaFXClipboardService : IClipboardService {
 
-    override fun copyReferenceUrlToClipboard(reference: Reference) {
+    override fun copyUrlToClipboard(url: String) {
     }
 
     override fun copyEntryToClipboard(entry: Entry, reference: Reference?) {

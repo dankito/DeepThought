@@ -6,7 +6,7 @@ import net.dankito.deepthought.model.Reference
 
 interface IClipboardService {
 
-    fun copyReferenceUrlToClipboard(reference: Reference)
+    fun copyUrlToClipboard(url: String)
 
     fun copyEntryToClipboard(entry: Entry, reference: Reference?)
 
