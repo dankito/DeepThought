@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import kotlinx.android.synthetic.main.list_item_article_summary_item.view.*
+import kotlinx.android.synthetic.main.list_item_read_later_article.view.*
 
 
 class ArticleSummaryItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

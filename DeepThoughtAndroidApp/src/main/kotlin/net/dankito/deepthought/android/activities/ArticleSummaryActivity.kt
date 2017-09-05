@@ -300,7 +300,7 @@ class ArticleSummaryActivity : BaseActivity() {
         adapter.items = summary.articles
 
         if(summary.indexOfAddedItems > 0) {
-            val centerOffset = (rcyArticleSummaryItems.height - resources.getDimension(R.dimen.list_item_article_summary_item_min_height)) / 2
+            val centerOffset = (rcyArticleSummaryItems.height - resources.getDimension(R.dimen.list_item_read_later_article_min_height)) / 2
             (rcyArticleSummaryItems.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(summary.indexOfAddedItems, centerOffset.toInt())
         }
     }

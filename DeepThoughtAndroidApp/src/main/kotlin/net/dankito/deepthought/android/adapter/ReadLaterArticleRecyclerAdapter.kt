@@ -19,7 +19,7 @@ class ReadLaterArticleRecyclerAdapter(private val presenter: ReadLaterArticleLis
 
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ReadLaterArticleViewHolder {
-        val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_article_summary_item, parent, false)
+        val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_read_later_article, parent, false)
 
         return ReadLaterArticleViewHolder(itemView)
     }

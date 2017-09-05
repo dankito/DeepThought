@@ -4,7 +4,7 @@
     android:id="@+id/readLaterArticleSwipeLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="@dimen/list_item_article_summary_item_min_height"
+    android:minHeight="@dimen/list_item_read_later_article_min_height"
 >
 
     <!-- Bottom View Start (the view that gets displayed when the user swipes from right to left. for explanation see https://github.com/daimajia/AndroidSwipeLayout/wiki/usage) -->
@@ -17,7 +17,7 @@
 
         <ImageButton
             android:id="@+id/btnSaveArticleSummaryItemForLaterReading"
-            android:layout_width="@dimen/list_item_article_summary_item_button_width"
+            android:layout_width="@dimen/list_item_read_later_article_button_width"
             android:layout_height="match_parent"
             android:src="@drawable/ic_read_later"
             android:scaleType="fitCenter"
@@ -26,7 +26,7 @@
 
         <ImageButton
             android:id="@+id/btnSaveArticleSummaryItemOrReadLaterArticle"
-            android:layout_width="@dimen/list_item_article_summary_item_button_width"
+            android:layout_width="@dimen/list_item_read_later_article_button_width"
             android:layout_height="match_parent"
             android:src="@android:drawable/ic_menu_save"
             android:scaleType="fitCenter"
@@ -34,7 +34,7 @@
 
         <ImageButton
             android:id="@+id/btnShareArticleSummaryItemOrReadLaterArticle"
-            android:layout_width="@dimen/list_item_article_summary_item_button_width"
+            android:layout_width="@dimen/list_item_read_later_article_button_width"
             android:layout_height="match_parent"
             android:src="@android:drawable/ic_menu_share"
             android:scaleType="fitCenter"
@@ -43,7 +43,7 @@
 
         <ImageButton
             android:id="@+id/btnDeleteReadLaterArticle"
-            android:layout_width="@dimen/list_item_article_summary_item_button_width"
+            android:layout_width="@dimen/list_item_read_later_article_button_width"
             android:layout_height="match_parent"
             android:src="@android:drawable/ic_menu_delete"
             android:scaleType="fitXY"
@@ -61,10 +61,10 @@
 
         <ImageView
             android:id="@+id/imgPreviewImage"
-            android:layout_width="@dimen/list_item_article_summary_item_preview_image_size"
-            android:layout_height="@dimen/list_item_article_summary_item_preview_image_size"
-            android:layout_marginRight="@dimen/list_item_article_summary_item_preview_image_margin_right"
-            android:layout_marginEnd="@dimen/list_item_article_summary_item_preview_image_margin_right"
+            android:layout_width="@dimen/list_item_read_later_article_preview_image_size"
+            android:layout_height="@dimen/list_item_read_later_article_preview_image_size"
+            android:layout_marginRight="@dimen/list_item_read_later_article_preview_image_margin_right"
+            android:layout_marginEnd="@dimen/list_item_read_later_article_preview_image_margin_right"
             android:layout_centerVertical="true"
         />
 
@@ -85,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:maxLines="2"
                 android:ellipsize="end"
-                android:textSize="@dimen/list_item_article_summary_item_title_text_size"
+                android:textSize="@dimen/list_item_read_later_article_title_text_size"
             />
 
             <TextView
@@ -95,7 +95,7 @@
                 android:layout_below="@+id/txtTitle"
                 android:layout_gravity="center_vertical"
                 android:gravity="center|start"
-                android:textSize="@dimen/list_item_article_summary_item_summary_text_size"
+                android:textSize="@dimen/list_item_read_later_article_summary_text_size"
             />
 
         </RelativeLayout>

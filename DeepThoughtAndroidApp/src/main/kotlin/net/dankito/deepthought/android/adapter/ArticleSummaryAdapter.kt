@@ -6,7 +6,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.list_item_article_summary_item.view.*
+import kotlinx.android.synthetic.main.list_item_read_later_article.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
@@ -25,7 +25,7 @@ class ArticleSummaryAdapter : ListAdapter<ArticleSummaryItem>() {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val articleSummaryItem = getItem(position)
 
-        val view = convertView ?: LayoutInflater.from(parent?.context).inflate(R.layout.list_item_article_summary_item, parent, false)
+        val view = convertView ?: LayoutInflater.from(parent?.context).inflate(R.layout.list_item_read_later_article, parent, false)
 
         view.txtTitle.visibility = if(articleSummaryItem.title.isBlank()) { GONE } else { VISIBLE }
         view.txtTitle.text = articleSummaryItem.title

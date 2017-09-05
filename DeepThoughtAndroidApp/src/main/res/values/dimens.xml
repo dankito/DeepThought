@@ -55,12 +55,12 @@
     <dimen name="list_item_article_summary_extractor_is_favorite_margin_right">10dp</dimen>
     <dimen name="list_item_article_summary_extractor_favorite_index_bottom_margin">10dp</dimen>
 
-    <dimen name="list_item_article_summary_item_min_height">84dp</dimen>
-    <dimen name="list_item_article_summary_item_button_width">84dp</dimen>
-    <dimen name="list_item_article_summary_item_preview_image_size">80dp</dimen>
-    <dimen name="list_item_article_summary_item_preview_image_margin_right">6dp</dimen>
-    <dimen name="list_item_article_summary_item_title_text_size">12sp</dimen>
-    <dimen name="list_item_article_summary_item_summary_text_size">10sp</dimen>
+    <dimen name="list_item_read_later_article_min_height">84dp</dimen>
+    <dimen name="list_item_read_later_article_button_width">84dp</dimen>
+    <dimen name="list_item_read_later_article_preview_image_size">80dp</dimen>
+    <dimen name="list_item_read_later_article_preview_image_margin_right">6dp</dimen>
+    <dimen name="list_item_read_later_article_title_text_size">12sp</dimen>
+    <dimen name="list_item_read_later_article_summary_text_size">10sp</dimen>
 
     <dimen name="dialog_add_article_summary_extractor_margin_left_and_right">24dp</dimen>
     <dimen name="dialog_add_article_summary_extractor_text_feed_or_website_url_margin_top_and_bottom">6dp</dimen>
