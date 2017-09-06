@@ -253,7 +253,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
     }
 
     private fun setTagsOnEntryPreviewOnUIThread(tagsOnEntry: MutableList<Tag>) {
-        txtTagsPreview?.text = tagsOnEntry.sortedBy { it.name.toLowerCase() }.joinToString { it.name }
+        txtTagsPreview?.text = tagsOnEntry.filterNotNull().sortedBy { it.name.toLowerCase() }.joinToString { it.name }
 
         mnApplyTagsOnEntryChanges?.isVisible = didTagsOnEntryChange(tagsOnEntry)
     }
