@@ -16,7 +16,7 @@ import kotlin.collections.HashSet
 import kotlin.concurrent.schedule
 
 
-abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(private val activity: Activity, private val menuResourceId: Int, list: List<T> = ArrayList<T>()) :
+abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(list: List<T> = ArrayList<T>()) :
         ListRecyclerSwipeAdapter<T, THolder>(list) {
 
     private var actionMode: android.view.ActionMode? = null
@@ -28,15 +28,28 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
     private val selectedItemsInContextualActionMode = LinkedHashSet<T>()
 
 
+    private var activity: Activity? = null
+
+    private var menuResourceId: Int? = null
+
     var actionItemClickListener: ((mode: android.view.ActionMode, actionItem: MenuItem, selectedItems: Set<T>) -> Boolean)? = null
 
 
-    override fun itemLongClicked(item: T, position: Int) {
-        if(actionMode == null) {
-            actionMode = activity.startActionMode(actionModeCallback)
-        }
+    fun enableMultiSelectionMode(activity: Activity, menuResourceId: Int, actionItemClickListener: ((mode: android.view.ActionMode, actionItem: MenuItem, selectedItems: Set<T>) -> Boolean)? = null) {
+        this.activity = activity
+        this.menuResourceId = menuResourceId
+        this.actionItemClickListener = actionItemClickListener
+    }
 
-        toggleSelection(item, position)
+
+    override fun itemLongClicked(item: T, position: Int) {
+        if(isMultiSelectModeEnabled()) {
+            if(actionMode == null) {
+                actionMode = activity?.startActionMode(actionModeCallback)
+            }
+
+            toggleSelection(item, position)
+        }
 
         super.itemLongClicked(item, position)
     }
@@ -67,7 +80,7 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
             actionMode?.finish()
         }
         else {
-            actionMode?.title = activity.getString(R.string.activity_article_summary_menu_count_articles_selected, selectedItemsInContextualActionMode.size, itemCount)
+            actionMode?.title = activity?.getString(R.string.activity_article_summary_menu_count_articles_selected, selectedItemsInContextualActionMode.size, itemCount)
             actionMode?.invalidate()
         }
     }
@@ -84,6 +97,10 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
     }
 
 
+    fun isMultiSelectModeEnabled(): Boolean {
+        return activity != null && menuResourceId != null
+    }
+
     fun isInMultiSelectMode(): Boolean {
         return actionMode != null
     }
@@ -93,14 +110,14 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
     private val actionModeCallback = object : AbsListView.MultiChoiceModeListener {
 
         override fun onCreateActionMode(mode: android.view.ActionMode, menu: Menu): Boolean {
-            mode.menuInflater.inflate(menuResourceId, menu)
+            menuResourceId?.let { mode.menuInflater.inflate(it, menu) }
 
             for(i in 0..menu.size() - 1) {
                 val menuItem = menu.getItem(i)
                 menuItem?.actionView?.setOnClickListener { onActionItemClicked(mode, menuItem) }
             }
 
-            placeActionModeBarInAppBarLayout()
+            activity?.let { placeActionModeBarInAppBarLayout(it) }
 
             return true
         }
@@ -121,23 +138,25 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
         }
 
         override fun onDestroyActionMode(mode: android.view.ActionMode) {
-            activity.findViewById(android.support.v7.appcompat.R.id.action_mode_bar)?.let { actionModeBar ->
-                actionModeBar.visibility = View.GONE // hide action_mode_bar here as otherwise it will be displayed together with toolbar
+            activity?.let { activity ->
+                activity.findViewById(android.support.v7.appcompat.R.id.action_mode_bar)?.let { actionModeBar ->
+                    actionModeBar.visibility = View.GONE // hide action_mode_bar here as otherwise it will be displayed together with toolbar
 
-                activity.findViewById(R.id.toolbar)?.let { it.visibility = View.VISIBLE }
+                    activity.findViewById(R.id.toolbar)?.let { it.visibility = View.VISIBLE }
+                }
+
+                selectedItemsInContextualActionMode.clear()
+                actionMode = null
+
+                notifyDataSetChanged()
+
+                fixItemGetsShownInPressedStateBug(activity)
             }
-
-            selectedItemsInContextualActionMode.clear()
-            actionMode = null
-
-            notifyDataSetChanged()
-
-            fixItemGetsShownInPressedStateBug()
         }
 
     }
 
-    private fun fixItemGetsShownInPressedStateBug() {
+    private fun fixItemGetsShownInPressedStateBug(activity: Activity) {
         // this is a real curious bug in Android (https://stackoverflow.com/questions/32559649/recyclerview-pressed-state-of-items-is-getting-messed-up):
         // after deselecting last item from multi select mode by hand in most cases an arbitrary item gets shown in pressed state (the user therefore thinks it is selected)
         // to circumvent this, we have to wait some time and unpress it with this really beautiful code. But user then sees a short blink anyway
@@ -157,12 +176,12 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
         }
     }
 
-    private fun placeActionModeBarInAppBarLayout() {
+    private fun placeActionModeBarInAppBarLayout(activity: Activity) {
         (activity.findViewById(android.support.v7.appcompat.R.id.action_bar_root) as? LinearLayout)?.let { actionBarRoot ->
             for(i in 0..actionBarRoot.childCount) { // starting with second call ActionBarContextView is already in correct place in appBarLayout -> won't find it in action_bar_root anymore
                 val child = actionBarRoot.getChildAt(i)
                 if(child is ActionBarContextView) {
-                    placeActionModeBarInAppBarLayout(child)
+                    placeActionModeBarInAppBarLayout(activity, child)
                 }
             }
 
@@ -170,7 +189,7 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
         }
     }
 
-    private fun placeActionModeBarInAppBarLayout(actionModeBar: ActionBarContextView) {
+    private fun placeActionModeBarInAppBarLayout(activity: Activity, actionModeBar: ActionBarContextView) {
         this.actionModeBar = actionModeBar
         actionModeBar.setBackgroundResource(R.drawable.primary_color_gradient)
 

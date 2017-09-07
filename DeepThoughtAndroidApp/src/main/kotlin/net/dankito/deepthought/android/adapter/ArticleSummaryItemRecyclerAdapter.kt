@@ -13,7 +13,12 @@ import net.dankito.newsreader.model.ArticleSummaryItem
 
 
 class ArticleSummaryItemRecyclerAdapter(activity: AppCompatActivity, private val presenter: ArticleSummaryPresenter):
-        MultiSelectListRecyclerSwipeAdapter<ArticleSummaryItem, ArticleSummaryItemViewHolder>(activity, R.menu.activity_article_summary_contextual_action_menu) {
+        MultiSelectListRecyclerSwipeAdapter<ArticleSummaryItem, ArticleSummaryItemViewHolder>() {
+
+    init {
+        enableMultiSelectionMode(activity, R.menu.activity_article_summary_contextual_action_menu)
+    }
+
 
     override fun getSwipeLayoutResourceId(position: Int) = R.id.readLaterArticleSwipeLayout
 
