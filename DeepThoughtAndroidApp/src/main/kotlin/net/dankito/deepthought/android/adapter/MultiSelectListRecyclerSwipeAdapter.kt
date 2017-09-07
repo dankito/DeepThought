@@ -1,7 +1,6 @@
 package net.dankito.deepthought.android.adapter
 
 import android.app.Activity
-import android.support.design.widget.AppBarLayout
 import android.support.v7.widget.ActionBarContextView
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
@@ -32,12 +31,16 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
 
     private var menuResourceId: Int? = null
 
+    private var layoutToPlaceActionModeBarInResourceId: Int = R.id.appBarLayout
+
     var actionItemClickListener: ((mode: android.view.ActionMode, actionItem: MenuItem, selectedItems: Set<T>) -> Boolean)? = null
 
 
-    fun enableMultiSelectionMode(activity: Activity, menuResourceId: Int, actionItemClickListener: ((mode: android.view.ActionMode, actionItem: MenuItem, selectedItems: Set<T>) -> Boolean)? = null) {
+    fun enableMultiSelectionMode(activity: Activity, menuResourceId: Int, layoutToPlaceActionModeBarInResourceId: Int = R.id.appBarLayout,
+                                 actionItemClickListener: ((mode: android.view.ActionMode, actionItem: MenuItem, selectedItems: Set<T>) -> Boolean)? = null) {
         this.activity = activity
         this.menuResourceId = menuResourceId
+        this.layoutToPlaceActionModeBarInResourceId = layoutToPlaceActionModeBarInResourceId
         this.actionItemClickListener = actionItemClickListener
     }
 
@@ -196,8 +199,8 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
         (actionModeBar.parent as? ViewGroup)?.let { parent ->
             parent.removeView(actionModeBar)
 
-            (activity.findViewById(R.id.appBarLayout) as? AppBarLayout)?.let { appBarLayout ->
-                appBarLayout.addView(actionModeBar)
+            (activity.findViewById(layoutToPlaceActionModeBarInResourceId) as? ViewGroup)?.let { layout ->
+                layout.addView(actionModeBar)
             }
         }
     }
