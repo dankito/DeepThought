@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.widget.Toolbar
 import android.view.*
-import net.dankito.deepthought.android.MainActivity
 import net.dankito.deepthought.android.R
 
 
@@ -30,9 +29,6 @@ abstract class FullscreenDialogFragment : DialogFragment() {
 
         if(hideStatusBar) {
             activity?.let { hideStatusBar(it) }
-        }
-        else if(activity is MainActivity) {
-            adjustDialogToShowStatusBar(rootView)
         }
 
         setupToolbar(rootView)
@@ -64,15 +60,6 @@ abstract class FullscreenDialogFragment : DialogFragment() {
 
             val uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN
             decorView.systemUiVisibility = uiOptions
-        }
-    }
-
-
-    private fun adjustDialogToShowStatusBar(rootView: View) {
-        // don't know why but when placing Dialog in android.R.id.content, the Dialog's content starts below the system status bar -> set a top margin in height of status bar
-        (rootView.layoutParams as? ViewGroup.MarginLayoutParams)?.let { params ->
-            params.setMargins(0, getStatusBarHeight(), 0, 0)
-            rootView.layoutParams = params
         }
     }
 
