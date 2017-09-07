@@ -49,15 +49,19 @@ android {
         }
     }
 
+    flavorDimensions "default"
+
     productFlavors {
         standard {
             ext.enableCrashlytics = false
+
+            dimension = "default"
         }
         beta {
-
+            dimension = "default"
         }
         extended {
-
+            dimension = "default"
         }
     }
 
