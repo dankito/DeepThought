@@ -37,6 +37,8 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
 
     private var htmlToSetOnStart: String? = null
 
+    private var htmlToEditLabelResourceId: Int? = null
+
     private var htmlChangedCallback: ((String) -> Unit)? = null
 
 
@@ -60,6 +62,9 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
 
         rootView.toolbar.setNavigationIcon(android.R.drawable.ic_menu_close_clear_cancel)
         rootView.toolbar.setNavigationOnClickListener { closeDialog() }
+
+        rootView.txtHtmlToEditLabel.visibility = if(htmlToEditLabelResourceId != null) View.VISIBLE else View.GONE
+        htmlToEditLabelResourceId?.let { rootView.txtHtmlToEditLabel.text = getString(it) }
 
         setupHtmlEditor(rootView)
     }
@@ -123,9 +128,10 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     }
 
 
-    fun showDialog(fragmentManager: FragmentManager, htmlToEdit: String, htmlChangedCallback: ((String) -> Unit)?) {
+    fun showDialog(fragmentManager: FragmentManager, htmlToEdit: String, htmlToEditLabelResourceId: Int? = null, htmlChangedCallback: ((String) -> Unit)?) {
         this.htmlChangedCallback = htmlChangedCallback
         this.htmlToSetOnStart = htmlToEdit
+        this.htmlToEditLabelResourceId = htmlToEditLabelResourceId
 
         showInFullscreen(fragmentManager, false)
     }

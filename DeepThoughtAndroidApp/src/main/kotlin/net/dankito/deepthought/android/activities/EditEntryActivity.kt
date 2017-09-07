@@ -298,7 +298,7 @@ class EditEntryActivity : BaseActivity() {
         contentToEdit?.let { content ->
             val editHtmlTextDialog = EditHtmlTextDialog()
 
-            editHtmlTextDialog.showDialog(supportFragmentManager, content) {
+            editHtmlTextDialog.showDialog(supportFragmentManager, content, R.string.activity_edit_entry_content_label) {
                 contentToEdit = it
 
                 entryHasBeenEdited()
@@ -315,7 +315,7 @@ class EditEntryActivity : BaseActivity() {
         abstractToEdit?.let { abstract ->
             val editHtmlTextDialog = EditHtmlTextDialog()
 
-            editHtmlTextDialog.showDialog(supportFragmentManager, abstract) {
+            editHtmlTextDialog.showDialog(supportFragmentManager, abstract, R.string.activity_edit_entry_abstract_label) {
                 abstractToEdit = it
 
                 entryHasBeenEdited()
