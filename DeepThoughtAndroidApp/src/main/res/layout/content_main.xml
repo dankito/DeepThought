@@ -14,16 +14,14 @@
     <!-- layout_marginTop: don't know why but by default ViewPager gets displayed below AppBarLayout -> setting AppBarLayout's size as margin top-->
 
 
-    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-                                       xmlns:tools="http://schemas.android.com/tools"
-                                       android:id="@+id/viewPager"
-                                       android:layout_width="match_parent"
-                                       android:layout_height="wrap_content"
-                                       android:layout_above="@+id/bottomViewNavigation"
-                                       android:layout_alignParentTop="true"
-                                       tools:context=".MainActivity" >
-
-    </android.support.v4.view.ViewPager>
+    <net.dankito.deepthought.android.views.NonSwipeableViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottomViewNavigation"
+        android:layout_alignParentTop="true"
+        tools:context=".MainActivity"
+        />
 
     <net.dankito.deepthought.android.views.AdvancedBottomNavigationView
         android:id="@+id/bottomViewNavigation"
