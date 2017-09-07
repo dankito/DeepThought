@@ -10,7 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
-import android.widget.TextView
+import com.google.android.flexbox.FlexboxLayout
 import kotlinx.android.synthetic.main.dialog_tags_on_entry.*
 import kotlinx.android.synthetic.main.dialog_tags_on_entry.view.*
 import net.dankito.deepthought.android.R
@@ -18,6 +18,7 @@ import net.dankito.deepthought.android.adapter.TagsOnEntryRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.service.showKeyboardDelayed
+import net.dankito.deepthought.android.views.TagsPreviewViewHelper
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.presenter.TagsOnEntryListPresenter
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
@@ -67,13 +68,15 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
 
     private val unmodifiedTagsOnEntry = ArrayList<Tag>()
 
+    private val tagsPreviewViewHelper = TagsPreviewViewHelper()
+
     private var lastActionPressTime = Date()
 
     private var tagsChangedCallback: ((MutableList<Tag>) -> Unit)? = null
 
     private var mnApplyTagsOnEntryChanges: MenuItem? = null
 
-    private var txtTagsPreview: TextView? = null
+    private var lytTagsPreview: FlexboxLayout? = null
 
     private var btnEditEntryCreateOrToggleTags: Button? = null
 
@@ -104,7 +107,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
         rootView.rcyTags.adapter = adapter
         adapter.deleteTagListener = { tag -> deleteTag(tag) }
 
-        txtTagsPreview = rootView.txtTagsPreview
+        lytTagsPreview = rootView.lytTagsPreview
         setTagsOnEntryPreviewOnUIThread(adapter.tagsOnEntry)
 
         btnEditEntryCreateOrToggleTags = rootView.btnEditEntryCreateOrToggleTags
@@ -253,7 +256,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
     }
 
     private fun setTagsOnEntryPreviewOnUIThread(tagsOnEntry: MutableList<Tag>) {
-        txtTagsPreview?.text = tagsOnEntry.filterNotNull().sortedBy { it.name.toLowerCase() }.joinToString { it.name }
+        lytTagsPreview?.let { tagsPreviewViewHelper.showTagsPreview(it, tagsOnEntry) }
 
         mnApplyTagsOnEntryChanges?.isVisible = didTagsOnEntryChange(tagsOnEntry)
     }

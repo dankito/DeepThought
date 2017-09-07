@@ -58,6 +58,8 @@ ext {
 
     swipeLayoutVersion = '1.2.0@aar'
 
+    flexboxVersion = '0.3.0'
+
     picassoVersion = '2.5.2'
 
 

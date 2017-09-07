@@ -19,16 +19,16 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_alignTop="@+id/txtTagsPreview"
-            android:layout_alignBottom="@+id/txtTagsPreview"
+            android:layout_alignTop="@+id/lytTagsPreview"
+            android:layout_alignBottom="@+id/lytTagsPreview"
             android:layout_marginLeft="@dimen/dialog_tags_on_entry_tag_preview_label_margin_left_right"
             android:layout_marginRight="@dimen/dialog_tags_on_entry_tag_preview_label_margin_left_right"
             android:textSize="@dimen/dialog_tags_on_entry_tag_preview_text_size"
             android:text="@string/dialog_tags_on_entry_tags_label"
         />
 
-        <TextView
-            android:id="@+id/txtTagsPreview"
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/lytTagsPreview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -36,14 +36,18 @@
             android:layout_alignParentEnd="true"
             android:layout_toRightOf="@+id/txtvwEntryTagsPreviewLabel"
             android:layout_toEndOf="@+id/txtvwEntryTagsPreviewLabel"
-            android:textSize="@dimen/dialog_tags_on_entry_tag_preview_text_size"
+            app:flexWrap="wrap"
+            app:flexDirection="row"
+            app:alignItems="flex_start"
+            app:alignContent="flex_start"
+            app:justifyContent="flex_start"
         />
 
         <EditText
             android:id="@+id/edtxtEditEntrySearchTag"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dialog_tags_on_entry_tag_search_tags_height"
-            android:layout_below="@+id/txtTagsPreview"
+            android:layout_below="@+id/lytTagsPreview"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_toLeftOf="@+id/btnEditEntryCreateOrToggleTags"
