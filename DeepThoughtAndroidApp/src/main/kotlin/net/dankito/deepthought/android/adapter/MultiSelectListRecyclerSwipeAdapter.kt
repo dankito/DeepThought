@@ -159,12 +159,14 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
 
     private fun placeActionModeBarInAppBarLayout() {
         (activity.findViewById(android.support.v7.appcompat.R.id.action_bar_root) as? LinearLayout)?.let { actionBarRoot ->
-            for(i in 0..actionBarRoot.childCount) {
+            for(i in 0..actionBarRoot.childCount) { // starting with second call ActionBarContextView is already in correct place in appBarLayout -> won't find it in action_bar_root anymore
                 val child = actionBarRoot.getChildAt(i)
                 if(child is ActionBarContextView) {
                     placeActionModeBarInAppBarLayout(child)
                 }
             }
+
+            activity.findViewById(R.id.toolbar)?.let { it.visibility = View.GONE }
         }
     }
 
@@ -178,7 +180,6 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
             (activity.findViewById(R.id.appBarLayout) as? AppBarLayout)?.let { appBarLayout ->
                 appBarLayout.addView(actionModeBar)
             }
-            activity.findViewById(R.id.toolbar)?.let { it.visibility = View.GONE }
         }
     }
 
