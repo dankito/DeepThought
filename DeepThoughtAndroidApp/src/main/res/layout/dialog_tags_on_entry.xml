@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/dialog_tags_on_entry_tag_preview_margin_top"
         android:layout_above="@+id/toolbar"
     >
 
