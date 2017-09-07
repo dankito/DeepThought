@@ -42,6 +42,8 @@
             app:alignItems="flex_start"
             app:alignContent="flex_start"
             app:justifyContent="flex_start"
+            app:showDivider="middle"
+            app:dividerDrawable="@drawable/flexbox_tags_on_entry_divider"
         />
 
         <EditText
