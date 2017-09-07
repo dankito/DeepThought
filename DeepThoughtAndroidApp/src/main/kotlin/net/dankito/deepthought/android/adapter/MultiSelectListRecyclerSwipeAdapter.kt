@@ -11,6 +11,9 @@ import android.view.ViewGroup
 import android.widget.AbsListView
 import android.widget.LinearLayout
 import net.dankito.deepthought.android.R
+import java.util.*
+import kotlin.collections.HashSet
+import kotlin.concurrent.schedule
 
 
 abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(private val activity: Activity, private val menuResourceId: Int, list: List<T> = ArrayList<T>()) :
@@ -19,6 +22,8 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
     private var actionMode: android.view.ActionMode? = null
 
     private var actionModeBar: ActionBarContextView? = null
+
+    private val createdViewHolders = HashSet<THolder>()
 
     private val selectedItemsInContextualActionMode = LinkedHashSet<T>()
 
@@ -69,6 +74,8 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
 
     override fun itemBound(viewHolder: RecyclerView.ViewHolder, item: T, position: Int) {
         super.itemBound(viewHolder, item, position)
+
+        createdViewHolders.add(viewHolder as THolder) // overwriting onCreateViewHolder() for this makes no sense as child class generates the ViewHolder
 
         if(isInMultiSelectMode()) { // otherwise due to isPressed flag item would also get shown as selected
             viewHolder.itemView.isPressed = false
@@ -122,9 +129,32 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
 
             selectedItemsInContextualActionMode.clear()
             actionMode = null
+
             notifyDataSetChanged()
+
+            fixItemGetsShownInPressedStateBug()
         }
 
+    }
+
+    private fun fixItemGetsShownInPressedStateBug() {
+        // this is a real curious bug in Android (https://stackoverflow.com/questions/32559649/recyclerview-pressed-state-of-items-is-getting-messed-up):
+        // after deselecting last item from multi select mode by hand in most cases an arbitrary item gets shown in pressed state (the user therefore thinks it is selected)
+        // to circumvent this, we have to wait some time and unpress it with this really beautiful code. But user then sees a short blink anyway
+
+        val timer = Timer()
+
+        timer.schedule(100) {
+            activity.runOnUiThread {
+                createdViewHolders.forEach { it.itemView.isPressed = false }
+            }
+        }
+
+        timer.schedule(1000) { // to be on the safe side when the 100 millisecond option doesn't work, but should actually never be needed
+            activity.runOnUiThread {
+                createdViewHolders.forEach { it.itemView.isPressed = false }
+            }
+        }
     }
 
     private fun placeActionModeBarInAppBarLayout() {
