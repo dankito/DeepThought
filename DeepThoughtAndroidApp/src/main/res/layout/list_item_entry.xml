@@ -64,7 +64,7 @@
             android:minHeight="@dimen/list_item_entry_preview_height"
             android:maxHeight="@dimen/list_item_entry_height"
             android:layout_below="@+id/txtReferencePreview"
-            android:layout_above="@+id/txtEntryTags"
+            android:layout_above="@+id/lytEntryTags"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentRight="true"
@@ -75,8 +75,9 @@
             style="@style/TextBodyStyle"
             />
 
-        <TextView
-            android:id="@+id/txtEntryTags"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:id="@+id/lytEntryTags"
             android:layout_width="match_parent"
             android:layout_height="@dimen/list_item_entry_tags_height"
             android:layout_alignParentLeft="true"
@@ -85,9 +86,6 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/list_item_entry_tags_margin_top"
-            android:maxLines="1"
-            android:ellipsize="end"
-            style="@style/Header2Style"
             />
 
     </RelativeLayout>

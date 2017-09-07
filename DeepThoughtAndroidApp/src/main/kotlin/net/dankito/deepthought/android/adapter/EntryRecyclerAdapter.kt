@@ -7,14 +7,16 @@ import android.widget.TextView
 import com.daimajia.swipe.SwipeLayout
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.EntryViewHolder
+import net.dankito.deepthought.android.views.TagsPreviewViewHelper
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.extensions.seriesAndPublishingDatePreview
-import net.dankito.deepthought.model.extensions.tagsPreview
 import net.dankito.deepthought.ui.presenter.EntriesListPresenterBase
 
 
 class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): ListRecyclerSwipeAdapter<Entry, EntryViewHolder>() {
+
+    private val tagsPreviewViewHelper = TagsPreviewViewHelper()
 
 
     override fun getSwipeLayoutResourceId(position: Int): Int {
@@ -42,7 +44,7 @@ class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): Lis
     private fun bindViewForNullValue(viewHolder: EntryViewHolder) {
         viewHolder.txtReferencePreview.visibility = View.GONE
         viewHolder.txtEntryPreview.text = ""
-        viewHolder.txtEntryTags.visibility = View.GONE
+        viewHolder.lytEntryTags.visibility = View.GONE
         viewHolder.btnShareEntry.setOnClickListener(null)
         viewHolder.btnDeleteEntry.setOnClickListener(null)
     }
@@ -60,8 +62,8 @@ class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): Lis
         viewHolder.txtEntryPreview.text = preview
         setTxtEntryPreviewMaxLines(viewHolder.txtEntryPreview, viewHolder.txtReferencePreview, entry)
 
-        viewHolder.txtEntryTags.visibility = if (entry.hasTags()) View.VISIBLE else View.GONE
-        viewHolder.txtEntryTags.text = entry.tagsPreview
+        viewHolder.lytEntryTags.visibility = if (entry.hasTags()) View.VISIBLE else View.GONE
+        tagsPreviewViewHelper.showTagsPreview(viewHolder.lytEntryTags, entry.tags)
 
         viewHolder.btnShareEntry.visibility = if (entry.reference != null) View.VISIBLE else View.GONE
         viewHolder.btnShareEntry.setOnClickListener {

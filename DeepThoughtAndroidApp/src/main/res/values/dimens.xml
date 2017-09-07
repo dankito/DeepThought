@@ -28,10 +28,14 @@
     <dimen name="list_item_entry_reference_preview_margin_bottom">6dp</dimen>
     <dimen name="list_item_entry_preview_height">50dp</dimen>
     <dimen name="list_item_entry_preview_text_size">11sp</dimen>
-    <dimen name="list_item_entry_tags_height">18dp</dimen>
+    <dimen name="list_item_entry_tags_height">20dp</dimen>
     <dimen name="list_item_entry_tags_text_size">11sp</dimen>
     <dimen name="list_item_entry_tags_margin_top">4dp</dimen>
     <dimen name="list_item_entry_button_width">80dp</dimen>
+
+    <dimen name="view_tag_corner_radius">18dp</dimen>
+    <dimen name="view_tag_text_padding_left_right">8dp</dimen>
+    <dimen name="view_tag_text_margin_right">6dp</dimen>
 
     <dimen name="list_item_tag_height">44dp</dimen>
     <dimen name="list_item_tag_button_width">66dp</dimen>
