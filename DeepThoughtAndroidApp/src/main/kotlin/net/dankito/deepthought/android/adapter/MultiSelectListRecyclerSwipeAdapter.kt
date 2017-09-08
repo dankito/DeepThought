@@ -18,9 +18,14 @@ import kotlin.concurrent.schedule
 abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(list: List<T> = ArrayList<T>()) :
         ListRecyclerSwipeAdapter<T, THolder>(list) {
 
-    private var actionMode: android.view.ActionMode? = null
+    var actionModeBar: ActionBarContextView? = null
 
-    private var actionModeBar: ActionBarContextView? = null
+    var actionItemClickListener: ((mode: android.view.ActionMode, actionItem: MenuItem, selectedItems: Set<T>) -> Boolean)? = null
+
+    var actionModeBarVisibilityListener: ((isVisible: Boolean) -> Unit)? = null
+
+
+    private var actionMode: android.view.ActionMode? = null
 
     private val createdViewHolders = HashSet<THolder>()
 
@@ -34,10 +39,6 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
     private var layoutToPlaceActionModeBarInResourceId: Int = R.id.appBarLayout
 
     private var hideToolbar = true
-
-    var actionItemClickListener: ((mode: android.view.ActionMode, actionItem: MenuItem, selectedItems: Set<T>) -> Boolean)? = null
-
-    var actionModeBarVisibilityListener: ((isVisible: Boolean) -> Unit)? = null
 
 
     fun enableMultiSelectionMode(activity: Activity, menuResourceId: Int, layoutToPlaceActionModeBarInResourceId: Int = R.id.appBarLayout, hideToolbar: Boolean = true,
