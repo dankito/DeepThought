@@ -19,7 +19,9 @@ import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.service.synchronization.initialsync.model.SyncInfo
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IDialogService
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.concurrent.schedule
 
 
 class AndroidDeviceRegistrationHandler(private var context: Context, dataManager: DataManager, initialSyncManager: InitialSyncManager, dialogService: IDialogService,
@@ -60,6 +62,12 @@ class AndroidDeviceRegistrationHandler(private var context: Context, dataManager
             currentActivityTracker.currentActivity?.let { activity ->
                 snackbarAskToSyncDataWithDevice?.dismiss()
             }
+        }
+    }
+
+    private fun showUnknownDeviceDiscoveredViewAfterDelay(unknownDevice: DiscoveredDevice, callback: (Boolean, Boolean) -> Unit) {
+        Timer().schedule(1000) {
+            showUnknownDeviceDiscoveredView(unknownDevice, callback)
         }
     }
 
@@ -168,7 +176,7 @@ class AndroidDeviceRegistrationHandler(private var context: Context, dataManager
 
                 unknownDevicesWaitingToShowNotificationToUser.entries.firstOrNull()?.let {
                     unknownDevicesWaitingToShowNotificationToUser.remove(it.key)
-                    showUnknownDeviceDiscoveredView(it.key, it.value)
+                    showUnknownDeviceDiscoveredViewAfterDelay(it.key, it.value)
                 }
             }
         }
