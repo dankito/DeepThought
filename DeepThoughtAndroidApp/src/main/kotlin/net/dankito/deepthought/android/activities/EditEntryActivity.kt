@@ -460,6 +460,7 @@ class EditEntryActivity : BaseActivity() {
         isInReaderMode = false
 
         entryFieldsPreview.visibility = View.VISIBLE
+        txtEntryContentLabel.visibility = View.VISIBLE
         appBarLayout.visibility = View.VISIBLE
 
         val layoutParams = wbEntry.layoutParams as RelativeLayout.LayoutParams
@@ -473,6 +474,7 @@ class EditEntryActivity : BaseActivity() {
         isInReaderMode = true
 
         entryFieldsPreview.visibility = View.GONE
+        txtEntryContentLabel.visibility = View.GONE
         appBarLayout.visibility = View.GONE
 
         val layoutParams = wbEntry.layoutParams as RelativeLayout.LayoutParams
