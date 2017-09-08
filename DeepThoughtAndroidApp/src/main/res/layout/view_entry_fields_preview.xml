@@ -19,8 +19,6 @@
 
         <TextView
             android:id="@+id/txtEntryReferenceLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             style="@style/EntryFieldName"
             android:text="@string/activity_edit_entry_reference_label"
         />
@@ -69,8 +67,6 @@
 
         <TextView
             android:id="@+id/txtTagsOnEntryLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             style="@style/EntryFieldName"
             android:text="@string/activity_edit_entry_tags_label"
         />
@@ -107,8 +103,6 @@
 
         <TextView
             android:id="@+id/txtEntryAbstractLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             style="@style/EntryFieldName"
             android:text="@string/activity_edit_entry_abstract_label"
         />
