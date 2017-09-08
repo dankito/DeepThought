@@ -103,13 +103,13 @@ class EntriesListView : MainActivityTabFragment<Entry>(R.menu.fragment_tab_entri
     override fun showOnboardingView() {
         super.showOnboardingView()
 
-        mainNavigationView?.isEnabled = false
+        mainNavigationView?.visibility = View.GONE
     }
 
     override fun hideOnboardingView() {
         super.hideOnboardingView()
 
-        mainNavigationView?.isEnabled = true
+        mainNavigationView?.visibility = View.VISIBLE
     }
 
 
