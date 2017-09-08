@@ -83,10 +83,14 @@ class MainActivity : BaseActivity() {
         bottomViewNavigation.disableShiftMode()
         bottomViewNavigation.setOnNavigationItemSelectedListener(bottomViewNavigationItemSelectedListener)
 
-        currentlyVisibleFragment = sectionsPagerAdapter.getItem(0) // set currentlyVisibleFragment on start otherwise back button won't work on first displayed fragment
-        currentlyVisibleFragment?.viewCameIntoView()
+        setCurrentlyVisibleFragment(0) // set currentlyVisibleFragment on start otherwise back button won't work on first displayed fragment
 
         floatingActionMenuButton = FloatingActionMenuButton(fab_menu, summaryExtractorManager, router, eventBus)
+    }
+
+    private fun setCurrentlyVisibleFragment(position: Int) {
+        currentlyVisibleFragment = sectionsPagerAdapter.getItem(position)
+        currentlyVisibleFragment?.viewCameIntoView()
     }
 
 
@@ -147,8 +151,7 @@ class MainActivity : BaseActivity() {
             currentItem.isChecked = true
             currentlySelectedNavigationItem = currentItem
 
-            currentlyVisibleFragment = sectionsPagerAdapter.getItem(position)
-            currentlyVisibleFragment?.viewCameIntoView()
+            setCurrentlyVisibleFragment(position)
         }
 
         override fun onPageScrollStateChanged(state: Int) {
