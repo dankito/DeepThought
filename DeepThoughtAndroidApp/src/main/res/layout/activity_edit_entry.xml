@@ -11,11 +11,21 @@
         android:layout_alignParentTop="true"
     />
 
+    <TextView
+        android:id="@+id/txtEntryContentLabel"
+        android:layout_below="@+id/lytEntryFieldsPreview"
+        android:layout_marginLeft="@dimen/activity_edit_entry_field_margin_left"
+        android:layout_marginStart="@dimen/activity_edit_entry_field_margin_left"
+        android:layout_marginBottom="@dimen/activity_edit_entry_content_label_margin_bottom"
+        style="@style/EntryFieldName"
+        android:text="@string/activity_edit_entry_content_label"
+    />
+
     <net.dankito.deepthought.android.views.FullScreenWebView
         android:id="@+id/wbEntry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/lytEntryFieldsPreview"
+        android:layout_below="@+id/txtEntryContentLabel"
         android:layout_above="@+id/appBarLayout"
     />
 
