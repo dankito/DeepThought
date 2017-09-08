@@ -3,10 +3,9 @@ package net.dankito.deepthought.android.fragments
 import android.app.Activity
 import android.support.v7.widget.RecyclerView
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.adapter.ListRecyclerSwipeAdapter
+import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.ReadLaterArticleRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
@@ -19,7 +18,8 @@ import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class ReadLaterArticlesListView : MainActivityTabFragment(R.menu.fragment_tab_read_later_articles_menu, R.string.tab_read_later_articles_onboarding_text), IReadLaterArticleView {
+class ReadLaterArticlesListView : MainActivityTabFragment<ReadLaterArticle>(R.menu.fragment_tab_read_later_articles_menu, R.menu.read_later_article_contextual_action_menu,
+        R.string.tab_read_later_articles_onboarding_text), IReadLaterArticleView {
 
 
     @Inject
@@ -56,12 +56,12 @@ class ReadLaterArticlesListView : MainActivityTabFragment(R.menu.fragment_tab_re
         return presenter
     }
 
-    override fun getListAdapter(): ListRecyclerSwipeAdapter<out BaseEntity, out RecyclerView.ViewHolder> {
+    override fun getListAdapter(): MultiSelectListRecyclerSwipeAdapter<ReadLaterArticle, out RecyclerView.ViewHolder> {
         return adapter
     }
 
-    override fun listItemClicked(selectedItem: BaseEntity) {
-        (selectedItem as? ReadLaterArticle)?.let { presenter.showArticle(it) }
+    override fun listItemClicked(selectedItem: ReadLaterArticle) {
+        presenter.showArticle(selectedItem)
     }
 
 

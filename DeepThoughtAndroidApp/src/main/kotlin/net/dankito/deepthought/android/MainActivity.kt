@@ -15,6 +15,7 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.fragments.MainActivityTabFragment
 import net.dankito.deepthought.android.service.IntentHandler
 import net.dankito.deepthought.android.views.FloatingActionMenuButton
+import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.ui.IRouter
@@ -30,7 +31,7 @@ class MainActivity : BaseActivity() {
 
     private var currentlySelectedNavigationItem: MenuItem? = null
 
-    private var currentlyVisibleFragment: MainActivityTabFragment? = null
+    private var currentlyVisibleFragment: MainActivityTabFragment<out BaseEntity>? = null
 
     private lateinit var floatingActionMenuButton: FloatingActionMenuButton
 

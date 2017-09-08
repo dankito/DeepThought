@@ -22,6 +22,17 @@
 
     <include layout="@layout/content_main"/>
 
+    <!-- An extra AppBarLayout to show contextual action mode bar in -->
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/multiSelecteModeAppBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        app:layout_behavior="@string/move_upward_behaviour"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+    </android.support.design.widget.AppBarLayout>
+
     <include
         layout="@layout/view_floating_action_button_main"
         android:layout_width="wrap_content"

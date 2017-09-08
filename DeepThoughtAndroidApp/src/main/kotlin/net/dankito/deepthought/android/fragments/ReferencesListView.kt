@@ -3,11 +3,10 @@ package net.dankito.deepthought.android.fragments
 import android.app.Activity
 import android.support.v7.widget.RecyclerView
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.adapter.ListRecyclerSwipeAdapter
+import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.ReferenceRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.ReferenceEntriesListDialog
-import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
@@ -20,7 +19,8 @@ import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class ReferencesListView: MainActivityTabFragment(R.menu.fragment_tab_references_menu, R.string.tab_reference_onboarding_text), IReferencesListView {
+class ReferencesListView: MainActivityTabFragment<Reference>(R.menu.fragment_tab_references_menu, R.menu.reference_contextual_action_menu, R.string.tab_reference_onboarding_text),
+        IReferencesListView {
 
     @Inject
     protected lateinit var referenceService: ReferenceService
@@ -56,15 +56,13 @@ class ReferencesListView: MainActivityTabFragment(R.menu.fragment_tab_references
         return presenter
     }
 
-    override fun getListAdapter(): ListRecyclerSwipeAdapter<out BaseEntity, out RecyclerView.ViewHolder> {
+    override fun getListAdapter(): MultiSelectListRecyclerSwipeAdapter<Reference, out RecyclerView.ViewHolder> {
         return adapter
     }
 
-    override fun listItemClicked(selectedItem: BaseEntity) {
-        (selectedItem as? Reference)?.let { reference ->
-            hideSearchViewKeyboard()
-            presenter.showEntriesForReference(reference)
-        }
+    override fun listItemClicked(selectedItem: Reference) {
+        hideSearchViewKeyboard()
+        presenter.showEntriesForReference(selectedItem)
     }
 
 

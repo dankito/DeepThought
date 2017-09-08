@@ -6,7 +6,7 @@ import android.support.v7.widget.SearchView
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.adapter.ListRecyclerSwipeAdapter
+import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.TagRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.TagEntriesListDialog
@@ -27,7 +27,7 @@ import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
 
 
-class TagsListView : MainActivityTabFragment(R.menu.fragment_tab_tags_menu, R.string.tab_tags_onboarding_text), ITagsListView {
+class TagsListView : MainActivityTabFragment<Tag>(R.menu.fragment_tab_tags_menu, R.menu.tag_contextual_action_menu, R.string.tab_tags_onboarding_text), ITagsListView {
 
     @Inject
     protected lateinit var dataManager: DataManager
@@ -69,12 +69,12 @@ class TagsListView : MainActivityTabFragment(R.menu.fragment_tab_tags_menu, R.st
         return presenter
     }
 
-    override fun getListAdapter(): ListRecyclerSwipeAdapter<out BaseEntity, out RecyclerView.ViewHolder> {
+    override fun getListAdapter(): MultiSelectListRecyclerSwipeAdapter<Tag, out RecyclerView.ViewHolder> {
         return adapter
     }
 
-    override fun listItemClicked(selectedItem: BaseEntity) {
-        tagSelected(selectedItem as? Tag)
+    override fun listItemClicked(selectedItem: Tag) {
+        tagSelected(selectedItem)
     }
 
 

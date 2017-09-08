@@ -3,12 +3,13 @@ package net.dankito.deepthought.android.fragments
 import android.app.Activity
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.view.ActionMode
+import android.view.MenuItem
 import android.view.View
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.EntryRecyclerAdapter
-import net.dankito.deepthought.android.adapter.ListRecyclerSwipeAdapter
+import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
@@ -21,7 +22,7 @@ import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class EntriesListView : MainActivityTabFragment(R.menu.fragment_tab_entries_menu, R.string.tab_entries_onboarding_text), IEntriesListView {
+class EntriesListView : MainActivityTabFragment<Entry>(R.menu.fragment_tab_entries_menu, R.menu.entry_contextual_action_menu, R.string.tab_entries_onboarding_text), IEntriesListView {
 
     @Inject
     protected lateinit var deleteEntityService: DeleteEntityService
@@ -57,12 +58,12 @@ class EntriesListView : MainActivityTabFragment(R.menu.fragment_tab_entries_menu
         return presenter
     }
 
-    override fun getListAdapter(): ListRecyclerSwipeAdapter<out BaseEntity, out RecyclerView.ViewHolder> {
+    override fun getListAdapter(): MultiSelectListRecyclerSwipeAdapter<Entry, out RecyclerView.ViewHolder> {
         return entryAdapter
     }
 
-    override fun listItemClicked(selectedItem: BaseEntity) {
-        (selectedItem as? Entry)?.let { presenter.showEntry(it) }
+    override fun listItemClicked(selectedItem: Entry) {
+        presenter.showEntry(selectedItem)
     }
 
 
@@ -79,6 +80,22 @@ class EntriesListView : MainActivityTabFragment(R.menu.fragment_tab_entries_menu
         entriesToShowOnAttach?.let {
             showEntities(it)
             entriesToShowOnAttach = null
+        }
+    }
+
+    override fun actionItemSelected(mode: ActionMode, actionItem: MenuItem, selectedItems: Set<Entry>): Boolean {
+        when(actionItem.itemId) {
+            R.id.mnEditEntry -> {
+                selectedItems.forEach { presenter.showEntry(it) }
+                mode.finish()
+                return true
+            }
+            R.id.mnDeleteEntry -> {
+                selectedItems.forEach { presenter.deleteEntry(it) }
+                mode.finish()
+                return true
+            }
+            else -> return false
         }
     }
 

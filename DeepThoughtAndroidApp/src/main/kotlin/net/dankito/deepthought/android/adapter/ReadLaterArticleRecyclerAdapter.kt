@@ -14,7 +14,7 @@ import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.presenter.ReadLaterArticleListPresenter
 
 
-class ReadLaterArticleRecyclerAdapter(private val presenter: ReadLaterArticleListPresenter): ListRecyclerSwipeAdapter<ReadLaterArticle, ReadLaterArticleViewHolder>() {
+class ReadLaterArticleRecyclerAdapter(private val presenter: ReadLaterArticleListPresenter): MultiSelectListRecyclerSwipeAdapter<ReadLaterArticle, ReadLaterArticleViewHolder>() {
 
     override fun getSwipeLayoutResourceId(position: Int) = R.id.readLaterArticleSwipeLayout
 

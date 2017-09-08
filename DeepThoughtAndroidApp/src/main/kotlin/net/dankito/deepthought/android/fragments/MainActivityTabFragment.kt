@@ -14,7 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.adapter.ListRecyclerSwipeAdapter
+import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.views.FullScreenRecyclerView
@@ -23,15 +23,18 @@ import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.service.search.Search
 
 
-abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, private val onboardingTextResourceId: Int) : Fragment() {
+abstract class MainActivityTabFragment<T : BaseEntity>(private val optionsMenuResourceId: Int, private val contextualActionMenuResourceId: Int,
+                                                       private val onboardingTextResourceId: Int) : Fragment() {
 
     private var presenter: IMainViewSectionPresenter? = null
 
     protected var recyclerView: FullScreenRecyclerView? = null
 
+    protected var recyclerAdapter: MultiSelectListRecyclerSwipeAdapter<T, out RecyclerView.ViewHolder>? = null
+
     protected var txtOnboardingText: TextView? = null
 
-    private var entitiesToCheckForOnboardingOnViewCreation: List<BaseEntity>? = null
+    private var entitiesToCheckForOnboardingOnViewCreation: List<T>? = null
 
     private var searchView: SearchView? = null
 
@@ -45,9 +48,9 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
     abstract fun initPresenter(): IMainViewSectionPresenter
 
 
-    abstract fun getListAdapter(): ListRecyclerSwipeAdapter<out BaseEntity, out RecyclerView.ViewHolder>
+    abstract fun getListAdapter(): MultiSelectListRecyclerSwipeAdapter<T, out RecyclerView.ViewHolder>
 
-    abstract fun listItemClicked(selectedItem: BaseEntity)
+    abstract fun listItemClicked(selectedItem: T)
 
 
     protected open fun getQueryHint(activity: Activity): String = ""
@@ -77,14 +80,34 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
         recyclerView?.enterFullscreenModeListener = { recyclerViewEnteredFullScreenMode() }
         recyclerView?.leaveFullscreenModeListener = { recyclerViewLeftFullScreenMode() }
 
-        val adapter = getListAdapter()
-        recyclerView?.adapter = adapter
-        adapter.itemClickListener = { item -> listItemClicked(item)}
+        setupAdapter()
 
         entitiesToCheckForOnboardingOnViewCreation?.let {
             retrievedEntitiesOnUiThread(it)
             entitiesToCheckForOnboardingOnViewCreation = null
         }
+    }
+
+    private fun setupAdapter() {
+        recyclerAdapter = getListAdapter()
+        recyclerView?.adapter = recyclerAdapter
+        recyclerAdapter?.itemClickListener = { item -> listItemClicked(item) }
+
+        (context as? Activity)?.let { activity ->
+            recyclerAdapter?.enableMultiSelectionMode(activity, contextualActionMenuResourceId, R.id.multiSelecteModeAppBarLayout, false) { mode, actionItem, selectedItems ->
+                actionItemSelected(mode, actionItem, selectedItems)
+            }
+
+            recyclerAdapter?.actionModeBarVisibilityListener = { isVisible -> multiSelectActionModeBarVisibilityChanged(isVisible) }
+        }
+    }
+
+    protected open fun multiSelectActionModeBarVisibilityChanged(visible: Boolean) {
+        activity?.findViewById(R.id.fab_menu)?.visibility = if(visible) View.GONE else View.VISIBLE
+    }
+
+    protected open fun actionItemSelected(mode: ActionMode, actionItem: MenuItem, selectedItems: Set<T>): Boolean {
+        return false
     }
 
     private fun recyclerViewEnteredFullScreenMode() {
@@ -104,7 +127,11 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
     private fun setLayoutForTogglingFullscreenMode(activity: Activity, viewVisibility: Int, topMargin: Int) {
         activity.findViewById(R.id.appBarLayout)?.visibility = viewVisibility
         activity.findViewById(R.id.bottomViewNavigation)?.visibility = viewVisibility
-        activity.findViewById(R.id.fab_menu)?.visibility = viewVisibility
+
+        recyclerAdapter?.actionModeBar?.visibility = viewVisibility
+        if(recyclerAdapter?.isInMultiSelectMode() == false) {
+            activity.findViewById(R.id.fab_menu)?.visibility = viewVisibility
+        }
 
         if(topMargin >= 0) {
             (activity.findViewById(R.id.content_layout_root) as? ViewGroup)?.let { layoutRoot ->
@@ -153,7 +180,7 @@ abstract class MainActivityTabFragment(private val optionsMenuResourceId: Int, p
     }
 
 
-    protected fun retrievedEntitiesOnUiThread(entities: List<BaseEntity>) {
+    protected fun retrievedEntitiesOnUiThread(entities: List<T>) {
         if(recyclerView == null) { // view not initialized yet
             entitiesToCheckForOnboardingOnViewCreation = entities
             return

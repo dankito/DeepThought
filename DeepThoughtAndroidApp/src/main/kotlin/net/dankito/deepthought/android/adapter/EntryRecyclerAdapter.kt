@@ -14,7 +14,7 @@ import net.dankito.deepthought.model.extensions.seriesAndPublishingDatePreview
 import net.dankito.deepthought.ui.presenter.EntriesListPresenterBase
 
 
-class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): ListRecyclerSwipeAdapter<Entry, EntryViewHolder>() {
+class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): MultiSelectListRecyclerSwipeAdapter<Entry, EntryViewHolder>() {
 
     private val tagsPreviewViewHelper = TagsPreviewViewHelper()
 

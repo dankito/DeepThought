@@ -13,7 +13,7 @@ import net.dankito.deepthought.ui.presenter.TagsListPresenter
 import net.dankito.deepthought.ui.tags.TagSearchResultState
 
 
-class TagRecyclerAdapter(private val presenter: TagsListPresenter): ListRecyclerSwipeAdapter<Tag, TagViewHolder>() {
+class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectListRecyclerSwipeAdapter<Tag, TagViewHolder>() {
 
     override fun getSwipeLayoutResourceId(position: Int) = R.id.tagSwipeLayout
 

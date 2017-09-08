@@ -13,7 +13,7 @@ import net.dankito.deepthought.ui.presenter.EditReferencePresenter
 import net.dankito.deepthought.ui.presenter.ReferencesPresenterBase
 
 
-class ReferenceRecyclerAdapter(private val presenter: ReferencesPresenterBase): ListRecyclerSwipeAdapter<Reference, ReferenceViewHolder>() {
+class ReferenceRecyclerAdapter(private val presenter: ReferencesPresenterBase): MultiSelectListRecyclerSwipeAdapter<Reference, ReferenceViewHolder>() {
 
     override fun getSwipeLayoutResourceId(position: Int) = R.id.referenceSwipeLayout
 

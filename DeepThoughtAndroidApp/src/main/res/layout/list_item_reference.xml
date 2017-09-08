@@ -4,6 +4,7 @@
     android:id="@+id/referenceSwipeLayout"
     android:layout_width="match_parent"
     android:layout_height="@dimen/list_item_reference_height"
+    android:background="@drawable/list_item_background"
 >
 
     <!-- Bottom View Start (the view that gets displayed when the user swipes from right to left. for explanation see https://github.com/daimajia/AndroidSwipeLayout/wiki/usage) -->
