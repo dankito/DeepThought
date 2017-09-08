@@ -42,6 +42,8 @@ class FullScreenRecyclerView : RecyclerView {
     }
 
 
+    var minimumCountItemsToActivateFullscreenMode = 15
+
     var enterFullscreenModeListener: (() -> Unit)? = null
     var leaveFullscreenModeListener: (() -> Unit)? = null
 
@@ -106,6 +108,12 @@ class FullScreenRecyclerView : RecyclerView {
         }, 50)
     }
 
+    private fun enterFullScreenModeIfHasEnoughItems() {
+        if(adapter.itemCount >= minimumCountItemsToActivateFullscreenMode) {
+            enterFullScreenMode()
+        }
+    }
+
     private fun enterFullScreenMode() {
         this.systemUiVisibility = READER_MODE_SYSTEM_UI_FLAGS
 
@@ -127,7 +135,7 @@ class FullScreenRecyclerView : RecyclerView {
             }
             else if(newState == SCROLL_STATE_DRAGGING) {
                 if(isInFullScreenMode == false) {
-                    enterFullScreenMode()
+                    enterFullScreenModeIfHasEnoughItems()
                 }
             }
         }
