@@ -258,6 +258,10 @@ class EditEntryActivity : BaseActivity() {
             }
         }
 
+        setOnboardingTextVisibilityOnUIThread()
+    }
+
+    private fun setOnboardingTextVisibilityOnUIThread() {
         if(contentToEdit.isNullOrBlank()) {
             wbEntry.visibility = View.GONE
             txtOnboardingText.visibility = View.VISIBLE
@@ -382,6 +386,8 @@ class EditEntryActivity : BaseActivity() {
         else {
             wbEntry.loadData(content, "text/html; charset=UTF-8", null)
         }
+
+        setOnboardingTextVisibilityOnUIThread()
     }
 
     private fun setAbstractPreviewOnUIThread() {
