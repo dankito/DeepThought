@@ -36,6 +36,8 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val optionsMenuRe
 
     private var entitiesToCheckForOnboardingOnViewCreation: List<T>? = null
 
+    private var searchMenuItem: MenuItem? = null
+
     private var searchView: SearchView? = null
 
     private var searchResultTextView: TextView? = null
@@ -216,7 +218,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val optionsMenuRe
             }
         }
 
-        searchView?.visibility = View.GONE
+        searchMenuItem?.isVisible = false
     }
 
     protected open fun hideOnboardingView() {
@@ -226,7 +228,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val optionsMenuRe
             txtOnboardingText.visibility = View.GONE
         }
 
-        searchView?.visibility = View.VISIBLE
+        searchMenuItem?.isVisible = true
     }
 
     private fun showCountSearchResults(entities: List<BaseEntity>) {
@@ -269,18 +271,22 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val optionsMenuRe
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
         inflater.inflate(optionsMenuResourceId, menu)
 
         // Associate searchable configuration with the SearchView if available
-        val searchItem = menu.findItem(R.id.search)
+        this.searchMenuItem = menu.findItem(R.id.search)
 
-        (searchItem?.actionView as? SearchView)?.let { searchView ->
+        if(txtOnboardingText?.visibility == View.VISIBLE) {
+            searchMenuItem?.isVisible = false // showOnboardingView() gets called before initSearchView() on app start -> set searchView.visibility here
+        }
+
+        (searchMenuItem?.actionView as? SearchView)?.let { searchView ->
             this.searchView = searchView
 
             initSearchView(searchView)
         }
-
-        super.onCreateOptionsMenu(menu, inflater)
     }
 
     protected open fun initSearchView(searchView: SearchView) {
