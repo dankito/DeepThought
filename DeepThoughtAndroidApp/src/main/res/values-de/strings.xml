@@ -70,7 +70,7 @@
 
     <string name="dialog_article_summary_extractors_add_extractor">Hinzufügen</string>
 
-    <string name="dialog_add_article_summary_extractor_feed_or_website_url">URL der Webseite oder des Feeds (z.B. sz.de oder http://newsfeed.zeit.de/index)</string>
+    <string name="dialog_add_article_summary_extractor_feed_or_website_url">URL der Webseite oder des Feeds\n(z.B. sz.de oder http://newsfeed.zeit.de/index)</string>
     <string name="dialog_add_article_summary_extractor_check_feed_or_website_url">Überprüfen</string>
     <string name="dialog_add_article_summary_extractor_found_feeds">Gefundene Feeds:</string>
 
