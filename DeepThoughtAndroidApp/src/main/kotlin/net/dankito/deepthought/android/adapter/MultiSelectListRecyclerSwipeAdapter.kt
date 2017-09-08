@@ -76,7 +76,7 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
         }
     }
 
-    private fun toggleSelection(item: T, position: Int) {
+    protected open fun toggleSelection(item: T, position: Int) {
         if(selectedItemsInContextualActionMode.contains(item)) {
             selectedItemsInContextualActionMode.remove(item)
         }

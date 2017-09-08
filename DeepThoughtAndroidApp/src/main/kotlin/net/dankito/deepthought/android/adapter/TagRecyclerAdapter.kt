@@ -18,6 +18,23 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
     override fun getSwipeLayoutResourceId(position: Int) = R.id.tagSwipeLayout
 
 
+    override fun itemLongClicked(item: Tag, position: Int) {
+        if(item is CalculatedTag == false) { // avoid that a CalculatedTag gets selected
+            super.itemLongClicked(item, position)
+        }
+    }
+
+    override fun itemClicked(item: Tag, position: Int): Boolean {
+        if(item is CalculatedTag == false) {
+            return super.itemClicked(item, position)
+        }
+        else {
+            notifyItemChanged(position) // so that onBindViewHolder() gets called and isActivated flag removed from view
+            return true
+        }
+    }
+
+
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TagViewHolder {
         val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_tag, parent, false)
 
@@ -68,6 +85,10 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
         viewHolder.btnDeleteTag.setOnClickListener { presenter.deleteTagAsync(tag) }
 
         setBackgroundColor(viewHolder.itemView, tag)
+
+        if(tag is CalculatedTag) { // make CalculatedTags unselectable in multi select mode
+            viewHolder.itemView.isActivated = false
+        }
     }
 
 
