@@ -33,14 +33,19 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
 
     private var layoutToPlaceActionModeBarInResourceId: Int = R.id.appBarLayout
 
+    private var hideToolbar = true
+
     var actionItemClickListener: ((mode: android.view.ActionMode, actionItem: MenuItem, selectedItems: Set<T>) -> Boolean)? = null
 
+    var actionModeBarVisibilityListener: ((isVisible: Boolean) -> Unit)? = null
 
-    fun enableMultiSelectionMode(activity: Activity, menuResourceId: Int, layoutToPlaceActionModeBarInResourceId: Int = R.id.appBarLayout,
+
+    fun enableMultiSelectionMode(activity: Activity, menuResourceId: Int, layoutToPlaceActionModeBarInResourceId: Int = R.id.appBarLayout, hideToolbar: Boolean = true,
                                  actionItemClickListener: ((mode: android.view.ActionMode, actionItem: MenuItem, selectedItems: Set<T>) -> Boolean)? = null) {
         this.activity = activity
         this.menuResourceId = menuResourceId
         this.layoutToPlaceActionModeBarInResourceId = layoutToPlaceActionModeBarInResourceId
+        this.hideToolbar = hideToolbar
         this.actionItemClickListener = actionItemClickListener
     }
 
@@ -150,6 +155,7 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
 
                 selectedItemsInContextualActionMode.clear()
                 actionMode = null
+                actionModeBarVisibilityListener?.invoke(false)
 
                 notifyDataSetChanged()
 
@@ -188,7 +194,11 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
                 }
             }
 
-            activity.findViewById(R.id.toolbar)?.let { it.visibility = View.GONE }
+            if(hideToolbar) {
+                activity.findViewById(R.id.toolbar)?.let { it.visibility = View.GONE }
+            }
+
+            actionModeBarVisibilityListener?.invoke(true)
         }
     }
 
