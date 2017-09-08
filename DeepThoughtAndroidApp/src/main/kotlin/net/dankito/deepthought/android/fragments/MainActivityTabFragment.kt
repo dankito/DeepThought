@@ -89,6 +89,8 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val optionsMenuRe
     }
 
     private fun setupAdapter() {
+        recyclerView?.minimumCountItemsToActivateFullscreenMode = 15
+
         recyclerAdapter = getListAdapter()
         recyclerView?.adapter = recyclerAdapter
         recyclerAdapter?.itemClickListener = { item -> listItemClicked(item) }
