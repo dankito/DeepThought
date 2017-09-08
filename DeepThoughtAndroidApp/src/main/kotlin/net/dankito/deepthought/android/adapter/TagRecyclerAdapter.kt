@@ -47,7 +47,7 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
 
         viewHolder.btnDeleteTag.setOnClickListener {  }
 
-        viewHolder.itemView.setBackgroundResource(getDefaultBackgroundColor())
+        setBackgroundForDefaultState(viewHolder.itemView)
     }
 
     private fun bindTagToView(viewHolder: TagViewHolder, tag: Tag) {
@@ -91,6 +91,10 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
         view.setBackgroundResource(getColorForState(state))
     }
 
+    private fun setBackgroundForDefaultState(view: View) {
+        view.setBackgroundResource(getDefaultBackgroundColor())
+    }
+
     private fun getColorForState(state: TagSearchResultState): Int {
         when(state) {
             TagSearchResultState.EXACT_OR_SINGLE_MATCH_BUT_NOT_OF_LAST_RESULT -> return R.color.tag_state_exact_or_single_match_but_not_of_last_result
@@ -101,6 +105,6 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
         }
     }
 
-    private fun getDefaultBackgroundColor() = R.color.tag_state_default
+    private fun getDefaultBackgroundColor() = R.drawable.list_item_background
 
 }
