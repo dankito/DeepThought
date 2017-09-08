@@ -6,7 +6,7 @@
         android:title="@string/activity_article_summary_menu_view"
         android:icon="@android:drawable/ic_menu_view"
         app:showAsAction="always"
-        android:actionLayout="@layout/action_layout_view"
+        android:actionLayout="@layout/contextual_action_mode_item_action_layout"
     />
 
     <item
@@ -14,7 +14,7 @@
         android:title="@string/activity_article_summary_menu_save_for_later_reading"
         android:icon="@drawable/ic_read_later"
         app:showAsAction="always"
-        android:actionLayout="@layout/action_layout_read_later"
+        android:actionLayout="@layout/contextual_action_mode_item_action_layout"
     />
 
     <item
@@ -22,7 +22,7 @@
         android:title="@string/activity_article_summary_menu_save"
         android:icon="@android:drawable/ic_menu_save"
         app:showAsAction="always"
-        android:actionLayout="@layout/action_layout_save"
+        android:actionLayout="@layout/contextual_action_mode_item_action_layout"
     />
 
 </menu>

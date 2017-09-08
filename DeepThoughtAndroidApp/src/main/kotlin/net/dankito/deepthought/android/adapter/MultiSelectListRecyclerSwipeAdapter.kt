@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.AbsListView
 import android.widget.LinearLayout
 import net.dankito.deepthought.android.R
+import net.dankito.deepthought.android.views.ActionItemHelper
 import java.util.*
 import kotlin.collections.HashSet
 import kotlin.concurrent.schedule
@@ -26,6 +27,8 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
 
 
     private var actionMode: android.view.ActionMode? = null
+
+    private var actionItemHelper = ActionItemHelper()
 
     private val createdViewHolders = HashSet<THolder>()
 
@@ -122,8 +125,7 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
             menuResourceId?.let { mode.menuInflater.inflate(it, menu) }
 
             for(i in 0..menu.size() - 1) {
-                val menuItem = menu.getItem(i)
-                menuItem?.actionView?.setOnClickListener { onActionItemClicked(mode, menuItem) }
+                actionItemHelper.setupLayout(menu.getItem(i)) { menuItem: MenuItem -> onActionItemClicked(mode, menuItem) }
             }
 
             activity?.let { placeActionModeBarInAppBarLayout(it) }
