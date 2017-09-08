@@ -3,6 +3,8 @@ package net.dankito.deepthought.android.fragments
 import android.app.Activity
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
+import android.view.ActionMode
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import net.dankito.deepthought.android.R
@@ -75,6 +77,22 @@ class TagsListView : MainActivityTabFragment<Tag>(R.menu.fragment_tab_tags_menu,
 
     override fun listItemClicked(selectedItem: Tag) {
         tagSelected(selectedItem)
+    }
+
+    override fun actionItemSelected(mode: ActionMode, actionItem: MenuItem, selectedItems: Set<Tag>): Boolean {
+        when(actionItem.itemId) {
+            R.id.mnEditTag -> {
+                selectedItems.forEach { presenter.editTag(it) }
+                mode.finish()
+                return true
+            }
+            R.id.mnDeleteTag -> {
+                selectedItems.forEach { presenter.deleteTagAsync(it) }
+                mode.finish()
+                return true
+            }
+            else -> return false
+        }
     }
 
 

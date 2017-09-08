@@ -2,6 +2,8 @@ package net.dankito.deepthought.android.fragments
 
 import android.app.Activity
 import android.support.v7.widget.RecyclerView
+import android.view.ActionMode
+import android.view.MenuItem
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.ReferenceRecyclerAdapter
@@ -63,6 +65,22 @@ class ReferencesListView: MainActivityTabFragment<Reference>(R.menu.fragment_tab
     override fun listItemClicked(selectedItem: Reference) {
         hideSearchViewKeyboard()
         presenter.showEntriesForReference(selectedItem)
+    }
+
+    override fun actionItemSelected(mode: ActionMode, actionItem: MenuItem, selectedItems: Set<Reference>): Boolean {
+        when(actionItem.itemId) {
+            R.id.mnEditReference -> {
+                selectedItems.forEach { presenter.editReference(it) }
+                mode.finish()
+                return true
+            }
+            R.id.mnDeleteReference -> {
+                selectedItems.forEach { presenter.deleteReference(it) }
+                mode.finish()
+                return true
+            }
+            else -> return false
+        }
     }
 
 

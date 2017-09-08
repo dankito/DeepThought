@@ -66,6 +66,22 @@ class EntriesListView : MainActivityTabFragment<Entry>(R.menu.fragment_tab_entri
         presenter.showEntry(selectedItem)
     }
 
+    override fun actionItemSelected(mode: ActionMode, actionItem: MenuItem, selectedItems: Set<Entry>): Boolean {
+        when(actionItem.itemId) {
+            R.id.mnEditEntry -> {
+                selectedItems.forEach { presenter.showEntry(it) }
+                mode.finish()
+                return true
+            }
+            R.id.mnDeleteEntry -> {
+                selectedItems.forEach { presenter.deleteEntry(it) }
+                mode.finish()
+                return true
+            }
+            else -> return false
+        }
+    }
+
 
     override fun getQueryHint(activity: Activity) = activity.getString(R.string.search_hint_entries)
 
@@ -80,22 +96,6 @@ class EntriesListView : MainActivityTabFragment<Entry>(R.menu.fragment_tab_entri
         entriesToShowOnAttach?.let {
             showEntities(it)
             entriesToShowOnAttach = null
-        }
-    }
-
-    override fun actionItemSelected(mode: ActionMode, actionItem: MenuItem, selectedItems: Set<Entry>): Boolean {
-        when(actionItem.itemId) {
-            R.id.mnEditEntry -> {
-                selectedItems.forEach { presenter.showEntry(it) }
-                mode.finish()
-                return true
-            }
-            R.id.mnDeleteEntry -> {
-                selectedItems.forEach { presenter.deleteEntry(it) }
-                mode.finish()
-                return true
-            }
-            else -> return false
         }
     }
 

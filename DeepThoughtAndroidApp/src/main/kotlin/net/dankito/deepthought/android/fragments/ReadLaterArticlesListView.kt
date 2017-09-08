@@ -2,6 +2,8 @@ package net.dankito.deepthought.android.fragments
 
 import android.app.Activity
 import android.support.v7.widget.RecyclerView
+import android.view.ActionMode
+import android.view.MenuItem
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.ReadLaterArticleRecyclerAdapter
@@ -62,6 +64,22 @@ class ReadLaterArticlesListView : MainActivityTabFragment<ReadLaterArticle>(R.me
 
     override fun listItemClicked(selectedItem: ReadLaterArticle) {
         presenter.showArticle(selectedItem)
+    }
+
+    override fun actionItemSelected(mode: ActionMode, actionItem: MenuItem, selectedItems: Set<ReadLaterArticle>): Boolean {
+        when(actionItem.itemId) {
+            R.id.mnSaveReadLaterArticle -> {
+                selectedItems.forEach { presenter.saveAndDeleteReadLaterArticle(it) }
+                mode.finish()
+                return true
+            }
+            R.id.mnDeleteReadLaterArticle -> {
+                selectedItems.forEach { presenter.deleteReadLaterArticle(it) }
+                mode.finish()
+                return true
+            }
+            else -> return false
+        }
     }
 
 
