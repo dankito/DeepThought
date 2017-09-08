@@ -19,21 +19,34 @@ class TelepolisArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
     }
 
     override fun parseHtmlToArticleSummary(url: String, document: Document, forLoadingMoreItems: Boolean): ArticleSummary {
-        return ArticleSummary(extractArticles(url, document))
+        val summary = ArticleSummary(extractArticles(url, document, forLoadingMoreItems))
+
+        determineHasMore(summary, url, document)
+
+        return summary
     }
 
-    private fun extractArticles(siteUrl: String, document: Document): List<ArticleSummaryItem> {
+    private fun extractArticles(siteUrl: String, document: Document, forLoadingMoreItems: Boolean): List<ArticleSummaryItem> {
         val articles = mutableListOf<ArticleSummaryItem>()
 
         articles.addAll(extractTopTeaserItems(siteUrl, document))
 
         articles.addAll(extractArticleItems(siteUrl, document))
 
-        articles.addAll(extractTeaserItems(siteUrl, document))
+        if(forLoadingMoreItems == false) {
+            articles.addAll(extractTeaserItems(siteUrl, document))
 
-        articles.addAll(extractMostCommentedAndMostReadArticles(siteUrl, document))
+            articles.addAll(extractMostCommentedAndMostReadArticles(siteUrl, document))
+        }
 
         return articles
+    }
+
+    private fun determineHasMore(summary: ArticleSummary, url: String, document: Document) {
+        var weitereMeldungenElement = document.body().select("a.seite_weiter").firstOrNull()
+
+        summary.canLoadMoreItems = weitereMeldungenElement != null
+        summary.nextItemsUrl = weitereMeldungenElement?.let { makeLinkAbsolute(it.attr("href"), url) }
     }
 
 
