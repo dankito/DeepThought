@@ -42,7 +42,7 @@ class FullScreenRecyclerView : RecyclerView {
     }
 
 
-    var minimumCountItemsToActivateFullscreenMode = 0
+    var minimumCountItemsToActivateFullscreenMode = 15
 
     var enterFullscreenModeListener: (() -> Unit)? = null
     var leaveFullscreenModeListener: (() -> Unit)? = null
