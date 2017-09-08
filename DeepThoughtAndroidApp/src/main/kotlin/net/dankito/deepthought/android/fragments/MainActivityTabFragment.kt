@@ -215,6 +215,8 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val optionsMenuRe
                 txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(onboardingTextResourceId).toString())
             }
         }
+
+        searchView?.visibility = View.GONE
     }
 
     protected open fun hideOnboardingView() {
@@ -223,6 +225,8 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val optionsMenuRe
         txtOnboardingText?.let { txtOnboardingText ->
             txtOnboardingText.visibility = View.GONE
         }
+
+        searchView?.visibility = View.VISIBLE
     }
 
     private fun showCountSearchResults(entities: List<BaseEntity>) {
