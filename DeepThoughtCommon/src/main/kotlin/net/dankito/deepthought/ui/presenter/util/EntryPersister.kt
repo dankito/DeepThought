@@ -44,7 +44,7 @@ class EntryPersister(private val entryService: EntryService, private val referen
         val removedTags = ArrayList(entry.tags)
         removedTags.removeAll(tags)
 
-        entry.setAllTags(tags)
+        entry.setAllTags(tags.filter { it != null })
 
 
         reference?.let {
@@ -73,7 +73,7 @@ class EntryPersister(private val entryService: EntryService, private val referen
         }
 
 
-        tags.forEach { tagService.update(it) } // TODO: check if tag needs an update
+        tags.filterNotNull().forEach { tagService.update(it) } // TODO: check if tag needs an update
 
         removedTags.forEach { tagService.update(it) }
 
