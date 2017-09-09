@@ -22,6 +22,7 @@ import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.feedaddressextractor.FeedAddress
 import net.dankito.feedaddressextractor.FeedAddressExtractor
+import net.dankito.feedaddressextractor.FeedType
 import net.dankito.newsreader.feed.IFeedReader
 import net.dankito.newsreader.model.FeedArticleSummary
 import java.net.URI
@@ -201,7 +202,8 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
 
     private fun showFoundFeedAddresses(result: List<FeedAddress>) {
         activity?.runOnUiThread {
-            feedAddressesAdapter.setItems(result)
+            val sortedFeeds = result.sortedByDescending { it.type == FeedType.Atom } // show Atom feeds at top
+            feedAddressesAdapter.setItems(sortedFeeds)
 
             txtFeedSearchResultsLabel?.visibility = VISIBLE
             lstFeedSearchResults?.visibility = VISIBLE

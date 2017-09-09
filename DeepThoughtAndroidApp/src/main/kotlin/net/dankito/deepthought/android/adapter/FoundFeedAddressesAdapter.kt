@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.list_item_found_feed_address.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.feedaddressextractor.FeedAddress
+import net.dankito.feedaddressextractor.FeedType
 
 
 class FoundFeedAddressesAdapter : ListAdapter<FeedAddress>() {
@@ -15,8 +16,15 @@ class FoundFeedAddressesAdapter : ListAdapter<FeedAddress>() {
 
         val view = convertView ?: LayoutInflater.from(parent?.context).inflate(R.layout.list_item_found_feed_address, parent, false)
 
-        view.txtFeedName.text = feedAddress.title
+        var feedName = feedAddress.title
+        if(feedAddress.type == FeedType.Atom) { // for Atom feeds add ' (preferred)' to title to give user a hint which feed to choose
+            feedName += " " + view.context.getString(R.string.dialog_add_article_summary_extractor_preferred_feed_title_addition) // getString() removes the white space from dialog_add_article_summary_extractor_preferred_feed_title_addition
+        }
+
+        view.txtFeedName.text = feedName
         view.txtFeedUrl.text = feedAddress.url
+
+        view.isActivated = position == 0 // mark first feed in list as selected
 
         return view
     }
