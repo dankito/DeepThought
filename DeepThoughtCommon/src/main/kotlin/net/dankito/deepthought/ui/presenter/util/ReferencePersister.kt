@@ -26,15 +26,26 @@ class ReferencePersister(private val referenceService: ReferenceService, private
     }
 
     fun saveReference(reference: Reference): Boolean {
+        if(reference.series != null && reference.series?.isPersisted() == false) { // series has been deleted in the meantime
+            reference.series?.let { series ->
+                reference.series = null
+
+                seriesService.persist(series)
+
+                reference.series = series
+            }
+
+        }
+
         if(reference.isPersisted() == false) {
             referenceService.persist(reference)
-
-            reference.series?.let { series ->
-                seriesService.update(series) // reference is now persisted so series needs an update to store reference's id
-            }
         }
         else {
             referenceService.update(reference)
+        }
+
+        reference.series?.let { series -> // TODO: check if series changed
+            seriesService.update(series) // reference is now persisted so series needs an update to store reference's id
         }
 
         return true
