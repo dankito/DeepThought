@@ -33,6 +33,8 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, thr
     companion object {
         private const val TAGS_DEFAULT_COUNT_MAX_SEARCH_RESULTS = 100000
 
+        private const val FILTERED_TAGS_DEFAULT_COUNT_MAX_SEARCH_RESULTS = 10000
+
         private val log = LoggerFactory.getLogger(TagIndexWriterAndSearcher::class.java)
     }
 
@@ -159,7 +161,7 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, thr
         }
 
         try {
-            entryIndexWriterAndSearcher.executeQuery(query, 10000, SortOption(FieldName.EntryCreated, SortOrder.Descending, SortField.Type.LONG))?.let { (searcher, hits) ->
+            entryIndexWriterAndSearcher.executeQuery(query, FILTERED_TAGS_DEFAULT_COUNT_MAX_SEARCH_RESULTS, SortOption(FieldName.EntryCreated, SortOrder.Descending, SortField.Type.LONG))?.let { (searcher, hits) ->
                 val entries = FilteredTagsLazyLoadingLuceneSearchResultsList(entityService.entityManager, searcher, hits, threadPool)
                 entriesHavingFilteredTags = entries
 
