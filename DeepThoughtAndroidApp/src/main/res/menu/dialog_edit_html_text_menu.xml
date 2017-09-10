@@ -5,7 +5,7 @@
         android:id="@+id/mnApplyHtmlChanges"
         app:showAsAction="always"
         android:orderInCategory="100"
-        android:title="@android:string/ok"
+        android:title="@string/action_apply"
         android:visible="false"
     />
 
