@@ -124,9 +124,7 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
         override fun onCreateActionMode(mode: android.view.ActionMode, menu: Menu): Boolean {
             menuResourceId?.let { mode.menuInflater.inflate(it, menu) }
 
-            for(i in 0..menu.size() - 1) {
-                actionItemHelper.setupLayout(menu.getItem(i)) { menuItem: MenuItem -> onActionItemClicked(mode, menuItem) }
-            }
+            actionItemHelper.setupLayout(menu) { menuItem: MenuItem -> onActionItemClicked(mode, menuItem) }
 
             activity?.let { placeActionModeBarInAppBarLayout(it) }
 
