@@ -76,16 +76,16 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
         showEditEntryView()
     }
 
-    override fun showEditEntryView(entry: Entry, field: EntryField?) {
-        showEditEntryView(EntryActivityParameters(entry, field = field))
+    override fun showEditEntryView(entry: Entry) {
+        showEditEntryView(EntryActivityParameters(entry))
     }
 
-    override fun showEditEntryView(article: ReadLaterArticle, field: EntryField?) {
-        showEditEntryView(EntryActivityParameters(readLaterArticle = article, field = field))
+    override fun showEditEntryView(article: ReadLaterArticle) {
+        showEditEntryView(EntryActivityParameters(readLaterArticle = article))
     }
 
-    override fun showEditEntryView(extractionResult: EntryExtractionResult, field: EntryField?) {
-        showEditEntryView(EntryActivityParameters(entryExtractionResult = extractionResult, field = field))
+    override fun showEditEntryView(extractionResult: EntryExtractionResult) {
+        showEditEntryView(EntryActivityParameters(entryExtractionResult = extractionResult))
     }
 
     private fun showEditEntryView(parameters: EntryActivityParameters? = null) {

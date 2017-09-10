@@ -1,7 +1,5 @@
 package net.dankito.deepthought.javafx.routing
 
-import net.dankito.deepthought.model.extensions.preview
-import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryExtractionResultView
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryView
@@ -9,6 +7,8 @@ import net.dankito.deepthought.javafx.dialogs.entry.EditReadLaterArticleView
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.ReadLaterArticleListView
 import net.dankito.deepthought.model.*
+import net.dankito.deepthought.model.extensions.preview
+import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.IEntriesListView
@@ -57,21 +57,21 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
 
     }
 
-    override fun showEditEntryView(entry: Entry, field: EntryField?) {
+    override fun showEditEntryView(entry: Entry) {
         runLater {
             // TODO: set title when Reference is not set
             mainWindowController.find(EditEntryView::class, mapOf(EditEntryView::entry to entry)).show(entry.reference.previewWithSeriesAndPublishingDate)
         }
     }
 
-    override fun showEditEntryView(article: ReadLaterArticle, field: EntryField?) {
+    override fun showEditEntryView(article: ReadLaterArticle) {
         runLater {
             // TODO: set title when Reference is not set
             mainWindowController.find(EditReadLaterArticleView::class, mapOf(EditReadLaterArticleView::article to article)).show(article.entryExtractionResult.reference?.preview)
         }
     }
 
-    override fun showEditEntryView(extractionResult: EntryExtractionResult, field: EntryField?) {
+    override fun showEditEntryView(extractionResult: EntryExtractionResult) {
         runLater {
             // TODO: set title when Reference is not set
             mainWindowController.find(EditEntryExtractionResultView::class, mapOf(EditEntryExtractionResultView::extractionResult to extractionResult)).show(extractionResult.reference?.preview)

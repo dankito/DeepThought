@@ -20,7 +20,10 @@ import net.dankito.deepthought.android.dialogs.EditHtmlTextDialog
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import net.dankito.deepthought.android.views.FullScreenWebView
-import net.dankito.deepthought.model.*
+import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.ReadLaterArticle
+import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
@@ -288,14 +291,6 @@ class EditEntryActivity : BaseActivity() {
         setReferencePreviewOnUIThread()
     }
 
-
-    private fun editEntryField(field: EntryField) {
-        when(field) {
-            EntryField.Abstract -> editAbstract()
-            EntryField.Reference -> editReference()
-            EntryField.Tags -> editTagsOnEntry()
-        }
-    }
 
     private fun editContent() {
         contentToEdit?.let { content ->
@@ -703,8 +698,6 @@ class EditEntryActivity : BaseActivity() {
             parameters.readLaterArticle?.let { editReadLaterArticle(it) }
 
             parameters.entryExtractionResult?.let { editEntryExtractionResult(it) }
-
-            parameters.field?.let { editEntryField(it) }
         }
     }
 
