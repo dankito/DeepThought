@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.dialog_tags_on_entry.*
 import kotlinx.android.synthetic.main.dialog_tags_on_entry.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.TagsOnEntryRecyclerAdapter
+import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.service.showKeyboardDelayed
@@ -105,6 +106,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
         rootView.toolbar.setNavigationOnClickListener { closeDialog() }
 
         rootView.rcyTags.adapter = adapter
+        rootView.rcyTags.addItemDecoration(HorizontalDividerItemDecoration(rootView.context))
         adapter.deleteTagListener = { tag -> deleteTag(tag) }
 
         lytTagsPreview = rootView.lytTagsPreview
