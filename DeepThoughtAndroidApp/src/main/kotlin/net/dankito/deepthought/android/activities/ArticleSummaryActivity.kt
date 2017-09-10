@@ -14,6 +14,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ArticleSummaryItemRecyclerAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.android.views.ActionItemHelper
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
@@ -78,6 +79,8 @@ class ArticleSummaryActivity : BaseActivity() {
     private var recyclerViewMarginBottom: Int = -1
 
     private var mnLoadMore: MenuItem? = null
+
+    private val actionItemHelper = ActionItemHelper()
 
 
     init {
@@ -205,8 +208,10 @@ class ArticleSummaryActivity : BaseActivity() {
     }
 
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.activity_article_summary_menu, menu)
+
+        actionItemHelper.setupLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
 
         mnLoadMore = menu?.findItem(R.id.mnLoadMore)
 
