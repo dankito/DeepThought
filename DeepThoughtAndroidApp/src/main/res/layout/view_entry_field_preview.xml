@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/activity_edit_entry_field_margin_top"
+    android:layout_marginLeft="@dimen/activity_edit_entry_field_margin_left"
+    android:layout_marginStart="@dimen/activity_edit_entry_field_margin_left"
+    android:layout_marginRight="@dimen/activity_edit_entry_field_margin_right"
+    android:layout_marginEnd="@dimen/activity_edit_entry_field_margin_right"
+    android:paddingTop="@dimen/activity_edit_entry_field_padding_top"
+    android:paddingLeft="@dimen/activity_edit_entry_field_padding_left_right"
+    android:paddingStart="@dimen/activity_edit_entry_field_padding_left_right"
+    android:paddingRight="@dimen/activity_edit_entry_field_padding_left_right"
+    android:paddingEnd="@dimen/activity_edit_entry_field_padding_left_right"
+    android:paddingBottom="@dimen/activity_edit_entry_field_padding_bottom"
+    android:background="@color/entry_field_background_color"
+>
+
+    <TextView
+        android:id="@+id/txtEntryFieldName"
+        style="@style/EntryFieldName"
+    />
+
+    <TextView
+        android:id="@+id/txtEntryFieldValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_edit_entry_field_name_margin_top"
+        android:layout_marginBottom="@dimen/activity_edit_entry_field_name_margin_bottom"
+        android:maxLines="2"
+        android:ellipsize="end"
+        style="@style/EntryFieldValue"
+    />
+
+    <View
+        android:id="@+id/vwEntryFieldDivider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_edit_entry_field_divider_thickness"
+        android:background="@color/entry_field_divider_color"
+    />
+
+</LinearLayout>

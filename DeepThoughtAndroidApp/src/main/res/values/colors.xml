@@ -21,6 +21,9 @@
 
     <color name="divider_line_color">#888888</color>
 
+    <color name="entry_field_background_color">#FFFFFF</color>
+    <color name="entry_field_divider_color">#E0E0E0</color>
+
     <!-- This is bad: Actually i wanted to define tag background colors centrally in one place for Android and JavaFX, but their parse methods have different formats (Android
          has opacity at the beginning, JavaFX at the end) -->
 

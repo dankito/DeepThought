@@ -84,12 +84,12 @@
     <string name="menu_share_entry_content">Inhalt</string>
 
     <string name="activity_edit_entry_title">Eintrag</string>
-    <string name="activity_edit_entry_content_label">Inhalt:</string>
+    <string name="activity_edit_entry_content_label">Inhalt</string>
     <string name="activity_edit_entry_edit_content_title">Inhalt</string>
-    <string name="activity_edit_entry_abstract_label">Zusammenfassung:</string>
+    <string name="activity_edit_entry_abstract_label">Zusammenfassung</string>
     <string name="activity_edit_entry_edit_abstract_title">Zusammenfassung</string>
-    <string name="activity_edit_entry_reference_label">Quelle:</string>
-    <string name="activity_edit_entry_tags_label">Schlagworte:</string>
+    <string name="activity_edit_entry_reference_label">Quelle</string>
+    <string name="activity_edit_entry_tags_label">Schlagworte</string>
     <string name="activity_edit_entry_alert_message_entry_contains_unsaved_changes">Eintrag enthält nicht gespeicherte Änderungen.\r\n\r\nSollen diese Änderungen nun
         gespeichert werden?</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->

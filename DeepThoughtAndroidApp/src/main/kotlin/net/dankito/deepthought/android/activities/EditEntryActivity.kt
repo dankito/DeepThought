@@ -19,9 +19,9 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.EditHtmlTextDialog
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
-import net.dankito.deepthought.android.views.EntryFieldsPreview
 import net.dankito.deepthought.android.views.FullScreenWebView
 import net.dankito.deepthought.model.*
+import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.html.HtmlEditorCommon
@@ -139,8 +139,6 @@ class EditEntryActivity : BaseActivity() {
     private lateinit var swipeTouchListener: OnSwipeTouchListener
 
 
-    private lateinit var entryFieldsPreview: EntryFieldsPreview
-
     private var mnSaveEntry: MenuItem? = null
 
 
@@ -216,9 +214,10 @@ class EditEntryActivity : BaseActivity() {
             actionBar.setDisplayShowHomeEnabled(true)
         }
 
-        this.entryFieldsPreview = lytEntryFieldsPreview
-        entryFieldsPreview.fieldClickedListener = { field -> entryFieldClicked(field)}
-        entryFieldsPreview.referenceClearedListener = { referenceCleared() }
+        lytAbstractPreview.setOnClickListener { editAbstract() }
+        lytReferencePreview.setOnClickListener { editReference() }
+        btnClearEntryReference.setOnClickListener { referenceCleared() }
+        lytTagsPreview.setOnClickListener { editTagsOnEntry() }
 
         setupEntryContentView()
     }
@@ -226,7 +225,10 @@ class EditEntryActivity : BaseActivity() {
     private fun referenceCleared() {
         referenceToEdit = null
 
+        entryHasBeenEdited()
+
         updateCanEntryBeSavedOnUIThread(true)
+        setReferencePreviewOnUIThread()
     }
 
     private fun setupEntryContentView() {
@@ -281,14 +283,13 @@ class EditEntryActivity : BaseActivity() {
 
     private fun savedReference(reference: Reference) {
         referenceToEdit = reference // do not set reference directly on entry as if entry is not saved yet adding it to reference.entries causes an error
-        entryFieldsPreview.reference = reference
 
         updateCanEntryBeSavedOnUIThread(true)
         setReferencePreviewOnUIThread()
     }
 
 
-    private fun entryFieldClicked(field: EntryField) {
+    private fun editEntryField(field: EntryField) {
         when(field) {
             EntryField.Abstract -> editAbstract()
             EntryField.Reference -> editReference()
@@ -389,15 +390,22 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setAbstractPreviewOnUIThread() {
-        entryFieldsPreview.setAbstractPreviewOnUIThread()
+        abstractToEdit?.let { lytAbstractPreview.setFieldOnUIThread(getString(R.string.activity_edit_entry_abstract_label), it) }
     }
 
     private fun setReferencePreviewOnUIThread() {
-        entryFieldsPreview.setReferencePreviewOnUIThread()
+        referenceToEdit?.let { lytReferencePreview.setFieldOnUIThread(getString(R.string.activity_edit_entry_reference_label), it.previewWithSeriesAndPublishingDate) }
+
+        if(referenceToEdit == null) {
+            lytReferencePreview.setFieldOnUIThread(getString(R.string.activity_edit_entry_reference_label), "")
+        }
+
+        btnClearEntryReference.visibility = if(referenceToEdit == null) View.GONE else View.VISIBLE
     }
 
     private fun setTagsOnEntryPreviewOnUIThread() {
-        entryFieldsPreview.setTagsOnEntryPreviewOnUIThread()
+        val tagsPreview = tagsOnEntry.filterNotNull().sortedBy { it.name.toLowerCase() }.joinToString { it.name }
+        lytTagsPreview.setFieldOnUIThread(getString(R.string.activity_edit_entry_tags_label), tagsPreview)
     }
 
 
@@ -457,7 +465,9 @@ class EditEntryActivity : BaseActivity() {
     private fun leaveReaderMode() {
         isInReaderMode = false
 
-        entryFieldsPreview.visibility = View.VISIBLE
+        lytAbstractPreview.visibility = View.VISIBLE
+        lytReferencePreview.visibility = View.VISIBLE
+        lytTagsPreview.visibility = View.VISIBLE
         txtEntryContentLabel.visibility = View.VISIBLE
         appBarLayout.visibility = View.VISIBLE
 
@@ -471,7 +481,9 @@ class EditEntryActivity : BaseActivity() {
     private fun enterReaderMode() {
         isInReaderMode = true
 
-        entryFieldsPreview.visibility = View.GONE
+        lytAbstractPreview.visibility = View.GONE
+        lytReferencePreview.visibility = View.GONE
+        lytTagsPreview.visibility = View.GONE
         txtEntryContentLabel.visibility = View.GONE
         appBarLayout.visibility = View.GONE
 
@@ -692,7 +704,7 @@ class EditEntryActivity : BaseActivity() {
 
             parameters.entryExtractionResult?.let { editEntryExtractionResult(it) }
 
-            parameters.field?.let { entryFieldClicked(it) }
+            parameters.field?.let { editEntryField(it) }
         }
     }
 
@@ -711,7 +723,6 @@ class EditEntryActivity : BaseActivity() {
 
     private fun editEntry(entry: Entry) {
         this.entry = entry
-        entryFieldsPreview.entry = entry
 
         editEntry(entry, entry.reference, entry.tags)
     }
@@ -724,7 +735,6 @@ class EditEntryActivity : BaseActivity() {
 
     private fun editReadLaterArticle(readLaterArticle: ReadLaterArticle) {
         this.readLaterArticle = readLaterArticle
-        entryFieldsPreview.readLaterArticle = readLaterArticle
         canEntryBeSaved = true
 
         editEntry(readLaterArticle.entryExtractionResult.entry, readLaterArticle.entryExtractionResult.reference, readLaterArticle.entryExtractionResult.tags)
@@ -738,7 +748,6 @@ class EditEntryActivity : BaseActivity() {
 
     private fun editEntryExtractionResult(extractionResult: EntryExtractionResult) {
         this.entryExtractionResult = extractionResult
-        entryFieldsPreview.entryExtractionResult = this.entryExtractionResult
         canEntryBeSaved = true
 
         editEntry(entryExtractionResult?.entry, entryExtractionResult?.reference, entryExtractionResult?.tags)
@@ -749,8 +758,6 @@ class EditEntryActivity : BaseActivity() {
         abstractToEdit = entry?.abstractString
         referenceToEdit = reference
 
-        entryFieldsPreview.reference = reference
-
         setContentPreviewOnUIThread(reference)
 
         setAbstractPreviewOnUIThread()
@@ -759,7 +766,6 @@ class EditEntryActivity : BaseActivity() {
 
         tags?.let {
             tagsOnEntry.addAll(tags)
-            entryFieldsPreview.tagsOnEntry = tagsOnEntry
 
             setTagsOnEntryPreviewOnUIThread()
         }
