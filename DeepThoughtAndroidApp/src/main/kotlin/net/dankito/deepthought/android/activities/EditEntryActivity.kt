@@ -143,6 +143,10 @@ class EditEntryActivity : BaseActivity() {
 
     private var mnSaveEntry: MenuItem? = null
 
+    private var mnSaveEntryExtractionResultForLaterReading: MenuItem? = null
+
+    private var mnDeleteReadLaterArticle: MenuItem? = null
+
 
     private var eventBusListener: EventBusListener? = null
 
@@ -150,7 +154,7 @@ class EditEntryActivity : BaseActivity() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = EditEntryPresenter(entryPersister, clipboardService, router)
+        presenter = EditEntryPresenter(entryPersister, readLaterArticleService, clipboardService, router)
     }
 
 
@@ -529,6 +533,12 @@ class EditEntryActivity : BaseActivity() {
 
         mnSaveEntry = menu.findItem(R.id.mnSaveEntry)
 
+        mnSaveEntryExtractionResultForLaterReading = menu.findItem(R.id.mnSaveEntryExtractionResultForLaterReading)
+        mnSaveEntryExtractionResultForLaterReading?.isVisible = entryExtractionResult != null
+
+        mnDeleteReadLaterArticle = menu.findItem(R.id.mnDeleteReadLaterArticle)
+        mnDeleteReadLaterArticle?.isVisible = readLaterArticle != null
+
         setMenuSaveEntryVisibleStateOnUIThread()
 
         return true
@@ -542,6 +552,14 @@ class EditEntryActivity : BaseActivity() {
             }
             R.id.mnSaveEntry -> {
                 saveEntryAndCloseDialog()
+                return true
+            }
+            R.id.mnSaveEntryExtractionResultForLaterReading -> {
+                saveEntryExtrationResultForLaterReadingAndCloseDialog()
+                return true
+            }
+            R.id.mnDeleteReadLaterArticle -> {
+                deleteReadLaterArticleAndCloseDialog()
                 return true
             }
             R.id.mnShareEntry -> {
@@ -597,6 +615,7 @@ class EditEntryActivity : BaseActivity() {
 
     private fun saveEntryAndCloseDialog() {
         mnSaveEntry?.isEnabled = false // disable to that save cannot be pressed a second time
+        mnSaveEntryExtractionResultForLaterReading?.isEnabled = false
         unregisterEventBusListener()
 
         saveEntryAsync { successful ->
@@ -605,6 +624,7 @@ class EditEntryActivity : BaseActivity() {
             }
             else {
                 mnSaveEntry?.isEnabled = true
+                mnSaveEntryExtractionResultForLaterReading?.isEnabled = true
                 mayRegisterEventBusListener()
             }
         }
@@ -645,6 +665,54 @@ class EditEntryActivity : BaseActivity() {
                 }
                 callback(successful)
             }
+        }
+    }
+
+    private fun saveEntryExtrationResultForLaterReadingAndCloseDialog() {
+        mnSaveEntry?.isEnabled = false // disable to that save cannot be pressed a second time
+        mnSaveEntryExtractionResultForLaterReading?.isEnabled = false
+        unregisterEventBusListener()
+
+        saveEntryForLaterReading { successful ->
+            if(successful) {
+                runOnUiThread { closeDialog() }
+            }
+            else {
+                mnSaveEntry?.isEnabled = true
+                mnSaveEntryExtractionResultForLaterReading?.isEnabled = true
+                mayRegisterEventBusListener()
+            }
+        }
+    }
+
+    private fun saveEntryForLaterReading(callback: (Boolean) -> Unit) {
+        val content = contentToEdit ?: ""
+        val abstract = abstractToEdit ?: ""
+
+        entryExtractionResult?.let { extractionResult ->
+            updateEntry(extractionResult.entry, content, abstract)
+            extractionResult.reference = referenceToEdit
+            extractionResult.tags = tagsOnEntry
+
+            presenter.saveEntryExtractionResultForLaterReading(extractionResult)
+            setActivityResult(EditEntryActivityResult(didSaveEntryExtractionResult = true, savedEntry = extractionResult.entry))
+            callback(true)
+        }
+
+        if(entryExtractionResult == null) {
+            callback(false)
+        }
+    }
+
+    private fun deleteReadLaterArticleAndCloseDialog() {
+        readLaterArticle?.let { readLaterArticle ->
+            mnSaveEntry?.isEnabled = false // disable to that save cannot be pressed a second time
+            mnDeleteReadLaterArticle?.isEnabled = false
+            unregisterEventBusListener()
+
+            presenter.deleteReadLaterArticle(readLaterArticle)
+
+            runOnUiThread { closeDialog() }
         }
     }
 

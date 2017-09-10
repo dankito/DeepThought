@@ -4,15 +4,33 @@
     <item
         android:id="@+id/mnShareEntry"
         app:showAsAction="always"
-        android:orderInCategory="200"
+        android:orderInCategory="100"
         android:title="@string/action_share"
         android:icon="@android:drawable/ic_menu_share"
     />
 
     <item
-        android:id="@+id/mnSaveEntry"
+        android:id="@+id/mnDeleteReadLaterArticle"
         app:showAsAction="always"
         android:orderInCategory="200"
+        android:title="@string/action_delete"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:visible="false"
+    />
+
+    <item
+        android:id="@+id/mnSaveEntryExtractionResultForLaterReading"
+        app:showAsAction="always"
+        android:orderInCategory="300"
+        android:title="@string/action_read_article_later"
+        android:icon="@drawable/ic_read_later"
+        android:visible="false"
+    />
+
+    <item
+        android:id="@+id/mnSaveEntry"
+        app:showAsAction="always"
+        android:orderInCategory="400"
         android:title="@string/action_save"
         android:icon="@android:drawable/ic_menu_save"
         android:visible="false"

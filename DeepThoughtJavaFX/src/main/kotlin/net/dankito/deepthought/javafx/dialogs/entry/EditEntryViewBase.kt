@@ -15,6 +15,7 @@ import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDa
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
+import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.utils.ui.IClipboardService
 import tornadofx.*
 import javax.inject.Inject
@@ -52,6 +53,9 @@ abstract class EditEntryViewBase : DialogFragment() {
     protected lateinit var entryPersister: EntryPersister
 
     @Inject
+    protected lateinit var readLaterArticleService: ReadLaterArticleService
+
+    @Inject
     protected lateinit var clipboardService: IClipboardService
 
     @Inject
@@ -61,7 +65,7 @@ abstract class EditEntryViewBase : DialogFragment() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = EditEntryPresenter(entryPersister, clipboardService, router)
+        presenter = EditEntryPresenter(entryPersister, readLaterArticleService, clipboardService, router)
     }
 
 
