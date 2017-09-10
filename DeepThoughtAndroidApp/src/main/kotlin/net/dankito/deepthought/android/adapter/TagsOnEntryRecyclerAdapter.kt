@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android.adapter
 
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,6 +39,8 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
             viewHolder.chktxtvwTag.visibility = View.VISIBLE
 
             viewHolder.chktxtvwTag.text = tag.displayText
+            val textStyle = if(tagsOnEntry.contains(tag)) Typeface.BOLD else Typeface.NORMAL
+            viewHolder.chktxtvwTag.setTypeface(viewHolder.chktxtvwTag.typeface, textStyle)
             viewHolder.chktxtvwTag.isChecked = tagsOnEntry.contains(tag)
 
             viewHolder.chktxtvwTag.setOnClickListener { toggleTagOnEntryOnUIThread(position) }
