@@ -16,6 +16,7 @@ import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemD
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.PickDateDialog
 import net.dankito.deepthought.android.service.hideKeyboard
+import net.dankito.deepthought.android.views.ActionItemHelper
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditReferencePresenter
@@ -81,6 +82,8 @@ class EditReferenceActivity : BaseActivity() {
 
 
     private val existingReferencesSearchResultsAdapter: ReferenceRecyclerAdapter
+
+    private val actionItemHelper = ActionItemHelper()
 
     private var eventBusListener: EventBusListener? = null
 
@@ -163,6 +166,8 @@ class EditReferenceActivity : BaseActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.activity_edit_reference_menu, menu)
+
+        actionItemHelper.setupLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
 
         return true
     }

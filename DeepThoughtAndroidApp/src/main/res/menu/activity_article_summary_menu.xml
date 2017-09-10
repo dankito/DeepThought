@@ -7,6 +7,7 @@
         android:orderInCategory="100"
         android:title="@string/activity_article_summary_menu_reload"
         android:icon="@android:drawable/stat_notify_sync"
+        app:actionLayout="@layout/contextual_action_mode_item_action_layout"
         />
 
     <item
@@ -15,6 +16,7 @@
         android:orderInCategory="200"
         android:title="@string/activity_article_summary_menu_load_more"
         android:icon="@drawable/ic_forward_white_48dp"
+        app:actionLayout="@layout/contextual_action_mode_item_action_layout"
         android:visible="false"
     />
 
