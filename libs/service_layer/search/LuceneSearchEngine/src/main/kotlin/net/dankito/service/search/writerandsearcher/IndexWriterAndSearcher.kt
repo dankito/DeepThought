@@ -29,7 +29,7 @@ import java.util.*
 abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: EntityServiceBase<TEntity>, eventBus: IEventBus, protected val threadPool: IThreadPool) {
 
     companion object {
-        protected const val DEFAULT_COUNT_MAX_SEARCH_RESULTS = 1000
+        protected const val DEFAULT_COUNT_MAX_SEARCH_RESULTS = 100000
 
         private const val WAIT_TIME_BEFORE_COMMITTING_INDICES_MILLIS = 1500L
 
