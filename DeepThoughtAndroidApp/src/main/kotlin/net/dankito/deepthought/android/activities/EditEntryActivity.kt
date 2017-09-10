@@ -28,8 +28,6 @@ import net.dankito.deepthought.model.extensions.getPlainTextForHtml
 import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.html.HtmlEditorCommon
-import net.dankito.deepthought.ui.html.IHtmlEditorListener
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.service.data.EntryService
@@ -789,21 +787,6 @@ class EditEntryActivity : BaseActivity() {
 
     private fun entryHasBeenEdited() {
         entryHasBeenEdited = true
-    }
-
-
-    private val contentListener = object : IHtmlEditorListener {
-
-        override fun editorHasLoaded(editor: HtmlEditorCommon) {
-        }
-
-        override fun htmlCodeUpdated() {
-            contentHasBeenEdited()
-        }
-
-        override fun htmlCodeHasBeenReset() {
-        }
-
     }
 
 
