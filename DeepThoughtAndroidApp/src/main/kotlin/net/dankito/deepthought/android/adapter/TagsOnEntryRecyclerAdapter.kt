@@ -38,10 +38,12 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
         else {
             viewHolder.chktxtvwTag.visibility = View.VISIBLE
 
+            val isAddedToEntry = tagsOnEntry.contains(tag)
+
             viewHolder.chktxtvwTag.text = tag.displayText
-            val textStyle = if(tagsOnEntry.contains(tag)) Typeface.BOLD else Typeface.NORMAL
-            viewHolder.chktxtvwTag.setTypeface(viewHolder.chktxtvwTag.typeface, textStyle)
-            viewHolder.chktxtvwTag.isChecked = tagsOnEntry.contains(tag)
+            val textStyle = if(isAddedToEntry) Typeface.BOLD else Typeface.NORMAL
+            viewHolder.chktxtvwTag.setTypeface(null, textStyle)
+            viewHolder.chktxtvwTag.isChecked = isAddedToEntry
 
             viewHolder.chktxtvwTag.setOnClickListener { toggleTagOnEntryOnUIThread(position) }
 
