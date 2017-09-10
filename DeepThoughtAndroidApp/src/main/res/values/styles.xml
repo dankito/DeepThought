@@ -61,9 +61,9 @@
         <item name="fab_size">mini</item>
 
         <item name="fab_shadowColor">#444</item>
-        <item name="fab_colorNormal">@color/colorPrimary</item>
+        <item name="fab_colorNormal">@color/colorAccent</item>
+        <item name="fab_colorPressed">@color/colorPrimary</item>
         <item name="fab_colorRipple">@color/colorPrimaryDark</item>
-        <item name="fab_colorPressed">@color/colorAccent</item>
 
         <item name="fab_showAnimation">@anim/jump_from_down</item>
         <item name="fab_hideAnimation">@anim/jump_to_down</item>

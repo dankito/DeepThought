@@ -10,8 +10,8 @@
 
     fab:menu_labels_style="@style/MenuLabelsStyle"
     fab:menu_shadowColor="#444"
-    fab:menu_colorNormal="?attr/colorPrimary"
-    fab:menu_colorPressed="?attr/colorAccent"
+    fab:menu_colorNormal="?attr/colorAccent"
+    fab:menu_colorPressed="?attr/colorPrimary"
     fab:menu_colorRipple="?attr/colorPrimaryDark"
 
     fab:menu_animationDelayPerItem="50">
