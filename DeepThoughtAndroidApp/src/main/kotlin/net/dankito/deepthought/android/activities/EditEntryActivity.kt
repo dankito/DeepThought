@@ -24,6 +24,7 @@ import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.extensions.getPlainTextForHtml
 import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
@@ -385,7 +386,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setAbstractPreviewOnUIThread() {
-        abstractToEdit?.let { lytAbstractPreview.setFieldOnUIThread(getString(R.string.activity_edit_entry_abstract_label), it) }
+        abstractToEdit?.let { lytAbstractPreview.setFieldOnUIThread(getString(R.string.activity_edit_entry_abstract_label), it.getPlainTextForHtml()) }
     }
 
     private fun setReferencePreviewOnUIThread() {
