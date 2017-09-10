@@ -136,8 +136,6 @@ class EditReferenceActivity : BaseActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        supportActionBar?.title = ""
-
         btnCreateNewReference.setOnClickListener { createReference() } // TODO: check if previous reference contains unsaved changes
 
         rcyExistingReferencesSearchResults.addItemDecoration(HorizontalDividerItemDecoration(this))

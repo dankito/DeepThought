@@ -84,8 +84,11 @@
     <string name="menu_share_reference_url">Url</string>
     <string name="menu_share_entry_content">Content</string>
 
+    <string name="activity_edit_entry_title">Entry</string>
     <string name="activity_edit_entry_content_label">Content:</string>
+    <string name="activity_edit_entry_edit_content_title">Content</string>
     <string name="activity_edit_entry_abstract_label">Abstract:</string>
+    <string name="activity_edit_entry_edit_abstract_title">Abstract</string>
     <string name="activity_edit_entry_reference_label">Reference:</string>
     <string name="activity_edit_entry_tags_label">Tags:</string>
     <string name="activity_edit_entry_alert_message_entry_contains_unsaved_changes">Entry contains unsaved changes.\n\nShould these changes now be saved?</string>
@@ -93,10 +96,12 @@
     <string name="activity_edit_entry_alert_message_entry_has_been_edited">Entry has been edited (probably on a synchronized device).\n\nWhen
         you now save the entry the other changes get overwritten.</string>
 
+    <string name="dialog_tags_on_entry_title">Tags</string>
     <string name="dialog_tags_on_entry_tags_label">Tags:</string>
     <string name="dialog_tags_on_entry_create_tag">New</string>
     <string name="dialog_tags_on_entry_toggle_tags">Toggle</string>
 
+    <string name="activity_edit_reference_title">Reference</string>
     <string name="activity_edit_reference_use_existing_label">Use existing:</string>
     <string name="activity_edit_reference_create_reference">New …</string>
     <string name="activity_edit_reference_create_reference_from_isbn">From ISBN …</string>

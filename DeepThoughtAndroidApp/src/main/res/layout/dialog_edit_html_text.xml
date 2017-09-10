@@ -6,22 +6,11 @@
                 android:background="#FFFFFF"
 >
 
-    <TextView
-        android:id="@+id/txtHtmlToEditLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/dialog_edit_html_text_label_margin_top"
-        android:layout_marginLeft="@dimen/dialog_edit_html_text_label_margin_left"
-        android:layout_marginStart="@dimen/dialog_edit_html_text_label_margin_left"
-        style="@style/Header1Style"
-    />
-
     <RelativeLayout
         android:id="@+id/lytHtmlEditor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtHtmlToEditLabel"
+        android:layout_alignParentTop="true"
         android:layout_above="@+id/toolbar"
     />
 

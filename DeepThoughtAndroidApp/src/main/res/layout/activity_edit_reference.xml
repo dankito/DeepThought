@@ -236,6 +236,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
+        app:title="@string/activity_edit_reference_title"
         style="@style/ToolbarStyle"
     />
 

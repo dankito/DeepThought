@@ -76,8 +76,6 @@ abstract class FullscreenDialogFragment : DialogFragment() {
 
     private fun setupToolbar(rootView: View) {
         (rootView.findViewById(R.id.toolbar) as? Toolbar)?.let { toolbar ->
-            toolbar.title = ""
-
             toolbar.setNavigationIcon(android.R.drawable.ic_menu_close_clear_cancel)
             toolbar.setNavigationOnClickListener { closeDialog() }
 

@@ -214,8 +214,6 @@ class EditEntryActivity : BaseActivity() {
         supportActionBar?.let { actionBar ->
             actionBar.setDisplayHomeAsUpEnabled(true)
             actionBar.setDisplayShowHomeEnabled(true)
-
-            actionBar.title = ""
         }
 
         this.entryFieldsPreview = lytEntryFieldsPreview
@@ -302,7 +300,7 @@ class EditEntryActivity : BaseActivity() {
         contentToEdit?.let { content ->
             val editHtmlTextDialog = EditHtmlTextDialog()
 
-            editHtmlTextDialog.showDialog(supportFragmentManager, content, R.string.activity_edit_entry_content_label) {
+            editHtmlTextDialog.showDialog(supportFragmentManager, content, R.string.activity_edit_entry_edit_content_title) {
                 contentToEdit = it
 
                 entryHasBeenEdited()
@@ -319,7 +317,7 @@ class EditEntryActivity : BaseActivity() {
         abstractToEdit?.let { abstract ->
             val editHtmlTextDialog = EditHtmlTextDialog()
 
-            editHtmlTextDialog.showDialog(supportFragmentManager, abstract, R.string.activity_edit_entry_abstract_label) {
+            editHtmlTextDialog.showDialog(supportFragmentManager, abstract, R.string.activity_edit_entry_edit_abstract_title) {
                 abstractToEdit = it
 
                 entryHasBeenEdited()

@@ -63,8 +63,7 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         rootView.toolbar.setNavigationIcon(android.R.drawable.ic_menu_close_clear_cancel)
         rootView.toolbar.setNavigationOnClickListener { closeDialog() }
 
-        rootView.txtHtmlToEditLabel.visibility = if(htmlToEditLabelResourceId != null) View.VISIBLE else View.GONE
-        htmlToEditLabelResourceId?.let { rootView.txtHtmlToEditLabel.text = getString(it) }
+        htmlToEditLabelResourceId?.let { rootView.toolbar.title = getString(it) }
 
         setupHtmlEditor(rootView)
     }

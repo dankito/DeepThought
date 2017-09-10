@@ -82,8 +82,11 @@
     <string name="menu_share_reference_url">Link</string>
     <string name="menu_share_entry_content">Inhalt</string>
 
+    <string name="activity_edit_entry_title">Eintrag</string>
     <string name="activity_edit_entry_content_label">Inhalt:</string>
+    <string name="activity_edit_entry_edit_content_title">Inhalt</string>
     <string name="activity_edit_entry_abstract_label">Zusammenfassung:</string>
+    <string name="activity_edit_entry_edit_abstract_title">Zusammenfassung</string>
     <string name="activity_edit_entry_reference_label">Quelle:</string>
     <string name="activity_edit_entry_tags_label">Schlagworte:</string>
     <string name="activity_edit_entry_alert_message_entry_contains_unsaved_changes">Eintrag enthält nicht gespeicherte Änderungen.\r\n\r\nSollen diese Änderungen nun
@@ -92,10 +95,12 @@
     <string name="activity_edit_entry_alert_message_entry_has_been_edited">Eintrag wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\r\n\r\nWenn
         Sie den Eintrag nun speichern, werden diese anderen Änderungen überschrieben.</string>
 
+    <string name="dialog_tags_on_entry_title">Schlagworte</string>
     <string name="dialog_tags_on_entry_tags_label">Schlagworte:</string>
     <string name="dialog_tags_on_entry_create_tag">Neu</string>
     <string name="dialog_tags_on_entry_toggle_tags">Tauschen</string>
 
+    <string name="activity_edit_reference_title">Quelle</string>
     <string name="activity_edit_reference_use_existing_label">Bestehende verwenden:</string>
     <string name="activity_edit_reference_create_reference">Neu …</string>
     <string name="activity_edit_reference_create_reference_from_isbn">Von ISBN …</string>

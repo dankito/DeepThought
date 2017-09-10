@@ -69,6 +69,7 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
+            app:title="@string/activity_edit_entry_title"
             style="@style/ToolbarStyle"/>
 
     </android.support.design.widget.AppBarLayout>
