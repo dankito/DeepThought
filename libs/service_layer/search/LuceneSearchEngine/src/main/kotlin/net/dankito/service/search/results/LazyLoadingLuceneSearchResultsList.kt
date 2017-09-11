@@ -22,9 +22,9 @@ open class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEn
     init {
         // real ugly code, but this seems to be the fastest variant: Load two items upfront synchronously (otherwise they may get displayed with incomplete data) and the rest  asynchronously
         if(hits.size > 0) {
-            super.retrieveEntityFromDatabaseAndCache(0) // load first item directly as otherwise UI may already tries to display it while it's not fully loaded yet (and therefore not all data gets displayed)
+            retrieveEntityFromDatabaseAndCacheIfNotRetrievedYet(0) // load first item directly as otherwise UI may already tries to display it while it's not fully loaded yet (and therefore not all data gets displayed)
             if(hits.size > 1) {
-                super.retrieveEntityFromDatabaseAndCache(1)
+                retrieveEntityFromDatabaseAndCacheIfNotRetrievedYet(1)
             }
 
             if(hits.size > 2) {
@@ -69,7 +69,13 @@ open class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEn
         val maxIndexToPreload = if(hits.size < startIndex + maxItemsToPreload) hits.size else startIndex + maxItemsToPreload
 
         for(i in startIndex..maxIndexToPreload - 1) {
-            super.retrieveEntityFromDatabaseAndCache(i)
+            retrieveEntityFromDatabaseAndCacheIfNotRetrievedYet(i)
+        }
+    }
+
+    private fun retrieveEntityFromDatabaseAndCacheIfNotRetrievedYet(index: Int) {
+        if(cachedResults[index] == null) {
+            super.retrieveEntityFromDatabaseAndCache(index)
         }
     }
 
