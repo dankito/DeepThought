@@ -18,7 +18,7 @@ class FullScreenRecyclerView : RecyclerView {
 
 
     companion object {
-        private const val DELAY_BEFORE_LEAVING_FULLSCREEN_MILLIS = 300L
+        private const val DELAY_BEFORE_LEAVING_FULLSCREEN_MILLIS = 500L
 
         private const val NON_READER_MODE_SYSTEM_UI_FLAGS = 0
         private val READER_MODE_SYSTEM_UI_FLAGS: Int
