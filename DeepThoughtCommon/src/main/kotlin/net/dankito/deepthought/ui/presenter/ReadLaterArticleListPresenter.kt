@@ -55,7 +55,7 @@ class ReadLaterArticleListPresenter(private val view: IReadLaterArticleView, pri
 
     fun getReadLaterArticles(searchTerm: String) {
         searchEngine.searchReadLaterArticles(ReadLaterArticleSearch(searchTerm) {
-            it.forEach { readLaterArticleService.deserializeEntryExtractionResult(it) }
+            it.filterNotNull().forEach { readLaterArticleService.deserializeEntryExtractionResult(it) }
 
             view.showEntities(it)
         })
