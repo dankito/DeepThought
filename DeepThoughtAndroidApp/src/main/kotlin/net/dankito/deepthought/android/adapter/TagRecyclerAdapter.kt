@@ -78,11 +78,20 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
         }
 
         setFilterIconDependingOnTagState(tag, viewHolder.imgFilter)
-        viewHolder.imgFilter.setOnClickListener { presenter.toggleFilterTag(tag) }
+        viewHolder.imgFilter.setOnClickListener {
+            presenter.toggleFilterTag(tag)
+            closeSwipeView(viewHolder)
+        }
 
-        viewHolder.btnEditTag.setOnClickListener { presenter.editTag(tag) }
+        viewHolder.btnEditTag.setOnClickListener {
+            presenter.editTag(tag)
+            closeSwipeView(viewHolder)
+        }
 
-        viewHolder.btnDeleteTag.setOnClickListener { presenter.deleteTagAsync(tag) }
+        viewHolder.btnDeleteTag.setOnClickListener {
+            presenter.deleteTagAsync(tag)
+            closeSwipeView(viewHolder)
+        }
 
         setBackgroundColor(viewHolder.itemView, tag)
 

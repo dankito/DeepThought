@@ -56,9 +56,18 @@ class ReferenceRecyclerAdapter(private val presenter: ReferencesPresenterBase): 
         viewHolder.btnEditReference.visibility = if(presenter is EditReferencePresenter) View.GONE else View.VISIBLE
         viewHolder.btnShareReference.visibility = if(reference.url.isNullOrBlank()) View.GONE else View.VISIBLE
 
-        viewHolder.btnEditReference.setOnClickListener { presenter.editReference(reference) }
-        viewHolder.btnShareReference.setOnClickListener { presenter.copyReferenceUrlToClipboard(reference) }
-        viewHolder.btnDeleteReference.setOnClickListener { presenter.deleteReference(reference) }
+        viewHolder.btnEditReference.setOnClickListener {
+            presenter.editReference(reference)
+            closeSwipeView(viewHolder)
+        }
+        viewHolder.btnShareReference.setOnClickListener {
+            presenter.copyReferenceUrlToClipboard(reference)
+            closeSwipeView(viewHolder)
+        }
+        viewHolder.btnDeleteReference.setOnClickListener {
+            presenter.deleteReference(reference)
+            closeSwipeView(viewHolder)
+        }
     }
 
 }

@@ -4,6 +4,7 @@ import android.support.v4.view.GestureDetectorCompat
 import android.support.v7.widget.RecyclerView
 import android.view.GestureDetector
 import android.view.MotionEvent
+import com.daimajia.swipe.SwipeLayout
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter
 
 
@@ -62,6 +63,12 @@ abstract class ListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(li
     protected open fun itemLongClicked(item: T, position: Int) {
         itemLongClickListener?.invoke(item)
     }
+
+
+    protected fun closeSwipeView(viewHolder: RecyclerView.ViewHolder) {
+        (viewHolder.itemView as? SwipeLayout)?.close()
+    }
+
 
     class TapGestureDetector<T>(private val item: T, private val itemClickListener: (item: T) -> Boolean, private val itemLongClickListener: (item: T) -> Unit) : GestureDetector.OnGestureListener {
 

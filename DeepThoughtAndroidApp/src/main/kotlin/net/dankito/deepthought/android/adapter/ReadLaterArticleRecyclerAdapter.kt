@@ -73,9 +73,18 @@ class ReadLaterArticleRecyclerAdapter(private val presenter: ReadLaterArticleLis
         viewHolder.btnShareReadLaterArticle.visibility = if(extractionResult.reference?.url?.isNullOrBlank() ?: false) View.GONE else View.VISIBLE
         viewHolder.btnDeleteReadLaterArticle.visibility = View.VISIBLE
 
-        viewHolder.btnSaveReadLaterArticle.setOnClickListener { presenter.saveAndDeleteReadLaterArticle(article) }
-        viewHolder.btnShareReadLaterArticle.setOnClickListener { presenter.copyReferenceUrlToClipboard(article) } // TODO: actually there should also be the option to share article's text
-        viewHolder.btnDeleteReadLaterArticle.setOnClickListener { presenter.deleteReadLaterArticle(article) }
+        viewHolder.btnSaveReadLaterArticle.setOnClickListener {
+            presenter.saveAndDeleteReadLaterArticle(article)
+            closeSwipeView(viewHolder)
+        }
+        viewHolder.btnShareReadLaterArticle.setOnClickListener {
+            presenter.copyReferenceUrlToClipboard(article) // TODO: actually there should also be the option to share article's text
+            closeSwipeView(viewHolder)
+        }
+        viewHolder.btnDeleteReadLaterArticle.setOnClickListener {
+            presenter.deleteReadLaterArticle(article)
+            closeSwipeView(viewHolder)
+        }
 
     }
 
