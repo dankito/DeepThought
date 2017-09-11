@@ -7,8 +7,8 @@ import com.squareup.picasso.Picasso
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.ReadLaterArticleViewHolder
 import net.dankito.deepthought.model.ReadLaterArticle
+import net.dankito.deepthought.model.extensions.getEntryPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.extensions.preview
-import net.dankito.deepthought.model.extensions.seriesAndPublishingDatePreview
 import net.dankito.deepthought.ui.presenter.ReadLaterArticleListPresenter
 
 
@@ -29,12 +29,7 @@ class ReadLaterArticleRecyclerAdapter(private val presenter: ReadLaterArticleLis
         viewHolder.txtTitle.visibility = if(referencePreview.isNullOrBlank()) View.GONE else View.VISIBLE
         viewHolder.txtTitle.text = referencePreview
 
-        var preview = item.entryExtractionResult.entry.preview
-        val seriesAndPublishingDate = item.entryExtractionResult.reference.seriesAndPublishingDatePreview
-        if(seriesAndPublishingDate.isNullOrBlank() == false) {
-            preview = seriesAndPublishingDate + " | " + preview
-        }
-        viewHolder.txtSummary.text = preview
+        viewHolder.txtSummary.text = item.entryExtractionResult.entry.getEntryPreviewWithSeriesAndPublishingDate(item.entryExtractionResult.reference)
         viewHolder.txtSummary.maxLines = 5
 
         viewHolder.imgPreviewImage.visibility = View.VISIBLE

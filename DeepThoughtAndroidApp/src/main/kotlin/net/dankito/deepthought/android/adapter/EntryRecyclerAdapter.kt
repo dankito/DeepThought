@@ -8,8 +8,8 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.EntryViewHolder
 import net.dankito.deepthought.android.views.TagsPreviewViewHelper
 import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.extensions.getEntryPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.extensions.preview
-import net.dankito.deepthought.model.extensions.seriesAndPublishingDatePreview
 import net.dankito.deepthought.ui.presenter.EntriesListPresenterBase
 
 
@@ -33,12 +33,7 @@ class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): Mul
         viewHolder.txtReferencePreview.visibility = if (referencePreview.isNullOrBlank()) View.GONE else View.VISIBLE
         viewHolder.txtReferencePreview.text = referencePreview
 
-        var preview = item.preview
-        val seriesAndPublishingDate = item.reference.seriesAndPublishingDatePreview
-        if(seriesAndPublishingDate.isNullOrBlank() == false) {
-            preview = seriesAndPublishingDate + " | " + preview
-        }
-        viewHolder.txtEntryPreview.text = preview
+        viewHolder.txtEntryPreview.text = item.getEntryPreviewWithSeriesAndPublishingDate(item.reference)
         setTxtEntryPreviewMaxLines(viewHolder.txtEntryPreview, viewHolder.txtReferencePreview, item)
 
         viewHolder.lytEntryTags.visibility = if (item.hasTags()) View.VISIBLE else View.GONE

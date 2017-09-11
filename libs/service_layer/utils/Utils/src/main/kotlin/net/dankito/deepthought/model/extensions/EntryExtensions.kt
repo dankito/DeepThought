@@ -1,6 +1,7 @@
 package net.dankito.deepthought.model.extensions
 
 import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Reference
 
 
 private const val MaxPreviewLength = 400
@@ -36,6 +37,18 @@ val Entry.entryPreview: String
 
         return preview
     }
+
+
+fun Entry.getEntryPreviewWithSeriesAndPublishingDate(reference: Reference?): String {
+    var preview = this.preview
+
+    val seriesAndPublishingDate = reference.seriesAndPublishingDatePreview
+    if(seriesAndPublishingDate.isNullOrBlank() == false) {
+        preview = seriesAndPublishingDate + " | " + preview
+    }
+
+    return preview
+}
 
 
 val Entry.referencePreview: String
