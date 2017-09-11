@@ -15,6 +15,8 @@
     <color name="list_item_default_background">@android:color/background_light</color>
     <color name="list_item_selected_background">#d2e8e5</color>
 
+    <color name="disabled_color">#D2D2D2</color>
+
 
     <color name="alert_cancel_button_text_color">#888888</color>
     <color name="alert_delete_button_text_color">#FF0000</color>

@@ -4,7 +4,10 @@
     android:id="@+id/tagOnEntrySwipeLayout"
     android:layout_width="match_parent"
     android:layout_height="@dimen/list_item_tag_on_entry_height"
+    android:clickable="true"
+    android:focusable="true"
 >
+    <!-- clickable and focusable are needed so that list item receives click events -->
 
     <!-- Bottom View Start (the view that gets displayed when the user swipes from right to left. for explanation see https://github.com/daimajia/AndroidSwipeLayout/wiki/usage) -->
 
@@ -38,18 +41,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <CheckedTextView
-            android:id="@+id/chktxtvwTag"
+        <ImageView
+            android:id="@+id/imgIsTagAddedToEntry"
+            android:layout_width="@dimen/list_item_tag_on_entry_icon_width"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/list_item_tag_on_entry_icon_margin_right"
+            android:layout_marginEnd="@dimen/list_item_tag_on_entry_icon_margin_right"
+            android:src="@drawable/ic_add_circle_outline_white_48dp"
+        />
+
+        <TextView
+            android:id="@+id/txtvwTagName"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:checkMark="?android:attr/textCheckMark"
+            android:layout_toRightOf="@+id/imgIsTagAddedToEntry"
+            android:layout_toEndOf="@+id/imgIsTagAddedToEntry"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:gravity="start|center_vertical"
-            android:clickable="true"
-            android:focusable="true"
-            android:longClickable="true"
         />
-        <!-- clickable and focusable are needed so that list item receives click events -->
-        <!-- longClickable is activated so that i can show Popup ContextMenu -->
 
     </RelativeLayout>
 

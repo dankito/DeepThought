@@ -1,9 +1,12 @@
 package net.dankito.deepthought.android.adapter
 
 import android.graphics.Typeface
+import android.os.Build
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.list_item_tag_on_entry.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.TagsOnEntryViewHolder
 import net.dankito.deepthought.model.Tag
@@ -24,6 +27,16 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TagsOnEntryViewHolder {
         val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_tag_on_entry, parent, false)
 
+        val imgIsTagAddedToEntry = itemView.imgIsTagAddedToEntry
+        val resources = itemView.context.resources
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            imgIsTagAddedToEntry.imageTintList = resources.getColorStateList(R.color.is_entity_selected_icon_color, itemView.context.theme)
+        }
+        else {
+            DrawableCompat.setTintList(itemView.imgIsTagAddedToEntry.drawable, resources.getColorStateList(R.color.is_entity_selected_icon_color))
+        }
+
         return TagsOnEntryViewHolder(itemView)
     }
 
@@ -34,18 +47,17 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
     }
 
     override fun bindItemToView(viewHolder: TagsOnEntryViewHolder, item: Tag) {
-        viewHolder.chktxtvwTag.visibility = View.VISIBLE
-
         val isAddedToEntry = tagsOnEntry.contains(item)
 
-        viewHolder.chktxtvwTag.text = item.displayText
+        viewHolder.txtvwTagName.text = item.displayText
         val textStyle = if(isAddedToEntry) Typeface.BOLD else Typeface.NORMAL
-        viewHolder.chktxtvwTag.setTypeface(null, textStyle)
-        viewHolder.chktxtvwTag.isChecked = isAddedToEntry
+        viewHolder.txtvwTagName.setTypeface(null, textStyle)
+
+        viewHolder.imgIsTagAddedToEntry.isActivated = isAddedToEntry
 
         setBackgroundColor(viewHolder.itemView, item)
 
-        viewHolder.chktxtvwTag.setOnClickListener { toggleTagOnEntryOnUIThread(viewHolder.adapterPosition) }
+        viewHolder.itemView.setOnClickListener { toggleTagOnEntryOnUIThread(viewHolder.adapterPosition) }
     }
 
     override fun setupSwipeView(viewHolder: TagsOnEntryViewHolder, item: Tag) {
