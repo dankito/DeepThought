@@ -46,6 +46,9 @@ abstract class ListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(li
         else {
             bindItemToView(viewHolder, item)
 
+            viewHolder.itemView.isSelected = false // reset selection state
+            viewHolder.itemView.isPressed = false
+
             (viewHolder.itemView as? SwipeLayout)?.isSwipeEnabled = true
             setupSwipeView(viewHolder, item)
 
@@ -79,6 +82,8 @@ abstract class ListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(li
     protected open fun itemClicked(viewHolder: RecyclerView.ViewHolder, item: T, position: Int): Boolean {
         itemClickListener?.let {
             it.invoke(item)
+
+            notifyItemChanged(position)
             return true
         }
 
