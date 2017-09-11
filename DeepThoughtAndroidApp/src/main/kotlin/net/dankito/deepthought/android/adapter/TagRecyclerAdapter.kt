@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android.adapter
 
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,15 +19,15 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
     override fun getSwipeLayoutResourceId(position: Int) = R.id.tagSwipeLayout
 
 
-    override fun itemLongClicked(item: Tag, position: Int) {
+    override fun itemLongClicked(viewHolder: RecyclerView.ViewHolder, item: Tag, position: Int) {
         if(item is CalculatedTag == false) { // avoid that a CalculatedTag gets selected
-            super.itemLongClicked(item, position)
+            super.itemLongClicked(viewHolder, item, position)
         }
     }
 
-    override fun itemClicked(item: Tag, position: Int): Boolean {
+    override fun itemClicked(viewHolder: RecyclerView.ViewHolder, item: Tag, position: Int): Boolean {
         if(item is CalculatedTag == false) {
-            return super.itemClicked(item, position)
+            return super.itemClicked(viewHolder, item, position)
         }
         else {
             notifyItemChanged(position) // so that onBindViewHolder() gets called and isActivated flag removed from view

@@ -41,7 +41,8 @@ abstract class ListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(li
         viewHolder.itemView.isLongClickable = true // otherwise context menu won't trigger / pop up
 
         if(itemClickListener != null || itemLongClickListener != null) { // use a GestureDetector as item clickListener also triggers when swiping or long pressing an item
-            val gestureDetector = GestureDetectorCompat(viewHolder.itemView.context, TapGestureDetector<T>(item, { itemClicked(item, position) }, { itemLongClicked(item, position) }))
+            val gestureDetector = GestureDetectorCompat(viewHolder.itemView.context, TapGestureDetector<T>(item, { itemClicked(viewHolder, item, position) },
+                    { itemLongClicked(viewHolder, item, position) }))
 
             viewHolder.itemView.setOnTouchListener { _, event -> gestureDetector.onTouchEvent(event) }
         }
@@ -51,7 +52,7 @@ abstract class ListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(li
     }
 
 
-    protected open fun itemClicked(item: T, position: Int): Boolean {
+    protected open fun itemClicked(viewHolder: RecyclerView.ViewHolder, item: T, position: Int): Boolean {
         itemClickListener?.let {
             it.invoke(item)
             return true
@@ -60,7 +61,7 @@ abstract class ListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(li
         return false
     }
 
-    protected open fun itemLongClicked(item: T, position: Int) {
+    protected open fun itemLongClicked(viewHolder: RecyclerView.ViewHolder, item: T, position: Int) {
         itemLongClickListener?.invoke(item)
     }
 

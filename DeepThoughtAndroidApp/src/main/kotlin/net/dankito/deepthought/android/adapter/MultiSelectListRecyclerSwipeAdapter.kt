@@ -54,7 +54,7 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
     }
 
 
-    override fun itemLongClicked(item: T, position: Int) {
+    override fun itemLongClicked(viewHolder: RecyclerView.ViewHolder, item: T, position: Int) {
         if(isMultiSelectModeEnabled()) {
             if(actionMode == null) {
                 actionMode = activity?.startActionMode(actionModeCallback)
@@ -63,16 +63,16 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
             toggleSelection(item, position)
         }
 
-        super.itemLongClicked(item, position)
+        super.itemLongClicked(viewHolder, item, position)
     }
 
-    override fun itemClicked(item: T, position: Int): Boolean {
+    override fun itemClicked(viewHolder: RecyclerView.ViewHolder, item: T, position: Int): Boolean {
         if(actionMode != null) {
             toggleSelection(item, position)
             return true
         }
         else {
-            return super.itemClicked(item, position)
+            return super.itemClicked(viewHolder, item, position)
         }
     }
 
