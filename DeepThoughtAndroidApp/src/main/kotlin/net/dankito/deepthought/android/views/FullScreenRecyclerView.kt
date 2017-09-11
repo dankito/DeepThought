@@ -7,6 +7,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.View
+import java.util.*
+import kotlin.concurrent.schedule
 
 
 /**
@@ -16,6 +18,8 @@ class FullScreenRecyclerView : RecyclerView {
 
 
     companion object {
+        private const val DELAY_BEFORE_LEAVING_FULLSCREEN_MILLIS = 300L
+
         private const val NON_READER_MODE_SYSTEM_UI_FLAGS = 0
         private val READER_MODE_SYSTEM_UI_FLAGS: Int
 
@@ -50,6 +54,10 @@ class FullScreenRecyclerView : RecyclerView {
 
     private var isInFullScreenMode = false
 
+    private var shouldLeaveFullScreenMode = false
+
+    private val leaveFullscreenModeTimer = Timer()
+
 
     constructor(context: Context) : super(context) {
         setupView()
@@ -77,11 +85,23 @@ class FullScreenRecyclerView : RecyclerView {
 
     private fun systemUiVisibilityChanged(flags: Int) {
         if(flags == NON_READER_MODE_SYSTEM_UI_FLAGS) {
-            leaveFullScreenMode()
+            leaveFullScreenModeOnUiThread()
         }
     }
 
-    private fun leaveFullScreenMode() {
+    private fun setShouldLeaveFullScreenMode() {
+        shouldLeaveFullScreenMode = true
+
+        leaveFullscreenModeTimer.schedule(DELAY_BEFORE_LEAVING_FULLSCREEN_MILLIS) {
+            if(shouldLeaveFullScreenMode) {
+                shouldLeaveFullScreenMode = false
+
+                (context as? Activity)?.runOnUiThread { leaveFullScreenModeOnUiThread() }
+            }
+        }
+    }
+
+    private fun leaveFullScreenModeOnUiThread() {
         val lastVisibleItem = (layoutManager as? LinearLayoutManager)?.findLastVisibleItemPosition() ?: -1
         val scrollToEnd = lastVisibleItem >= 0 && lastVisibleItem >= adapter.itemCount - 1
 
@@ -108,13 +128,13 @@ class FullScreenRecyclerView : RecyclerView {
         }, 50)
     }
 
-    private fun enterFullScreenModeIfHasEnoughItems() {
+    private fun enterFullScreenModeIfHasEnoughItemsOnUiThread() {
         if(adapter.itemCount >= minimumCountItemsToActivateFullscreenMode) {
-            enterFullScreenMode()
+            enterFullScreenModeOnUiThread()
         }
     }
 
-    private fun enterFullScreenMode() {
+    private fun enterFullScreenModeOnUiThread() {
         this.systemUiVisibility = READER_MODE_SYSTEM_UI_FLAGS
 
         isInFullScreenMode = true
@@ -130,12 +150,17 @@ class FullScreenRecyclerView : RecyclerView {
 
             if(newState == SCROLL_STATE_IDLE) {
                 if(isInFullScreenMode) {
-                    leaveFullScreenMode()
+                    setShouldLeaveFullScreenMode() // leaving fullscreen immediately when scrolling stops provides very bad user experience when she/he likes to scroll on as it
+                    // then leaves fullscreen and immediately enters it again -> leave with some delay
                 }
             }
             else if(newState == SCROLL_STATE_DRAGGING) {
+                if(shouldLeaveFullScreenMode) {
+                    shouldLeaveFullScreenMode = false
+                }
+
                 if(isInFullScreenMode == false) {
-                    enterFullScreenModeIfHasEnoughItems()
+                    enterFullScreenModeIfHasEnoughItemsOnUiThread()
                 }
             }
         }
