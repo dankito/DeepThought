@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.activity_edit_reference.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
-import net.dankito.deepthought.android.adapter.ReferenceRecyclerAdapter
+import net.dankito.deepthought.android.adapter.ReferenceOnEntryRecyclerAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.PickDateDialog
@@ -81,7 +81,7 @@ class EditReferenceActivity : BaseActivity() {
     private var currentlySetPublishingDate: Date? = null
 
 
-    private val existingReferencesSearchResultsAdapter: ReferenceRecyclerAdapter
+    private val existingReferencesSearchResultsAdapter: ReferenceOnEntryRecyclerAdapter
 
     private val actionItemHelper = ActionItemHelper()
 
@@ -93,7 +93,7 @@ class EditReferenceActivity : BaseActivity() {
 
         presenter = EditReferencePresenter(searchEngine, router, clipboardService, deleteEntityService, referencePersister)
 
-        existingReferencesSearchResultsAdapter = ReferenceRecyclerAdapter(presenter)
+        existingReferencesSearchResultsAdapter = ReferenceOnEntryRecyclerAdapter(presenter)
     }
 
 
@@ -280,6 +280,7 @@ class EditReferenceActivity : BaseActivity() {
 
     private fun showReference(reference: Reference) {
         this.reference = reference
+        existingReferencesSearchResultsAdapter.selectedReference = reference
 
         edtxtTitle.setText(reference.title)
         reference.series?.let { edtxtSeries.setText(it.title) }

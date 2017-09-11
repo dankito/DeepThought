@@ -51,22 +51,39 @@
                     android:gravity="center_vertical"
     >
 
-        <LinearLayout
+        <ImageView
+            android:id="@+id/imgIsReferenceAddedToEntry"
+            android:layout_width="@dimen/list_item_reference_on_entry_icon_width"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="@dimen/list_item_reference_on_entry_icon_right_margin"
+            android:layout_marginEnd="@dimen/list_item_reference_on_entry_icon_right_margin"
+            android:src="@drawable/ic_add_circle_outline_white_48dp"
+            android:visibility="gone"
+        />
+
+        <RelativeLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:layout_toRightOf="@+id/imgIsReferenceAddedToEntry"
+            android:layout_toEndOf="@+id/imgIsReferenceAddedToEntry"
             android:layout_toLeftOf="@+id/txtChevronRight"
             android:layout_toStartOf="@+id/txtChevronRight"
             android:layout_centerVertical="true"
+            android:gravity="start|center_vertical"
         >
 
             <TextView
                 android:id="@+id/txtReferenceTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:gravity="start|center_vertical"
                 android:maxLines="2"
                 android:ellipsize="end"
                 style="@style/Header1Style"
@@ -76,6 +93,11 @@
                 android:id="@+id/txtReferenceSeriesAndPublishingDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/txtReferenceTitle"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_marginTop="@dimen/list_item_reference_series_preview_margin_top"
                 android:gravity="center_vertical"
                 android:lines="1"
@@ -83,7 +105,7 @@
                 style="@style/Header2Style"
             />
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/txtChevronRight"
