@@ -27,18 +27,23 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TagsOnEntryViewHolder {
         val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_tag_on_entry, parent, false)
 
+        setIconTintList(itemView)
+
+        return TagsOnEntryViewHolder(itemView)
+    }
+
+    private fun setIconTintList(itemView: View) {
         val imgIsTagAddedToEntry = itemView.imgIsTagAddedToEntry
         val resources = itemView.context.resources
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             imgIsTagAddedToEntry.imageTintList = resources.getColorStateList(R.color.is_entity_selected_icon_color, itemView.context.theme)
         }
         else {
             DrawableCompat.setTintList(itemView.imgIsTagAddedToEntry.drawable, resources.getColorStateList(R.color.is_entity_selected_icon_color))
         }
-
-        return TagsOnEntryViewHolder(itemView)
     }
+
 
     override fun bindViewForNullValue(viewHolder: TagsOnEntryViewHolder) {
         super.bindViewForNullValue(viewHolder)
@@ -53,7 +58,7 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
         val textStyle = if(isAddedToEntry) Typeface.BOLD else Typeface.NORMAL
         viewHolder.txtvwTagName.setTypeface(null, textStyle)
 
-        viewHolder.imgIsTagAddedToEntry.isActivated = isAddedToEntry
+        viewHolder.itemView.isActivated = isAddedToEntry // sets icon's tint and textview's text color
 
         setBackgroundColor(viewHolder.itemView, item)
 
