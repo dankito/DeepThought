@@ -3,7 +3,6 @@ package net.dankito.deepthought.android.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.daimajia.swipe.SwipeLayout
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.ReferenceViewHolder
 import net.dankito.deepthought.model.Reference
@@ -24,48 +23,30 @@ class ReferenceRecyclerAdapter(private val presenter: ReferencesPresenterBase): 
         return ReferenceViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(viewHolder: ReferenceViewHolder, position: Int) {
-        val reference = getItem(position)
+    override fun bindItemToView(viewHolder: ReferenceViewHolder, item: Reference) {
+        viewHolder.txtReferenceTitle.text = item.preview
 
-        if(reference == null) {
-            bindViewForNullValue(viewHolder)
-        }
-        else {
-            bindTagToView(viewHolder, reference)
-            itemBound(viewHolder, reference, position)
-        }
-    }
-
-    private fun bindViewForNullValue(viewHolder: ReferenceViewHolder) {
-        viewHolder.txtReferenceTitle.visibility = View.INVISIBLE
-        viewHolder.txtReferenceSeriesAndPublishingDate.visibility = View.INVISIBLE
-
-        (viewHolder.itemView as? SwipeLayout)?.isSwipeEnabled = false
-    }
-
-    private fun bindTagToView(viewHolder: ReferenceViewHolder, reference: Reference) {
-        viewHolder.txtReferenceTitle.visibility = View.VISIBLE
-        viewHolder.txtReferenceTitle.text = reference.preview
-
-        val seriesPreview = reference.seriesAndPublishingDatePreview
+        val seriesPreview = item.seriesAndPublishingDatePreview
         viewHolder.txtReferenceSeriesAndPublishingDate.text = seriesPreview
         viewHolder.txtReferenceSeriesAndPublishingDate.visibility = if(seriesPreview.isNullOrBlank()) View.GONE else View.VISIBLE
+    }
 
-        (viewHolder.itemView as? SwipeLayout)?.isSwipeEnabled = true
-
+    override fun setupSwipeView(viewHolder: ReferenceViewHolder, item: Reference) {
         viewHolder.btnEditReference.visibility = if(presenter is EditReferencePresenter) View.GONE else View.VISIBLE
-        viewHolder.btnShareReference.visibility = if(reference.url.isNullOrBlank()) View.GONE else View.VISIBLE
+        viewHolder.btnShareReference.visibility = if(item.url.isNullOrBlank()) View.GONE else View.VISIBLE
 
         viewHolder.btnEditReference.setOnClickListener {
-            presenter.editReference(reference)
+            presenter.editReference(item)
             closeSwipeView(viewHolder)
         }
+
         viewHolder.btnShareReference.setOnClickListener {
-            presenter.copyReferenceUrlToClipboard(reference)
+            presenter.copyReferenceUrlToClipboard(item)
             closeSwipeView(viewHolder)
         }
+
         viewHolder.btnDeleteReference.setOnClickListener {
-            presenter.deleteReference(reference)
+            presenter.deleteReference(item)
             closeSwipeView(viewHolder)
         }
     }

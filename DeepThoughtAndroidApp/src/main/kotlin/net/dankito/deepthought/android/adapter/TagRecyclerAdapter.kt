@@ -42,63 +42,42 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
         return TagViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(viewHolder: TagViewHolder, position: Int) {
-        val tag = getItem(position)
-
-        if(tag == null) {
-            bindViewForNullValue(viewHolder)
-        }
-        else {
-            bindTagToView(viewHolder, tag)
-            itemBound(viewHolder, tag, position)
-        }
-
-        (viewHolder.itemView as? SwipeLayout)?.isSwipeEnabled = tag is CalculatedTag == false && tag != null
-    }
-
-    private fun bindViewForNullValue(viewHolder: TagViewHolder) {
-        viewHolder.txtTagDisplayText.visibility = View.INVISIBLE
-
-        viewHolder.imgFilter.visibility = View.INVISIBLE
-
-        viewHolder.btnEditTag.setOnClickListener {  }
-
-        viewHolder.btnDeleteTag.setOnClickListener {  }
+    override fun bindViewForNullValue(viewHolder: TagViewHolder) {
+        super.bindViewForNullValue(viewHolder)
 
         setBackgroundForDefaultState(viewHolder.itemView)
     }
 
-    private fun bindTagToView(viewHolder: TagViewHolder, tag: Tag) {
-        viewHolder.txtTagDisplayText.visibility = View.VISIBLE
-
+    override fun bindItemToView(viewHolder: TagViewHolder, item: Tag) {
         if(presenter.isTagFilterApplied()) {
-            viewHolder.txtTagDisplayText.text = "${tag.name} (${presenter.getCountEntriesForFilteredTag(tag)} / ${tag.countEntries})"
+            viewHolder.txtTagDisplayText.text = "${item.name} (${presenter.getCountEntriesForFilteredTag(item)} / ${item.countEntries})"
         }
         else {
-            viewHolder.txtTagDisplayText.text = tag.displayText
+            viewHolder.txtTagDisplayText.text = item.displayText
         }
 
-        setFilterIconDependingOnTagState(tag, viewHolder.imgFilter)
-        viewHolder.imgFilter.setOnClickListener {
-            presenter.toggleFilterTag(tag)
-            closeSwipeView(viewHolder)
-        }
+        setFilterIconDependingOnTagState(item, viewHolder.imgFilter)
+        viewHolder.imgFilter.setOnClickListener { presenter.toggleFilterTag(item) }
 
+        setBackgroundColor(viewHolder.itemView, item)
+
+        if(item is CalculatedTag) { // make CalculatedTags unselectable in multi select mode
+            viewHolder.itemView.isActivated = false
+        }
+    }
+
+    override fun setupSwipeView(viewHolder: TagViewHolder, item: Tag) {
         viewHolder.btnEditTag.setOnClickListener {
-            presenter.editTag(tag)
+            presenter.editTag(item)
             closeSwipeView(viewHolder)
         }
 
         viewHolder.btnDeleteTag.setOnClickListener {
-            presenter.deleteTagAsync(tag)
+            presenter.deleteTagAsync(item)
             closeSwipeView(viewHolder)
         }
 
-        setBackgroundColor(viewHolder.itemView, tag)
-
-        if(tag is CalculatedTag) { // make CalculatedTags unselectable in multi select mode
-            viewHolder.itemView.isActivated = false
-        }
+        (viewHolder.itemView as? SwipeLayout)?.isSwipeEnabled = item is CalculatedTag == false
     }
 
 

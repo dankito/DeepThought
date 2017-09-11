@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.daimajia.swipe.SwipeLayout
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.EntryViewHolder
 import net.dankito.deepthought.android.views.TagsPreviewViewHelper
@@ -29,51 +28,33 @@ class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): Mul
         return EntryViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(viewHolder: EntryViewHolder, position: Int) {
-        val entry = getItem(position)
-
-        if(entry == null) { // when an entry has been deleted in db on a synchronized device but index hasn't been updated yet
-            bindViewForNullValue(viewHolder)
-        }
-        else {
-            bindEntryToView(viewHolder, entry)
-            itemBound(viewHolder, entry, position)
-        }
-    }
-
-    private fun bindViewForNullValue(viewHolder: EntryViewHolder) {
-        viewHolder.txtReferencePreview.visibility = View.GONE
-        viewHolder.txtEntryPreview.text = ""
-        viewHolder.lytEntryTags.visibility = View.GONE
-        viewHolder.btnShareEntry.setOnClickListener(null)
-        viewHolder.btnDeleteEntry.setOnClickListener(null)
-    }
-
-    private fun bindEntryToView(viewHolder: EntryViewHolder, entry: Entry) {
-        val referencePreview = entry.reference.preview
+    override fun bindItemToView(viewHolder: EntryViewHolder, item: Entry) {
+        val referencePreview = item.reference.preview
         viewHolder.txtReferencePreview.visibility = if (referencePreview.isNullOrBlank()) View.GONE else View.VISIBLE
         viewHolder.txtReferencePreview.text = referencePreview
 
-        var preview = entry.preview
-        val seriesAndPublishingDate = entry.reference.seriesAndPublishingDatePreview
+        var preview = item.preview
+        val seriesAndPublishingDate = item.reference.seriesAndPublishingDatePreview
         if(seriesAndPublishingDate.isNullOrBlank() == false) {
             preview = seriesAndPublishingDate + " | " + preview
         }
         viewHolder.txtEntryPreview.text = preview
-        setTxtEntryPreviewMaxLines(viewHolder.txtEntryPreview, viewHolder.txtReferencePreview, entry)
+        setTxtEntryPreviewMaxLines(viewHolder.txtEntryPreview, viewHolder.txtReferencePreview, item)
 
-        viewHolder.lytEntryTags.visibility = if (entry.hasTags()) View.VISIBLE else View.GONE
-        tagsPreviewViewHelper.showTagsPreview(viewHolder.lytEntryTags, entry.tags)
+        viewHolder.lytEntryTags.visibility = if (item.hasTags()) View.VISIBLE else View.GONE
+        tagsPreviewViewHelper.showTagsPreview(viewHolder.lytEntryTags, item.tags)
+    }
 
-        viewHolder.btnShareEntry.visibility = if (entry.reference != null) View.VISIBLE else View.GONE
+    override fun setupSwipeView(viewHolder: EntryViewHolder, item: Entry) {
+        viewHolder.btnShareEntry.visibility = if (item.reference != null) View.VISIBLE else View.GONE
         viewHolder.btnShareEntry.setOnClickListener {
-            presenter.copyReferenceUrlToClipboard(entry)
-            (viewHolder.itemView as? SwipeLayout)?.close()
+            presenter.copyReferenceUrlToClipboard(item)
+            closeSwipeView(viewHolder)
         }
 
         viewHolder.btnDeleteEntry.setOnClickListener {
-            presenter.deleteEntry(entry)
-            (viewHolder.itemView as? SwipeLayout)?.close()
+            presenter.deleteEntry(item)
+            closeSwipeView(viewHolder)
         }
     }
 

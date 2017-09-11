@@ -4,7 +4,6 @@ import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.daimajia.swipe.SwipeLayout
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.TagsOnEntryViewHolder
 import net.dankito.deepthought.model.Tag
@@ -28,33 +27,37 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
         return TagsOnEntryViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(viewHolder: TagsOnEntryViewHolder, position: Int) {
-        val tag = getItem(position)
+    override fun bindViewForNullValue(viewHolder: TagsOnEntryViewHolder) {
+        super.bindViewForNullValue(viewHolder)
 
-        if(tag == null) {
-            viewHolder.chktxtvwTag.visibility = View.INVISIBLE
-            (viewHolder.itemView as? SwipeLayout)?.isSwipeEnabled = false
+        setBackgroundForDefaultState(viewHolder.itemView)
+    }
+
+    override fun bindItemToView(viewHolder: TagsOnEntryViewHolder, item: Tag) {
+        viewHolder.chktxtvwTag.visibility = View.VISIBLE
+
+        val isAddedToEntry = tagsOnEntry.contains(item)
+
+        viewHolder.chktxtvwTag.text = item.displayText
+        val textStyle = if(isAddedToEntry) Typeface.BOLD else Typeface.NORMAL
+        viewHolder.chktxtvwTag.setTypeface(null, textStyle)
+        viewHolder.chktxtvwTag.isChecked = isAddedToEntry
+
+        setBackgroundColor(viewHolder.itemView, item)
+
+        viewHolder.chktxtvwTag.setOnClickListener { toggleTagOnEntryOnUIThread(viewHolder.adapterPosition) }
+    }
+
+    override fun setupSwipeView(viewHolder: TagsOnEntryViewHolder, item: Tag) {
+        viewHolder.btnEditTag.setOnClickListener {
+            presenter.editTag(item)
+            closeSwipeView(viewHolder)
         }
-        else {
-            viewHolder.chktxtvwTag.visibility = View.VISIBLE
 
-            val isAddedToEntry = tagsOnEntry.contains(tag)
-
-            viewHolder.chktxtvwTag.text = tag.displayText
-            val textStyle = if(isAddedToEntry) Typeface.BOLD else Typeface.NORMAL
-            viewHolder.chktxtvwTag.setTypeface(null, textStyle)
-            viewHolder.chktxtvwTag.isChecked = isAddedToEntry
-
-            viewHolder.chktxtvwTag.setOnClickListener { toggleTagOnEntryOnUIThread(position) }
-
-            itemBound(viewHolder, tag, position)
-
-            (viewHolder.itemView as? SwipeLayout)?.isSwipeEnabled = true
-            viewHolder.btnEditTag.setOnClickListener { presenter.editTag(tag) }
-            viewHolder.btnDeleteTag.setOnClickListener { deleteTagListener?.invoke(tag) }
+        viewHolder.btnDeleteTag.setOnClickListener {
+            deleteTagListener?.invoke(item)
+            closeSwipeView(viewHolder)
         }
-
-        setBackgroundColor(viewHolder.itemView, tag)
     }
 
 
@@ -84,14 +87,20 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
         view.setBackgroundResource(getColorForState(state))
     }
 
+    private fun setBackgroundForDefaultState(view: View) {
+        view.setBackgroundResource(getDefaultBackgroundColor())
+    }
+
     private fun getColorForState(state: TagSearchResultState): Int {
         when(state) {
             TagSearchResultState.EXACT_OR_SINGLE_MATCH_BUT_NOT_OF_LAST_RESULT -> return R.color.tag_state_exact_or_single_match_but_not_of_last_result
             TagSearchResultState.MATCH_BUT_NOT_OF_LAST_RESULT -> return R.color.tag_state_match_but_not_of_last_result
             TagSearchResultState.EXACT_MATCH_OF_LAST_RESULT -> return R.color.tag_state_exact_match_of_last_result
             TagSearchResultState.SINGLE_MATCH_OF_LAST_RESULT -> return R.color.tag_state_single_match_of_last_result
-            else -> return R.color.tag_state_default
+            else -> return getDefaultBackgroundColor()
         }
     }
+
+    private fun getDefaultBackgroundColor() = R.drawable.list_item_background
 
 }

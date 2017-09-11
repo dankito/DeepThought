@@ -3,14 +3,12 @@ package net.dankito.deepthought.android.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.daimajia.swipe.SwipeLayout
 import com.squareup.picasso.Picasso
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.ReadLaterArticleViewHolder
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.extensions.seriesAndPublishingDatePreview
-import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.presenter.ReadLaterArticleListPresenter
 
 
@@ -25,36 +23,14 @@ class ReadLaterArticleRecyclerAdapter(private val presenter: ReadLaterArticleLis
         return ReadLaterArticleViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(viewHolder: ReadLaterArticleViewHolder, position: Int) {
-        val readLaterArticle = getItem(position)
-        val extractionResult = readLaterArticle?.entryExtractionResult
-
-        if(extractionResult == null) {
-            bindViewForNullValue(viewHolder)
-        }
-        else {
-            bindArticleToView(viewHolder, readLaterArticle, extractionResult)
-            itemBound(viewHolder, readLaterArticle, position)
-        }
-    }
-
-    private fun bindViewForNullValue(viewHolder: ReadLaterArticleViewHolder) {
-        viewHolder.txtTitle.visibility = View.INVISIBLE
-        viewHolder.txtSummary.visibility = View.INVISIBLE
-        viewHolder.imgPreviewImage.visibility = View.INVISIBLE
-
-        (viewHolder.itemView as? SwipeLayout)?.isSwipeEnabled = false
-    }
-
-    private fun bindArticleToView(viewHolder: ReadLaterArticleViewHolder, article: ReadLaterArticle, extractionResult: EntryExtractionResult) {
-        val referencePreview = extractionResult.reference?.preview
+    override fun bindItemToView(viewHolder: ReadLaterArticleViewHolder, item: ReadLaterArticle) {
+        val referencePreview = item.entryExtractionResult?.reference?.preview
 
         viewHolder.txtTitle.visibility = if(referencePreview.isNullOrBlank()) View.GONE else View.VISIBLE
         viewHolder.txtTitle.text = referencePreview
 
-        viewHolder.txtSummary.visibility = View.VISIBLE
-        var preview = extractionResult.entry.preview
-        val seriesAndPublishingDate = extractionResult.reference.seriesAndPublishingDatePreview
+        var preview = item.entryExtractionResult.entry.preview
+        val seriesAndPublishingDate = item.entryExtractionResult.reference.seriesAndPublishingDatePreview
         if(seriesAndPublishingDate.isNullOrBlank() == false) {
             preview = seriesAndPublishingDate + " | " + preview
         }
@@ -64,28 +40,27 @@ class ReadLaterArticleRecyclerAdapter(private val presenter: ReadLaterArticleLis
         viewHolder.imgPreviewImage.visibility = View.VISIBLE
 
         Picasso.with(viewHolder.itemView.context)
-                .load(extractionResult.reference?.previewImageUrl)
+                .load(item.entryExtractionResult.reference?.previewImageUrl)
                 .into(viewHolder.imgPreviewImage)
+    }
 
-        (viewHolder.itemView as? SwipeLayout)?.isSwipeEnabled = true
-
-        viewHolder.btnSaveReadLaterArticle.visibility = View.VISIBLE
-        viewHolder.btnShareReadLaterArticle.visibility = if(extractionResult.reference?.url?.isNullOrBlank() ?: false) View.GONE else View.VISIBLE
-        viewHolder.btnDeleteReadLaterArticle.visibility = View.VISIBLE
-
+    override fun setupSwipeView(viewHolder: ReadLaterArticleViewHolder, item: ReadLaterArticle) {
         viewHolder.btnSaveReadLaterArticle.setOnClickListener {
-            presenter.saveAndDeleteReadLaterArticle(article)
-            closeSwipeView(viewHolder)
-        }
-        viewHolder.btnShareReadLaterArticle.setOnClickListener {
-            presenter.copyReferenceUrlToClipboard(article) // TODO: actually there should also be the option to share article's text
-            closeSwipeView(viewHolder)
-        }
-        viewHolder.btnDeleteReadLaterArticle.setOnClickListener {
-            presenter.deleteReadLaterArticle(article)
+            presenter.saveAndDeleteReadLaterArticle(item)
             closeSwipeView(viewHolder)
         }
 
+        viewHolder.btnShareReadLaterArticle.visibility = if(item.entryExtractionResult?.reference?.url?.isNullOrBlank() ?: false) View.GONE else View.VISIBLE
+        viewHolder.btnShareReadLaterArticle.setOnClickListener {
+            presenter.copyReferenceUrlToClipboard(item) // TODO: actually there should also be the option to share article's text
+            closeSwipeView(viewHolder)
+        }
+
+        viewHolder.btnDeleteReadLaterArticle.visibility = View.VISIBLE
+        viewHolder.btnDeleteReadLaterArticle.setOnClickListener {
+            presenter.deleteReadLaterArticle(item)
+            closeSwipeView(viewHolder)
+        }
     }
 
 }

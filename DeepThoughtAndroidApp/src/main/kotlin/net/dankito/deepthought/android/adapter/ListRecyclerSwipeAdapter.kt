@@ -37,6 +37,30 @@ abstract class ListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(li
     }
 
 
+    override fun onBindViewHolder(viewHolder: THolder, position: Int) {
+        val item = getItem(position)
+
+        if(item == null) {
+            bindViewForNullValue(viewHolder)
+        }
+        else {
+            bindItemToView(viewHolder, item)
+
+            (viewHolder.itemView as? SwipeLayout)?.isSwipeEnabled = true
+            setupSwipeView(viewHolder, item)
+
+            itemBound(viewHolder, item, position)
+        }
+    }
+
+    protected open fun bindViewForNullValue(viewHolder: THolder) {
+        (viewHolder.itemView as? SwipeLayout)?.isSwipeEnabled = false
+    }
+
+    abstract fun bindItemToView(viewHolder: THolder, item: T)
+
+    abstract fun setupSwipeView(viewHolder: THolder, item: T)
+
     protected open fun itemBound(viewHolder: RecyclerView.ViewHolder, item: T, position: Int) {
         viewHolder.itemView.isLongClickable = true // otherwise context menu won't trigger / pop up
 
