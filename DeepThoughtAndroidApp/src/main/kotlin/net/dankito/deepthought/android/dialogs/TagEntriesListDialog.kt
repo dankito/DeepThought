@@ -56,6 +56,10 @@ class TagEntriesListDialog : EntriesListDialogBase() {
         }
     }
 
+    override fun getDialogTitle(entries: List<Entry>): String {
+        return tag.name + " (" + entries.size + ")"
+    }
+
 
     inner class EventBusListener {
 

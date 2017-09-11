@@ -3,6 +3,7 @@ package net.dankito.deepthought.android.dialogs
 import android.content.Context
 import android.support.v4.app.FragmentManager
 import android.view.View
+import kotlinx.android.synthetic.main.dialog_entries_list.*
 import kotlinx.android.synthetic.main.dialog_entries_list.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.EntryRecyclerAdapter
@@ -69,11 +70,26 @@ abstract class EntriesListDialogBase : FullscreenDialogFragment() {
 
 
     protected fun retrieveAndShowEntries() {
-        retrieveEntries { showEntries(it) }
+        retrieveEntries {
+            activity?.runOnUiThread {
+                showEntriesOnUiThread(it)
+                showDialogTitleOnUiThread(it)
+            }
+        }
     }
 
-    private fun showEntries(entries: List<Entry>) {
-        activity?.runOnUiThread { adapter.items = entries }
+    private fun showEntriesOnUiThread(entries: List<Entry>) {
+        adapter.items = entries
+    }
+
+    private fun showDialogTitleOnUiThread(entries: List<Entry>) {
+        toolbar?.let { toolbar -> // sometimes toolbar is null (why?)
+            toolbar.title = getDialogTitle(entries)
+        }
+    }
+
+    protected open fun getDialogTitle(entries: List<Entry>): String {
+        return ""
     }
 
     protected abstract fun retrieveEntries(callback: (List<Entry>) -> Unit)
