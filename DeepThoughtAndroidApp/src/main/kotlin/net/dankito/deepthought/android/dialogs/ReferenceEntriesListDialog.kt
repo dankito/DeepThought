@@ -22,8 +22,6 @@ class ReferenceEntriesListDialog: EntriesListDialogBase() {
         this.reference = reference
 
         showDialog(fragmentManager)
-
-        retrieveAndShowEntries()
     }
 
     override fun retrieveEntries(callback: (List<Entry>) -> Unit) {
@@ -31,7 +29,7 @@ class ReferenceEntriesListDialog: EntriesListDialogBase() {
             callback(reference.entries) // TODO: currently no sorting is applied
         }
 
-        if(reference == null) { // sometimes onAttach() is called before reference is set (how can this ever be?)
+        if(reference == null) { // sometimes onAttach() is called before reference is set (how can this ever happen?)
             callback(emptyList())
         }
     }

@@ -1,6 +1,5 @@
 package net.dankito.deepthought.android.dialogs
 
-import android.content.Context
 import android.support.v4.app.FragmentManager
 import android.view.View
 import kotlinx.android.synthetic.main.dialog_entries_list.*
@@ -62,18 +61,17 @@ abstract class EntriesListDialogBase : FullscreenDialogFragment() {
     }
 
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
+    override fun onResume() {
+        super.onResume()
 
         retrieveAndShowEntries()
     }
 
-
     protected fun retrieveAndShowEntries() {
-        retrieveEntries {
+        retrieveEntries { entries ->
             activity?.runOnUiThread {
-                showEntriesOnUiThread(it)
-                showDialogTitleOnUiThread(it)
+                showEntriesOnUiThread(entries)
+                showDialogTitleOnUiThread(entries)
             }
         }
     }
