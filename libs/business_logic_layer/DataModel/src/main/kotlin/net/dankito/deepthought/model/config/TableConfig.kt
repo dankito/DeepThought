@@ -206,6 +206,10 @@ class TableConfig {
 
         const val ReadLaterArticleTableName = "read_later_article"
 
+        const val ReadLaterArticleEntryPreviewColumnName = "entry_preview"
+        const val ReadLaterArticleReferencePreviewColumnName = "reference_preview"
+        const val ReadLaterArticleReferenceUrlColumnName = "reference_url"
+        const val ReadLaterArticlePreviewImageUrlColumnName = "preview_image_url"
         const val ReadLaterArticleEntryExtractionResultColumnName = "entry_extraction_result"
 
     }

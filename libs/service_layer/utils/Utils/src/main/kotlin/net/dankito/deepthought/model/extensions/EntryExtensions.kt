@@ -4,6 +4,8 @@ import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
 
 
+const val SeriesAndPublishingDateAndEntryPreviewSeparator = " | "
+
 private const val MaxPreviewLength = 400
 
 
@@ -44,7 +46,7 @@ fun Entry.getEntryPreviewWithSeriesAndPublishingDate(reference: Reference?): Str
 
     val seriesAndPublishingDate = reference.seriesAndPublishingDatePreview
     if(seriesAndPublishingDate.isNullOrBlank() == false) {
-        preview = seriesAndPublishingDate + " | " + preview
+        preview = seriesAndPublishingDate + SeriesAndPublishingDateAndEntryPreviewSeparator + preview
     }
 
     return preview

@@ -5,6 +5,8 @@ import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.extensions.extractor
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.model.ReadLaterArticle
+import net.dankito.deepthought.model.extensions.SeriesAndPublishingDateAndEntryPreviewSeparator
+import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
@@ -125,7 +127,13 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
     }
 
     private fun saveArticleForLaterReading(item: ArticleSummaryItem, result: EntryExtractionResult) {
-        readLaterArticleService.persist(ReadLaterArticle(result))
+        var entryPreview = item.summary
+        val seriesAndPublishingDate = result.reference.preview
+        if(seriesAndPublishingDate.isNullOrBlank() == false) {
+            entryPreview = seriesAndPublishingDate + SeriesAndPublishingDateAndEntryPreviewSeparator + entryPreview
+        }
+
+        readLaterArticleService.persist(ReadLaterArticle(result, entryPreview, item.title, item.url, item.previewImageUrl))
 
         dialogService.showLittleInfoMessage(localization.getLocalizedString("article.summary.extractor.article.saved.for.later.reading", item.title))
     }

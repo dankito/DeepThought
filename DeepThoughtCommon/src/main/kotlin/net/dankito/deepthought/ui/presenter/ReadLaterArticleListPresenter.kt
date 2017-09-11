@@ -55,14 +55,14 @@ class ReadLaterArticleListPresenter(private val view: IReadLaterArticleView, pri
 
     fun getReadLaterArticles(searchTerm: String) {
         searchEngine.searchReadLaterArticles(ReadLaterArticleSearch(searchTerm) {
-            it.filterNotNull().forEach { readLaterArticleService.deserializeEntryExtractionResult(it) }
-
             view.showEntities(it)
         })
     }
 
 
     fun showArticle(article: ReadLaterArticle) {
+        readLaterArticleService.deserializeEntryExtractionResult(article)
+
         router.showEditEntryView(article)
     }
 
@@ -81,7 +81,7 @@ class ReadLaterArticleListPresenter(private val view: IReadLaterArticleView, pri
     }
 
     fun copyReferenceUrlToClipboard(article: ReadLaterArticle) {
-        article.entryExtractionResult.reference?.url?.let { url ->
+        article.referenceUrl?.let { url ->
             clipboardService.copyUrlToClipboard(url)
         }
     }

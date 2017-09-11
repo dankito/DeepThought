@@ -5,6 +5,8 @@ import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.extensions.getEntryPreviewWithSeriesAndPublishingDate
+import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
@@ -34,8 +36,9 @@ class EditEntryPresenter(private val entryPersister: EntryPersister, private val
         entryPersister.saveEntryAsync(entry, reference, tags, callback)
     }
 
-    fun saveEntryExtractionResultForLaterReading(entryExtractionResult: EntryExtractionResult) {
-        readLaterArticleService.persist(ReadLaterArticle(entryExtractionResult))
+    fun saveEntryExtractionResultForLaterReading(extractionResult: EntryExtractionResult) {
+        readLaterArticleService.persist(ReadLaterArticle(extractionResult, extractionResult.entry.getEntryPreviewWithSeriesAndPublishingDate(extractionResult.reference),
+                extractionResult.reference.preview, extractionResult.reference?.url, extractionResult.reference?.previewImageUrl))
     }
 
     fun deleteReadLaterArticle(article: ReadLaterArticle) {
