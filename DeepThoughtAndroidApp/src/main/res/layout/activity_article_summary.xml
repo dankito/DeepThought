@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     tools:context="net.dankito.deepthought.android.activities.ArticleSummaryActivity">
 
-    <android.support.v7.widget.RecyclerView
+    <net.dankito.deepthought.android.views.FullScreenRecyclerView
         android:id="@+id/rcyArticleSummaryItems"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
