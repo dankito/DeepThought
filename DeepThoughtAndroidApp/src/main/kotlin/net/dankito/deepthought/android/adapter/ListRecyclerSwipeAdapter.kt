@@ -44,20 +44,24 @@ abstract class ListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(li
             bindViewForNullValue(viewHolder)
         }
         else {
-            bindItemToView(viewHolder, item)
-
-            viewHolder.itemView.isSelected = false // reset selection state
-            viewHolder.itemView.isPressed = false
-
-            (viewHolder.itemView as? SwipeLayout)?.isSwipeEnabled = true
-            setupSwipeView(viewHolder, item)
-
-            itemBound(viewHolder, item, position)
+            bindViewForNonNullValue(viewHolder, item, position)
         }
     }
 
     protected open fun bindViewForNullValue(viewHolder: THolder) {
         (viewHolder.itemView as? SwipeLayout)?.isSwipeEnabled = false
+    }
+
+    protected open fun bindViewForNonNullValue(viewHolder: THolder, item: T, position: Int) {
+        bindItemToView(viewHolder, item)
+
+        viewHolder.itemView.isSelected = false // reset selection state
+        viewHolder.itemView.isPressed = false
+
+        (viewHolder.itemView as? SwipeLayout)?.isSwipeEnabled = true
+        setupSwipeView(viewHolder, item)
+
+        itemBound(viewHolder, item, position)
     }
 
     abstract fun bindItemToView(viewHolder: THolder, item: T)
