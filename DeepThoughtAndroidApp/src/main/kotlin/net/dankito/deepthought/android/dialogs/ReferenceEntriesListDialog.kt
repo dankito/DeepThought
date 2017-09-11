@@ -12,7 +12,7 @@ class ReferenceEntriesListDialog: EntriesListDialogBase() {
     }
 
 
-    private var reference: Reference? = null
+    private lateinit var reference: Reference
 
 
     override fun getDialogTag() = TAG
@@ -25,17 +25,13 @@ class ReferenceEntriesListDialog: EntriesListDialogBase() {
     }
 
     override fun retrieveEntries(callback: (List<Entry>) -> Unit) {
-        reference?.let { reference ->
+        reference.let { reference ->
             callback(reference.entries) // TODO: currently no sorting is applied
-        }
-
-        if(reference == null) { // sometimes onAttach() is called before reference is set (how can this ever happen?)
-            callback(emptyList())
         }
     }
 
     override fun getDialogTitle(entries: List<Entry>): String {
-        return reference?.title ?: super.getDialogTitle(entries)
+        return reference.title
     }
 
 }
