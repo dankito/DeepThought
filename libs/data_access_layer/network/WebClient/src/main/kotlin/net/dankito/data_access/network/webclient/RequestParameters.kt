@@ -14,6 +14,8 @@ data class RequestParameters(val url: String, var body: String? = null,
     companion object {
         const val DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; rv:55.0) Gecko/20100101 Firefox/55.0"
 
+        const val DEFAULT_MOBILE_USER_AGENT = "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/537.36 (KHTML, like Gecko) CChrome/60.0.3112.105 Safari/537.36"
+
         const val DEFAULT_CONNECTION_TIMEOUT_MILLIS = 2000
 
         const val DEFAULT_DOWNLOAD_BUFFER_SIZE = 8 * 1024
