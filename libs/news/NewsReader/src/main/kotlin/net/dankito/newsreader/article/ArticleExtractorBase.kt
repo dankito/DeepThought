@@ -7,6 +7,7 @@ import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.newsreader.model.ArticleSummaryItem
+import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
@@ -87,6 +88,10 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
             extractionResult.error = e
             log.error("Could not extract article with post from " + url, e)
         }
+    }
+
+    override fun parseHtml(extractionResult: EntryExtractionResult, html: String, url: String) {
+        parseHtmlToArticle(extractionResult, Jsoup.parse(html, url), url)
     }
 
     abstract protected fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String)

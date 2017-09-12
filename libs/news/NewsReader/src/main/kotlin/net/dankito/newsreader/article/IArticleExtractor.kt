@@ -16,4 +16,7 @@ interface IArticleExtractor {
 
     fun extractArticleAsync(url : String, callback: (AsyncResult<EntryExtractionResult>) -> Unit)
 
+
+    fun parseHtml(extractionResult: EntryExtractionResult, html: String, url: String)
+
 }
