@@ -30,7 +30,7 @@ class TazArticleExtractorTest : ArticleExtractorTestBase() {
                 "Ei. Ei. Eieieieiei",
                 "Der Gifteier-Skandal betrifft überwiegend große Farmen mit mehr als 15.000 Hennen. Er zeigt, wie riskant die industrielle Geflügelhaltung ist.",
                 "http://taz.de/picture/2194530/624/18914385.jpeg",
-                12000, false, "Essay über Massentierhaltung"
+                11000, false, "Essay über Massentierhaltung"
                 )
     }
 

@@ -16,7 +16,7 @@ class TagesschauArticleExtractorTest : ArticleExtractorTestBase() {
                 "Verwechslungen und Jugendsünden",
                 "Sechs Wochen nach dem G20-Gipfel haben erste Journalisten Bescheid bekommen, warum ihre Akkreditierung entzogen wurde. Was beim Bundeskriminalamt an Daten über sie gespeichert war, erweist sich als toxisches Datengebräu.",
                 "http://www.tagesschau.de/g20-akkreditierungen-101~_v-modPremiumHalb.jpg",
-                24000, false, "Entzogene G20-Akkreditierungen")
+                16000, false, "Entzogene G20-Akkreditierungen")
     }
 
 }
