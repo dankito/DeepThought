@@ -12,7 +12,7 @@ data class RequestParameters(val url: String, var body: String? = null,
                              var downloadProgressListener: ((progress: Float, downloadedChunk: ByteArray) -> Unit)? = null) {
 
     companion object {
-        const val DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; rv:36.0) Gecko/20100101 Firefox/36.0"
+        const val DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 6.3; rv:55.0) Gecko/20100101 Firefox/55.0"
 
         const val DEFAULT_CONNECTION_TIMEOUT_MILLIS = 2000
 
