@@ -254,6 +254,9 @@ class EditEntryActivity : BaseActivity() {
         settings.defaultTextEncodingName = "UTF-8" // otherwise non ASCII text doesn't get displayed correctly
         settings.defaultFontSize = 18 // default font is too small
         settings.domStorageEnabled = true // otherwise images may not load, see https://stackoverflow.com/questions/29888395/images-not-loading-in-android-webview
+        settings.setSupportZoom(true)
+        settings.builtInZoomControls = true
+        settings.displayZoomControls = false
         settings.javaScriptEnabled = true // so that embedded videos etc. work
     }
 
