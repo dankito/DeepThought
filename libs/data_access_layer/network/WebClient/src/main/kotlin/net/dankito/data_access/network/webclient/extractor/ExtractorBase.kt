@@ -48,7 +48,7 @@ abstract class ExtractorBase(val webClient : IWebClient) {
     }
 
     protected open fun createParametersForUrl(url: String, body: String? = null): RequestParameters {
-        val parameters = RequestParameters(url, body)
+        val parameters = RequestParameters(url, body, userAgent = RequestParameters.DEFAULT_MOBILE_USER_AGENT)
 
         return parameters
     }
