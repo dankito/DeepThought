@@ -817,12 +817,11 @@ class EditEntryActivity : BaseActivity() {
         this.entryExtractionResult = extractionResult
         canEntryBeSaved = true
 
-        editEntry(entryExtractionResult?.entry, entryExtractionResult?.reference, entryExtractionResult?.tags, extractionResult.webSiteHtml)
+        editEntry(entryExtractionResult?.entry, entryExtractionResult?.reference, entryExtractionResult?.tags)
     }
 
-    private fun editEntry(entry: Entry?, reference: Reference?, tags: Collection<Tag>?, content: String? = null) {
+    private fun editEntry(entry: Entry?, reference: Reference?, tags: Collection<Tag>?) {
         contentToEdit = entry?.content
-        content?.let { contentToEdit = it }
         abstractToEdit = entry?.abstractString
         referenceToEdit = reference
 

@@ -68,7 +68,7 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
     protected open fun extractArticle(url: String): EntryExtractionResult? {
         requestUrl(url).let { document ->
             val contentHtml = document.outerHtml()
-            val extractionResult = EntryExtractionResult(Entry(contentHtml), Reference(url, url, null), webSiteHtml = contentHtml)
+            val extractionResult = EntryExtractionResult(Entry(contentHtml), Reference(url, url, null))
 
             parseHtmlToArticle(extractionResult, document, url)
 

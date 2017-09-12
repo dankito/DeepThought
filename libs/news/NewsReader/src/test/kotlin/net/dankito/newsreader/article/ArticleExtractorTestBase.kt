@@ -47,7 +47,6 @@ abstract class ArticleExtractorTestBase {
 
         extractionResult?.let {
             assertThat(extractionResult.couldExtractContent, `is`(true))
-            assertThat(extractionResult.webSiteHtml, notNullValue())
             assertThat(extractionResult.error, nullValue())
 
             assertThat(extractionResult.entry.content.isNullOrBlank(), `is`(false))
