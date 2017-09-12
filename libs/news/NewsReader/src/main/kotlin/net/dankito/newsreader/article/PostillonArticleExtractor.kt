@@ -38,7 +38,7 @@ class PostillonArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
         }
     }
 
-    override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
+    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
         document.body().select(".post").first()?.let { postElement ->
             postElement.select(".post-title")?.let { titleElement ->
                 postElement.select(".post-body").first()?.let { bodyElement ->
@@ -48,12 +48,10 @@ class PostillonArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
 
                     bodyElement.select(".separator a img").first()?.let { reference.previewImageUrl = it.attr("src") }
 
-                    return EntryExtractionResult(entry, reference)
+                    extractionResult.setExtractedContent(entry, reference)
                 }
             }
         }
-
-        return null
     }
 
     private fun extractContent(bodyElement: Element): String {

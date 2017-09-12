@@ -21,7 +21,7 @@ class SueddeutscheMagazinArticleExtractor(webClient: IWebClient) : ArticleExtrac
     }
 
 
-    override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
+    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
         val referenceAndAbstract = extractReferenceAndAbstract(document, url)
 
         document.body().select(".content").first()?.let { contentElement ->
@@ -33,11 +33,9 @@ class SueddeutscheMagazinArticleExtractor(webClient: IWebClient) : ArticleExtrac
                     referenceAndAbstract?.first?.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
                 }
 
-                return EntryExtractionResult(entry, referenceAndAbstract?.first)
+                extractionResult.setExtractedContent(entry, referenceAndAbstract?.first)
             }
         }
-
-        return null
     }
 
     private fun extractContent(mainContent: Element): String {

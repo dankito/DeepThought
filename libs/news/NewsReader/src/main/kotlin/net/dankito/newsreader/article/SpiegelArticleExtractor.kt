@@ -24,7 +24,7 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
         return url.toLowerCase().contains("://www.spiegel.de/") && url.length > "://www.spiegel.de/".length + 4
     }
 
-    override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
+    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
             val contentElement = document.body().getElementById("content-main")
 
             val articleSectionElements = document.body().getElementsByClass("article-section")
@@ -34,7 +34,7 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
 
             val reference = extractReference(url, contentElement)
 
-            return EntryExtractionResult(entry, reference)
+            extractionResult.setExtractedContent(entry, reference)
 
     }
 

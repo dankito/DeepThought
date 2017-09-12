@@ -27,21 +27,19 @@ class GuardianArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(web
     }
 
 
-    override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
+    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
         document.body().select("#article").first()?.let { articleElement ->
             articleElement.select(".mobile-only").remove()
 
             articleElement.select(".content__headline").first()?.let { titleElement ->
                 articleElement.select(".js-content-main-column").first()?.let { contentMainElement ->
-                    return extractArticle(url, articleElement, titleElement, contentMainElement)
+                    extractArticle(extractionResult, url, articleElement, titleElement, contentMainElement)
                 }
             }
         }
-
-        return null
     }
 
-    private fun extractArticle(url: String, articleElement: Element, titleElement: Element, contentMainElement: Element): EntryExtractionResult {
+    private fun extractArticle(extractionResult: EntryExtractionResult, url: String, articleElement: Element, titleElement: Element, contentMainElement: Element) {
         val entry = Entry(extractContent(contentMainElement))
 
         articleElement.select(".content__standfirst").first()?.let { entry.abstractString = it.text() }
@@ -51,7 +49,7 @@ class GuardianArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(web
 
         contentMainElement.select(".media-primary").first()?.let { reference.previewImageUrl = extractUrlFromFigureElement(it) }
 
-        return EntryExtractionResult(entry, reference)
+        extractionResult.setExtractedContent(entry, reference)
     }
 
     private fun extractUrlFromFigureElement(figureElement: Element): String? {

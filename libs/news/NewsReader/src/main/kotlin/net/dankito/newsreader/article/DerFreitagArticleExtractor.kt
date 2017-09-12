@@ -27,16 +27,14 @@ class DerFreitagArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
         return url.toLowerCase().contains("://www.freitag.de/") && url.length > "://www.freitag.de/".length + 5
     }
 
-    override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
+    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
         document.body().select("article").first()?.let { articleElement ->
             val articleEntry = createEntry(articleElement, url)
 
             val reference = createReference(url, articleElement)
             
-            return EntryExtractionResult(articleEntry, reference)
+            extractionResult.setExtractedContent(articleEntry, reference)
         }
-
-        return null
     }
 
     private fun createEntry(articleElement: Element, url: String): Entry {

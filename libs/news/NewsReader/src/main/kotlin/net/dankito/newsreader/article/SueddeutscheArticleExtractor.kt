@@ -39,23 +39,23 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         return super.extractArticle(siteUrl)
     }
 
-    override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
+    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
         if(isMultiPageArticle(document) && triedToResolveMultiPageArticle == false) { // some multi page articles after fetching read all on one page still have the read all on  page link
             triedToResolveMultiPageArticle = true
-            return extractArticleWithPost(url, "article.singlePage=true") // -> extractArticleWithPost() would be called endlessly. that's what triedToResolveMultiPageArticle is there for to avoid this
+            extractArticleWithPost(extractionResult, url, "article.singlePage=true") // -> extractArticleWithPost() would be called endlessly. that's what triedToResolveMultiPageArticle is there for to avoid this
+            return
         }
 
         triedToResolveMultiPageArticle = false
 
         document.body().select("#sitecontent").first()?.let { siteContent ->
-            return extractArticle(siteContent, url)
+            extractArticle(extractionResult, siteContent, url)
+            return
         }
 
         document.body().select("article.gallery").first()?.let { galleryArticleElement ->
-            return extractGalleryArticle(galleryArticleElement, url)
+            extractGalleryArticle(extractionResult, galleryArticleElement, url)
         }
-
-        return null
     }
 
     private fun isMultiPageArticle(document: Document): Boolean {
@@ -63,7 +63,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
 
-    private fun extractArticle(siteContent: Element, siteUrl: String): EntryExtractionResult? {
+    private fun extractArticle(extractionResult: EntryExtractionResult, siteContent: Element, siteUrl: String) {
         val reference = extractReference(siteContent, siteUrl)
 
         siteContent.select("#article-body").first()?.let { articleBody ->
@@ -81,10 +81,8 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
             val entry = Entry(content, abstract)
 
-            return EntryExtractionResult(entry, reference)
+            extractionResult.setExtractedContent(entry, reference)
         }
-
-        return null
     }
 
     private fun cleanArticleBody(articleBody: Element) {
@@ -123,7 +121,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
 
-    private fun extractGalleryArticle(galleryArticleElement: Element, siteUrl: String): EntryExtractionResult? {
+    private fun extractGalleryArticle(extractionResult: EntryExtractionResult, galleryArticleElement: Element, siteUrl: String) {
         val reference = extractReference(galleryArticleElement, siteUrl)
 
         val abstract = galleryArticleElement.select(".entry-summary").first()?.text() ?: ""
@@ -134,10 +132,8 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
             articleBody.select(".offscreen").first()?.let { reference?.publishingDate = parseSueddeutscheDateString(it.text()) }
 
-            return EntryExtractionResult(Entry(content.toString(), abstract), reference)
+            extractionResult.setExtractedContent(Entry(content.toString(), abstract), reference)
         }
-
-        return null
     }
 
     private fun readHtmlOfAllImagesInGallery(imageHtml: StringBuilder, articleBody: Element, siteUrl: String) {

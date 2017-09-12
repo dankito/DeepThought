@@ -29,20 +29,24 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
         return url.toLowerCase().contains("://www.zeit.de/") && url.length > "://www.zeit.de/".length + 5
     }
 
-    override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
+    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
         document.body().select("article").first()?.let { articleElement ->
             val multiPageArticleArticleOnOnePageUrl = getArticleOnOnePageUrlForMultiPageArticles(articleElement)
-            if (multiPageArticleArticleOnOnePageUrl != null)
-                return extractArticle(multiPageArticleArticleOnOnePageUrl)
+            if(multiPageArticleArticleOnOnePageUrl != null) {
+                extractArticle(multiPageArticleArticleOnOnePageUrl)?.let {
+                    if(it.couldExtractContent) {
+                        extractionResult.setExtractedContent(it.entry, it.reference)
+                        return
+                    }
+                }
+            }
 
             val articleEntry = createEntry(articleElement)
 
             val reference = createReference(url, articleElement)
 
-            return EntryExtractionResult(articleEntry, reference)
+            extractionResult.setExtractedContent(articleEntry, reference)
         }
-
-        return null
     }
 
     protected fun getArticleOnOnePageUrlForMultiPageArticles(articleBodyElement: Element): String? {

@@ -29,15 +29,15 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
                 (url.toLowerCase().startsWith("http://jetzt.sueddeutsche.de/") && url.length > "http://jetzt.sueddeutsche.de/".length)
     }
 
-    override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
+    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
         // TODO: may re-add extracting old version
-        return parseHtmlToEntryNewVersion(url, document)
+        parseHtmlToEntryNewVersion(extractionResult, url, document)
     }
 
 
     /*        Parsing an SZ Jetzt article of new Homepage Style, introduced beginning 2016      */
 
-    private fun parseHtmlToEntryNewVersion(articleUrl: String, document: Document): EntryExtractionResult? {
+    private fun parseHtmlToEntryNewVersion(extractionResult: EntryExtractionResult, articleUrl: String, document: Document) {
         document.body().select("article").first()?.let { articleElement ->
             articleElement.select(".article__content").first()?.let { articleContentElement ->
                 val content = parseContent(articleContentElement)
@@ -46,13 +46,9 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
                 val entry = Entry(content, abstractString)
                 val reference = extractReference( articleElement, articleUrl)
 
-                val extractionResult = EntryExtractionResult(entry, reference)
-
-                return extractionResult
+                extractionResult.setExtractedContent(entry, reference)
             }
         }
-        
-        return null
     }
 
     private fun extractAbstract(articleElement: Element): String {

@@ -17,23 +17,26 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
     }
 
 
-    abstract protected fun parseArticle(headerElement: Element, articleElement: Element, url: String, title: String) : EntryExtractionResult?
+    abstract protected fun parseArticle(extractionResult: EntryExtractionResult, headerElement: Element, articleElement: Element, url: String, title: String)
 
 
-    override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
+    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
         document.body().select("article").first()?.let { article ->
             getReadAllOnOnePageUrl(article, url)?.let { allOnOnePageUrl ->
-                return extractArticle(allOnOnePageUrl)
+                extractArticle(allOnOnePageUrl)?.let {
+                    if(it.couldExtractContent) {
+                        extractionResult.setExtractedContent(it.entry, it.reference)
+                        return
+                    }
+                }
             }
 
             article.select("header").first()?.let { header ->
                 header.select(".article__heading").first()?.text()?.let { title ->
-                    return parseArticle(header, article, url, title)
+                    parseArticle(extractionResult, header, article, url, title)
                 }
             }
         }
-
-        return null
     }
 
     private fun getReadAllOnOnePageUrl(article: Element, siteUrl: String): String? {

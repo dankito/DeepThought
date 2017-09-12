@@ -20,7 +20,7 @@ class TechStageArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
     }
 
 
-    override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
+    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
         document.body().select("#content > article").first()?.let { articleElement ->
             articleElement.select("#article_content").first()?.let { contentElement ->
                 val reference = extractReference(articleElement, contentElement, url)
@@ -29,11 +29,9 @@ class TechStageArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
 
                 cleanContent(contentElement)
 
-                return EntryExtractionResult(Entry(contentElement.outerHtml(), abstract), reference)
+                extractionResult.setExtractedContent(Entry(contentElement.outerHtml(), abstract), reference)
             }
         }
-
-        return null
     }
 
     private fun extractAbstract(contentElement: Element): String {

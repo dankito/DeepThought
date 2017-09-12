@@ -29,7 +29,7 @@ class NetzPolitikOrgArticleExtractor(webClient: IWebClient) : ArticleExtractorBa
     }
 
 
-    override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
+    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
         document.body().select("article").first()?.let { articleElement ->
             val title = articleElement.select(".entry-title").first()?.text() ?: ""
             val reference = Reference(url, title, parsePublishingDate(articleElement))
@@ -39,10 +39,8 @@ class NetzPolitikOrgArticleExtractor(webClient: IWebClient) : ArticleExtractorBa
 
             val entry = Entry(extractContent(articleElement), abstract)
 
-            return EntryExtractionResult(entry, reference)
+            extractionResult.setExtractedContent(entry, reference)
         }
-
-        return null
     }
 
     private fun extractContent(articleElement: Element): String {

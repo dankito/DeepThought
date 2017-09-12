@@ -3,8 +3,7 @@ package net.dankito.newsreader.article
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.OkHttpWebClient
 import net.dankito.deepthought.model.util.EntryExtractionResult
-import org.hamcrest.CoreMatchers.`is`
-import org.hamcrest.CoreMatchers.notNullValue
+import org.hamcrest.CoreMatchers.*
 import org.hamcrest.Matchers.greaterThan
 import org.junit.Assert.assertThat
 import java.util.concurrent.CountDownLatch
@@ -47,6 +46,10 @@ abstract class ArticleExtractorTestBase {
         assertThat(extractionResult, notNullValue())
 
         extractionResult?.let {
+            assertThat(extractionResult.couldExtractContent, `is`(true))
+            assertThat(extractionResult.webSiteHtml, notNullValue())
+            assertThat(extractionResult.error, nullValue())
+
             assertThat(extractionResult.entry.content.isNullOrBlank(), `is`(false))
             assertThat(extractionResult.entry.abstractString, `is`(abstract))
 

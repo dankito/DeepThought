@@ -31,16 +31,14 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
         return url.toLowerCase().contains("://www.heise.de/ct/") && url.length > "://www.heise.de/ct/".length + 5
     }
 
-    override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
+    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
         document.body().select("main section").first()?.let { sectionElement ->
             val articleEntry = createEntry(url, sectionElement)
 
             val reference = createReference(url, sectionElement)
 
-            return EntryExtractionResult(articleEntry, reference)
+            extractionResult.setExtractedContent(articleEntry, reference)
         }
-
-        return null
     }
 
     private fun createEntry(url: String, sectionElement: Element): Entry {

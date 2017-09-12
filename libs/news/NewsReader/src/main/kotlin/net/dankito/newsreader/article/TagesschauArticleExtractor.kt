@@ -36,16 +36,14 @@ class TagesschauArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
         }
     }
 
-    override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
+    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
         document.body().select("#content .storywrapper").first()?.let { contentElement ->
             extractEntry(contentElement)?.let { entry ->
                 val reference = extractReference(url, contentElement)
 
-                return EntryExtractionResult(entry, reference)
+                extractionResult.setExtractedContent(entry, reference)
             }
         }
-
-        return null
     }
 
     private fun extractEntry(contentElement: Element): Entry? {

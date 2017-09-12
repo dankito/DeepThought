@@ -3,6 +3,8 @@ package net.dankito.newsreader.article
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.data_access.network.webclient.extractor.ExtractorBase
+import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.newsreader.model.ArticleSummaryItem
 import org.jsoup.nodes.Document
@@ -65,23 +67,29 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
 
     protected open fun extractArticle(url: String): EntryExtractionResult? {
         requestUrl(url).let { document ->
-            return parseHtmlToArticle(document, url)
+            val contentHtml = document.outerHtml()
+            val extractionResult = EntryExtractionResult(Entry(contentHtml), Reference(url, url, null), webSiteHtml = contentHtml)
+
+            parseHtmlToArticle(extractionResult, document, url)
+
+            // TODO: if extraction didn't work try default ArticleExtraction if not done already
+
+            return extractionResult
         }
     }
 
-    protected open fun extractArticleWithPost(url: String, body: String? = null): EntryExtractionResult? {
+    protected open fun extractArticleWithPost(extractionResult: EntryExtractionResult, url: String, body: String? = null) {
         try {
             requestUrlWithPost(url, body).let { document ->
-                return parseHtmlToArticle(document, url)
+                parseHtmlToArticle(extractionResult, document, url)
             }
         } catch (e: Exception) {
+            extractionResult.error = e
             log.error("Could not extract article with post from " + url, e)
         }
-
-        return null
     }
 
-    abstract protected fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult?
+    abstract protected fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String)
 
 
     protected fun makeLinksAbsolute(element: Element, url: String) {

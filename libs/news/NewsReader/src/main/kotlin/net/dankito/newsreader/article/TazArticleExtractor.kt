@@ -24,7 +24,7 @@ class TazArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClien
         return url.toLowerCase().contains("taz.de/") && url.length > (url.toLowerCase().indexOf("taz.de/") + "taz.de/".length)
     }
 
-    override fun parseHtmlToArticle(document: Document, url: String): EntryExtractionResult? {
+    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
         document.body().select(".sectbody").first()?.let { bodyElement ->
             val reference = extractReference(document, url, bodyElement)
 
@@ -34,12 +34,8 @@ class TazArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClien
             bodyElement.select("h1, h4, .intro, .caption, .rack, .ad_bin, .contentad, .sold").remove()
             val content = bodyElement.children().joinToString("") { it.outerHtml() }
 
-            val entry = Entry(content, abstract)
-
-            return EntryExtractionResult(entry, reference)
+            extractionResult.setExtractedContent(Entry(content, abstract), reference)
         }
-
-        return null
     }
 
     private fun extractReference(document: Document, url: String, bodyElement: Element): Reference {
