@@ -134,10 +134,13 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val optionsMenuRe
         activity.findViewById(R.id.bottomViewNavigation)?.visibility = viewVisibility
 
         if(recyclerAdapter?.isInMultiSelectMode() == false) {
-            activity.findViewById(R.id.fab_menu)?.visibility = viewVisibility
+            if(isCurrentSelectedTab) { // don't set fab_menu's visibility when another tab fragment is currently selected
+                activity.findViewById(R.id.fab_menu)?.visibility = viewVisibility
+            }
         }
         else {
             recyclerAdapter?.actionModeBar?.visibility = viewVisibility
+            activity.findViewById(R.id.fab_menu)?.visibility = View.GONE
         }
 
         if(topMargin >= 0) {
