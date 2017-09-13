@@ -1,6 +1,8 @@
 package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import org.jsoup.nodes.Comment
 import org.jsoup.nodes.Document
@@ -34,7 +36,12 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
             article.select("header").first()?.let { header ->
                 header.select(".article__heading").first()?.text()?.let { title ->
                     parseArticle(extractionResult, header, article, url, title)
+                    return
                 }
+            }
+
+            if(isMobileArticle(article, document, url)) {
+                parseMobileArticle(extractionResult, article, url)
             }
         }
     }
@@ -44,7 +51,43 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
             return makeLinkAbsolute(allOnOnePageAnchorElement.attr("href"), siteUrl)
         }
 
+        article.select(".article-pages-summary__onepage").first()?.let { allOnOnePageAnchorElement ->
+            return makeLinkAbsolute(allOnOnePageAnchorElement.attr("href"), siteUrl)
+        }
+
         return null
+    }
+
+
+    private fun isMobileArticle(article: Element, document: Document, url: String): Boolean {
+        return url.contains("://m.heise.de/")
+    }
+
+    private fun parseMobileArticle(extractionResult: EntryExtractionResult, article: Element, url: String) {
+        val reference = extractMobileArticleReference(article, url)
+
+        val abstract = article.select("p.lead_text").first()?.text()?.trim() ?: ""
+
+        article.select("h1, figure.aufmacherbild, time, span.author, a.comments, p.lead_text, .comment, .btn-toolbar .whatsbroadcast-toolbar, #whatsbroadcast, " +
+                ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta").remove()
+        val content = article.html()
+
+        extractionResult.setExtractedContent(Entry(content, abstract), reference)
+    }
+
+    private fun extractMobileArticleReference(article: Element, url: String): Reference {
+        val title = article.select("h1").first()?.text()?.trim() ?: ""
+
+        val reference = Reference(url, title)
+
+        article.select("figure.aufmacherbild img").first()?.let {
+            reference.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
+        }
+        article.select("time").first()?.let {
+            reference.publishingDate = parseIsoDateTimeString(it.attr("datetime"))
+        }
+
+        return reference
     }
 
 

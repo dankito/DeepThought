@@ -26,4 +26,13 @@ class HeiseNewsArticleExtractorTest : ArticleExtractorTestBase() {
                 "https://1.f.ix.de/scale/geometry/695/q75/imgs/18/2/2/2/5/7/6/8/2160544145_a1d9d08f19_o-308b3c396dd30932.jpeg", 7000) // 6700 is approximately the length of the first page
     }
 
+
+    @Test
+    fun extractMobileArticle() {
+        getAndTestArticle("https://m.heise.de/newsticker/meldung/Alexander-Gerst-Umweltzerstoerung-koennte-an-Intelligenz-zweifeln-lassen-3827472.html",
+                "Alexander Gerst: Umweltzerstörung könnte an Intelligenz zweifeln lassen",
+                "Astronaut Alexander Gerst soll als erster Deutscher Kommandant der internationalen Raumstation ISS werden. In Düsseldorf berichtete er davon, wie seine 166 Tage im All seine Perspektive verändert haben.",
+                "https://m.f.ix.de/scale/geometry/1280/q50/imgs/18/2/2/7/5/9/6/5/urn-newsml-dpa-com-20090101-150429-99-07406_large_4_3-28dd2171e1a4fa1c.jpeg@jpg", 4300)
+    }
+
 }
