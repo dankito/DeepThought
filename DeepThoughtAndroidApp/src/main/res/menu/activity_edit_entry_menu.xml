@@ -31,9 +31,19 @@
     />
 
     <item
-        android:id="@+id/mnSaveEntry"
+        android:id="@+id/mnToggleReaderMode"
         app:showAsAction="always"
         android:orderInCategory="400"
+        android:title="@string/action_toggle_reader_mode"
+        android:icon="@drawable/book"
+        app:actionLayout="@layout/contextual_action_mode_item_action_layout"
+        android:visible="false"
+    />
+
+    <item
+        android:id="@+id/mnSaveEntry"
+        app:showAsAction="always"
+        android:orderInCategory="500"
         android:title="@string/action_save"
         android:icon="@android:drawable/ic_menu_save"
         app:actionLayout="@layout/contextual_action_mode_item_action_layout"

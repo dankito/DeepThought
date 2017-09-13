@@ -147,12 +147,16 @@ class EditEntryActivity : BaseActivity() {
 
     private var isInFullscreenMode = false
 
+    private var isInReaderMode = false
+
     private lateinit var swipeTouchListener: OnSwipeTouchListener
 
 
     private val actionItemHelper = ActionItemHelper()
 
     private var mnSaveEntry: MenuItem? = null
+
+    private var mnToggleReaderMode: MenuItem? = null
 
     private var mnSaveEntryExtractionResultForLaterReading: MenuItem? = null
 
@@ -287,6 +291,8 @@ class EditEntryActivity : BaseActivity() {
 
         // now try to extract entry content from WebView's html
         if(entryExtractionResult?.couldExtractContent == false) {
+            contentToEdit = html
+
             entryExtractionResult?.let { extractionResult ->
                 articleExtractorManager.extractArticleAndAddDefaultDataAsync(extractionResult, html, url)
                 if(extractionResult.couldExtractContent) {
@@ -299,7 +305,7 @@ class EditEntryActivity : BaseActivity() {
     private fun extractedContentOnUiThread(extractionResult: EntryExtractionResult) {
         wbEntry.removeJavascriptInterface(GetHtmlCodeFromWebViewJavaScriptInterfaceName)
 
-        // TODO: show Reader icon
+        mnToggleReaderMode?.isVisible = extractionResult.couldExtractContent
     }
 
 
@@ -432,7 +438,7 @@ class EditEntryActivity : BaseActivity() {
         var content = contentToEdit
         val url = reference?.url
 
-        if(content.isNullOrBlank() && entryExtractionResult != null && entryExtractionResult?.couldExtractContent == false && url != null) {
+        if(content.isNullOrBlank() && entryExtractionResult != null && isInReaderMode == false && url != null) {
             wbEntry.loadUrl(url)
         }
         else {
@@ -598,6 +604,9 @@ class EditEntryActivity : BaseActivity() {
 
         mnSaveEntry = menu.findItem(R.id.mnSaveEntry)
 
+        mnToggleReaderMode = menu.findItem(R.id.mnToggleReaderMode)
+        mnToggleReaderMode?.isVisible = entryExtractionResult?.couldExtractContent ?: false
+
         mnSaveEntryExtractionResultForLaterReading = menu.findItem(R.id.mnSaveEntryExtractionResultForLaterReading)
         mnSaveEntryExtractionResultForLaterReading?.isVisible = entryExtractionResult != null
 
@@ -619,6 +628,10 @@ class EditEntryActivity : BaseActivity() {
                 saveEntryAndCloseDialog()
                 return true
             }
+            R.id.mnToggleReaderMode -> {
+                toggleReaderMode()
+                return true
+            }
             R.id.mnSaveEntryExtractionResultForLaterReading -> {
                 saveEntryExtrationResultForLaterReadingAndCloseDialog()
                 return true
@@ -634,6 +647,19 @@ class EditEntryActivity : BaseActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun toggleReaderMode() {
+        isInReaderMode = !isInReaderMode
+
+        if(isInReaderMode) {
+            contentToEdit = entryExtractionResult?.entry?.content ?: ""
+        }
+        else {
+            contentToEdit = entryExtractionResult?.webSiteHtml ?: ""
+        }
+
+        setContentPreviewOnUIThread()
     }
 
     private fun showShareEntryPopupMenu(clickedView: View) {
