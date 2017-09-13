@@ -11,8 +11,8 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.webkit.JavascriptInterface
+import android.webkit.WebChromeClient
 import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.activity_edit_entry.*
 import net.dankito.deepthought.android.R
@@ -48,6 +48,7 @@ import net.dankito.utils.ui.IDialogService
 import net.engio.mbassy.listener.Handler
 import java.util.*
 import javax.inject.Inject
+import kotlin.concurrent.schedule
 
 
 class EditEntryActivity : BaseActivity() {
@@ -275,17 +276,38 @@ class EditEntryActivity : BaseActivity() {
 
         wbEntry.addJavascriptInterface(GetHtmlCodeFromWebViewJavaScripInterface { url, html -> siteFinishedLoading(url, html) }, GetHtmlCodeFromWebViewJavaScriptInterfaceName)
 
-        wbEntry.setWebViewClient(object : WebViewClient() {
-            override fun onPageFinished(webView: WebView, url: String?) {
-                super.onPageFinished(webView, url)
+        wbEntry.setWebChromeClient(object : WebChromeClient() {
+            private var hasCompletelyFinishedLoadingPage = false
+            private val timerCheckIfHasCompletelyFinishedLoadingPage = Timer()
 
-                // if EntryExtractionResult's entry content hasn't been extracted yet, wait till WebView is loaded and extract entry content then
-                if(entryExtractionResult?.couldExtractContent == false) {
-                    webView.loadUrl("javascript:$GetHtmlCodeFromWebViewJavaScriptInterfaceName.finishedLoadingSite" +
-                            "(document.URL, '<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');")
+            override fun onProgressChanged(webView: WebView, newProgress: Int) {
+                super.onProgressChanged(webView, newProgress)
+
+                if(newProgress < 100) {
+                    hasCompletelyFinishedLoadingPage = false
+                }
+                else {
+                    hasCompletelyFinishedLoadingPage = true
+                    timerCheckIfHasCompletelyFinishedLoadingPage.schedule(1000L) { // 100 % may only means a part of the page but not the whole page is loaded -> wait some time and check if not loading another part of the page
+                        if(hasCompletelyFinishedLoadingPage) {
+                            webPageCompletelyLoaded(webView)
+                        }
+                    }
                 }
             }
         })
+    }
+
+    private fun webPageCompletelyLoaded(webView: WebView) {
+        runOnUiThread { webPageCompletelyLoadedOnUiThread(webView) }
+    }
+
+    private fun webPageCompletelyLoadedOnUiThread(webView: WebView) {
+        // if EntryExtractionResult's entry content hasn't been extracted yet, wait till WebView is loaded and extract entry content then
+        if(entryExtractionResult?.couldExtractContent == false) {
+            webView.loadUrl("javascript:$GetHtmlCodeFromWebViewJavaScriptInterfaceName.finishedLoadingSite" +
+                    "(document.URL, '<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');")
+        }
     }
 
     private fun siteFinishedLoading(url: String, html: String) {
@@ -297,6 +319,7 @@ class EditEntryActivity : BaseActivity() {
 
             entryExtractionResult?.let { extractionResult ->
                 articleExtractorManager.extractArticleAndAddDefaultDataAsync(extractionResult, html, url)
+
                 if(extractionResult.couldExtractContent) {
                     runOnUiThread { extractedContentOnUiThread(extractionResult) }
                 }
