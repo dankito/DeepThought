@@ -1,10 +1,12 @@
 package net.dankito.deepthought.android.adapter
 
+import android.graphics.Typeface
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import com.daimajia.swipe.SwipeLayout
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.TagViewHolder
@@ -60,6 +62,7 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
         viewHolder.imgFilter.setOnClickListener { presenter.toggleFilterTag(item) }
 
         setBackgroundColor(viewHolder.itemView, item)
+        setTextColor(viewHolder.txtTagDisplayText, item)
 
         if(item is CalculatedTag) { // make CalculatedTags unselectable in multi select mode
             viewHolder.itemView.isActivated = false
@@ -92,6 +95,17 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
                 true -> imgFilter.setImageResource(R.drawable.filter)
                 false -> imgFilter.setImageResource(R.drawable.filter_disabled)
             }
+        }
+    }
+
+    private fun setTextColor(txtTagDisplayText: TextView, tag: Tag) {
+        if(presenter.isTagFiltered(tag)) {
+            txtTagDisplayText.setTextColor(txtTagDisplayText.context.resources.getColor(R.color.colorAccent))
+            txtTagDisplayText.setTypeface(null, Typeface.BOLD)
+        }
+        else {
+            txtTagDisplayText.setTextColor(txtTagDisplayText.context.resources.getColor(R.color.unselected_item_text_color))
+            txtTagDisplayText.setTypeface(null, Typeface.NORMAL)
         }
     }
 

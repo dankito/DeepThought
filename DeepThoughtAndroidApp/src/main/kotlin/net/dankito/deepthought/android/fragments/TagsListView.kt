@@ -7,6 +7,8 @@ import android.view.ActionMode
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import kotlinx.android.synthetic.main.fragment_main_activity_tab.*
+import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.TagRecyclerAdapter
@@ -57,6 +59,8 @@ class TagsListView : MainActivityTabFragment<Tag>(R.menu.fragment_tab_tags_menu,
 
     private lateinit var adapter: TagRecyclerAdapter
 
+    private lateinit var filteredTagsAdapter: TagRecyclerAdapter
+
 
     init {
         AppComponent.component.inject(this)
@@ -68,11 +72,29 @@ class TagsListView : MainActivityTabFragment<Tag>(R.menu.fragment_tab_tags_menu,
 
         adapter = TagRecyclerAdapter(presenter)
 
+        filteredTagsAdapter = TagRecyclerAdapter(presenter)
+        filteredTagsAdapter.itemClickListener = { listItemClicked(it) }
+        presenter.tagFilterListener = { filteredTagsChanged(it) }
+
         return presenter
+    }
+
+    private fun filteredTagsChanged(filteredTags: List<Tag>) {
+        filteredTagsAdapter.items = filteredTags
+
+        activity?.runOnUiThread {
+            lytFilteredEntities.visibility = if(presenter.isTagFilterApplied()) View.VISIBLE else View.GONE
+        }
     }
 
     override fun getListAdapter(): MultiSelectListRecyclerSwipeAdapter<Tag, out RecyclerView.ViewHolder> {
         return adapter
+    }
+
+    override fun setupUI(rootView: View) {
+        super.setupUI(rootView)
+
+        rootView.rcyFilteredEntities?.adapter = filteredTagsAdapter
     }
 
     override fun listItemClicked(selectedItem: Tag) {

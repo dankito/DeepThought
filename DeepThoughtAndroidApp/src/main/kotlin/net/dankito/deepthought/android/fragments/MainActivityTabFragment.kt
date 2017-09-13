@@ -45,7 +45,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val optionsMenuRe
     private var layoutRootOriginalTopMargin = -1
 
 
-    protected open fun setupUI(rootView: View?) { }
+    protected open fun setupUI(rootView: View) { }
 
     abstract fun initPresenter(): IMainViewSectionPresenter
 
@@ -66,11 +66,11 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val optionsMenuRe
         rootView?.let {
             txtOnboardingText = rootView.txtOnboardingText
             setupListView(it)
+
+            setupUI(rootView)
         }
 
         setHasOptionsMenu(true)
-
-        setupUI(rootView)
 
         return rootView
     }

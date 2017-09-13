@@ -6,6 +6,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:id="@+id/lytFilteredEntities"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/fragment_tab_entries_filtered_entities_margin_bottom"
+        android:visibility="gone"
+    >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcyFilteredEntities"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        />
+
+        <View
+            android:id="@+id/vwEntryFieldDivider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/fragment_tab_entries_filtered_entities_divider_height"
+            android:background="@color/entry_field_divider_color"
+        />
+
+    </LinearLayout>
+
     <net.dankito.deepthought.android.views.FullScreenRecyclerView
         android:id="@+id/rcyEntities"
         android:layout_width="match_parent"
