@@ -304,7 +304,7 @@ class EditEntryActivity : BaseActivity() {
 
     private fun webPageCompletelyLoadedOnUiThread(webView: WebView) {
         // if EntryExtractionResult's entry content hasn't been extracted yet, wait till WebView is loaded and extract entry content then
-        if(entryExtractionResult?.couldExtractContent == false) {
+        if(entryExtractionResult?.couldExtractContent == false && webView.url != "about:blank") {
             webView.loadUrl("javascript:$GetHtmlCodeFromWebViewJavaScriptInterfaceName.finishedLoadingSite" +
                     "(document.URL, '<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');")
         }
@@ -471,6 +471,7 @@ class EditEntryActivity : BaseActivity() {
                 content = "<body style=\"font-family: serif, Georgia, Roboto, Helvetica, Arial; font-size:17;\"" + content + "</body>"
             }
 
+            clearWebViewEntry() // clear WebView as otherwise new data (= content) may not gets displayed but previous one still does
             if(url != null && Build.VERSION.SDK_INT > 16) {
                 wbEntry.loadDataWithBaseURL(url, content, "text/html; charset=UTF-8", "utf-8", null)
             }
@@ -480,6 +481,15 @@ class EditEntryActivity : BaseActivity() {
         }
 
         setOnboardingTextVisibilityOnUIThread()
+    }
+
+    private fun clearWebViewEntry() {
+        if(Build.VERSION.SDK_INT < 18) {
+            wbEntry.clearView()
+        }
+        else {
+            wbEntry.loadUrl("about:blank")
+        }
     }
 
     private fun setAbstractPreviewOnUIThread() {
