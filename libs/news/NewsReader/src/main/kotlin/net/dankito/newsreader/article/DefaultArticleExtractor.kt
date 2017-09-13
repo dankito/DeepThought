@@ -70,7 +70,7 @@ class DefaultArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
     }
 
     override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
-        extractionResult.setExtractedContent(Entry(extractContent(document)), Reference(url = url, title = document.title()))
+        extractionResult.setExtractedContent(Entry(extractContent(document)), Reference(url, document.title()))
 
         metaDataExtractor.extractMetaData(extractionResult, document)
     }
