@@ -46,6 +46,12 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
         }
     }
 
+    fun extractArticleAndAddDefaultDataAsync(extractionResult: EntryExtractionResult, html: String, url: String) {
+        articleExtractors.getExtractorForUrl(url)?.let { extractor ->
+            extractor.parseHtml(extractionResult, html, url)
+        }
+    }
+
     private fun addDefaultData(extractor: IArticleExtractor, item: ArticleSummaryItem, asyncResult: AsyncResult<EntryExtractionResult>,
                                  extractionResult: EntryExtractionResult, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
         val siteName = getSiteName(extractor, item)
