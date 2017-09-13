@@ -45,6 +45,9 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val optionsMenuRe
     private var layoutRootOriginalTopMargin = -1
 
 
+    var isCurrentSelectedTab = false
+
+
     protected open fun setupUI(rootView: View) { }
 
     abstract fun initPresenter(): IMainViewSectionPresenter

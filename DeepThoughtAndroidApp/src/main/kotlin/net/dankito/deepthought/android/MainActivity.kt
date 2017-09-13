@@ -89,7 +89,10 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setCurrentlyVisibleFragment(position: Int) {
+        currentlyVisibleFragment?.isCurrentSelectedTab = false
+
         currentlyVisibleFragment = sectionsPagerAdapter.getItem(position)
+        currentlyVisibleFragment?.isCurrentSelectedTab = true
         currentlyVisibleFragment?.viewCameIntoView()
     }
 
