@@ -8,7 +8,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.activity_edit_entry.*
 import net.dankito.deepthought.android.R
@@ -28,6 +30,7 @@ import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.extensions.getPlainTextForHtml
 import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
@@ -57,6 +60,8 @@ class EditEntryActivity : BaseActivity() {
         private const val TAGS_ON_ENTRY_INTENT_EXTRA_NAME = "TAGS_ON_ENTRY"
 
         const val ResultId = "EDIT_ENTRY_ACTIVITY_RESULT"
+
+        private const val GetHtmlCodeFromWebViewJavaScriptInterfaceName = "HtmlViewer"
 
         private const val NON_READER_MODE_SYSTEM_UI_FLAGS = 0
         private val READER_MODE_SYSTEM_UI_FLAGS: Int
@@ -107,6 +112,9 @@ class EditEntryActivity : BaseActivity() {
 
     @Inject
     protected lateinit var serializer: ISerializer
+
+    @Inject
+    protected lateinit var articleExtractorManager: ArticleExtractorManager
 
     @Inject
     protected lateinit var dialogService: IDialogService
@@ -258,6 +266,51 @@ class EditEntryActivity : BaseActivity() {
         settings.builtInZoomControls = true
         settings.displayZoomControls = false
         settings.javaScriptEnabled = true // so that embedded videos etc. work
+
+        wbEntry.addJavascriptInterface(GetHtmlCodeFromWebViewJavaScripInterface { url, html -> siteFinishedLoading(url, html) }, GetHtmlCodeFromWebViewJavaScriptInterfaceName)
+
+        wbEntry.setWebViewClient(object : WebViewClient() {
+            override fun onPageFinished(webView: WebView, url: String?) {
+                super.onPageFinished(webView, url)
+
+                // if EntryExtractionResult's entry content hasn't been extracted yet, wait till WebView is loaded and extract entry content then
+                if(entryExtractionResult?.couldExtractContent == false) {
+                    webView.loadUrl("javascript:$GetHtmlCodeFromWebViewJavaScriptInterfaceName.finishedLoadingSite" +
+                            "(document.URL, '<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');")
+                }
+            }
+        })
+    }
+
+    private fun siteFinishedLoading(url: String, html: String) {
+        entryExtractionResult?.webSiteHtml = html
+
+        // now try to extract entry content from WebView's html
+        if(entryExtractionResult?.couldExtractContent == false) {
+            entryExtractionResult?.let { extractionResult ->
+                articleExtractorManager.extractArticleAndAddDefaultDataAsync(extractionResult, html, url)
+                if(extractionResult.couldExtractContent) {
+                    runOnUiThread { extractedContentOnUiThread(extractionResult) }
+                }
+            }
+        }
+    }
+
+    private fun extractedContentOnUiThread(extractionResult: EntryExtractionResult) {
+        wbEntry.removeJavascriptInterface(GetHtmlCodeFromWebViewJavaScriptInterfaceName)
+
+        // TODO: show Reader icon
+    }
+
+
+    inner class GetHtmlCodeFromWebViewJavaScripInterface(private val retrievedHtmlCode: ((url: String, html: String) -> Unit)) {
+
+        @JavascriptInterface
+        @SuppressWarnings("unused")
+        fun finishedLoadingSite(url: String, html: String) {
+            retrievedHtmlCode(url, html)
+        }
+
     }
 
 
@@ -643,7 +696,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun saveEntryAsync(callback: (Boolean) -> Unit) {
-        val content = contentToEdit ?: ""
+        var content = contentToEdit ?: ""
         val abstract = abstractToEdit ?: ""
 
         entry?.let { entry ->
@@ -657,6 +710,13 @@ class EditEntryActivity : BaseActivity() {
         }
 
         entryExtractionResult?.let { extractionResult ->
+            if(extractionResult.couldExtractContent == false) {
+                extractionResult.webSiteHtml?.let { content = it }
+            }
+            if(extractionResult.couldExtractContent && extractionResult.entry.content.isNullOrBlank() == false) {
+                content = extractionResult.entry.content
+            }
+
             updateEntry(extractionResult.entry, content, abstract)
             presenter.saveEntryAsync(extractionResult.entry, referenceToEdit, tagsOnEntry) { successful ->
                 if(successful) {
