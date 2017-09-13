@@ -154,6 +154,7 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, thr
     fun searchFilteredTags(search: FilteredTagsSearch, termsToSearchFor: List<String>) {
         var entriesHavingFilteredTags: List<Entry> = listOf()
         var tagsOnEntriesContainingFilteredTags: List<Tag> = listOf()
+        val tagsToFilterForIds = search.tagsToFilterFor.map { it.id }
         val query = BooleanQuery()
 
         search.tagsToFilterFor.forEach { tag ->
@@ -165,7 +166,7 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, thr
                 val entries = FilteredTagsLazyLoadingLuceneSearchResultsList(entityService.entityManager, searcher, hits, threadPool)
                 entriesHavingFilteredTags = entries
 
-                val tagIdsOnEntriesContainingFilteredTags: Collection<String> = entries.tagIdsOnResultEntries
+                val tagIdsOnEntriesContainingFilteredTags: Collection<String> = entries.tagIdsOnResultEntries.filter { tagsToFilterForIds.contains(it) == false }
 
                 val sortedTagIdsOnEntriesContainingFilteredTags = searchInGivenTags(tagIdsOnEntriesContainingFilteredTags, termsToSearchFor)
 
