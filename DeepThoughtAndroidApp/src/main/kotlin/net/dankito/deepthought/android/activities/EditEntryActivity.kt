@@ -2,6 +2,8 @@ package net.dankito.deepthought.android.activities
 
 import android.os.Build
 import android.os.Bundle
+import android.support.v7.widget.ActionMenuView
+import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.PopupMenu
 import android.text.Html
 import android.view.Menu
@@ -641,7 +643,7 @@ class EditEntryActivity : BaseActivity() {
                 return true
             }
             R.id.mnShareEntry -> {
-                showShareEntryPopupMenu(findViewById(R.id.mnShareEntry))
+                showShareEntryPopupMenu()
                 return true
             }
         }
@@ -662,8 +664,13 @@ class EditEntryActivity : BaseActivity() {
         setContentPreviewOnUIThread()
     }
 
-    private fun showShareEntryPopupMenu(clickedView: View) {
-        val popup = PopupMenu(this, clickedView)
+    private fun showShareEntryPopupMenu() {
+        val overflowMenuButton = getOverflowMenuButton()
+        if(overflowMenuButton == null) {
+            return
+        }
+
+        val popup = PopupMenu(this, overflowMenuButton)
 
         popup.menuInflater.inflate(R.menu.share_entry_menu, popup.menu)
 
@@ -681,6 +688,24 @@ class EditEntryActivity : BaseActivity() {
         }
 
         popup.show()
+    }
+
+    private fun getOverflowMenuButton(): View? {
+        for(i in 0..toolbar.childCount - 1) { // OverflowMenuButton is child of ActionMenuView which is child of toolbar (both don't have an id so i cannot search for them)
+            val child = toolbar.getChildAt(i)
+
+            if(child is ActionMenuView) {
+                for(j in 0..child.childCount) {
+                    val actionMenuViewChild = child.getChildAt(j)
+
+                    if(actionMenuViewChild is AppCompatImageView && actionMenuViewChild is ActionMenuView.ActionMenuChildView) {
+                        return actionMenuViewChild
+                    }
+                }
+            }
+        }
+
+        return null
     }
 
     private fun shareReferenceUrl() {
