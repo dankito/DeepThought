@@ -165,6 +165,8 @@ class EditEntryActivity : BaseActivity() {
 
     private var mnDeleteReadLaterArticle: MenuItem? = null
 
+    private var mnShareEntry: MenuItem? = null
+
 
     private var eventBusListener: EventBusListener? = null
 
@@ -504,6 +506,7 @@ class EditEntryActivity : BaseActivity() {
         }
 
         btnClearEntryReference.visibility = if(referenceToEdit == null) View.GONE else View.VISIBLE
+        mnShareEntry?.isVisible = referenceToEdit?.url.isNullOrBlank() == false
     }
 
     private fun setTagsOnEntryPreviewOnUIThread() {
@@ -647,6 +650,9 @@ class EditEntryActivity : BaseActivity() {
 
         mnDeleteReadLaterArticle = menu.findItem(R.id.mnDeleteReadLaterArticle)
         mnDeleteReadLaterArticle?.isVisible = readLaterArticle != null
+
+        mnShareEntry = menu.findItem(R.id.mnShareEntry)
+        mnShareEntry?.isVisible = referenceToEdit?.url.isNullOrBlank() == false
 
         setMenuSaveEntryVisibleStateOnUIThread()
 
