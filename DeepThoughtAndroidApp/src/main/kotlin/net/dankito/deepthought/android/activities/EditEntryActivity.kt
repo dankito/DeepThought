@@ -23,7 +23,7 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.EditHtmlTextDialog
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
-import net.dankito.deepthought.android.views.ActionItemHelper
+import net.dankito.deepthought.android.views.ActionItemUtil
 import net.dankito.deepthought.android.views.FullScreenWebView
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.ReadLaterArticle
@@ -154,7 +154,7 @@ class EditEntryActivity : BaseActivity() {
     private lateinit var swipeTouchListener: OnSwipeTouchListener
 
 
-    private val actionItemHelper = ActionItemHelper()
+    private val actionItemHelper = ActionItemUtil()
 
     private var mnSaveEntry: MenuItem? = null
 

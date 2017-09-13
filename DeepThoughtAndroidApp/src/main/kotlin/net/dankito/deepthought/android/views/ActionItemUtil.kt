@@ -5,7 +5,7 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.contextual_action_mode_item_action_layout.view.*
 
 
-class ActionItemHelper {
+class ActionItemUtil {
 
     fun setupLayout(menu: Menu, onClickListener: ((MenuItem) -> Unit)? = null) {
         for(i in 0..menu.size() - 1) {

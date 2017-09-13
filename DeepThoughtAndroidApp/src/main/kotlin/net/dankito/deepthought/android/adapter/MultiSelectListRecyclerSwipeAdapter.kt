@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.AbsListView
 import android.widget.LinearLayout
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.views.ActionItemHelper
+import net.dankito.deepthought.android.views.ActionItemUtil
 import java.util.*
 import kotlin.collections.HashSet
 import kotlin.concurrent.schedule
@@ -28,7 +28,7 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
 
     private var actionMode: android.view.ActionMode? = null
 
-    private var actionItemHelper = ActionItemHelper()
+    private var actionItemHelper = ActionItemUtil()
 
     private val createdViewHolders = HashSet<THolder>()
 

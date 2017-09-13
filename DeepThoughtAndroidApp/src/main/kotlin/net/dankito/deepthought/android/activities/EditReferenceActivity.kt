@@ -16,7 +16,7 @@ import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemD
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.PickDateDialog
 import net.dankito.deepthought.android.service.hideKeyboard
-import net.dankito.deepthought.android.views.ActionItemHelper
+import net.dankito.deepthought.android.views.ActionItemUtil
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditReferencePresenter
@@ -83,7 +83,7 @@ class EditReferenceActivity : BaseActivity() {
 
     private val existingReferencesSearchResultsAdapter: ReferenceOnEntryRecyclerAdapter
 
-    private val actionItemHelper = ActionItemHelper()
+    private val actionItemHelper = ActionItemUtil()
 
     private var eventBusListener: EventBusListener? = null
 

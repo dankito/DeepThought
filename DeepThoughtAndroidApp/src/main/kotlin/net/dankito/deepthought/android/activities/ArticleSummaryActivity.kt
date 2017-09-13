@@ -14,7 +14,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ArticleSummaryItemRecyclerAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.views.ActionItemHelper
+import net.dankito.deepthought.android.views.ActionItemUtil
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
@@ -81,7 +81,7 @@ class ArticleSummaryActivity : BaseActivity() {
 
     private var mnLoadMore: MenuItem? = null
 
-    private val actionItemHelper = ActionItemHelper()
+    private val actionItemHelper = ActionItemUtil()
 
 
     init {
