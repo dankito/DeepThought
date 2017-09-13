@@ -33,15 +33,15 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
                 }
             }
 
+            if(articleElement.hasClass("printversion")) {
+                parsePrintVersionToArticle(extractionResult, articleElement, url)
+                return
+            }
+
             articleElement.select("header").first()?.let { headerElement ->
                 headerElement.select(".article__heading").first()?.text()?.let { title ->
                     parseArticle(extractionResult, headerElement, articleElement, url, title)
-                    return
                 }
-            }
-
-            if(articleElement.hasClass("printversion")) {
-                parsePrintVersionToArticle(extractionResult, articleElement, url)
             }
         }
     }
