@@ -63,15 +63,15 @@ class EditEntryActivity : BaseActivity() {
 
         private const val GetHtmlCodeFromWebViewJavaScriptInterfaceName = "HtmlViewer"
 
-        private const val NON_READER_MODE_SYSTEM_UI_FLAGS = 0
-        private val READER_MODE_SYSTEM_UI_FLAGS: Int
+        private const val NON_FULLSCREEN_MODE_SYSTEM_UI_FLAGS = 0
+        private val FULLSCREEN_MODE_SYSTEM_UI_FLAGS: Int
 
 
         init {
-            READER_MODE_SYSTEM_UI_FLAGS = createReaderModeSystemUiFlags()
+            FULLSCREEN_MODE_SYSTEM_UI_FLAGS = createFullscreenModeSystemUiFlags()
         }
 
-        private fun createReaderModeSystemUiFlags(): Int {
+        private fun createFullscreenModeSystemUiFlags(): Int {
             // see https://developer.android.com/training/system-ui/immersive.html
             var flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
 
@@ -145,7 +145,7 @@ class EditEntryActivity : BaseActivity() {
 
     private val presenter: EditEntryPresenter
 
-    private var isInReaderMode = false
+    private var isInFullscreenMode = false
 
     private lateinit var swipeTouchListener: OnSwipeTouchListener
 
@@ -473,8 +473,8 @@ class EditEntryActivity : BaseActivity() {
 
     private fun systemUiVisibilityChanged(flags: Int) {
         // as immersive fullscreen is only available for KitKat and above leave immersive fullscreen mode by swiping from screen top or bottom is also only available on these  devices
-        if(flags == NON_READER_MODE_SYSTEM_UI_FLAGS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            leaveReaderMode()
+        if(flags == NON_FULLSCREEN_MODE_SYSTEM_UI_FLAGS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            leaveFullscreenMode()
         }
     }
 
@@ -491,10 +491,10 @@ class EditEntryActivity : BaseActivity() {
         val hitResult = wbEntry.hitTestResult
         val type = hitResult.type
 
-        // leave the functionality for clicking on links, phone numbers, geo coordinates, ... Only go to reader mode when clicked somewhere else in the WebView or on an image
+        // leave the functionality for clicking on links, phone numbers, geo coordinates, ... Only go to fullscreen mode when clicked somewhere else in the WebView or on an image
         if(type == WebView.HitTestResult.UNKNOWN_TYPE || type == WebView.HitTestResult.IMAGE_TYPE) {
-            if(isInReaderMode) {
-                leaveReaderMode()
+            if(isInFullscreenMode) {
+                leaveFullscreenMode()
             }
             else {
                 editContent()
@@ -504,19 +504,19 @@ class EditEntryActivity : BaseActivity() {
 
     private fun handleChangeFullScreenModeEvent(mode: FullScreenWebView.FullScreenMode) {
         when(mode) {
-            FullScreenWebView.FullScreenMode.Enter -> enterReaderMode()
-            FullScreenWebView.FullScreenMode.Leave -> leaveReaderMode()
+            FullScreenWebView.FullScreenMode.Enter -> enterFullscreenMode()
+            FullScreenWebView.FullScreenMode.Leave -> leaveFullscreenMode()
         }
     }
 
     private fun handleWebViewDoubleTap() {
-        if(isInReaderMode) {
+        if(isInFullscreenMode) {
             saveEntryAndCloseDialog()
         }
     }
 
     private fun handleWebViewSwipe(swipeDirection: OnSwipeTouchListener.SwipeDirection) {
-        if(isInReaderMode) {
+        if(isInFullscreenMode) {
             when(swipeDirection) {
                 OnSwipeTouchListener.SwipeDirection.Left -> presenter.returnToPreviousView()
                 OnSwipeTouchListener.SwipeDirection.Right -> editTagsOnEntry()
@@ -524,8 +524,8 @@ class EditEntryActivity : BaseActivity() {
         }
     }
 
-    private fun leaveReaderMode() {
-        isInReaderMode = false
+    private fun leaveFullscreenMode() {
+        isInFullscreenMode = false
 
         lytAbstractPreview.visibility = View.VISIBLE
         lytReferencePreview.visibility = View.VISIBLE
@@ -537,11 +537,11 @@ class EditEntryActivity : BaseActivity() {
         layoutParams.alignWithParent = false
         wbEntry.layoutParams = layoutParams
 
-        wbEntry.systemUiVisibility = NON_READER_MODE_SYSTEM_UI_FLAGS
+        wbEntry.systemUiVisibility = NON_FULLSCREEN_MODE_SYSTEM_UI_FLAGS
     }
 
-    private fun enterReaderMode() {
-        isInReaderMode = true
+    private fun enterFullscreenMode() {
+        isInFullscreenMode = true
 
         lytAbstractPreview.visibility = View.GONE
         lytReferencePreview.visibility = View.GONE
@@ -553,7 +553,7 @@ class EditEntryActivity : BaseActivity() {
         layoutParams.alignWithParent = true
         wbEntry.layoutParams = layoutParams
 
-        wbEntry.systemUiVisibility = READER_MODE_SYSTEM_UI_FLAGS
+        wbEntry.systemUiVisibility = FULLSCREEN_MODE_SYSTEM_UI_FLAGS
     }
 
 
