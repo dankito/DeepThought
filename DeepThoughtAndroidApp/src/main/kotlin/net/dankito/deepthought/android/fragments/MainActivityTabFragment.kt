@@ -130,9 +130,11 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val optionsMenuRe
         activity.findViewById(R.id.appBarLayout)?.visibility = viewVisibility
         activity.findViewById(R.id.bottomViewNavigation)?.visibility = viewVisibility
 
-        recyclerAdapter?.actionModeBar?.visibility = viewVisibility
         if(recyclerAdapter?.isInMultiSelectMode() == false) {
             activity.findViewById(R.id.fab_menu)?.visibility = viewVisibility
+        }
+        else {
+            recyclerAdapter?.actionModeBar?.visibility = viewVisibility
         }
 
         if(topMargin >= 0) {
