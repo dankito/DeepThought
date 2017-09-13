@@ -274,7 +274,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setOnboardingTextVisibilityOnUIThread() {
-        if(contentToEdit.isNullOrBlank()) {
+        if(contentToEdit.isNullOrBlank() && (entryExtractionResult == null || entryExtractionResult?.couldExtractContent == true)) {
             wbEntry.visibility = View.GONE
             txtOnboardingText.visibility = View.VISIBLE
 
@@ -379,15 +379,20 @@ class EditEntryActivity : BaseActivity() {
         var content = contentToEdit
         val url = reference?.url
 
-        if(content?.startsWith("<html") == false && content?.startsWith("<body") == false) {
-            content = "<body style=\"font-family: serif, Georgia, Roboto, Helvetica, Arial; font-size:17;\"" + content + "</body>"
-        }
-
-        if(url != null && Build.VERSION.SDK_INT > 16) {
-            wbEntry.loadDataWithBaseURL(url, content, "text/html; charset=UTF-8", "utf-8", null)
+        if(content.isNullOrBlank() && entryExtractionResult != null && entryExtractionResult?.couldExtractContent == false && url != null) {
+            wbEntry.loadUrl(url)
         }
         else {
-            wbEntry.loadData(content, "text/html; charset=UTF-8", null)
+            if(content?.startsWith("<html") == false && content?.startsWith("<body") == false) {
+                content = "<body style=\"font-family: serif, Georgia, Roboto, Helvetica, Arial; font-size:17;\"" + content + "</body>"
+            }
+
+            if(url != null && Build.VERSION.SDK_INT > 16) {
+                wbEntry.loadDataWithBaseURL(url, content, "text/html; charset=UTF-8", "utf-8", null)
+            }
+            else {
+                wbEntry.loadData(content, "text/html; charset=UTF-8", null)
+            }
         }
 
         setOnboardingTextVisibilityOnUIThread()
