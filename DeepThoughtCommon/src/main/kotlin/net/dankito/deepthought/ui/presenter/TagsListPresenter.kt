@@ -31,6 +31,8 @@ class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: Da
 
     protected val calculatedTags = ArrayList<CalculatedTag>()
 
+    var tagFilterListener: ((List<Tag>) -> Unit)? = null
+
 
     @Inject
     protected lateinit var entityChangedNotifier: EntityChangedNotifier
@@ -107,6 +109,8 @@ class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: Da
         else {
             tagsFilter.add(tag)
         }
+
+        tagFilterListener?.invoke(tagsFilter)
     }
 
     fun getCountEntriesForFilteredTag(tag: Tag): Int {
