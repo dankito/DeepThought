@@ -86,12 +86,12 @@ data class Reference(
 
     private constructor() : this("")
 
-    constructor(url: String, title: String, publishingDate: Date? = null, series: Series? = null, subTitle: String = "", previewImageUrl: String? = null) : this(title) {
+    constructor(url: String, title: String, publishingDate: Date? = null, previewImageUrl: String? = null, subTitle: String = "", series: Series? = null) : this(title) {
         this.url = url
         this.publishingDate = publishingDate
-        this.series = series
         this.previewImageUrl = previewImageUrl
         this.subTitle = subTitle
+        this.series = series
     }
 
 
