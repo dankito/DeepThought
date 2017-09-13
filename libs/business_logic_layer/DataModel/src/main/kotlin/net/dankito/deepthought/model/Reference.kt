@@ -10,10 +10,7 @@ import kotlin.collections.ArrayList
 data class Reference(
 
         @Column(name = TableConfig.ReferenceTitleColumnName)
-        var title: String,
-
-        @Column(name = TableConfig.ReferenceSubTitleColumnName)
-        var subTitle: String = ""
+        var title: String
 
 ) : BaseEntity() {
 
@@ -21,6 +18,9 @@ data class Reference(
         private const val serialVersionUID = -7176298227016698447L
     }
 
+
+    @Column(name = TableConfig.ReferenceSubTitleColumnName)
+    var subTitle: String = ""
 
     @Column(name = TableConfig.ReferenceUrlColumnName)
     var url: String? = null
@@ -86,11 +86,12 @@ data class Reference(
 
     private constructor() : this("")
 
-    constructor(url: String, title: String, publishingDate: Date? = null, series: Series? = null, subTitle: String = "", previewImageUrl: String? = null) : this(title, subTitle) {
+    constructor(url: String, title: String, publishingDate: Date? = null, series: Series? = null, subTitle: String = "", previewImageUrl: String? = null) : this(title) {
         this.url = url
         this.publishingDate = publishingDate
         this.series = series
         this.previewImageUrl = previewImageUrl
+        this.subTitle = subTitle
     }
 
 
