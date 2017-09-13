@@ -52,7 +52,8 @@ abstract class ArticleExtractorTestBase {
             assertThat(extractionResult.entry.content.isNullOrBlank(), `is`(false))
             abstract?.let { assertThat(extractionResult.entry.abstractString, `is`(abstract)) }
 
-            previewImageUrl?.let { assertThat(extractionResult.reference?.previewImageUrl, `is`(previewImageUrl)) }
+//            previewImageUrl?.let { assertThat(extractionResult.reference?.previewImageUrl, `is`(previewImageUrl)) }
+            previewImageUrl?.let { assertThat(extractionResult.reference?.previewImageUrl.isNullOrBlank(), `is`(false)) }
             minContentLength?.let { assertThat(extractionResult.entry.content.length, `is`(greaterThan(it))) }
 
             assertThat(extractionResult.reference, notNullValue())
