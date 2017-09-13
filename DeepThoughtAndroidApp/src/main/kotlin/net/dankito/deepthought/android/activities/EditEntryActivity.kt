@@ -467,11 +467,11 @@ class EditEntryActivity : BaseActivity() {
             wbEntry.loadUrl(url)
         }
         else {
-            if(content?.startsWith("<html") == false && content?.startsWith("<body") == false) {
-                content = "<body style=\"font-family: serif, Georgia, Roboto, Helvetica, Arial; font-size:17;\"" + content + "</body>"
+            if(content?.startsWith("<html") == false && content?.startsWith("<body") == false && content?.startsWith("<!doctype") == false) {
+                content = "<html><body style=\"font-family: serif, Georgia, Roboto, Helvetica, Arial; font-size:17;\">" + content + "</body></html>"
             }
 
-            clearWebViewEntry() // clear WebView as otherwise new data (= content) may not gets displayed but previous one still does
+            clearWebViewEntry() // clear WebView
             if(url != null && Build.VERSION.SDK_INT > 16) {
                 wbEntry.loadDataWithBaseURL(url, content, "text/html; charset=UTF-8", "utf-8", null)
             }
