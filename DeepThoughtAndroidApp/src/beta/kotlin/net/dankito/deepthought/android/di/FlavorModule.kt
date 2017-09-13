@@ -14,6 +14,14 @@ class FlavorModule {
 
     @Provides
     @Singleton
+    fun provideArticleSummaryPresenter(entryPersister: EntryPersister, readLaterArticleService: ReadLaterArticleService, articleExtractorManager: ArticleExtractorManager,
+                                       router: IRouter, clipboardService: IClipboardService, dialogService: IDialogService) : ArticleSummaryPresenter {
+        return ArticleSummaryPresenter(entryPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService)
+    }
+
+
+    @Provides
+    @Singleton
     fun provideCrashReporter() : ICrashReporter {
         return TestFairyCrashReporter()
     }

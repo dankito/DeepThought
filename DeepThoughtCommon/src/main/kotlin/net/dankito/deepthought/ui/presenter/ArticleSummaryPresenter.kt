@@ -4,7 +4,9 @@ import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.extensions.extractor
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
+import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.ReadLaterArticle
+import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.extensions.SeriesAndPublishingDateAndEntryPreviewSeparator
 import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.util.EntryExtractionResult
@@ -78,10 +80,8 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
         }
     }
 
-    fun getAndShowArticle(item: ArticleSummaryItem) {
-        getArticle(item) {
-            it.result?.let { showArticle(it) }
-        }
+    open fun getAndShowArticle(item: ArticleSummaryItem) {
+        showArticle(EntryExtractionResult(Entry("", item.summary), Reference(item.url, item.title, item.publishedDate, previewImageUrl = item.previewImageUrl)))
     }
 
     protected open fun showArticle(extractionResult: EntryExtractionResult) {
@@ -139,7 +139,7 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
     }
 
 
-    private fun getArticle(item: ArticleSummaryItem, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
+    protected fun getArticle(item: ArticleSummaryItem, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
         articleExtractorManager.extractArticleAndAddDefaultDataAsync(item) { asyncResult ->
             asyncResult.error?.let {
                 showError("alert.message.could.not.load.article", it)

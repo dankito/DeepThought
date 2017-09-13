@@ -70,7 +70,8 @@ class ArticleSummaryActivity : BaseActivity() {
     protected lateinit var dialogService: IDialogService
 
 
-    private var presenter: ArticleSummaryPresenter
+    @Inject
+    protected lateinit var presenter: ArticleSummaryPresenter
 
     private var extractorConfig: ArticleSummaryExtractorConfig? = null
 
@@ -85,8 +86,6 @@ class ArticleSummaryActivity : BaseActivity() {
 
     init {
         AppComponent.component.inject(this)
-
-        presenter = ArticleSummaryPresenter(entryPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService)
 
         adapter = ArticleSummaryItemRecyclerAdapter(this, presenter)
     }
