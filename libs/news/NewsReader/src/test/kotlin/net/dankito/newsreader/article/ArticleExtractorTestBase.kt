@@ -50,7 +50,7 @@ abstract class ArticleExtractorTestBase {
             assertThat(extractionResult.error, nullValue())
 
             assertThat(extractionResult.entry.content.isNullOrBlank(), `is`(false))
-            assertThat(extractionResult.entry.abstractString, `is`(abstract))
+            abstract?.let { assertThat(extractionResult.entry.abstractString, `is`(abstract)) }
 
             previewImageUrl?.let { assertThat(extractionResult.reference?.previewImageUrl, `is`(previewImageUrl)) }
             minContentLength?.let { assertThat(extractionResult.entry.content.length, `is`(greaterThan(it))) }
