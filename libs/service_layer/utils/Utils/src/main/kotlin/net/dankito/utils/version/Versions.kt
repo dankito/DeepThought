@@ -8,9 +8,9 @@ class Versions {
 
         const val DataModelVersion = 1
 
-        const val DataIndexVersion = 1
-
         const val CommunicationProtocolVersion = 1
+
+        const val SearchIndexVersion = 1
 
         const val HtmlEditorVersion = 1
     }
