@@ -122,10 +122,8 @@ class FullScreenRecyclerView : RecyclerView {
 
     private fun scrollToEndDelayed() {
         postDelayed({
-            (context as? Activity)?.runOnUiThread {
-                val targetPosition = if(adapter.itemCount > 0) adapter.itemCount - 1 else 0 // don't scroll to -1, would throw an exception
-                smoothScrollToPosition(targetPosition)
-            }
+            val targetPosition = if(adapter.itemCount > 0) adapter.itemCount - 1 else 0 // don't scroll to -1, would throw an exception
+            smoothScrollToPosition(targetPosition)
         }, 50)
     }
 

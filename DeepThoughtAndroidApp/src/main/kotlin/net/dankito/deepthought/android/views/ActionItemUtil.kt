@@ -1,6 +1,5 @@
 package net.dankito.deepthought.android.views
 
-import android.app.Activity
 import android.support.v7.widget.ActionMenuView
 import android.view.Menu
 import android.view.MenuItem
@@ -38,9 +37,9 @@ class ActionItemUtil {
 
 
     // we have to wait some time till actionModeBar is deflated and its children are added
-    fun adjustActionModeBarLayoutDelayed(activity: Activity, toolbarOrActionModeBar: ViewGroup, countActionItems: Int, reserveOverflow: Boolean? = null) {
+    fun adjustActionModeBarLayoutDelayed(toolbarOrActionModeBar: ViewGroup, countActionItems: Int, reserveOverflow: Boolean? = null) {
         toolbarOrActionModeBar.postDelayed({
-            activity.runOnUiThread { adjustActionModeBarLayout(toolbarOrActionModeBar, countActionItems, reserveOverflow) }
+            adjustActionModeBarLayout(toolbarOrActionModeBar, countActionItems, reserveOverflow)
         }, 100L)
     }
 
