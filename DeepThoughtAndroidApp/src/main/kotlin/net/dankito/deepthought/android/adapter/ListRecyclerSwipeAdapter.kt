@@ -14,6 +14,8 @@ abstract class ListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(li
 
     var itemLongClickListener: ((item: T) -> Unit)? = null
 
+    var swipeLayoutOpenedListener: ((THolder) -> Unit)? = null
+
 
     protected val createdViewHolders = HashSet<THolder>()
 
@@ -42,6 +44,10 @@ abstract class ListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(li
 
     protected open fun viewHolderCreated(viewHolder: THolder) {
         createdViewHolders.add(viewHolder)
+
+        (viewHolder.itemView as? SwipeLayout)?.let {
+            it.addRevealListener(it.id) { child, _, _, _ -> swipeLayoutOpenedListener?.invoke(viewHolder) }
+        }
     }
 
     override fun onBindViewHolder(viewHolder: THolder, position: Int) {
