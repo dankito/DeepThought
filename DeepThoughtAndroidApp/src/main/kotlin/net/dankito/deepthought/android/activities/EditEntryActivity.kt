@@ -13,6 +13,7 @@ import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.activity_edit_entry.*
 import net.dankito.deepthought.android.R
@@ -277,6 +278,8 @@ class EditEntryActivity : BaseActivity() {
         settings.javaScriptEnabled = true // so that embedded videos etc. work
 
         wbEntry.addJavascriptInterface(GetHtmlCodeFromWebViewJavaScripInterface { url, html -> siteFinishedLoading(url, html) }, GetHtmlCodeFromWebViewJavaScriptInterfaceName)
+
+        wbEntry.setWebViewClient(WebViewClient()) // to avoid that redirects open url in browser
 
         wbEntry.setWebChromeClient(object : WebChromeClient() {
             private var hasCompletelyFinishedLoadingPage = false
