@@ -47,7 +47,7 @@ data class DeepThought(
         private set
 
 
-    private constructor() : this(User(), Device(), LocalSettings())
+    private constructor() : this(User(), Device(), null) // TODO: replace null by LocalSettings()
 
 
     fun addNoteType(noteType: NoteType): Boolean {

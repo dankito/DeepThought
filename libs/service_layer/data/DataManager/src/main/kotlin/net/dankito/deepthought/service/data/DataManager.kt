@@ -63,7 +63,7 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
                 localUser = deepThought.localUser
                 localDevice = deepThought.localDevice
                 val settings = deepThought.localSettings
-                if(settings != null) {
+                if(settings != null && settings.isPersisted()) {
                     this.localSettings = settings
                 }
                 else { // TODO: remove after next alpha release
