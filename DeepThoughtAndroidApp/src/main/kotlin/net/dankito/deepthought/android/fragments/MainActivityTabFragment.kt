@@ -12,15 +12,19 @@ import android.text.Html
 import android.view.*
 import android.widget.LinearLayout
 import android.widget.TextView
+import kotlinx.android.synthetic.main.fragment_main_activity_tab.*
 import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
+import kotlinx.android.synthetic.main.layout_context_help.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.views.FullScreenRecyclerView
 import net.dankito.deepthought.model.BaseEntity
+import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.service.search.Search
+import javax.inject.Inject
 
 
 abstract class MainActivityTabFragment<T : BaseEntity>(private val optionsMenuResourceId: Int, private val contextualActionMenuResourceId: Int,
@@ -46,6 +50,10 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val optionsMenuRe
 
 
     var isCurrentSelectedTab = false
+
+
+    @Inject
+    protected lateinit var dataManager: DataManager
 
 
     protected open fun setupUI(rootView: View) { }
@@ -97,6 +105,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val optionsMenuRe
         recyclerAdapter = getListAdapter()
         recyclerView?.adapter = recyclerAdapter
         recyclerAdapter?.itemClickListener = { item -> listItemClicked(item) }
+        recyclerAdapter?.swipeLayoutOpenedListener = { checkIfContextHelpListItemActionsHasBeenShownToUserOnUiThread() }
 
         (context as? Activity)?.let { activity ->
             recyclerAdapter?.enableMultiSelectionMode(activity, contextualActionMenuResourceId, R.id.multiSelecteModeAppBarLayout, false) { mode, actionItem, selectedItems ->
@@ -109,6 +118,19 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val optionsMenuRe
 
     protected open fun multiSelectActionModeBarVisibilityChanged(visible: Boolean) {
         activity?.findViewById(R.id.fab_menu)?.visibility = if(visible) View.GONE else View.VISIBLE
+
+        if(visible) {
+            checkIfContextHelpListItemActionsHasBeenShownToUserOnUiThread()
+        }
+    }
+
+    private fun checkIfContextHelpListItemActionsHasBeenShownToUserOnUiThread() {
+        if(dataManager.localSettings.didShowListItemActionsHelp == false) {
+            showContextHelpOnUiThread(R.string.context_help_list_item_actions)
+
+            dataManager.localSettings.didShowListItemActionsHelp = true
+            dataManager.localSettingsUpdated()
+        }
     }
 
     protected open fun actionItemSelected(mode: ActionMode, actionItem: MenuItem, selectedItems: Set<T>): Boolean {
@@ -238,6 +260,20 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val optionsMenuRe
 
         searchMenuItem?.isVisible = true
     }
+
+
+    protected fun showContextHelpOnUiThread(helpTextResourceId: Int) {
+        showContextHelpOnUiThread(context.getString(helpTextResourceId))
+    }
+
+    protected fun showContextHelpOnUiThread(helpText: String) {
+        txtContextHelpText.text = helpText
+
+        lytContextHelp.visibility = View.VISIBLE
+
+        btnDismissContextHelp.setOnClickListener { lytContextHelp.visibility = View.GONE }
+    }
+
 
     private fun showCountSearchResults(entities: List<BaseEntity>) {
         searchView?.let { searchView ->

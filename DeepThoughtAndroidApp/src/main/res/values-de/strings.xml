@@ -66,6 +66,13 @@
     ]]>
     </string>
 
+
+    <string name="context_help_list_item_actions">Wenn Sie eine Aktion auf einem Item ausführen möchten, wischen Sie über dieses Item von rechts nach links.\n\nWenn
+        Sie eine Aktion auf mehreren Items ausführen möchten, halten Sie ein Item lange gedrückt.\n\nDies
+        funktioniert auf praktisch allen Listen. Versuchen Sie\'s.
+    </string>
+
+
     <string name="dialog_article_summary_extractors_add_extractor">Hinzufügen</string>
 
     <string name="dialog_add_article_summary_extractor_feed_or_website_url">URL der Webseite oder des Feeds\n(z.B. sz.de oder http://newsfeed.zeit.de/index)</string>

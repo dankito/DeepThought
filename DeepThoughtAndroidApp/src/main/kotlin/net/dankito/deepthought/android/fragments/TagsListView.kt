@@ -17,7 +17,6 @@ import net.dankito.deepthought.android.dialogs.TagEntriesListDialog
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.model.CalculatedTag
 import net.dankito.deepthought.model.Tag
-import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.deepthought.ui.presenter.TagsListPresenter
@@ -32,9 +31,6 @@ import javax.inject.Inject
 
 
 class TagsListView : MainActivityTabFragment<Tag>(R.menu.fragment_tab_tags_menu, R.menu.tag_contextual_action_menu, R.string.tab_tags_onboarding_text), ITagsListView {
-
-    @Inject
-    protected lateinit var dataManager: DataManager
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine

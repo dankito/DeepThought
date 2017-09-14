@@ -68,6 +68,13 @@
     ]]>
     </string>
 
+
+    <string name="context_help_list_item_actions">If you want to execute an action on only one item, swipe the item from right to left.\nIf
+        you want to execute an action on multiple items, long press that item.\nThis
+        behaviour is valid for almost all lists. Try it.
+    </string>
+
+
     <string name="dialog_article_summary_extractors_add_extractor">Add</string>
 
     <string name="dialog_add_article_summary_extractor_feed_or_website_url">Feed or website url\n(e.g. nytimes.com or https://www.theguardian.com/uk/rss)</string>
