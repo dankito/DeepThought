@@ -1,5 +1,6 @@
 package net.dankito.service.search
 
+import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.*
 import net.dankito.service.eventbus.IEventBus
@@ -21,6 +22,8 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
     : SearchEngineBase(threadPool) {
 
     companion object {
+        private const val DefaultDelayBeforeUpdatingIndexSeconds = 60
+
         private val log = LoggerFactory.getLogger(LuceneSearchEngine::class.java)
     }
 
@@ -87,9 +90,44 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
     override fun searchEngineInitialized() {
         super.searchEngineInitialized()
 
-        // there are many reasons why the index isn't in sync anymore with database (e.g. an entity got synchronized but app gets closed before it gets indexed)
-        Timer().schedule(30 * 1000L) {
-            indexWritersAndSearchers.forEach { it.updateIndex() }
+        Timer().schedule(DefaultDelayBeforeUpdatingIndexSeconds * 1000L) {
+            updateIndex()
+        }
+    }
+
+    /**
+     * There are many reasons why the index isn't in sync anymore with database (e.g. an entity got synchronized but app gets closed before it gets indexed).
+     * This methods (re-)indexes all entities with changes since dataManager.localSettings.lastSearchIndexUpdateTime to ensure index is up to date again
+     */
+    private fun updateIndex() {
+        val startTime = Date()
+        log.info("Starting updating index with last index update time ${dataManager.localSettings.lastSearchIndexUpdateTime}")
+
+        dataManager.entityManager.getAllEntitiesUpdatedAfter<BaseEntity>(dataManager.localSettings.lastSearchIndexUpdateTime).forEach { entity ->
+            updateEntityInIndex(entity)
+        }
+
+        dataManager.localSettings.lastSearchIndexUpdateTime = startTime
+        dataManager.localSettingsUpdated()
+
+        log.info("Done updating index")
+    }
+
+    private fun updateEntityInIndex(entity: BaseEntity) {
+        if(entity is Entry) {
+            entryIndexWriterAndSearcher.updateEntityInIndex(entity)
+        }
+        else if(entity is Tag) {
+            tagIndexWriterAndSearcher.updateEntityInIndex(entity)
+        }
+        else if(entity is Series) {
+            seriesIndexWriterAndSearcher.updateEntityInIndex(entity)
+        }
+        else if(entity is Reference) {
+            referenceIndexWriterAndSearcher.updateEntityInIndex(entity)
+        }
+        else if(entity is ReadLaterArticle) {
+            readLaterArticleIndexWriterAndSearcher.updateEntityInIndex(entity)
         }
     }
 

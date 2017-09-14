@@ -286,7 +286,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
     }
 
 
-    protected fun updateEntityInIndex(entity: TEntity) {
+    fun updateEntityInIndex(entity: TEntity) {
         removeEntityFromIndex(entity)
         indexEntity(entity)
     }
