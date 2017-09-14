@@ -19,7 +19,6 @@ class TableConfig {
 
         const val DeepThoughtTableName = "deep_thought"
 
-        const val DeepThoughtDataModelVersionColumnName = "data_model_version"
         const val DeepThoughtLocalUserJoinColumnName = "local_user_id"
         const val DeepThoughtLocalDeviceJoinColumnName = "local_device_id"
         const val DeepThoughtNextEntryIndexColumnName = "next_entry_index"

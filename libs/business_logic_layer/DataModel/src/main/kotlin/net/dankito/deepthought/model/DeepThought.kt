@@ -27,10 +27,6 @@ data class DeepThought(
     }
 
 
-    @Column(name = TableConfig.DeepThoughtDataModelVersionColumnName)
-    val dataModelVersion = 1
-
-
     @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     @OrderBy(value = "sortOrder")
     var noteTypes: MutableSet<NoteType> = TreeSet<NoteType>()
