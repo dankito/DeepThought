@@ -24,6 +24,8 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
     companion object {
         private const val DefaultDelayBeforeUpdatingIndexSeconds = 60
 
+        private const val DefaultIntervalToRunOptimizationDays = 14
+
         private val log = LoggerFactory.getLogger(LuceneSearchEngine::class.java)
     }
 
@@ -92,6 +94,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
         Timer().schedule(DefaultDelayBeforeUpdatingIndexSeconds * 1000L) {
             updateIndex()
+            optimizeIndicesIfNeeded()
         }
     }
 
@@ -129,6 +132,35 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
         else if(entity is ReadLaterArticle) {
             readLaterArticleIndexWriterAndSearcher.updateEntityInIndex(entity)
         }
+    }
+
+    /**
+     * Checks if time since last optimization run is greater than DefaultIntervalToRunOptimizationDays and if so calls optimizeIndices()
+     */
+    private fun optimizeIndicesIfNeeded() {
+        val startTime = Date()
+        val timeSinceLastOptimizationMillis = startTime.time - dataManager.localSettings.lastDatabaseOptimizationTime.time
+        if(timeSinceLastOptimizationMillis > DefaultIntervalToRunOptimizationDays * 24 * 60 * 60 * 1000) {
+            optimizeIndices()
+
+            dataManager.localSettings.lastDatabaseOptimizationTime = startTime
+            dataManager.localSettingsUpdated()
+        }
+    }
+
+    /**
+     * From time to time index needs an optimization, remove deleted documents from index and merge index files into a single file.
+     */
+    private fun optimizeIndices() {
+        log.info("Starting to optimize indices ...")
+
+        entryIndexWriterAndSearcher.optimizeIndex()
+        tagIndexWriterAndSearcher.optimizeIndex()
+        seriesIndexWriterAndSearcher.optimizeIndex()
+        referenceIndexWriterAndSearcher.optimizeIndex()
+        readLaterArticleIndexWriterAndSearcher.optimizeIndex()
+
+        log.info("Done optimizing indices")
     }
 
 

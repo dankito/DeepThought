@@ -67,7 +67,7 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
                     this.localSettings = settings
                 }
                 else { // TODO: remove after next alpha release
-                    this.localSettings = LocalSettings(1, 1, 1, Date(0), Date(0), false, false, false)
+                    this.localSettings = LocalSettings(1, 1, 1, Date(0), Date(0), Date(0), false, false, false)
                     deepThought.localSettings = localSettings
                     entityManager.persistEntity(localSettings)
                     entityManager.updateEntity(deepThought)

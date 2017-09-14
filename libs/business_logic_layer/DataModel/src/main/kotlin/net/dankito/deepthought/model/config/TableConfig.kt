@@ -76,6 +76,7 @@ class TableConfig {
         const val LocalSettingsHtmlEditorVersionColumnName = "html_editor_version"
         const val LocalSettingsLastDatabaseOptimizationTimeColumnName = "last_database_optimization_time"
         const val LocalSettingsLastSearchIndexUpdateTimeColumnName = "last_search_index_update_time"
+        const val LocalSettingsLastSearchIndexOptimizationTimeColumnName = "last_search_index_optimization_time"
         const val LocalSettingsDidShowListItemActionsHelpColumnName = "did_show_list_item_actions_help"
         const val LocalSettingsDidShowSearchTagsHelpColumnName = "did_show_search_tags_help"
         const val LocalSettingsDidShowSetTagsOnEntryHelpColumnName = "did_show_set_tags_on_entry_help"

@@ -24,6 +24,9 @@ data class LocalSettings(
         @Column(name = TableConfig.LocalSettingsLastSearchIndexUpdateTimeColumnName)
         var lastSearchIndexUpdateTime: Date,
 
+        @Column(name = TableConfig.LocalSettingsLastSearchIndexOptimizationTimeColumnName)
+        var lastSearchIndexOptimizationTime: Date,
+
         @Column(name = TableConfig.LocalSettingsDidShowListItemActionsHelpColumnName)
         var didShowListItemActionsHelp: Boolean,
 
@@ -41,6 +44,6 @@ data class LocalSettings(
     }
 
 
-    internal constructor() : this(0, 0, 0, Date(), Date(), false, false, false)
+    internal constructor() : this(0, 0, 0, Date(0), Date(0), Date(0), false, false, false)
 
 }
