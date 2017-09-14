@@ -5,6 +5,7 @@
                 android:minHeight="@dimen/view_context_help_height"
                 android:padding="@dimen/view_context_help_padding"
                 android:background="@color/context_help_background_color"
+                android:visibility="gone"
 >
 
     <ImageView
