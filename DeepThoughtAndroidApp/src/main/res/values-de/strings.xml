@@ -63,9 +63,6 @@
     ]]>
     </string>
 
-    <string name="activity_article_summary_menu_view">Anzeigen</string>
-    <string name="activity_article_summary_menu_save_for_later_reading">Vormerken</string>
-    <string name="activity_article_summary_menu_save">Speichern</string>
     <string name="activity_article_summary_menu_count_articles_selected" formatted="false">%d / %d</string>
     <string name="activity_article_summary_menu_reload">Neu laden</string>
     <string name="activity_article_summary_menu_load_more">Mehr laden</string>

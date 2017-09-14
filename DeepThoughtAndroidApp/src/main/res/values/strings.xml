@@ -65,9 +65,6 @@
     ]]>
     </string>
 
-    <string name="activity_article_summary_menu_view">View</string>
-    <string name="activity_article_summary_menu_save_for_later_reading">Read later</string>
-    <string name="activity_article_summary_menu_save">Save</string>
     <string name="activity_article_summary_menu_count_articles_selected" formatted="false">%d / %d</string>
     <string name="activity_article_summary_menu_reload">Reload</string>
     <string name="activity_article_summary_menu_load_more">Load more</string>

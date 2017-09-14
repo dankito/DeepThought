@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/mnViewArticle"
-        android:title="@string/activity_article_summary_menu_view"
+        android:title="@string/action_view"
         android:icon="@android:drawable/ic_menu_view"
         app:showAsAction="always"
         android:actionLayout="@layout/contextual_action_mode_item_action_layout"
@@ -11,7 +11,7 @@
 
     <item
         android:id="@+id/mnSaveArticleForLaterReading"
-        android:title="@string/activity_article_summary_menu_save_for_later_reading"
+        android:title="@string/action_read_article_later"
         android:icon="@drawable/ic_read_later"
         app:showAsAction="always"
         android:actionLayout="@layout/contextual_action_mode_item_action_layout"
@@ -19,7 +19,7 @@
 
     <item
         android:id="@+id/mnSaveArticle"
-        android:title="@string/activity_article_summary_menu_save"
+        android:title="@string/action_save"
         android:icon="@android:drawable/ic_menu_save"
         app:showAsAction="always"
         android:actionLayout="@layout/contextual_action_mode_item_action_layout"
