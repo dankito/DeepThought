@@ -2,12 +2,14 @@ package net.dankito.deepthought.service.data
 
 import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.model.Device
+import net.dankito.deepthought.model.LocalSettings
 import net.dankito.deepthought.model.User
 import net.dankito.deepthought.model.enums.FileType
 import net.dankito.deepthought.model.enums.FileTypeDefaultFolderName
 import net.dankito.deepthought.model.enums.NoteType
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.localization.Localization
+import net.dankito.utils.version.Versions
 import org.slf4j.LoggerFactory
 import java.util.*
 
@@ -24,7 +26,9 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
 
         val localDevice = createUserDefaultDevice(localUser)
 
-        val deepThought = DeepThought(localUser, localDevice)
+        val localSettings = LocalSettings(Versions.CommunicationProtocolVersion, Versions.SearchIndexVersion, Versions.HtmlEditorVersion, Date(0), Date(0), false, false, false)
+
+        val deepThought = DeepThought(localUser, localDevice, localSettings)
 
         createEnumerationsDefaultValues(deepThought)
 

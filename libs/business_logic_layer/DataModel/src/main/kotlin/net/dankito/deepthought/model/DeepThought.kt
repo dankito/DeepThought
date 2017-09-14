@@ -17,7 +17,11 @@ data class DeepThought(
 
         @OneToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST))
         @JoinColumn(name = TableConfig.DeepThoughtLocalDeviceJoinColumnName)
-        val localDevice: Device
+        val localDevice: Device,
+
+        @OneToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.PERSIST))
+        @JoinColumn(name = TableConfig.DeepThoughtLocalSettingsJoinColumnName)
+        var localSettings: LocalSettings? // TODO: change to val and make non-nullable
 
 ) : BaseEntity(), Serializable {
 
@@ -43,7 +47,7 @@ data class DeepThought(
         private set
 
 
-    private constructor() : this(User(), Device())
+    private constructor() : this(User(), Device(), LocalSettings())
 
 
     fun addNoteType(noteType: NoteType): Boolean {

@@ -21,6 +21,7 @@ class TableConfig {
 
         const val DeepThoughtLocalUserJoinColumnName = "local_user_id"
         const val DeepThoughtLocalDeviceJoinColumnName = "local_device_id"
+        const val DeepThoughtLocalSettingsJoinColumnName = "local_settings_id"
         const val DeepThoughtNextEntryIndexColumnName = "next_entry_index"
 
 
@@ -63,6 +64,21 @@ class TableConfig {
         const val DeviceOsNameColumnName = "os_name"
         const val DeviceOsVersionColumnName = "os_version"
         const val DeviceIconColumnName = "device_icon"
+
+
+
+        /*          LocalSettings Table Config        */
+
+        const val LocalSettingsTableName = "local_settings"
+
+        const val LocalSettingsCommunicationProtocolVersionColumnName = "communication_protocol_version"
+        const val LocalSettingsSearchIndexVersionColumnName = "search_index_version"
+        const val LocalSettingsHtmlEditorVersionColumnName = "html_editor_version"
+        const val LocalSettingsLastDatabaseOptimizationTimeColumnName = "last_database_optimization_time"
+        const val LocalSettingsLastSearchIndexUpdateTimeColumnName = "last_search_index_update_time"
+        const val LocalSettingsDidShowListItemActionsHelpColumnName = "did_show_list_item_actions_help"
+        const val LocalSettingsDidShowSearchTagsHelpColumnName = "did_show_search_tags_help"
+        const val LocalSettingsDidShowSetTagsOnEntryHelpColumnName = "did_show_set_tags_on_entry_help"
 
 
         /*          Entry Table Config        */
