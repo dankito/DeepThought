@@ -1,6 +1,7 @@
 package net.dankito.data_access.database
 
 import com.couchbase.lite.*
+import net.dankito.deepthought.model.config.TableConfig
 import net.dankito.jpa.apt.config.EntityConfig
 import net.dankito.jpa.apt.config.JPAEntityConfiguration
 import net.dankito.jpa.cache.DaoCache
@@ -11,6 +12,7 @@ import net.dankito.utils.version.Versions
 import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 abstract class CouchbaseLiteEntityManagerBase(protected var context: Context, private val localSettingsStore: ILocalSettingsStore) : IEntityManager {
@@ -218,6 +220,46 @@ abstract class CouchbaseLiteEntityManagerBase(protected var context: Context, pr
         }
 
         return dao
+    }
+
+
+    override fun <T> getAllEntitiesUpdatedAfter(lastUpdateTime: Date): List<T> {
+        val lastUpdateTimeMillis = lastUpdateTime.time
+
+        val view = database.getView("UPDATED_ENTITIES")
+        view.setMap({ document, emitter ->
+            (document[TableConfig.BaseEntityModifiedOnColumnName] as? Long)?.let { modifiedOn ->
+                if(modifiedOn > lastUpdateTimeMillis) {
+                    emitter.emit(document[Dao.ID_SYSTEM_COLUMN_NAME], null)
+                }
+            }
+        }, "1")
+
+        val updatedEntities = getEntitiesFromView<T>(view)
+        view.delete()
+        log.info("Retrieved ${updatedEntities.size} updated entities")
+
+        return updatedEntities
+    }
+
+    private fun <T> getEntitiesFromView(view: View): ArrayList<T> {
+        val updatedEntities = ArrayList<T>()
+
+        val queryEnumerator = view.createQuery().run()
+        val anyDao = mapEntityClassesToDaos.values.first()
+
+        while(queryEnumerator.hasNext()) {
+            val document = queryEnumerator.next().document
+
+            anyDao.getEntityClassFromDocument(document)?.let { entityClass ->
+                getDaoForClass(entityClass)?.let { dao ->
+                    (dao.createObjectFromDocument(document, document.id, entityClass) as? T)?.let { entity ->
+                        updatedEntities.add(entity)
+                    }
+                }
+            }
+        }
+        return updatedEntities
     }
 
 }

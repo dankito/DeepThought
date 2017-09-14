@@ -1,5 +1,7 @@
 package net.dankito.data_access.database
 
+import java.util.*
+
 
 interface IEntityManager {
 
@@ -21,5 +23,7 @@ interface IEntityManager {
     fun <T> getEntityById(type: Class<T>, id: String): T?
     fun <T> getEntitiesById(type: Class<T>, ids: Collection<String>, keepOrderingOfIds: Boolean): List<T>
     fun <T> getAllEntitiesOfType(type: Class<T>): List<T>
+
+    fun <T> getAllEntitiesUpdatedAfter(lastUpdateTime: Date): List<T>
 
 }
