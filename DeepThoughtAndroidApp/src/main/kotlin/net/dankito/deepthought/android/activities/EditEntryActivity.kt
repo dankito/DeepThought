@@ -644,7 +644,7 @@ class EditEntryActivity : BaseActivity() {
         mnSaveEntry = menu.findItem(R.id.mnSaveEntry)
 
         mnToggleReaderMode = menu.findItem(R.id.mnToggleReaderMode)
-        mnToggleReaderMode?.isVisible = entryExtractionResult?.couldExtractContent ?: false
+        mnToggleReaderMode?.isVisible = entryExtractionResult?.couldExtractContent == true && entryExtractionResult?.webSiteHtml != null // show mnToggleReaderMode only if previously original web site was shown
 
         mnSaveEntryExtractionResultForLaterReading = menu.findItem(R.id.mnSaveEntryExtractionResultForLaterReading)
         mnSaveEntryExtractionResultForLaterReading?.isVisible = entryExtractionResult != null
