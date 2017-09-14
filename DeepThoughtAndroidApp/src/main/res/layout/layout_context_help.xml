@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/view_context_help_height"
+                android:padding="@dimen/view_context_help_padding"
+                android:background="@color/context_help_background_color"
+>
+
+    <ImageView
+        android:id="@+id/imgHelpIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="@dimen/view_context_help_image_margin_left"
+        android:layout_marginStart="@dimen/view_context_help_image_margin_left"
+        android:layout_marginRight="@dimen/view_context_help_image_margin_right"
+        android:layout_marginEnd="@dimen/view_context_help_image_margin_right"
+        android:gravity="center_vertical|start"
+        android:layout_centerVertical="true"
+        android:tint="@color/colorAccent"
+        android:src="@android:drawable/ic_menu_help"
+    />
+
+    <TextView
+        android:id="@+id/txtContextHelpText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/imgHelpIcon"
+        android:layout_toEndOf="@+id/imgHelpIcon"
+        android:layout_toLeftOf="@+id/btnDismissContextHelp"
+        android:layout_toStartOf="@+id/btnDismissContextHelp"
+        android:gravity="center_vertical"
+        android:layout_centerVertical="true"
+        android:textColor="@color/context_help_text_color"
+        android:lineSpacingExtra="@dimen/view_context_help_text_line_spacing"
+        android:text="@string/context_help_list_item_actions"
+    />
+
+    <Button
+        android:id="@+id/btnDismissContextHelp"
+        android:layout_width="@dimen/view_context_help_button_width"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:gravity="center_vertical|end"
+        android:layout_centerVertical="true"
+        style="?android:attr/buttonBarButtonStyle"
+        android:textColor="@color/context_help_text_color"
+        android:text="@android:string/ok"
+    />
+
+</RelativeLayout>

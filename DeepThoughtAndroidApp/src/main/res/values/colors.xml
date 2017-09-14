@@ -10,6 +10,9 @@
 
     <color name="toolbar_background_color">@color/colorPrimary</color>
 
+    <color name="context_help_background_color">#323232</color>
+    <color name="context_help_text_color">#E76999</color>
+
     <color name="black_semi_transparent">#B2000000</color>
 
     <color name="unselected_item_text_color">#000000</color>
