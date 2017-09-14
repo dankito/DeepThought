@@ -103,6 +103,8 @@ abstract class FullscreenDialogFragment : DialogFragment() {
         transaction.remove(this)
 
         transaction.commit()
+
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
 
