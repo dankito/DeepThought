@@ -1,5 +1,7 @@
 package net.dankito.utils.settings
 
+import net.dankito.utils.version.Versions
+
 
 abstract class LocalSettingsStoreBase : ILocalSettingsStore {
 
@@ -10,7 +12,7 @@ abstract class LocalSettingsStoreBase : ILocalSettingsStore {
 
         const val DefaultDataFolder = "data/"
 
-        const val DefaultDatabaseDataModelVersion = 0
+        const val DefaultDatabaseDataModelVersion = Versions.DataModelVersion
     }
 
 
