@@ -26,7 +26,7 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
     var actionModeBarVisibilityListener: ((isVisible: Boolean) -> Unit)? = null
 
 
-    private var actionMode: android.view.ActionMode? = null
+    var actionMode: android.view.ActionMode? = null
 
     private var actionItemHelper = ActionItemUtil()
 
@@ -57,7 +57,7 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
     override fun itemLongClicked(viewHolder: RecyclerView.ViewHolder, item: T, position: Int) {
         if(isMultiSelectModeEnabled()) {
             if(actionMode == null) {
-                actionMode = activity?.startActionMode(actionModeCallback)
+                activity?.startActionMode(actionModeCallback)
             }
 
             toggleSelection(item, position)
@@ -122,6 +122,7 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
     private val actionModeCallback = object : AbsListView.MultiChoiceModeListener {
 
         override fun onCreateActionMode(mode: android.view.ActionMode, menu: Menu): Boolean {
+            actionMode = mode
             menuResourceId?.let { mode.menuInflater.inflate(it, menu) }
 
             actionItemHelper.setupLayout(menu) { menuItem: MenuItem -> onActionItemClicked(mode, menuItem) }
