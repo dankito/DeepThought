@@ -20,6 +20,9 @@
     <string name="action_read_article_later">Vormerken</string>
     <string name="action_toggle_reader_mode">Leseansicht</string>
     <string name="action_delete">Löschen</string>
+    <string name="action_reload">Neu laden</string>
+    <string name="action_load_more">Mehr laden</string>
+    <string name="contextual_action_menu_count_items_selected" formatted="false">%d / %d</string>
     <string name="action_apply">Übernehmen</string>
 
     <string name="search_title">Suche</string>
@@ -62,10 +65,6 @@
         <p>(Click on the fields above to edit entry\'s abstract, reference and tags.)</p>
     ]]>
     </string>
-
-    <string name="activity_article_summary_menu_count_articles_selected" formatted="false">%d / %d</string>
-    <string name="activity_article_summary_menu_reload">Neu laden</string>
-    <string name="activity_article_summary_menu_load_more">Mehr laden</string>
 
     <string name="dialog_article_summary_extractors_add_extractor">Hinzufügen</string>
 

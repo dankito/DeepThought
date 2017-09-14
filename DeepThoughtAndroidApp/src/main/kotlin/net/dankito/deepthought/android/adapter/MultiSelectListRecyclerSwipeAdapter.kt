@@ -92,7 +92,7 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
             actionMode?.finish()
         }
         else {
-            actionMode?.title = activity?.getString(R.string.activity_article_summary_menu_count_articles_selected, selectedItemsInContextualActionMode.size, itemCount)
+            actionMode?.title = activity?.getString(R.string.contextual_action_menu_count_items_selected, selectedItemsInContextualActionMode.size, itemCount)
             actionMode?.invalidate()
         }
     }
