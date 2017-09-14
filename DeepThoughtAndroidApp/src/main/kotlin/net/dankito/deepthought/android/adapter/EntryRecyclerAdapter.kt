@@ -25,7 +25,10 @@ class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): Mul
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): EntryViewHolder {
         val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_entry, parent, false)
 
-        return EntryViewHolder(itemView)
+        val viewHolder = EntryViewHolder(itemView)
+
+        viewHolderCreated(viewHolder)
+        return viewHolder
     }
 
     override fun bindItemToView(viewHolder: EntryViewHolder, item: Entry) {

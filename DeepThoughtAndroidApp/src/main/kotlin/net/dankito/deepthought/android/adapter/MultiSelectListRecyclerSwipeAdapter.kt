@@ -12,7 +12,6 @@ import android.widget.LinearLayout
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.views.ActionItemUtil
 import java.util.*
-import kotlin.collections.HashSet
 import kotlin.concurrent.schedule
 
 
@@ -29,8 +28,6 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
     var actionMode: android.view.ActionMode? = null
 
     private var actionItemHelper = ActionItemUtil()
-
-    private val createdViewHolders = HashSet<THolder>()
 
     private val selectedItemsInContextualActionMode = LinkedHashSet<T>()
 
@@ -99,8 +96,6 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
 
     override fun itemBound(viewHolder: RecyclerView.ViewHolder, item: T, position: Int) {
         super.itemBound(viewHolder, item, position)
-
-        createdViewHolders.add(viewHolder as THolder) // overwriting onCreateViewHolder() for this makes no sense as child class generates the ViewHolder
 
         if(isInMultiSelectMode()) { // otherwise due to isPressed flag item would also get shown as selected
             viewHolder.itemView.isPressed = false

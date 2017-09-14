@@ -15,6 +15,9 @@ abstract class ListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(li
     var itemLongClickListener: ((item: T) -> Unit)? = null
 
 
+    protected val createdViewHolders = HashSet<THolder>()
+
+
     var items: List<T> = list
         set(value) {
             field = value
@@ -36,6 +39,10 @@ abstract class ListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(li
         this.items = newList
     }
 
+
+    protected open fun viewHolderCreated(viewHolder: THolder) {
+        createdViewHolders.add(viewHolder)
+    }
 
     override fun onBindViewHolder(viewHolder: THolder, position: Int) {
         val item = getItem(position)

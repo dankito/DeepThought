@@ -25,7 +25,10 @@ class ArticleSummaryItemRecyclerAdapter(activity: AppCompatActivity, private val
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ArticleSummaryItemViewHolder {
         val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_read_later_article, parent, false)
 
-        return ArticleSummaryItemViewHolder(itemView)
+        val viewHolder = ArticleSummaryItemViewHolder(itemView)
+
+        viewHolderCreated(viewHolder)
+        return viewHolder
     }
 
     override fun bindItemToView(viewHolder: ArticleSummaryItemViewHolder, item: ArticleSummaryItem) {

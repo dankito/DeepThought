@@ -26,7 +26,10 @@ abstract class ReferenceRecyclerAdapterBase(private val presenter: ReferencesPre
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ReferenceViewHolder {
         val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_reference, parent, false)
 
-        return ReferenceViewHolder(itemView)
+        val viewHolder = ReferenceViewHolder(itemView)
+
+        viewHolderCreated(viewHolder)
+        return viewHolder
     }
 
     override fun bindItemToView(viewHolder: ReferenceViewHolder, item: Reference) {

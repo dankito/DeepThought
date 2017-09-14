@@ -29,7 +29,10 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
 
         setIconTintList(itemView)
 
-        return TagsOnEntryViewHolder(itemView)
+        val viewHolder = TagsOnEntryViewHolder(itemView)
+
+        viewHolderCreated(viewHolder)
+        return viewHolder
     }
 
     private fun setIconTintList(itemView: View) {
