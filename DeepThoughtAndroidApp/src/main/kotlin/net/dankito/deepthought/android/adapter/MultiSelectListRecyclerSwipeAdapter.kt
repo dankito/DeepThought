@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
+import android.widget.ImageView
 import android.widget.LinearLayout
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.views.ActionItemUtil
@@ -192,9 +193,12 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
             for(i in 0..actionBarRoot.childCount) { // starting with second call ActionBarContextView is already in correct place in appBarLayout -> won't find it in action_bar_root anymore
                 val child = actionBarRoot.getChildAt(i)
                 if(child is ActionBarContextView) {
+                    this.actionModeBar = child
                     placeActionModeBarInAppBarLayout(activity, child)
                 }
             }
+
+            actionModeBar?.let {adjustActionModeBarLayout(activity, it) }
 
             if(hideToolbar) {
                 activity.findViewById(R.id.toolbar)?.let { it.visibility = View.GONE }
@@ -205,9 +209,6 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
     }
 
     private fun placeActionModeBarInAppBarLayout(activity: Activity, actionModeBar: ActionBarContextView) {
-        this.actionModeBar = actionModeBar
-        actionModeBar.setBackgroundResource(R.drawable.primary_color_gradient)
-
         (actionModeBar.parent as? ViewGroup)?.let { parent ->
             parent.removeView(actionModeBar)
 
@@ -215,6 +216,33 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
                 layout.addView(actionModeBar)
             }
         }
+    }
+
+    private fun adjustActionModeBarLayout(activity: Activity, actionModeBar: ActionBarContextView) {
+        actionModeBar.setBackgroundResource(R.drawable.primary_color_gradient)
+
+        // we have to wait some time till actionModeBar is deflated and its children are added
+        actionModeBar.postDelayed({
+            activity.runOnUiThread { adjustActionModeBarLayout(actionModeBar) }
+        }, 200L)
+    }
+
+    private fun adjustActionModeBarLayout(actionModeBar: ActionBarContextView) {
+        for(i in 0..actionModeBar.childCount - 1) {
+            val child = actionModeBar.getChildAt(i)
+
+            if(child is ImageView) {
+                (child.layoutParams as? ViewGroup.MarginLayoutParams)?.let { layoutParams ->
+                    layoutParams.rightMargin = 0
+                    child.layoutParams = layoutParams
+                }
+            }
+            else if(child is LinearLayout) {
+                child.setPadding(0, 0, 0, 0)
+            }
+        }
+
+        actionItemHelper.setMaxActionItemsCount(actionModeBar, 4, false)
     }
 
 }
