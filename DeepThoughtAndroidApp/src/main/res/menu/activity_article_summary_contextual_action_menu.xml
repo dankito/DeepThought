@@ -25,4 +25,13 @@
         android:actionLayout="@layout/contextual_action_mode_item_action_layout"
     />
 
+    <item
+        android:id="@+id/mnContextualActionLoadMore"
+        android:title="@string/action_load_more"
+        android:icon="@drawable/ic_forward_white_48dp"
+        app:showAsAction="always"
+        android:actionLayout="@layout/contextual_action_mode_item_action_layout"
+        android:visible="false"
+    />
+
 </menu>

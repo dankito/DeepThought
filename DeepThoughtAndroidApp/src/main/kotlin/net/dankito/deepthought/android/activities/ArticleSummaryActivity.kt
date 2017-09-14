@@ -148,6 +148,7 @@ class ArticleSummaryActivity : BaseActivity() {
         rcyArticleSummaryItems.adapter = adapter
         adapter.itemClickListener = { item -> articleClicked(item) }
         adapter.actionItemClickListener = { mode, actionItem, selectedItems -> actionItemSelected(mode, actionItem, selectedItems) }
+        adapter.actionModeBarVisibilityListener = { actionModeBarVisibilityChanged(it) }
     }
 
     private fun recyclerViewEnteredFullscreenMode() {
@@ -202,7 +203,19 @@ class ArticleSummaryActivity : BaseActivity() {
                 }
                 return true
             }
+            R.id.mnContextualActionLoadMore -> {
+                loadMoreItems()
+                return true
+            }
             else -> return false
+        }
+    }
+
+    private fun actionModeBarVisibilityChanged(isVisible: Boolean) {
+        if(isVisible) {
+            if(presenter.lastLoadedSummary?.canLoadMoreItems == true) {
+                adapter.actionMode?.menu?.findItem(R.id.mnContextualActionLoadMore)?.isVisible = true
+            }
         }
     }
 
