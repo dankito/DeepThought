@@ -1,110 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#F0F0F0"
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/content_layout_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0F0F0"
 >
 
-    <net.dankito.deepthought.android.views.EntryFieldPreview
-        android:id="@+id/lytAbstractPreview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-    />
-
-    <net.dankito.deepthought.android.views.EntryFieldPreview
-        android:id="@+id/lytReferencePreview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/lytAbstractPreview"
-    />
-
-    <ImageButton
-        android:id="@+id/btnClearEntryReference"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/lytReferencePreview"
-        android:layout_alignBottom="@+id/lytReferencePreview"
-        android:background="@android:color/transparent"
-        android:src="@android:drawable/ic_delete"
-        android:visibility="gone"
-    />
-
-    <net.dankito.deepthought.android.views.EntryFieldPreview
-        android:id="@+id/lytTagsPreview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/lytReferencePreview"
-    />
-
-    <TextView
-        android:id="@+id/txtEntryContentLabel"
-        android:layout_below="@+id/lytTagsPreview"
-        android:layout_marginTop="@dimen/activity_edit_entry_field_margin_top"
-        android:layout_marginLeft="@dimen/activity_edit_entry_field_margin_left"
-        android:layout_marginStart="@dimen/activity_edit_entry_field_margin_left"
-        android:layout_marginRight="@dimen/activity_edit_entry_field_margin_right"
-        android:layout_marginEnd="@dimen/activity_edit_entry_field_margin_right"
-        android:layout_marginBottom="@dimen/activity_edit_entry_content_label_margin_bottom"
-        style="@style/EntryFieldName"
-        android:textAlignment="center"
-        android:text="@string/activity_edit_entry_content_label"
-    />
-
-    <net.dankito.deepthought.android.views.FullScreenWebView
-        android:id="@+id/wbEntry"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtEntryContentLabel"
-        android:layout_above="@+id/appBarLayout"
-    />
-
     <RelativeLayout
-        android:id="@+id/lytOnboardingText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtEntryContentLabel"
-        android:layout_above="@+id/appBarLayout"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginLeft="@dimen/activity_edit_entry_onboarding_left_right_margin"
-        android:layout_marginStart="@dimen/activity_edit_entry_onboarding_left_right_margin"
-        android:layout_marginRight="@dimen/activity_edit_entry_onboarding_left_right_margin"
-        android:layout_marginEnd="@dimen/activity_edit_entry_onboarding_left_right_margin"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/move_upward_behaviour"
     >
 
-        <TextView
-            android:id="@+id/txtOnboardingText"
+        <net.dankito.deepthought.android.views.EntryFieldPreview
+            android:id="@+id/lytAbstractPreview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_centerInParent="true"
-            android:textAlignment="center"
-            android:ellipsize="end"
-            android:minLines="2"
+            android:layout_alignParentTop="true"
+        />
+
+        <net.dankito.deepthought.android.views.EntryFieldPreview
+            android:id="@+id/lytReferencePreview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lytAbstractPreview"
+        />
+
+        <ImageButton
+            android:id="@+id/btnClearEntryReference"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/lytReferencePreview"
+            android:layout_alignBottom="@+id/lytReferencePreview"
+            android:background="@android:color/transparent"
+            android:src="@android:drawable/ic_delete"
             android:visibility="gone"
         />
 
+        <net.dankito.deepthought.android.views.EntryFieldPreview
+            android:id="@+id/lytTagsPreview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lytReferencePreview"
+        />
+
+        <TextView
+            android:id="@+id/txtEntryContentLabel"
+            android:layout_below="@+id/lytTagsPreview"
+            android:layout_marginTop="@dimen/activity_edit_entry_field_margin_top"
+            android:layout_marginLeft="@dimen/activity_edit_entry_field_margin_left"
+            android:layout_marginStart="@dimen/activity_edit_entry_field_margin_left"
+            android:layout_marginRight="@dimen/activity_edit_entry_field_margin_right"
+            android:layout_marginEnd="@dimen/activity_edit_entry_field_margin_right"
+            android:layout_marginBottom="@dimen/activity_edit_entry_content_label_margin_bottom"
+            style="@style/EntryFieldName"
+            android:textAlignment="center"
+            android:text="@string/activity_edit_entry_content_label"
+        />
+
+        <net.dankito.deepthought.android.views.FullScreenWebView
+            android:id="@+id/wbEntry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtEntryContentLabel"
+            android:layout_above="@+id/appBarLayout"
+        />
+
+        <RelativeLayout
+            android:id="@+id/lytOnboardingText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtEntryContentLabel"
+            android:layout_above="@+id/appBarLayout"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="@dimen/activity_edit_entry_onboarding_left_right_margin"
+            android:layout_marginStart="@dimen/activity_edit_entry_onboarding_left_right_margin"
+            android:layout_marginRight="@dimen/activity_edit_entry_onboarding_left_right_margin"
+            android:layout_marginEnd="@dimen/activity_edit_entry_onboarding_left_right_margin"
+        >
+
+            <TextView
+                android:id="@+id/txtOnboardingText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerInParent="true"
+                android:textAlignment="center"
+                android:ellipsize="end"
+                android:minLines="2"
+                android:visibility="gone"
+            />
+
+        </RelativeLayout>
+
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                app:title="@string/activity_edit_entry_title"
+                style="@style/ToolbarStyle"/>
+
+        </android.support.design.widget.AppBarLayout>
+
     </RelativeLayout>
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            app:title="@string/activity_edit_entry_title"
-            style="@style/ToolbarStyle"/>
-
-    </android.support.design.widget.AppBarLayout>
-
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>
