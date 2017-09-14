@@ -327,6 +327,18 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
     }
 
 
+    fun optimizeIndex() {
+        getWriter()?.let { writer ->
+            writer.forceMergeDeletes()
+            writer.forceMerge(1)
+
+            writer.commit()
+
+            log.info("Optimized index of $this")
+        }
+    }
+
+
     /**
      * Calling commit() is a costly operation
      * -> don't call it on each update / deletion, wait some time before commit accumulated changes.
