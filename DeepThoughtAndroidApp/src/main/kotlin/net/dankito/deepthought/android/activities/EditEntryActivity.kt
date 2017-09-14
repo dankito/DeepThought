@@ -318,6 +318,7 @@ class EditEntryActivity : BaseActivity() {
         // now try to extract entry content from WebView's html
         if(entryExtractionResult?.couldExtractContent == false) {
             contentToEdit = html
+            entryExtractionResult?.webSiteHtml = html
 
             entryExtractionResult?.let { extractionResult ->
                 articleExtractorManager.extractArticleAndAddDefaultDataAsync(extractionResult, html, url)
