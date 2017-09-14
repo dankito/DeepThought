@@ -124,6 +124,22 @@ class TagsListView : MainActivityTabFragment<Tag>(R.menu.fragment_tab_tags_menu,
 
     override fun searchEntities(query: String) {
         presenter.searchTags(query)
+
+        if(query != Search.EmptySearchTerm) {
+            checkIfContextHelpSearchTagsHasBeenShownToUserOnUiThread()
+        }
+    }
+
+    private fun checkIfContextHelpSearchTagsHasBeenShownToUserOnUiThread() {
+        val localSettings = dataManager.localSettings
+        localSettings.countTagSearches++
+
+        if(localSettings.countTagSearches >= 30 && localSettings.didShowSearchTagsHelp == false) {
+            localSettings.didShowSearchTagsHelp = true
+            showContextHelpOnUiThread(R.string.context_help_search_tags)
+        }
+
+        dataManager.localSettingsUpdated()
     }
 
     override fun querySubmitted(query: String): Boolean {

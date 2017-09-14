@@ -74,6 +74,14 @@
         behaviour is valid for almost all lists. Try it.
     </string>
 
+    <string name="context_help_search_tags">To search for multiple tags, enter a comma (,).\nTo
+        filter entered tags, press the action button (\'Enter\') on keyboard.
+    </string>
+
+    <string name="context_help_set_tags_on_entry">To select multiple tags, enter a comma (,).\nTo
+        create a new or toggle entered tags, press the action button (\'Enter\') on keyboard.
+    </string>
+
 
     <string name="dialog_article_summary_extractors_add_extractor">Add</string>
 

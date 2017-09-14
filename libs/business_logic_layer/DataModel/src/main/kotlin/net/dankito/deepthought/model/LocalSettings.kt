@@ -34,7 +34,13 @@ data class LocalSettings(
         var didShowSearchTagsHelp: Boolean,
 
         @Column(name = TableConfig.LocalSettingsDidShowSetTagsOnEntryHelpColumnName)
-        var didShowSetTagsOnEntryHelp: Boolean
+        var didShowSetTagsOnEntryHelp: Boolean,
+
+        @Column(name = TableConfig.LocalSettingsCountTagSearchesColumnName)
+        var countTagSearches: Int = 0,
+
+        @Column(name = TableConfig.LocalSettingsCountTagsOnEntrySearchesColumnName)
+        var countTagsOnEntrySearches: Int = 0
 
 ) : BaseEntity() {
 

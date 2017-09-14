@@ -72,6 +72,14 @@
         funktioniert auf praktisch allen Listen. Versuchen Sie\'s.
     </string>
 
+    <string name="context_help_search_tags">Um nach mehreren Schlagworten zu suchen, trennen Sie diese im Suchfeld mit Komma (,).\nUm
+        den Filter auf die eingegebenen Schlagworte zu setzen, drücken Sie den Action Knopf (\'Enter\') auf dem Keyboard (rechts unten).
+    </string>
+
+    <string name="context_help_set_tags_on_entry">Um mehrere Schlagworte auszuwählen, trennen Sie diese im Suchfeld mit Komma (,).\nUm
+        ein neues Schlagwort anzulegen oder die eingegebenen zu tauschen, drücken Sie den Action Knopf (\'Enter\') auf dem Keyboard (rechts unten).
+    </string>
+
 
     <string name="dialog_article_summary_extractors_add_extractor">Hinzufügen</string>
 

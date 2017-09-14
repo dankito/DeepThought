@@ -80,6 +80,8 @@ class TableConfig {
         const val LocalSettingsDidShowListItemActionsHelpColumnName = "did_show_list_item_actions_help"
         const val LocalSettingsDidShowSearchTagsHelpColumnName = "did_show_search_tags_help"
         const val LocalSettingsDidShowSetTagsOnEntryHelpColumnName = "did_show_set_tags_on_entry_help"
+        const val LocalSettingsCountTagSearchesColumnName = "count_tag_searches"
+        const val LocalSettingsCountTagsOnEntrySearchesColumnName = "count_tags_on_entry_searches"
 
 
         /*          Entry Table Config        */

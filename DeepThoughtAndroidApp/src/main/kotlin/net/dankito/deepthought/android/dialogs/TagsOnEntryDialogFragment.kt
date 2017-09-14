@@ -13,6 +13,7 @@ import android.widget.Button
 import com.google.android.flexbox.FlexboxLayout
 import kotlinx.android.synthetic.main.dialog_tags_on_entry.*
 import kotlinx.android.synthetic.main.dialog_tags_on_entry.view.*
+import kotlinx.android.synthetic.main.layout_context_help.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.TagsOnEntryRecyclerAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
@@ -165,6 +166,19 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
     }
 
 
+    protected fun showContextHelpOnUiThread(helpTextResourceId: Int) {
+        showContextHelpOnUiThread(context.getString(helpTextResourceId))
+    }
+
+    protected fun showContextHelpOnUiThread(helpText: String) {
+        txtContextHelpText.text = helpText
+
+        lytContextHelp.visibility = View.VISIBLE
+
+        btnDismissContextHelp.setOnClickListener { lytContextHelp.visibility = View.GONE }
+    }
+
+
     private fun deleteTag(tag: Tag) {
         if(adapter.tagsOnEntry.contains(tag)) {
             adapter.tagsOnEntry.remove(tag)
@@ -180,6 +194,23 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
 
     private fun searchTags(searchTerm: String) {
         presenter.searchTags(searchTerm)
+
+        if(searchTerm != Search.EmptySearchTerm) { // in setupUI() - when view aren't set yet for showContextHelpOnUiThread() - searchTags() is called with an empty search term -> avoid that showContextHelpOnUiThread() gets called
+            activity?.runOnUiThread { checkIfContextHelpSetTagsOnEntryHasBeenShownToUserOnUiThread() }
+        }
+    }
+
+    private fun checkIfContextHelpSetTagsOnEntryHasBeenShownToUserOnUiThread() {
+        val dataManager = tagService.dataManager
+        val localSettings = dataManager.localSettings
+        localSettings.countTagsOnEntrySearches++
+
+        if(localSettings.countTagsOnEntrySearches >= 30 && localSettings.didShowSetTagsOnEntryHelp == false) {
+            localSettings.didShowSetTagsOnEntryHelp = true
+            showContextHelpOnUiThread(R.string.context_help_set_tags_on_entry)
+        }
+
+        dataManager.localSettingsUpdated()
     }
 
 
