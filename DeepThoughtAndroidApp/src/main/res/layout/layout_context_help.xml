@@ -35,7 +35,6 @@
         android:layout_centerVertical="true"
         android:textColor="@color/context_help_text_color"
         android:lineSpacingExtra="@dimen/view_context_help_text_line_spacing"
-        android:text="@string/context_help_list_item_actions"
     />
 
     <Button
