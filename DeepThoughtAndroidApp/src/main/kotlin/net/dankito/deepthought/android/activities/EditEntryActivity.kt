@@ -269,6 +269,9 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setupEntryContentView() {
+        lytOnboardingText.setOnClickListener { editContent() }
+        txtEntryContentLabel.setOnClickListener { editContent() }
+
         wbEntry.setOnSystemUiVisibilityChangeListener { flags -> systemUiVisibilityChanged(flags) }
         wbEntry.changeFullScreenModeListener = { mode -> handleChangeFullScreenModeEvent(mode) }
 
@@ -376,7 +379,7 @@ class EditEntryActivity : BaseActivity() {
     private fun setOnboardingTextVisibilityOnUIThread() {
         if(contentToEdit.isNullOrBlank() && (entryExtractionResult == null || entryExtractionResult?.couldExtractContent == true)) {
             wbEntry.visibility = View.GONE
-            txtOnboardingText.visibility = View.VISIBLE
+            lytOnboardingText.visibility = View.VISIBLE
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(R.string.activity_edit_entry_edit_content_onboarding_text).toString(), Html.FROM_HTML_MODE_LEGACY)
@@ -384,12 +387,10 @@ class EditEntryActivity : BaseActivity() {
             else {
                 txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(R.string.activity_edit_entry_edit_content_onboarding_text).toString())
             }
-
-            txtOnboardingText.setOnClickListener { editContent() }
         }
         else {
             wbEntry.visibility = View.VISIBLE
-            txtOnboardingText.visibility = View.GONE
+            lytOnboardingText.visibility = View.GONE
         }
     }
 
