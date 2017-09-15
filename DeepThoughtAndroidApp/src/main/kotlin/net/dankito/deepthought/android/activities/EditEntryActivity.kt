@@ -350,6 +350,9 @@ class EditEntryActivity : BaseActivity() {
         wbEntry.removeJavascriptInterface(GetHtmlCodeFromWebViewJavaScriptInterfaceName)
 
         mnToggleReaderMode?.isVisible = extractionResult.couldExtractContent
+
+        editEntryExtractionResult(extractionResult, false) // updates reference and abstract, but avoids that extracted content gets shown (this is important according to our
+        // lawyer, user must click on toggleReaderMode menu first)
     }
 
 
@@ -1006,19 +1009,21 @@ class EditEntryActivity : BaseActivity() {
         editEntryExtractionResult(extractionResult)
     }
 
-    private fun editEntryExtractionResult(extractionResult: EntryExtractionResult) {
+    private fun editEntryExtractionResult(extractionResult: EntryExtractionResult, updateContentPreview: Boolean = true) {
         this.entryExtractionResult = extractionResult
         canEntryBeSaved = true
 
-        editEntry(entryExtractionResult?.entry, entryExtractionResult?.reference, entryExtractionResult?.tags)
+        editEntry(entryExtractionResult?.entry, entryExtractionResult?.reference, entryExtractionResult?.tags, updateContentPreview)
     }
 
-    private fun editEntry(entry: Entry?, reference: Reference?, tags: Collection<Tag>?) {
+    private fun editEntry(entry: Entry?, reference: Reference?, tags: Collection<Tag>?, updateContentPreview: Boolean = true) {
         contentToEdit = entry?.content
         abstractToEdit = entry?.abstractString
         referenceToEdit = reference
 
-        setContentPreviewOnUIThread(reference)
+        if(updateContentPreview) {
+            setContentPreviewOnUIThread(reference)
+        }
 
         setAbstractPreviewOnUIThread()
 
