@@ -16,6 +16,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.activity_edit_entry.*
+import kotlinx.android.synthetic.main.view_floating_action_button_entry_fields.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditEntryActivityResult
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
@@ -246,7 +247,16 @@ class EditEntryActivity : BaseActivity() {
         btnClearEntryReference.setOnClickListener { referenceCleared() }
         lytTagsPreview.setOnClickListener { editTagsOnEntry() }
 
+        fabEditEntryTags.setOnClickListener { executeActionAndCloseFloatingActionMenu { editTagsOnEntry() } }
+        fabEditEntryReference.setOnClickListener { executeActionAndCloseFloatingActionMenu { editReference() } }
+        fabEditEntryAbstract.setOnClickListener { executeActionAndCloseFloatingActionMenu { editAbstract() } }
+
         setupEntryContentView()
+    }
+
+    private fun executeActionAndCloseFloatingActionMenu(action: (() -> Unit)) {
+        action.invoke()
+        fabEntryFieldsMenu.close(true)
     }
 
     private fun referenceCleared() {
@@ -500,6 +510,10 @@ class EditEntryActivity : BaseActivity() {
 
     private fun setAbstractPreviewOnUIThread() {
         abstractToEdit?.let { lytAbstractPreview.setFieldOnUIThread(getString(R.string.activity_edit_entry_abstract_label), it.getPlainTextForHtml()) }
+
+        lytAbstractPreview.visibility = if(abstractToEdit.isNullOrBlank()) View.GONE else View.VISIBLE
+        fabEditEntryAbstract.visibility = if(abstractToEdit.isNullOrBlank()) View.VISIBLE else View.GONE
+        setFloatingActionButtonVisibilityOnUIThread()
     }
 
     private fun setReferencePreviewOnUIThread() {
@@ -509,6 +523,10 @@ class EditEntryActivity : BaseActivity() {
             lytReferencePreview.setFieldOnUIThread(getString(R.string.activity_edit_entry_reference_label), "")
         }
 
+        lytReferencePreview.visibility = if(referenceToEdit == null) View.GONE else View.VISIBLE
+        fabEditEntryReference.visibility = if(referenceToEdit == null) View.VISIBLE else View.GONE
+        setFloatingActionButtonVisibilityOnUIThread()
+
         btnClearEntryReference.visibility = if(referenceToEdit == null) View.GONE else View.VISIBLE
         mnShareEntry?.isVisible = referenceToEdit?.url.isNullOrBlank() == false
     }
@@ -516,6 +534,19 @@ class EditEntryActivity : BaseActivity() {
     private fun setTagsOnEntryPreviewOnUIThread() {
         val tagsPreview = tagsOnEntry.filterNotNull().sortedBy { it.name.toLowerCase() }.joinToString { it.name }
         lytTagsPreview.setFieldOnUIThread(getString(R.string.activity_edit_entry_tags_label), tagsPreview)
+
+        lytTagsPreview.visibility = if(tagsOnEntry.filterNotNull().isEmpty()) View.GONE else View.VISIBLE
+        fabEditEntryTags.visibility = if(tagsOnEntry.filterNotNull().isEmpty()) View.VISIBLE else View.GONE
+        setFloatingActionButtonVisibilityOnUIThread()
+    }
+
+    private fun setFloatingActionButtonVisibilityOnUIThread() {
+        if(fabEditEntryTags.visibility != View.GONE || fabEditEntryReference.visibility != View.GONE || fabEditEntryAbstract.visibility != View.GONE) {
+            fabEntryFieldsMenu.visibility = View.VISIBLE
+        }
+        else {
+            fabEntryFieldsMenu.visibility = View.GONE
+        }
     }
 
 
@@ -579,6 +610,7 @@ class EditEntryActivity : BaseActivity() {
         lytReferencePreview.visibility = View.VISIBLE
         lytTagsPreview.visibility = View.VISIBLE
         txtEntryContentLabel.visibility = View.VISIBLE
+        fabEntryFieldsMenu.visibility = View.VISIBLE
         appBarLayout.visibility = View.VISIBLE
 
         val layoutParams = wbEntry.layoutParams as RelativeLayout.LayoutParams
@@ -595,6 +627,7 @@ class EditEntryActivity : BaseActivity() {
         lytReferencePreview.visibility = View.GONE
         lytTagsPreview.visibility = View.GONE
         txtEntryContentLabel.visibility = View.GONE
+        fabEntryFieldsMenu.visibility = View.GONE
         appBarLayout.visibility = View.GONE
 
         val layoutParams = wbEntry.layoutParams as RelativeLayout.LayoutParams
