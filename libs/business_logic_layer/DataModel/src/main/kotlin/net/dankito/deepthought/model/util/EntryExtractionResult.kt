@@ -15,10 +15,25 @@ data class EntryExtractionResult(var entry: Entry, var reference: Reference? = n
 
 
     fun setExtractedContent(entry: Entry, reference: Reference?) {
+        val previousEntry = this.entry
+        val previousReference = this.reference
+
         this.entry = entry
         reference?.let { this.reference = it }
 
+        copyInfoFromPreviousEntryAndReference(entry, previousEntry, reference, previousReference)
+
         this.couldExtractContent = true
+    }
+
+    private fun copyInfoFromPreviousEntryAndReference(entry: Entry, previousEntry: Entry, reference: Reference?, previousReference: Reference?) {
+        if (entry.abstractString.isNullOrBlank() && previousEntry != null) {
+            entry.abstractString = previousEntry.abstractString
+        }
+
+        if (reference != null && reference.previewImageUrl == null && previousReference?.previewImageUrl != null) {
+            reference.previewImageUrl = previousReference?.previewImageUrl
+        }
     }
 
 }
