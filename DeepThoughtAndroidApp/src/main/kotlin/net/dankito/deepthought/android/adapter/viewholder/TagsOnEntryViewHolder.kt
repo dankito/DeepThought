@@ -6,6 +6,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.list_item_tag_on_entry.view.*
+import java.util.*
 
 
 class TagsOnEntryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -17,5 +18,7 @@ class TagsOnEntryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
     val btnEditTag: ImageButton = itemView.btnEditTag
 
     val btnDeleteTag: ImageButton = itemView.btnDeleteTag
+
+    var lastItemSwipeTime: Date? = null
 
 }

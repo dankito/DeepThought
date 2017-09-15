@@ -6,12 +6,14 @@ import android.support.v4.graphics.drawable.DrawableCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.daimajia.swipe.SwipeLayout
 import kotlinx.android.synthetic.main.list_item_tag_on_entry.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.TagsOnEntryViewHolder
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.presenter.TagsOnEntryListPresenter
 import net.dankito.deepthought.ui.tags.TagSearchResultState
+import java.util.*
 
 
 class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter, val listener: (MutableList<Tag>) -> Unit) : ListRecyclerSwipeAdapter<Tag, TagsOnEntryViewHolder>() {
@@ -30,6 +32,8 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
         setIconTintList(itemView)
 
         val viewHolder = TagsOnEntryViewHolder(itemView)
+
+        (itemView as? SwipeLayout)?.addRevealListener(itemView.id) { _, _, _, _ -> viewHolder.lastItemSwipeTime = Date() }
 
         viewHolderCreated(viewHolder)
         return viewHolder
@@ -65,7 +69,7 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
 
         setBackgroundColor(viewHolder.itemView, item)
 
-        viewHolder.itemView.setOnClickListener { toggleTagOnEntryOnUIThread(viewHolder.adapterPosition) }
+        viewHolder.itemView.setOnClickListener { itemClicked(viewHolder, item) }
     }
 
     override fun setupSwipeView(viewHolder: TagsOnEntryViewHolder, item: Tag) {
@@ -81,9 +85,17 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
     }
 
 
-    private fun toggleTagOnEntryOnUIThread(position: Int) {
-        val tag = getItem(position)
+    private fun itemClicked(viewHolder: TagsOnEntryViewHolder, tag: Tag) {
+        val lastSwipeTime = viewHolder.lastItemSwipeTime
 
+        // a swipe on an item also triggers onClickListener -> filter out swipes before calling toggleTagOnEntryOnUIThread() as otherwise swipe layout would get closed
+        // immediately again -> wouldn't be possible to activate list item actions anymore
+        if(lastSwipeTime == null || Date().time - lastSwipeTime.time > 200) {
+            toggleTagOnEntryOnUIThread(tag)
+        }
+    }
+
+    private fun toggleTagOnEntryOnUIThread(tag: Tag) {
         if(tagsOnEntry.contains(tag)) {
             tagsOnEntry.remove(tag)
         }
