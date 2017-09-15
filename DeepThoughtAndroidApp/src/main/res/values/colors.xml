@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Oliver's green based design -->
     <color name="colorPrimary">#359e7d</color>
     <color name="colorPrimaryDark">#22685d</color>
     <color name="colorAccent">#078176</color>
+
+    <!-- blue / orange -->
+    <!--<color name="colorPrimary">#0D47A1</color> &lt;!&ndash; Material Design Color Code: Blue 900 &ndash;&gt;-->
+    <!--<color name="colorPrimaryDark">#1A237E</color> &lt;!&ndash; Material Design Color Code: Indigo 900 &ndash;&gt;-->
+    <!--<color name="colorAccent">#FF9100</color> &lt;!&ndash; Material Design Color Code: Orange A400 &ndash;&gt;-->
 
     <color name="colorPrimaryGradientStart">#078176</color>
     <color name="colorPrimaryGradientEnd">#309c7c</color>

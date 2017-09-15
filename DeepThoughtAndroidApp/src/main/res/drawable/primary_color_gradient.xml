@@ -7,6 +7,9 @@
                 android:startColor="@color/colorPrimaryGradientStart"
                 android:endColor="@color/colorPrimaryGradientEnd"
                 android:type="linear" />
+            <!--<solid-->
+                <!--android:color="@color/colorPrimary"-->
+                <!--/>-->
         </shape>
     </item>
 
