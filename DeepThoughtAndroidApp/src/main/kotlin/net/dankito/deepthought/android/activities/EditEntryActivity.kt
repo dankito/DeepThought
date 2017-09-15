@@ -540,7 +540,7 @@ class EditEntryActivity : BaseActivity() {
         lytTagsPreview.setFieldOnUIThread(getString(R.string.activity_edit_entry_tags_label), tagsPreview)
 
         lytTagsPreview.visibility = if(tagsOnEntry.filterNotNull().isEmpty()) View.GONE else View.VISIBLE
-        fabEditEntryTags.visibility = if(tagsOnEntry.filterNotNull().isEmpty()) View.VISIBLE else View.GONE
+        fabEditEntryTags.visibility = if(tagsOnEntry.filterNotNull().isEmpty() == false) View.GONE else if(fabEntryFieldsMenu.isOpened) View.VISIBLE else View.INVISIBLE
         setFloatingActionButtonVisibilityOnUIThread()
     }
 
