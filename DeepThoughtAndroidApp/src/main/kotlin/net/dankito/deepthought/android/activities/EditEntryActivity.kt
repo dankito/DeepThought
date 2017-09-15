@@ -1031,9 +1031,9 @@ class EditEntryActivity : BaseActivity() {
 
         tags?.let {
             tagsOnEntry.addAll(tags)
-
-            setTagsOnEntryPreviewOnUIThread()
         }
+
+        setTagsOnEntryPreviewOnUIThread()
 
         mayRegisterEventBusListener()
     }
