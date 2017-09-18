@@ -96,7 +96,7 @@
     <style name="EntryFieldName">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">#AAAAAA</item>
+        <item name="android:textColor">#b8b8b8</item>
     </style>
 
     <style name="EntryFieldValue">
@@ -113,6 +113,7 @@
         <item name="android:layout_marginLeft">@dimen/chevron_right_margin_left</item>
         <item name="android:layout_marginStart">@dimen/chevron_right_margin_left</item>
         <item name="android:textSize">@dimen/chevron_right_text_size</item>
+        <!-- according to design actually colorPrimary should be used-->
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:text">❯</item>
     </style>

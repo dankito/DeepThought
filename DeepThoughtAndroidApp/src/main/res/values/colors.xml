@@ -12,6 +12,7 @@
     <!--<color name="colorAccent">#FF9100</color> &lt;!&ndash; Material Design Color Code: Orange A400 &ndash;&gt;-->
 
     <color name="colorPrimaryGradientStart">#078176</color>
+    <!-- according to design actually #319B7C should be used -->
     <color name="colorPrimaryGradientEnd">#309c7c</color>
 
     <color name="toolbar_background_color">@color/colorPrimary</color>
