@@ -14,43 +14,43 @@
         android:layout_above="@+id/toolbar"
     >
 
-        <TextView
-            android:id="@+id/txtvwEntryTagsPreviewLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignTop="@+id/lytTagsPreview"
-            android:layout_alignBottom="@+id/lytTagsPreview"
-            android:layout_marginLeft="@dimen/dialog_tags_on_entry_tag_preview_label_margin_left_right"
-            android:layout_marginRight="@dimen/dialog_tags_on_entry_tag_preview_label_margin_left_right"
-            android:textSize="@dimen/dialog_tags_on_entry_tag_preview_text_size"
-            android:text="@string/dialog_tags_on_entry_tags_label"
-        />
-
-        <com.google.android.flexbox.FlexboxLayout
-            android:id="@+id/lytTagsPreview"
+        <LinearLayout
+            android:id="@+id/lytentryTagsPreview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_toRightOf="@+id/txtvwEntryTagsPreviewLabel"
-            android:layout_toEndOf="@+id/txtvwEntryTagsPreviewLabel"
-            app:flexWrap="wrap"
-            app:flexDirection="row"
-            app:alignItems="flex_start"
-            app:alignContent="flex_start"
-            app:justifyContent="flex_start"
-            app:showDivider="middle"
-            app:dividerDrawable="@drawable/flexbox_tags_on_entry_divider"
-        />
+            android:minHeight="@dimen/dialog_tags_on_entry_tag_preview_min_height"
+        >
+
+            <TextView
+                android:id="@+id/txtvwEntryTagsPreviewLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dialog_tags_on_entry_tag_preview_label_margin_left_right"
+                android:layout_marginRight="@dimen/dialog_tags_on_entry_tag_preview_label_margin_left_right"
+                android:textSize="@dimen/dialog_tags_on_entry_tag_preview_text_size"
+                android:text="@string/dialog_tags_on_entry_tags_label"
+            />
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/lytTagsPreview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:flexWrap="wrap"
+                app:flexDirection="row"
+                app:alignItems="flex_start"
+                app:alignContent="flex_start"
+                app:justifyContent="flex_start"
+                app:showDivider="middle"
+                app:dividerDrawable="@drawable/flexbox_tags_on_entry_divider"
+            />
+
+        </LinearLayout>
 
         <EditText
             android:id="@+id/edtxtEditEntrySearchTag"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dialog_tags_on_entry_tag_search_tags_height"
-            android:layout_below="@+id/lytTagsPreview"
+            android:layout_below="@+id/lytentryTagsPreview"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_toLeftOf="@+id/btnEditEntryCreateOrToggleTags"
@@ -68,6 +68,7 @@
             android:minWidth="@dimen/dialog_tags_on_entry_tag_search_tags_button_min_width"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/edtxtEditEntrySearchTag"
             android:layout_alignBottom="@+id/edtxtEditEntrySearchTag"
             android:textSize="@dimen/dialog_tags_on_entry_tag_search_tags_text_size"
             android:text="@string/dialog_tags_on_entry_create_tag"
