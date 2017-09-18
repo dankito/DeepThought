@@ -104,6 +104,7 @@
     <string name="activity_edit_entry_edit_abstract_title">Abstract</string>
     <string name="activity_edit_entry_reference_label">Reference</string>
     <string name="activity_edit_entry_tags_label">Tags</string>
+    <string name="activity_edit_entry_tags_onboarding_text">Add meaningful tags, so that you can find it later easily</string>
     <string name="activity_edit_entry_alert_message_entry_contains_unsaved_changes">Entry contains unsaved changes.\n\nShould these changes now be saved?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
     <string name="activity_edit_entry_alert_message_entry_has_been_edited">Entry has been edited (probably on a synchronized device).\n\nWhen

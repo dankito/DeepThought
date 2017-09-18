@@ -539,8 +539,13 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setTagsOnEntryPreviewOnUIThread() {
-        val tagsPreview = tagsOnEntry.filterNotNull().sortedBy { it.name.toLowerCase() }.joinToString { it.name }
-        lytTagsPreview.setFieldValueOnUiThread(tagsPreview)
+        if(tagsOnEntry.filterNotNull().isEmpty()) {
+            lytTagsPreview.setOnboardingTextOnUiThread(R.string.activity_edit_entry_tags_onboarding_text)
+        }
+        else {
+            val tagsPreview = tagsOnEntry.filterNotNull().sortedBy { it.name.toLowerCase() }.joinToString { it.name }
+            lytTagsPreview.setFieldValueOnUiThread(tagsPreview)
+        }
     }
 
     private fun setFloatingActionButtonVisibilityOnUIThread() {
