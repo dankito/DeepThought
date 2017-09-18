@@ -51,14 +51,14 @@ class EntryFieldPreview : LinearLayout {
         txtEntryFieldValue.text = fieldValue
 
         txtEntryFieldValue.setTypeface(null, Typeface.NORMAL)
-        txtEntryFieldValue.setTextColorToColorResource(R.color.entry_field_value_text_color)
+        txtEntryFieldValue.setTextColorToColorResource(R.color.entity_field_value_text_color)
     }
 
     fun setOnboardingTextOnUiThread(onboardingTextResourceId: Int) {
         txtEntryFieldValue.text = context.getString(onboardingTextResourceId)
 
         txtEntryFieldValue.setTypeface(null, Typeface.ITALIC)
-        txtEntryFieldValue.setTextColorToColorResource(R.color.entry_field_onboarding_text_color)
+        txtEntryFieldValue.setTextColorToColorResource(R.color.entity_field_onboarding_text_color)
     }
 
 

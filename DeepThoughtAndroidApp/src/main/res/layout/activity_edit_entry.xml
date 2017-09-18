@@ -57,7 +57,7 @@
             android:layout_marginRight="@dimen/activity_edit_entry_field_margin_right"
             android:layout_marginEnd="@dimen/activity_edit_entry_field_margin_right"
             android:layout_marginBottom="@dimen/activity_edit_entry_content_label_margin_bottom"
-            style="@style/EntryFieldName"
+            style="@style/EntityFieldName"
             android:textAlignment="center"
             android:text="@string/activity_edit_entry_content_label"
         />

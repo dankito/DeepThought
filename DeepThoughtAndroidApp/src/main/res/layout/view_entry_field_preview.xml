@@ -14,12 +14,12 @@
     android:paddingRight="@dimen/activity_edit_entry_field_padding_left_right"
     android:paddingEnd="@dimen/activity_edit_entry_field_padding_left_right"
     android:paddingBottom="@dimen/activity_edit_entry_field_padding_bottom"
-    android:background="@color/entry_field_background_color"
+    android:background="@color/entity_field_background_color"
 >
 
     <TextView
         android:id="@+id/txtEntryFieldName"
-        style="@style/EntryFieldName"
+        style="@style/EntityFieldName"
     />
 
     <TextView
@@ -30,14 +30,14 @@
         android:layout_marginBottom="@dimen/activity_edit_entry_field_name_margin_bottom"
         android:maxLines="2"
         android:ellipsize="end"
-        style="@style/EntryFieldValue"
+        style="@style/EntityFieldValue"
     />
 
     <View
         android:id="@+id/vwEntryFieldDivider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/activity_edit_entry_field_divider_thickness"
-        android:background="@color/entry_field_divider_color"
+        android:background="@color/entity_field_divider_color"
     />
 
 </LinearLayout>
