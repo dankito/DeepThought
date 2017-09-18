@@ -22,6 +22,7 @@
 
     <color name="black_semi_transparent">#B2000000</color>
 
+    <color name="default_text_color">#000000</color>
     <color name="unselected_item_text_color">#000000</color>
 
     <color name="list_item_default_background">@android:color/background_light</color>
