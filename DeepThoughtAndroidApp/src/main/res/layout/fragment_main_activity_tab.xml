@@ -11,14 +11,33 @@
          android:id="@+id/lytContextHelp"
     />
 
+    <net.dankito.deepthought.android.views.FullScreenRecyclerView
+        android:id="@+id/rcyEntities"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        android:layout_weight="0"
+        android:longClickable="true"
+    />
+
     <LinearLayout
         android:id="@+id/lytFilteredEntities"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/fragment_tab_entries_filtered_entities_margin_bottom"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/fragment_tab_entries_filtered_entities_margin_top"
+        android:layout_weight="1"
+        android:gravity="bottom"
         android:visibility="gone"
     >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Header1Style"
+            android:layout_marginBottom="6dp"
+            android:text="@string/fragment_main_activity_tabs_filtered_entities_label"
+        />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rcyFilteredEntities"
@@ -27,27 +46,13 @@
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         />
 
-        <View
-            android:id="@+id/vwEntryFieldDivider"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/fragment_tab_entries_filtered_entities_divider_height"
-            android:background="@color/entry_field_divider_color"
-        />
-
     </LinearLayout>
-
-    <net.dankito.deepthought.android.views.FullScreenRecyclerView
-        android:id="@+id/rcyEntities"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-        android:longClickable="true"
-    />
 
     <RelativeLayout
         android:id="@+id/lytOnboardingText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
     >
 
         <TextView

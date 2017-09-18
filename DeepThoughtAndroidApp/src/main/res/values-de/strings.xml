@@ -35,6 +35,8 @@
     <string name="search_hint_references">Quellen finden</string>
     <string name="search_hint_read_later_articles">Artikel zum später Lesen finden</string>
 
+    <string name="fragment_main_activity_tabs_filtered_entities_label">Gefiltert:</string>
+
     <string name="tab_entries_onboarding_text"><![CDATA[
         <p>To add a new entry, press the + button at the bottom right corner and select \'Entry\'.</p>
         <p>To add a newspaper article, press the + button at the bottom right corner, select \'Newspaper Article\' and enter the url of a newspaper site or a RSS feed url.</p>

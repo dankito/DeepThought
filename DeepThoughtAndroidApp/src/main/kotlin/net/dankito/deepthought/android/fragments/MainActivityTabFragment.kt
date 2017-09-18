@@ -238,7 +238,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
         recyclerView?.visibility = View.GONE
 
         txtOnboardingText?.let { txtOnboardingText ->
-            txtOnboardingText.visibility = View.VISIBLE
+            lytOnboardingText.visibility = View.VISIBLE
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(onboardingTextResourceId).toString(), Html.FROM_HTML_MODE_LEGACY)
@@ -255,7 +255,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
         recyclerView?.visibility = View.VISIBLE
         
         txtOnboardingText?.let { txtOnboardingText ->
-            txtOnboardingText.visibility = View.GONE
+            lytOnboardingText.visibility = View.GONE
         }
 
         searchMenuItem?.isVisible = true
