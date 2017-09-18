@@ -41,9 +41,11 @@ class EntryFieldPreview : LinearLayout {
     }
 
 
-    fun setFieldOnUIThread(fieldName: String, fieldValue: String) {
+    fun setFieldNameOnUiThread(fieldName: String) {
         txtEntryFieldName.text = fieldName
+    }
 
+    fun setFieldValueOnUiThread(fieldValue: String) {
         txtEntryFieldValue.text = fieldValue
     }
 

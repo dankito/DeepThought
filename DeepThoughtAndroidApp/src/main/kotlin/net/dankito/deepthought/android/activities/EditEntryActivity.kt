@@ -242,6 +242,10 @@ class EditEntryActivity : BaseActivity() {
             actionBar.setDisplayShowHomeEnabled(true)
         }
 
+        lytAbstractPreview.setFieldNameOnUiThread(getString(R.string.activity_edit_entry_abstract_label))
+        lytReferencePreview.setFieldNameOnUiThread(getString(R.string.activity_edit_entry_reference_label))
+        lytTagsPreview.setFieldNameOnUiThread(getString(R.string.activity_edit_entry_tags_label))
+
         lytAbstractPreview.setOnClickListener { editAbstract() }
         lytReferencePreview.setOnClickListener { editReference() }
         btnClearEntryReference.setOnClickListener { referenceCleared() }
@@ -512,7 +516,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setAbstractPreviewOnUIThread() {
-        abstractToEdit?.let { lytAbstractPreview.setFieldOnUIThread(getString(R.string.activity_edit_entry_abstract_label), it.getPlainTextForHtml()) }
+        abstractToEdit?.let { lytAbstractPreview.setFieldValueOnUiThread(it.getPlainTextForHtml()) }
 
         lytAbstractPreview.visibility = if(abstractToEdit.isNullOrBlank()) View.GONE else View.VISIBLE
         fabEditEntryAbstract.visibility = if(abstractToEdit.isNullOrBlank()) View.VISIBLE else View.GONE
@@ -520,10 +524,10 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setReferencePreviewOnUIThread() {
-        referenceToEdit?.let { lytReferencePreview.setFieldOnUIThread(getString(R.string.activity_edit_entry_reference_label), it.previewWithSeriesAndPublishingDate) }
+        referenceToEdit?.let { lytReferencePreview.setFieldValueOnUiThread(it.previewWithSeriesAndPublishingDate) }
 
         if(referenceToEdit == null) {
-            lytReferencePreview.setFieldOnUIThread(getString(R.string.activity_edit_entry_reference_label), "")
+            lytReferencePreview.setFieldValueOnUiThread("")
         }
 
         lytReferencePreview.visibility = if(referenceToEdit == null) View.GONE else View.VISIBLE
@@ -536,7 +540,7 @@ class EditEntryActivity : BaseActivity() {
 
     private fun setTagsOnEntryPreviewOnUIThread() {
         val tagsPreview = tagsOnEntry.filterNotNull().sortedBy { it.name.toLowerCase() }.joinToString { it.name }
-        lytTagsPreview.setFieldOnUIThread(getString(R.string.activity_edit_entry_tags_label), tagsPreview)
+        lytTagsPreview.setFieldValueOnUiThread(tagsPreview)
     }
 
     private fun setFloatingActionButtonVisibilityOnUIThread() {
