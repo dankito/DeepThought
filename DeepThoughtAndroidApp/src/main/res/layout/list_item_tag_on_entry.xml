@@ -70,7 +70,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:gravity="start|center_vertical"
-            android:textColor="@color/is_entity_selected_text_color"
+            android:textColor="@color/tag_on_entry_text_color"
         />
 
     </RelativeLayout>
