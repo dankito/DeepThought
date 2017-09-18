@@ -2,6 +2,7 @@ package net.dankito.deepthought.android.dialogs
 
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import kotlinx.android.synthetic.main.dialog_article_summary_extractors.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorsAdapter
 import net.dankito.deepthought.android.di.AppComponent
@@ -50,12 +51,8 @@ class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
     }
 
     private fun showArticleSummaryExtractorsDialog() {
-        var builder = AlertDialog.Builder(activity)
-        builder = builder.setAdapter(adapter, { dialog, which ->
-            val selectedExtractor = adapter.getItem(which)
-            showSelectedSummaryExtractor(selectedExtractor)
-            dialog.dismiss()
-        })
+        val builder = AlertDialog.Builder(activity)
+        builder.setView(R.layout.dialog_article_summary_extractors)
 
         builder.setNegativeButton(android.R.string.cancel, { dialog, _ -> dialog.dismiss() })
 
@@ -69,15 +66,17 @@ class ArticleSummaryExtractorsDialog(private val activity: AppCompatActivity) {
         val dialog = builder.create()
         dialog.show()
 
-        enableEditingExtractorConfig(dialog)
+        setupAdapter(dialog)
     }
 
-    private fun enableEditingExtractorConfig(dialog: AlertDialog) {
-        dialog.listView.setOnItemLongClickListener { _, _, position, _ ->
-            val extractorConfig = adapter.getItem(position)
-            ArticleSummaryExtractorConfigDialog().editConfiguration(activity, extractorConfig) { }
-            true
+    private fun setupAdapter(dialog: AlertDialog) {
+        dialog.rcyArticleSummaryExtractors.adapter = adapter
+        adapter.itemClickListener = { item ->
+            showSelectedSummaryExtractor(item)
+            dialog.dismiss()
         }
+
+        adapter.itemLongClickListener = { item -> ArticleSummaryExtractorConfigDialog().editConfiguration(activity, item) { } }
     }
 
 

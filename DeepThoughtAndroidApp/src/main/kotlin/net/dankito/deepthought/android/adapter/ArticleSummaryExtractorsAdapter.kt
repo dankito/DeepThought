@@ -7,9 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import kotlinx.android.synthetic.main.list_item_article_summary_extractor.view.*
 import net.dankito.deepthought.android.R
+import net.dankito.deepthought.android.adapter.viewholder.ArticleSummaryExtractorViewHolder
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorConfigDialog
 import net.dankito.deepthought.android.service.utils.BitmapCache
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
@@ -18,7 +19,7 @@ import javax.inject.Inject
 
 
 class ArticleSummaryExtractorsAdapter(private val activity: AppCompatActivity, private val summaryExtractorsManager: ArticleSummaryExtractorConfigManager)
-    : ListAdapter<ArticleSummaryExtractorConfig>() {
+    : ListRecyclerSwipeAdapter<ArticleSummaryExtractorConfig, ArticleSummaryExtractorViewHolder>() {
 
 
     @Inject
@@ -36,46 +37,61 @@ class ArticleSummaryExtractorsAdapter(private val activity: AppCompatActivity, p
     }
 
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val extractorConfig = getItem(position)
+    override fun getSwipeLayoutResourceId(position: Int) = R.id.articleSummaryExtractorSwipeLayout
 
-        val view = convertView ?: LayoutInflater.from(parent?.context).inflate(R.layout.list_item_article_summary_extractor, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ArticleSummaryExtractorViewHolder {
+        val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_article_summary_extractor, parent, false)
 
-        showExtractorIcon(view, extractorConfig)
+        val viewHolder = ArticleSummaryExtractorViewHolder(itemView)
 
-        view.txtExtractorName.text = extractorConfig.name
-
-
-        view.chkIsFavorite.setOnCheckedChangeListener(null)
-
-        view.chkIsFavorite.isChecked = extractorConfig.isFavorite
-
-        view.chkIsFavorite.setOnCheckedChangeListener { _, isChecked ->
-            summaryExtractorsManager.setFavoriteStatus(extractorConfig, isChecked)
-        }
-
-
-        view.txtFavoriteIndex.visibility = if(extractorConfig.favoriteIndex != null) View.VISIBLE else View.GONE
-        extractorConfig.favoriteIndex?.let {
-            view.txtFavoriteIndex.text = (it + 1).toString()
-        }
-
-        view.tag = extractorConfig
-
-        return view
+        viewHolderCreated(viewHolder)
+        return viewHolder
     }
 
-    private fun showExtractorIcon(view: View, extractorConfig: ArticleSummaryExtractorConfig) {
-        val imageView = view.imgPreviewImage
 
-        imageView.tag = extractorConfig.iconUrl
-        imageView.setImageBitmap(null)
+    override fun bindItemToView(viewHolder: ArticleSummaryExtractorViewHolder, item: ArticleSummaryExtractorConfig) {
+        showExtractorIcon(viewHolder.imgPreviewImage, item)
+
+        viewHolder.txtExtractorName.text = item.name
+
+
+        viewHolder.chkIsFavorite.setOnCheckedChangeListener(null)
+
+        viewHolder.chkIsFavorite.isChecked = item.isFavorite
+
+        viewHolder.chkIsFavorite.setOnCheckedChangeListener { _, isChecked ->
+            summaryExtractorsManager.setFavoriteStatus(item, isChecked)
+        }
+
+
+        viewHolder.txtFavoriteIndex.visibility = if(item.favoriteIndex != null) View.VISIBLE else View.GONE
+        item.favoriteIndex?.let {
+            viewHolder.txtFavoriteIndex.text = (it + 1).toString()
+        }
+    }
+
+    override fun setupSwipeView(viewHolder: ArticleSummaryExtractorViewHolder, item: ArticleSummaryExtractorConfig) {
+        viewHolder.btnEditArticleSummaryExtractorConfig.setOnClickListener {
+            ArticleSummaryExtractorConfigDialog().editConfiguration(activity, item) { }
+            closeSwipeView(viewHolder)
+        }
+
+        viewHolder.btnDeleteArticleSummaryExtractorConfig.setOnClickListener {
+            summaryExtractorsManager.deleteConfig(item)
+            closeSwipeView(viewHolder)
+        }
+    }
+
+
+    private fun showExtractorIcon(imgPreviewImage: ImageView, extractorConfig: ArticleSummaryExtractorConfig) {
+        imgPreviewImage.tag = extractorConfig.iconUrl
+        imgPreviewImage.setImageBitmap(null)
 
         extractorConfig.iconUrl?.let { iconUrl ->
             bitmapCache.getBitmapForUrlAsync(iconUrl) { result ->
                 result.result?.let { bitmap ->
-                    if(iconUrl == imageView.tag) { // check if icon in imgPreviewImage still for the same iconUrl should be displayed
-                        showIcon(imageView, bitmap)
+                    if(iconUrl == imgPreviewImage.tag) { // check if icon in imgPreviewImage still for the same iconUrl should be displayed
+                        showIcon(imgPreviewImage, bitmap)
                     }
                 }
             }
@@ -98,7 +114,7 @@ class ArticleSummaryExtractorsAdapter(private val activity: AppCompatActivity, p
     }
 
     private fun updateConfigsOnUIThread() {
-        setItems(summaryExtractorsManager.getConfigs())
+        items = summaryExtractorsManager.getConfigs()
     }
 
 }

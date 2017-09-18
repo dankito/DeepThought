@@ -69,6 +69,7 @@
     <dimen name="list_item_article_summary_extractor_is_favorite_star_width">36dp</dimen>
     <dimen name="list_item_article_summary_extractor_is_favorite_margin_right">10dp</dimen>
     <dimen name="list_item_article_summary_extractor_favorite_index_bottom_margin">10dp</dimen>
+    <dimen name="list_item_article_summary_extractor_button_width">70dp</dimen>
 
     <dimen name="list_item_read_later_article_min_height">84dp</dimen>
     <dimen name="list_item_read_later_article_button_width">84dp</dimen>

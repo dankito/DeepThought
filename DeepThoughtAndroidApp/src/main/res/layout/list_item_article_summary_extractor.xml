@@ -1,71 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/list_item_article_summary_extractor_height"
-                android:layout_margin="@dimen/list_item_article_summary_extractor_margin"
-                android:descendantFocusability="blocksDescendants"
+<com.daimajia.swipe.SwipeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/articleSummaryExtractorSwipeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/list_item_article_summary_extractor_height"
+    android:layout_margin="@dimen/list_item_article_summary_extractor_margin"
+    android:descendantFocusability="blocksDescendants"
 >
 
-    <ImageView
-        android:id="@+id/imgPreviewImage"
-        android:layout_width="@dimen/list_item_article_summary_extractor_preview_image_size"
-        android:layout_height="@dimen/list_item_article_summary_extractor_preview_image_size"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/list_item_article_summary_extractor_preview_image_margin_right"
-        android:layout_marginRight="@dimen/list_item_article_summary_extractor_preview_image_margin_right"
-    />
+    <!-- Bottom View Start (the view that gets displayed when the user swipes from right to left. for explanation see https://github.com/daimajia/AndroidSwipeLayout/wiki/usage) -->
 
-    <TextView
-        android:id="@+id/txtExtractorName"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_toRightOf="@+id/imgPreviewImage"
-        android:layout_toEndOf="@+id/imgPreviewImage"
-        android:layout_toLeftOf="@+id/lytIsFavorite"
-        android:layout_toStartOf="@+id/lytIsFavorite"
-        android:gravity="center_vertical"
-        style="@style/TextAppearance.AppCompat.Large"
-    />
-
-
-    <RelativeLayout
-        android:id="@+id/lytIsFavorite"
-        android:layout_width="@dimen/list_item_article_summary_extractor_is_favorite_width"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/list_item_article_summary_extractor_is_favorite_margin_right"
-        android:layout_marginEnd="@dimen/list_item_article_summary_extractor_is_favorite_margin_right"
-        android:descendantFocusability="blocksDescendants"
+        android:orientation="horizontal"
     >
 
-        <!-- First i wanted to use a RatingBar, but then i got the tip to style a CheckBox with a star (but image needs up scaling then): https://stackoverflow.com/questions/8930735/how-to-set-the-favorite-star-icon-to-on-when-clicked-and-off-when-again-clicked -->
+        <ImageButton
+            android:id="@+id/btnEditArticleSummaryExtractorConfig"
+            android:layout_width="@dimen/list_item_article_summary_extractor_button_width"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_mode_edit_white_48dp"
+            android:scaleType="fitCenter"
+        />
 
-        <CheckBox android:id="@+id/chkIsFavorite"
-                  android:layout_width="@dimen/list_item_article_summary_extractor_is_favorite_star_width"
-                  android:layout_height="wrap_content"
-                  android:scaleX="@dimen/list_item_article_summary_extractor_is_favorite_scale"
-                  android:scaleY="@dimen/list_item_article_summary_extractor_is_favorite_scale"
-                  android:layout_alignParentRight="true"
-                  android:layout_alignParentEnd="true"
-                  android:layout_centerVertical="true"
-                  style="?android:attr/starStyle"
+        <ImageButton
+            android:id="@+id/btnDeleteArticleSummaryExtractorConfig"
+            android:layout_width="@dimen/list_item_article_summary_extractor_button_width"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_delete_white_48dp"
+            android:scaleType="fitXY"
+        />
+
+    </LinearLayout>
+
+
+    <!-- Surface View Start (the view that's displayed by default) -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imgPreviewImage"
+            android:layout_width="@dimen/list_item_article_summary_extractor_preview_image_size"
+            android:layout_height="@dimen/list_item_article_summary_extractor_preview_image_size"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/list_item_article_summary_extractor_preview_image_margin_right"
+            android:layout_marginRight="@dimen/list_item_article_summary_extractor_preview_image_margin_right"
         />
 
         <TextView
-            android:id="@+id/txtFavoriteIndex"
+            android:id="@+id/txtExtractorName"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/imgPreviewImage"
+            android:layout_toEndOf="@+id/imgPreviewImage"
+            android:layout_toLeftOf="@+id/lytIsFavorite"
+            android:layout_toStartOf="@+id/lytIsFavorite"
+            android:gravity="center_vertical"
+            style="@style/TextAppearance.AppCompat.Large"
+        />
+
+
+        <RelativeLayout
+            android:id="@+id/lytIsFavorite"
+            android:layout_width="@dimen/list_item_article_summary_extractor_is_favorite_width"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/list_item_article_summary_extractor_favorite_index_bottom_margin"
-            android:visibility="gone"
-        />
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/list_item_article_summary_extractor_is_favorite_margin_right"
+            android:layout_marginEnd="@dimen/list_item_article_summary_extractor_is_favorite_margin_right"
+            android:descendantFocusability="blocksDescendants"
+        >
+
+            <!-- First i wanted to use a RatingBar, but then i got the tip to style a CheckBox with a star (but image needs up scaling then): https://stackoverflow.com/questions/8930735/how-to-set-the-favorite-star-icon-to-on-when-clicked-and-off-when-again-clicked -->
+
+            <CheckBox android:id="@+id/chkIsFavorite"
+                      android:layout_width="@dimen/list_item_article_summary_extractor_is_favorite_star_width"
+                      android:layout_height="wrap_content"
+                      android:scaleX="@dimen/list_item_article_summary_extractor_is_favorite_scale"
+                      android:scaleY="@dimen/list_item_article_summary_extractor_is_favorite_scale"
+                      android:layout_alignParentRight="true"
+                      android:layout_alignParentEnd="true"
+                      android:layout_centerVertical="true"
+                      style="?android:attr/starStyle"
+            />
+
+            <TextView
+                android:id="@+id/txtFavoriteIndex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/list_item_article_summary_extractor_favorite_index_bottom_margin"
+                android:visibility="gone"
+            />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
-</RelativeLayout>
+</com.daimajia.swipe.SwipeLayout>
