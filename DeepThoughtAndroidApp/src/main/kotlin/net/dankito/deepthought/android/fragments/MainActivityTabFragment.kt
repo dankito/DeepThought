@@ -36,6 +36,8 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
 
     protected var recyclerAdapter: MultiSelectListRecyclerSwipeAdapter<T, out RecyclerView.ViewHolder>? = null
 
+    protected var lytOnboardingText: ViewGroup? = null
+
     protected var txtOnboardingText: TextView? = null
 
     private var entitiesToCheckForOnboardingOnViewCreation: List<T>? = null
@@ -75,6 +77,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
         val rootView = inflater?.inflate(R.layout.fragment_main_activity_tab, container, false)
 
         rootView?.let {
+            lytOnboardingText = rootView.lytOnboardingText
             txtOnboardingText = rootView.txtOnboardingText
             setupListView(it)
 
@@ -238,7 +241,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
         recyclerView?.visibility = View.GONE
 
         txtOnboardingText?.let { txtOnboardingText ->
-            lytOnboardingText.visibility = View.VISIBLE
+            lytOnboardingText?.visibility = View.VISIBLE
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(onboardingTextResourceId).toString(), Html.FROM_HTML_MODE_LEGACY)
@@ -253,8 +256,8 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
 
     protected open fun hideOnboardingView() {
         recyclerView?.visibility = View.VISIBLE
-        
-        txtOnboardingText?.let { txtOnboardingText ->
+
+        lytOnboardingText?.let { lytOnboardingText ->
             lytOnboardingText.visibility = View.GONE
         }
 
@@ -322,7 +325,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
         // Associate searchable configuration with the SearchView if available
         this.searchMenuItem = menu.findItem(R.id.search)
 
-        if(txtOnboardingText?.visibility == View.VISIBLE) {
+        if(lytOnboardingText?.visibility == View.VISIBLE) {
             searchMenuItem?.isVisible = false // showOnboardingView() gets called before initSearchView() on app start -> set searchView.visibility here
         }
 
