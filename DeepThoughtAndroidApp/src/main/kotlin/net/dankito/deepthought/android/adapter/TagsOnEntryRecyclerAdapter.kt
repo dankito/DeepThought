@@ -62,8 +62,15 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
         val isAddedToEntry = tagsOnEntry.contains(item)
 
         viewHolder.txtvwTagName.text = item.displayText
-        val textStyle = if(isAddedToEntry) Typeface.BOLD else Typeface.NORMAL
-        viewHolder.txtvwTagName.setTypeface(null, textStyle)
+
+        if(isAddedToEntry) {
+            viewHolder.imgIsTagAddedToEntry.setImageResource(R.drawable.ic_checkmark)
+            viewHolder.txtvwTagName.setTypeface(null, Typeface.BOLD)
+        }
+        else {
+            viewHolder.imgIsTagAddedToEntry.setImageResource(R.drawable.ic_add)
+            viewHolder.txtvwTagName.setTypeface(null, Typeface.NORMAL)
+        }
 
         viewHolder.itemView.isActivated = isAddedToEntry // sets icon's tint and textview's text color
 
@@ -133,6 +140,6 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
         }
     }
 
-    private fun getDefaultBackgroundColor() = R.drawable.list_item_background
+    private fun getDefaultBackgroundColor() = android.R.color.transparent
 
 }

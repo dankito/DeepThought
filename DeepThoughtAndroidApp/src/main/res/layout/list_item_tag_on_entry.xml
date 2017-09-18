@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/list_item_tag_on_entry_icon_margin_right"
             android:layout_marginEnd="@dimen/list_item_tag_on_entry_icon_margin_right"
-            android:src="@drawable/ic_add_circle_outline_white_48dp"
+            android:src="@drawable/ic_add"
         />
 
         <TextView
