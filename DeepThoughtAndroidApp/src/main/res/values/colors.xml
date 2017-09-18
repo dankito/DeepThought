@@ -26,6 +26,8 @@
     <color name="list_item_default_background">@android:color/background_light</color>
     <color name="list_item_selected_background">#d2e8e5</color>
 
+    <color name="tag_added_to_entry">#1fbb68</color>
+
     <color name="disabled_color">#D2D2D2</color>
 
 
