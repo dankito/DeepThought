@@ -2,7 +2,6 @@ package net.dankito.deepthought.android.adapter.viewholder
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,7 +14,7 @@ class ArticleSummaryExtractorViewHolder(itemView: View) : RecyclerView.ViewHolde
 
     val txtExtractorName: TextView = itemView.txtExtractorName
 
-    val chkIsFavorite: CheckBox = itemView.chkIsFavorite
+    val btnIsFavorite: ImageButton = itemView.btnIsFavorite
 
     val txtFavoriteIndex: TextView = itemView.txtFavoriteIndex
 

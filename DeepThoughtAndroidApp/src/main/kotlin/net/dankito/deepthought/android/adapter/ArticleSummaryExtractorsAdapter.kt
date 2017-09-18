@@ -55,13 +55,13 @@ class ArticleSummaryExtractorsAdapter(private val activity: AppCompatActivity, p
         viewHolder.txtExtractorName.text = item.name
 
 
-        viewHolder.chkIsFavorite.setOnCheckedChangeListener(null)
-
-        viewHolder.chkIsFavorite.isChecked = item.isFavorite
-
-        viewHolder.chkIsFavorite.setOnCheckedChangeListener { _, isChecked ->
-            summaryExtractorsManager.setFavoriteStatus(item, isChecked)
+        if(item.isFavorite) {
+            viewHolder.btnIsFavorite.setImageResource(R.drawable.ic_star_white_48dp)
         }
+        else {
+            viewHolder.btnIsFavorite.setImageResource(R.drawable.ic_star_border_white_48dp)
+        }
+        viewHolder.btnIsFavorite.setOnClickListener { summaryExtractorsManager.toggleFavoriteStatus(item) }
 
 
         viewHolder.txtFavoriteIndex.visibility = if(item.favoriteIndex != null) View.VISIBLE else View.GONE

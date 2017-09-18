@@ -61,13 +61,14 @@
     <dimen name="list_item_reference_margin_right">4dp</dimen>
     <dimen name="list_item_reference_series_preview_margin_top">2dp</dimen>
 
-    <dimen name="list_item_article_summary_extractor_height">70dp</dimen>
+    <dimen name="list_item_article_summary_extractor_height">60dp</dimen>
     <dimen name="list_item_article_summary_extractor_margin">4dp</dimen>
-    <dimen name="list_item_article_summary_extractor_preview_image_size">60dp</dimen>
+    <dimen name="list_item_article_summary_extractor_preview_image_size">50dp</dimen>
     <dimen name="list_item_article_summary_extractor_preview_image_margin_right">6dp</dimen>
-    <dimen name="list_item_article_summary_extractor_is_favorite_width">40dp</dimen>
-    <dimen name="list_item_article_summary_extractor_is_favorite_star_width">36dp</dimen>
+    <dimen name="list_item_article_summary_extractor_is_favorite_width">50dp</dimen>
+    <dimen name="list_item_article_summary_extractor_is_favorite_star_width">50dp</dimen>
     <dimen name="list_item_article_summary_extractor_is_favorite_margin_right">10dp</dimen>
+    <dimen name="list_item_article_summary_extractor_favorite_icon_margin_right">10dp</dimen>
     <dimen name="list_item_article_summary_extractor_favorite_index_bottom_margin">10dp</dimen>
     <dimen name="list_item_article_summary_extractor_button_width">70dp</dimen>
 
