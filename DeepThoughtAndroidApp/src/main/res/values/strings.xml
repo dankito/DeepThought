@@ -64,7 +64,7 @@
 
     <string name="activity_edit_entry_edit_content_onboarding_text"><![CDATA[
         <p>Click here to set entry\'s content (the information you actually want to save).</p>
-        <p>(Click on the fields above to edit entry\'s abstract, reference and tags.)</p>
+        <p>(Click on the fields above or the + button at bottom right edge to set entry\'s abstract, reference and tags.)</p>
     ]]>
     </string>
 
