@@ -125,7 +125,7 @@
     <dimen name="list_item_tag_on_entry_added_border_width">6dp</dimen>
     <dimen name="list_item_tag_on_entry_added_border_margin_right">18dp</dimen>
     <dimen name="list_item_tag_on_entry_icon_width">30dp</dimen>
-    <dimen name="list_item_tag_on_entry_icon_margin_right">6dp</dimen>
+    <dimen name="list_item_tag_on_entry_icon_margin_right">12dp</dimen>
     <dimen name="list_item_tag_on_entry_button_width">40dp</dimen>
 
     <dimen name="activity_edit_reference_find_existing_margin_left">6dp</dimen>
