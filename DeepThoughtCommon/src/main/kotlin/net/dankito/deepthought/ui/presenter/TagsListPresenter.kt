@@ -78,6 +78,8 @@ class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: Da
     fun clearTagFilter() {
         tagsFilter.clear()
 
+        tagFilterListener?.invoke(tagsFilter)
+
         searchTags()
     }
 
