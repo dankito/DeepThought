@@ -247,7 +247,6 @@ class EditEntryActivity : BaseActivity() {
         btnClearEntryReference.setOnClickListener { referenceCleared() }
         lytTagsPreview.setOnClickListener { editTagsOnEntry() }
 
-        fabEditEntryTags.setOnClickListener { executeActionAndCloseFloatingActionMenu { editTagsOnEntry() } }
         fabEditEntryReference.setOnClickListener { executeActionAndCloseFloatingActionMenu { editReference() } }
         fabEditEntryAbstract.setOnClickListener { executeActionAndCloseFloatingActionMenu { editAbstract() } }
 
@@ -538,14 +537,10 @@ class EditEntryActivity : BaseActivity() {
     private fun setTagsOnEntryPreviewOnUIThread() {
         val tagsPreview = tagsOnEntry.filterNotNull().sortedBy { it.name.toLowerCase() }.joinToString { it.name }
         lytTagsPreview.setFieldOnUIThread(getString(R.string.activity_edit_entry_tags_label), tagsPreview)
-
-        lytTagsPreview.visibility = if(tagsOnEntry.filterNotNull().isEmpty()) View.GONE else View.VISIBLE
-        fabEditEntryTags.visibility = if(tagsOnEntry.filterNotNull().isEmpty() == false) View.GONE else if(fabEntryFieldsMenu.isOpened) View.VISIBLE else View.INVISIBLE
-        setFloatingActionButtonVisibilityOnUIThread()
     }
 
     private fun setFloatingActionButtonVisibilityOnUIThread() {
-        if(fabEditEntryTags.visibility != View.GONE || fabEditEntryReference.visibility != View.GONE || fabEditEntryAbstract.visibility != View.GONE) {
+        if(fabEditEntryReference.visibility != View.GONE || fabEditEntryAbstract.visibility != View.GONE) {
             fabEntryFieldsMenu.visibility = View.VISIBLE
         }
         else {
