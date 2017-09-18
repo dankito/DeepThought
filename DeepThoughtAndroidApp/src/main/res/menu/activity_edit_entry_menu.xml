@@ -6,7 +6,7 @@
         app:showAsAction="always"
         android:orderInCategory="200"
         android:title="@string/action_toggle_reader_mode"
-        android:icon="@drawable/book"
+        android:icon="@drawable/ic_reader_mode"
         app:actionLayout="@layout/contextual_action_mode_item_action_layout"
         android:visible="false"
     />
