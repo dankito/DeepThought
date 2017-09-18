@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.text.Html
 import android.view.*
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_main_activity_tab.*
@@ -39,6 +40,8 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
     protected var lytOnboardingText: ViewGroup? = null
 
     protected var txtOnboardingText: TextView? = null
+
+    protected var btnClearFilteredEntities: ImageButton? = null
 
     private var entitiesToCheckForOnboardingOnViewCreation: List<T>? = null
 
@@ -73,12 +76,19 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
     abstract fun searchEntities(query: String)
 
 
+    protected open fun clearFilteredEntities() { }
+
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater?.inflate(R.layout.fragment_main_activity_tab, container, false)
 
         rootView?.let {
             lytOnboardingText = rootView.lytOnboardingText
             txtOnboardingText = rootView.txtOnboardingText
+
+            btnClearFilteredEntities = rootView.btnClearFilteredEntities
+            btnClearFilteredEntities?.setOnClickListener { clearFilteredEntities() }
+
             setupListView(it)
 
             setupUI(rootView)

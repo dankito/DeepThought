@@ -79,8 +79,16 @@ class TagsListView : MainActivityTabFragment<Tag>(R.menu.tag_contextual_action_m
         filteredTagsAdapter.items = filteredTags
 
         activity?.runOnUiThread {
-            lytFilteredEntities.visibility = if(presenter.isTagFilterApplied()) View.VISIBLE else View.GONE
+            val visibility = if(presenter.isTagFilterApplied()) View.VISIBLE else View.GONE
+            lytFilteredEntities.visibility = visibility
+            btnClearFilteredEntities?.visibility = visibility
         }
+    }
+
+    override fun clearFilteredEntities() {
+        super.clearFilteredEntities()
+
+        presenter.clearTagFilter()
     }
 
     override fun getListAdapter(): MultiSelectListRecyclerSwipeAdapter<Tag, out RecyclerView.ViewHolder> {
