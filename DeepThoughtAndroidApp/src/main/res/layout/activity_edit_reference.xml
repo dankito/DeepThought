@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginBottom="@dimen/activity_edit_reference_find_existing_controls_margin_bottom"
+            android:padding="@dimen/activity_edit_reference_padding"
             android:visibility="gone"
         >
 
@@ -110,6 +111,7 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/lytSetEntryReferenceControls"
             android:layout_above="@id/toolbar"
+            android:padding="@dimen/activity_edit_reference_padding"
         >
 
             <RelativeLayout
@@ -121,8 +123,9 @@
                     android:id="@+id/txtTitleLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/activity_edit_reference_title_label"
                     android:layout_alignParentTop="true"
+                    style="@style/EntityFieldName"
+                    android:text="@string/activity_edit_reference_title_label"
                 />
 
                 <EditText
@@ -130,15 +133,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/txtTitleLabel"
+                    style="@style/ReferenceFieldValue"
                 />
 
                 <TextView
                     android:id="@+id/txtSeries"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/activity_edit_reference_series_label"
                     android:layout_below="@+id/edtxtTitle"
                     android:layout_marginTop="@dimen/activity_edit_reference_section_top_margin"
+                    style="@style/EntityFieldName"
+                    android:text="@string/activity_edit_reference_series_label"
                 />
 
                 <EditText
@@ -150,6 +155,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_toLeftOf="@+id/btnSelectExistingSeries"
                     android:layout_toStartOf="@+id/btnSelectExistingSeries"
+                    style="@style/ReferenceFieldValue"
                     android:enabled="false"
                 />
 
@@ -161,7 +167,10 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignTop="@+id/edtxtSeries"
                     android:layout_alignBottom="@+id/edtxtSeries"
+                    android:padding="@dimen/activity_edit_reference_icons_padding"
                     android:scaleType="fitCenter"
+                    android:background="@android:color/transparent"
+                    android:tint="@color/colorPrimary"
                     android:src="@drawable/ic_search_white_48dp"
                 />
 
@@ -169,9 +178,10 @@
                     android:id="@+id/txtIssueLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/activity_edit_reference_issue_label"
                     android:layout_below="@+id/edtxtSeries"
                     android:layout_marginTop="@dimen/activity_edit_reference_section_top_margin"
+                    style="@style/EntityFieldName"
+                    android:text="@string/activity_edit_reference_issue_label"
                 />
 
                 <EditText
@@ -183,15 +193,17 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
+                    style="@style/ReferenceFieldValue"
                 />
 
                 <TextView
                     android:id="@+id/txtPublishingDateLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/activity_edit_reference_publishing_date_label"
                     android:layout_below="@+id/edtxtIssue"
                     android:layout_marginTop="@dimen/activity_edit_reference_section_top_margin"
+                    style="@style/EntityFieldName"
+                    android:text="@string/activity_edit_reference_publishing_date_label"
                 />
 
                 <EditText
@@ -203,6 +215,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_toLeftOf="@+id/btnSelectPublishingDate"
                     android:layout_toStartOf="@+id/btnSelectPublishingDate"
+                    style="@style/ReferenceFieldValue"
                 />
 
                 <ImageButton
@@ -213,7 +226,10 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignTop="@+id/edtxtPublishingDate"
                     android:layout_alignBottom="@+id/edtxtPublishingDate"
+                    android:padding="@dimen/activity_edit_reference_icons_padding"
                     android:scaleType="fitCenter"
+                    android:background="@android:color/transparent"
+                    android:tint="@color/colorPrimary"
                     android:src="@drawable/ic_date_range_white_48dp"
                 />
 
@@ -221,9 +237,10 @@
                     android:id="@+id/txtUrlLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/activity_edit_reference_url_label"
                     android:layout_below="@+id/edtxtPublishingDate"
                     android:layout_marginTop="@dimen/activity_edit_reference_section_top_margin"
+                    style="@style/EntityFieldName"
+                    android:text="@string/activity_edit_reference_url_label"
                 />
 
                 <EditText
@@ -235,7 +252,8 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
-                    android:inputType="textUri"
+                    style="@style/ReferenceFieldValue"
+                    android:inputType="textWebEditText"
                 />
 
             </RelativeLayout>
