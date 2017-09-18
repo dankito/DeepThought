@@ -91,6 +91,7 @@
     <dimen name="list_item_found_feed_address_margin_left_and_right">0dp</dimen>
     <dimen name="list_item_found_feed_address_feed_url_margin_bottom">6dp</dimen>
 
+    <dimen name="dialog_article_summary_extractor_config_padding">8dp</dimen>
     <dimen name="dialog_article_summary_extractor_config_enter_name_margin_top">6dp</dimen>
     <dimen name="dialog_article_summary_extractor_config_icon_label_margin_top">12dp</dimen>
     <dimen name="dialog_article_summary_extractor_config_icon_list_margin_top">6dp</dimen>
