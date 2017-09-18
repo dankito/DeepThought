@@ -82,6 +82,8 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
             }
         }
 
+        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE) // so that keyboard doesn't cover OK and Cancel buttons
+
         return view
     }
 
