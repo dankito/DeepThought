@@ -162,6 +162,10 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
         return favorites.toList()
     }
 
+    fun toggleFavoriteStatus(extractorConfig: ArticleSummaryExtractorConfig) {
+        setFavoriteStatus(extractorConfig, !extractorConfig.isFavorite)
+    }
+
     fun setFavoriteStatus(extractorConfig: ArticleSummaryExtractorConfig, isFavorite: Boolean) {
         extractorConfig.isFavorite = isFavorite
 
