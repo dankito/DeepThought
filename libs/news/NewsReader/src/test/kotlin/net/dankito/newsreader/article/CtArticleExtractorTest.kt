@@ -38,5 +38,15 @@ class CtArticleExtractorTest : ArticleExtractorTestBase() {
         )
     }
 
+    @Test
+    fun importMobileArticle() {
+        getAndTestArticle("https://m.heise.de/ct/artikel/Die-Neuerungen-von-Linux-4-14-3831941.html",
+                "Die Neuerungen von Linux 4.14",
+                "Ein Zerocopy-Ansatz im Netzwerkcode verspricht einen Performance-Gewinn. Den sollen auch Optimierungen am Ext4-Dateisystem erzielen. Btrfs und SquashFS lernen einen neuen und flexibleren Kompressionsalgorithmus.",
+                "https://m.f.ix.de/scale/geometry/1280/q50/ct/imgs/04/2/2/7/8/7/7/7/kl-414-1c94ab97c8b56075.png@jpg",
+                16700, false
+        )
+    }
+
 
 }

@@ -19,6 +19,8 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
 
         private val heiseDateFormat: DateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN)
 
+        private val ctMobileDateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.GERMAN)
+
         private val log = LoggerFactory.getLogger(CtArticleExtractor::class.java)
     }
 
@@ -28,17 +30,27 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
     }
 
     override fun canExtractEntryFromUrl(url: String): Boolean {
-        return url.toLowerCase().contains("://www.heise.de/ct/") && url.length > "://www.heise.de/ct/".length + 5
+        return (url.toLowerCase().contains("://www.heise.de/ct/") || url.toLowerCase().contains("://m.heise.de/ct/")) && url.length > "://m.heise.de/ct/".length + 5
     }
 
     override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
         document.body().select("main section").first()?.let { sectionElement ->
-            val articleEntry = createEntry(url, sectionElement)
-
-            val reference = createReference(url, sectionElement)
-
-            extractionResult.setExtractedContent(articleEntry, reference)
+            parseDesktopSite(url, sectionElement, extractionResult)
+            return
         }
+
+        document.body().select("article").first()?.let { articleElement ->
+            parseMobileSite(url, articleElement, extractionResult)
+        }
+    }
+
+
+    private fun parseDesktopSite(url: String, sectionElement: Element, extractionResult: EntryExtractionResult) {
+        val articleEntry = createEntry(url, sectionElement)
+
+        val reference = createReference(url, sectionElement)
+
+        extractionResult.setExtractedContent(articleEntry, reference)
     }
 
     private fun createEntry(url: String, sectionElement: Element): Entry {
@@ -106,6 +118,36 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
         val publishingDate = extractDate(sectionElement)
 
         return Reference(articleUrl, title, publishingDate, subTitle = subTitle)
+    }
+
+
+    private fun parseMobileSite(url: String, article: Element, extractionResult: EntryExtractionResult) {
+        val reference = extractMobileArticleReference(article, url)
+
+        val abstract = article.select("p.lead_text").first()?.text()?.trim() ?: ""
+
+        article.select("h1, figure.aufmacherbild, time, span.author, a.comments, p.lead_text, .comment, .btn-toolbar .whatsbroadcast-toolbar, #whatsbroadcast, " +
+                ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta, .widget-werbung").remove()
+        val content = article.html()
+
+        extractionResult.setExtractedContent(Entry(content, abstract), reference)
+    }
+
+    private fun extractMobileArticleReference(article: Element, url: String): Reference {
+        val title = article.select("h1").first()?.text()?.trim() ?: ""
+
+        val reference = Reference(url, title)
+
+        article.select("figure.aufmacherbild img").first()?.let {
+            reference.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
+        }
+        article.select("time").first()?.let {
+            try {
+                reference.publishingDate = ctMobileDateFormat.parse(it.attr("datetime"))
+            } catch(e: Exception) { log.warn("Could not parse C't mobile site date string ${it.attr("datetime")}", e) }
+        }
+
+        return reference
     }
 
 
