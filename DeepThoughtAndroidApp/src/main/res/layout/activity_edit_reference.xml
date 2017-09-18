@@ -161,7 +161,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignTop="@+id/edtxtSeries"
                     android:layout_alignBottom="@+id/edtxtSeries"
-                    android:src="@android:drawable/ic_menu_search"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_search_white_48dp"
                 />
 
                 <TextView
@@ -212,7 +213,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignTop="@+id/edtxtPublishingDate"
                     android:layout_alignBottom="@+id/edtxtPublishingDate"
-                    android:src="@android:drawable/ic_menu_my_calendar"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_date_range_white_48dp"
                 />
 
                 <TextView

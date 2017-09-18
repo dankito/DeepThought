@@ -37,7 +37,7 @@
             android:layout_alignTop="@+id/lytReferencePreview"
             android:layout_alignBottom="@+id/lytReferencePreview"
             android:background="@android:color/transparent"
-            android:src="@android:drawable/ic_delete"
+            android:src="@drawable/ic_delete_white_48dp"
             android:visibility="gone"
         />
 
