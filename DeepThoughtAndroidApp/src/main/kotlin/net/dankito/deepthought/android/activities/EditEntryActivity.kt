@@ -1033,8 +1033,10 @@ class EditEntryActivity : BaseActivity() {
 
         setReferencePreviewOnUIThread()
 
-        tags?.let {
-            tagsOnEntry.addAll(tags)
+        tags?.forEach { tag ->
+            if(tagsOnEntry.contains(tag) == false) { // to avoid have a tag twice we really have to check each single tag
+                tagsOnEntry.add(tag)
+            }
         }
 
         setTagsOnEntryPreviewOnUIThread()
