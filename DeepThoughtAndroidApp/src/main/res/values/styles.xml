@@ -96,11 +96,11 @@
     <style name="EntryFieldName">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">#b8b8b8</item>
+        <item name="android:textColor">@color/entry_field_name_text_color</item>
     </style>
 
     <style name="EntryFieldValue">
-        <item name="android:textColor">#000000</item>
+        <item name="android:textColor">@color/entry_field_name_text_color</item>
     </style>
 
     <style name="ChevronRightStyle">
