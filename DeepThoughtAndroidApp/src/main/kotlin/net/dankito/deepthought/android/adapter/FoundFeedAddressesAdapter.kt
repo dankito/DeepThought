@@ -24,8 +24,6 @@ class FoundFeedAddressesAdapter : ListAdapter<FeedAddress>() {
         view.txtFeedName.text = feedName
         view.txtFeedUrl.text = feedAddress.url
 
-        view.isActivated = position == 0 // mark first feed in list as selected
-
         return view
     }
 
