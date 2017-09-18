@@ -80,7 +80,10 @@
     <dimen name="list_item_read_later_article_summary_text_size">10sp</dimen>
 
     <dimen name="dialog_add_article_summary_extractor_margin_left_and_right">24dp</dimen>
+    <dimen name="dialog_add_article_summary_extractor_padding">8dp</dimen>
+    <dimen name="dialog_add_article_summary_extractor_text_feed_or_website_url_text_size">14sp</dimen>
     <dimen name="dialog_add_article_summary_extractor_text_feed_or_website_url_margin_top_and_bottom">6dp</dimen>
+    <dimen name="dialog_add_article_summary_extractor_label_feed_search_results_text_size">16sp</dimen>
     <dimen name="dialog_add_article_summary_extractor_label_feed_search_results_margin_top">6dp</dimen>
     <dimen name="dialog_add_article_summary_extractor_listview_feed_search_results_margin_top">6dp</dimen>
 

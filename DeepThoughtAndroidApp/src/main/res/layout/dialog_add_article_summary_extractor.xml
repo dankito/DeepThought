@@ -4,12 +4,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dialog_add_article_summary_extractor_margin_left_and_right"
                 android:layout_marginRight="@dimen/dialog_add_article_summary_extractor_margin_left_and_right"
+                android:padding="@dimen/dialog_add_article_summary_extractor_padding"
 >
 
     <TextView
         android:id="@+id/txtFeedOrWebsiteUrl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/TextBodyStyle"
+        android:textSize="@dimen/dialog_add_article_summary_extractor_text_feed_or_website_url_text_size"
         android:text="@string/dialog_add_article_summary_extractor_feed_or_website_url"
     />
 
@@ -54,8 +57,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/btnCheckFeedOrWebsiteUrl"
         android:layout_marginTop="@dimen/dialog_add_article_summary_extractor_label_feed_search_results_margin_top"
-        android:visibility="gone"
+        style="@style/Header1Style"
+        android:textSize="@dimen/dialog_add_article_summary_extractor_label_feed_search_results_text_size"
+        android:textColor="@color/colorAccent"
         android:text="@string/dialog_add_article_summary_extractor_found_feeds"
+        android:visibility="gone"
     />
 
     <ListView
