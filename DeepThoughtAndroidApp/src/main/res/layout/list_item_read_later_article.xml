@@ -20,7 +20,7 @@
             android:id="@+id/btnSaveArticleSummaryItemForLaterReading"
             android:layout_width="@dimen/list_item_read_later_article_button_width"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_read_later"
+            android:src="@drawable/ic_read_later_article_action"
             android:scaleType="fitCenter"
             android:visibility="gone"
         />

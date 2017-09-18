@@ -26,7 +26,7 @@
         app:showAsAction="always"
         android:orderInCategory="400"
         android:title="@string/action_read_article_later"
-        android:icon="@drawable/ic_read_later"
+        android:icon="@drawable/ic_read_later_article_action"
         app:actionLayout="@layout/contextual_action_mode_item_action_layout"
         android:visible="false"
     />

@@ -12,7 +12,7 @@
     <item
         android:id="@+id/mnSaveArticleForLaterReading"
         android:title="@string/action_read_article_later"
-        android:icon="@drawable/ic_read_later"
+        android:icon="@drawable/ic_read_later_article_action"
         app:showAsAction="always"
         android:actionLayout="@layout/contextual_action_mode_item_action_layout"
     />
