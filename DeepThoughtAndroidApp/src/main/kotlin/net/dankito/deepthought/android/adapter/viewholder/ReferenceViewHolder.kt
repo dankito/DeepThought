@@ -14,7 +14,7 @@ class ReferenceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     val txtReferenceSeriesAndPublishingDate: TextView = itemView.txtReferenceSeriesAndPublishingDate
 
-    val imgIsReferenceAddedToEntry: ImageView = itemView.imgIsReferenceAddedToEntry
+    val imgIsReferenceSetOnEntry: ImageView = itemView.imgIsReferenceSetOnEntry
 
     val txtChevronRight: TextView = itemView.txtChevronRight
 

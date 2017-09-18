@@ -29,7 +29,7 @@ class ReferenceOnEntryRecyclerAdapter(presenter: ReferencesPresenterBase): Refer
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ReferenceViewHolder {
         val viewHolder = super.onCreateViewHolder(parent, viewType)
 
-        setIconTintList(viewHolder.imgIsReferenceAddedToEntry)
+        setIconTintList(viewHolder.imgIsReferenceSetOnEntry)
 
         return viewHolder
     }

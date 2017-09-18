@@ -39,7 +39,7 @@ abstract class ReferenceRecyclerAdapterBase(private val presenter: ReferencesPre
         viewHolder.txtReferenceSeriesAndPublishingDate.text = seriesPreview
         viewHolder.txtReferenceSeriesAndPublishingDate.visibility = if(seriesPreview.isNullOrBlank()) View.GONE else View.VISIBLE
 
-        viewHolder.imgIsReferenceAddedToEntry.visibility = if(shouldShowImageIsReferenceAddedToEntry) View.VISIBLE else View.GONE
+        viewHolder.imgIsReferenceSetOnEntry.visibility = if(shouldShowImageIsReferenceAddedToEntry) View.VISIBLE else View.GONE
         viewHolder.txtChevronRight.visibility = if(shouldShowChevronRight) View.VISIBLE else View.GONE
     }
 

@@ -52,14 +52,14 @@
     >
 
         <ImageView
-            android:id="@+id/imgIsReferenceAddedToEntry"
+            android:id="@+id/imgIsReferenceSetOnEntry"
             android:layout_width="@dimen/list_item_reference_on_entry_icon_width"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentBottom="true"
             android:layout_marginRight="@dimen/list_item_reference_on_entry_icon_right_margin"
             android:layout_marginEnd="@dimen/list_item_reference_on_entry_icon_right_margin"
-            android:src="@drawable/ic_add_circle_outline_white_48dp"
+            android:src="@drawable/ic_add"
             android:visibility="gone"
         />
 
@@ -67,8 +67,8 @@
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/imgIsReferenceAddedToEntry"
-            android:layout_toEndOf="@+id/imgIsReferenceAddedToEntry"
+            android:layout_toRightOf="@+id/imgIsReferenceSetOnEntry"
+            android:layout_toEndOf="@+id/imgIsReferenceSetOnEntry"
             android:layout_toLeftOf="@+id/txtChevronRight"
             android:layout_toStartOf="@+id/txtChevronRight"
             android:layout_centerVertical="true"
