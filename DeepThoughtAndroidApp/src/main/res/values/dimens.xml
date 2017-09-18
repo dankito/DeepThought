@@ -16,6 +16,7 @@
     <dimen name="action_padding_right">2dp</dimen>
 
     <dimen name="fragment_tab_entries_filtered_entities_margin_top">12dp</dimen>
+    <dimen name="fragment_tab_entries_filtered_entities_margin_bottom">20dp</dimen>
     <dimen name="fragment_tab_entries_onboarding_left_right_margin">20dp</dimen>
 
     <dimen name="chevron_right_width">15dp</dimen>
