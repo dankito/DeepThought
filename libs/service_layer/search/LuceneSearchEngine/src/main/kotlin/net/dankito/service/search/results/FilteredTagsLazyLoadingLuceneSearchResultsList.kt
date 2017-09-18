@@ -20,8 +20,17 @@ class FilteredTagsLazyLoadingLuceneSearchResultsList(entityManager: IEntityManag
 
     var tagIdsOnResultEntries = HashSet<String>()
 
+    // yeah, i know, never call overwritable methods in a constructor, but LazyLoadingLuceneSearchResultsList does so by calling retrieveEntityFromDatabaseAndCacheIfNotRetrievedYet()
+    // -> handle it by temporarily storing ids in tagIdsOnResultEntriesCollectedBeforeCallToInit
+    private var tagIdsOnResultEntriesCollectedBeforeCallToInit: List<String>? = null
+
 
     init {
+        tagIdsOnResultEntriesCollectedBeforeCallToInit?.let {
+            tagIdsOnResultEntries.addAll(it)
+            tagIdsOnResultEntriesCollectedBeforeCallToInit = null
+        }
+
         try {
             this.entityIds = retrieveEntityIds(hits)
         } catch (ex: Exception) {
@@ -50,7 +59,17 @@ class FilteredTagsLazyLoadingLuceneSearchResultsList(entityManager: IEntityManag
     override fun getEntityIdFromHit(hitDoc: Document): String {
         val entityId = super.getEntityIdFromHit(hitDoc)
 
-        hitDoc.getFields(FieldName.EntryTagsIds).forEach { tagIdsOnResultEntries.add(it.stringValue()) }
+        val entryTagIds = hitDoc.getFields(FieldName.EntryTagsIds).map { it.stringValue() }
+
+        if(tagIdsOnResultEntries == null) {
+            tagIdsOnResultEntriesCollectedBeforeCallToInit = entryTagIds
+        }
+        else {
+            tagIdsOnResultEntries.addAll(entryTagIds)
+        }
+
+        hitDoc.getFields(FieldName.EntryTagsIds).forEach {
+        }
 
         return entityId
     }
