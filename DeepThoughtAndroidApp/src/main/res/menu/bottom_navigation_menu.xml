@@ -4,28 +4,28 @@
     <item
         android:id="@+id/btnvEntries"
         android:title="@string/tab_entries_title"
-        android:icon="@drawable/ic_description_white_48dp"
+        android:icon="@drawable/ic_entry"
         android:orderInCategory="0"
         />
 
     <item
         android:id="@+id/btnvTags"
         android:title="@string/tab_tags_title"
-        android:icon="@drawable/ic_local_offer_white_48dp"
+        android:icon="@drawable/ic_tag"
         android:orderInCategory="1"
     />
 
     <item
         android:id="@+id/btnvReferences"
         android:title="@string/tab_references_title"
-        android:icon="@drawable/ic_book_white_48dp"
+        android:icon="@drawable/ic_reference"
         android:orderInCategory="2"
     />
 
     <item
         android:id="@+id/btnvReadLaterArticles"
         android:title="@string/tab_read_later_articles_title"
-        android:icon="@drawable/ic_read_later"
+        android:icon="@drawable/ic_read_later_article"
         android:orderInCategory="3"
     />
 
