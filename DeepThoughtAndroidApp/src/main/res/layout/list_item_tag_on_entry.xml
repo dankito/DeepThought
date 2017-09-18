@@ -21,7 +21,7 @@
             android:id="@+id/btnEditTag"
             android:layout_width="@dimen/list_item_tag_on_entry_button_width"
             android:layout_height="match_parent"
-            android:src="@android:drawable/ic_menu_edit"
+            android:src="@drawable/ic_mode_edit_white_48dp"
             android:scaleType="fitCenter"
         />
 
@@ -29,7 +29,7 @@
             android:id="@+id/btnDeleteTag"
             android:layout_width="@dimen/list_item_tag_on_entry_button_width"
             android:layout_height="match_parent"
-            android:src="@android:drawable/ic_menu_delete"
+            android:src="@drawable/ic_delete_white_48dp"
             android:scaleType="fitXY"
         />
 

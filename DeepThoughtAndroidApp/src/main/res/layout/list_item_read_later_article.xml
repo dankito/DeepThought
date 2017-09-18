@@ -29,7 +29,7 @@
             android:id="@+id/btnSaveArticleSummaryItemOrReadLaterArticle"
             android:layout_width="@dimen/list_item_read_later_article_button_width"
             android:layout_height="match_parent"
-            android:src="@android:drawable/ic_menu_save"
+            android:src="@drawable/ic_save_white_48dp"
             android:scaleType="fitCenter"
         />
 
@@ -37,7 +37,7 @@
             android:id="@+id/btnShareArticleSummaryItemOrReadLaterArticle"
             android:layout_width="@dimen/list_item_read_later_article_button_width"
             android:layout_height="match_parent"
-            android:src="@android:drawable/ic_menu_share"
+            android:src="@drawable/ic_share_white_48dp"
             android:scaleType="fitCenter"
             android:visibility="gone"
         />
@@ -46,7 +46,7 @@
             android:id="@+id/btnDeleteReadLaterArticle"
             android:layout_width="@dimen/list_item_read_later_article_button_width"
             android:layout_height="match_parent"
-            android:src="@android:drawable/ic_menu_delete"
+            android:src="@drawable/ic_delete_white_48dp"
             android:scaleType="fitXY"
             android:visibility="gone"
         />
