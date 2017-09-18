@@ -9,6 +9,7 @@
         android:id="@+id/txtAskExtractorNameLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/Header1Style"
         android:text="@string/dialog_article_summary_extractor_config_enter_name"
     />
 
@@ -26,6 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/edtxtAskExtractorName"
+        style="@style/Header1Style"
         android:layout_marginTop="@dimen/dialog_article_summary_extractor_config_icon_label_margin_top"
         android:text="@string/dialog_article_summary_extractor_config_select_icon"
     />
