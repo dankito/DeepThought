@@ -30,7 +30,7 @@ import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
 
 
-class TagsListView : MainActivityTabFragment<Tag>(R.menu.fragment_tab_tags_menu, R.menu.tag_contextual_action_menu, R.string.tab_tags_onboarding_text), ITagsListView {
+class TagsListView : MainActivityTabFragment<Tag>(R.menu.tag_contextual_action_menu, R.string.tab_tags_onboarding_text), ITagsListView {
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine

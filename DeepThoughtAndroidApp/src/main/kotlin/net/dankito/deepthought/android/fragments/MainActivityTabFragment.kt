@@ -27,8 +27,8 @@ import net.dankito.service.search.Search
 import javax.inject.Inject
 
 
-abstract class MainActivityTabFragment<T : BaseEntity>(private val optionsMenuResourceId: Int, private val contextualActionMenuResourceId: Int,
-                                                       private val onboardingTextResourceId: Int) : Fragment() {
+abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualActionMenuResourceId: Int, private val onboardingTextResourceId: Int,
+                                                       private val optionsMenuResourceId: Int = R.menu.fragment_main_activity_tab_menu) : Fragment() {
 
     private var presenter: IMainViewSectionPresenter? = null
 

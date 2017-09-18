@@ -21,7 +21,7 @@ import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class ReferencesListView: MainActivityTabFragment<Reference>(R.menu.fragment_tab_references_menu, R.menu.reference_contextual_action_menu, R.string.tab_reference_onboarding_text),
+class ReferencesListView: MainActivityTabFragment<Reference>(R.menu.reference_contextual_action_menu, R.string.tab_reference_onboarding_text),
         IReferencesListView {
 
     @Inject
