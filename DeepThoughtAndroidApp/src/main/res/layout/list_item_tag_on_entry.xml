@@ -41,10 +41,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <View
+            android:id="@+id/vwIsTagOnEntryBorder"
+            android:layout_width="@dimen/list_item_tag_on_entry_added_border_width"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/list_item_tag_on_entry_added_border_margin_right"
+            android:layout_marginEnd="@dimen/list_item_tag_on_entry_added_border_margin_right"
+            android:background="@color/tag_added_to_entry"
+        />
+
         <ImageView
             android:id="@+id/imgIsTagAddedToEntry"
             android:layout_width="@dimen/list_item_tag_on_entry_icon_width"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/vwIsTagOnEntryBorder"
+            android:layout_toEndOf="@+id/vwIsTagOnEntryBorder"
             android:layout_marginRight="@dimen/list_item_tag_on_entry_icon_margin_right"
             android:layout_marginEnd="@dimen/list_item_tag_on_entry_icon_margin_right"
             android:src="@drawable/ic_add"

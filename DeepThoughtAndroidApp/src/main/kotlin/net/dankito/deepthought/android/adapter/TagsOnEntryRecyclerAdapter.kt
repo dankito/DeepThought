@@ -66,10 +66,12 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
         if(isAddedToEntry) {
             viewHolder.imgIsTagAddedToEntry.setImageResource(R.drawable.ic_checkmark)
             viewHolder.txtvwTagName.setTypeface(null, Typeface.BOLD)
+            viewHolder.vwIsTagOnEntryBorder.visibility = View.VISIBLE
         }
         else {
             viewHolder.imgIsTagAddedToEntry.setImageResource(R.drawable.ic_add)
             viewHolder.txtvwTagName.setTypeface(null, Typeface.NORMAL)
+            viewHolder.vwIsTagOnEntryBorder.visibility = View.INVISIBLE
         }
 
         viewHolder.itemView.isActivated = isAddedToEntry // sets icon's tint and textview's text color

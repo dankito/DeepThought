@@ -11,6 +11,8 @@ import java.util.*
 
 class TagsOnEntryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+    val vwIsTagOnEntryBorder: View = itemView.vwIsTagOnEntryBorder
+
     val imgIsTagAddedToEntry: ImageView = itemView.imgIsTagAddedToEntry
 
     val txtvwTagName: TextView = itemView.txtvwTagName
