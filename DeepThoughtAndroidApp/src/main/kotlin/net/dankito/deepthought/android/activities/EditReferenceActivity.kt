@@ -139,13 +139,7 @@ class EditReferenceActivity : BaseActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        btnCreateNewReference.setOnClickListener { createReference() } // TODO: check if previous reference contains unsaved changes
-
-        rcyExistingReferencesSearchResults.addItemDecoration(HorizontalDividerItemDecoration(this))
-        rcyExistingReferencesSearchResults.adapter = existingReferencesSearchResultsAdapter
-        existingReferencesSearchResultsAdapter.itemClickListener = { item -> existingReferenceSelected(item) }
-
-        edtxtFindReferences.addTextChangedListener(edtxtFindReferencesTextWatcher)
+        setupFindExistingReferenceSection()
 
         btnSelectPublishingDate.setOnClickListener { showDatePickerDialog() }
 
@@ -154,6 +148,16 @@ class EditReferenceActivity : BaseActivity() {
                 edtxtPublishingDateLostFocus(edtxtPublishingDate.text.toString())
             }
         }
+    }
+
+    private fun setupFindExistingReferenceSection() {
+        btnCreateNewReference.setOnClickListener { createReference() } // TODO: check if previous reference contains unsaved changes
+
+        rcyExistingReferencesSearchResults.addItemDecoration(HorizontalDividerItemDecoration(this))
+        rcyExistingReferencesSearchResults.adapter = existingReferencesSearchResultsAdapter
+        existingReferencesSearchResultsAdapter.itemClickListener = { item -> existingReferenceSelected(item) }
+
+        edtxtFindReferences.addTextChangedListener(edtxtFindReferencesTextWatcher)
     }
 
 
