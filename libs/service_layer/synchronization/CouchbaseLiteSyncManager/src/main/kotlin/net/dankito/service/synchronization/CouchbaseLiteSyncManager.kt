@@ -5,10 +5,7 @@ import com.couchbase.lite.listener.Credentials
 import com.couchbase.lite.listener.LiteListener
 import com.couchbase.lite.replicator.Replication
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
-import net.dankito.deepthought.model.DeepThought
-import net.dankito.deepthought.model.Device
-import net.dankito.deepthought.model.DiscoveredDevice
-import net.dankito.deepthought.model.INetworkSettings
+import net.dankito.deepthought.model.*
 import net.dankito.jpa.couchbaselite.Dao
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import org.slf4j.LoggerFactory
@@ -53,6 +50,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
     private fun setReplicationFilter(database: Database) {
         val entitiesToFilter = ArrayList<String>()
         entitiesToFilter.add(DeepThought::class.java.name)
+        entitiesToFilter.add(LocalSettings::class.java.name)
 
         database.setFilter(EntitiesFilterName) { revision, params ->
             revision.getProperty(Dao.TYPE_COLUMN_NAME)?.let { entityType ->
