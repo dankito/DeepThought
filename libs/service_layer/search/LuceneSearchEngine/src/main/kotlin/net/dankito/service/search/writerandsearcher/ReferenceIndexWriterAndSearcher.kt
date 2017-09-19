@@ -15,9 +15,15 @@ import org.apache.lucene.document.*
 import org.apache.lucene.index.Term
 import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.*
+import java.text.SimpleDateFormat
 
 
 class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventBus: IEventBus, threadPool: IThreadPool) : IndexWriterAndSearcher<Reference>(referenceService, eventBus, threadPool) {
+
+    companion object {
+        private val PublishingDateIndexFormat = SimpleDateFormat("dd MM yyyy")
+    }
+
 
     override fun getDirectoryName(): String {
         return "references"
@@ -49,8 +55,21 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
             }
         }
 
-        entity.publishingDate?.let { publishingDate -> doc.add(LongField(FieldName.ReferencePublishingDate, publishingDate.time, Field.Store.YES)) }
+        indexPublishingDate(entity, doc)
     }
+
+    private fun indexPublishingDate(entity: Reference, doc: Document) {
+        entity.publishingDate?.let { publishingDate -> doc.add(LongField(FieldName.ReferencePublishingDate, publishingDate.time, Field.Store.YES)) }
+
+        val publishingDateString = if (entity.publishingDateString != null) entity.publishingDateString
+        else if (entity.publishingDate != null) PublishingDateIndexFormat.format(entity.publishingDate)
+        else ""
+
+        if (publishingDateString.isNullOrBlank() == false) {
+            doc.add(Field(FieldName.ReferencePublishingDateString, publishingDateString, TextField.TYPE_NOT_STORED))
+        }
+    }
+
 
     fun searchReferences(search: ReferenceSearch, termsToSearchFor: List<String>) {
         val query = BooleanQuery()
@@ -70,7 +89,7 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
             query.add(WildcardQuery(Term(getIdFieldName(), "*")), BooleanClause.Occur.MUST)
         }
         else {
-            for (term in termsToFilterFor) {
+            for(term in termsToFilterFor) {
                 val escapedTerm = QueryParser.escape(term)
                 val termQuery = BooleanQuery()
 
@@ -79,7 +98,7 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
 
                 termQuery.add(PrefixQuery(Term(FieldName.ReferenceSeries, escapedTerm)), BooleanClause.Occur.SHOULD)
 
-                termQuery.add(PrefixQuery(Term(FieldName.ReferencePublishingDate, escapedTerm)), BooleanClause.Occur.SHOULD)
+                termQuery.add(WildcardQuery(Term(FieldName.ReferencePublishingDateString, "*$escapedTerm*")), BooleanClause.Occur.SHOULD)
 
                 query.add(termQuery, BooleanClause.Occur.MUST)
             }
