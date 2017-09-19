@@ -253,7 +253,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
                     style="@style/ReferenceFieldValue"
-                    android:inputType="textWebEditText"
+                    android:inputType="textMultiLine|textUri"
                 />
 
             </RelativeLayout>
