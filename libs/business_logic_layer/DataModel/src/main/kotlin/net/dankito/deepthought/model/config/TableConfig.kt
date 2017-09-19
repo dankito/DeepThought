@@ -161,6 +161,7 @@ class TableConfig {
         const val ReferenceIssueColumnName = "issue"
         const val ReferenceIsbnOrIssnColumnName = "isbn_or_issn"
         const val ReferencePublishingDateColumnName = "publishing_date"
+        const val ReferencePublishingDateStringColumnName = "publishing_date_string"
 
 
         /*          Reference Table Config        */

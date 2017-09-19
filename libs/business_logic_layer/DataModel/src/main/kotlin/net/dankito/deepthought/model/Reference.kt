@@ -43,6 +43,10 @@ data class Reference(
     @Temporal(TemporalType.TIMESTAMP)
     var publishingDate: Date? = null
 
+    @Column(name = TableConfig.ReferencePublishingDateStringColumnName)
+    var publishingDateString: String? = null
+        private set
+
 
     @Column(name = TableConfig.ReferenceAbstractColumnName)
     var abstractString: String? = null
@@ -92,6 +96,12 @@ data class Reference(
         this.previewImageUrl = previewImageUrl
         this.subTitle = subTitle
         this.series = series
+    }
+
+
+    fun setPublishingDate(publishingDate: Date?, publishingDateString: String? = null) {
+        this.publishingDate = publishingDate
+        this.publishingDateString = publishingDateString
     }
 
 
