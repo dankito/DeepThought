@@ -33,7 +33,7 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
             doc.add(Field(FieldName.ReferenceTitle, entity.title, TextField.TYPE_NOT_STORED))
         }
         if(entity.subTitle.isNullOrEmpty() == false) {
-            doc.add(Field(FieldName.ReferenceSubTitle, entity.title, TextField.TYPE_NOT_STORED))
+            doc.add(Field(FieldName.ReferenceSubTitle, entity.subTitle, TextField.TYPE_NOT_STORED))
         }
 
         entity.series?.let { series ->
