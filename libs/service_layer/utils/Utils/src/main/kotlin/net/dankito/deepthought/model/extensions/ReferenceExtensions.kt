@@ -30,7 +30,12 @@ val Reference?.seriesAndPublishingDatePreview: String
 
         var preview = series?.title ?: ""
 
-        publishingDate?.let { preview += " " + PublishingDateFormat.format(it) }
+        if(publishingDateString != null) {
+            preview += " " + publishingDateString
+        }
+        else if(publishingDate != null) {
+            preview += " " + PublishingDateFormat.format(publishingDate)
+        }
 
         return preview.trim()
     }

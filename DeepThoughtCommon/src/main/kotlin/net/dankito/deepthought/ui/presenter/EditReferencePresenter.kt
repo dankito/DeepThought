@@ -59,7 +59,14 @@ class EditReferencePresenter(searchEngine: ISearchEngine, router: IRouter, clipb
     }
 
 
-    fun saveReferenceAsync(reference: Reference, callback: (Boolean) -> Unit) {
+    fun saveReferenceAsync(reference: Reference, publishingDateInput: Date?, publishingDateStringInput: String?, callback: (Boolean) -> Unit) {
+        val publishingDateString = if(publishingDateStringInput.isNullOrBlank()) null else publishingDateStringInput
+        val publishingDate = if(publishingDateInput != null) publishingDateInput
+                             else if(publishingDateString != null) parsePublishingDate(publishingDateString)
+                             else null
+
+        reference.setPublishingDate(publishingDate, publishingDateString)
+
         referencePersister.saveReferenceAsync(reference, callback)
     }
 

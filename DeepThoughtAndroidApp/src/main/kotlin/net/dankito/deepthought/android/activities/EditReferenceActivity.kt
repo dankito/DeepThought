@@ -210,10 +210,9 @@ class EditReferenceActivity : BaseActivity() {
             reference.title = edtxtTitle.text.toString()
 //            reference.series = edtxtSeries.text.toString()
             reference.issue = edtxtIssue.text.toString()
-            reference.publishingDate = currentlySetPublishingDate
             reference.url = edtxtUrl.text.toString()
 
-            presenter.saveReferenceAsync(reference) { successful ->
+            presenter.saveReferenceAsync(reference, currentlySetPublishingDate, edtxtPublishingDate.text.toString()) { successful ->
                 if(successful) {
                     setActivityResult(EditReferenceActivityResult(didSaveReference = true, savedReference = reference))
                 }
@@ -232,23 +231,19 @@ class EditReferenceActivity : BaseActivity() {
 
 
     private fun edtxtPublishingDateLostFocus(enteredText: String) {
-        val parsedDate = presenter.parsePublishingDate(enteredText)
+        this.currentlySetPublishingDate = presenter.parsePublishingDate(enteredText)
 
-        if(parsedDate != null) {
-            showPublishingDate(parsedDate)
-        }
-        else {
-            edtxtPublishingDate.error = getString(R.string.activity_edit_reference_error_could_not_parse_publishing_date, enteredText)
-        }
+        // TODO: show hint or error when publishingDateString couldn't be parsed?
+//        if(currentlySetPublishingDate == null) {
+//            edtxtPublishingDate.error = getString(R.string.activity_edit_reference_error_could_not_parse_publishing_date, enteredText)
+//        }
     }
 
     private fun showDatePickerDialog() {
-        reference?.let { reference ->
-            val pickDateDialog = PickDateDialog()
+        val pickDateDialog = PickDateDialog()
 
-            pickDateDialog.show(supportFragmentManager, reference.publishingDate) { selectedDate ->
-                showPublishingDate(selectedDate)
-            }
+        pickDateDialog.show(supportFragmentManager, currentlySetPublishingDate) { selectedDate ->
+            showPublishingDate(selectedDate)
         }
     }
 
@@ -286,18 +281,23 @@ class EditReferenceActivity : BaseActivity() {
         reference.series?.let { edtxtSeries.setText(it.title) }
         edtxtIssue.setText(reference.issue)
 
-        showPublishingDate(reference.publishingDate)
+        showPublishingDate(reference.publishingDate, reference.publishingDateString)
 
         edtxtUrl.setText(reference.url)
 
         mayRegisterEventBusListener()
     }
 
-    private fun showPublishingDate(publishingDate: Date?) {
+    private fun showPublishingDate(publishingDate: Date?, publishingDateString: String? = null) {
         this.currentlySetPublishingDate = publishingDate
 
-        publishingDate?.let { edtxtPublishingDate.setText(presenter.convertPublishingDateToText(it)) }
-        if(publishingDate == null) {
+        if(publishingDateString != null) {
+            edtxtPublishingDate.setText(publishingDateString)
+        }
+        else if(publishingDate != null) {
+            edtxtPublishingDate.setText(presenter.convertPublishingDateToText(publishingDate))
+        }
+        else {
             edtxtPublishingDate.setText("")
         }
     }
