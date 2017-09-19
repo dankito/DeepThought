@@ -7,11 +7,24 @@ import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.ui.IClipboardService
 import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 
 class EditReferencePresenter(searchEngine: ISearchEngine, router: IRouter, clipboardService: IClipboardService, deleteEntityService: DeleteEntityService,
                              private val referencePersister: ReferencePersister) : ReferencesPresenterBase(searchEngine, router, clipboardService, deleteEntityService) {
+
+    companion object {
+        private val ShortDateFormat = DateFormat.getDateInstance(DateFormat.SHORT)
+        private val MediumDateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM)
+        private val LongDateFormat = DateFormat.getDateInstance(DateFormat.LONG)
+
+        private val MonthAndYearSeparatedBySlashDateFormat = SimpleDateFormat("MM/yyyy")
+        private val MonthAndShortYearSeparatedBySlashDateFormat = SimpleDateFormat("MM/yy")
+        private val MonthAndYearSeparatedByDotDateFormat = SimpleDateFormat("MM.yyyy")
+        private val MonthAndShortYearSeparatedByDotDateFormat = SimpleDateFormat("MM.yy")
+        private val YearDateFormat = SimpleDateFormat("yyyy")
+    }
 
 
     fun convertPublishingDateToText(publishingDate: Date): String {
@@ -20,33 +33,29 @@ class EditReferencePresenter(searchEngine: ISearchEngine, router: IRouter, clipb
 
     private fun getBestDateFormatForLanguage(): DateFormat {
         if(Locale.getDefault().language == "de") {
-            return getMediumDateFormat()
+            return MediumDateFormat
         }
 
-        return getShortDateFormat()
+        return ShortDateFormat
     }
 
 
     fun parsePublishingDate(dateString: String): Date? {
-        try { return getShortDateFormat().parse(dateString) } catch(ignored: Exception) { }
+        try { return ShortDateFormat.parse(dateString) } catch(ignored: Exception) { }
 
-        try { return getMediumDateFormat().parse(dateString) } catch(ignored: Exception) { }
+        try { return MediumDateFormat.parse(dateString) } catch(ignored: Exception) { }
 
-        try { return getLongDateFormat().parse(dateString) } catch(ignored: Exception) { }
+        try { return LongDateFormat.parse(dateString) } catch(ignored: Exception) { }
+
+        try { return MonthAndYearSeparatedBySlashDateFormat.parse(dateString) } catch(ignored: Exception) { }
+        try { return MonthAndShortYearSeparatedBySlashDateFormat.parse(dateString) } catch(ignored: Exception) { }
+
+        try { return MonthAndYearSeparatedByDotDateFormat.parse(dateString) } catch(ignored: Exception) { }
+        try { return MonthAndShortYearSeparatedByDotDateFormat.parse(dateString) } catch(ignored: Exception) { }
+
+        try { return YearDateFormat.parse(dateString) } catch(ignored: Exception) { }
 
         return null
-    }
-
-    private fun getShortDateFormat(): DateFormat {
-        return DateFormat.getDateInstance(DateFormat.SHORT)
-    }
-
-    private fun getMediumDateFormat(): DateFormat {
-        return DateFormat.getDateInstance(DateFormat.MEDIUM)
-    }
-
-    private fun getLongDateFormat(): DateFormat {
-        return DateFormat.getDateInstance(DateFormat.LONG)
     }
 
 
