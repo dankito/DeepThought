@@ -2,6 +2,7 @@ package net.dankito.service.data
 
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Tag
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IDialogService
@@ -11,7 +12,7 @@ import net.dankito.utils.ui.IDialogService
  * When simply calling <entityServiceBase>.delete() entity's references aren't updated and still keep a reference to deleted entity.
  * This service first removes all references and updates them and then deletes the entity with its EntityService.
  */
-class DeleteEntityService(private val entryService: EntryService, private val tagService: TagService, private val referenceService: ReferenceService, seriesService: SeriesService,
+class DeleteEntityService(private val entryService: EntryService, private val tagService: TagService, private val referenceService: ReferenceService, private val seriesService: SeriesService,
                           private val dialogService: IDialogService, private val threadPool: IThreadPool) {
 
     fun deleteEntryAsync(entry: Entry) {
@@ -87,6 +88,20 @@ class DeleteEntityService(private val entryService: EntryService, private val ta
         }
 
         referenceService.delete(reference)
+    }
+
+
+    fun deleteSeriesAsync(series: Series) {
+        threadPool.runAsync { deleteSeries(series) }
+    }
+
+    fun deleteSeries(series: Series) {
+        ArrayList(series.references).filterNotNull().filter { it.id != null }.forEach { reference ->
+            reference.series = null
+            referenceService.update(reference)
+        }
+
+        seriesService.delete(series)
     }
 
 }
