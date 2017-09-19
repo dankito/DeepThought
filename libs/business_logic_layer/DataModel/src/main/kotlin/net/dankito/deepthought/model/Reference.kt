@@ -26,7 +26,7 @@ data class Reference(
     var url: String? = null
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.MERGE))
-    @JoinColumn(name = TableConfig.EntryReferenceJoinColumnName)
+    @JoinColumn(name = TableConfig.ReferenceSeriesJoinColumnName)
     var series: Series? = null
         set(series) {
             field?.removeReference(this)
