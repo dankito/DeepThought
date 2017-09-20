@@ -68,6 +68,10 @@ class EditSeriesActivity : BaseActivity() {
 
     private val existingSeriesSearchResultsAdapter: SeriesOnReferenceRecyclerAdapter
 
+    private var didSeriesChange = false
+
+    private var mnSaveSeries: MenuItem? = null
+
 
     private val actionItemHelper = ActionItemUtil()
 
@@ -118,6 +122,8 @@ class EditSeriesActivity : BaseActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        edtxtTitle.addTextChangedListener(edtxtTitleTextWatcher)
+
         setupFindExistingSeriesSection()
     }
 
@@ -141,6 +147,9 @@ class EditSeriesActivity : BaseActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.activity_edit_series_menu, menu)
+
+        mnSaveSeries = menu.findItem(R.id.mnSaveSeries)
+        mnSaveSeries?.isVisible = didSeriesChange
 
         actionItemHelper.setupLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
 
@@ -225,11 +234,12 @@ class EditSeriesActivity : BaseActivity() {
     }
 
     private fun showSeries(series: Series) {
-        println("this.series = ${this.series}, new series = $series")
         this.series = series
         existingSeriesSearchResultsAdapter.selectedSeries = series
 
+        edtxtTitle.removeTextChangedListener(edtxtTitleTextWatcher)
         edtxtTitle.setText(series.title)
+        edtxtTitle.addTextChangedListener(edtxtTitleTextWatcher)
 
         unregisterEventBusListener()
         mayRegisterEventBusListener()
@@ -291,6 +301,8 @@ class EditSeriesActivity : BaseActivity() {
 
         // TODO: check if previous series has unsaved changes
         showSeries(series)
+
+        updateDidSeriesChangeOnUiThread(true)
     }
 
     private fun showRecyclerViewExistingSeriesSearchResults() {
@@ -320,6 +332,24 @@ class EditSeriesActivity : BaseActivity() {
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
 
+    }
+
+
+    private val edtxtTitleTextWatcher = object : TextWatcher {
+        override fun afterTextChanged(editable: Editable) {
+            updateDidSeriesChangeOnUiThread(true)
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+
+    }
+
+    private fun updateDidSeriesChangeOnUiThread(didSeriesChange: Boolean) {
+        this.didSeriesChange = didSeriesChange
+
+        mnSaveSeries?.isVisible = didSeriesChange
     }
 
 
