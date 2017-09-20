@@ -119,142 +119,39 @@
                 android:layout_height="wrap_content"
             >
 
-                <TextView
-                    android:id="@+id/txtTitleLabel"
+                <net.dankito.deepthought.android.views.EditEntityField
+                    android:id="@+id/lytEditReferenceTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    style="@style/EntityFieldName"
-                    android:text="@string/activity_edit_reference_title_label"
                 />
 
-                <EditText
-                    android:id="@+id/edtxtTitle"
+                <net.dankito.deepthought.android.views.EditEntityField
+                    android:id="@+id/lytEditReferenceSeries"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/txtTitleLabel"
-                    style="@style/EditableEntityFieldValue"
+                    android:layout_below="@+id/lytEditReferenceTitle"
                 />
 
-                <TextView
-                    android:id="@+id/txtSeries"
+                <net.dankito.deepthought.android.views.EditEntityField
+                    android:id="@+id/lytEditReferenceIssue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/edtxtTitle"
-                    android:layout_marginTop="@dimen/activity_edit_reference_section_top_margin"
-                    style="@style/EntityFieldName"
-                    android:text="@string/activity_edit_reference_series_label"
+                    android:layout_below="@+id/lytEditReferenceSeries"
                 />
 
-                <EditText
-                    android:id="@+id/edtxtSeries"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/txtSeries"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_toLeftOf="@+id/btnSelectExistingOrRemoveSetSeries"
-                    android:layout_toStartOf="@+id/btnSelectExistingOrRemoveSetSeries"
-                    style="@style/EditableEntityFieldValue"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                />
-
-                <ImageButton
-                    android:id="@+id/btnSelectExistingOrRemoveSetSeries"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignTop="@+id/edtxtSeries"
-                    android:layout_alignBottom="@+id/edtxtSeries"
-                    android:padding="@dimen/activity_edit_reference_icons_padding"
-                    android:scaleType="fitCenter"
-                    android:background="@android:color/transparent"
-                    android:tint="@color/colorPrimary"
-                    android:src="@drawable/ic_search_white_48dp"
-                />
-
-                <TextView
-                    android:id="@+id/txtIssueLabel"
+                <net.dankito.deepthought.android.views.EditEntityField
+                    android:id="@+id/lytEditReferencePublishingDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/edtxtSeries"
-                    android:layout_marginTop="@dimen/activity_edit_reference_section_top_margin"
-                    style="@style/EntityFieldName"
-                    android:text="@string/activity_edit_reference_issue_label"
+                    android:layout_below="@+id/lytEditReferenceIssue"
                 />
 
-                <EditText
-                    android:id="@+id/edtxtIssue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/txtIssueLabel"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    style="@style/EditableEntityFieldValue"
-                />
-
-                <TextView
-                    android:id="@+id/txtPublishingDateLabel"
+                <net.dankito.deepthought.android.views.EditEntityField
+                    android:id="@+id/lytEditReferenceUrl"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/edtxtIssue"
-                    android:layout_marginTop="@dimen/activity_edit_reference_section_top_margin"
-                    style="@style/EntityFieldName"
-                    android:text="@string/activity_edit_reference_publishing_date_label"
-                />
-
-                <EditText
-                    android:id="@+id/edtxtPublishingDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/txtPublishingDateLabel"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_toLeftOf="@+id/btnSelectPublishingDate"
-                    android:layout_toStartOf="@+id/btnSelectPublishingDate"
-                    style="@style/EditableEntityFieldValue"
-                />
-
-                <ImageButton
-                    android:id="@+id/btnSelectPublishingDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignTop="@+id/edtxtPublishingDate"
-                    android:layout_alignBottom="@+id/edtxtPublishingDate"
-                    android:padding="@dimen/activity_edit_reference_icons_padding"
-                    android:scaleType="fitCenter"
-                    android:background="@android:color/transparent"
-                    android:tint="@color/colorPrimary"
-                    android:src="@drawable/ic_date_range_white_48dp"
-                />
-
-                <TextView
-                    android:id="@+id/txtUrlLabel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/edtxtPublishingDate"
-                    android:layout_marginTop="@dimen/activity_edit_reference_section_top_margin"
-                    style="@style/EntityFieldName"
-                    android:text="@string/activity_edit_reference_url_label"
-                />
-
-                <EditText
-                    android:id="@+id/edtxtUrl"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/txtUrlLabel"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    style="@style/EditableEntityFieldValue"
-                    android:inputType="textMultiLine|textUri"
+                    android:layout_below="@+id/lytEditReferencePublishingDate"
                 />
 
             </RelativeLayout>
