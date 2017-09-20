@@ -2,9 +2,12 @@ package net.dankito.deepthought.android.views
 
 import android.content.Context
 import android.graphics.Typeface
+import android.os.Bundle
+import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
+import android.view.AbsSavedState
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
@@ -17,6 +20,11 @@ import net.dankito.deepthought.android.extensions.setTextColorToColorResource
 
 
 class EditEntityField : RelativeLayout {
+
+    companion object {
+        private const val FIELD_NAME_BUNDLE_EXTRA_NAME = "FIELD_NAME"
+        private const val FIELD_VALUE_BUNDLE_EXTRA_NAME = "FIELD_VALUE"
+    }
 
 
     private lateinit var txtEntityFieldName: TextView
@@ -51,6 +59,27 @@ class EditEntityField : RelativeLayout {
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         setupUI(context)
+    }
+
+
+    override fun onSaveInstanceState(): Parcelable {
+        super.onSaveInstanceState() // we have to call it but we're not interested in its result
+
+        val bundle = Bundle()
+
+        bundle.putString(FIELD_NAME_BUNDLE_EXTRA_NAME, txtEntityFieldName.text.toString())
+        bundle.putString(FIELD_VALUE_BUNDLE_EXTRA_NAME, getCurrentFieldValue())
+
+        return bundle
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        super.onRestoreInstanceState(AbsSavedState.EMPTY_STATE) // don't call with state as super.onRestoreInstanceState() doesn't like a Bundle as parameter value
+
+        (state as? Bundle)?.let { bundle ->
+            bundle.getString(FIELD_NAME_BUNDLE_EXTRA_NAME)?.let {  txtEntityFieldName.text = it }
+            bundle.getString(FIELD_VALUE_BUNDLE_EXTRA_NAME)?.let {  edtxtEntityFieldValue.setText(it) }
+        }
     }
 
 

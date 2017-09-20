@@ -43,11 +43,7 @@ class EditReferenceActivity : BaseActivity() {
 
     companion object {
         private const val REFERENCE_ID_BUNDLE_EXTRA_NAME = "REFERENCE_ID"
-        private const val REFERENCE_TITLE_BUNDLE_EXTRA_NAME = "REFERENCE_TITLE"
         private const val REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME = "REFERENCE_SERIES_ID"
-        private const val REFERENCE_ISSUE_BUNDLE_EXTRA_NAME = "REFERENCE_ISSUE"
-        private const val REFERENCE_PUBLISHING_DATE_BUNDLE_EXTRA_NAME = "REFERENCE_PUBLISHING_DATE"
-        private const val REFERENCE_URL_BUNDLE_EXTRA_NAME = "REFERENCE_URL"
 
         const val ResultId = "EDIT_REFERENCE_ACTIVITY_RESULT"
     }
@@ -126,11 +122,7 @@ class EditReferenceActivity : BaseActivity() {
     private fun restoreState(savedInstanceState: Bundle) {
         savedInstanceState.getString(REFERENCE_ID_BUNDLE_EXTRA_NAME)?.let { referenceId -> showReference(referenceId) }
 
-        savedInstanceState.getString(REFERENCE_TITLE_BUNDLE_EXTRA_NAME)?.let { lytEditReferenceTitle.setFieldValueOnUiThread(it) }
         savedInstanceState.getString(REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME)?.let { setAndShowSeriesOnUiThread(it) }
-        savedInstanceState.getString(REFERENCE_ISSUE_BUNDLE_EXTRA_NAME)?.let { lytEditReferenceIssue.setFieldValueOnUiThread(it) }
-        savedInstanceState.getString(REFERENCE_PUBLISHING_DATE_BUNDLE_EXTRA_NAME)?.let { lytEditReferencePublishingDate.setFieldValueOnUiThread(it) }
-        savedInstanceState.getString(REFERENCE_URL_BUNDLE_EXTRA_NAME)?.let { lytEditReferenceUrl.setFieldValueOnUiThread(it) }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -139,11 +131,7 @@ class EditReferenceActivity : BaseActivity() {
         outState?.let {
             outState.putString(REFERENCE_ID_BUNDLE_EXTRA_NAME, reference?.id)
 
-            outState.putString(REFERENCE_TITLE_BUNDLE_EXTRA_NAME, lytEditReferenceTitle.getCurrentFieldValue())
             outState.putString(REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME, currentlySetSeries?.id)
-            outState.putString(REFERENCE_ISSUE_BUNDLE_EXTRA_NAME, lytEditReferenceIssue.getCurrentFieldValue())
-            outState.putString(REFERENCE_PUBLISHING_DATE_BUNDLE_EXTRA_NAME, lytEditReferencePublishingDate.getCurrentFieldValue())
-            outState.putString(REFERENCE_URL_BUNDLE_EXTRA_NAME, lytEditReferenceUrl.getCurrentFieldValue())
         }
     }
 
