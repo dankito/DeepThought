@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_edit_reference.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
+import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityResult
 import net.dankito.deepthought.android.adapter.ReferenceOnEntryRecyclerAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.di.AppComponent
@@ -18,6 +19,7 @@ import net.dankito.deepthought.android.dialogs.PickDateDialog
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.views.ActionItemUtil
 import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditReferencePresenter
 import net.dankito.deepthought.ui.presenter.util.ReferencePersister
@@ -77,6 +79,8 @@ class EditReferenceActivity : BaseActivity() {
     private val presenter: EditReferencePresenter
 
     private var reference: Reference? = null
+
+    private var currentlySetSeries: Series? = null
 
     private var currentlySetPublishingDate: Date? = null
 
@@ -141,6 +145,9 @@ class EditReferenceActivity : BaseActivity() {
 
         setupFindExistingReferenceSection()
 
+
+        edtxtSeries.setOnClickListener { editSeries() }
+
         btnSelectPublishingDate.setOnClickListener { showDatePickerDialog() }
 
         edtxtPublishingDate.setOnFocusChangeListener { _, hasFocus ->
@@ -161,8 +168,20 @@ class EditReferenceActivity : BaseActivity() {
     }
 
 
+    override fun onResume() {
+        super.onResume()
+
+        (getAndClearResult(EditSeriesActivity.ResultId) as? EditSeriesActivityResult)?.let { result ->
+            if(result.didSaveSeries) {
+                result.savedSeries?.let { savedSeriesOnUiThread(it) }
+            }
+        }
+    }
+
     override fun onDestroy() {
         unregisterEventBusListener()
+
+        parameterHolder.clearActivityResults(EditSeriesActivity.ResultId)
 
         super.onDestroy()
     }
@@ -192,6 +211,20 @@ class EditReferenceActivity : BaseActivity() {
     }
 
 
+    private fun editSeries() {
+        setWaitingForResult(EditSeriesActivity.ResultId)
+
+        reference?.let { presenter.editSeries(it, currentlySetSeries) }
+    }
+
+    private fun savedSeriesOnUiThread(series: Series) {
+        // do not set series directly on reference as if reference is not saved yet adding it to series.references causes an error
+        showSeriesOnUiThread(series)
+
+//        updateCanReferenceBeSavedOnUIThread(true)
+    }
+
+
     private fun saveReferenceAndCloseDialog() {
         unregisterEventBusListener()
 
@@ -212,11 +245,10 @@ class EditReferenceActivity : BaseActivity() {
     private fun saveReferenceAsync(callback: (Boolean) -> Unit) {
         reference?.let { reference ->
             reference.title = edtxtTitle.text.toString()
-//            reference.series = edtxtSeries.text.toString()
             reference.issue = edtxtIssue.text.toString()
             reference.url = edtxtUrl.text.toString()
 
-            presenter.saveReferenceAsync(reference, currentlySetPublishingDate, edtxtPublishingDate.text.toString()) { successful ->
+            presenter.saveReferenceAsync(reference, currentlySetSeries, currentlySetPublishingDate, edtxtPublishingDate.text.toString()) { successful ->
                 if(successful) {
                     setActivityResult(EditReferenceActivityResult(didSaveReference = true, savedReference = reference))
                 }
@@ -282,14 +314,27 @@ class EditReferenceActivity : BaseActivity() {
         existingReferencesSearchResultsAdapter.selectedReference = reference
 
         edtxtTitle.setText(reference.title)
-        reference.series?.let { edtxtSeries.setText(it.title) }
-        edtxtIssue.setText(reference.issue)
 
+        showSeriesOnUiThread(reference.series)
+
+        edtxtIssue.setText(reference.issue)
         showPublishingDate(reference.publishingDate, reference.publishingDateString)
 
         edtxtUrl.setText(reference.url)
 
+        unregisterEventBusListener()
         mayRegisterEventBusListener()
+    }
+
+    private fun showSeriesOnUiThread(series: Series?) {
+        this.currentlySetSeries = series
+
+        if(series != null) {
+            edtxtSeries.setText(series.title)
+        }
+        else {
+            edtxtSeries.setText("")
+        }
     }
 
     private fun showPublishingDate(publishingDate: Date?, publishingDateString: String? = null) {

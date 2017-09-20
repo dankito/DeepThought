@@ -156,7 +156,8 @@
                     android:layout_toLeftOf="@+id/btnSelectExistingSeries"
                     android:layout_toStartOf="@+id/btnSelectExistingSeries"
                     style="@style/ReferenceFieldValue"
-                    android:enabled="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                 />
 
                 <ImageButton
