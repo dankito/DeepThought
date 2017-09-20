@@ -66,7 +66,7 @@ class EditEntityField : RelativeLayout {
     }
 
 
-    fun setFieldNameAndValueChangeListenerOnUiThread(fieldNameResourceId: Int, didValueChangeListener: ((didValueChange: Boolean) -> Unit)?) {
+    fun setFieldNameOnUiThread(fieldNameResourceId: Int, didValueChangeListener: ((didValueChange: Boolean) -> Unit)?) {
         setFieldNameOnUiThread(fieldNameResourceId)
 
         this.didValueChangeListener = didValueChangeListener
@@ -113,6 +113,12 @@ class EditEntityField : RelativeLayout {
         edtxtEntityFieldValue.isFocusableInTouchMode = isEditable
     }
 
+
+    fun showActionIconOnUiThread(iconResourceId: Int, actionIconClickedListener: (() -> Unit)?) {
+        showActionIconOnUiThread(iconResourceId)
+
+        this.actionIconClickedListener = actionIconClickedListener
+    }
 
     fun showActionIconOnUiThread(iconResourceId: Int) {
         btnEntityFieldAction.setImageResource(iconResourceId)
