@@ -115,4 +115,8 @@ open class BaseActivity : AppCompatActivity() {
         return result
     }
 
+    protected fun clearAllActivityResults() {
+        parameterHolder.clearActivityResults()
+    }
+
 }
