@@ -238,8 +238,6 @@ class EditReferenceActivity : BaseActivity() {
     private fun savedSeriesOnUiThread(series: Series) {
         // do not set series directly on reference as if reference is not saved yet adding it to series.references causes an error
         setAndShowSeriesOnUiThread(series)
-
-        updateDidReferenceChangeOnUiThread(ReferenceField.Series, series != reference?.series)
     }
 
 
@@ -362,13 +360,14 @@ class EditReferenceActivity : BaseActivity() {
             lytEditReferenceSeries.setFieldValueOnUiThread(series.title)
             lytEditReferenceSeries.showActionIconOnUiThread(android.R.drawable.ic_delete) {
                 setAndShowSeriesOnUiThread(null)
-                updateDidReferenceChangeOnUiThread(ReferenceField.Series, reference?.series != null)
             }
         }
         else {
             lytEditReferenceSeries.setFieldValueOnUiThread("")
             lytEditReferenceSeries.showActionIconOnUiThread(R.drawable.ic_search_white_48dp) { editSeries() }
         }
+
+        updateDidReferenceChangeOnUiThread(ReferenceField.Series, series != reference?.series)
     }
 
     private fun showPublishingDate(publishingDate: Date?, publishingDateString: String? = null) {
