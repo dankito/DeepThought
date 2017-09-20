@@ -27,12 +27,9 @@ import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import net.dankito.deepthought.android.views.ActionItemUtil
 import net.dankito.deepthought.android.views.FullScreenWebView
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.ReadLaterArticle
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.getPlainTextForHtml
-import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
+import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
@@ -403,6 +400,9 @@ class EditEntryActivity : BaseActivity() {
     private fun savedReference(reference: Reference) {
         referenceToEdit = reference // do not set reference directly on entry as if entry is not saved yet adding it to reference.entries causes an error
 
+        entryExtractionResult?.series = null
+        readLaterArticle?.entryExtractionResult?.series = null
+
         updateCanEntryBeSavedOnUIThread(true)
         setReferencePreviewOnUIThread()
     }
@@ -448,7 +448,7 @@ class EditEntryActivity : BaseActivity() {
         val reference = referenceToEdit
         val entry = entry ?: readLaterArticle?.entryExtractionResult?.entry ?: entryExtractionResult?.entry ?: Entry("") // should never be the case that entry is null, just to make compiler happy
 
-        presenter.editReference(reference, entry)
+        presenter.editReference(reference, entry, getCurrentSeries())
     }
 
     private fun editTagsOnEntry() {
@@ -524,7 +524,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setReferencePreviewOnUIThread() {
-        referenceToEdit?.let { lytReferencePreview.setFieldValueOnUiThread(it.previewWithSeriesAndPublishingDate) }
+        referenceToEdit?.let { lytReferencePreview.setFieldValueOnUiThread(it.getPreviewWithSeriesAndPublishingDate(getCurrentSeries())) }
 
         if(referenceToEdit == null) {
             lytReferencePreview.setFieldValueOnUiThread("")
@@ -536,6 +536,14 @@ class EditEntryActivity : BaseActivity() {
 
         btnClearEntryReference.visibility = if(referenceToEdit == null) View.GONE else View.VISIBLE
         mnShareEntry?.isVisible = referenceToEdit?.url.isNullOrBlank() == false
+    }
+
+    private fun getCurrentSeries(): Series? {
+        readLaterArticle?.let { return it.entryExtractionResult.series }
+
+        entryExtractionResult?.let { return it.series }
+
+        return referenceToEdit?.series
     }
 
     private fun setTagsOnEntryPreviewOnUIThread() {
@@ -800,15 +808,15 @@ class EditEntryActivity : BaseActivity() {
 
     private fun shareEntryContent() {
         entry?.let { entry ->
-            presenter.shareEntry(entry, entry.reference)
+            presenter.shareEntry(entry, entry.reference, entry.reference?.series)
         }
 
         readLaterArticle?.entryExtractionResult?.let {  extractionResult ->
-            presenter.shareEntry(extractionResult.entry, extractionResult.reference)
+            presenter.shareEntry(extractionResult.entry, extractionResult.reference, extractionResult.series)
         }
 
         entryExtractionResult?.let { extractionResult ->
-            presenter.shareEntry(extractionResult.entry, extractionResult.reference)
+            presenter.shareEntry(extractionResult.entry, extractionResult.reference, extractionResult.series)
         }
     }
 
@@ -836,7 +844,7 @@ class EditEntryActivity : BaseActivity() {
 
         entry?.let { entry ->
             updateEntry(entry, content, abstract)
-            presenter.saveEntryAsync(entry, referenceToEdit, tagsOnEntry) { successful ->
+            presenter.saveEntryAsync(entry, referenceToEdit, tags = tagsOnEntry) { successful ->
                 if(successful) {
                     setActivityResult(EditEntryActivityResult(didSaveEntry = true, savedEntry = entry))
                 }
@@ -853,7 +861,7 @@ class EditEntryActivity : BaseActivity() {
             }
 
             updateEntry(extractionResult.entry, content, abstract)
-            presenter.saveEntryAsync(extractionResult.entry, referenceToEdit, tagsOnEntry) { successful ->
+            presenter.saveEntryAsync(extractionResult.entry, referenceToEdit, extractionResult.series, tagsOnEntry) { successful ->
                 if(successful) {
                     setActivityResult(EditEntryActivityResult(didSaveEntryExtractionResult = true, savedEntry = extractionResult.entry))
                 }
@@ -865,7 +873,7 @@ class EditEntryActivity : BaseActivity() {
             val extractionResult = readLaterArticle.entryExtractionResult
             updateEntry(extractionResult.entry, content, abstract)
 
-            presenter.saveEntryAsync(extractionResult.entry, referenceToEdit, tagsOnEntry) { successful ->
+            presenter.saveEntryAsync(extractionResult.entry, referenceToEdit, extractionResult.series, tagsOnEntry) { successful ->
                 if(successful) {
                     readLaterArticleService.delete(readLaterArticle)
                     setActivityResult(EditEntryActivityResult(didSaveReadLaterArticle = true, savedEntry = extractionResult.entry))

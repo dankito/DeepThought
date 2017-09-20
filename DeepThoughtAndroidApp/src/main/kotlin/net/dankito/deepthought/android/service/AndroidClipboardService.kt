@@ -5,9 +5,10 @@ import android.os.Build
 import android.support.v7.widget.ShareActionProvider
 import net.dankito.deepthought.model.extensions.abstractPlainText
 import net.dankito.deepthought.model.extensions.contentPlainText
-import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
+import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Series
 import net.dankito.utils.ui.IClipboardService
 
 
@@ -27,14 +28,14 @@ class AndroidClipboardService(private val activityTracker: CurrentActivityTracke
         share(shareIntent)
     }
 
-    override fun copyEntryToClipboard(entry: Entry, reference: Reference?) {
+    override fun copyEntryToClipboard(entry: Entry, reference: Reference?, series: Series?) {
         val shareIntent = Intent()
         shareIntent.action = Intent.ACTION_SEND
 
         var content = entry.contentPlainText
 
         if(reference != null) { // TODO: Replace System.lineSeparator by PlatformConfig.getNewLineChar()
-            content = content + System.lineSeparator() + System.lineSeparator() + "(" + reference.previewWithSeriesAndPublishingDate + ": " + reference.url + ")"
+            content = content + System.lineSeparator() + System.lineSeparator() + "(" + reference.getPreviewWithSeriesAndPublishingDate(series) + ": " + reference.url + ")"
         }
 
         shareIntent.putExtra(Intent.EXTRA_TEXT, content)

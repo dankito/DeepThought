@@ -2,6 +2,7 @@ package net.dankito.deepthought.model.extensions
 
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Series
 
 
 const val SeriesAndPublishingDateAndEntryPreviewSeparator = " | "
@@ -41,10 +42,10 @@ val Entry.entryPreview: String
     }
 
 
-fun Entry.getEntryPreviewWithSeriesAndPublishingDate(reference: Reference?): String {
+fun Entry.getEntryPreviewWithSeriesAndPublishingDate(reference: Reference?, series: Series? = null): String {
     var preview = this.preview
 
-    val seriesAndPublishingDate = reference.seriesAndPublishingDatePreview
+    val seriesAndPublishingDate = reference.getSeriesAndPublishingDatePreview(series)
     if(seriesAndPublishingDate.isNullOrBlank() == false) {
         preview = seriesAndPublishingDate + SeriesAndPublishingDateAndEntryPreviewSeparator + preview
     }

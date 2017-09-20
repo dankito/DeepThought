@@ -1,22 +1,13 @@
 package net.dankito.deepthought.javafx.dialogs.entry
 
 import net.dankito.deepthought.javafx.di.AppComponent
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.ReadLaterArticle
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.Tag
-import net.dankito.service.data.ReadLaterArticleService
+import net.dankito.deepthought.model.*
 import org.jsoup.Jsoup
-import javax.inject.Inject
 
 
 class EditReadLaterArticleView : EditEntryViewBase() {
 
     val article: ReadLaterArticle by param()
-
-
-    @Inject
-    protected lateinit var readLaterArticleService: ReadLaterArticleService
 
 
     init {
@@ -35,6 +26,10 @@ class EditReadLaterArticleView : EditEntryViewBase() {
 
     override fun getReferenceForSaving(): Reference? {
         return article.entryExtractionResult.reference
+    }
+
+    override fun getCurrentSeries(): Series? {
+        return article.entryExtractionResult.series
     }
 
     override fun getTagsForSaving(): List<Tag> {

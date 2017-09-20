@@ -8,7 +8,7 @@ import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.extensions.SeriesAndPublishingDateAndEntryPreviewSeparator
-import net.dankito.deepthought.model.extensions.preview
+import net.dankito.deepthought.model.extensions.getSeriesAndPublishingDatePreview
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
@@ -128,7 +128,7 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
     private fun saveArticleForLaterReading(item: ArticleSummaryItem, result: EntryExtractionResult) {
         var entryPreview = item.summary
-        val seriesAndPublishingDate = result.reference.preview
+        val seriesAndPublishingDate = result.reference.getSeriesAndPublishingDatePreview(result.series)
         if(seriesAndPublishingDate.isNullOrBlank() == false) {
             entryPreview = seriesAndPublishingDate + SeriesAndPublishingDateAndEntryPreviewSeparator + entryPreview
         }

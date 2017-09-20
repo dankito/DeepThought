@@ -1,10 +1,7 @@
 package net.dankito.deepthought.ui.presenter
 
 import net.dankito.deepthought.di.CommonComponent
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.ReadLaterArticle
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.getEntryPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.util.EntryExtractionResult
@@ -28,16 +25,16 @@ class EditEntryPresenter(private val entryPersister: EntryPersister, private val
     }
 
 
-    fun editReference(reference: Reference?, forEntry: Entry) {
-        router.showEditEntryReferenceView(forEntry, reference)
+    fun editReference(reference: Reference?, forEntry: Entry, series: Series?) {
+        router.showEditEntryReferenceView(forEntry, reference, series)
     }
 
-    fun saveEntryAsync(entry: Entry, reference: Reference? = null, tags: Collection<Tag> = ArrayList(), callback: (Boolean) -> Unit) {
-        entryPersister.saveEntryAsync(entry, reference, tags, callback)
+    fun saveEntryAsync(entry: Entry, reference: Reference? = null, series: Series? = null, tags: Collection<Tag> = ArrayList(), callback: (Boolean) -> Unit) {
+        entryPersister.saveEntryAsync(entry, reference, series, tags, callback)
     }
 
     fun saveEntryExtractionResultForLaterReading(extractionResult: EntryExtractionResult) {
-        readLaterArticleService.persist(ReadLaterArticle(extractionResult, extractionResult.entry.getEntryPreviewWithSeriesAndPublishingDate(extractionResult.reference),
+        readLaterArticleService.persist(ReadLaterArticle(extractionResult, extractionResult.entry.getEntryPreviewWithSeriesAndPublishingDate(extractionResult.reference, extractionResult.series),
                 extractionResult.reference.preview, extractionResult.reference?.url, extractionResult.reference?.previewImageUrl))
     }
 
@@ -50,8 +47,8 @@ class EditEntryPresenter(private val entryPersister: EntryPersister, private val
         reference.url?.let { clipboardService.copyUrlToClipboard(it) }
     }
 
-    fun shareEntry(entry: Entry, reference: Reference?) {
-        clipboardService.copyEntryToClipboard(entry, reference)
+    fun shareEntry(entry: Entry, reference: Reference?, series: Series?) {
+        clipboardService.copyEntryToClipboard(entry, reference, series)
     }
 
 

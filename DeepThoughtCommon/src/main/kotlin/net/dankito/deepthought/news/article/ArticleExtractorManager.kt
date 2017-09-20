@@ -105,11 +105,11 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
 
     private fun setSeries(extractionResult: EntryExtractionResult, siteName: String, asyncResult: AsyncResult<EntryExtractionResult>, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
         extractionResult.reference?.let { reference ->
-            if(reference.series == null || reference.series?.isPersisted() == false) { // series not set to a persisted Series -> try to find an existing one or create and persist a new one
-                val seriesTitle = reference.series?.title ?: siteName
+            if(extractionResult.series == null || extractionResult.series?.isPersisted() == false) { // series not set to a persisted Series -> try to find an existing one or create and persist a new one
+                val seriesTitle = extractionResult.series?.title ?: siteName
 
                 getSeriesForTitleSynchronized(seriesTitle) {
-                    reference.series = it
+                    extractionResult.series = it
                     callback(asyncResult)
                 }
 

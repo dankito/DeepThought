@@ -1,6 +1,7 @@
 package net.dankito.deepthought.model.extensions
 
 import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Series
 import java.text.DateFormat
 
 
@@ -22,38 +23,49 @@ val Reference?.preview: String
         return preview
     }
 
+
 val Reference?.seriesAndPublishingDatePreview: String
     get() {
-        if(this == null) {
-            return ""
-        }
-
-        var preview = series?.title ?: ""
-
-        if(publishingDateString != null) {
-            preview += " " + publishingDateString
-        }
-        else if(publishingDate != null) {
-            preview += " " + PublishingDateFormat.format(publishingDate)
-        }
-
-        return preview.trim()
+        return getSeriesAndPublishingDatePreview()
     }
+
+fun Reference?.getSeriesAndPublishingDatePreview(series: Series? = null): String {
+    if(this == null) {
+        return ""
+    }
+
+    val seriesForPreview = series ?: this.series
+    var preview = seriesForPreview?.title ?: ""
+
+    if(publishingDateString != null) {
+        preview += " " + publishingDateString
+    }
+    else if(publishingDate != null) {
+        preview += " " + PublishingDateFormat.format(publishingDate)
+    }
+
+    return preview.trim()
+}
+
 
 val Reference?.previewWithSeriesAndPublishingDate: String
     get() {
-        if(this == null) {
-            return ""
-        }
-
-        var preview = this.preview
-
-        var publisherAndDate = seriesAndPublishingDatePreview
-
-        if(publisherAndDate.isNullOrBlank() == false) {
-            preview = publisherAndDate.trim() + " " + preview
-        }
-
-        return preview
+        return getPreviewWithSeriesAndPublishingDate()
     }
+
+fun Reference?.getPreviewWithSeriesAndPublishingDate(series: Series? = null): String {
+    if(this == null) {
+        return ""
+    }
+
+    var preview = this.preview
+
+    val publisherAndDate = getSeriesAndPublishingDatePreview(series)
+
+    if(publisherAndDate.isNullOrBlank() == false) {
+        preview = publisherAndDate.trim() + " " + preview
+    }
+
+    return preview
+}
 

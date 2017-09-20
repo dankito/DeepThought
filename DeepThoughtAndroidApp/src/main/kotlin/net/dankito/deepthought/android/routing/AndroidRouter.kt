@@ -2,10 +2,7 @@ package net.dankito.deepthought.android.routing
 
 import android.content.Context
 import android.content.Intent
-import net.dankito.deepthought.android.activities.ArticleSummaryActivity
-import net.dankito.deepthought.android.activities.BaseActivity
-import net.dankito.deepthought.android.activities.EditEntryActivity
-import net.dankito.deepthought.android.activities.EditReferenceActivity
+import net.dankito.deepthought.android.activities.*
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EntryActivityParameters
@@ -17,7 +14,6 @@ import net.dankito.deepthought.android.service.ActivityParameterHolder
 import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.EntryExtractionResult
-import net.dankito.deepthought.android.activities.EditSeriesActivity
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.utils.serialization.ISerializer
@@ -107,8 +103,8 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
         showEditReferenceView(EditReferenceActivityParameters(reference))
     }
 
-    override fun showEditEntryReferenceView(forEntry: Entry, reference: Reference?) {
-        showEditReferenceView(EditReferenceActivityParameters(reference, forEntry))
+    override fun showEditEntryReferenceView(forEntry: Entry, reference: Reference?, series: Series?) {
+        showEditReferenceView(EditReferenceActivityParameters(reference, forEntry, series))
     }
 
     private fun showEditReferenceView(parameters: EditReferenceActivityParameters) {

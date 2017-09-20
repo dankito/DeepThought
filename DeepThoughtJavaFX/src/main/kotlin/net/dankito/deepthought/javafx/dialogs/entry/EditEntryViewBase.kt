@@ -10,8 +10,9 @@ import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Tag
-import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
+import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
@@ -202,7 +203,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
 
     protected fun showReferencePreview(reference: Reference?) {
-        this.referencePreview.value = reference?.previewWithSeriesAndPublishingDate ?: ""
+        this.referencePreview.value = reference?.getPreviewWithSeriesAndPublishingDate(getCurrentSeries()) ?: ""
     }
 
     protected fun showTagsPreview(tags: Collection<Tag>) {
@@ -211,7 +212,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
 
     protected open fun saveEntryAndCloseDialog() {
-        presenter.saveEntryAsync(getEntryForSaving(), getReferenceForSaving(), getTagsForSaving()) {
+        presenter.saveEntryAsync(getEntryForSaving(), getReferenceForSaving(), getCurrentSeries(), getTagsForSaving()) {
             entrySaved()
 
             runLater { closeDialog() }
@@ -228,9 +229,12 @@ abstract class EditEntryViewBase : DialogFragment() {
         close()
     }
 
+
     protected abstract fun getEntryForSaving(): Entry
 
     protected abstract fun getReferenceForSaving(): Reference?
+
+    protected abstract fun getCurrentSeries(): Series?
 
     protected abstract fun getTagsForSaving(): List<Tag>
 

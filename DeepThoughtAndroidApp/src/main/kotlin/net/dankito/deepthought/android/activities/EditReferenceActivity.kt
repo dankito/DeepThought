@@ -123,7 +123,7 @@ class EditReferenceActivity : BaseActivity() {
         savedInstanceState.getString(REFERENCE_ID_BUNDLE_EXTRA_NAME)?.let { referenceId -> showReference(referenceId) }
 
         savedInstanceState.getString(REFERENCE_TITLE_BUNDLE_EXTRA_NAME)?.let { lytEditReferenceTitle.setFieldValueOnUiThread(it) }
-        savedInstanceState.getString(REFERENCE_SERIES_BUNDLE_EXTRA_NAME)?.let { lytEditReferenceSeries.setFieldValueOnUiThread(it) }
+        savedInstanceState.getString(REFERENCE_SERIES_BUNDLE_EXTRA_NAME)?.let { lytEditReferenceSeries.setFieldValueOnUiThread(it) } // TODO: restore from id
         savedInstanceState.getString(REFERENCE_ISSUE_BUNDLE_EXTRA_NAME)?.let { lytEditReferenceIssue.setFieldValueOnUiThread(it) }
         savedInstanceState.getString(REFERENCE_PUBLISHING_DATE_BUNDLE_EXTRA_NAME)?.let { lytEditReferencePublishingDate.setFieldValueOnUiThread(it) }
         savedInstanceState.getString(REFERENCE_URL_BUNDLE_EXTRA_NAME)?.let { lytEditReferenceUrl.setFieldValueOnUiThread(it) }
@@ -136,7 +136,7 @@ class EditReferenceActivity : BaseActivity() {
             outState.putString(REFERENCE_ID_BUNDLE_EXTRA_NAME, reference?.id)
 
             outState.putString(REFERENCE_TITLE_BUNDLE_EXTRA_NAME, lytEditReferenceTitle.getCurrentFieldValue())
-            outState.putString(REFERENCE_SERIES_BUNDLE_EXTRA_NAME, lytEditReferenceSeries.getCurrentFieldValue())
+            outState.putString(REFERENCE_SERIES_BUNDLE_EXTRA_NAME, lytEditReferenceSeries.getCurrentFieldValue()) // TODO: save only id
             outState.putString(REFERENCE_ISSUE_BUNDLE_EXTRA_NAME, lytEditReferenceIssue.getCurrentFieldValue())
             outState.putString(REFERENCE_PUBLISHING_DATE_BUNDLE_EXTRA_NAME, lytEditReferencePublishingDate.getCurrentFieldValue())
             outState.putString(REFERENCE_URL_BUNDLE_EXTRA_NAME, lytEditReferenceUrl.getCurrentFieldValue())
@@ -312,7 +312,7 @@ class EditReferenceActivity : BaseActivity() {
     private fun showParameters(parameters: EditReferenceActivityParameters?) {
         parameters?.let {
             if(parameters.reference != null) {
-                showReference(parameters.reference)
+                showReference(parameters.reference, parameters.series)
             }
             else {
                 createReference()
@@ -334,13 +334,13 @@ class EditReferenceActivity : BaseActivity() {
         }
     }
 
-    private fun showReference(reference: Reference) {
+    private fun showReference(reference: Reference, series: Series? = null) {
         this.reference = reference
         existingReferencesSearchResultsAdapter.selectedReference = reference
 
         lytEditReferenceTitle.setFieldValueOnUiThread(reference.title)
 
-        setAndShowSeriesOnUiThread(reference.series)
+        setAndShowSeriesOnUiThread(series ?: reference.series)
 
         lytEditReferenceIssue.setFieldValueOnUiThread(reference.issue ?: "")
         showPublishingDate(reference.publishingDate, reference.publishingDateString)

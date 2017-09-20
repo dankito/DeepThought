@@ -83,7 +83,7 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
         // TODO
     }
 
-    override fun showEditEntryReferenceView(forEntry: Entry, reference: Reference?) {
+    override fun showEditEntryReferenceView(forEntry: Entry, reference: Reference?, series: Series?) {
         // there should be no need for this on JavaFX
     }
 
