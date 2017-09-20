@@ -33,6 +33,8 @@ class EditEntityField : RelativeLayout {
 
     var didValueChangeListener: ((didValueChange: Boolean) -> Unit)? = null
 
+    var fieldValueFocusChangedListener: ((hasFocus: Boolean) -> Unit)? = null
+
     var actionIconClickedListener: (() -> Unit)? = null
 
 
@@ -58,6 +60,7 @@ class EditEntityField : RelativeLayout {
 
         edtxtEntityFieldValue = rootView.edtxtEntityFieldValue
         edtxtEntityFieldValue.addTextChangedListener(edtxtEntityFieldValueTextWatcher)
+        edtxtEntityFieldValue.setOnFocusChangeListener { _, hasFocus -> fieldValueFocusChangedListener?.invoke(hasFocus) }
 
         btnEntityFieldAction = rootView.btnEntityFieldAction
     }
