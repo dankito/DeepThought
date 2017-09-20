@@ -142,4 +142,12 @@
     <dimen name="activity_edit_reference_section_top_margin">16dp</dimen>
     <dimen name="activity_edit_reference_icons_padding">4dp</dimen>
 
+    <dimen name="activity_edit_series_padding">8dp</dimen>
+    <dimen name="activity_edit_series_find_existing_margin_left">6dp</dimen>
+    <dimen name="activity_edit_series_find_existing_controls_margin_bottom">12dp</dimen>
+    <dimen name="activity_edit_series_create_buttons_min_width">120dp</dimen>
+    <dimen name="activity_edit_series_create_buttons_text_size">13sp</dimen>
+    <dimen name="activity_edit_series_section_top_margin">16dp</dimen>
+    <dimen name="activity_edit_series_icons_padding">4dp</dimen>
+
 </resources>

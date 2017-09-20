@@ -131,6 +131,16 @@
     <string name="activity_edit_reference_alert_message_reference_has_been_edited">Reference has been edited (probably on a synchronized device).\n\nWhen
         you now save the reference the other changes get overwritten.</string>
 
+    <string name="activity_edit_series_title">Series</string>
+    <string name="activity_edit_series_use_existing_label">Use existing:</string>
+    <string name="activity_edit_series_create_series">New …</string>
+    <string name="activity_edit_series_create_series_from_isbn">From ISBN …</string>
+    <string name="activity_edit_series_title_label">Title</string>
+    <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
+    <string name="activity_edit_series_alert_message_series_has_been_edited">Series has been edited (probably on a synchronized device).\n\nWhen
+        you now save the series the other changes get overwritten.
+    </string>
+
     <string name="synchronize_data_with_this_device">Synchronize data with</string>
     <string name="never_ask_again">Never ask again</string>
     <string name="alert_title_permit_device_to_synchronize">Device asks for Permission</string>

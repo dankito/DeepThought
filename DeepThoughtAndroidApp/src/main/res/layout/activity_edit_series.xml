@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/content_layout_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+>
+    <!-- Set focusable and focusableInTouchMode to true so that keyboard doesn't get shown on Activity start -->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/move_upward_behaviour"
+    >
+
+
+        <RelativeLayout
+            android:id="@+id/lytSetReferenceSeriesControls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="@dimen/activity_edit_series_find_existing_controls_margin_bottom"
+            android:padding="@dimen/activity_edit_series_padding"
+            android:visibility="gone"
+        >
+
+            <RelativeLayout
+                android:id="@+id/lytExistingSeriesSearchBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+            >
+
+                <TextView
+                    android:id="@+id/txtFindSeriesLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignBaseline="@+id/edtxtFindSeries"
+                    android:text="@string/activity_edit_series_use_existing_label"
+                />
+
+                <EditText
+                    android:id="@+id/edtxtFindSeries"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dialog_tags_on_entry_tag_search_tags_height"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_toRightOf="@+id/txtFindSeriesLabel"
+                    android:layout_toEndOf="@+id/txtFindSeriesLabel"
+                    android:layout_marginLeft="@dimen/activity_edit_series_find_existing_margin_left"
+                    android:layout_marginStart="@dimen/activity_edit_series_find_existing_margin_left"
+                    android:inputType="text"
+                />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lytEditReferenceSeriesControls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lytExistingSeriesSearchBar"
+            >
+
+                <Button
+                    android:id="@+id/btnCreateNewSeries"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="@dimen/activity_edit_series_create_buttons_min_width"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:textSize="@dimen/activity_edit_series_create_buttons_text_size"
+                    android:text="@string/activity_edit_series_create_series"
+                />
+
+                <Button
+                    android:id="@+id/btnCreateSeriesFromIsbn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="@dimen/activity_edit_series_create_buttons_min_width"
+                    android:layout_toRightOf="@+id/btnCreateNewSeries"
+                    android:layout_toEndOf="@+id/btnCreateNewSeries"
+                    android:textSize="@dimen/activity_edit_series_create_buttons_text_size"
+                    android:text="@string/activity_edit_series_create_series_from_isbn"
+                    android:enabled="false"
+                />
+
+            </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rcyExistingSeriesSearchResults"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lytEditReferenceSeriesControls"
+                android:layout_alignParentBottom="true"
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                android:longClickable="true"
+                android:visibility="gone"
+            />
+
+        </RelativeLayout>
+
+        <ScrollView
+            android:id="@+id/scrEditSeries"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/lytSetReferenceSeriesControls"
+            android:layout_above="@id/toolbar"
+            android:padding="@dimen/activity_edit_series_padding"
+        >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+            >
+
+                <TextView
+                    android:id="@+id/txtTitleLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    style="@style/EntityFieldName"
+                    android:text="@string/activity_edit_series_title_label"
+                />
+
+                <EditText
+                    android:id="@+id/edtxtTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/txtTitleLabel"
+                    style="@style/ReferenceFieldValue"
+                />
+
+            </RelativeLayout>
+
+        </ScrollView>
+
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            app:title="@string/activity_edit_series_title"
+            style="@style/ToolbarStyle"
+        />
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

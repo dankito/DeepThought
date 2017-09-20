@@ -23,6 +23,7 @@ import net.dankito.deepthought.di.BaseModule
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.di.CommonDataModule
 import net.dankito.deepthought.di.CommonModule
+import net.dankito.deepthought.android.activities.EditSeriesActivity
 import javax.inject.Singleton
 
 
@@ -83,5 +84,7 @@ interface AppComponent : CommonComponent {
     fun inject(htmlEditor: AndroidHtmlEditor)
 
     fun inject(editReferenceActivity: EditReferenceActivity)
+
+    fun inject(editSeriesActivity: EditSeriesActivity)
 
 }

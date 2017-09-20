@@ -6,6 +6,7 @@ import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.presenter.*
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.deepthought.ui.presenter.util.ReferencePersister
+import net.dankito.deepthought.ui.presenter.util.SeriesPersister
 import javax.inject.Singleton
 
 
@@ -39,6 +40,8 @@ interface CommonComponent : BaseComponent {
     fun inject(entryPersister: EntryPersister)
 
     fun inject(referencePersister: ReferencePersister)
+
+    fun inject(seriesPersister: SeriesPersister)
 
     fun inject(articleExtractorManager: ArticleExtractorManager)
 

@@ -35,12 +35,16 @@
             <!-- For receiving shared data -->
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/plain" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/html" />
             </intent-filter>
 
@@ -84,6 +88,11 @@
             </intent-filter>
         </receiver>
 
+        <activity
+            android:name=".activities.EditSeriesActivity"
+            android:label="@string/activity_edit_reference_title"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

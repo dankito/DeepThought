@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+>
+
+    <item
+        android:id="@+id/mnSaveSeries"
+        app:showAsAction="always"
+        android:orderInCategory="100"
+        android:title="@string/action_save"
+        android:icon="@drawable/ic_save_white_48dp"
+        app:actionLayout="@layout/contextual_action_mode_item_action_layout"
+    />
+
+</menu>

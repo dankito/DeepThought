@@ -130,6 +130,15 @@
     <string name="activity_edit_reference_alert_message_reference_has_been_edited">Quelle wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\r\n\r\nWenn
         Sie die Quelle nun speichern, werden diese anderen Änderungen überschrieben.</string>
 
+    <string name="activity_edit_series_title">Reihe</string>
+    <string name="activity_edit_series_use_existing_label">Bestehende verwenden:</string>
+    <string name="activity_edit_series_create_series">Neu …</string>
+    <string name="activity_edit_series_create_series_from_isbn">Von ISBN …</string>
+    <string name="activity_edit_series_title_label">Titel</string>
+    <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
+    <string name="activity_edit_series_alert_message_series_has_been_edited">Reihe wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\r\n\r\nWenn
+        Sie die Reihe nun speichern, werden diese anderen Änderungen überschrieben.</string>
+
     <string name="synchronize_data_with_this_device">Daten synchronisieren mit</string>
     <string name="never_ask_again">Nicht mehr fragen</string>
     <string name="alert_title_permit_device_to_synchronize">Gerät frägt um Erlaubnis</string>
