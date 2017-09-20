@@ -122,7 +122,13 @@ class EditReferenceActivity : BaseActivity() {
     private fun restoreState(savedInstanceState: Bundle) {
         savedInstanceState.getString(REFERENCE_ID_BUNDLE_EXTRA_NAME)?.let { referenceId -> showReference(referenceId) }
 
-        savedInstanceState.getString(REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME)?.let { setAndShowSeriesOnUiThread(it) }
+        val seriesId = savedInstanceState.getString(REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME)
+        if(seriesId != null) {
+            setAndShowSeriesOnUiThread(seriesId)
+        }
+        else {
+            setAndShowSeriesOnUiThread(null)
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
