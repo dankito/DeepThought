@@ -26,6 +26,7 @@ import net.dankito.deepthought.ui.presenter.EditReferencePresenter
 import net.dankito.deepthought.ui.presenter.util.ReferencePersister
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReferenceService
+import net.dankito.service.data.SeriesService
 import net.dankito.service.data.messages.ReferenceChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
@@ -43,7 +44,7 @@ class EditReferenceActivity : BaseActivity() {
     companion object {
         private const val REFERENCE_ID_BUNDLE_EXTRA_NAME = "REFERENCE_ID"
         private const val REFERENCE_TITLE_BUNDLE_EXTRA_NAME = "REFERENCE_TITLE"
-        private const val REFERENCE_SERIES_BUNDLE_EXTRA_NAME = "REFERENCE_SERIES"
+        private const val REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME = "REFERENCE_SERIES_ID"
         private const val REFERENCE_ISSUE_BUNDLE_EXTRA_NAME = "REFERENCE_ISSUE"
         private const val REFERENCE_PUBLISHING_DATE_BUNDLE_EXTRA_NAME = "REFERENCE_PUBLISHING_DATE"
         private const val REFERENCE_URL_BUNDLE_EXTRA_NAME = "REFERENCE_URL"
@@ -55,6 +56,9 @@ class EditReferenceActivity : BaseActivity() {
 
     @Inject
     protected lateinit var referenceService: ReferenceService
+
+    @Inject
+    protected lateinit var seriesService: SeriesService
 
     @Inject
     protected lateinit var referencePersister: ReferencePersister
@@ -123,7 +127,7 @@ class EditReferenceActivity : BaseActivity() {
         savedInstanceState.getString(REFERENCE_ID_BUNDLE_EXTRA_NAME)?.let { referenceId -> showReference(referenceId) }
 
         savedInstanceState.getString(REFERENCE_TITLE_BUNDLE_EXTRA_NAME)?.let { lytEditReferenceTitle.setFieldValueOnUiThread(it) }
-        savedInstanceState.getString(REFERENCE_SERIES_BUNDLE_EXTRA_NAME)?.let { lytEditReferenceSeries.setFieldValueOnUiThread(it) } // TODO: restore from id
+        savedInstanceState.getString(REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME)?.let { setAndShowSeriesOnUiThread(it) }
         savedInstanceState.getString(REFERENCE_ISSUE_BUNDLE_EXTRA_NAME)?.let { lytEditReferenceIssue.setFieldValueOnUiThread(it) }
         savedInstanceState.getString(REFERENCE_PUBLISHING_DATE_BUNDLE_EXTRA_NAME)?.let { lytEditReferencePublishingDate.setFieldValueOnUiThread(it) }
         savedInstanceState.getString(REFERENCE_URL_BUNDLE_EXTRA_NAME)?.let { lytEditReferenceUrl.setFieldValueOnUiThread(it) }
@@ -136,7 +140,7 @@ class EditReferenceActivity : BaseActivity() {
             outState.putString(REFERENCE_ID_BUNDLE_EXTRA_NAME, reference?.id)
 
             outState.putString(REFERENCE_TITLE_BUNDLE_EXTRA_NAME, lytEditReferenceTitle.getCurrentFieldValue())
-            outState.putString(REFERENCE_SERIES_BUNDLE_EXTRA_NAME, lytEditReferenceSeries.getCurrentFieldValue()) // TODO: save only id
+            outState.putString(REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME, currentlySetSeries?.id)
             outState.putString(REFERENCE_ISSUE_BUNDLE_EXTRA_NAME, lytEditReferenceIssue.getCurrentFieldValue())
             outState.putString(REFERENCE_PUBLISHING_DATE_BUNDLE_EXTRA_NAME, lytEditReferencePublishingDate.getCurrentFieldValue())
             outState.putString(REFERENCE_URL_BUNDLE_EXTRA_NAME, lytEditReferenceUrl.getCurrentFieldValue())
@@ -349,6 +353,12 @@ class EditReferenceActivity : BaseActivity() {
 
         unregisterEventBusListener()
         mayRegisterEventBusListener()
+    }
+
+    private fun setAndShowSeriesOnUiThread(seriesId: String) {
+        seriesService.retrieve(seriesId)?.let { series ->
+            setAndShowSeriesOnUiThread(series)
+        }
     }
 
     private fun setAndShowSeriesOnUiThread(series: Series?) {
