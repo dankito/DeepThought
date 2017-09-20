@@ -33,6 +33,8 @@ class EditEntityField : RelativeLayout {
 
     var didValueChangeListener: ((didValueChange: Boolean) -> Unit)? = null
 
+    var fieldClickedListener: (() -> Unit)? = null
+
     var fieldValueFocusChangedListener: ((hasFocus: Boolean) -> Unit)? = null
 
     var actionIconClickedListener: (() -> Unit)? = null
@@ -57,9 +59,11 @@ class EditEntityField : RelativeLayout {
         val rootView = inflater.inflate(R.layout.view_edit_entity_field, this)
 
         txtEntityFieldName = rootView.txtEntityFieldName
+        txtEntityFieldName.setOnClickListener { fieldClickedListener?.invoke() }
 
         edtxtEntityFieldValue = rootView.edtxtEntityFieldValue
         edtxtEntityFieldValue.addTextChangedListener(edtxtEntityFieldValueTextWatcher)
+        edtxtEntityFieldValue.setOnClickListener { fieldClickedListener?.invoke() } // remember: setOnClickListener() on an EditText only works if focusable has been set to  false -> call setFieldNameOnUiThread() with isEditable = false
         edtxtEntityFieldValue.setOnFocusChangeListener { _, hasFocus -> fieldValueFocusChangedListener?.invoke(hasFocus) }
 
         btnEntityFieldAction = rootView.btnEntityFieldAction
