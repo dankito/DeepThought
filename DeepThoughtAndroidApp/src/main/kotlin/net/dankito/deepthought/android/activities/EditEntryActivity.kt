@@ -191,7 +191,9 @@ class EditEntryActivity : BaseActivity() {
 
         savedInstanceState?.let { restoreState(it) }
 
-        showParameters(getParameters() as? EntryActivityParameters)
+        if(savedInstanceState == null) {
+            showParameters(getParameters() as? EntryActivityParameters)
+        }
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
