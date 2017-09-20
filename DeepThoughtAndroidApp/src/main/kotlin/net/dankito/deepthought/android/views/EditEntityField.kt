@@ -66,14 +66,16 @@ class EditEntityField : RelativeLayout {
     }
 
 
-    fun setFieldNameOnUiThread(fieldNameResourceId: Int, didValueChangeListener: ((didValueChange: Boolean) -> Unit)?) {
-        setFieldNameOnUiThread(fieldNameResourceId)
+    fun setFieldNameOnUiThread(fieldNameResourceId: Int, isEditable: Boolean = true, didValueChangeListener: ((didValueChange: Boolean) -> Unit)?) {
+        setFieldNameOnUiThread(fieldNameResourceId, isEditable)
 
         this.didValueChangeListener = didValueChangeListener
     }
 
-    fun setFieldNameOnUiThread(fieldNameResourceId: Int) {
+    fun setFieldNameOnUiThread(fieldNameResourceId: Int, isEditable: Boolean = true) {
         txtEntityFieldName.text = context.getString(fieldNameResourceId)
+
+        setEditTextEntityFieldValueIsEditableOnUiThread(isEditable)
     }
 
     fun getCurrentFieldValue(): String {
@@ -84,9 +86,8 @@ class EditEntityField : RelativeLayout {
         edtxtEntityFieldValue.inputType = inputType
     }
 
-    fun setFieldValueOnUiThread(fieldValue: String, isEditable: Boolean = true) {
+    fun setFieldValueOnUiThread(fieldValue: String) {
         setEditTextEntityFieldValueOnUiThread(fieldValue)
-        setEditTextEntityFieldValueIsEditableOnUiThread(isEditable)
 
         edtxtEntityFieldValue.setTypeface(null, Typeface.NORMAL)
         edtxtEntityFieldValue.setTextColorToColorResource(R.color.entity_field_value_text_color)
