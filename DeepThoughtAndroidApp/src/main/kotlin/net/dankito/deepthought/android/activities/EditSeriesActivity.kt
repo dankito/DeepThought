@@ -122,8 +122,7 @@ class EditSeriesActivity : BaseActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        lytEditSeriesTitle.setFieldNameOnUiThread(R.string.activity_edit_series_title_label)
-        lytEditSeriesTitle.didValueChangeListener = { updateDidSeriesChangeOnUiThread(it) }
+        lytEditSeriesTitle.setFieldNameAndValueChangeListenerOnUiThread(R.string.activity_edit_series_title_label) { updateDidSeriesChangeOnUiThread(it) }
 
         setupFindExistingSeriesSection()
     }

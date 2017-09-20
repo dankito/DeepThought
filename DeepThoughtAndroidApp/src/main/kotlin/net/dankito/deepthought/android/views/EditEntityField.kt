@@ -66,6 +66,12 @@ class EditEntityField : RelativeLayout {
     }
 
 
+    fun setFieldNameAndValueChangeListenerOnUiThread(fieldNameResourceId: Int, didValueChangeListener: ((didValueChange: Boolean) -> Unit)?) {
+        setFieldNameOnUiThread(fieldNameResourceId)
+
+        this.didValueChangeListener = didValueChangeListener
+    }
+
     fun setFieldNameOnUiThread(fieldNameResourceId: Int) {
         txtEntityFieldName.text = context.getString(fieldNameResourceId)
     }
