@@ -35,6 +35,11 @@ interface IRouter {
     fun showEditEntryReferenceView(forEntry: Entry, reference: Reference?)
 
 
+    fun showEditSeriesView(series: Series)
+
+    fun showEditReferenceSeriesView(forReference: Reference, series: Series?)
+
+
     fun returnToPreviousView()
 
 }

@@ -7,6 +7,7 @@ import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.activities.EditEntryActivity
 import net.dankito.deepthought.android.activities.EditReferenceActivity
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityParameters
+import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EntryActivityParameters
 import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
@@ -16,6 +17,7 @@ import net.dankito.deepthought.android.service.ActivityParameterHolder
 import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.android.activities.EditSeriesActivity
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.utils.serialization.ISerializer
@@ -116,6 +118,24 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
         addParametersToIntent(editReferenceIntent, parameters)
 
         context.startActivity(editReferenceIntent)
+    }
+
+
+    override fun showEditSeriesView(series: Series) {
+        showEditSeriesView(EditSeriesActivityParameters(series))
+    }
+
+    override fun showEditReferenceSeriesView(forReference: Reference, series: Series?) {
+        showEditSeriesView(EditSeriesActivityParameters(series, forReference))
+    }
+
+    private fun showEditSeriesView(parameters: EditSeriesActivityParameters) {
+        val editSeriesIntent = Intent(context, EditSeriesActivity::class.java)
+        editSeriesIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        addParametersToIntent(editSeriesIntent, parameters)
+
+        context.startActivity(editSeriesIntent)
     }
 
 
