@@ -37,6 +37,7 @@ import net.dankito.deepthought.ui.presenter.EditEntryPresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.ReadLaterArticleService
+import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.TagService
 import net.dankito.service.data.messages.EntryChanged
 import net.dankito.service.eventbus.IEventBus
@@ -59,6 +60,7 @@ class EditEntryActivity : BaseActivity() {
 
         private const val CONTENT_INTENT_EXTRA_NAME = "CONTENT"
         private const val ABSTRACT_INTENT_EXTRA_NAME = "ABSTRACT"
+        private const val REFERENCE_INTENT_EXTRA_NAME = "REFERENCE"
         private const val TAGS_ON_ENTRY_INTENT_EXTRA_NAME = "TAGS_ON_ENTRY"
 
         const val ResultId = "EDIT_ENTRY_ACTIVITY_RESULT"
@@ -99,6 +101,9 @@ class EditEntryActivity : BaseActivity() {
 
     @Inject
     protected lateinit var tagService: TagService
+
+    @Inject
+    protected lateinit var referenceService: ReferenceService
 
     @Inject
     protected lateinit var entryPersister: EntryPersister
@@ -204,6 +209,8 @@ class EditEntryActivity : BaseActivity() {
             setAbstractPreviewOnUIThread()
         }
 
+        savedInstanceState.getString(REFERENCE_INTENT_EXTRA_NAME)?.let { referenceID -> restoreReference(referenceID) }
+
         savedInstanceState.getString(TAGS_ON_ENTRY_INTENT_EXTRA_NAME)?.let { tagsOnEntryIds -> restoreTagsOnEntryAsync(tagsOnEntryIds) }
     }
 
@@ -221,6 +228,8 @@ class EditEntryActivity : BaseActivity() {
             entryExtractionResult?.let { outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, serializer.serializeObject(it)) }
 
             outState.putString(TAGS_ON_ENTRY_INTENT_EXTRA_NAME, serializer.serializeObject(tagsOnEntry))
+
+            outState.putString(REFERENCE_INTENT_EXTRA_NAME, referenceToEdit?.id)
 
             outState.putString(CONTENT_INTENT_EXTRA_NAME, contentToEdit)
 
@@ -1052,6 +1061,11 @@ class EditEntryActivity : BaseActivity() {
         mayRegisterEventBusListener()
     }
 
+    private fun restoreReference(referenceId: String) {
+        referenceToEdit = referenceService.retrieve(referenceId)
+
+        runOnUiThread { setReferencePreviewOnUIThread() }
+    }
 
     private fun restoreTagsOnEntryAsync(tagsOnEntryIdsString: String) {
         threadPool.runAsync { restoreTagsOnEntry(tagsOnEntryIdsString) }
