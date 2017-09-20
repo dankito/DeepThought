@@ -20,6 +20,7 @@ import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.views.ActionItemUtil
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Series
+import net.dankito.deepthought.model.fields.ReferenceField
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditReferencePresenter
 import net.dankito.deepthought.ui.presenter.util.ReferencePersister
@@ -34,6 +35,7 @@ import net.dankito.utils.ui.IDialogService
 import net.engio.mbassy.listener.Handler
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.HashSet
 
 
 class EditReferenceActivity : BaseActivity() {
@@ -87,6 +89,12 @@ class EditReferenceActivity : BaseActivity() {
 
     private val existingReferencesSearchResultsAdapter: ReferenceOnEntryRecyclerAdapter
 
+    private var didReferenceChange = false
+
+    private val changedFields = HashSet<ReferenceField>()
+
+    private var mnSaveReference: MenuItem? = null
+
     private val actionItemHelper = ActionItemUtil()
 
     private var eventBusListener: EventBusListener? = null
@@ -114,11 +122,11 @@ class EditReferenceActivity : BaseActivity() {
     private fun restoreState(savedInstanceState: Bundle) {
         savedInstanceState.getString(REFERENCE_ID_BUNDLE_EXTRA_NAME)?.let { referenceId -> showReference(referenceId) }
 
-        savedInstanceState.getString(REFERENCE_TITLE_BUNDLE_EXTRA_NAME)?.let { edtxtTitle.setText(it) }
-        savedInstanceState.getString(REFERENCE_SERIES_BUNDLE_EXTRA_NAME)?.let { edtxtSeries.setText(it) }
-        savedInstanceState.getString(REFERENCE_ISSUE_BUNDLE_EXTRA_NAME)?.let { edtxtIssue.setText(it) }
-        savedInstanceState.getString(REFERENCE_PUBLISHING_DATE_BUNDLE_EXTRA_NAME)?.let { edtxtPublishingDate.setText(it) }
-        savedInstanceState.getString(REFERENCE_URL_BUNDLE_EXTRA_NAME)?.let { edtxtUrl.setText(it) }
+        savedInstanceState.getString(REFERENCE_TITLE_BUNDLE_EXTRA_NAME)?.let { lytEditReferenceTitle.setFieldValueOnUiThread(it) }
+        savedInstanceState.getString(REFERENCE_SERIES_BUNDLE_EXTRA_NAME)?.let { lytEditReferenceSeries.setFieldValueOnUiThread(it) }
+        savedInstanceState.getString(REFERENCE_ISSUE_BUNDLE_EXTRA_NAME)?.let { lytEditReferenceIssue.setFieldValueOnUiThread(it) }
+        savedInstanceState.getString(REFERENCE_PUBLISHING_DATE_BUNDLE_EXTRA_NAME)?.let { lytEditReferencePublishingDate.setFieldValueOnUiThread(it) }
+        savedInstanceState.getString(REFERENCE_URL_BUNDLE_EXTRA_NAME)?.let { lytEditReferenceUrl.setFieldValueOnUiThread(it) }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -127,11 +135,11 @@ class EditReferenceActivity : BaseActivity() {
         outState?.let {
             outState.putString(REFERENCE_ID_BUNDLE_EXTRA_NAME, reference?.id)
 
-            outState.putString(REFERENCE_TITLE_BUNDLE_EXTRA_NAME, edtxtTitle.text.toString())
-            outState.putString(REFERENCE_SERIES_BUNDLE_EXTRA_NAME, edtxtSeries.text.toString())
-            outState.putString(REFERENCE_ISSUE_BUNDLE_EXTRA_NAME, edtxtIssue.text.toString())
-            outState.putString(REFERENCE_PUBLISHING_DATE_BUNDLE_EXTRA_NAME, edtxtPublishingDate.text.toString())
-            outState.putString(REFERENCE_URL_BUNDLE_EXTRA_NAME, edtxtUrl.text.toString())
+            outState.putString(REFERENCE_TITLE_BUNDLE_EXTRA_NAME, lytEditReferenceTitle.getCurrentFieldValue())
+            outState.putString(REFERENCE_SERIES_BUNDLE_EXTRA_NAME, lytEditReferenceSeries.getCurrentFieldValue())
+            outState.putString(REFERENCE_ISSUE_BUNDLE_EXTRA_NAME, lytEditReferenceIssue.getCurrentFieldValue())
+            outState.putString(REFERENCE_PUBLISHING_DATE_BUNDLE_EXTRA_NAME, lytEditReferencePublishingDate.getCurrentFieldValue())
+            outState.putString(REFERENCE_URL_BUNDLE_EXTRA_NAME, lytEditReferenceUrl.getCurrentFieldValue())
         }
     }
 
@@ -146,17 +154,22 @@ class EditReferenceActivity : BaseActivity() {
         setupFindExistingReferenceSection()
 
 
-        edtxtSeries.setOnClickListener { editSeries() }
+        lytEditReferenceTitle.setFieldNameOnUiThread(R.string.activity_edit_reference_title_label) { updateDidReferenceChangeOnUiThread(ReferenceField.Title, it) }
 
-        btnSelectExistingOrRemoveSetSeries.setOnClickListener { buttonSelectExistingOrRemoveSetSeriesClicked() }
+        lytEditReferenceSeries.setFieldNameOnUiThread(R.string.activity_edit_reference_series_label, false)
+        lytEditReferenceSeries.fieldClickedListener = { editSeries() }
 
-        btnSelectPublishingDate.setOnClickListener { showDatePickerDialog() }
+        lytEditReferenceIssue.setFieldNameOnUiThread(R.string.activity_edit_reference_issue_label) { updateDidReferenceChangeOnUiThread(ReferenceField.Issue, it) }
 
-        edtxtPublishingDate.setOnFocusChangeListener { _, hasFocus ->
+        lytEditReferencePublishingDate.setFieldNameOnUiThread(R.string.activity_edit_reference_publishing_date_label) { updateDidReferenceChangeOnUiThread(ReferenceField.PublishingDate, it) }
+        lytEditReferencePublishingDate.showActionIconOnUiThread(R.drawable.ic_date_range_white_48dp) { showDatePickerDialog() }
+        lytEditReferencePublishingDate.fieldValueFocusChangedListener = { hasFocus ->
             if(hasFocus == false) {
-                edtxtPublishingDateLostFocus(edtxtPublishingDate.text.toString())
+                edtxtPublishingDateLostFocus(lytEditReferencePublishingDate.getCurrentFieldValue())
             }
         }
+
+        lytEditReferenceUrl.setFieldNameOnUiThread(R.string.activity_edit_reference_url_label) { updateDidReferenceChangeOnUiThread(ReferenceField.Url, it) }
     }
 
     private fun setupFindExistingReferenceSection() {
@@ -192,6 +205,9 @@ class EditReferenceActivity : BaseActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.activity_edit_reference_menu, menu)
 
+        mnSaveReference = menu.findItem(R.id.mnSaveReference)
+        mnSaveReference?.isVisible = didReferenceChange
+
         actionItemHelper.setupLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
 
         return true
@@ -225,15 +241,15 @@ class EditReferenceActivity : BaseActivity() {
         // do not set series directly on reference as if reference is not saved yet adding it to series.references causes an error
         setAndShowSeriesOnUiThread(series)
 
-//        updateCanReferenceBeSavedOnUIThread(true)
+        updateDidReferenceChangeOnUiThread(ReferenceField.Series, series != reference?.series)
     }
 
 
     private fun saveReferenceAndCloseDialog() {
         unregisterEventBusListener()
 
-        if(edtxtPublishingDate.hasFocus()) { // OnFocusChangeListener doesn't get called when save action gets pressed
-            edtxtPublishingDateLostFocus(edtxtPublishingDate.text.toString())
+        if(lytEditReferencePublishingDate.hasFocus()) { // OnFocusChangeListener doesn't get called when save action gets pressed
+            edtxtPublishingDateLostFocus(lytEditReferencePublishingDate.getCurrentFieldValue())
         }
 
         saveReferenceAsync { successful ->
@@ -248,11 +264,11 @@ class EditReferenceActivity : BaseActivity() {
 
     private fun saveReferenceAsync(callback: (Boolean) -> Unit) {
         reference?.let { reference ->
-            reference.title = edtxtTitle.text.toString()
-            reference.issue = edtxtIssue.text.toString()
-            reference.url = edtxtUrl.text.toString()
+            reference.title = lytEditReferenceTitle.getCurrentFieldValue()
+            reference.issue = if(lytEditReferenceIssue.getCurrentFieldValue().isNullOrBlank()) null else lytEditReferenceIssue.getCurrentFieldValue()
+            reference.url = if(lytEditReferenceUrl.getCurrentFieldValue().isNullOrBlank()) null else lytEditReferenceUrl.getCurrentFieldValue()
 
-            presenter.saveReferenceAsync(reference, currentlySetSeries, currentlySetPublishingDate, edtxtPublishingDate.text.toString()) { successful ->
+            presenter.saveReferenceAsync(reference, currentlySetSeries, currentlySetPublishingDate, lytEditReferencePublishingDate.getCurrentFieldValue()) { successful ->
                 if(successful) {
                     setActivityResult(EditReferenceActivityResult(didSaveReference = true, savedReference = reference))
                 }
@@ -271,7 +287,11 @@ class EditReferenceActivity : BaseActivity() {
 
 
     private fun edtxtPublishingDateLostFocus(enteredText: String) {
+        val previousValue = this.currentlySetPublishingDate
+
         this.currentlySetPublishingDate = presenter.parsePublishingDate(enteredText)
+
+        updateDidReferenceChangeOnUiThread(ReferenceField.PublishingDate, currentlySetPublishingDate != previousValue)
 
         // TODO: show hint or error when publishingDateString couldn't be parsed?
 //        if(currentlySetPublishingDate == null) {
@@ -279,21 +299,12 @@ class EditReferenceActivity : BaseActivity() {
 //        }
     }
 
-    private fun buttonSelectExistingOrRemoveSetSeriesClicked() {
-        if(currentlySetSeries == null) {
-            editSeries()
-        }
-        else {
-            setAndShowSeriesOnUiThread(null)
-            // TODO: mark reference changed
-        }
-    }
-
     private fun showDatePickerDialog() {
         val pickDateDialog = PickDateDialog()
 
         pickDateDialog.show(supportFragmentManager, currentlySetPublishingDate) { selectedDate ->
             showPublishingDate(selectedDate)
+            updateDidReferenceChangeOnUiThread(ReferenceField.PublishingDate, true)
         }
     }
 
@@ -327,14 +338,14 @@ class EditReferenceActivity : BaseActivity() {
         this.reference = reference
         existingReferencesSearchResultsAdapter.selectedReference = reference
 
-        edtxtTitle.setText(reference.title)
+        lytEditReferenceTitle.setFieldValueOnUiThread(reference.title)
 
         setAndShowSeriesOnUiThread(reference.series)
 
-        edtxtIssue.setText(reference.issue)
+        lytEditReferenceIssue.setFieldValueOnUiThread(reference.issue ?: "")
         showPublishingDate(reference.publishingDate, reference.publishingDateString)
 
-        edtxtUrl.setText(reference.url)
+        lytEditReferenceUrl.setFieldValueOnUiThread(reference.url ?: "")
 
         unregisterEventBusListener()
         mayRegisterEventBusListener()
@@ -344,27 +355,47 @@ class EditReferenceActivity : BaseActivity() {
         this.currentlySetSeries = series
 
         if(series != null) {
-            edtxtSeries.setText(series.title)
-            btnSelectExistingOrRemoveSetSeries.setImageResource(android.R.drawable.ic_delete)
+            lytEditReferenceSeries.setFieldValueOnUiThread(series.title)
+            lytEditReferenceSeries.showActionIconOnUiThread(android.R.drawable.ic_delete) {
+                setAndShowSeriesOnUiThread(null)
+                updateDidReferenceChangeOnUiThread(ReferenceField.Series, reference?.series != null)
+            }
         }
         else {
-            edtxtSeries.setText("")
-            btnSelectExistingOrRemoveSetSeries.setImageResource(R.drawable.ic_search_white_48dp)
+            lytEditReferenceSeries.setFieldValueOnUiThread("")
+            lytEditReferenceSeries.showActionIconOnUiThread(R.drawable.ic_search_white_48dp) { editSeries() }
         }
     }
 
     private fun showPublishingDate(publishingDate: Date?, publishingDateString: String? = null) {
         this.currentlySetPublishingDate = publishingDate
 
+        val publishingDateStringToShow =
         if(publishingDateString != null) {
-            edtxtPublishingDate.setText(publishingDateString)
+            publishingDateString
         }
         else if(publishingDate != null) {
-            edtxtPublishingDate.setText(presenter.convertPublishingDateToText(publishingDate))
+            presenter.convertPublishingDateToText(publishingDate)
         }
         else {
-            edtxtPublishingDate.setText("")
+            ""
         }
+
+        lytEditReferencePublishingDate.setFieldValueOnUiThread(publishingDateStringToShow)
+    }
+
+
+    private fun updateDidReferenceChangeOnUiThread(field: ReferenceField, didFieldValueChange: Boolean) {
+        if(didFieldValueChange) {
+            changedFields.add(field)
+        }
+        else {
+            changedFields.remove(field)
+        }
+
+        this.didReferenceChange = changedFields.size > 0
+
+        mnSaveReference?.isVisible = didReferenceChange
     }
 
 
