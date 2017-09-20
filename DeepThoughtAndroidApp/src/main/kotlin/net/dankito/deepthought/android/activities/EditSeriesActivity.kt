@@ -101,7 +101,7 @@ class EditSeriesActivity : BaseActivity() {
     private fun restoreState(savedInstanceState: Bundle) {
         savedInstanceState.getString(SERIES_ID_BUNDLE_EXTRA_NAME)?.let { seriesId -> showSeries(seriesId) }
 
-        savedInstanceState.getString(SERIES_TITLE_BUNDLE_EXTRA_NAME)?.let { edtxtTitle.setText(it) }
+        savedInstanceState.getString(SERIES_TITLE_BUNDLE_EXTRA_NAME)?.let { lytEditSeriesTitle.setFieldValueOnUiThread(it) }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -110,7 +110,7 @@ class EditSeriesActivity : BaseActivity() {
         outState?.let {
             outState.putString(SERIES_ID_BUNDLE_EXTRA_NAME, series?.id)
 
-            outState.putString(SERIES_TITLE_BUNDLE_EXTRA_NAME, edtxtTitle.text.toString())
+            outState.putString(SERIES_TITLE_BUNDLE_EXTRA_NAME, lytEditSeriesTitle.getCurrentFieldValue())
         }
     }
 
@@ -122,7 +122,8 @@ class EditSeriesActivity : BaseActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        edtxtTitle.addTextChangedListener(edtxtTitleTextWatcher)
+        lytEditSeriesTitle.setFieldNameOnUiThread(R.string.activity_edit_series_title_label)
+        lytEditSeriesTitle.didValueChangeListener = { updateDidSeriesChangeOnUiThread(it) }
 
         setupFindExistingSeriesSection()
     }
@@ -188,7 +189,7 @@ class EditSeriesActivity : BaseActivity() {
 
     private fun saveSeriesAsync(callback: (Boolean) -> Unit) {
         series?.let { series ->
-            series.title = edtxtTitle.text.toString()
+            series.title = lytEditSeriesTitle.getCurrentFieldValue()
 
             presenter.saveSeriesAsync(series) { successful ->
                 if(successful) {
@@ -237,9 +238,7 @@ class EditSeriesActivity : BaseActivity() {
         this.series = series
         existingSeriesSearchResultsAdapter.selectedSeries = series
 
-        edtxtTitle.removeTextChangedListener(edtxtTitleTextWatcher)
-        edtxtTitle.setText(series.title)
-        edtxtTitle.addTextChangedListener(edtxtTitleTextWatcher)
+        lytEditSeriesTitle.setFieldValueOnUiThread(series.title)
 
         unregisterEventBusListener()
         mayRegisterEventBusListener()
@@ -334,17 +333,6 @@ class EditSeriesActivity : BaseActivity() {
 
     }
 
-
-    private val edtxtTitleTextWatcher = object : TextWatcher {
-        override fun afterTextChanged(editable: Editable) {
-            updateDidSeriesChangeOnUiThread(true)
-        }
-
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
-
-    }
 
     private fun updateDidSeriesChangeOnUiThread(didSeriesChange: Boolean) {
         this.didSeriesChange = didSeriesChange

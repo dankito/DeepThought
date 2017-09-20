@@ -114,29 +114,11 @@
             android:padding="@dimen/activity_edit_series_padding"
         >
 
-            <RelativeLayout
+            <net.dankito.deepthought.android.views.EditEntityField
+                android:id="@+id/lytEditSeriesTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-            >
-
-                <TextView
-                    android:id="@+id/txtTitleLabel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    style="@style/EntityFieldName"
-                    android:text="@string/activity_edit_series_title_label"
-                />
-
-                <EditText
-                    android:id="@+id/edtxtTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/txtTitleLabel"
-                    style="@style/EditableEntityFieldValue"
-                />
-
-            </RelativeLayout>
+            />
 
         </ScrollView>
 
