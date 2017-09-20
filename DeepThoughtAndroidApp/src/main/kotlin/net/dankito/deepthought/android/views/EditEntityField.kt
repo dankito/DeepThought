@@ -134,7 +134,11 @@ class EditEntityField : RelativeLayout {
 
         btnEntityFieldAction.visibility = View.VISIBLE
 
-        btnEntityFieldAction.setOnClickListener { actionIconClickedListener?.invoke() }
+        btnEntityFieldAction.setOnClickListener {
+            edtxtEntityFieldValue.clearFocus() // ensure edtxtEntityFieldValue loses focus so that e.g. Reference.publishingDate gets updated before PickDateDialog with not updated date gets shown
+            btnEntityFieldAction.requestFocus()
+            actionIconClickedListener?.invoke()
+        }
     }
 
     fun hideActionIconOnUiThread() {
