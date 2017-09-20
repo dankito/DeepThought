@@ -37,7 +37,7 @@ class EditSeriesActivity : BaseActivity() {
     companion object {
         private const val SERIES_ID_BUNDLE_EXTRA_NAME = "SERIES_ID"
         private const val REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME = "REFERENCE_ID"
-        private const val SERIES_TITLE_BUNDLE_EXTRA_NAME = "SERIES_TITLE"
+        private const val DID_SERIES_CHANGE_BUNDLE_EXTRA_NAME = "DID_SERIES_CHANGE"
 
         const val ResultId = "EDIT_SERIES_ACTIVITY_RESULT"
     }
@@ -111,7 +111,7 @@ class EditSeriesActivity : BaseActivity() {
 
         savedInstanceState.getString(REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME)?.let { referenceId -> restoreReferenceToSetSeriesOn(referenceId) }
 
-        savedInstanceState.getString(SERIES_TITLE_BUNDLE_EXTRA_NAME)?.let { lytEditSeriesTitle.setFieldValueOnUiThread(it) }
+        savedInstanceState.getBoolean(DID_SERIES_CHANGE_BUNDLE_EXTRA_NAME)?.let { didSeriesChange -> updateDidSeriesChangeOnUiThread(didSeriesChange) }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -122,7 +122,7 @@ class EditSeriesActivity : BaseActivity() {
 
             referenceToSetSeriesOn?.let { outState.putString(REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME, it.id) }
 
-            outState.putString(SERIES_TITLE_BUNDLE_EXTRA_NAME, lytEditSeriesTitle.getCurrentFieldValue())
+            outState.putBoolean(DID_SERIES_CHANGE_BUNDLE_EXTRA_NAME, didSeriesChange)
         }
     }
 
