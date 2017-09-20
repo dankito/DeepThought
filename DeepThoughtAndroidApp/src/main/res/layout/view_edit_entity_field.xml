@@ -21,7 +21,9 @@
         android:layout_toLeftOf="@+id/btnEntityFieldAction"
         android:layout_toStartOf="@+id/btnEntityFieldAction"
         style="@style/EditableEntityFieldValue"
+        android:saveEnabled="false"
     />
+    <!-- Set saveEnabled to false as Android messes up restoring the values -->
 
     <ImageButton
         android:id="@+id/btnEntityFieldAction"
