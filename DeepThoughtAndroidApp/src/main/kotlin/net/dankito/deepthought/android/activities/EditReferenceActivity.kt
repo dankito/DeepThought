@@ -91,6 +91,8 @@ class EditReferenceActivity : BaseActivity() {
 
     private var didReferenceChange = false
 
+    private var selectedAnotherReference = false
+
     private val changedFields = HashSet<ReferenceField>()
 
     private var mnSaveReference: MenuItem? = null
@@ -396,7 +398,11 @@ class EditReferenceActivity : BaseActivity() {
             changedFields.remove(field)
         }
 
-        this.didReferenceChange = changedFields.size > 0
+        updateDidReferenceChangeOnUiThread()
+    }
+
+    private fun updateDidReferenceChangeOnUiThread() {
+        this.didReferenceChange = changedFields.size > 0 || selectedAnotherReference
 
         mnSaveReference?.isVisible = didReferenceChange
     }
@@ -455,8 +461,12 @@ class EditReferenceActivity : BaseActivity() {
 
         hideRecyclerViewExistingReferencesSearchResults()
 
+        selectedAnotherReference = reference != this.reference
+
         // TODO: check if previous reference has unsaved changes
         showReference(reference)
+
+        updateDidReferenceChangeOnUiThread()
     }
 
     private fun showRecyclerViewExistingReferencesSearchResults() {
