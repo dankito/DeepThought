@@ -29,7 +29,7 @@
             android:layout_width="@dimen/list_item_article_summary_extractor_button_width"
             android:layout_height="match_parent"
             android:src="@drawable/ic_delete_white_48dp"
-            android:scaleType="fitXY"
+            android:scaleType="fitCenter"
         />
 
     </LinearLayout>
