@@ -153,15 +153,15 @@
                     android:layout_below="@id/txtSeries"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:layout_toLeftOf="@+id/btnSelectExistingSeries"
-                    android:layout_toStartOf="@+id/btnSelectExistingSeries"
+                    android:layout_toLeftOf="@+id/btnSelectExistingOrRemoveSetSeries"
+                    android:layout_toStartOf="@+id/btnSelectExistingOrRemoveSetSeries"
                     style="@style/ReferenceFieldValue"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                 />
 
                 <ImageButton
-                    android:id="@+id/btnSelectExistingSeries"
+                    android:id="@+id/btnSelectExistingOrRemoveSetSeries"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"

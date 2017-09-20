@@ -148,6 +148,8 @@ class EditReferenceActivity : BaseActivity() {
 
         edtxtSeries.setOnClickListener { editSeries() }
 
+        btnSelectExistingOrRemoveSetSeries.setOnClickListener { buttonSelectExistingOrRemoveSetSeriesClicked() }
+
         btnSelectPublishingDate.setOnClickListener { showDatePickerDialog() }
 
         edtxtPublishingDate.setOnFocusChangeListener { _, hasFocus ->
@@ -212,14 +214,16 @@ class EditReferenceActivity : BaseActivity() {
 
 
     private fun editSeries() {
-        setWaitingForResult(EditSeriesActivity.ResultId)
+        reference?.let {
+            setWaitingForResult(EditSeriesActivity.ResultId)
 
-        reference?.let { presenter.editSeries(it, currentlySetSeries) }
+            presenter.editSeries(it, currentlySetSeries)
+        }
     }
 
     private fun savedSeriesOnUiThread(series: Series) {
         // do not set series directly on reference as if reference is not saved yet adding it to series.references causes an error
-        showSeriesOnUiThread(series)
+        setAndShowSeriesOnUiThread(series)
 
 //        updateCanReferenceBeSavedOnUIThread(true)
     }
@@ -275,6 +279,16 @@ class EditReferenceActivity : BaseActivity() {
 //        }
     }
 
+    private fun buttonSelectExistingOrRemoveSetSeriesClicked() {
+        if(currentlySetSeries == null) {
+            editSeries()
+        }
+        else {
+            setAndShowSeriesOnUiThread(null)
+            // TODO: mark reference changed
+        }
+    }
+
     private fun showDatePickerDialog() {
         val pickDateDialog = PickDateDialog()
 
@@ -315,7 +329,7 @@ class EditReferenceActivity : BaseActivity() {
 
         edtxtTitle.setText(reference.title)
 
-        showSeriesOnUiThread(reference.series)
+        setAndShowSeriesOnUiThread(reference.series)
 
         edtxtIssue.setText(reference.issue)
         showPublishingDate(reference.publishingDate, reference.publishingDateString)
@@ -326,14 +340,16 @@ class EditReferenceActivity : BaseActivity() {
         mayRegisterEventBusListener()
     }
 
-    private fun showSeriesOnUiThread(series: Series?) {
+    private fun setAndShowSeriesOnUiThread(series: Series?) {
         this.currentlySetSeries = series
 
         if(series != null) {
             edtxtSeries.setText(series.title)
+            btnSelectExistingOrRemoveSetSeries.setImageResource(android.R.drawable.ic_delete)
         }
         else {
             edtxtSeries.setText("")
+            btnSelectExistingOrRemoveSetSeries.setImageResource(R.drawable.ic_search_white_48dp)
         }
     }
 
