@@ -16,10 +16,12 @@ import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemD
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.views.ActionItemUtil
+import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditSeriesPresenter
 import net.dankito.service.data.DeleteEntityService
+import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.SeriesService
 import net.dankito.service.data.messages.SeriesChanged
 import net.dankito.service.eventbus.IEventBus
@@ -34,6 +36,7 @@ class EditSeriesActivity : BaseActivity() {
 
     companion object {
         private const val SERIES_ID_BUNDLE_EXTRA_NAME = "SERIES_ID"
+        private const val REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME = "REFERENCE_ID"
         private const val SERIES_TITLE_BUNDLE_EXTRA_NAME = "SERIES_TITLE"
 
         const val ResultId = "EDIT_SERIES_ACTIVITY_RESULT"
@@ -42,6 +45,9 @@ class EditSeriesActivity : BaseActivity() {
 
     @Inject
     protected lateinit var seriesService: SeriesService
+
+    @Inject
+    protected lateinit var referenceService: ReferenceService
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
@@ -63,6 +69,8 @@ class EditSeriesActivity : BaseActivity() {
 
 
     private var series: Series? = null
+
+    private var referenceToSetSeriesOn: Reference? = null
 
     private val presenter: EditSeriesPresenter
 
@@ -101,6 +109,8 @@ class EditSeriesActivity : BaseActivity() {
     private fun restoreState(savedInstanceState: Bundle) {
         savedInstanceState.getString(SERIES_ID_BUNDLE_EXTRA_NAME)?.let { seriesId -> showSeries(seriesId) }
 
+        savedInstanceState.getString(REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME)?.let { referenceId -> restoreReferenceToSetSeriesOn(referenceId) }
+
         savedInstanceState.getString(SERIES_TITLE_BUNDLE_EXTRA_NAME)?.let { lytEditSeriesTitle.setFieldValueOnUiThread(it) }
     }
 
@@ -109,6 +119,8 @@ class EditSeriesActivity : BaseActivity() {
 
         outState?.let {
             outState.putString(SERIES_ID_BUNDLE_EXTRA_NAME, series?.id)
+
+            referenceToSetSeriesOn?.let { outState.putString(REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME, it.id) }
 
             outState.putString(SERIES_TITLE_BUNDLE_EXTRA_NAME, lytEditSeriesTitle.getCurrentFieldValue())
         }
@@ -218,9 +230,20 @@ class EditSeriesActivity : BaseActivity() {
             }
 
             if(parameters.forReference != null) {
-                lytSetReferenceSeriesControls.visibility = View.VISIBLE
+                setReferenceToSetSeriesOn(parameters.forReference)
             }
         }
+    }
+
+    private fun restoreReferenceToSetSeriesOn(referenceId: String) {
+        referenceService.retrieve(referenceId)?.let { reference ->
+            setReferenceToSetSeriesOn(reference)
+        }
+    }
+
+    private fun setReferenceToSetSeriesOn(reference: Reference) {
+        referenceToSetSeriesOn = reference
+        lytSetReferenceSeriesControls.visibility = View.VISIBLE
     }
 
     private fun createSeries() {
