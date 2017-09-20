@@ -80,6 +80,10 @@ class EditEntityField : RelativeLayout {
         return edtxtEntityFieldValue.text.toString()
     }
 
+    fun setFieldValueInputTypeOnUiThread(inputType: Int) {
+        edtxtEntityFieldValue.inputType = inputType
+    }
+
     fun setFieldValueOnUiThread(fieldValue: String, isEditable: Boolean = true) {
         setEditTextEntityFieldValueOnUiThread(fieldValue)
         setEditTextEntityFieldValueIsEditableOnUiThread(isEditable)
