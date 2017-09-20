@@ -145,10 +145,15 @@ class EditSeriesActivity : BaseActivity() {
         rcyExistingSeriesSearchResults.addItemDecoration(HorizontalDividerItemDecoration(this))
         rcyExistingSeriesSearchResults.adapter = existingSeriesSearchResultsAdapter
         existingSeriesSearchResultsAdapter.itemClickListener = { item -> existingSeriesSelected(item) }
-
-        edtxtFindSeries.addTextChangedListener(edtxtFindSeriesTextWatcher)
     }
 
+
+    override fun onResume() {
+        super.onResume()
+
+        edtxtFindSeries.removeTextChangedListener(edtxtFindSeriesTextWatcher) // don't add edtxtFindSeriesTextWatcher twice
+        edtxtFindSeries.addTextChangedListener(edtxtFindSeriesTextWatcher) // add edtxtFindSeriesTextWatcher here not in setupUI() as when restoring state edtxtFindSeries's text gets restored and edtxtFindSeriesTextWatcher therefore called
+    }
 
     override fun onDestroy() {
         unregisterEventBusListener()
