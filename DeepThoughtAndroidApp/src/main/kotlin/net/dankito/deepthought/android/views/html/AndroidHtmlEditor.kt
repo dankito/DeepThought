@@ -144,10 +144,6 @@ class AndroidHtmlEditor : WebView, IJavaScriptBridge, IJavaScriptExecutor {
     }
 
 
-    override fun executeScript(javaScript: String) {
-        executeScript(javaScript, null)
-    }
-
     override fun executeScript(javaScript: String, listener: ((result: Any) -> Unit)?) {
         if(Looper.myLooper() == Looper.getMainLooper()) {
             executeScriptOnUiThread(javaScript, listener)
