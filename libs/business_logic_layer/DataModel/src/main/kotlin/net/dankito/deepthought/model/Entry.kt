@@ -15,8 +15,7 @@ data class Entry(
         var content: String,
 
         @Column(name = TableConfig.EntryAbstractColumnName)
-        @Lob
-        var abstractString: String = "" // field cannot be named 'abstract' as this is a Java Keyword. So i named field abstractString but getter is called getAbstract()
+        var abstractString: String = "" // field cannot be named 'abstract' as this is a Java Keyword
 
 ) : BaseEntity(), Serializable {
 
