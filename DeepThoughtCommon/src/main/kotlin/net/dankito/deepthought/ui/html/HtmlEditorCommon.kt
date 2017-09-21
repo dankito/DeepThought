@@ -80,9 +80,14 @@ class HtmlEditorCommon(scriptExecutor: IJavaScriptExecutor, private val htmlEdit
      */
     fun getHtmlAsyncViaJavaScript(callback: (html: String) -> Unit) {
         scriptExecutor?.executeScript(JavaScriptCommandGetHtml, { result ->
-            val html = getUnescapedResponse(result)
+            if(result is String) {
+                val html = getUnescapedResponse(result)
 
-            callback(html)
+                callback(html)
+            }
+            else {
+                callback("") // TODO: what to return in this case
+            }
         })
     }
 

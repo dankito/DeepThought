@@ -144,7 +144,7 @@ class AndroidHtmlEditor : WebView, IJavaScriptBridge, IJavaScriptExecutor {
     }
 
 
-    override fun executeScript(javaScript: String, listener: ((result: Any) -> Unit)?) {
+    override fun executeScript(javaScript: String, listener: ((result: Any?) -> Unit)?) {
         if(Looper.myLooper() == Looper.getMainLooper()) {
             executeScriptOnUiThread(javaScript, listener)
         }
@@ -156,7 +156,7 @@ class AndroidHtmlEditor : WebView, IJavaScriptBridge, IJavaScriptExecutor {
         }
     }
 
-    private fun executeScriptOnUiThread(javaScript: String, listener: ((result: Any) -> Unit)?) {
+    private fun executeScriptOnUiThread(javaScript: String, listener: ((result: Any?) -> Unit)?) {
         try {
             if(osHelper.isRunningOnAndroidAtLeastOfApiLevel(19)) {
                 executeScriptOnUiThreadForAndroid19AndAbove(javaScript, listener)
@@ -172,14 +172,14 @@ class AndroidHtmlEditor : WebView, IJavaScriptBridge, IJavaScriptExecutor {
     }
 
     @TargetApi(19)
-    private fun executeScriptOnUiThreadForAndroid19AndAbove(javaScript: String, listener: ((result: Any) -> Unit)?) {
+    private fun executeScriptOnUiThreadForAndroid19AndAbove(javaScript: String, listener: ((result: Any?) -> Unit)?) {
         // evaluateJavascript() only works on API 19 and newer!
         evaluateJavascript(javaScript) { value ->
             listener?.invoke(value)
         }
     }
 
-    private fun executeScriptOnUiThreadForAndroidPre19(javaScript: String, listener: ((result: Any) -> Unit)?) {
+    private fun executeScriptOnUiThreadForAndroidPre19(javaScript: String, listener: ((result: Any?) -> Unit)?) {
         if (listener == null) { // no response is needed
             loadUrl("javascript:" + javaScript)
         }
@@ -208,7 +208,7 @@ class AndroidHtmlEditor : WebView, IJavaScriptBridge, IJavaScriptExecutor {
 
     /*  Response handling as Android pre 19 doesn't support getting result of executed JavaScript    */
 
-    private var listenerForGetHtml: ((result: Any) -> Unit)? = null
+    private var listenerForGetHtml: ((result: Any?) -> Unit)? = null
     private var waitForGetHtmlResponseLatch: CountDownLatch? = null
 
     @JavascriptInterface
