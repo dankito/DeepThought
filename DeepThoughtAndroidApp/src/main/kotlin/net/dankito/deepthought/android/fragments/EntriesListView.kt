@@ -104,12 +104,14 @@ class EntriesListView : MainActivityTabFragment<Entry>(R.menu.entry_contextual_a
         super.showOnboardingView()
 
         mainNavigationView?.visibility = View.GONE
+        arrowToFloatingActionButton.visibility = View.VISIBLE
     }
 
     override fun hideOnboardingView() {
         super.hideOnboardingView()
 
         mainNavigationView?.visibility = View.VISIBLE
+        arrowToFloatingActionButton.visibility = View.GONE
     }
 
 

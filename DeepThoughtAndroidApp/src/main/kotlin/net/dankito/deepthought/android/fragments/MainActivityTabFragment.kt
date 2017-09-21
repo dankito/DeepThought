@@ -43,6 +43,8 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
 
     protected var btnClearFilteredEntities: ImageButton? = null
 
+    protected lateinit var arrowToFloatingActionButton: View
+
     private var entitiesToCheckForOnboardingOnViewCreation: List<T>? = null
 
     private var searchMenuItem: MenuItem? = null
@@ -88,6 +90,8 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
 
             btnClearFilteredEntities = rootView.btnClearFilteredEntities
             btnClearFilteredEntities?.setOnClickListener { clearFilteredEntities() }
+
+            arrowToFloatingActionButton = rootView.arrowToFloatingActionButton
 
             setupListView(it)
 
