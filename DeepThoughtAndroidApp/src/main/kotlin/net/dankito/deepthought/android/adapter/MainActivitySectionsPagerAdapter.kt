@@ -9,12 +9,29 @@ import net.dankito.deepthought.model.BaseEntity
 
 class MainActivitySectionsPagerAdapter(private val fragmentManager: FragmentManager, private val mainNavigationView: View) : FragmentPagerAdapter(fragmentManager) {
 
+    companion object {
+        private var hasAdapterBeenCreatedBefore = false
+    }
+
+
+    private var entriesListView: EntriesListView? = null
 
     private var tagsListView: TagsListView? = null
 
     private var referencesListView: ReferencesListView? = null
 
     private var readLaterArticlesListView: ReadLaterArticlesListView? = null
+
+    private val hasAdapterBeenRecreated: Boolean
+
+
+    init {
+        if(hasAdapterBeenCreatedBefore == false) {
+            hasAdapterBeenCreatedBefore = true
+        }
+
+        hasAdapterBeenRecreated = hasAdapterBeenCreatedBefore
+    }
 
 
     override fun getCount(): Int {
@@ -44,18 +61,27 @@ class MainActivitySectionsPagerAdapter(private val fragmentManager: FragmentMana
         // couldn't figure out that Android bug: after destroying MainActivity, on create two EntriesListViews are created: One by Android system and one here
         // On the one created here activity and context never are set, so it can't display its data. Therefore never return this one, always use fragmentManager.
         // This is only true for EntriesListView (really curious; maybe due to it's the first fragment in adapter)
-
-        fragmentManager.fragments.forEach { fragment ->
-            if(fragment is EntriesListView) {
-                fragment.mainNavigationView = mainNavigationView
-                return fragment
+        if(hasAdapterBeenRecreated == false) { // only on first creating return cached adapter
+            entriesListView?.let {
+                return it
             }
         }
 
-        val entriesListView = EntriesListView()
-        entriesListView.mainNavigationView = mainNavigationView
+        fragmentManager.fragments.forEach { fragment ->
+            if(fragment is EntriesListView) {
+                entriesListView = fragment
+                println("Returning entriesListView $fragment")
+            }
+        }
 
-        return entriesListView
+        if(entriesListView == null) {
+            entriesListView = EntriesListView()
+            println("Created entriesListView $entriesListView")
+        }
+
+        entriesListView?.mainNavigationView = mainNavigationView
+
+        return entriesListView!!
     }
 
     private fun getTagsListView(): TagsListView {
