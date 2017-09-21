@@ -190,6 +190,8 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
                 it.parent().remove()
             }
         }
+
+        articleElement.select("hr").remove()
     }
 
 }
