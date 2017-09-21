@@ -369,7 +369,7 @@ class EditReferenceActivity : BaseActivity() {
             lytEditReferenceSeries.showActionIconOnUiThread(R.drawable.ic_search_white_48dp) { editSeries() }
         }
 
-        updateDidReferenceChangeOnUiThread(ReferenceField.Series, series != reference?.series)
+        updateDidReferenceChangeOnUiThread(ReferenceField.Series, series?.id != reference?.series?.id)
     }
 
     private fun showPublishingDate(publishingDate: Date?, publishingDateString: String? = null) {
@@ -461,7 +461,7 @@ class EditReferenceActivity : BaseActivity() {
 
         hideRecyclerViewExistingReferencesSearchResults()
 
-        selectedAnotherReference = reference != this.reference
+        selectedAnotherReference = reference?.id != this.reference?.id
 
         // TODO: check if previous reference has unsaved changes
         showReference(reference)
