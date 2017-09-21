@@ -60,7 +60,7 @@ data class Reference(
 
 
     @Column(name = TableConfig.ReferenceTableOfContentsColumnName)
-    @Lob
+    @Lob // TODO: evaluate if we should save it as LOB or not
     var tableOfContents: String? = null
 
     @Column(name = TableConfig.ReferenceIsbnOrIssnColumnName)

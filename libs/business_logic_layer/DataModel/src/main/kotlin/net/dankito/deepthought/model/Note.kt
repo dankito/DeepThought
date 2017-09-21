@@ -9,7 +9,6 @@ import javax.persistence.*
 data class Note(
 
         @Column(name = TableConfig.NoteNoteColumnName)
-        @Lob
         var note: String
 
 ) : BaseEntity() {
