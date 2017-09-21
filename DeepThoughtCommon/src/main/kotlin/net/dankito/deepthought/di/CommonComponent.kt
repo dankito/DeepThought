@@ -37,6 +37,8 @@ interface CommonComponent : BaseComponent {
 
     fun inject(tagsOnEntryListPresenter: TagsOnEntryListPresenter)
 
+    fun inject(seriesPresenterBase: SeriesPresenterBase)
+
     fun inject(entryPersister: EntryPersister)
 
     fun inject(referencePersister: ReferencePersister)

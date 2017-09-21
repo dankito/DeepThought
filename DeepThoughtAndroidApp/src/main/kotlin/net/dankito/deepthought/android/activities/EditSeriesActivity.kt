@@ -159,6 +159,8 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
     override fun onDestroy() {
         unregisterEventBusListener()
 
+        presenter.cleanUp()
+
         super.onDestroy()
     }
 
