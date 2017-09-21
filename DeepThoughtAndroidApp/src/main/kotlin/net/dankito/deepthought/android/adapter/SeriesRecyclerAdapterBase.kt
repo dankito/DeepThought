@@ -31,7 +31,7 @@ abstract class SeriesRecyclerAdapterBase(private val presenter: SeriesPresenterB
     }
 
     override fun bindItemToView(viewHolder: SeriesViewHolder, item: Series) {
-        viewHolder.txtSeriesTitle.text = item.title
+        viewHolder.txtSeriesTitle.text = item.displayText
 
         viewHolder.imgIsSeriesSetOnReference.visibility = if(shouldShowImageIsSeriesSetOnReference) View.VISIBLE else View.GONE
         viewHolder.txtChevronRight.visibility = if(shouldShowChevronRight) View.VISIBLE else View.GONE
