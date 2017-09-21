@@ -10,8 +10,6 @@ import net.dankito.deepthought.model.BaseEntity
 class MainActivitySectionsPagerAdapter(private val fragmentManager: FragmentManager, private val mainNavigationView: View) : FragmentPagerAdapter(fragmentManager) {
 
 
-    private var entriesListView: EntriesListView? = null
-
     private var tagsListView: TagsListView? = null
 
     private var referencesListView: ReferencesListView? = null
@@ -43,23 +41,21 @@ class MainActivitySectionsPagerAdapter(private val fragmentManager: FragmentMana
      */
 
     private fun getEntriesListView(): EntriesListView {
-        entriesListView?.let {
-            return it
-        }
+        // couldn't figure out that Android bug: after destroying MainActivity, on create two EntriesListViews are created: One by Android system and one here
+        // On the one created here activity and context never are set, so it can't display its data. Therefore never return this one, always use fragmentManager.
+        // This is only true for EntriesListView (really curious; maybe due to it's the first fragment in adapter)
 
         fragmentManager.fragments.forEach { fragment ->
             if(fragment is EntriesListView) {
-                entriesListView = fragment
+                fragment.mainNavigationView = mainNavigationView
+                return fragment
             }
         }
 
-        if(entriesListView == null) {
-            entriesListView = EntriesListView()
-        }
+        val entriesListView = EntriesListView()
+        entriesListView.mainNavigationView = mainNavigationView
 
-        entriesListView?.mainNavigationView = mainNavigationView
-
-        return entriesListView!!
+        return entriesListView
     }
 
     private fun getTagsListView(): TagsListView {
