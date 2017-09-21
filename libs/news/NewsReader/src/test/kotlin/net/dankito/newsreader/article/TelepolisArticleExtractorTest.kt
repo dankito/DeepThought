@@ -19,19 +19,17 @@ class TelepolisArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
-    fun extractMultiPageArticle() {
+    fun extractMultiPageArticle() { // it seems that print version has no abstract anymore
         getAndTestArticle("https://www.heise.de/tp/features/G20-Die-Eskalation-begann-mit-der-Ernennung-von-Dudde-zum-Polizeichef-3804738.html",
                 "G20: Die Eskalation begann mit der Ernennung von Dudde zum Polizeichef",
-                "Das Komitee für Grundrechte und Demokratie im Nachtrag zu den Auseinandersetzungen in Hamburg",
-                "https://www.heise.de/tp/imgs/89/2/2/6/0/6/1/3/Hamburgg20Polizei-f57f6ef5b9a089df.jpeg", 11700)
+                null,"https://www.heise.de/tp/imgs/89/2/2/6/0/6/1/3/Hamburgg20Polizei-f57f6ef5b9a089df.jpeg", 10000)
     }
 
     @Test
-    fun extractVeryLargeMultiPageArticle() {
+    fun extractVeryLargeMultiPageArticle() { // it seems that print version has no abstract anymore
         getAndTestArticle("https://www.heise.de/tp/features/Googeln-Sie-mal-von-vorgestern-Mr-Damore-3804769.html",
                 "Googeln Sie mal \"von vorgestern\", Mr. Damore",
-                "Das im viel diskutierten \"Google Manifest\" formulierte Frauenbild scheint rückständig - ist jedoch aktueller denn je. Zeit für eine Debatte über einen neuen Typus \"sozial verträglicher Mann\"",
-                "https://www.heise.de/tp/imgs/89/2/2/6/0/6/4/0/_Johann_Wilhelm_von_der_Pfalz_und_Anna_Maria_Luisa_de__Medici__1708_-cc6af64ad3f9af0e.jpeg", 44600)
+                null,"https://www.heise.de/tp/imgs/89/2/2/6/0/6/4/0/_Johann_Wilhelm_von_der_Pfalz_und_Anna_Maria_Luisa_de__Medici__1708_-cc6af64ad3f9af0e.jpeg", 43000)
     }
 
 }
