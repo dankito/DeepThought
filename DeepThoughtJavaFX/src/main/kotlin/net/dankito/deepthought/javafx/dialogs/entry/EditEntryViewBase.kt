@@ -5,9 +5,10 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.scene.control.Control
 import javafx.scene.control.Label
 import javafx.scene.layout.Priority
-import javafx.scene.web.WebView
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
+import net.dankito.deepthought.javafx.ui.controls.JavaFXHtmlEditor
+import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Series
@@ -44,7 +45,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     private var txtTags: Label by singleAssign()
 
-    private var wbContent: WebView by singleAssign()
+    private val htmlEditor: JavaFXHtmlEditor
 
 
     private val presenter: EditEntryPresenter
@@ -67,6 +68,8 @@ abstract class EditEntryViewBase : DialogFragment() {
         AppComponent.component.inject(this)
 
         presenter = EditEntryPresenter(entryPersister, readLaterArticleService, clipboardService, router)
+
+        htmlEditor = JavaFXHtmlEditor(null)
     }
 
 
@@ -143,14 +146,11 @@ abstract class EditEntryViewBase : DialogFragment() {
             }
         }
 
-        wbContent = webview {
-            vgrow = Priority.ALWAYS
-            useMaxWidth = true
-
-            prefWidthProperty().bind(this@vbox.widthProperty())
-
-            contentHtml.onChange { engine.loadContent(contentHtml.value) }
-        }
+        add(htmlEditor)
+        htmlEditor.vgrow = Priority.ALWAYS
+        htmlEditor.useMaxWidth = true
+        htmlEditor.prefWidthProperty().bind(this@vbox.widthProperty())
+        contentHtml.onChange { htmlEditor.setHtml(contentHtml.value) }
 
         anchorpane {
 
@@ -186,17 +186,19 @@ abstract class EditEntryViewBase : DialogFragment() {
     }
 
 
+    override fun onUndock() {
+        cleanUp()
+
+        super.onUndock()
+    }
+
     private fun cleanUp() {
         contentHtml.onChange { }
-        wbContent.prefWidthProperty().unbind()
 
-        // Delete cache for navigate back
-        wbContent.engine.load("about:blank")
-        wbContent.engine.history.entries.clear()
-        // Delete cookies
-        java.net.CookieHandler.setDefault(java.net.CookieManager())
+        htmlEditor.prefWidthProperty().unbind()
+        htmlEditor.cleanUp()
 
-        root.getChildren().remove(wbContent)
+        root.children.remove(htmlEditor)
 
         System.gc()
     }
