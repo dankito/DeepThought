@@ -46,7 +46,7 @@ abstract class SeriesRecyclerAdapterBase(private val presenter: SeriesPresenterB
         }
 
         viewHolder.btnDeleteSeries.setOnClickListener {
-            presenter.deleteSeries(item)
+            presenter.deleteSeriesAsync(item)
             closeSwipeView(viewHolder)
         }
     }

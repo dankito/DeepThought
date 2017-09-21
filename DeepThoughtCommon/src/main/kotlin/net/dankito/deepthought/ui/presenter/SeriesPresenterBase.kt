@@ -52,8 +52,8 @@ abstract class SeriesPresenterBase(private val seriesListView: ISeriesListView, 
         router.showEditSeriesView(series)
     }
 
-    fun deleteSeries(series: Series) {
-        deleteEntityService.deleteSeries(series)
+    fun deleteSeriesAsync(series: Series) {
+        deleteEntityService.deleteSeriesAsync(series)
     }
 
 
