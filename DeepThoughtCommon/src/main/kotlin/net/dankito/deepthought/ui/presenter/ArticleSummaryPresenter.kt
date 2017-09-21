@@ -130,7 +130,12 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
         var entryPreview = item.summary
         val seriesAndPublishingDate = result.reference.getSeriesAndPublishingDatePreview(result.series)
         if(seriesAndPublishingDate.isNullOrBlank() == false) {
-            entryPreview = seriesAndPublishingDate + SeriesAndPublishingDateAndEntryPreviewSeparator + entryPreview
+            if(entryPreview.isNullOrBlank()) {
+                entryPreview = seriesAndPublishingDate
+            }
+            else {
+                entryPreview = seriesAndPublishingDate + SeriesAndPublishingDateAndEntryPreviewSeparator + entryPreview
+            }
         }
 
         readLaterArticleService.persist(ReadLaterArticle(result, entryPreview, item.title, item.url, item.previewImageUrl))

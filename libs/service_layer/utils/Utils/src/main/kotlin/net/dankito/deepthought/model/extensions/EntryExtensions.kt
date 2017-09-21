@@ -43,11 +43,16 @@ val Entry.entryPreview: String
 
 
 fun Entry.getEntryPreviewWithSeriesAndPublishingDate(reference: Reference?, series: Series? = null): String {
-    var preview = this.preview
+    var preview = this.entryPreview
 
     val seriesAndPublishingDate = reference.getSeriesAndPublishingDatePreview(series)
     if(seriesAndPublishingDate.isNullOrBlank() == false) {
-        preview = seriesAndPublishingDate + SeriesAndPublishingDateAndEntryPreviewSeparator + preview
+        if(preview.isNullOrBlank()) {
+            preview = seriesAndPublishingDate
+        }
+        else {
+            preview = seriesAndPublishingDate + SeriesAndPublishingDateAndEntryPreviewSeparator + preview
+        }
     }
 
     return preview
