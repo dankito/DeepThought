@@ -2,10 +2,7 @@ package net.dankito.deepthought.model
 
 import net.dankito.deepthought.model.config.TableConfig
 import java.util.*
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.OneToMany
+import javax.persistence.*
 
 
 @Entity(name = TableConfig.SeriesTableName)
@@ -16,34 +13,41 @@ data class Series(
 
 ) : BaseEntity() {
 
-        companion object {
-            private const val serialVersionUID = -7176298227016698448L
-        }
+    companion object {
+        private const val serialVersionUID = -7176298227016698448L
+    }
 
 
-        private constructor() : this("")
+    private constructor() : this("")
 
 
-        @OneToMany(fetch = FetchType.LAZY, mappedBy = "series")
-        var references: MutableList<Reference> = ArrayList() // TODO: don't expose a mutable list to the outside
-            private set
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "series")
+    var references: MutableList<Reference> = ArrayList() // TODO: don't expose a mutable list to the outside
+        private set
 
 
-        fun hasReferences(): Boolean {
-            return references.size > 0
-        }
+    fun hasReferences(): Boolean {
+        return references.size > 0
+    }
 
-        internal fun addReference(reference: Reference): Boolean {
-            return references.add(reference)
-        }
+    val countReferences: Int
+        get() = references.size
 
-        internal fun removeReference(reference: Reference): Boolean {
-            return references.remove(reference)
-        }
+    internal fun addReference(reference: Reference): Boolean {
+        return references.add(reference)
+    }
+
+    internal fun removeReference(reference: Reference): Boolean {
+        return references.remove(reference)
+    }
 
 
-        override fun toString(): String {
-            return title + " (" + references.size + ")"
-        }
+    val displayText: String
+        @Transient
+        get() = "$title ($countReferences)"
+
+    override fun toString(): String {
+        return displayText
+    }
 
 }
