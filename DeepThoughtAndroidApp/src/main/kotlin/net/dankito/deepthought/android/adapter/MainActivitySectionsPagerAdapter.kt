@@ -70,13 +70,11 @@ class MainActivitySectionsPagerAdapter(private val fragmentManager: FragmentMana
         fragmentManager.fragments.forEach { fragment ->
             if(fragment is EntriesListView) {
                 entriesListView = fragment
-                println("Returning entriesListView $fragment")
             }
         }
 
         if(entriesListView == null) {
             entriesListView = EntriesListView()
-            println("Created entriesListView $entriesListView")
         }
 
         entriesListView?.mainNavigationView = mainNavigationView
