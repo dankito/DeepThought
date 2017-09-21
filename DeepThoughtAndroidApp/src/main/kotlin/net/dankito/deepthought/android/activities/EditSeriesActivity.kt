@@ -20,6 +20,7 @@ import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditSeriesPresenter
+import net.dankito.deepthought.ui.view.ISeriesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.SeriesService
@@ -32,7 +33,7 @@ import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 
 
-class EditSeriesActivity : BaseActivity() {
+class EditSeriesActivity : BaseActivity(), ISeriesListView {
 
     companion object {
         private const val SERIES_ID_BUNDLE_EXTRA_NAME = "SERIES_ID"
@@ -90,7 +91,7 @@ class EditSeriesActivity : BaseActivity() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = EditSeriesPresenter(searchEngine, router, deleteEntityService, seriesService, threadPool)
+        presenter = EditSeriesPresenter(this, searchEngine, router, deleteEntityService, seriesService, threadPool)
 
         existingSeriesSearchResultsAdapter = SeriesOnReferenceRecyclerAdapter(presenter)
     }
@@ -309,15 +310,13 @@ class EditSeriesActivity : BaseActivity() {
         }
         else {
             presenter.searchSeries(query) {
-                runOnUiThread { retrievedExistingSeriesSearchResultsOnUiThread(it) }
+                runOnUiThread { showRecyclerViewExistingSeriesSearchResults() }
             }
         }
     }
 
     private fun retrievedExistingSeriesSearchResultsOnUiThread(searchResults: List<Series>) {
         existingSeriesSearchResultsAdapter.items = searchResults
-
-        showRecyclerViewExistingSeriesSearchResults()
     }
 
     private fun existingSeriesSelected(series: Series) {
@@ -365,6 +364,15 @@ class EditSeriesActivity : BaseActivity() {
         this.didSeriesChange = didSeriesChange
 
         mnSaveSeries?.isVisible = didSeriesChange
+    }
+
+
+    /*     ISeriesListView implementation      */
+    
+    override fun showEntities(entities: List<Series>) {
+        runOnUiThread {
+            retrievedExistingSeriesSearchResultsOnUiThread(entities)
+        }
     }
 
 
