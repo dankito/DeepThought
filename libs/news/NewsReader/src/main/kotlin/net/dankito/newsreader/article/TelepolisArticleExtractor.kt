@@ -94,9 +94,20 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
     private fun extractContentForPringVersion(articleElement: Element, url: String): String {
         var content = ""
 
-        articleElement.select(".content").first()?.let { contentElement ->
+        var contentElement = articleElement.select(".content").first()
+
+        if(contentElement == null) { // it seems the print version has no .content element anymore
+            if(articleElement.select("header, .printversion__back-to-article, .printversion__logo").size >= 3) { // ok, articleElement is already the contentElement -> remove clutter
+                articleElement.select("header, .printversion__back-to-article, .printversion__logo, .aufmacherbild, .printversion__copyright").remove()
+                contentElement = articleElement
+            }
+        }
+
+        contentElement?.let {
             makeLinksAbsolute(contentElement, url)
             tryToReplaceReferencesWithLinks(contentElement, articleElement)
+
+            removeReferencesFromPrintVersion(contentElement)
 
             content = contentElement.outerHtml()
         }
@@ -171,6 +182,14 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
         }
 
         return reference
+    }
+
+    private fun removeReferencesFromPrintVersion(articleElement: Element) {
+        articleElement.select("p > strong").forEach {
+            if(it.text().trim() == "Links in diesem Artikel:" || it.text().trim() == "URL dieses Artikels:") {
+                it.parent().remove()
+            }
+        }
     }
 
 }
