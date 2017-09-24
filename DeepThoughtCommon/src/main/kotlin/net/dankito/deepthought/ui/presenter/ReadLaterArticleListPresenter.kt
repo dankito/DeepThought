@@ -54,6 +54,8 @@ class ReadLaterArticleListPresenter(private val view: IReadLaterArticleView, pri
     }
 
     fun getReadLaterArticles(searchTerm: String) {
+        lastSearchTermProperty = searchTerm
+
         searchEngine.searchReadLaterArticles(ReadLaterArticleSearch(searchTerm) {
             view.showEntities(it)
         })
