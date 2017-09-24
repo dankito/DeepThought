@@ -97,6 +97,7 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
 
                 termQuery.add(PrefixQuery(Term(FieldName.ReferenceSeries, escapedTerm)), BooleanClause.Occur.SHOULD)
 
+                termQuery.add(WildcardQuery(Term(FieldName.ReferenceIssue, "*$escapedTerm*")), BooleanClause.Occur.SHOULD)
                 termQuery.add(WildcardQuery(Term(FieldName.ReferencePublishingDateString, "*$escapedTerm*")), BooleanClause.Occur.SHOULD)
 
                 query.add(termQuery, BooleanClause.Occur.MUST)
