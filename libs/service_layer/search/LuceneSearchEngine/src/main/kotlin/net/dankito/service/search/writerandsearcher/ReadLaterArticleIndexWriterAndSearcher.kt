@@ -1,9 +1,9 @@
 package net.dankito.service.search.writerandsearcher
 
-import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.model.extensions.abstractPlainText
 import net.dankito.deepthought.model.extensions.contentPlainText
+import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.messages.ReadLaterArticleChanged
 import net.dankito.service.eventbus.EventBusPriorities
@@ -61,11 +61,11 @@ class ReadLaterArticleIndexWriterAndSearcher(readLaterArticleService: ReadLaterA
     }
 
     private fun addQueryForSearchTerm(termsToFilterFor: List<String>, query: BooleanQuery) {
-        if (termsToFilterFor.isEmpty()) {
+        if(termsToFilterFor.isEmpty()) {
             query.add(WildcardQuery(Term(getIdFieldName(), "*")), BooleanClause.Occur.MUST)
         }
         else {
-            for (term in termsToFilterFor) {
+            for(term in termsToFilterFor) {
                 val escapedTerm = QueryParser.escape(term)
                 val termQuery = BooleanQuery()
 

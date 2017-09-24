@@ -61,11 +61,11 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
     private fun indexPublishingDate(entity: Reference, doc: Document) {
         entity.publishingDate?.let { publishingDate -> doc.add(LongField(FieldName.ReferencePublishingDate, publishingDate.time, Field.Store.YES)) }
 
-        val publishingDateString = if (entity.publishingDateString != null) entity.publishingDateString
-        else if (entity.publishingDate != null) PublishingDateIndexFormat.format(entity.publishingDate)
+        val publishingDateString = if(entity.publishingDateString != null) entity.publishingDateString
+        else if(entity.publishingDate != null) PublishingDateIndexFormat.format(entity.publishingDate)
         else ""
 
-        if (publishingDateString.isNullOrBlank() == false) {
+        if(publishingDateString.isNullOrBlank() == false) {
             doc.add(Field(FieldName.ReferencePublishingDateString, publishingDateString, TextField.TYPE_NOT_STORED))
         }
     }
@@ -85,7 +85,7 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
     }
 
     private fun addQueryForSearchTerm(termsToFilterFor: List<String>, query: BooleanQuery, search: ReferenceSearch) {
-        if (termsToFilterFor.isEmpty()) {
+        if(termsToFilterFor.isEmpty()) {
             query.add(WildcardQuery(Term(getIdFieldName(), "*")), BooleanClause.Occur.MUST)
         }
         else {

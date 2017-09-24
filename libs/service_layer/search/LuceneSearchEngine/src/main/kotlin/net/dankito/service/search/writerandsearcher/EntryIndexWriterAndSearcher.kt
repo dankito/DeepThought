@@ -49,7 +49,7 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
 
         doc.add(LongField(FieldName.EntryCreated, entity.createdOn.time, Field.Store.YES))
 
-        if (entity.hasTags()) {
+        if(entity.hasTags()) {
             for(tag in entity.tags.filterNotNull().filter { it.id != null }) {
                 doc.add(StringField(FieldName.EntryTagsIds, tag.id, Field.Store.YES))
             }
@@ -81,12 +81,12 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
     }
 
     private fun addQueryForOptions(search: EntriesSearch, query: BooleanQuery) {
-        if (search.filterOnlyEntriesWithoutTags) {
+        if(search.filterOnlyEntriesWithoutTags) {
             query.add(TermQuery(Term(FieldName.EntryNoTags, NoTagsFieldValue)), BooleanClause.Occur.MUST)
         }
-        else if (search.entriesMustHaveTheseTags.isNotEmpty()) {
+        else if(search.entriesMustHaveTheseTags.isNotEmpty()) {
             val filterEntriesQuery = BooleanQuery()
-            for (tag in search.entriesMustHaveTheseTags.filterNotNull().filter { it.id != null }) {
+            for(tag in search.entriesMustHaveTheseTags.filterNotNull().filter { it.id != null }) {
                 filterEntriesQuery.add(TermQuery(Term(FieldName.EntryTagsIds, tag.id)), BooleanClause.Occur.MUST)
             }
 
@@ -95,21 +95,21 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
     }
 
     private fun addQueryForSearchTerm(termsToFilterFor: List<String>, query: BooleanQuery, search: EntriesSearch) {
-        if (termsToFilterFor.isEmpty()) {
+        if(termsToFilterFor.isEmpty()) {
             query.add(WildcardQuery(Term(FieldName.EntryId, "*")), BooleanClause.Occur.MUST)
         }
         else {
-            for (term in termsToFilterFor) {
+            for(term in termsToFilterFor) {
                 val escapedTerm = QueryParser.escape(term)
                 val termQuery = BooleanQuery()
 
-                if (search.filterContent) {
+                if(search.filterContent) {
                     termQuery.add(PrefixQuery(Term(FieldName.EntryContent, escapedTerm)), BooleanClause.Occur.SHOULD)
                 }
-                if (search.filterAbstract) {
+                if(search.filterAbstract) {
                     termQuery.add(PrefixQuery(Term(FieldName.EntryAbstract, escapedTerm)), BooleanClause.Occur.SHOULD)
                 }
-                if (search.filterReference) {
+                if(search.filterReference) {
                     termQuery.add(PrefixQuery(Term(FieldName.EntryReference, escapedTerm)), BooleanClause.Occur.SHOULD)
                 }
 

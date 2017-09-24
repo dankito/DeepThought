@@ -50,11 +50,11 @@ class SeriesIndexWriterAndSearcher(seriesService: SeriesService, eventBus: IEven
     }
 
     private fun addQueryForSearchTerm(termsToFilterFor: List<String>, query: BooleanQuery) {
-        if (termsToFilterFor.isEmpty()) {
+        if(termsToFilterFor.isEmpty()) {
             query.add(WildcardQuery(Term(getIdFieldName(), "*")), BooleanClause.Occur.MUST)
         }
         else {
-            for (term in termsToFilterFor) {
+            for(term in termsToFilterFor) {
                 val escapedTerm = QueryParser.escape(term)
 
                 query.add(PrefixQuery(Term(FieldName.SeriesTitle, escapedTerm)), BooleanClause.Occur.MUST)

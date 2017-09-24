@@ -76,8 +76,8 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, thr
     }
 
     private fun executeSearchForNonEmptySearchTerm(search: TagsSearch, tagNamesToSearchFor: List<String>) {
-        for (tagNameToSearchFor in tagNamesToSearchFor) {
-            if (search.isInterrupted) {
+        for(tagNameToSearchFor in tagNamesToSearchFor) {
+            if(search.isInterrupted) {
                 return
             }
 
@@ -99,14 +99,14 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, thr
 
     private fun executeSearchForSingleTagName(search: TagsSearch, tagNameToSearchFor: String): Boolean {
         val searchTerm = QueryParser.escape(tagNameToSearchFor)
-        if (search.isInterrupted) {
+        if(search.isInterrupted) {
             return true
         }
 
         val exactMatches = getExactMatches(searchTerm)
 
         val tagsContainingTermQuery = WildcardQuery(Term(FieldName.TagName, "*$searchTerm*"))
-        if (search.isInterrupted) {
+        if(search.isInterrupted) {
             return true
         }
 
@@ -194,7 +194,7 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, thr
             searchTermQuery.add(WildcardQuery(Term(FieldName.TagName, "*")), BooleanClause.Occur.SHOULD)
         }
         else {
-            for (tagName in tagNamesToSearchFor) {
+            for(tagName in tagNamesToSearchFor) {
                 searchTermQuery.add(WildcardQuery(Term(FieldName.TagName, "*$tagName*")), BooleanClause.Occur.SHOULD)
             }
         }

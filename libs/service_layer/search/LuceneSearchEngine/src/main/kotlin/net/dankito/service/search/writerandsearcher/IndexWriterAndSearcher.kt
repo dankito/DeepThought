@@ -103,7 +103,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
             this.writer = IndexWriter(directory, config)
         } catch(e: Exception) {
-//            if (e is LockObtainFailedException) { // TODO: really only on LockObtainFailedException?
+//            if(e is LockObtainFailedException) { // TODO: really only on LockObtainFailedException?
                 isReadOnly = true
 //            }
 
@@ -163,7 +163,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
         else { // index has changed
             val newDirectoryReader = DirectoryReader.openIfChanged(directoryReader, writer, true)
 
-            if (newDirectoryReader != null) {
+            if(newDirectoryReader != null) {
                 return newDirectoryReader
             }
             else {
@@ -344,7 +344,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
      * -> don't call it on each update / deletion, wait some time before commit accumulated changes.
      */
     @Synchronized protected fun startCommitIndicesTimer() {
-        if (commitIndicesTimer != null) { // timer already started
+        if(commitIndicesTimer != null) { // timer already started
             return
         }
 
@@ -388,7 +388,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
     protected fun getSorting(sortOptions: List<SortOption>): Sort {
         val sort = Sort()
 
-        if (sortOptions.isNotEmpty()) {
+        if(sortOptions.isNotEmpty()) {
             val sortFields = arrayOfNulls<SortField>(sortOptions.size)
 
             for(i in sortOptions.indices) {
@@ -405,7 +405,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
     protected fun executeQueryForSearchWithCollectionResult(search: SearchWithCollectionResult<TEntity>, query: Query, resultEntityClass: Class<TEntity>,
                                                             countMaxSearchResults: Int = DEFAULT_COUNT_MAX_SEARCH_RESULTS, vararg sortOptions: SortOption) {
-        if (search.isInterrupted)
+        if(search.isInterrupted)
             return
 
         try {

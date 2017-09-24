@@ -104,7 +104,7 @@ class SearchFilteredTagsIntegrationTest : LuceneSearchEngineIntegrationTestBase(
     private fun createTagsToFilter(countTagsToFilter: Int): MutableList<Tag> {
         val tagsToFilter = mutableListOf<Tag>()
 
-        for (i in 1..countTagsToFilter) {
+        for(i in 1..countTagsToFilter) {
             val tagToFilter = Tag("Filter_" + i)
             tagService.persist(tagToFilter)
             tagsToFilter.add(tagToFilter)
@@ -116,7 +116,7 @@ class SearchFilteredTagsIntegrationTest : LuceneSearchEngineIntegrationTestBase(
     private fun createTagsOnEntriesWithTagsToFilter(countTagsOnEntriesWithTagsToFilter: Int): MutableList<Tag> {
         val tagsOnEntriesWithTagsToFilter = mutableListOf<Tag>()
 
-        for (i in 1..countTagsOnEntriesWithTagsToFilter) {
+        for(i in 1..countTagsOnEntriesWithTagsToFilter) {
             val tagOnEntriesWithTagsToFilter = Tag("On_Entry_With_Tag_To_Filter_" + i)
             tagService.persist(tagOnEntriesWithTagsToFilter)
             tagsOnEntriesWithTagsToFilter.add(tagOnEntriesWithTagsToFilter)
@@ -130,7 +130,7 @@ class SearchFilteredTagsIntegrationTest : LuceneSearchEngineIntegrationTestBase(
         val tagsOnEntriesWithTagsToFilterNoSetOnEntriesYet = ArrayList(tagsOnEntriesWithTagsToFilter)
         val tagsRandom = Random(System.nanoTime())
 
-        for (i in 1..countEntriesOnTagsToFilter) {
+        for(i in 1..countEntriesOnTagsToFilter) {
             val entryOnTagToFilter = Entry("Filter_" + i)
 
             entryOnTagToFilter.setAllTags(tagsToFilter)
@@ -161,7 +161,7 @@ class SearchFilteredTagsIntegrationTest : LuceneSearchEngineIntegrationTestBase(
     private fun createNoiseTags(countNoiseTags: Int): MutableList<Tag> {
         val noiseTags = mutableListOf<Tag>()
 
-        for (i in 1..countNoiseTags) {
+        for(i in 1..countNoiseTags) {
             val noiseTag = Tag("Noise_" + i)
             tagService.persist(noiseTag)
             noiseTags.add(noiseTag)
@@ -174,7 +174,7 @@ class SearchFilteredTagsIntegrationTest : LuceneSearchEngineIntegrationTestBase(
         val noiseEntries = mutableListOf<Entry>()
         val tagsRandom = Random(System.nanoTime())
 
-        for (i in 1..countNoiseEntries) {
+        for(i in 1..countNoiseEntries) {
             val noiseEntry = Entry("Noise_" + i)
 
             if(noiseTags.isNotEmpty()) {
