@@ -19,6 +19,8 @@ abstract class SeriesPresenterBase(private val seriesListView: ISeriesListView, 
 
     protected var lastSearchTermProperty = Search.EmptySearchTerm
 
+    private var lastSeriesSearch: SeriesSearch? = null
+
 
     @Inject
     protected lateinit var eventBus: IEventBus
@@ -38,13 +40,17 @@ abstract class SeriesPresenterBase(private val seriesListView: ISeriesListView, 
 
 
     fun searchSeries(searchTerm: String, searchCompleted: ((List<Series>) -> Unit)? = null) {
+        lastSeriesSearch?.interrupt()
+
         lastSearchTermProperty = searchTerm
 
-        searchEngine.searchSeries(SeriesSearch(searchTerm) { result ->
+        lastSeriesSearch = SeriesSearch(searchTerm) { result ->
             seriesListView.showEntities(result)
 
             searchCompleted?.invoke(result)
-        })
+        }
+
+        searchEngine.searchSeries(lastSeriesSearch!!)
     }
 
 
