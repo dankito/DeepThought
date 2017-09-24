@@ -180,6 +180,12 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
 
 
     private fun deleteTag(tag: Tag) {
+        removeTagFromEntry(tag)
+
+        presenter.deleteTagAsync(tag)
+    }
+
+    private fun removeTagFromEntry(tag: Tag) {
         if(adapter.tagsOnEntry.contains(tag)) {
             adapter.tagsOnEntry.remove(tag)
             activity?.runOnUiThread {
@@ -187,8 +193,6 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
                 setTagsOnEntryPreviewOnUIThread(adapter.tagsOnEntry)
             }
         }
-
-        presenter.deleteTagAsync(tag)
     }
 
 
@@ -289,7 +293,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
     }
 
     private fun setTagsOnEntryPreviewOnUIThread(tagsOnEntry: MutableList<Tag>) {
-        lytTagsPreview?.let { tagsPreviewViewHelper.showTagsPreview(it, tagsOnEntry) }
+        lytTagsPreview?.let { tagsPreviewViewHelper.showTagsPreview(it, tagsOnEntry, true) { removeTagFromEntry(it) } }
 
         mnApplyTagsOnEntryChanges?.isVisible = didTagsOnEntryChange(tagsOnEntry)
     }

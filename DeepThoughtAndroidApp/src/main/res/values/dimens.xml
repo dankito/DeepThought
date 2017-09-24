@@ -46,6 +46,9 @@
     <dimen name="view_tag_text_padding_bottom">2dp</dimen>
     <dimen name="view_tag_margin_right">6dp</dimen>
     <dimen name="view_tag_margin_bottom">6dp</dimen>
+    <dimen name="view_tag_button_width">10dp</dimen>
+    <dimen name="view_tag_button_height">20dp</dimen>
+    <dimen name="view_tag_button_padding_right">4dp</dimen>
 
     <dimen name="list_item_tag_height">44dp</dimen>
     <dimen name="list_item_tag_button_width">66dp</dimen>
