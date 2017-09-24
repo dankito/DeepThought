@@ -33,6 +33,8 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
 
     protected var lastTagsSearchResults: TagsSearchResults? = null
 
+    private var lastFilteredTagsSearch: FilteredTagsSearch? = null
+
     protected var lastFilteredTagsSearchResults: FilteredTagsSearchResult? = null
 
     protected val tagsFilter = ArrayList<Tag>()
@@ -97,12 +99,16 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
     }
 
     private fun searchFilteredTags(searchTerm: String, tagsFilter: List<Tag>) {
-        searchEngine.searchFilteredTags(FilteredTagsSearch(tagsFilter, searchTerm) { result ->
+        lastFilteredTagsSearch?.interrupt()
+
+        lastFilteredTagsSearch = FilteredTagsSearch(tagsFilter, searchTerm) { result ->
             this.lastTagsSearchResults = null
             this.lastFilteredTagsSearchResults = result
 
             tagsListView.showEntities(result.tagsOnEntriesContainingFilteredTags)
-        })
+        }
+
+        searchEngine.searchFilteredTags(lastFilteredTagsSearch!!)
     }
 
 
