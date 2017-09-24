@@ -13,7 +13,7 @@ import net.dankito.utils.IThreadPool
 import net.engio.mbassy.listener.Handler
 import org.apache.lucene.document.Document
 import org.apache.lucene.document.Field
-import org.apache.lucene.document.StringField
+import org.apache.lucene.document.TextField
 import org.apache.lucene.index.Term
 import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.*
@@ -32,8 +32,7 @@ class SeriesIndexWriterAndSearcher(seriesService: SeriesService, eventBus: IEven
 
 
     override fun addEntityFieldsToDocument(entity: Series, doc: Document) {
-        // for an not analyzed String it's important to index it lower case as only then lower case search finds it
-        doc.add(StringField(FieldName.SeriesTitle, entity.title.toLowerCase(), Field.Store.NO))
+        doc.add(Field(FieldName.SeriesTitle, entity.title, TextField.TYPE_NOT_STORED))
     }
 
 
