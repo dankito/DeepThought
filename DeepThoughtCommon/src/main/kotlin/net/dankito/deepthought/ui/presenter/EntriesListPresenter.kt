@@ -59,7 +59,8 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, router
     }
 
 
-    fun searchEntries(searchTerm: String, searchInContent: Boolean = true, searchInAbstract: Boolean = true, searchInReference: Boolean = true, searchCompleted: ((List<Entry>) -> Unit)? = null) {
+    fun searchEntries(searchTerm: String, searchInContent: Boolean = true, searchInAbstract: Boolean = true, searchInReference: Boolean = true, searchInTags: Boolean = true,
+                      searchCompleted: ((List<Entry>) -> Unit)? = null) {
         lastEntriesSearch?.interrupt()
         lastSearchTermProperty = searchTerm
 
@@ -73,7 +74,7 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, router
             filterOnlyEntriesWithoutTags = it is EntriesWithoutTagsCalculatedTag
         }
 
-        lastEntriesSearch = EntriesSearch(searchTerm, searchInContent, searchInAbstract, searchInReference, filterOnlyEntriesWithoutTags, entriesMustHaveTheseTags) { result ->
+        lastEntriesSearch = EntriesSearch(searchTerm, searchInContent, searchInAbstract, searchInReference, searchInTags, filterOnlyEntriesWithoutTags, entriesMustHaveTheseTags) { result ->
             entriesListView.showEntities(result)
 
             searchCompleted?.invoke(result)

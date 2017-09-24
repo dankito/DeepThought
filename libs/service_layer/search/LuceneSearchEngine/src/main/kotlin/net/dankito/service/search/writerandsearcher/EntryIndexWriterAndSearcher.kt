@@ -52,6 +52,7 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
         if(entity.hasTags()) {
             for(tag in entity.tags.filterNotNull().filter { it.id != null }) {
                 doc.add(StringField(FieldName.EntryTagsIds, tag.id, Field.Store.YES))
+                doc.add(Field(FieldName.EntryTagsNames, tag.name, TextField.TYPE_NOT_STORED))
             }
         }
         else {
@@ -114,6 +115,9 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
                 }
                 if(search.filterReference) {
                     termQuery.add(PrefixQuery(Term(FieldName.EntryReference, escapedTerm)), BooleanClause.Occur.SHOULD)
+                }
+                if(search.filterTags) {
+                    termQuery.add(PrefixQuery(Term(FieldName.EntryTagsNames, escapedTerm)), BooleanClause.Occur.SHOULD)
                 }
 
                 query.add(termQuery, BooleanClause.Occur.MUST)

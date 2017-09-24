@@ -21,6 +21,7 @@ object FieldName {
     val EntryCreated = "created"
 
     val EntryTagsIds = "tags_ids"
+    val EntryTagsNames = "tags_names"
     val EntryNoTags = "no_tags"
 
     val EntryReference = "reference"
