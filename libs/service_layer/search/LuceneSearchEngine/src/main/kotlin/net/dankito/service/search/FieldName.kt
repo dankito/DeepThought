@@ -44,7 +44,7 @@ object FieldName {
     val ReferenceTitle = "reference_title"
     val ReferenceSubTitle = "reference_subtitle"
     val ReferenceSeries = "reference_series"
-    val ReferenceIssueOrPublishingDate = "reference_issue_or_publishing_date"
+    val ReferenceIssue = "reference_issue"
     val ReferencePublishingDate = "reference_publishing_date"
     val ReferencePublishingDateString = "reference_publishing_date_string"
 
