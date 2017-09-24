@@ -30,6 +30,8 @@ class ReadLaterArticleListPresenter(private val view: IReadLaterArticleView, pri
 
     private var lastSearchTermProperty = Search.EmptySearchTerm
 
+    private var lastReadLaterArticleSearch: ReadLaterArticleSearch? = null
+
     private val eventBusListener = EventBusListener()
 
 
@@ -54,11 +56,15 @@ class ReadLaterArticleListPresenter(private val view: IReadLaterArticleView, pri
     }
 
     fun getReadLaterArticles(searchTerm: String) {
+        lastReadLaterArticleSearch?.interrupt()
+
         lastSearchTermProperty = searchTerm
 
-        searchEngine.searchReadLaterArticles(ReadLaterArticleSearch(searchTerm) {
+        lastReadLaterArticleSearch = ReadLaterArticleSearch(searchTerm) {
             view.showEntities(it)
-        })
+        }
+
+        searchEngine.searchReadLaterArticles(lastReadLaterArticleSearch!!)
     }
 
 
