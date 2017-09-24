@@ -161,6 +161,10 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, thr
             query.add(BooleanClause(TermQuery(Term(FieldName.EntryTagsIds, tag.id)), BooleanClause.Occur.MUST))
         }
 
+        if(search.isInterrupted) {
+            return
+        }
+
         try {
             entryIndexWriterAndSearcher.executeQuery(query, FILTERED_TAGS_DEFAULT_COUNT_MAX_SEARCH_RESULTS, SortOption(FieldName.EntryCreated, SortOrder.Descending, SortField.Type.LONG))?.let { (searcher, hits) ->
                 val entries = FilteredTagsLazyLoadingLuceneSearchResultsList(entityService.entityManager, searcher, hits, threadPool)
@@ -176,7 +180,12 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, thr
             log.error("Could not execute Query " + query.toString(), ex)
         }
 
-        search.completedListener(FilteredTagsSearchResult(entriesHavingFilteredTags, tagsOnEntriesContainingFilteredTags))
+        if(search.isInterrupted) {
+            return
+        }
+
+        search.results = FilteredTagsSearchResult(entriesHavingFilteredTags, tagsOnEntriesContainingFilteredTags)
+        search.fireSearchCompleted()
     }
 
     private fun searchInGivenTags(givenTagIds: Collection<String>, tagNamesToSearchFor: List<String>): List<String> {
