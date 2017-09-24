@@ -29,6 +29,8 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, router
 
     private var lastSearchTermProperty = Search.EmptySearchTerm
 
+    private var lastEntriesSearch: EntriesSearch? = null
+
 
     @Inject
     protected lateinit var eventBus: IEventBus
@@ -58,7 +60,8 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, router
 
 
     fun searchEntries(searchTerm: String, searchInContent: Boolean = true, searchInAbstract: Boolean = true, searchInReference: Boolean = true, searchCompleted: ((List<Entry>) -> Unit)? = null) {
-       lastSearchTermProperty = searchTerm
+        lastEntriesSearch?.interrupt()
+        lastSearchTermProperty = searchTerm
 
         var filterOnlyEntriesWithoutTags = false
         val entriesMustHaveTheseTags = ArrayList(tagsFilter)
@@ -70,11 +73,13 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, router
             filterOnlyEntriesWithoutTags = it is EntriesWithoutTagsCalculatedTag
         }
 
-        searchEngine.searchEntries(EntriesSearch(searchTerm, searchInContent, searchInAbstract, searchInReference, filterOnlyEntriesWithoutTags, entriesMustHaveTheseTags) { result ->
+        lastEntriesSearch = EntriesSearch(searchTerm, searchInContent, searchInAbstract, searchInReference, filterOnlyEntriesWithoutTags, entriesMustHaveTheseTags) { result ->
             entriesListView.showEntities(result)
 
             searchCompleted?.invoke(result)
-        })
+        }
+
+        searchEngine.searchEntries(lastEntriesSearch!!)
     }
 
     override fun getLastSearchTerm(): String {

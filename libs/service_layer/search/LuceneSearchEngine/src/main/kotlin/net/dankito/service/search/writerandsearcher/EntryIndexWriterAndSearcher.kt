@@ -75,6 +75,9 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
 
         addQueryForOptions(search, query)
 
+        if(search.isInterrupted)
+            return
+
         addQueryForSearchTerm(termsToFilterFor, query, search)
 
         executeQueryForSearchWithCollectionResult(search, query, Entry::class.java, MaxEntriesSearchResults, SortOption(FieldName.EntryCreated, SortOrder.Descending, SortField.Type.LONG))
