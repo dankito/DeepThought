@@ -62,16 +62,7 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
 
                 localUser = deepThought.localUser
                 localDevice = deepThought.localDevice
-                val settings = deepThought.localSettings
-                if(settings != null && settings.isPersisted()) {
-                    this.localSettings = settings
-                }
-                else { // TODO: remove after next alpha release
-                    this.localSettings = LocalSettings(1, 1, 1, Date(0), Date(0), Date(0), false, false, false)
-                    deepThought.localSettings = localSettings
-                    entityManager.persistEntity(localSettings)
-                    entityManager.updateEntity(deepThought)
-                }
+                this.localSettings = deepThought.localSettings
 
                 return
             }
@@ -89,7 +80,7 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
 
         localUser = deepThought.localUser
         localDevice = deepThought.localDevice
-        deepThought.localSettings?.let { localSettings = it } // TODO: change after next alpha release
+        localSettings = deepThought.localSettings
 
         entityManager.persistEntity(deepThought)
     }
