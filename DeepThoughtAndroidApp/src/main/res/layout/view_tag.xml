@@ -7,6 +7,7 @@
     android:paddingStart="@dimen/view_tag_text_padding_left_right"
     android:paddingRight="@dimen/view_tag_text_padding_left_right"
     android:paddingEnd="@dimen/view_tag_text_padding_left_right"
+    android:paddingBottom="@dimen/view_tag_text_padding_bottom"
     android:layout_marginRight="@dimen/view_tag_margin_right"
     android:layout_marginEnd="@dimen/view_tag_margin_right"
     android:gravity="center"
