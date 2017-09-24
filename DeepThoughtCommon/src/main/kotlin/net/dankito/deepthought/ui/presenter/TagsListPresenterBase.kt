@@ -97,8 +97,6 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
     }
 
     private fun searchFilteredTags(searchTerm: String, tagsFilter: List<Tag>) {
-        lastSearchTermProperty = searchTerm
-
         searchEngine.searchFilteredTags(FilteredTagsSearch(tagsFilter, searchTerm) { result ->
             this.lastTagsSearchResults = null
             this.lastFilteredTagsSearchResults = result
