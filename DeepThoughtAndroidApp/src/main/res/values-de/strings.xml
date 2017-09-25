@@ -106,6 +106,8 @@
     <string name="activity_edit_entry_reference_label">Quelle</string>
     <string name="activity_edit_entry_tags_label">Schlagworte</string>
     <string name="activity_edit_entry_tags_onboarding_text">Geben Sie dem Eintrag aussagekräftige Schlagworte, damit Sie ihn später leichter wieder finden</string>
+    <string name="activity_edit_entry_reference_onboarding_text">Speichern wo Sie diese Information gefunden haben</string>
+    <string name="activity_edit_entry_abstract_onboarding_text">Evtl. einen Titel oder eine Zusammenfassung für diese Information hinzufügen</string>
     <string name="activity_edit_entry_alert_message_entry_contains_unsaved_changes">Eintrag enthält nicht gespeicherte Änderungen.\r\n\r\nSollen diese Änderungen nun
         gespeichert werden?</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
