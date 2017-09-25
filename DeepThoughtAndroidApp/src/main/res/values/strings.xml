@@ -66,7 +66,7 @@
 
 
     <string name="activity_edit_entry_edit_content_onboarding_text"><![CDATA[
-        <p>Click here to set entry\'s content (the information you actually want to save).</p>
+        <p>Click here to set entry\'s information (the data you actually want to save).</p>
         <p>(Click on the fields above or the + button at bottom right edge to set entry\'s abstract, reference and tags.)</p>
     ]]>
     </string>
@@ -98,13 +98,13 @@
     <string name="dialog_article_summary_extractor_alert_message_delete_config" formatted="false">Really delete news site %s?</string>
 
     <string name="menu_share_reference_url">Url</string>
-    <string name="menu_share_entry_content">Content</string>
+    <string name="menu_share_entry_content">Information</string>
 
     <string name="activity_edit_entry_title">Entry</string>
-    <string name="activity_edit_entry_content_label">Content</string>
-    <string name="activity_edit_entry_edit_content_title">Content</string>
-    <string name="activity_edit_entry_abstract_label">Abstract</string>
-    <string name="activity_edit_entry_edit_abstract_title">Abstract</string>
+    <string name="activity_edit_entry_content_label">Information</string>
+    <string name="activity_edit_entry_edit_content_title">Information</string>
+    <string name="activity_edit_entry_abstract_label">Title / Abstract</string>
+    <string name="activity_edit_entry_edit_abstract_title">Title / Abstract</string>
     <string name="activity_edit_entry_reference_label">Reference</string>
     <string name="activity_edit_entry_tags_label">Tags</string>
     <string name="activity_edit_entry_tags_onboarding_text">Add meaningful tags, so that you can find it later easily</string>
