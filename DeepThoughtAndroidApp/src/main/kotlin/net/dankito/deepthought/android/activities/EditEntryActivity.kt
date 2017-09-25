@@ -201,6 +201,11 @@ class EditEntryActivity : BaseActivity() {
         savedInstanceState.getString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME)?.let { readLaterArticleId -> editReadLaterArticle(readLaterArticleId) }
         savedInstanceState.getString(ENTRY_ID_INTENT_EXTRA_NAME)?.let { entryId -> editEntry(entryId) }
 
+        if(savedInstanceState.getString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME) == null && savedInstanceState.getString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME) == null &&
+                savedInstanceState.getString(ENTRY_ID_INTENT_EXTRA_NAME) == null) { // a new Entry is being created then
+            createEntry(false) // don't go to EditHtmlTextDialog for content here as we're restoring state, content may already be set
+        }
+
         savedInstanceState.getString(CONTENT_INTENT_EXTRA_NAME)?.let { content ->
             contentToEdit = content
             setContentPreviewOnUIThread()
@@ -994,11 +999,14 @@ class EditEntryActivity : BaseActivity() {
         }
     }
 
-    private fun createEntry() {
+    private fun createEntry(editContent: Boolean = true) {
         canEntryBeSaved = true
 
         editEntry(Entry(""))
-        editContent() // go directly to edit content dialog, there's absolutely nothing to see on this almost empty screen
+
+        if(editContent) {
+            editContent() // go directly to edit content dialog, there's absolutely nothing to see on this almost empty screen
+        }
     }
 
     private fun editEntry(entryId: String) {
