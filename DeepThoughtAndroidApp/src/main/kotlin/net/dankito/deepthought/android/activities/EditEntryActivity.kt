@@ -58,6 +58,9 @@ class EditEntryActivity : BaseActivity() {
         private const val READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME = "READ_LATER_ARTICLE_ID"
         private const val ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ENTRY_EXTRACTION_RESULT"
 
+        private const val FORCE_SHOW_REFERENCE_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_REFERENCE_PREVIEW"
+        private const val FORCE_SHOW_ABSTRACT_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_ABSTRACT_PREVIEW"
+
         private const val CONTENT_INTENT_EXTRA_NAME = "CONTENT"
         private const val ABSTRACT_INTENT_EXTRA_NAME = "ABSTRACT"
         private const val REFERENCE_INTENT_EXTRA_NAME = "REFERENCE"
@@ -145,6 +148,10 @@ class EditEntryActivity : BaseActivity() {
 
     private val tagsOnEntry: MutableList<Tag> = ArrayList()
 
+    private var forceShowAbstractPreview = false
+
+    private var forceShowReferencePreview = false
+
     private var canEntryBeSaved = false
 
     private var entryHasBeenEdited = false
@@ -197,6 +204,9 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
+        this.forceShowReferencePreview = savedInstanceState.getBoolean(FORCE_SHOW_REFERENCE_PREVIEW_INTENT_EXTRA_NAME, false)
+        this.forceShowAbstractPreview = savedInstanceState.getBoolean(FORCE_SHOW_ABSTRACT_PREVIEW_INTENT_EXTRA_NAME, false)
+
         savedInstanceState.getString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)?.let { editEntryExtractionResult(it) }
         savedInstanceState.getString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME)?.let { readLaterArticleId -> editReadLaterArticle(readLaterArticleId) }
         savedInstanceState.getString(ENTRY_ID_INTENT_EXTRA_NAME)?.let { entryId -> editEntry(entryId) }
@@ -234,6 +244,9 @@ class EditEntryActivity : BaseActivity() {
             outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, null)
             entryExtractionResult?.let { outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, serializer.serializeObject(it)) }
 
+            outState.putBoolean(FORCE_SHOW_REFERENCE_PREVIEW_INTENT_EXTRA_NAME, forceShowReferencePreview)
+            outState.putBoolean(FORCE_SHOW_ABSTRACT_PREVIEW_INTENT_EXTRA_NAME, forceShowAbstractPreview)
+
             outState.putString(TAGS_ON_ENTRY_INTENT_EXTRA_NAME, serializer.serializeObject(tagsOnEntry))
 
             outState.putString(REFERENCE_INTENT_EXTRA_NAME, referenceToEdit?.id)
@@ -264,10 +277,24 @@ class EditEntryActivity : BaseActivity() {
         btnClearEntryReference.setOnClickListener { referenceCleared() }
         lytTagsPreview.setOnClickListener { editTagsOnEntry() }
 
-        fabEditEntryReference.setOnClickListener { executeActionAndCloseFloatingActionMenu { editReference() } }
-        fabEditEntryAbstract.setOnClickListener { executeActionAndCloseFloatingActionMenu { editAbstract() } }
+        fabEditEntryReference.setOnClickListener { executeActionAndCloseFloatingActionMenu { addReferenceToEntry() } }
+        fabEditEntryAbstract.setOnClickListener { executeActionAndCloseFloatingActionMenu { addAbstractToEntry() } }
 
         setupEntryContentView()
+    }
+
+    private fun addReferenceToEntry() {
+        forceShowReferencePreview = true
+        setReferencePreviewOnUIThread()
+
+        editReference()
+    }
+
+    private fun addAbstractToEntry() {
+        forceShowAbstractPreview = true
+        setAbstractPreviewOnUIThread()
+
+        editAbstract()
     }
 
     private fun executeActionAndCloseFloatingActionMenu(action: (() -> Unit)) {
@@ -532,22 +559,32 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setAbstractPreviewOnUIThread() {
-        abstractToEdit?.let { lytAbstractPreview.setFieldValueOnUiThread(it.getPlainTextForHtml()) }
+        if(abstractToEdit.isNullOrBlank()) {
+            lytAbstractPreview.setOnboardingTextOnUiThread(R.string.activity_edit_entry_abstract_onboarding_text)
+        }
+        else {
+            lytAbstractPreview.setFieldValueOnUiThread(abstractToEdit.getPlainTextForHtml())
+        }
 
-        lytAbstractPreview.visibility = if(abstractToEdit.isNullOrBlank()) View.GONE else View.VISIBLE
-        fabEditEntryAbstract.visibility = if(abstractToEdit.isNullOrBlank()) View.VISIBLE else View.GONE
+        val showAbstractPreview = this.forceShowAbstractPreview || abstractToEdit.isNullOrBlank() == false
+
+        lytAbstractPreview.visibility = if(showAbstractPreview) View.VISIBLE else View.GONE
+        fabEditEntryAbstract.visibility = if(showAbstractPreview) View.GONE else View.VISIBLE
         setFloatingActionButtonVisibilityOnUIThread()
     }
 
     private fun setReferencePreviewOnUIThread() {
-        referenceToEdit?.let { lytReferencePreview.setFieldValueOnUiThread(it.getPreviewWithSeriesAndPublishingDate(getCurrentSeries())) }
-
         if(referenceToEdit == null) {
-            lytReferencePreview.setFieldValueOnUiThread("")
+            lytReferencePreview.setOnboardingTextOnUiThread(R.string.activity_edit_entry_reference_onboarding_text)
+        }
+        else {
+            lytReferencePreview.setFieldValueOnUiThread(referenceToEdit.getPreviewWithSeriesAndPublishingDate(getCurrentSeries()))
         }
 
-        lytReferencePreview.visibility = if(referenceToEdit == null) View.GONE else View.VISIBLE
-        fabEditEntryReference.visibility = if(referenceToEdit == null) View.VISIBLE else View.GONE
+        val showReferencePreview = this.forceShowReferencePreview || referenceToEdit != null
+
+        lytReferencePreview.visibility = if(showReferencePreview) View.VISIBLE else View.GONE
+        fabEditEntryReference.visibility = if(showReferencePreview) View.GONE else View.VISIBLE
         setFloatingActionButtonVisibilityOnUIThread()
 
         btnClearEntryReference.visibility = if(referenceToEdit == null) View.GONE else View.VISIBLE
