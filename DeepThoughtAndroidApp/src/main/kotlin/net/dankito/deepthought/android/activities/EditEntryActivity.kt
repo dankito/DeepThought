@@ -985,17 +985,16 @@ class EditEntryActivity : BaseActivity() {
 
 
     private fun showParameters(parameters: EntryActivityParameters?) {
-        if(parameters == null) { // create entry
-            if(entry == null) { // entry != null -> entry has been restored from savedInstanceState, parameters therefor is null
-                createEntry()
-            }
-        }
-        else {
+        if(parameters != null) {
             parameters.entry?.let { editEntry(it) }
 
             parameters.readLaterArticle?.let { editReadLaterArticle(it) }
 
             parameters.entryExtractionResult?.let { editEntryExtractionResult(it) }
+
+            if(parameters.createEntry) {
+                createEntry()
+            }
         }
     }
 

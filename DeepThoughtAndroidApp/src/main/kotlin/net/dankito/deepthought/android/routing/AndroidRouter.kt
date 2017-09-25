@@ -71,7 +71,7 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
 
 
     override fun showCreateEntryView() {
-        showEditEntryView()
+        showEditEntryView(EntryActivityParameters(createEntry = true))
     }
 
     override fun showEditEntryView(entry: Entry) {
