@@ -27,7 +27,6 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            android:layout_width="match_parent"
             style="@style/ToolbarStyle"
             app:titleMarginStart="24dp"
         />

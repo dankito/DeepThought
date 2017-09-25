@@ -101,10 +101,9 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        app:title="@string/dialog_tags_on_entry_title"
-        style="@style/ToolbarStyle"
         android:layout_alignParentBottom="true"
+        style="@style/ToolbarStyle"
+        app:title="@string/dialog_tags_on_entry_title"
         />
 
 </RelativeLayout>
