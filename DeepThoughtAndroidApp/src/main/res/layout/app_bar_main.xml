@@ -24,7 +24,7 @@
 
     <!-- An extra AppBarLayout to show contextual action mode bar in -->
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/multiSelecteModeAppBarLayout"
+        android:id="@+id/multiSelectModeAppBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

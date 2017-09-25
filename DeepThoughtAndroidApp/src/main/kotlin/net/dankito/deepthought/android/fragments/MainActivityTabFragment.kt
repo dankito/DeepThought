@@ -125,7 +125,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
         recyclerAdapter?.swipeLayoutOpenedListener = { checkIfContextHelpListItemActionsHasBeenShownToUserOnUiThread() }
 
         (context as? Activity)?.let { activity ->
-            recyclerAdapter?.enableMultiSelectionMode(activity, contextualActionMenuResourceId, R.id.multiSelecteModeAppBarLayout, false) { mode, actionItem, selectedItems ->
+            recyclerAdapter?.enableMultiSelectionMode(activity, contextualActionMenuResourceId, R.id.multiSelectModeAppBarLayout, false) { mode, actionItem, selectedItems ->
                 actionItemSelected(mode, actionItem, selectedItems)
             }
 
