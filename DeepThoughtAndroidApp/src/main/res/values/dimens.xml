@@ -106,7 +106,8 @@
     <dimen name="divider_margin_left_right">20dp</dimen>
 
     <dimen name="activity_edit_entry_label_margin_right">4dp</dimen>
-    <dimen name="activity_edit_entry_field_margin_top">10dp</dimen>
+    <dimen name="activity_edit_entry_fields_margin_top">8dp</dimen>
+    <dimen name="activity_edit_entry_field_margin_top">4dp</dimen>
     <dimen name="activity_edit_entry_field_margin_left">12dp</dimen>
     <dimen name="activity_edit_entry_field_margin_right">12dp</dimen>
     <dimen name="activity_edit_entry_field_padding_top">2dp</dimen>
