@@ -31,6 +31,7 @@ import net.dankito.service.data.messages.ReferenceChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.ReferenceSearch
+import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import net.engio.mbassy.listener.Handler
@@ -43,7 +44,9 @@ class EditReferenceActivity : BaseActivity() {
 
     companion object {
         private const val REFERENCE_ID_BUNDLE_EXTRA_NAME = "REFERENCE_ID"
+        private const val UNPERSISTED_REFERENCE_BUNDLE_EXTRA_NAME = "UNPERSISTED_REFERENCE_ID"
         private const val REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME = "REFERENCE_SERIES_ID"
+        private const val ORIGINALLY_SET_REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME = "ORIGINALLY_SET_REFERENCE_SERIES_ID"
 
         const val ResultId = "EDIT_REFERENCE_ACTIVITY_RESULT"
     }
@@ -58,6 +61,9 @@ class EditReferenceActivity : BaseActivity() {
 
     @Inject
     protected lateinit var referencePersister: ReferencePersister
+
+    @Inject
+    protected lateinit var serializer: ISerializer
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
@@ -81,6 +87,8 @@ class EditReferenceActivity : BaseActivity() {
     private val presenter: EditReferencePresenter
 
     private var reference: Reference? = null
+
+    private var originallySetSeries: Series? = null
 
     private var currentlySetSeries: Series? = null
 
@@ -124,6 +132,12 @@ class EditReferenceActivity : BaseActivity() {
     private fun restoreState(savedInstanceState: Bundle) {
         savedInstanceState.getString(REFERENCE_ID_BUNDLE_EXTRA_NAME)?.let { referenceId -> showReference(referenceId) }
 
+        savedInstanceState.getString(UNPERSISTED_REFERENCE_BUNDLE_EXTRA_NAME)?.let { showReference(serializer.deserializeObject(it, Reference::class.java)) }
+
+        savedInstanceState.getString(ORIGINALLY_SET_REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME)?.let { originallySetSeriesId ->
+            this.originallySetSeries = seriesService.retrieve(originallySetSeriesId)
+        }
+
         val seriesId = savedInstanceState.getString(REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME)
         if(seriesId != null) {
             setAndShowSeriesOnUiThread(seriesId)
@@ -137,9 +151,18 @@ class EditReferenceActivity : BaseActivity() {
         super.onSaveInstanceState(outState)
 
         outState?.let {
-            outState.putString(REFERENCE_ID_BUNDLE_EXTRA_NAME, reference?.id)
+            reference?.let { reference ->
+                if(reference.id != null) {
+                    outState.putString(REFERENCE_ID_BUNDLE_EXTRA_NAME, reference.id)
+                }
+                else {
+                    outState.putString(UNPERSISTED_REFERENCE_BUNDLE_EXTRA_NAME, serializer.serializeObject(reference))
+                }
+            }
 
             outState.putString(REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME, currentlySetSeries?.id)
+
+            outState.putString(ORIGINALLY_SET_REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME, originallySetSeries?.id)
         }
     }
 
@@ -310,6 +333,8 @@ class EditReferenceActivity : BaseActivity() {
     private fun showParameters(parameters: EditReferenceActivityParameters?) {
         parameters?.let {
             if(parameters.reference != null) {
+                this.originallySetSeries = parameters.series ?: parameters.reference.series
+
                 showReference(parameters.reference, parameters.series)
             }
             else {
@@ -369,7 +394,7 @@ class EditReferenceActivity : BaseActivity() {
             lytEditReferenceSeries.showActionIconOnUiThread(R.drawable.ic_search_white_48dp) { editSeries() }
         }
 
-        updateDidReferenceChangeOnUiThread(ReferenceField.Series, series?.id != reference?.series?.id)
+        updateDidReferenceChangeOnUiThread(ReferenceField.Series, series?.id != originallySetSeries?.id)
     }
 
     private fun showPublishingDate(publishingDate: Date?, publishingDateString: String? = null) {
