@@ -24,6 +24,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginBottom="@dimen/activity_edit_reference_find_existing_controls_margin_bottom"
+            android:layout_marginLeft="@dimen/edit_text_padding_left"
+            android:layout_marginStart="@dimen/edit_text_padding_left"
             android:paddingLeft="@dimen/activity_edit_reference_padding_left_right"
             android:paddingStart="@dimen/activity_edit_reference_padding_left_right"
             android:paddingRight="@dimen/activity_edit_reference_padding_left_right"
@@ -70,6 +72,7 @@
                 android:layout_below="@+id/lytExistingReferencesSearchBar"
             >
 
+                <!-- Button as a padding of 12dp, so remove left padding so that it's left aligned with txtFindReferenceLabel (but it's not working that way) -->
                 <Button
                     android:id="@+id/btnCreateNewReference"
                     android:layout_width="wrap_content"
@@ -77,6 +80,8 @@
                     android:minWidth="@dimen/activity_edit_reference_create_buttons_min_width"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
+                    android:paddingLeft="0dp"
+                    android:paddingStart="0dp"
                     android:textSize="@dimen/activity_edit_reference_create_buttons_text_size"
                     android:text="@string/activity_edit_reference_create_reference"
                 />
