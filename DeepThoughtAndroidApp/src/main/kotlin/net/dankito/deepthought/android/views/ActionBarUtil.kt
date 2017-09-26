@@ -10,10 +10,10 @@ import kotlinx.android.synthetic.main.contextual_action_mode_item_action_layout.
 import org.slf4j.LoggerFactory
 
 
-class ActionItemUtil {
+class ActionBarUtil {
 
     companion object {
-        private val log = LoggerFactory.getLogger(ActionItemUtil::class.java)
+        private val log = LoggerFactory.getLogger(ActionBarUtil::class.java)
     }
 
 

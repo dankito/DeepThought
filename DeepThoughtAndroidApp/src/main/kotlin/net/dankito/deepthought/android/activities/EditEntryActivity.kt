@@ -25,7 +25,7 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.EditHtmlTextDialog
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
-import net.dankito.deepthought.android.views.ActionItemUtil
+import net.dankito.deepthought.android.views.ActionBarUtil
 import net.dankito.deepthought.android.views.FullScreenWebView
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.getPlainTextForHtml
@@ -166,7 +166,7 @@ class EditEntryActivity : BaseActivity() {
     private lateinit var swipeTouchListener: OnSwipeTouchListener
 
 
-    private val actionItemHelper = ActionItemUtil()
+    private val actionBarUtil = ActionBarUtil()
 
     private var mnSaveEntry: MenuItem? = null
 
@@ -744,7 +744,7 @@ class EditEntryActivity : BaseActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.activity_edit_entry_menu, menu)
-        actionItemHelper.setupLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
+        actionBarUtil.setupLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
 
         mnSaveEntry = menu.findItem(R.id.mnSaveEntry)
 

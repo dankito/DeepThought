@@ -15,7 +15,7 @@ import net.dankito.deepthought.android.adapter.SeriesOnReferenceRecyclerAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.hideKeyboard
-import net.dankito.deepthought.android.views.ActionItemUtil
+import net.dankito.deepthought.android.views.ActionBarUtil
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.ui.IRouter
@@ -82,7 +82,7 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
     private var mnSaveSeries: MenuItem? = null
 
 
-    private val actionItemHelper = ActionItemUtil()
+    private val actionBarUtil = ActionBarUtil()
 
     private var eventBusListener: EventBusListener? = null
 
@@ -171,7 +171,7 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
         mnSaveSeries = menu.findItem(R.id.mnSaveSeries)
         mnSaveSeries?.isVisible = didSeriesChange
 
-        actionItemHelper.setupLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
+        actionBarUtil.setupLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
 
         return true
     }

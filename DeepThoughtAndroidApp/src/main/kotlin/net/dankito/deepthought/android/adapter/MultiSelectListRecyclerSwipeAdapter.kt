@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.AbsListView
 import android.widget.LinearLayout
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.views.ActionItemUtil
+import net.dankito.deepthought.android.views.ActionBarUtil
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -27,7 +27,7 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
 
     var actionMode: android.view.ActionMode? = null
 
-    private var actionItemHelper = ActionItemUtil()
+    private var actionBarUtil = ActionBarUtil()
 
     private val selectedItemsInContextualActionMode = LinkedHashSet<T>()
 
@@ -120,7 +120,7 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
             actionMode = mode
             menuResourceId?.let { mode.menuInflater.inflate(it, menu) }
 
-            actionItemHelper.setupLayout(menu) { menuItem: MenuItem -> onActionItemClicked(mode, menuItem) }
+            actionBarUtil.setupLayout(menu) { menuItem: MenuItem -> onActionItemClicked(mode, menuItem) }
 
             activity?.let { placeActionModeBarInAppBarLayout(it) }
 
@@ -192,7 +192,7 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
                 }
             }
 
-            actionModeBar?.let { actionItemHelper.adjustActionModeBarLayoutDelayed(it, 4, false) }
+            actionModeBar?.let { actionBarUtil.adjustActionModeBarLayoutDelayed(it, 4, false) }
 
             if(hideToolbar) {
                 activity.findViewById(R.id.toolbar)?.let { it.visibility = View.GONE }
