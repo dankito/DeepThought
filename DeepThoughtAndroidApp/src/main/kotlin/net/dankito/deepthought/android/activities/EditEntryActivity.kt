@@ -717,18 +717,18 @@ class EditEntryActivity : BaseActivity() {
         layoutParams.alignWithParent = true
         wbEntry.layoutParams = layoutParams
 
-        mayShowEntryContentFullscreenHelpOnUIThread()
+        mayShowEntryInformationFullscreenHelpOnUIThread()
 
         wbEntry.systemUiVisibility = FULLSCREEN_MODE_SYSTEM_UI_FLAGS
     }
 
-    private fun mayShowEntryContentFullscreenHelpOnUIThread() {
+    private fun mayShowEntryInformationFullscreenHelpOnUIThread() {
         val localSettings = entryService.dataManager.localSettings
 
-        if(localSettings.didShowEntryContentFullscreenHelp == false) {
-            contextHelpUtil.showContextHelp(lytContextHelpFullscreenMode, R.string.context_help_entry_content_fullscreen)
+        if(localSettings.didShowEntryInformationFullscreenHelp == false) {
+            contextHelpUtil.showContextHelp(lytContextHelpFullscreenMode, R.string.context_help_entry_information_fullscreen)
 
-            localSettings.didShowEntryContentFullscreenHelp = true
+            localSettings.didShowEntryInformationFullscreenHelp = true
             entryService.dataManager.localSettingsUpdated()
         }
     }
