@@ -677,18 +677,36 @@ class EditEntryActivity : BaseActivity() {
 
     private fun handleWebViewDoubleTap() {
         if(isInFullscreenMode) {
-            saveEntryAndCloseDialog()
+            mayShowEntryInformationFullscreenGesturesHelpOnUIThread { saveEntryAndCloseDialog() }
         }
     }
 
     private fun handleWebViewSwipe(swipeDirection: OnSwipeTouchListener.SwipeDirection) {
         if(isInFullscreenMode) {
             when(swipeDirection) {
-                OnSwipeTouchListener.SwipeDirection.Left -> presenter.returnToPreviousView()
-                OnSwipeTouchListener.SwipeDirection.Right -> editTagsOnEntry()
+                OnSwipeTouchListener.SwipeDirection.Left -> {
+                    mayShowEntryInformationFullscreenGesturesHelpOnUIThread { presenter.returnToPreviousView() }
+                }
+                OnSwipeTouchListener.SwipeDirection.Right -> {
+                    mayShowEntryInformationFullscreenGesturesHelpOnUIThread { editTagsOnEntry() }
+                }
             }
         }
     }
+
+    private fun mayShowEntryInformationFullscreenGesturesHelpOnUIThread(userConfirmedHelpOnUIThread: () -> Unit) {
+        val localSettings = entryService.dataManager.localSettings
+
+        if(localSettings.didShowEntryInformationFullscreenGesturesHelp == false) {
+            dialogService.showConfirmationDialog(getString(R.string.context_help_entry_information_fullscreen_gestures), showNoButton = false) {
+                runOnUiThread { userConfirmedHelpOnUIThread() }
+            }
+
+            localSettings.didShowEntryInformationFullscreenGesturesHelp = true
+            entryService.dataManager.localSettingsUpdated()
+        }
+    }
+
 
     private fun leaveFullscreenMode() {
         isInFullscreenMode = false

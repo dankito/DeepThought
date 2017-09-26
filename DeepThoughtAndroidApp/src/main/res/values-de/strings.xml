@@ -90,6 +90,11 @@
         indem Sie außer auf Links oder Bildern irgendwo auf dem Bildschirm tippen.
     </string>
 
+    <string name="context_help_entry_information_fullscreen_gestures">Sie haben gerade eine der Vollbildmodus Gesten ausgeführt:\n\n- Schnell von rechts nach links wischen:
+        Eintrag bearbeiten Dialog verlassen\n- Schnell von links nach rechts wischen: Schlagworte bearbeiten\n- Schnelles Doppeltippen: Eintrag speichern und
+        Dialog verlassen.
+    </string>
+
 
     <string name="dialog_article_summary_extractors_add_extractor">Hinzufügen</string>
 

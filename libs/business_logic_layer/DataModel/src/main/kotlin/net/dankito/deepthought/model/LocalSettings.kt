@@ -46,7 +46,10 @@ data class LocalSettings(
         var didShowSaveEntryChangesHelp: Boolean = false,
 
         @Column(name = TableConfig.LocalSettingsDidShowEntryInformationFullscreenHelpColumnName)
-        var didShowEntryInformationFullscreenHelp: Boolean = false
+        var didShowEntryInformationFullscreenHelp: Boolean = false,
+
+        @Column(name = TableConfig.LocalSettingsDidShowEntryInformationFullscreenGesturesHelpColumnName)
+        var didShowEntryInformationFullscreenGesturesHelp: Boolean = false
 
 ) : BaseEntity() {
 
