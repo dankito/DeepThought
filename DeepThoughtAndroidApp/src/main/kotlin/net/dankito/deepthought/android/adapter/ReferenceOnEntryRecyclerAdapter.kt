@@ -1,7 +1,7 @@
 package net.dankito.deepthought.android.adapter
 
 import android.os.Build
-import android.support.v4.graphics.drawable.DrawableCompat
+import android.support.v4.widget.ImageViewCompat
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -42,7 +42,7 @@ class ReferenceOnEntryRecyclerAdapter(presenter: ReferencesPresenterBase): Refer
             imgIsReferenceAddedToEntry.imageTintList = resources.getColorStateList(R.color.is_entity_selected_icon_color, context.theme)
         }
         else {
-            DrawableCompat.setTintList(imgIsReferenceAddedToEntry.drawable, resources.getColorStateList(R.color.is_entity_selected_icon_color))
+            ImageViewCompat.setImageTintList(imgIsReferenceAddedToEntry, resources.getColorStateList(R.color.is_entity_selected_icon_color))
         }
     }
 

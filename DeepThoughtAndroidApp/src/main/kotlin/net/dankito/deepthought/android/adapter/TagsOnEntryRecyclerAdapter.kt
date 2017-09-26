@@ -2,7 +2,7 @@ package net.dankito.deepthought.android.adapter
 
 import android.graphics.Typeface
 import android.os.Build
-import android.support.v4.graphics.drawable.DrawableCompat
+import android.support.v4.widget.ImageViewCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,7 +47,7 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
             imgIsTagAddedToEntry.imageTintList = resources.getColorStateList(R.color.is_entity_selected_icon_color, itemView.context.theme)
         }
         else {
-            DrawableCompat.setTintList(itemView.imgIsTagAddedToEntry.drawable, resources.getColorStateList(R.color.is_entity_selected_icon_color))
+            ImageViewCompat.setImageTintList(itemView.imgIsTagAddedToEntry, resources.getColorStateList(R.color.is_entity_selected_icon_color))
         }
     }
 
