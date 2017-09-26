@@ -28,6 +28,7 @@ import net.dankito.service.data.messages.SeriesChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.ui.IDialogService
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
@@ -49,6 +50,9 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
 
     @Inject
     protected lateinit var referenceService: ReferenceService
+
+    @Inject
+    protected lateinit var serializer: ISerializer
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
@@ -110,7 +114,7 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
     private fun restoreState(savedInstanceState: Bundle) {
         savedInstanceState.getString(SERIES_ID_BUNDLE_EXTRA_NAME)?.let { seriesId -> showSeries(seriesId) }
 
-        savedInstanceState.getString(REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME)?.let { referenceId -> restoreReferenceToSetSeriesOn(referenceId) }
+        savedInstanceState.getString(REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME)?.let { setReferenceToSetSeriesOn(serializer.deserializeObject(it, Reference::class.java)) }
 
         savedInstanceState.getBoolean(DID_SERIES_CHANGE_BUNDLE_EXTRA_NAME)?.let { didSeriesChange -> updateDidSeriesChangeOnUiThread(didSeriesChange) }
     }
@@ -121,7 +125,7 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
         outState?.let {
             outState.putString(SERIES_ID_BUNDLE_EXTRA_NAME, series?.id)
 
-            referenceToSetSeriesOn?.let { outState.putString(REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME, it.id) }
+            referenceToSetSeriesOn?.let { outState.putString(REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME, serializer.serializeObject(it)) }
 
             outState.putBoolean(DID_SERIES_CHANGE_BUNDLE_EXTRA_NAME, didSeriesChange)
         }
@@ -266,12 +270,6 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
             if(parameters.forReference != null) {
                 setReferenceToSetSeriesOn(parameters.forReference)
             }
-        }
-    }
-
-    private fun restoreReferenceToSetSeriesOn(referenceId: String) {
-        referenceService.retrieve(referenceId)?.let { reference ->
-            setReferenceToSetSeriesOn(reference)
         }
     }
 
