@@ -1000,9 +1000,9 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun askIfUnsavedChangesShouldBeSaved() {
-        dialogService.showConfirmationDialog(getString(R.string.activity_edit_entry_alert_message_entry_contains_unsaved_changes)) { shouldChangedGetSaved ->
+        dialogService.showConfirmationDialog(getString(R.string.activity_edit_entry_alert_message_entry_contains_unsaved_changes)) { shouldChangesGetSaved ->
             runOnUiThread {
-                if(shouldChangedGetSaved) {
+                if(shouldChangesGetSaved) {
                     saveEntryAndCloseDialog()
                 }
                 else {
