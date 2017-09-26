@@ -32,6 +32,7 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 style="@style/ToolbarStyle"
+                app:titleMarginStart="24dp"
             />
 
         </android.support.design.widget.AppBarLayout>
