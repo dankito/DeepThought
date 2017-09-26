@@ -13,10 +13,15 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
+        <!-- actually i'd liked to set contentInsetLeft to ?attr/contentInsetLeft, but that crashes application, therefore i use its value directly -->
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_height="?attr/actionBarSize"
-            style="@style/ToolbarStyle"/>
+            style="@style/ToolbarStyle"
+            app:contentInsetLeft="16dp"
+            app:contentInsetStart="16dp"
+            app:contentInsetStartWithNavigation="16dp"
+        />
 
     </android.support.design.widget.AppBarLayout>
 
