@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.contextual_action_mode_item_action_layout.view.*
-import net.dankito.deepthought.android.R
 import org.slf4j.LoggerFactory
 
 
@@ -44,8 +43,6 @@ class ActionItemUtil {
     }
 
     fun adjustActionModeBarLayout(toolbarOrActionModeBar: ViewGroup, countActionItems: Int, reserveOverflow: Boolean? = null) {
-        toolbarOrActionModeBar.setBackgroundResource(R.drawable.primary_color_gradient)
-
         reduceCloseButtonAndTitleViewSize(toolbarOrActionModeBar)
 
         setMaxActionItemsCount(toolbarOrActionModeBar, countActionItems, reserveOverflow)

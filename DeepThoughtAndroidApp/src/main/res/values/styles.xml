@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="actionModeStyle">@style/ActionModeStyle</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -25,6 +26,11 @@
         <item name="android:background">@drawable/primary_color_gradient</item>
         <item name="android:popupTheme">@style/AppTheme.PopupOverlay</item>
         <item name="android:theme">@style/AppTheme.AppBarOverlay</item>
+    </style>
+
+    <style name="ActionModeStyle" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="background">@drawable/primary_color_gradient</item>
+        <item name="height">?attr/actionBarSize</item>
     </style>
 
 
