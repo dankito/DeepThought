@@ -9,11 +9,10 @@
 
     <dimen name="toolbar_height">40dp</dimen>
 
-    <dimen name="action_item_width">62dp</dimen>
+    <dimen name="action_item_width">56dp</dimen>
     <dimen name="action_title_height">13dp</dimen>
     <dimen name="action_title_text_size">10sp</dimen>
     <dimen name="action_padding_top_bottom">6dp</dimen>
-    <dimen name="action_padding_right">2dp</dimen>
 
     <dimen name="fragment_tab_entries_filtered_entities_margin_top">12dp</dimen>
     <dimen name="fragment_tab_entries_filtered_entities_margin_bottom">20dp</dimen>

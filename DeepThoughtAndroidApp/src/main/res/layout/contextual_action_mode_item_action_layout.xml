@@ -3,9 +3,7 @@
                 android:layout_width="@dimen/action_item_width"
                 android:layout_height="match_parent"
                 android:paddingTop="@dimen/action_padding_top_bottom"
-                android:paddingBottom="@dimen/action_padding_top_bottom"
-                android:paddingRight="@dimen/action_padding_right"
-                android:paddingEnd="@dimen/action_padding_right">
+                android:paddingBottom="@dimen/action_padding_top_bottom">
     
     <ImageView
         android:id="@+id/imgActionIcon"
