@@ -8,29 +8,34 @@
     android:layout_height="match_parent"
     tools:context="net.dankito.deepthought.android.activities.ArticleSummaryActivity">
 
-    <net.dankito.deepthought.android.views.FullScreenRecyclerView
-        android:id="@+id/rcyArticleSummaryItems"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="?attr/actionBarSize"
-        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         app:layout_behavior="@string/move_upward_behaviour"
-    />
+    >
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        app:layout_behavior="@string/move_upward_behaviour"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            style="@style/ToolbarStyle"
-            app:titleMarginStart="24dp"
+        <net.dankito.deepthought.android.views.FullScreenRecyclerView
+            android:id="@+id/rcyArticleSummaryItems"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/appBarLayout"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         />
 
-    </android.support.design.widget.AppBarLayout>
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                style="@style/ToolbarStyle"
+            />
+
+        </android.support.design.widget.AppBarLayout>
+
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>
