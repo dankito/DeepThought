@@ -79,9 +79,10 @@ class TableConfig {
         const val LocalSettingsLastSearchIndexOptimizationTimeColumnName = "last_search_index_optimization_time"
         const val LocalSettingsDidShowListItemActionsHelpColumnName = "did_show_list_item_actions_help"
         const val LocalSettingsDidShowSearchTagsHelpColumnName = "did_show_search_tags_help"
-        const val LocalSettingsDidShowSetTagsOnEntryHelpColumnName = "did_show_set_tags_on_entry_help"
         const val LocalSettingsCountTagSearchesColumnName = "count_tag_searches"
+        const val LocalSettingsDidShowSetTagsOnEntryHelpColumnName = "did_show_set_tags_on_entry_help"
         const val LocalSettingsCountTagsOnEntrySearchesColumnName = "count_tags_on_entry_searches"
+        const val LocalSettingsDidShowSaveEntryChangesHelpColumnName = "did_show_save_entry_changes_help"
 
 
         /*          Entry Table Config        */

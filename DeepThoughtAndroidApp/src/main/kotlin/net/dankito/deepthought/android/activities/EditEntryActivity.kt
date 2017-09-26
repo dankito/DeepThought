@@ -25,6 +25,7 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.EditHtmlTextDialog
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
+import net.dankito.deepthought.android.views.ContextHelpUtil
 import net.dankito.deepthought.android.views.FullScreenWebView
 import net.dankito.deepthought.android.views.ToolbarUtil
 import net.dankito.deepthought.model.*
@@ -165,6 +166,8 @@ class EditEntryActivity : BaseActivity() {
 
     private lateinit var swipeTouchListener: OnSwipeTouchListener
 
+
+    private val contextHelpUtil = ContextHelpUtil()
 
     private val toolbarUtil = ToolbarUtil()
 
@@ -416,6 +419,8 @@ class EditEntryActivity : BaseActivity() {
         (getAndClearResult(EditReferenceActivity.ResultId) as? EditReferenceActivityResult)?.let { result ->
             if(result.didSaveReference) {
                 result.savedReference?.let { savedReference(it) }
+
+                mayShowSaveEntryChangesHelpOnUIThread()
             }
         }
 
@@ -437,6 +442,17 @@ class EditEntryActivity : BaseActivity() {
         else {
             wbEntry.visibility = View.VISIBLE
             lytOnboardingText.visibility = View.GONE
+        }
+    }
+
+    private fun mayShowSaveEntryChangesHelpOnUIThread() {
+        val localSettings = entryService.dataManager.localSettings
+
+        if(localSettings.didShowSaveEntryChangesHelp == false) {
+            contextHelpUtil.showContextHelp(lytContextHelp, R.string.context_help_save_entry_changes)
+
+            localSettings.didShowSaveEntryChangesHelp = true
+            entryService.dataManager.localSettingsUpdated()
         }
     }
 
@@ -480,6 +496,7 @@ class EditEntryActivity : BaseActivity() {
                 runOnUiThread {
                     updateCanEntryBeSavedOnUIThread(true)
                     setAbstractPreviewOnUIThread()
+                    mayShowSaveEntryChangesHelpOnUIThread()
                 }
             }
         }
@@ -506,6 +523,7 @@ class EditEntryActivity : BaseActivity() {
             runOnUiThread {
                 updateCanEntryBeSavedOnUIThread(true)
                 setTagsOnEntryPreviewOnUIThread()
+                mayShowSaveEntryChangesHelpOnUIThread()
             }
         }
     }

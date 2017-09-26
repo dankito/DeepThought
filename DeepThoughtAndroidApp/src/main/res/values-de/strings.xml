@@ -83,6 +83,9 @@
         ein neues Schlagwort anzulegen oder die eingegebenen zu tauschen, drücken Sie den Action Knopf (\'Enter\') auf dem Keyboard (rechts unten).
     </string>
 
+    <string name="context_help_save_entry_changes">Die Änderungen wurden nun übernommen. Um sie zu speichern drücken Sie den \'Speichern\' Button unten rechts.
+    </string>
+
 
     <string name="dialog_article_summary_extractors_add_extractor">Hinzufügen</string>
 
