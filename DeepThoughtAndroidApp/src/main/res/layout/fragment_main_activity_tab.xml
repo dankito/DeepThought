@@ -81,6 +81,7 @@
             android:layout_marginRight="@dimen/fragment_tab_entries_onboarding_left_right_margin"
             android:layout_marginEnd="@dimen/fragment_tab_entries_onboarding_left_right_margin"
             android:textAlignment="center"
+            android:gravity="center_horizontal"
         />
 
         <net.dankito.deepthought.android.views.PointToFloatingActionButtonArrow

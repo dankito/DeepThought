@@ -20,6 +20,7 @@
         android:layout_alignParentBottom="true"
         android:lines="1"
         android:textAlignment="center"
+        android:gravity="center_horizontal"
         android:textSize="@dimen/action_title_text_size"
     />
 
