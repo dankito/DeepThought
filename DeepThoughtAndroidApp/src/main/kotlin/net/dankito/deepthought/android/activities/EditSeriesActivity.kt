@@ -165,6 +165,10 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
     }
 
 
+    override fun onBackPressed() {
+        askIfUnsavedChangesShouldBeSavedAndCloseDialog()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.activity_edit_series_menu, menu)
 
@@ -179,7 +183,7 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             android.R.id.home -> {
-                closeDialog()
+                askIfUnsavedChangesShouldBeSavedAndCloseDialog()
                 return true
             }
             R.id.mnSaveSeries -> {
@@ -191,6 +195,28 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
         return super.onOptionsItemSelected(item)
     }
 
+
+    private fun askIfUnsavedChangesShouldBeSavedAndCloseDialog() {
+        if(didSeriesChange) {
+            askIfUnsavedChangesShouldBeSaved()
+        }
+        else {
+            closeDialog()
+        }
+    }
+
+    private fun askIfUnsavedChangesShouldBeSaved() {
+        dialogService.showConfirmationDialog(getString(R.string.activity_edit_series_alert_message_series_has_been_edited)) { shouldChangesGetSaved ->
+            runOnUiThread {
+                if(shouldChangesGetSaved) {
+                    saveSeriesAndCloseDialog()
+                }
+                else {
+                    closeDialog()
+                }
+            }
+        }
+    }
 
 
     private fun saveSeriesAndCloseDialog() {

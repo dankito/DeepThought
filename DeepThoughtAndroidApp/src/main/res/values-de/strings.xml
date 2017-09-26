@@ -140,6 +140,8 @@
     <string name="activity_edit_series_create_series">Neu …</string>
     <string name="activity_edit_series_create_series_from_isbn">Von ISBN …</string>
     <string name="activity_edit_series_title_label">Titel</string>
+    <string name="activity_edit_series_alert_message_series_contains_unsaved_changes">Reihe enthält nicht gespeicherte Änderungen.\n\nSollen diese Änderungen nun
+        gespeichert werden?</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
     <string name="activity_edit_series_alert_message_series_has_been_edited">Reihe wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\n\nWenn
         Sie die Reihe nun speichern, werden diese anderen Änderungen überschrieben.</string>
