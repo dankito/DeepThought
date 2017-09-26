@@ -3,7 +3,10 @@
                 android:layout_width="@dimen/action_item_width"
                 android:layout_height="match_parent"
                 android:paddingTop="@dimen/action_padding_top_bottom"
-                android:paddingBottom="@dimen/action_padding_top_bottom">
+                android:paddingBottom="@dimen/action_padding_top_bottom"
+                android:layout_marginRight="@dimen/action_margin_right"
+                android:layout_marginEnd="@dimen/action_margin_right"
+>
     
     <ImageView
         android:id="@+id/imgActionIcon"
