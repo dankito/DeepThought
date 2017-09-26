@@ -24,13 +24,23 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
         <item name="android:background">@drawable/primary_color_gradient</item>
-        <item name="android:popupTheme">@style/AppTheme.PopupOverlay</item>
+        <!-- remove space between close button and title text view -->
+        <item name="titleMarginStart">0dp</item>
+        <item name="contentInsetLeft">0dp</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+        <item name="popupTheme">@style/AppTheme.PopupOverlay</item>
         <item name="android:theme">@style/AppTheme.AppBarOverlay</item>
     </style>
 
     <style name="ActionModeStyle" parent="@style/Widget.AppCompat.ActionMode">
         <item name="background">@drawable/primary_color_gradient</item>
         <item name="height">?attr/actionBarSize</item>
+        <!-- remove space between close button and title text view -->
+        <item name="titleMarginStart">0dp</item>
+        <item name="contentInsetLeft">0dp</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
     </style>
 
 
