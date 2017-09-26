@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory
 class ToolbarUtil {
 
     companion object {
+        const val DefaultCountActionItems = 4
+
         private val log = LoggerFactory.getLogger(ToolbarUtil::class.java)
     }
 
@@ -36,7 +38,7 @@ class ToolbarUtil {
 
 
     // we have to wait some time till actionModeBar is deflated and its children are added
-    fun adjustToolbarLayoutDelayed(toolbarOrActionModeBar: ViewGroup, countActionItems: Int, reserveOverflow: Boolean? = null) {
+    fun adjustToolbarLayoutDelayed(toolbarOrActionModeBar: ViewGroup, reserveOverflow: Boolean? = null, countActionItems: Int = DefaultCountActionItems) {
         toolbarOrActionModeBar.postDelayed({
             adjustToolbarLayout(toolbarOrActionModeBar, countActionItems, reserveOverflow)
         }, 100L)
