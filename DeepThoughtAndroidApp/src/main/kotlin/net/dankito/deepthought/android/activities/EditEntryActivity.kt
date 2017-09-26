@@ -679,9 +679,7 @@ class EditEntryActivity : BaseActivity() {
     private fun leaveFullscreenMode() {
         isInFullscreenMode = false
 
-        lytAbstractPreview.visibility = View.VISIBLE
-        lytReferencePreview.visibility = View.VISIBLE
-        lytTagsPreview.visibility = View.VISIBLE
+        lytEntryFieldsPreview.visibility = View.VISIBLE
         txtEntryContentLabel.visibility = View.VISIBLE
         fabEntryFieldsMenu.visibility = View.VISIBLE
         appBarLayout.visibility = View.VISIBLE
@@ -696,9 +694,7 @@ class EditEntryActivity : BaseActivity() {
     private fun enterFullscreenMode() {
         isInFullscreenMode = true
 
-        lytAbstractPreview.visibility = View.GONE
-        lytReferencePreview.visibility = View.GONE
-        lytTagsPreview.visibility = View.GONE
+        lytEntryFieldsPreview.visibility = View.GONE
         txtEntryContentLabel.visibility = View.GONE
         fabEntryFieldsMenu.visibility = View.GONE
         appBarLayout.visibility = View.GONE
