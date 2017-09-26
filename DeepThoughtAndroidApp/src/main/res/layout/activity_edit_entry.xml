@@ -16,7 +16,7 @@
 
         <include
             layout="@layout/layout_context_help"
-            android:id="@+id/lytContextHelp"
+            android:id="@+id/lytContextHelpSave"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -26,7 +26,7 @@
             android:id="@+id/lytEntryFieldsPreview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/lytContextHelp"
+            android:layout_below="@+id/lytContextHelpSave"
             android:layout_marginTop="@dimen/activity_edit_entry_fields_margin_top"
         >
 
@@ -82,11 +82,19 @@
             android:text="@string/activity_edit_entry_content_label"
         />
 
+        <include
+            layout="@layout/layout_context_help"
+            android:id="@+id/lytContextHelpFullscreenMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtEntryContentLabel"
+        />
+
         <net.dankito.deepthought.android.views.FullScreenWebView
             android:id="@+id/wbEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txtEntryContentLabel"
+            android:layout_below="@+id/lytContextHelpFullscreenMode"
             android:layout_above="@+id/appBarLayout"
         />
 

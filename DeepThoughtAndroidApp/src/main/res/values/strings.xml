@@ -88,6 +88,10 @@
     <string name="context_help_save_entry_changes">The changes done are now only applied, to save them press the \'Save\' button at bottom right.
     </string>
 
+    <string name="context_help_entry_content_fullscreen">Scrolling entry\'s information as you just did starts fullscreen mode.\nYou can leave it by simply tapping
+        anywhere except on links and images in the screen.
+    </string>
+
 
     <string name="dialog_article_summary_extractors_add_extractor">Add</string>
 

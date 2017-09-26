@@ -43,7 +43,10 @@ data class LocalSettings(
         var countTagsOnEntrySearches: Int = 0,
 
         @Column(name = TableConfig.LocalSettingsDidShowSaveEntryChangesHelpColumnName)
-        var didShowSaveEntryChangesHelp: Boolean = false
+        var didShowSaveEntryChangesHelp: Boolean = false,
+
+        @Column(name = TableConfig.LocalSettingsDidShowEntryContentFullscreenHelpColumnName)
+        var didShowEntryContentFullscreenHelp: Boolean = false
 
 ) : BaseEntity() {
 

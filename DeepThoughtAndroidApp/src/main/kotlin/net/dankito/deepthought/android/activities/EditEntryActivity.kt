@@ -449,7 +449,7 @@ class EditEntryActivity : BaseActivity() {
         val localSettings = entryService.dataManager.localSettings
 
         if(localSettings.didShowSaveEntryChangesHelp == false) {
-            contextHelpUtil.showContextHelp(lytContextHelp, R.string.context_help_save_entry_changes)
+            contextHelpUtil.showContextHelp(lytContextHelpSave, R.string.context_help_save_entry_changes)
 
             localSettings.didShowSaveEntryChangesHelp = true
             entryService.dataManager.localSettingsUpdated()
@@ -717,7 +717,20 @@ class EditEntryActivity : BaseActivity() {
         layoutParams.alignWithParent = true
         wbEntry.layoutParams = layoutParams
 
+        mayShowEntryContentFullscreenHelpOnUIThread()
+
         wbEntry.systemUiVisibility = FULLSCREEN_MODE_SYSTEM_UI_FLAGS
+    }
+
+    private fun mayShowEntryContentFullscreenHelpOnUIThread() {
+        val localSettings = entryService.dataManager.localSettings
+
+        if(localSettings.didShowEntryContentFullscreenHelp == false) {
+            contextHelpUtil.showContextHelp(lytContextHelpFullscreenMode, R.string.context_help_entry_content_fullscreen)
+
+            localSettings.didShowEntryContentFullscreenHelp = true
+            entryService.dataManager.localSettingsUpdated()
+        }
     }
 
 
