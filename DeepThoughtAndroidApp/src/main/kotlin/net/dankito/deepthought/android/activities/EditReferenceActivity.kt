@@ -47,6 +47,7 @@ class EditReferenceActivity : BaseActivity() {
         private const val UNPERSISTED_REFERENCE_BUNDLE_EXTRA_NAME = "UNPERSISTED_REFERENCE_ID"
         private const val REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME = "REFERENCE_SERIES_ID"
         private const val ORIGINALLY_SET_REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME = "ORIGINALLY_SET_REFERENCE_SERIES_ID"
+        private const val IS_FOR_ENTRY_SET_BUNDLE_EXTRA_NAME = "IS_FOR_ENTRY_SET"
 
         const val ResultId = "EDIT_REFERENCE_ACTIVITY_RESULT"
     }
@@ -145,6 +146,10 @@ class EditReferenceActivity : BaseActivity() {
         else {
             setAndShowSeriesOnUiThread(null)
         }
+
+        if(savedInstanceState.getBoolean(IS_FOR_ENTRY_SET_BUNDLE_EXTRA_NAME, false) == true) {
+            lytSetEntryReferenceControls.visibility = View.VISIBLE
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -163,6 +168,8 @@ class EditReferenceActivity : BaseActivity() {
             outState.putString(REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME, currentlySetSeries?.id)
 
             outState.putString(ORIGINALLY_SET_REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME, originallySetSeries?.id)
+
+            outState.putBoolean(IS_FOR_ENTRY_SET_BUNDLE_EXTRA_NAME, lytSetEntryReferenceControls.visibility == View.VISIBLE)
         }
     }
 
