@@ -129,6 +129,8 @@
     <string name="activity_edit_reference_publishing_date_label">Veröffentlichungsdatum</string>
     <string name="activity_edit_reference_url_label">URL</string>
     <string name="activity_edit_reference_error_could_not_parse_publishing_date" formatted="false">Kann %s nicht in ein Datum umwandeln</string>
+    <string name="activity_edit_reference_alert_message_reference_contains_unsaved_changes">Quelle enthält nicht gespeicherte Änderungen.\n\nSollen diese Änderungen nun
+        gespeichert werden?</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
     <string name="activity_edit_reference_alert_message_reference_has_been_edited">Quelle wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\n\nWenn
         Sie die Quelle nun speichern, werden diese anderen Änderungen überschrieben.</string>

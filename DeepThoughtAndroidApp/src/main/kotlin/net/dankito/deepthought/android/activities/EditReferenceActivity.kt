@@ -225,6 +225,10 @@ class EditReferenceActivity : BaseActivity() {
     }
 
 
+    override fun onBackPressed() {
+        askIfUnsavedChangesShouldBeSavedAndCloseDialog()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.activity_edit_reference_menu, menu)
 
@@ -239,7 +243,7 @@ class EditReferenceActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             android.R.id.home -> {
-                closeDialog()
+                askIfUnsavedChangesShouldBeSavedAndCloseDialog()
                 return true
             }
             R.id.mnSaveReference -> {
@@ -265,6 +269,28 @@ class EditReferenceActivity : BaseActivity() {
         setAndShowSeriesOnUiThread(series)
     }
 
+
+    private fun askIfUnsavedChangesShouldBeSavedAndCloseDialog() {
+        if(didReferenceChange) {
+            askIfUnsavedChangesShouldBeSaved()
+        }
+        else {
+            closeDialog()
+        }
+    }
+
+    private fun askIfUnsavedChangesShouldBeSaved() {
+        dialogService.showConfirmationDialog(getString(R.string.activity_edit_reference_alert_message_reference_contains_unsaved_changes)) { shouldChangesGetSaved ->
+            runOnUiThread {
+                if(shouldChangesGetSaved) {
+                    saveReferenceAndCloseDialog()
+                }
+                else {
+                    closeDialog()
+                }
+            }
+        }
+    }
 
     private fun saveReferenceAndCloseDialog() {
         unregisterEventBusListener()

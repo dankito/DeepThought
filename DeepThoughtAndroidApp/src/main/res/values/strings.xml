@@ -130,6 +130,7 @@
     <string name="activity_edit_reference_publishing_date_label">Publishing date</string>
     <string name="activity_edit_reference_url_label">Url</string>
     <string name="activity_edit_reference_error_could_not_parse_publishing_date" formatted="false">Cannot parse %s to date</string>
+    <string name="activity_edit_reference_alert_message_reference_contains_unsaved_changes">Reference contains unsaved changes.\n\nShould these changes now be saved?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
     <string name="activity_edit_reference_alert_message_reference_has_been_edited">Reference has been edited (probably on a synchronized device).\n\nWhen
         you now save the reference the other changes get overwritten.</string>
