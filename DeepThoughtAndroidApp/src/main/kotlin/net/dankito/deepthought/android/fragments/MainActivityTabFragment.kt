@@ -135,6 +135,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
 
     protected open fun multiSelectActionModeBarVisibilityChanged(visible: Boolean) {
         activity?.findViewById(R.id.fab_menu)?.visibility = if(visible) View.GONE else View.VISIBLE
+        activity?.findViewById(R.id.bottomViewNavigation)?.visibility = if(visible) View.GONE else View.VISIBLE
 
         if(visible) {
             checkIfContextHelpListItemActionsHasBeenShownToUserOnUiThread()
