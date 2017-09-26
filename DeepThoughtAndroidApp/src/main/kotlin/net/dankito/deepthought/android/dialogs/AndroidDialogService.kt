@@ -41,21 +41,26 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
         builder.create().show()
     }
 
-    override fun showConfirmationDialog(message: CharSequence, alertTitle: CharSequence?, optionSelected: (Boolean) -> Unit) {
+    override fun showConfirmationDialog(message: CharSequence, alertTitle: CharSequence?, showNoButton: Boolean, optionSelected: (Boolean) -> Unit) {
         currentActivityTracker.currentActivity?.let { activity ->
             if(Looper.getMainLooper().getThread() == Thread.currentThread()) {
-                showConfirmMessageOnUiThread(activity, message, alertTitle, optionSelected)
+                showConfirmMessageOnUiThread(activity, message, alertTitle, showNoButton, optionSelected)
             }
             else {
-                activity.runOnUiThread { showConfirmMessageOnUiThread(activity, message, alertTitle, optionSelected) }
+                activity.runOnUiThread { showConfirmMessageOnUiThread(activity, message, alertTitle, showNoButton, optionSelected) }
             }
         }
     }
 
-    private fun showConfirmMessageOnUiThread(activity: Activity, message: CharSequence, alertTitle: CharSequence?, optionSelected: (Boolean) -> Unit) {
+    private fun showConfirmMessageOnUiThread(activity: Activity, message: CharSequence, alertTitle: CharSequence?, showNoButton: Boolean, optionSelected: (Boolean) -> Unit) {
         val builder = createDialog(activity, message, alertTitle)
 
-        builder.setNegativeButton(android.R.string.no, { _, _ -> optionSelected(false) })
+        if(showNoButton) {
+            builder.setNegativeButton(android.R.string.no, { _, _ -> optionSelected(false) })
+        }
+        else {
+            builder.setNegativeButton(null, null)
+        }
 
         builder.setPositiveButton(android.R.string.yes, { _, _ -> optionSelected(true) })
 

@@ -41,16 +41,22 @@ class JavaFXDialogService(private val localizationProperty: Localization) : IDia
     }
 
 
-    override fun showConfirmationDialog(message: CharSequence, alertTitle: CharSequence?, optionSelected: (Boolean) -> Unit) {
-        showConfirmationDialog(message, alertTitle, null, optionSelected)
+    override fun showConfirmationDialog(message: CharSequence, alertTitle: CharSequence?, showNoButton: Boolean, optionSelected: (Boolean) -> Unit) {
+        showConfirmationDialog(message, alertTitle, showNoButton, null, optionSelected)
     }
 
-    fun showConfirmationDialog(message: CharSequence, alertTitle: CharSequence?, owner: Stage?, optionSelected: (Boolean) -> Unit) {
-        FXUtils.runOnUiThread { showConfirmationDialogOnUiThread(message, alertTitle, owner, optionSelected) }
+    fun showConfirmationDialog(message: CharSequence, alertTitle: CharSequence?, showNoButton: Boolean = true, owner: Stage?, optionSelected: (Boolean) -> Unit) {
+        FXUtils.runOnUiThread { showConfirmationDialogOnUiThread(message, alertTitle, showNoButton, owner, optionSelected) }
     }
 
-    private fun showConfirmationDialogOnUiThread(message: CharSequence, alertTitle: CharSequence?, owner: Stage?, optionSelected: (Boolean) -> Unit) {
-        val alert = createDialog(Alert.AlertType.CONFIRMATION, message, alertTitle, owner, ButtonType.NO, ButtonType.YES)
+    private fun showConfirmationDialogOnUiThread(message: CharSequence, alertTitle: CharSequence?, showNoButton: Boolean, owner: Stage?, optionSelected: (Boolean) -> Unit) {
+        val buttons = ArrayList<ButtonType>()
+        if(showNoButton) {
+            buttons.add(ButtonType.NO)
+        }
+        buttons.add(ButtonType.YES)
+
+        val alert = createDialog(Alert.AlertType.CONFIRMATION, message, alertTitle, owner, *buttons.toTypedArray())
 
         val result = alert.showAndWait()
         return optionSelected(result.get() == ButtonType.YES)
