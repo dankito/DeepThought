@@ -744,7 +744,7 @@ class EditEntryActivity : BaseActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.activity_edit_entry_menu, menu)
-        actionBarUtil.setupLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
+        actionBarUtil.setupActionItemsLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
 
         mnSaveEntry = menu.findItem(R.id.mnSaveEntry)
 

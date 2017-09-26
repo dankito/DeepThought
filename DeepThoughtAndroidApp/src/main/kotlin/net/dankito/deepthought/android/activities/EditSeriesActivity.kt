@@ -171,7 +171,7 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
         mnSaveSeries = menu.findItem(R.id.mnSaveSeries)
         mnSaveSeries?.isVisible = didSeriesChange
 
-        actionBarUtil.setupLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
+        actionBarUtil.setupActionItemsLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
 
         return true
     }

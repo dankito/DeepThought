@@ -120,7 +120,7 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
             actionMode = mode
             menuResourceId?.let { mode.menuInflater.inflate(it, menu) }
 
-            actionBarUtil.setupLayout(menu) { menuItem: MenuItem -> onActionItemClicked(mode, menuItem) }
+            actionBarUtil.setupActionItemsLayout(menu) { menuItem: MenuItem -> onActionItemClicked(mode, menuItem) }
 
             activity?.let { placeActionModeBarInAppBarLayout(it) }
 

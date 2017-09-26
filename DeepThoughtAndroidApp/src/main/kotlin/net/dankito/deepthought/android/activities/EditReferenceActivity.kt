@@ -208,7 +208,7 @@ class EditReferenceActivity : BaseActivity() {
         mnSaveReference = menu.findItem(R.id.mnSaveReference)
         mnSaveReference?.isVisible = didReferenceChange
 
-        actionBarUtil.setupLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
+        actionBarUtil.setupActionItemsLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
 
         return true
     }

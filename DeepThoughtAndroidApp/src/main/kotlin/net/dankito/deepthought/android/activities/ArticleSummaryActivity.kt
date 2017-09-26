@@ -223,7 +223,7 @@ class ArticleSummaryActivity : BaseActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.activity_article_summary_menu, menu)
 
-        actionBarUtil.setupLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
+        actionBarUtil.setupActionItemsLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
 
         mnLoadMore = menu?.findItem(R.id.mnLoadMore)
 

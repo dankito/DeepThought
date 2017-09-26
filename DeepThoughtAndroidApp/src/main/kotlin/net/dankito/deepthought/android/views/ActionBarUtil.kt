@@ -17,13 +17,13 @@ class ActionBarUtil {
     }
 
 
-    fun setupLayout(menu: Menu, onClickListener: ((MenuItem) -> Unit)? = null) {
+    fun setupActionItemsLayout(menu: Menu, onClickListener: ((MenuItem) -> Unit)? = null) {
         for(i in 0..menu.size() - 1) {
-            setupLayout(menu.getItem(i), onClickListener)
+            setupActionItemsLayout(menu.getItem(i), onClickListener)
         }
     }
 
-    fun setupLayout(menuItem: MenuItem?, onClickListener: ((MenuItem) -> Unit)? = null) {
+    fun setupActionItemsLayout(menuItem: MenuItem?, onClickListener: ((MenuItem) -> Unit)? = null) {
         menuItem?.actionView?.let { actionView ->
             actionView.imgActionIcon.setImageDrawable(menuItem.icon)
             actionView.txtActionTitle.text = menuItem.title
