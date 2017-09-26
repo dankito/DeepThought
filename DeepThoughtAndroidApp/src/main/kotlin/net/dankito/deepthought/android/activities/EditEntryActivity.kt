@@ -25,8 +25,8 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.EditHtmlTextDialog
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
-import net.dankito.deepthought.android.views.ToolbarUtil
 import net.dankito.deepthought.android.views.FullScreenWebView
+import net.dankito.deepthought.android.views.ToolbarUtil
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.getPlainTextForHtml
 import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
@@ -570,6 +570,7 @@ class EditEntryActivity : BaseActivity() {
 
         lytAbstractPreview.visibility = if(showAbstractPreview) View.VISIBLE else View.GONE
         fabEditEntryAbstract.visibility = if(showAbstractPreview) View.GONE else View.VISIBLE
+        println("setAbstractPreviewOnUIThread(), lytAbstractPreview.visibility = ${lytAbstractPreview.visibility}, abstract = $abstractToEdit, forceShowAbstractPreview = $forceShowAbstractPreview")
         setFloatingActionButtonVisibilityOnUIThread()
     }
 
@@ -585,6 +586,7 @@ class EditEntryActivity : BaseActivity() {
 
         lytReferencePreview.visibility = if(showReferencePreview) View.VISIBLE else View.GONE
         fabEditEntryReference.visibility = if(showReferencePreview) View.GONE else View.VISIBLE
+        println("setReferencePreviewOnUIThread(), lytReferencePreview.visibility = ${lytAbstractPreview.visibility}, reference = $referenceToEdit, forceShowReferencePreview = $forceShowReferencePreview")
         setFloatingActionButtonVisibilityOnUIThread()
 
         btnClearEntryReference.visibility = if(referenceToEdit == null) View.GONE else View.VISIBLE
@@ -616,6 +618,8 @@ class EditEntryActivity : BaseActivity() {
         else {
             fabEntryFieldsMenu.visibility = View.GONE
         }
+
+        println("fabEditEntryReference.visibility = ${fabEditEntryReference.visibility}, fabEditEntryAbstract.visibility = ${fabEditEntryAbstract.visibility}")
     }
 
 
