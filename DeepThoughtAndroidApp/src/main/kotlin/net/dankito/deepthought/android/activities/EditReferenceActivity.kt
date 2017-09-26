@@ -374,7 +374,7 @@ class EditReferenceActivity : BaseActivity() {
                 createReference()
             }
 
-            if(parameters.ofEntry != null) {
+            if(parameters.forEntry != null) {
                 lytSetEntryReferenceControls.visibility = View.VISIBLE
             }
         }
