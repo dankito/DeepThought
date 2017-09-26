@@ -3,11 +3,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+    <!-- EditText has a padding of 4dp, so set TextView's padding left also to 4dp so that they are left aligned -->
     <TextView
         android:id="@+id/txtEntityFieldName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/view_edit_entity_field_top_margin"
+        android:layout_marginLeft="@dimen/edit_entry_padding_left"
+        android:layout_marginStart="@dimen/edit_entry_padding_left"
         style="@style/EntityFieldName"
     />
 
