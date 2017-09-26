@@ -78,7 +78,7 @@ class EditEntityField : RelativeLayout {
 
         (state as? Bundle)?.let { bundle ->
             bundle.getString(FIELD_NAME_BUNDLE_EXTRA_NAME)?.let {  txtEntityFieldName.text = it }
-            bundle.getString(FIELD_VALUE_BUNDLE_EXTRA_NAME)?.let {  edtxtEntityFieldValue.setText(it) }
+            bundle.getString(FIELD_VALUE_BUNDLE_EXTRA_NAME)?.let {  setEditTextEntityFieldValueOnUiThread(it) }
         }
     }
 
