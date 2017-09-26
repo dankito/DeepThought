@@ -28,16 +28,16 @@ data class LocalSettings(
         var lastSearchIndexOptimizationTime: Date,
 
         @Column(name = TableConfig.LocalSettingsDidShowListItemActionsHelpColumnName)
-        var didShowListItemActionsHelp: Boolean,
+        var didShowListItemActionsHelp: Boolean = false,
 
         @Column(name = TableConfig.LocalSettingsDidShowSearchTagsHelpColumnName)
-        var didShowSearchTagsHelp: Boolean,
-
-        @Column(name = TableConfig.LocalSettingsDidShowSetTagsOnEntryHelpColumnName)
-        var didShowSetTagsOnEntryHelp: Boolean,
+        var didShowSearchTagsHelp: Boolean = false,
 
         @Column(name = TableConfig.LocalSettingsCountTagSearchesColumnName)
         var countTagSearches: Int = 0,
+
+        @Column(name = TableConfig.LocalSettingsDidShowSetTagsOnEntryHelpColumnName)
+        var didShowSetTagsOnEntryHelp: Boolean = false,
 
         @Column(name = TableConfig.LocalSettingsCountTagsOnEntrySearchesColumnName)
         var countTagsOnEntrySearches: Int = 0
@@ -50,6 +50,6 @@ data class LocalSettings(
     }
 
 
-    internal constructor() : this(0, 0, 0, Date(0), Date(0), Date(0), false, false, false)
+    internal constructor() : this(0, 0, 0, Date(0), Date(0), Date(0))
 
 }
