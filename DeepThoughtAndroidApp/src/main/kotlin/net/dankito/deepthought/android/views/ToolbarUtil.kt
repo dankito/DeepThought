@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.contextual_action_mode_item_action_layout.view.*
+import net.dankito.deepthought.android.extensions.setRightMargin
 import org.slf4j.LoggerFactory
 
 
@@ -56,10 +57,7 @@ class ToolbarUtil {
             val child = toolbarOrActionModeBar.getChildAt(i)
 
             if(child is ImageView) { // ImageView on newer Androids, AppCompatImageButton on older ones
-                (child.layoutParams as? ViewGroup.MarginLayoutParams)?.let { layoutParams ->
-                    layoutParams.rightMargin = 0
-                    child.layoutParams = layoutParams
-                }
+                (child.layoutParams as? ViewGroup.MarginLayoutParams)?.setRightMargin(0)
             }
             else if(child is LinearLayout) { // LinearLayout on newer Androids, AppCompatTextView on older ones
                 child.setPadding(0, 0, 0, 0)

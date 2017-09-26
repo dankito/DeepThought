@@ -1,13 +1,13 @@
 package net.dankito.deepthought.android.views
 
 import android.content.Context
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.flexbox.FlexboxLayout
 import kotlinx.android.synthetic.main.view_tag.view.*
 import net.dankito.deepthought.android.R
+import net.dankito.deepthought.android.extensions.setRightMargin
 import net.dankito.deepthought.model.Tag
 
 
@@ -37,18 +37,9 @@ class TagsPreviewViewHelper {
         layout.addView(tagView)
 
         // don't know why, but layout_marginRight set in view_tag.xml is ignored by LinearLayout -> set it programmatically
+        val rightMargin = tagView.context.resources.getDimension(R.dimen.view_tag_margin_right).toInt()
         if(addSpaceToTheRight) {
-            setMargin(tagView)
-        }
-    }
-
-    private fun setMargin(tagView: View) {
-        (tagView.layoutParams as? ViewGroup.MarginLayoutParams)?.let { layoutParams ->
-            layoutParams.rightMargin = tagView.context.resources.getDimension(R.dimen.view_tag_margin_right).toInt()
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                layoutParams.marginEnd = layoutParams.rightMargin
-            }
+            (tagView.layoutParams as? ViewGroup.MarginLayoutParams)?.setRightMargin(rightMargin)
         }
     }
 
