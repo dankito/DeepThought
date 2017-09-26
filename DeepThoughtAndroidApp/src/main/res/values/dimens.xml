@@ -121,7 +121,7 @@
     <dimen name="dialog_edit_html_text_label_margin_top">2dp</dimen>
     <dimen name="dialog_edit_html_text_label_margin_left">8dp</dimen>
 
-    <dimen name="dialog_tags_on_entry_tag_preview_min_height">20dp</dimen>
+    <dimen name="dialog_tags_on_entry_tag_preview_min_height">22dp</dimen>
     <dimen name="dialog_tags_on_entry_tag_preview_text_size">13sp</dimen>
     <dimen name="dialog_tags_on_entry_tag_preview_label_margin_left_right">4dp</dimen>
     <dimen name="dialog_tags_on_entry_tag_preview_margin_top">4dp</dimen>
