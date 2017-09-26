@@ -15,6 +15,7 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
+            android:layout_height="?attr/actionBarSize"
             style="@style/ToolbarStyle"/>
 
     </android.support.design.widget.AppBarLayout>

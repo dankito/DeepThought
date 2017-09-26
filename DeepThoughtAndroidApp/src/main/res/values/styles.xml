@@ -22,7 +22,7 @@
 
     <style name="ToolbarStyle">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:layout_height">@dimen/toolbar_height</item>
         <item name="android:background">@drawable/primary_color_gradient</item>
         <!-- remove space between close button and title text view -->
         <item name="titleMarginStart">0dp</item>
@@ -35,7 +35,7 @@
 
     <style name="ActionModeStyle" parent="@style/Widget.AppCompat.ActionMode">
         <item name="background">@drawable/primary_color_gradient</item>
-        <item name="height">?attr/actionBarSize</item>
+        <item name="height">@dimen/toolbar_height</item>
         <!-- remove space between close button and title text view -->
         <item name="titleMarginStart">0dp</item>
         <item name="contentInsetLeft">0dp</item>
