@@ -192,7 +192,7 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
                 }
             }
 
-            actionModeBar?.let { actionBarUtil.adjustActionModeBarLayoutDelayed(it, 4, false) }
+            actionModeBar?.let { actionBarUtil.adjustToolbarLayoutDelayed(it, 4, false) }
 
             if(hideToolbar) {
                 activity.findViewById(R.id.toolbar)?.let { it.visibility = View.GONE }

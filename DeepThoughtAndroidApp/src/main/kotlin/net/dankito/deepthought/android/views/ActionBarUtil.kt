@@ -36,13 +36,13 @@ class ActionBarUtil {
 
 
     // we have to wait some time till actionModeBar is deflated and its children are added
-    fun adjustActionModeBarLayoutDelayed(toolbarOrActionModeBar: ViewGroup, countActionItems: Int, reserveOverflow: Boolean? = null) {
+    fun adjustToolbarLayoutDelayed(toolbarOrActionModeBar: ViewGroup, countActionItems: Int, reserveOverflow: Boolean? = null) {
         toolbarOrActionModeBar.postDelayed({
-            adjustActionModeBarLayout(toolbarOrActionModeBar, countActionItems, reserveOverflow)
+            adjustToolbarLayout(toolbarOrActionModeBar, countActionItems, reserveOverflow)
         }, 100L)
     }
 
-    fun adjustActionModeBarLayout(toolbarOrActionModeBar: ViewGroup, countActionItems: Int, reserveOverflow: Boolean? = null) {
+    fun adjustToolbarLayout(toolbarOrActionModeBar: ViewGroup, countActionItems: Int, reserveOverflow: Boolean? = null) {
         reduceCloseButtonAndTitleViewSize(toolbarOrActionModeBar)
 
         setMaxActionItemsCount(toolbarOrActionModeBar, countActionItems, reserveOverflow)
