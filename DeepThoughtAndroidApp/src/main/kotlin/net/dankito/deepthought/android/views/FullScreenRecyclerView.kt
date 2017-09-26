@@ -113,7 +113,7 @@ class FullScreenRecyclerView : RecyclerView {
 
         // currently it's not possible to see the last two items as when we're scrolling down it goes to fullscreen, when it snaps back to non fullscreen,
         // last two items are covered again by other views -> when scrolled to end in fullscreen mode show last item after leaving fullscreen
-        // but scrolling immediately has no effect has BottonNavigationView and other views aren't displayed yet -> do it delayed
+        // but scrolling immediately has no effect has BottomNavigationView and other views aren't displayed yet -> do it delayed
         if(scrollToEnd) {
             scrollToEndDelayed()
         }
