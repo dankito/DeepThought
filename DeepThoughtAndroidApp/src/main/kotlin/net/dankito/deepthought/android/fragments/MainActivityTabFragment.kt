@@ -15,11 +15,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_main_activity_tab.*
 import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
-import kotlinx.android.synthetic.main.layout_context_help.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.service.hideKeyboard
+import net.dankito.deepthought.android.views.ContextHelpUtil
 import net.dankito.deepthought.android.views.FullScreenRecyclerView
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.service.data.DataManager
@@ -36,6 +36,8 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
     protected var recyclerView: FullScreenRecyclerView? = null
 
     protected var recyclerAdapter: MultiSelectListRecyclerSwipeAdapter<T, out RecyclerView.ViewHolder>? = null
+
+    private val contextHelpUtil = ContextHelpUtil()
 
     protected var lytOnboardingText: ViewGroup? = null
 
@@ -281,15 +283,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
 
 
     protected fun showContextHelpOnUiThread(helpTextResourceId: Int) {
-        showContextHelpOnUiThread(context.getString(helpTextResourceId))
-    }
-
-    protected fun showContextHelpOnUiThread(helpText: String) {
-        txtContextHelpText.text = helpText
-
-        lytContextHelp.visibility = View.VISIBLE
-
-        btnDismissContextHelp.setOnClickListener { lytContextHelp.visibility = View.GONE }
+        contextHelpUtil.showContextHelp(lytContextHelp, helpTextResourceId)
     }
 
 

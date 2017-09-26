@@ -13,13 +13,13 @@ import android.widget.Button
 import com.google.android.flexbox.FlexboxLayout
 import kotlinx.android.synthetic.main.dialog_tags_on_entry.*
 import kotlinx.android.synthetic.main.dialog_tags_on_entry.view.*
-import kotlinx.android.synthetic.main.layout_context_help.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.TagsOnEntryRecyclerAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.service.showKeyboardDelayed
+import net.dankito.deepthought.android.views.ContextHelpUtil
 import net.dankito.deepthought.android.views.TagsPreviewViewHelper
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.presenter.TagsOnEntryListPresenter
@@ -71,6 +71,8 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
     private val unmodifiedTagsOnEntry = ArrayList<Tag>()
 
     private val tagsPreviewViewHelper = TagsPreviewViewHelper()
+
+    private val contextHelpUtil = ContextHelpUtil()
 
     private var lastActionPressTime = Date()
 
@@ -166,16 +168,8 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
     }
 
 
-    protected fun showContextHelpOnUiThread(helpTextResourceId: Int) {
-        showContextHelpOnUiThread(context.getString(helpTextResourceId))
-    }
-
-    protected fun showContextHelpOnUiThread(helpText: String) {
-        txtContextHelpText.text = helpText
-
-        lytContextHelp.visibility = View.VISIBLE
-
-        btnDismissContextHelp.setOnClickListener { lytContextHelp.visibility = View.GONE }
+    private fun showContextHelpOnUiThread(helpTextResourceId: Int) {
+        contextHelpUtil.showContextHelp(lytContextHelp, helpTextResourceId)
     }
 
 
