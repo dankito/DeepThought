@@ -108,10 +108,10 @@
     <string name="activity_edit_entry_tags_onboarding_text">Geben Sie dem Eintrag aussagekräftige Schlagworte, damit Sie ihn später leichter wieder finden</string>
     <string name="activity_edit_entry_reference_onboarding_text">Speichern wo Sie diese Information gefunden haben</string>
     <string name="activity_edit_entry_abstract_onboarding_text">Evtl. einen Titel oder eine Zusammenfassung für diese Information hinzufügen</string>
-    <string name="activity_edit_entry_alert_message_entry_contains_unsaved_changes">Eintrag enthält nicht gespeicherte Änderungen.\r\n\r\nSollen diese Änderungen nun
+    <string name="activity_edit_entry_alert_message_entry_contains_unsaved_changes">Eintrag enthält nicht gespeicherte Änderungen.\n\nSollen diese Änderungen nun
         gespeichert werden?</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
-    <string name="activity_edit_entry_alert_message_entry_has_been_edited">Eintrag wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\r\n\r\nWenn
+    <string name="activity_edit_entry_alert_message_entry_has_been_edited">Eintrag wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\n\nWenn
         Sie den Eintrag nun speichern, werden diese anderen Änderungen überschrieben.</string>
 
     <string name="dialog_tags_on_entry_title">Schlagworte</string>
@@ -130,7 +130,7 @@
     <string name="activity_edit_reference_url_label">URL</string>
     <string name="activity_edit_reference_error_could_not_parse_publishing_date" formatted="false">Kann %s nicht in ein Datum umwandeln</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
-    <string name="activity_edit_reference_alert_message_reference_has_been_edited">Quelle wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\r\n\r\nWenn
+    <string name="activity_edit_reference_alert_message_reference_has_been_edited">Quelle wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\n\nWenn
         Sie die Quelle nun speichern, werden diese anderen Änderungen überschrieben.</string>
 
     <string name="activity_edit_series_title">Reihe</string>
@@ -139,7 +139,7 @@
     <string name="activity_edit_series_create_series_from_isbn">Von ISBN …</string>
     <string name="activity_edit_series_title_label">Titel</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
-    <string name="activity_edit_series_alert_message_series_has_been_edited">Reihe wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\r\n\r\nWenn
+    <string name="activity_edit_series_alert_message_series_has_been_edited">Reihe wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\n\nWenn
         Sie die Reihe nun speichern, werden diese anderen Änderungen überschrieben.</string>
 
     <string name="synchronize_data_with_this_device">Daten synchronisieren mit</string>
@@ -148,7 +148,7 @@
     <string name="alert_message_permit_device_to_synchronize" formatted="false">%s erlauben sich zu synchronisieren?</string>
     <string name="alert_message_enter_this_code_on_remote_device" formatted="false">Geben sie diesen Code auf %s ein:&lt;br/>&lt;br/>&lt;b>%s&lt;/b></string>
     <string name="alert_title_enter_response_code_for_permitting_synchronization" formatted="false">Geben Sie den Code ein, der auf %s angezeigt wird:</string>
-    <string name="alert_title_entered_response_code_was_wrong">Eingegebener Code war falsch.\r\nGeben Sie den Code ein, der auf %s angezeigt wird:</string>
+    <string name="alert_title_entered_response_code_was_wrong">Eingegebener Code war falsch.\nGeben Sie den Code ein, der auf %s angezeigt wird:</string>
 
     <string formatted="false" name="error_no_rss_or_atom_feed_found_for_url">Kein RSS oder Atom Feed gefunden für URL %s</string>
     <string formatted="false" name="error_cannot_read_feed_or_extract_feed_addresses_from_url">Konnte Feed nicht lesen oder Feed Adressen nicht extrahieren von URL %s: %s</string>
