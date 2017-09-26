@@ -9,8 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/view_edit_entity_field_top_margin"
-        android:layout_marginLeft="@dimen/edit_entry_padding_left"
-        android:layout_marginStart="@dimen/edit_entry_padding_left"
+        android:layout_marginLeft="@dimen/edit_text_padding_left"
+        android:layout_marginStart="@dimen/edit_text_padding_left"
         style="@style/EntityFieldName"
     />
 
