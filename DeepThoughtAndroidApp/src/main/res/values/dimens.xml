@@ -139,7 +139,7 @@
     <dimen name="list_item_tag_on_entry_icon_margin_right">12dp</dimen>
     <dimen name="list_item_tag_on_entry_button_width">40dp</dimen>
 
-    <dimen name="activity_edit_reference_padding">8dp</dimen>
+    <dimen name="activity_edit_reference_padding_left_right">8dp</dimen>
     <dimen name="activity_edit_reference_find_existing_margin_left">6dp</dimen>
     <dimen name="activity_edit_reference_find_existing_controls_margin_bottom">12dp</dimen>
     <dimen name="activity_edit_reference_create_buttons_min_width">120dp</dimen>

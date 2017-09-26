@@ -24,7 +24,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginBottom="@dimen/activity_edit_reference_find_existing_controls_margin_bottom"
-            android:padding="@dimen/activity_edit_reference_padding"
+            android:paddingLeft="@dimen/activity_edit_reference_padding_left_right"
+            android:paddingStart="@dimen/activity_edit_reference_padding_left_right"
+            android:paddingRight="@dimen/activity_edit_reference_padding_left_right"
+            android:paddingEnd="@dimen/activity_edit_reference_padding_left_right"
             android:visibility="gone"
         >
 
@@ -105,13 +108,17 @@
 
         </RelativeLayout>
 
+
         <ScrollView
             android:id="@+id/scrEditReference"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/lytSetEntryReferenceControls"
             android:layout_above="@id/toolbar"
-            android:padding="@dimen/activity_edit_reference_padding"
+            android:paddingLeft="@dimen/activity_edit_reference_padding_left_right"
+            android:paddingStart="@dimen/activity_edit_reference_padding_left_right"
+            android:paddingRight="@dimen/activity_edit_reference_padding_left_right"
+            android:paddingEnd="@dimen/activity_edit_reference_padding_left_right"
         >
 
             <RelativeLayout
