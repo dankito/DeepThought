@@ -121,7 +121,7 @@
         <item name="android:layout_marginTop">-6dp</item>
         <item name="android:layout_marginLeft">-4dp</item>
         <item name="android:layout_marginStart">-4dp</item>
-        <item name="android:backgroundTint">@color/entity_field_divider_color</item>
+        <item name="backgroundTint">@color/entity_field_divider_color</item>
     </style>
 
     <style name="ChevronRightStyle">
