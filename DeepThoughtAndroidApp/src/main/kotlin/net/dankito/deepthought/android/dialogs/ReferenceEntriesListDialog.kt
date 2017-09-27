@@ -3,6 +3,7 @@ package net.dankito.deepthought.android.dialogs
 import android.support.v4.app.FragmentManager
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
+import net.dankito.service.search.specific.EntriesSearch
 
 
 class ReferenceEntriesListDialog: EntriesListDialogBase() {
@@ -25,9 +26,9 @@ class ReferenceEntriesListDialog: EntriesListDialogBase() {
     }
 
     override fun retrieveEntries(callback: (List<Entry>) -> Unit) {
-        reference.let { reference ->
-            callback(reference.entries) // TODO: currently no sorting is applied
-        }
+        searchEngine.searchEntries(EntriesSearch(entriesMustHaveThisReference = reference) {
+            callback(it)
+        })
     }
 
     override fun getDialogTitle(entries: List<Entry>): String {
