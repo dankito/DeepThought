@@ -11,7 +11,7 @@ CKEDITOR.editorConfig = function( config ) {
 	// The toolbar groups arrangement, optimized for a single toolbar row.
 	config.toolbarGroups = [
 		{ name: 'styles' },
-		{ name: 'basicstyles', groups: [ 'basicstyles' ] },
+		{ name: 'basicstyles', groups: [ 'basicstyles', 'colors' ] },
 		{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
 		{ name: 'insert',   groups: [ 'customized_insert' ] },
 		{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] }
@@ -19,7 +19,7 @@ CKEDITOR.editorConfig = function( config ) {
 
 	// The default plugins included in the basic setup define some buttons that
 	// are not needed in a basic editor. They are removed here.
-	config.removeButtons = 'Cut,Copy,Strike,Subscript,Superscript,Anchor,Link,Unlink,Image,Symbol,Replace';
+	config.removeButtons = 'Cut,Copy,Strike,Subscript,Superscript,Anchor,Link,Unlink,Image,Symbol,Replace,TextColor';
 
 	// Dialog windows are also simplified.
 	config.removeDialogTabs = 'link:advanced';
