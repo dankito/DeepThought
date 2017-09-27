@@ -108,17 +108,7 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
 
         setupUI()
 
-        savedInstanceState?.let { restoreState(it) }
-
         showParameters(getParameters() as? EditSeriesActivityParameters)
-    }
-
-    private fun restoreState(savedInstanceState: Bundle) {
-        savedInstanceState.getString(SERIES_ID_BUNDLE_EXTRA_NAME)?.let { seriesId -> showSeries(seriesId) }
-
-        savedInstanceState.getString(REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME)?.let { setReferenceToSetSeriesOn(serializer.deserializeObject(it, Reference::class.java)) }
-
-        savedInstanceState.getBoolean(DID_SERIES_CHANGE_BUNDLE_EXTRA_NAME)?.let { didSeriesChange -> updateDidSeriesChangeOnUiThread(didSeriesChange) }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -130,6 +120,18 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
             referenceToSetSeriesOn?.let { outState.putString(REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME, serializer.serializeObject(it)) }
 
             outState.putBoolean(DID_SERIES_CHANGE_BUNDLE_EXTRA_NAME, didSeriesChange)
+        }
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        savedInstanceState?.let {
+            savedInstanceState.getString(SERIES_ID_BUNDLE_EXTRA_NAME)?.let { seriesId -> showSeries(seriesId) }
+
+            savedInstanceState.getString(REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME)?.let { setReferenceToSetSeriesOn(serializer.deserializeObject(it, Reference::class.java)) }
+
+            savedInstanceState.getBoolean(DID_SERIES_CHANGE_BUNDLE_EXTRA_NAME)?.let { didSeriesChange -> updateDidSeriesChangeOnUiThread(didSeriesChange) }
         }
     }
 
