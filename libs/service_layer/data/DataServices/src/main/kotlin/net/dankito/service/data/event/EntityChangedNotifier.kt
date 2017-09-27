@@ -11,14 +11,51 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
     fun notifyListenersOfEntityChange(entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource) {
         val entityClass = entity.javaClass
 
-        createEntityChangedMessage(entityClass, entity, changeType, source)?.let { message -> // if entity has no extra EntityChanged message, return value is null
+        dispatchMessagesForChangedEntity(entityClass, entity, changeType, source)
+
+        dispatchMessagesForDependentEntities(entityClass, entity, changeType, source)
+    }
+
+    private fun dispatchMessagesForChangedEntity(entityClass: Class<out BaseEntity>, entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource) {
+        createEntityChangedMessage(entityClass, entity, changeType, source)?.let { message ->
+            // if entity has no extra EntityChanged message, return value is null
             eventBus.post(message) // has to be called synchronized so that LuceneSearchEngine can update its index before any other class accesses updated index
         }
 
         eventBus.postAsync(EntitiesOfTypeChanged(entityClass, changeType, source))
     }
 
-    private fun createEntityChangedMessage(entityClass: Class<BaseEntity>, entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource): IEventBusMessage? {
+    private fun dispatchMessagesForDependentEntities(entityClass: Class<BaseEntity>, entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource) {
+        if(entityClass == Tag::class.java) {
+            dispatchMessagesForTagDependentEntities(entity as Tag, source)
+        }
+        else if(entityClass == Series::class.java) {
+            dispatchMessagesForSeriesDependentEntities(entity as Series, source)
+        }
+        else if(entityClass == Reference::class.java) {
+            dispatchMessagesForReferenceDependentEntities(entity as Reference, source)
+        }
+    }
+
+    private fun dispatchMessagesForTagDependentEntities(tag: Tag, source: EntityChangeSource) {
+        tag.entries.forEach { entry ->
+            notifyListenersOfEntityChange(entry, EntityChangeType.Updated, source)
+        }
+    }
+
+    private fun dispatchMessagesForSeriesDependentEntities(series: Series, source: EntityChangeSource) {
+        series.references.forEach { reference ->
+            notifyListenersOfEntityChange(reference, EntityChangeType.Updated, source)
+        }
+    }
+
+    private fun dispatchMessagesForReferenceDependentEntities(reference: Reference, source: EntityChangeSource) {
+        reference.entries.forEach { entry ->
+            notifyListenersOfEntityChange(entry, EntityChangeType.Updated, source)
+        }
+    }
+
+    private fun createEntityChangedMessage(entityClass: Class<out BaseEntity>, entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource): IEventBusMessage? {
         when(entityClass) {
             Entry::class.java -> return EntryChanged(entity as Entry, changeType, source)
             Tag::class.java -> return TagChanged(entity as Tag, changeType, source)
