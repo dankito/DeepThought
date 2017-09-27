@@ -1,12 +1,9 @@
 package net.dankito.deepthought.android.adapter
 
-import android.os.Build
-import android.support.v4.widget.ImageViewCompat
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
-import android.widget.ImageView
-import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.ReferenceViewHolder
+import net.dankito.deepthought.android.extensions.setTintListToEntityIsSelectedColor
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.ui.presenter.ReferencesPresenterBase
 
@@ -29,21 +26,9 @@ class ReferenceOnEntryRecyclerAdapter(presenter: ReferencesPresenterBase): Refer
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ReferenceViewHolder {
         val viewHolder = super.onCreateViewHolder(parent, viewType)
 
-        setIconTintList(viewHolder.imgIsReferenceSetOnEntry)
+        viewHolder.imgIsReferenceSetOnEntry.setTintListToEntityIsSelectedColor()
 
         return viewHolder
-    }
-
-    private fun setIconTintList(imgIsReferenceAddedToEntry: ImageView) {
-        val context = imgIsReferenceAddedToEntry.context
-        val resources = context.resources
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            imgIsReferenceAddedToEntry.imageTintList = resources.getColorStateList(R.color.is_entity_selected_icon_color, context.theme)
-        }
-        else {
-            ImageViewCompat.setImageTintList(imgIsReferenceAddedToEntry, resources.getColorStateList(R.color.is_entity_selected_icon_color))
-        }
     }
 
 

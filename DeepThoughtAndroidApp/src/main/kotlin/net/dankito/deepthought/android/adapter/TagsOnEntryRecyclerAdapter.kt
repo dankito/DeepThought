@@ -1,8 +1,6 @@
 package net.dankito.deepthought.android.adapter
 
 import android.graphics.Typeface
-import android.os.Build
-import android.support.v4.widget.ImageViewCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +8,7 @@ import com.daimajia.swipe.SwipeLayout
 import kotlinx.android.synthetic.main.list_item_tag_on_entry.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.TagsOnEntryViewHolder
+import net.dankito.deepthought.android.extensions.setTintListToEntityIsSelectedColor
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.presenter.TagsOnEntryListPresenter
 import net.dankito.deepthought.ui.tags.TagSearchResultState
@@ -29,7 +28,7 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TagsOnEntryViewHolder {
         val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_tag_on_entry, parent, false)
 
-        setIconTintList(itemView)
+        itemView.imgIsTagAddedToEntry.setTintListToEntityIsSelectedColor()
 
         val viewHolder = TagsOnEntryViewHolder(itemView)
 
@@ -37,18 +36,6 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
 
         viewHolderCreated(viewHolder)
         return viewHolder
-    }
-
-    private fun setIconTintList(itemView: View) {
-        val imgIsTagAddedToEntry = itemView.imgIsTagAddedToEntry
-        val resources = itemView.context.resources
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            imgIsTagAddedToEntry.imageTintList = resources.getColorStateList(R.color.is_entity_selected_icon_color, itemView.context.theme)
-        }
-        else {
-            ImageViewCompat.setImageTintList(itemView.imgIsTagAddedToEntry, resources.getColorStateList(R.color.is_entity_selected_icon_color))
-        }
     }
 
 
