@@ -50,13 +50,12 @@ class EntryPersister(private val entryService: EntryService, private val referen
 
         reference?.let {
             if(reference.isPersisted() == false) {
-                referencePersister.saveReference(reference)
+                referencePersister.saveReference(reference, series)
             }
         }
 
         val previousReference = entry.reference
 
-        series?.let { reference?.series = it } // we assume series is for sure saved
         entry.reference = reference
 
 
@@ -68,8 +67,8 @@ class EntryPersister(private val entryService: EntryService, private val referen
         }
 
 
-        if(reference != previousReference) { // only update reference if it really changed
-            reference?.let { referencePersister.saveReference(reference) }
+        if(reference?.id != previousReference?.id) { // only update reference if it really changed
+            reference?.let { referencePersister.saveReference(reference, series) }
 
             previousReference?.let { referencePersister.saveReference(it) }
         }
