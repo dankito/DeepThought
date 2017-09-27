@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="wrap_content"
@@ -20,9 +20,23 @@
         android:id="@+id/imgIsAddedToEntity"
         android:layout_width="@dimen/view_is_added_to_entity_icon_width"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/vwIsAddedToEntityBorder"
+        android:layout_toEndOf="@+id/vwIsAddedToEntityBorder"
         android:layout_marginRight="@dimen/view_is_added_to_entity_icon_margin_right"
         android:layout_marginEnd="@dimen/view_is_added_to_entity_icon_margin_right"
         android:src="@drawable/ic_add"
     />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/txtvwEntityName"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/imgIsAddedToEntity"
+        android:layout_toEndOf="@+id/imgIsAddedToEntity"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:gravity="start|center_vertical"
+        android:textColor="@color/default_text_color"
+    />
+
+</RelativeLayout>

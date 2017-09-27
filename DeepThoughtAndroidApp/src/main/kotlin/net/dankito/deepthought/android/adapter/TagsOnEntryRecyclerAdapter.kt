@@ -48,16 +48,16 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
     override fun bindItemToView(viewHolder: TagsOnEntryViewHolder, item: Tag) {
         val isAddedToEntry = tagsOnEntry.contains(item)
 
-        viewHolder.txtvwTagName.text = item.displayText
+        viewHolder.txtvwEntityName.text = item.displayText
 
         if(isAddedToEntry) {
             viewHolder.imgIsAddedToEntity.setImageResource(R.drawable.ic_checkmark)
-            viewHolder.txtvwTagName.setTypeface(null, Typeface.BOLD)
+            viewHolder.txtvwEntityName.setTypeface(null, Typeface.BOLD)
             viewHolder.vwIsAddedToEntityBorder.visibility = View.VISIBLE
         }
         else {
             viewHolder.imgIsAddedToEntity.setImageResource(R.drawable.ic_add)
-            viewHolder.txtvwTagName.setTypeface(null, Typeface.NORMAL)
+            viewHolder.txtvwEntityName.setTypeface(null, Typeface.NORMAL)
             viewHolder.vwIsAddedToEntityBorder.visibility = View.INVISIBLE
         }
 

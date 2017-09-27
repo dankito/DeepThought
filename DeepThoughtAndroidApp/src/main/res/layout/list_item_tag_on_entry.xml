@@ -37,27 +37,11 @@
 
 
     <!-- Surface View Start (the view that's displayed by default) -->
-    <RelativeLayout
+    <include
+        layout="@layout/view_is_added_to_entity"
+        android:id="@+id/vwIsTagOnEntry"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <include
-            layout="@layout/view_is_added_to_entity"
-            android:id="@+id/vwIsTagOnEntry"
-        />
-
-        <TextView
-            android:id="@+id/txtvwTagName"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toRightOf="@+id/vwIsTagOnEntry"
-            android:layout_toEndOf="@+id/vwIsTagOnEntry"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:gravity="start|center_vertical"
-            android:textColor="@color/default_text_color"
-        />
-
-    </RelativeLayout>
+        android:layout_height="match_parent"
+    />
 
 </com.daimajia.swipe.SwipeLayout>

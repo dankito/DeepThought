@@ -16,7 +16,7 @@ class TagsOnEntryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
 
     val imgIsAddedToEntity: ImageView = itemView.imgIsAddedToEntity
 
-    val txtvwTagName: TextView = itemView.txtvwTagName
+    val txtvwEntityName: TextView = itemView.txtvwEntityName
 
     val btnEditTag: ImageButton = itemView.btnEditTag
 
