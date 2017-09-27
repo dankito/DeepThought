@@ -63,7 +63,10 @@
     <dimen name="list_item_reference_button_width">72dp</dimen>
     <dimen name="list_item_reference_margin_left">12dp</dimen>
     <dimen name="list_item_reference_margin_right">4dp</dimen>
-    <dimen name="list_item_reference_series_preview_margin_top">2dp</dimen>
+
+    <dimen name="list_item_series_height">54dp</dimen>
+    <dimen name="list_item_series_button_width">54dp</dimen>
+    <dimen name="list_item_series_margin_left">12dp</dimen>
 
     <dimen name="list_item_article_summary_extractor_height">60dp</dimen>
     <dimen name="list_item_article_summary_extractor_margin">4dp</dimen>

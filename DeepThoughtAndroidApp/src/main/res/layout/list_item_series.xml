@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/seriesSwipeLayout"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/list_item_reference_height"
+    android:layout_height="@dimen/list_item_series_height"
     android:background="@drawable/list_item_background"
 >
 
@@ -17,7 +17,7 @@
 
         <ImageButton
             android:id="@+id/btnEditSeries"
-            android:layout_width="@dimen/list_item_reference_button_width"
+            android:layout_width="@dimen/list_item_series_button_width"
             android:layout_height="match_parent"
             android:src="@drawable/ic_mode_edit_white_48dp"
             android:scaleType="fitCenter"
@@ -25,7 +25,7 @@
 
         <ImageButton
             android:id="@+id/btnDeleteSeries"
-            android:layout_width="@dimen/list_item_reference_button_width"
+            android:layout_width="@dimen/list_item_series_button_width"
             android:layout_height="match_parent"
             android:src="@drawable/ic_delete_white_48dp"
             android:scaleType="fitCenter"
@@ -38,8 +38,8 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/list_item_reference_margin_left"
-                    android:layout_marginStart="@dimen/list_item_reference_margin_left"
+                    android:layout_marginLeft="@dimen/list_item_series_margin_left"
+                    android:layout_marginStart="@dimen/list_item_series_margin_left"
                     android:gravity="center_vertical"
     >
 
