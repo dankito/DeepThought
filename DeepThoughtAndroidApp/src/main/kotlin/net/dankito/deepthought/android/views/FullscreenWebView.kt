@@ -73,11 +73,16 @@ class FullscreenWebView : WebView {
 
     private fun checkShouldEnterFullscreenMode(differenceY: Int) {
         if(differenceY > scrollDownDifferenceYThreshold || differenceY < scrollUpDifferenceYThreshold) {
-            changeFullscreenModeListener?.invoke(FullscreenMode.Enter)
-            hasEnteredFullscreenMode = true
-            lastOnScrollFullscreenModeTogglingTimestamp = Date()
+            enterFullscreenMode()
         }
     }
+
+    private fun enterFullscreenMode() {
+        changeFullscreenModeListener?.invoke(FullscreenMode.Enter)
+        hasEnteredFullscreenMode = true
+        lastOnScrollFullscreenModeTogglingTimestamp = Date()
+    }
+
 
     private fun hasFullscreenModeToggledShortlyBefore(): Boolean {
         return Date().time - (lastOnScrollFullscreenModeTogglingTimestamp?.time ?: 0) < AfterTogglingNotHandleScrollEventsForMillis
