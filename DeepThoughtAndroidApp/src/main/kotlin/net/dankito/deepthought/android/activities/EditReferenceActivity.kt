@@ -126,34 +126,7 @@ class EditReferenceActivity : BaseActivity() {
 
         setupUI()
 
-        savedInstanceState?.let { restoreState(it) }
-
         showParameters(getParameters() as? EditReferenceActivityParameters)
-    }
-
-    private fun restoreState(savedInstanceState: Bundle) {
-        savedInstanceState.getString(REFERENCE_ID_BUNDLE_EXTRA_NAME)?.let { referenceId -> showReference(referenceId) }
-
-        savedInstanceState.getString(UNPERSISTED_REFERENCE_BUNDLE_EXTRA_NAME)?.let { showReference(serializer.deserializeObject(it, Reference::class.java)) }
-
-        savedInstanceState.getString(ORIGINALLY_SET_REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME)?.let { originallySetSeriesId ->
-            this.originallySetSeries = seriesService.retrieve(originallySetSeriesId)
-        }
-
-        val seriesId = savedInstanceState.getString(REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME)
-        if(seriesId != null) {
-            setAndShowSeriesOnUiThread(seriesId)
-        }
-        else {
-            setAndShowSeriesOnUiThread(null)
-        }
-
-        this.selectedAnotherReference = savedInstanceState.getBoolean(SELECTED_ANOTHER_REFERENCE_BUNDLE_EXTRA_NAME, false)
-        updateDidReferenceChangeOnUiThread()
-
-        if(savedInstanceState.getBoolean(IS_FOR_ENTRY_SET_BUNDLE_EXTRA_NAME, false) == true) {
-            lytSetEntryReferenceControls.visibility = View.VISIBLE
-        }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -176,6 +149,35 @@ class EditReferenceActivity : BaseActivity() {
             outState.putBoolean(SELECTED_ANOTHER_REFERENCE_BUNDLE_EXTRA_NAME, selectedAnotherReference)
 
             outState.putBoolean(IS_FOR_ENTRY_SET_BUNDLE_EXTRA_NAME, lytSetEntryReferenceControls.visibility == View.VISIBLE)
+        }
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        savedInstanceState?.let {
+            savedInstanceState.getString(REFERENCE_ID_BUNDLE_EXTRA_NAME)?.let { referenceId -> showReference(referenceId) }
+
+            savedInstanceState.getString(UNPERSISTED_REFERENCE_BUNDLE_EXTRA_NAME)?.let { showReference(serializer.deserializeObject(it, Reference::class.java)) }
+
+            savedInstanceState.getString(ORIGINALLY_SET_REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME)?.let { originallySetSeriesId ->
+                this.originallySetSeries = seriesService.retrieve(originallySetSeriesId)
+            }
+
+            val seriesId = savedInstanceState.getString(REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME)
+            if(seriesId != null) {
+                setAndShowSeriesOnUiThread(seriesId)
+            }
+            else {
+                setAndShowSeriesOnUiThread(null)
+            }
+
+            this.selectedAnotherReference = savedInstanceState.getBoolean(SELECTED_ANOTHER_REFERENCE_BUNDLE_EXTRA_NAME, false)
+            updateDidReferenceChangeOnUiThread()
+
+            if(savedInstanceState.getBoolean(IS_FOR_ENTRY_SET_BUNDLE_EXTRA_NAME, false) == true) {
+                lytSetEntryReferenceControls.visibility = View.VISIBLE
+            }
         }
     }
 
