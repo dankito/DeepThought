@@ -26,7 +26,7 @@ import net.dankito.deepthought.android.dialogs.EditHtmlTextDialog
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import net.dankito.deepthought.android.views.ContextHelpUtil
-import net.dankito.deepthought.android.views.FullScreenWebView
+import net.dankito.deepthought.android.views.FullscreenWebView
 import net.dankito.deepthought.android.views.ToolbarUtil
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.getPlainTextForHtml
@@ -319,7 +319,7 @@ class EditEntryActivity : BaseActivity() {
         txtEntryContentLabel.setOnClickListener { editContent() }
 
         wbEntry.setOnSystemUiVisibilityChangeListener { flags -> systemUiVisibilityChanged(flags) }
-        wbEntry.changeFullScreenModeListener = { mode -> handleChangeFullScreenModeEvent(mode) }
+        wbEntry.changeFullscreenModeListener = { mode -> handleChangeFullscreenModeEvent(mode) }
 
         swipeTouchListener = OnSwipeTouchListener(this) { handleWebViewSwipe(it) }
         swipeTouchListener.singleTapListener = { handleWebViewClick() }
@@ -668,10 +668,10 @@ class EditEntryActivity : BaseActivity() {
         }
     }
 
-    private fun handleChangeFullScreenModeEvent(mode: FullScreenWebView.FullScreenMode) {
+    private fun handleChangeFullscreenModeEvent(mode: FullscreenWebView.FullscreenMode) {
         when(mode) {
-            FullScreenWebView.FullScreenMode.Enter -> enterFullscreenMode()
-            FullScreenWebView.FullScreenMode.Leave -> leaveFullscreenMode()
+            FullscreenWebView.FullscreenMode.Enter -> enterFullscreenMode()
+            FullscreenWebView.FullscreenMode.Leave -> leaveFullscreenMode()
         }
     }
 
@@ -722,7 +722,7 @@ class EditEntryActivity : BaseActivity() {
 
         wbEntry.systemUiVisibility = NON_FULLSCREEN_MODE_SYSTEM_UI_FLAGS
 
-        if(wbEntry.hasReachedEnd) { // TODO: move to FullScreenWebView
+        if(wbEntry.hasReachedEnd) { // TODO: move to FullscreenWebView
             wbEntry.scrollToEndDelayed()
         }
     }

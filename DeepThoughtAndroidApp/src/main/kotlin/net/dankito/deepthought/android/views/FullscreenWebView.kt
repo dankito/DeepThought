@@ -9,9 +9,9 @@ import java.util.*
 /**
  * On scroll down fires a listener to enter full screen mode, on scroll up fires the same listener to leave full screen mode.
  */
-class FullScreenWebView : WebView {
+class FullscreenWebView : WebView {
 
-    enum class FullScreenMode {
+    enum class FullscreenMode {
         Enter,
         Leave
     }
@@ -32,10 +32,10 @@ class FullScreenWebView : WebView {
 
     var hasReachedEnd = false
 
-    var changeFullScreenModeListener: ((FullScreenMode) -> Unit)? = null
+    var changeFullscreenModeListener: ((FullscreenMode) -> Unit)? = null
 
 
-    private var hasEnteredFullScreenMode = false
+    private var hasEnteredFullscreenMode = false
 
     private var lastOnScrollFullscreenModeTogglingTimestamp: Date? = null
 
@@ -49,7 +49,7 @@ class FullScreenWebView : WebView {
 
     override fun onWindowSystemUiVisibilityChanged(visible: Int) {
         if(visible == 0) {
-            hasEnteredFullScreenMode = false // otherwise hasEnteredFullScreenMode stays true and full screen mode isn't entered anymore on resume
+            hasEnteredFullscreenMode = false // otherwise hasEnteredFullscreenMode stays true and full screen mode isn't entered anymore on resume
         }
 
         super.onWindowSystemUiVisibilityChanged(visible)
@@ -58,28 +58,28 @@ class FullScreenWebView : WebView {
     override fun onScrollChanged(scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int) {
         super.onScrollChanged(scrollX, scrollY, oldScrollX, oldScrollY)
 
-        if(hasFullScreenModeToggledShortlyBefore()) {
+        if(hasFullscreenModeToggledShortlyBefore()) {
             return // when toggling reader mode there's a huge jump in scroll difference due to displaying additional / hiding controls -> filter out these events shortly after  entering/leaving reader mode
         }
 
         val differenceY = scrollY - oldScrollY
 
-        if(hasEnteredFullScreenMode == false) {
-            checkShouldEnterFullScreenMode(differenceY)
+        if(hasEnteredFullscreenMode == false) {
+            checkShouldEnterFullscreenMode(differenceY)
         }
 
         this.hasReachedEnd = scrollY >= computeVerticalScrollRange() - computeVerticalScrollExtent() - HasReachedEndTolerance
     }
 
-    private fun checkShouldEnterFullScreenMode(differenceY: Int) {
+    private fun checkShouldEnterFullscreenMode(differenceY: Int) {
         if(differenceY > scrollDownDifferenceYThreshold || differenceY < scrollUpDifferenceYThreshold) {
-            changeFullScreenModeListener?.invoke(FullScreenMode.Enter)
-            hasEnteredFullScreenMode = true
+            changeFullscreenModeListener?.invoke(FullscreenMode.Enter)
+            hasEnteredFullscreenMode = true
             lastOnScrollFullscreenModeTogglingTimestamp = Date()
         }
     }
 
-    private fun hasFullScreenModeToggledShortlyBefore(): Boolean {
+    private fun hasFullscreenModeToggledShortlyBefore(): Boolean {
         return Date().time - (lastOnScrollFullscreenModeTogglingTimestamp?.time ?: 0) < AfterTogglingNotHandleScrollEventsForMillis
     }
 

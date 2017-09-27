@@ -14,7 +14,7 @@ import kotlin.concurrent.schedule
 /**
  * When scrolling enters immersive full screen mode, when scrolling stops leaves full screen mode again.
  */
-class FullScreenRecyclerView : RecyclerView {
+class FullscreenRecyclerView : RecyclerView {
 
 
     companion object {
@@ -52,9 +52,9 @@ class FullScreenRecyclerView : RecyclerView {
     var leaveFullscreenModeListener: (() -> Unit)? = null
 
 
-    private var isInFullScreenMode = false
+    private var isInFullscreenMode = false
 
-    private var shouldLeaveFullScreenMode = false
+    private var shouldLeaveFullscreenMode = false
 
     private val leaveFullscreenModeTimer = Timer()
 
@@ -85,29 +85,29 @@ class FullScreenRecyclerView : RecyclerView {
 
     private fun systemUiVisibilityChanged(flags: Int) {
         if(flags == NON_READER_MODE_SYSTEM_UI_FLAGS) {
-            leaveFullScreenModeOnUiThread()
+            leaveFullscreenModeOnUiThread()
         }
     }
 
-    private fun setShouldLeaveFullScreenMode() {
-        shouldLeaveFullScreenMode = true
+    private fun setShouldLeaveFullscreenMode() {
+        shouldLeaveFullscreenMode = true
 
         leaveFullscreenModeTimer.schedule(DELAY_BEFORE_LEAVING_FULLSCREEN_MILLIS) {
-            if(shouldLeaveFullScreenMode) {
-                shouldLeaveFullScreenMode = false
+            if(shouldLeaveFullscreenMode) {
+                shouldLeaveFullscreenMode = false
 
-                (context as? Activity)?.runOnUiThread { leaveFullScreenModeOnUiThread() }
+                (context as? Activity)?.runOnUiThread { leaveFullscreenModeOnUiThread() }
             }
         }
     }
 
-    private fun leaveFullScreenModeOnUiThread() {
+    private fun leaveFullscreenModeOnUiThread() {
         val lastVisibleItem = (layoutManager as? LinearLayoutManager)?.findLastVisibleItemPosition() ?: -1
         val scrollToEnd = lastVisibleItem >= 0 && lastVisibleItem >= adapter.itemCount - 1
 
         this.systemUiVisibility = NON_READER_MODE_SYSTEM_UI_FLAGS
 
-        isInFullScreenMode = false
+        isInFullscreenMode = false
 
         leaveFullscreenModeListener?.invoke()
 
@@ -127,16 +127,16 @@ class FullScreenRecyclerView : RecyclerView {
         }, 50)
     }
 
-    private fun enterFullScreenModeIfHasEnoughItemsOnUiThread() {
+    private fun enterFullscreenModeIfHasEnoughItemsOnUiThread() {
         if(adapter.itemCount >= minimumCountItemsToActivateFullscreenMode) {
-            enterFullScreenModeOnUiThread()
+            enterFullscreenModeOnUiThread()
         }
     }
 
-    private fun enterFullScreenModeOnUiThread() {
+    private fun enterFullscreenModeOnUiThread() {
         this.systemUiVisibility = READER_MODE_SYSTEM_UI_FLAGS
 
-        isInFullScreenMode = true
+        isInFullscreenMode = true
 
         enterFullscreenModeListener?.invoke()
     }
@@ -148,18 +148,18 @@ class FullScreenRecyclerView : RecyclerView {
             super.onScrollStateChanged(recyclerView, newState)
 
             if(newState == SCROLL_STATE_IDLE) {
-                if(isInFullScreenMode) {
-                    setShouldLeaveFullScreenMode() // leaving fullscreen immediately when scrolling stops provides very bad user experience when she/he likes to scroll on as it
+                if(isInFullscreenMode) {
+                    setShouldLeaveFullscreenMode() // leaving fullscreen immediately when scrolling stops provides very bad user experience when she/he likes to scroll on as it
                     // then leaves fullscreen and immediately enters it again -> leave with some delay
                 }
             }
             else if(newState == SCROLL_STATE_DRAGGING) {
-                if(shouldLeaveFullScreenMode) {
-                    shouldLeaveFullScreenMode = false
+                if(shouldLeaveFullscreenMode) {
+                    shouldLeaveFullscreenMode = false
                 }
 
-                if(isInFullScreenMode == false) {
-                    enterFullScreenModeIfHasEnoughItemsOnUiThread()
+                if(isInFullscreenMode == false) {
+                    enterFullscreenModeIfHasEnoughItemsOnUiThread()
                 }
             }
         }

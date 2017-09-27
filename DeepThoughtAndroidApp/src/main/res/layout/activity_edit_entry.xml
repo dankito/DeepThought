@@ -90,7 +90,7 @@
             android:layout_below="@+id/txtEntryContentLabel"
         />
 
-        <net.dankito.deepthought.android.views.FullScreenWebView
+        <net.dankito.deepthought.android.views.FullscreenWebView
             android:id="@+id/wbEntry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

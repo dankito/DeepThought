@@ -20,7 +20,7 @@ import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapt
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.views.ContextHelpUtil
-import net.dankito.deepthought.android.views.FullScreenRecyclerView
+import net.dankito.deepthought.android.views.FullscreenRecyclerView
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
@@ -33,7 +33,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
 
     private var presenter: IMainViewSectionPresenter? = null
 
-    protected var recyclerView: FullScreenRecyclerView? = null
+    protected var recyclerView: FullscreenRecyclerView? = null
 
     protected var recyclerAdapter: MultiSelectListRecyclerSwipeAdapter<T, out RecyclerView.ViewHolder>? = null
 
@@ -109,8 +109,8 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
         recyclerView = rootView.rcyEntities
         recyclerView?.addItemDecoration(HorizontalDividerItemDecoration(rootView.context))
 
-        recyclerView?.enterFullscreenModeListener = { recyclerViewEnteredFullScreenMode() }
-        recyclerView?.leaveFullscreenModeListener = { recyclerViewLeftFullScreenMode() }
+        recyclerView?.enterFullscreenModeListener = { recyclerViewEnteredFullscreenMode() }
+        recyclerView?.leaveFullscreenModeListener = { recyclerViewLeftFullscreenMode() }
 
         setupAdapter()
 
@@ -157,7 +157,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
         return false
     }
 
-    private fun recyclerViewEnteredFullScreenMode() {
+    private fun recyclerViewEnteredFullscreenMode() {
         activity?.let { activity ->
             layoutRootOriginalTopMargin = activity.findViewById(R.id.appBarLayout)?.height ?: 0
 
@@ -165,7 +165,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
         }
     }
 
-    private fun recyclerViewLeftFullScreenMode() {
+    private fun recyclerViewLeftFullscreenMode() {
         activity?.let { activity ->
             setLayoutForTogglingFullscreenMode(activity, View.VISIBLE, layoutRootOriginalTopMargin)
         }
