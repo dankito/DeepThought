@@ -36,7 +36,9 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:gravity="start|center_vertical"
-        android:textColor="@color/default_text_color"
+        android:maxLines="2"
+        android:ellipsize="end"
+        style="@style/Header1Style"
     />
 
 </RelativeLayout>
