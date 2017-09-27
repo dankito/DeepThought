@@ -354,7 +354,10 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
     }
 
     override fun updateDisplayedTags() {
-        activity?.runOnUiThread { adapter.notifyDataSetChanged() }
+        activity?.runOnUiThread {
+            adapter.notifyDataSetChanged()
+            setTagsOnEntryPreviewOnUIThread()
+        }
     }
 
 }
