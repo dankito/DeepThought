@@ -8,7 +8,6 @@ import android.support.v7.widget.PopupMenu
 import android.text.Html
 import android.view.Menu
 import android.view.MenuItem
-import android.view.MotionEvent
 import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
@@ -137,8 +136,6 @@ class EditEntryActivity : BaseActivity() {
     private val presenter: EditEntryPresenter
 
     private var isInReaderMode = false
-
-    private lateinit var swipeTouchListener: OnSwipeTouchListener
 
 
     private val contextHelpUtil = ContextHelpUtil()
@@ -294,11 +291,9 @@ class EditEntryActivity : BaseActivity() {
 
         wbEntry.changeFullscreenModeListener = { mode -> handleChangeFullscreenModeEvent(mode) }
 
-        swipeTouchListener = OnSwipeTouchListener(this) { handleWebViewSwipe(it) }
-        swipeTouchListener.singleTapListener = { handleWebViewClick() }
-        swipeTouchListener.doubleTapListener = { handleWebViewDoubleTap() }
-
-        wbEntry.setOnTouchListener { _, event -> handleWebViewTouch(event) }
+        wbEntry.singleTapListener = { handleWebViewSingleTap(it) }
+        wbEntry.doubleTapListener = { handleWebViewDoubleTap(it) }
+        wbEntry.swipeListener = { isInFullscreen, swipeDirection -> handleWebViewSwipe(isInFullscreen, swipeDirection) }
 
         val settings = wbEntry.getSettings()
         settings.defaultTextEncodingName = "UTF-8" // otherwise non ASCII text doesn't get displayed correctly
@@ -610,31 +605,6 @@ class EditEntryActivity : BaseActivity() {
     }
 
 
-    /**
-     * WebView doesn't fire click event, so we had to implement this our self
-     */
-    private fun handleWebViewTouch(event: MotionEvent): Boolean {
-        swipeTouchListener.onTouch(wbEntry, event)
-
-        return false // don't consume event as otherwise scrolling won't work anymore
-    }
-
-    private fun handleWebViewClick() {
-        val hitResult = wbEntry.hitTestResult
-        val type = hitResult.type
-
-        // leave the functionality for clicking on links, phone numbers, geo coordinates, ... Only go to fullscreen mode when clicked somewhere else in the WebView or on an image
-        if(type == WebView.HitTestResult.UNKNOWN_TYPE || type == WebView.HitTestResult.IMAGE_TYPE) {
-            if(wbEntry.isInFullscreenMode) {
-                wbEntry.isInFullscreenMode = false // TODO: move to FullscreenWebView
-                leaveFullscreenMode()
-            }
-            else {
-                editContent()
-            }
-        }
-    }
-
     private fun handleChangeFullscreenModeEvent(mode: FullscreenWebView.FullscreenMode) {
         when(mode) {
             FullscreenWebView.FullscreenMode.Enter -> enterFullscreenMode()
@@ -642,14 +612,20 @@ class EditEntryActivity : BaseActivity() {
         }
     }
 
-    private fun handleWebViewDoubleTap() {
-        if(wbEntry.isInFullscreenMode) {
+    private fun handleWebViewSingleTap(isInFullscreen: Boolean) {
+        if(isInFullscreen == false) {
+            editContent()
+        }
+    }
+
+    private fun handleWebViewDoubleTap(isInFullscreen: Boolean) {
+        if(isInFullscreen) {
             mayShowEntryInformationFullscreenGesturesHelpOnUIThread { saveEntryAndCloseDialog() }
         }
     }
 
-    private fun handleWebViewSwipe(swipeDirection: OnSwipeTouchListener.SwipeDirection) {
-        if(wbEntry.isInFullscreenMode) {
+    private fun handleWebViewSwipe(isInFullscreen: Boolean, swipeDirection: OnSwipeTouchListener.SwipeDirection) {
+        if(isInFullscreen) {
             when(swipeDirection) {
                 OnSwipeTouchListener.SwipeDirection.Left -> {
                     mayShowEntryInformationFullscreenGesturesHelpOnUIThread { presenter.returnToPreviousView() }

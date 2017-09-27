@@ -3,8 +3,10 @@ package net.dankito.deepthought.android.views
 import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import android.webkit.WebView
+import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import java.util.*
 
 
@@ -61,17 +63,33 @@ class FullscreenWebView : WebView {
 
     var changeFullscreenModeListener: ((FullscreenMode) -> Unit)? = null
 
+    var singleTapListener: ((isInFullscreen: Boolean) -> Unit)? = null
+
+    var doubleTapListener: ((isInFullscreen: Boolean) -> Unit)? = null
+
+    var swipeListener: ((isInFullscreen: Boolean, OnSwipeTouchListener.SwipeDirection) -> Unit)? = null
+
 
     private var hasReachedEnd = false
 
     private var lastOnScrollFullscreenModeTogglingTimestamp: Date? = null
 
+    private lateinit var swipeTouchListener: OnSwipeTouchListener
 
-    constructor(context: Context) : super(context)
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    constructor(context: Context) : super(context) { setupUI(context) }
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) { setupUI(context) }
+
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) { setupUI(context) }
+
+
+    private fun setupUI(context: Context) {
+        swipeTouchListener = OnSwipeTouchListener(context) { handleWebViewSwipe(it) }
+
+        swipeTouchListener.singleTapListener = { handleWebViewSingleTap() }
+        swipeTouchListener.doubleTapListener = { handleWebViewDoubleTap() }
+    }
 
 
     override fun onWindowSystemUiVisibilityChanged(flags: Int) {
@@ -86,6 +104,38 @@ class FullscreenWebView : WebView {
 
         super.onWindowSystemUiVisibilityChanged(flags)
     }
+
+    /**
+     * WebView doesn't fire click event, so we had to implement this our self
+     */
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        swipeTouchListener.onTouch(this, event)
+
+        return super.onTouchEvent(event)
+    }
+
+    private fun handleWebViewSingleTap() {
+        val hitResult = hitTestResult
+        val type = hitResult.type
+
+        // leave the functionality for clicking on links, phone numbers, geo coordinates, ... Only go to fullscreen mode when clicked somewhere else in the WebView or on an image
+        if(type == WebView.HitTestResult.UNKNOWN_TYPE || type == WebView.HitTestResult.IMAGE_TYPE) {
+            singleTapListener?.invoke(isInFullscreenMode)
+
+            if(isInFullscreenMode) {
+                leaveFullscreenMode()
+            }
+        }
+    }
+
+    private fun handleWebViewDoubleTap() {
+        doubleTapListener?.invoke(isInFullscreenMode)
+    }
+
+    private fun handleWebViewSwipe(swipeDirection: OnSwipeTouchListener.SwipeDirection) {
+        swipeListener?.invoke(isInFullscreenMode, swipeDirection)
+    }
+
 
     override fun onScrollChanged(scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int) {
         super.onScrollChanged(scrollX, scrollY, oldScrollX, oldScrollY)
