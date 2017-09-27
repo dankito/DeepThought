@@ -113,7 +113,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
         adapter.deleteTagListener = { tag -> deleteTag(tag) }
 
         lytTagsPreview = rootView.lytTagsPreview
-        setTagsOnEntryPreviewOnUIThread(adapter.tagsOnEntry)
+        setTagsOnEntryPreviewOnUIThread()
 
         btnEditEntryCreateOrToggleTags = rootView.btnEditEntryCreateOrToggleTags
         rootView.btnEditEntryCreateOrToggleTags.setOnClickListener { handleCreateNewTagOrToggleTagsAction() }
@@ -184,7 +184,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
             adapter.tagsOnEntry.remove(tag)
             activity?.runOnUiThread {
                 adapter.notifyDataSetChanged()
-                setTagsOnEntryPreviewOnUIThread(adapter.tagsOnEntry)
+                setTagsOnEntryPreviewOnUIThread()
             }
         }
     }
@@ -250,7 +250,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
 
         adapter.tagsOnEntry.add(newTag)
 
-        setTagsOnEntryPreviewOnUIThread(adapter.tagsOnEntry)
+        setTagsOnEntryPreviewOnUIThread()
 
         searchTags(enteredText)
     }
@@ -260,7 +260,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
 
         activity?.runOnUiThread {
             adapter.notifyDataSetChanged()
-            setTagsOnEntryPreviewOnUIThread(adapter.tagsOnEntry)
+            setTagsOnEntryPreviewOnUIThread()
         }
     }
 
@@ -284,6 +284,10 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
 
     private fun wasDoubleTap(currentActionPressTime: Date, previousActionPressTime: Date): Boolean {
         return currentActionPressTime.time - previousActionPressTime.time <= DoubleTapMaxDelayMillis
+    }
+
+    private fun setTagsOnEntryPreviewOnUIThread() {
+        setTagsOnEntryPreviewOnUIThread(adapter.tagsOnEntry)
     }
 
     private fun setTagsOnEntryPreviewOnUIThread(tagsOnEntry: MutableList<Tag>) {
