@@ -572,7 +572,7 @@ class EditReferenceActivity : BaseActivity() {
 
         @Handler
         fun entryChanged(change: ReferenceChanged) {
-            if(change.entity == reference) {
+            if(change.entity.id == reference?.id) {
                 referenceHasBeenEdited(change.entity)
             }
         }
