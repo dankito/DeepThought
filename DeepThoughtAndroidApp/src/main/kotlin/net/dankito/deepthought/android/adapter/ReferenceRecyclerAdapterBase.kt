@@ -3,6 +3,7 @@ package net.dankito.deepthought.android.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.list_item_reference.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.ReferenceViewHolder
 import net.dankito.deepthought.model.Reference
@@ -19,12 +20,18 @@ abstract class ReferenceRecyclerAdapterBase(private val presenter: ReferencesPre
 
     abstract val shouldShowButtonEditReference: Boolean
 
+    protected open fun isAddedToEntity(reference: Reference): Boolean {
+        return false
+    }
+
 
     override fun getSwipeLayoutResourceId(position: Int) = R.id.referenceSwipeLayout
 
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ReferenceViewHolder {
         val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_reference, parent, false)
+
+        itemView.vwIsReferenceSetOnEntity.isShowAddedViewEnabled = shouldShowImageIsReferenceAddedToEntry
 
         val viewHolder = ReferenceViewHolder(itemView)
 
@@ -33,13 +40,13 @@ abstract class ReferenceRecyclerAdapterBase(private val presenter: ReferencesPre
     }
 
     override fun bindItemToView(viewHolder: ReferenceViewHolder, item: Reference) {
-        viewHolder.txtReferenceTitle.text = item.preview
+        var seriesPreview: String? = item.seriesAndPublishingDatePreview
+        if(seriesPreview.isNullOrBlank()) seriesPreview = null
 
-        val seriesPreview = item.seriesAndPublishingDatePreview
-        viewHolder.txtReferenceSeriesAndPublishingDate.text = seriesPreview
-        viewHolder.txtReferenceSeriesAndPublishingDate.visibility = if(seriesPreview.isNullOrBlank()) View.GONE else View.VISIBLE
+        val isAddedToEntity = shouldShowImageIsReferenceAddedToEntry && isAddedToEntity(item)
 
-        viewHolder.imgIsReferenceSetOnEntry.visibility = if(shouldShowImageIsReferenceAddedToEntry) View.VISIBLE else View.GONE
+        viewHolder.vwIsReferenceSetOnEntity.showState(item.preview, isAddedToEntity, seriesPreview)
+
         viewHolder.txtChevronRight.visibility = if(shouldShowChevronRight) View.VISIBLE else View.GONE
     }
 
