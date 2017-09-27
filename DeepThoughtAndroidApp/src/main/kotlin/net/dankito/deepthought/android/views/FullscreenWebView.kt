@@ -35,7 +35,7 @@ class FullscreenWebView : WebView {
     var changeFullscreenModeListener: ((FullscreenMode) -> Unit)? = null
 
 
-    private var hasEnteredFullscreenMode = false
+    private var isInFullscreenMode = false
 
     private var lastOnScrollFullscreenModeTogglingTimestamp: Date? = null
 
@@ -49,7 +49,7 @@ class FullscreenWebView : WebView {
 
     override fun onWindowSystemUiVisibilityChanged(visible: Int) {
         if(visible == 0) {
-            hasEnteredFullscreenMode = false // otherwise hasEnteredFullscreenMode stays true and full screen mode isn't entered anymore on resume
+            isInFullscreenMode = false // otherwise isInFullscreenMode stays true and full screen mode isn't entered anymore on resume
         }
 
         super.onWindowSystemUiVisibilityChanged(visible)
@@ -64,7 +64,7 @@ class FullscreenWebView : WebView {
 
         val differenceY = scrollY - oldScrollY
 
-        if(hasEnteredFullscreenMode == false) {
+        if(isInFullscreenMode == false) {
             checkShouldEnterFullscreenMode(differenceY)
         }
 
@@ -79,7 +79,7 @@ class FullscreenWebView : WebView {
 
     private fun enterFullscreenMode() {
         changeFullscreenModeListener?.invoke(FullscreenMode.Enter)
-        hasEnteredFullscreenMode = true
+        isInFullscreenMode = true
         lastOnScrollFullscreenModeTogglingTimestamp = Date()
     }
 
