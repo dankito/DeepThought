@@ -350,7 +350,7 @@ function groupJustifyItems(editor) {
     editor.addMenuItems( items );
 
     editor.ui.add( 'Justify', CKEDITOR.UI_MENUBUTTON, {
-        label: 'Justify', // TODO: translate
+        label: editor.lang.common.alignJustify,
         name: 'Justify',
         modes: { wysiwyg: 1 },
         icon: 'JustifyLeft',
@@ -486,7 +486,7 @@ function groupInsertItems(editor) {
     editor.addMenuItems( items );
 
     editor.ui.add( 'insert', CKEDITOR.UI_MENUBUTTON, {
-        label: 'Insert', // TODO: translate
+        label: editor.lang.toolbar.toolbarGroups.insert,
         modes: { wysiwyg: 1 },
         icon: 'image',
         toolbar: 'justify_and_insert,20',
