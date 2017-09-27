@@ -70,30 +70,6 @@ class EditEntryActivity : BaseActivity() {
         const val ResultId = "EDIT_ENTRY_ACTIVITY_RESULT"
 
         private const val GetHtmlCodeFromWebViewJavaScriptInterfaceName = "HtmlViewer"
-
-        private const val NON_FULLSCREEN_MODE_SYSTEM_UI_FLAGS = 0
-        private val FULLSCREEN_MODE_SYSTEM_UI_FLAGS: Int
-
-
-        init {
-            FULLSCREEN_MODE_SYSTEM_UI_FLAGS = createFullscreenModeSystemUiFlags()
-        }
-
-        private fun createFullscreenModeSystemUiFlags(): Int {
-            // see https://developer.android.com/training/system-ui/immersive.html
-            var flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-                // even thought View.SYSTEM_UI_FLAG_FULLSCREEN is also available from SDK 16 and above, to my experience it doesn't work reliable (at least not on Android 4.1)
-                flags = flags or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-            }
-
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                flags = flags or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE
-            }
-
-            return flags
-        }
     }
 
 
@@ -159,8 +135,6 @@ class EditEntryActivity : BaseActivity() {
 
 
     private val presenter: EditEntryPresenter
-
-    private var isInFullscreenMode = false
 
     private var isInReaderMode = false
 
@@ -318,7 +292,6 @@ class EditEntryActivity : BaseActivity() {
         lytOnboardingText.setOnClickListener { editContent() }
         txtEntryContentLabel.setOnClickListener { editContent() }
 
-        wbEntry.setOnSystemUiVisibilityChangeListener { flags -> systemUiVisibilityChanged(flags) }
         wbEntry.changeFullscreenModeListener = { mode -> handleChangeFullscreenModeEvent(mode) }
 
         swipeTouchListener = OnSwipeTouchListener(this) { handleWebViewSwipe(it) }
@@ -637,13 +610,6 @@ class EditEntryActivity : BaseActivity() {
     }
 
 
-    private fun systemUiVisibilityChanged(flags: Int) {
-        // as immersive fullscreen is only available for KitKat and above leave immersive fullscreen mode by swiping from screen top or bottom is also only available on these  devices
-        if(flags == NON_FULLSCREEN_MODE_SYSTEM_UI_FLAGS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            leaveFullscreenMode()
-        }
-    }
-
     /**
      * WebView doesn't fire click event, so we had to implement this our self
      */
@@ -659,7 +625,8 @@ class EditEntryActivity : BaseActivity() {
 
         // leave the functionality for clicking on links, phone numbers, geo coordinates, ... Only go to fullscreen mode when clicked somewhere else in the WebView or on an image
         if(type == WebView.HitTestResult.UNKNOWN_TYPE || type == WebView.HitTestResult.IMAGE_TYPE) {
-            if(isInFullscreenMode) {
+            if(wbEntry.isInFullscreenMode) {
+                wbEntry.isInFullscreenMode = false // TODO: move to FullscreenWebView
                 leaveFullscreenMode()
             }
             else {
@@ -676,13 +643,13 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun handleWebViewDoubleTap() {
-        if(isInFullscreenMode) {
+        if(wbEntry.isInFullscreenMode) {
             mayShowEntryInformationFullscreenGesturesHelpOnUIThread { saveEntryAndCloseDialog() }
         }
     }
 
     private fun handleWebViewSwipe(swipeDirection: OnSwipeTouchListener.SwipeDirection) {
-        if(isInFullscreenMode) {
+        if(wbEntry.isInFullscreenMode) {
             when(swipeDirection) {
                 OnSwipeTouchListener.SwipeDirection.Left -> {
                     mayShowEntryInformationFullscreenGesturesHelpOnUIThread { presenter.returnToPreviousView() }
@@ -709,8 +676,6 @@ class EditEntryActivity : BaseActivity() {
 
 
     private fun leaveFullscreenMode() {
-        isInFullscreenMode = false
-
         lytEntryFieldsPreview.visibility = View.VISIBLE
         txtEntryContentLabel.visibility = View.VISIBLE
         appBarLayout.visibility = View.VISIBLE
@@ -719,17 +684,9 @@ class EditEntryActivity : BaseActivity() {
         val layoutParams = wbEntry.layoutParams as RelativeLayout.LayoutParams
         layoutParams.alignWithParent = false
         wbEntry.layoutParams = layoutParams
-
-        wbEntry.systemUiVisibility = NON_FULLSCREEN_MODE_SYSTEM_UI_FLAGS
-
-        if(wbEntry.hasReachedEnd) { // TODO: move to FullscreenWebView
-            wbEntry.scrollToEndDelayed()
-        }
     }
 
     private fun enterFullscreenMode() {
-        isInFullscreenMode = true
-
         lytEntryFieldsPreview.visibility = View.GONE
         txtEntryContentLabel.visibility = View.GONE
         fabEntryFieldsMenu.visibility = View.GONE
@@ -740,8 +697,6 @@ class EditEntryActivity : BaseActivity() {
         wbEntry.layoutParams = layoutParams
 
         mayShowEntryInformationFullscreenHelpOnUIThread()
-
-        wbEntry.systemUiVisibility = FULLSCREEN_MODE_SYSTEM_UI_FLAGS
     }
 
     private fun mayShowEntryInformationFullscreenHelpOnUIThread() {
