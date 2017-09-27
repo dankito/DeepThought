@@ -1,14 +1,11 @@
 package net.dankito.deepthought.android.adapter
 
-import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.daimajia.swipe.SwipeLayout
-import kotlinx.android.synthetic.main.view_is_added_to_entity.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.TagsOnEntryViewHolder
-import net.dankito.deepthought.android.extensions.setTintListToEntityIsSelectedColor
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.presenter.TagsOnEntryListPresenter
 import net.dankito.deepthought.ui.tags.TagSearchResultState
@@ -28,8 +25,6 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TagsOnEntryViewHolder {
         val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_tag_on_entry, parent, false)
 
-        itemView.imgIsAddedToEntity.setTintListToEntityIsSelectedColor()
-
         val viewHolder = TagsOnEntryViewHolder(itemView)
 
         (itemView as? SwipeLayout)?.addRevealListener(itemView.id) { _, _, _, _ -> viewHolder.lastItemSwipeTime = Date() }
@@ -48,20 +43,7 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
     override fun bindItemToView(viewHolder: TagsOnEntryViewHolder, item: Tag) {
         val isAddedToEntry = tagsOnEntry.contains(item)
 
-        viewHolder.txtvwEntityName.text = item.displayText
-
-        if(isAddedToEntry) {
-            viewHolder.imgIsAddedToEntity.setImageResource(R.drawable.ic_checkmark)
-            viewHolder.txtvwEntityName.setTypeface(null, Typeface.BOLD)
-            viewHolder.vwIsAddedToEntityBorder.visibility = View.VISIBLE
-        }
-        else {
-            viewHolder.imgIsAddedToEntity.setImageResource(R.drawable.ic_add)
-            viewHolder.txtvwEntityName.setTypeface(null, Typeface.NORMAL)
-            viewHolder.vwIsAddedToEntityBorder.visibility = View.INVISIBLE
-        }
-
-        viewHolder.itemView.isActivated = isAddedToEntry // sets icon's tint and textview's text color
+        viewHolder.vwIsTagOnEntry.showState(item.displayText, isAddedToEntry)
 
         setBackgroundColor(viewHolder.itemView, item)
 

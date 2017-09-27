@@ -37,8 +37,7 @@
 
 
     <!-- Surface View Start (the view that's displayed by default) -->
-    <include
-        layout="@layout/view_is_added_to_entity"
+    <net.dankito.deepthought.android.views.IsAddedToEntityView
         android:id="@+id/vwIsTagOnEntry"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
