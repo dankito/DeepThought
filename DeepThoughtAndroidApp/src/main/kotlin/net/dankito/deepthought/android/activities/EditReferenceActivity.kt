@@ -27,6 +27,8 @@ import net.dankito.deepthought.ui.presenter.util.ReferencePersister
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.SeriesService
+import net.dankito.service.data.messages.EntityChangeSource
+import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.ReferenceChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
@@ -573,7 +575,13 @@ class EditReferenceActivity : BaseActivity() {
         @Handler
         fun entryChanged(change: ReferenceChanged) {
             if(change.entity.id == reference?.id) {
-                referenceHasBeenEdited(change.entity)
+                if(change.source == EntityChangeSource.Local && (change.changeType == EntityChangeType.PreDelete || change.changeType == EntityChangeType.Deleted)) {
+                    setActivityResult(EditReferenceActivityResult(didDeleteReference = true))
+                    runOnUiThread { closeDialog() }
+                }
+                else {
+                    referenceHasBeenEdited(change.entity)
+                }
             }
         }
     }

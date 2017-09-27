@@ -394,6 +394,9 @@ class EditEntryActivity : BaseActivity() {
 
                 mayShowSaveEntryChangesHelpOnUIThread()
             }
+            else if(result.didDeleteReference) {
+                referenceCleared()
+            }
         }
 
         setOnboardingTextVisibilityOnUIThread()
