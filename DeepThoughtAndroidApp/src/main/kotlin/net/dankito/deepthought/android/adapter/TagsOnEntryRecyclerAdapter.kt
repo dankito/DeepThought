@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.daimajia.swipe.SwipeLayout
-import kotlinx.android.synthetic.main.list_item_tag_on_entry.view.*
+import kotlinx.android.synthetic.main.view_is_added_to_entity.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.TagsOnEntryViewHolder
 import net.dankito.deepthought.android.extensions.setTintListToEntityIsSelectedColor
@@ -28,7 +28,7 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TagsOnEntryViewHolder {
         val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_tag_on_entry, parent, false)
 
-        itemView.imgIsTagAddedToEntry.setTintListToEntityIsSelectedColor()
+        itemView.imgIsAddedToEntity.setTintListToEntityIsSelectedColor()
 
         val viewHolder = TagsOnEntryViewHolder(itemView)
 
@@ -51,14 +51,14 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
         viewHolder.txtvwTagName.text = item.displayText
 
         if(isAddedToEntry) {
-            viewHolder.imgIsTagAddedToEntry.setImageResource(R.drawable.ic_checkmark)
+            viewHolder.imgIsAddedToEntity.setImageResource(R.drawable.ic_checkmark)
             viewHolder.txtvwTagName.setTypeface(null, Typeface.BOLD)
-            viewHolder.vwIsTagOnEntryBorder.visibility = View.VISIBLE
+            viewHolder.vwIsAddedToEntityBorder.visibility = View.VISIBLE
         }
         else {
-            viewHolder.imgIsTagAddedToEntry.setImageResource(R.drawable.ic_add)
+            viewHolder.imgIsAddedToEntity.setImageResource(R.drawable.ic_add)
             viewHolder.txtvwTagName.setTypeface(null, Typeface.NORMAL)
-            viewHolder.vwIsTagOnEntryBorder.visibility = View.INVISIBLE
+            viewHolder.vwIsAddedToEntityBorder.visibility = View.INVISIBLE
         }
 
         viewHolder.itemView.isActivated = isAddedToEntry // sets icon's tint and textview's text color

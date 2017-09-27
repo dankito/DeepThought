@@ -41,32 +41,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <View
-            android:id="@+id/vwIsTagOnEntryBorder"
-            android:layout_width="@dimen/list_item_tag_on_entry_added_border_width"
-            android:layout_height="match_parent"
-            android:layout_marginRight="@dimen/list_item_tag_on_entry_added_border_margin_right"
-            android:layout_marginEnd="@dimen/list_item_tag_on_entry_added_border_margin_right"
-            android:background="@color/tag_added_to_entry"
-        />
-
-        <ImageView
-            android:id="@+id/imgIsTagAddedToEntry"
-            android:layout_width="@dimen/list_item_tag_on_entry_icon_width"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/vwIsTagOnEntryBorder"
-            android:layout_toEndOf="@+id/vwIsTagOnEntryBorder"
-            android:layout_marginRight="@dimen/list_item_tag_on_entry_icon_margin_right"
-            android:layout_marginEnd="@dimen/list_item_tag_on_entry_icon_margin_right"
-            android:src="@drawable/ic_add"
+        <include
+            layout="@layout/view_is_added_to_entity"
+            android:id="@+id/vwIsTagOnEntry"
         />
 
         <TextView
             android:id="@+id/txtvwTagName"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toRightOf="@+id/imgIsTagAddedToEntry"
-            android:layout_toEndOf="@+id/imgIsTagAddedToEntry"
+            android:layout_toRightOf="@+id/vwIsTagOnEntry"
+            android:layout_toEndOf="@+id/vwIsTagOnEntry"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:gravity="start|center_vertical"

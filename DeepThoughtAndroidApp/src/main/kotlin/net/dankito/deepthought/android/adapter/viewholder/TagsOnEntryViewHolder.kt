@@ -6,14 +6,15 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.list_item_tag_on_entry.view.*
+import kotlinx.android.synthetic.main.view_is_added_to_entity.view.*
 import java.util.*
 
 
 class TagsOnEntryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    val vwIsTagOnEntryBorder: View = itemView.vwIsTagOnEntryBorder
+    val vwIsAddedToEntityBorder: View = itemView.vwIsAddedToEntityBorder
 
-    val imgIsTagAddedToEntry: ImageView = itemView.imgIsTagAddedToEntry
+    val imgIsAddedToEntity: ImageView = itemView.imgIsAddedToEntity
 
     val txtvwTagName: TextView = itemView.txtvwTagName
 

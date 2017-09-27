@@ -133,10 +133,6 @@
     <dimen name="dialog_tags_on_entry_tag_list_tags_margin">4dp</dimen>
 
     <dimen name="list_item_tag_on_entry_height">40dp</dimen>
-    <dimen name="list_item_tag_on_entry_added_border_width">6dp</dimen>
-    <dimen name="list_item_tag_on_entry_added_border_margin_right">18dp</dimen>
-    <dimen name="list_item_tag_on_entry_icon_width">30dp</dimen>
-    <dimen name="list_item_tag_on_entry_icon_margin_right">12dp</dimen>
     <dimen name="list_item_tag_on_entry_button_width">40dp</dimen>
 
     <dimen name="activity_edit_reference_padding_left_right">8dp</dimen>
@@ -157,6 +153,11 @@
 
     <dimen name="view_edit_entity_field_top_margin">16dp</dimen>
     <dimen name="view_edit_entity_field_icon_padding">4dp</dimen>
+
+    <dimen name="view_is_added_to_entity_border_width">6dp</dimen>
+    <dimen name="view_is_added_to_entity_border_margin_right">18dp</dimen>
+    <dimen name="view_is_added_to_entity_icon_width">30dp</dimen>
+    <dimen name="view_is_added_to_entity_icon_margin_right">12dp</dimen>
 
     <!-- EditText has a padding of 4dp, so to left align a control with it add this value as paddingLeft / marginLeft -->
     <dimen name="edit_text_padding_left">4dp</dimen>
