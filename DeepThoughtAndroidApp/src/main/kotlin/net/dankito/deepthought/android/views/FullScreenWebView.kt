@@ -37,7 +37,7 @@ class FullScreenWebView : WebView {
 
     private var hasEnteredFullScreenMode = false
 
-    private var lastOnScrollReaderModeTogglingTimestamp: Date? = null
+    private var lastOnScrollFullscreenModeTogglingTimestamp: Date? = null
 
 
     constructor(context: Context) : super(context)
@@ -75,12 +75,12 @@ class FullScreenWebView : WebView {
         if(differenceY > scrollDownDifferenceYThreshold || differenceY < scrollUpDifferenceYThreshold) {
             changeFullScreenModeListener?.invoke(FullScreenMode.Enter)
             hasEnteredFullScreenMode = true
-            lastOnScrollReaderModeTogglingTimestamp = Date()
+            lastOnScrollFullscreenModeTogglingTimestamp = Date()
         }
     }
 
     private fun hasFullScreenModeToggledShortlyBefore(): Boolean {
-        return Date().time - (lastOnScrollReaderModeTogglingTimestamp?.time ?: 0) < AfterTogglingNotHandleScrollEventsForMillis
+        return Date().time - (lastOnScrollFullscreenModeTogglingTimestamp?.time ?: 0) < AfterTogglingNotHandleScrollEventsForMillis
     }
 
 
@@ -91,7 +91,7 @@ class FullScreenWebView : WebView {
     }
 
     fun scrollToEnd() {
-        lastOnScrollReaderModeTogglingTimestamp = Date() // we also have to set lastOnScrollReaderModeTogglingTimestamp as otherwise scrolling may is large enough to re-enter fullscreen mode
+        lastOnScrollFullscreenModeTogglingTimestamp = Date() // we also have to set lastOnScrollFullscreenModeTogglingTimestamp as otherwise scrolling may is large enough to re-enter fullscreen mode
         scrollY = computeVerticalScrollRange() - computeVerticalScrollExtent()
     }
 
