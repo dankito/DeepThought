@@ -18,17 +18,15 @@
         <ImageButton
             android:id="@+id/btnEditSeries"
             android:layout_width="@dimen/list_item_series_button_width"
-            android:layout_height="match_parent"
+            style="@style/SwipeButtonStyle"
             android:src="@drawable/ic_mode_edit_white_48dp"
-            android:scaleType="fitCenter"
         />
 
         <ImageButton
             android:id="@+id/btnDeleteSeries"
             android:layout_width="@dimen/list_item_series_button_width"
-            android:layout_height="match_parent"
+            style="@style/SwipeButtonStyle"
             android:src="@drawable/ic_delete_white_48dp"
-            android:scaleType="fitCenter"
         />
 
     </LinearLayout>
