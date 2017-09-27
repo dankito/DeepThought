@@ -25,8 +25,6 @@ class FullscreenWebView : WebView {
         private const val DefaultScrollDownDifferenceYThreshold = 3
         private const val DefaultScrollUpDifferenceYThreshold = -10
 
-        private const val HasReachedEndTolerance = 5
-
         private const val AfterTogglingNotHandleScrollEventsForMillis = 500
 
 
@@ -150,7 +148,8 @@ class FullscreenWebView : WebView {
             checkShouldEnterFullscreenMode(differenceY)
         }
 
-        this.hasReachedEnd = scrollY >= computeVerticalScrollRange() - computeVerticalScrollExtent() - HasReachedEndTolerance
+        val tolerance = computeVerticalScrollExtent() / 10
+        this.hasReachedEnd = scrollY >= computeVerticalScrollRange() - computeVerticalScrollExtent() - tolerance
     }
 
     private fun checkShouldEnterFullscreenMode(differenceY: Int) {
