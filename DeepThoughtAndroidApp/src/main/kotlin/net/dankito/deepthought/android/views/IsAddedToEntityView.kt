@@ -57,6 +57,14 @@ class IsAddedToEntityView : RelativeLayout {
     fun showState(entityName: String, isAddedToEntity: Boolean, secondaryInformation: String? = null) {
         txtvwEntityName.text = entityName
 
+        setIsAddedToEntity(isAddedToEntity)
+
+        setSecondaryInformationTextView(secondaryInformation)
+
+        this.isActivated = isAddedToEntity // sets icon's tint and textview's text color
+    }
+
+    private fun setIsAddedToEntity(isAddedToEntity: Boolean) {
         if(isShowAddedViewEnabled) {
             if(isAddedToEntity) {
                 imgIsAddedToEntity.setImageResource(R.drawable.ic_checkmark)
@@ -73,17 +81,15 @@ class IsAddedToEntityView : RelativeLayout {
             vwIsAddedToEntityBorder.visibility = View.GONE
             imgIsAddedToEntity.visibility = View.GONE
         }
+    }
 
-        if(secondaryInformation == null) {
+    private fun setSecondaryInformationTextView(secondaryInformation: String?) {
+        if (secondaryInformation == null) {
             txtvwEntitySecondaryInformation.visibility = View.GONE
-        }
-        else {
+        } else {
             txtvwEntitySecondaryInformation.text = secondaryInformation
             txtvwEntitySecondaryInformation.visibility = View.VISIBLE
         }
-        println("secondaryInformation = $secondaryInformation, txtvwEntitySecondaryInformation.visibility = ${txtvwEntitySecondaryInformation.visibility}")
-
-        this.isActivated = isAddedToEntity // sets icon's tint and textview's text color
     }
 
 }
