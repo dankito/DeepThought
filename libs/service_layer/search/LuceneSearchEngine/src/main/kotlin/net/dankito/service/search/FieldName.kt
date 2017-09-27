@@ -26,6 +26,7 @@ object FieldName {
 
     val EntryReference = "reference"
     val EntryReferenceId = "reference_id"
+    val EntryReferenceSeriesId = "reference_series_id"
     val EntryNoReference = "no_reference"
 
     val EntryNotes = "notes"

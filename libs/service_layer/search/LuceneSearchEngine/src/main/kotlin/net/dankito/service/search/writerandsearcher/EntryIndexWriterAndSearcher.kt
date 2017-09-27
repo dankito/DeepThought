@@ -63,6 +63,8 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
         if(reference != null) {
             doc.add(Field(FieldName.EntryReference, reference.previewWithSeriesAndPublishingDate, TextField.TYPE_NOT_STORED))
             doc.add(StringField(FieldName.EntryReferenceId, reference.id, Field.Store.YES))
+
+            reference.series?.let { doc.add(StringField(FieldName.EntryReferenceSeriesId, it.id, Field.Store.YES)) }
         }
         else {
             doc.add(StringField(FieldName.EntryNoReference, FieldValue.NoReferenceFieldValue, Field.Store.NO))
@@ -104,6 +106,13 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
             filterReferenceQuery.add(TermQuery(Term(FieldName.EntryReferenceId, referenceId)), BooleanClause.Occur.MUST)
 
             query.add(filterReferenceQuery, BooleanClause.Occur.MUST)
+        }
+
+        search.entriesMustHaveThisSeries?.id?.let { seriesId ->
+            val filterSeriesQuery = BooleanQuery()
+            filterSeriesQuery.add(TermQuery(Term(FieldName.EntryReferenceSeriesId, seriesId)), BooleanClause.Occur.MUST)
+
+            query.add(filterSeriesQuery, BooleanClause.Occur.MUST)
         }
     }
 
