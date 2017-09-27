@@ -1082,8 +1082,10 @@ class EditEntryActivity : BaseActivity() {
             setContentPreviewOnUIThread(reference)
         }
 
+        if(abstractToEdit.isNullOrBlank() == false) { this.forceShowAbstractPreview = true } // forcing that once it has been shown it doesn't get hidden anymore
         setAbstractPreviewOnUIThread()
 
+        reference?.let { this.forceShowReferencePreview = true } // forcing that once it has been shown it doesn't get hidden anymore
         setReferencePreviewOnUIThread()
 
         tags?.forEach { tag ->
