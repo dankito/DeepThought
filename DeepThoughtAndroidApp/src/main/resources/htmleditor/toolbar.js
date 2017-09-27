@@ -1,6 +1,51 @@
 
 function customizeToolbar(editor) {
+    groupStyleItems(editor)
     groupInsertItems(editor);
+}
+
+function groupStyleItems(editor) {
+    editor.addMenuGroup( 'style_group' );
+
+    var items = {};
+
+    items.bold = {
+        label: editor.lang.basicstyles.bold,
+        group: 'style_group',
+        command: 'bold',
+        order: 10
+    };
+
+    items.italic = {
+        label: editor.lang.basicstyles.italic,
+        group: 'style_group',
+        command: 'italic',
+        order: 20
+    };
+
+    items.underline = {
+        label: editor.lang.basicstyles.underline,
+        group: 'style_group',
+        command: 'underline',
+        order: 30
+    };
+
+    editor.addMenuItems( items );
+
+    editor.ui.add( 'basicstyles', CKEDITOR.UI_MENUBUTTON, {
+        label: editor.lang.toolbar.toolbarGroups.styles,
+        modes: { wysiwyg: 1 },
+        icon: 'bold',
+        toolbar: 'customized_basic_style,10',
+        onMenu: function() {
+            var active = {};
+
+            for ( var p in items )
+                active[ p ] = CKEDITOR.TRISTATE_OFF;
+
+            return active;
+        }
+    } );
 }
 
 function groupInsertItems(editor) {
@@ -73,7 +118,7 @@ function groupInsertItems(editor) {
     editor.addMenuItems( items );
 
     editor.ui.add( 'insert', CKEDITOR.UI_MENUBUTTON, {
-        label: 'Insert', // TODO: translate
+        label: editor.lang.toolbar.toolbarGroups.insert,
         modes: { wysiwyg: 1 },
         icon: 'image',
         toolbar: 'customized_insert,10',
