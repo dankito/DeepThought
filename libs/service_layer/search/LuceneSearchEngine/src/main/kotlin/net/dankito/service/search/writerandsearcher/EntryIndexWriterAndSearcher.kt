@@ -62,6 +62,7 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
         val reference = entity.reference
         if(reference != null) {
             doc.add(Field(FieldName.EntryReference, reference.previewWithSeriesAndPublishingDate, TextField.TYPE_NOT_STORED))
+            doc.add(StringField(FieldName.EntryReferenceId, reference.id, Field.Store.YES))
         }
         else {
             doc.add(StringField(FieldName.EntryNoReference, FieldValue.NoReferenceFieldValue, Field.Store.NO))
