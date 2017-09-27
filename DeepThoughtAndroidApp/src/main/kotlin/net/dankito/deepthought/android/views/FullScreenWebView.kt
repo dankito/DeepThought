@@ -21,12 +21,16 @@ class FullScreenWebView : WebView {
         private const val DefaultScrollDownDifferenceYThreshold = 3
         private const val DefaultScrollUpDifferenceYThreshold = -10
 
+        private const val HasReachedEndTolerance = 5
+
         private const val AfterTogglingNotHandleScrollEventsForMillis = 500
     }
 
 
     var scrollUpDifferenceYThreshold = DefaultScrollUpDifferenceYThreshold
     var scrollDownDifferenceYThreshold = DefaultScrollDownDifferenceYThreshold
+
+    var hasReachedEnd = false
 
     var changeFullScreenModeListener: ((FullScreenMode) -> Unit)? = null
 
@@ -63,6 +67,8 @@ class FullScreenWebView : WebView {
         if(hasEnteredFullScreenMode == false) {
             checkShouldEnterFullScreenMode(differenceY)
         }
+
+        this.hasReachedEnd = scrollY >= computeVerticalScrollRange() - computeVerticalScrollExtent() - HasReachedEndTolerance
     }
 
     private fun checkShouldEnterFullScreenMode(differenceY: Int) {
@@ -75,6 +81,18 @@ class FullScreenWebView : WebView {
 
     private fun hasFullScreenModeToggledShortlyBefore(): Boolean {
         return Date().time - (lastOnScrollReaderModeTogglingTimestamp?.time ?: 0) < AfterTogglingNotHandleScrollEventsForMillis
+    }
+
+
+    fun scrollToEndDelayed() {
+        postDelayed({
+            scrollToEnd()
+        }, 50)
+    }
+
+    fun scrollToEnd() {
+        lastOnScrollReaderModeTogglingTimestamp = Date() // we also have to set lastOnScrollReaderModeTogglingTimestamp as otherwise scrolling may is large enough to re-enter fullscreen mode
+        scrollY = computeVerticalScrollRange() - computeVerticalScrollExtent()
     }
 
 }

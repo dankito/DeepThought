@@ -721,6 +721,10 @@ class EditEntryActivity : BaseActivity() {
         wbEntry.layoutParams = layoutParams
 
         wbEntry.systemUiVisibility = NON_FULLSCREEN_MODE_SYSTEM_UI_FLAGS
+
+        if(wbEntry.hasReachedEnd) { // TODO: move to FullScreenWebView
+            wbEntry.scrollToEndDelayed()
+        }
     }
 
     private fun enterFullscreenMode() {
