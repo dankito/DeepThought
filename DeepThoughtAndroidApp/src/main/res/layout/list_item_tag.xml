@@ -53,7 +53,7 @@
             android:layout_marginRight="@dimen/list_item_tag_filter_icon_margin_right"
             android:layout_marginEnd="@dimen/list_item_tag_filter_icon_margin_right"
             android:focusable="false"
-            android:background="@drawable/filter"
+            android:src="@drawable/ic_filter"
         />
 
         <TextView
