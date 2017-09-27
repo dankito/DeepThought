@@ -10,6 +10,7 @@ import net.dankito.deepthought.ui.view.ITagsListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
+import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
@@ -145,7 +146,14 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
         @Handler()
         fun entityChanged(entitiesOfTypeChanged: EntitiesOfTypeChanged) {
             when(entitiesOfTypeChanged.entityType) {
-                Tag::class.java -> searchTags()
+                Tag::class.java -> {
+                    if(entitiesOfTypeChanged.changeType == EntityChangeType.Updated) {
+                        tagsListView.updateDisplayedTags()
+                    }
+                    else {
+                        searchTags()
+                    }
+                }
                 AllEntriesCalculatedTag::class.java -> tagsListView.updateDisplayedTags()
                 EntriesWithoutTagsCalculatedTag::class.java -> tagsListView.updateDisplayedTags()
                 Entry::class.java -> tagsListView.updateDisplayedTags() // count entries on tag(s) may have changed
