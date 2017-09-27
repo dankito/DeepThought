@@ -45,6 +45,9 @@ class EntryPersister(private val entryService: EntryService, private val referen
         val removedTags = ArrayList(entry.tags)
         removedTags.removeAll(tags)
 
+        val addedTags = ArrayList(tags)
+        addedTags.removeAll(entry.tags)
+
         entry.setAllTags(tags.filter { it != null })
 
 
@@ -74,9 +77,9 @@ class EntryPersister(private val entryService: EntryService, private val referen
         }
 
 
-        tags.filterNotNull().forEach { tagService.update(it) } // TODO: check if tag needs an update
+        addedTags.filterNotNull().forEach { tagService.update(it) }
 
-        removedTags.forEach { tagService.update(it) }
+        removedTags.filterNotNull().forEach { tagService.update(it) }
 
 
         return true
