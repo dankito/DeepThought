@@ -648,6 +648,9 @@ class EditEntryActivity : BaseActivity() {
             localSettings.didShowEntryInformationFullscreenGesturesHelp = true
             entryService.dataManager.localSettingsUpdated()
         }
+        else {
+            userConfirmedHelpOnUIThread()
+        }
     }
 
 
