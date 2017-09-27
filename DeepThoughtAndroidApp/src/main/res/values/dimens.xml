@@ -58,11 +58,7 @@
     <dimen name="list_item_tag_filter_icon_margin_right">4dp</dimen>
 
     <dimen name="list_item_reference_height">72dp</dimen>
-    <dimen name="list_item_reference_on_entry_icon_width">30dp</dimen>
-    <dimen name="list_item_reference_on_entry_icon_right_margin">6dp</dimen>
     <dimen name="list_item_reference_button_width">72dp</dimen>
-    <dimen name="list_item_reference_margin_left">12dp</dimen>
-    <dimen name="list_item_reference_margin_right">4dp</dimen>
 
     <dimen name="list_item_series_height">54dp</dimen>
     <dimen name="list_item_series_button_width">54dp</dimen>
