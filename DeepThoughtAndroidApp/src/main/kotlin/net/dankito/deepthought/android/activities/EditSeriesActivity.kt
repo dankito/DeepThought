@@ -408,7 +408,7 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
 
         @Handler
         fun entryChanged(change: SeriesChanged) {
-            if(change.entity == series) {
+            if(change.entity.id == series?.id) {
                 if(change.source == EntityChangeSource.Local && (change.changeType == EntityChangeType.PreDelete || change.changeType == EntityChangeType.Deleted)) {
                     setActivityResult(EditSeriesActivityResult(didDeleteSeries = true))
                     runOnUiThread { closeDialog() }
