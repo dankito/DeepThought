@@ -89,13 +89,21 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
         if(search.filterOnlyEntriesWithoutTags) {
             query.add(TermQuery(Term(FieldName.EntryNoTags, NoTagsFieldValue)), BooleanClause.Occur.MUST)
         }
-        else if(search.entriesMustHaveTheseTags.isNotEmpty()) {
+
+        if(search.entriesMustHaveTheseTags.isNotEmpty()) {
             val filterEntriesQuery = BooleanQuery()
             for(tag in search.entriesMustHaveTheseTags.filterNotNull().filter { it.id != null }) {
                 filterEntriesQuery.add(TermQuery(Term(FieldName.EntryTagsIds, tag.id)), BooleanClause.Occur.MUST)
             }
 
             query.add(filterEntriesQuery, BooleanClause.Occur.MUST)
+        }
+
+        search.entriesMustHaveThisReference?.id?.let { referenceId ->
+            val filterReferenceQuery = BooleanQuery()
+            filterReferenceQuery.add(TermQuery(Term(FieldName.EntryReferenceId, referenceId)), BooleanClause.Occur.MUST)
+
+            query.add(filterReferenceQuery, BooleanClause.Occur.MUST)
         }
     }
 
