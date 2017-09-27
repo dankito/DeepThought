@@ -6,6 +6,16 @@ import android.widget.ImageView
 import net.dankito.deepthought.android.R
 
 
+fun ImageView.setTintColor(tintColorResourceId: Int) {
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        setColorFilter(context.getColor(tintColorResourceId))
+    }
+    else {
+        setColorFilter(context.resources.getColor(tintColorResourceId))
+    }
+}
+
+
 fun ImageView.setTintList(tintColorResource: Int) {
     val resources = context.resources
 

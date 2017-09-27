@@ -10,6 +10,7 @@ import android.widget.TextView
 import com.daimajia.swipe.SwipeLayout
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.TagViewHolder
+import net.dankito.deepthought.android.extensions.setTintColor
 import net.dankito.deepthought.model.CalculatedTag
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.presenter.TagsListPresenter
@@ -94,9 +95,9 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
         else {
             imgFilter.visibility = View.VISIBLE
 
-            when(presenter.isTagFiltered(tag)) {
-                true -> imgFilter.setImageResource(R.drawable.filter)
-                false -> imgFilter.setImageResource(R.drawable.filter_disabled)
+            when(presenter.isTagFiltered(tag)) { // setting tintList to is_entity_selected_icon_color and then setting itemView.isActivated does not work here as MultiSelectListRecyclerSwipeAdapter overwrites isActivated
+                true -> imgFilter.setTintColor(R.color.colorAccent)
+                false -> imgFilter.setTintColor(R.color.disabled_color)
             }
         }
     }
