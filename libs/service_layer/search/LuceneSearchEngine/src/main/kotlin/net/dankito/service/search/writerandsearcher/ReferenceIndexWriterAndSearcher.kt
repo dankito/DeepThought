@@ -43,6 +43,8 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
         }
 
         entity.series?.let { series ->
+            doc.add(StringField(FieldName.ReferenceSeriesId, series.id, Field.Store.YES))
+
             if(series.title.isNotEmpty()) {
                 doc.add(Field(FieldName.ReferenceSeries, series.title, TextField.TYPE_NOT_STORED))
             }
@@ -73,6 +75,8 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
     fun searchReferences(search: ReferenceSearch, termsToSearchFor: List<String>) {
         val query = BooleanQuery()
 
+        addQueryForOptions(search, query)
+
         addQueryForSearchTerm(termsToSearchFor, query, search)
 
         executeQueryForSearchWithCollectionResult(search, query, Reference::class.java, sortOptions = *arrayOf(
@@ -81,6 +85,15 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
                 SortOption(FieldName.ReferenceTitle, SortOrder.Ascending, SortField.Type.STRING)
             )
         )
+    }
+
+    private fun addQueryForOptions(search: ReferenceSearch, query: BooleanQuery) {
+        search.mustHaveThisSeries?.let { series ->
+            val filterSeriesQuery = BooleanQuery()
+            filterSeriesQuery.add(TermQuery(Term(FieldName.ReferenceSeriesId, series.id)), BooleanClause.Occur.MUST)
+
+            query.add(filterSeriesQuery, BooleanClause.Occur.MUST)
+        }
     }
 
     private fun addQueryForSearchTerm(termsToFilterFor: List<String>, query: BooleanQuery, search: ReferenceSearch) {
