@@ -43,41 +43,15 @@
                     android:gravity="center_vertical"
     >
 
-        <ImageView
-            android:id="@+id/imgIsSeriesSetOnReference"
-            android:layout_width="@dimen/list_item_reference_on_entry_icon_width"
-            android:layout_height="wrap_content"
+        <net.dankito.deepthought.android.views.IsAddedToEntityView
+            android:id="@+id/vwIsSeriesSetOnReference"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginRight="@dimen/list_item_reference_on_entry_icon_right_margin"
-            android:layout_marginEnd="@dimen/list_item_reference_on_entry_icon_right_margin"
-            android:src="@drawable/ic_add"
-            android:visibility="gone"
-        />
-
-        <RelativeLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/imgIsSeriesSetOnReference"
-            android:layout_toEndOf="@+id/imgIsSeriesSetOnReference"
             android:layout_toLeftOf="@+id/txtChevronRight"
             android:layout_toStartOf="@+id/txtChevronRight"
-            android:layout_centerVertical="true"
-            android:gravity="start|center_vertical"
-        >
-
-            <TextView
-                android:id="@+id/txtSeriesTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="start|center_vertical"
-                android:maxLines="2"
-                android:ellipsize="end"
-                style="@style/Header1Style"
-            />
-
-        </RelativeLayout>
+        />
 
         <TextView
             android:id="@+id/txtChevronRight"

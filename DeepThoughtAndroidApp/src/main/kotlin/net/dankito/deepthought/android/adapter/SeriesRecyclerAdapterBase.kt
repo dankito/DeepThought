@@ -17,6 +17,10 @@ abstract class SeriesRecyclerAdapterBase(private val presenter: SeriesPresenterB
 
     abstract val shouldShowButtonEditSeries: Boolean
 
+    protected open fun isSetOnReference(series: Series): Boolean {
+        return false
+    }
+
 
     override fun getSwipeLayoutResourceId(position: Int) = R.id.seriesSwipeLayout
 
@@ -31,9 +35,8 @@ abstract class SeriesRecyclerAdapterBase(private val presenter: SeriesPresenterB
     }
 
     override fun bindItemToView(viewHolder: SeriesViewHolder, item: Series) {
-        viewHolder.txtSeriesTitle.text = item.displayText
+        viewHolder.vwIsSeriesSetOnReference.showState(item.displayText, shouldShowImageIsSeriesSetOnReference && isSetOnReference(item))
 
-        viewHolder.imgIsSeriesSetOnReference.visibility = if(shouldShowImageIsSeriesSetOnReference) View.VISIBLE else View.GONE
         viewHolder.txtChevronRight.visibility = if(shouldShowChevronRight) View.VISIBLE else View.GONE
     }
 
