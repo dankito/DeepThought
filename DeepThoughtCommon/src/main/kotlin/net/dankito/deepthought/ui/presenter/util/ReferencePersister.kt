@@ -43,12 +43,12 @@ class ReferencePersister(private val referenceService: ReferenceService, private
         }
 
         val previousSeries = reference.series
-        if(previousSeries != null && previousSeries != series) { // remove previous series
+        if(previousSeries != null && previousSeries?.id != series?.id) { // remove previous series
             reference.series = null
             seriesService.update(previousSeries)
         }
 
-        if(previousSeries != series) {
+        if(previousSeries?.id != series?.id) {
             reference.series = series
         }
 
@@ -60,7 +60,7 @@ class ReferencePersister(private val referenceService: ReferenceService, private
             referenceService.update(reference)
         }
 
-        if(series != previousSeries || isReferencePersisted == false) {
+        if(series?.id != previousSeries?.id || isReferencePersisted == false) {
             series?.let { seriesService.update(series) } // reference is now persisted so series needs an update to store reference's id
         }
 
