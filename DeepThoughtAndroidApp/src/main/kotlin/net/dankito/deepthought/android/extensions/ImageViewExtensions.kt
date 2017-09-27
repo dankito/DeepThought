@@ -16,6 +16,9 @@ fun ImageView.setTintColor(tintColorResourceId: Int) {
 }
 
 
+/**
+ * Tint color cannot be set directly in layout xml as older versions of Android don't support the android:tint attribute (application crashes then)
+ */
 fun ImageView.setTintList(tintColorResource: Int) {
     val resources = context.resources
 
