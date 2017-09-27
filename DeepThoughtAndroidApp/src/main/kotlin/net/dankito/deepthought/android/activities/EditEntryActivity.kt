@@ -340,10 +340,14 @@ class EditEntryActivity : BaseActivity() {
             webView.loadUrl("javascript:$GetHtmlCodeFromWebViewJavaScriptInterfaceName.finishedLoadingSite" +
                     "(document.URL, '<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');")
         }
+        else if(entry != null || readLaterArticle != null) {
+            wbEntry.setWebViewClient(null) // now reactivate default url handling
+        }
     }
 
     private fun siteFinishedLoading(url: String, html: String) {
         entryExtractionResult?.webSiteHtml = html
+        runOnUiThread { wbEntry.setWebViewClient(null) } // now reactivate default url handling
 
         // now try to extract entry content from WebView's html
         if(entryExtractionResult?.couldExtractContent == false) {
