@@ -27,18 +27,43 @@
         android:src="@drawable/ic_add"
     />
 
-    <TextView
-        android:id="@+id/txtvwEntityName"
-        android:layout_width="match_parent"
+    <!-- needed to center TextViews vertically -->
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_toRightOf="@+id/imgIsAddedToEntity"
         android:layout_toEndOf="@+id/imgIsAddedToEntity"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:gravity="start|center_vertical"
-        android:maxLines="2"
-        android:ellipsize="end"
-        style="@style/Header1Style"
-    />
+        android:gravity="center_vertical"
+    >
+
+        <TextView
+            android:id="@+id/txtvwEntityName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:gravity="start|center_vertical"
+            android:maxLines="2"
+            android:ellipsize="end"
+            style="@style/Header1Style"
+        />
+
+        <TextView
+            android:id="@+id/txtvwEntitySecondaryInformation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtvwEntityName"
+            android:layout_alignLeft="@+id/txtvwEntityName"
+            android:layout_alignStart="@+id/txtvwEntityName"
+            android:layout_alignRight="@+id/txtvwEntityName"
+            android:layout_alignEnd="@+id/txtvwEntityName"
+            android:layout_marginTop="@dimen/view_is_added_to_entity_secondary_information_margin_top"
+            android:gravity="start|center_vertical"
+            android:lines="1"
+            android:ellipsize="end"
+            style="@style/Header2Style"
+        />
+
+    </RelativeLayout>
 
 </RelativeLayout>

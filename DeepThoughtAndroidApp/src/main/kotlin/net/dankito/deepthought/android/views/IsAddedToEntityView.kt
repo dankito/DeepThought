@@ -21,6 +21,11 @@ class IsAddedToEntityView : RelativeLayout {
 
     private lateinit var txtvwEntityName: TextView
 
+    private lateinit var txtvwEntitySecondaryInformation: TextView
+
+
+    var isShowAddedViewEnabled = true
+
 
     constructor(context: Context) : super(context) {
         setupUI(context)
@@ -43,24 +48,40 @@ class IsAddedToEntityView : RelativeLayout {
         vwIsAddedToEntityBorder = rootView.vwIsAddedToEntityBorder
         imgIsAddedToEntity = rootView.imgIsAddedToEntity
         txtvwEntityName = rootView.txtvwEntityName
+        txtvwEntitySecondaryInformation = rootView.txtvwEntitySecondaryInformation
 
         imgIsAddedToEntity.setTintListToEntityIsSelectedColor()
     }
 
 
-    fun showState(entityName: String, isAddedToEntity: Boolean) {
+    fun showState(entityName: String, isAddedToEntity: Boolean, secondaryInformation: String? = null) {
         txtvwEntityName.text = entityName
 
-        if(isAddedToEntity) {
-            imgIsAddedToEntity.setImageResource(R.drawable.ic_checkmark)
-            txtvwEntityName.setTypeface(null, Typeface.BOLD)
-            vwIsAddedToEntityBorder.visibility = View.VISIBLE
+        if(isShowAddedViewEnabled) {
+            if(isAddedToEntity) {
+                imgIsAddedToEntity.setImageResource(R.drawable.ic_checkmark)
+                txtvwEntityName.setTypeface(null, Typeface.BOLD)
+                vwIsAddedToEntityBorder.visibility = View.VISIBLE
+            }
+            else {
+                imgIsAddedToEntity.setImageResource(R.drawable.ic_add)
+                txtvwEntityName.setTypeface(null, Typeface.NORMAL)
+                vwIsAddedToEntityBorder.visibility = View.INVISIBLE
+            }
         }
         else {
-            imgIsAddedToEntity.setImageResource(R.drawable.ic_add)
-            txtvwEntityName.setTypeface(null, Typeface.NORMAL)
-            vwIsAddedToEntityBorder.visibility = View.INVISIBLE
+            vwIsAddedToEntityBorder.visibility = View.GONE
+            imgIsAddedToEntity.visibility = View.GONE
         }
+
+        if(secondaryInformation == null) {
+            txtvwEntitySecondaryInformation.visibility = View.GONE
+        }
+        else {
+            txtvwEntitySecondaryInformation.text = secondaryInformation
+            txtvwEntitySecondaryInformation.visibility = View.VISIBLE
+        }
+        println("secondaryInformation = $secondaryInformation, txtvwEntitySecondaryInformation.visibility = ${txtvwEntitySecondaryInformation.visibility}")
 
         this.isActivated = isAddedToEntity // sets icon's tint and textview's text color
     }
