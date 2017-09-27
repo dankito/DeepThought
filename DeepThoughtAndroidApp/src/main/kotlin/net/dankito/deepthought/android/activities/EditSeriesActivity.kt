@@ -24,6 +24,8 @@ import net.dankito.deepthought.ui.view.ISeriesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.SeriesService
+import net.dankito.service.data.messages.EntityChangeSource
+import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.SeriesChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
@@ -407,7 +409,13 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
         @Handler
         fun entryChanged(change: SeriesChanged) {
             if(change.entity == series) {
-                seriesHasBeenEdited(change.entity)
+                if(change.source == EntityChangeSource.Local && (change.changeType == EntityChangeType.PreDelete || change.changeType == EntityChangeType.Deleted)) {
+                    setActivityResult(EditSeriesActivityResult(didDeleteSeries = true))
+                    runOnUiThread { closeDialog() }
+                }
+                else {
+                    seriesHasBeenEdited(change.entity)
+                }
             }
         }
     }

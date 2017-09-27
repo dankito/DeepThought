@@ -228,6 +228,9 @@ class EditReferenceActivity : BaseActivity() {
             if(result.didSaveSeries) {
                 result.savedSeries?.let { savedSeriesOnUiThread(it) }
             }
+            if(result.didDeleteSeries) {
+                setAndShowSeriesOnUiThread(null)
+            }
         }
     }
 
