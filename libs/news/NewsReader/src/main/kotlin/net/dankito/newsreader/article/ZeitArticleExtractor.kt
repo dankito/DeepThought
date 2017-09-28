@@ -15,7 +15,8 @@ import java.util.*
 class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient) {
 
     companion object {
-        private val zeitDateTimeFormat: DateFormat = SimpleDateFormat("dd. MMMMM yyyy HH:mm", Locale.GERMAN)
+        private val ZeitDateTimeFormat: DateFormat = SimpleDateFormat("dd. MMMMM yyyy HH:mm", Locale.GERMAN)
+        private val ZeitDateTimeFormatWithComma: DateFormat = SimpleDateFormat("dd. MMMMM yyyy, HH:mm", Locale.GERMAN)
 
         private val log = LoggerFactory.getLogger(ZeitArticleExtractor::class.java)
     }
@@ -111,10 +112,13 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
         articleDateTime = articleDateTime.replace(" Uhr", "").trim { it <= ' ' }
 
         try {
-            val parsedDate = zeitDateTimeFormat.parse(articleDateTime)
-            return parsedDate
-        } catch (ex: Exception) {
-            log.error("Could not parse Zeit DateTime Format " + articleDateTime, ex)
+            return ZeitDateTimeFormatWithComma.parse(articleDateTime)
+        } catch (ignored: Exception) { }
+
+        try {
+            return ZeitDateTimeFormat.parse(articleDateTime)
+        } catch (e: Exception) {
+            log.error("Could not parse Zeit DateTime Format " + articleDateTime, e)
         }
 
         return null
