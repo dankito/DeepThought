@@ -1,5 +1,6 @@
 package net.dankito.newsreader.article
 
+import com.chimbori.crux.articles.Article
 import com.chimbori.crux.articles.ArticleExtractor
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.deepthought.model.Entry
@@ -24,7 +25,27 @@ class CruxArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
                 .extractContent()
                 .article()
 
-        extractionResult.setExtractedContent(Entry(article.document.outerHtml(), article.description),
+        val content = mayAddPreviewImageToContent(article, article.document.outerHtml())
+
+        extractionResult.setExtractedContent(Entry(content, article.description),
                 Reference(url, article.title, previewImageUrl = makeLinkAbsolute(article.imageUrl, url)))
+    }
+
+    private fun mayAddPreviewImageToContent(article: Article, content: String): String {
+        if(article.imageUrl != null && content.contains(article.imageUrl) == false) {
+            for(image in article.images) {
+                if(article.imageUrl.contains(image.src)) { // image.src may is a relative url
+                    if(content.contains(image.src) == false) { // again check if content does not already contain (relative) imageUrl
+                        return "<figure>" + image.element.outerHtml() + "</figure>" + article.document.outerHtml()
+                    }
+
+                    break
+                }
+            }
+
+            return "<figure><img src=\"${article.imageUrl}\" alt=\"preview image\" /></figure>${article.document.outerHtml()}"
+        }
+
+        return article.document.outerHtml()
     }
 }
