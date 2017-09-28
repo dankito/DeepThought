@@ -47,7 +47,7 @@ abstract class ReferenceRecyclerAdapterBase(private val presenter: ReferencesPre
 
         viewHolder.vwIsReferenceSetOnEntity.showState(item.preview, isAddedToEntity, seriesPreview)
 
-        viewHolder.txtChevronRight.visibility = if(shouldShowChevronRight) View.VISIBLE else View.GONE
+        viewHolder.imgChevronRight.visibility = if(shouldShowChevronRight) View.VISIBLE else View.GONE
     }
 
     override fun setupSwipeView(viewHolder: ReferenceViewHolder, item: Reference) {

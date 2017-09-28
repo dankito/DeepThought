@@ -52,15 +52,13 @@
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@+id/txtChevronRight"
-            android:layout_toStartOf="@+id/txtChevronRight"
+            android:layout_toLeftOf="@+id/imgChevronRight"
+            android:layout_toStartOf="@+id/imgChevronRight"
         />
 
-        <TextView
-            android:id="@+id/txtChevronRight"
+        <ImageView
+            android:id="@+id/imgChevronRight"
             style="@style/ChevronRightStyle"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true"
         />
 
     </RelativeLayout>

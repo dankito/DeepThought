@@ -62,8 +62,8 @@
             android:layout_alignParentBottom="true"
             android:layout_toRightOf="@+id/imgFilter"
             android:layout_toEndOf="@+id/imgFilter"
-            android:layout_toLeftOf="@+id/txtChevronRight"
-            android:layout_toStartOf="@+id/txtChevronRight"
+            android:layout_toLeftOf="@+id/imgChevronRight"
+            android:layout_toStartOf="@+id/imgChevronRight"
             android:layout_marginLeft="@dimen/list_item_tag_margin_left"
             android:layout_marginStart="@dimen/list_item_tag_margin_left"
             android:layout_centerVertical="true"
@@ -71,8 +71,8 @@
             style="@android:style/TextAppearance.Medium"
         />
 
-        <TextView
-            android:id="@+id/txtChevronRight"
+        <ImageView
+            android:id="@+id/imgChevronRight"
             style="@style/ChevronRightStyle"
         />
 

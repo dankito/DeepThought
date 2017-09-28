@@ -37,7 +37,7 @@ abstract class SeriesRecyclerAdapterBase(private val presenter: SeriesPresenterB
     override fun bindItemToView(viewHolder: SeriesViewHolder, item: Series) {
         viewHolder.vwIsSeriesSetOnReference.showState(item.displayText, shouldShowImageIsSeriesSetOnReference && isSetOnReference(item))
 
-        viewHolder.txtChevronRight.visibility = if(shouldShowChevronRight) View.VISIBLE else View.GONE
+        viewHolder.imgChevronRight.visibility = if(shouldShowChevronRight) View.VISIBLE else View.GONE
     }
 
     override fun setupSwipeView(viewHolder: SeriesViewHolder, item: Series) {

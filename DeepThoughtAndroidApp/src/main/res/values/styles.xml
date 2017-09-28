@@ -133,16 +133,17 @@
     <style name="ChevronRightStyle">
         <item name="android:layout_width">@dimen/chevron_right_width</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentTop">true</item>
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_alignParentBottom">true</item>
         <item name="android:layout_centerInParent">true</item>
-        <item name="android:gravity">center_vertical</item>
+        <item name="android:gravity">end|center_vertical</item>
         <item name="android:layout_marginLeft">@dimen/chevron_right_margin_left</item>
         <item name="android:layout_marginStart">@dimen/chevron_right_margin_left</item>
-        <item name="android:textSize">@dimen/chevron_right_text_size</item>
+        <item name="android:src">@drawable/ic_chevron_right_black_48dp</item>
         <!-- according to design actually colorPrimary should be used-->
-        <item name="android:textColor">@color/colorAccent</item>
-        <item name="android:text">❯</item>
+        <item name="android:tint">@color/colorAccent</item>
     </style>
 
 
