@@ -139,11 +139,11 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
      */
     private fun optimizeIndicesIfNeeded() {
         val startTime = Date()
-        val timeSinceLastOptimizationMillis = startTime.time - dataManager.localSettings.lastDatabaseOptimizationTime.time
+        val timeSinceLastOptimizationMillis = startTime.time - dataManager.localSettings.lastSearchIndexOptimizationTime.time
         if(timeSinceLastOptimizationMillis > DefaultIntervalToRunOptimizationDays * 24 * 60 * 60 * 1000) {
             optimizeIndices()
 
-            dataManager.localSettings.lastDatabaseOptimizationTime = startTime
+            dataManager.localSettings.lastSearchIndexOptimizationTime = startTime
             dataManager.localSettingsUpdated()
         }
     }
