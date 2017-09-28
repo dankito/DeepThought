@@ -77,8 +77,14 @@ class AndroidDeviceRegistrationHandler(private var context: Context, dataManager
             return
         }
 
-        currentActivityTracker.currentActivity?.let { activity ->
+        val activity = currentActivityTracker.currentActivity
+        if(activity != null) {
             activity.runOnUiThread { askUserToSyncDataWithDeviceOnMainThread(activity, unknownDevice, callback) }
+        }
+        else { // when there's not current activity, e.g. only DeepThoughtBackgroundAndroidService is running but no UI is displayed, wait till UI is available again
+            currentActivityTracker.addNextActivitySetListener {
+                showUnknownDeviceDiscoveredViewAfterDelay(unknownDevice, callback)
+            }
         }
     }
 
