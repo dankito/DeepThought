@@ -114,6 +114,11 @@ abstract class CouchbaseLiteEntityManagerBase(protected var context: Context, pr
     }
 
 
+    override fun optimizeDatabase() {
+        databaseCompacter.scheduleCompacting()
+    }
+
+
     override fun getDatabasePath(): String {
         return _databasePath
     }

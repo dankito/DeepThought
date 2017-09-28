@@ -10,6 +10,8 @@ interface IEntityManager {
 
     fun open(configuration: EntityManagerConfiguration)
 
+    fun optimizeDatabase()
+
     fun close()
 
 
