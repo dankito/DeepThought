@@ -25,6 +25,6 @@ class CruxArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
                 .article()
 
         extractionResult.setExtractedContent(Entry(article.document.outerHtml(), article.description),
-                Reference(url, article.title, previewImageUrl = article.imageUrl))
+                Reference(url, article.title, previewImageUrl = makeLinkAbsolute(article.imageUrl, url)))
     }
 }
