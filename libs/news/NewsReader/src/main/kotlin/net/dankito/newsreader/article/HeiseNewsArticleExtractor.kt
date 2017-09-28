@@ -26,15 +26,41 @@ class HeiseNewsArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
 
     override fun parseArticle(extractionResult: EntryExtractionResult, headerElement: Element, articleElement: Element, url: String, title: String) {
         articleElement.select(".meldung_wrapper").first()?.let { contentElement ->
-            val entry = Entry(extractContent(articleElement, url))
-            contentElement.select(".meldung_anrisstext").first()?.text()?.let { entry.abstractString = it }
-
-            val publishingDate = extractPublishingDate(headerElement)
-            val reference = Reference(url, title, publishingDate)
-            reference.previewImageUrl = makeLinkAbsolute(contentElement.select(".aufmacherbild img").first()?.attr("src") ?: "", url)
-
-            extractionResult.setExtractedContent(entry, reference)
+            parseMeldungWrapperArticle(extractionResult, headerElement, articleElement, contentElement, url, title)
+            return
         }
+
+        articleElement.select(".article-content").first()?.let { articleContentElement ->
+            parseArticleContentArticle(extractionResult, headerElement, articleContentElement, url, title)
+        }
+    }
+
+
+    // new version
+    private fun parseArticleContentArticle(extractionResult: EntryExtractionResult, headerElement: Element, articleContentElement: Element, url: String, title: String) {
+        val reference = Reference(url, title, extractPublishingDate(headerElement))
+        articleContentElement.select(".aufmacherbild img").first()?.let { previewImageElement ->
+            reference.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), url)
+        }
+
+        val abstract = articleContentElement.select(".article-content__lead").first()?.text() ?: ""
+
+        articleContentElement.select(".article-content__lead").remove()
+
+        extractionResult.setExtractedContent(Entry(articleContentElement.outerHtml(), abstract), reference)
+    }
+
+
+    // old version
+    private fun parseMeldungWrapperArticle(extractionResult: EntryExtractionResult, headerElement: Element, articleElement: Element, contentElement: Element, url: String, title: String) {
+        val entry = Entry(extractContent(articleElement, url))
+        contentElement.select(".meldung_anrisstext").first()?.text()?.let { entry.abstractString = it }
+
+        val publishingDate = extractPublishingDate(headerElement)
+        val reference = Reference(url, title, publishingDate)
+        reference.previewImageUrl = makeLinkAbsolute(contentElement.select(".aufmacherbild img").first()?.attr("src") ?: "", url)
+
+        extractionResult.setExtractedContent(entry, reference)
     }
 
     private fun extractContent(articleElement: Element, url: String): String {
