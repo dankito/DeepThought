@@ -28,12 +28,26 @@ data class EntryExtractionResult(var entry: Entry, var reference: Reference? = n
     }
 
     private fun copyInfoFromPreviousEntryAndReference(entry: Entry, previousEntry: Entry, reference: Reference?, previousReference: Reference?) {
-        if (entry.abstractString.isNullOrBlank() && previousEntry != null) {
+        if(entry.abstractString.isNullOrBlank() && previousEntry != null) {
             entry.abstractString = previousEntry.abstractString
         }
+        if(entry.content.isNullOrBlank() && previousEntry != null) {
+            entry.content = previousEntry.content
+        }
 
-        if (reference != null && reference.previewImageUrl == null && previousReference?.previewImageUrl != null) {
-            reference.previewImageUrl = previousReference?.previewImageUrl
+        if(reference != null && previousReference != null) {
+            if(reference.title.isNullOrBlank() && previousReference.title.isNullOrBlank() == false) {
+                reference.title = previousReference.title
+            }
+            if(reference.previewImageUrl == null && previousReference.previewImageUrl != null) {
+                reference.previewImageUrl = previousReference.previewImageUrl
+            }
+            if(reference.publishingDate == null && previousReference.publishingDate != null) {
+                reference.publishingDate = previousReference.publishingDate
+            }
+            if(reference.publishingDateString.isNullOrBlank() && previousReference.publishingDateString.isNullOrBlank() == false) {
+                reference.setPublishingDate(reference.publishingDate, previousReference.publishingDateString)
+            }
         }
     }
 
