@@ -7,13 +7,14 @@ import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.service.synchronization.initialsync.model.SyncInfo
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.services.hashing.IBase64Service
 import java.net.InetSocketAddress
 import java.net.SocketAddress
 
 
 class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings, registrationHandler: IDeviceRegistrationHandler, entityManager: IEntityManager,
-                                  base64Service: IBase64Service, threadPool: IThreadPool) : IClientCommunicator {
+                                  serializer: ISerializer, base64Service: IBase64Service, threadPool: IThreadPool) : IClientCommunicator {
 
     private val requestSender: IRequestSender
 
@@ -29,7 +30,7 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
 
         val socketHandler = SocketHandler()
         val messageHandler = MessageHandler(messageHandlerConfig)
-        val messageSerializer = JsonMessageSerializer(messageHandler)
+        val messageSerializer = JsonMessageSerializer(messageHandler, serializer)
 
         this.requestSender = RequestSender(socketHandler, messageSerializer, threadPool)
 

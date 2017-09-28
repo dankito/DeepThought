@@ -1,29 +1,18 @@
 package net.dankito.data_access.network.communication
 
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
 import net.dankito.data_access.network.communication.message.IMessageHandler
 import net.dankito.data_access.network.communication.message.Request
 import net.dankito.data_access.network.communication.message.Response
 import net.dankito.data_access.network.communication.message.ResponseErrorType
+import net.dankito.utils.serialization.ISerializer
 import org.slf4j.LoggerFactory
 import java.io.IOException
 
 
-class JsonMessageSerializer(protected var messageHandler: IMessageHandler) : IMessageSerializer {
+class JsonMessageSerializer(private val messageHandler: IMessageHandler, private val serializer: ISerializer) : IMessageSerializer {
 
     companion object {
         private val log = LoggerFactory.getLogger(JsonMessageSerializer::class.java)
-    }
-
-
-    protected var objectMapper: ObjectMapper
-
-
-    init {
-
-        this.objectMapper = ObjectMapper()
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     }
 
 
@@ -97,16 +86,12 @@ class JsonMessageSerializer(protected var messageHandler: IMessageHandler) : IMe
 
     @Throws(Exception::class)
     protected fun serializeObject(`object`: Any): String {
-        return objectMapper.writeValueAsString(`object`)
+        return serializer.serializeObject(`object`)
     }
 
     @Throws(IOException::class)
     protected fun <T> deserializeObject(serializedObject: String, objectClass: Class<T>, vararg genericParameterTypes: Class<Any>): T {
-        if (genericParameterTypes.size == 0) {
-            return objectMapper.readValue(serializedObject, objectClass)
-        } else {
-            return objectMapper.readValue<T>(serializedObject, objectMapper.typeFactory.constructParametricType(objectClass, *genericParameterTypes))
-        }
+        return serializer.deserializeObject(serializedObject, objectClass, *genericParameterTypes)
     }
 
     protected fun addMessageEndStringAndGetBytesFromString(string: String): ByteArray {
