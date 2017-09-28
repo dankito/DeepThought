@@ -10,6 +10,7 @@ import net.dankito.utils.IPlatformConfiguration
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.*
+import kotlin.concurrent.schedule
 import kotlin.concurrent.thread
 
 
@@ -17,6 +18,10 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
                   private val defaultDataInitializer: DefaultDataInitializer, platformConfiguration: IPlatformConfiguration) {
 
     companion object {
+        private const val DefaultDelayBeforeOptimizingDatabaseSeconds = 5 * 60
+
+        private const val DefaultIntervalToRunOptimizationDays = 7
+
         private val log = LoggerFactory.getLogger(DataManager::class.java)
     }
 
@@ -62,7 +67,9 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
 
                 localUser = deepThought.localUser
                 localDevice = deepThought.localDevice
-                this.localSettings = deepThought.localSettings
+                localSettings = deepThought.localSettings
+
+                mayOptimizeDatabase()
 
                 return
             }
@@ -75,7 +82,7 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
         createAndPersistDefaultDeepThought()
     }
 
-    protected fun createAndPersistDefaultDeepThought() {
+    private fun createAndPersistDefaultDeepThought() {
         deepThought = defaultDataInitializer.createDefaultData()
 
         localUser = deepThought.localUser
@@ -83,6 +90,27 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
         localSettings = deepThought.localSettings
 
         entityManager.persistEntity(deepThought)
+    }
+
+    private fun mayOptimizeDatabase() {
+        Timer().schedule(DefaultDelayBeforeOptimizingDatabaseSeconds * 1000L) {
+            optimizeDatabaseIfNeeded()
+        }
+    }
+
+    private fun optimizeDatabaseIfNeeded() {
+        val startTime = Date()
+        val timeSinceLastOptimizationMillis = startTime.time - localSettings.lastDatabaseOptimizationTime.time
+        if(timeSinceLastOptimizationMillis > DefaultIntervalToRunOptimizationDays * 24 * 60 * 60 * 1000) {
+            optimizeDatabase()
+
+            localSettings.lastDatabaseOptimizationTime = startTime
+            localSettingsUpdated()
+        }
+    }
+
+    private fun optimizeDatabase() {
+        entityManager.optimizeDatabase()
     }
 
 
