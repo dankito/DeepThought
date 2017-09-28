@@ -104,17 +104,15 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
 
 
     private fun setSeries(extractionResult: EntryExtractionResult, siteName: String, asyncResult: AsyncResult<EntryExtractionResult>, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
-        extractionResult.reference?.let { reference ->
-            if(extractionResult.series == null || extractionResult.series?.isPersisted() == false) { // series not set to a persisted Series -> try to find an existing one or create and persist a new one
-                val seriesTitle = extractionResult.series?.title ?: siteName
+        if(extractionResult.series == null || extractionResult.series?.isPersisted() == false) { // series not set to a persisted Series -> try to find an existing one or create and persist a new one
+            val seriesTitle = extractionResult.series?.title ?: siteName
 
-                getSeriesForTitleSynchronized(seriesTitle) {
-                    extractionResult.series = it
-                    callback(asyncResult)
-                }
-
-                return // avoid that callback() at end of this method gets called
+            getSeriesForTitleSynchronized(seriesTitle) {
+                extractionResult.series = it
+                callback(asyncResult)
             }
+
+            return // avoid that callback() at end of this method gets called
         }
 
         callback(asyncResult)
