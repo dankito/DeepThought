@@ -43,6 +43,8 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
     protected lateinit var defaultAnalyzer: LanguageDependentAnalyzer
 
+    private var indexDirectory: File? = null
+
     private var directory: Directory? = null
 
     private var writer: IndexWriter? = null
@@ -81,6 +83,8 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
         indexDirectory.mkdirs() // necessary?
 
         directory = FSDirectory.open(indexDirectory)
+
+        this.indexDirectory = indexDirectory
 
         return directory
     }
@@ -317,12 +321,14 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
 
     fun deleteIndex() {
-        getWriter()?.let { writer ->
-            writer.deleteAll()
-            writer.prepareCommit()
-            writer.commit()
+        synchronized(InstanceLock) {
+            log.info("Deleting index for $this")
+            writer?.close()
+            writer = null
 
-            markIndexHasBeenUpdated()
+            indexDirectory?.let { dir ->
+                dir.listFiles().forEach { it.delete() }
+            }
         }
     }
 
