@@ -24,7 +24,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
     companion object {
         private const val DefaultDelayBeforeUpdatingIndexSeconds = 60
 
-        private const val DefaultIntervalToRunOptimizationDays = 14
+        private const val DefaultIntervalToRunOptimizationDays = 7
 
         private val log = LoggerFactory.getLogger(LuceneSearchEngine::class.java)
     }
