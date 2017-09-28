@@ -52,6 +52,16 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
         }
     }
 
+    fun addDefaultData(item: ArticleSummaryItem, extractionResult: EntryExtractionResult, callback: () -> Unit) {
+        item.articleSummaryExtractorConfig?.tagsToAddOnExtractedArticles?.forEach {
+            extractionResult.tags.add(it)
+        }
+
+        val siteName = getSiteName(item)
+
+        addDefaultDataForSiteName(siteName, extractionResult, callback)
+    }
+
     private fun addDefaultData(extractor: IArticleExtractor, item: ArticleSummaryItem, extractionResult: EntryExtractionResult, callback: () -> Unit) {
         item.articleSummaryExtractorConfig?.tagsToAddOnExtractedArticles?.forEach {
             extractionResult.tags.add(it)
@@ -77,6 +87,16 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
         }
     }
 
+    private fun getSiteName(item: ArticleSummaryItem): String? {
+        var siteName = item.articleSummaryExtractorConfig?.name
+
+        if(siteName == null) {
+            siteName = getSiteNameForUrl(item.url)
+        }
+
+        return siteName
+    }
+
     private fun getSiteName(extractor: IArticleExtractor, item: ArticleSummaryItem): String? {
         var siteName = getSiteName(extractor, item.url)
 
@@ -91,13 +111,20 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
         var siteName = extractor.getName()
 
         if(siteName == null) { // when extractor is default article extractor, use host name for default tag and series
-            try {
-                val url = URL(urlString)
-                siteName = url.host.toLowerCase().replace("www.", "")
-            } catch(ignored: Exception) { }
+            siteName = getSiteNameForUrl(urlString)
         }
 
         return siteName
+    }
+
+    private fun getSiteNameForUrl(urlString: String): String? {
+        try {
+            val url = URL(urlString)
+
+            return url.host.toLowerCase().replace("www.", "")
+        } catch(ignored: Exception) { }
+
+        return null
     }
 
 
