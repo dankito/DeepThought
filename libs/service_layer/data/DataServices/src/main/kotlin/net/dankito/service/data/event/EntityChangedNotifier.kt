@@ -38,19 +38,19 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
     }
 
     private fun dispatchMessagesForTagDependentEntities(tag: Tag, source: EntityChangeSource) {
-        tag.entries.forEach { entry ->
+        tag.entries.filterNotNull().forEach { entry ->
             notifyListenersOfEntityChange(entry, EntityChangeType.Updated, source)
         }
     }
 
     private fun dispatchMessagesForSeriesDependentEntities(series: Series, source: EntityChangeSource) {
-        series.references.forEach { reference ->
+        series.references.filterNotNull().forEach { reference ->
             notifyListenersOfEntityChange(reference, EntityChangeType.Updated, source)
         }
     }
 
     private fun dispatchMessagesForReferenceDependentEntities(reference: Reference, source: EntityChangeSource) {
-        reference.entries.forEach { entry ->
+        reference.entries.filterNotNull().forEach { entry ->
             notifyListenersOfEntityChange(entry, EntityChangeType.Updated, source)
         }
     }
