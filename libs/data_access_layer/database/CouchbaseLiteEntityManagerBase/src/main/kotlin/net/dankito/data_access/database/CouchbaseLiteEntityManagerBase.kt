@@ -7,6 +7,7 @@ import net.dankito.jpa.apt.config.JPAEntityConfiguration
 import net.dankito.jpa.cache.DaoCache
 import net.dankito.jpa.cache.ObjectCache
 import net.dankito.jpa.couchbaselite.Dao
+import net.dankito.jpa.util.DatabaseCompacter
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.version.Versions
 import org.slf4j.LoggerFactory
@@ -28,6 +29,8 @@ abstract class CouchbaseLiteEntityManagerBase(protected var context: Context, pr
     lateinit var database: Database
         private set
 
+    private lateinit var databaseCompacter: DatabaseCompacter
+
     protected var daoCache = DaoCache()
 
     var objectCache = ObjectCache()
@@ -42,6 +45,8 @@ abstract class CouchbaseLiteEntityManagerBase(protected var context: Context, pr
         this._databasePath = adjustDatabasePath(context, configuration)
 
         createDatabase(configuration)
+
+        databaseCompacter = DatabaseCompacter(database, 10000)
 
         val result = loadGeneratedModel()
 
@@ -89,7 +94,7 @@ abstract class CouchbaseLiteEntityManagerBase(protected var context: Context, pr
     }
 
     protected fun createDaoForEntity(entityConfig: EntityConfig): Dao {
-        return Dao(database, entityConfig, objectCache, daoCache)
+        return Dao(database, entityConfig, objectCache, daoCache, databaseCompacter)
     }
 
 
