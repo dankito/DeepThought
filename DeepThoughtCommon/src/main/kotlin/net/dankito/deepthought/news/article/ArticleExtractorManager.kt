@@ -31,7 +31,7 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
     fun extractArticleAndAddDefaultDataAsync(item: ArticleSummaryItem, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
         articleExtractors.getExtractorForItem(item)?.let { extractor ->
             extractor.extractArticleAsync(item) { asyncResult ->
-                asyncResult.result?.let { addDefaultData(extractor, item, asyncResult, it, callback) }
+                asyncResult.result?.let { addDefaultData(extractor, item, it) { callback(asyncResult) } }
                 asyncResult.error?.let { callback(asyncResult) }
             }
         }
@@ -40,7 +40,7 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
     fun extractArticleAndAddDefaultDataAsync(url: String, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
         articleExtractors.getExtractorForUrl(url)?.let { extractor ->
             extractor.extractArticleAsync(url) { asyncResult ->
-                asyncResult.result?.let { addDefaultData(extractor, url, asyncResult, it, callback) }
+                asyncResult.result?.let { addDefaultData(extractor, url, it) { callback(asyncResult) } }
                 asyncResult.error?.let { callback(asyncResult) }
             }
         }
@@ -52,30 +52,28 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
         }
     }
 
-    private fun addDefaultData(extractor: IArticleExtractor, item: ArticleSummaryItem, asyncResult: AsyncResult<EntryExtractionResult>,
-                                 extractionResult: EntryExtractionResult, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
-        val siteName = getSiteName(extractor, item)
-
+    private fun addDefaultData(extractor: IArticleExtractor, item: ArticleSummaryItem, extractionResult: EntryExtractionResult, callback: () -> Unit) {
         item.articleSummaryExtractorConfig?.tagsToAddOnExtractedArticles?.forEach {
             extractionResult.tags.add(it)
         }
 
-        addDefaultDataForSiteName(siteName, callback, asyncResult, extractionResult)
+        val siteName = getSiteName(extractor, item)
+
+        addDefaultDataForSiteName(siteName, extractionResult, callback)
     }
 
-    private fun addDefaultData(extractor: IArticleExtractor, url: String, asyncResult: AsyncResult<EntryExtractionResult>,
-                               extractionResult: EntryExtractionResult, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
+    private fun addDefaultData(extractor: IArticleExtractor, url: String, extractionResult: EntryExtractionResult, callback: () -> Unit) {
         val siteName = getSiteName(extractor, url)
 
-        addDefaultDataForSiteName(siteName, callback, asyncResult, extractionResult)
+        addDefaultDataForSiteName(siteName, extractionResult, callback)
     }
 
-    private fun addDefaultDataForSiteName(siteName: String?, callback: (AsyncResult<EntryExtractionResult>) -> Unit, asyncResult: AsyncResult<EntryExtractionResult>, extractionResult: EntryExtractionResult) {
+    private fun addDefaultDataForSiteName(siteName: String?, extractionResult: EntryExtractionResult, callback: () -> Unit) {
         if(siteName == null) {
-            callback(asyncResult)
+            callback()
         }
         else {
-            setSeries(extractionResult, siteName, asyncResult, callback)
+            setSeries(extractionResult, siteName, callback)
         }
     }
 
@@ -103,19 +101,19 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
     }
 
 
-    private fun setSeries(extractionResult: EntryExtractionResult, siteName: String, asyncResult: AsyncResult<EntryExtractionResult>, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
+    private fun setSeries(extractionResult: EntryExtractionResult, siteName: String, callback: () -> Unit) {
         if(extractionResult.series == null || extractionResult.series?.isPersisted() == false) { // series not set to a persisted Series -> try to find an existing one or create and persist a new one
             val seriesTitle = extractionResult.series?.title ?: siteName
 
             getSeriesForTitleSynchronized(seriesTitle) {
                 extractionResult.series = it
-                callback(asyncResult)
+                callback()
             }
 
             return // avoid that callback() at end of this method gets called
         }
 
-        callback(asyncResult)
+        callback()
     }
 
     /**
