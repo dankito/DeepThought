@@ -22,6 +22,9 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
     }
 
 
+    private val metaDataExtractor = WebPageMetaDataExtractor(webClient)
+
+
     override fun extractArticleAsync(item : ArticleSummaryItem, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
         extractArticleAsync(item.url) { extractionResult ->
             extractionResult.result?.let {
@@ -70,6 +73,7 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
         requestUrl(url).let { document ->
             val contentHtml = document.outerHtml()
             val extractionResult = EntryExtractionResult(Entry(contentHtml), Reference(url, url, null))
+            parseMetaData(extractionResult, document)
 
             parseHtmlToArticle(extractionResult, document, url)
 
@@ -91,10 +95,28 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
     }
 
     override fun parseHtml(extractionResult: EntryExtractionResult, html: String, url: String) {
-        parseHtmlToArticle(extractionResult, Jsoup.parse(html, url), url)
+        val document = Jsoup.parse(html, url)
+        parseMetaData(extractionResult, document)
+
+        parseHtmlToArticle(extractionResult, document, url)
     }
 
     abstract protected fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String)
+
+
+    private fun parseMetaData(extractionResult: EntryExtractionResult, document: Document) {
+        val metaData = metaDataExtractor.extractMetaData(document)
+
+        metaData.title?.let { extractionResult.reference?.title = it }
+
+        metaData.description?.let { extractionResult.entry.abstractString = it }
+
+        extractionResult.reference?.previewImageUrl = metaData.previewImageUrl
+
+        extractionResult.reference?.setPublishingDate(metaData.publishingDate, metaData.publishingDateString)
+
+        // TODO: what about series / siteName?
+    }
 
 
     protected fun makeLinksAbsolute(element: Element, url: String) {
