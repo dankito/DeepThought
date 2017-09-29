@@ -36,16 +36,16 @@ class CruxArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
             for(image in article.images) {
                 if(article.imageUrl.contains(image.src)) { // image.src may is a relative url
                     if(content.contains(image.src) == false) { // again check if content does not already contain (relative) imageUrl
-                        return "<figure>" + image.element.outerHtml() + "</figure>" + article.document.outerHtml()
+                        return "<figure>" + image.element.outerHtml() + "</figure>" + content
                     }
 
                     break
                 }
             }
 
-            return "<figure><img src=\"${article.imageUrl}\" alt=\"preview image\" /></figure>${article.document.outerHtml()}"
+            return "<figure><img src=\"${article.imageUrl}\" alt=\"preview image\" /></figure>${content}"
         }
 
-        return article.document.outerHtml()
+        return content
     }
 }
