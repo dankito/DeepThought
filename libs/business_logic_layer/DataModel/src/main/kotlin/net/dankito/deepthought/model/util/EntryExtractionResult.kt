@@ -24,7 +24,7 @@ data class EntryExtractionResult(var entry: Entry, var reference: Reference? = n
 
         copyInfoFromPreviousEntryAndReference(entry, previousEntry, reference, previousReference)
 
-        this.couldExtractContent = true
+        this.couldExtractContent = entry.content.isNullOrBlank() == false
     }
 
     private fun copyInfoFromPreviousEntryAndReference(entry: Entry, previousEntry: Entry, reference: Reference?, previousReference: Reference?) {
