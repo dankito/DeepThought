@@ -169,7 +169,7 @@ class FullscreenWebView : WebView {
     }
 
 
-    private fun leaveFullscreenMode() {
+    fun leaveFullscreenMode() {
         isInFullscreenMode = false
 
         changeFullscreenModeListener?.invoke(FullscreenMode.Leave)
