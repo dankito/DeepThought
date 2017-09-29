@@ -32,7 +32,7 @@ class CruxArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
     }
 
     private fun mayAddPreviewImageToContent(article: Article, content: String): String {
-        if(article.imageUrl != null && content.contains(article.imageUrl) == false) {
+        if(content.isNullOrBlank() == false && article.imageUrl != null && content.contains(article.imageUrl) == false) {
             for(image in article.images) {
                 if(article.imageUrl.contains(image.src)) { // image.src may is a relative url
                     if(content.contains(image.src) == false) { // again check if content does not already contain (relative) imageUrl
