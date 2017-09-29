@@ -11,6 +11,7 @@ import net.dankito.service.data.SeriesService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.SeriesSearch
+import org.slf4j.LoggerFactory
 import java.net.URL
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -18,6 +19,11 @@ import javax.inject.Inject
 
 
 class ArticleExtractorManager(private val tagService: TagService, private val seriesService: SeriesService, private val searchEngine: ISearchEngine) {
+
+    companion object {
+        private val log = LoggerFactory.getLogger(ArticleExtractorManager::class.java)
+    }
+
 
     @Inject
     protected lateinit var articleExtractors: ArticleExtractors
@@ -30,6 +36,8 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
 
     fun extractArticleAndAddDefaultDataAsync(item: ArticleSummaryItem, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
         articleExtractors.getExtractorForItem(item)?.let { extractor ->
+            log.info("Using $extractor to extract item ${item.title}")
+
             extractor.extractArticleAsync(item) { asyncResult ->
                 asyncResult.result?.let { addDefaultData(extractor, item, it) { callback(asyncResult) } }
                 asyncResult.error?.let { callback(asyncResult) }
@@ -39,6 +47,8 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
 
     fun extractArticleAndAddDefaultDataAsync(url: String, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
         articleExtractors.getExtractorForUrl(url)?.let { extractor ->
+            log.info("Using $extractor to extract url $url")
+
             extractor.extractArticleAsync(url) { asyncResult ->
                 asyncResult.result?.let { addDefaultData(extractor, url, it) { callback(asyncResult) } }
                 asyncResult.error?.let { callback(asyncResult) }
