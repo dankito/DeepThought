@@ -37,11 +37,11 @@ fun Reference?.getSeriesAndPublishingDatePreview(series: Series? = null): String
     val seriesForPreview = series ?: this.series
     var preview = seriesForPreview?.title ?: ""
 
-    if(publishingDateString != null) {
-        preview += " " + publishingDateString
-    }
-    else if(publishingDate != null) {
+    if(publishingDate != null) {
         preview += " " + PublishingDateFormat.format(publishingDate)
+    }
+    else if(publishingDateString != null) { // publishingDateString may is just a technical date string like 2017.03.27T12:00:00+02:00
+        preview += " " + publishingDateString
     }
 
     return preview.trim()
