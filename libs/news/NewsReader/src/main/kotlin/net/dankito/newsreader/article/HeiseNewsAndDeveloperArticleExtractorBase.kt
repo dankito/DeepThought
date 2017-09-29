@@ -69,7 +69,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         val abstract = article.select("p.lead_text").first()?.text()?.trim() ?: ""
 
         article.select("h1, figure.aufmacherbild, time, span.author, a.comments, p.lead_text, .comment, .btn-toolbar .whatsbroadcast-toolbar, #whatsbroadcast, " +
-                ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta").remove()
+                ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta, .widget-werbung").remove()
         val content = article.html()
 
         extractionResult.setExtractedContent(Entry(content, abstract), reference)
