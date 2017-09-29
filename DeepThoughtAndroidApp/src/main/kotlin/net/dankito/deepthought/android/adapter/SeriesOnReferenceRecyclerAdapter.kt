@@ -20,7 +20,7 @@ class SeriesOnReferenceRecyclerAdapter(presenter: SeriesPresenterBase): SeriesRe
 
 
     override fun isSetOnReference(series: Series): Boolean {
-        return selectedSeries == series
+        return selectedSeries?.id == series.id
     }
 
 }

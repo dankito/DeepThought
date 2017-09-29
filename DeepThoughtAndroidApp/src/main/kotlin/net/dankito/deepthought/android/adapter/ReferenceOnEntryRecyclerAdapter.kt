@@ -20,7 +20,7 @@ class ReferenceOnEntryRecyclerAdapter(presenter: ReferencesPresenterBase): Refer
 
 
     override fun isAddedToEntity(reference: Reference): Boolean {
-        return selectedReference == reference
+        return selectedReference?.id == reference.id
     }
 
 }
