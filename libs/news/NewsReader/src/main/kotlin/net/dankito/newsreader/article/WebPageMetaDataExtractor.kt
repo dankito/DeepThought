@@ -33,6 +33,10 @@ class WebPageMetaDataExtractor(webClient: IWebClient) : ExtractorBase(webClient)
             var title = document.head().select("meta[name=\"og:title\"]").first()?.attr("content") // html's title sometimes has website name in it, so try og:title first
 
             if(title == null) {
+                title = document.head().select("meta[property=\"og:title\"]").first()?.attr("content")
+            }
+
+            if(title == null) {
                 title = document.title()
             }
 
@@ -88,6 +92,10 @@ class WebPageMetaDataExtractor(webClient: IWebClient) : ExtractorBase(webClient)
         }
 
         if(dateString == null) {
+            dateString = document.head().select("meta[property=\"last-modified\"]").first()?.attr("content")
+        }
+
+        if(dateString == null) {
             dateString = document.head().select("meta[name=\"pdate\"]").first()?.attr("content")
         }
 
@@ -112,7 +120,13 @@ class WebPageMetaDataExtractor(webClient: IWebClient) : ExtractorBase(webClient)
 
     private fun extractPreviewImageUrl(extractionResult: EntryExtractionResult, document: Document) {
         if(extractionResult.reference?.previewImageUrl == null) {
-            extractionResult.reference?.previewImageUrl = document.head().select("meta[name=\"og:image\"]").first()?.attr("content")
+            var previewImageUrl = document.head().select("meta[name=\"og:image\"]").first()?.attr("content")
+
+            if(previewImageUrl == null) {
+                previewImageUrl = document.head().select("meta[property=\"og:image\"]").first()?.attr("content")
+            }
+
+            extractionResult.reference?.previewImageUrl = previewImageUrl
         }
     }
 
