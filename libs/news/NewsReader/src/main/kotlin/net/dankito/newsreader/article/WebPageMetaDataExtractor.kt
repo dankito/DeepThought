@@ -1,11 +1,13 @@
 package net.dankito.newsreader.article
 
+import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.data_access.network.webclient.extractor.ExtractorBase
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import org.jsoup.nodes.Document
 
 
-class WebPageMetaDataExtractor {
+class WebPageMetaDataExtractor(webClient: IWebClient) : ExtractorBase(webClient) {
 
     fun extractMetaData(extractionResult: EntryExtractionResult, document: Document) {
         extractTitle(extractionResult, document)
@@ -14,7 +16,7 @@ class WebPageMetaDataExtractor {
 
         extractSiteName(extractionResult, document)
 
-        extractDateString(extractionResult, document)
+        extractPublishingDate(extractionResult, document)
 
         extractPreviewImageUrl(extractionResult, document)
 
@@ -59,16 +61,21 @@ class WebPageMetaDataExtractor {
         }
     }
 
-    private fun extractDateString(extractionResult: EntryExtractionResult, document: Document) {
+    private fun extractPublishingDate(extractionResult: EntryExtractionResult, document: Document) {
         extractionResult.reference?.let { reference ->
-            if(reference.issue == null) {
-                // TODO: try to parse DateString and set publishingDate instead
-                reference.issue = extractDateString(document)
+            extractPublishingDateString(document)?.let { publishingDateString ->
+                var publishingDate = parseIsoDateTimeString(publishingDateString)
+
+                if(publishingDate == null) {
+                    publishingDate = parseIsoDateTimeStringWithoutTimezone(publishingDateString)
+                }
+
+                reference.setPublishingDate(publishingDate, publishingDateString)
             }
         }
     }
 
-    private fun extractDateString(document: Document): String? {
+    private fun extractPublishingDateString(document: Document): String? {
         var dateString = document.head().select("meta[name=\"last-modified\"]").first()?.attr("content")
 
         if(dateString == null) {
