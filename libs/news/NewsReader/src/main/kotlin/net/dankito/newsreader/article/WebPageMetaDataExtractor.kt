@@ -2,6 +2,7 @@ package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.extractor.ExtractorBase
+import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import org.jsoup.nodes.Document
@@ -10,6 +11,10 @@ import org.jsoup.nodes.Document
 class WebPageMetaDataExtractor(webClient: IWebClient) : ExtractorBase(webClient) {
 
     fun extractMetaData(extractionResult: EntryExtractionResult, document: Document) {
+        if(extractionResult.reference == null) {
+            extractionResult.reference = Reference(document.baseUri(), document.title())
+        }
+
         extractTitle(extractionResult, document)
 
         extractAbstract(extractionResult, document)
