@@ -173,7 +173,8 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
     private fun getSeriesForTitle(seriesTitle: String, callback: (Series) -> Unit) {
         searchEngine.searchSeries(SeriesSearch(seriesTitle) { searchResults ->
             if(searchResults.isNotEmpty()) {
-                callback(searchResults.first())
+                val exactMatches = searchResults.filter { it.title == seriesTitle } // filter out that ones with a similiar name, e.g. 'SZ Magazin' when searching for 'SZ'
+                callback(exactMatches.sortedByDescending { it.countReferences }.first()) // in case there are several same names, use that one with most references
                 return@SeriesSearch
             }
 
