@@ -2,132 +2,92 @@ package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.extractor.ExtractorBase
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.Series
-import net.dankito.deepthought.model.util.EntryExtractionResult
 import org.jsoup.nodes.Document
+import java.util.*
 
 
 class WebPageMetaDataExtractor(webClient: IWebClient) : ExtractorBase(webClient) {
 
-    fun extractMetaData(extractionResult: EntryExtractionResult, document: Document) {
-        if(extractionResult.reference == null) {
-            extractionResult.reference = Reference(document.baseUri(), document.title())
+    fun extractMetaData(document: Document): WebPageMetaData {
+        val metaData = WebPageMetaData()
+
+        metaData.title = extractTitle(document)
+
+        metaData.description = extractDescription(document)
+
+        metaData.siteName = extractSiteName(document)
+
+        metaData.previewImageUrl = extractPreviewImageUrl(document)
+
+        metaData.publishingDateString = extractPublishingDateString(document)
+        metaData.publishingDateString?.let {
+            metaData.publishingDate = tryToParsePublishingDateString(it)
         }
-
-        extractTitle(extractionResult, document)
-
-        extractAbstract(extractionResult, document)
-
-        extractSiteName(extractionResult, document)
-
-        extractPublishingDate(extractionResult, document)
-
-        extractPreviewImageUrl(extractionResult, document)
 
         // TODO: what about keywords (property=article:tag)?
+
+        return metaData
     }
 
-    private fun extractTitle(extractionResult: EntryExtractionResult, document: Document) {
-        extractionResult.reference?.let { reference ->
-            var title = document.head().select("meta[name=\"og:title\"]").first()?.attr("content") // html's title sometimes has website name in it, so try og:title first
+    private fun extractTitle(document: Document): String? {
+        // html's title sometimes has website name in it, so try og:title first
+        document.head().select("meta[name=\"og:title\"]").first()?.attr("content")?.let { return it }
 
-            if(title == null) {
-                title = document.head().select("meta[property=\"og:title\"]").first()?.attr("content")
-            }
+        document.head().select("meta[property=\"og:title\"]").first()?.attr("content")?.let { return it }
 
-            if(title == null) {
-                title = document.title()
-            }
-
-            title?.let { reference.title = it }
-        }
+        return document.title()
     }
 
-    private fun extractAbstract(extractionResult: EntryExtractionResult, document: Document) {
-        if(extractionResult.entry.abstractString.isBlank()) {
-            var abstract = document.head().select("meta[name=\"description\"]").first()?.attr("content")
+    private fun extractDescription(document: Document): String? {
+        document.head().select("meta[name=\"description\"]").first()?.attr("content")?.let { return it }
 
-            if (abstract == null) {
-                abstract = document.head().select("meta[name=\"og:description\"]").first()?.attr("content")
-            }
+        document.head().select("meta[name=\"og:description\"]").first()?.attr("content")?.let { return it }
 
-            abstract?.let { extractionResult.entry.abstractString = it }
-        }
+        return null
     }
 
-    private fun extractSiteName(extractionResult: EntryExtractionResult, document: Document) {
-        extractionResult.reference?.let { reference ->
-            if(reference.series == null) {
-                var siteName = document.head().select("meta[name=\"publisher\"]").first()?.attr("content")
+    private fun extractSiteName(document: Document): String? {
+        document.head().select("meta[name=\"publisher\"]").first()?.attr("content")?.let { return it }
 
-                if(siteName == null) {
-                    siteName = document.head().select("meta[name=\"og:site_name\"]").first()?.attr("content")
-                }
+        document.head().select("meta[name=\"og:site_name\"]").first()?.attr("content")?.let { return it }
 
-                siteName?.let { reference.series = Series(it) }
-            }
-        }
-    }
-
-    private fun extractPublishingDate(extractionResult: EntryExtractionResult, document: Document) {
-        extractionResult.reference?.let { reference ->
-            extractPublishingDateString(document)?.let { publishingDateString ->
-                var publishingDate = parseIsoDateTimeString(publishingDateString)
-
-                if(publishingDate == null) {
-                    publishingDate = parseIsoDateTimeStringWithoutTimezone(publishingDateString)
-                }
-
-                reference.setPublishingDate(publishingDate, publishingDateString)
-            }
-        }
+        return null
     }
 
     private fun extractPublishingDateString(document: Document): String? {
-        var dateString = document.head().select("meta[name=\"last-modified\"]").first()?.attr("content")
+        document.head().select("meta[name=\"last-modified\"]").first()?.attr("content")?.let { return it }
 
-        if(dateString == null) {
-            dateString = document.head().select("meta[name=\"date\"]").first()?.attr("content")
-        }
+        document.head().select("meta[name=\"date\"]").first()?.attr("content")?.let { return it }
 
-        if(dateString == null) {
-            dateString = document.head().select("meta[property=\"last-modified\"]").first()?.attr("content")
-        }
+        document.head().select("meta[property=\"last-modified\"]").first()?.attr("content")?.let { return it }
 
-        if(dateString == null) {
-            dateString = document.head().select("meta[name=\"pdate\"]").first()?.attr("content")
-        }
+        document.head().select("meta[name=\"pdate\"]").first()?.attr("content")?.let { return it }
 
-        if(dateString == null) {
-            dateString = document.head().select("meta[property=\"article:modified\"]").first()?.attr("content")
-        }
+        document.head().select("meta[property=\"article:modified\"]").first()?.attr("content")?.let { return it }
 
-        if(dateString == null) {
-            dateString = document.head().select("meta[property=\"article:published\"]").first()?.attr("content")
-        }
+        document.head().select("meta[property=\"article:published\"]").first()?.attr("content")?.let { return it }
 
-        if(dateString == null) {
-            dateString = document.head().select("meta[property=\"article:modified_time\"]").first()?.attr("content")
-        }
+        document.head().select("meta[property=\"article:modified_time\"]").first()?.attr("content")?.let { return it }
 
-        if(dateString == null) {
-            dateString = document.head().select("meta[property=\"article:published_time\"]").first()?.attr("content")
-        }
+        document.head().select("meta[property=\"article:published_time\"]").first()?.attr("content")?.let { return it }
 
-        return dateString
+        return null
     }
 
-    private fun extractPreviewImageUrl(extractionResult: EntryExtractionResult, document: Document) {
-        if(extractionResult.reference?.previewImageUrl == null) {
-            var previewImageUrl = document.head().select("meta[name=\"og:image\"]").first()?.attr("content")
+    private fun tryToParsePublishingDateString(publishingDateString: String): Date? {
+        parseIsoDateTimeString(publishingDateString)?.let { return it }
 
-            if(previewImageUrl == null) {
-                previewImageUrl = document.head().select("meta[property=\"og:image\"]").first()?.attr("content")
-            }
+        parseIsoDateTimeStringWithoutTimezone(publishingDateString)?.let { return it }
 
-            extractionResult.reference?.previewImageUrl = previewImageUrl
-        }
+        return null
+    }
+
+    private fun extractPreviewImageUrl(document: Document): String? {
+        document.head().select("meta[name=\"og:image\"]").first()?.attr("content")?.let { return it }
+
+        document.head().select("meta[property=\"og:image\"]").first()?.attr("content")?.let { return it }
+
+        return null
     }
 
 }
