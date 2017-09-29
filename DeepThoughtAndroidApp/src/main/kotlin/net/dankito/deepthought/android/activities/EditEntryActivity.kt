@@ -649,13 +649,17 @@ class EditEntryActivity : BaseActivity() {
 
         if(localSettings.didShowEntryInformationFullscreenGesturesHelp == false) {
             dialogService.showConfirmationDialog(getString(R.string.context_help_entry_information_fullscreen_gestures), showNoButton = false) {
-                runOnUiThread { userConfirmedHelpOnUIThread() }
+                runOnUiThread {
+                    wbEntry.leaveFullscreenMode() // leave fullscreen otherwise a lot of unwanted behaviour occurs
+                    userConfirmedHelpOnUIThread()
+                }
             }
 
             localSettings.didShowEntryInformationFullscreenGesturesHelp = true
             entryService.dataManager.localSettingsUpdated()
         }
         else {
+            wbEntry.leaveFullscreenMode() // leave fullscreen otherwise a lot of unwanted behaviour occurs
             userConfirmedHelpOnUIThread()
         }
     }
