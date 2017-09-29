@@ -13,7 +13,8 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
 
         dispatchMessagesForChangedEntity(entityClass, entity, changeType, source)
 
-        dispatchMessagesForDependentEntities(entityClass, entity, changeType, source)
+        // TODO: on large data sets this is not working out as it emits way too many EntityChange messages
+//        dispatchMessagesForDependentEntities(entityClass, entity, changeType, source)
     }
 
     private fun dispatchMessagesForChangedEntity(entityClass: Class<out BaseEntity>, entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource) {
