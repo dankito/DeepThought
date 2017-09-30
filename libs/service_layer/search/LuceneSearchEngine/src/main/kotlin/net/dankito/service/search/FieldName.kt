@@ -10,6 +10,11 @@ object FieldName {
 
     /*      Entries      */
 
+    val EntryIdsId = "entry_ids_id"
+
+    val EntryIdsCreated = "created"
+
+
     val EntryId = "entry_id"
 
     val EntryAbstract = "abstract"

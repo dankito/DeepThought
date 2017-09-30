@@ -30,6 +30,8 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
     }
 
 
+    private val entryIdsIndexWriterAndSearcher = EntryIdsIndexWriterAndSearcher(entryService, eventBus, threadPool)
+
     private val entryIndexWriterAndSearcher = EntryIndexWriterAndSearcher(entryService, eventBus, threadPool)
 
     private val tagIndexWriterAndSearcher = TagIndexWriterAndSearcher(tagService, eventBus, threadPool, entryIndexWriterAndSearcher)
@@ -46,7 +48,8 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
 
     init {
-        indexWritersAndSearchers = listOf(entryIndexWriterAndSearcher, tagIndexWriterAndSearcher, referenceIndexWriterAndSearcher, seriesIndexWriterAndSearcher, readLaterArticleIndexWriterAndSearcher)
+        indexWritersAndSearchers = listOf(entryIdsIndexWriterAndSearcher, entryIndexWriterAndSearcher, tagIndexWriterAndSearcher, referenceIndexWriterAndSearcher,
+                seriesIndexWriterAndSearcher, readLaterArticleIndexWriterAndSearcher)
 
         createDirectoryAndIndexSearcherAndWritersAsync()
     }
@@ -154,6 +157,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
     private fun optimizeIndices() {
         log.info("Starting to optimize indices ...")
 
+        entryIdsIndexWriterAndSearcher.optimizeIndex()
         entryIndexWriterAndSearcher.optimizeIndex()
         tagIndexWriterAndSearcher.optimizeIndex()
         seriesIndexWriterAndSearcher.optimizeIndex()
@@ -206,7 +210,12 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
     /*      ISearchEngine implementation        */
 
     override fun searchEntries(search: EntriesSearch, termsToSearchFor: List<String>) {
-        entryIndexWriterAndSearcher.searchEntries(search, termsToSearchFor)
+        if(search.isSearchingForEntryIds()) {
+            entryIdsIndexWriterAndSearcher.searchEntryIds(search, termsToSearchFor)
+        }
+        else {
+            entryIndexWriterAndSearcher.searchEntries(search, termsToSearchFor)
+        }
     }
 
     override fun searchTags(search: TagsSearch, termsToSearchFor: List<String>) {

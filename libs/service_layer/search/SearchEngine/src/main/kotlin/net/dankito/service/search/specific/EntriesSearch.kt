@@ -14,5 +14,9 @@ class EntriesSearch(searchTerm: String = Search.EmptySearchTerm, val filterConte
                     val entriesMustHaveTheseTags: MutableCollection<Tag> = mutableListOf(), val entriesMustHaveThisReference: Reference? = null, val entriesMustHaveThisSeries: Series? = null,
                     completedListener: (List<Entry>) -> Unit) : SearchWithCollectionResult<Entry>(searchTerm, completedListener) {
 
+    fun isSearchingForEntryIds(): Boolean {
+        return searchTerm == Search.EmptySearchTerm && filterOnlyEntriesWithoutTags == false && entriesMustHaveTheseTags.isEmpty() &&
+                entriesMustHaveThisReference == null && entriesMustHaveThisSeries == null
+    }
 
 }
