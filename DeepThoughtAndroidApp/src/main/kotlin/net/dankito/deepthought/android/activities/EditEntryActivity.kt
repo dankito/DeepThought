@@ -359,7 +359,7 @@ class EditEntryActivity : BaseActivity() {
 
             if(entryExtractionResult?.couldExtractContent == false) {
                 entryExtractionResult?.let { extractionResult ->
-                    articleExtractorManager.extractArticleAndAddDefaultDataAsync(extractionResult, html, url)
+                    articleExtractorManager.extractArticleAndAddDefaultData(extractionResult, html, url)
 
                     if(extractionResult.couldExtractContent) {
                         runOnUiThread { extractedContentOnUiThread(extractionResult) }
