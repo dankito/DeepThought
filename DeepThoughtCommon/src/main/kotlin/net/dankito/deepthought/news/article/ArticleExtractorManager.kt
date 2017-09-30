@@ -58,6 +58,8 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
 
     fun extractArticleAndAddDefaultData(extractionResult: EntryExtractionResult, html: String, url: String) {
         articleExtractors.getExtractorForUrl(url)?.let { extractor ->
+            log.info("Using $extractor to extract html from url $url")
+
             extractor.parseHtml(extractionResult, html, url)
         }
     }
