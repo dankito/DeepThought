@@ -77,6 +77,11 @@ class DeleteEntityService(private val entryService: EntryService, private val ta
     }
 
     fun deleteReference(reference: Reference) {
+        reference.series?.let { series ->
+            reference.series = null
+            seriesService.update(series)
+        }
+
         ArrayList(reference.entries).filterNotNull().filter { it.id != null }.forEach { entry ->
             entry.reference = null
             entryService.update(entry)
