@@ -22,9 +22,9 @@ data class EntryExtractionResult(var entry: Entry, var reference: Reference? = n
         this.entry = entry
         reference?.let { this.reference = it }
 
-        copyInfoFromPreviousEntryAndReference(entry, previousEntry, reference, previousReference)
+        this.couldExtractContent = entry.content.isNullOrBlank() == false // set couldExtractContent here by extracted content before previous content may gets copied over in copyInfoFromPreviousEntryAndReference()
 
-        this.couldExtractContent = entry.content.isNullOrBlank() == false
+        copyInfoFromPreviousEntryAndReference(entry, previousEntry, reference, previousReference)
     }
 
     private fun copyInfoFromPreviousEntryAndReference(entry: Entry, previousEntry: Entry, reference: Reference?, previousReference: Reference?) {
