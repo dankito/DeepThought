@@ -15,8 +15,4 @@ class EntriesSearch(searchTerm: String = Search.EmptySearchTerm, val filterConte
                     completedListener: (List<Entry>) -> Unit) : SearchWithCollectionResult<Entry>(searchTerm, completedListener) {
 
 
-    fun addTagEntriesMustHave(tag: Tag): Boolean {
-        return entriesMustHaveTheseTags.add(tag)
-    }
-
 }
