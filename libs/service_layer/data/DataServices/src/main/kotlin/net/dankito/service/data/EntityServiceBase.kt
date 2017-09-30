@@ -44,10 +44,10 @@ abstract class EntityServiceBase<T : BaseEntity>(val entityClass: Class<T>, val 
         return entityManager.getEntityById(entityClass, id)
     }
 
-    open fun update(entity: T) {
+    open fun update(entity: T, didChangesAffectingDependentEntities: Boolean = false) {
         entityManager.updateEntity(entity)
 
-        callEntitiesUpdatedListeners(entity, EntityChangeType.Updated)
+        callEntitiesUpdatedListeners(entity, EntityChangeType.Updated, didChangesAffectingDependentEntities)
     }
 
     open fun delete(entity: T) {
@@ -59,8 +59,8 @@ abstract class EntityServiceBase<T : BaseEntity>(val entityClass: Class<T>, val 
     }
 
 
-    private fun callEntitiesUpdatedListeners(entity: T, changeType: EntityChangeType) {
-        entityChangedNotifier.notifyListenersOfEntityChange(entity, changeType, EntityChangeSource.Local)
+    private fun callEntitiesUpdatedListeners(entity: T, changeType: EntityChangeType, didChangesAffectingDependentEntities: Boolean = false) {
+        entityChangedNotifier.notifyListenersOfEntityChange(entity, changeType, EntityChangeSource.Local, didChangesAffectingDependentEntities)
     }
 
 }

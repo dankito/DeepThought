@@ -127,7 +127,7 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
         dialogService.askForTextInput(localization.getLocalizedString("alert.message.tag.name"), defaultValue = tag.name) { _, enteredName ->
             enteredName?.let {
                 tag.name = enteredName
-                tagService.update(tag)
+                tagService.update(tag, true)
             }
         }
     }

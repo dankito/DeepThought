@@ -19,10 +19,10 @@ class EntryService(dataManager: DataManager, entityChangedNotifier: EntityChange
         updatePreview(entity)
     }
 
-    override fun update(entity: Entry) {
+    override fun update(entity: Entry, didChangesAffectingDependentEntities: Boolean) {
         updatePreview(entity)
 
-        super.update(entity)
+        super.update(entity, didChangesAffectingDependentEntities)
     }
 
     private fun updatePreview(entity: Entry) {

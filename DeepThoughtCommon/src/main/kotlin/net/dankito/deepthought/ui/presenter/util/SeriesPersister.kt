@@ -27,7 +27,7 @@ class SeriesPersister(private val seriesService: SeriesService) {
     fun saveSeries(series: Series): Boolean {
         // may extract SeriesPersister
         if(series.isPersisted()) {
-            seriesService.update(series)
+            seriesService.update(series, true)
         }
         else {
             seriesService.persist(series)

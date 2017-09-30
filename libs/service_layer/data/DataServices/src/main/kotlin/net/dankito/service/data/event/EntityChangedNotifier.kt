@@ -8,13 +8,14 @@ import net.dankito.service.eventbus.messages.IEventBusMessage
 
 class EntityChangedNotifier(private val eventBus: IEventBus) {
 
-    fun notifyListenersOfEntityChange(entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource) {
+    fun notifyListenersOfEntityChange(entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource, didChangesAffectingDependentEntities: Boolean = false) {
         val entityClass = entity.javaClass
 
         dispatchMessagesForChangedEntity(entityClass, entity, changeType, source)
 
-        // TODO: on large data sets this is not working out as it emits way too many EntityChange messages
-//        dispatchMessagesForDependentEntities(entityClass, entity, changeType, source)
+        if(didChangesAffectingDependentEntities) {
+            dispatchMessagesForDependentEntities(entityClass, entity, changeType, source)
+        }
     }
 
     private fun dispatchMessagesForChangedEntity(entityClass: Class<out BaseEntity>, entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource) {
