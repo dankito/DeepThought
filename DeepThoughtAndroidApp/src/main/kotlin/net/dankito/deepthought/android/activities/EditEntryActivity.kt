@@ -519,27 +519,33 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setContentPreviewOnUIThread(reference: Reference?) {
-        var content = contentToEdit
+        val content = contentToEdit
         val url = reference?.url
 
         if(content.isNullOrBlank() && entryExtractionResult != null && isInReaderMode == false && url != null) {
             wbEntry.loadUrl(url)
         }
         else {
-            if(content?.startsWith("<html") == false && content?.startsWith("<body") == false && content?.startsWith("<!doctype") == false) {
-                content = "<html><body style=\"font-family: serif, Georgia, Roboto, Helvetica, Arial; font-size:17;\">" + content + "</body></html>"
-            }
-
-            clearWebViewEntry() // clear WebView
-            if(url != null && Build.VERSION.SDK_INT > 16) {
-                wbEntry.loadDataWithBaseURL(url, content, "text/html; charset=UTF-8", "utf-8", null)
-            }
-            else {
-                wbEntry.loadData(content, "text/html; charset=UTF-8", null)
-            }
+            showContentInWebView(content, url)
         }
 
         setOnboardingTextVisibilityOnUIThread()
+    }
+
+    private fun showContentInWebView(contentParam: String?, url: String?) {
+        var content = contentParam
+
+        if(content?.startsWith("<html") == false && content?.startsWith("<body") == false && content?.startsWith("<!doctype") == false) {
+            content = "<html><body style=\"font-family: serif, Georgia, Roboto, Helvetica, Arial; font-size:17;\">" + content + "</body></html>"
+        }
+
+        clearWebViewEntry() // clear WebView
+        if(url != null && Build.VERSION.SDK_INT > 16) {
+            wbEntry.loadDataWithBaseURL(url, content, "text/html; charset=UTF-8", "utf-8", null)
+        }
+        else {
+            wbEntry.loadData(content, "text/html; charset=UTF-8", null)
+        }
     }
 
     private fun clearWebViewEntry() {
