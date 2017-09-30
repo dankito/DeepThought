@@ -8,6 +8,7 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.deepthought.ui.presenter.util.ReferencePersister
+import net.dankito.deepthought.ui.presenter.util.SeriesPersister
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
@@ -104,6 +105,12 @@ class CommonDataModule {
     @Singleton
     fun provideReferencePersister(referenceService: ReferenceService, seriesService: SeriesService): ReferencePersister {
         return ReferencePersister(referenceService, seriesService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSeriesPersister(seriesService: SeriesService): SeriesPersister {
+        return SeriesPersister(seriesService)
     }
 
 

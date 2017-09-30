@@ -20,6 +20,7 @@ import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditSeriesPresenter
+import net.dankito.deepthought.ui.presenter.util.SeriesPersister
 import net.dankito.deepthought.ui.view.ISeriesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReferenceService
@@ -52,6 +53,9 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
 
     @Inject
     protected lateinit var referenceService: ReferenceService
+
+    @Inject
+    protected lateinit var seriesPersister: SeriesPersister
 
     @Inject
     protected lateinit var serializer: ISerializer
@@ -97,7 +101,7 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
     init {
         AppComponent.component.inject(this)
 
-        presenter = EditSeriesPresenter(this, searchEngine, router, deleteEntityService, seriesService, threadPool)
+        presenter = EditSeriesPresenter(this, searchEngine, router, deleteEntityService, seriesPersister, threadPool)
 
         existingSeriesSearchResultsAdapter = SeriesOnReferenceRecyclerAdapter(presenter)
     }

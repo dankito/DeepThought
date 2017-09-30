@@ -3,6 +3,7 @@ package net.dankito.deepthought.ui.presenter
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.deepthought.ui.presenter.util.SeriesPersister
 import net.dankito.deepthought.ui.view.ISeriesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.SeriesService
@@ -10,7 +11,7 @@ import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.IThreadPool
 
 
-class EditSeriesPresenter(seriesListView: ISeriesListView, searchEngine: ISearchEngine, router: IRouter, deleteEntityService: DeleteEntityService, private val seriesService: SeriesService,
+class EditSeriesPresenter(seriesListView: ISeriesListView, searchEngine: ISearchEngine, router: IRouter, deleteEntityService: DeleteEntityService, private val seriesPersister: SeriesPersister,
                           private val threadPool: IThreadPool) : SeriesPresenterBase(seriesListView, searchEngine, router, deleteEntityService) {
 
 
@@ -22,13 +23,7 @@ class EditSeriesPresenter(seriesListView: ISeriesListView, searchEngine: ISearch
     }
 
     fun saveSeries(series: Series) {
-        // may extract SeriesPersister
-        if(series.isPersisted()) {
-            seriesService.update(series)
-        }
-        else {
-            seriesService.persist(series)
-        }
+        seriesPersister.saveSeries(series)
     }
 
 
