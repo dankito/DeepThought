@@ -10,7 +10,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.service.data.messages.EntitiesOfTypeChanged
+import net.dankito.service.data.messages.ArticleSummaryExtractorConfigChanged
 import net.dankito.service.eventbus.IEventBus
 import net.engio.mbassy.listener.Handler
 
@@ -96,10 +96,8 @@ class FloatingActionMenuButton(private val floatingActionMenu: FloatingActionMen
     inner class EventBusListener {
 
         @Handler
-        fun articleSummaryExtractorsChanged(changed: EntitiesOfTypeChanged) {
-            if(changed.entityType == ArticleSummaryExtractorConfig::class.java) {
-                setFavoriteArticleSummaryExtractors()
-            }
+        fun articleSummaryExtractorsChanged(changed: ArticleSummaryExtractorConfigChanged) {
+            setFavoriteArticleSummaryExtractors()
         }
     }
 

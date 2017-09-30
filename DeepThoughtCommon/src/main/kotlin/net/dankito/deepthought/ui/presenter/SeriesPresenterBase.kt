@@ -5,7 +5,7 @@ import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.ISeriesListView
 import net.dankito.service.data.DeleteEntityService
-import net.dankito.service.data.messages.EntitiesOfTypeChanged
+import net.dankito.service.data.messages.SeriesChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
@@ -66,10 +66,8 @@ abstract class SeriesPresenterBase(private val seriesListView: ISeriesListView, 
     inner class EventBusListener {
 
         @Handler()
-        fun seriesChanged(entitiesOfTypeChanged: EntitiesOfTypeChanged) {
-            if(entitiesOfTypeChanged.entityType == Series::class.java) {
-                searchSeries(lastSearchTermProperty)
-            }
+        fun seriesChanged(seriesChange: SeriesChanged) {
+            searchSeries(lastSearchTermProperty)
         }
 
     }
