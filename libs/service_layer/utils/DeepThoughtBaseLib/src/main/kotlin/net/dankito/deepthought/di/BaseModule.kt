@@ -6,7 +6,7 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.utils.language.ILanguageDetector
-import net.dankito.utils.language.NorconexLanguageDetector
+import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.utils.language.SupportedLanguages
 import javax.inject.Singleton
 
@@ -29,7 +29,7 @@ class BaseModule {
     @Provides
     @Singleton
     fun provideLanguageDetector(dataManager: DataManager, supportedLanguages: SupportedLanguages) : ILanguageDetector {
-        return NorconexLanguageDetector(dataManager, supportedLanguages)
+        return NoOpLanguageDetector()
     }
 
 
