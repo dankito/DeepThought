@@ -692,6 +692,8 @@ class EditEntryActivity : BaseActivity() {
         layoutParams.alignWithParent = true
         wbEntry.layoutParams = layoutParams
 
+        content_layout_root.invalidate()
+
         mayShowEntryInformationFullscreenHelpOnUIThread()
     }
 
