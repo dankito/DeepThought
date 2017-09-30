@@ -931,12 +931,7 @@ class EditEntryActivity : BaseActivity() {
 
         entryExtractionResult?.let { extractionResult ->
             // TODO: save extracted content when in reader mode and webSiteHtml when not in reader mode
-            if(extractionResult.couldExtractContent == false) {
-                extractionResult.webSiteHtml?.let { content = it }
-            }
-            if(extractionResult.couldExtractContent && extractionResult.entry.content.isNullOrBlank() == false) {
-                content = extractionResult.entry.content
-            }
+            // TODO: contentToEdit show now always contain the correct value depending on is or is not in reader mode, doesn't it?
 
             updateEntry(extractionResult.entry, content, abstract)
             presenter.saveEntryAsync(extractionResult.entry, referenceToEdit, extractionResult.series, tagsOnEntry) { successful ->
