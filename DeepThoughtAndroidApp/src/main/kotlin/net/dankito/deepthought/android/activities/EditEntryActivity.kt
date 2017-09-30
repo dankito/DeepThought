@@ -61,6 +61,8 @@ class EditEntryActivity : BaseActivity() {
         private const val FORCE_SHOW_REFERENCE_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_REFERENCE_PREVIEW"
         private const val FORCE_SHOW_ABSTRACT_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_ABSTRACT_PREVIEW"
 
+        private const val IS_IN_READER_MODE_INTENT_EXTRA_NAME = "IS_IN_READER_MODE"
+
         private const val CONTENT_INTENT_EXTRA_NAME = "CONTENT"
         private const val ABSTRACT_INTENT_EXTRA_NAME = "ABSTRACT"
         private const val REFERENCE_INTENT_EXTRA_NAME = "REFERENCE"
@@ -181,6 +183,8 @@ class EditEntryActivity : BaseActivity() {
         this.forceShowReferencePreview = savedInstanceState.getBoolean(FORCE_SHOW_REFERENCE_PREVIEW_INTENT_EXTRA_NAME, false)
         this.forceShowAbstractPreview = savedInstanceState.getBoolean(FORCE_SHOW_ABSTRACT_PREVIEW_INTENT_EXTRA_NAME, false)
 
+        this.isInReaderMode = savedInstanceState.getBoolean(IS_IN_READER_MODE_INTENT_EXTRA_NAME, false)
+
         savedInstanceState.getString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)?.let { editEntryExtractionResult(it) }
         savedInstanceState.getString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME)?.let { readLaterArticleId -> editReadLaterArticle(readLaterArticleId) }
         savedInstanceState.getString(ENTRY_ID_INTENT_EXTRA_NAME)?.let { entryId -> editEntry(entryId) }
@@ -220,6 +224,8 @@ class EditEntryActivity : BaseActivity() {
 
             outState.putBoolean(FORCE_SHOW_REFERENCE_PREVIEW_INTENT_EXTRA_NAME, forceShowReferencePreview)
             outState.putBoolean(FORCE_SHOW_ABSTRACT_PREVIEW_INTENT_EXTRA_NAME, forceShowAbstractPreview)
+
+            outState.putBoolean(IS_IN_READER_MODE_INTENT_EXTRA_NAME, isInReaderMode)
 
             outState.putString(TAGS_ON_ENTRY_INTENT_EXTRA_NAME, serializer.serializeObject(tagsOnEntry))
 
@@ -334,7 +340,7 @@ class EditEntryActivity : BaseActivity() {
 
     private fun webPageCompletelyLoadedOnUiThread(webView: WebView) {
         // if EntryExtractionResult's entry content hasn't been extracted yet, wait till WebView is loaded and extract entry content then
-        if(entryExtractionResult?.couldExtractContent == false && webView.url != "about:blank") {
+        if(entryExtractionResult != null && isInReaderMode == false && webView.url != "about:blank" && webView.url.startsWith("data:text/html") == false) {
             webView.loadUrl("javascript:$GetHtmlCodeFromWebViewJavaScriptInterfaceName.finishedLoadingSite" +
                     "(document.URL, '<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');")
         }
@@ -344,19 +350,20 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun siteFinishedLoading(url: String, html: String) {
-        entryExtractionResult?.webSiteHtml = html
         runOnUiThread { wbEntry.setWebViewClient(null) } // now reactivate default url handling
 
         // now try to extract entry content from WebView's html
-        if(entryExtractionResult?.couldExtractContent == false) {
-            contentToEdit = html
+        if(entryExtractionResult != null && isInReaderMode == false) {
             entryExtractionResult?.webSiteHtml = html
+            contentToEdit = html
 
-            entryExtractionResult?.let { extractionResult ->
-                articleExtractorManager.extractArticleAndAddDefaultDataAsync(extractionResult, html, url)
+            if(entryExtractionResult?.couldExtractContent == false) {
+                entryExtractionResult?.let { extractionResult ->
+                    articleExtractorManager.extractArticleAndAddDefaultDataAsync(extractionResult, html, url)
 
-                if(extractionResult.couldExtractContent) {
-                    runOnUiThread { extractedContentOnUiThread(extractionResult) }
+                    if(extractionResult.couldExtractContent) {
+                        runOnUiThread { extractedContentOnUiThread(extractionResult) }
+                    }
                 }
             }
         }
@@ -397,25 +404,7 @@ class EditEntryActivity : BaseActivity() {
             }
         }
 
-        setOnboardingTextVisibilityOnUIThread()
-    }
-
-    private fun setOnboardingTextVisibilityOnUIThread() {
-        if(contentToEdit.isNullOrBlank() && (entryExtractionResult == null || entryExtractionResult?.couldExtractContent == true)) {
-            wbEntry.visibility = View.GONE
-            lytOnboardingText.visibility = View.VISIBLE
-
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(R.string.activity_edit_entry_edit_content_onboarding_text).toString(), Html.FROM_HTML_MODE_LEGACY)
-            }
-            else {
-                txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(R.string.activity_edit_entry_edit_content_onboarding_text).toString())
-            }
-        }
-        else {
-            wbEntry.visibility = View.VISIBLE
-            lytOnboardingText.visibility = View.GONE
-        }
+        setContentPreviewOnUIThread()
     }
 
     private fun mayShowSaveEntryChangesHelpOnUIThread() {
@@ -519,16 +508,31 @@ class EditEntryActivity : BaseActivity() {
     private fun setContentPreviewOnUIThread(reference: Reference?) {
         val content = contentToEdit
         val url = reference?.url
+        var showOnboarding = true
 
-        if(content.isNullOrBlank() && entryExtractionResult != null && isInReaderMode == false && url != null) {
+        if(shouldShowContent(content)) {
+            showContentInWebView(content, url)
+            showOnboarding = false
+        }
+        else if(isInReaderMode == false && entryExtractionResult?.webSiteHtml != null) {
+            showContentInWebView(entryExtractionResult?.webSiteHtml, url)
+            showOnboarding = false
+        }
+        else if(url != null) { // then load url
+            clearWebViewEntry()
             wbEntry.setWebViewClient(WebViewClient()) // to avoid that redirects open url in browser
             wbEntry.loadUrl(url)
-        }
-        else {
-            showContentInWebView(content, url)
+            showOnboarding = false
         }
 
-        setOnboardingTextVisibilityOnUIThread()
+        setOnboardingTextVisibilityOnUIThread(showOnboarding)
+    }
+
+    private fun shouldShowContent(content: String?): Boolean {
+        // TODO: currently we assume that for entry and readLaterArticle content is always set, this may change in the feature
+        return content.isNullOrBlank() == false &&
+                (entryExtractionResult == null ||
+                (isInReaderMode && entryExtractionResult?.couldExtractContent == true) )
     }
 
     private fun showContentInWebView(contentParam: String?, url: String?) {
@@ -555,6 +559,25 @@ class EditEntryActivity : BaseActivity() {
             wbEntry.loadUrl("about:blank")
         }
     }
+
+    private fun setOnboardingTextVisibilityOnUIThread(showOnboarding: Boolean) {
+        if(showOnboarding) {
+            wbEntry.visibility = View.GONE
+            lytOnboardingText.visibility = View.VISIBLE
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(R.string.activity_edit_entry_edit_content_onboarding_text).toString(), Html.FROM_HTML_MODE_LEGACY)
+            }
+            else {
+                txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(R.string.activity_edit_entry_edit_content_onboarding_text).toString())
+            }
+        }
+        else {
+            wbEntry.visibility = View.VISIBLE
+            lytOnboardingText.visibility = View.GONE
+        }
+    }
+
 
     private fun setAbstractPreviewOnUIThread() {
         if(abstractToEdit.isNullOrBlank()) {
@@ -750,7 +773,7 @@ class EditEntryActivity : BaseActivity() {
         mnSaveEntry = menu.findItem(R.id.mnSaveEntry)
 
         mnToggleReaderMode = menu.findItem(R.id.mnToggleReaderMode)
-        mnToggleReaderMode?.isVisible = entryExtractionResult?.couldExtractContent == true && entryExtractionResult?.webSiteHtml != null // show mnToggleReaderMode only if previously original web site was shown
+        mnToggleReaderMode?.isVisible = entryExtractionResult?.couldExtractContent == true /*&& entryExtractionResult?.webSiteHtml != null*/ // show mnToggleReaderMode only if previously original web site was shown
 
         mnSaveEntryExtractionResultForLaterReading = menu.findItem(R.id.mnSaveEntryExtractionResultForLaterReading)
         mnSaveEntryExtractionResultForLaterReading?.isVisible = entryExtractionResult != null
@@ -907,6 +930,7 @@ class EditEntryActivity : BaseActivity() {
         }
 
         entryExtractionResult?.let { extractionResult ->
+            // TODO: save extracted content when in reader mode and webSiteHtml when not in reader mode
             if(extractionResult.couldExtractContent == false) {
                 extractionResult.webSiteHtml?.let { content = it }
             }
@@ -1028,7 +1052,10 @@ class EditEntryActivity : BaseActivity() {
 
             parameters.readLaterArticle?.let { editReadLaterArticle(it) }
 
-            parameters.entryExtractionResult?.let { editEntryExtractionResult(it) }
+            parameters.entryExtractionResult?.let {
+                isInReaderMode = it.couldExtractContent
+                editEntryExtractionResult(it)
+            }
 
             if(parameters.createEntry) {
                 createEntry()
