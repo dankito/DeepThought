@@ -289,12 +289,17 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
 
     private fun showCountSearchResults(entities: List<BaseEntity>) {
         searchView?.let { searchView ->
-            if(searchResultTextView == null) {
+            if(searchResultTextView == null || isNotInSearchViewAnymore(searchResultTextView)) {
                 addSearchResultTextViewToSearchView(searchView)
             }
 
             searchResultTextView?.text = resources.getQuantityString(R.plurals.search_count_results, entities.size, entities.size)
         }
+    }
+
+    // don't know why but Android re-initializes searchView when changing tabs -> check if searchResultTextView got kicked out of view hierarchy
+    private fun isNotInSearchViewAnymore(searchResultTextView: TextView?): Boolean {
+        return searchResultTextView?.parent != searchView?.findViewById(android.support.v7.appcompat.R.id.search_plate)
     }
 
     private fun addSearchResultTextViewToSearchView(searchView: SearchView) {
