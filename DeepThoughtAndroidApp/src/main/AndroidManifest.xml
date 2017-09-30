@@ -79,16 +79,6 @@
             android:theme="@style/AppTheme.NoActionBar"
         />
 
-        <receiver
-            android:name=".service.network.NetworkConnectivityChangeBroadcastReceiver"
-            android:enabled="true" >
-
-            <intent-filter>
-                <!-- ConnectivityManager.CONNECTIVITY_ACTION -->
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-            </intent-filter>
-        </receiver>
-
         <activity
             android:name=".activities.EditSeriesActivity"
             android:label="@string/activity_edit_reference_title"
