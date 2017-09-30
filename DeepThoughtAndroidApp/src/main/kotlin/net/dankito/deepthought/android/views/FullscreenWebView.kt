@@ -161,7 +161,7 @@ class FullscreenWebView : WebView {
 
     private fun enterFullscreenMode() {
         isInFullscreenMode = true
-        lastOnScrollFullscreenModeTogglingTimestamp = Date()
+        updateLastOnScrollFullscreenModeTogglingTimestamp()
 
         changeFullscreenModeListener?.invoke(FullscreenMode.Enter)
 
@@ -194,8 +194,35 @@ class FullscreenWebView : WebView {
     }
 
     fun scrollToEnd() {
-        lastOnScrollFullscreenModeTogglingTimestamp = Date() // we also have to set lastOnScrollFullscreenModeTogglingTimestamp as otherwise scrolling may is large enough to re-enter fullscreen mode
+        updateLastOnScrollFullscreenModeTogglingTimestamp() // we also have to set lastOnScrollFullscreenModeTogglingTimestamp as otherwise scrolling may is large enough to re-enter fullscreen mode
         scrollY = computeVerticalScrollRange() - computeVerticalScrollExtent()
+    }
+
+
+    /*      Ensure that a scroll due to loadData() doesn't toggle Fullscreen        */
+
+    override fun loadData(data: String?, mimeType: String?, encoding: String?) {
+        updateLastOnScrollFullscreenModeTogglingTimestamp()
+        super.loadData(data, mimeType, encoding)
+    }
+
+    override fun loadDataWithBaseURL(baseUrl: String?, data: String?, mimeType: String?, encoding: String?, historyUrl: String?) {
+        updateLastOnScrollFullscreenModeTogglingTimestamp()
+        super.loadDataWithBaseURL(baseUrl, data, mimeType, encoding, historyUrl)
+    }
+
+    override fun loadUrl(url: String?) {
+        updateLastOnScrollFullscreenModeTogglingTimestamp()
+        super.loadUrl(url)
+    }
+
+    override fun loadUrl(url: String?, additionalHttpHeaders: MutableMap<String, String>?) {
+        updateLastOnScrollFullscreenModeTogglingTimestamp()
+        super.loadUrl(url, additionalHttpHeaders)
+    }
+
+    private fun updateLastOnScrollFullscreenModeTogglingTimestamp() {
+        lastOnScrollFullscreenModeTogglingTimestamp = Date()
     }
 
 }
