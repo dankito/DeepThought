@@ -306,8 +306,6 @@ class EditEntryActivity : BaseActivity() {
 
         wbEntry.addJavascriptInterface(GetHtmlCodeFromWebViewJavaScripInterface { url, html -> siteFinishedLoading(url, html) }, GetHtmlCodeFromWebViewJavaScriptInterfaceName)
 
-        wbEntry.setWebViewClient(WebViewClient()) // to avoid that redirects open url in browser
-
         wbEntry.setWebChromeClient(object : WebChromeClient() {
             private var hasCompletelyFinishedLoadingPage = false
             private val timerCheckIfHasCompletelyFinishedLoadingPage = Timer()
@@ -523,6 +521,7 @@ class EditEntryActivity : BaseActivity() {
         val url = reference?.url
 
         if(content.isNullOrBlank() && entryExtractionResult != null && isInReaderMode == false && url != null) {
+            wbEntry.setWebViewClient(WebViewClient()) // to avoid that redirects open url in browser
             wbEntry.loadUrl(url)
         }
         else {
