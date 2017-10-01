@@ -480,7 +480,7 @@ class EditReferenceActivity : BaseActivity() {
 
 
     private fun mayRegisterEventBusListener() {
-        if(reference?.isPersisted() ?: false) {
+        if(reference?.isPersisted() ?: false && eventBusListener == null) {
             synchronized(this) {
                 val eventBusListenerInit = EventBusListener()
 

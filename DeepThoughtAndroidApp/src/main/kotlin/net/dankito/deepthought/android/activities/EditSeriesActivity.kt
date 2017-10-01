@@ -308,7 +308,7 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
 
 
     private fun mayRegisterEventBusListener() {
-        if(series?.isPersisted() ?: false) {
+        if(series?.isPersisted() ?: false && eventBusListener == null) {
             synchronized(this) {
                 val eventBusListenerInit = EventBusListener()
 

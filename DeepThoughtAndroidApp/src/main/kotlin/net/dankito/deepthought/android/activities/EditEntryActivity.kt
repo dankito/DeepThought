@@ -1163,7 +1163,7 @@ class EditEntryActivity : BaseActivity() {
 
 
     private fun mayRegisterEventBusListener() {
-        if(entry?.isPersisted() ?: false) {
+        if(entry?.isPersisted() ?: false && eventBusListener == null) {
             synchronized(this) {
                 val eventBusListenerInit = EventBusListener()
 
