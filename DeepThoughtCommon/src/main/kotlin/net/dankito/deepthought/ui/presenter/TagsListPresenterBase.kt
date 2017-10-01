@@ -1,16 +1,13 @@
 package net.dankito.deepthought.ui.presenter
 
-import net.dankito.deepthought.model.AllEntriesCalculatedTag
-import net.dankito.deepthought.model.EntriesWithoutTagsCalculatedTag
-import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.tags.TagSearchResultState
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.view.ITagsListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
-import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.data.messages.EntityChangeType
+import net.dankito.service.data.messages.TagChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
@@ -144,19 +141,12 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
     inner class EventBusListener {
 
         @Handler()
-        fun entityChanged(entitiesOfTypeChanged: EntitiesOfTypeChanged) {
-            when(entitiesOfTypeChanged.entityType) {
-                Tag::class.java -> {
-                    if(entitiesOfTypeChanged.changeType == EntityChangeType.Updated) {
-                        tagsListView.updateDisplayedTags()
-                    }
-                    else {
-                        searchTags()
-                    }
-                }
-                AllEntriesCalculatedTag::class.java -> tagsListView.updateDisplayedTags()
-                EntriesWithoutTagsCalculatedTag::class.java -> tagsListView.updateDisplayedTags()
-                Entry::class.java -> tagsListView.updateDisplayedTags() // count entries on tag(s) may have changed
+        fun entityChanged(tagChanged: TagChanged) {
+            if(tagChanged.changeType == EntityChangeType.Updated) {
+                tagsListView.updateDisplayedTags()
+            }
+            else {
+                searchTags()
             }
         }
 

@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentManager
 import net.dankito.deepthought.model.CalculatedTag
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Tag
-import net.dankito.service.data.messages.EntryChanged
 import net.dankito.service.data.messages.TagChanged
 import net.dankito.service.search.specific.EntriesSearch
 import net.engio.mbassy.listener.Handler
@@ -65,14 +64,9 @@ class TagEntriesListDialog : EntriesListDialogBase() {
 
         @Handler
         fun tagChanged(tagChanged: TagChanged) {
-            if(tagChanged.entity == tag) {
+            if(tagChanged.entity.id == tag.id) {
                 retrieveAndShowEntries()
             }
-        }
-
-        @Handler
-        fun entriesChanged(entriesChanged: EntryChanged) {
-            retrieveAndShowEntries()
         }
 
     }
