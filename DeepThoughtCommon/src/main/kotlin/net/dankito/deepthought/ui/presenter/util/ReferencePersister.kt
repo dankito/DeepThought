@@ -57,7 +57,7 @@ class ReferencePersister(private val referenceService: ReferenceService, private
             referenceService.persist(reference)
         }
         else {
-            referenceService.update(reference)
+            referenceService.update(reference, true)
         }
 
         if(series?.id != previousSeries?.id || isReferencePersisted == false) {
