@@ -1196,7 +1196,7 @@ class EditEntryActivity : BaseActivity() {
 
         @Handler
         fun entryChanged(change: EntryChanged) {
-            if(change.entity == entry) {
+            if(change.entity.id == entry?.id) {
                 entryHasBeenEdited(change.entity)
             }
         }
