@@ -921,7 +921,7 @@ class EditEntryActivity : BaseActivity() {
 
         entry?.let { entry ->
             updateEntry(entry, content, abstract)
-            presenter.saveEntryAsync(entry, referenceToEdit, tags = tagsOnEntry) { successful ->
+            presenter.saveEntryAsync(entry, referenceToEdit, referenceToEdit?.series, tags = tagsOnEntry) { successful ->
                 if(successful) {
                     setActivityResult(EditEntryActivityResult(didSaveEntry = true, savedEntry = entry))
                 }
