@@ -7,6 +7,3 @@
 [submodule "libs/news/Crux"]
 	path = libs/news/Crux
 	url = https://github.com/dankito/crux
-[submodule "libs/data_access_layer/database/JpaAnnotationReader"]
-	path = libs/data_access_layer/database/JpaAnnotationReader
-	url = https://github.com/dankito/JpaAnnotationReader
