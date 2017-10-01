@@ -262,14 +262,23 @@ abstract class CouchbaseLiteEntityManagerBase(protected var context: Context, pr
             val document = queryEnumerator.next().document
 
             anyDao.getEntityClassFromDocument(document)?.let { entityClass ->
-                getDaoForClass(entityClass)?.let { dao ->
-                    (dao.createObjectFromDocument(document, document.id, entityClass) as? T)?.let { entity ->
-                        updatedEntities.add(entity)
-                    }
-                }
+                getObjectForDocument(entityClass, document, updatedEntities)
             }
         }
         return updatedEntities
+    }
+
+    private fun <T> getObjectForDocument(entityClass: Class<*>, document: Document, updatedEntities: ArrayList<T>) {
+        (objectCache.get(entityClass, document.id) as? T)?.let { // first check if an object for that id is already cached
+            updatedEntities.add(it)
+            return
+        }
+
+        getDaoForClass(entityClass)?.let { dao ->
+            (dao.createObjectFromDocument(document, document.id, entityClass) as? T)?.let { entity ->
+                updatedEntities.add(entity)
+            }
+        }
     }
 
 }
