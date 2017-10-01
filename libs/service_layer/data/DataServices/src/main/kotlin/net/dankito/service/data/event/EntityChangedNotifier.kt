@@ -4,9 +4,16 @@ import net.dankito.deepthought.model.*
 import net.dankito.service.data.messages.*
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.messages.IEventBusMessage
+import net.dankito.utils.IThreadPool
 
 
-class EntityChangedNotifier(private val eventBus: IEventBus) {
+class EntityChangedNotifier(private val eventBus: IEventBus, private val threadPool: IThreadPool) {
+
+    fun notifyListenersOfEntityChangeAsync(entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource, didChangesAffectingDependentEntities: Boolean = false) {
+        threadPool.runAsync {
+            notifyListenersOfEntityChange(entity, changeType, source, didChangesAffectingDependentEntities)
+        }
+    }
 
     fun notifyListenersOfEntityChange(entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource, didChangesAffectingDependentEntities: Boolean = false) {
         val entityClass = entity.javaClass

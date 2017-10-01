@@ -78,7 +78,7 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
 
 
         if(synchronizedEntity != null) {
-            changeNotifier.notifyListenersOfEntityChange(synchronizedEntity, entityChangeType, EntityChangeSource.Synchronization)
+            changeNotifier.notifyListenersOfEntityChangeAsync(synchronizedEntity, entityChangeType, EntityChangeSource.Synchronization)
         }
     }
 
@@ -112,7 +112,7 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
                 val entityType = getEntityTypeFromRevision(lastUndeletedRevision)
                 if (entityType != null) {
                     getDeletedEntity(id, entityType, document)?.let { deletedEntity ->
-                        changeNotifier.notifyListenersOfEntityChange(deletedEntity, EntityChangeType.Deleted, EntityChangeSource.Synchronization)
+                        changeNotifier.notifyListenersOfEntityChangeAsync(deletedEntity, EntityChangeType.Deleted, EntityChangeSource.Synchronization)
                     }
                 }
             }

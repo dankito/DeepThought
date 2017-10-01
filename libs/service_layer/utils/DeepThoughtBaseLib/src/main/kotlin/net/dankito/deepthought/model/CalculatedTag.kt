@@ -27,7 +27,7 @@ abstract class CalculatedTag(name: String, protected val searchEngine: ISearchEn
             this.entries = it
 
             if(informUIOfUpdate) {
-                entityChangedNotifier.notifyListenersOfEntityChange(this, EntityChangeType.Updated, EntityChangeSource.Local)
+                entityChangedNotifier.notifyListenersOfEntityChangeAsync(this, EntityChangeType.Updated, EntityChangeSource.Local)
             }
         }
     }

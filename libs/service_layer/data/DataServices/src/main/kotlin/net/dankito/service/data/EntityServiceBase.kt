@@ -60,7 +60,7 @@ abstract class EntityServiceBase<T : BaseEntity>(val entityClass: Class<T>, val 
 
 
     private fun callEntitiesUpdatedListeners(entity: T, changeType: EntityChangeType, didChangesAffectingDependentEntities: Boolean = false) {
-        entityChangedNotifier.notifyListenersOfEntityChange(entity, changeType, EntityChangeSource.Local, didChangesAffectingDependentEntities)
+        entityChangedNotifier.notifyListenersOfEntityChangeAsync(entity, changeType, EntityChangeSource.Local, didChangesAffectingDependentEntities)
     }
 
 }
