@@ -42,6 +42,7 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
     companion object {
         private const val SERIES_ID_BUNDLE_EXTRA_NAME = "SERIES_ID"
         private const val REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME = "REFERENCE_ID"
+        private const val SELECTED_ANOTHER_SERIES_BUNDLE_EXTRA_NAME = "SELECTED_ANOTHER_SERIES"
         private const val DID_SERIES_CHANGE_BUNDLE_EXTRA_NAME = "DID_SERIES_CHANGE"
 
         const val ResultId = "EDIT_SERIES_ACTIVITY_RESULT"
@@ -87,6 +88,8 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
 
     private val existingSeriesSearchResultsAdapter: SeriesOnReferenceRecyclerAdapter
 
+    private var selectedAnotherSeries = false
+
     private var didSeriesChange = false
 
     private var mnSaveSeries: MenuItem? = null
@@ -123,6 +126,7 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
 
             referenceToSetSeriesOn?.let { outState.putString(REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME, serializer.serializeObject(it)) }
 
+            outState.putBoolean(SELECTED_ANOTHER_SERIES_BUNDLE_EXTRA_NAME, selectedAnotherSeries)
             outState.putBoolean(DID_SERIES_CHANGE_BUNDLE_EXTRA_NAME, didSeriesChange)
         }
     }
@@ -135,6 +139,7 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
 
             savedInstanceState.getString(REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME)?.let { setReferenceToSetSeriesOn(serializer.deserializeObject(it, Reference::class.java)) }
 
+            selectedAnotherSeries = savedInstanceState.getBoolean(SELECTED_ANOTHER_SERIES_BUNDLE_EXTRA_NAME, false)
             savedInstanceState.getBoolean(DID_SERIES_CHANGE_BUNDLE_EXTRA_NAME)?.let { didSeriesChange -> updateDidSeriesChangeOnUiThread(didSeriesChange) }
         }
     }
@@ -234,14 +239,27 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
     private fun saveSeriesAndCloseDialog() {
         unregisterEventBusListener()
 
-        saveSeriesAsync { successful ->
-            if(successful) {
-                runOnUiThread { closeDialog() }
-            }
-            else {
-                mayRegisterEventBusListener()
+        if(didSeriesValuesChange()) {
+            saveSeriesAsync { successful ->
+                if(successful) {
+                    runOnUiThread { closeDialog() }
+                }
+                else {
+                    mayRegisterEventBusListener()
+                }
             }
         }
+        else {
+            if(selectedAnotherSeries) {
+                setActivityResult(EditSeriesActivityResult(didSaveSeries = true, savedSeries = series))
+            }
+
+            closeDialog()
+        }
+    }
+
+    private fun didSeriesValuesChange(): Boolean {
+        return series?.title != lytEditSeriesTitle.getCurrentFieldValue()
     }
 
     private fun saveSeriesAsync(callback: (Boolean) -> Unit) {
@@ -358,10 +376,13 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
 
         hideRecyclerViewExistingSeriesSearchResults()
 
+        selectedAnotherSeries = series?.id != this.series?.id
+
         // TODO: check if previous series has unsaved changes
         showSeries(series)
 
         updateDidSeriesChangeOnUiThread(true)
+        mayRegisterEventBusListener()
     }
 
     private fun showRecyclerViewExistingSeriesSearchResults() {
