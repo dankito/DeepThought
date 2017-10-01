@@ -405,6 +405,8 @@ class EditEntryActivity : BaseActivity() {
         }
 
         setContentPreviewOnUIThread()
+
+        mayRegisterEventBusListener()
     }
 
     private fun mayShowSaveEntryChangesHelpOnUIThread() {
@@ -731,12 +733,16 @@ class EditEntryActivity : BaseActivity() {
     }
 
 
+    override fun onPause() {
+        unregisterEventBusListener()
+
+        super.onPause()
+    }
+
     override fun onDestroy() {
         pauseWebView()
 
         parameterHolder.clearActivityResults(EditReferenceActivity.ResultId)
-
-        unregisterEventBusListener()
 
         super.onDestroy()
     }
@@ -1128,8 +1134,6 @@ class EditEntryActivity : BaseActivity() {
         }
 
         setTagsOnEntryPreviewOnUIThread()
-
-        mayRegisterEventBusListener()
     }
 
     private fun restoreReference(referenceId: String) {

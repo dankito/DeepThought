@@ -234,11 +234,17 @@ class EditReferenceActivity : BaseActivity() {
                 setAndShowSeriesOnUiThread(null)
             }
         }
+
+        mayRegisterEventBusListener()
+    }
+
+    override fun onPause() {
+        unregisterEventBusListener()
+
+        super.onPause()
     }
 
     override fun onDestroy() {
-        unregisterEventBusListener()
-
         parameterHolder.clearActivityResults(EditSeriesActivity.ResultId)
 
         super.onDestroy()
@@ -417,7 +423,6 @@ class EditReferenceActivity : BaseActivity() {
         lytEditReferenceUrl.setFieldValueOnUiThread(reference.url ?: "")
 
         unregisterEventBusListener()
-        mayRegisterEventBusListener()
     }
 
     private fun setAndShowSeriesOnUiThread(seriesId: String) {
@@ -538,6 +543,7 @@ class EditReferenceActivity : BaseActivity() {
         showReference(reference)
 
         updateDidReferenceChangeOnUiThread()
+        mayRegisterEventBusListener()
     }
 
     private fun showRecyclerViewExistingReferencesSearchResults() {
