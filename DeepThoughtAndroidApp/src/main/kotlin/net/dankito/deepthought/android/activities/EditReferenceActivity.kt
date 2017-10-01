@@ -580,7 +580,7 @@ class EditReferenceActivity : BaseActivity() {
 
         @Handler
         fun entryChanged(change: ReferenceChanged) {
-            if(change.entity.id == reference?.id) {
+            if(change.entity.id == reference?.id && change.isDependentChange == false) {
                 if(change.source == EntityChangeSource.Local && (change.changeType == EntityChangeType.PreDelete || change.changeType == EntityChangeType.Deleted)) {
                     setActivityResult(EditReferenceActivityResult(didDeleteReference = true))
                     runOnUiThread { closeDialog() }

@@ -1200,7 +1200,7 @@ class EditEntryActivity : BaseActivity() {
 
         @Handler
         fun entryChanged(change: EntryChanged) {
-            if(change.entity.id == entry?.id) {
+            if(change.entity.id == entry?.id && change.isDependentChange == false) {
                 entryHasBeenEdited(change.entity)
             }
         }

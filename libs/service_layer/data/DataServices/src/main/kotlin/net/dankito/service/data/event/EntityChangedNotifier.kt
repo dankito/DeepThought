@@ -3,7 +3,6 @@ package net.dankito.service.data.event
 import net.dankito.deepthought.model.*
 import net.dankito.service.data.messages.*
 import net.dankito.service.eventbus.IEventBus
-import net.dankito.service.eventbus.messages.IEventBusMessage
 import net.dankito.utils.IThreadPool
 
 
@@ -15,23 +14,25 @@ class EntityChangedNotifier(private val eventBus: IEventBus, private val threadP
         }
     }
 
-    fun notifyListenersOfEntityChange(entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource, didChangesAffectingDependentEntities: Boolean = false) {
+    fun notifyListenersOfEntityChange(entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource, didChangesAffectingDependentEntities: Boolean = false, isDependentChange: Boolean = false) {
         val entityClass = entity.javaClass
 
-        dispatchMessagesForChangedEntity(entityClass, entity, changeType, source)
+        dispatchMessagesForChangedEntity(entityClass, entity, changeType, source, isDependentChange)
 
         if(didChangesAffectingDependentEntities) {
             dispatchMessagesForDependentEntities(entityClass, entity, changeType, source)
         }
     }
 
-    private fun dispatchMessagesForChangedEntity(entityClass: Class<out BaseEntity>, entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource) {
+    private fun dispatchMessagesForChangedEntity(entityClass: Class<out BaseEntity>, entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource, isDependentChange: Boolean) {
         createEntityChangedMessage(entityClass, entity, changeType, source)?.let { message ->
+            message.isDependentChange = isDependentChange
+
             // if entity has no extra EntityChanged message, return value is null
             eventBus.post(message) // has to be called synchronized so that LuceneSearchEngine can update its index before any other class accesses updated index
         }
 
-        eventBus.postAsync(EntitiesOfTypeChanged(entityClass, changeType, source))
+        eventBus.postAsync(EntitiesOfTypeChanged(entityClass, changeType, source, isDependentChange))
     }
 
     private fun dispatchMessagesForDependentEntities(entityClass: Class<BaseEntity>, entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource) {
@@ -64,7 +65,7 @@ class EntityChangedNotifier(private val eventBus: IEventBus, private val threadP
         }
     }
 
-    private fun createEntityChangedMessage(entityClass: Class<out BaseEntity>, entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource): IEventBusMessage? {
+    private fun createEntityChangedMessage(entityClass: Class<out BaseEntity>, entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource): EntityChanged<out BaseEntity>? {
         when(entityClass) {
             Entry::class.java -> return EntryChanged(entity as Entry, changeType, source)
             Tag::class.java -> return TagChanged(entity as Tag, changeType, source)
