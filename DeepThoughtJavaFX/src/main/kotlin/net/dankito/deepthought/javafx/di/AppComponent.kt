@@ -14,7 +14,6 @@ import net.dankito.deepthought.javafx.dialogs.entry.EditEntryViewBase
 import net.dankito.deepthought.javafx.dialogs.entry.EditReadLaterArticleView
 import net.dankito.deepthought.javafx.dialogs.entry.TagsOnEntryDialog
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindow
-import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.ArticleExtractorsMenuButton
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.EntriesListView
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.MainMenuBar
@@ -41,8 +40,6 @@ interface AppComponent : CommonComponent {
     fun inject(appInitializer: JavaFXAppInitializer)
 
     fun inject(mainWindow: MainWindow)
-
-    fun inject(mainWindowController: MainWindowController)
 
     fun inject(mainMenuBar: MainMenuBar)
 
