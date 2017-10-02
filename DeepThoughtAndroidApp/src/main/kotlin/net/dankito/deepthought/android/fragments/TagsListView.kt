@@ -151,7 +151,7 @@ class TagsListView : MainActivityTabFragment<Tag>(R.menu.tag_contextual_action_m
     }
 
     override fun querySubmitted(query: String): Boolean {
-        presenter.toggleFilterTags(adapter.items)
+        presenter.toggleFilterTagsOfLastSearchResult()
         return true
     }
 

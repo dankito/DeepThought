@@ -104,6 +104,16 @@ class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: Da
         searchTags()
     }
 
+    fun toggleFilterTagsOfLastSearchResult() {
+        lastTagsSearchResults?.let { searchResult ->
+            toggleFilterTags(searchResult.getRelevantMatchesSortedButOnlyExactMatchesFromLastResult())
+        }
+
+        lastFilteredTagsSearchResults?.let { searchResult ->
+            toggleFilterTags(searchResult.tagsOnEntriesContainingFilteredTags)
+        }
+    }
+
     private fun doToggleFilterTag(tag: Tag) {
         if(isTagFiltered(tag)) {
             tagsFilter.remove(tag)
