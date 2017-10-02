@@ -209,11 +209,11 @@ abstract class EditEntryViewBase : DialogFragment() {
         contentHtml.value = entry.content
 
         showTagsPreview(tags)
-        showReferencePreview(reference)
+        showReferencePreview(reference, series)
     }
 
-    private fun showReferencePreview(reference: Reference?) {
-        this.referencePreview.value = reference?.getPreviewWithSeriesAndPublishingDate(getCurrentSeries()) ?: ""
+    private fun showReferencePreview(reference: Reference?, series: Series?) {
+        this.referencePreview.value = reference?.getPreviewWithSeriesAndPublishingDate(series) ?: ""
     }
 
     private fun showTagsPreview(tags: Collection<Tag>) {
