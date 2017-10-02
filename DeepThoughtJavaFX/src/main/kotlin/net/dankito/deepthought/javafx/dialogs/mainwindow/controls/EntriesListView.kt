@@ -1,13 +1,14 @@
 package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 
 import javafx.scene.layout.Priority
-import net.dankito.deepthought.model.extensions.referencePreview
-import net.dankito.deepthought.model.extensions.tagsPreview
 import net.dankito.deepthought.javafx.di.AppComponent
-import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
+import net.dankito.deepthought.javafx.dialogs.mainwindow.model.EntryViewModel
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
+import net.dankito.deepthought.javafx.util.LazyLoadingObservableList
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.extensions.referencePreview
+import net.dankito.deepthought.model.extensions.tagsPreview
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EntriesListPresenter
 import net.dankito.deepthought.ui.view.IEntriesListView
@@ -26,7 +27,10 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
         private val dateTimeFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG)
     }
 
-    private val controller: MainWindowController by inject()
+
+    private val entryModel = EntryViewModel()
+
+    private val entries = LazyLoadingObservableList<Entry>()
 
     private val searchBar: EntriesSearchBar
 
@@ -68,7 +72,7 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
     override val root = vbox {
         add(searchBar.root)
 
-        tableview<Entry>(controller.entries) {
+        tableview<Entry>(entries) {
             column(messages["entry.column.header.index"], Entry::entryIndex).prefWidth(46.0)
             column(messages["entry.column.header.reference"], Entry::referencePreview).weigthedWidth(4.0)
             column(messages["entry.column.header.preview"], Entry::preview).weigthedWidth(4.0)
@@ -78,7 +82,7 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
 
             columnResizePolicy = SmartResize.POLICY
 
-            bindSelected(controller.entryModel)
+            bindSelected(entryModel)
 
             vgrow = Priority.ALWAYS
 
@@ -111,7 +115,7 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
     /*          IEntriesListView implementation            */
 
     override fun showEntities(entities: List<Entry>) {
-        runLater { controller.entries.setAll(entities) }
+        runLater { entries.setAll(entities) }
     }
 
     override fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {
