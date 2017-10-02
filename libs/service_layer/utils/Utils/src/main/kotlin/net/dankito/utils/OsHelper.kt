@@ -1,6 +1,4 @@
-package net.dankito.deepthought.util
-
-import net.dankito.utils.IPlatformConfiguration
+package net.dankito.utils
 
 
 class OsHelper(private val platformConfiguration: IPlatformConfiguration) {

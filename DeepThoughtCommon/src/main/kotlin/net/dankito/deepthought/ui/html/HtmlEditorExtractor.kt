@@ -1,7 +1,7 @@
 package net.dankito.deepthought.ui.html
 
 import net.dankito.deepthought.service.data.DataManager
-import net.dankito.deepthought.util.OsHelper
+import net.dankito.utils.OsHelper
 import org.slf4j.LoggerFactory
 import java.io.*
 import java.util.jar.JarEntry

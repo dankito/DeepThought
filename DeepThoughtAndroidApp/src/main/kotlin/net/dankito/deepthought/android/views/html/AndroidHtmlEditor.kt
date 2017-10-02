@@ -11,7 +11,7 @@ import android.webkit.*
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.ui.html.*
-import net.dankito.deepthought.util.OsHelper
+import net.dankito.utils.OsHelper
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
