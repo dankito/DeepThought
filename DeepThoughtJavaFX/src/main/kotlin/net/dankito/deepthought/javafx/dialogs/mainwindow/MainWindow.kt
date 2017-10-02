@@ -16,9 +16,13 @@ import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.EntriesListView
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.TagsListView
 import net.dankito.deepthought.javafx.res.icons.IconPaths
+import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardContent
+import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
+import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.ReadLaterArticleSearch
 import tornadofx.*
@@ -41,6 +45,12 @@ class MainWindow : View() {
     @Inject
     protected lateinit var searchEngine: ISearchEngine
 
+    @Inject
+    protected lateinit var articleExtractorManager: ArticleExtractorManager
+
+    @Inject
+    protected lateinit var router: IRouter
+
 
     override val root: BorderPane by fxml()
 
@@ -52,17 +62,23 @@ class MainWindow : View() {
 
     private var contentPane: VBox by singleAssign()
 
+    private val mnitmFileClipboard: Menu by fxid()
+
     private val btnArticleExtractors: MenuButton by fxid()
 
     val tagsListView: TagsListView by inject()
 
     val entriesListView: EntriesListView by inject()
 
+    private val clipboardWatcher: JavaFXClipboardWatcher
+
 
     init {
         AppComponent.component.inject(this)
 
         setupUI()
+
+        clipboardWatcher = JavaFXClipboardWatcher(primaryStage) { clipboardContentChangedExternally(it) }
     }
 
     private fun setupUI() {
@@ -175,6 +191,26 @@ class MainWindow : View() {
 
                 return@forEach
             }
+        }
+    }
+
+
+    private fun clipboardContentChangedExternally(clipboardContent: JavaFXClipboardContent) {
+        mnitmFileClipboard.isDisable = !clipboardContent.hasUrl()
+
+        mnitmFileClipboard.items.clear()
+
+        if(clipboardContent.hasUrl()) {
+            val extractContentFromUrlMenuItem = MenuItem(messages["main.window.menu.view.extract.entry.from.url"])
+            extractContentFromUrlMenuItem.action { extractEntryFromClipboardContent(clipboardContent) }
+            mnitmFileClipboard.items.add(extractContentFromUrlMenuItem)
+        }
+    }
+
+    private fun extractEntryFromClipboardContent(clipboardContent: JavaFXClipboardContent) {
+        articleExtractorManager.extractArticleAndAddDefaultDataAsync(clipboardContent.url) {
+            it.result?.let { router.showEditEntryView(it) }
+//            it.error?.let { showErrorMessage(it, clipboardContent.url) }
         }
     }
 
