@@ -3,6 +3,7 @@ package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 import javafx.beans.value.ChangeListener
 import javafx.scene.control.Menu
 import javafx.scene.control.MenuItem
+import javafx.scene.input.KeyCombination
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
@@ -51,14 +52,14 @@ class MainMenuBar : View() {
 
                             separator()
 
-                            item(messages["main.window.menu.quit"]) {
+                            item(messages["main.window.menu.quit"], KeyCombination.keyCombination("Ctrl+Q")) {
                                 action { primaryStage.close() }
                             }
                         }
 
                         menu(messages["main.window.menu.view"]) {
                             isVisible = false
-                            checkmenuitem(messages["main.window.menu.view.show.quick.edit.entry.pane"]) {
+                            checkmenuitem(messages["main.window.menu.view.show.quick.edit.entry.pane"], KeyCombination.keyCombination("F4")) {
                                 selectedProperty().addListener(ChangeListener<Boolean> { observable, oldValue, newValue ->
 
                                 })
