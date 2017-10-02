@@ -51,6 +51,17 @@ abstract class EditEntryViewBase : DialogFragment() {
     private val presenter: EditEntryPresenter
 
 
+    private var entry: Entry? = null
+
+    private var abstractToEdit = ""
+
+    private val tagsOnEntry = LinkedHashSet<Tag>()
+
+    private var referenceToEdit: Reference? = null
+
+    private var seriesToEdit: Series? = null
+
+
     @Inject
     protected lateinit var entryPersister: EntryPersister
 
@@ -205,10 +216,16 @@ abstract class EditEntryViewBase : DialogFragment() {
 
 
     protected fun showData(entry: Entry, tags: Collection<Tag>, reference: Reference?, series: Series?) {
-        abstractPlainText.value = Jsoup.parseBodyFragment(entry.abstractString).text()
+        this.entry = entry
+        abstractToEdit = entry.abstractString
+        tagsOnEntry.addAll(tags) // make a copy
+        referenceToEdit = reference
+        seriesToEdit = series
+
+        abstractPlainText.value = Jsoup.parseBodyFragment(abstractToEdit).text()
         contentHtml.value = entry.content
 
-        showTagsPreview(tags)
+        showTagsPreview(tagsOnEntry)
         showReferencePreview(reference, series)
     }
 
@@ -221,11 +238,24 @@ abstract class EditEntryViewBase : DialogFragment() {
     }
 
 
-    protected open fun saveEntryAndCloseDialog() {
-        presenter.saveEntryAsync(getEntryForSaving(), getReferenceForSaving(), getCurrentSeries(), getTagsForSaving()) {
+    private fun saveEntryAndCloseDialog() {
+        updateEntryAndSaveAsync {
             entrySaved()
 
             runLater { closeDialog() }
+        }
+    }
+
+    private fun updateEntryAndSaveAsync(done: () -> Unit) {
+        htmlEditor.getHtmlAsync {
+            entry?.let { entry ->
+                entry.content = it
+                entry.abstractString = abstractToEdit
+
+                presenter.saveEntryAsync(entry, referenceToEdit, seriesToEdit, tagsOnEntry) {
+                    done()
+                }
+            }
         }
     }
 
@@ -238,14 +268,5 @@ abstract class EditEntryViewBase : DialogFragment() {
 
         close()
     }
-
-
-    protected abstract fun getEntryForSaving(): Entry
-
-    protected abstract fun getReferenceForSaving(): Reference?
-
-    protected abstract fun getCurrentSeries(): Series?
-
-    protected abstract fun getTagsForSaving(): List<Tag>
 
 }

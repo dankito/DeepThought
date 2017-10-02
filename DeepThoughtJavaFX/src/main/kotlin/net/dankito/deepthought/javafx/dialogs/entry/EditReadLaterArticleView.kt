@@ -1,7 +1,7 @@
 package net.dankito.deepthought.javafx.dialogs.entry
 
 import net.dankito.deepthought.javafx.di.AppComponent
-import net.dankito.deepthought.model.*
+import net.dankito.deepthought.model.ReadLaterArticle
 
 
 class EditReadLaterArticleView : EditEntryViewBase() {
@@ -13,23 +13,6 @@ class EditReadLaterArticleView : EditEntryViewBase() {
         AppComponent.component.inject(this)
 
         showData(article.entryExtractionResult.entry, article.entryExtractionResult.tags, article.entryExtractionResult.reference, article.entryExtractionResult.series)
-    }
-
-
-    override fun getEntryForSaving(): Entry {
-        return article.entryExtractionResult.entry
-    }
-
-    override fun getReferenceForSaving(): Reference? {
-        return article.entryExtractionResult.reference
-    }
-
-    override fun getCurrentSeries(): Series? {
-        return article.entryExtractionResult.series
-    }
-
-    override fun getTagsForSaving(): List<Tag> {
-        return article.entryExtractionResult.tags
     }
 
 
