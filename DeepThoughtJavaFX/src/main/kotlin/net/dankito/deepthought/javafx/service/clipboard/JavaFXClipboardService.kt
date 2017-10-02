@@ -1,4 +1,4 @@
-package net.dankito.deepthought.javafx.service
+package net.dankito.deepthought.javafx.service.clipboard
 
 import javafx.scene.input.Clipboard
 import javafx.scene.input.ClipboardContent
