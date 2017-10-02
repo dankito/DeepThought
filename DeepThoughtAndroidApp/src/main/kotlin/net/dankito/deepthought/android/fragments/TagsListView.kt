@@ -204,6 +204,10 @@ class TagsListView : MainActivityTabFragment<Tag>(R.menu.tag_contextual_action_m
         activity?.runOnUiThread {
             adapter.items = entities
 
+            if(presenter.isTagFilterApplied()) {
+                filteredTagsAdapter.notifyDataSetChanged()
+            }
+
             retrievedEntitiesOnUiThread(entities)
         }
     }
