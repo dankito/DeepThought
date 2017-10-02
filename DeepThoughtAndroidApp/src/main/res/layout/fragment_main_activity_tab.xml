@@ -11,58 +11,67 @@
          android:id="@+id/lytContextHelp"
     />
 
-    <net.dankito.deepthought.android.views.FullscreenRecyclerView
-        android:id="@+id/rcyEntities"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-        android:layout_weight="0"
-        android:longClickable="true"
-    />
 
     <RelativeLayout
-        android:id="@+id/lytFilteredEntities"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/fragment_tab_entries_filtered_entities_margin_top"
-        android:layout_marginBottom="@dimen/fragment_tab_entries_filtered_entities_margin_bottom"
-        android:layout_weight="1"
-        android:gravity="bottom"
-        android:visibility="gone"
+        android:layout_height="wrap_content"
     >
 
-        <TextView
-            android:id="@+id/txtFilteredEntitiesLabel"
+        <net.dankito.deepthought.android.views.FullscreenRecyclerView
+            android:id="@+id/rcyEntities"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Header1Style"
-            android:layout_marginBottom="6dp"
-            android:text="@string/fragment_main_activity_tabs_filtered_entities_label"
-        />
-
-        <ImageButton
-            android:id="@+id/btnClearFilteredEntities"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/txtFilteredEntitiesLabel"
-            android:layout_alignBottom="@+id/txtFilteredEntitiesLabel"
-            android:background="@android:color/transparent"
-            android:src="@android:drawable/ic_delete"
-            android:visibility="gone"
-        />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rcyFilteredEntities"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txtFilteredEntitiesLabel"
+            android:layout_alignParentTop="true"
+            android:layout_above="@+id/lytFilteredEntities"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            android:longClickable="true"
         />
+
+        <RelativeLayout
+            android:id="@+id/lytFilteredEntities"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fragment_tab_entries_filtered_entities_margin_top"
+            android:layout_marginBottom="@dimen/fragment_tab_entries_filtered_entities_margin_bottom"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"
+        >
+
+            <TextView
+                android:id="@+id/txtFilteredEntitiesLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Header1Style"
+                android:layout_marginBottom="6dp"
+                android:text="@string/fragment_main_activity_tabs_filtered_entities_label"
+            />
+
+            <ImageButton
+                android:id="@+id/btnClearFilteredEntities"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/txtFilteredEntitiesLabel"
+                android:layout_alignBottom="@+id/txtFilteredEntitiesLabel"
+                android:background="@android:color/transparent"
+                android:src="@android:drawable/ic_delete"
+                android:visibility="gone"
+            />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rcyFilteredEntities"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtFilteredEntitiesLabel"
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            />
+
+        </RelativeLayout>
 
     </RelativeLayout>
+
 
     <RelativeLayout
         android:id="@+id/lytOnboardingText"
