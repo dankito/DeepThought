@@ -93,7 +93,7 @@
     </string>
 
     <string name="context_help_entry_information_fullscreen_gestures">You just invoked one of the fullscreen gestures:\n\n- Fast swipe from right to left:
-        Leave edit entry view\n- Fast swipe from left to right: Edit entry's tags\n- Double tap: Save entry and close edit entry view.
+        Leave edit entry view\n- Fast swipe from left to right: Edit entry\'s tags\n- Double tap: Save entry and close edit entry view.
     </string>
 
 
