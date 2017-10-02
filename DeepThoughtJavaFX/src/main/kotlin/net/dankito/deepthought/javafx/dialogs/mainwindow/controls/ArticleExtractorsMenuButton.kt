@@ -1,7 +1,6 @@
 package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 
 import javafx.geometry.Pos
-import javafx.scene.Parent
 import javafx.scene.control.ContentDisplay
 import javafx.scene.control.MenuButton
 import javafx.scene.control.MenuItem
@@ -69,8 +68,7 @@ class ArticleExtractorsMenuButton(private val controller: MainWindowController) 
         eventBus.register(eventBusListener)
     }
 
-    override val root: Parent
-        get() = btnArticleExtractors
+    override val root = btnArticleExtractors
 
     private fun setupArticleExtractorsMenuButton() {
         btnArticleExtractors.contentDisplay = ContentDisplay.GRAPHIC_ONLY
@@ -80,9 +78,9 @@ class ArticleExtractorsMenuButton(private val controller: MainWindowController) 
 
         btnArticleExtractors.items.clear() // remove automatically added 'Article 1' and 'Article 2'
 
-        btnArticleExtractors.setGraphic(ImageView(IconPaths.NewspaperIconPath))
+        btnArticleExtractors.graphic = ImageView(IconPaths.NewspaperIconPath)
 
-        FXUtils.ensureNodeOnlyUsesSpaceIfVisible(root)
+        FXUtils.ensureNodeOnlyUsesSpaceIfVisible(btnArticleExtractors)
 
         dataManager.addInitializationListener {
             addOrRemoveReadLaterArticlesItem()
