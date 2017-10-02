@@ -3,7 +3,6 @@ package net.dankito.deepthought.javafx.dialogs.mainwindow
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.EntryViewModel
 import net.dankito.deepthought.javafx.util.LazyLoadingObservableList
-import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.data.EntryService
@@ -30,13 +29,5 @@ class MainWindowController : Controller() {
         AppComponent.component.inject(this)
     }
 
-
-    fun showArticlesSummaryView(articleSummaryExtractorConfig: ArticleSummaryExtractorConfig) {
-        router.showArticleSummaryView(articleSummaryExtractorConfig)
-    }
-
-    fun showReadLaterArticlesView() {
-        router.showReadLaterArticlesView()
-    }
 
 }

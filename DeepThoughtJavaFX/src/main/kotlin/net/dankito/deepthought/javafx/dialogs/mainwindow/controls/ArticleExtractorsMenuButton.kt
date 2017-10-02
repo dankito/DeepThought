@@ -109,7 +109,7 @@ class ArticleExtractorsMenuButton(private val controller: MainWindowController) 
 
         val showReadLaterArticlesItem = MenuItem(messages["article.extractors.item.show.read.later.articles"])
         showReadLaterArticlesItem.tag = ReadLaterArticlesItemTag
-        showReadLaterArticlesItem.action { controller.showReadLaterArticlesView() }
+        showReadLaterArticlesItem.action { showReadLaterArticlesView() }
 
         addMenuButtonArticleExtractorsMenuItem(showReadLaterArticlesItem, 0)
 
@@ -128,7 +128,7 @@ class ArticleExtractorsMenuButton(private val controller: MainWindowController) 
     private fun addArticleSummaryExtractor(articleSummaryExtractorConfig: ArticleSummaryExtractorConfig) {
         val extractorItem = MenuItem(articleSummaryExtractorConfig.name)
         extractorItem.tag = articleSummaryExtractorConfig
-        extractorItem.setOnAction { controller.showArticlesSummaryView(articleSummaryExtractorConfig) }
+        extractorItem.setOnAction { showArticlesSummaryView(articleSummaryExtractorConfig) }
 
         val graphicPane = hbox {
             minWidth = ICON_SIZE
@@ -180,6 +180,15 @@ class ArticleExtractorsMenuButton(private val controller: MainWindowController) 
                 return@forEach
             }
         }
+    }
+
+
+    private fun showArticlesSummaryView(articleSummaryExtractorConfig: ArticleSummaryExtractorConfig) {
+        router.showArticleSummaryView(articleSummaryExtractorConfig)
+    }
+
+    private fun showReadLaterArticlesView() {
+        router.showReadLaterArticlesView()
     }
 
 
