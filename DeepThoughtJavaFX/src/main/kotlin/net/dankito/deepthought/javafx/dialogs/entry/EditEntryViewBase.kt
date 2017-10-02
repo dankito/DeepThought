@@ -8,7 +8,6 @@ import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.javafx.ui.controls.JavaFXHtmlEditor
-import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Series
@@ -19,6 +18,7 @@ import net.dankito.deepthought.ui.presenter.EditEntryPresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.utils.ui.IClipboardService
+import org.jsoup.Jsoup
 import tornadofx.*
 import javax.inject.Inject
 
@@ -204,11 +204,19 @@ abstract class EditEntryViewBase : DialogFragment() {
     }
 
 
-    protected fun showReferencePreview(reference: Reference?) {
+    protected fun showData(entry: Entry, tags: Collection<Tag>, reference: Reference?, series: Series?) {
+        abstractPlainText.value = Jsoup.parseBodyFragment(entry.abstractString).text()
+        contentHtml.value = entry.content
+
+        showTagsPreview(tags)
+        showReferencePreview(reference)
+    }
+
+    private fun showReferencePreview(reference: Reference?) {
         this.referencePreview.value = reference?.getPreviewWithSeriesAndPublishingDate(getCurrentSeries()) ?: ""
     }
 
-    protected fun showTagsPreview(tags: Collection<Tag>) {
+    private fun showTagsPreview(tags: Collection<Tag>) {
         this.tagsPreview.value = tags.sortedBy { it.name.toLowerCase() }.joinToString { it.name }
     }
 

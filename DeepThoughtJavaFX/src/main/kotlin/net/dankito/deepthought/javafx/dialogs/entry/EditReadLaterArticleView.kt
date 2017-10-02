@@ -2,7 +2,6 @@ package net.dankito.deepthought.javafx.dialogs.entry
 
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.model.*
-import org.jsoup.Jsoup
 
 
 class EditReadLaterArticleView : EditEntryViewBase() {
@@ -13,10 +12,7 @@ class EditReadLaterArticleView : EditEntryViewBase() {
     init {
         AppComponent.component.inject(this)
 
-        abstractPlainText.value = Jsoup.parseBodyFragment(article.entryExtractionResult.entry.abstractString).text()
-        contentHtml.value = article.entryExtractionResult.entry.content
-        showReferencePreview(article.entryExtractionResult.reference)
-        showTagsPreview(article.entryExtractionResult.tags)
+        showData(article.entryExtractionResult.entry, article.entryExtractionResult.tags, article.entryExtractionResult.reference, article.entryExtractionResult.series)
     }
 
 

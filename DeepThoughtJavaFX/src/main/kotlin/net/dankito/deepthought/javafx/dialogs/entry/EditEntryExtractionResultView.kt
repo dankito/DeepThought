@@ -5,7 +5,6 @@ import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.util.EntryExtractionResult
-import org.jsoup.Jsoup
 
 
 class EditEntryExtractionResultView : EditEntryViewBase() {
@@ -14,10 +13,7 @@ class EditEntryExtractionResultView : EditEntryViewBase() {
 
 
     init {
-        abstractPlainText.value = Jsoup.parseBodyFragment(extractionResult.entry.abstractString).text()
-        contentHtml.value = extractionResult.entry.content
-        showReferencePreview(extractionResult.reference)
-        showTagsPreview(extractionResult.tags)
+        showData(extractionResult.entry, extractionResult.tags, extractionResult.reference, extractionResult.series)
     }
 
 
