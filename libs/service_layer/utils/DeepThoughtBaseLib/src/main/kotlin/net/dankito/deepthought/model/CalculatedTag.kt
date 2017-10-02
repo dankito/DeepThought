@@ -12,6 +12,11 @@ import net.engio.mbassy.listener.Handler
 abstract class CalculatedTag(name: String, protected val searchEngine: ISearchEngine, protected val eventBus: IEventBus, protected val entityChangedNotifier: EntityChangedNotifier)
     : Tag(name) {
 
+    companion object {
+        const val CountCalculatedTags = 2
+    }
+
+
     private val eventBusListener = EventBusListener()
 
 

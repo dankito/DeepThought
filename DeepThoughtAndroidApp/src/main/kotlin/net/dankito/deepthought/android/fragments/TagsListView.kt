@@ -188,7 +188,8 @@ class TagsListView : MainActivityTabFragment<Tag>(R.menu.tag_contextual_action_m
 
     override fun shouldShowOnboardingView(entities: List<BaseEntity>, searchTerm: String): Boolean {
         return searchTerm == Search.EmptySearchTerm && presenter.isTagFilterApplied() == false &&
-                entities.size <= 2 && entities.filter { it is CalculatedTag == false }.isEmpty() // 2 = count of calculated tags; check first so that not over all tags is iterated
+                entities.size <= CalculatedTag.CountCalculatedTags &&  // check first <= count of calculated tags so that not over all tags is iterated
+                entities.filter { it is CalculatedTag == false }.isEmpty()
     }
 
     override fun showOnboardingView() {
