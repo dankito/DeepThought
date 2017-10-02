@@ -75,8 +75,16 @@ class TagsSearchResults(val overAllSearchTerm: String) {
             }
         }
 
-        lastResult?.let {
-            matches.addAll(it.exactMatches)
+        lastResult?.let { lastResult ->
+            if(lastResult.hasExactMatches()) {
+                matches.addAll(lastResult.exactMatches)
+            }
+            else if(lastResult.hasSingleMatch()) { // ok, if lastResult doesn't have exact matches, take single match or as last resort allMatches
+                lastResult.getSingleMatch()?.let { matches.add(it) }
+            }
+            else {
+                matches.addAll(lastResult.allMatches)
+            }
         }
 
         relevantMatchesSortedButOnlyExactMatchesFromLastResultProperty = matches.sortedBy { it.name }
