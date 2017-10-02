@@ -1,5 +1,6 @@
 package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 
+import javafx.beans.value.ChangeListener
 import javafx.scene.control.Menu
 import javafx.scene.control.MenuItem
 import javafx.scene.layout.Priority
@@ -52,6 +53,38 @@ class MainMenuBar : View() {
 
                             item(messages["main.window.menu.quit"]) {
                                 action { primaryStage.close() }
+                            }
+                        }
+
+                        menu(messages["main.window.menu.view"]) {
+                            isVisible = false
+                            checkmenuitem(messages["main.window.menu.view.show.quick.edit.entry.pane"]) {
+                                selectedProperty().addListener(ChangeListener<Boolean> { observable, oldValue, newValue ->
+
+                                })
+                            }
+                        }
+
+                        menu(messages["main.window.menu.tools"]) {
+                            isVisible = false
+                            menu(messages["main.window.menu.tools.language"]) {
+                                checkmenuitem(messages["application.language.english"]) {
+                                    action { }
+                                }
+                                checkmenuitem(messages["application.language.german"]) {
+                                    action { }
+                                }
+                            }
+                        }
+
+                        menu(messages["main.window.menu.window"]) {
+                            isVisible = false
+                        }
+
+                        menu(messages["main.window.menu.help"]) {
+                            isVisible = false
+                            item(messages["main.window.menu.help.about"]) {
+                                action { }
                             }
                         }
                     }
