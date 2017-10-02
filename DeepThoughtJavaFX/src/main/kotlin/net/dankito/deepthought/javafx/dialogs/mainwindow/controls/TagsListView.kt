@@ -104,6 +104,23 @@ class TagsListView : EntitiesListView(), ITagsListView {
             vgrow = Priority.ALWAYS
 
             selectionModel.selectedItemProperty().addListener { _, _, newValue -> tagSelected(newValue) }
+
+            contextmenu {
+                item(messages["context.menu.tag.edit"]) {
+                    isDisable = true
+                    action {
+                        selectedItem?.let { presenter.editTag(it) }
+                    }
+                }
+
+                separator()
+
+                item(messages["context.menu.tag.delete"]) {
+                    action {
+                        selectedItem?.let { presenter.deleteTagAsync(it) }
+                    }
+                }
+            }
         }
     }
 
