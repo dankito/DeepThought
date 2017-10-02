@@ -66,7 +66,7 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
         viewHolder.imgFilter.setOnClickListener { presenter.toggleFilterTag(item) }
 
         setBackgroundColor(viewHolder.itemView, item)
-        setTextColor(viewHolder.txtTagDisplayText, item)
+        setTextStyle(viewHolder.txtTagDisplayText, item)
 
         if(item is CalculatedTag) { // make CalculatedTags unselectable in multi select mode
             viewHolder.itemView.isActivated = false
@@ -102,13 +102,11 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
         }
     }
 
-    private fun setTextColor(txtTagDisplayText: TextView, tag: Tag) {
+    private fun setTextStyle(txtTagDisplayText: TextView, tag: Tag) {
         if(presenter.isTagFiltered(tag)) {
-            txtTagDisplayText.setTextColor(txtTagDisplayText.context.resources.getColor(R.color.colorAccent))
             txtTagDisplayText.setTypeface(null, Typeface.BOLD)
         }
         else {
-            txtTagDisplayText.setTextColor(txtTagDisplayText.context.resources.getColor(R.color.unselected_item_text_color))
             txtTagDisplayText.setTypeface(null, Typeface.NORMAL)
         }
     }

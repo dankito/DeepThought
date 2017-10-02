@@ -68,6 +68,7 @@
             android:layout_marginStart="@dimen/list_item_tag_margin_left"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
+            android:textColor="@color/unselected_item_text_color"
             style="@android:style/TextAppearance.Medium"
         />
 
