@@ -20,7 +20,6 @@ import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.html.HtmlEditorExtractor
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
-import net.dankito.deepthought.util.OsHelper
 import net.dankito.faviconextractor.FaviconComparator
 import net.dankito.faviconextractor.FaviconExtractor
 import net.dankito.feedaddressextractor.FeedAddressExtractor
@@ -38,10 +37,7 @@ import net.dankito.service.synchronization.CouchbaseLiteSyncManager
 import net.dankito.service.synchronization.ISyncManager
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
-import net.dankito.utils.IPlatformConfiguration
-import net.dankito.utils.IThreadPool
-import net.dankito.utils.ImageCache
-import net.dankito.utils.ThreadPool
+import net.dankito.utils.*
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.ISerializer
@@ -106,9 +102,10 @@ class CommonModule {
 
     @Provides
     @Singleton
-    fun provideSearchEngine(dataManager: DataManager, languageDetector: ILanguageDetector, threadPool: IThreadPool, eventBus: IEventBus, entryService: EntryService, tagService: TagService,
+    fun provideSearchEngine(dataManager: DataManager, languageDetector: ILanguageDetector, threadPool: IThreadPool, osHelper: OsHelper, eventBus: IEventBus,
+                            entryService: EntryService, tagService: TagService,
                             referenceService: ReferenceService, seriesService: SeriesService, readLaterArticleService: ReadLaterArticleService) : ISearchEngine {
-        return LuceneSearchEngine(dataManager, languageDetector, threadPool, eventBus, entryService, tagService, referenceService, seriesService, readLaterArticleService)
+        return LuceneSearchEngine(dataManager, languageDetector, osHelper, threadPool, eventBus, entryService, tagService, referenceService, seriesService, readLaterArticleService)
     }
 
 
