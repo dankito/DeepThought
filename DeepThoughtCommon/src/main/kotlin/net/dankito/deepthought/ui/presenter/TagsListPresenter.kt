@@ -137,7 +137,7 @@ class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: Da
             }
         }
 
-        return tag.countEntries
+        return 0 // there are not entries having this combination of tags
     }
 
 
