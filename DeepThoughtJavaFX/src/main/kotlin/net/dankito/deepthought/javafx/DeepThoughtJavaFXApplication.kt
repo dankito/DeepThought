@@ -10,7 +10,9 @@ import net.dankito.deepthought.javafx.di.DaggerAppComponent
 import net.dankito.deepthought.javafx.di.JavaFXModule
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindow
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
+import net.dankito.utils.localization.UTF8ResourceBundleControl
 import tornadofx.*
+import java.util.*
 import javax.inject.Inject
 
 
@@ -24,13 +26,20 @@ class DeepThoughtJavaFXApplication : App(MainWindow::class) {
 
 
     override fun start(stage: Stage) {
-        setupDI() // has to be called before Stage is created as creates FX.messages
+        setupMessagesResources() // has to be done before creating / injecting first instances as some of them already rely on Messages (e.g. CalculatedTags)
+
+        setupDI()
 
         super.start(stage)
 
         mainWindowController.init()
     }
 
+
+    private fun setupMessagesResources() {
+        ResourceBundle.clearCache() // at this point default ResourceBundles are already created and cached. In order that ResourceBundle created below takes effect cache has to be clearedbefore
+        FX.messages = ResourceBundle.getBundle("Messages", UTF8ResourceBundleControl())
+    }
 
     private fun setupDI() {
         val component = DaggerAppComponent.builder()
