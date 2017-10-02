@@ -2,9 +2,16 @@ package net.dankito.deepthought.javafx.dialogs.entry
 
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
+import javafx.collections.FXCollections
+import javafx.collections.ObservableSet
+import javafx.collections.SetChangeListener
+import javafx.scene.Cursor
 import javafx.scene.control.Control
 import javafx.scene.control.Label
+import javafx.scene.input.MouseButton
+import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Priority
+import javafx.stage.StageStyle
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.javafx.ui.controls.JavaFXHtmlEditor
@@ -47,6 +54,8 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     private val htmlEditor: JavaFXHtmlEditor
 
+    private var tagsOnEntryDialog: TagsOnEntryDialog? = null
+
 
     private val presenter: EditEntryPresenter
 
@@ -55,7 +64,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     private var abstractToEdit = ""
 
-    private val tagsOnEntry = LinkedHashSet<Tag>()
+    private val tagsOnEntry: ObservableSet<Tag> = FXCollections.observableSet()
 
     private var referenceToEdit: Reference? = null
 
@@ -81,6 +90,8 @@ abstract class EditEntryViewBase : DialogFragment() {
         presenter = EditEntryPresenter(entryPersister, readLaterArticleService, clipboardService, router)
 
         htmlEditor = JavaFXHtmlEditor(null)
+
+        tagsOnEntry.addListener(SetChangeListener<Tag> { showTagsPreview(tagsOnEntry) } )
     }
 
 
@@ -138,6 +149,9 @@ abstract class EditEntryViewBase : DialogFragment() {
             prefHeight = 50.0
             maxHeight = 70.0
             prefWidthProperty().bind(this@vbox.widthProperty())
+
+            cursor = Cursor.HAND
+            setOnMouseClicked { editTags(it) }
 
             label(messages["edit.entry.tags.label"]) {
                 minWidth = Control.USE_PREF_SIZE
@@ -212,6 +226,20 @@ abstract class EditEntryViewBase : DialogFragment() {
         root.children.remove(htmlEditor)
 
         System.gc()
+    }
+
+
+    private fun editTags(event: MouseEvent) {
+        if(event.button == MouseButton.PRIMARY) {
+            if(tagsOnEntryDialog == null) {
+                tagsOnEntryDialog = find(TagsOnEntryDialog::class, mapOf(TagsOnEntryDialog::tagsOnEntry to tagsOnEntry))
+                tagsOnEntryDialog?.show(messages["tags.on.entry.dialog.title"], stageStyle = StageStyle.UTILITY, owner = currentStage) // TODO: add icon
+            }
+            else {
+                tagsOnEntryDialog?.close()
+                tagsOnEntryDialog = null
+            }
+        }
     }
 
 
