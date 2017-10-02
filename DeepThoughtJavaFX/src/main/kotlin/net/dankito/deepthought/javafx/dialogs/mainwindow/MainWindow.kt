@@ -39,6 +39,8 @@ class MainWindow : View() {
     }
 
     private fun setupUI() {
+        title = messages["main.window.title"] // TODO: set icon
+
         splpnContent = splitpane {
             tbpnOverview = tabpane {
                 prefWidth = 300.0
