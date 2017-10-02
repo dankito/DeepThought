@@ -1,8 +1,8 @@
 package net.dankito.deepthought.javafx.dialogs.mainwindow
 
-import javafx.beans.value.ChangeListener
-import javafx.beans.value.ObservableValue
-import javafx.scene.control.*
+import javafx.scene.control.SplitPane
+import javafx.scene.control.Tab
+import javafx.scene.control.TabPane
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
@@ -14,9 +14,6 @@ import tornadofx.*
 
 
 class MainWindow : View() {
-
-    val controller: MainWindowController by inject()
-
 
     override val root: BorderPane by fxml()
 
