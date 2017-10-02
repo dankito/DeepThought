@@ -83,6 +83,22 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
             vgrow = Priority.ALWAYS
 
             onDoubleClick { router.showEditEntryView(selectionModel.selectedItem) }
+
+            contextmenu {
+                item(messages["context.menu.entry.copy.url.to.clipboard"]) {
+                    action {
+                        selectedItem?.let { presenter.copyReferenceUrlToClipboard(it) }
+                    }
+                }
+
+                separator()
+
+                item(messages["context.menu.entry.delete"]) {
+                    action {
+                        selectedItem?.let { presenter.deleteEntry(it) }
+                    }
+                }
+            }
         }
     }
 
