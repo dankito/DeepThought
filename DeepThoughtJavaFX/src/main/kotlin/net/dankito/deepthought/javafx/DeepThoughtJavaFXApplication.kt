@@ -22,7 +22,7 @@ class DeepThoughtJavaFXApplication : App(MainWindow::class) {
     protected lateinit var appInitializer: JavaFXAppInitializer
 
 
-    val mainWindowController: MainWindowController by inject()
+    private val mainWindowController: MainWindowController by inject()
 
 
     override fun start(stage: Stage) {
@@ -31,8 +31,6 @@ class DeepThoughtJavaFXApplication : App(MainWindow::class) {
         setupDI()
 
         super.start(stage)
-
-        mainWindowController.init()
     }
 
 
