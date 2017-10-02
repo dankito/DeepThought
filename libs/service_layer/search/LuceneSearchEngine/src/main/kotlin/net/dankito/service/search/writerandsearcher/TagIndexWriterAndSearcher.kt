@@ -17,6 +17,7 @@ import net.dankito.service.search.specific.TagsSearch
 import net.dankito.service.search.specific.TagsSearchResult
 import net.dankito.service.search.util.LazyLoadingList
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.OsHelper
 import net.engio.mbassy.listener.Handler
 import org.apache.lucene.document.Document
 import org.apache.lucene.document.Field
@@ -27,8 +28,8 @@ import org.apache.lucene.search.*
 import org.slf4j.LoggerFactory
 
 
-class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, threadPool: IThreadPool, private val entryIndexWriterAndSearcher: EntryIndexWriterAndSearcher)
-    : IndexWriterAndSearcher<Tag>(tagService, eventBus, threadPool) {
+class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool, private val entryIndexWriterAndSearcher: EntryIndexWriterAndSearcher)
+    : IndexWriterAndSearcher<Tag>(tagService, eventBus, osHelper, threadPool) {
 
     companion object {
         private const val TAGS_DEFAULT_COUNT_MAX_SEARCH_RESULTS = 100000
@@ -166,7 +167,7 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, thr
 
         try {
             entryIndexWriterAndSearcher.executeQuery(query, FILTERED_TAGS_DEFAULT_COUNT_MAX_SEARCH_RESULTS, SortOption(FieldName.EntryCreated, SortOrder.Descending, SortField.Type.LONG))?.let { (searcher, hits) ->
-                val entries = FilteredTagsLazyLoadingLuceneSearchResultsList(entityService.entityManager, searcher, hits, threadPool)
+                val entries = FilteredTagsLazyLoadingLuceneSearchResultsList(entityService.entityManager, searcher, hits, osHelper, threadPool)
                 entriesHavingFilteredTags = entries
 
                 val tagIdsOnEntriesContainingFilteredTags: Collection<String> = entries.tagIdsOnResultEntries.filter { tagsToFilterForIds.contains(it) == false }

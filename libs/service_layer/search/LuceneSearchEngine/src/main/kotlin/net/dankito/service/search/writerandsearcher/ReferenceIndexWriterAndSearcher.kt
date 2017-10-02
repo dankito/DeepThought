@@ -10,6 +10,7 @@ import net.dankito.service.search.SortOption
 import net.dankito.service.search.SortOrder
 import net.dankito.service.search.specific.ReferenceSearch
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.OsHelper
 import net.engio.mbassy.listener.Handler
 import org.apache.lucene.document.*
 import org.apache.lucene.index.Term
@@ -18,7 +19,8 @@ import org.apache.lucene.search.*
 import java.text.SimpleDateFormat
 
 
-class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventBus: IEventBus, threadPool: IThreadPool) : IndexWriterAndSearcher<Reference>(referenceService, eventBus, threadPool) {
+class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool)
+    : IndexWriterAndSearcher<Reference>(referenceService, eventBus, osHelper, threadPool) {
 
     companion object {
         private val PublishingDateIndexFormat = SimpleDateFormat("dd MM yyyy")

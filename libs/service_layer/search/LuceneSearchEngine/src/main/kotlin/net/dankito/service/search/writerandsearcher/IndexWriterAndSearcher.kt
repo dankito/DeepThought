@@ -8,6 +8,8 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.*
 import net.dankito.service.search.results.LazyLoadingLuceneSearchResultsList
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.OsHelper
+import net.engio.mbassy.listener.Synchronized
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.document.Document
 import org.apache.lucene.document.Field
@@ -26,7 +28,7 @@ import java.io.File
 import java.util.*
 
 
-abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: EntityServiceBase<TEntity>, eventBus: IEventBus, protected val threadPool: IThreadPool) {
+abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: EntityServiceBase<TEntity>, eventBus: IEventBus, protected val osHelper: OsHelper, protected val threadPool: IThreadPool) {
 
     companion object {
         protected const val DEFAULT_COUNT_MAX_SEARCH_RESULTS = 100000
@@ -385,7 +387,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
     protected fun executeQuery(query: Query, resultEntityClass: Class<TEntity>, countMaxSearchResults: Int = DEFAULT_COUNT_MAX_SEARCH_RESULTS, vararg sortOptions: SortOption): List<TEntity> {
         executeQuery(query, countMaxSearchResults, *sortOptions)?.let { (searcher, hits) ->
-            return LazyLoadingLuceneSearchResultsList<TEntity>(entityService.entityManager, searcher, resultEntityClass, getIdFieldName(), hits, threadPool)
+            return LazyLoadingLuceneSearchResultsList<TEntity>(entityService.entityManager, searcher, resultEntityClass, getIdFieldName(), hits, osHelper, threadPool)
         }
 
         return listOf()

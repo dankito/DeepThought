@@ -3,10 +3,14 @@ package net.dankito.service.search
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.*
+import net.dankito.service.data.messages.EntitiesOfTypeChanged
+import net.dankito.service.data.messages.EntityChangeSource
+import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.specific.*
 import net.dankito.service.search.writerandsearcher.*
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.OsHelper
 import net.dankito.utils.language.ILanguageDetector
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.FSDirectory
@@ -17,8 +21,8 @@ import kotlin.concurrent.schedule
 import kotlin.concurrent.thread
 
 
-class LuceneSearchEngine(private val dataManager: DataManager, private val languageDetector: ILanguageDetector, threadPool: IThreadPool, eventBus: IEventBus, entryService: EntryService,
-                         tagService: TagService, referenceService: ReferenceService, seriesService: SeriesService, readLaterArticleService: ReadLaterArticleService)
+class LuceneSearchEngine(private val dataManager: DataManager, private val languageDetector: ILanguageDetector, osHelper: OsHelper, threadPool: IThreadPool, eventBus: IEventBus,
+                         entryService: EntryService, tagService: TagService, referenceService: ReferenceService, seriesService: SeriesService, readLaterArticleService: ReadLaterArticleService)
     : SearchEngineBase(threadPool) {
 
     companion object {
@@ -30,17 +34,17 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
     }
 
 
-    private val entryIdsIndexWriterAndSearcher = EntryIdsIndexWriterAndSearcher(entryService, eventBus, threadPool)
+    private val entryIdsIndexWriterAndSearcher = EntryIdsIndexWriterAndSearcher(entryService, eventBus, osHelper, threadPool)
 
-    private val entryIndexWriterAndSearcher = EntryIndexWriterAndSearcher(entryService, eventBus, threadPool)
+    private val entryIndexWriterAndSearcher = EntryIndexWriterAndSearcher(entryService, eventBus, osHelper, threadPool)
 
-    private val tagIndexWriterAndSearcher = TagIndexWriterAndSearcher(tagService, eventBus, threadPool, entryIndexWriterAndSearcher)
+    private val tagIndexWriterAndSearcher = TagIndexWriterAndSearcher(tagService, eventBus, osHelper, threadPool, entryIndexWriterAndSearcher)
 
-    private val referenceIndexWriterAndSearcher = ReferenceIndexWriterAndSearcher(referenceService, eventBus, threadPool)
+    private val referenceIndexWriterAndSearcher = ReferenceIndexWriterAndSearcher(referenceService, eventBus, osHelper, threadPool)
 
-    private val seriesIndexWriterAndSearcher = SeriesIndexWriterAndSearcher(seriesService, eventBus, threadPool)
+    private val seriesIndexWriterAndSearcher = SeriesIndexWriterAndSearcher(seriesService, eventBus, osHelper, threadPool)
 
-    private val readLaterArticleIndexWriterAndSearcher = ReadLaterArticleIndexWriterAndSearcher(readLaterArticleService, eventBus, threadPool)
+    private val readLaterArticleIndexWriterAndSearcher = ReadLaterArticleIndexWriterAndSearcher(readLaterArticleService, eventBus, osHelper, threadPool)
 
     private val indexWritersAndSearchers: List<IndexWriterAndSearcher<*>>
 

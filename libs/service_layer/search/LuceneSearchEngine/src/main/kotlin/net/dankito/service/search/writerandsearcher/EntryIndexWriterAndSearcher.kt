@@ -15,6 +15,7 @@ import net.dankito.service.search.SortOption
 import net.dankito.service.search.SortOrder
 import net.dankito.service.search.specific.EntriesSearch
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.OsHelper
 import net.engio.mbassy.listener.Handler
 import org.apache.lucene.document.*
 import org.apache.lucene.index.Term
@@ -22,7 +23,8 @@ import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.*
 
 
-class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBus, threadPool: IThreadPool) : IndexWriterAndSearcher<Entry>(entryService, eventBus, threadPool) {
+class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool)
+    : IndexWriterAndSearcher<Entry>(entryService, eventBus, osHelper, threadPool) {
 
     companion object {
         private val MaxEntriesSearchResults = 1000000 // e.g. for AllEntriesCalculatedTag all entries must be returned

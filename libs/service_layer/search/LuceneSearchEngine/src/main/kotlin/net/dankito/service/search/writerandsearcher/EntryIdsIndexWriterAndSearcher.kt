@@ -10,6 +10,7 @@ import net.dankito.service.search.SortOption
 import net.dankito.service.search.SortOrder
 import net.dankito.service.search.specific.EntriesSearch
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.OsHelper
 import net.engio.mbassy.listener.Handler
 import org.apache.lucene.document.Document
 import org.apache.lucene.document.Field
@@ -22,7 +23,8 @@ import org.apache.lucene.search.WildcardQuery
 /**
  * An Index that only contains entry ids so that searching for all entries (e.g. on app start) is a little bit faster than searching in big EntryIndexWriterAndSearcher
  */
-class EntryIdsIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBus, threadPool: IThreadPool) : IndexWriterAndSearcher<Entry>(entryService, eventBus, threadPool) {
+class EntryIdsIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool)
+    : IndexWriterAndSearcher<Entry>(entryService, eventBus, osHelper, threadPool) {
 
     companion object {
         private val MaxEntriesSearchResults = 1000000 // e.g. for AllEntriesCalculatedTag all entries must be returned

@@ -4,13 +4,14 @@ import net.dankito.data_access.database.IEntityManager
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.service.search.util.LazyLoadingList
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.OsHelper
 import org.apache.lucene.document.Document
 import org.apache.lucene.search.IndexSearcher
 import org.apache.lucene.search.ScoreDoc
 
 
 open class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEntityManager, protected var searcher: IndexSearcher, resultType: Class<T>,
-                            protected var idFieldName: String, private val hits: Array<ScoreDoc>, private val threadPool: IThreadPool)
+                            protected var idFieldName: String, private val hits: Array<ScoreDoc>, private val osHelper: OsHelper, private val threadPool: IThreadPool)
     : LazyLoadingList<T>(entityManager, resultType) {
 
     companion object {
@@ -20,9 +21,16 @@ open class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEn
 
 
     init {
+        if(isRunningOnAndroid()) {
+            preloadFirstItems()
+        }
+    }
+
+    private fun preloadFirstItems() {
         // real ugly code, but this seems to be the fastest variant: Load two items upfront synchronously (otherwise they may get displayed with incomplete data) and the rest  asynchronously
         if(hits.size > 0) {
             retrieveEntityFromDatabaseAndCacheIfNotRetrievedYet(0) // load first item directly as otherwise UI may already tries to display it while it's not fully loaded yet (and therefore not all data gets displayed)
+
             if(hits.size > 1) {
                 retrieveEntityFromDatabaseAndCacheIfNotRetrievedYet(1)
             }
@@ -60,8 +68,10 @@ open class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEn
     }
 
     private fun preloadItemsAsync(startIndex: Int, maxItemsToPreload: Int) {
-        threadPool.runAsync {
-            preloadItems(startIndex, maxItemsToPreload)
+        if(isRunningOnAndroid()) {
+            threadPool.runAsync {
+                preloadItems(startIndex, maxItemsToPreload)
+            }
         }
     }
 
@@ -77,6 +87,11 @@ open class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEn
         if(cachedResults[index] == null) {
             super.retrieveEntityFromDatabaseAndCache(index)
         }
+    }
+
+
+    private fun isRunningOnAndroid(): Boolean {
+        return osHelper.isRunningOnAndroid
     }
 
 }
