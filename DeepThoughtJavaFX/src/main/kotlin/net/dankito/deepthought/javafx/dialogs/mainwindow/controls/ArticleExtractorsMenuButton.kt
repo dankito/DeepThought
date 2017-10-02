@@ -72,7 +72,8 @@ class ArticleExtractorsMenuButton(private val controller: MainWindowController) 
 
     private fun setupArticleExtractorsMenuButton() {
         btnArticleExtractors.contentDisplay = ContentDisplay.GRAPHIC_ONLY
-        btnArticleExtractors.maxHeight = 26.0
+        btnArticleExtractors.minHeight = 29.0
+        btnArticleExtractors.maxHeight = 29.0
         btnArticleExtractors.prefWidth = 60.0
         btnArticleExtractors.isVisible = false
 

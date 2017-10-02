@@ -36,11 +36,11 @@ class MainMenuBar : View() {
     }
 
     override val root = gridpane {
-                prefHeight = 30.0
-
                 row {
-                    prefHeight = 30.0
                     menubar {
+                        minHeight = 30.0
+                        maxHeight = 30.0
+
                         gridpaneColumnConstraints {
                             hgrow = Priority.ALWAYS
                             minWidth = 50.0
