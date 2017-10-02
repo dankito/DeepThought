@@ -17,6 +17,7 @@ import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.data.messages.ArticleSummaryExtractorConfigChanged
+import net.dankito.service.data.messages.ReadLaterArticleChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.ReadLaterArticleSearch
@@ -29,6 +30,8 @@ class ArticleExtractorsMenuButton(private val controller: MainWindowController) 
 
     companion object {
         private const val ICON_SIZE = 38.0
+
+        private const val ReadLaterArticlesItemTag = "ReadLaterArticlesItem"
     }
 
 
@@ -82,17 +85,31 @@ class ArticleExtractorsMenuButton(private val controller: MainWindowController) 
         FXUtils.ensureNodeOnlyUsesSpaceIfVisible(root)
 
         dataManager.addInitializationListener {
-            searchEngine.searchReadLaterArticles(ReadLaterArticleSearch {
-                if(it.isNotEmpty()) {
-                    runLater { addShowReadLaterArticlesMenuItem() }
-                }
-            })
+            addOrRemoveReadLaterArticlesItem()
         }
     }
 
 
+    private fun addOrRemoveReadLaterArticlesItem() {
+        searchEngine.searchReadLaterArticles(ReadLaterArticleSearch {
+            runLater {
+                if (it.isNotEmpty()) {
+                    addShowReadLaterArticlesMenuItem()
+                }
+                else {
+                    removeShowReadLaterArticlesMenuItem()
+                }
+            }
+        })
+    }
+
     private fun addShowReadLaterArticlesMenuItem() {
+        if(btnArticleExtractors.items.size > 0 && btnArticleExtractors.items.get(0).tag == ReadLaterArticlesItemTag) { // ReadLaterArticles item already added
+            return
+        }
+
         val showReadLaterArticlesItem = MenuItem(messages["article.extractors.item.show.read.later.articles"])
+        showReadLaterArticlesItem.tag = ReadLaterArticlesItemTag
         showReadLaterArticlesItem.action { controller.showReadLaterArticlesView() }
 
         addMenuButtonArticleExtractorsMenuItem(showReadLaterArticlesItem, 0)
@@ -102,7 +119,14 @@ class ArticleExtractorsMenuButton(private val controller: MainWindowController) 
         btnArticleExtractors.isVisible = true
     }
 
-    fun addArticleSummaryExtractor(articleSummaryExtractorConfig: ArticleSummaryExtractorConfig) {
+    private fun removeShowReadLaterArticlesMenuItem() {
+        if(btnArticleExtractors.items.size > 0 && btnArticleExtractors.items.get(0).tag == ReadLaterArticlesItemTag) { // ReadLaterArticles item already added
+            btnArticleExtractors.items.remove(0, 2)
+        }
+    }
+
+
+    private fun addArticleSummaryExtractor(articleSummaryExtractorConfig: ArticleSummaryExtractorConfig) {
         val extractorItem = MenuItem(articleSummaryExtractorConfig.name)
         extractorItem.tag = articleSummaryExtractorConfig
         extractorItem.setOnAction { controller.showArticlesSummaryView(articleSummaryExtractorConfig) }
@@ -166,6 +190,12 @@ class ArticleExtractorsMenuButton(private val controller: MainWindowController) 
         fun articleSummaryExtractorChanged(changed: ArticleSummaryExtractorConfigChanged) {
             FXUtils.runOnUiThread { articleSummaryExtractorUpdated(changed.entity) }
         }
+
+        @Handler
+        fun readLaterArticleChanged(changed: ReadLaterArticleChanged) {
+            addOrRemoveReadLaterArticlesItem()
+        }
+
     }
 
 }
