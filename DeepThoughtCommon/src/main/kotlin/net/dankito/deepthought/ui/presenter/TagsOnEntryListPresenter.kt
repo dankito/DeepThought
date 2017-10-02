@@ -27,7 +27,7 @@ class TagsOnEntryListPresenter(tagsListView: ITagsListView, searchEngine: ISearc
         return searchResultsUtil.getButtonStateForSearchResult(lastTagsSearchResults)
     }
 
-    fun toggleTagsOnEntry(tagsOnEntry: MutableList<Tag>) {
+    fun toggleTagsOnEntry(tagsOnEntry: MutableCollection<Tag>) {
         lastTagsSearchResults?.let { searchResults ->
             searchResults.results.forEach { result ->
                 if(result.hasExactMatches()) {
@@ -40,7 +40,7 @@ class TagsOnEntryListPresenter(tagsListView: ITagsListView, searchEngine: ISearc
         }
     }
 
-    private fun toggleTagAffiliation(tag: Tag, tagsOnEntry: MutableList<Tag>) {
+    private fun toggleTagAffiliation(tag: Tag, tagsOnEntry: MutableCollection<Tag>) {
         if (tagsOnEntry.contains(tag)) {
             tagsOnEntry.remove(tag)
         }
