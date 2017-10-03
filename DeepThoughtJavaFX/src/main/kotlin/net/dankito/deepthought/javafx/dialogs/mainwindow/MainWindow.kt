@@ -4,6 +4,7 @@ import javafx.scene.control.SplitPane
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import javafx.scene.image.Image
+import javafx.scene.image.ImageView
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
@@ -12,9 +13,10 @@ import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.EntriesListVie
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.MainMenuBar
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.TagsListView
 import tornadofx.*
+import tornadofx.FX.Companion.messages
 
 
-class MainWindow : View() {
+class MainWindow : View(messages["main.window.title"], ImageView(Image(MainWindow::class.java.classLoader.getResourceAsStream("icons/AppIcon.ico")))) {
 
     override val root: BorderPane by fxml()
 
@@ -40,9 +42,6 @@ class MainWindow : View() {
     }
 
     private fun setupUI() {
-        title = messages["main.window.title"] // TODO: set icon
-        setStageIcon(Image(MainWindow::class.java.classLoader.getResourceAsStream("icons/AppIcon.png")))
-
         splpnContent = splitpane {
             tbpnOverview = tabpane {
                 prefWidth = 300.0
