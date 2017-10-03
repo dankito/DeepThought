@@ -23,7 +23,7 @@ object ArticleTextExtractor {
 
     // Unlikely candidates
     private val UNLIKELY = Pattern.compile("com(bx|ment|munity)|dis(qus|cuss)|e(xtra|[-]?mail)|foot|"
-            + "header|menu|re(mark|ply)|rss|sh(are|outbox)|social|twitter|facebook|sponsor"
+            + "header|menu|re(mark|ply)|rss|sh(are|outbox)|social|twitter|facebook|sponsor|"
             + "a(d|ll|gegate|rchive|ttachment)|(pag(er|ination))|popup|print|"
             + "login|si(debar|gn|ngle)|hinweis|expla(in|nation)?|metablock")
 
