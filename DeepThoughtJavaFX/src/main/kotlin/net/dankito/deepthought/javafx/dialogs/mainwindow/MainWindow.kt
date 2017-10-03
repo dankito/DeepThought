@@ -4,7 +4,6 @@ import javafx.scene.control.SplitPane
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import javafx.scene.image.Image
-import javafx.scene.image.ImageView
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
@@ -16,7 +15,7 @@ import tornadofx.*
 import tornadofx.FX.Companion.messages
 
 
-class MainWindow : View(messages["main.window.title"], ImageView(Image(MainWindow::class.java.classLoader.getResourceAsStream("icons/AppIcon.ico")))) {
+class MainWindow : View(messages["main.window.title"]) {
 
     override val root: BorderPane by fxml()
 
@@ -42,6 +41,8 @@ class MainWindow : View(messages["main.window.title"], ImageView(Image(MainWindo
     }
 
     private fun setupUI() {
+        setStageIcon(Image(MainWindow::class.java.classLoader.getResourceAsStream("icons/AppIcon.png")))
+
         splpnContent = splitpane {
             tbpnOverview = tabpane {
                 prefWidth = 300.0
