@@ -3,6 +3,7 @@ package net.dankito.deepthought.javafx.dialogs.mainwindow
 import javafx.scene.control.SplitPane
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
+import javafx.scene.image.Image
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
@@ -40,6 +41,7 @@ class MainWindow : View() {
 
     private fun setupUI() {
         title = messages["main.window.title"] // TODO: set icon
+        setStageIcon(Image(MainWindow::class.java.classLoader.getResourceAsStream("icons/AppIcon.png")))
 
         splpnContent = splitpane {
             tbpnOverview = tabpane {
