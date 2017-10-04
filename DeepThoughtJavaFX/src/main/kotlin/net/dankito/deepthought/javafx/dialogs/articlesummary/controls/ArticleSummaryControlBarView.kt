@@ -7,10 +7,10 @@ import javafx.geometry.Pos
 import javafx.scene.control.ContentDisplay
 import javafx.scene.image.ImageView
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
-import net.dankito.deepthought.javafx.dialogs.articlesummary.presenter.JavaFXArticleSummaryPresenter
 import net.dankito.deepthought.javafx.res.icons.IconPaths
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
+import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import tornadofx.*
@@ -18,7 +18,7 @@ import java.text.DateFormat
 import java.util.*
 
 
-class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPresenter, private val articleSummaryItemsView: ArticleSummaryItemsView,
+class ArticleSummaryControlBarView(private val presenter: ArticleSummaryPresenter, private val articleSummaryItemsView: ArticleSummaryItemsView,
                                    private val articleSummaryExtractorConfig: ArticleSummaryExtractorConfig) : View() {
 
     companion object {

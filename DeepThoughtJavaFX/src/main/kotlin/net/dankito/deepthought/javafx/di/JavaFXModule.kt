@@ -7,7 +7,6 @@ import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.deepthought.javafx.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.javafx.appstart.JavaFXAppInitializer
 import net.dankito.deepthought.javafx.dialogs.JavaFXDialogService
-import net.dankito.deepthought.javafx.dialogs.articlesummary.presenter.JavaFXArticleSummaryPresenter
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardService
@@ -17,6 +16,7 @@ import net.dankito.deepthought.javafx.service.settings.JavaFXLocalSettingsStore
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractorsManager
 import net.dankito.service.data.ReadLaterArticleService
@@ -88,7 +88,7 @@ class JavaFXModule(private val flavorInstanceProvider: JavaFXInstanceProvider, p
     @Provides
     @Singleton
     fun provideArticleSummaryPresenter(entryPersister: EntryPersister, readLaterArticleService: ReadLaterArticleService, articleExtractorManager: ArticleExtractorManager,
-                                       router: IRouter, clipboardService: IClipboardService, dialogService: IDialogService) : JavaFXArticleSummaryPresenter {
+                                       router: IRouter, clipboardService: IClipboardService, dialogService: IDialogService) : ArticleSummaryPresenter {
         return flavorInstanceProvider.provideArticleSummaryPresenter(entryPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService)
     }
 
