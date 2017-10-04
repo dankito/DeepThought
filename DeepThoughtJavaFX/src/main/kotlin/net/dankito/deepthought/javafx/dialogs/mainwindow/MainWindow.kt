@@ -68,6 +68,7 @@ class MainWindow : View(messages["main.window.title"]) {
 
             contentPane.add(entriesListView.root)
             VBox.setVgrow(entriesListView.root, Priority.ALWAYS)
+            entriesListView.statusBar = statusBar
 
             splpnContent.setDividerPosition(0, 0.2)
         }

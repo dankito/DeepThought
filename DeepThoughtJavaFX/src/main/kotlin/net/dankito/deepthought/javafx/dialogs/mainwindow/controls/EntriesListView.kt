@@ -37,6 +37,8 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
 
     private var tableEntries: TableView<Entry> by singleAssign()
 
+    var statusBar: StatusBar? = null
+
     private val presenter: EntriesListPresenter
 
 
@@ -121,6 +123,8 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
         runLater {
             entries.setAll(entities)
             tableEntries.refresh() // necessary when count entries stays the same (e.g. when an entry has been updated)
+
+            statusBar?.showCountDisplayedEntriesOnUiThread(entities.size)
         }
     }
 

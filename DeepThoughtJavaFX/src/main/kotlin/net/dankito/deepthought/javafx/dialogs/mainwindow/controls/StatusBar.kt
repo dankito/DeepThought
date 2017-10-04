@@ -32,11 +32,11 @@ class StatusBar : View() {
             }
 
             statusLabelCountEntries = label {
-                prefWidth = 100.0
                 textAlignment = TextAlignment.RIGHT
 
                 gridpaneConstraints {
                     vAlignment = VPos.CENTER
+                    hAlignment = HPos.RIGHT
                     columnIndex = 1
                 }
 
@@ -45,6 +45,15 @@ class StatusBar : View() {
                 }
             }
         }
+    }
+
+
+    fun showStatusOnUiThread(status: String) {
+        statusLabel.text = status
+    }
+
+    fun showCountDisplayedEntriesOnUiThread(countEntries: Int) {
+        statusLabelCountEntries.text = String.format(messages["main.window.status.bar.count.displayed.entries"], countEntries)
     }
 
 }
