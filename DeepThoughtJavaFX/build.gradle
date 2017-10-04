@@ -48,7 +48,9 @@ compileTestKotlin.kotlinOptions.jvmTarget = '1.8'
 
 
 dependencies {
-    compile project(':DeepThoughtJavaLogic')
+    compile project(':DeepThoughtCommon')
+    compile project(':JavaCouchbaseLiteEntityManager')
+    compile project(':UdpDevicesDiscoverer')
 
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
@@ -58,6 +60,9 @@ dependencies {
 
     compile "no.tornado:tornadofx-controls:$tornadoFXControlsVersion"
     compile "org.controlsfx:controlsfx:$controlsFXVersion"
+
+    compile "ch.qos.logback:logback-core:$logbackVersion"
+    compile "ch.qos.logback:logback-classic:$logbackVersion"
 }
 
 compileJava {
