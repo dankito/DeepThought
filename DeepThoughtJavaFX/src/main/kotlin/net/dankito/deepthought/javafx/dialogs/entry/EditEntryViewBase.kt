@@ -100,7 +100,7 @@ abstract class EditEntryViewBase : DialogFragment() {
         prefHeight = 650.0
 
         hbox {
-            prefHeight = 50.0
+            prefHeight = 20.0
             maxHeight = 100.0
             prefWidthProperty().bind(this@vbox.widthProperty())
 
@@ -110,8 +110,6 @@ abstract class EditEntryViewBase : DialogFragment() {
             }
 
             txtAbstract = label {
-                prefHeight = 50.0
-                maxHeight = 100.0
                 isWrapText = true
 
                 textProperty().bind(abstractPlainText)
@@ -123,7 +121,7 @@ abstract class EditEntryViewBase : DialogFragment() {
         }
 
         hbox {
-            prefHeight = 50.0
+            prefHeight = 20.0
             maxHeight = 70.0
             prefWidthProperty().bind(this@vbox.widthProperty())
 
@@ -146,7 +144,7 @@ abstract class EditEntryViewBase : DialogFragment() {
         }
 
         hbox {
-            prefHeight = 50.0
+            prefHeight = 20.0
             maxHeight = 70.0
             prefWidthProperty().bind(this@vbox.widthProperty())
 
