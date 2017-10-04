@@ -1,4 +1,4 @@
-package net.dankito.deepthought.android.service.di
+package net.dankito.deepthought.android.di
 
 import android.content.Context
 import dagger.Module
@@ -11,7 +11,7 @@ import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.data_access.network.discovery.AndroidUdpDevicesDiscoverer
 import net.dankito.data_access.network.discovery.IDevicesDiscoverer
 import net.dankito.deepthought.android.service.hashing.AndroidBase64Service
-import net.dankito.deepthought.android.service.platform.AndroidPlatformConfiguration
+import net.dankito.deepthought.android.service.settings.AndroidPlatformConfiguration
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.services.hashing.IBase64Service

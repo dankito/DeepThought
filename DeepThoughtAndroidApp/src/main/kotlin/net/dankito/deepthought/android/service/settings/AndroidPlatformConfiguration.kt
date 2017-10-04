@@ -1,4 +1,4 @@
-package net.dankito.deepthought.android.service.platform
+package net.dankito.deepthought.android.service.settings
 
 import android.content.Context
 import android.os.Build
