@@ -16,6 +16,7 @@ import javafx.scene.web.WebView
 import javafx.stage.StageStyle
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
+import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
 import net.dankito.deepthought.javafx.ui.controls.JavaFXHtmlEditor
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.Entry
@@ -200,37 +201,8 @@ abstract class EditEntryViewBase : DialogFragment() {
             }
         }
 
-        anchorpane {
-
-            hbox {
-                anchorpaneConstraints {
-                    topAnchor = 0.0
-                    rightAnchor = 0.0
-                    bottomAnchor = 0.0
-                }
-
-                button(messages["action.cancel"]) {
-                    minHeight = 40.0
-                    maxHeight = 40.0
-                    prefWidth = 150.0
-                    action { closeDialog() }
-
-                    hboxConstraints {
-                        marginRight = 12.0
-                    }
-                }
-
-                button(messages["action.save"]) {
-                    minHeight = 40.0
-                    maxHeight = 40.0
-                    prefWidth = 150.0
-
-                    disableProperty().bind(hasUnsavedChanges)
-
-                    action { saveEntryAndCloseDialog() }
-                }
-            }
-        }
+        val buttons = DialogButtonBar({ closeDialog() }, { saveEntryAsync(it) }, hasUnsavedChanges.value, messages["action.save"])
+        add(buttons)
     }
 
     protected open fun urlLoaded(url: String, html: String) {
@@ -314,11 +286,11 @@ abstract class EditEntryViewBase : DialogFragment() {
     }
 
 
-    private fun saveEntryAndCloseDialog() {
+    private fun saveEntryAsync(done: () -> Unit) {
         updateEntryAndSaveAsync {
             entrySaved()
 
-            runLater { closeDialog() }
+            done()
         }
     }
 
@@ -339,10 +311,12 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     }
 
-    protected open fun closeDialog() {
-        cleanUp()
+    private fun closeDialog() {
+        runLater {
+            cleanUp()
 
-        close()
+            close()
+        }
     }
 
 }
