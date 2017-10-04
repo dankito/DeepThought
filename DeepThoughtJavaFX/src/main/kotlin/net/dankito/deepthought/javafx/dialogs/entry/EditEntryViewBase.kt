@@ -5,16 +5,19 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableSet
 import javafx.collections.SetChangeListener
+import javafx.concurrent.Worker
 import javafx.scene.Cursor
 import javafx.scene.control.Control
 import javafx.scene.control.Label
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Priority
+import javafx.scene.web.WebView
 import javafx.stage.StageStyle
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.javafx.ui.controls.JavaFXHtmlEditor
+import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Series
@@ -54,6 +57,8 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     private val htmlEditor: JavaFXHtmlEditor
 
+    private var wbvwShowUrl: WebView by singleAssign()
+
     private var tagsOnEntryDialog: TagsOnEntryDialog? = null
 
 
@@ -69,6 +74,8 @@ abstract class EditEntryViewBase : DialogFragment() {
     private var referenceToEdit: Reference? = null
 
     private var seriesToEdit: Series? = null
+
+    private var currentlyDisplayedUrl: String? = null
 
 
     @Inject
@@ -173,7 +180,25 @@ abstract class EditEntryViewBase : DialogFragment() {
         htmlEditor.vgrow = Priority.ALWAYS
         htmlEditor.useMaxWidth = true
         htmlEditor.prefWidthProperty().bind(this@vbox.widthProperty())
+        FXUtils.ensureNodeOnlyUsesSpaceIfVisible(htmlEditor)
         contentHtml.onChange { htmlEditor.setHtml(contentHtml.value) }
+
+        wbvwShowUrl = webview {
+            isVisible = false
+            useMaxWidth = true
+
+            vboxConstraints {
+                vgrow = Priority.ALWAYS
+            }
+        }
+        FXUtils.ensureNodeOnlyUsesSpaceIfVisible(wbvwShowUrl)
+
+        wbvwShowUrl.engine.loadWorker.stateProperty().addListener { _, _, newState ->
+            if(newState === Worker.State.SUCCEEDED) {
+                val html = wbvwShowUrl.engine.executeScript("document.documentElement.outerHTML") as String
+                currentlyDisplayedUrl?.let { urlLoaded(it, html) }
+            }
+        }
 
         anchorpane {
 
@@ -206,6 +231,10 @@ abstract class EditEntryViewBase : DialogFragment() {
                 }
             }
         }
+    }
+
+    protected open fun urlLoaded(url: String, html: String) {
+
     }
 
 
@@ -241,7 +270,7 @@ abstract class EditEntryViewBase : DialogFragment() {
     }
 
 
-    protected fun showData(entry: Entry, tags: Collection<Tag>, reference: Reference?, series: Series?) {
+    protected fun showData(entry: Entry, tags: Collection<Tag>, reference: Reference?, series: Series?, contentToEdit: String? = null) {
         this.entry = entry
         abstractToEdit = entry.abstractString
         tagsOnEntry.addAll(tags) // make a copy
@@ -249,10 +278,31 @@ abstract class EditEntryViewBase : DialogFragment() {
         seriesToEdit = series
 
         abstractPlainText.value = Jsoup.parseBodyFragment(abstractToEdit).text()
-        contentHtml.value = entry.content
+
+        showContent(entry, reference, contentToEdit)
 
         showTagsPreview(tagsOnEntry)
         showReferencePreview(reference, series)
+    }
+
+    private fun showContent(entry: Entry, reference: Reference?, contentToEdit: String?) {
+        val content = contentToEdit ?: entry.content
+
+        if(content.isNullOrBlank() && reference?.url != null) { // content could not get extracted yet -> show url and when its html is loaded try to extract content then
+            reference.url?.let { url ->
+                wbvwShowUrl.engine.load(url)
+                currentlyDisplayedUrl = url
+
+                htmlEditor.isVisible = false
+                wbvwShowUrl.isVisible = true
+            }
+        }
+        else {
+            contentHtml.value = content
+
+            htmlEditor.isVisible = true
+            wbvwShowUrl.isVisible = false
+        }
     }
 
     private fun showReferencePreview(reference: Reference?, series: Series?) {
