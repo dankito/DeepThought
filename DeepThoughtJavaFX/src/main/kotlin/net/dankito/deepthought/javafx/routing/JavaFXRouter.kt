@@ -41,7 +41,7 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
     override fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig, summary: ArticleSummary?) {
         runLater {
             // TODO: may also pass summary
-            val dialogView = mainWindowController.find(ArticleSummaryView::class, mapOf(ArticleSummaryView::articleSummaryExtractor to extractor))
+            val dialogView = mainWindowController.find(ArticleSummaryView::class, mapOf(ArticleSummaryView::articleSummaryExtractorConfig to extractor))
             dialogView.show(extractor.name, extractor.iconUrl)
         }
     }

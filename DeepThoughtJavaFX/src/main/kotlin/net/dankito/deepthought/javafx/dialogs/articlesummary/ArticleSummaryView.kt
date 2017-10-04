@@ -40,7 +40,7 @@ class ArticleSummaryView : DialogFragment() {
     protected lateinit var presenter: JavaFXArticleSummaryPresenter
 
 
-    val articleSummaryExtractor: ArticleSummaryExtractorConfig by param()
+    val articleSummaryExtractorConfig: ArticleSummaryExtractorConfig by param()
 
     private val articleSummaryItemsView: ArticleSummaryItemsView
 
@@ -56,15 +56,13 @@ class ArticleSummaryView : DialogFragment() {
     init {
         AppComponent.component.inject(this)
 
-        presenter.extractArticlesSummary(articleSummaryExtractor)
-
         articleSummaryItemsView = ArticleSummaryItemsView(presenter)
         root.center = articleSummaryItemsView.root
 
-        articleSummaryControlBarView = ArticleSummaryControlBarView(presenter, articleSummaryItemsView)
+        articleSummaryControlBarView = ArticleSummaryControlBarView(presenter, articleSummaryItemsView, articleSummaryExtractorConfig)
         root.bottom = articleSummaryControlBarView.root
 
-        title = articleSummaryExtractor.name
+        title = articleSummaryExtractorConfig.name
     }
 
 }

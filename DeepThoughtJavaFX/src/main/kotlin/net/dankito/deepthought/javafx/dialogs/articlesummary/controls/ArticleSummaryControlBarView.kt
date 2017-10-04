@@ -6,14 +6,20 @@ import javafx.collections.SetChangeListener
 import javafx.geometry.Pos
 import javafx.scene.control.ContentDisplay
 import javafx.scene.image.ImageView
+import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.deepthought.javafx.dialogs.articlesummary.presenter.JavaFXArticleSummaryPresenter
 import net.dankito.deepthought.javafx.res.icons.IconPaths
 import net.dankito.deepthought.javafx.util.FXUtils
+import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
+import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import tornadofx.*
+import java.text.DateFormat
+import java.util.*
 
 
-class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPresenter, private val articleSummaryItemsView: ArticleSummaryItemsView) : View() {
+class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPresenter, private val articleSummaryItemsView: ArticleSummaryItemsView,
+                                   private val articleSummaryExtractorConfig: ArticleSummaryExtractorConfig) : View() {
 
     companion object {
         private const val ButtonsHeight = 40.0
@@ -27,7 +33,14 @@ class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPr
         private const val ButtonsLeftMargin = 12.0
 
         private const val BarHeight = ButtonsHeight + 2 * ButtonsTopAndBottomMargin
+
+        private val LastUpdateTimeDateFormat = DateFormat.getDateTimeInstance()
     }
+
+
+    val canLoadMoreItems = SimpleBooleanProperty(false)
+
+    val lastUpdateTime = SimpleStringProperty("")
 
 
     private val countItemsSelectedLabelText = SimpleStringProperty(String.format(messages["count.items.selected"], 0))
@@ -41,6 +54,8 @@ class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPr
 
             countItemsSelectedLabelText.set(String.format(messages["count.items.selected"], it.set.size))
         })
+
+        presenter.extractArticlesSummary(articleSummaryExtractorConfig) { articleSummaryReceived(it) }
     }
 
 
@@ -110,7 +125,7 @@ class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPr
 
             alignment = Pos.CENTER_LEFT
 
-            label(presenter.lastUpdateTime) {
+            label(lastUpdateTime) {
                 hboxConstraints {
                     marginLeft = ButtonsLeftMargin
                 }
@@ -125,7 +140,7 @@ class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPr
                 contentDisplay = ContentDisplay.GRAPHIC_ONLY
                 graphic = ImageView(IconPaths.UpdateIconPath)
 
-                action { presenter.extractArticlesSummary(articleSummaryItemsView.root) }
+                action { presenter.extractArticlesSummary(articleSummaryExtractorConfig) { articleSummaryReceived(it) } }
 
                 hboxConstraints {
                     marginLeft = 6.0
@@ -139,13 +154,13 @@ class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPr
                 minWidth = IconButtonsWidth
                 maxWidth = IconButtonsWidth
 
-                visibleProperty().bind(presenter.canLoadMoreItems)
+                visibleProperty().bind(canLoadMoreItems)
                 FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
 
                 contentDisplay = ContentDisplay.GRAPHIC_ONLY
                 graphic = ImageView(IconPaths.LoadNextItemsIconPath)
 
-                action { presenter.loadMoreItems(articleSummaryItemsView.root) }
+                action { presenter.loadMoreItems(articleSummaryExtractorConfig) { articleSummaryReceived(it) } }
 
                 hboxConstraints {
                     marginLeft = ButtonsLeftMargin
@@ -174,9 +189,26 @@ class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPr
         }
     }
 
-
     private fun getSelectedItems(): Collection<ArticleSummaryItem> {
         return articleSummaryItemsView.checkedItems
+    }
+
+
+    private fun articleSummaryReceived(result: AsyncResult<out ArticleSummary>) {
+        result.result?.let { articleSummaryReceived(it) }
+        // TODO: show error
+    }
+
+    private fun articleSummaryReceived(articleSummary: ArticleSummary) {
+        runLater {
+            articleSummaryItemsView.items.setAll(articleSummary.articles)
+
+            canLoadMoreItems.set(articleSummary.canLoadMoreItems)
+
+            lastUpdateTime.set(LastUpdateTimeDateFormat.format(Date()))
+
+            articleSummaryItemsView.root.scrollTo(articleSummary.indexOfAddedItems)
+        }
     }
 
 }

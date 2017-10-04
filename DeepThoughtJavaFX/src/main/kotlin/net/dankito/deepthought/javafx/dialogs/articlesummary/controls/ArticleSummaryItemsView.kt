@@ -2,6 +2,7 @@ package net.dankito.deepthought.javafx.dialogs.articlesummary.controls
 
 import javafx.collections.FXCollections
 import javafx.collections.ObservableSet
+import net.dankito.deepthought.javafx.dialogs.articlesummary.model.ArticleSummaryItemViewModel
 import net.dankito.deepthought.javafx.dialogs.articlesummary.presenter.JavaFXArticleSummaryPresenter
 import net.dankito.newsreader.model.ArticleSummaryItem
 import tornadofx.*
@@ -9,15 +10,20 @@ import tornadofx.*
 
 class ArticleSummaryItemsView(private val presenter: JavaFXArticleSummaryPresenter) : View() {
 
+    val items = FXCollections.observableArrayList<ArticleSummaryItem>()
+
     val checkedItems: ObservableSet<ArticleSummaryItem> = FXCollections.observableSet(LinkedHashSet())
 
 
+    private val itemModel = ArticleSummaryItemViewModel()
+
+
     override val root = listview<ArticleSummaryItem> {
-        items = presenter.items
+        items = this@ArticleSummaryItemsView.items
 
         userData = checkedItems // bad code design
 
-        bindSelected(presenter.itemModel)
+        bindSelected(itemModel)
 
         prefWidth = 800.0
         prefHeight = 400.0
