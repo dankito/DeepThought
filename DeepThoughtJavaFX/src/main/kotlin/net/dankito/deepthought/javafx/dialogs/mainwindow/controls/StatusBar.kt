@@ -24,6 +24,8 @@ class StatusBar : View() {
                 gridpaneConstraints {
                     hgrow = Priority.ALWAYS
                     vAlignment = VPos.CENTER
+                    marginTopBottom(2.0)
+                    marginLeftRight(2.0)
                 }
 
                 gridpaneColumnConstraints {
@@ -35,9 +37,12 @@ class StatusBar : View() {
                 textAlignment = TextAlignment.RIGHT
 
                 gridpaneConstraints {
+                    columnIndex = 1
                     vAlignment = VPos.CENTER
                     hAlignment = HPos.RIGHT
-                    columnIndex = 1
+                    marginTopBottom(2.0)
+                    marginRight = 2.0
+                    marginLeft = 6.0
                 }
 
                 gridpaneColumnConstraints {
