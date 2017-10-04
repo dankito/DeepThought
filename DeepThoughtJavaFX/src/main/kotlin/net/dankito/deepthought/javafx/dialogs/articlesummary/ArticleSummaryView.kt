@@ -36,10 +36,11 @@ class ArticleSummaryView : DialogFragment() {
     @Inject
     protected lateinit var dialogService: IDialogService
 
+    @Inject
+    protected lateinit var presenter: JavaFXArticleSummaryPresenter
+
 
     val articleSummaryExtractor: ArticleSummaryExtractorConfig by param()
-
-    private var presenter: JavaFXArticleSummaryPresenter
 
     private val articleSummaryItemsView: ArticleSummaryItemsView
 
@@ -55,7 +56,7 @@ class ArticleSummaryView : DialogFragment() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = JavaFXArticleSummaryPresenter(articleSummaryExtractor, entryPerister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService)
+        presenter.extractArticlesSummary(articleSummaryExtractor)
 
         articleSummaryItemsView = ArticleSummaryItemsView(presenter)
         root.center = articleSummaryItemsView.root

@@ -23,7 +23,7 @@ import java.util.*
 /**
  * Yeah, i know this is bad design, a Controller deriving from a Presenter ...
  */
-class JavaFXArticleSummaryPresenter(private val articleSummaryExtractor: ArticleSummaryExtractorConfig, entryPersister: EntryPersister, readLaterArticleService: ReadLaterArticleService,
+class JavaFXArticleSummaryPresenter(entryPersister: EntryPersister, readLaterArticleService: ReadLaterArticleService,
                                     articleExtractorManager: ArticleExtractorManager, router: IRouter, clipboardService: IClipboardService, dialogService: IDialogService)
     : ArticleSummaryPresenter(entryPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService) {
 
@@ -31,6 +31,9 @@ class JavaFXArticleSummaryPresenter(private val articleSummaryExtractor: Article
     companion object {
         private val LastUpdateTimeDateFormat = DateFormat.getDateTimeInstance()
     }
+
+
+    private var articleSummaryExtractorConfig: ArticleSummaryExtractorConfig by singleAssign()
 
 
     val itemModel = ArticleSummaryItemViewModel()
@@ -42,13 +45,14 @@ class JavaFXArticleSummaryPresenter(private val articleSummaryExtractor: Article
     val lastUpdateTime = SimpleStringProperty("")
 
 
-    init {
-        extractArticlesSummary()
+    fun extractArticlesSummary(config: ArticleSummaryExtractorConfig) {
+        this.articleSummaryExtractorConfig = config
+
+        extractArticlesSummary(null)
     }
 
-
     fun extractArticlesSummary(listView: ListView<ArticleSummaryItem>? = null) {
-        extractArticlesSummary(articleSummaryExtractor) {
+        extractArticlesSummary(articleSummaryExtractorConfig) {
             it.result?.let { articleSummaryReceived(it, listView) }
         }
     }
@@ -57,7 +61,7 @@ class JavaFXArticleSummaryPresenter(private val articleSummaryExtractor: Article
         lastLoadedSummary?.let { summary ->
             canLoadMoreItems.set(false)
 
-            loadMoreItems(articleSummaryExtractor) {
+            loadMoreItems(articleSummaryExtractorConfig) {
                 it.result?.let { articleSummaryReceived(it, listView) }
             }
         }

@@ -7,6 +7,7 @@ import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.javafx.appstart.JavaFXAppInitializer
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.di.DaggerAppComponent
+import net.dankito.deepthought.javafx.di.JavaFXInstanceProvider
 import net.dankito.deepthought.javafx.di.JavaFXModule
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindow
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
@@ -41,7 +42,7 @@ class DeepThoughtJavaFXApplication : App(MainWindow::class) {
 
     private fun setupDI() {
         val component = DaggerAppComponent.builder()
-                .javaFXModule(JavaFXModule(mainWindowController))
+                .javaFXModule(JavaFXModule(createFlavorInstanceProvider(), mainWindowController))
                 .build()
 
         BaseComponent.component = component
@@ -54,6 +55,10 @@ class DeepThoughtJavaFXApplication : App(MainWindow::class) {
         component.inject(this)
 
         appInitializer.initializeApp()
+    }
+
+    protected open fun createFlavorInstanceProvider(): JavaFXInstanceProvider {
+        return JavaFXInstanceProvider()
     }
 
 

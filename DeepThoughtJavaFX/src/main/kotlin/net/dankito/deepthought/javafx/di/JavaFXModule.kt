@@ -7,16 +7,19 @@ import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.deepthought.javafx.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.javafx.appstart.JavaFXAppInitializer
 import net.dankito.deepthought.javafx.dialogs.JavaFXDialogService
+import net.dankito.deepthought.javafx.dialogs.articlesummary.presenter.JavaFXArticleSummaryPresenter
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardService
 import net.dankito.deepthought.javafx.service.communication.JavaFXDeviceRegistrationHandler
 import net.dankito.deepthought.javafx.service.network.JavaFXNetworkConnectivityManager
 import net.dankito.deepthought.javafx.service.settings.JavaFXLocalSettingsStore
+import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractorsManager
-import net.dankito.newsreader.summary.NoOpImplementedArticleSummaryExtractorsManager
+import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.services.network.INetworkConnectivityManager
@@ -28,7 +31,7 @@ import javax.inject.Singleton
 
 
 @Module
-class JavaFXModule(private val mainWindowController: MainWindowController) {
+class JavaFXModule(private val flavorInstanceProvider: JavaFXInstanceProvider, private val mainWindowController: MainWindowController) {
 
     @Provides
     @Singleton
@@ -84,8 +87,15 @@ class JavaFXModule(private val mainWindowController: MainWindowController) {
 
     @Provides
     @Singleton
+    fun provideArticleSummaryPresenter(entryPersister: EntryPersister, readLaterArticleService: ReadLaterArticleService, articleExtractorManager: ArticleExtractorManager,
+                                       router: IRouter, clipboardService: IClipboardService, dialogService: IDialogService) : JavaFXArticleSummaryPresenter {
+        return flavorInstanceProvider.provideArticleSummaryPresenter(entryPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService)
+    }
+
+    @Provides
+    @Singleton
     fun provideImplementedArticleSummaryExtractorsManager(webClient: IWebClient) : IImplementedArticleSummaryExtractorsManager {
-        return NoOpImplementedArticleSummaryExtractorsManager()
+        return flavorInstanceProvider.provideImplementedArticleSummaryExtractorsManager(webClient)
     }
 
 }
