@@ -1,5 +1,6 @@
 package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 
+import javafx.scene.control.TableView
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.EntryViewModel
@@ -33,6 +34,8 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
     private val entries = LazyLoadingObservableList<Entry>()
 
     private val searchBar: EntriesSearchBar
+
+    private var tableEntries: TableView<Entry> by singleAssign()
 
     private val presenter: EntriesListPresenter
 
@@ -72,7 +75,7 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
     override val root = vbox {
         add(searchBar.root)
 
-        tableview<Entry>(entries) {
+        tableEntries = tableview<Entry>(entries) {
             column(messages["entry.column.header.index"], Entry::entryIndex).prefWidth(46.0)
             column(messages["entry.column.header.reference"], Entry::referencePreview).weigthedWidth(4.0)
             column(messages["entry.column.header.preview"], Entry::preview).weigthedWidth(4.0)
@@ -115,7 +118,10 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
     /*          IEntriesListView implementation            */
 
     override fun showEntities(entities: List<Entry>) {
-        runLater { entries.setAll(entities) }
+        runLater {
+            entries.setAll(entities)
+            tableEntries.refresh() // necessary when count entries stays the same (e.g. when an entry has been updated)
+        }
     }
 
     override fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {
