@@ -54,7 +54,7 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
         AppComponent.component.inject(this)
 
         presenter = EntriesListPresenter(this, router, searchEngine, deleteEntityService, clipboardService)
-        searchBar = EntriesSearchBar(this)
+        searchBar = EntriesSearchBar(this, presenter)
 
         (router as? JavaFXRouter)?.entriesListView = this // TODO: this is bad code design
 

@@ -19,7 +19,7 @@ import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class EntriesListPresenter(private val entriesListView: IEntriesListView, router: IRouter, private var searchEngine: ISearchEngine,
+class EntriesListPresenter(private val entriesListView: IEntriesListView, private val router: IRouter, private val searchEngine: ISearchEngine,
                            deleteEntityService: DeleteEntityService, clipboardService: IClipboardService)
     : EntriesListPresenterBase(deleteEntityService, clipboardService, router), IMainViewSectionPresenter {
 
@@ -50,6 +50,10 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, router
         eventBus.unregister(eventBusListener)
     }
 
+
+    fun createEntry() {
+        router.showCreateEntryView()
+    }
 
     fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {
         selectedTag = tag
