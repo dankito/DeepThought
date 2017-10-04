@@ -1,4 +1,4 @@
-package net.dankito.deepthought.java.service.di
+package net.dankito.deepthought.javafx.di
 
 import dagger.Module
 import dagger.Provides
@@ -9,8 +9,8 @@ import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.data_access.network.discovery.IDevicesDiscoverer
 import net.dankito.data_access.network.discovery.UdpDevicesDiscoverer
-import net.dankito.deepthought.java.service.hashing.Java8Base64Service
-import net.dankito.deepthought.java.service.platform.JavaPlatformConfiguration
+import net.dankito.deepthought.javafx.service.hashing.Java8Base64Service
+import net.dankito.deepthought.javafx.service.settings.JavaPlatformConfiguration
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.services.hashing.IBase64Service

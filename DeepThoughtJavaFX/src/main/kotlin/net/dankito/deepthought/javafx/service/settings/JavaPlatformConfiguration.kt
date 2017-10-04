@@ -1,4 +1,4 @@
-package net.dankito.deepthought.java.service.platform
+package net.dankito.deepthought.javafx.service.settings
 
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.utils.IPlatformConfiguration
