@@ -20,9 +20,6 @@ import java.text.DateFormat
 import java.util.*
 
 
-/**
- * Yeah, i know this is bad design, a Controller deriving from a Presenter ...
- */
 class JavaFXArticleSummaryPresenter(entryPersister: EntryPersister, readLaterArticleService: ReadLaterArticleService,
                                     articleExtractorManager: ArticleExtractorManager, router: IRouter, clipboardService: IClipboardService, dialogService: IDialogService)
     : ArticleSummaryPresenter(entryPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService) {
