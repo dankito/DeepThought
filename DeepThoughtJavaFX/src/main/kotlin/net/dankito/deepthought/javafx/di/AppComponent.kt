@@ -5,7 +5,6 @@ import net.dankito.deepthought.di.BaseModule
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.di.CommonDataModule
 import net.dankito.deepthought.di.CommonModule
-import net.dankito.deepthought.java.service.di.JavaCommonModule
 import net.dankito.deepthought.javafx.DeepThoughtJavaFXApplication
 import net.dankito.deepthought.javafx.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.javafx.appstart.JavaFXAppInitializer
