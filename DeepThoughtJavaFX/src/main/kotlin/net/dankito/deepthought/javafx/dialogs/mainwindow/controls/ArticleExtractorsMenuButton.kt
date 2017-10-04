@@ -74,6 +74,7 @@ class ArticleExtractorsMenuButton : View() {
         btnArticleExtractors.isVisible = false
 
         btnArticleExtractors.graphic = ImageView(IconPaths.NewspaperIconPath)
+        btnArticleExtractors.style = "-fx-border-image-insets: 0; -fx-border-insets: 0; -fx-padding: 0;"
 
         btnArticleExtractors.items.clear() // remove automatically added 'Article 1' and 'Article 2'
 
