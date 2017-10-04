@@ -60,14 +60,11 @@ class ArticleExtractorsMenuButton : View() {
         btnArticleExtractors = MenuButton()
         setupArticleExtractorsMenuButton()
 
-        extractorsConfigManager.addInitializationListener { runLater {
-            extractorsConfigManager.getConfigs().forEach { addArticleSummaryExtractor(it) }
-        } }
-
-        eventBus.register(eventBusListener)
+        setupData()
     }
 
     override val root = btnArticleExtractors
+
 
     private fun setupArticleExtractorsMenuButton() {
         btnArticleExtractors.contentDisplay = ContentDisplay.GRAPHIC_ONLY
@@ -76,15 +73,25 @@ class ArticleExtractorsMenuButton : View() {
         btnArticleExtractors.prefWidth = 60.0
         btnArticleExtractors.isVisible = false
 
-        btnArticleExtractors.items.clear() // remove automatically added 'Article 1' and 'Article 2'
-
         btnArticleExtractors.graphic = ImageView(IconPaths.NewspaperIconPath)
 
+        btnArticleExtractors.items.clear() // remove automatically added 'Article 1' and 'Article 2'
+
         FXUtils.ensureNodeOnlyUsesSpaceIfVisible(btnArticleExtractors)
+    }
+
+    private fun setupData() {
+        extractorsConfigManager.addInitializationListener {
+            runLater {
+                extractorsConfigManager.getConfigs().forEach { addArticleSummaryExtractor(it) }
+            }
+        }
 
         dataManager.addInitializationListener {
             addOrRemoveReadLaterArticlesItem()
         }
+
+        eventBus.register(eventBusListener)
     }
 
 
