@@ -1,0 +1,47 @@
+apply plugin: 'java'
+apply plugin: 'kotlin'
+apply plugin: 'application'
+
+
+mainClassName = "net.dankito.deepthought.javafx.DeepThoughtJavaFXExtendedApplicationKt"
+
+def title = 'Deep Thought'
+
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+
+sourceSets {
+    main.java.srcDirs += [ 'src/main/kotlin', 'build/generated/source/kapt/main' ]
+    test.java.srcDirs += [ 'src/test/kotlin', 'build/generated/source/kapt/test' ]
+
+    main {
+        resources {
+            srcDirs = [ "src/main/kotlin", "src/main/resources" ] // for TornadoFX .fxml files should reside in the same folder as <View>.kt -> add src/main/kotlin as resource folder
+            excludes = [ "**/*.kt", "**/*.java" ]
+        }
+    }
+}
+
+
+compileKotlin.kotlinOptions.jvmTarget = '1.8'
+compileTestKotlin.kotlinOptions.jvmTarget = '1.8'
+
+
+dependencies {
+    compile project(':DeepThoughtJavaFX')
+
+    compile project(':ArticleSummaryExtractors')
+}
+
+
+jar {
+    manifest {
+        attributes  'Main-Class': mainClassName,
+                'Implementation-Title': title,
+                'Implementation-Version': appVersionName
+    }
+
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
