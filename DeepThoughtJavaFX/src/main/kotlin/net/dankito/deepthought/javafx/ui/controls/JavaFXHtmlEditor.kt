@@ -67,7 +67,7 @@ class JavaFXHtmlEditor(private val listener: IHtmlEditorListener?) : HBox(), IJa
         loadCKEditor()
     }
 
-    fun loadCKEditor() {
+    private fun loadCKEditor() {
         engine.loadWorker.stateProperty().addListener { ov, oldState, newState ->
             if(newState === Worker.State.SUCCEEDED) {
                 htmlEditor.webControlLoaded()
