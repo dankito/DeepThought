@@ -209,7 +209,7 @@ abstract class EditEntryViewBase : DialogFragment() {
                     bottomAnchor = 0.0
                 }
 
-                button("Cancel") {
+                button(messages["action.cancel"]) {
                     minHeight = 40.0
                     maxHeight = 40.0
                     prefWidth = 150.0
@@ -220,7 +220,7 @@ abstract class EditEntryViewBase : DialogFragment() {
                     }
                 }
 
-                button("Save") {
+                button(messages["action.save"]) {
                     minHeight = 40.0
                     maxHeight = 40.0
                     prefWidth = 150.0
