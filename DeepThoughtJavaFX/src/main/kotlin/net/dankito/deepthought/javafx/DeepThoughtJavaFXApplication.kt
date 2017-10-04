@@ -17,7 +17,7 @@ import java.util.*
 import javax.inject.Inject
 
 
-class DeepThoughtJavaFXApplication : App(MainWindow::class) {
+open class DeepThoughtJavaFXApplication : App(MainWindow::class) {
 
     @Inject
     protected lateinit var appInitializer: JavaFXAppInitializer

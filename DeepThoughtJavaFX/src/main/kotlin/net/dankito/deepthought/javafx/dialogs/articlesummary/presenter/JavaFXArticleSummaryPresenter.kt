@@ -20,7 +20,7 @@ import java.text.DateFormat
 import java.util.*
 
 
-class JavaFXArticleSummaryPresenter(entryPersister: EntryPersister, readLaterArticleService: ReadLaterArticleService,
+open class JavaFXArticleSummaryPresenter(entryPersister: EntryPersister, readLaterArticleService: ReadLaterArticleService,
                                     articleExtractorManager: ArticleExtractorManager, router: IRouter, clipboardService: IClipboardService, dialogService: IDialogService)
     : ArticleSummaryPresenter(entryPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService) {
 
