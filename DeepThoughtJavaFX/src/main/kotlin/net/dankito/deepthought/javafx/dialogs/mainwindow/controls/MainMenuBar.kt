@@ -6,7 +6,6 @@ import javafx.scene.control.MenuItem
 import javafx.scene.input.KeyCombination
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.di.AppComponent
-import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardContent
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
 import net.dankito.deepthought.news.article.ArticleExtractorManager
@@ -22,9 +21,6 @@ class MainMenuBar : View() {
 
     @Inject
     protected lateinit var router: IRouter
-
-
-    val controller: MainWindowController by inject()
 
 
     private lateinit var clipboardWatcher: JavaFXClipboardWatcher
@@ -90,7 +86,7 @@ class MainMenuBar : View() {
                         }
                     }
 
-                    add(ArticleExtractorsMenuButton(controller))
+                    add(ArticleExtractorsMenuButton())
                 }
 
                 clipboardWatcher = JavaFXClipboardWatcher(primaryStage) { clipboardContentChangedExternally(it) }

@@ -8,7 +8,6 @@ import javafx.scene.control.SeparatorMenuItem
 import javafx.scene.image.ImageView
 import javafx.scene.layout.HBox
 import net.dankito.deepthought.javafx.di.AppComponent
-import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.res.icons.IconPaths
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
@@ -25,7 +24,7 @@ import tornadofx.*
 import javax.inject.Inject
 
 
-class ArticleExtractorsMenuButton(private val controller: MainWindowController) : View() {
+class ArticleExtractorsMenuButton : View() {
 
     companion object {
         private const val ICON_SIZE = 38.0
