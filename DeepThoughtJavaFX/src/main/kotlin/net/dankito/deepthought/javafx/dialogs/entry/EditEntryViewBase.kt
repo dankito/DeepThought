@@ -62,6 +62,8 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     private var tagsOnEntryDialog: TagsOnEntryDialog? = null
 
+    private var editAbstractDialog: EditHtmlDialog? = null
+
 
     private val presenter: EditEntryPresenter
 
@@ -112,6 +114,9 @@ abstract class EditEntryViewBase : DialogFragment() {
             maxHeight = 100.0
             prefWidthProperty().bind(this@vbox.widthProperty())
 
+            cursor = Cursor.HAND
+            setOnMouseClicked { abstractPreviewClicked(it) }
+
             label(messages["edit.entry.abstract.label"]) {
                 minWidth = Control.USE_PREF_SIZE // guarantee that label keeps its calculated size
                 useMaxWidth = true
@@ -157,7 +162,7 @@ abstract class EditEntryViewBase : DialogFragment() {
             prefWidthProperty().bind(this@vbox.widthProperty())
 
             cursor = Cursor.HAND
-            setOnMouseClicked { editTags(it) }
+            setOnMouseClicked { tagsPreviewClicked(it) }
 
             label(messages["edit.entry.tags.label"]) {
                 minWidth = Control.USE_PREF_SIZE
@@ -228,7 +233,7 @@ abstract class EditEntryViewBase : DialogFragment() {
     }
 
 
-    private fun editTags(event: MouseEvent) {
+    private fun tagsPreviewClicked(event: MouseEvent) {
         if(event.button == MouseButton.PRIMARY) {
             if(tagsOnEntryDialog == null) {
                 tagsOnEntryDialog = find(TagsOnEntryDialog::class, mapOf(TagsOnEntryDialog::tagsOnEntry to tagsOnEntry))
@@ -237,6 +242,21 @@ abstract class EditEntryViewBase : DialogFragment() {
             else {
                 tagsOnEntryDialog?.close()
                 tagsOnEntryDialog = null
+            }
+        }
+    }
+
+    private fun abstractPreviewClicked(event: MouseEvent) {
+        if(event.button == MouseButton.PRIMARY) {
+            if(editAbstractDialog == null) {
+                editAbstractDialog = find(EditHtmlDialog::class)
+                editAbstractDialog?.show(abstractToEdit, messages["edit.entry.abstract.dialog.title"], currentStage, { this.editAbstractDialog = null } ) { // TODO: add icon
+                    abstractToEdit = it
+                    abstractPlainText.value = Jsoup.parseBodyFragment(abstractToEdit).text()
+                }
+            }
+            else {
+                editAbstractDialog?.currentStage?.requestFocus()
             }
         }
     }
