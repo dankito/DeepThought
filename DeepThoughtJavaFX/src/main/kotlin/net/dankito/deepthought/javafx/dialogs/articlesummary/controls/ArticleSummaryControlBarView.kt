@@ -201,13 +201,11 @@ class ArticleSummaryControlBarView(private val presenter: JavaFXArticleSummaryPr
 
     private fun articleSummaryReceived(articleSummary: ArticleSummary) {
         runLater {
-            articleSummaryItemsView.items.setAll(articleSummary.articles)
+            articleSummaryItemsView.showArticlesOnUiThread(articleSummary.articles, articleSummary.indexOfAddedItems)
 
             canLoadMoreItems.set(articleSummary.canLoadMoreItems)
 
             lastUpdateTime.set(LastUpdateTimeDateFormat.format(Date()))
-
-            articleSummaryItemsView.root.scrollTo(articleSummary.indexOfAddedItems)
         }
     }
 

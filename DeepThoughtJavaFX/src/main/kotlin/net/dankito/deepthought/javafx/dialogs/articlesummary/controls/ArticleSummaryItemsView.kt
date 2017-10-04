@@ -10,12 +10,12 @@ import tornadofx.*
 
 class ArticleSummaryItemsView(private val presenter: JavaFXArticleSummaryPresenter) : View() {
 
-    val items = FXCollections.observableArrayList<ArticleSummaryItem>()
-
     val checkedItems: ObservableSet<ArticleSummaryItem> = FXCollections.observableSet(LinkedHashSet())
 
 
     private val itemModel = ArticleSummaryItemViewModel()
+
+    private val items = FXCollections.observableArrayList<ArticleSummaryItem>()
 
 
     override val root = listview<ArticleSummaryItem> {
@@ -58,6 +58,13 @@ class ArticleSummaryItemsView(private val presenter: JavaFXArticleSummaryPresent
 
     fun clearSelectedItems() {
         checkedItems.clear()
+    }
+
+
+    fun showArticlesOnUiThread(articles: List<ArticleSummaryItem>, indexToScrollTo: Int) {
+        items.setAll(articles)
+
+        root.scrollTo(indexToScrollTo)
     }
 
 }
