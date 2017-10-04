@@ -4,7 +4,7 @@ import net.dankito.deepthought.model.enums.OsType
 import net.dankito.utils.IPlatformConfiguration
 import java.io.File
 
-class JavaPlatformConfiguration : IPlatformConfiguration {
+class JavaFXPlatformConfiguration : IPlatformConfiguration {
 
     override fun getUserName(): String {
         return System.getProperty("user.name")

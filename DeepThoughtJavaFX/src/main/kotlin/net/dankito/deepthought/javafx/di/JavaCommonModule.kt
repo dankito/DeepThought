@@ -10,7 +10,7 @@ import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.data_access.network.discovery.IDevicesDiscoverer
 import net.dankito.data_access.network.discovery.UdpDevicesDiscoverer
 import net.dankito.deepthought.javafx.service.hashing.Java8Base64Service
-import net.dankito.deepthought.javafx.service.settings.JavaPlatformConfiguration
+import net.dankito.deepthought.javafx.service.settings.JavaFXPlatformConfiguration
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.services.hashing.IBase64Service
@@ -25,7 +25,7 @@ class JavaCommonModule {
     @Provides
     @Singleton
     fun providePlatformConfiguration() : IPlatformConfiguration {
-        return JavaPlatformConfiguration()
+        return JavaFXPlatformConfiguration()
     }
 
 
