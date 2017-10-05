@@ -1156,11 +1156,6 @@ class EditEntryActivity : BaseActivity() {
     }
 
 
-    private fun contentHasBeenEdited() {
-        entryHasBeenEdited()
-        runOnUiThread { updateCanEntryBeSavedOnUIThread(true) }
-    }
-
     private fun entryHasBeenEdited() {
         entryHasBeenEdited = true
     }
