@@ -38,7 +38,7 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
     private fun showInfoMessageOnUIThread(activity: Activity, message: CharSequence, alertTitle: CharSequence?) {
         val builder = createDialog(activity, message, alertTitle, android.R.drawable.ic_dialog_info)
 
-        builder.create().show()
+        buildAndShowDialog(builder)
     }
 
     override fun showConfirmationDialog(message: CharSequence, alertTitle: CharSequence?, showNoButton: Boolean, optionSelected: (Boolean) -> Unit) {
@@ -64,7 +64,7 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
 
         builder.setPositiveButton(android.R.string.yes, { _, _ -> optionSelected(true) })
 
-        builder.create().show()
+        buildAndShowDialog(builder)
     }
 
     override fun showErrorMessage(errorMessage: CharSequence, alertTitle: CharSequence?, exception: Exception?) {
@@ -81,7 +81,7 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
 
         val builder = createDialog(activity, message, alertTitle, android.R.drawable.ic_dialog_alert)
 
-        builder.create().show()
+        buildAndShowDialog(builder)
     }
 
     override fun askForTextInput(questionText: CharSequence, alertTitleText: CharSequence?, defaultValue: CharSequence?, type: net.dankito.utils.ui.InputType, callback: (Boolean, String?) -> Unit) {
@@ -110,7 +110,7 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
             dialog.cancel()
         }
 
-        builder.show()
+        buildAndShowDialog(builder)
 
         input.showKeyboardDelayed()
     }
@@ -130,6 +130,12 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
         builder.setNegativeButton(android.R.string.ok, null)
 
         return builder
+    }
+
+    private fun buildAndShowDialog(builder: AlertDialog.Builder) {
+        val dialog = builder.create()
+
+        dialog.show()
     }
 
 }
