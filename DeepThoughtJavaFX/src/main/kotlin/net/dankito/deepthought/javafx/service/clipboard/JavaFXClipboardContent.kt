@@ -13,8 +13,8 @@ class JavaFXClipboardContent(private val clipboard: Clipboard, private val urlUt
         return clipboard.hasString()
     }
 
-    val plainText: String?
-        get() = clipboard.string
+    val plainText: String? = clipboard.string
+
 
     fun hasUrl(): Boolean {
         val text = this.plainText
@@ -34,32 +34,32 @@ class JavaFXClipboardContent(private val clipboard: Clipboard, private val urlUt
             return null
         }
 
+
     fun hasHtml(): Boolean {
         return clipboard.hasHtml()
     }
 
-    val html: String?
-        get() = clipboard.html
+    val html: String? = clipboard.html
+
 
     fun hasRtf(): Boolean {
         return clipboard.hasRtf()
     }
 
-    val rtf: String?
-        get() = clipboard.rtf
+    val rtf: String? = clipboard.rtf
+
 
     fun hasImage(): Boolean {
         return clipboard.hasImage()
     }
 
-    val image: Image?
-        get() = clipboard.image
+    val image: Image? = clipboard.image
+
 
     fun hasFiles(): Boolean {
         return clipboard.hasFiles()
     }
 
-    val files: List<File>?
-        get() = clipboard.files
+    val files: List<File>? = clipboard.files
 
 }
