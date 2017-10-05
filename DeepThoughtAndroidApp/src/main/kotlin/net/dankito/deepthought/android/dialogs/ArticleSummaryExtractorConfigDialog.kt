@@ -173,7 +173,7 @@ class ArticleSummaryExtractorConfigDialog {
                 return false
             }
 
-            return Math.abs(otherIcon.size?.width ?: 0 - maxSize) < Math.abs(currentIcon.size?.width ?: 0 - maxSize) // get that one that is closest to maxSize
+            return Math.abs((otherIcon.size?.width ?: 0) - maxSize) < Math.abs((currentIcon.size?.width ?: 0) - maxSize) // get that one that is closest to maxSize
         }
 
         return false
