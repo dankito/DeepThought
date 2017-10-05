@@ -18,7 +18,7 @@ class JavaFXClipboardContent(private val clipboard: Clipboard, private val urlUt
 
     fun hasUrl(): Boolean {
         val text = this.plainText
-        return clipboard.hasUrl() || (text != null && urlUtil.isUri(text))
+        return clipboard.hasUrl() || (text != null && urlUtil.isHttpUri(text))
     }
 
     val url: String?
@@ -26,7 +26,7 @@ class JavaFXClipboardContent(private val clipboard: Clipboard, private val urlUt
             clipboard.url?.let { return it }
 
             plainText?.let {
-                if(urlUtil.isUri(it)) {
+                if(urlUtil.isHttpUri(it)) {
                     return it
                 }
             }

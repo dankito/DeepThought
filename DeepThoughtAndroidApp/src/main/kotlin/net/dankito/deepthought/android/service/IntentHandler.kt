@@ -34,7 +34,7 @@ class IntentHandler(private val articleExtractorManager: ArticleExtractorManager
 
     private fun handleReceivedPlainText(intent: Intent) {
         intent.getStringExtra(Intent.EXTRA_TEXT)?.let { sharedText ->
-            if(urlUtil.isUri(sharedText)) {
+            if(urlUtil.isHttpUri(sharedText)) {
                 articleExtractorManager.extractArticleAndAddDefaultDataAsync(sharedText) {
                     it.result?.let { router.showEditEntryView(it) }
                     it.error?.let { showErrorMessage(it, sharedText) }
