@@ -146,9 +146,12 @@ class TagsListView : MainActivityTabFragment<Tag>(R.menu.tag_contextual_action_m
         if(localSettings.countTagSearches >= LocalSettings.ShowSearchTagsHelpOnCountSearches && localSettings.didShowSearchTagsHelp == false) {
             localSettings.didShowSearchTagsHelp = true
             showContextHelpOnUiThread(R.string.context_help_search_tags)
-        }
 
-        dataManager.localSettingsUpdated()
+            dataManager.localSettingsUpdated()
+        }
+        else if(localSettings.countTagSearches < LocalSettings.ShowSearchTagsHelpOnCountSearches) {
+            dataManager.localSettingsUpdated()
+        }
     }
 
     override fun querySubmitted(query: String): Boolean {

@@ -207,9 +207,12 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
         if(localSettings.countTagsOnEntrySearches >= LocalSettings.ShowSetTagsOnEntryHelpOnCountSearches && localSettings.didShowSetTagsOnEntryHelp == false) {
             localSettings.didShowSetTagsOnEntryHelp = true
             showContextHelpOnUiThread(R.string.context_help_set_tags_on_entry)
-        }
 
-        dataManager.localSettingsUpdated()
+            dataManager.localSettingsUpdated()
+        }
+        else if(localSettings.countTagsOnEntrySearches < LocalSettings.ShowSetTagsOnEntryHelpOnCountSearches) {
+            dataManager.localSettingsUpdated()
+        }
     }
 
 
