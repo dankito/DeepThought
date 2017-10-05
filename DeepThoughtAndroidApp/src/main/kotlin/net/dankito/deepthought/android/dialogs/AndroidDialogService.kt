@@ -118,7 +118,8 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
 
 
     private fun createDialog(activity: Activity, message: CharSequence, alertTitle: CharSequence?, iconResource: Int? = null): AlertDialog.Builder {
-        var builder = AlertDialog.Builder(activity)
+        // according to https://stackoverflow.com/questions/44643366/alertdialog-is-hidden-by-activity necessary to sure place it above all other windows
+        var builder = AlertDialog.Builder(activity.applicationContext)
 
         alertTitle?.let { builder = builder.setTitle(it) }
 
