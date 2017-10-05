@@ -6,6 +6,7 @@ import net.dankito.deepthought.android.MainActivity
 import net.dankito.deepthought.android.activities.ArticleSummaryActivity
 import net.dankito.deepthought.android.activities.EditEntryActivity
 import net.dankito.deepthought.android.activities.EditReferenceActivity
+import net.dankito.deepthought.android.activities.EditSeriesActivity
 import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorIconsAdapter
 import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorsAdapter
 import net.dankito.deepthought.android.androidservice.DeepThoughtBackgroundAndroidService
@@ -22,7 +23,6 @@ import net.dankito.deepthought.di.BaseModule
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.di.CommonDataModule
 import net.dankito.deepthought.di.CommonModule
-import net.dankito.deepthought.android.activities.EditSeriesActivity
 import javax.inject.Singleton
 
 
@@ -61,6 +61,8 @@ interface AppComponent : CommonComponent {
     fun inject(readLaterArticlesListView: ReadLaterArticlesListView)
 
     fun inject(entriesListDialogBase: EntriesListDialogBase)
+
+    fun inject(referenceEntriesListDialog: ReferenceEntriesListDialog)
 
     fun inject(addArticleSummaryExtractorDialog: AddArticleSummaryExtractorDialog)
 
