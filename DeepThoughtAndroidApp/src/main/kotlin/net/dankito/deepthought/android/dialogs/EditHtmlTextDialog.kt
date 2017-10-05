@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import kotlinx.android.synthetic.main.dialog_edit_html_text.*
 import kotlinx.android.synthetic.main.dialog_edit_html_text.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
@@ -27,7 +28,9 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     companion object {
         val TAG: String = javaClass.name
 
-        private const val HTML_INTENT_EXTRA_NAME = "HTML"
+        private const val HTML_EXTRA_NAME = "HTML"
+
+        private const val HTML_TO_EDIT_LABEL_RESOURCE_ID_EXTRA_NAME = "HTML_TO_EDIT_LABEL_RESOURCE_ID"
     }
 
 
@@ -63,9 +66,13 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         rootView.toolbar.setNavigationIcon(android.R.drawable.ic_menu_close_clear_cancel)
         rootView.toolbar.setNavigationOnClickListener { closeDialog() }
 
-        htmlToEditLabelResourceId?.let { rootView.toolbar.title = getString(it) }
+        htmlToEditLabelResourceId?.let { setTitle(rootView.toolbar, it) }
 
         setupHtmlEditor(rootView)
+    }
+
+    private fun setTitle(toolbar: android.support.v7.widget.Toolbar, it: Int) {
+        toolbar.title = getString(it)
     }
 
     private fun setupHtmlEditor(rootView: View) {
@@ -99,18 +106,30 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         super.onSaveInstanceState(outState)
 
         outState?.let {
+            htmlToEditLabelResourceId?.let { outState.putInt(HTML_TO_EDIT_LABEL_RESOURCE_ID_EXTRA_NAME, it) }
+
             val countDownLatch = CountDownLatch(1)
             htmlEditor.getHtmlAsync { content ->
-                outState.putString(HTML_INTENT_EXTRA_NAME, content)
+                outState.putString(HTML_EXTRA_NAME, content)
                 countDownLatch.countDown()
             }
             try { countDownLatch.await(1, TimeUnit.SECONDS) } catch(ignored: Exception) { }
         }
     }
 
-    override fun restoreState(savedInstanceState: Bundle) {
-        savedInstanceState.getString(HTML_INTENT_EXTRA_NAME)?.let { content ->
-            Timer().schedule(100L) { htmlEditor.setHtml(content, true) } // set delayed otherwise setHtml() from editEntry() wins
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+
+        savedInstanceState?.let {
+            savedInstanceState.getString(HTML_EXTRA_NAME)?.let { html ->
+                Timer().schedule(100L) { htmlEditor.setHtml(html, true) }
+            }
+
+            val resourceId = savedInstanceState.getInt(HTML_TO_EDIT_LABEL_RESOURCE_ID_EXTRA_NAME)
+            if(resourceId > 0) {
+                this.htmlToEditLabelResourceId = resourceId
+                setTitle(toolbar, resourceId)
+            }
         }
     }
 
