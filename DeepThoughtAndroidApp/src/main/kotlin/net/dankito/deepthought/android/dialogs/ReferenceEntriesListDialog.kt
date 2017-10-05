@@ -83,7 +83,7 @@ class ReferenceEntriesListDialog: EntriesListDialogBase() {
     }
 
     override fun getDialogTitle(entries: List<Entry>): String {
-        return reference?.title ?: ""
+        return reference?.title ?: super.getDialogTitle(entries)
     }
 
 
