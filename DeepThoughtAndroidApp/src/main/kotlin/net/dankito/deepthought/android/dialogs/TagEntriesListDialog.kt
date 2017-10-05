@@ -1,6 +1,5 @@
 package net.dankito.deepthought.android.dialogs
 
-import android.content.DialogInterface
 import android.support.v4.app.FragmentManager
 import net.dankito.deepthought.model.CalculatedTag
 import net.dankito.deepthought.model.Entry
@@ -31,16 +30,20 @@ class TagEntriesListDialog : EntriesListDialogBase() {
         this.tag = tag
         this.tagsFilter = tagsFilter
 
-        eventBus.register(eventBusListener)
-
         showDialog(fragmentManager)
     }
 
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onResume() {
+        super.onResume()
+
+        eventBus.register(eventBusListener)
+    }
+
+    override fun onPause() {
         eventBus.unregister(eventBusListener)
 
-        super.onDismiss(dialog)
+        super.onPause()
     }
 
 
