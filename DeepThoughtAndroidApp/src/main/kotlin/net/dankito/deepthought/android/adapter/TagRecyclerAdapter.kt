@@ -27,7 +27,7 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
     }
 
     override fun itemClicked(viewHolder: RecyclerView.ViewHolder, item: Tag, position: Int): Boolean {
-        if(item is CalculatedTag == false) {
+        if(item is CalculatedTag == false || isInMultiSelectMode() == false) {
             return super.itemClicked(viewHolder, item, position)
         }
         else {
