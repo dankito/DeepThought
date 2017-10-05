@@ -30,7 +30,7 @@ class ReferencePersister(private val referenceService: ReferenceService, private
         return saveReference(reference, reference.series)
     }
 
-    fun saveReference(reference: Reference, series: Series?): Boolean {
+    fun saveReference(reference: Reference, series: Series?, doChangesAffectDependentEntities: Boolean = true): Boolean {
         if(reference.series != null && reference.series?.isPersisted() == false) { // series has been deleted in the meantime
             reference.series?.let { series ->
                 reference.series = null
@@ -57,7 +57,7 @@ class ReferencePersister(private val referenceService: ReferenceService, private
             referenceService.persist(reference)
         }
         else {
-            referenceService.update(reference, true)
+            referenceService.update(reference, doChangesAffectDependentEntities)
         }
 
         if(series?.id != previousSeries?.id || isReferencePersisted == false) {
