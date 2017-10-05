@@ -50,6 +50,8 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
 
     private val feedAddressesAdapter = FoundFeedAddressesAdapter()
 
+    private var showingFeedAddressesForUrl: String? = null
+
     private var lstFeedSearchResults: ListView? = null
     private var txtFeedSearchResultsLabel: TextView? = null
 
@@ -155,13 +157,14 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
             return
         }
 
-        if (asyncResult.result != null) {
+        if(asyncResult.result != null) {
             val feedAddresses = asyncResult.result as List<FeedAddress>
-            if (feedAddresses.isEmpty()) {
+
+            if(feedAddresses.isEmpty()) {
                 showNoFeedAddressesFoundError(feedOrWebsiteUrl)
             }
             else {
-                showFoundFeedAddresses(feedAddresses)
+                showFoundFeedAddresses(feedAddresses, feedOrWebsiteUrl)
             }
         }
         else {
@@ -178,7 +181,7 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
     }
 
     private fun addFeedOnUIThread(activity: Activity, feedUrl: String, summary: FeedArticleSummary) {
-        val config = ArticleSummaryExtractorConfig(feedUrl, summary.title ?: "", summary.imageUrl, siteUrl = summary.siteUrl)
+        val config = ArticleSummaryExtractorConfig(feedUrl, summary.title ?: "", summary.imageUrl, siteUrl = showingFeedAddressesForUrl ?: summary.siteUrl)
         val extractorConfigDialog = ArticleSummaryExtractorConfigDialog()
 
         extractorConfigDialog.editConfiguration(activity, config) { didEditConfiguration ->
@@ -202,8 +205,10 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
         router.showArticleSummaryView(config, summary)
     }
 
-    private fun showFoundFeedAddresses(result: List<FeedAddress>) {
+    private fun showFoundFeedAddresses(result: List<FeedAddress>, feedOrWebsiteUrl: String) {
         activity?.runOnUiThread {
+            this.showingFeedAddressesForUrl = feedOrWebsiteUrl
+
             val sortedFeeds = result.sortedByDescending { it.type == FeedType.Atom } // show Atom feeds at top
             feedAddressesAdapter.setItems(sortedFeeds)
 
