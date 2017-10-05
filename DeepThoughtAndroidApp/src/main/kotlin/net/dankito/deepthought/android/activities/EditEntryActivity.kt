@@ -28,6 +28,7 @@ import net.dankito.deepthought.android.views.ContextHelpUtil
 import net.dankito.deepthought.android.views.FullscreenWebView
 import net.dankito.deepthought.android.views.ToolbarUtil
 import net.dankito.deepthought.model.*
+import net.dankito.deepthought.model.extensions.entryPreview
 import net.dankito.deepthought.model.extensions.getPlainTextForHtml
 import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.fields.EntryField
@@ -36,10 +37,7 @@ import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
-import net.dankito.service.data.EntryService
-import net.dankito.service.data.ReadLaterArticleService
-import net.dankito.service.data.ReferenceService
-import net.dankito.service.data.TagService
+import net.dankito.service.data.*
 import net.dankito.service.data.messages.EntryChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.IThreadPool
@@ -89,6 +87,9 @@ class EditEntryActivity : BaseActivity() {
 
     @Inject
     protected lateinit var entryPersister: EntryPersister
+
+    @Inject
+    protected lateinit var deleteEntityService: DeleteEntityService
 
     @Inject
     protected lateinit var clipboardService: IClipboardService
@@ -153,6 +154,8 @@ class EditEntryActivity : BaseActivity() {
     private val toolbarUtil = ToolbarUtil()
 
     private var mnSaveEntry: MenuItem? = null
+
+    private var mnDeleteExistingEntry: MenuItem? = null
 
     private var mnToggleReaderMode: MenuItem? = null
 
@@ -520,8 +523,23 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setMenuSaveEntryVisibleStateOnUIThread() {
-        mnSaveEntry?.isVisible = entry == null // EntryExtractionResult and ReadLaterArticle always can be saved
-                                || changedFields.size > 0
+        if(haveAllFieldsOfExistingEntryBeenDeleted()) {
+            mnSaveEntry?.isVisible = false
+            mnDeleteExistingEntry?.isVisible = true
+        }
+        else {
+            mnSaveEntry?.isVisible = entry == null // EntryExtractionResult and ReadLaterArticle always can be saved
+                    || changedFields.size > 0
+            mnDeleteExistingEntry?.isVisible = false
+        }
+    }
+
+    private fun haveAllFieldsOfExistingEntryBeenDeleted(): Boolean {
+        if(entry != null && entry?.isPersisted() == true) {
+            return contentToEdit.isNullOrBlank() && tagsOnEntry.isEmpty() && referenceToEdit == null && abstractToEdit.isNullOrBlank()
+        }
+
+        return false
     }
 
 
@@ -799,6 +817,7 @@ class EditEntryActivity : BaseActivity() {
         toolbarUtil.setupActionItemsLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
 
         mnSaveEntry = menu.findItem(R.id.mnSaveEntry)
+        mnDeleteExistingEntry = menu.findItem(R.id.mnDeleteExistingEntry)
 
         mnToggleReaderMode = menu.findItem(R.id.mnToggleReaderMode)
         mnToggleReaderMode?.isVisible = entryExtractionResult?.couldExtractContent == true /*&& entryExtractionResult?.webSiteHtml != null*/ // show mnToggleReaderMode only if previously original web site was shown
@@ -825,6 +844,10 @@ class EditEntryActivity : BaseActivity() {
             }
             R.id.mnSaveEntry -> {
                 saveEntryAndCloseDialog()
+                return true
+            }
+            R.id.mnDeleteExistingEntry -> {
+                askIfShouldDeleteExistingEntryAndCloseDialog()
                 return true
             }
             R.id.mnToggleReaderMode -> {
@@ -1020,6 +1043,21 @@ class EditEntryActivity : BaseActivity() {
         }
     }
 
+
+    private fun askIfShouldDeleteExistingEntryAndCloseDialog() {
+        entry?.let { entry ->
+            dialogService.showConfirmationDialog(getString(R.string.activity_edit_entry_alert_message_delete_entry, entry.entryPreview)) { deleteEntry ->
+                if(deleteEntry) {
+                    mnDeleteExistingEntry?.isEnabled = false
+                    unregisterEventBusListener()
+
+                    deleteEntityService.deleteEntry(entry)
+                    closeDialog()
+                }
+            }
+        }
+    }
+
     private fun deleteReadLaterArticleAndCloseDialog() {
         readLaterArticle?.let { readLaterArticle ->
             mnSaveEntry?.isEnabled = false // disable to that save cannot be pressed a second time
@@ -1031,6 +1069,7 @@ class EditEntryActivity : BaseActivity() {
             runOnUiThread { closeDialog() }
         }
     }
+
 
     private fun setActivityResult(result: EditEntryActivityResult) {
         parameterHolder.setActivityResult(ResultId, result)
