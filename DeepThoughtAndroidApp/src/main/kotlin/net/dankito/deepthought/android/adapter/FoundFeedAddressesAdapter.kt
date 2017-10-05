@@ -18,7 +18,7 @@ class FoundFeedAddressesAdapter : ListAdapter<FeedAddress>() {
 
         var feedName = feedAddress.title
         if(feedAddress.type == FeedType.Atom && count > 1) { // for Atom feeds add ' (preferred)' to title to give user a hint which feed to choose
-            feedName += " " + view.context.getString(R.string.dialog_add_article_summary_extractor_preferred_feed_title_addition) // getString() removes the white space from dialog_add_article_summary_extractor_preferred_feed_title_addition
+            feedName += " " + view.context.getString(R.string.dialog_add_article_summary_extractor_recommended_feed_title_addition) // getString() removes the white space from dialog_add_article_summary_extractor_preferred_feed_title_addition
         }
 
         view.txtFeedName.text = feedName

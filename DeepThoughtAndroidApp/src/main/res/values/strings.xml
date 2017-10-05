@@ -102,7 +102,7 @@
     <string name="dialog_add_article_summary_extractor_feed_or_website_url">Feed or website url\n(e.g. nytimes.com or https://www.theguardian.com/uk/rss)</string>
     <string name="dialog_add_article_summary_extractor_check_feed_or_website_url">Check</string>
     <string name="dialog_add_article_summary_extractor_found_feeds">Found feeds:</string>
-    <string name="dialog_add_article_summary_extractor_preferred_feed_title_addition">(preferred)</string>
+    <string name="dialog_add_article_summary_extractor_recommended_feed_title_addition">(recommended)</string>
 
     <string name="dialog_article_summary_extractor_config_enter_name">Enter name:</string>
     <string name="dialog_article_summary_extractor_config_select_icon">Select icon:</string>
