@@ -11,6 +11,7 @@ import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.utils.UrlUtil
+import net.dankito.utils.ui.IDialogService
 import tornadofx.*
 import javax.inject.Inject
 
@@ -19,6 +20,9 @@ class MainMenuBar : View() {
 
     @Inject
     protected lateinit var articleExtractorManager: ArticleExtractorManager
+
+    @Inject
+    protected lateinit var dialogService: IDialogService
 
     @Inject
     protected lateinit var router: IRouter
@@ -112,8 +116,12 @@ class MainMenuBar : View() {
     private fun extractEntryFromUrl(url: String) {
         articleExtractorManager.extractArticleAndAddDefaultDataAsync(url) {
             it.result?.let { router.showEditEntryView(it) }
-//            it.error?.let { showErrorMessage(it, clipboardContent.url) }
+            it.error?.let { showErrorMessage(it, url) }
         }
+    }
+
+    private fun showErrorMessage(error: Exception, articleUrl: String) {
+        dialogService.showErrorMessage(dialogService.getLocalization().getLocalizedString("alert.message.could.not.extract.entry.from.url", articleUrl), exception = error)
     }
 
 }
