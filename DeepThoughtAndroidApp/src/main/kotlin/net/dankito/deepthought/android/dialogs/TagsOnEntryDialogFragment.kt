@@ -314,13 +314,18 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
 
 
     fun show(fragmentManager: FragmentManager, tagsOnEntry: MutableList<Tag>, tagsChangedCallback: ((MutableList<Tag>) -> Unit)?) {
-        this.tagsChangedCallback = tagsChangedCallback
+        restoreDialog(tagsOnEntry, tagsChangedCallback)
 
-        unmodifiedTagsOnEntry.addAll(tagsOnEntry)
         adapter.tagsOnEntry = ArrayList(tagsOnEntry) // make a copy so that original collection doesn't get manipulated
         setTagsOnEntryPreviewOnUIThread(tagsOnEntry)
 
         showInFullscreen(fragmentManager, false)
+    }
+
+    fun restoreDialog(tagsOnEntry: Collection<Tag>, tagsChangedCallback: ((MutableList<Tag>) -> Unit)?) {
+        this.tagsChangedCallback = tagsChangedCallback
+
+        unmodifiedTagsOnEntry.addAll(tagsOnEntry)
     }
 
     private fun applyChangesAndCloseDialog() {
