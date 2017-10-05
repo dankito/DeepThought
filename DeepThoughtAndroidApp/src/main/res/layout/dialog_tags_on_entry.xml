@@ -89,7 +89,7 @@
             android:id="@+id/rcyTags"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/lytContextHelp"
+            android:layout_below="@+id/btnEditEntryCreateOrToggleTags"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="@dimen/dialog_tags_on_entry_tag_list_tags_margin"
             android:layout_marginRight="@dimen/dialog_tags_on_entry_tag_list_tags_margin"
