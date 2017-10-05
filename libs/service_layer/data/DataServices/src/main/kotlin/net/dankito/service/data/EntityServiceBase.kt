@@ -51,7 +51,7 @@ abstract class EntityServiceBase<T : BaseEntity>(val entityClass: Class<T>, val 
     }
 
     open fun delete(entity: T) {
-        callEntitiesUpdatedListeners(entity, EntityChangeType.PreDelete) // as after deleting entity from db entity's id is null -> for services still needing entity's id call PreDelete
+        callEntitiesUpdatedListenersSynchronously(entity, EntityChangeType.PreDelete) // as after deleting entity from db entity's id is null -> for services still needing entity's id call  PreDelete synchronously
 
         entityManager.deleteEntity(entity)
 
@@ -61,6 +61,10 @@ abstract class EntityServiceBase<T : BaseEntity>(val entityClass: Class<T>, val 
 
     private fun callEntitiesUpdatedListeners(entity: T, changeType: EntityChangeType, didChangesAffectingDependentEntities: Boolean = false) {
         entityChangedNotifier.notifyListenersOfEntityChangeAsync(entity, changeType, EntityChangeSource.Local, didChangesAffectingDependentEntities)
+    }
+
+    private fun callEntitiesUpdatedListenersSynchronously(entity: T, changeType: EntityChangeType, didChangesAffectingDependentEntities: Boolean = false) {
+        entityChangedNotifier.notifyListenersOfEntityChange(entity, changeType, EntityChangeSource.Local, didChangesAffectingDependentEntities)
     }
 
 }
