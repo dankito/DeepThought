@@ -16,14 +16,11 @@ import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemD
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.views.ToolbarUtil
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
-import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
-import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
-import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.utils.ImageCache
 import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.ui.IClipboardService
@@ -44,15 +41,6 @@ class ArticleSummaryActivity : BaseActivity() {
 
     @Inject
     protected lateinit var extractorsConfigManager: ArticleSummaryExtractorConfigManager
-
-    @Inject
-    protected lateinit var entryPersister: EntryPersister
-
-    @Inject
-    protected lateinit var readLaterArticleService: ReadLaterArticleService
-
-    @Inject
-    protected lateinit var articleExtractorManager: ArticleExtractorManager
 
     @Inject
     protected lateinit var serializer: ISerializer
