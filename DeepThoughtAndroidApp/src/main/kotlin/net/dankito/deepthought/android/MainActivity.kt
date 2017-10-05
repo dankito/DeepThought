@@ -20,6 +20,7 @@ import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.eventbus.IEventBus
+import net.dankito.utils.UrlUtil
 import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
 
@@ -38,6 +39,9 @@ class MainActivity : BaseActivity() {
 
     @Inject
     protected lateinit var router: IRouter
+
+    @Inject
+    protected lateinit var urlUtil: UrlUtil
 
     @Inject
     protected lateinit var eventBus: IEventBus
@@ -132,7 +136,7 @@ class MainActivity : BaseActivity() {
             return
         }
 
-        IntentHandler(articleExtractorManager, router, dialogService).handle(intent)
+        IntentHandler(articleExtractorManager, router, urlUtil, dialogService).handle(intent)
     }
 
 

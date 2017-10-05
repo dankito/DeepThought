@@ -4,11 +4,11 @@ import android.content.Intent
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.utils.UrlUtil
 import net.dankito.utils.ui.IDialogService
-import java.net.URI
 
 
-class IntentHandler(private val articleExtractorManager: ArticleExtractorManager, private val router: IRouter, private val dialogService: IDialogService) {
+class IntentHandler(private val articleExtractorManager: ArticleExtractorManager, private val router: IRouter, private val urlUtil: UrlUtil, private val dialogService: IDialogService) {
 
     fun handle(intent: Intent) {
         val action = intent.action
@@ -34,7 +34,7 @@ class IntentHandler(private val articleExtractorManager: ArticleExtractorManager
 
     private fun handleReceivedPlainText(intent: Intent) {
         intent.getStringExtra(Intent.EXTRA_TEXT)?.let { sharedText ->
-            if(isReceivedTextAnUri(sharedText)) {
+            if(urlUtil.isUri(sharedText)) {
                 articleExtractorManager.extractArticleAndAddDefaultDataAsync(sharedText) {
                     it.result?.let { router.showEditEntryView(it) }
                     it.error?.let { showErrorMessage(it, sharedText) }
@@ -59,15 +59,6 @@ class IntentHandler(private val articleExtractorManager: ArticleExtractorManager
         }
 
         router.showEditEntryView(Entry("<p>$sharedText</p>", "<p>$abstractPlain</p>"))
-    }
-
-    private fun isReceivedTextAnUri(sharedText: String): Boolean {
-        try {
-            val uri = URI.create(sharedText)
-            return uri != null
-        } catch(ignored: Exception) { } // ok, sharedText is not an Uri
-
-        return false
     }
 
 

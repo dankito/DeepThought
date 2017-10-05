@@ -5,6 +5,7 @@ import dagger.Provides
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
+import net.dankito.utils.UrlUtil
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.utils.language.SupportedLanguages
@@ -18,6 +19,12 @@ class BaseModule {
     @Singleton
     fun provideEventBus() : IEventBus {
         return MBassadorEventBus()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUrlUtil() : UrlUtil {
+        return UrlUtil()
     }
 
     @Provides
