@@ -153,6 +153,8 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
                     adapter.tagsOnEntry.add(tag)
                 }
             }
+
+            setTagsOnEntryPreviewOnUIThread()
         }
     }
 
