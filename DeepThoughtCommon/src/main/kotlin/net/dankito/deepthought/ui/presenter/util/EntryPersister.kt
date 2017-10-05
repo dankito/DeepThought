@@ -71,9 +71,9 @@ class EntryPersister(private val entryService: EntryService, private val referen
 
 
         if(reference?.id != previousReference?.id) { // only update reference if it really changed
-            reference?.let { referencePersister.saveReference(reference, series) }
+            reference?.let { referencePersister.saveReference(reference, series, false) }
 
-            previousReference?.let { referencePersister.saveReference(it) }
+            previousReference?.let { referencePersister.saveReference(it, it.series, false) }
         }
 
 
