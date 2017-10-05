@@ -23,7 +23,7 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
                                            private val feedReader: IFeedReader) {
 
     companion object {
-        const val MAX_SIZE = 152
+        const val MAX_SIZE = 196
     }
 
 
