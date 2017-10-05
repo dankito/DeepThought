@@ -170,8 +170,9 @@
     <string formatted="false" name="error_no_rss_or_atom_feed_found_for_url">Kein RSS oder Atom Feed gefunden für URL %s</string>
     <string formatted="false" name="error_cannot_read_feed_or_extract_feed_addresses_from_url">Konnte Feed nicht lesen oder Feed Adressen nicht extrahieren von URL %s: %s</string>
 
-    <string name="bild_easter_egg">Wir achten selbstverständlich die Meinungsfreiheit, bei Bild kennt unsere Toleranz jedoch Grenzen.\nWir wollen nicht, dass unsere App für
-        solch ein hetzerisches Machwerk verwendet wird.\nDie App wird deshalb nun abstürzen.
+    <string name="bild_easter_egg">Wir respektieren selbstverständlich die Meinungsfreiheit.\nWir haben jedoch sehr viel Zeit und Mühe in diese App gesteckt und
+        möchten nicht, dass unsere Mühen verwendet werden solch ein hetzerisches und verlogenes Machwerk wie die Bild zu lesen. Die Welt wäre eine bessere ohne Bild.\nDie
+        App wird zur Strafe nun abstürzen.
     </string>
 
 </resources>
