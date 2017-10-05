@@ -34,6 +34,7 @@ class ContextHelpUtil {
         animateShowContextHelp(lytContextHelp)
     }
 
+    // TODO: animation currently only works on top off screen, not in other places
     private fun animateShowContextHelp(lytContextHelp: View) {
         if (lytContextHelp.measuredHeight == 0) { // in this case we have to wait till height is determined -> set OnGlobalLayoutListener
             var layoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null // have to do it that complicated otherwise in OnGlobalLayoutListener we cannot access layoutListener variable
