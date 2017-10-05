@@ -55,6 +55,10 @@ data class LocalSettings(
 
 
     companion object {
+        const val ShowSearchTagsHelpOnCountSearches = 30
+
+        const val ShowSetTagsOnEntryHelpOnCountSearches = 30
+
         private const val serialVersionUID = 7190724856152328858L
     }
 

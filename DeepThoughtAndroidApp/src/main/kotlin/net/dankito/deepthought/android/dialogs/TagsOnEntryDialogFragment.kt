@@ -21,6 +21,7 @@ import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.service.showKeyboardDelayed
 import net.dankito.deepthought.android.views.ContextHelpUtil
 import net.dankito.deepthought.android.views.TagsPreviewViewHelper
+import net.dankito.deepthought.model.LocalSettings
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.presenter.TagsOnEntryListPresenter
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
@@ -203,7 +204,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
         val localSettings = dataManager.localSettings
         localSettings.countTagsOnEntrySearches++
 
-        if(localSettings.countTagsOnEntrySearches >= 30 && localSettings.didShowSetTagsOnEntryHelp == false) {
+        if(localSettings.countTagsOnEntrySearches >= LocalSettings.ShowSetTagsOnEntryHelpOnCountSearches && localSettings.didShowSetTagsOnEntryHelp == false) {
             localSettings.didShowSetTagsOnEntryHelp = true
             showContextHelpOnUiThread(R.string.context_help_set_tags_on_entry)
         }

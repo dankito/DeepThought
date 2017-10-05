@@ -16,6 +16,7 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.TagEntriesListDialog
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.model.CalculatedTag
+import net.dankito.deepthought.model.LocalSettings
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
@@ -142,7 +143,7 @@ class TagsListView : MainActivityTabFragment<Tag>(R.menu.tag_contextual_action_m
         val localSettings = dataManager.localSettings
         localSettings.countTagSearches++
 
-        if(localSettings.countTagSearches >= 30 && localSettings.didShowSearchTagsHelp == false) {
+        if(localSettings.countTagSearches >= LocalSettings.ShowSearchTagsHelpOnCountSearches && localSettings.didShowSearchTagsHelp == false) {
             localSettings.didShowSearchTagsHelp = true
             showContextHelpOnUiThread(R.string.context_help_search_tags)
         }
