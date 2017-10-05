@@ -111,6 +111,7 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
 
         feedReader.readFeedAsync(feedOrWebsiteUrl) {
             if(it.result != null) {
+                this.showingFeedAddressesForUrl = null // feed address entered, so we don't need entered text as siteUrl
                 addFeed(feedOrWebsiteUrl, it.result as FeedArticleSummary)
             }
             else {
