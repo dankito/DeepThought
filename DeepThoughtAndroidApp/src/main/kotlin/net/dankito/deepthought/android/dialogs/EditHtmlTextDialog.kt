@@ -16,11 +16,9 @@ import net.dankito.deepthought.android.views.html.AndroidHtmlEditor
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditorPool
 import net.dankito.deepthought.ui.html.HtmlEditorCommon
 import net.dankito.deepthought.ui.html.IHtmlEditorListener
-import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import kotlin.concurrent.schedule
 
 
 class EditHtmlTextDialog : FullscreenDialogFragment() {
@@ -122,7 +120,9 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
 
         savedInstanceState?.let {
             savedInstanceState.getString(HTML_EXTRA_NAME)?.let { html ->
-                Timer().schedule(100L) { htmlEditor.setHtml(html, true) }
+                htmlEditor.postDelayed({
+                    htmlEditor.setHtml(html, true)
+                }, 100)
             }
 
             val resourceId = savedInstanceState.getInt(HTML_TO_EDIT_LABEL_RESOURCE_ID_EXTRA_NAME)
@@ -131,6 +131,18 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
                 setTitle(toolbar, resourceId)
             }
         }
+    }
+
+    fun restoreDialog(htmlToEdit: String, htmlChangedCallback: ((String) -> Unit)?) {
+        setupDialog(htmlToEdit, htmlChangedCallback)
+
+        htmlEditor.postDelayed({
+            htmlEditor.getHtmlAsync { currentHtml ->
+                if(currentHtml != htmlToEdit) {
+                    setDidHtmlChange(true)
+                }
+            }
+        }, 300) // must be greater than the value of postDelayed in onViewStateRestored()
     }
 
 
@@ -147,11 +159,16 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
 
 
     fun showDialog(fragmentManager: FragmentManager, htmlToEdit: String, htmlToEditLabelResourceId: Int? = null, htmlChangedCallback: ((String) -> Unit)?) {
-        this.htmlChangedCallback = htmlChangedCallback
-        this.htmlToSetOnStart = htmlToEdit
+        setupDialog(htmlToEdit, htmlChangedCallback)
         this.htmlToEditLabelResourceId = htmlToEditLabelResourceId
 
         showInFullscreen(fragmentManager, false)
+    }
+
+    private fun setupDialog(htmlToEdit: String, htmlChangedCallback: ((String) -> Unit)?) {
+        this.htmlToSetOnStart = htmlToEdit
+
+        this.htmlChangedCallback = htmlChangedCallback
     }
 
     private fun applyChangesAndCloseDialog() {

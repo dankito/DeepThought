@@ -415,6 +415,17 @@ class EditEntryActivity : BaseActivity() {
             it.restoreDialog(originalTags ?: ArrayList<Tag>()) { appliedChangesToTags(it) }
         }
 
+        (supportFragmentManager.findFragmentByTag(EditHtmlTextDialog.TAG) as? EditHtmlTextDialog)?.let { dialog ->
+            (dialog.view?.findViewById(R.id.toolbar) as? android.support.v7.widget.Toolbar)?.title?.let { toolbarTitle ->
+                if(toolbarTitle == getString(R.string.activity_edit_entry_edit_content_title)) {
+                    dialog.restoreDialog(contentToEdit ?: "") { appliedChangesToContent(it) }
+                }
+                else if(toolbarTitle == getString(R.string.activity_edit_entry_edit_abstract_title)) {
+                    dialog.restoreDialog(abstractToEdit ?: "") { appliedChangedToAbstract(it) }
+                }
+            }
+        }
+
         setContentPreviewOnUIThread()
 
         mayRegisterEventBusListener()
@@ -451,13 +462,17 @@ class EditEntryActivity : BaseActivity() {
             val editHtmlTextDialog = EditHtmlTextDialog()
 
             editHtmlTextDialog.showDialog(supportFragmentManager, content, R.string.activity_edit_entry_edit_content_title) {
-                contentToEdit = it
-
-                runOnUiThread {
-                    updateEntryFieldChangedOnUIThread(EntryField.Information, originalInformation != contentToEdit)
-                    setContentPreviewOnUIThread()
-                }
+                appliedChangesToContent(it)
             }
+        }
+    }
+
+    private fun appliedChangesToContent(content: String) {
+        contentToEdit = content
+
+        runOnUiThread {
+            updateEntryFieldChangedOnUIThread(EntryField.Information, originalInformation != contentToEdit)
+            setContentPreviewOnUIThread()
         }
     }
 
@@ -466,14 +481,18 @@ class EditEntryActivity : BaseActivity() {
             val editHtmlTextDialog = EditHtmlTextDialog()
 
             editHtmlTextDialog.showDialog(supportFragmentManager, abstract, R.string.activity_edit_entry_edit_abstract_title) {
-                abstractToEdit = it
-
-                runOnUiThread {
-                    updateEntryFieldChangedOnUIThread(EntryField.TitleAbstract, originalTitleAbstract != abstractToEdit)
-                    setAbstractPreviewOnUIThread()
-                    mayShowSaveEntryChangesHelpOnUIThread()
-                }
+                appliedChangedToAbstract(it)
             }
+        }
+    }
+
+    private fun appliedChangedToAbstract(abstractTitle: String) {
+        abstractToEdit = abstractTitle
+
+        runOnUiThread {
+            updateEntryFieldChangedOnUIThread(EntryField.TitleAbstract, originalTitleAbstract != abstractToEdit)
+            setAbstractPreviewOnUIThread()
+            mayShowSaveEntryChangesHelpOnUIThread()
         }
     }
 
