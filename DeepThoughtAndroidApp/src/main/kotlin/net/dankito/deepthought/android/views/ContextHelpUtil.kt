@@ -51,10 +51,14 @@ class ContextHelpUtil {
     }
 
     private fun animateShowContextHelpAfterMeasuringHeight(lytContextHelp: View) {
+        // this may works
+//        playAnimation(lytContextHelp, lytContextHelp.y - lytContextHelp.measuredHeight.toFloat(), lytContextHelp.y)
         playAnimation(lytContextHelp, - lytContextHelp.measuredHeight.toFloat(), 0f)
     }
 
     private fun animateHideContextHelp(lytContextHelp: View) {
+        // does not work
+//        playAnimation(lytContextHelp, lytContextHelp.y, lytContextHelp.y - lytContextHelp.measuredHeight.toFloat()) { lytContextHelp.visibility = View.GONE }
         playAnimation(lytContextHelp, 0f, - lytContextHelp.measuredHeight.toFloat()) { lytContextHelp.visibility = View.GONE }
     }
 
