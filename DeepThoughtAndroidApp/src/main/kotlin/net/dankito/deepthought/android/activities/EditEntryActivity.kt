@@ -30,6 +30,7 @@ import net.dankito.deepthought.android.views.ToolbarUtil
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.getPlainTextForHtml
 import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
+import net.dankito.deepthought.model.fields.EntryField
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
@@ -118,6 +119,15 @@ class EditEntryActivity : BaseActivity() {
     private var entryExtractionResult: EntryExtractionResult? = null
 
 
+    private var originalInformation: String? = null
+
+    private var originalTags: Collection<Tag>? = null
+
+    private var originalReference: Reference? = null
+
+    private var originalTitleAbstract: String? = null
+
+
     private var contentToEdit: String? = null
 
     private var abstractToEdit: String? = null
@@ -126,13 +136,11 @@ class EditEntryActivity : BaseActivity() {
 
     private val tagsOnEntry: MutableList<Tag> = ArrayList()
 
+    private val changedFields = HashSet<EntryField>()
+
     private var forceShowAbstractPreview = false
 
     private var forceShowReferencePreview = false
-
-    private var canEntryBeSaved = false
-
-    private var entryHasBeenEdited = false
 
 
     private val presenter: EditEntryPresenter
@@ -283,12 +291,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun referenceCleared() {
-        referenceToEdit = null
-
-        entryHasBeenEdited()
-
-        updateCanEntryBeSavedOnUIThread(true)
-        setReferencePreviewOnUIThread()
+        referenceChanged(null)
     }
 
     private fun setupEntryContentView() {
@@ -421,12 +424,16 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun savedReference(reference: Reference) {
+        referenceChanged(reference)
+
+        entryExtractionResult?.series = null // TODO: why did i do this?
+        readLaterArticle?.entryExtractionResult?.series = null
+    }
+
+    private fun referenceChanged(reference: Reference?) {
         referenceToEdit = reference // do not set reference directly on entry as if entry is not saved yet adding it to reference.entries causes an error
 
-        entryExtractionResult?.series = null
-        readLaterArticle?.entryExtractionResult?.series = null
-
-        updateCanEntryBeSavedOnUIThread(true)
+        updateEntryFieldChangedOnUIThread(EntryField.Reference, originalReference != referenceToEdit)
         setReferencePreviewOnUIThread()
     }
 
@@ -438,10 +445,8 @@ class EditEntryActivity : BaseActivity() {
             editHtmlTextDialog.showDialog(supportFragmentManager, content, R.string.activity_edit_entry_edit_content_title) {
                 contentToEdit = it
 
-                entryHasBeenEdited()
-
                 runOnUiThread {
-                    updateCanEntryBeSavedOnUIThread(true)
+                    updateEntryFieldChangedOnUIThread(EntryField.Information, originalInformation != contentToEdit)
                     setContentPreviewOnUIThread()
                 }
             }
@@ -455,10 +460,8 @@ class EditEntryActivity : BaseActivity() {
             editHtmlTextDialog.showDialog(supportFragmentManager, abstract, R.string.activity_edit_entry_edit_abstract_title) {
                 abstractToEdit = it
 
-                entryHasBeenEdited()
-
                 runOnUiThread {
-                    updateCanEntryBeSavedOnUIThread(true)
+                    updateEntryFieldChangedOnUIThread(EntryField.TitleAbstract, originalTitleAbstract != abstractToEdit)
                     setAbstractPreviewOnUIThread()
                     mayShowSaveEntryChangesHelpOnUIThread()
                 }
@@ -482,24 +485,43 @@ class EditEntryActivity : BaseActivity() {
             tagsOnEntry.clear()
             tagsOnEntry.addAll(it)
 
-            entryHasBeenEdited()
-
             runOnUiThread {
-                updateCanEntryBeSavedOnUIThread(true)
+                updateEntryFieldChangedOnUIThread(EntryField.Tags, didTagsChange(it))
                 setTagsOnEntryPreviewOnUIThread()
                 mayShowSaveEntryChangesHelpOnUIThread()
             }
         }
     }
 
-    private fun updateCanEntryBeSavedOnUIThread(canEntryBeSaved: Boolean) {
-        this.canEntryBeSaved = canEntryBeSaved
+    private fun didTagsChange(editedTags: Collection<Tag>): Boolean {
+        originalTags?.let { originalTags ->
+            if(originalTags.size != editedTags.size) {
+                return true
+            }
+
+            val copy = ArrayList(originalTags)
+            copy.removeAll(editedTags)
+
+            return copy.size > 0
+        }
+
+        return true
+    }
+
+    private fun updateEntryFieldChangedOnUIThread(field: EntryField, didChange: Boolean) {
+        if(didChange) {
+            changedFields.add(field)
+        }
+        else {
+            changedFields.remove(field)
+        }
 
         setMenuSaveEntryVisibleStateOnUIThread()
     }
 
     private fun setMenuSaveEntryVisibleStateOnUIThread() {
-        mnSaveEntry?.isVisible = canEntryBeSaved
+        mnSaveEntry?.isVisible = entry == null // EntryExtractionResult and ReadLaterArticle always can be saved
+                                || changedFields.size > 0
     }
 
 
@@ -1021,7 +1043,7 @@ class EditEntryActivity : BaseActivity() {
 
 
     private fun askIfUnsavedChangesShouldBeSavedAndCloseDialog() {
-        if(entryHasBeenEdited) {
+        if(changedFields.size > 0) {
             askIfUnsavedChangesShouldBeSaved()
         }
         else {
@@ -1065,8 +1087,6 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun createEntry(editContent: Boolean = true) {
-        canEntryBeSaved = true
-
         editEntry(Entry(""))
 
         if(editContent) {
@@ -1094,7 +1114,6 @@ class EditEntryActivity : BaseActivity() {
 
     private fun editReadLaterArticle(readLaterArticle: ReadLaterArticle) {
         this.readLaterArticle = readLaterArticle
-        canEntryBeSaved = true
 
         editEntry(readLaterArticle.entryExtractionResult.entry, readLaterArticle.entryExtractionResult.reference, readLaterArticle.entryExtractionResult.tags)
     }
@@ -1107,12 +1126,16 @@ class EditEntryActivity : BaseActivity() {
 
     private fun editEntryExtractionResult(extractionResult: EntryExtractionResult, updateContentPreview: Boolean = true) {
         this.entryExtractionResult = extractionResult
-        canEntryBeSaved = true
 
         editEntry(entryExtractionResult?.entry, entryExtractionResult?.reference, entryExtractionResult?.tags, updateContentPreview)
     }
 
     private fun editEntry(entry: Entry?, reference: Reference?, tags: Collection<Tag>?, updateContentPreview: Boolean = true) {
+        originalInformation = entry?.content
+        originalTags = tags
+        originalReference = reference
+        originalTitleAbstract = entry?.abstractString
+
         contentToEdit = entry?.content
         abstractToEdit = entry?.abstractString
         referenceToEdit = reference
@@ -1153,11 +1176,6 @@ class EditEntryActivity : BaseActivity() {
         tagsOnEntry.addAll(restoredTagsOnEntry)
 
         runOnUiThread { setTagsOnEntryPreviewOnUIThread() }
-    }
-
-
-    private fun entryHasBeenEdited() {
-        entryHasBeenEdited = true
     }
 
 
