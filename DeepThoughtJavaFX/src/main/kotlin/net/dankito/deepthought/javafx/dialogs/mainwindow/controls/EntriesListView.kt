@@ -17,6 +17,7 @@ import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
 import net.dankito.utils.ui.IClipboardService
+import net.dankito.utils.ui.IDialogService
 import tornadofx.*
 import java.text.DateFormat
 import javax.inject.Inject
@@ -47,6 +48,9 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
+
+    @Inject
+    protected lateinit var dialogService: IDialogService
 
     @Inject
     protected lateinit var router: IRouter
@@ -104,9 +108,17 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
 
                 item(messages["context.menu.entry.delete"]) {
                     action {
-                        selectedItem?.let { presenter.deleteEntry(it) }
+                        selectedItem?.let { askIfShouldDeleteEntry(it) }
                     }
                 }
+            }
+        }
+    }
+
+    private fun askIfShouldDeleteEntry(entry: Entry) {
+        dialogService.showConfirmationDialog(dialogService.getLocalization().getLocalizedString("alert.message.really.delete.entry")) { shouldDeleteEntry ->
+            if(shouldDeleteEntry) {
+                presenter.deleteEntry(entry)
             }
         }
     }
