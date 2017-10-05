@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.daimajia.swipe.SwipeLayout
+<net.dankito.deepthought.android.views.FixedSwipeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/referenceSwipeLayout"
     android:layout_width="match_parent"
@@ -63,4 +63,4 @@
 
     </RelativeLayout>
 
-</com.daimajia.swipe.SwipeLayout>
+</net.dankito.deepthought.android.views.FixedSwipeLayout>
