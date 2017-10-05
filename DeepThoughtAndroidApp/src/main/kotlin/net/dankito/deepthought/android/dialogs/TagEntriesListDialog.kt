@@ -28,9 +28,9 @@ class TagEntriesListDialog : EntriesListDialogBase() {
     protected lateinit var tagService: TagService
 
 
-    private lateinit var tag: Tag
+    private var tag: Tag? = null // made it nullable instead of lateinit so that at least application doesn't crash if it cannot be set on restore
 
-    private lateinit var tagsFilter: List<Tag>
+    private var tagsFilter: List<Tag> = ArrayList()
 
     private val eventBusListener = EventBusListener()
 
@@ -72,8 +72,8 @@ class TagEntriesListDialog : EntriesListDialogBase() {
         super.onSaveInstanceState(outState)
 
         outState?.let {
-            outState.putString(TAG_ID_EXTRA_NAME, tag.id)
-            outState.putString(TAG_FILTER_IDS_EXTRA_NAME, tagsFilter.filterNotNull().joinToString(",") { it.id!! })
+            outState.putString(TAG_ID_EXTRA_NAME, tag?.id)
+            outState.putString(TAG_FILTER_IDS_EXTRA_NAME, tagsFilter.filterNotNull().joinToString(",") { it.id ?: "" })
         }
     }
 
@@ -88,7 +88,7 @@ class TagEntriesListDialog : EntriesListDialogBase() {
                 tagService.retrieve(it)?.let { tagsFilter.add(it) }
             }
 
-            tag?.let { // TODO: if tag is null or savedInstanceState doesn't contain TAG_ID_EXTRA_NAME application will crash
+            tag?.let {
                 setupDialog(tag, tagsFilter)
             }
         }
@@ -96,6 +96,16 @@ class TagEntriesListDialog : EntriesListDialogBase() {
 
 
     override fun retrieveEntries(callback: (List<Entry>) -> Unit) {
+        tag?.let {
+            retrieveEntries(it, callback)
+        }
+
+        if(tag == null) {
+            callback(ArrayList<Entry>())
+        }
+    }
+
+    private fun retrieveEntries(tag: Tag, callback: (List<Entry>) -> Unit) {
         if(tag is CalculatedTag) {
             callback(tag.entries)
         }
@@ -107,7 +117,7 @@ class TagEntriesListDialog : EntriesListDialogBase() {
     }
 
     override fun getDialogTitle(entries: List<Entry>): String {
-        return tag.displayText
+        return tag?.displayText ?: ""
     }
 
 
@@ -115,7 +125,7 @@ class TagEntriesListDialog : EntriesListDialogBase() {
 
         @Handler
         fun tagChanged(tagChanged: TagChanged) {
-            if(tagChanged.entity.id == tag.id) {
+            if(tagChanged.entity.id == tag?.id) {
                 retrieveAndShowEntries()
             }
         }

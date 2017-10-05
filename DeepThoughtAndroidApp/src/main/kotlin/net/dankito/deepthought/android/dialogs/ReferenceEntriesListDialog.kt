@@ -25,7 +25,7 @@ class ReferenceEntriesListDialog: EntriesListDialogBase() {
     protected lateinit var referenceService: ReferenceService
 
 
-    private lateinit var reference: Reference
+    private var reference: Reference? = null // made it nullable instead of lateinit so that at least application doesn't crash if it cannot be set on restore
 
     private val eventBusListener = EventBusListener()
 
@@ -61,7 +61,7 @@ class ReferenceEntriesListDialog: EntriesListDialogBase() {
         super.onSaveInstanceState(outState)
 
         outState?.let {
-            outState.putString(REFERENCE_ID_EXTRA_NAME, reference.id)
+            outState.putString(REFERENCE_ID_EXTRA_NAME, reference?.id)
         }
     }
 
@@ -83,7 +83,7 @@ class ReferenceEntriesListDialog: EntriesListDialogBase() {
     }
 
     override fun getDialogTitle(entries: List<Entry>): String {
-        return reference.title
+        return reference?.title ?: ""
     }
 
 
@@ -91,7 +91,7 @@ class ReferenceEntriesListDialog: EntriesListDialogBase() {
 
         @Handler
         fun tagChanged(referenceChanged: ReferenceChanged) {
-            if(referenceChanged.entity.id == reference.id) {
+            if(referenceChanged.entity.id == reference?.id) {
                 retrieveAndShowEntries()
             }
         }
