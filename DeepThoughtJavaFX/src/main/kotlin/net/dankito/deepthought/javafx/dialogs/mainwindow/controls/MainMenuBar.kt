@@ -98,15 +98,15 @@ class MainMenuBar : View() {
 
         mnitmFileClipboard.items.clear()
 
-        if(clipboardContent.hasUrl()) {
+        clipboardContent.url?.let { url ->
             val extractContentFromUrlMenuItem = MenuItem(messages["main.window.menu.file.extract.entry.from.url"])
-            extractContentFromUrlMenuItem.action { extractEntryFromClipboardContent(clipboardContent) }
+            extractContentFromUrlMenuItem.action { extractEntryFromUrl(url) }
             mnitmFileClipboard.items.add(extractContentFromUrlMenuItem)
         }
     }
 
-    private fun extractEntryFromClipboardContent(clipboardContent: JavaFXClipboardContent) {
-        articleExtractorManager.extractArticleAndAddDefaultDataAsync(clipboardContent.url) {
+    private fun extractEntryFromUrl(url: String) {
+        articleExtractorManager.extractArticleAndAddDefaultDataAsync(url) {
             it.result?.let { router.showEditEntryView(it) }
 //            it.error?.let { showErrorMessage(it, clipboardContent.url) }
         }

@@ -12,42 +12,42 @@ class JavaFXClipboardContent(private val clipboard: Clipboard) {
         return clipboard.hasString()
     }
 
-    val string: String
+    val string: String?
         get() = clipboard.string
 
     fun hasUrl(): Boolean {
         return clipboard.hasUrl()
     }
 
-    val url: String
+    val url: String?
         get() = clipboard.url
 
     fun hasHtml(): Boolean {
         return clipboard.hasHtml()
     }
 
-    val html: String
+    val html: String?
         get() = clipboard.html
 
     fun hasRtf(): Boolean {
         return clipboard.hasRtf()
     }
 
-    val rtf: String
+    val rtf: String?
         get() = clipboard.rtf
 
     fun hasImage(): Boolean {
         return clipboard.hasImage()
     }
 
-    val image: Image
+    val image: Image?
         get() = clipboard.image
 
     fun hasFiles(): Boolean {
         return clipboard.hasFiles()
     }
 
-    val files: List<File>
+    val files: List<File>?
         get() = clipboard.files
 
 }
