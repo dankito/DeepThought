@@ -23,13 +23,15 @@ class JavaFXClipboardContent(private val clipboard: Clipboard, private val urlUt
 
     val url: String?
         get() {
+            clipboard.url?.let { return it }
+
             plainText?.let {
                 if(urlUtil.isUri(it)) {
                     return it
                 }
             }
 
-            return clipboard.url
+            return null
         }
 
     fun hasHtml(): Boolean {
