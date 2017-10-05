@@ -152,12 +152,31 @@ class ArticleSummaryExtractorConfigDialog {
 
             // to retrieve all icon sizes
             val bestIcon = faviconComparator.getBestIcon(listIcons, maxSize = ArticleSummaryExtractorConfigManager.MAX_SIZE, returnSquarishOneIfPossible = true)
-            if(currentIcon == null) {
+            if(preferOverCurrentIcon(bestIcon, currentIcon, ArticleSummaryExtractorConfigManager.MAX_SIZE)) {
                 currentIcon = bestIcon
             }
 
             callback(listIcons, currentIcon)
         }
+    }
+
+    private fun preferOverCurrentIcon(otherIcon: Favicon?, currentIcon: Favicon?, maxSize: Int): Boolean {
+        otherIcon?.let {
+            if(currentIcon == null) {
+                return true
+            }
+
+            if(otherIcon.size?.isSquare() == true && currentIcon.size?.isSquare() == false) {
+                return true
+            }
+            else if(otherIcon.size?.isSquare() == false && currentIcon.size?.isSquare() == true) {
+                return false
+            }
+
+            return Math.abs(otherIcon.size?.width ?: 0 - maxSize) < Math.abs(currentIcon.size?.width ?: 0 - maxSize) // get that one that is closest to maxSize
+        }
+
+        return false
     }
 
     private fun mergeFavicons(listIcons: MutableList<Favicon>, retrievedFavicons: List<Favicon>, currentIcon: Favicon?) {
