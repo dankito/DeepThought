@@ -117,7 +117,11 @@ class TagEntriesListDialog : EntriesListDialogBase() {
     }
 
     override fun getDialogTitle(entries: List<Entry>): String {
-        return tag?.displayText ?: ""
+        tag?.let {
+            return it.name + " (" + entries.size + ")"
+        }
+
+        return super.getDialogTitle(entries)
     }
 
 
