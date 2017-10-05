@@ -10,6 +10,7 @@ import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardContent
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.utils.UrlUtil
 import tornadofx.*
 import javax.inject.Inject
 
@@ -21,6 +22,9 @@ class MainMenuBar : View() {
 
     @Inject
     protected lateinit var router: IRouter
+
+    @Inject
+    protected lateinit var urlUtil: UrlUtil
 
 
     private lateinit var clipboardWatcher: JavaFXClipboardWatcher
@@ -89,7 +93,7 @@ class MainMenuBar : View() {
             add(ArticleExtractorsMenuButton())
         }
 
-        clipboardWatcher = JavaFXClipboardWatcher(primaryStage) { clipboardContentChangedExternally(it) }
+        clipboardWatcher = JavaFXClipboardWatcher(primaryStage, urlUtil) { clipboardContentChangedExternally(it) }
     }
 
 

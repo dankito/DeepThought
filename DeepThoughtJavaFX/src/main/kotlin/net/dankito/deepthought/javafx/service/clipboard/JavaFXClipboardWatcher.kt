@@ -2,17 +2,18 @@ package net.dankito.deepthought.javafx.service.clipboard
 
 import javafx.scene.input.Clipboard
 import javafx.stage.Stage
+import net.dankito.utils.UrlUtil
 import java.util.*
 
 
-class JavaFXClipboardWatcher(stage: Stage) {
+class JavaFXClipboardWatcher(stage: Stage, private val urlUtil: UrlUtil) {
 
     private var sourceOfLastShownPopup: Any? = null
 
     private var clipboardContentChangedExternallyListeners: MutableSet<(JavaFXClipboardContent) -> Unit> = HashSet()
 
 
-    constructor(stage: Stage, listener: (JavaFXClipboardContent) -> Unit) : this(stage) {
+    constructor(stage: Stage, urlUtil: UrlUtil, listener: (JavaFXClipboardContent) -> Unit) : this(stage, urlUtil) {
         addClipboardContentChangedExternallyListener(listener)
     }
 
@@ -29,7 +30,7 @@ class JavaFXClipboardWatcher(stage: Stage) {
     }
 
     private fun checkForChangedClipboardContent() {
-        val clipboardContent = JavaFXClipboardContent(Clipboard.getSystemClipboard())
+        val clipboardContent = JavaFXClipboardContent(Clipboard.getSystemClipboard(), urlUtil)
 //        Application.getContentExtractorManager().getContentExtractorOptionsForClipboardContentAsync(clipboardContent, { contentExtractOptions ->
 //            if (contentExtractOptions.getSource().equals(sourceOfLastShownPopup) === false) {
 //                sourceOfLastShownPopup = contentExtractOptions.getSource()
@@ -39,7 +40,7 @@ class JavaFXClipboardWatcher(stage: Stage) {
     }
 
     private fun callClipboardContentChangedExternallyListeners(clipboardContent: JavaFXClipboardContent) {
-        for (listener in clipboardContentChangedExternallyListeners) {
+        for(listener in clipboardContentChangedExternallyListeners) {
             listener(clipboardContent)
         }
     }

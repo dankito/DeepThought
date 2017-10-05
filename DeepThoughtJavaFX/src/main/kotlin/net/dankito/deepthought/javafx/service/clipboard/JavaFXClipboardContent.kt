@@ -2,10 +2,11 @@ package net.dankito.deepthought.javafx.service.clipboard
 
 import javafx.scene.image.Image
 import javafx.scene.input.Clipboard
+import net.dankito.utils.UrlUtil
 import java.io.File
 
 
-class JavaFXClipboardContent(private val clipboard: Clipboard) {
+class JavaFXClipboardContent(private val clipboard: Clipboard, private val urlUtil: UrlUtil) {
 
 
     fun hasString(): Boolean {
@@ -16,11 +17,20 @@ class JavaFXClipboardContent(private val clipboard: Clipboard) {
         get() = clipboard.string
 
     fun hasUrl(): Boolean {
-        return clipboard.hasUrl()
+        val text = this.string
+        return clipboard.hasUrl() || (text != null && urlUtil.isUri(text))
     }
 
     val url: String?
-        get() = clipboard.url
+        get() {
+            string?.let {
+                if(urlUtil.isUri(it)) {
+                    return it
+                }
+            }
+
+            return clipboard.url
+        }
 
     fun hasHtml(): Boolean {
         return clipboard.hasHtml()
