@@ -34,6 +34,9 @@ class FeedAddressExtractor(private val webClient : IWebClient) {
             if(response.isSuccessful) {
                 return extractFeedAddresses(response, url)
             }
+            else {
+                throw response.error as Throwable
+            }
         }
 
         return listOf()
