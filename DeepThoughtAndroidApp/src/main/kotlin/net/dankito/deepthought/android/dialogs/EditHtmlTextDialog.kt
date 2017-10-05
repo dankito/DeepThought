@@ -177,13 +177,17 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         }
 
         override fun htmlCodeUpdated() {
-            activity?.runOnUiThread { mnApplyHtmlChanges.isVisible = true }
+            setDidHtmlChange(true)
         }
 
         override fun htmlCodeHasBeenReset() {
-            activity?.runOnUiThread { mnApplyHtmlChanges.isVisible = false }
+            setDidHtmlChange(false)
         }
 
+    }
+
+    private fun setDidHtmlChange(didChange: Boolean) {
+        activity?.runOnUiThread { mnApplyHtmlChanges.isVisible = didChange }
     }
 
 }
