@@ -122,7 +122,7 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
     }
 
     private fun sanitizeUrl(enteredFeedOrWebsiteUrl: String): String {
-        var feedOrWebsiteUrl = enteredFeedOrWebsiteUrl
+        var feedOrWebsiteUrl = enteredFeedOrWebsiteUrl.trim()
 
         if(feedOrWebsiteUrl.startsWith("http") == false) {
             if(feedOrWebsiteUrl.startsWith("www.") == false && feedOrWebsiteUrl.startsWith("/") == false) {
