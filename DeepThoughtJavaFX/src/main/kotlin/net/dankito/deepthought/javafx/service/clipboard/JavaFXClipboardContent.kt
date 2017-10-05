@@ -9,21 +9,21 @@ import java.io.File
 class JavaFXClipboardContent(private val clipboard: Clipboard, private val urlUtil: UrlUtil) {
 
 
-    fun hasString(): Boolean {
+    fun hasPlainText(): Boolean {
         return clipboard.hasString()
     }
 
-    val string: String?
+    val plainText: String?
         get() = clipboard.string
 
     fun hasUrl(): Boolean {
-        val text = this.string
+        val text = this.plainText
         return clipboard.hasUrl() || (text != null && urlUtil.isUri(text))
     }
 
     val url: String?
         get() {
-            string?.let {
+            plainText?.let {
                 if(urlUtil.isUri(it)) {
                     return it
                 }
