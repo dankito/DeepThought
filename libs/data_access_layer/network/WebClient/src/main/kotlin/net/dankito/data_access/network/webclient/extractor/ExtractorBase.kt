@@ -81,12 +81,22 @@ abstract class ExtractorBase(val webClient : IWebClient) {
             if(relativeUri.isAbsolute && relativeUri.scheme.startsWith("http") == false) {
                 return relativeUrl // it's an absolute uri but just doesn't start with http, e.g. mailto: for file:
             }
+        } catch(ignored: Exception) { }
 
+        try {
             val uri = URI(siteUrl)
             return uri.resolve(relativeUrl).toString()
-//            val port = if(uri.port > 0) ":" + uri.port else ""
-//            val separator = if(relativeUrl.startsWith("/")) "" else "/"
-//            return uri.scheme + "://" + uri.host + port + separator + relativeUrl
+        } catch(ignored: Exception) { }
+
+        try {
+            val uri = URI(siteUrl)
+
+            val port = if(uri.port > 0) ":" + uri.port else ""
+            val separator = if(relativeUrl.startsWith("/")) "" else "/"
+
+            val manuallyCreatedUriString = uri.scheme + "://" + uri.host + port + separator + relativeUrl
+            val manuallyCreatedUri = URI(manuallyCreatedUriString)
+            return manuallyCreatedUri.toString()
         } catch(ignored: Exception) { }
 
         return null
