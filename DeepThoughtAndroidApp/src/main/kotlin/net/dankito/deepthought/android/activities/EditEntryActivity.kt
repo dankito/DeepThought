@@ -47,6 +47,7 @@ import net.dankito.utils.ui.IDialogService
 import net.engio.mbassy.listener.Handler
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 import kotlin.concurrent.schedule
 
 
@@ -410,6 +411,10 @@ class EditEntryActivity : BaseActivity() {
             }
         }
 
+        (supportFragmentManager.findFragmentByTag(TagsOnEntryDialogFragment.TAG) as? TagsOnEntryDialogFragment)?.let {
+            it.restoreDialog(originalTags ?: ArrayList<Tag>()) { appliedChangesToTags(it) }
+        }
+
         setContentPreviewOnUIThread()
 
         mayRegisterEventBusListener()
@@ -485,14 +490,18 @@ class EditEntryActivity : BaseActivity() {
         val tagsOnEntryDialog = TagsOnEntryDialogFragment()
 
         tagsOnEntryDialog.show(supportFragmentManager, tagsOnEntry) {
-            tagsOnEntry.clear()
-            tagsOnEntry.addAll(it)
+            appliedChangesToTags(it)
+        }
+    }
 
-            runOnUiThread {
-                updateEntryFieldChangedOnUIThread(EntryField.Tags, didTagsChange(it))
-                setTagsOnEntryPreviewOnUIThread()
-                mayShowSaveEntryChangesHelpOnUIThread()
-            }
+    private fun appliedChangesToTags(it: MutableList<Tag>) {
+        tagsOnEntry.clear()
+        tagsOnEntry.addAll(it)
+
+        runOnUiThread {
+            updateEntryFieldChangedOnUIThread(EntryField.Tags, didTagsChange(it))
+            setTagsOnEntryPreviewOnUIThread()
+            mayShowSaveEntryChangesHelpOnUIThread()
         }
     }
 
