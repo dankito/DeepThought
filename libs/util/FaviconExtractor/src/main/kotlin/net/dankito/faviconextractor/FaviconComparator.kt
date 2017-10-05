@@ -16,8 +16,6 @@ class FaviconComparator(val webClient : IWebClient) {
 
 
     fun getBestIcon(favicons: List<Favicon>, minSize: Int = DEFAULT_MIN_SIZE, maxSize: Int? = null, returnSquarishOneIfPossible: Boolean = false) : Favicon? {
-        val bestIcon : Favicon? = null
-
         // retrieve sizes of icons which's size isn't known yet
         favicons.filter { it.size == null }.forEach {
             it.size = retrieveIconSize(it)
@@ -42,7 +40,7 @@ class FaviconComparator(val webClient : IWebClient) {
 
         favicons.filter { it.size == null }.firstOrNull()?.let { return it }
 
-        return bestIcon
+        return null
     }
 
     fun doesFitSize(iconUrl: String, minSize: Int = DEFAULT_MIN_SIZE, maxSize: Int? = null, mustBeSquarish: Boolean = false): Boolean {
