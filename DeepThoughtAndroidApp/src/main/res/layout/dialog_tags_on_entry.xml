@@ -10,15 +10,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/dialog_tags_on_entry_tag_preview_margin_top"
         android:layout_above="@+id/toolbar"
     >
+
+        <include
+            layout="@layout/layout_context_help"
+            android:id="@+id/lytContextHelp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+        />
 
         <LinearLayout
             android:id="@+id/lytentryTagsPreview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/lytContextHelp"
             android:minHeight="@dimen/dialog_tags_on_entry_tag_preview_min_height"
+            android:layout_marginTop="@dimen/dialog_tags_on_entry_tag_preview_margin_top"
         >
 
             <TextView
@@ -73,14 +82,6 @@
             android:textSize="@dimen/dialog_tags_on_entry_tag_search_tags_text_size"
             android:text="@string/dialog_tags_on_entry_create_tag"
             android:enabled="false"
-        />
-
-        <include
-            layout="@layout/layout_context_help"
-            android:id="@+id/lytContextHelp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/edtxtEditEntrySearchTag"
         />
 
 
