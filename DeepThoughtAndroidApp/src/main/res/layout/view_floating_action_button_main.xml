@@ -26,15 +26,6 @@
     />
 
     <com.github.clans.fab.FloatingActionButton
-        android:id="@+id/fab_add_tag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/MenuButtonsStyle"
-        fab:fab_label="@string/floating_action_menu_add_tag"
-        android:visibility="gone"
-    />
-
-    <com.github.clans.fab.FloatingActionButton
         android:id="@+id/fab_add_entry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
