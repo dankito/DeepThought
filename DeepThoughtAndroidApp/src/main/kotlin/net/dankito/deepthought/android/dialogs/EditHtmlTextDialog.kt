@@ -89,12 +89,16 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         }
     }
 
+    override fun onPause() {
+        this.view?.hideKeyboard()
+
+        super.onPause()
+    }
+
     override fun onDestroy() {
         htmlEditorPool.htmlEditorReleased(htmlEditor)
 
         htmlChangedCallback = null
-
-        this.view?.hideKeyboard()
 
         super.onDestroy()
     }

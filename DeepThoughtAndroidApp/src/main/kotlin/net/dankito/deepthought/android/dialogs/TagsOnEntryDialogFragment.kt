@@ -129,6 +129,12 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
         searchTags(Search.EmptySearchTerm)
     }
 
+    override fun onPause() {
+        edtxtEditEntrySearchTag?.hideKeyboard()
+
+        super.onPause()
+    }
+
     override fun onDestroy() {
         if(didOriginalTagsOnEntryChange && didApplyChanges == false) { // tags have been deleted that are on originalTagsOnEntry, but user didn't apply changes -> inform caller now
             tagsChangedCallback?.invoke(ArrayList(originalTagsOnEntry)) // make a copy, otherwise EditEntryActivity's call to clear will also clear originalTagsOnEntry
@@ -137,8 +143,6 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
         presenter.destroy()
 
         tagsChangedCallback = null
-
-        edtxtEditEntrySearchTag?.hideKeyboard()
 
         super.onDestroy()
     }
