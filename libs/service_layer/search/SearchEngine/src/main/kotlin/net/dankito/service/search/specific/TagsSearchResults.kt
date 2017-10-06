@@ -19,17 +19,17 @@ class TagsSearchResults(val overAllSearchTerm: String) {
     var results: MutableList<TagsSearchResult> = ArrayList()
         private set
 
-    protected var allMatchesProperty: List<Tag>? = null
+    private var allMatchesProperty: List<Tag>? = null
 
-    protected var relevantMatchesSortedProperty: List<Tag>? = null
+    private var relevantMatchesSortedProperty: List<Tag>? = null
 
-    protected var relevantMatchesSortedButOnlyExactMatchesFromLastResultProperty: List<Tag>? = null
+    private var relevantMatchesSortedButOnlyExactMatchesFromLastResultProperty: List<Tag>? = null
 
-    protected var exactMatchesProperty: List<Tag>? = null
+    private var exactMatchesProperty: List<Tag>? = null
 
-    protected var exactOrSingleMatchesNotOfLastResultProperty: List<Tag>? = null
+    private var exactOrSingleMatchesNotOfLastResultProperty: List<Tag>? = null
 
-    protected var matchesButOfLastResult: List<Tag>? = null
+    private var matchesButOfLastResult: List<Tag>? = null
 
 
     constructor(overAllSearchTerm: String, relevantMatchesSorted: List<Tag>) : this(overAllSearchTerm) {
