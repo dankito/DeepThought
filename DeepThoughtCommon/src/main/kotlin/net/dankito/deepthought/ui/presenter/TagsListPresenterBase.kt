@@ -80,15 +80,19 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
         lastTagsSearch?.interrupt()
 
         lastTagsSearch = TagsSearch(searchTerm) { result ->
-            this.lastTagsSearchResults = result
-            this.lastFilteredTagsSearchResults = null
-
-            val tags = getTagsFromSearchTagsWithoutFilterResult(result)
-
-            tagsListView.showEntities(tags)
+            tagsSearchResultsRetrieved(result)
         }
 
         searchEngine.searchTags(lastTagsSearch!!)
+    }
+
+    protected open fun tagsSearchResultsRetrieved(result: TagsSearchResults) {
+        this.lastTagsSearchResults = result
+        this.lastFilteredTagsSearchResults = null
+
+        val tags = getTagsFromSearchTagsWithoutFilterResult(result)
+
+        tagsListView.showEntities(tags)
     }
 
     protected open fun getTagsFromSearchTagsWithoutFilterResult(result: TagsSearchResults): List<Tag> {
