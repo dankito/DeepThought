@@ -1230,7 +1230,7 @@ class EditEntryActivity : BaseActivity() {
             }
         }
 
-        updateDisplayedValuesOnUIThread(reference)
+        updateDisplayedValuesOnUIThread(reference, updateContentPreview)
     }
 
     private fun updateDisplayedValuesOnUIThread(reference: Reference? = referenceToEdit, updateContentPreview: Boolean = true) {
