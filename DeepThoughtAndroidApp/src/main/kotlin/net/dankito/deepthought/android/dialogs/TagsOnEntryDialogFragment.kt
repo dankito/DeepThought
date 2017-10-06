@@ -109,9 +109,6 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
         rootView.toolbar.setOnMenuItemClickListener { item -> menuItemClicked(item) }
         mnApplyTagsOnEntryChanges = rootView.toolbar.menu.findItem(R.id.mnApplyTagsOnEntryChanges)
 
-        rootView.toolbar.setNavigationIcon(android.R.drawable.ic_menu_close_clear_cancel)
-        rootView.toolbar.setNavigationOnClickListener { closeDialog() }
-
         rootView.rcyTags.adapter = adapter
         rootView.rcyTags.addItemDecoration(HorizontalDividerItemDecoration(rootView.context))
         adapter.deleteTagListener = { tag -> deleteTag(tag) }
