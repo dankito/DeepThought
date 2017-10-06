@@ -27,6 +27,8 @@
     <string name="action_load_more">Load more</string>
     <string name="contextual_action_menu_count_items_selected" formatted="false">%d / %d</string>
     <string name="action_apply">Apply</string>
+    <string name="action_yes">Yes</string>
+    <string name="action_no">No</string>
 
     <string name="search_title">Search</string>
     <plurals name="search_count_results">

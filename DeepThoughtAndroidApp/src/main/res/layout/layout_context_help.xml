@@ -1,52 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="@dimen/view_context_help_height"
-                android:padding="@dimen/view_context_help_padding"
-                android:background="@color/context_help_background_color"
-                android:visibility="gone"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/view_context_help_height"
+    android:background="@color/context_help_background_color"
+    android:visibility="gone"
 >
 
-    <ImageView
-        android:id="@+id/imgHelpIcon"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginRight="@dimen/view_context_help_image_margin_right"
-        android:layout_marginEnd="@dimen/view_context_help_image_margin_right"
-        android:gravity="center_vertical|start"
-        android:layout_centerVertical="true"
-        android:tint="@color/colorAccent"
-        android:src="@drawable/ic_help_outline_white_48dp"
-    />
+        android:padding="@dimen/view_context_help_padding"
+    >
 
-    <TextView
-        android:id="@+id/txtContextHelpText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/imgHelpIcon"
-        android:layout_toEndOf="@+id/imgHelpIcon"
-        android:layout_toLeftOf="@+id/btnDismissContextHelp"
-        android:layout_toStartOf="@+id/btnDismissContextHelp"
-        android:gravity="center_vertical"
-        android:layout_centerVertical="true"
-        android:textColor="@color/context_help_text_color"
-        android:lineSpacingExtra="@dimen/view_context_help_text_line_spacing"
-    />
+        <ImageView
+            android:id="@+id/imgHelpIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginRight="@dimen/view_context_help_image_margin_right"
+            android:layout_marginEnd="@dimen/view_context_help_image_margin_right"
+            android:gravity="center_vertical|start"
+            android:layout_centerVertical="true"
+            android:tint="@color/colorAccent"
+            android:src="@drawable/ic_help_outline_white_48dp"
+        />
 
-    <Button
-        android:id="@+id/btnDismissContextHelp"
-        android:layout_width="@dimen/view_context_help_button_width"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:gravity="center_vertical|end"
-        android:layout_centerVertical="true"
-        style="?android:attr/buttonBarButtonStyle"
-        android:textColor="@color/context_help_text_color"
-        android:text="@android:string/ok"
-    />
+        <TextView
+            android:id="@+id/txtContextHelpText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/imgHelpIcon"
+            android:layout_toEndOf="@+id/imgHelpIcon"
+            android:layout_toLeftOf="@+id/btnDismissContextHelp"
+            android:layout_toStartOf="@+id/btnDismissContextHelp"
+            android:gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:textColor="@color/context_help_text_color"
+            android:lineSpacingExtra="@dimen/view_context_help_text_line_spacing"
+        />
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/btnDismissContextHelp"
+            android:layout_width="@dimen/view_context_help_button_width"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:gravity="center_vertical|end"
+            android:layout_centerVertical="true"
+            style="?android:attr/buttonBarButtonStyle"
+            android:textColor="@color/context_help_text_color"
+            android:text="@android:string/ok"
+        />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_context_help_confirm_button_height"
+    >
+
+        <Button
+            android:id="@+id/btnDeny"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            style="?android:attr/buttonBarButtonStyle"
+            android:textColor="@color/context_help_text_color"
+            android:text="@string/action_no"
+            android:visibility="gone"
+        />
+
+        <Button
+            android:id="@+id/btnConfirm"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            style="?android:attr/buttonBarButtonStyle"
+            android:textColor="@color/context_help_text_color"
+            android:text="@string/action_yes"
+            android:visibility="gone"
+        />
+
+    </LinearLayout>
+
+</LinearLayout>

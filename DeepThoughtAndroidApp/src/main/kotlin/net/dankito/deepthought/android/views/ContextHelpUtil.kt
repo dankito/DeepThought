@@ -34,6 +34,32 @@ class ContextHelpUtil {
         animateShowContextHelp(lytContextHelp)
     }
 
+
+    fun showAsConfirmation(lytContextHelp: View, confirmationTextResourceId: Int, didConfirm: () -> Unit) {
+        showAsConfirmation(lytContextHelp, lytContextHelp.context.getString(confirmationTextResourceId), didConfirm)
+    }
+
+    fun showAsConfirmation(lytContextHelp: View, confirmationText: String, didConfirm: () -> Unit) {
+        val txtContextHelpText = lytContextHelp.findViewById(R.id.txtContextHelpText) as TextView
+        txtContextHelpText.text = confirmationText
+
+        lytContextHelp.findViewById(R.id.btnDismissContextHelp)?.visibility = View.GONE
+
+        val btnDeny = lytContextHelp.findViewById(R.id.btnDeny) as Button
+        btnDeny.visibility = View.VISIBLE
+        btnDeny.setOnClickListener { hide(lytContextHelp) }
+
+        val btnConfirm = lytContextHelp.findViewById(R.id.btnConfirm) as Button
+        btnConfirm.visibility = View.VISIBLE
+        btnConfirm.setOnClickListener {
+            didConfirm()
+            hide(lytContextHelp)
+        }
+
+        lytContextHelp.visibility = View.VISIBLE
+    }
+
+
     // TODO: animation currently only works on top off screen, not in other places
     private fun animateShowContextHelp(lytContextHelp: View) {
         if (lytContextHelp.measuredHeight == 0) { // in this case we have to wait till height is determined -> set OnGlobalLayoutListener
@@ -59,7 +85,11 @@ class ContextHelpUtil {
     private fun animateHideContextHelp(lytContextHelp: View) {
         // does not work
 //        playAnimation(lytContextHelp, lytContextHelp.y, lytContextHelp.y - lytContextHelp.measuredHeight.toFloat()) { lytContextHelp.visibility = View.GONE }
-        playAnimation(lytContextHelp, 0f, - lytContextHelp.measuredHeight.toFloat()) { lytContextHelp.visibility = View.GONE }
+        playAnimation(lytContextHelp, 0f, - lytContextHelp.measuredHeight.toFloat()) { hide(lytContextHelp) }
+    }
+
+    private fun hide(lytContextHelp: View) {
+        lytContextHelp.visibility = View.GONE
     }
 
     private fun playAnimation(lytContextHelp: View, yStart: Float, yEnd: Float, animationEndListener: (() -> Unit)? = null) {

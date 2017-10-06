@@ -31,6 +31,7 @@
     <dimen name="view_context_help_image_margin_right">8dp</dimen>
     <dimen name="view_context_help_text_line_spacing">2dp</dimen>
     <dimen name="view_context_help_button_width">48dp</dimen>
+    <dimen name="view_context_help_confirm_button_height">36dp</dimen>
 
     <dimen name="list_item_entry_height">118dp</dimen>
     <dimen name="list_item_entry_padding">8dp</dimen>
