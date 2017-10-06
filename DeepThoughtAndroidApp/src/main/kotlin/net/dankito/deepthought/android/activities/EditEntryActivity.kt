@@ -25,6 +25,7 @@ import net.dankito.deepthought.android.dialogs.EditHtmlTextDialog
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import net.dankito.deepthought.android.views.ContextHelpUtil
+import net.dankito.deepthought.android.views.EditEntryActivityFloatingActionMenuButton
 import net.dankito.deepthought.android.views.FullscreenWebView
 import net.dankito.deepthought.android.views.ToolbarUtil
 import net.dankito.deepthought.model.*
@@ -166,6 +167,8 @@ class EditEntryActivity : BaseActivity() {
 
     private var mnShareEntry: MenuItem? = null
 
+    private lateinit var floatingActionMenu: EditEntryActivityFloatingActionMenuButton
+
 
     private var eventBusListener: EventBusListener? = null
 
@@ -269,8 +272,7 @@ class EditEntryActivity : BaseActivity() {
         btnClearEntryReference.setOnClickListener { referenceCleared() }
         lytTagsPreview.setOnClickListener { editTagsOnEntry() }
 
-        fabEditEntryReference.setOnClickListener { executeActionAndCloseFloatingActionMenu { addReferenceToEntry() } }
-        fabEditEntryAbstract.setOnClickListener { executeActionAndCloseFloatingActionMenu { addAbstractToEntry() } }
+        floatingActionMenu = EditEntryActivityFloatingActionMenuButton(fabEntryFieldsMenu, { addReferenceToEntry() }, { addAbstractToEntry() } )
 
         setupEntryContentView()
     }
@@ -287,11 +289,6 @@ class EditEntryActivity : BaseActivity() {
         setAbstractPreviewOnUIThread()
 
         editAbstract()
-    }
-
-    private fun executeActionAndCloseFloatingActionMenu(action: (() -> Unit)) {
-        action.invoke()
-        fabEntryFieldsMenu.close(true)
     }
 
     private fun referenceCleared() {
@@ -701,12 +698,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setFloatingActionButtonVisibilityOnUIThread() {
-        if(fabEditEntryReference.visibility != View.GONE || fabEditEntryAbstract.visibility != View.GONE) {
-            fabEntryFieldsMenu.visibility = View.VISIBLE
-        }
-        else {
-            fabEntryFieldsMenu.visibility = View.GONE
-        }
+        floatingActionMenu.setVisibilityOnUIThread()
     }
 
 
@@ -777,8 +769,8 @@ class EditEntryActivity : BaseActivity() {
     private fun enterFullscreenMode() {
         lytEntryFieldsPreview.visibility = View.GONE
         txtEntryContentLabel.visibility = View.GONE
-        fabEntryFieldsMenu.visibility = View.GONE
         appBarLayout.visibility = View.GONE
+        floatingActionMenu.setVisibilityOnUIThread()
 
         val layoutParams = wbEntry.layoutParams as RelativeLayout.LayoutParams
         layoutParams.alignWithParent = true
