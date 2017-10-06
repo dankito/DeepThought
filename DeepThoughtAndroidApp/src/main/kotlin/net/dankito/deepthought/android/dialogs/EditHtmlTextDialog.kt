@@ -1,7 +1,6 @@
 package net.dankito.deepthought.android.dialogs
 
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.view.MenuItem
 import android.view.View
@@ -93,6 +92,10 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     override fun onDestroy() {
         htmlEditorPool.htmlEditorReleased(htmlEditor)
 
+        htmlChangedCallback = null
+
+        this.view?.hideKeyboard()
+
         super.onDestroy()
     }
 
@@ -174,14 +177,6 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
 
             closeDialog()
         }
-    }
-
-    override fun closeDialogOnUiThread(activity: FragmentActivity) {
-        htmlChangedCallback = null
-
-        this.view?.hideKeyboard()
-
-        super.closeDialogOnUiThread(activity)
     }
 
 
