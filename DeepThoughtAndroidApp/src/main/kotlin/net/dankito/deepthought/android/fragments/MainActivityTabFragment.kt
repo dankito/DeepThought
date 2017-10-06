@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.text.Html
 import android.view.*
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -365,7 +366,21 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
 
             searchView.setOnQueryTextListener(entriesQueryTextListener) // move setOnQueryTextListener() behind searchView.setQuery() (in presenter?.getLastSearchTerm()?.let {})
             // as otherwise when lastSearchTerm != null onQuerySubmit gets called (and therefore e.g. tag filter applied)
+
+            adjustSearchViewLayout(searchView)
         }
+    }
+
+    private fun adjustSearchViewLayout(searchView: SearchView) {
+        (searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text) as? EditText)?.let { searchField ->
+            try {
+                val cursorDrawableField = TextView::class.java.getDeclaredField("mCursorDrawableRes") // textCursorDrawable is only accessible in xml, not in code -> get it via reflection
+                cursorDrawableField.isAccessible = true
+                cursorDrawableField.set(searchField, R.drawable.search_view_cursor_drawable) // with default style cursor is invisible -> set it to white
+            } catch(ignored: Exception) { }
+        }
+
+        addSearchResultTextViewToSearchView(searchView)
     }
 
     protected fun hideSearchViewKeyboard() {
