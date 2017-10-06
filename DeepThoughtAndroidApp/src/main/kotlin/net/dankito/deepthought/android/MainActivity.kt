@@ -109,7 +109,10 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        if(currentlyVisibleFragment?.onBackPressed() == false) {
+        if(floatingActionMenuButton.handlesBackButtonPress()) {
+
+        }
+        else if(currentlyVisibleFragment?.onBackPressed() == false) {
             super.onBackPressed() // when not handling by fragment call default back button press handling
         }
     }

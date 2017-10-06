@@ -89,7 +89,21 @@ class FloatingActionMenuButton(private val floatingActionMenu: FloatingActionMen
 
     private fun executeAndCloseMenu(action: () -> Unit) {
         action()
+        closeMenu()
+    }
+
+    private fun closeMenu() {
         floatingActionMenu.close(true)
+    }
+
+
+    fun handlesBackButtonPress(): Boolean {
+        if(floatingActionMenu.isOpened) {
+            closeMenu()
+            return true
+        }
+
+        return false
     }
 
 
