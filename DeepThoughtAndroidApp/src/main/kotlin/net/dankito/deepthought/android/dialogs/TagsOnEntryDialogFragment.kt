@@ -26,7 +26,7 @@ import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.presenter.TagsOnEntryListPresenter
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.tags.TagsSearcherButtonState
-import net.dankito.deepthought.ui.view.ITagsListView
+import net.dankito.deepthought.ui.view.ITagsOnEntryListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
@@ -37,7 +37,7 @@ import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 
-class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
+class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListView {
 
     companion object {
         val TAG: String = javaClass.name
@@ -361,6 +361,29 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
         activity?.runOnUiThread {
             adapter.notifyDataSetChanged()
             setTagsOnEntryPreviewOnUIThread()
+        }
+    }
+
+    override fun shouldCreateNotExistingTags(notExistingTags: List<String>, tagsShouldGetCreatedCallback: (tagsOnEntry: MutableCollection<Tag>) -> Unit) {
+        activity?.runOnUiThread {
+            val questionText = getShouldCreateNotExistingTagsQuestionText(notExistingTags)
+
+            contextHelpUtil.showAsConfirmation(lytConfirmCreateTags, questionText) {
+                tagsShouldGetCreatedCallback(adapter.tagsOnEntry)
+                setTagsOnEntryPreviewOnUIThread()
+            }
+        }
+    }
+
+    private fun getShouldCreateNotExistingTagsQuestionText(notExistingTags: List<String>): String {
+        val lastTagName = notExistingTags[notExistingTags.size - 1]
+
+        if (notExistingTags.size == 1)
+            return resources.getQuantityString(R.plurals.dialog_tags_on_entry_confirm_create_tags, notExistingTags.size, lastTagName)
+        else {
+            val otherTagNames = notExistingTags.subList(0, notExistingTags.size - 1).joinToString(", ")
+
+            return resources.getQuantityString(R.plurals.dialog_tags_on_entry_confirm_create_tags, notExistingTags.size, otherTagNames, lastTagName)
         }
     }
 

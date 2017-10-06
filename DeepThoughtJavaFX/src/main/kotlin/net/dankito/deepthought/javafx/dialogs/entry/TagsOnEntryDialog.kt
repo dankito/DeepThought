@@ -15,7 +15,7 @@ import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.presenter.TagsOnEntryListPresenter
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.tags.TagsSearcherButtonState
-import net.dankito.deepthought.ui.view.ITagsListView
+import net.dankito.deepthought.ui.view.ITagsOnEntryListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
@@ -25,7 +25,7 @@ import tornadofx.*
 import javax.inject.Inject
 
 
-class TagsOnEntryDialog : DialogFragment(), ITagsListView {
+class TagsOnEntryDialog : DialogFragment(), ITagsOnEntryListView {
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
@@ -186,6 +186,10 @@ class TagsOnEntryDialog : DialogFragment(), ITagsListView {
 
     override fun updateDisplayedTags() {
         // nothing to do in JavaFX
+    }
+
+    override fun shouldCreateNotExistingTags(notExistingTags: List<String>, tagsShouldGetCreatedCallback: (tagsOnEntry: MutableCollection<Tag>) -> Unit) {
+        // TODO
     }
 
 }

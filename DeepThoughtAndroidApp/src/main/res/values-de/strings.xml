@@ -134,6 +134,10 @@
     <string name="dialog_tags_on_entry_tags_label">Schlagworte:</string>
     <string name="dialog_tags_on_entry_create_tag">Neu</string>
     <string name="dialog_tags_on_entry_toggle_tags">Tauschen</string>
+    <plurals name="dialog_tags_on_entry_confirm_create_tags">
+        <item quantity="one">Es gibt kein Schlagwort mit Namen %1$s.\nMöchten Sie es erstellen?</item> <!-- Alternative, klingt aber ein bisschen doof im Pluaral -->
+        <item quantity="other">Die Schlagworte %1$s und %2$s existieren nicht.\nMöchten Sie sie erstellen?</item>
+    </plurals>
 
     <string name="activity_edit_reference_title">Quelle</string>
     <string name="activity_edit_reference_use_existing_label">Bestehende verwenden:</string>

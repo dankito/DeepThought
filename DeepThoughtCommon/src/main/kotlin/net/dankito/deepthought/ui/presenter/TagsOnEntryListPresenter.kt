@@ -4,18 +4,18 @@ import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.tags.TagsSearcherButtonState
-import net.dankito.deepthought.ui.view.ITagsListView
+import net.dankito.deepthought.ui.view.ITagsOnEntryListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.SearchEngineBase
-import net.dankito.service.search.specific.TagsSearchResults
+import net.dankito.service.search.specific.TagsSearchResult
 import net.dankito.utils.ui.IDialogService
 
 
-class TagsOnEntryListPresenter(tagsListView: ITagsListView, searchEngine: ISearchEngine, tagService: TagService, deleteEntityService: DeleteEntityService,
+class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryListView, searchEngine: ISearchEngine, tagService: TagService, deleteEntityService: DeleteEntityService,
                                searchResultsUtil: TagsSearchResultsUtil, dialogService: IDialogService)
-    : TagsListPresenterBase(tagsListView, searchEngine, tagService, deleteEntityService, searchResultsUtil, dialogService) {
+    : TagsListPresenterBase(tagsOnEntryListView, searchEngine, tagService, deleteEntityService, searchResultsUtil, dialogService) {
 
 
     init {
@@ -39,6 +39,14 @@ class TagsOnEntryListPresenter(tagsListView: ITagsListView, searchEngine: ISearc
         }
     }
 
+    private fun createNewTags(tagNames: Collection<String>, tagsOnEntry: MutableCollection<Tag>) {
+        tagNames.forEach {
+            tagsOnEntry.add(createNewTag(it))
+        }
+
+        searchTags()
+    }
+
     private fun createNewTag(tagName: String): Tag {
         val newTag = Tag(tagName)
 
@@ -49,14 +57,27 @@ class TagsOnEntryListPresenter(tagsListView: ITagsListView, searchEngine: ISearc
 
     fun toggleTagsOnEntry(tagsOnEntry: MutableCollection<Tag>) {
         lastTagsSearchResults?.let { searchResults ->
+            val notExistingEnteredTags = ArrayList<String>()
+
             searchResults.results.forEach { result ->
-                if(result.hasExactMatches()) {
-                    result.exactMatches.forEach { toggleTagAffiliation(it, tagsOnEntry) }
-                }
-                else {
-                    result.allMatches.filterNotNull().forEach { toggleTagAffiliation(it, tagsOnEntry) }
-                }
+                toggleTagOnEntry(tagsOnEntry, result, notExistingEnteredTags)
             }
+
+            if(notExistingEnteredTags.isNotEmpty()) {
+                handleEnteredNotExistingTags(notExistingEnteredTags)
+            }
+        }
+    }
+
+    private fun toggleTagOnEntry(tagsOnEntry: MutableCollection<Tag>, result: TagsSearchResult, notExistingEnteredTags: ArrayList<String>) {
+        if(result.hasExactMatches()) {
+            result.exactMatches.forEach { toggleTagAffiliation(it, tagsOnEntry) }
+        }
+        else if (result.hasMatches == false) {
+            notExistingEnteredTags.add(result.searchTerm)
+        }
+        else {
+            result.allMatches.filterNotNull().forEach { toggleTagAffiliation(it, tagsOnEntry) }
         }
     }
 
@@ -66,6 +87,12 @@ class TagsOnEntryListPresenter(tagsListView: ITagsListView, searchEngine: ISearc
         }
         else {
             tagsOnEntry.add(tag)
+        }
+    }
+
+    private fun handleEnteredNotExistingTags(notExistingEnteredTags: ArrayList<String>) {
+        tagsOnEntryListView.shouldCreateNotExistingTags(notExistingEnteredTags) { tagsOnEntry ->
+            createNewTags(notExistingEnteredTags, tagsOnEntry)
         }
     }
 
