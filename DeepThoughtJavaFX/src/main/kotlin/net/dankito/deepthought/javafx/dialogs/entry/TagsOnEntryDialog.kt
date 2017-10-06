@@ -152,22 +152,11 @@ class TagsOnEntryDialog : DialogFragment(), ITagsListView {
 
     private fun createOrToggleTags() {
         if(btnCreateOrToggleTagsState == TagsSearcherButtonState.CREATE_TAG) {
-            createNewTag()
+            presenter.createNewTags(txtfldSearchTags.text, tagsOnEntry)
         }
         else {
             toggleTagsOnEntry()
         }
-    }
-
-    private fun createNewTag() {
-        val enteredText = txtfldSearchTags.text.trim()
-        val newTag = Tag(enteredText)
-
-        tagService.persist(newTag)
-
-        tagsOnEntry.add(newTag)
-
-        presenter.searchTags(enteredText)
     }
 
     private fun toggleTagsOnEntry() {

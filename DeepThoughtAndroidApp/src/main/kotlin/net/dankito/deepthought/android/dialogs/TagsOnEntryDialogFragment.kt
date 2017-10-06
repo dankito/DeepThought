@@ -31,7 +31,6 @@ import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
-import net.dankito.service.search.SearchEngineBase
 import net.dankito.utils.ui.IDialogService
 import java.util.*
 import javax.inject.Inject
@@ -250,21 +249,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
     }
 
     private fun createNewTags() {
-        val enteredText = edtxtEditEntrySearchTag.editableText.toString().trim()
-
-        enteredText.split(SearchEngineBase.TagsSearchTermSeparator).map { it.trim() }.forEach { tagName ->
-            createNewTag(tagName)
-        }
-
-        searchTags(enteredText)
-    }
-
-    private fun createNewTag(tagName: String) {
-        val newTag = Tag(tagName)
-
-        tagService.persist(newTag)
-
-        adapter.tagsOnEntry.add(newTag)
+        presenter.createNewTags(edtxtEditEntrySearchTag.editableText.toString(), adapter.tagsOnEntry)
 
         setTagsOnEntryPreviewOnUIThread()
     }
