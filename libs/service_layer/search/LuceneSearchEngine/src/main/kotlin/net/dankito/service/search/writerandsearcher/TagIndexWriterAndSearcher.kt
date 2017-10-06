@@ -99,7 +99,7 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osH
     }
 
     private fun executeSearchForSingleTagName(search: TagsSearch, tagNameToSearchFor: String): Boolean {
-        val searchTerm = QueryParser.escape(tagNameToSearchFor)
+        val searchTerm = QueryParser.escape(tagNameToSearchFor.toLowerCase())
         if(search.isInterrupted) {
             return true
         }
@@ -130,7 +130,7 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osH
                 return
             }
 
-            val searchTerm = QueryParser.escape(result.searchTerm)
+            val searchTerm = QueryParser.escape(result.searchTerm.toLowerCase())
             if(result.hasExactMatches() && result !== search.results.lastResult) { // from last TagSearchResult only use exact matches, but from all others all matches
                 sortRelevantTagsQuery.add(TermQuery(Term(FieldName.TagName, searchTerm)), BooleanClause.Occur.SHOULD)
             }
