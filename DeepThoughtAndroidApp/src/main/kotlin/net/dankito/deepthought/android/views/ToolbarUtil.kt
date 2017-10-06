@@ -3,6 +3,7 @@ package net.dankito.deepthought.android.views
 import android.support.v7.widget.ActionMenuView
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -28,13 +29,23 @@ class ToolbarUtil {
 
     fun setupActionItemsLayout(menuItem: MenuItem?, onClickListener: ((MenuItem) -> Unit)? = null) {
         menuItem?.actionView?.let { actionView ->
-            actionView.imgActionIcon.setImageDrawable(menuItem.icon)
-            actionView.txtActionTitle.text = menuItem.title
+            setTitleAndIcon(actionView, menuItem)
 
             actionView.setOnClickListener {
                 onClickListener?.invoke(menuItem)
             }
         }
+    }
+
+    fun updateMenuItemView(menuItem: MenuItem?) {
+        menuItem?.actionView?.let { actionView ->
+            setTitleAndIcon(actionView, menuItem)
+        }
+    }
+
+    private fun setTitleAndIcon(actionView: View, menuItem: MenuItem) {
+        actionView.imgActionIcon.setImageDrawable(menuItem.icon)
+        actionView.txtActionTitle.text = menuItem.title
     }
 
 

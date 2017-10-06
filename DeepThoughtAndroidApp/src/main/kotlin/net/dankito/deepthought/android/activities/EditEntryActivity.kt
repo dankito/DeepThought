@@ -377,6 +377,7 @@ class EditEntryActivity : BaseActivity() {
         wbEntry.removeJavascriptInterface(GetHtmlCodeFromWebViewJavaScriptInterfaceName)
 
         mnToggleReaderMode?.isVisible = extractionResult.couldExtractContent
+        invalidateOptionsMenu()
 
         editEntryExtractionResult(extractionResult, false) // updates reference and abstract, but avoids that extracted content gets shown (this is important according to our
         // lawyer, user must click on toggleReaderMode menu first)
@@ -841,6 +842,7 @@ class EditEntryActivity : BaseActivity() {
 
         mnToggleReaderMode = menu.findItem(R.id.mnToggleReaderMode)
         mnToggleReaderMode?.isVisible = entryExtractionResult?.couldExtractContent == true /*&& entryExtractionResult?.webSiteHtml != null*/ // show mnToggleReaderMode only if previously original web site was shown
+        setReaderModeActionStateOnUIThread()
 
         mnSaveEntryExtractionResultForLaterReading = menu.findItem(R.id.mnSaveEntryExtractionResultForLaterReading)
         mnSaveEntryExtractionResultForLaterReading?.isVisible = entryExtractionResult != null
@@ -854,6 +856,23 @@ class EditEntryActivity : BaseActivity() {
         setMenuSaveEntryVisibleStateOnUIThread()
 
         return true
+    }
+
+    private fun setReaderModeActionStateOnUIThread() {
+        mnToggleReaderMode?.let { mnToggleReaderMode ->
+            if(mnToggleReaderMode.isVisible == true) {
+                if(isInReaderMode) {
+                    mnToggleReaderMode.title = getString(R.string.action_reader_view)
+                    mnToggleReaderMode.setIcon(R.drawable.ic_reader_mode)
+                }
+                else {
+                    mnToggleReaderMode.title = getString(R.string.action_website_view)
+                    mnToggleReaderMode.setIcon(R.drawable.ic_reader_mode_disabled)
+                }
+
+                toolbarUtil.updateMenuItemView(mnToggleReaderMode)
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -902,6 +921,7 @@ class EditEntryActivity : BaseActivity() {
         }
 
         setContentPreviewOnUIThread()
+        invalidateOptionsMenu()
     }
 
     private fun showShareEntryPopupMenu() {

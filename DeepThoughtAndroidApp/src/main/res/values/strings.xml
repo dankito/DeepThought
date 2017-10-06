@@ -20,7 +20,8 @@
     <string name="action_share">Share</string>
     <string name="action_view">View</string>
     <string name="action_read_article_later">Read later</string>
-    <string name="action_toggle_reader_mode">Reader view</string>
+    <string name="action_website_view">Website view</string>
+    <string name="action_reader_view">Reader view</string>
     <string name="action_delete">Delete</string>
     <string name="action_reload">Reload</string>
     <string name="action_load_more">Load more</string>

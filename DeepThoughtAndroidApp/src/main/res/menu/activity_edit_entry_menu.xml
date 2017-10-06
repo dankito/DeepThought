@@ -5,8 +5,8 @@
         android:id="@+id/mnToggleReaderMode"
         app:showAsAction="always"
         android:orderInCategory="200"
-        android:title="@string/action_toggle_reader_mode"
-        android:icon="@drawable/ic_reader_mode"
+        android:title="@string/action_website_view"
+        android:icon="@drawable/ic_reader_mode_disabled"
         app:actionLayout="@layout/contextual_action_mode_item_action_layout"
         android:visible="false"
     />
