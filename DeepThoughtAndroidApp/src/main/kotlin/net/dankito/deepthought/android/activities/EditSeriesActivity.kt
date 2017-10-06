@@ -347,7 +347,7 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
         }
     }
 
-    private fun seriesHasBeenEdited(series: Series) {
+    private fun warnSeriesHasBeenEdited(series: Series) {
         unregisterEventBusListener() // message now gets shown, don't display it a second time
 
         runOnUiThread {
@@ -440,8 +440,8 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
                     setActivityResult(EditSeriesActivityResult(didDeleteSeries = true))
                     runOnUiThread { closeDialog() }
                 }
-                else {
-                    seriesHasBeenEdited(change.entity)
+                else if(change.source == EntityChangeSource.Synchronization) {
+                    warnSeriesHasBeenEdited(change.entity)
                 }
             }
         }

@@ -39,6 +39,7 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.service.data.*
+import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntryChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.IThreadPool
@@ -1280,7 +1281,7 @@ class EditEntryActivity : BaseActivity() {
         }
     }
 
-    private fun entryHasBeenEdited(entry: Entry) {
+    private fun warnEntryHasBeenEdited(entry: Entry) {
         unregisterEventBusListener() // message now gets shown, don't display it a second time
 
         runOnUiThread {
@@ -1293,7 +1294,9 @@ class EditEntryActivity : BaseActivity() {
         @Handler
         fun entryChanged(change: EntryChanged) {
             if(change.entity.id == entry?.id && change.isDependentChange == false) {
-                entryHasBeenEdited(change.entity)
+                if(change.source == EntityChangeSource.Synchronization) {
+                    warnEntryHasBeenEdited(change.entity)
+                }
             }
         }
     }

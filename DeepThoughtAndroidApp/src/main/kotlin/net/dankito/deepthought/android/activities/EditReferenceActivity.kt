@@ -506,7 +506,7 @@ class EditReferenceActivity : BaseActivity() {
         }
     }
 
-    private fun referenceHasBeenEdited(reference: Reference) {
+    private fun warnReferenceHasBeenEdited(reference: Reference) {
         unregisterEventBusListener() // message now gets shown, don't display it a second time
 
         runOnUiThread {
@@ -585,8 +585,8 @@ class EditReferenceActivity : BaseActivity() {
                     setActivityResult(EditReferenceActivityResult(didDeleteReference = true))
                     runOnUiThread { closeDialog() }
                 }
-                else {
-                    referenceHasBeenEdited(change.entity)
+                else if(change.source == EntityChangeSource.Synchronization) {
+                    warnReferenceHasBeenEdited(change.entity)
                 }
             }
         }
