@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.view_floating_action_button_main.*
 import net.dankito.deepthought.android.activities.BaseActivity
@@ -90,6 +91,14 @@ class MainActivity : BaseActivity() {
         setCurrentlyVisibleFragment(0) // set currentlyVisibleFragment on start otherwise back button won't work on first displayed fragment
 
         floatingActionMenuButton = FloatingActionMenuButton(fab_menu, summaryExtractorManager, router, eventBus)
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if(floatingActionMenuButton.handlesTouch(event)) { // close menu when menu is opened and touch is outside floatingActionMenuButton
+            return true
+        }
+
+        return super.dispatchTouchEvent(event)
     }
 
     private fun setCurrentlyVisibleFragment(position: Int) {

@@ -2,6 +2,7 @@ package net.dankito.deepthought.android.views
 
 import android.app.Activity
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
@@ -22,6 +23,7 @@ class FloatingActionMenuButton(private val floatingActionMenu: FloatingActionMen
 
     private val eventBusListener = EventBusListener()
 
+
     init {
         setup()
 
@@ -30,6 +32,8 @@ class FloatingActionMenuButton(private val floatingActionMenu: FloatingActionMen
 
 
     private fun setup() {
+        floatingActionMenu.setClosedOnTouchOutside(true)
+
         floatingActionMenu.fab_add_entry.setOnClickListener { executeAndCloseMenu { router.showCreateEntryView() } }
         floatingActionMenu.fab_add_newspaper_article.setOnClickListener { executeAndCloseMenu { router.showArticleSummaryExtractorsView() } }
 
@@ -101,6 +105,19 @@ class FloatingActionMenuButton(private val floatingActionMenu: FloatingActionMen
         if(floatingActionMenu.isOpened) {
             closeMenu()
             return true
+        }
+
+        return false
+    }
+
+
+    fun handlesTouch(event: MotionEvent): Boolean {
+        if(floatingActionMenu.isOpened) { // if menu is opened and user clicked somewhere else in the view, close menu
+            if(floatingActionMenu.isTouchInsideView(event) == false) {
+                closeMenu()
+
+                return true
+            }
         }
 
         return false
