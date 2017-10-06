@@ -125,7 +125,7 @@ class EditEntryActivity : BaseActivity() {
 
     private var originalInformation: String? = null
 
-    private var originalTags: Collection<Tag>? = null
+    private var originalTags: MutableCollection<Tag>? = null
 
     private var originalReference: Reference? = null
 
@@ -512,12 +512,12 @@ class EditEntryActivity : BaseActivity() {
         }
     }
 
-    private fun appliedChangesToTags(it: MutableList<Tag>) {
+    private fun appliedChangesToTags(editedTags: Collection<Tag>) {
         tagsOnEntry.clear()
-        tagsOnEntry.addAll(it)
+        tagsOnEntry.addAll(editedTags)
 
         runOnUiThread {
-            updateEntryFieldChangedOnUIThread(EntryField.Tags, didTagsChange(it))
+            updateEntryFieldChangedOnUIThread(EntryField.Tags, didTagsChange(editedTags))
             setTagsOnEntryPreviewOnUIThread()
             mayShowSaveEntryChangesHelpOnUIThread()
         }
@@ -1210,7 +1210,7 @@ class EditEntryActivity : BaseActivity() {
         editEntry(entryExtractionResult?.entry, entryExtractionResult?.reference, entryExtractionResult?.tags, updateContentPreview)
     }
 
-    private fun editEntry(entry: Entry?, reference: Reference?, tags: Collection<Tag>?, updateContentPreview: Boolean = true) {
+    private fun editEntry(entry: Entry?, reference: Reference?, tags: MutableCollection<Tag>?, updateContentPreview: Boolean = true) {
         originalInformation = entry?.content
         originalTags = tags
         originalReference = reference

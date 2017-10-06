@@ -1,7 +1,6 @@
 package net.dankito.deepthought.android.dialogs
 
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.text.Editable
 import android.text.TextWatcher
@@ -69,7 +68,9 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
 
     private val adapter: TagsOnEntryRecyclerAdapter
 
-    private val unmodifiedTagsOnEntry = ArrayList<Tag>()
+    private var originalTagsOnEntry: MutableCollection<Tag> = ArrayList<Tag>()
+
+    private var didOriginalTagsOnEntryChange = false
 
     private val tagsPreviewViewHelper = TagsPreviewViewHelper()
 
@@ -77,7 +78,9 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
 
     private var lastActionPressTime = Date()
 
-    private var tagsChangedCallback: ((MutableList<Tag>) -> Unit)? = null
+    private var tagsChangedCallback: ((Collection<Tag>) -> Unit)? = null
+
+    private var didApplyChanges = false
 
     private var mnApplyTagsOnEntryChanges: MenuItem? = null
 
@@ -130,7 +133,15 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
     }
 
     override fun onDestroy() {
+        if(didOriginalTagsOnEntryChange && didApplyChanges == false) { // tags have been deleted that are on originalTagsOnEntry, but user didn't apply changes -> inform caller now
+            tagsChangedCallback?.invoke(ArrayList(originalTagsOnEntry)) // make a copy, otherwise EditEntryActivity's call to clear will also clear originalTagsOnEntry
+        }
+
         presenter.destroy()
+
+        tagsChangedCallback = null
+
+        edtxtEditEntrySearchTag?.hideKeyboard()
 
         super.onDestroy()
     }
@@ -183,6 +194,10 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
     }
 
     private fun removeTagFromEntry(tag: Tag) {
+        if(originalTagsOnEntry.remove(tag)) {
+            didOriginalTagsOnEntryChange = true // so that we can notify EditEntryActivity that it's tags changed
+        }
+
         if(adapter.tagsOnEntry.contains(tag)) {
             adapter.tagsOnEntry.remove(tag)
             activity?.runOnUiThread {
@@ -296,17 +311,17 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
     }
 
     private fun didTagsOnEntryChange(tagsOnEntry: MutableList<Tag>): Boolean {
-        if(unmodifiedTagsOnEntry.size != tagsOnEntry.size) {
+        if(originalTagsOnEntry.size != tagsOnEntry.size) {
             return true
         }
 
         val copy = ArrayList(tagsOnEntry)
-        copy.removeAll(unmodifiedTagsOnEntry)
+        copy.removeAll(originalTagsOnEntry)
         return copy.size > 0
     }
 
 
-    fun show(fragmentManager: FragmentManager, tagsOnEntry: MutableList<Tag>, tagsChangedCallback: ((MutableList<Tag>) -> Unit)?) {
+    fun show(fragmentManager: FragmentManager, tagsOnEntry: MutableList<Tag>, tagsChangedCallback: ((Collection<Tag>) -> Unit)?) {
         restoreDialog(tagsOnEntry, tagsChangedCallback)
 
         adapter.tagsOnEntry = ArrayList(tagsOnEntry) // make a copy so that original collection doesn't get manipulated
@@ -315,24 +330,17 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
         showInFullscreen(fragmentManager, false)
     }
 
-    fun restoreDialog(tagsOnEntry: Collection<Tag>, tagsChangedCallback: ((MutableList<Tag>) -> Unit)?) {
+    fun restoreDialog(tagsOnEntry: MutableCollection<Tag>, tagsChangedCallback: ((Collection<Tag>) -> Unit)?) {
         this.tagsChangedCallback = tagsChangedCallback
 
-        unmodifiedTagsOnEntry.addAll(tagsOnEntry)
+        originalTagsOnEntry = tagsOnEntry
     }
 
     private fun applyChangesAndCloseDialog() {
+        didApplyChanges = true
         tagsChangedCallback?.invoke(adapter.tagsOnEntry)
 
         closeDialog()
-    }
-
-    override fun closeDialogOnUiThread(activity: FragmentActivity) {
-        tagsChangedCallback = null
-
-        edtxtEditEntrySearchTag?.hideKeyboard()
-
-        super.closeDialogOnUiThread(activity)
     }
 
 
