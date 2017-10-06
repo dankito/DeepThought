@@ -15,7 +15,7 @@ import net.dankito.deepthought.android.adapter.MainActivitySectionsPagerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.fragments.MainActivityTabFragment
 import net.dankito.deepthought.android.service.IntentHandler
-import net.dankito.deepthought.android.views.FloatingActionMenuButton
+import net.dankito.deepthought.android.views.MainActivityFloatingActionMenuButton
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
@@ -35,7 +35,7 @@ class MainActivity : BaseActivity() {
 
     private var currentlyVisibleFragment: MainActivityTabFragment<out BaseEntity>? = null
 
-    private lateinit var floatingActionMenuButton: FloatingActionMenuButton
+    private lateinit var floatingActionMenuButton: MainActivityFloatingActionMenuButton
 
 
     @Inject
@@ -90,7 +90,7 @@ class MainActivity : BaseActivity() {
 
         setCurrentlyVisibleFragment(0) // set currentlyVisibleFragment on start otherwise back button won't work on first displayed fragment
 
-        floatingActionMenuButton = FloatingActionMenuButton(fab_menu, summaryExtractorManager, router, eventBus)
+        floatingActionMenuButton = MainActivityFloatingActionMenuButton(fab_menu, summaryExtractorManager, router, eventBus)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
