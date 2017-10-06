@@ -4,7 +4,6 @@ package net.dankito.service.search.specific
 import net.dankito.deepthought.model.Tag
 import net.dankito.service.search.Search
 import net.dankito.service.search.util.CombinedLazyLoadingList
-import java.util.*
 
 
 class TagsSearchResults(val overAllSearchTerm: String) {
@@ -15,6 +14,8 @@ class TagsSearchResults(val overAllSearchTerm: String) {
 
 
     val hasEmptySearchTerm = overAllSearchTerm.isNullOrBlank()
+
+    var tagNamesToSearchFor: List<String> = listOf()
 
     var results: MutableList<TagsSearchResult> = ArrayList()
         private set
@@ -30,6 +31,8 @@ class TagsSearchResults(val overAllSearchTerm: String) {
     private var exactOrSingleMatchesNotOfLastResultProperty: List<Tag>? = null
 
     private var matchesButOfLastResult: List<Tag>? = null
+
+    private var searchTermsWithoutMatchesProperty: List<String>? = null
 
 
     constructor(overAllSearchTerm: String, relevantMatchesSorted: List<Tag>) : this(overAllSearchTerm) {
@@ -279,6 +282,27 @@ class TagsSearchResults(val overAllSearchTerm: String) {
 
             return listOf()
         }
+
+
+    fun getSearchTermsWithoutMatches(): List<String> {
+        if(searchTermsWithoutMatchesProperty == null) {
+            searchTermsWithoutMatchesProperty = determineSearchTermsWithoutMatches()
+        }
+
+        return searchTermsWithoutMatchesProperty ?: listOf()
+    }
+
+    private fun determineSearchTermsWithoutMatches(): List<String>? {
+        val searchTermsWithoutMatches = ArrayList<String>()
+
+        results.forEach { result ->
+            if(result.hasMatches == false) {
+                searchTermsWithoutMatches.add(result.searchTerm)
+            }
+        }
+
+        return searchTermsWithoutMatches
+    }
 
 
     override fun toString(): String {

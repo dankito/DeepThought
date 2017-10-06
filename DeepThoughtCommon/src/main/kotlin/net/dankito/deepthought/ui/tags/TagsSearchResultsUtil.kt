@@ -1,7 +1,6 @@
 package net.dankito.deepthought.ui.tags
 
 import net.dankito.deepthought.model.Tag
-import net.dankito.service.search.SearchEngineBase
 import net.dankito.service.search.specific.TagsSearchResults
 
 
@@ -34,7 +33,7 @@ class TagsSearchResultsUtil {
             return TagsSearcherButtonState.DISABLED
         }
 
-        if(searchResults.getExactMatches().isEmpty() && searchResults.overAllSearchTerm.contains(SearchEngineBase.TagsSearchTermSeparator) == false) {
+        if(searchResults.getSearchTermsWithoutMatches().size == searchResults.tagNamesToSearchFor.size) {
             return TagsSearcherButtonState.CREATE_TAG
         }
 

@@ -31,6 +31,7 @@ import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
+import net.dankito.service.search.SearchEngineBase
 import net.dankito.utils.ui.IDialogService
 import java.util.*
 import javax.inject.Inject
@@ -241,24 +242,31 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsListView {
 
     private fun handleCreateNewTagOrToggleTagsAction() {
         if(btnEditEntryCreateOrToggleTagsState == TagsSearcherButtonState.CREATE_TAG) {
-            createNewTag()
+            createNewTags()
         }
         else {
             toggleTagsOnEntry()
         }
     }
 
-    private fun createNewTag() {
+    private fun createNewTags() {
         val enteredText = edtxtEditEntrySearchTag.editableText.toString().trim()
-        val newTag = Tag(enteredText)
+
+        enteredText.split(SearchEngineBase.TagsSearchTermSeparator).map { it.trim() }.forEach { tagName ->
+            createNewTag(tagName)
+        }
+
+        searchTags(enteredText)
+    }
+
+    private fun createNewTag(tagName: String) {
+        val newTag = Tag(tagName)
 
         tagService.persist(newTag)
 
         adapter.tagsOnEntry.add(newTag)
 
         setTagsOnEntryPreviewOnUIThread()
-
-        searchTags(enteredText)
     }
 
     private fun toggleTagsOnEntry() {

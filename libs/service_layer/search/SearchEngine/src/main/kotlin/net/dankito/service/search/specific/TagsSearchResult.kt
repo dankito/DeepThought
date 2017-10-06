@@ -73,6 +73,9 @@ class TagsSearchResult {
     val allMatchesCount: Int
         get() = allMatches.size
 
+    val hasMatches: Boolean
+        get() = allMatchesCount > 0
+
 
     override fun toString(): String {
         return searchTerm + " has " + allMatchesCount + " matches, hasExactMatches = " + hasExactMatches()

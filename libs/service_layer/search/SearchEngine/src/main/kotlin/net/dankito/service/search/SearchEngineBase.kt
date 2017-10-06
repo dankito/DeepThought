@@ -34,6 +34,8 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
             tagNamesToFilterFor = getSingleSearchTerms(search.searchTerm, TagsSearchTermSeparator)
         }
 
+        search.results.tagNamesToSearchFor = tagNamesToFilterFor
+
         threadPool.runAsync { searchTags(search, tagNamesToFilterFor) }
     }
 
