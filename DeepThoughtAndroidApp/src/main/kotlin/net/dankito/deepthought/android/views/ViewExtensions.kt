@@ -1,7 +1,12 @@
 package net.dankito.deepthought.android.views
 
+import android.view.MotionEvent
 import android.view.View
 
+
+fun View.isTouchInsideView(event: MotionEvent): Boolean {
+    return isPointInsideView(event.rawX, event.rawY)
+}
 
 /**
  * Determines if given points are inside view
