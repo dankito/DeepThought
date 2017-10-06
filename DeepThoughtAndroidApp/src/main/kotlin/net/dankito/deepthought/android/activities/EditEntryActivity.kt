@@ -1220,15 +1220,9 @@ class EditEntryActivity : BaseActivity() {
         abstractToEdit = entry?.abstractString
         referenceToEdit = reference
 
-        if(updateContentPreview) {
-            setContentPreviewOnUIThread(reference)
-        }
-
         if(abstractToEdit.isNullOrBlank() == false) { this.forceShowAbstractPreview = true } // forcing that once it has been shown it doesn't get hidden anymore
-        setAbstractPreviewOnUIThread()
 
         reference?.let { this.forceShowReferencePreview = true } // forcing that once it has been shown it doesn't get hidden anymore
-        setReferencePreviewOnUIThread()
 
         tags?.forEach { tag ->
             if(tagsOnEntry.contains(tag) == false) { // to avoid have a tag twice we really have to check each single tag
@@ -1236,7 +1230,19 @@ class EditEntryActivity : BaseActivity() {
             }
         }
 
+        updateDisplayedValuesOnUIThread(reference)
+    }
+
+    private fun updateDisplayedValuesOnUIThread(reference: Reference? = referenceToEdit, updateContentPreview: Boolean = true) {
+        if(updateContentPreview) {
+            setContentPreviewOnUIThread(reference)
+        }
+
         setTagsOnEntryPreviewOnUIThread()
+
+        setReferencePreviewOnUIThread()
+
+        setAbstractPreviewOnUIThread()
     }
 
     private fun restoreReference(referenceId: String) {
@@ -1289,6 +1295,10 @@ class EditEntryActivity : BaseActivity() {
         }
     }
 
+    private fun updateDisplayedValues() {
+        runOnUiThread { updateDisplayedValuesOnUIThread() }
+    }
+
     inner class EventBusListener {
 
         @Handler
@@ -1296,6 +1306,9 @@ class EditEntryActivity : BaseActivity() {
             if(change.entity.id == entry?.id && change.isDependentChange == false) {
                 if(change.source == EntityChangeSource.Synchronization) {
                     warnEntryHasBeenEdited(change.entity)
+                }
+                else {
+                    updateDisplayedValues()
                 }
             }
         }
