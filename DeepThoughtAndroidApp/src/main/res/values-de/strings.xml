@@ -28,6 +28,12 @@
     <string name="action_yes">Ja</string>
     <string name="action_no">Nein</string>
 
+    <string name="permanent_notification_content">Einträge schnell erstellen</string>
+    <string name="permanent_notification_create_entry_action">Eintrag erstellen</string>
+    <string name="permanent_notification_create_entry_label">Information eingeben</string>
+    <string name="permanent_notification_reply_successfully_saved_entry">Eintrag gespeichert</string>
+    <string name="permanent_notification_reply_could_not_save_entry">Eintrag konnte nicht gespeichert werden</string>
+
     <string name="search_title">Suche</string>
     <plurals name="search_count_results">
         <item quantity="one">%d Ergebnis</item>

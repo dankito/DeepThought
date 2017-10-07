@@ -5,6 +5,7 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import net.dankito.deepthought.android.activities.BaseActivity
+import net.dankito.deepthought.android.androidservice.PermanentNotificationService
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.android.service.network.NetworkConnectivityChangeBroadcastReceiver
@@ -46,6 +47,9 @@ class AndroidAppInitializer {
     @Inject
     protected lateinit var crashReporter: ICrashReporter
 
+    @Inject
+    protected lateinit var permanentNotificationService: PermanentNotificationService
+
 
     fun initializeApp() {
         AppComponent.component.inject(this)
@@ -55,6 +59,8 @@ class AndroidAppInitializer {
         initializeNetworkConnectivityChangeBroadcastReceiver()
 
         initializeHtmlEditorExtractor()
+
+        initializePermanentNotification()
     }
 
     private fun initializeCrashReporter() {
@@ -94,6 +100,11 @@ class AndroidAppInitializer {
 
     private fun preloadHtmlEditors(currentActivity: BaseActivity) {
         currentActivity.runOnUiThread { htmlEditorPool.preloadHtmlEditors(currentActivity, 2) }
+    }
+
+
+    private fun initializePermanentNotification() {
+        permanentNotificationService.showPermanentNotification()
     }
 
 }

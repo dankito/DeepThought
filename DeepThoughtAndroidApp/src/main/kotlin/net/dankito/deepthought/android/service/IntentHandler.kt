@@ -1,6 +1,7 @@
 package net.dankito.deepthought.android.service
 
 import android.content.Intent
+import net.dankito.deepthought.android.androidservice.PermanentNotificationService
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
@@ -8,17 +9,21 @@ import net.dankito.utils.UrlUtil
 import net.dankito.utils.ui.IDialogService
 
 
-class IntentHandler(private val articleExtractorManager: ArticleExtractorManager, private val router: IRouter, private val urlUtil: UrlUtil, private val dialogService: IDialogService) {
+class IntentHandler(private val articleExtractorManager: ArticleExtractorManager, private val router: IRouter, private val urlUtil: UrlUtil,
+                    private val dialogService: IDialogService, private val permanentNotificationService: PermanentNotificationService) {
 
     fun handle(intent: Intent) {
         val action = intent.action
         val type = intent.type
 
-        if (Intent.ACTION_SEND == action && type != null) {
+        if(Intent.ACTION_SEND == action && type != null) {
             handleActionSendIntent(type, intent)
         }
-        else if (Intent.ACTION_SEND_MULTIPLE == action && type != null) {
+        else if(Intent.ACTION_SEND_MULTIPLE == action && type != null) {
             handleActionSendMultipleIntent()
+        }
+        else if(permanentNotificationService.handlesIntent(intent)) {
+
         }
     }
 

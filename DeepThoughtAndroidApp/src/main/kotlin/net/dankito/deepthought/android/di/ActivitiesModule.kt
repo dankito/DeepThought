@@ -4,6 +4,7 @@ import android.content.Context
 import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
+import net.dankito.deepthought.android.androidservice.PermanentNotificationService
 import net.dankito.deepthought.android.appstart.AndroidAppInitializer
 import net.dankito.deepthought.android.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.android.dialogs.AndroidDialogService
@@ -17,6 +18,7 @@ import net.dankito.deepthought.android.service.settings.AndroidLocalSettingsStor
 import net.dankito.deepthought.android.views.html.AndroidHtmlEditorPool
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.ISerializer
@@ -73,6 +75,12 @@ class ActivitiesModule(private val applicationContext: Context) {
     @Singleton
     fun provideDialogService(currentActivityTracker: CurrentActivityTracker, localization: Localization) : IDialogService {
         return AndroidDialogService(currentActivityTracker, localization)
+    }
+
+    @Provides
+    @Singleton
+    fun providePermanentNotificationService(context: Context, entryPersister: EntryPersister) : PermanentNotificationService {
+        return PermanentNotificationService(context, entryPersister)
     }
 
     @Provides

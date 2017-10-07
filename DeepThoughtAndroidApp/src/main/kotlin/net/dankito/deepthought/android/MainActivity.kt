@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.view_floating_action_button_main.*
 import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.adapter.MainActivitySectionsPagerAdapter
+import net.dankito.deepthought.android.androidservice.PermanentNotificationService
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.fragments.MainActivityTabFragment
 import net.dankito.deepthought.android.service.IntentHandler
@@ -55,6 +56,9 @@ class MainActivity : BaseActivity() {
 
     @Inject
     protected lateinit var dialogService: IDialogService
+
+    @Inject
+    protected lateinit var permanentNotificationService: PermanentNotificationService
 
 
     init {
@@ -148,7 +152,7 @@ class MainActivity : BaseActivity() {
             return
         }
 
-        IntentHandler(articleExtractorManager, router, urlUtil, dialogService).handle(intent)
+        IntentHandler(articleExtractorManager, router, urlUtil, dialogService, permanentNotificationService).handle(intent)
     }
 
 
