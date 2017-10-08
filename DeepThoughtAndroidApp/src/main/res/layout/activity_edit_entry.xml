@@ -90,44 +90,56 @@
             android:layout_below="@+id/txtEntryContentLabel"
         />
 
-        <net.dankito.deepthought.android.views.FullscreenWebView
-            android:id="@+id/wbEntry"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/lytContextHelpFullscreenMode"
             android:layout_above="@+id/appBarLayout"
-        />
-
-        <RelativeLayout
-            android:id="@+id/lytOnboardingText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txtEntryContentLabel"
-            android:layout_above="@+id/appBarLayout"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginLeft="@dimen/activity_edit_entry_onboarding_left_right_margin"
-            android:layout_marginStart="@dimen/activity_edit_entry_onboarding_left_right_margin"
-            android:layout_marginRight="@dimen/activity_edit_entry_onboarding_left_right_margin"
-            android:layout_marginEnd="@dimen/activity_edit_entry_onboarding_left_right_margin"
-            android:visibility="gone"
         >
 
-            <TextView
-                android:id="@+id/txtOnboardingText"
+            <net.dankito.deepthought.android.views.FullscreenWebView
+                android:id="@+id/wbEntry"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_centerInParent="true"
-                android:textAlignment="center"
-                android:gravity="center_horizontal"
-                android:ellipsize="end"
-                android:minLines="2"
+                android:layout_height="0dp"
+                android:layout_weight="1"
             />
 
-        </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/lytOnboardingText"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:visibility="gone"
+            >
+
+                <TextView
+                    android:id="@+id/txtOnboardingText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_edit_entry_onboarding_left_right_margin"
+                    android:layout_marginStart="@dimen/activity_edit_entry_onboarding_left_right_margin"
+                    android:layout_marginRight="@dimen/activity_edit_entry_onboarding_left_right_margin"
+                    android:layout_marginEnd="@dimen/activity_edit_entry_onboarding_left_right_margin"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:textAlignment="center"
+                    android:gravity="center_horizontal"
+                    android:ellipsize="end"
+                    android:minLines="2"
+                />
+
+                <net.dankito.deepthought.android.views.PointToFloatingActionButtonArrow
+                    android:id="@+id/arrowToFloatingActionButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtOnboardingText"
+                    android:layout_alignParentBottom="true"
+                />
+
+            </RelativeLayout>
+
+        </LinearLayout>
 
 
         <android.support.design.widget.AppBarLayout

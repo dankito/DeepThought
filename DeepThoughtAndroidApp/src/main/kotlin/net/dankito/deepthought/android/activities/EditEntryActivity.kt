@@ -13,7 +13,6 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.RelativeLayout
 import com.github.clans.fab.FloatingActionMenu
 import kotlinx.android.synthetic.main.activity_edit_entry.*
 import kotlinx.android.synthetic.main.view_floating_action_button_entry_fields.*
@@ -590,24 +589,24 @@ class EditEntryActivity : BaseActivity() {
     private fun setContentPreviewOnUIThread(reference: Reference?) {
         val content = contentToEdit
         val url = reference?.url
-        var showOnboarding = true
+        var showContentOnboarding = true
 
         if(shouldShowContent(content)) {
             showContentInWebView(content, url)
-            showOnboarding = false
+            showContentOnboarding = false
         }
         else if(isInReaderMode == false && entryExtractionResult?.webSiteHtml != null) {
             showContentInWebView(entryExtractionResult?.webSiteHtml, url)
-            showOnboarding = false
+            showContentOnboarding = false
         }
         else if(url != null) { // then load url
             clearWebViewEntry()
             wbEntry.setWebViewClient(WebViewClient()) // to avoid that redirects open url in browser
             wbEntry.loadUrl(url)
-            showOnboarding = false
+            showContentOnboarding = false
         }
 
-        setContentOnboardingTextVisibilityOnUIThread(showOnboarding)
+        setOnboardingTextVisibilityOnUIThread(showContentOnboarding)
     }
 
     private fun shouldShowContent(content: String?): Boolean {
@@ -642,38 +641,33 @@ class EditEntryActivity : BaseActivity() {
         }
     }
 
-    private fun setContentOnboardingTextVisibilityOnUIThread(showOnboarding: Boolean) {
-        if(showOnboarding) {
-            wbEntry.visibility = View.GONE
+    private fun setOnboardingTextVisibilityOnUIThread(showContentOnboarding: Boolean? = null) {
+        val showOnboardingForEntryProperties = shouldShowOnboardingForEntryProperties()
+        if(showContentOnboarding == true || showOnboardingForEntryProperties) {
             lytOnboardingText.visibility = View.VISIBLE
 
+            val onboardingText = if(showContentOnboarding == true) getText(R.string.activity_edit_entry_edit_content_onboarding_text).toString() else getText(R.string.activity_edit_entry_edit_content_onboarding_text).toString()
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(R.string.activity_edit_entry_edit_content_onboarding_text).toString(), Html.FROM_HTML_MODE_LEGACY)
+                txtOnboardingText.text = Html.fromHtml(onboardingText, Html.FROM_HTML_MODE_LEGACY)
             }
             else {
-                txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(R.string.activity_edit_entry_edit_content_onboarding_text).toString())
+                txtOnboardingText.text = Html.fromHtml(onboardingText)
             }
         }
         else {
-            wbEntry.visibility = View.VISIBLE
             lytOnboardingText.visibility = View.GONE
+        }
+
+        if(showContentOnboarding == true) {
+            wbEntry.visibility = View.GONE
+        }
+        else if(showContentOnboarding == false) {
+            wbEntry.visibility = View.VISIBLE
         }
     }
 
-    private fun setEntryFieldsOnboardingTextVisibilityOnUIThread(showOnboarding: Boolean) {
-        if(showOnboarding) {
-            lytOnboardingText.visibility = View.VISIBLE
-
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(R.string.activity_edit_entry_edit_content_onboarding_text).toString(), Html.FROM_HTML_MODE_LEGACY)
-            }
-            else {
-                txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(R.string.activity_edit_entry_edit_content_onboarding_text).toString())
-            }
-        }
-        else {
-            lytOnboardingText.visibility = View.GONE
-        }
+    private fun shouldShowOnboardingForEntryProperties(): Boolean {
+        return lytTagsPreview.visibility == View.GONE && lytReferencePreview.visibility == View.GONE && lytAbstractPreview.visibility == View.GONE
     }
 
 
@@ -689,7 +683,7 @@ class EditEntryActivity : BaseActivity() {
 
         lytAbstractPreview.visibility = if(showAbstractPreview) View.VISIBLE else View.GONE
         fabEditEntryAbstract.visibility = if(showAbstractPreview) View.GONE else View.VISIBLE
-        setFloatingActionButtonVisibilityOnUIThread()
+        setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread()
     }
 
     private fun setReferencePreviewOnUIThread() {
@@ -704,7 +698,7 @@ class EditEntryActivity : BaseActivity() {
 
         lytReferencePreview.visibility = if(showReferencePreview) View.VISIBLE else View.GONE
         fabEditEntryReference.visibility = if(showReferencePreview) View.GONE else View.VISIBLE
-        setFloatingActionButtonVisibilityOnUIThread()
+        setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread()
 
         btnClearEntryReference.visibility = if(referenceToEdit == null) View.GONE else View.VISIBLE
         mnShareEntry?.isVisible = referenceToEdit?.url.isNullOrBlank() == false
@@ -731,6 +725,11 @@ class EditEntryActivity : BaseActivity() {
 
         lytTagsPreview.visibility = if(showTagsPreview) View.VISIBLE else View.GONE
         fabEditEntryTags.visibility = if(showTagsPreview) View.GONE else View.VISIBLE
+        setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread()
+    }
+
+    private fun setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread() {
+        setOnboardingTextVisibilityOnUIThread(null)
         setFloatingActionButtonVisibilityOnUIThread()
     }
 
@@ -790,22 +789,15 @@ class EditEntryActivity : BaseActivity() {
         lytEntryFieldsPreview.visibility = View.VISIBLE
         txtEntryContentLabel.visibility = View.VISIBLE
         appBarLayout.visibility = View.VISIBLE
-        setFloatingActionButtonVisibilityOnUIThread()
-
-        val layoutParams = wbEntry.layoutParams as RelativeLayout.LayoutParams
-        layoutParams.alignWithParent = false
-        wbEntry.layoutParams = layoutParams
+        setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread()
     }
 
     private fun enterFullscreenMode() {
         lytEntryFieldsPreview.visibility = View.GONE
         txtEntryContentLabel.visibility = View.GONE
+        lytOnboardingText.visibility = View.GONE
         appBarLayout.visibility = View.GONE
         floatingActionMenu.setVisibilityOnUIThread()
-
-        val layoutParams = wbEntry.layoutParams as RelativeLayout.LayoutParams
-        layoutParams.alignWithParent = true
-        wbEntry.layoutParams = layoutParams
 
         content_layout_root.invalidate()
 
