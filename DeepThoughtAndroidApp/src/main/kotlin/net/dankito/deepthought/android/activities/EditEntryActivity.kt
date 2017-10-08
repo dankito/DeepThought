@@ -616,7 +616,7 @@ class EditEntryActivity : BaseActivity() {
             showContentInWebView(entryExtractionResult?.webSiteHtml, url)
             showContentOnboarding = false
         }
-        else if(url != null) { // then load url
+        else if(url != null && entry == null) { // then load url (but don't show it for an Entry)
             clearWebViewEntry()
             wbEntry.setWebViewClient(WebViewClient()) // to avoid that redirects open url in browser
             wbEntry.loadUrl(url)
