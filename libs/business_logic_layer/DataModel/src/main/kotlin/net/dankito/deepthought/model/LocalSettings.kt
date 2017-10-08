@@ -42,6 +42,9 @@ data class LocalSettings(
         @Column(name = TableConfig.LocalSettingsCountTagsOnEntrySearchesColumnName)
         var countTagsOnEntrySearches: Int = 0,
 
+        @Column(name = TableConfig.LocalSettingsDidShowAddEntryPropertyHelpColumnName)
+        var didShowAddEntryPropertyHelp: Boolean = false,
+
         @Column(name = TableConfig.LocalSettingsDidShowSaveEntryChangesHelpColumnName)
         var didShowSaveEntryChangesHelp: Boolean = false,
 

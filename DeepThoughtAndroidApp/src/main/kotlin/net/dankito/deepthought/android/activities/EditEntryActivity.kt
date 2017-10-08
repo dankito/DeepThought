@@ -412,14 +412,7 @@ class EditEntryActivity : BaseActivity() {
         super.onResume()
 
         (getAndClearResult(EditReferenceActivity.ResultId) as? EditReferenceActivityResult)?.let { result ->
-            if(result.didSaveReference) {
-                result.savedReference?.let { savedReference(it) }
-
-                mayShowSaveEntryChangesHelpOnUIThread()
-            }
-            else if(result.didDeleteReference) {
-                referenceCleared()
-            }
+            appliedChangesToReference(result)
         }
 
         (supportFragmentManager.findFragmentByTag(TagsOnEntryDialogFragment.TAG) as? TagsOnEntryDialogFragment)?.let {
@@ -499,6 +492,7 @@ class EditEntryActivity : BaseActivity() {
 
     private fun appliedChangedToAbstract(abstractTitle: String) {
         abstractToEdit = abstractTitle
+        entryPropertySet()
 
         runOnUiThread {
             updateEntryFieldChangedOnUIThread(EntryField.TitleAbstract, originalTitleAbstract != abstractToEdit)
@@ -516,6 +510,19 @@ class EditEntryActivity : BaseActivity() {
         presenter.editReference(reference, entry, getCurrentSeries())
     }
 
+    private fun appliedChangesToReference(result: EditReferenceActivityResult) {
+        if(result.didSaveReference) {
+            result.savedReference?.let { savedReference(it) }
+
+            mayShowSaveEntryChangesHelpOnUIThread()
+        }
+        else if(result.didDeleteReference) {
+            referenceCleared()
+        }
+
+        entryPropertySet()
+    }
+
     private fun editTagsOnEntry() {
         val tagsOnEntryDialog = TagsOnEntryDialogFragment()
 
@@ -527,6 +534,7 @@ class EditEntryActivity : BaseActivity() {
     private fun appliedChangesToTags(editedTags: Collection<Tag>) {
         tagsOnEntry.clear()
         tagsOnEntry.addAll(editedTags)
+        entryPropertySet()
 
         runOnUiThread {
             updateEntryFieldChangedOnUIThread(EntryField.Tags, didTagsChange(editedTags))
@@ -579,6 +587,15 @@ class EditEntryActivity : BaseActivity() {
         }
 
         return false
+    }
+
+    private fun entryPropertySet() {
+        val localSettings = entryService.dataManager.localSettings
+
+        if(localSettings.didShowAddEntryPropertyHelp == false && contentToEdit.isNullOrBlank() == false) {
+            localSettings.didShowAddEntryPropertyHelp = true
+            entryService.dataManager.localSettingsUpdated()
+        }
     }
 
 
@@ -667,7 +684,8 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun shouldShowOnboardingForEntryProperties(): Boolean {
-        return lytTagsPreview.visibility == View.GONE && lytReferencePreview.visibility == View.GONE && lytAbstractPreview.visibility == View.GONE
+        return entryService.dataManager.localSettings.didShowAddEntryPropertyHelp == false &&
+                lytTagsPreview.visibility == View.GONE && lytReferencePreview.visibility == View.GONE && lytAbstractPreview.visibility == View.GONE
     }
 
 

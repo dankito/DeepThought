@@ -82,6 +82,7 @@ class TableConfig {
         const val LocalSettingsCountTagSearchesColumnName = "count_tag_searches"
         const val LocalSettingsDidShowSetTagsOnEntryHelpColumnName = "did_show_set_tags_on_entry_help"
         const val LocalSettingsCountTagsOnEntrySearchesColumnName = "count_tags_on_entry_searches"
+        const val LocalSettingsDidShowAddEntryPropertyHelpColumnName = "did_show_add_entry_property_help"
         const val LocalSettingsDidShowSaveEntryChangesHelpColumnName = "did_show_save_entry_changes_help"
         const val LocalSettingsDidShowEntryInformationFullscreenHelpColumnName = "entry_information_fullscreen_help"
         const val LocalSettingsDidShowEntryInformationFullscreenGesturesHelpColumnName = "entry_information_fullscreen_gestures_help"
