@@ -60,6 +60,7 @@ class EditEntryActivity : BaseActivity() {
         private const val READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME = "READ_LATER_ARTICLE_ID"
         private const val ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ENTRY_EXTRACTION_RESULT"
 
+        private const val FORCE_SHOW_TAGS_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_TAGS_PREVIEW"
         private const val FORCE_SHOW_REFERENCE_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_REFERENCE_PREVIEW"
         private const val FORCE_SHOW_ABSTRACT_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_ABSTRACT_PREVIEW"
 
@@ -142,9 +143,11 @@ class EditEntryActivity : BaseActivity() {
 
     private val changedFields = HashSet<EntryField>()
 
-    private var forceShowAbstractPreview = false
+    private var forceShowTagsPreview = false
 
     private var forceShowReferencePreview = false
+
+    private var forceShowAbstractPreview = false
 
 
     private val presenter: EditEntryPresenter
@@ -196,6 +199,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
+        this.forceShowTagsPreview = savedInstanceState.getBoolean(FORCE_SHOW_TAGS_PREVIEW_INTENT_EXTRA_NAME, false)
         this.forceShowReferencePreview = savedInstanceState.getBoolean(FORCE_SHOW_REFERENCE_PREVIEW_INTENT_EXTRA_NAME, false)
         this.forceShowAbstractPreview = savedInstanceState.getBoolean(FORCE_SHOW_ABSTRACT_PREVIEW_INTENT_EXTRA_NAME, false)
 
@@ -238,6 +242,7 @@ class EditEntryActivity : BaseActivity() {
             outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, null)
             entryExtractionResult?.let { outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, serializer.serializeObject(it)) }
 
+            outState.putBoolean(FORCE_SHOW_TAGS_PREVIEW_INTENT_EXTRA_NAME, forceShowTagsPreview)
             outState.putBoolean(FORCE_SHOW_REFERENCE_PREVIEW_INTENT_EXTRA_NAME, forceShowReferencePreview)
             outState.putBoolean(FORCE_SHOW_ABSTRACT_PREVIEW_INTENT_EXTRA_NAME, forceShowAbstractPreview)
 
@@ -273,9 +278,16 @@ class EditEntryActivity : BaseActivity() {
         btnClearEntryReference.setOnClickListener { referenceCleared() }
         lytTagsPreview.setOnClickListener { editTagsOnEntry() }
 
-        floatingActionMenu = EditEntryActivityFloatingActionMenuButton(fabEntryFieldsMenu, { addReferenceToEntry() }, { addAbstractToEntry() } )
+        floatingActionMenu = EditEntryActivityFloatingActionMenuButton(fabEntryFieldsMenu, { addTagsToEntry() }, { addReferenceToEntry() }, { addAbstractToEntry() } )
 
         setupEntryContentView()
+    }
+
+    private fun addTagsToEntry() {
+        forceShowTagsPreview = true
+        setTagsOnEntryPreviewOnUIThread()
+
+        editTagsOnEntry()
     }
 
     private fun addReferenceToEntry() {
@@ -696,6 +708,12 @@ class EditEntryActivity : BaseActivity() {
             val tagsPreview = tagsOnEntry.filterNotNull().sortedBy { it.name.toLowerCase() }.joinToString { it.name }
             lytTagsPreview.setFieldValueOnUiThread(tagsPreview)
         }
+
+        val showTagsPreview = this.forceShowTagsPreview || tagsOnEntry.size > 0
+
+        lytTagsPreview.visibility = if(showTagsPreview) View.VISIBLE else View.GONE
+        fabEditEntryTags.visibility = if(showTagsPreview) View.GONE else View.VISIBLE
+        setFloatingActionButtonVisibilityOnUIThread()
     }
 
     private fun setFloatingActionButtonVisibilityOnUIThread() {
@@ -1222,6 +1240,7 @@ class EditEntryActivity : BaseActivity() {
                 tagsOnEntry.add(tag)
             }
         }
+        forceShowTagsPreview = tags?.size ?: 0 > 0
 
         updateDisplayedValuesOnUIThread(reference, updateContentPreview)
     }
