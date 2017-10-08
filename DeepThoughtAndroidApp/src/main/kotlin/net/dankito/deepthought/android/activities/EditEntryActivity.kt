@@ -357,12 +357,13 @@ class EditEntryActivity : BaseActivity() {
 
     private fun webPageCompletelyLoadedOnUiThread(webView: WebView) {
         // if EntryExtractionResult's entry content hasn't been extracted yet, wait till WebView is loaded and extract entry content then
-        if(entryExtractionResult != null && isInReaderMode == false && webView.url != "about:blank" && webView.url.startsWith("data:text/html") == false) {
+        if((entryExtractionResult != null || readLaterArticle != null) && isInReaderMode == false &&
+                webView.url != "about:blank" && webView.url.startsWith("data:text/html") == false) {
             webView.loadUrl("javascript:$GetHtmlCodeFromWebViewJavaScriptInterfaceName.finishedLoadingSite" +
                     "(document.URL, '<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');")
         }
-        else if(entry != null || readLaterArticle != null) {
-            wbEntry.setWebViewClient(null) // now reactivate default url handling
+        else if(entry != null) {
+            wbEntry.setWebViewClient(null) // now re-activate default url handling
         }
     }
 
@@ -370,12 +371,13 @@ class EditEntryActivity : BaseActivity() {
         runOnUiThread { wbEntry.setWebViewClient(null) } // now reactivate default url handling
 
         // now try to extract entry content from WebView's html
-        if(entryExtractionResult != null && isInReaderMode == false) {
-            entryExtractionResult?.webSiteHtml = html
+        val extractionResult = entryExtractionResult ?: readLaterArticle?.entryExtractionResult
+        if(extractionResult != null && isInReaderMode == false) {
+            extractionResult?.webSiteHtml = html
             contentToEdit = html
 
-            if(entryExtractionResult?.couldExtractContent == false) {
-                entryExtractionResult?.let { extractionResult ->
+            if(extractionResult?.couldExtractContent == false) {
+                extractionResult?.let { extractionResult ->
                     articleExtractorManager.extractArticleAndAddDefaultData(extractionResult, html, url)
 
                     if(extractionResult.couldExtractContent) {
@@ -386,14 +388,18 @@ class EditEntryActivity : BaseActivity() {
         }
     }
 
-    private fun extractedContentOnUiThread(extractionResult: EntryExtractionResult) {
+    private fun extractedContentOnUiThread(extractionResult: EntryExtractionResult) { // extractionResult can either be from entryExtractionResult or readLaterArticle
         wbEntry.removeJavascriptInterface(GetHtmlCodeFromWebViewJavaScriptInterfaceName)
 
         mnToggleReaderMode?.isVisible = extractionResult.couldExtractContent
         invalidateOptionsMenu()
 
-        editEntryExtractionResult(extractionResult, false) // updates reference and abstract, but avoids that extracted content gets shown (this is important according to our
-        // lawyer, user must click on toggleReaderMode menu first)
+        entryExtractionResult?.let {
+            editEntryExtractionResult(it, false) // updates reference and abstract, but avoids that extracted content gets shown (this is important according to our
+            // lawyer, user must click on toggleReaderMode menu first)
+        }
+
+        readLaterArticle?.let { editReadLaterArticle(it, false) }
     }
 
 
@@ -607,6 +613,7 @@ class EditEntryActivity : BaseActivity() {
         val content = contentToEdit
         val url = reference?.url
         var showContentOnboarding = true
+        val extractionResult = entryExtractionResult ?: readLaterArticle?.entryExtractionResult
 
         if(shouldShowContent(content)) {
             showContentInWebView(content, url)
@@ -627,10 +634,10 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun shouldShowContent(content: String?): Boolean {
-        // TODO: currently we assume that for entry and readLaterArticle content is always set, this may change in the feature
+        // TODO: currently we assume that for entry content is always set, this may change in the feature
         return content.isNullOrBlank() == false &&
-                (entryExtractionResult == null ||
-                (isInReaderMode && entryExtractionResult?.couldExtractContent == true) )
+                (entry != null || (isInReaderMode &&
+                        (entryExtractionResult?.couldExtractContent == true || readLaterArticle?.entryExtractionResult?.couldExtractContent == true)) )
     }
 
     private fun showContentInWebView(contentParam: String?, url: String?) {
@@ -881,7 +888,7 @@ class EditEntryActivity : BaseActivity() {
         mnDeleteExistingEntry = menu.findItem(R.id.mnDeleteExistingEntry)
 
         mnToggleReaderMode = menu.findItem(R.id.mnToggleReaderMode)
-        mnToggleReaderMode?.isVisible = entryExtractionResult?.couldExtractContent == true /*&& entryExtractionResult?.webSiteHtml != null*/ // show mnToggleReaderMode only if previously original web site was shown
+        mnToggleReaderMode?.isVisible = entryExtractionResult?.couldExtractContent == true || readLaterArticle?.entryExtractionResult?.couldExtractContent == true /*&& entryExtractionResult?.webSiteHtml != null*/ // show mnToggleReaderMode only if previously original web site was shown
         setReaderModeActionStateOnUIThread()
 
         mnSaveEntryExtractionResultForLaterReading = menu.findItem(R.id.mnSaveEntryExtractionResultForLaterReading)
@@ -953,11 +960,12 @@ class EditEntryActivity : BaseActivity() {
     private fun toggleReaderMode() {
         isInReaderMode = !isInReaderMode
 
+        val extractionResult = entryExtractionResult ?: readLaterArticle?.entryExtractionResult
         if(isInReaderMode) {
-            contentToEdit = entryExtractionResult?.entry?.content ?: ""
+            contentToEdit = extractionResult?.entry?.content ?: ""
         }
         else {
-            contentToEdit = entryExtractionResult?.webSiteHtml ?: ""
+            contentToEdit = extractionResult?.webSiteHtml ?: ""
         }
 
         setContentPreviewOnUIThread()
@@ -1255,10 +1263,10 @@ class EditEntryActivity : BaseActivity() {
         }
     }
 
-    private fun editReadLaterArticle(readLaterArticle: ReadLaterArticle) {
+    private fun editReadLaterArticle(readLaterArticle: ReadLaterArticle, updateContentPreview: Boolean = true) {
         this.readLaterArticle = readLaterArticle
 
-        editEntry(readLaterArticle.entryExtractionResult.entry, readLaterArticle.entryExtractionResult.reference, readLaterArticle.entryExtractionResult.tags)
+        editEntry(readLaterArticle.entryExtractionResult.entry, readLaterArticle.entryExtractionResult.reference, readLaterArticle.entryExtractionResult.tags, updateContentPreview)
     }
 
     private fun editEntryExtractionResult(serializedExtractionResult: String) {
