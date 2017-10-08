@@ -619,8 +619,8 @@ class EditEntryActivity : BaseActivity() {
             showContentInWebView(content, url)
             showContentOnboarding = false
         }
-        else if(isInReaderMode == false && entryExtractionResult?.webSiteHtml != null) {
-            showContentInWebView(entryExtractionResult?.webSiteHtml, url)
+        else if(isInReaderMode == false && extractionResult?.webSiteHtml != null) {
+            showContentInWebView(extractionResult?.webSiteHtml, url)
             showContentOnboarding = false
         }
         else if(url != null && entry == null) { // then load url (but don't show it for an Entry)
