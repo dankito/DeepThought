@@ -18,7 +18,7 @@
     <string name="action_share">Teilen</string>
     <string name="action_view">Anzeigen</string>
     <string name="action_read_article_later">Vormerken</string>
-    <string name="action_website_view">Webseite</string>
+    <string name="action_website_view">Webansicht</string>
     <string name="action_reader_view">Leseansicht</string>
     <string name="action_delete">Löschen</string>
     <string name="action_reload">Neu laden</string>
