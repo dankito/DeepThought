@@ -303,7 +303,6 @@ class EditEntryActivity : BaseActivity() {
         wbEntry.changeFullscreenModeListener = { mode -> handleChangeFullscreenModeEvent(mode) }
 
         wbEntry.singleTapListener = { handleWebViewSingleTap(it) }
-        wbEntry.doubleTapListener = { handleWebViewDoubleTap(it) }
         wbEntry.swipeListener = { isInFullscreen, swipeDirection -> handleWebViewSwipe(isInFullscreen, swipeDirection) }
 
         val settings = wbEntry.getSettings()
@@ -714,12 +713,6 @@ class EditEntryActivity : BaseActivity() {
     private fun handleWebViewSingleTap(isInFullscreen: Boolean) {
         if(isInFullscreen == false) {
             editContent()
-        }
-    }
-
-    private fun handleWebViewDoubleTap(isInFullscreen: Boolean) {
-        if(isInFullscreen) {
-            mayShowEntryInformationFullscreenGesturesHelpOnUIThread { saveEntryAndCloseDialog() }
         }
     }
 

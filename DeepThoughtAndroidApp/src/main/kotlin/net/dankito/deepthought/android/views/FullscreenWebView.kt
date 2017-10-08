@@ -119,14 +119,17 @@ class FullscreenWebView : WebView {
         // leave the functionality for clicking on links, phone numbers, geo coordinates, ... Only go to fullscreen mode when clicked somewhere else in the WebView or on an image
         if(type == WebView.HitTestResult.UNKNOWN_TYPE || type == WebView.HitTestResult.IMAGE_TYPE) {
             singleTapListener?.invoke(isInFullscreenMode)
-
-            if(isInFullscreenMode) {
-                leaveFullscreenMode()
-            }
         }
     }
 
     private fun handleWebViewDoubleTap() {
+        if(isInFullscreenMode) {
+            leaveFullscreenMode()
+        }
+        else {
+            enterFullscreenMode()
+        }
+
         doubleTapListener?.invoke(isInFullscreenMode)
     }
 
