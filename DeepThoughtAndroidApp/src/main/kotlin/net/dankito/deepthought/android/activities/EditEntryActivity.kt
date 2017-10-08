@@ -14,6 +14,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.RelativeLayout
+import com.github.clans.fab.FloatingActionMenu
 import kotlinx.android.synthetic.main.activity_edit_entry.*
 import kotlinx.android.synthetic.main.view_floating_action_button_entry_fields.*
 import net.dankito.deepthought.android.R
@@ -278,7 +279,8 @@ class EditEntryActivity : BaseActivity() {
         btnClearEntryReference.setOnClickListener { referenceCleared() }
         lytTagsPreview.setOnClickListener { editTagsOnEntry() }
 
-        floatingActionMenu = EditEntryActivityFloatingActionMenuButton(floatingActionMenu, { addTagsToEntry() }, { addReferenceToEntry() }, { addAbstractToEntry() } )
+        floatingActionMenu = EditEntryActivityFloatingActionMenuButton(findViewById(R.id.floatingActionMenu) as FloatingActionMenu, { addTagsToEntry() },
+                { addReferenceToEntry() }, { addAbstractToEntry() } )
 
         setupEntryContentView()
     }
@@ -605,7 +607,7 @@ class EditEntryActivity : BaseActivity() {
             showOnboarding = false
         }
 
-        setOnboardingTextVisibilityOnUIThread(showOnboarding)
+        setContentOnboardingTextVisibilityOnUIThread(showOnboarding)
     }
 
     private fun shouldShowContent(content: String?): Boolean {
@@ -640,7 +642,7 @@ class EditEntryActivity : BaseActivity() {
         }
     }
 
-    private fun setOnboardingTextVisibilityOnUIThread(showOnboarding: Boolean) {
+    private fun setContentOnboardingTextVisibilityOnUIThread(showOnboarding: Boolean) {
         if(showOnboarding) {
             wbEntry.visibility = View.GONE
             lytOnboardingText.visibility = View.VISIBLE
@@ -654,6 +656,22 @@ class EditEntryActivity : BaseActivity() {
         }
         else {
             wbEntry.visibility = View.VISIBLE
+            lytOnboardingText.visibility = View.GONE
+        }
+    }
+
+    private fun setEntryFieldsOnboardingTextVisibilityOnUIThread(showOnboarding: Boolean) {
+        if(showOnboarding) {
+            lytOnboardingText.visibility = View.VISIBLE
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(R.string.activity_edit_entry_edit_content_onboarding_text).toString(), Html.FROM_HTML_MODE_LEGACY)
+            }
+            else {
+                txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(R.string.activity_edit_entry_edit_content_onboarding_text).toString())
+            }
+        }
+        else {
             lytOnboardingText.visibility = View.GONE
         }
     }
