@@ -620,7 +620,7 @@ class EditEntryActivity : BaseActivity() {
             showContentOnboarding = false
         }
         else if(isInReaderMode == false && extractionResult?.webSiteHtml != null) {
-            showContentInWebView(extractionResult?.webSiteHtml, url)
+            showContentInWebView(extractionResult.webSiteHtml, url)
             showContentOnboarding = false
         }
         else if(url != null && entry == null) { // then load url (but don't show it for an Entry)
@@ -707,7 +707,9 @@ class EditEntryActivity : BaseActivity() {
         val showAbstractPreview = this.forceShowAbstractPreview || abstractToEdit.isNullOrBlank() == false
 
         lytAbstractPreview.visibility = if(showAbstractPreview) View.VISIBLE else View.GONE
-        fabEditEntryAbstract.visibility = if(showAbstractPreview) View.GONE else View.VISIBLE
+        if(fabEditEntryAbstract.visibility != View.INVISIBLE) { // visibility already set by FloatingActionMenu
+            fabEditEntryAbstract.visibility = if(showAbstractPreview) View.GONE else View.VISIBLE
+        }
         setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread()
     }
 
@@ -722,7 +724,9 @@ class EditEntryActivity : BaseActivity() {
         val showReferencePreview = this.forceShowReferencePreview || referenceToEdit != null
 
         lytReferencePreview.visibility = if(showReferencePreview) View.VISIBLE else View.GONE
-        fabEditEntryReference.visibility = if(showReferencePreview) View.GONE else View.VISIBLE
+        if(fabEditEntryReference.visibility != View.INVISIBLE) { // visibility already set by FloatingActionMenu
+            fabEditEntryReference.visibility = if(showReferencePreview) View.GONE else View.VISIBLE
+        }
         setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread()
 
         btnClearEntryReference.visibility = if(referenceToEdit == null) View.GONE else View.VISIBLE
@@ -749,7 +753,9 @@ class EditEntryActivity : BaseActivity() {
         val showTagsPreview = this.forceShowTagsPreview || tagsOnEntry.size > 0
 
         lytTagsPreview.visibility = if(showTagsPreview) View.VISIBLE else View.GONE
-        fabEditEntryTags.visibility = if(showTagsPreview) View.GONE else View.VISIBLE
+        if(fabEditEntryTags.visibility != View.INVISIBLE) { // visibility already set by FloatingActionMenu
+            fabEditEntryTags.visibility = if (showTagsPreview) View.GONE else View.VISIBLE
+        }
         setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread()
     }
 
