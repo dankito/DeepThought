@@ -154,6 +154,8 @@ class EditEntryActivity : BaseActivity() {
 
     private var isInReaderMode = false
 
+    private var webSiteHtml: String? = null
+
 
     private val contextHelpUtil = ContextHelpUtil()
 
@@ -373,7 +375,7 @@ class EditEntryActivity : BaseActivity() {
         // now try to extract entry content from WebView's html
         val extractionResult = entryExtractionResult ?: readLaterArticle?.entryExtractionResult
         if(extractionResult != null && isInReaderMode == false) {
-            extractionResult?.webSiteHtml = html
+            webSiteHtml = html
             contentToEdit = html
 
             if(extractionResult?.couldExtractContent == false) {
@@ -613,14 +615,13 @@ class EditEntryActivity : BaseActivity() {
         val content = contentToEdit
         val url = reference?.url
         var showContentOnboarding = true
-        val extractionResult = entryExtractionResult ?: readLaterArticle?.entryExtractionResult
 
         if(shouldShowContent(content)) {
             showContentInWebView(content, url)
             showContentOnboarding = false
         }
-        else if(isInReaderMode == false && extractionResult?.webSiteHtml != null) {
-            showContentInWebView(extractionResult.webSiteHtml, url)
+        else if(isInReaderMode == false && webSiteHtml != null) {
+            showContentInWebView(webSiteHtml, url)
             showContentOnboarding = false
         }
         else if(url != null && entry == null) { // then load url (but don't show it for an Entry)
@@ -894,7 +895,7 @@ class EditEntryActivity : BaseActivity() {
         mnDeleteExistingEntry = menu.findItem(R.id.mnDeleteExistingEntry)
 
         mnToggleReaderMode = menu.findItem(R.id.mnToggleReaderMode)
-        mnToggleReaderMode?.isVisible = entryExtractionResult?.couldExtractContent == true || readLaterArticle?.entryExtractionResult?.couldExtractContent == true /*&& entryExtractionResult?.webSiteHtml != null*/ // show mnToggleReaderMode only if previously original web site was shown
+        mnToggleReaderMode?.isVisible = entryExtractionResult?.couldExtractContent == true || readLaterArticle?.entryExtractionResult?.couldExtractContent == true /*&& webSiteHtml != null*/ // show mnToggleReaderMode only if previously original web site was shown
         setReaderModeActionStateOnUIThread()
 
         mnSaveEntryExtractionResultForLaterReading = menu.findItem(R.id.mnSaveEntryExtractionResultForLaterReading)
@@ -966,12 +967,12 @@ class EditEntryActivity : BaseActivity() {
     private fun toggleReaderMode() {
         isInReaderMode = !isInReaderMode
 
-        val extractionResult = entryExtractionResult ?: readLaterArticle?.entryExtractionResult
         if(isInReaderMode) {
+            val extractionResult = entryExtractionResult ?: readLaterArticle?.entryExtractionResult
             contentToEdit = extractionResult?.entry?.content ?: ""
         }
         else {
-            contentToEdit = extractionResult?.webSiteHtml ?: ""
+            contentToEdit = webSiteHtml ?: ""
         }
 
         setContentPreviewOnUIThread()
