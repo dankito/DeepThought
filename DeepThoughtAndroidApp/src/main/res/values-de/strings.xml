@@ -1,17 +1,28 @@
 <resources>
 
+    <!-- Die Tabs auf der Hauptseite -->
+
     <string name="tab_entries_title">Einträge</string>
     <string name="tab_tags_title">Schlagworte</string>
     <string name="tab_references_title">Quellen</string>
     <string name="tab_read_later_articles_title">Gemerkt</string>
 
+
+    <!-- Diese ignorieren -->
+
     <string name="navigation_drawer_open">Navigation Drawer öffnen</string> <!-- TODO -->
     <string name="navigation_drawer_close">Navigation Drawer schließen</string> <!-- TODO -->
+
+    <!-- Floating Action Button ist der + Button auf der Startseite. Die Werte hier werden dann im Menü angezeigt, wenn ich auf diesen Button klicke -->
+    <!-- In Platzhalter wie '%s' füge ich dann im Code etwas ein (z. B. hier: SZ) -->
 
     <string name="floating_action_menu_add_entry">Eintrag</string>
     <string name="floating_action_menu_add_tag">Schlagwort</string>
     <string name="floating_action_menu_add_newspaper_article">Zeitungsartikel</string>
     <string name="floating_action_button_add_article_of_newspaper">%s Artikel</string>
+
+
+    <!-- Actions werden in den Toolbar unten zusammen mit einem Icon angezeigt. Diese Actions gelten für mehrere Fenster (Activities) -->
 
     <string name="action_edit">Bearbeiten</string>
     <string name="action_save">Speichern</string>
@@ -28,6 +39,9 @@
     <string name="action_yes">Ja</string>
     <string name="action_no">Nein</string>
 
+
+    <!-- Für die Suche im Hauptfenster oben (Stimmt: Im Deutschen heißt es Suchen, im Englischen Find) -->
+
     <string name="search_title">Suche</string>
     <plurals name="search_count_results">
         <item quantity="one">%d Ergebnis</item>
@@ -38,7 +52,14 @@
     <string name="search_hint_references">Quellen finden</string>
     <string name="search_hint_read_later_articles">Artikel zum später Lesen finden</string>
 
+
+    <!-- Wenn du im Hauptfenster bei den Schlagwörtern auf das Filtersymbol eines Schlagwortes tippst -->
+
     <string name="fragment_main_activity_tabs_filtered_entities_label">Gefiltert:</string>
+
+
+    <!-- Onboarding Texte sind Einführungstexte. Diese werden in der Regel bei der ersten Benutzung angezeigt um dem Nutzer eine Funktion zu erklären. -->
+    <!-- Alles was mit tab_ beginnt befindet sich wieder auf der Hauptseite und wird angezeigt, wenn in der entsprechenden Kategorie noch nichts angelegt wurde. -->
 
     <!-- Removed <p></p> from last paragraph as otherwise txtOnboardingText has some padding at end and and PointToFloatingActionButtonArrow therefore doesn't reach to text -->
     <string name="tab_entries_onboarding_text"><![CDATA[
@@ -66,6 +87,9 @@
     </string>
 
 
+    <!-- Diese Hilfe wird im Eintrag bearbeiten Bildschirm (+ Button im Hauptbildschirm, dann Eintrag auswählen) angezeigt, wenn kein Inhalt eingegeben wurde -->
+    <!-- In der kommenden Version werden zunächst auch die Schlagworte ausgeblendet, d. h. dann kann man alles über den + Button hinzufügen. -->
+
     <string name="activity_edit_entry_edit_content_onboarding_text"><![CDATA[
         <p>Click here to set entry\'s information (the data you actually want to save).</p>
         <p>(Click on the fields above or the + button at bottom right edge to set entry\'s abstract, reference and tags.)</p>
@@ -73,18 +97,34 @@
     </string>
 
 
+    <!-- Diese Hilfen wurden Kontext bezogen zu verschiedenen Ereignissen angezeigt -->
+
+    <!-- Diese hier wenn zum ersten Mal im Hauptbildschirm lange auf einen Listeneintrag geklickt wird oder ein Listeneintrag von rechts nach links gewischt (geswipt) wird -->
+    <!-- Item meint einen Listeneintrag in einer Liste (im Hauptbildschirm hat z. B. jeder Tab eine Liste, eben eine Liste mit den Einträge, den Schlagworten, ...) -->
+    <!-- Ein einzelner Eintrag in solch einer Liste wird im Englischen (oder zumindest bei den Programmiereren *g*) als Item bezeichnet. -->
+    <!-- \n bedeutet: Neue Zeile (Wenn dir zwei neue Zeilen zu viel sind, kannst du auch nur eine nehmen) -->
+
     <string name="context_help_list_item_actions">Wenn Sie eine Aktion auf einem Item ausführen möchten, wischen Sie über dieses Item von rechts nach links.\n\nWenn
         Sie eine Aktion auf mehreren Items ausführen möchten, halten Sie ein Item lange gedrückt.\n\nDies
         funktioniert auf praktisch allen Listen. Versuchen Sie\'s.
     </string>
 
+
+    <!-- Wenn man im Hauptfenster unter Schlagworte im Suchfeld oben mindestens 30 Buchstaben eingegeben hat -->
+
     <string name="context_help_search_tags">Um nach mehreren Schlagworten zu suchen, trennen Sie diese im Suchfeld mit Komma (,).\nUm
         den Filter auf die eingegebenen Schlagworte zu setzen, drücken Sie den Action Knopf (\'Enter\') auf dem Keyboard (rechts unten).
     </string>
 
+
+    <!-- Wenn man im Eintrag bearbeiten Fenster die Schlagworte bearbeitet und im Suchfeld unten mindestens 30 Buchstaben eingegeben hat -->
+
     <string name="context_help_set_tags_on_entry">Um mehrere Schlagworte auszuwählen, trennen Sie diese im Suchfeld mit Komma (,).\nUm
         ein neues Schlagwort anzulegen oder die eingegebenen zu tauschen, drücken Sie den Action Knopf (\'Enter\') auf dem Keyboard (rechts unten).
     </string>
+
+
+    <!-- Wenn man im Eintrag bearbeiten Fenster etwas bearbeitet hat (z. B. den Inhalt, die Schlagworte, ...) und auf 'Übernehmen' geklickt hast -->
 
     <string name="context_help_save_entry_changes">Die Änderungen wurden nun übernommen. Um sie zu speichern drücken Sie den \'Speichern\' Button unten rechts.
     </string>
