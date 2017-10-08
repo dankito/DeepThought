@@ -747,7 +747,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread() {
-        setOnboardingTextVisibilityOnUIThread(null)
+        setOnboardingTextVisibilityOnUIThread(wbEntry.visibility != View.VISIBLE) // so that onboarding text for content is shown if one of entry's other properties is set but content not yet
         setFloatingActionButtonVisibilityOnUIThread()
     }
 
