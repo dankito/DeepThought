@@ -7,7 +7,9 @@ import android.support.v7.app.AppCompatActivity
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.WebView
+import kotlinx.android.synthetic.main.activity_edit_entry.view.*
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import java.util.*
 
@@ -76,6 +78,8 @@ class FullscreenWebView : WebView {
 
     private lateinit var swipeTouchListener: OnSwipeTouchListener
 
+    private var lytFullscreenWebViewOptionsBar: ViewGroup? = null
+
 
     constructor(context: Context) : super(context) { setupUI(context) }
 
@@ -89,6 +93,13 @@ class FullscreenWebView : WebView {
 
         swipeTouchListener.singleTapListener = { handleWebViewSingleTap() }
         swipeTouchListener.doubleTapListener = { handleWebViewDoubleTap() }
+    }
+
+
+    fun setOptionsBar(lytFullscreenWebViewOptionsBar: ViewGroup) {
+        this.lytFullscreenWebViewOptionsBar = lytFullscreenWebViewOptionsBar
+
+        lytFullscreenWebViewOptionsBar.btnLeaveFullscreen.setOnClickListener { leaveFullscreenMode() }
     }
 
 
@@ -181,6 +192,7 @@ class FullscreenWebView : WebView {
     private fun enterFullscreenMode() {
         isInFullscreenMode = true
         updateLastOnScrollFullscreenModeTogglingTimestamp()
+        lytFullscreenWebViewOptionsBar?.visibility = View.VISIBLE
 
         changeFullscreenModeListener?.invoke(FullscreenMode.Enter)
 
@@ -191,6 +203,7 @@ class FullscreenWebView : WebView {
     fun leaveFullscreenMode() {
         isInFullscreenMode = false
         updateLastOnScrollFullscreenModeTogglingTimestamp()
+        lytFullscreenWebViewOptionsBar?.visibility = View.GONE
 
         changeFullscreenModeListener?.invoke(FullscreenMode.Leave)
 

@@ -315,6 +315,7 @@ class EditEntryActivity : BaseActivity() {
         lytOnboardingText.setOnClickListener { editContent() }
         txtEntryContentLabel.setOnClickListener { editContent() }
 
+        wbEntry.setOptionsBar(lytFullscreenWebViewOptionsBar)
         wbEntry.changeFullscreenModeListener = { mode -> handleChangeFullscreenModeEvent(mode) }
 
         wbEntry.singleTapListener = { handleWebViewSingleTap(it) }
