@@ -190,6 +190,7 @@ class FullscreenWebView : WebView {
 
     fun leaveFullscreenMode() {
         isInFullscreenMode = false
+        updateLastOnScrollFullscreenModeTogglingTimestamp()
 
         changeFullscreenModeListener?.invoke(FullscreenMode.Leave)
 
