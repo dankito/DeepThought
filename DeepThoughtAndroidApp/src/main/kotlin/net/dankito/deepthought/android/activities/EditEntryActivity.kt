@@ -287,24 +287,24 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun addTagsToEntry() {
+        editTagsOnEntry()
+
         forceShowTagsPreview = true
         setTagsOnEntryPreviewOnUIThread()
-
-        editTagsOnEntry()
     }
 
     private fun addReferenceToEntry() {
+        editReference()
+
         forceShowReferencePreview = true
         setReferencePreviewOnUIThread()
-
-        editReference()
     }
 
     private fun addAbstractToEntry() {
+        editAbstract()
+
         forceShowAbstractPreview = true
         setAbstractPreviewOnUIThread()
-
-        editAbstract()
     }
 
     private fun referenceCleared() {
