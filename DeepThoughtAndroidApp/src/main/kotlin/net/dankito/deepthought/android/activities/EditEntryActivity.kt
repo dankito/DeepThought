@@ -902,12 +902,12 @@ class EditEntryActivity : BaseActivity() {
         mnToggleReaderMode?.let { mnToggleReaderMode ->
             if(mnToggleReaderMode.isVisible == true) {
                 if(isInReaderMode) {
-                    mnToggleReaderMode.title = getString(R.string.action_reader_view)
-                    mnToggleReaderMode.setIcon(R.drawable.ic_reader_mode)
-                }
-                else {
                     mnToggleReaderMode.title = getString(R.string.action_website_view)
                     mnToggleReaderMode.setIcon(R.drawable.ic_reader_mode_disabled)
+                }
+                else {
+                    mnToggleReaderMode.title = getString(R.string.action_reader_view)
+                    mnToggleReaderMode.setIcon(R.drawable.ic_reader_mode)
                 }
 
                 toolbarUtil.updateMenuItemView(mnToggleReaderMode)
