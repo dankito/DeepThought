@@ -5,7 +5,7 @@
     <string name="tab_entries_title">Einträge</string>
     <string name="tab_tags_title">Schlagworte</string>
     <string name="tab_references_title">Quellen</string>
-    <string name="tab_read_later_articles_title">Gemerkt</string>
+    <string name="tab_read_later_articles_title">Vorgemerkt</string>
 
 
     <!-- Diese ignorieren -->
@@ -47,10 +47,10 @@
         <item quantity="one">%d Ergebnis</item>
         <item quantity="other">%d Ergebnisse</item>
     </plurals>
-    <string name="search_hint_entries">Einträge finden</string>
-    <string name="search_hint_tags">Schlagworte finden</string>
-    <string name="search_hint_references">Quellen finden</string>
-    <string name="search_hint_read_later_articles">Artikel zum später Lesen finden</string>
+    <string name="search_hint_entries">Einträge suchen</string>
+    <string name="search_hint_tags">Schlagworte suchen</string>
+    <string name="search_hint_references">Quellen suchen</string>
+    <string name="search_hint_read_later_articles">Vorgemerkte Artikel suchen</string>
 
 
     <!-- Wenn du im Hauptfenster bei den Schlagwörtern auf das Filtersymbol eines Schlagwortes tippst -->
@@ -63,26 +63,26 @@
 
     <!-- Removed <p></p> from last paragraph as otherwise txtOnboardingText has some padding at end and and PointToFloatingActionButtonArrow therefore doesn't reach to text -->
     <string name="tab_entries_onboarding_text"><![CDATA[
-        <p>To add a new entry, press the + button at the bottom right corner and select \'Entry\'.</p>
-        To add a newspaper article, press the + button at the bottom right corner, select \'Newspaper Article\' and enter the url of a newspaper site or a RSS feed url.
+        <p>Klicken Sie auf das + Symbol unten rechts und wählen Sie \'Eintrag\' um einen Eintrag anzulegen. </p>
+        Wählen Sie \'Zeitungsartikel\'um einen Artikel anzulegen.
     ]]>
     </string>
     <string name="tab_tags_onboarding_text"><![CDATA[
-        <p>Tags are used to organize your entries.</p>
-        <p>To add a tag to an entry, select an entry in tab \'Entries\' and press on \'Tags\'. Enter the name of your new tag and press \'New\'.</p>
+        <p>Schlagworte helfen Ihnen dabei Einträge schneller wiederzufinden.</p>
+        <p>Sie haben noch keine Schlagworte angelegt.</p>
+        <p>Wählen Sie unter \'Einträge\' einen Eintrag aus und fügen Sie diesem Schlagworte hinzu.</p>
     ]]>
     </string>
     <string name="tab_reference_onboarding_text"><![CDATA[
-        <p>You can add references to your entries to remember where you found that entry.</p>
-        <p>To add a reference to an entry, select an entry in tab \'Entries\' and press on \'Reference\'. <br /> Enter the title of your new reference and press the save icon.</p>
+        <p>Fügen Sie Ihren Einträgen Quellen hinzu, um sich zu erinnern, wo Sie den Inhalt gefunden haben.</p>
+        <p>Sie haben noch keine Quellen hinzugefügt.</p>
+        <p>Wählen Sie unter \'Einträge\' einen Eintrag aus und fügen Sie eine Quelle hinzu.</p>
     ]]>
     </string>
     <string name="tab_read_later_articles_onboarding_text"><![CDATA[
-        <p>If you don\'t have time to read an article now or will come soon to an area with bad internet
-        connection you can save an article for later reading.</p>
-        <p>Articles for later reading are stored offline so that you can read them without internet connection, but are not saved yet to your entries collection.</p>
-        <p>To add an article for later reading, press the + button at the bottom right corner, press \'Newspaper Article\', select a newspaper site and in the new window with all
-            articles of that newspaper site, long press an article and select \'Read later\' at the bottom.</p>
+        <p>Vorgemerkte Artikel werden offline gespeichert, so dass Sie diese später lesen können – auch ohne Internetverbindung. Vorgemerkte Artikel werden vorerst nicht in Ihre Einträge-Sammlung übernommen.</p>
+        <p>Sie haben noch keine Artikel vorgemerkt.</p>
+        <p>Legen Sie bei Bedarf über \'Einträge\' einen Artikel an und wählen Sie \'Vormerken\'. </p>
     ]]>
     </string>
 
@@ -91,8 +91,8 @@
     <!-- In der kommenden Version werden zunächst auch die Schlagworte ausgeblendet, d. h. dann kann man alles über den + Button hinzufügen. -->
 
     <string name="activity_edit_entry_edit_content_onboarding_text"><![CDATA[
-        <p>Click here to set entry\'s information (the data you actually want to save).</p>
-        <p>(Click on the fields above or the + button at bottom right edge to set entry\'s abstract, reference and tags.)</p>
+        <p>Klicken Sie hier um Ihren Inhalt einzugeben.</p>
+        <p>Klicken sie auf das + Symbol unten rechts, um eine Zusammenfassung, eine Quelle oder Schlagworte hinzuzufügen.</p>
     ]]>
     </string>
 
@@ -104,38 +104,37 @@
     <!-- Ein einzelner Eintrag in solch einer Liste wird im Englischen (oder zumindest bei den Programmiereren *g*) als Item bezeichnet. -->
     <!-- \n bedeutet: Neue Zeile (Wenn dir zwei neue Zeilen zu viel sind, kannst du auch nur eine nehmen) -->
 
-    <string name="context_help_list_item_actions">Wenn Sie eine Aktion auf einem Item ausführen möchten, wischen Sie über dieses Item von rechts nach links.\n\nWenn
-        Sie eine Aktion auf mehreren Items ausführen möchten, halten Sie ein Item lange gedrückt.\n\nDies
-        funktioniert auf praktisch allen Listen. Versuchen Sie\'s.
+    <string name="context_help_list_item_actions">Wischen Sie von rechts nach links über einen Listeneintrag, um eine Aktion auszuführen.\n\nWenn
+        Sie eine Aktion für mehrere Listeneinträge ausführen möchten, halten Sie einen Listeneintrag lange gedrückt.\n\nDies
+        funktioniert auch für andere Listen.
     </string>
 
 
     <!-- Wenn man im Hauptfenster unter Schlagworte im Suchfeld oben mindestens 30 Buchstaben eingegeben hat -->
 
-    <string name="context_help_search_tags">Um nach mehreren Schlagworten zu suchen, trennen Sie diese im Suchfeld mit Komma (,).\nUm
-        den Filter auf die eingegebenen Schlagworte zu setzen, drücken Sie den Action Knopf (\'Enter\') auf dem Keyboard (rechts unten).
+    <string name="context_help_search_tags">Um nach mehreren Schlagworten zu suchen, trennen Sie diese durch ein Komma (,).
     </string>
 
 
     <!-- Wenn man im Eintrag bearbeiten Fenster die Schlagworte bearbeitet und im Suchfeld unten mindestens 30 Buchstaben eingegeben hat -->
 
-    <string name="context_help_set_tags_on_entry">Um mehrere Schlagworte auszuwählen, trennen Sie diese im Suchfeld mit Komma (,).\nUm
-        ein neues Schlagwort anzulegen oder die eingegebenen zu tauschen, drücken Sie den Action Knopf (\'Enter\') auf dem Keyboard (rechts unten).
+    <string name="context_help_set_tags_on_entry">Um mehrere Schlagworte auszuwählen, trennen Sie diese im Suchfeld durch ein Komma (,).\nUm
+        ein neues Schlagwort anzulegen oder die eingegebenen hinzuzufügen, drücken Sie auf Ihrer Tastatur \'Enter\'.
     </string>
 
 
     <!-- Wenn man im Eintrag bearbeiten Fenster etwas bearbeitet hat (z. B. den Inhalt, die Schlagworte, ...) und auf 'Übernehmen' geklickt hast -->
 
-    <string name="context_help_save_entry_changes">Die Änderungen wurden nun übernommen. Um sie zu speichern drücken Sie den \'Speichern\' Button unten rechts.
+    <string name="context_help_save_entry_changes">Um Ihre Änderungen zu speichern, drücken Sie den \'Speichern\' Button unten rechts.
     </string>
 
-    <string name="context_help_entry_information_fullscreen">Scrollen, wie Sie es gerade gemacht haben, startet den Vollbildmodus.\nSie können den Vollbildmodus wieder verlassen,
-        indem Sie außer auf Links oder Bildern irgendwo auf dem Bildschirm tippen.
+    <string name="context_help_entry_information_fullscreen">Scrollen oder Doppelklicken startet den Vollbildmodus.\nDurch erneutes Doppelklicken können Sie den Vollbildmodus
+        wieder verlassen.
     </string>
 
-    <string name="context_help_entry_information_fullscreen_gestures">Sie haben gerade eine der Vollbildmodus Gesten ausgeführt:\n\n- Schnell von rechts nach links wischen:
-        Eintrag bearbeiten Dialog verlassen\n- Schnell von links nach rechts wischen: Schlagworte bearbeiten\n- Schnelles Doppeltippen: Eintrag speichern und
-        Dialog verlassen.
+    <string name="context_help_entry_information_fullscreen_gestures"> Sie haben im Vollbildmodus eine der folgenden Handlungen ausgeführt\n\n- Schnell von rechts nach links
+        wischen:
+        Eintrag bearbeiten Dialog verlassen\n- Schnell von links nach rechts wischen: Schlagworte bearbeiten
     </string>
 
 
@@ -151,23 +150,23 @@
     <string name="dialog_article_summary_extractor_alert_message_delete_config" formatted="false">Nachrichtenseite %s wirklich löschen?</string>
 
     <string name="menu_share_reference_url">Link</string>
-    <string name="menu_share_entry_content">Information</string>
+    <string name="menu_share_entry_content">Inhalt</string>
 
     <string name="activity_edit_entry_title">Eintrag</string>
-    <string name="activity_edit_entry_content_label">Information</string>
-    <string name="activity_edit_entry_edit_content_title">Information</string>
+    <string name="activity_edit_entry_content_label">Inhalt</string>
+    <string name="activity_edit_entry_edit_content_title">Inhalt</string>
     <string name="activity_edit_entry_abstract_label">Titel / Zusammenfassung</string>
     <string name="activity_edit_entry_edit_abstract_title">Titel / Zusammenfassung</string>
     <string name="activity_edit_entry_reference_label">Quelle</string>
     <string name="activity_edit_entry_tags_label">Schlagworte</string>
-    <string name="activity_edit_entry_tags_onboarding_text">Geben Sie dem Eintrag aussagekräftige Schlagworte, damit Sie ihn später leichter wieder finden</string>
-    <string name="activity_edit_entry_reference_onboarding_text">Speichern wo Sie diese Information gefunden haben</string>
-    <string name="activity_edit_entry_abstract_onboarding_text">Evtl. einen Titel oder eine Zusammenfassung für diese Information hinzufügen</string>
-    <string name="activity_edit_entry_alert_message_entry_contains_unsaved_changes">Eintrag enthält nicht gespeicherte Änderungen.\n\nSollen diese Änderungen nun
-        gespeichert werden?</string>
+    <string name="activity_edit_entry_tags_onboarding_text">Geben Sie Ihrem Eintrag aussagekräftige Schlagworte, um ihn später leichter wiederzufinden.</string>
+    <string name="activity_edit_entry_reference_onboarding_text">Speichern Sie, wo Sie diesen Inhalt gefunden haben.</string>
+    <string name="activity_edit_entry_abstract_onboarding_text">Fügen Sie Ihrem Eintrag einen Titel oder eine Zusammenfassung hinzu. </string>
+    <string name="activity_edit_entry_alert_message_entry_contains_unsaved_changes">Ih Eintrag enthält nicht gespeicherte Änderungen.\n\nWollen Sie Ihre Änderungen
+        speichern?</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
-    <string name="activity_edit_entry_alert_message_entry_has_been_edited">Eintrag wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\n\nWenn
-        Sie den Eintrag nun speichern, werden diese anderen Änderungen überschrieben.</string>
+    <string name="activity_edit_entry_alert_message_entry_has_been_edited">Ihr Eintrag wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\n\nWenn
+        Sie den Eintrag jetzt speichern überschreiben Sie diese Änderungen. </string>
     <string name="activity_edit_entry_alert_message_delete_entry">Möchten Sie den Eintrag \'%s\' wirklich löschen?</string>
 
     <string name="dialog_tags_on_entry_title">Schlagworte</string>
@@ -189,37 +188,35 @@
     <string name="activity_edit_reference_publishing_date_label">Veröffentlichungsdatum</string>
     <string name="activity_edit_reference_url_label">URL</string>
     <string name="activity_edit_reference_error_could_not_parse_publishing_date" formatted="false">Kann %s nicht in ein Datum umwandeln</string>
-    <string name="activity_edit_reference_alert_message_reference_contains_unsaved_changes">Quelle enthält nicht gespeicherte Änderungen.\n\nSollen diese Änderungen nun
-        gespeichert werden?</string>
+    <string name="activity_edit_reference_alert_message_reference_contains_unsaved_changes">Quelle enthält nicht gespeicherte Änderungen.\n\nSollen diese Änderungen gespeichert
+        werden?</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
     <string name="activity_edit_reference_alert_message_reference_has_been_edited">Quelle wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\n\nWenn
-        Sie die Quelle nun speichern, werden diese anderen Änderungen überschrieben.</string>
+        Sie die Quelle nun speichern, überschreiben Sie diese Änderungen.</string>
 
     <string name="activity_edit_series_title">Reihe</string>
     <string name="activity_edit_series_use_existing_label">Bestehende verwenden:</string>
     <string name="activity_edit_series_create_series">Neu …</string>
     <string name="activity_edit_series_create_series_from_isbn">Von ISBN …</string>
     <string name="activity_edit_series_title_label">Titel</string>
-    <string name="activity_edit_series_alert_message_series_contains_unsaved_changes">Reihe enthält nicht gespeicherte Änderungen.\n\nSollen diese Änderungen nun
-        gespeichert werden?</string>
+    <string name="activity_edit_series_alert_message_series_contains_unsaved_changes">Reihe enthält nicht gespeicherte Änderungen.\n\nSollen diese Änderungen gespeichert
+        werden?</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
     <string name="activity_edit_series_alert_message_series_has_been_edited">Reihe wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\n\nWenn
-        Sie die Reihe nun speichern, werden diese anderen Änderungen überschrieben.</string>
+        Sie die Reihe nun speichern, überschreiben Sie diese Änderungen.</string>
 
     <string name="synchronize_data_with_this_device">Daten synchronisieren mit</string>
     <string name="never_ask_again">Nicht mehr fragen</string>
-    <string name="alert_title_permit_device_to_synchronize">Gerät frägt um Erlaubnis</string>
+    <string name="alert_title_permit_device_to_synchronize">Gerät fragt um Erlaubnis</string>
     <string name="alert_message_permit_device_to_synchronize" formatted="false">%s erlauben sich zu synchronisieren?</string>
     <string name="alert_message_enter_this_code_on_remote_device" formatted="false">Geben sie diesen Code auf %s ein:&lt;br/>&lt;br/>&lt;b>%s&lt;/b></string>
     <string name="alert_title_enter_response_code_for_permitting_synchronization" formatted="false">Geben Sie den Code ein, der auf %s angezeigt wird:</string>
-    <string name="alert_title_entered_response_code_was_wrong">Eingegebener Code war falsch.\nGeben Sie den Code ein, der auf %s angezeigt wird:</string>
+    <string name="alert_title_entered_response_code_was_wrong">Eingegebener Code ist falsch.\nGeben Sie den Code ein, der auf %s angezeigt wird:</string>
 
     <string formatted="false" name="error_no_rss_or_atom_feed_found_for_url">Kein RSS oder Atom Feed gefunden für URL %s</string>
     <string formatted="false" name="error_cannot_read_feed_or_extract_feed_addresses_from_url">Konnte Feed nicht lesen oder Feed Adressen nicht extrahieren von URL %s: %s</string>
 
-    <string name="bild_easter_egg">Wir respektieren selbstverständlich die Meinungsfreiheit.\nWir haben jedoch sehr viel Zeit und Mühe in diese App gesteckt und
-        möchten nicht, dass unsere Mühen verwendet werden solch ein hetzerisches und verlogenes Machwerk wie die Bild zu lesen. Die Welt wäre eine bessere ohne Bild.\nDie
-        App wird zur Strafe nun abstürzen.
+    <string name="bild_easter_egg">Für die Bild-Zeitung steht diese Funktion leider nicht zur Verfügung.
     </string>
 
 </resources>
