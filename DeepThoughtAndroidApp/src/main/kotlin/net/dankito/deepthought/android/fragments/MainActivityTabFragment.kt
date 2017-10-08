@@ -137,7 +137,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
     }
 
     protected open fun multiSelectActionModeBarVisibilityChanged(visible: Boolean) {
-        activity?.findViewById(R.id.fab_menu)?.visibility = if(visible) View.GONE else View.VISIBLE
+        activity?.findViewById(R.id.floatingActionMenu)?.visibility = if(visible) View.GONE else View.VISIBLE
         activity?.findViewById(R.id.bottomViewNavigation)?.visibility = if(visible) View.GONE else View.VISIBLE
 
         if(visible) {
@@ -178,12 +178,12 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
 
         if(recyclerAdapter?.isInMultiSelectMode() == false) {
             if(isCurrentSelectedTab) { // don't set fab_menu's visibility when another tab fragment is currently selected
-                activity.findViewById(R.id.fab_menu)?.visibility = viewVisibility
+                activity.findViewById(R.id.floatingActionMenu)?.visibility = viewVisibility
             }
         }
         else {
             recyclerAdapter?.actionModeBar?.visibility = viewVisibility
-            activity.findViewById(R.id.fab_menu)?.visibility = View.GONE
+            activity.findViewById(R.id.floatingActionMenu)?.visibility = View.GONE
         }
 
         if(topMargin >= 0) {

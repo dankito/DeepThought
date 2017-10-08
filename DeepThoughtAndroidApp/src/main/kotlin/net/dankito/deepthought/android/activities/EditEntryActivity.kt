@@ -278,7 +278,7 @@ class EditEntryActivity : BaseActivity() {
         btnClearEntryReference.setOnClickListener { referenceCleared() }
         lytTagsPreview.setOnClickListener { editTagsOnEntry() }
 
-        floatingActionMenu = EditEntryActivityFloatingActionMenuButton(fabEntryFieldsMenu, { addTagsToEntry() }, { addReferenceToEntry() }, { addAbstractToEntry() } )
+        floatingActionMenu = EditEntryActivityFloatingActionMenuButton(floatingActionMenu, { addTagsToEntry() }, { addReferenceToEntry() }, { addAbstractToEntry() } )
 
         setupEntryContentView()
     }

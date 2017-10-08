@@ -22,14 +22,14 @@ class EditEntryActivityFloatingActionMenuButton(floatingActionMenu: FloatingActi
 
     fun setVisibilityOnUIThread(isInFullscreenMode: Boolean = false) {
         if(isInFullscreenMode) {
-            floatingActionMenu.fabEntryFieldsMenu.visibility = View.GONE
+            floatingActionMenu.floatingActionMenu.visibility = View.GONE
         }
         else if(floatingActionMenu.fabEditEntryTags.visibility != View.GONE || floatingActionMenu.fabEditEntryReference.visibility != View.GONE ||
                 floatingActionMenu.fabEditEntryAbstract.visibility != View.GONE) {
-            floatingActionMenu.fabEntryFieldsMenu.visibility = View.VISIBLE
+            floatingActionMenu.floatingActionMenu.visibility = View.VISIBLE
         }
         else {
-            floatingActionMenu.fabEntryFieldsMenu.visibility = View.GONE
+            floatingActionMenu.floatingActionMenu.visibility = View.GONE
         }
     }
 

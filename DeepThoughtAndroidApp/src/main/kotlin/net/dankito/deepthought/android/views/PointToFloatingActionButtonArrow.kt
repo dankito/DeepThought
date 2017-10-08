@@ -92,7 +92,7 @@ class PointToFloatingActionButtonArrow : View {
     private fun getFloatingActionButton(): FloatingActionButton? {
         if(floatingActionButton == null) {
             (context as? Activity)?.let { activity ->
-                activity.findViewById(R.id.fab_menu)?.let { fab ->
+                activity.findViewById(R.id.floatingActionMenu)?.let { fab ->
                     val mMenuButtonField = fab::class.java.getDeclaredField("mMenuButton")
                     mMenuButtonField.isAccessible = true
 
