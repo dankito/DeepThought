@@ -86,6 +86,7 @@ class TableConfig {
         const val LocalSettingsDidShowSaveEntryChangesHelpColumnName = "did_show_save_entry_changes_help"
         const val LocalSettingsDidShowEntryInformationFullscreenHelpColumnName = "entry_information_fullscreen_help"
         const val LocalSettingsDidShowEntryInformationFullscreenGesturesHelpColumnName = "entry_information_fullscreen_gestures_help"
+        const val LocalSettingsDidShowSavedReadLaterArticleIsNowInEntriesHelpColumnName = "did_show_saved_read_later_article_is_now_in_entries_help"
 
 
         /*          Entry Table Config        */

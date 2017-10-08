@@ -98,6 +98,10 @@
         Dialog verlassen.
     </string>
 
+    <string name="context_help_saved_read_later_article_is_now_in_entries">Der Artikel wurde nun gespeichert.\n\nD.h. er befindet sich nun in \'Einträge\' und nicht mehr in
+        \'Vorgemerkt\'.
+    </string>
+
 
     <string name="dialog_article_summary_extractors_add_extractor">Hinzufügen</string>
 

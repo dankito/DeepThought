@@ -99,6 +99,9 @@
         Leave edit entry view\n- Fast swipe from left to right: Edit entry\'s tags\n- Double tap: Save entry and close edit entry view.
     </string>
 
+    <string name="context_help_saved_read_later_article_is_now_in_entries">The article is saved now.\n\nThat means you now find it in \'Entries\', not in \'Read later\' anymore.
+    </string>
+
 
     <string name="dialog_article_summary_extractors_add_extractor">Add</string>
 

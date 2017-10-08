@@ -1036,7 +1036,7 @@ class EditEntryActivity : BaseActivity() {
 
         saveEntryAsync { successful ->
             if(successful) {
-                runOnUiThread { closeDialog() }
+                mayShowSavedReadLaterArticleHelpAndCloseDialog()
             }
             else {
                 mnSaveEntry?.isEnabled = true
@@ -1047,7 +1047,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun saveEntryAsync(callback: (Boolean) -> Unit) {
-        var content = contentToEdit ?: ""
+        val content = contentToEdit ?: ""
         val abstract = abstractToEdit ?: ""
 
         entry?.let { entry ->
@@ -1084,6 +1084,30 @@ class EditEntryActivity : BaseActivity() {
                 }
                 callback(successful)
             }
+        }
+    }
+
+    private fun mayShowSavedReadLaterArticleHelpAndCloseDialog() {
+        mayShowSavedReadLaterArticleHelp {
+            runOnUiThread {
+                closeDialog()
+            }
+        }
+    }
+
+    private fun mayShowSavedReadLaterArticleHelp(callback: () -> Unit) {
+        val localSettings = entryService.dataManager.localSettings
+
+        if(readLaterArticle != null && localSettings.didShowSavedReadLaterArticleIsNowInEntriesHelp == false) {
+            localSettings.didShowSavedReadLaterArticleIsNowInEntriesHelp = true
+            entryService.dataManager.localSettingsUpdated()
+
+            dialogService.showConfirmationDialog(getString(R.string.context_help_saved_read_later_article_is_now_in_entries), showNoButton = false) {
+                callback()
+            }
+        }
+        else {
+            callback()
         }
     }
 
