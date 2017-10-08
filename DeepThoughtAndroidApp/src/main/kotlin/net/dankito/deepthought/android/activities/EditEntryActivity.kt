@@ -734,7 +734,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setFloatingActionButtonVisibilityOnUIThread() {
-        floatingActionMenu.setVisibilityOnUIThread()
+        floatingActionMenu.setVisibilityOnUIThread(wbEntry.isInFullscreenMode)
     }
 
 
@@ -797,7 +797,7 @@ class EditEntryActivity : BaseActivity() {
         txtEntryContentLabel.visibility = View.GONE
         lytOnboardingText.visibility = View.GONE
         appBarLayout.visibility = View.GONE
-        floatingActionMenu.setVisibilityOnUIThread()
+        floatingActionMenu.setVisibilityOnUIThread(true)
 
         content_layout_root.invalidate()
 
