@@ -38,6 +38,7 @@
                 android:layout_marginRight="@dimen/dialog_tags_on_entry_tag_list_tags_margin"
                 android:layout_marginBottom="@dimen/dialog_tags_on_entry_tag_list_tags_margin_bottom"
                 app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                android:scrollbars="vertical"
             />
 
         </LinearLayout>

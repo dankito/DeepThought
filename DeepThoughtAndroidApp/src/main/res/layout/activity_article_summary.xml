@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/appBarLayout"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            android:scrollbars="vertical"
         />
 
         <android.support.design.widget.AppBarLayout

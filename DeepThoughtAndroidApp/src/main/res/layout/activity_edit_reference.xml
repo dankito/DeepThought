@@ -107,6 +107,7 @@
                 android:layout_below="@+id/lytEditEntryReferenceControls"
                 android:layout_alignParentBottom="true"
                 app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                android:scrollbars="vertical"
                 android:longClickable="true"
                 android:visibility="gone"
             />

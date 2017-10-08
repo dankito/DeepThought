@@ -24,6 +24,7 @@
             android:layout_alignParentTop="true"
             android:layout_above="@+id/lytFilteredEntities"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            android:scrollbars="vertical"
             android:longClickable="true"
         />
 
