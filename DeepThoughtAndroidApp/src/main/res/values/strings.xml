@@ -68,8 +68,12 @@
 
 
     <string name="activity_edit_entry_edit_content_onboarding_text"><![CDATA[
-        <p>Click here to create your content.</p>
-        <p>Tab + button to set abstract, reference and tags.</p>
+        Click here to create your content.
+    ]]>
+    </string>
+
+    <string name="activity_edit_entry_add_entry_properties_onboarding_text"><![CDATA[
+        Tab + button to add tags, a reference or a summary to your entry.
     ]]>
     </string>
 
