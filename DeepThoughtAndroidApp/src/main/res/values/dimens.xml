@@ -160,6 +160,9 @@
     <dimen name="activity_edit_series_section_top_margin">16dp</dimen>
     <dimen name="activity_edit_series_icons_padding">4dp</dimen>
 
+    <dimen name="find_existing_entity_divider_height">2dp</dimen>
+    <dimen name="find_existing_entity_margin_top">6dp</dimen>
+
     <dimen name="view_edit_entity_field_margin_bottom">8dp</dimen>
     <dimen name="view_edit_entity_field_icon_padding">4dp</dimen>
 

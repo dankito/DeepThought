@@ -113,6 +113,14 @@
                 android:visibility="gone"
             />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/find_existing_entity_divider_height"
+                android:layout_below="@+id/rcyExistingReferencesSearchResults"
+                android:layout_marginTop="@dimen/find_existing_entity_margin_top"
+                android:background="@color/divider_line_color"
+            />
+
         </RelativeLayout>
 
 
