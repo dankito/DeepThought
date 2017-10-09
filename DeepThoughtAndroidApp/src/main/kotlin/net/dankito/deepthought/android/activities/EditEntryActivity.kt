@@ -672,7 +672,8 @@ class EditEntryActivity : BaseActivity() {
         if(showContentOnboarding == true || showOnboardingForEntryProperties) {
             lytOnboardingText.visibility = View.VISIBLE
 
-            val onboardingText = if(showContentOnboarding == true) getText(R.string.activity_edit_entry_edit_content_onboarding_text).toString() else getText(R.string.activity_edit_entry_add_entry_properties_onboarding_text).toString()
+            val onboardingTextId = if(showContentOnboarding == true) R.string.activity_edit_entry_edit_content_onboarding_text else R.string.activity_edit_entry_add_entry_properties_onboarding_text
+            val onboardingText = if(showContentOnboarding == true) getText(onboardingTextId).toString() else getText(onboardingTextId).toString()
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 txtOnboardingText.text = Html.fromHtml(onboardingText, Html.FROM_HTML_MODE_LEGACY)
             }
