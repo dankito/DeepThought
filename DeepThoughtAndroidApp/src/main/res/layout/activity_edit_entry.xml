@@ -106,7 +106,7 @@
             >
 
                 <net.dankito.deepthought.android.views.FullscreenWebView
-                    android:id="@+id/wbEntry"
+                    android:id="@+id/wbvwContent"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_alignParentTop="true"

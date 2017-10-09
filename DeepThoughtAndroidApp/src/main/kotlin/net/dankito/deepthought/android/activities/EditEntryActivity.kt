@@ -320,13 +320,13 @@ class EditEntryActivity : BaseActivity() {
         lytOnboardingText.setOnClickListener { editContent() }
         txtEntryContentLabel.setOnClickListener { editContent() }
 
-        wbEntry.setOptionsBar(lytFullscreenWebViewOptionsBar)
-        wbEntry.changeFullscreenModeListener = { mode -> handleChangeFullscreenModeEvent(mode) }
+        wbvwContent.setOptionsBar(lytFullscreenWebViewOptionsBar)
+        wbvwContent.changeFullscreenModeListener = { mode -> handleChangeFullscreenModeEvent(mode) }
 
-        wbEntry.singleTapListener = { handleWebViewSingleTap(it) }
-        wbEntry.swipeListener = { isInFullscreen, swipeDirection -> handleWebViewSwipe(isInFullscreen, swipeDirection) }
+        wbvwContent.singleTapListener = { handleWebViewSingleTap(it) }
+        wbvwContent.swipeListener = { isInFullscreen, swipeDirection -> handleWebViewSwipe(isInFullscreen, swipeDirection) }
 
-        val settings = wbEntry.getSettings()
+        val settings = wbvwContent.getSettings()
         settings.defaultTextEncodingName = "UTF-8" // otherwise non ASCII text doesn't get displayed correctly
         settings.defaultFontSize = 18 // default font is too small
         settings.domStorageEnabled = true // otherwise images may not load, see https://stackoverflow.com/questions/29888395/images-not-loading-in-android-webview
@@ -335,9 +335,9 @@ class EditEntryActivity : BaseActivity() {
         settings.displayZoomControls = false
         settings.javaScriptEnabled = true // so that embedded videos etc. work
 
-        wbEntry.addJavascriptInterface(GetHtmlCodeFromWebViewJavaScripInterface { url, html -> siteFinishedLoading(url, html) }, GetHtmlCodeFromWebViewJavaScriptInterfaceName)
+        wbvwContent.addJavascriptInterface(GetHtmlCodeFromWebViewJavaScripInterface { url, html -> siteFinishedLoading(url, html) }, GetHtmlCodeFromWebViewJavaScriptInterfaceName)
 
-        wbEntry.setWebChromeClient(object : WebChromeClient() {
+        wbvwContent.setWebChromeClient(object : WebChromeClient() {
             private var hasCompletelyFinishedLoadingPage = false
             private val timerCheckIfHasCompletelyFinishedLoadingPage = Timer()
 
@@ -371,12 +371,12 @@ class EditEntryActivity : BaseActivity() {
                     "(document.URL, '<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');")
         }
         else if(entry != null) {
-            wbEntry.setWebViewClient(null) // now re-activate default url handling
+            wbvwContent.setWebViewClient(null) // now re-activate default url handling
         }
     }
 
     private fun siteFinishedLoading(url: String, html: String) {
-        runOnUiThread { wbEntry.setWebViewClient(null) } // now reactivate default url handling
+        runOnUiThread { wbvwContent.setWebViewClient(null) } // now reactivate default url handling
 
         // now try to extract entry content from WebView's html
         val extractionResult = entryExtractionResult ?: readLaterArticle?.entryExtractionResult
@@ -397,7 +397,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun extractedContentOnUiThread(extractionResult: EntryExtractionResult) { // extractionResult can either be from entryExtractionResult or readLaterArticle
-        wbEntry.removeJavascriptInterface(GetHtmlCodeFromWebViewJavaScriptInterfaceName)
+        wbvwContent.removeJavascriptInterface(GetHtmlCodeFromWebViewJavaScriptInterfaceName)
 
         mnToggleReaderMode?.isVisible = extractionResult.couldExtractContent
         invalidateOptionsMenu()
@@ -632,8 +632,8 @@ class EditEntryActivity : BaseActivity() {
         }
         else if(url != null && entry == null) { // then load url (but don't show it for an Entry)
             clearWebViewEntry()
-            wbEntry.setWebViewClient(WebViewClient()) // to avoid that redirects open url in browser
-            wbEntry.loadUrl(url)
+            wbvwContent.setWebViewClient(WebViewClient()) // to avoid that redirects open url in browser
+            wbvwContent.loadUrl(url)
             showContentOnboarding = false
         }
 
@@ -656,19 +656,19 @@ class EditEntryActivity : BaseActivity() {
 
         clearWebViewEntry() // clear WebView
         if(url != null && Build.VERSION.SDK_INT > 16) {
-            wbEntry.loadDataWithBaseURL(url, content, "text/html; charset=UTF-8", "utf-8", null)
+            wbvwContent.loadDataWithBaseURL(url, content, "text/html; charset=UTF-8", "utf-8", null)
         }
         else {
-            wbEntry.loadData(content, "text/html; charset=UTF-8", null)
+            wbvwContent.loadData(content, "text/html; charset=UTF-8", null)
         }
     }
 
     private fun clearWebViewEntry() {
         if(Build.VERSION.SDK_INT < 18) {
-            wbEntry.clearView()
+            wbvwContent.clearView()
         }
         else {
-            wbEntry.loadUrl("about:blank")
+            wbvwContent.loadUrl("about:blank")
         }
     }
 
@@ -778,7 +778,7 @@ class EditEntryActivity : BaseActivity() {
         // when user comes to EditEntryDialog, don't show floatingActionMenu till some content has been entered. She/he should focus on the content
         val hasUserEverEnteredSomeContent = dataManager.localSettings.didShowAddEntryPropertiesHelp || contentToEdit.isNullOrBlank() == false
 
-        floatingActionMenu.setVisibilityOnUIThread(wbEntry.isInFullscreenMode, hasUserEverEnteredSomeContent)
+        floatingActionMenu.setVisibilityOnUIThread(wbvwContent.isInFullscreenMode, hasUserEverEnteredSomeContent)
     }
 
 
@@ -814,7 +814,7 @@ class EditEntryActivity : BaseActivity() {
         if(localSettings.didShowEntryInformationFullscreenGesturesHelp == false) {
             dialogService.showConfirmationDialog(getString(R.string.context_help_entry_information_fullscreen_gestures), showNoButton = false) {
                 runOnUiThread {
-                    wbEntry.leaveFullscreenMode() // leave fullscreen otherwise a lot of unwanted behaviour occurs
+                    wbvwContent.leaveFullscreenMode() // leave fullscreen otherwise a lot of unwanted behaviour occurs
                     userConfirmedHelpOnUIThread()
                 }
             }
@@ -823,7 +823,7 @@ class EditEntryActivity : BaseActivity() {
             entryService.dataManager.localSettingsUpdated()
         }
         else {
-            wbEntry.leaveFullscreenMode() // leave fullscreen otherwise a lot of unwanted behaviour occurs
+            wbvwContent.leaveFullscreenMode() // leave fullscreen otherwise a lot of unwanted behaviour occurs
             userConfirmedHelpOnUIThread()
         }
     }
@@ -880,7 +880,7 @@ class EditEntryActivity : BaseActivity() {
         try {
             Class.forName("android.webkit.WebView")
                     .getMethod("onPause")
-                    .invoke(wbEntry)
+                    .invoke(wbvwContent)
 
         } catch(ignored: Exception) { }
     }
