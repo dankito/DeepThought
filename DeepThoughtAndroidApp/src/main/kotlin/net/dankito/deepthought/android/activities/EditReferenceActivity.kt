@@ -235,6 +235,10 @@ class EditReferenceActivity : BaseActivity() {
             }
         }
 
+        (supportFragmentManager.findFragmentByTag(PickDateDialog.TAG) as? PickDateDialog)?.let { dialog ->
+            dialog.restoreDialog { selectedPublishingDate(it) }
+        }
+
         mayRegisterEventBusListener()
     }
 
@@ -376,9 +380,13 @@ class EditReferenceActivity : BaseActivity() {
         val pickDateDialog = PickDateDialog()
 
         pickDateDialog.show(supportFragmentManager, currentlySetPublishingDate) { selectedDate ->
-            showPublishingDate(selectedDate)
-            updateDidReferenceChangeOnUiThread(ReferenceField.PublishingDate, true)
+            selectedPublishingDate(selectedDate)
         }
+    }
+
+    private fun selectedPublishingDate(selectedDate: Date) {
+        showPublishingDate(selectedDate)
+        updateDidReferenceChangeOnUiThread(ReferenceField.PublishingDate, true)
     }
 
 
