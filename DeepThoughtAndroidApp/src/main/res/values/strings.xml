@@ -35,49 +35,47 @@
         <item quantity="one">%d result</item>
         <item quantity="other">%d results</item>
     </plurals>
-    <string name="search_hint_entries">Search Entries</string>
-    <string name="search_hint_tags">Search Tags</string>
-    <string name="search_hint_references">Search References</string>
-    <string name="search_hint_read_later_articles">Search Read later Articles</string>
+    <string name="search_hint_entries">Find Entries</string>
+    <string name="search_hint_tags">Find Tags</string>
+    <string name="search_hint_references">Find References</string>
+    <string name="search_hint_read_later_articles">Find \'Read later\'articles </string>
 
     <string name="fragment_main_activity_tabs_filtered_entities_label">Filtered:</string>
 
     <!-- Removed <p></p> from last paragraph as otherwise txtOnboardingText has some padding at end and and PointToFloatingActionButtonArrow therefore doesn't reach to text -->
     <string name="tab_entries_onboarding_text"><![CDATA[
-        <p>To add a new entry, press the + button at the bottom right corner and select \'Entry\'.</p>
-        To add a newspaper article, press the + button at the bottom right corner, select \'Newspaper Article\' and enter the url of a newspaper site or a RSS feed url.
+        <p>To add a new entry, press the + button and select \'Entry\'.</p>
+        To add a newspaper article, press the + button and select \'Newspaper Article\'.
     ]]>
     </string>
     <string name="tab_tags_onboarding_text"><![CDATA[
         <p>Tags are used to organize your entries.</p>
-        <p>To add a tag to an entry, select an entry in tab \'Entries\' and press on \'Tags\'. Enter the name of your new tag and press \'New\'.</p>
+        <p>You don\'t have any tags yet.</p>
+        <p>To add a tag to an entry, select an entry in tab \'Entries\' and tab \'Tags\'. </p>
     ]]>
     </string>
     <string name="tab_reference_onboarding_text"><![CDATA[
-        <p>You can add references to your entries to remember where you found that entry.</p>
-        <p>To add a reference to an entry, select an entry in tab \'Entries\' and press on \'Reference\'. <br /> Enter the title of your new reference and press the save icon.</p>
+        <p>You can add references to your entries to remember where you found them.</p>
+        <p>You don\'t have any references yet.</p>
+        <p>To add a reference to an entry, select an entry in tab \'Entries\' and tab \'Reference\'.</p>
     ]]>
     </string>
     <string name="tab_read_later_articles_onboarding_text"><![CDATA[
-        <p>If you don\'t have time to read an article now or will come soon to an area with bad internet
-        connection you can save an article for later reading.</p>
-        <p>Articles for later reading are stored offline so that you can read them without internet connection, but are not saved yet to your entries collection.</p>
-        <p>To add an article for later reading, press the + button at the bottom right corner, press \'Newspaper Article\', select a newspaper site and in the new window with all
-            articles of that newspaper site, long press an article and select \'Read later\' at the bottom.</p>
+        <p>Articles for later reading are stored offline so that you can read them without internet connection. They are not yet part of your entries collection.</p>
+        <p>Choose a newspaper article via \'Entries\' and tab \'Read later\' .</p>
     ]]>
     </string>
 
 
     <string name="activity_edit_entry_edit_content_onboarding_text"><![CDATA[
-        <p>Click here to set entry\'s information (the data you actually want to save).</p>
-        <p>(Click on the fields above or the + button at bottom right edge to set entry\'s abstract, reference and tags.)</p>
+        <p>Click here to create your content.</p>
+        <p>Tab + button to set abstract, reference and tags.</p>
     ]]>
     </string>
 
 
     <string name="context_help_list_item_actions">If you want to execute an action on only one item, swipe the item from right to left.\nIf
-        you want to execute an action on multiple items, long press that item.\nThis
-        behaviour is valid for almost all lists. Try it.
+        you want to execute an action on multiple items, long press each item.\nThis also works for other lists.
     </string>
 
     <string name="context_help_search_tags">To search for multiple tags, enter a comma (,).\nTo
