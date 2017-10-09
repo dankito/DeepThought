@@ -74,6 +74,8 @@ class FullscreenWebView : WebView {
 
     private var hasReachedEnd = false
 
+    private var disableScrolling = false
+
     private var lastOnScrollFullscreenModeTogglingTimestamp: Date? = null
 
     private lateinit var swipeTouchListener: OnSwipeTouchListener
@@ -124,6 +126,10 @@ class FullscreenWebView : WebView {
             swipeTouchListener.onTouch(this, event)
         }
 
+        if(disableScrolling) { // if both taps of a double tap weren't exactly on the same place may a large scroll occur after transition to fullscreen / not-fullscreen mode -> disable scrolling during this time
+            return event.action == MotionEvent.ACTION_MOVE || event.action == MotionEvent.ACTION_UP // somehow we also have to catch the last ACTION_UP as otherwise text gets selected
+        }
+
         return super.onTouchEvent(event)
     }
 
@@ -150,6 +156,8 @@ class FullscreenWebView : WebView {
     }
 
     private fun handleWebViewDoubleTap() {
+        disableScrolling = true // otherwise double tap may triggers a large scroll
+
         if(isInFullscreenMode) {
             leaveFullscreenMode()
         }
@@ -158,6 +166,10 @@ class FullscreenWebView : WebView {
         }
 
         doubleTapListener?.invoke(isInFullscreenMode)
+
+        postDelayed({
+            disableScrolling = false
+        }, 300)
     }
 
     private fun handleWebViewSwipe(swipeDirection: OnSwipeTouchListener.SwipeDirection) {
