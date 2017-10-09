@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@color/entity_field_background_color"
+>
 
     <!-- EditText has a padding of 4dp, so set TextView's padding left also to 4dp so that they are left aligned -->
     <TextView
@@ -23,6 +25,7 @@
         android:layout_alignParentStart="true"
         android:layout_toLeftOf="@+id/btnEntityFieldAction"
         android:layout_toStartOf="@+id/btnEntityFieldAction"
+        android:maxLines="4"
         style="@style/EditableEntityFieldValue"
         android:saveEnabled="false"
     />
