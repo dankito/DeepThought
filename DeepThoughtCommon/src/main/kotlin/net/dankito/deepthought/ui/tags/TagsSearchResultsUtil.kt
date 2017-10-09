@@ -28,7 +28,7 @@ class TagsSearchResultsUtil {
     }
 
 
-    fun getButtonStateForSearchResult(searchResults: TagsSearchResults?): TagsSearcherButtonState {
+    fun getButtonStateForSearchResult(searchResults: TagsSearchResults?, tagsOnEntry: Collection<Tag>): TagsSearcherButtonState {
         if (searchResults == null || searchResults.overAllSearchTerm.isBlank()) {
             return TagsSearcherButtonState.DISABLED
         }
@@ -37,7 +37,14 @@ class TagsSearchResultsUtil {
             return TagsSearcherButtonState.CREATE_TAG
         }
 
-        return TagsSearcherButtonState.TOGGLE_TAGS
+        val notAddedTags = ArrayList(searchResults.getAllMatches())
+        notAddedTags.removeAll(tagsOnEntry)
+
+        if(notAddedTags.size == 0 || (notAddedTags.size - searchResults.getSearchTermsWithoutMatches().size) <= 0) {
+            return TagsSearcherButtonState.REMOVE_TAGS
+        }
+
+        return TagsSearcherButtonState.ADD_TAGS
     }
 
 }

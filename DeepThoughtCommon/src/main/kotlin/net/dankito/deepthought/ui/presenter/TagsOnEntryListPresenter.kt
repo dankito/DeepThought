@@ -25,8 +25,8 @@ class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryList
     }
 
 
-    fun getButtonStateForSearchResult(): TagsSearcherButtonState {
-        return searchResultsUtil.getButtonStateForSearchResult(lastTagsSearchResults)
+    fun getButtonStateForSearchResult(tagsOnEntry: Collection<Tag>): TagsSearcherButtonState {
+        return searchResultsUtil.getButtonStateForSearchResult(lastTagsSearchResults, tagsOnEntry)
     }
 
     fun createNewTags(enteredText: String, tagsOnEntry: MutableCollection<Tag>) {
@@ -55,12 +55,12 @@ class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryList
         return newTag
     }
 
-    fun toggleTagsOnEntry(tagsOnEntry: MutableCollection<Tag>) {
+    fun toggleTagsOnEntry(tagsOnEntry: MutableCollection<Tag>, state: TagsSearcherButtonState) {
         lastTagsSearchResults?.let { searchResults ->
             val notExistingEnteredTags = ArrayList<String>()
 
             searchResults.results.forEach { result ->
-                toggleTagOnEntry(tagsOnEntry, result, notExistingEnteredTags)
+                toggleTagOnEntry(tagsOnEntry, result, state, notExistingEnteredTags)
             }
 
             if(notExistingEnteredTags.isNotEmpty()) {
@@ -69,24 +69,28 @@ class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryList
         }
     }
 
-    private fun toggleTagOnEntry(tagsOnEntry: MutableCollection<Tag>, result: TagsSearchResult, notExistingEnteredTags: ArrayList<String>) {
+    private fun toggleTagOnEntry(tagsOnEntry: MutableCollection<Tag>, result: TagsSearchResult, state: TagsSearcherButtonState, notExistingEnteredTags: ArrayList<String>) {
         if(result.hasExactMatches()) {
-            result.exactMatches.forEach { toggleTagAffiliation(it, tagsOnEntry) }
+            result.exactMatches.forEach { toggleTagAffiliation(it, tagsOnEntry, state) }
         }
         else if (result.hasMatches == false) {
             notExistingEnteredTags.add(result.searchTerm)
         }
         else {
-            result.allMatches.filterNotNull().forEach { toggleTagAffiliation(it, tagsOnEntry) }
+            result.allMatches.filterNotNull().forEach { toggleTagAffiliation(it, tagsOnEntry, state) }
         }
     }
 
-    private fun toggleTagAffiliation(tag: Tag, tagsOnEntry: MutableCollection<Tag>) {
-        if (tagsOnEntry.contains(tag)) {
-            tagsOnEntry.remove(tag)
+    private fun toggleTagAffiliation(tag: Tag, tagsOnEntry: MutableCollection<Tag>, state: TagsSearcherButtonState) {
+        if(tagsOnEntry.contains(tag)) {
+            if(state == TagsSearcherButtonState.REMOVE_TAGS) {
+                tagsOnEntry.remove(tag)
+            }
         }
         else {
-            tagsOnEntry.add(tag)
+            if(state == TagsSearcherButtonState.ADD_TAGS) {
+                tagsOnEntry.add(tag)
+            }
         }
     }
 

@@ -130,7 +130,7 @@ class TagsOnEntryDialog : DialogFragment(), ITagsOnEntryListView {
 
 
     private fun setButtonState() {
-        val buttonState = presenter.getButtonStateForSearchResult()
+        val buttonState = presenter.getButtonStateForSearchResult(tagsOnEntry)
 
         applyButtonState(buttonState)
     }
@@ -144,8 +144,11 @@ class TagsOnEntryDialog : DialogFragment(), ITagsOnEntryListView {
             if(state == TagsSearcherButtonState.CREATE_TAG) {
                 button.text = messages["tags.on.entry.dialog.create.tag"]
             }
-            else if(state == TagsSearcherButtonState.TOGGLE_TAGS) {
-                button.text = messages["tags.on.entry.dialog.toggle.tags"]
+            else if(state == TagsSearcherButtonState.ADD_TAGS) {
+                button.text = messages["tags.on.entry.dialog.add.tags"]
+            }
+            else if(state == TagsSearcherButtonState.REMOVE_TAGS) {
+                button.text = messages["tags.on.entry.dialog.remove.tags"]
             }
         }
     }
@@ -160,7 +163,9 @@ class TagsOnEntryDialog : DialogFragment(), ITagsOnEntryListView {
     }
 
     private fun toggleTagsOnEntry() {
-        presenter.toggleTagsOnEntry(tagsOnEntry)
+        presenter.toggleTagsOnEntry(tagsOnEntry, btnCreateOrToggleTagsState)
+
+        setButtonState()
     }
 
     private fun toggleTagOnEntry(tag: Tag?) {

@@ -235,7 +235,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
 
 
     private fun setButtonState() {
-        val buttonState = presenter.getButtonStateForSearchResult()
+        val buttonState = presenter.getButtonStateForSearchResult(adapter.tagsOnEntry)
 
         applyButtonState(buttonState)
     }
@@ -249,8 +249,11 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
             if(state == TagsSearcherButtonState.CREATE_TAG) {
                 button.setText(R.string.dialog_tags_on_entry_create_tag)
             }
-            else if(state == TagsSearcherButtonState.TOGGLE_TAGS) {
-                button.setText(R.string.dialog_tags_on_entry_toggle_tags)
+            else if(state == TagsSearcherButtonState.ADD_TAGS) {
+                button.setText(R.string.dialog_tags_on_entry_add_tags)
+            }
+            else if(state == TagsSearcherButtonState.REMOVE_TAGS) {
+                button.setText(R.string.dialog_tags_on_entry_remove_tags)
             }
         }
     }
@@ -271,11 +274,12 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
     }
 
     private fun toggleTagsOnEntry() {
-        presenter.toggleTagsOnEntry(adapter.tagsOnEntry)
+        presenter.toggleTagsOnEntry(adapter.tagsOnEntry, btnEditEntryCreateOrToggleTagsState)
 
         activity?.runOnUiThread {
             adapter.notifyDataSetChanged()
             setTagsOnEntryPreviewOnUIThread()
+            setButtonState()
         }
     }
 
