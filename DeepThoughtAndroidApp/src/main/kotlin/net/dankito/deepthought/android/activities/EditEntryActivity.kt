@@ -325,7 +325,6 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setupEntryContentView() {
-        wbvwContent.setOnClickListener { editContent() }
         txtEntryContentLabel.setOnClickListener { editContent() }
 
         wbvwContent.setOptionsBar(lytFullscreenWebViewOptionsBar)
