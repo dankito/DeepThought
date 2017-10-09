@@ -117,7 +117,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/find_existing_entity_divider_height"
                 android:layout_below="@+id/rcyExistingReferencesSearchResults"
-                android:layout_marginTop="@dimen/find_existing_entity_margin_top"
+                android:layout_marginTop="@dimen/find_existing_entity_margin_top_bottom"
+                android:layout_marginBottom="@dimen/find_existing_entity_margin_top_bottom"
                 android:background="@color/divider_line_color"
             />
 
