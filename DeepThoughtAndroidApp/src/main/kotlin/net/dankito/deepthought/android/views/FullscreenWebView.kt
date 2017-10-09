@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android.views
 
+import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.support.v4.app.DialogFragment
@@ -81,6 +82,10 @@ class FullscreenWebView : WebView {
     private lateinit var swipeTouchListener: OnSwipeTouchListener
 
     private var lytFullscreenWebViewOptionsBar: ViewGroup? = null
+
+    private var checkIfScrollingStoppedTimer = Timer()
+
+    private var checkIfScrollingStoppedTimerTask: TimerTask? = null
 
 
     constructor(context: Context) : super(context) { setupUI(context) }
@@ -192,12 +197,43 @@ class FullscreenWebView : WebView {
 
         val tolerance = computeVerticalScrollExtent() / 10
         this.hasReachedEnd = scrollY >= computeVerticalScrollRange() - computeVerticalScrollExtent() - tolerance
+
+        hideOptionsBarOnUiThread()
+        startCheckIfScrollingStopped()
     }
 
     private fun checkShouldEnterFullscreenMode(differenceY: Int) {
         if(differenceY > scrollDownDifferenceYThreshold || differenceY < scrollUpDifferenceYThreshold) {
             enterFullscreenMode()
         }
+    }
+
+    private fun startCheckIfScrollingStopped() {
+        checkIfScrollingStoppedTimerTask?.cancel()
+
+        checkIfScrollingStoppedTimerTask = object: TimerTask() {
+            override fun run() {
+                showOptionsBar()
+            }
+        }
+
+        checkIfScrollingStoppedTimer.schedule(checkIfScrollingStoppedTimerTask, 300)
+    }
+
+    private fun hideOptionsBarOnUiThread() {
+        lytFullscreenWebViewOptionsBar?.visibility = View.GONE
+    }
+
+    private fun showOptionsBar() {
+        (lytFullscreenWebViewOptionsBar?.context as? Activity)?.let { activity ->
+            activity.runOnUiThread {
+                showOptionsBarOnUiThread()
+            }
+        }
+    }
+
+    private fun showOptionsBarOnUiThread() {
+        lytFullscreenWebViewOptionsBar?.visibility = View.VISIBLE
     }
 
 
@@ -215,7 +251,7 @@ class FullscreenWebView : WebView {
     fun leaveFullscreenMode() {
         isInFullscreenMode = false
         updateLastOnScrollFullscreenModeTogglingTimestamp()
-        lytFullscreenWebViewOptionsBar?.visibility = View.GONE
+        hideOptionsBarOnUiThread()
 
         changeFullscreenModeListener?.invoke(FullscreenMode.Leave)
 
