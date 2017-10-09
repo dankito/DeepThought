@@ -39,6 +39,8 @@
 
     <color name="divider_line_color">#888888</color>
 
+    <color name="edit_entity_activity_background">#F0F0F0</color>
+
     <color name="entity_field_background_color">#FFFFFF</color>
     <color name="entity_field_name_text_color">#b8b8b8</color>
     <color name="entity_field_value_text_color">#000000</color>
