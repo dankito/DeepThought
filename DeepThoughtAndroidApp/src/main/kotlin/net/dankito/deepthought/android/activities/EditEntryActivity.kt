@@ -601,8 +601,8 @@ class EditEntryActivity : BaseActivity() {
     private fun entryPropertySet() {
         val localSettings = entryService.dataManager.localSettings
 
-        if(localSettings.didShowAddEntryPropertyHelp == false && contentToEdit.isNullOrBlank() == false) {
-            localSettings.didShowAddEntryPropertyHelp = true
+        if(localSettings.didShowAddEntryPropertiesHelp == false && contentToEdit.isNullOrBlank() == false) {
+            localSettings.didShowAddEntryPropertiesHelp = true
             entryService.dataManager.localSettingsUpdated()
         }
     }
@@ -696,7 +696,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun shouldShowOnboardingForEntryProperties(): Boolean {
-        return entryService.dataManager.localSettings.didShowAddEntryPropertyHelp == false &&
+        return entryService.dataManager.localSettings.didShowAddEntryPropertiesHelp == false &&
                 lytTagsPreview.visibility == View.GONE && lytReferencePreview.visibility == View.GONE && lytAbstractPreview.visibility == View.GONE
     }
 
