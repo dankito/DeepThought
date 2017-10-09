@@ -410,6 +410,7 @@ class EditEntryActivity : BaseActivity() {
 
         runOnUiThread {
             wbvwContent.setWebViewClient(null) // now reactivate default url handling
+            prgIsLoadingWebPage.visibility = View.GONE
         }
     }
 
@@ -648,6 +649,7 @@ class EditEntryActivity : BaseActivity() {
             isLoadingUrl = true
             wbvwContent.elementClickedListener = { true } // disable link clicks during loading url
             wbvwContent.setWebViewClient(WebViewClient()) // to avoid that redirects open url in browser
+            prgIsLoadingWebPage.visibility = View.VISIBLE
             wbvwContent.loadUrl(url)
             showContentOnboarding = false
         }

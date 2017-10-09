@@ -74,6 +74,7 @@
 
         <TextView
             android:id="@+id/txtEntryContentLabel"
+            android:layout_width="wrap_content"
             android:layout_below="@+id/lytEntryFieldsPreview"
             android:layout_marginTop="@dimen/activity_edit_entry_field_margin_top"
             android:layout_marginLeft="@dimen/activity_edit_entry_field_margin_left"
@@ -82,9 +83,21 @@
             android:layout_marginEnd="@dimen/activity_edit_entry_field_margin_right"
             android:layout_marginBottom="@dimen/activity_edit_entry_content_label_margin_bottom"
             style="@style/EntityFieldName"
+            android:layout_centerHorizontal="true"
             android:textAlignment="center"
             android:gravity="center_horizontal"
             android:text="@string/activity_edit_entry_content_label"
+        />
+
+        <ProgressBar
+            android:id="@+id/prgIsLoadingWebPage"
+            android:layout_width="@dimen/activity_edit_entry_progress_is_loading_web_page_width"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/txtEntryContentLabel"
+            android:layout_toEndOf="@+id/txtEntryContentLabel"
+            android:layout_alignTop="@+id/txtEntryContentLabel"
+            android:layout_alignBottom="@+id/txtEntryContentLabel"
+            android:visibility="gone"
         />
 
         <include
