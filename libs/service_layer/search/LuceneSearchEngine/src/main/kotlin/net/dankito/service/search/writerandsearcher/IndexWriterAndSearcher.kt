@@ -1,5 +1,6 @@
 package net.dankito.service.search.writerandsearcher
 
+import net.dankito.data_access.database.ChangedEntity
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.service.data.EntityServiceBase
 import net.dankito.service.data.messages.EntityChangeType
@@ -292,22 +293,37 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
     }
 
 
+    fun updateEntityInIndex(changedEntity: ChangedEntity<TEntity>) {
+        if(changedEntity.isDeleted) {
+            changedEntity.id?.let { removeEntityFromIndex(it) }
+        }
+        else if(changedEntity.entity != null) {
+            changedEntity.entity?.let { updateEntityInIndex(it) }
+        }
+    }
+
     fun updateEntityInIndex(entity: TEntity) {
         removeEntityFromIndex(entity)
         indexEntity(entity)
     }
 
     protected fun removeEntityFromIndex(removedEntity: TEntity) {
+        log.info("Going to remove entity $removedEntity from index")
+
+        removedEntity.id?.let { removeEntityFromIndex(it) }
+    }
+
+    protected fun removeEntityFromIndex(entityId: String) {
         if(isReadOnly) {
             return
         }
 
         try {
             getWriter()?.let { writer ->
-                removedEntity.id?.let { removeEntityFromIndex(writer, it) }
+                removeEntityFromIndex(writer, entityId)
             }
         } catch (e: Exception) {
-            log.error("Could not delete Document for removed entity " + removedEntity, e)
+            log.error("Could not delete Document for removed entity with id " + entityId, e)
         }
     }
 

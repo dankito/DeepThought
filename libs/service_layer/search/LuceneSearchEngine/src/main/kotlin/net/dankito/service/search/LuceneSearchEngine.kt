@@ -1,11 +1,9 @@
 package net.dankito.service.search
 
+import net.dankito.data_access.database.ChangedEntity
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.*
-import net.dankito.service.data.messages.EntitiesOfTypeChanged
-import net.dankito.service.data.messages.EntityChangeSource
-import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.specific.*
 import net.dankito.service.search.writerandsearcher.*
@@ -113,8 +111,8 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
         val startTime = Date()
         log.info("Starting updating index with last index update time ${dataManager.localSettings.lastSearchIndexUpdateTime}")
 
-        dataManager.entityManager.getAllEntitiesUpdatedAfter<BaseEntity>(dataManager.localSettings.lastSearchIndexUpdateTime).forEach { entity ->
-            updateEntityInIndex(entity)
+        dataManager.entityManager.getAllEntitiesUpdatedAfter<BaseEntity>(dataManager.localSettings.lastSearchIndexUpdateTime).forEach { changedEntity ->
+            updateEntityInIndex(changedEntity)
         }
 
         dataManager.localSettings.lastSearchIndexUpdateTime = startTime
@@ -123,21 +121,13 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
         log.info("Done updating index")
     }
 
-    private fun updateEntityInIndex(entity: BaseEntity) {
-        if(entity is Entry) {
-            entryIndexWriterAndSearcher.updateEntityInIndex(entity)
-        }
-        else if(entity is Tag) {
-            tagIndexWriterAndSearcher.updateEntityInIndex(entity)
-        }
-        else if(entity is Series) {
-            seriesIndexWriterAndSearcher.updateEntityInIndex(entity)
-        }
-        else if(entity is Reference) {
-            referenceIndexWriterAndSearcher.updateEntityInIndex(entity)
-        }
-        else if(entity is ReadLaterArticle) {
-            readLaterArticleIndexWriterAndSearcher.updateEntityInIndex(entity)
+    private fun updateEntityInIndex(changedEntity: ChangedEntity<BaseEntity>) {
+        when(changedEntity.entityClass) {
+            Entry::class.java -> entryIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Entry>)
+            Tag::class.java -> tagIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Tag>)
+            Series::class.java -> seriesIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Series>)
+            Reference::class.java -> referenceIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Reference>)
+            ReadLaterArticleService::class.java -> readLaterArticleIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<ReadLaterArticle>)
         }
     }
 
