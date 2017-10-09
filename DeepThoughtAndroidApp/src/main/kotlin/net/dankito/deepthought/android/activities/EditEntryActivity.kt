@@ -685,10 +685,10 @@ class EditEntryActivity : BaseActivity() {
         }
 
         if(showContentOnboarding == true) {
-            wbEntry.visibility = View.GONE
+            lytContentWebView.visibility = View.GONE
         }
         else if(showContentOnboarding == false) {
-            wbEntry.visibility = View.VISIBLE
+            lytContentWebView.visibility = View.VISIBLE
         }
     }
 
