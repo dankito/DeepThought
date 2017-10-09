@@ -67,22 +67,27 @@
             android:name=".activities.ArticleSummaryActivity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
         />
 
         <activity
             android:name=".activities.EditEntryActivity"
             android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
         />
 
         <activity
             android:name=".activities.EditReferenceActivity"
             android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
         />
 
         <activity
             android:name=".activities.EditSeriesActivity"
             android:label="@string/activity_edit_reference_title"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
+        >
         </activity>
     </application>
 
