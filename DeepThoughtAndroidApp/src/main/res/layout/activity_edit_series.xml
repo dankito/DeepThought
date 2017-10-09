@@ -27,7 +27,10 @@
             android:layout_marginBottom="@dimen/activity_edit_series_find_existing_controls_margin_bottom"
             android:layout_marginLeft="@dimen/edit_text_padding_left"
             android:layout_marginStart="@dimen/edit_text_padding_left"
-            android:padding="@dimen/activity_edit_series_padding"
+            android:paddingLeft="@dimen/activity_edit_series_padding"
+            android:paddingStart="@dimen/activity_edit_series_padding"
+            android:paddingRight="@dimen/activity_edit_series_padding"
+            android:paddingEnd="@dimen/activity_edit_series_padding"
             android:visibility="gone"
         >
 
