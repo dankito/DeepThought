@@ -680,6 +680,8 @@ class EditEntryActivity : BaseActivity() {
             else {
                 txtOnboardingText.text = Html.fromHtml(onboardingText)
             }
+
+            arrowToFloatingActionButton.visibility = if(showContentOnboarding != true && showOnboardingForEntryProperties) View.VISIBLE else View.GONE
         }
         else {
             lytOnboardingText.visibility = View.GONE

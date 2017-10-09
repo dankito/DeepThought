@@ -165,6 +165,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtOnboardingText"
                     android:layout_alignParentBottom="true"
+                    android:visibility="gone"
                 />
 
             </RelativeLayout>
