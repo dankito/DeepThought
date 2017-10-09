@@ -323,7 +323,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setupEntryContentView() {
-        lytOnboardingText.setOnClickListener { editContent() }
+        lytContentWebViewAndOnboardingText.setOnClickListener { editContent() }
         txtEntryContentLabel.setOnClickListener { editContent() }
 
         wbvwContent.setOptionsBar(lytFullscreenWebViewOptionsBar)
