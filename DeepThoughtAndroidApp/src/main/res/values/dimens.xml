@@ -116,7 +116,7 @@
     <dimen name="activity_edit_entry_field_padding_top">2dp</dimen>
     <dimen name="activity_edit_entry_field_padding_left_right">8dp</dimen>
     <dimen name="activity_edit_entry_field_padding_left_right_minus_edit_text_padding_left">4dp</dimen>
-    <dimen name="activity_edit_entry_field_negative_view_edit_entity_field_margin_bottom">-16dp</dimen>
+    <dimen name="activity_edit_entry_field_negative_view_edit_entity_field_margin_bottom">-8dp</dimen>
     <dimen name="activity_edit_entry_field_padding_bottom">4dp</dimen>
     <dimen name="activity_edit_entry_field_name_margin_top">1dp</dimen>
     <dimen name="activity_edit_entry_field_name_margin_bottom">4dp</dimen>
@@ -160,7 +160,7 @@
     <dimen name="activity_edit_series_section_top_margin">16dp</dimen>
     <dimen name="activity_edit_series_icons_padding">4dp</dimen>
 
-    <dimen name="view_edit_entity_field_margin_bottom">16dp</dimen>
+    <dimen name="view_edit_entity_field_margin_bottom">8dp</dimen>
     <dimen name="view_edit_entity_field_icon_padding">4dp</dimen>
 
     <dimen name="view_is_added_to_entity_border_width">6dp</dimen>
