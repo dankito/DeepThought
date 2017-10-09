@@ -70,6 +70,8 @@ class ToolbarUtil {
             if(child is ImageView) { // ImageView on newer Androids, AppCompatImageButton on older ones
                 (child.layoutParams as? ViewGroup.MarginLayoutParams)?.setRightMargin(0)
                 child.setPadding(0, 0, 0, 0)
+
+                child.layoutParams?.width = 85
             }
             else if(child is LinearLayout) { // LinearLayout on newer Androids, AppCompatTextView on older ones
                 child.setPadding(0, 0, 0, 0)

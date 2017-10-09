@@ -125,6 +125,7 @@ class ArticleSummaryActivity : BaseActivity() {
         setContentView(R.layout.activity_article_summary)
 
         setSupportActionBar(toolbar)
+        toolbarUtil.adjustToolbarLayoutDelayed(toolbar)
 
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

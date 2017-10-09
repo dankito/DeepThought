@@ -272,6 +272,7 @@ class EditEntryActivity : BaseActivity() {
         setContentView(R.layout.activity_edit_entry)
 
         setSupportActionBar(toolbar)
+        toolbarUtil.adjustToolbarLayoutDelayed(toolbar)
 
         supportActionBar?.let { actionBar ->
             actionBar.setDisplayHomeAsUpEnabled(true)

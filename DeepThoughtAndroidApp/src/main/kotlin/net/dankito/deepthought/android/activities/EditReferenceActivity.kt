@@ -187,6 +187,7 @@ class EditReferenceActivity : BaseActivity() {
         setContentView(R.layout.activity_edit_reference)
 
         setSupportActionBar(toolbar)
+        toolbarUtil.adjustToolbarLayoutDelayed(toolbar)
 
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

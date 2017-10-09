@@ -148,6 +148,7 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
         setContentView(R.layout.activity_edit_series)
 
         setSupportActionBar(toolbar)
+        toolbarUtil.adjustToolbarLayoutDelayed(toolbar)
 
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
