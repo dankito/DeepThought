@@ -121,7 +121,11 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/lytSetReferenceSeriesControls"
             android:layout_above="@id/toolbar"
-            android:padding="@dimen/activity_edit_series_padding"
+            android:paddingTop="@dimen/activity_edit_series_padding"
+            android:paddingLeft="@dimen/activity_edit_series_padding"
+            android:paddingStart="@dimen/activity_edit_series_padding"
+            android:paddingRight="@dimen/activity_edit_series_padding"
+            android:paddingEnd="@dimen/activity_edit_series_padding"
         >
 
             <net.dankito.deepthought.android.views.EditEntityField
