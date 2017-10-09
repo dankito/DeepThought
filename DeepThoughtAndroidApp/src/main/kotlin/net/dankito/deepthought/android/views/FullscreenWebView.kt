@@ -132,15 +132,15 @@ class FullscreenWebView : WebView {
      * WebView doesn't fire click event, so we had to implement this our self
      */
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if(isDialogInForeground() == false) { // touches from dialogs (e.g. TagsOnEntryDialog) if not handled there also come here -> avoid handling these
+            swipeTouchListener.onTouch(this, event)
+        }
+
         if(event.action == MotionEvent.ACTION_UP && elementClickedListener != null) {
             val hitResult = hitTestResult
             val type = hitResult.type
 
             elementClickedListener?.let { return it.invoke(type) } // this is bad: in most cases type is UNKNOWN, even though clicked on images etc. -> we cannot determine if user clicked an element or simply the background
-        }
-
-        if(isDialogInForeground() == false) { // touches from dialogs (e.g. TagsOnEntryDialog) if not handled there also come here -> avoid handling these
-            swipeTouchListener.onTouch(this, event)
         }
 
         if(disableScrolling) { // if both taps of a double tap weren't exactly on the same place may a large scroll occur after transition to fullscreen / not-fullscreen mode -> disable scrolling during this time
