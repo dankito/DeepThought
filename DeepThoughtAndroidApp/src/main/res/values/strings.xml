@@ -156,6 +156,8 @@
     <string name="activity_edit_reference_error_could_not_parse_publishing_date" formatted="false">Cannot parse %s to date</string>
     <string name="activity_edit_reference_alert_message_create_new_reference">Do you really want to create a new reference?\n\nThe current reference then
         gets discarded and a new one will be created.</string>
+    <string name="activity_edit_reference_alert_message_create_new_reference_current_one_has_unsaved_changes">Current reference has unsaved changes.\n\nDo you want to
+        save these before?</string>
     <string name="activity_edit_reference_alert_message_reference_contains_unsaved_changes">Reference contains unsaved changes.\n\nShould these changes now be saved?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
     <string name="activity_edit_reference_alert_message_reference_has_been_edited">Reference has been edited (probably on a synchronized device).\n\nWhen
@@ -168,8 +170,9 @@
     <string name="activity_edit_series_title_label">Title</string>
     <string name="activity_edit_series_alert_message_create_new_series">Do you really want to create a new Series?\n\nThe current series then
         gets discarded and a new one will be created.</string>
-    <string name="activity_edit_series_alert_message_series_contains_unsaved_changes">Reihe enthält nicht gespeicherte Änderungen.\n\nSollen diese Änderungen nun
-        gespeichert werden?</string>
+    <string name="activity_edit_series_alert_message_create_new_series_current_one_has_unsaved_changes">Current series has unsaved changes.\n\nDo you want to
+        save these before?</string>
+    <string name="activity_edit_series_alert_message_series_contains_unsaved_changes">Series has unsaved changes.\n\nDo you want to save these changes?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
     <string name="activity_edit_series_alert_message_series_has_been_edited">Series has been edited (probably on a synchronized device).\n\nWhen
         you now save the series the other changes get overwritten.

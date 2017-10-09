@@ -307,7 +307,25 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
     private fun askIfANewSeriesShouldBeCreated() {
         dialogService.showConfirmationDialog(getString(R.string.activity_edit_series_alert_message_create_new_series)) { createNewSeries ->
             if(createNewSeries) {
-                createSeries() // TODO: check if previous reference contains unsaved changes
+                if(didSeriesChange) {
+                    askIfCurrentSeriesChangesShouldGetSaved()
+                }
+                else {
+                    createSeries()
+                }
+            }
+        }
+    }
+
+    private fun askIfCurrentSeriesChangesShouldGetSaved() {
+        dialogService.showConfirmationDialog(getString(R.string.activity_edit_series_alert_message_create_new_series_current_one_has_unsaved_changes)) { saveChanges ->
+            if(saveChanges) {
+                saveSeriesAsync { // TODO: show error message in case of failure
+                    runOnUiThread { createSeries() }
+                }
+            }
+            else {
+                createSeries()
             }
         }
     }

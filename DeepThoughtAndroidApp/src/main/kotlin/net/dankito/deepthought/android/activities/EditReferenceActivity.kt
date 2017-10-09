@@ -410,7 +410,25 @@ class EditReferenceActivity : BaseActivity() {
     private fun askIfANewReferenceShouldBeCreated() {
         dialogService.showConfirmationDialog(getString(R.string.activity_edit_reference_alert_message_create_new_reference)) { createNewReference ->
             if(createNewReference) {
-                createReference() // TODO: check if previous reference contains unsaved changes
+                if(didReferenceChange) {
+                    askIfCurrentReferenceChangesShouldGetSaved()
+                }
+                else {
+                    createReference()
+                }
+            }
+        }
+    }
+
+    private fun askIfCurrentReferenceChangesShouldGetSaved() {
+        dialogService.showConfirmationDialog(getString(R.string.activity_edit_reference_alert_message_create_new_reference_current_one_has_unsaved_changes)) { saveChanges ->
+            if(saveChanges) {
+                saveReferenceAsync { // TODO: show error message in case of failure
+                    runOnUiThread { createReference() }
+                }
+            }
+            else {
+                createReference()
             }
         }
     }
