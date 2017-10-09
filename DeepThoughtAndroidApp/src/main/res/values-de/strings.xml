@@ -133,11 +133,11 @@
     <string name="context_help_save_entry_changes">Um Ihre Änderungen zu speichern, drücken Sie den \'Speichern\' Button unten rechts.
     </string>
 
-    <string name="context_help_entry_information_fullscreen">Scrollen oder Doppelklicken startet den Vollbildmodus.\nDurch erneutes Doppelklicken können Sie den Vollbildmodus
+    <string name="context_help_entry_content_fullscreen">Scrollen oder Doppelklicken startet den Vollbildmodus.\nDurch erneutes Doppelklicken können Sie den Vollbildmodus
         wieder verlassen.
     </string>
 
-    <string name="context_help_entry_information_fullscreen_gestures"> Sie haben im Vollbildmodus eine der folgenden Handlungen ausgeführt\n\n- Schnell von rechts nach links
+    <string name="context_help_entry_content_fullscreen_gestures"> Sie haben im Vollbildmodus eine der folgenden Handlungen ausgeführt\n\n- Schnell von rechts nach links
         wischen:
         Eintrag bearbeiten Dialog verlassen\n- Schnell von links nach rechts wischen: Schlagworte bearbeiten
     </string>

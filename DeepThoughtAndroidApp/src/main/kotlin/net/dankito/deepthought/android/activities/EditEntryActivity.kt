@@ -830,7 +830,7 @@ class EditEntryActivity : BaseActivity() {
         val localSettings = entryService.dataManager.localSettings
 
         if(localSettings.didShowEntryInformationFullscreenGesturesHelp == false) {
-            dialogService.showConfirmationDialog(getString(R.string.context_help_entry_information_fullscreen_gestures), showNoButton = false) {
+            dialogService.showConfirmationDialog(getString(R.string.context_help_entry_content_fullscreen_gestures), showNoButton = false) {
                 runOnUiThread {
                     wbvwContent.leaveFullscreenMode() // leave fullscreen otherwise a lot of unwanted behaviour occurs
                     userConfirmedHelpOnUIThread()
@@ -870,7 +870,7 @@ class EditEntryActivity : BaseActivity() {
         val localSettings = entryService.dataManager.localSettings
 
         if(localSettings.didShowEntryInformationFullscreenHelp == false) {
-            contextHelpUtil.showContextHelp(lytContextHelpFullscreenMode, R.string.context_help_entry_information_fullscreen)
+            contextHelpUtil.showContextHelp(lytContextHelpFullscreenMode, R.string.context_help_entry_content_fullscreen)
 
             localSettings.didShowEntryInformationFullscreenHelp = true
             entryService.dataManager.localSettingsUpdated()
