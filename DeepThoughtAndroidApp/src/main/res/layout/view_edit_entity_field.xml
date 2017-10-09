@@ -4,6 +4,8 @@
                 android:layout_height="wrap_content"
                 android:background="@color/entity_field_background_color"
                 android:layout_marginBottom="@dimen/view_edit_entity_field_margin_bottom"
+                android:paddingLeft="@dimen/view_edit_entity_field_padding_left"
+                android:paddingStart="@dimen/view_edit_entity_field_padding_left"
 >
 
     <!-- EditText has a padding of 4dp, so set TextView's padding left also to 4dp so that they are left aligned -->
@@ -25,6 +27,8 @@
         android:layout_alignParentStart="true"
         android:layout_toLeftOf="@+id/btnEntityFieldAction"
         android:layout_toStartOf="@+id/btnEntityFieldAction"
+        android:layout_marginRight="@dimen/view_edit_entity_field_value_margin_right"
+        android:layout_marginEnd="@dimen/view_edit_entity_field_value_margin_right"
         android:maxLines="4"
         style="@style/EditableEntityFieldValue"
         android:saveEnabled="false"
@@ -35,11 +39,12 @@
         android:id="@+id/btnEntityFieldAction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxWidth="@dimen/view_edit_entity_field_icon_max_size"
+        android:maxHeight="@dimen/view_edit_entity_field_icon_max_size"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/edtxtEntityFieldValue"
-        android:layout_alignBottom="@+id/edtxtEntityFieldValue"
-        android:padding="@dimen/view_edit_entity_field_icon_padding"
+        android:adjustViewBounds="true"
+        android:layout_centerVertical="true"
         android:scaleType="fitCenter"
         android:background="@android:color/transparent"
         android:tint="@color/colorPrimary"
