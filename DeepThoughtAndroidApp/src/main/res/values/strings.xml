@@ -94,7 +94,7 @@
     <string name="context_help_save_entry_changes">The changes done are now only applied, to save them press the \'Save\' button at bottom right.
     </string>
 
-    <string name="context_help_entry_information_fullscreen">Scrolling entry\'s information as you just did starts fullscreen mode.\nYou can leave it by simply tapping
+    <string name="context_help_entry_information_fullscreen">Scrolling entry\'s content as you just did starts fullscreen mode.\nYou can leave it by simply tapping
         anywhere except on links and images in the screen.
     </string>
 
@@ -118,11 +118,11 @@
     <string name="dialog_article_summary_extractor_alert_message_delete_config" formatted="false">Really delete news site %s?</string>
 
     <string name="menu_share_reference_url">Url</string>
-    <string name="menu_share_entry_content">Information</string>
+    <string name="menu_share_entry_content">content</string>
 
     <string name="activity_edit_entry_title">Entry</string>
-    <string name="activity_edit_entry_content_label">Information</string>
-    <string name="activity_edit_entry_edit_content_title">Information</string>
+    <string name="activity_edit_entry_content_label">content</string>
+    <string name="activity_edit_entry_edit_content_title">content</string>
     <string name="activity_edit_entry_abstract_label">Title / Abstract</string>
     <string name="activity_edit_entry_edit_abstract_title">Title / Abstract</string>
     <string name="activity_edit_entry_reference_label">Reference</string>
