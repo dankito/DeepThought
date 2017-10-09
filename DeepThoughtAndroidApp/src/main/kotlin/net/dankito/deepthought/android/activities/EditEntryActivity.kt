@@ -772,7 +772,8 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread(showContentOnboarding: Boolean? = null) {
-        setOnboardingTextVisibilityOnUIThread(showContentOnboarding)
+        val calculatedShowContentOnboarding = if(showContentOnboarding == null) lytContentWebView.visibility != View.VISIBLE else showContentOnboarding
+        setOnboardingTextVisibilityOnUIThread(calculatedShowContentOnboarding)
         setFloatingActionButtonVisibilityOnUIThread()
     }
 
