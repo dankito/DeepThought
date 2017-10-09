@@ -6,6 +6,7 @@ import android.support.v7.app.AlertDialog
 import android.text.InputType
 import android.widget.EditText
 import android.widget.Toast
+import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.android.service.showKeyboardDelayed
 import net.dankito.utils.localization.Localization
@@ -56,13 +57,13 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
         val builder = createDialog(activity, message, alertTitle)
 
         if(showNoButton) {
-            builder.setNegativeButton(android.R.string.no, { _, _ -> optionSelected(false) })
+            builder.setNegativeButton(R.string.action_no, { _, _ -> optionSelected(false) })
         }
         else {
             builder.setNegativeButton(null, null)
         }
 
-        builder.setPositiveButton(android.R.string.yes, { _, _ -> optionSelected(true) })
+        builder.setPositiveButton(if(showNoButton) R.string.action_yes else R.string.action_ok, { _, _ -> optionSelected(true) })
 
         buildAndShowDialog(builder)
     }

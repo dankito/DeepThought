@@ -36,6 +36,7 @@
     <string name="action_load_more">Mehr laden</string>
     <string name="contextual_action_menu_count_items_selected" formatted="false">%d / %d</string>
     <string name="action_apply">Übernehmen</string>
+    <string name="action_ok">OK</string>
     <string name="action_yes">Ja</string>
     <string name="action_no">Nein</string>
 
