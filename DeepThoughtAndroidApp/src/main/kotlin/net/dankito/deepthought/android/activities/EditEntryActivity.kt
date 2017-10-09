@@ -325,7 +325,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setupEntryContentView() {
-        lytContentWebViewAndOnboardingText.setOnClickListener { editContent() }
+        wbvwContent.setOnClickListener { editContent() }
         txtEntryContentLabel.setOnClickListener { editContent() }
 
         wbvwContent.setOptionsBar(lytFullscreenWebViewOptionsBar)
@@ -693,6 +693,7 @@ class EditEntryActivity : BaseActivity() {
         val showOnboardingForEntryProperties = shouldShowOnboardingForEntryProperties()
         if(showContentOnboarding == true || showOnboardingForEntryProperties) {
             lytOnboardingText.visibility = View.VISIBLE
+            lytContentWebViewAndOnboardingText.setOnClickListener { editContent() } // only enable editing content by clicking on lytContentWebViewAndOnboardingText when showing onboarding text
 
             val onboardingTextId = if(showContentOnboarding == true) R.string.activity_edit_entry_edit_content_onboarding_text else R.string.activity_edit_entry_add_entry_properties_onboarding_text
             val onboardingText = if(showContentOnboarding == true) getText(onboardingTextId).toString() else getText(onboardingTextId).toString()
@@ -707,6 +708,7 @@ class EditEntryActivity : BaseActivity() {
         }
         else {
             lytOnboardingText.visibility = View.GONE
+            lytContentWebViewAndOnboardingText.setOnClickListener(null)
         }
 
         if(showContentOnboarding == true) {
