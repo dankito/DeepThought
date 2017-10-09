@@ -17,6 +17,7 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.view_edit_entity_field.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.extensions.setTextColorToColorResource
+import net.dankito.deepthought.android.service.showKeyboard
 
 
 class EditEntityField : RelativeLayout {
@@ -34,7 +35,7 @@ class EditEntityField : RelativeLayout {
     private lateinit var btnEntityFieldAction: ImageButton
 
 
-    private var didValueChange = false
+    var didValueChange = false
 
     private var originalValue = ""
 
@@ -174,6 +175,11 @@ class EditEntityField : RelativeLayout {
         btnEntityFieldAction.visibility = View.INVISIBLE
 
         btnEntityFieldAction.setOnClickListener(null)
+    }
+
+
+    fun startEditing() {
+        edtxtEntityFieldValue.showKeyboard()
     }
 
 

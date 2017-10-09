@@ -276,14 +276,20 @@ class EditEntryActivity : BaseActivity() {
             actionBar.setDisplayShowHomeEnabled(true)
         }
 
-        lytAbstractPreview.setFieldNameOnUiThread(getString(R.string.activity_edit_entry_abstract_label))
+        lytAbstractPreview.setFieldNameOnUiThread(R.string.activity_edit_entry_abstract_label) { didAbstractChange -> abstractChanged(didAbstractChange) }
+        lytAbstractPreview.fieldValueFocusChangedListener = { hasFocus ->
+            if(hasFocus == false) {
+                appliedChangesToAbstract(lytAbstractPreview.didValueChange)
+            }
+        }
         lytReferencePreview.setFieldNameOnUiThread(getString(R.string.activity_edit_entry_reference_label))
         lytTagsPreview.setFieldNameOnUiThread(getString(R.string.activity_edit_entry_tags_label))
 
-        lytAbstractPreview.setOnClickListener { editAbstract() }
         lytReferencePreview.setOnClickListener { editReference() }
         btnClearEntryReference.setOnClickListener { referenceCleared() }
         lytTagsPreview.setOnClickListener { editTagsOnEntry() }
+
+        wbvwContent?.requestFocus() // avoid that lytAbstractPreview gets focus and keyboard therefore gets show on activity start
 
         floatingActionMenu = EditEntryActivityFloatingActionMenuButton(findViewById(R.id.floatingActionMenu) as FloatingActionMenu, { addTagsToEntry() },
                 { addReferenceToEntry() }, { addAbstractToEntry() } )
@@ -306,10 +312,10 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun addAbstractToEntry() {
-        editAbstract()
-
         forceShowAbstractPreview = true
         setAbstractPreviewOnUIThread()
+
+        lytAbstractPreview.startEditing()
     }
 
     private fun referenceCleared() {
@@ -438,9 +444,6 @@ class EditEntryActivity : BaseActivity() {
                 if(toolbarTitle == getString(R.string.activity_edit_entry_edit_content_title)) {
                     dialog.restoreDialog(contentToEdit ?: "") { appliedChangesToContent(it) }
                 }
-                else if(toolbarTitle == getString(R.string.activity_edit_entry_edit_abstract_title)) {
-                    dialog.restoreDialog(abstractToEdit ?: "") { appliedChangesToAbstract(it) }
-                }
             }
         }
 
@@ -494,22 +497,21 @@ class EditEntryActivity : BaseActivity() {
         }
     }
 
-    private fun editAbstract() {
-        abstractToEdit?.let { abstract ->
-            val editHtmlTextDialog = EditHtmlTextDialog()
-
-            editHtmlTextDialog.showDialog(supportFragmentManager, abstract, R.string.activity_edit_entry_edit_abstract_title) {
-                appliedChangesToAbstract(it)
-            }
-        }
-    }
-
-    private fun appliedChangesToAbstract(abstractTitle: String) {
-        abstractToEdit = abstractTitle
+    private fun abstractChanged(didAbstractChange: Boolean) {
+        abstractToEdit = lytAbstractPreview.getCurrentFieldValue()
         entryPropertySet()
 
         runOnUiThread {
-            updateEntryFieldChangedOnUIThread(EntryField.TitleAbstract, originalTitleAbstract != abstractToEdit)
+            updateEntryFieldChangedOnUIThread(EntryField.TitleAbstract, didAbstractChange)
+        }
+    }
+
+    private fun appliedChangesToAbstract(didAbstractChange: Boolean) {
+        abstractToEdit = lytAbstractPreview.getCurrentFieldValue()
+        entryPropertySet()
+
+        runOnUiThread {
+            updateEntryFieldChangedOnUIThread(EntryField.TitleAbstract, didAbstractChange)
             setAbstractPreviewOnUIThread()
             mayShowSaveEntryChangesHelpOnUIThread()
         }
@@ -708,7 +710,7 @@ class EditEntryActivity : BaseActivity() {
 
     private fun setAbstractPreviewOnUIThread() {
         if(abstractToEdit.isNullOrBlank()) {
-            lytAbstractPreview.setOnboardingTextOnUiThread(R.string.activity_edit_entry_abstract_onboarding_text)
+//            lytAbstractPreview.setOnboardingTextOnUiThread(R.string.activity_edit_entry_abstract_onboarding_text)
         }
         else {
             lytAbstractPreview.setFieldValueOnUiThread(abstractToEdit.getPlainTextForHtml())

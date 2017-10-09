@@ -30,11 +30,16 @@
             android:layout_marginTop="@dimen/activity_edit_entry_fields_margin_top"
         >
 
-            <net.dankito.deepthought.android.views.EntryFieldPreview
+            <net.dankito.deepthought.android.views.EditEntityField
                 android:id="@+id/lytAbstractPreview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
+                android:layout_marginLeft="@dimen/activity_edit_entry_field_margin_left"
+                android:layout_marginStart="@dimen/activity_edit_entry_field_margin_left"
+                android:layout_marginRight="@dimen/activity_edit_entry_field_margin_right"
+                android:layout_marginEnd="@dimen/activity_edit_entry_field_margin_right"
+                android:layout_marginBottom="@dimen/activity_edit_entry_field_negative_view_edit_entity_field_margin_bottom"
             />
 
             <net.dankito.deepthought.android.views.EntryFieldPreview
