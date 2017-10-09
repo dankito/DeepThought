@@ -20,17 +20,22 @@ class EditEntryActivityFloatingActionMenuButton(floatingActionMenu: FloatingActi
     }
 
 
-    fun setVisibilityOnUIThread(isInFullscreenMode: Boolean = false) {
+    fun setVisibilityOnUIThread(isInFullscreenMode: Boolean = false, hasUserEverEnteredSomeContent: Boolean) {
         if(isInFullscreenMode) {
             floatingActionMenu.floatingActionMenu.visibility = View.GONE
         }
-        else if(floatingActionMenu.fabEditEntryTags.visibility != View.GONE || floatingActionMenu.fabEditEntryReference.visibility != View.GONE ||
-                floatingActionMenu.fabEditEntryAbstract.visibility != View.GONE) {
+        else if(hasUserEverEnteredSomeContent && isAnyFloatingActionMenuButtonVisible()) {
             floatingActionMenu.floatingActionMenu.visibility = View.VISIBLE
         }
         else {
             floatingActionMenu.floatingActionMenu.visibility = View.GONE
         }
+    }
+
+    private fun isAnyFloatingActionMenuButtonVisible(): Boolean {
+        return  floatingActionMenu.fabEditEntryTags.visibility != View.GONE ||
+                floatingActionMenu.fabEditEntryReference.visibility != View.GONE ||
+                floatingActionMenu.fabEditEntryAbstract.visibility != View.GONE
     }
 
 }

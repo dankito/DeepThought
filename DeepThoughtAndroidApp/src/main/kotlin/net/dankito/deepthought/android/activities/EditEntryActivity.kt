@@ -35,6 +35,7 @@ import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishin
 import net.dankito.deepthought.model.fields.EntryField
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.news.article.ArticleExtractorManager
+import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
@@ -176,11 +177,15 @@ class EditEntryActivity : BaseActivity() {
     private lateinit var floatingActionMenu: EditEntryActivityFloatingActionMenuButton
 
 
+    private val dataManager: DataManager
+
     private var eventBusListener: EventBusListener? = null
 
 
     init {
         AppComponent.component.inject(this)
+
+        dataManager = entryService.dataManager
 
         presenter = EditEntryPresenter(entryPersister, readLaterArticleService, clipboardService, router)
     }
@@ -434,7 +439,7 @@ class EditEntryActivity : BaseActivity() {
                     dialog.restoreDialog(contentToEdit ?: "") { appliedChangesToContent(it) }
                 }
                 else if(toolbarTitle == getString(R.string.activity_edit_entry_edit_abstract_title)) {
-                    dialog.restoreDialog(abstractToEdit ?: "") { appliedChangedToAbstract(it) }
+                    dialog.restoreDialog(abstractToEdit ?: "") { appliedChangesToAbstract(it) }
                 }
             }
         }
@@ -494,12 +499,12 @@ class EditEntryActivity : BaseActivity() {
             val editHtmlTextDialog = EditHtmlTextDialog()
 
             editHtmlTextDialog.showDialog(supportFragmentManager, abstract, R.string.activity_edit_entry_edit_abstract_title) {
-                appliedChangedToAbstract(it)
+                appliedChangesToAbstract(it)
             }
         }
     }
 
-    private fun appliedChangedToAbstract(abstractTitle: String) {
+    private fun appliedChangesToAbstract(abstractTitle: String) {
         abstractToEdit = abstractTitle
         entryPropertySet()
 
@@ -632,7 +637,7 @@ class EditEntryActivity : BaseActivity() {
             showContentOnboarding = false
         }
 
-        setOnboardingTextVisibilityOnUIThread(showContentOnboarding)
+        setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread(showContentOnboarding)
     }
 
     private fun shouldShowContent(content: String?): Boolean {
@@ -764,13 +769,16 @@ class EditEntryActivity : BaseActivity() {
         setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread()
     }
 
-    private fun setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread() {
-        setOnboardingTextVisibilityOnUIThread(wbEntry.visibility != View.VISIBLE) // so that onboarding text for content is shown if one of entry's other properties is set but content not yet
+    private fun setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread(showContentOnboarding: Boolean? = null) {
+        setOnboardingTextVisibilityOnUIThread(showContentOnboarding)
         setFloatingActionButtonVisibilityOnUIThread()
     }
 
     private fun setFloatingActionButtonVisibilityOnUIThread() {
-        floatingActionMenu.setVisibilityOnUIThread(wbEntry.isInFullscreenMode)
+        // when user comes to EditEntryDialog, don't show floatingActionMenu till some content has been entered. She/he should focus on the content
+        val hasUserEverEnteredSomeContent = dataManager.localSettings.didShowAddEntryPropertiesHelp || contentToEdit.isNullOrBlank() == false
+
+        floatingActionMenu.setVisibilityOnUIThread(wbEntry.isInFullscreenMode, hasUserEverEnteredSomeContent)
     }
 
 
@@ -833,7 +841,7 @@ class EditEntryActivity : BaseActivity() {
         txtEntryContentLabel.visibility = View.GONE
         lytOnboardingText.visibility = View.GONE
         appBarLayout.visibility = View.GONE
-        floatingActionMenu.setVisibilityOnUIThread(true)
+        setFloatingActionButtonVisibilityOnUIThread()
 
         content_layout_root.invalidate()
 
