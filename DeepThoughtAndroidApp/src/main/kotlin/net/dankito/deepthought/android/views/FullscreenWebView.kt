@@ -72,6 +72,11 @@ class FullscreenWebView : WebView {
 
     var swipeListener: ((isInFullscreen: Boolean, OnSwipeTouchListener.SwipeDirection) -> Unit)? = null
 
+    /**
+     * Should return true if Android's url loading should be disabled
+     */
+    var elementClickedListener: ((elementType: Int) -> Boolean)? = null
+
 
     private var hasReachedEnd = false
 
@@ -127,6 +132,13 @@ class FullscreenWebView : WebView {
      * WebView doesn't fire click event, so we had to implement this our self
      */
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if(event.action == MotionEvent.ACTION_UP && elementClickedListener != null) {
+            val hitResult = hitTestResult
+            val type = hitResult.type
+
+            elementClickedListener?.let { return it.invoke(type) } // this is bad: in most cases type is UNKNOWN, even though clicked on images etc. -> we cannot determine if user clicked an element or simply the background
+        }
+
         if(isDialogInForeground() == false) { // touches from dialogs (e.g. TagsOnEntryDialog) if not handled there also come here -> avoid handling these
             swipeTouchListener.onTouch(this, event)
         }

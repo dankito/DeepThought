@@ -157,6 +157,8 @@ class EditEntryActivity : BaseActivity() {
 
     private var webSiteHtml: String? = null
 
+    private var isLoadingUrl = false
+
 
     private val contextHelpUtil = ContextHelpUtil()
 
@@ -377,12 +379,12 @@ class EditEntryActivity : BaseActivity() {
                     "(document.URL, '<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');")
         }
         else if(entry != null) {
-            wbvwContent.setWebViewClient(null) // now re-activate default url handling
+            urlLoadedNow()
         }
     }
 
     private fun siteFinishedLoading(url: String, html: String) {
-        runOnUiThread { wbvwContent.setWebViewClient(null) } // now reactivate default url handling
+        urlLoadedNow()
 
         // now try to extract entry content from WebView's html
         val extractionResult = entryExtractionResult ?: readLaterArticle?.entryExtractionResult
@@ -399,6 +401,15 @@ class EditEntryActivity : BaseActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private fun urlLoadedNow() {
+        isLoadingUrl = false
+        wbvwContent.elementClickedListener = null
+
+        runOnUiThread {
+            wbvwContent.setWebViewClient(null) // now reactivate default url handling
         }
     }
 
@@ -634,6 +645,8 @@ class EditEntryActivity : BaseActivity() {
         }
         else if(url != null && entry == null) { // then load url (but don't show it for an Entry)
             clearWebViewEntry()
+            isLoadingUrl = true
+            wbvwContent.elementClickedListener = { true } // disable link clicks during loading url
             wbvwContent.setWebViewClient(WebViewClient()) // to avoid that redirects open url in browser
             wbvwContent.loadUrl(url)
             showContentOnboarding = false
