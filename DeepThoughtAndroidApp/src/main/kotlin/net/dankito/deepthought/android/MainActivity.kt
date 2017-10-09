@@ -90,7 +90,7 @@ class MainActivity : BaseActivity() {
 
         setCurrentlyVisibleFragment(0) // set currentlyVisibleFragment on start otherwise back button won't work on first displayed fragment
 
-        floatingActionMenuButton = MainActivityFloatingActionMenuButton(fab_menu, summaryExtractorManager, router, eventBus)
+        floatingActionMenuButton = MainActivityFloatingActionMenuButton(floatingActionMenu, summaryExtractorManager, router, eventBus)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
