@@ -196,6 +196,8 @@
     <string name="activity_edit_reference_publishing_date_label">Veröffentlichungsdatum</string>
     <string name="activity_edit_reference_url_label">URL</string>
     <string name="activity_edit_reference_error_could_not_parse_publishing_date" formatted="false">Kann %s nicht in ein Datum umwandeln</string>
+    <string name="activity_edit_reference_alert_message_create_new_reference">Möchten Sie wirklich eine neue Quelle erstellen?\n\nDie aktuelle wird dann verworfen
+        und eine neue Quelle wird angelegt.</string>
     <string name="activity_edit_reference_alert_message_reference_contains_unsaved_changes">Quelle enthält nicht gespeicherte Änderungen.\n\nSollen diese Änderungen gespeichert
         werden?</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
@@ -207,6 +209,8 @@
     <string name="activity_edit_series_create_series">Neu …</string>
     <string name="activity_edit_series_create_series_from_isbn">Von ISBN …</string>
     <string name="activity_edit_series_title_label">Titel</string>
+    <string name="activity_edit_series_alert_message_create_new_series">Möchten Sie wirklich eine neue Reihe erstellen?\n\nDie aktuelle wird dann verworfen
+        und eine neue Reihe wird angelegt.</string>
     <string name="activity_edit_series_alert_message_series_contains_unsaved_changes">Reihe enthält nicht gespeicherte Änderungen.\n\nSollen diese Änderungen gespeichert
         werden?</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->

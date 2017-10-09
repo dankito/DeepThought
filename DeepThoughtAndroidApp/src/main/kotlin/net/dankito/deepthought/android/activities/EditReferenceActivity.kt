@@ -213,7 +213,7 @@ class EditReferenceActivity : BaseActivity() {
     }
 
     private fun setupFindExistingReferenceSection() {
-        btnCreateNewReference.setOnClickListener { createReference() } // TODO: check if previous reference contains unsaved changes
+        btnCreateNewReference.setOnClickListener { askIfANewReferenceShouldBeCreated() }
 
         rcyExistingReferencesSearchResults.addItemDecoration(HorizontalDividerItemDecoration(this))
         rcyExistingReferencesSearchResults.adapter = existingReferencesSearchResultsAdapter
@@ -403,6 +403,14 @@ class EditReferenceActivity : BaseActivity() {
 
             if(parameters.forEntry != null) {
                 lytSetEntryReferenceControls.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun askIfANewReferenceShouldBeCreated() {
+        dialogService.showConfirmationDialog(getString(R.string.activity_edit_reference_alert_message_create_new_reference)) { createNewReference ->
+            if(createNewReference) {
+                createReference() // TODO: check if previous reference contains unsaved changes
             }
         }
     }

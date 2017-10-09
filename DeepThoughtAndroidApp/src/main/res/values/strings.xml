@@ -154,6 +154,8 @@
     <string name="activity_edit_reference_publishing_date_label">Publishing date</string>
     <string name="activity_edit_reference_url_label">Url</string>
     <string name="activity_edit_reference_error_could_not_parse_publishing_date" formatted="false">Cannot parse %s to date</string>
+    <string name="activity_edit_reference_alert_message_create_new_reference">Do you really want to create a new reference?\n\nThe current reference then
+        gets discarded and a new one will be created.</string>
     <string name="activity_edit_reference_alert_message_reference_contains_unsaved_changes">Reference contains unsaved changes.\n\nShould these changes now be saved?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
     <string name="activity_edit_reference_alert_message_reference_has_been_edited">Reference has been edited (probably on a synchronized device).\n\nWhen
@@ -164,6 +166,8 @@
     <string name="activity_edit_series_create_series">New …</string>
     <string name="activity_edit_series_create_series_from_isbn">From ISBN …</string>
     <string name="activity_edit_series_title_label">Title</string>
+    <string name="activity_edit_series_alert_message_create_new_series">Do you really want to create a new Series?\n\nThe current series then
+        gets discarded and a new one will be created.</string>
     <string name="activity_edit_series_alert_message_series_contains_unsaved_changes">Reihe enthält nicht gespeicherte Änderungen.\n\nSollen diese Änderungen nun
         gespeichert werden?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->

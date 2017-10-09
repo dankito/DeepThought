@@ -158,7 +158,7 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
     }
 
     private fun setupFindExistingSeriesSection() {
-        btnCreateNewSeries.setOnClickListener { createSeries() } // TODO: check if previous series contains unsaved changes
+        btnCreateNewSeries.setOnClickListener { askIfANewSeriesShouldBeCreated() }
 
         rcyExistingSeriesSearchResults.addItemDecoration(HorizontalDividerItemDecoration(this))
         rcyExistingSeriesSearchResults.adapter = existingSeriesSearchResultsAdapter
@@ -302,6 +302,14 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
     private fun setReferenceToSetSeriesOn(reference: Reference) {
         referenceToSetSeriesOn = reference
         lytSetReferenceSeriesControls.visibility = View.VISIBLE
+    }
+
+    private fun askIfANewSeriesShouldBeCreated() {
+        dialogService.showConfirmationDialog(getString(R.string.activity_edit_series_alert_message_create_new_series)) { createNewSeries ->
+            if(createNewSeries) {
+                createSeries() // TODO: check if previous reference contains unsaved changes
+            }
+        }
     }
 
     private fun createSeries() {
