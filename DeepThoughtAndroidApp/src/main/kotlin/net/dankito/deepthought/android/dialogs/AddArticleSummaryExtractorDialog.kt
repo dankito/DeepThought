@@ -25,6 +25,7 @@ import net.dankito.feedaddressextractor.FeedAddressExtractor
 import net.dankito.feedaddressextractor.FeedType
 import net.dankito.newsreader.feed.IFeedReader
 import net.dankito.newsreader.model.FeedArticleSummary
+import net.dankito.utils.ui.IDialogService
 import java.net.URI
 import javax.inject.Inject
 
@@ -47,6 +48,10 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
 
     @Inject
     protected lateinit var router: IRouter
+
+    @Inject
+    protected lateinit var dialogService: IDialogService
+
 
     private val feedAddressesAdapter = FoundFeedAddressesAdapter()
 
@@ -220,30 +225,18 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
 
     private fun showNoFeedAddressesFoundError(feedOrWebsiteUrl: String) {
         activity?.let {
-            showErrorThreadSafe(getString(R.string.error_no_rss_or_atom_feed_found_for_url, feedOrWebsiteUrl))
+            showError(getString(R.string.error_no_rss_or_atom_feed_found_for_url, feedOrWebsiteUrl))
         }
     }
 
     private fun showError(feedOrWebsiteUrl: String, error: Exception) {
         activity?.let { // it happened that activity was not set -> getString() throws an exception
-            showErrorThreadSafe(getString(R.string.error_cannot_read_feed_or_extract_feed_addresses_from_url, feedOrWebsiteUrl, error.localizedMessage))
+            showError(getString(R.string.error_cannot_read_feed_or_extract_feed_addresses_from_url, feedOrWebsiteUrl, error.localizedMessage))
         }
     }
 
-    private fun showErrorThreadSafe(error: String) {
-        activity?.let { activity ->
-            activity.runOnUiThread { showError(activity, error) }
-        }
-    }
-
-    private fun showError(activity: Activity, error: String) {
-        val builder = AlertDialog.Builder(activity)
-
-        builder.setMessage(error)
-
-        builder.setNegativeButton(android.R.string.ok, null)
-
-        builder.create().show()
+    private fun showError(error: String) {
+        dialogService.showErrorMessage(error)
     }
 
 
