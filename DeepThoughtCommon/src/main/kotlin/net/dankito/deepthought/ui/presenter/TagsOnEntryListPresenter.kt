@@ -83,12 +83,12 @@ class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryList
 
     private fun toggleTagAffiliation(tag: Tag, tagsOnEntry: MutableCollection<Tag>, state: TagsSearcherButtonState) {
         if(tagsOnEntry.contains(tag)) {
-            if(state == TagsSearcherButtonState.REMOVE_TAGS) {
+            if(state == TagsSearcherButtonState.REMOVE_TAGS || state == TagsSearcherButtonState.TOGGLE_TAGS) {
                 tagsOnEntry.remove(tag)
             }
         }
         else {
-            if(state == TagsSearcherButtonState.ADD_TAGS) {
+            if(state == TagsSearcherButtonState.ADD_TAGS || state == TagsSearcherButtonState.TOGGLE_TAGS) {
                 tagsOnEntry.add(tag)
             }
         }

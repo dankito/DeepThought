@@ -255,6 +255,9 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
             else if(state == TagsSearcherButtonState.REMOVE_TAGS) {
                 button.setText(R.string.dialog_tags_on_entry_remove_tags)
             }
+            else if(state == TagsSearcherButtonState.TOGGLE_TAGS) {
+                button.setText(R.string.dialog_tags_on_entry_toggle_tags)
+            }
         }
     }
 

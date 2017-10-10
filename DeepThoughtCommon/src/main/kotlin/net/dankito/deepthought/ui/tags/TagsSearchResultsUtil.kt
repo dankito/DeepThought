@@ -37,14 +37,16 @@ class TagsSearchResultsUtil {
             return TagsSearcherButtonState.CREATE_TAG
         }
 
-
-        // the basic idea is - if there's at least one not added tag, we show 'Add'.
         if(containsOnlyAddedTags(tagsOnEntry, searchResults)) {
             return TagsSearcherButtonState.REMOVE_TAGS
         }
 
+        if(containsAddedTags(tagsOnEntry, searchResults) == false) {
+            return TagsSearcherButtonState.ADD_TAGS
+        }
+
         // as we have excluded all other cases above, this is the only one that remains
-        return TagsSearcherButtonState.ADD_TAGS
+        return TagsSearcherButtonState.TOGGLE_TAGS
     }
 
     private fun containsOnlyNotExistingTags(searchResults: TagsSearchResults): Boolean {
@@ -61,6 +63,17 @@ class TagsSearchResultsUtil {
         remainingMatches.removeAll(tagsOnEntry)
 
         return remainingMatches.size <= searchResults.getSearchTermsWithoutMatches().size
+    }
+
+    private fun containsAddedTags(tagsOnEntry: Collection<Tag>, searchResults: TagsSearchResults): Boolean {
+        if(tagsOnEntry.isEmpty() || searchResults.getRelevantMatchesSorted().size > (tagsOnEntry.size + searchResults.getSearchTermsWithoutMatches().size)) {
+            return false
+        }
+
+        val remainingMatches = ArrayList(searchResults.getRelevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossible())
+        remainingMatches.removeAll(tagsOnEntry)
+
+        return remainingMatches.size < searchResults.getRelevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossible().size
     }
 
 }
