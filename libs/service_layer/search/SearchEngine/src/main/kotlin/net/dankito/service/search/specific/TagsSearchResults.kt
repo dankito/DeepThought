@@ -24,7 +24,7 @@ class TagsSearchResults(val overAllSearchTerm: String) {
 
     private var relevantMatchesSortedProperty: List<Tag>? = null
 
-    private var relevantMatchesSortedButOnlyExactMatchesFromLastResultProperty: List<Tag>? = null
+    private var relevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossibleProperty: List<Tag>? = null
 
     private var exactMatchesProperty: List<Tag>? = null
 
@@ -62,13 +62,13 @@ class TagsSearchResults(val overAllSearchTerm: String) {
      * Returns almost the same result as getRelevantMatchesSorted(), but from last TagsSearchResults returns not allMatches but exactMatches.
      * As it's currently only used for tags filter (and therefore with not so many tags), we do calculate the result in memory and not via search engine
      */
-    fun getRelevantMatchesSortedButOnlyExactMatchesFromLastResult(): List<Tag> {
-        relevantMatchesSortedButOnlyExactMatchesFromLastResultProperty?.let { return it }
+    fun getRelevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossible(): List<Tag> {
+        relevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossibleProperty?.let { return it }
 
-        return determineRelevantMatchesSortedButOnlyExactMatchesFromLastResult()
+        return determineRelevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossible()
     }
 
-    private fun determineRelevantMatchesSortedButOnlyExactMatchesFromLastResult(): List<Tag> {
+    private fun determineRelevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossible(): List<Tag> {
         val matches = ArrayList<Tag>()
 
         // from last TagSearchResult only use exact matches, but from all others all matches
@@ -90,9 +90,9 @@ class TagsSearchResults(val overAllSearchTerm: String) {
             }
         }
 
-        relevantMatchesSortedButOnlyExactMatchesFromLastResultProperty = matches.sortedBy { it.name }
+        relevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossibleProperty = matches.sortedBy { it.name }
 
-        return relevantMatchesSortedButOnlyExactMatchesFromLastResultProperty!!
+        return relevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossibleProperty!!
     }
 
     fun setRelevantMatchesSorted(relevantMatchesSorted: List<Tag>) {

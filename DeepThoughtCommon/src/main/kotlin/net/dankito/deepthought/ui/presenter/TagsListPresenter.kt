@@ -106,7 +106,7 @@ class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: Da
 
     fun toggleFilterTagsOfLastSearchResult() {
         lastTagsSearchResults?.let { searchResult ->
-            toggleFilterTags(searchResult.getRelevantMatchesSortedButOnlyExactMatchesFromLastResult())
+            toggleFilterTags(searchResult.getRelevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossible())
         }
 
         lastFilteredTagsSearchResults?.let { searchResult ->
