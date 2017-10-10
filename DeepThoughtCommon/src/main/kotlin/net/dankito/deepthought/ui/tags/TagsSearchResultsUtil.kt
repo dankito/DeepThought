@@ -34,7 +34,7 @@ class TagsSearchResultsUtil {
         }
 
         if(searchResults.getSearchTermsWithoutMatches().size == searchResults.tagNamesToSearchFor.size ||
-                (searchResults.getSearchTermsWithoutMatches().size == searchResults.tagNamesToSearchFor.size - 1 && searchResults.lastResult?.hasExactMatches() == false)) { // last result contains more then just the exact matches
+                (searchResults.tagNamesToSearchFor.size == 1 && searchResults.lastResult?.hasExactMatches() == false)) { // first result doesn't have an exact match -> show Create
             return TagsSearcherButtonState.CREATE_TAG
         }
 
