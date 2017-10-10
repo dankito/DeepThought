@@ -58,8 +58,18 @@ class TagsSearchResults(val overAllSearchTerm: String) {
         return getAllMatches()
     }
 
+    fun setRelevantMatchesSorted(relevantMatchesSorted: List<Tag>) {
+        this.relevantMatchesSortedProperty = relevantMatchesSorted
+
+        // TODO: what was that good for?
+        if (results.size == 0) {
+            addSearchResult(TagsSearchResult(overAllSearchTerm, relevantMatchesSorted))
+        }
+    }
+
+
     /**
-     * Returns almost the same result as getRelevantMatchesSorted(), but from last TagsSearchResults returns not allMatches but exactMatches.
+     * Returns almost the same result as getRelevantMatchesSorted(), but from last TagsSearchResults returns only exactMatches if available. If not it returns all matches from last result as well.
      * As it's currently only used for tags filter (and therefore with not so many tags), we do calculate the result in memory and not via search engine
      */
     fun getRelevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossible(): List<Tag> {
@@ -71,37 +81,19 @@ class TagsSearchResults(val overAllSearchTerm: String) {
     private fun determineRelevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossible(): List<Tag> {
         val matches = ArrayList<Tag>()
 
-        // from last TagSearchResult only use exact matches, but from all others all matches
+        // actually the same applies for all other results as for last result: if there are exact matches, use these, otherwise allMatches
         results.forEach { result ->
-            if(result != lastResult) {
-                matches.addAll(result.allMatches)
-            }
-        }
-
-        lastResult?.let { lastResult ->
-            if(lastResult.hasExactMatches()) {
-                matches.addAll(lastResult.exactMatches)
-            }
-            else if(lastResult.hasSingleMatch()) { // ok, if lastResult doesn't have exact matches, take single match or as last resort allMatches
-                lastResult.getSingleMatch()?.let { matches.add(it) }
+            if(result.hasExactMatches()) {
+                matches.addAll(result.exactMatches)
             }
             else {
-                matches.addAll(lastResult.allMatches)
+                matches.addAll(result.allMatches)
             }
         }
 
         relevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossibleProperty = matches.sortedBy { it.name }
 
         return relevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossibleProperty!!
-    }
-
-    fun setRelevantMatchesSorted(relevantMatchesSorted: List<Tag>) {
-        this.relevantMatchesSortedProperty = relevantMatchesSorted
-
-        // TODO: what was that good for?
-        if (results.size == 0) {
-            addSearchResult(TagsSearchResult(overAllSearchTerm, relevantMatchesSorted))
-        }
     }
 
 
