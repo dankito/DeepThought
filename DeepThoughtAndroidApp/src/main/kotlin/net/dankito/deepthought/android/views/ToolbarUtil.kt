@@ -1,10 +1,12 @@
 package net.dankito.deepthought.android.views
 
+import android.support.v7.widget.ActionBarContextView
 import android.support.v7.widget.ActionMenuView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.contextual_action_mode_item_action_layout.view.*
@@ -69,13 +71,15 @@ class ToolbarUtil {
         for(i in 0..toolbarOrActionModeBar.childCount - 1) {
             val child = toolbarOrActionModeBar.getChildAt(i)
 
-            if(child is ImageView) { // ImageView on newer Androids, AppCompatImageButton on older ones
+            if(child is ImageButton || (toolbarOrActionModeBar is ActionBarContextView && child is ImageView)) { // home / close button at left of toolbar / actionModeBar
                 (child.layoutParams as? ViewGroup.MarginLayoutParams)?.setRightMargin(0)
                 child.setPadding(0, 0, 0, 0)
 
-                child.layoutParams?.width = (45 * density).toInt()
+                val newWidth = (45 * density).toInt()
+                child.minimumWidth = newWidth
+                child.layoutParams?.width = newWidth
             }
-            else if(child is LinearLayout) { // LinearLayout on newer Androids, AppCompatTextView on older ones
+            else if(child is LinearLayout) { // toolbar / actionModeBar's title
                 child.setPadding(0, 0, 0, 0)
             }
         }
