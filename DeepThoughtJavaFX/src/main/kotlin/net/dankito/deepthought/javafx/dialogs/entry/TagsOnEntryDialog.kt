@@ -150,6 +150,9 @@ class TagsOnEntryDialog : DialogFragment(), ITagsOnEntryListView {
             else if(state == TagsSearcherButtonState.REMOVE_TAGS) {
                 button.text = messages["tags.on.entry.dialog.remove.tags"]
             }
+            else if(state == TagsSearcherButtonState.TOGGLE_TAGS) {
+                button.text = messages["tags.on.entry.dialog.toggle.tags"]
+            }
         }
     }
 
