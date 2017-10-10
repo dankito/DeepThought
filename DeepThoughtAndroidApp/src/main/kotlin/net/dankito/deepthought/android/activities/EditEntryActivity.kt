@@ -635,6 +635,7 @@ class EditEntryActivity : BaseActivity() {
         val content = contentToEdit
         val url = reference?.url
         var showContentOnboarding = true
+        prgIsLoadingWebPage.visibility = View.GONE
 
         if(shouldShowContent(content)) {
             showContentInWebView(content, url)
