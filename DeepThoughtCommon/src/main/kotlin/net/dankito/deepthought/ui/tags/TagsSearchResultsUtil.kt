@@ -38,14 +38,25 @@ class TagsSearchResultsUtil {
             return TagsSearcherButtonState.CREATE_TAG
         }
 
-        val notAddedTags = ArrayList(searchResults.getAllMatches())
-        notAddedTags.removeAll(tagsOnEntry)
 
-        if(notAddedTags.size == 0 || (notAddedTags.size - searchResults.getSearchTermsWithoutMatches().size) <= 0) {
+        // the basic idea is - if there's at least one not added tag, we show 'Add'.
+        if(containsOnlyAddedTags(tagsOnEntry, searchResults)) {
             return TagsSearcherButtonState.REMOVE_TAGS
         }
 
+        // as we have excluded all other cases above, this is the only one that remains
         return TagsSearcherButtonState.ADD_TAGS
+    }
+
+    private fun containsOnlyAddedTags(tagsOnEntry: Collection<Tag>, searchResults: TagsSearchResults): Boolean {
+        if(tagsOnEntry.isEmpty() || searchResults.getAllMatches().size > (tagsOnEntry.size + searchResults.getSearchTermsWithoutMatches().size)) {
+            return false
+        }
+
+        val remainingMatches = ArrayList(searchResults.getRelevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossible())
+        remainingMatches.removeAll(tagsOnEntry)
+
+        return remainingMatches.size <= searchResults.getSearchTermsWithoutMatches().size
     }
 
 }
