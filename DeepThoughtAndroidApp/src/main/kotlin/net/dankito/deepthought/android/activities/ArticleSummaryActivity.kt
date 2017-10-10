@@ -262,8 +262,9 @@ class ArticleSummaryActivity : BaseActivity() {
     private fun showExtractorIconInActionBar(iconPath: File, config: ArticleSummaryExtractorConfig) {
         try {
             val icon = BitmapFactory.decodeFile(iconPath.path)
-            val scaledSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24.toFloat(), resources.displayMetrics).toInt()
-            val scaledIcon = Bitmap.createScaledBitmap(icon, scaledSize, scaledSize, false)
+            val scaledHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24.toFloat(), resources.displayMetrics).toInt()
+            val scaledWidth = if(icon.height == 0) scaledHeight else (scaledHeight * (icon.width / icon.height))
+            val scaledIcon = Bitmap.createScaledBitmap(icon, scaledWidth, scaledHeight, false)
 
             if(icon != scaledIcon) { // if icon didn't get scaled scaledIcon equals icon -> recycling would cause an app crash
                 icon.recycle()
