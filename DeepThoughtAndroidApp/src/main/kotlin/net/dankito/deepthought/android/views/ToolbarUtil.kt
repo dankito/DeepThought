@@ -64,6 +64,8 @@ class ToolbarUtil {
 
 
     fun reduceCloseButtonAndTitleViewSize(toolbarOrActionModeBar: ViewGroup) {
+        val density = toolbarOrActionModeBar.context.resources.displayMetrics.density
+
         for(i in 0..toolbarOrActionModeBar.childCount - 1) {
             val child = toolbarOrActionModeBar.getChildAt(i)
 
@@ -71,7 +73,7 @@ class ToolbarUtil {
                 (child.layoutParams as? ViewGroup.MarginLayoutParams)?.setRightMargin(0)
                 child.setPadding(0, 0, 0, 0)
 
-                child.layoutParams?.width = 85
+                child.layoutParams?.width = (45 * density).toInt()
             }
             else if(child is LinearLayout) { // LinearLayout on newer Androids, AppCompatTextView on older ones
                 child.setPadding(0, 0, 0, 0)
