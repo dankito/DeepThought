@@ -83,15 +83,19 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
     }
 
     private fun initiallyRetrievedSummaryExtractorConfigs() {
+        configurateExtractors()
+
+        configManagerInitialized()
+    }
+
+    private fun configurateExtractors() {
         initImplementedExtractors()
 
         initFeedExtractors()
 
         handleConfigsWithoutExtractors()
 
-        favorites = configurations.values.filter { it.isFavorite }.sortedBy { it.favoriteIndex }.toMutableList()
-
-        configManagerInitialized()
+        determineFavorites()
     }
 
     private fun initImplementedExtractors() {
@@ -146,6 +150,16 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
                 callback(null)
             }
         }
+    }
+
+    private fun determineFavorites() {
+        favorites = configurations.values.filter { it.isFavorite }.sortedBy { it.favoriteIndex }.toMutableList()
+    }
+
+
+    private fun articleSummaryExtractorConfigUpdated() {
+        readPersistedConfigs()
+        configurateExtractors()
     }
 
 
@@ -277,7 +291,7 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
         @Handler(priority = EventBusPriorities.EntityService)
         fun configChanged(change: ArticleSummaryExtractorConfigChanged) {
             if(change.source == EntityChangeSource.Synchronization) {
-                readPersistedConfigs()
+                articleSummaryExtractorConfigUpdated()
             }
         }
 
