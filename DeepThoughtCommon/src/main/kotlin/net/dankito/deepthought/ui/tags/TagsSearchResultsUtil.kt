@@ -53,7 +53,7 @@ class TagsSearchResultsUtil {
     }
 
     private fun containsOnlyAddedTags(tagsOnEntry: Collection<Tag>, searchResults: TagsSearchResults): Boolean {
-        if(tagsOnEntry.isEmpty() || searchResults.getAllMatches().size > (tagsOnEntry.size + searchResults.getSearchTermsWithoutMatches().size)) {
+        if(tagsOnEntry.isEmpty() || searchResults.getRelevantMatchesSorted().size > (tagsOnEntry.size + searchResults.getSearchTermsWithoutMatches().size)) {
             return false
         }
 
