@@ -33,7 +33,8 @@ class TagsSearchResultsUtil {
             return TagsSearcherButtonState.DISABLED
         }
 
-        if(searchResults.getSearchTermsWithoutMatches().size == searchResults.tagNamesToSearchFor.size) {
+        if(searchResults.getSearchTermsWithoutMatches().size == searchResults.tagNamesToSearchFor.size ||
+                (searchResults.getSearchTermsWithoutMatches().size == searchResults.tagNamesToSearchFor.size - 1 && searchResults.lastResult?.hasExactMatches() == false)) { // last result contains more then just the exact matches
             return TagsSearcherButtonState.CREATE_TAG
         }
 
