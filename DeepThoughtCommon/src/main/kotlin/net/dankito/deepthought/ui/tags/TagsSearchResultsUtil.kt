@@ -33,8 +33,7 @@ class TagsSearchResultsUtil {
             return TagsSearcherButtonState.DISABLED
         }
 
-        if(searchResults.getSearchTermsWithoutMatches().size == searchResults.tagNamesToSearchFor.size ||
-                (searchResults.tagNamesToSearchFor.size == 1 && searchResults.lastResult?.hasExactMatches() == false)) { // first result doesn't have an exact match -> show Create
+        if(containsOnlyNotExistingTags(searchResults)) {
             return TagsSearcherButtonState.CREATE_TAG
         }
 
@@ -46,6 +45,11 @@ class TagsSearchResultsUtil {
 
         // as we have excluded all other cases above, this is the only one that remains
         return TagsSearcherButtonState.ADD_TAGS
+    }
+
+    private fun containsOnlyNotExistingTags(searchResults: TagsSearchResults): Boolean {
+        return searchResults.getSearchTermsWithoutMatches().size == searchResults.tagNamesToSearchFor.size ||
+                (searchResults.tagNamesToSearchFor.size == 1 && searchResults.lastResult?.hasExactMatches() == false)  // first result doesn't have an exact match -> show Create
     }
 
     private fun containsOnlyAddedTags(tagsOnEntry: Collection<Tag>, searchResults: TagsSearchResults): Boolean {
