@@ -13,11 +13,15 @@ import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.OkHttpWebClient
 import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
+import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.ReferencePersister
+import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.deepthought.model.NetworkSettings
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.deepthought.service.import_export.DataImporterExporterManager
 import net.dankito.deepthought.ui.html.HtmlEditorExtractor
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.faviconextractor.FaviconComparator
@@ -68,12 +72,6 @@ class CommonModule {
         return NetworkHelper()
     }
 
-
-    @Provides
-    @Singleton
-    fun provideThreadPool() : IThreadPool {
-        return ThreadPool()
-    }
 
     @Provides
     @Singleton
@@ -139,6 +137,14 @@ class CommonModule {
     @Singleton
     fun provideArticleExtractors(webClient: IWebClient) : ArticleExtractors {
         return ArticleExtractors(webClient)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDataImporterExporterManager(searchEngine: ISearchEngine, entryPersister: EntryPersister, tagService: TagService,
+                                           referencePersister: ReferencePersister, seriesPersister: SeriesPersister)
+            : DataImporterExporterManager {
+        return DataImporterExporterManager(searchEngine, entryPersister, tagService, referencePersister, seriesPersister)
     }
 
 
