@@ -15,6 +15,8 @@ dependencies {
 
     compile project(':DeepThoughtBaseLib')
 
+    compile 'org.jbibtex:jbibtex:1.0.15'
+
 
     testCompile ("junit:junit:$junitVersion", {
         exclude group: 'org.hamcrest', module: 'hamcrest-core'
