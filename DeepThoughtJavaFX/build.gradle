@@ -63,6 +63,9 @@ dependencies {
 
     compile "ch.qos.logback:logback-core:$logbackVersion"
     compile "ch.qos.logback:logback-classic:$logbackVersion"
+
+    // TODO: mode to DeepThoughtCommon again
+    compile project(':BibTeXImporterExporter')
 }
 
 compileJava {
