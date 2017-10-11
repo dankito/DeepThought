@@ -128,7 +128,7 @@ class MainMenuBar : View() {
     private fun addImporterAndExporter() {
         importerExporterManager.importer.sortedBy { it.name }.forEach { importer ->
             mnitmFileImport.item(importer.name) {
-                action { getFileToImport()?.let { importer.import(it) } }
+                action { getFileToImport()?.let { importer.importAsync(it) { } } }
             }
         }
 
@@ -136,7 +136,7 @@ class MainMenuBar : View() {
             mnitmFileExport.item(exporter.name) {
                 action { getFileToExportTo()?.let { file ->
                     searchEngine.searchEntries(EntriesSearch {
-                        exporter.export(file, it)
+                        exporter.exportAsync(file, it)
                     })
                 } }
             }

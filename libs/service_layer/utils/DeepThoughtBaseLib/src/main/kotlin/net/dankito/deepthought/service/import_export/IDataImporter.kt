@@ -10,6 +10,8 @@ interface IDataImporter {
         get
 
 
+    fun importAsync(bibTeXFile: File, done: (Collection<Entry>) -> Unit)
+
     fun import(bibTeXFile: File): Collection<Entry>
 
 }

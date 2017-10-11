@@ -10,6 +10,8 @@ interface IDataExporter {
         get
 
 
+    fun exportAsync(destinationFile: File, entries: Collection<Entry>)
+
     fun export(destinationFile: File, entries: Collection<Entry>)
 
 }

@@ -14,6 +14,7 @@ import net.dankito.service.search.SearchEngineBase
 import net.dankito.service.search.specific.SeriesSearch
 import net.dankito.service.search.specific.TagsSearch
 import net.dankito.service.search.specific.TagsSearchResult
+import net.dankito.utils.IThreadPool
 import org.jbibtex.*
 import org.slf4j.LoggerFactory
 import java.io.File
@@ -25,7 +26,7 @@ import java.util.concurrent.TimeUnit
 
 
 class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryPersister: EntryPersister, private val tagService: TagService,
-                     private val referencePersister: ReferencePersister, private val seriesPersister: SeriesPersister) : IDataImporter {
+                     private val referencePersister: ReferencePersister, private val seriesPersister: SeriesPersister, private val threadPool: IThreadPool) : IDataImporter {
 
     companion object {
         val DateFormat = SimpleDateFormat("yyyy-MM-dd")
@@ -41,6 +42,12 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
     override val name: String
         get() = "BibTeX"
 
+
+    override fun importAsync(bibTeXFile: File, done: (Collection<Entry>) -> Unit) {
+        threadPool.runAsync {
+            done(import(bibTeXFile))
+        }
+    }
 
     override fun import(bibTeXFile: File): Collection<Entry> {
         val reader = FileReader(bibTeXFile)

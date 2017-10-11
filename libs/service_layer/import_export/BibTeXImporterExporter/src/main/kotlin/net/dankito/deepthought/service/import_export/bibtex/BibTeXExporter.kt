@@ -5,13 +5,14 @@ import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.extensions.abstractPlainText
 import net.dankito.deepthought.model.extensions.contentPlainText
 import net.dankito.deepthought.service.import_export.IDataExporter
+import net.dankito.utils.IThreadPool
 import org.jbibtex.*
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.FileWriter
 
 
-class BibTeXExporter : IDataExporter {
+class BibTeXExporter(private val threadPool: IThreadPool) : IDataExporter {
 
     companion object {
         private val log = LoggerFactory.getLogger(BibTeXExporter::class.java)
@@ -21,6 +22,12 @@ class BibTeXExporter : IDataExporter {
     override val name: String
         get() = "BibTeX"
 
+
+    override fun exportAsync(destinationFile: File, entries: Collection<Entry>) {
+        threadPool.runAsync {
+            export(destinationFile, entries)
+        }
+    }
 
     override fun export(destinationFile: File, entries: Collection<Entry>) {
         log.info("Starting to export ${entries.size} entries to $destinationFile")

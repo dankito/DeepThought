@@ -41,7 +41,10 @@ import net.dankito.service.synchronization.CouchbaseLiteSyncManager
 import net.dankito.service.synchronization.ISyncManager
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
-import net.dankito.utils.*
+import net.dankito.utils.IPlatformConfiguration
+import net.dankito.utils.IThreadPool
+import net.dankito.utils.ImageCache
+import net.dankito.utils.OsHelper
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.ISerializer
@@ -142,9 +145,9 @@ class CommonModule {
     @Provides
     @Singleton
     fun provideDataImporterExporterManager(searchEngine: ISearchEngine, entryPersister: EntryPersister, tagService: TagService,
-                                           referencePersister: ReferencePersister, seriesPersister: SeriesPersister)
+                                           referencePersister: ReferencePersister, seriesPersister: SeriesPersister, threadPool: IThreadPool)
             : DataImporterExporterManager {
-        return DataImporterExporterManager(searchEngine, entryPersister, tagService, referencePersister, seriesPersister)
+        return DataImporterExporterManager(searchEngine, entryPersister, tagService, referencePersister, seriesPersister, threadPool)
     }
 
 

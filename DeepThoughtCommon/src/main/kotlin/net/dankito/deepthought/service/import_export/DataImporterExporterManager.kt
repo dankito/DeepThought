@@ -7,11 +7,12 @@ import net.dankito.deepthought.service.import_export.bibtex.BibTeXExporter
 import net.dankito.deepthought.service.import_export.bibtex.BibTeXImporter
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
+import net.dankito.utils.IThreadPool
 import java.util.*
 
 
 class DataImporterExporterManager(private val searchEngine: ISearchEngine, private val entryPersister: EntryPersister, private val tagService: TagService,
-                                  private val referencePersister: ReferencePersister, private val seriesPersister: SeriesPersister) {
+                                  private val referencePersister: ReferencePersister, private val seriesPersister: SeriesPersister, private val threadPool: IThreadPool) {
 
     val importer: List<IDataImporter> = ArrayList<IDataImporter>()
         get
@@ -27,11 +28,11 @@ class DataImporterExporterManager(private val searchEngine: ISearchEngine, priva
 
     private fun createImporterAndExporter() {
         (importer as? MutableCollection<IDataImporter>)?.let { importer ->
-            importer.add(BibTeXImporter(searchEngine, entryPersister, tagService, referencePersister, seriesPersister))
+            importer.add(BibTeXImporter(searchEngine, entryPersister, tagService, referencePersister, seriesPersister, threadPool))
         }
 
         (exporter as? MutableCollection<IDataExporter>)?.let { exporter ->
-            exporter.add(BibTeXExporter())
+            exporter.add(BibTeXExporter(threadPool))
         }
     }
 
