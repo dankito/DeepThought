@@ -24,7 +24,6 @@ dependencies {
     compile project(':FeedAddressExtractor')
     compile project(':RomeFeedReader')
     compile project(':FaviconExtractor')
-    compile project(':BibTeXImporterExporter')
 
     compile project(':JacksonJsonSerializer')
     compile project(':DevicesDiscoverer')

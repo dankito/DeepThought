@@ -1,8 +1,10 @@
-package net.dankito.deepthought.service.import_export
+package net.dankito.deepthought.javafx.service.import_export
 
 import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.data.SeriesPersister
+import net.dankito.deepthought.service.import_export.IDataExporter
+import net.dankito.deepthought.service.import_export.IDataImporter
 import net.dankito.deepthought.service.import_export.bibtex.BibTeXExporter
 import net.dankito.deepthought.service.import_export.bibtex.BibTeXImporter
 import net.dankito.service.data.TagService

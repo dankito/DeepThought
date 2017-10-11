@@ -9,8 +9,8 @@ import javafx.stage.FileChooser
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardContent
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
+import net.dankito.deepthought.javafx.service.import_export.DataImporterExporterManager
 import net.dankito.deepthought.news.article.ArticleExtractorManager
-import net.dankito.deepthought.service.import_export.DataImporterExporterManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.EntriesSearch

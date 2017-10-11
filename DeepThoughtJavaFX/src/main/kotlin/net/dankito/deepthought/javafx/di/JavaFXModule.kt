@@ -14,11 +14,11 @@ import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardService
 import net.dankito.deepthought.javafx.service.communication.JavaFXDeviceRegistrationHandler
+import net.dankito.deepthought.javafx.service.import_export.DataImporterExporterManager
 import net.dankito.deepthought.javafx.service.network.JavaFXNetworkConnectivityManager
 import net.dankito.deepthought.javafx.service.settings.JavaFXLocalSettingsStore
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
-import net.dankito.deepthought.service.import_export.DataImporterExporterManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractorsManager
