@@ -35,6 +35,8 @@ class WebPageMetaDataExtractor(webClient: IWebClient) : ExtractorBase(webClient)
 
         document.head().select("meta[property=\"og:title\"]").first()?.attr("content")?.let { return it }
 
+        document.head().select("meta[name=\"title\"]").first()?.attr("content")?.let { return it }
+
         return document.title()
     }
 
