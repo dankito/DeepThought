@@ -3,6 +3,7 @@ package net.dankito.deepthought.service.import_export
 import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.data.SeriesPersister
+import net.dankito.deepthought.service.import_export.bibtex.BibTeXExporter
 import net.dankito.deepthought.service.import_export.bibtex.BibTeXImporter
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
@@ -27,6 +28,10 @@ class DataImporterExporterManager(private val searchEngine: ISearchEngine, priva
     private fun createImporterAndExporter() {
         (importer as? MutableCollection<IDataImporter>)?.let { importer ->
             importer.add(BibTeXImporter(searchEngine, entryPersister, tagService, referencePersister, seriesPersister))
+        }
+
+        (exporter as? MutableCollection<IDataExporter>)?.let { exporter ->
+            exporter.add(BibTeXExporter())
         }
     }
 
