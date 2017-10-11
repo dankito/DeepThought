@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 
 class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryPersister: EntryPersister, private val tagService: TagService,
@@ -83,14 +84,15 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
 
     private fun mapBibTeXEntryToEntry(bibTeXEntry: BibTeXEntry, latexParser: LaTeXParser, latexPrinter: LaTeXPrinter): Entry {
         val entry = Entry("")
+        val tags = ArrayList<Tag>()
         val reference = Reference("")
         referencePersister.saveReference(reference)
 
         bibTeXEntry.fields.forEach { key, value ->
-            mapEntryField(entry, reference, key, value, latexParser, latexPrinter)
+            mapEntryField(entry, tags, reference, key, value, latexParser, latexPrinter)
         }
 
-        entryPersister.saveEntryAsync(entry, reference, reference.series, entry.tags) {
+        entryPersister.saveEntryAsync(entry, reference, reference.series, tags) {
             log.info("Persisted entry $entry")
         }
         log.info("Created entry $entry")
@@ -98,12 +100,11 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
         return entry
     }
 
-    private fun mapEntryField(entry: Entry, reference: Reference, bibTeXKey: Key, bibTeXValue: Value, latexParser: LaTeXParser, latexPrinter: LaTeXPrinter) {
+    private fun mapEntryField(entry: Entry, tags: MutableList<Tag>, reference: Reference, bibTeXKey: Key, bibTeXValue: Value, latexParser: LaTeXParser, latexPrinter: LaTeXPrinter) {
         if (bibTeXValue is StringValue) { // TODO: parse others
             val stringValue = getStringFromBibTeXValue(bibTeXValue, latexParser, latexPrinter)
-            log.info("Parsing $bibTeXKey = $stringValue")
 
-            mapEntryStringField(entry, reference, bibTeXKey.value, stringValue)
+            mapEntryStringField(entry, tags, reference, bibTeXKey.value, stringValue)
         }
     }
 
@@ -122,14 +123,13 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
         return stringValue
     }
 
-    private fun mapEntryStringField(entry: Entry, reference: Reference, fieldName: String, fieldValue: String) {
+    private fun mapEntryStringField(entry: Entry, tags: MutableList<Tag>, reference: Reference, fieldName: String, fieldValue: String) {
         when(fieldName) {
-            // TODO: map Umlaute, {\"a} -> ae
             "annote" -> entry.content = entry.content + if(entry.content.isNotEmpty()) "\n" else "" + fieldValue
             "abstract" -> entry.abstractString = fieldValue
             "pages" -> entry.indication = fieldValue
 
-            "keywords" -> mapEntryTags(entry, fieldValue)
+            "keywords" -> mapEntryTags(tags, fieldValue)
 
             "title" -> reference.title = fieldValue
             "url" -> reference.url = fieldValue
@@ -147,14 +147,14 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
         }
     }
 
-    private fun mapEntryTags(entry: Entry, tagNames: String) {
+    private fun mapEntryTags(tags: MutableList<Tag>, tagNames: String) {
         val tagNamesAdjusted = tagNames.replace(TagsSeparator, SearchEngineBase.TagsSearchTermSeparator) // tags or often separated by ';' in BibTeX
 
         val countDownLatch = CountDownLatch(1)
 
         searchEngine.searchTags(TagsSearch(tagNamesAdjusted) { results ->
             results.results.forEach { result ->
-                addTagForTagSearchResult(result, entry)
+                tags.add(getTagForTagSearchResult(result))
             }
 
             countDownLatch.countDown()
@@ -163,16 +163,15 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
         countDownLatch.await(2, TimeUnit.MINUTES)
     }
 
-    private fun addTagForTagSearchResult(result: TagsSearchResult, entry: Entry) {
+    private fun getTagForTagSearchResult(result: TagsSearchResult): Tag {
         if(result.hasExactMatches()) {
-            result.exactMatches.sortedByDescending { it.countEntries }.firstOrNull()?.let { entry.addTag(it) }
+            result.exactMatches.sortedByDescending { it.countEntries }.firstOrNull()?.let { return it }
         }
-        else {
-            val newTag = Tag(result.searchTerm)
-            tagService.persist(newTag)
 
-            entry.addTag(newTag)
-        }
+        val newTag = Tag(result.searchTerm)
+        tagService.persist(newTag)
+
+        return newTag
     }
 
 
