@@ -77,6 +77,7 @@
         <p>Fügen Sie Ihren Einträgen Quellen hinzu, um sich zu erinnern, wo Sie den Inhalt gefunden haben.</p>
         <p>Sie haben noch keine Quellen hinzugefügt.</p>
         <p>Wählen Sie unter \'Einträge\' einen Eintrag aus und fügen Sie eine Quelle hinzu.</p>
+
     ]]>
     </string>
     <string name="tab_read_later_articles_onboarding_text"><![CDATA[
@@ -150,17 +151,17 @@
     <string name="dialog_article_summary_extractor_alert_message_delete_config" formatted="false">Nachrichtenseite %s wirklich löschen?</string>
 
     <string name="menu_share_reference_url">Link</string>
-    <string name="menu_share_entry_content">Inhalt</string>
+    <string name="menu_share_entry_content">Text</string>
 
     <string name="activity_edit_entry_title">Eintrag</string>
-    <string name="activity_edit_entry_content_label">Inhalt</string>
-    <string name="activity_edit_entry_edit_content_title">Inhalt</string>
+    <string name="activity_edit_entry_content_label">Text</string>
+    <string name="activity_edit_entry_edit_content_title">Text</string>
     <string name="activity_edit_entry_abstract_label">Titel / Zusammenfassung</string>
     <string name="activity_edit_entry_edit_abstract_title">Titel / Zusammenfassung</string>
     <string name="activity_edit_entry_reference_label">Quelle</string>
     <string name="activity_edit_entry_tags_label">Schlagworte</string>
     <string name="activity_edit_entry_tags_onboarding_text">Geben Sie Ihrem Eintrag aussagekräftige Schlagworte, um ihn später leichter wiederzufinden.</string>
-    <string name="activity_edit_entry_reference_onboarding_text">Speichern Sie, wo Sie diesen Inhalt gefunden haben.</string>
+    <string name="activity_edit_entry_reference_onboarding_text">Speichern Sie, wo Sie diesen Text gefunden haben.</string>
     <string name="activity_edit_entry_abstract_onboarding_text">Fügen Sie Ihrem Eintrag einen Titel oder eine Zusammenfassung hinzu. </string>
     <string name="activity_edit_entry_alert_message_entry_contains_unsaved_changes">Ih Eintrag enthält nicht gespeicherte Änderungen.\n\nWollen Sie Ihre Änderungen
         speichern?</string>
