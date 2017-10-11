@@ -28,11 +28,11 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
                      private val referencePersister: ReferencePersister, private val seriesPersister: SeriesPersister) : IDataImporter {
 
     companion object {
-        private val DateFormat = SimpleDateFormat("yyyy-MM-dd")
-        private val ShortDateFormat = SimpleDateFormat("yy-MM-dd")
-        private val YearFormat = SimpleDateFormat("yyyy")
+        val DateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val ShortDateFormat = SimpleDateFormat("yy-MM-dd")
+        val YearFormat = SimpleDateFormat("yyyy")
 
-        private const val TagsSeparator = ";"
+        const val TagsSeparator = ";"
 
         private val log = LoggerFactory.getLogger(BibTeXImporter::class.java)
     }
