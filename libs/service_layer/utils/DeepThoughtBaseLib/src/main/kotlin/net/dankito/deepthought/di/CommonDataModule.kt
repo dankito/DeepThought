@@ -4,11 +4,11 @@ import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.IEntityManager
+import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.ReferencePersister
+import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
-import net.dankito.deepthought.ui.presenter.util.EntryPersister
-import net.dankito.deepthought.ui.presenter.util.ReferencePersister
-import net.dankito.deepthought.ui.presenter.util.SeriesPersister
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus

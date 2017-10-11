@@ -23,7 +23,7 @@ import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.fields.ReferenceField
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditReferencePresenter
-import net.dankito.deepthought.ui.presenter.util.ReferencePersister
+import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.SeriesService

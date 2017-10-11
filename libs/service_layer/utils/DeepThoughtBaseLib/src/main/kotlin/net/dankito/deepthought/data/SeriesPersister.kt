@@ -1,6 +1,6 @@
-package net.dankito.deepthought.ui.presenter.util
+package net.dankito.deepthought.data
 
-import net.dankito.deepthought.di.CommonComponent
+import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.model.Series
 import net.dankito.service.data.SeriesService
 import net.dankito.utils.IThreadPool
@@ -14,7 +14,7 @@ class SeriesPersister(private val seriesService: SeriesService) {
 
 
     init {
-        CommonComponent.component.inject(this)
+        BaseComponent.component.inject(this)
     }
 
 
