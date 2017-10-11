@@ -11,13 +11,13 @@ import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardContent
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.import_export.DataImporterExporterManager
-import net.dankito.deepthought.service.import_export.IDataImporter
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.specific.EntriesSearch
 import net.dankito.utils.UrlUtil
 import net.dankito.utils.ui.IDialogService
 import tornadofx.*
 import java.io.File
-import java.util.*
 import javax.inject.Inject
 
 
@@ -28,6 +28,9 @@ class MainMenuBar : View() {
 
     @Inject
     protected lateinit var importerExporterManager: DataImporterExporterManager
+
+    @Inject
+    protected lateinit var searchEngine: ISearchEngine
 
     @Inject
     protected lateinit var dialogService: IDialogService
@@ -126,6 +129,16 @@ class MainMenuBar : View() {
         importerExporterManager.importer.sortedBy { it.name }.forEach { importer ->
             mnitmFileImport.item(importer.name) {
                 action { getFileToImport()?.let { importer.import(it) } }
+            }
+        }
+
+        importerExporterManager.exporter.sortedBy { it.name }.forEach { exporter ->
+            mnitmFileExport.item(exporter.name) {
+                action { getFileToExportTo()?.let { file ->
+                    searchEngine.searchEntries(EntriesSearch {
+                        exporter.export(file, it)
+                    })
+                } }
             }
         }
     }
