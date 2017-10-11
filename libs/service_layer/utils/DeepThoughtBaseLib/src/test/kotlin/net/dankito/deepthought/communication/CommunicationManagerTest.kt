@@ -35,6 +35,7 @@ import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.localization.Localization
+import net.dankito.utils.serialization.JacksonJsonSerializer
 import net.dankito.utils.services.hashing.IBase64Service
 import net.dankito.utils.services.network.NetworkConnectivityManagerBase
 import net.dankito.utils.services.network.NetworkHelper
@@ -87,6 +88,8 @@ class CommunicationManagerTest {
 
     private val fileStorageService = JavaFileStorageService()
 
+    private val serializer = JacksonJsonSerializer(mock(), mock())
+
 
     private lateinit var localDevice: Device
 
@@ -130,7 +133,7 @@ class CommunicationManagerTest {
 
     private val localEventBus = MBassadorEventBus()
 
-    private val localEntityChangedNotifier = EntityChangedNotifier(localEventBus)
+    private val localEntityChangedNotifier = EntityChangedNotifier(localEventBus, localThreadPool)
 
     private lateinit var localSynchronizedChangesHandler: SynchronizedChangesHandler
 
@@ -185,7 +188,7 @@ class CommunicationManagerTest {
 
     private val remoteEventBus = MBassadorEventBus()
 
-    private val remoteEntityChangedNotifier = EntityChangedNotifier(remoteEventBus)
+    private val remoteEntityChangedNotifier = EntityChangedNotifier(remoteEventBus, remoteThreadPool)
 
     private lateinit var remoteSynchronizedChangesHandler: SynchronizedChangesHandler
 
@@ -231,7 +234,7 @@ class CommunicationManagerTest {
             localRegistrationHandler = createDeviceRegistrationHandler(localRegisterAtRemote, localPermitRemoteToSynchronize, localCorrectChallengeResponse, localDataManager,
                     localInitialSyncManager, localDialogService, localization)
 
-            localClientCommunicator = TcpSocketClientCommunicator(localNetworkSettings, localRegistrationHandler, localEntityManager, base64Service, localThreadPool)
+            localClientCommunicator = TcpSocketClientCommunicator(localNetworkSettings, localRegistrationHandler, localEntityManager, serializer, base64Service, localThreadPool)
 
             localConnectedDevicesService = ConnectedDevicesService(localDevicesDiscoverer, localClientCommunicator, localSyncManager, localRegistrationHandler, localNetworkSettings, localEntityManager)
 
@@ -268,7 +271,7 @@ class CommunicationManagerTest {
 //            remoteRegistrationHandler = spy<IDeviceRegistrationHandler>(registrationHandlerInstance)
             remoteRegistrationHandler = registrationHandlerInstance
 
-            remoteClientCommunicator = TcpSocketClientCommunicator(remoteNetworkSettings, remoteRegistrationHandler, remoteEntityManager, base64Service, remoteThreadPool)
+            remoteClientCommunicator = TcpSocketClientCommunicator(remoteNetworkSettings, remoteRegistrationHandler, remoteEntityManager, serializer, base64Service, remoteThreadPool)
 
             remoteConnectedDevicesService = ConnectedDevicesService(remoteDevicesDiscoverer, remoteClientCommunicator, remoteSyncManager, remoteRegistrationHandler, remoteNetworkSettings, remoteEntityManager)
 
