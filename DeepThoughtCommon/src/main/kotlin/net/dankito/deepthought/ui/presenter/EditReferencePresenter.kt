@@ -3,7 +3,7 @@ package net.dankito.deepthought.ui.presenter
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.presenter.util.ReferencePersister
+import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.ui.IClipboardService

@@ -1,6 +1,6 @@
-package net.dankito.deepthought.ui.presenter.util
+package net.dankito.deepthought.data
 
-import net.dankito.deepthought.di.CommonComponent
+import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.model.Entry
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Series
@@ -9,6 +9,7 @@ import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.TagService
 import net.dankito.utils.IThreadPool
+import java.util.*
 import javax.inject.Inject
 
 
@@ -19,7 +20,7 @@ class EntryPersister(private val entryService: EntryService, private val referen
 
 
     init {
-        CommonComponent.component.inject(this)
+        BaseComponent.component.inject(this)
     }
 
 
