@@ -62,7 +62,7 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
             }
 
             override fun checkCrossReferenceResolution(key: Key?, entry: BibTeXEntry?) {
-                log.info("String resolution: $key = $entry")
+                log.info("Reference resolution: $key = $entry")
                 super.checkCrossReferenceResolution(key, entry)
             }
 
@@ -71,8 +71,6 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
         val database = bibTeXParser.parseFully(filterReader)
 
         return mapDatabaseToEntries(database)
-
-        // http://www.kleinezeitung.at/oesterreich/5298693/Maskottchen-bestraft_Verhuellungsverbot_In-Wien-musste-ein-Hai
     }
 
     private fun mapDatabaseToEntries(database: BibTeXDatabase): Collection<Entry> {
@@ -92,10 +90,7 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
             mapEntryField(entry, tags, reference, key, value, latexParser, latexPrinter)
         }
 
-        entryPersister.saveEntryAsync(entry, reference, reference.series, tags) {
-            log.info("Persisted entry $entry")
-        }
-        log.info("Created entry $entry")
+        entryPersister.saveEntryAsync(entry, reference, reference.series, tags) { }
 
         return entry
     }
