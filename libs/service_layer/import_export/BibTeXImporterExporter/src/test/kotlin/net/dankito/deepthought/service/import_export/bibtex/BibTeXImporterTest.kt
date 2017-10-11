@@ -3,11 +3,11 @@ package net.dankito.deepthought.service.import_export.bibtex
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
+import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.ReferencePersister
+import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Tag
-import net.dankito.service.data.EntryService
-import net.dankito.service.data.ReferenceService
-import net.dankito.service.data.SeriesService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.SearchEngineBase
@@ -25,15 +25,15 @@ class BibTeXImporterTest {
 
     private val searchEngineMock: ISearchEngine = mock()
 
-    private val entryServiceMock: EntryService = mock()
+    private val entryPersisterMock: EntryPersister = mock()
 
     private val tagServiceMock: TagService = mock()
 
-    private val referenceServiceMock: ReferenceService = mock()
+    private val referencePersisterMock: ReferencePersister = mock()
 
-    private val seriesServiceMock: SeriesService = mock()
+    private val seriesPersisterMock: SeriesPersister = mock()
 
-    private val importer = BibTeXImporter(searchEngineMock, entryServiceMock, tagServiceMock, referenceServiceMock, seriesServiceMock)
+    private val importer = BibTeXImporter(searchEngineMock, entryPersisterMock, tagServiceMock, referencePersisterMock, seriesPersisterMock)
 
 
     @Before
