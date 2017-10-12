@@ -4,10 +4,10 @@ import dagger.Module
 import dagger.Provides
 import net.dankito.deepthought.android.reporting.TestFairyCrashReporter
 import net.dankito.deepthought.android.service.reporting.ICrashReporter
+import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
-import net.dankito.deepthought.data.EntryPersister
 import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractorsManager
 import net.dankito.newsreader.summary.NoOpImplementedArticleSummaryExtractorsManager
 import net.dankito.service.data.ReadLaterArticleService
