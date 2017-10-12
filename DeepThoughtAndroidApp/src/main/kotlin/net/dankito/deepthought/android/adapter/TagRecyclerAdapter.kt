@@ -49,6 +49,8 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
     override fun bindViewForNullValue(viewHolder: TagViewHolder) {
         super.bindViewForNullValue(viewHolder)
 
+        viewHolder.txtTagDisplayText.text = ""
+        viewHolder.imgFilter.visibility = View.INVISIBLE
         setBackgroundForDefaultState(viewHolder.itemView)
     }
 

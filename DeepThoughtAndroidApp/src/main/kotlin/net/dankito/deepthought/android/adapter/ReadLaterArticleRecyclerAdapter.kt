@@ -24,6 +24,14 @@ class ReadLaterArticleRecyclerAdapter(private val presenter: ReadLaterArticleLis
         return viewHolder
     }
 
+    override fun bindViewForNullValue(viewHolder: ReadLaterArticleViewHolder) {
+        super.bindViewForNullValue(viewHolder)
+
+        viewHolder.txtTitle.visibility = View.GONE
+        viewHolder.txtSummary.visibility = View.GONE
+        viewHolder.imgPreviewImage.visibility = View.GONE
+    }
+
     override fun bindItemToView(viewHolder: ReadLaterArticleViewHolder, item: ReadLaterArticle) {
         viewHolder.txtTitle.visibility = if(item.referencePreview.isNullOrBlank()) View.GONE else View.VISIBLE
         viewHolder.txtTitle.text = item.referencePreview

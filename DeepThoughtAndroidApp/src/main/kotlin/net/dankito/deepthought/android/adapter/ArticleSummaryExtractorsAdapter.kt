@@ -49,6 +49,15 @@ class ArticleSummaryExtractorsAdapter(private val activity: AppCompatActivity, p
     }
 
 
+    override fun bindViewForNullValue(viewHolder: ArticleSummaryExtractorViewHolder) {
+        super.bindViewForNullValue(viewHolder)
+
+        viewHolder.imgPreviewImage.visibility = View.GONE
+        viewHolder.txtExtractorName.visibility = View.GONE
+        viewHolder.btnIsFavorite.visibility = View.GONE
+        viewHolder.txtFavoriteIndex.visibility = View.GONE
+    }
+
     override fun bindItemToView(viewHolder: ArticleSummaryExtractorViewHolder, item: ArticleSummaryExtractorConfig) {
         showExtractorIcon(viewHolder.imgPreviewImage, item)
 

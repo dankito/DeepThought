@@ -31,6 +31,14 @@ class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): Mul
         return viewHolder
     }
 
+    override fun bindViewForNonNullValue(viewHolder: EntryViewHolder, item: Entry, position: Int) {
+        super.bindViewForNonNullValue(viewHolder, item, position)
+
+        viewHolder.txtReferencePreview.visibility = View.GONE
+        viewHolder.txtEntryPreview.visibility = View.GONE
+        viewHolder.lytEntryTags.visibility = View.GONE
+    }
+
     override fun bindItemToView(viewHolder: EntryViewHolder, item: Entry) {
         val referencePreview = item.reference.preview
         viewHolder.txtReferencePreview.visibility = if (referencePreview.isNullOrBlank()) View.GONE else View.VISIBLE

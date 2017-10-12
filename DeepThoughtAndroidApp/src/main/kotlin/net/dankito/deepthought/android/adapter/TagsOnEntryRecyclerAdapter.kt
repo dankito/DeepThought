@@ -37,6 +37,7 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
     override fun bindViewForNullValue(viewHolder: TagsOnEntryViewHolder) {
         super.bindViewForNullValue(viewHolder)
 
+        viewHolder.vwIsTagOnEntry.showState("", false)
         setBackgroundForDefaultState(viewHolder.itemView)
     }
 

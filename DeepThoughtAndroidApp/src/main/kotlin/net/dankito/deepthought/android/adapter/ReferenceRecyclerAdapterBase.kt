@@ -39,6 +39,14 @@ abstract class ReferenceRecyclerAdapterBase(private val presenter: ReferencesPre
         return viewHolder
     }
 
+    override fun bindViewForNullValue(viewHolder: ReferenceViewHolder) {
+        super.bindViewForNullValue(viewHolder)
+
+        viewHolder.vwIsReferenceSetOnEntity.showState("", false)
+
+        viewHolder.imgChevronRight.visibility = View.GONE
+    }
+
     override fun bindItemToView(viewHolder: ReferenceViewHolder, item: Reference) {
         var seriesPreview: String? = item.seriesAndPublishingDatePreview
         if(seriesPreview.isNullOrBlank()) seriesPreview = null
