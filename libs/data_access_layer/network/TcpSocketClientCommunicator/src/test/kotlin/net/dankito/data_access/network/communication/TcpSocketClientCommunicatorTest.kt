@@ -1,5 +1,6 @@
 package net.dankito.data_access.network.communication
 
+import com.nhaarman.mockito_kotlin.mock
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.communication.message.DeviceInfo
@@ -44,7 +45,7 @@ class TcpSocketClientCommunicatorTest {
         val networkSettings = NetworkSettings(remoteDevice, User("Local", UUID.randomUUID().toString()))
 
         underTest = TcpSocketClientCommunicator(networkSettings, Mockito.mock(IDeviceRegistrationHandler::class.java), Mockito.mock(IEntityManager::class.java),
-                Mockito.mock(IBase64Service::class.java), ThreadPool())
+                mock(), Mockito.mock(IBase64Service::class.java), ThreadPool())
 
         val countDownLatch = CountDownLatch(1)
 

@@ -1,6 +1,6 @@
-package net.dankito.deepthought.ui.presenter.util
+package net.dankito.deepthought.data
 
-import net.dankito.deepthought.di.CommonComponent
+import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Series
 import net.dankito.service.data.ReferenceService
@@ -16,7 +16,7 @@ class ReferencePersister(private val referenceService: ReferenceService, private
 
 
     init {
-        CommonComponent.component.inject(this)
+        BaseComponent.component.inject(this)
     }
 
 

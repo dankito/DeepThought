@@ -6,7 +6,7 @@ import net.dankito.deepthought.model.extensions.getEntryPreviewWithSeriesAndPubl
 import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.util.EntryExtractionResult
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.presenter.util.EntryPersister
+import net.dankito.deepthought.data.EntryPersister
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IClipboardService

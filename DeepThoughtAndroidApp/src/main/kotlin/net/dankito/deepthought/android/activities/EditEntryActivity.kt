@@ -29,7 +29,6 @@ import net.dankito.deepthought.android.views.EditEntryActivityFloatingActionMenu
 import net.dankito.deepthought.android.views.FullscreenWebView
 import net.dankito.deepthought.android.views.ToolbarUtil
 import net.dankito.deepthought.model.*
-import net.dankito.deepthought.model.extensions.entryPreview
 import net.dankito.deepthought.model.extensions.getPlainTextForHtml
 import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.fields.EntryField
@@ -38,7 +37,7 @@ import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
-import net.dankito.deepthought.ui.presenter.util.EntryPersister
+import net.dankito.deepthought.data.EntryPersister
 import net.dankito.service.data.*
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntryChanged
