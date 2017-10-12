@@ -12,7 +12,6 @@ import net.dankito.deepthought.javafx.res.icons.IconPaths
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
-import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.data.messages.ArticleSummaryExtractorConfigChanged
 import net.dankito.service.data.messages.ReadLaterArticleChanged
@@ -32,9 +31,6 @@ class ArticleExtractorsMenuButton : View() {
         private const val ReadLaterArticlesItemTag = "ReadLaterArticlesItem"
     }
 
-
-    @Inject
-    protected lateinit var dataManager: DataManager
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
@@ -88,7 +84,7 @@ class ArticleExtractorsMenuButton : View() {
             }
         }
 
-        dataManager.addInitializationListener {
+        searchEngine.addInitializationListener {
             addOrRemoveReadLaterArticlesItem()
         }
 
