@@ -308,8 +308,6 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
     }
 
     protected fun removeEntityFromIndex(removedEntity: TEntity) {
-        log.info("Going to remove entity $removedEntity from index")
-
         removedEntity.id?.let { removeEntityFromIndex(it) }
     }
 
