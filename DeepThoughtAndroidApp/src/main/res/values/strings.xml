@@ -170,7 +170,7 @@
     <string name="activity_edit_series_use_existing_label">Select existing:</string>
     <string name="activity_edit_series_create_series">New …</string>
     <string name="activity_edit_series_create_series_from_isbn">From ISBN …</string>
-    <string name="activity_edit_series_title_label">Title</string>
+    <string name="activity_edit_series_title_label">Series title</string>
     <string name="activity_edit_series_alert_message_create_new_series">Do you really want to create a new Series?\n\nThe current series then
         gets discarded and a new one will be created.</string>
     <string name="activity_edit_series_alert_message_create_new_series_current_one_has_unsaved_changes">Current series has unsaved changes.\n\nDo you want to

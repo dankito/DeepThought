@@ -213,7 +213,7 @@
     <string name="activity_edit_series_use_existing_label">Bestehende verwenden:</string>
     <string name="activity_edit_series_create_series">Neu …</string>
     <string name="activity_edit_series_create_series_from_isbn">Von ISBN …</string>
-    <string name="activity_edit_series_title_label">Titel</string>
+    <string name="activity_edit_series_title_label">Reihentitel</string>
     <string name="activity_edit_series_alert_message_create_new_series">Möchten Sie wirklich eine neue Reihe erstellen?\n\nDie aktuelle wird dann verworfen
         und eine neue Reihe wird angelegt.</string>
     <string name="activity_edit_series_alert_message_create_new_series_current_one_has_unsaved_changes">Die aktuelle Reihe enthält nicht gespeicherte Änderungen.\n\nSollen diese
