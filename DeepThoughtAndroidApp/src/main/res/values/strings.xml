@@ -148,7 +148,7 @@
     </plurals>
 
     <string name="activity_edit_reference_title">Reference</string>
-    <string name="activity_edit_reference_use_existing_label">Use existing:</string>
+    <string name="activity_edit_reference_use_existing_label">Select existing:</string>
     <string name="activity_edit_reference_create_reference">New …</string>
     <string name="activity_edit_reference_create_reference_from_isbn">From ISBN …</string>
     <string name="activity_edit_reference_title_label">Title</string>
@@ -167,7 +167,7 @@
         you now save the reference the other changes get overwritten.</string>
 
     <string name="activity_edit_series_title">Series</string>
-    <string name="activity_edit_series_use_existing_label">Use existing:</string>
+    <string name="activity_edit_series_use_existing_label">Select existing:</string>
     <string name="activity_edit_series_create_series">New …</string>
     <string name="activity_edit_series_create_series_from_isbn">From ISBN …</string>
     <string name="activity_edit_series_title_label">Title</string>
