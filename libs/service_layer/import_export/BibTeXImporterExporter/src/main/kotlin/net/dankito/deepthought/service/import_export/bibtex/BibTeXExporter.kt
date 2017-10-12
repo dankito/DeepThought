@@ -59,7 +59,7 @@ class BibTeXExporter(private val threadPool: IThreadPool) : IDataExporter {
 
         var entryContent = entry.contentPlainText
         if(entry.abstractString.isNullOrBlank() == false) {
-            entryContent += entry.abstractPlainText + if(entryContent.isNullOrBlank()) "" else " - " + entry.contentPlainText
+            entryContent += entry.abstractPlainText + if(entryContent.isNullOrBlank()) "" else "\n\n" + entry.contentPlainText
         }
         addField(bibTeXEntry, "abstract", entryContent)
 
