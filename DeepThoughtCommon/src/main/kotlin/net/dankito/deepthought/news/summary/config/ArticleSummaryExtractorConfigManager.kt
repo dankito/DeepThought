@@ -201,9 +201,7 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
 
         for(i in 0..favorites.size - 1) {
             val favorite = favorites.get(i)
-            println("${favorite.name} index before: ${favorite.favoriteIndex}")
             favorite.favoriteIndex = i
-            println("After: ${favorite.favoriteIndex}")
         }
     }
 
