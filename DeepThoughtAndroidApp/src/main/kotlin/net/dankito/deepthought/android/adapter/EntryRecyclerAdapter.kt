@@ -31,8 +31,8 @@ class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): Mul
         return viewHolder
     }
 
-    override fun bindViewForNonNullValue(viewHolder: EntryViewHolder, item: Entry, position: Int) {
-        super.bindViewForNonNullValue(viewHolder, item, position)
+    override fun bindViewForNullValue(viewHolder: EntryViewHolder) {
+        super.bindViewForNullValue(viewHolder)
 
         viewHolder.txtReferencePreview.visibility = View.GONE
         viewHolder.txtEntryPreview.visibility = View.GONE
