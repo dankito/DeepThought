@@ -220,15 +220,15 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
     private fun checkIfContextHelpSetTagsOnEntryHasBeenShownToUserOnUiThread() {
         val dataManager = tagService.dataManager
         val localSettings = dataManager.localSettings
-        localSettings.countTagsOnEntrySearches++
+        localSettings.countTagsOnItemSearches++
 
-        if(localSettings.countTagsOnEntrySearches >= LocalSettings.ShowSetTagsOnEntryHelpOnCountSearches && localSettings.didShowSetTagsOnEntryHelp == false) {
-            localSettings.didShowSetTagsOnEntryHelp = true
+        if(localSettings.countTagsOnItemSearches >= LocalSettings.ShowSetTagsOnItemHelpOnCountSearches && localSettings.didShowSetTagsOnItemHelp == false) {
+            localSettings.didShowSetTagsOnItemHelp = true
             showContextHelpOnUiThread(R.string.context_help_set_tags_on_entry)
 
             dataManager.localSettingsUpdated()
         }
-        else if(localSettings.countTagsOnEntrySearches < LocalSettings.ShowSetTagsOnEntryHelpOnCountSearches) {
+        else if(localSettings.countTagsOnItemSearches < LocalSettings.ShowSetTagsOnItemHelpOnCountSearches) {
             dataManager.localSettingsUpdated()
         }
     }

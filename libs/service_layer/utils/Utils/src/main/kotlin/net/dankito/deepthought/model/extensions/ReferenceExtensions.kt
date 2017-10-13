@@ -1,14 +1,14 @@
 package net.dankito.deepthought.model.extensions
 
-import net.dankito.deepthought.model.Reference
 import net.dankito.deepthought.model.Series
+import net.dankito.deepthought.model.Source
 import java.text.DateFormat
 
 
 private val PublishingDateFormat = DateFormat.getDateInstance(DateFormat.SHORT)
 
 
-val Reference?.preview: String
+val Source?.preview: String
     get() {
         if(this == null) {
             return ""
@@ -24,12 +24,12 @@ val Reference?.preview: String
     }
 
 
-val Reference?.seriesAndPublishingDatePreview: String
+val Source?.seriesAndPublishingDatePreview: String
     get() {
         return getSeriesAndPublishingDatePreview()
     }
 
-fun Reference?.getSeriesAndPublishingDatePreview(series: Series? = null): String {
+fun Source?.getSeriesAndPublishingDatePreview(series: Series? = null): String {
     if(this == null) {
         return ""
     }
@@ -48,12 +48,12 @@ fun Reference?.getSeriesAndPublishingDatePreview(series: Series? = null): String
 }
 
 
-val Reference?.previewWithSeriesAndPublishingDate: String
+val Source?.previewWithSeriesAndPublishingDate: String
     get() {
         return getPreviewWithSeriesAndPublishingDate()
     }
 
-fun Reference?.getPreviewWithSeriesAndPublishingDate(series: Series? = null): String {
+fun Source?.getPreviewWithSeriesAndPublishingDate(series: Series? = null): String {
     if(this == null) {
         return ""
     }

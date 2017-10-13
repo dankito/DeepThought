@@ -40,11 +40,11 @@ data class FileLink(
     var sourceUriString = ""
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "attachedFiles")
-    var entriesAttachedTo: MutableSet<Entry> = HashSet()
+    var itemsAttachedTo: MutableSet<Item> = HashSet()
         private set
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "attachedFiles")
-    var referencesAttachedTo: MutableSet<Reference> = HashSet()
+    var sourcesAttachedTo: MutableSet<Source> = HashSet()
         private set
 
 
@@ -57,27 +57,27 @@ data class FileLink(
     private constructor() : this("")
 
 
-    val isAttachedToEntries: Boolean
-        get() = entriesAttachedTo.size > 0
+    val isAttachedToItems: Boolean
+        get() = itemsAttachedTo.size > 0
 
-    internal fun addAsAttachmentToEntry(entry: Entry): Boolean {
-        return entriesAttachedTo.add(entry)
+    internal fun addAsAttachmentToItem(item: Item): Boolean {
+        return itemsAttachedTo.add(item)
     }
 
-    internal fun removeAsAttachmentFromEntry(entry: Entry): Boolean {
-        return entriesAttachedTo.remove(entry)
+    internal fun removeAsAttachmentFromItem(item: Item): Boolean {
+        return itemsAttachedTo.remove(item)
     }
 
 
-    val isAttachedToReferences: Boolean
-        get() = referencesAttachedTo.size > 0
+    val isAttachedToSource: Boolean
+        get() = sourcesAttachedTo.size > 0
 
-    internal fun addAsAttachmentToReference(reference: Reference): Boolean {
-        return referencesAttachedTo.add(reference)
+    internal fun addAsAttachmentToSource(source: Source): Boolean {
+        return sourcesAttachedTo.add(source)
     }
 
-    internal fun removeAsAttachmentFromReference(reference: Reference): Boolean {
-        return referencesAttachedTo.remove(reference)
+    internal fun removeAsAttachmentFromSource(source: Source): Boolean {
+        return sourcesAttachedTo.remove(source)
     }
 
 }

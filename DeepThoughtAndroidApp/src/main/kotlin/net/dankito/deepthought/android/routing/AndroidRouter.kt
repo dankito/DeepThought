@@ -13,7 +13,7 @@ import net.dankito.deepthought.android.dialogs.TagEntriesListDialog
 import net.dankito.deepthought.android.service.ActivityParameterHolder
 import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.model.*
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.utils.serialization.ISerializer
@@ -29,10 +29,10 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
         }
     }
 
-    override fun showEntriesForReference(reference: Reference) {
+    override fun showEntriesForReference(source: Source) {
         activityTracker.currentActivity?.let { currentActivity ->
             val dialog = ReferenceEntriesListDialog()
-            dialog.showDialog(currentActivity.supportFragmentManager, reference)
+            dialog.showDialog(currentActivity.supportFragmentManager, source)
         }
     }
 
@@ -74,16 +74,16 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
         showEditEntryView(EntryActivityParameters(createEntry = true))
     }
 
-    override fun showEditEntryView(entry: Entry) {
-        showEditEntryView(EntryActivityParameters(entry))
+    override fun showEditEntryView(item: Item) {
+        showEditEntryView(EntryActivityParameters(item))
     }
 
     override fun showEditEntryView(article: ReadLaterArticle) {
         showEditEntryView(EntryActivityParameters(readLaterArticle = article))
     }
 
-    override fun showEditEntryView(extractionResult: EntryExtractionResult) {
-        showEditEntryView(EntryActivityParameters(entryExtractionResult = extractionResult))
+    override fun showEditEntryView(extractionResult: ItemExtractionResult) {
+        showEditEntryView(EntryActivityParameters(itemExtractionResult = extractionResult))
     }
 
     private fun showEditEntryView(parameters: EntryActivityParameters? = null) {
@@ -99,12 +99,12 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
     }
 
 
-    override fun showEditReferenceView(reference: Reference) {
-        showEditReferenceView(EditReferenceActivityParameters(reference))
+    override fun showEditReferenceView(source: Source) {
+        showEditReferenceView(EditReferenceActivityParameters(source))
     }
 
-    override fun showEditEntryReferenceView(forEntry: Entry, reference: Reference?, series: Series?) {
-        showEditReferenceView(EditReferenceActivityParameters(reference, forEntry, series))
+    override fun showEditEntryReferenceView(forItem: Item, source: Source?, series: Series?) {
+        showEditReferenceView(EditReferenceActivityParameters(source, forItem, series))
     }
 
     private fun showEditReferenceView(parameters: EditReferenceActivityParameters) {
@@ -121,8 +121,8 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
         showEditSeriesView(EditSeriesActivityParameters(series))
     }
 
-    override fun showEditReferenceSeriesView(forReference: Reference, series: Series?) {
-        showEditSeriesView(EditSeriesActivityParameters(series, forReference))
+    override fun showEditReferenceSeriesView(forSource: Source, series: Series?) {
+        showEditSeriesView(EditSeriesActivityParameters(series, forSource))
     }
 
     private fun showEditSeriesView(parameters: EditSeriesActivityParameters) {

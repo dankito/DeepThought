@@ -1,6 +1,6 @@
 package net.dankito.deepthought.service.import_export
 
-import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Item
 import java.io.File
 
 
@@ -10,8 +10,8 @@ interface IDataExporter {
         get
 
 
-    fun exportAsync(destinationFile: File, entries: Collection<Entry>)
+    fun exportAsync(destinationFile: File, items: Collection<Item>)
 
-    fun export(destinationFile: File, entries: Collection<Entry>)
+    fun export(destinationFile: File, items: Collection<Item>)
 
 }

@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.util.*
@@ -27,7 +27,7 @@ class GuardianArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(web
     }
 
 
-    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
+    override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("#article").first()?.let { articleElement ->
             articleElement.select(".mobile-only").remove()
 
@@ -39,13 +39,13 @@ class GuardianArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(web
         }
     }
 
-    private fun extractArticle(extractionResult: EntryExtractionResult, url: String, articleElement: Element, titleElement: Element, contentMainElement: Element) {
-        val entry = Entry(extractContent(contentMainElement))
+    private fun extractArticle(extractionResult: ItemExtractionResult, url: String, articleElement: Element, titleElement: Element, contentMainElement: Element) {
+        val entry = Item(extractContent(contentMainElement))
 
-        articleElement.select(".content__standfirst").first()?.let { entry.abstractString = it.text() }
+        articleElement.select(".content__standfirst").first()?.let { entry.summary = it.text() }
 
 
-        val reference = Reference(url, titleElement.text(), extractPublishingDate(contentMainElement))
+        val reference = Source(url, titleElement.text(), extractPublishingDate(contentMainElement))
 
         contentMainElement.select(".media-primary").first()?.let { reference.previewImageUrl = extractUrlFromFigureElement(it) }
 

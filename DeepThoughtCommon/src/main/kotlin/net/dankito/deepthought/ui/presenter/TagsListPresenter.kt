@@ -96,7 +96,7 @@ class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: Da
             }
         }
         else {
-            if(isTagFilterApplied()) { // after tags filter has applied no tags are shown anymore (there are no entries having these tags) -> clear tag filter
+            if(isTagFilterApplied()) { // after tags filter has applied no tags are shown anymore (there are no items having these tags) -> clear tag filter
                 clearTagFilter()
             }
         }
@@ -129,7 +129,7 @@ class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: Da
         lastFilteredTagsSearchResults?.let {
             // TODO: this is bad code, uses knowledge of  implementation details
             (it.entriesHavingFilteredTags as? FilteredTagsLazyLoadingLuceneSearchResultsList)?.entityIds?.let { allFilteredEntryIds ->
-                (tag.entries as? LazyLoadingEntitiesCollection)?.let { // TODO: here as well
+                (tag.items as? LazyLoadingEntitiesCollection)?.let { // TODO: here as well
                     val filteredEntriesOnTag = ArrayList(it.targetEntitiesIds)
                     filteredEntriesOnTag.retainAll(allFilteredEntryIds)
                     return filteredEntriesOnTag.size
@@ -137,7 +137,7 @@ class TagsListPresenter(tagsListView: ITagsListView, private val dataManager: Da
             }
         }
 
-        return 0 // there are not entries having this combination of tags
+        return 0 // there are not items having this combination of tags
     }
 
 

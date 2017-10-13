@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
@@ -22,12 +22,12 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
 
 
 
-    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
+    override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("article").first()?.let { articleElement ->
             getReadAllOnOnePageUrl(articleElement, url)?.let { allOnOnePageUrl ->
                 extractArticle(allOnOnePageUrl)?.let {
                     if(it.couldExtractContent) {
-                        extractionResult.setExtractedContent(it.entry, it.reference)
+                        extractionResult.setExtractedContent(it.item, it.source)
                         return
                     }
                 }
@@ -58,7 +58,7 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
     }
 
 
-    override fun parseArticle(extractionResult: EntryExtractionResult, headerElement: Element, articleElement: Element, url: String, title: String) {
+    override fun parseArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleElement: Element, url: String, title: String) {
         val reference = extractReference(headerElement, articleElement, url, title)
 
         val abstract = articleElement.select(".beitraganriss").first()?.text()?.trim() ?: ""
@@ -67,11 +67,11 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
         makeLinksAbsolute(articleElement, url)
         val content = articleElement.children().joinToString("") { it.outerHtml()}
 
-        extractionResult.setExtractedContent(Entry(content, abstract), reference)
+        extractionResult.setExtractedContent(Item(content, abstract), reference)
     }
 
-    private fun extractReference(headerElement: Element, articleElement: Element, url: String, title: String): Reference? {
-        val reference = Reference(url, title, extractPublishingDate(headerElement))
+    private fun extractReference(headerElement: Element, articleElement: Element, url: String, title: String): Source? {
+        val reference = Source(url, title, extractPublishingDate(headerElement))
 
         articleElement.select(".aufmacherbild img").first()?.let { previewImageElement ->
             reference.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), url)
@@ -81,14 +81,14 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
     }
 
 
-    private fun parsePrintVersionToArticle(extractionResult: EntryExtractionResult, articleElement: Element, url: String) {
+    private fun parsePrintVersionToArticle(extractionResult: ItemExtractionResult, articleElement: Element, url: String) {
         val reference = extractReferenceForPrintVersion(articleElement, url)
 
         val abstract = articleElement.ownerDocument().head().select("meta[property=og:description]").first()?.attr("content")?.trim() ?: ""
 
         val content = extractContentForPringVersion(articleElement, url)
 
-        extractionResult.setExtractedContent(Entry(content, abstract), reference)
+        extractionResult.setExtractedContent(Item(content, abstract), reference)
     }
 
     private fun extractContentForPringVersion(articleElement: Element, url: String): String {
@@ -168,11 +168,11 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
         return null
     }
 
-    private fun extractReferenceForPrintVersion(articleElement: Element, url: String): Reference {
+    private fun extractReferenceForPrintVersion(articleElement: Element, url: String): Source {
         val title = articleElement.select("h1").first()?.text()?.trim() ?: ""
         val publishingDate = articleElement.select(".publish-info").first()?.let { extractPublishingDate(it) }
 
-        val reference = Reference(url, title, publishingDate)
+        val reference = Source(url, title, publishingDate)
 
         articleElement.select(".aufmacherbild img").first()?.let { previewImageElement ->
             reference.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), url)

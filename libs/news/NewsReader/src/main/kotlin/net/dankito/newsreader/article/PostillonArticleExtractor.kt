@@ -2,9 +2,9 @@ package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.newsreader.model.ArticleSummaryItem
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -30,21 +30,21 @@ class PostillonArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
     }
 
 
-    override fun extractArticleAsync(item: ArticleSummaryItem, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
+    override fun extractArticleAsync(item: ArticleSummaryItem, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
         super.extractArticleAsync(item) {
-            it.result?.let { it.entry.abstractString = item.summary } // it's very hard to extract abstract from html code, so use that one from ArticleSummaryItem
+            it.result?.let { it.item.summary = item.summary } // it's very hard to extract abstract from html code, so use that one from ArticleSummaryItem
 
             callback(it)
         }
     }
 
-    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
+    override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select(".post").first()?.let { postElement ->
             postElement.select(".post-title")?.let { titleElement ->
                 postElement.select(".post-body").first()?.let { bodyElement ->
-                    val entry = Entry(extractContent(bodyElement))
+                    val entry = Item(extractContent(bodyElement))
 
-                    val reference = Reference(url, titleElement.text(), extractPublishingDate(postElement))
+                    val reference = Source(url, titleElement.text(), extractPublishingDate(postElement))
 
                     bodyElement.select(".separator a img").first()?.let { reference.previewImageUrl = it.attr("src") }
 

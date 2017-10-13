@@ -3,7 +3,7 @@ package net.dankito.deepthought.ui.presenter
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.CalculatedTag
 import net.dankito.deepthought.model.EntriesWithoutTagsCalculatedTag
-import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.IEntriesListView
@@ -64,7 +64,7 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
 
 
     fun searchEntries(searchTerm: String, searchInContent: Boolean = true, searchInAbstract: Boolean = true, searchInReference: Boolean = true, searchInTags: Boolean = true,
-                      searchCompleted: ((List<Entry>) -> Unit)? = null) {
+                      searchCompleted: ((List<Item>) -> Unit)? = null) {
         lastEntriesSearch?.interrupt()
         lastSearchTermProperty = searchTerm
 

@@ -1,7 +1,7 @@
 package net.dankito.service.search.writerandsearcher
 
 import net.dankito.deepthought.model.CalculatedTag
-import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Tag
 import net.dankito.service.data.TagService
 import net.dankito.service.data.messages.TagChanged
@@ -152,7 +152,7 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osH
 
 
     fun searchFilteredTags(search: FilteredTagsSearch, termsToSearchFor: List<String>) {
-        var entriesHavingFilteredTags: List<Entry> = listOf()
+        var entriesHavingFilteredTags: List<Item> = listOf()
         var tagsOnEntriesContainingFilteredTags: List<Tag> = listOf()
         val tagsToFilterForIds = search.tagsToFilterFor.map { it.id }
         val query = BooleanQuery()

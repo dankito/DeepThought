@@ -1,6 +1,6 @@
 package net.dankito.service.search
 
-import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Tag
 
 
@@ -11,10 +11,10 @@ data class SearchFilteredTagsTestData(val countTagsToFilter: Int, val countTagsO
 
     lateinit var tagsOnEntriesWithTagsToFilter: List<Tag>
 
-    lateinit var entriesOnTagsToFilter: List<Entry>
+    lateinit var entriesOnTagsToFilter: List<Item>
 
     lateinit var noiseTags: List<Tag>
 
-    lateinit var noiseEntries: List<Entry>
+    lateinit var noiseItems: List<Item>
 
 }

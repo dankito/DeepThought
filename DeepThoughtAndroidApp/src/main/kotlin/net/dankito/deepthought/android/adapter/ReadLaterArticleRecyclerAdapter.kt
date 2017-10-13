@@ -33,10 +33,10 @@ class ReadLaterArticleRecyclerAdapter(private val presenter: ReadLaterArticleLis
     }
 
     override fun bindItemToView(viewHolder: ReadLaterArticleViewHolder, item: ReadLaterArticle) {
-        viewHolder.txtTitle.visibility = if(item.referencePreview.isNullOrBlank()) View.GONE else View.VISIBLE
-        viewHolder.txtTitle.text = item.referencePreview
+        viewHolder.txtTitle.visibility = if(item.sourcePreview.isNullOrBlank()) View.GONE else View.VISIBLE
+        viewHolder.txtTitle.text = item.sourcePreview
 
-        viewHolder.txtSummary.text = item.entryPreview
+        viewHolder.txtSummary.text = item.itemPreview
         viewHolder.txtSummary.maxLines = 5
 
         viewHolder.imgPreviewImage.visibility = View.VISIBLE
@@ -52,7 +52,7 @@ class ReadLaterArticleRecyclerAdapter(private val presenter: ReadLaterArticleLis
             closeSwipeView(viewHolder)
         }
 
-        viewHolder.btnShareReadLaterArticle.visibility = if(item.entryExtractionResult?.reference?.url?.isNullOrBlank() ?: false) View.GONE else View.VISIBLE
+        viewHolder.btnShareReadLaterArticle.visibility = if(item.itemExtractionResult?.source?.url?.isNullOrBlank() ?: false) View.GONE else View.VISIBLE
         viewHolder.btnShareReadLaterArticle.setOnClickListener {
             presenter.copyReferenceUrlToClipboard(item) // TODO: actually there should also be the option to share article's text
             closeSwipeView(viewHolder)

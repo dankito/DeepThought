@@ -1,6 +1,6 @@
 package net.dankito.service.search
 
-import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Tag
 import net.dankito.service.search.specific.FilteredTagsSearch
 import net.dankito.service.search.specific.FilteredTagsSearchResult
@@ -98,7 +98,7 @@ class SearchFilteredTagsIntegrationTest : LuceneSearchEngineIntegrationTestBase(
 
         testData.noiseTags = createNoiseTags(testData.countNoiseTags)
 
-        testData.noiseEntries = createNoiseEntries(testData.countNoiseEntries, testData.noiseTags, testData.tagsOnEntriesWithTagsToFilter)
+        testData.noiseItems = createNoiseEntries(testData.countNoiseEntries, testData.noiseTags, testData.tagsOnEntriesWithTagsToFilter)
     }
 
     private fun createTagsToFilter(countTagsToFilter: Int): MutableList<Tag> {
@@ -125,13 +125,13 @@ class SearchFilteredTagsIntegrationTest : LuceneSearchEngineIntegrationTestBase(
         return tagsOnEntriesWithTagsToFilter
     }
 
-    private fun createEntriesOnTagsToFilter(countEntriesOnTagsToFilter: Int, tagsToFilter: List<Tag>, tagsOnEntriesWithTagsToFilter: List<Tag>): List<Entry> {
-        val entriesOnTagsToFilter = mutableListOf<Entry>()
+    private fun createEntriesOnTagsToFilter(countEntriesOnTagsToFilter: Int, tagsToFilter: List<Tag>, tagsOnEntriesWithTagsToFilter: List<Tag>): List<Item> {
+        val entriesOnTagsToFilter = mutableListOf<Item>()
         val tagsOnEntriesWithTagsToFilterNoSetOnEntriesYet = ArrayList(tagsOnEntriesWithTagsToFilter)
         val tagsRandom = Random(System.nanoTime())
 
         for(i in 1..countEntriesOnTagsToFilter) {
-            val entryOnTagToFilter = Entry("Filter_" + i)
+            val entryOnTagToFilter = Item("Filter_" + i)
 
             entryOnTagToFilter.setAllTags(tagsToFilter)
 
@@ -146,7 +146,7 @@ class SearchFilteredTagsIntegrationTest : LuceneSearchEngineIntegrationTestBase(
             entriesOnTagsToFilter.add(entryOnTagToFilter)
         }
 
-        if(tagsOnEntriesWithTagsToFilterNoSetOnEntriesYet.isNotEmpty() && entriesOnTagsToFilter.isNotEmpty()) { // if not all tags from tagsOnEntriesWithTagsToFilter have been set on entries, do it now
+        if(tagsOnEntriesWithTagsToFilterNoSetOnEntriesYet.isNotEmpty() && entriesOnTagsToFilter.isNotEmpty()) { // if not all tags from tagsOnEntriesWithTagsToFilter have been set on items, do it now
             val entry = entriesOnTagsToFilter[0]
             tagsOnEntriesWithTagsToFilterNoSetOnEntriesYet.forEach { entry.addTag(it) }
             entryService.update(entry)
@@ -170,12 +170,12 @@ class SearchFilteredTagsIntegrationTest : LuceneSearchEngineIntegrationTestBase(
         return noiseTags
     }
 
-    private fun createNoiseEntries(countNoiseEntries: Int, noiseTags: List<Tag>, tagsOnEntriesWithTagsToFilter: List<Tag>): List<Entry> {
-        val noiseEntries = mutableListOf<Entry>()
+    private fun createNoiseEntries(countNoiseEntries: Int, noiseTags: List<Tag>, tagsOnEntriesWithTagsToFilter: List<Tag>): List<Item> {
+        val noiseEntries = mutableListOf<Item>()
         val tagsRandom = Random(System.nanoTime())
 
         for(i in 1..countNoiseEntries) {
-            val noiseEntry = Entry("Noise_" + i)
+            val noiseEntry = Item("Noise_" + i)
 
             if(noiseTags.isNotEmpty()) {
                 val countNoiseTags = tagsRandom.nextInt(noiseTags.size)

@@ -6,10 +6,10 @@ import javax.persistence.*
 import kotlin.collections.ArrayList
 
 
-@Entity(name = TableConfig.ReferenceTableName)
-data class Reference(
+@Entity(name = TableConfig.SourceTableName)
+data class Source(
 
-        @Column(name = TableConfig.ReferenceTitleColumnName)
+        @Column(name = TableConfig.SourceTitleColumnName)
         var title: String
 
 ) : BaseEntity() {
@@ -19,72 +19,72 @@ data class Reference(
     }
 
 
-    @Column(name = TableConfig.ReferenceSubTitleColumnName)
+    @Column(name = TableConfig.SourceSubTitleColumnName)
     var subTitle: String = ""
 
-    @Column(name = TableConfig.ReferenceUrlColumnName)
+    @Column(name = TableConfig.SourceUrlColumnName)
     var url: String? = null
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.MERGE))
-    @JoinColumn(name = TableConfig.ReferenceSeriesJoinColumnName)
+    @JoinColumn(name = TableConfig.SourceSeriesJoinColumnName)
     var series: Series? = null
         set(series) {
-            field?.removeReference(this)
+            field?.removeSource(this)
 
             field = series
 
-            series?.addReference(this)
+            series?.addSource(this)
         }
 
-    @Column(name = TableConfig.ReferenceIssueColumnName)
+    @Column(name = TableConfig.SourceIssueColumnName)
     var issue: String? = null
 
-    @Column(name = TableConfig.ReferencePublishingDateColumnName)
+    @Column(name = TableConfig.SourcePublishingDateColumnName)
     @Temporal(TemporalType.TIMESTAMP)
     var publishingDate: Date? = null
 
-    @Column(name = TableConfig.ReferencePublishingDateStringColumnName)
+    @Column(name = TableConfig.SourcePublishingDateStringColumnName)
     var publishingDateString: String? = null
         private set
 
 
-    @Column(name = TableConfig.ReferenceAbstractColumnName)
+    @Column(name = TableConfig.SourceAbstractColumnName)
     var abstractString: String? = null
 
-    @Column(name = TableConfig.ReferenceLengthColumnName)
+    @Column(name = TableConfig.SourceLengthColumnName)
     var length: String? = null
 
-    @Column(name = TableConfig.ReferenceLastAccessDateColumnName)
+    @Column(name = TableConfig.SourceLastAccessDateColumnName)
     @Temporal(TemporalType.TIMESTAMP)
     var lastAccessDate: Date? = null
 
 
-    @Column(name = TableConfig.ReferenceTableOfContentsColumnName)
+    @Column(name = TableConfig.SourceTableOfContentsColumnName)
     @Lob // TODO: evaluate if we should save it as LOB or not
     var tableOfContents: String? = null
 
-    @Column(name = TableConfig.ReferenceIsbnOrIssnColumnName)
+    @Column(name = TableConfig.SourceIsbnOrIssnColumnName)
     var isbnOrIssn: String? = null
 
-    @Column(name = TableConfig.ReferenceNotesColumnName)
+    @Column(name = TableConfig.SourceNotesColumnName)
     var notes: String? = null
 
 
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "reference")
-    var entries: MutableList<Entry> = ArrayList() // TODO: don't expose a mutable list to the outside
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "source")
+    var items: MutableList<Item> = ArrayList() // TODO: don't expose a mutable list to the outside
         private set
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = TableConfig.ReferenceBaseAttachedFileJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.ReferenceBaseAttachedFileJoinTableReferenceBaseIdColumnName)), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.ReferenceBaseAttachedFileJoinTableFileLinkIdColumnName)))
+    @JoinTable(name = TableConfig.SourceAttachedFileJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.SourceAttachedFileJoinTableSourceBaseIdColumnName)), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.SourceAttachedFileJoinTableFileLinkIdColumnName)))
     var attachedFiles: MutableList<FileLink> = ArrayList()
         private set
 
-    @Column(name = TableConfig.ReferencePreviewImageUrlColumnName)
+    @Column(name = TableConfig.SourcePreviewImageUrlColumnName)
     var previewImageUrl: String? = null
 
     @OneToOne(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
-    @JoinColumn(name = TableConfig.ReferencePreviewImageJoinColumnName)
+    @JoinColumn(name = TableConfig.SourcePreviewImageJoinColumnName)
     var previewImage: FileLink? = null
 
 
@@ -105,16 +105,16 @@ data class Reference(
     }
 
 
-    fun hasEntries(): Boolean {
-        return entries.size > 0
+    fun hasItems(): Boolean {
+        return items.size > 0
     }
 
-    internal fun addEntry(entry: Entry): Boolean {
-        return entries.add(entry)
+    internal fun addItem(item: Item): Boolean {
+        return items.add(item)
     }
 
-    internal fun removeEntry(entry: Entry): Boolean {
-        return entries.remove(entry)
+    internal fun removeItem(item: Item): Boolean {
+        return items.remove(item)
     }
 
 
@@ -124,7 +124,7 @@ data class Reference(
 
     fun addAttachedFile(file: FileLink): Boolean {
         if (attachedFiles.add(file)) {
-            file.addAsAttachmentToReference(this)
+            file.addAsAttachmentToSource(this)
 
             return true
         }
@@ -134,7 +134,7 @@ data class Reference(
 
     fun removeAttachedFile(file: FileLink): Boolean {
         if (attachedFiles.remove(file)) {
-            file.removeAsAttachmentFromReference(this)
+            file.removeAsAttachmentFromSource(this)
 
             return true
         }

@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
@@ -29,14 +29,14 @@ class NetzPolitikOrgArticleExtractor(webClient: IWebClient) : ArticleExtractorBa
     }
 
 
-    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
+    override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("article").first()?.let { articleElement ->
             val title = articleElement.select(".entry-title").first()?.text() ?: ""
-            val reference = Reference(url, title, parsePublishingDate(articleElement), articleElement.select("figure img").first()?.attr("src"))
+            val reference = Source(url, title, parsePublishingDate(articleElement), articleElement.select("figure img").first()?.attr("src"))
 
             val abstract = articleElement.select(".entry-excerpt").first()?.html() ?: ""
 
-            val entry = Entry(extractContent(articleElement), abstract)
+            val entry = Item(extractContent(articleElement), abstract)
 
             extractionResult.setExtractedContent(entry, reference)
         }

@@ -1,7 +1,7 @@
 package net.dankito.deepthought.data
 
 import net.dankito.deepthought.di.BaseComponent
-import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Series
 import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.SeriesService
@@ -20,48 +20,48 @@ class ReferencePersister(private val referenceService: ReferenceService, private
     }
 
 
-    fun saveReferenceAsync(reference: Reference, series: Series?, callback: (Boolean) -> Unit) {
+    fun saveReferenceAsync(source: Source, series: Series?, callback: (Boolean) -> Unit) {
         threadPool.runAsync {
-            callback(saveReference(reference, series))
+            callback(saveReference(source, series))
         }
     }
 
-    fun saveReference(reference: Reference): Boolean {
-        return saveReference(reference, reference.series)
+    fun saveReference(source: Source): Boolean {
+        return saveReference(source, source.series)
     }
 
-    fun saveReference(reference: Reference, series: Series?, doChangesAffectDependentEntities: Boolean = true): Boolean {
-        if(reference.series != null && reference.series?.isPersisted() == false) { // series has been deleted in the meantime
-            reference.series?.let { series ->
-                reference.series = null
+    fun saveReference(source: Source, series: Series?, doChangesAffectDependentEntities: Boolean = true): Boolean {
+        if(source.series != null && source.series?.isPersisted() == false) { // series has been deleted in the meantime
+            source.series?.let { series ->
+                source.series = null
 
                 seriesService.persist(series)
 
-                reference.series = series
+                source.series = series
             }
 
         }
 
-        val previousSeries = reference.series
+        val previousSeries = source.series
         if(previousSeries != null && previousSeries?.id != series?.id) { // remove previous series
-            reference.series = null
+            source.series = null
             seriesService.update(previousSeries)
         }
 
         if(previousSeries?.id != series?.id) {
-            reference.series = series
+            source.series = series
         }
 
-        val isReferencePersisted = reference.isPersisted()
+        val isReferencePersisted = source.isPersisted()
         if(isReferencePersisted == false) {
-            referenceService.persist(reference)
+            referenceService.persist(source)
         }
         else {
-            referenceService.update(reference, doChangesAffectDependentEntities)
+            referenceService.update(source, doChangesAffectDependentEntities)
         }
 
         if(series?.id != previousSeries?.id || isReferencePersisted == false) {
-            series?.let { seriesService.update(series) } // reference is now persisted so series needs an update to store reference's id
+            series?.let { seriesService.update(series) } // source is now persisted so series needs an update to store source's id
         }
 
         return true

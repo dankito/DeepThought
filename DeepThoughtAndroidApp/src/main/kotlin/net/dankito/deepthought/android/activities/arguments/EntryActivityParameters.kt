@@ -1,11 +1,11 @@
 package net.dankito.deepthought.android.activities.arguments
 
-import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.ReadLaterArticle
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.util.ItemExtractionResult
 
 
-data class EntryActivityParameters(val entry: Entry? = null,
+data class EntryActivityParameters(val item: Item? = null,
                                    val readLaterArticle: ReadLaterArticle? = null,
-                                   val entryExtractionResult: EntryExtractionResult? = null,
+                                   val itemExtractionResult: ItemExtractionResult? = null,
                                    val createEntry: Boolean = false)

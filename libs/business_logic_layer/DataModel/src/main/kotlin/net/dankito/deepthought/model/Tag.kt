@@ -23,8 +23,8 @@ open class Tag(
     @Column(name = TableConfig.TagDescriptionColumnName)
     var description = ""
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags") // TODO: has cascade also to be set to { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH } as in Entry?
-    var entries: List<Entry> = ArrayList() // TODO: don't expose a mutable list to the outside
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags") // TODO: has cascade also to be set to { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH } as in Item?
+    var items: List<Item> = ArrayList() // TODO: don't expose a mutable list to the outside
         protected set
 
     init {
@@ -35,28 +35,28 @@ open class Tag(
     private constructor() : this("")
 
 
-    fun hasEntries(): Boolean {
-        return countEntries > 0
+    fun hasItems(): Boolean {
+        return countItems > 0
     }
 
-    val countEntries: Int
-        get() = entries.size
+    val countItems: Int
+        get() = items.size
 
-    internal fun addEntry(entry: Entry): Boolean {
-        // i know this is not perfect as added Entry could have a smaller EntryIndex than already added ones
-        (entries as? MutableList<Entry>)?.add(0, entry) // but sorting is not an option as with sorting all Entries would have to be loaded witch is bad on Tags with a lot of Entries
+    internal fun addItem(item: Item): Boolean {
+        // i know this is not perfect as added Item could have a smaller ItemIndex than already added ones
+        (items as? MutableList<Item>)?.add(0, item) // but sorting is not an option as with sorting all Items would have to be loaded witch is bad on Tags with a lot of Items
 
         return true
     }
 
-    internal fun removeEntry(entry: Entry): Boolean {
-        return (entries as? MutableList<Entry>)?.remove(entry) ?: false
+    internal fun removeItem(item: Item): Boolean {
+        return (items as? MutableList<Item>)?.remove(item) ?: false
     }
 
 
     val displayText: String
         @Transient
-        get() = "$name ($countEntries)"
+        get() = "$name ($countItems)"
 
     override fun toString(): String {
         return displayText

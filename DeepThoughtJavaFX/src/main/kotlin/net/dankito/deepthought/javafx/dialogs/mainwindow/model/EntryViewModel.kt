@@ -3,15 +3,15 @@ package net.dankito.deepthought.javafx.dialogs.mainwindow.model
 import javafx.beans.property.SimpleLongProperty
 import javafx.beans.property.SimpleStringProperty
 import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
-import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Item
 import tornadofx.*
 
 
-class EntryViewModel : ItemViewModel<Entry>() {
+class EntryViewModel : ItemViewModel<Item>() {
 
-    val index = bind { SimpleLongProperty(item?.entryIndex ?: 0) }
+    val index = bind { SimpleLongProperty(item?.itemIndex ?: 0) }
 
-    val reference = bind { SimpleStringProperty(item?.reference.previewWithSeriesAndPublishingDate ?: "") }
+    val reference = bind { SimpleStringProperty(item?.source.previewWithSeriesAndPublishingDate ?: "") }
 
     val preview = bind { SimpleStringProperty(item?.preview ?: "") }
 

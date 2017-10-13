@@ -1,6 +1,6 @@
 package net.dankito.service.data.messages
 
-import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Source
 
 
-class ReferenceChanged(entity: Reference, changeType: EntityChangeType, source: EntityChangeSource): EntityChanged<Reference>(entity, changeType, source)
+class ReferenceChanged(entity: Source, changeType: EntityChangeType, source: EntityChangeSource): EntityChanged<Source>(entity, changeType, source)

@@ -114,7 +114,7 @@ class MainActivity : BaseActivity() {
         super.onResume()
 
         clearAllActivityResults() // important, so that the results from Activities opened from one of the tabs aren't displayed later in another activity (e.g. opening
-        // EditReferenceActivity from ReferenceListView tab first, then going to EditEntryActivity -> Reference of first called EditReferenceActivity is then shown in second EditEntryActivity
+        // EditReferenceActivity from ReferenceListView tab first, then going to EditEntryActivity -> Source of first called EditReferenceActivity is then shown in second EditEntryActivity
     }
 
     override fun onBackPressed() {

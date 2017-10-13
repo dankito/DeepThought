@@ -3,9 +3,9 @@ package net.dankito.deepthought.service.import_export.bibtex
 import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.data.SeriesPersister
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Series
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.service.import_export.IDataImporter
 import net.dankito.service.data.TagService
@@ -44,13 +44,13 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
         get() = "BibTeX"
 
 
-    override fun importAsync(bibTeXFile: File, done: (Collection<Entry>) -> Unit) {
+    override fun importAsync(bibTeXFile: File, done: (Collection<Item>) -> Unit) {
         threadPool.runAsync {
             done(import(bibTeXFile))
         }
     }
 
-    override fun import(bibTeXFile: File): Collection<Entry> {
+    override fun import(bibTeXFile: File): Collection<Item> {
         val reader = FileReader(bibTeXFile)
         val filterReader = CharacterFilterReader(reader)
 
@@ -73,17 +73,17 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
         return mapDatabaseToEntries(database)
     }
 
-    private fun mapDatabaseToEntries(database: BibTeXDatabase): Collection<Entry> {
+    private fun mapDatabaseToEntries(database: BibTeXDatabase): Collection<Item> {
         val latexParser = LaTeXParser()
         val latexPrinter = LaTeXPrinter()
 
         return database.entries.map { mapEntry -> mapBibTeXEntryToEntry(mapEntry.value, latexParser, latexPrinter) }.filterNotNull()
     }
 
-    private fun mapBibTeXEntryToEntry(bibTeXEntry: BibTeXEntry, latexParser: LaTeXParser, latexPrinter: LaTeXPrinter): Entry {
-        val entry = Entry("")
+    private fun mapBibTeXEntryToEntry(bibTeXEntry: BibTeXEntry, latexParser: LaTeXParser, latexPrinter: LaTeXPrinter): Item {
+        val entry = Item("")
         val tags = ArrayList<Tag>()
-        val reference = Reference("")
+        val reference = Source("")
         referencePersister.saveReference(reference)
 
         bibTeXEntry.fields.forEach { key, value ->
@@ -95,11 +95,11 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
         return entry
     }
 
-    private fun mapEntryField(entry: Entry, tags: MutableList<Tag>, reference: Reference, bibTeXKey: Key, bibTeXValue: Value, latexParser: LaTeXParser, latexPrinter: LaTeXPrinter) {
+    private fun mapEntryField(item: Item, tags: MutableList<Tag>, source: Source, bibTeXKey: Key, bibTeXValue: Value, latexParser: LaTeXParser, latexPrinter: LaTeXPrinter) {
         if (bibTeXValue is StringValue) { // TODO: parse others
             val stringValue = getStringFromBibTeXValue(bibTeXValue, latexParser, latexPrinter)
 
-            mapEntryStringField(entry, tags, reference, bibTeXKey.value, stringValue)
+            mapEntryStringField(item, tags, source, bibTeXKey.value, stringValue)
         }
     }
 
@@ -118,24 +118,24 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
         return stringValue
     }
 
-    private fun mapEntryStringField(entry: Entry, tags: MutableList<Tag>, reference: Reference, fieldName: String, fieldValue: String) {
+    private fun mapEntryStringField(item: Item, tags: MutableList<Tag>, source: Source, fieldName: String, fieldValue: String) {
         when(fieldName) {
-            "annote" -> entry.content = entry.content + if(entry.content.isNotEmpty()) "\n" else "" + fieldValue
-            "abstract" -> entry.abstractString = fieldValue
-            "pages" -> entry.indication = fieldValue
+            "annote" -> item.content = item.content + if(item.content.isNotEmpty()) "\n" else "" + fieldValue
+            "abstract" -> item.summary = fieldValue
+            "pages" -> item.indication = fieldValue
 
             "keywords" -> mapEntryTags(tags, fieldValue)
 
-            "title" -> reference.title = fieldValue
-            "url" -> reference.url = fieldValue
-            "year" -> setReferencePublishingDate(reference, fieldValue)
-            "urldate" -> setReferenceLastAccessDate(reference, fieldValue)
-            "number" -> reference.issue = fieldValue
-            "isbn" -> reference.isbnOrIssn = fieldValue
-            "issn" -> reference.isbnOrIssn = fieldValue
+            "title" -> source.title = fieldValue
+            "url" -> source.url = fieldValue
+            "year" -> setReferencePublishingDate(source, fieldValue)
+            "urldate" -> setReferenceLastAccessDate(source, fieldValue)
+            "number" -> source.issue = fieldValue
+            "isbn" -> source.isbnOrIssn = fieldValue
+            "issn" -> source.isbnOrIssn = fieldValue
 
-            "series" -> setEntrySeries(reference, fieldValue)
-            "journal" -> setEntrySeries(reference, fieldValue)
+            "series" -> setEntrySeries(source, fieldValue)
+            "journal" -> setEntrySeries(source, fieldValue)
 
             // TODO
             "file" -> { }
@@ -160,7 +160,7 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
 
     private fun getTagForTagSearchResult(result: TagsSearchResult): Tag {
         if(result.hasExactMatches()) {
-            result.exactMatches.sortedByDescending { it.countEntries }.firstOrNull()?.let { return it }
+            result.exactMatches.sortedByDescending { it.countItems }.firstOrNull()?.let { return it }
         }
 
         val newTag = Tag(result.searchTerm)
@@ -170,11 +170,11 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
     }
 
 
-    private fun setEntrySeries(reference: Reference, seriesTitle: String) {
+    private fun setEntrySeries(source: Source, seriesTitle: String) {
         val countDownLatch = CountDownLatch(1)
 
         searchEngine.searchSeries(SeriesSearch(seriesTitle) { result ->
-            addSeriesForSearchResult(reference, seriesTitle, result)
+            addSeriesForSearchResult(source, seriesTitle, result)
 
             countDownLatch.countDown()
         })
@@ -182,28 +182,28 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
         countDownLatch.await(2, TimeUnit.SECONDS)
     }
 
-    private fun addSeriesForSearchResult(reference: Reference, seriesTitle: String, result: List<Series>) {
-        result.filter { it.title.toLowerCase() == seriesTitle.toLowerCase() }.sortedByDescending { it.countReferences }.firstOrNull()?.let {
-            reference.series = it
+    private fun addSeriesForSearchResult(source: Source, seriesTitle: String, result: List<Series>) {
+        result.filter { it.title.toLowerCase() == seriesTitle.toLowerCase() }.sortedByDescending { it.countSources }.firstOrNull()?.let {
+            source.series = it
         }
 
-        if(reference.series == null) { // no series with that name found
+        if(source.series == null) { // no series with that name found
             val series = Series(seriesTitle)
             seriesPersister.saveSeries(series)
 
-            reference.series = series
+            source.series = series
         }
     }
 
 
-    private fun setReferencePublishingDate(reference: Reference, publishingDateString: String) {
+    private fun setReferencePublishingDate(source: Source, publishingDateString: String) {
         val publishingDate = tryToParseDateString(publishingDateString)
 
-        reference.setPublishingDate(publishingDate, publishingDateString)
+        source.setPublishingDate(publishingDate, publishingDateString)
     }
 
-    private fun setReferenceLastAccessDate(reference: Reference, lastAccessDateString: String) {
-        reference.lastAccessDate = tryToParseDateString(lastAccessDateString)
+    private fun setReferenceLastAccessDate(source: Source, lastAccessDateString: String) {
+        source.lastAccessDate = tryToParseDateString(lastAccessDateString)
     }
 
     private fun tryToParseDateString(dateString: String): Date? {

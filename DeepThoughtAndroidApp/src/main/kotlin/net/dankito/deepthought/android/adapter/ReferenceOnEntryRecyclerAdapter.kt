@@ -1,12 +1,12 @@
 package net.dankito.deepthought.android.adapter
 
-import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.presenter.ReferencesPresenterBase
 
 
 class ReferenceOnEntryRecyclerAdapter(presenter: ReferencesPresenterBase): ReferenceRecyclerAdapterBase(presenter) {
 
-    var selectedReference: Reference? = null
+    var selectedSource: Source? = null
 
 
     override val shouldShowImageIsReferenceAddedToEntry: Boolean
@@ -19,8 +19,8 @@ class ReferenceOnEntryRecyclerAdapter(presenter: ReferencesPresenterBase): Refer
         get() = false
 
 
-    override fun isAddedToEntity(reference: Reference): Boolean {
-        return selectedReference?.id == reference.id
+    override fun isAddedToEntity(source: Source): Boolean {
+        return selectedSource?.id == source.id
     }
 
 }

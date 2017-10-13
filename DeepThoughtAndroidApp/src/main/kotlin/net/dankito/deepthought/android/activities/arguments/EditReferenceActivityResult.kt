@@ -1,6 +1,6 @@
 package net.dankito.deepthought.android.activities.arguments
 
-import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Source
 
 
-data class EditReferenceActivityResult(val didSaveReference: Boolean = false, val savedReference: Reference? = null, val didDeleteReference: Boolean = false)
+data class EditReferenceActivityResult(val didSaveReference: Boolean = false, val savedSource: Source? = null, val didDeleteReference: Boolean = false)

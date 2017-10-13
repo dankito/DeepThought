@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import org.jsoup.nodes.Comment
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -21,13 +21,13 @@ class SueddeutscheMagazinArticleExtractor(webClient: IWebClient) : ArticleExtrac
     }
 
 
-    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
+    override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         val referenceAndAbstract = extractReferenceAndAbstract(document, url)
 
         document.body().select(".content").first()?.let { contentElement ->
 
             contentElement.select(".maincontent").first()?.let { mainContent ->
-                val entry = Entry(extractContent(mainContent), referenceAndAbstract?.second ?: "")
+                val entry = Item(extractContent(mainContent), referenceAndAbstract?.second ?: "")
 
                 mainContent.select(".text-image-container img, .img-text-fullwidth-container img").first()?.let {
                     referenceAndAbstract?.first?.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
@@ -76,41 +76,41 @@ class SueddeutscheMagazinArticleExtractor(webClient: IWebClient) : ArticleExtrac
     }
 
 
-    private fun extractReferenceAndAbstract(document: Document, siteUrl: String): Pair<Reference, String?>? {
-        var reference: Reference? = null
+    private fun extractReferenceAndAbstract(document: Document, siteUrl: String): Pair<Source, String?>? {
+        var source: Source? = null
         var abstract: String? = null
 
         document.body().select("#artikelhead").first()?.let { articleHeader ->
             articleHeader.select(".vorspann").first()?.let { vorspanElement ->
                 vorspanElement.select("h1").first()?.let { titleElement ->
-                    reference = Reference(titleElement.text())
-                    reference?.url = siteUrl
+                    source = Source(titleElement.text())
+                    source?.url = siteUrl
                     titleElement.remove()
                     vorspanElement.select(".autor").remove()
                     abstract = convertNonBreakableSpans(vorspanElement.text())
                 }
             }
 
-            extractSubTitleAndPublishingDate(articleHeader, reference)
+            extractSubTitleAndPublishingDate(articleHeader, source)
         }
 
-        reference?.let { reference ->
-            return Pair<Reference, String?>(reference, abstract)
+        source?.let { reference ->
+            return Pair<Source, String?>(reference, abstract)
         }
 
         return null
     }
 
-    private fun extractSubTitleAndPublishingDate(articleHeader: Element, reference: Reference?): Unit? {
+    private fun extractSubTitleAndPublishingDate(articleHeader: Element, source: Source?): Unit? {
         return articleHeader.select(".klassifizierung").first()?.let { classificationElement ->
             classificationElement.select(".label").first()?.let { labelElement ->
-                reference?.subTitle = labelElement.text()
+                source?.subTitle = labelElement.text()
 
                 classificationElement.select("a.heft").first()?.let {
-                    reference?.issue = it.text().replace("Heft", "").trim()
+                    source?.issue = it.text().replace("Heft", "").trim()
                 }
                 if (labelElement.nextElementSibling() != null) {
-                    reference?.issue = labelElement.nextElementSibling().text()
+                    source?.issue = labelElement.nextElementSibling().text()
                 }
             }
         }

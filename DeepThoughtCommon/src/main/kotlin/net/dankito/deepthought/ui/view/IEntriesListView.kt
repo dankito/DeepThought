@@ -1,10 +1,10 @@
 package net.dankito.deepthought.ui.view
 
-import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Tag
 
 
-interface IEntriesListView : IEntitiesListView<Entry> {
+interface IEntriesListView : IEntitiesListView<Item> {
 
     fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>)
 

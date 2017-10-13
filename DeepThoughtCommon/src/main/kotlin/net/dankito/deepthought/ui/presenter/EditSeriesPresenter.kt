@@ -1,6 +1,6 @@
 package net.dankito.deepthought.ui.presenter
 
-import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.data.SeriesPersister
@@ -26,8 +26,8 @@ class EditSeriesPresenter(seriesListView: ISeriesListView, searchEngine: ISearch
     }
 
 
-    fun editSeries(reference: Reference, series: Series?) {
-        router.showEditReferenceSeriesView(reference, series)
+    fun editSeries(source: Source, series: Series?) {
+        router.showEditReferenceSeriesView(source, series)
     }
 
 }

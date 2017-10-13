@@ -1,18 +1,18 @@
 package net.dankito.deepthought.ui.presenter
 
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
+import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.extensions.extractor
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
-import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.ReadLaterArticle
-import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.extensions.SeriesAndPublishingDateAndEntryPreviewSeparator
 import net.dankito.deepthought.model.extensions.getSeriesAndPublishingDatePreview
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.data.EntryPersister
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.service.data.ReadLaterArticleService
@@ -81,14 +81,14 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
     }
 
     open fun getAndShowArticle(item: ArticleSummaryItem) {
-        val extractionResult = EntryExtractionResult(Entry("", item.summary), Reference(item.url, item.title, item.publishedDate, item.previewImageUrl))
+        val extractionResult = ItemExtractionResult(Item("", item.summary), Source(item.url, item.title, item.publishedDate, item.previewImageUrl))
 
         articleExtractorManager.addDefaultData(item, extractionResult) {
             showArticle(extractionResult)
         }
     }
 
-    protected open fun showArticle(extractionResult: EntryExtractionResult) {
+    protected open fun showArticle(extractionResult: ItemExtractionResult) {
         router.showEditEntryView(extractionResult)
     }
 
@@ -107,7 +107,7 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
         }
     }
 
-    private fun saveArticle(item: ArticleSummaryItem, extractionResult: EntryExtractionResult) {
+    private fun saveArticle(item: ArticleSummaryItem, extractionResult: ItemExtractionResult) {
         entryPersister.saveEntryAsync(extractionResult) { successful ->
             if(successful) {
                 dialogService.showLittleInfoMessage(localization.getLocalizedString("article.summary.extractor.article.saved", item.title))
@@ -130,9 +130,9 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
         }
     }
 
-    private fun saveArticleForLaterReading(item: ArticleSummaryItem, result: EntryExtractionResult) {
+    private fun saveArticleForLaterReading(item: ArticleSummaryItem, result: ItemExtractionResult) {
         var entryPreview = item.summary
-        val seriesAndPublishingDate = result.reference.getSeriesAndPublishingDatePreview(result.series)
+        val seriesAndPublishingDate = result.source.getSeriesAndPublishingDatePreview(result.series)
         if(seriesAndPublishingDate.isNullOrBlank() == false) {
             if(entryPreview.isNullOrBlank()) {
                 entryPreview = seriesAndPublishingDate
@@ -148,7 +148,7 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
     }
 
 
-    protected fun getArticle(item: ArticleSummaryItem, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
+    protected fun getArticle(item: ArticleSummaryItem, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
         articleExtractorManager.extractArticleAndAddDefaultDataAsync(item) { asyncResult ->
             asyncResult.error?.let {
                 showError("alert.message.could.not.load.article", it)

@@ -6,7 +6,7 @@ import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.EntryViewModel
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
 import net.dankito.deepthought.javafx.util.LazyLoadingObservableList
-import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.extensions.referencePreview
 import net.dankito.deepthought.model.extensions.tagsPreview
@@ -32,11 +32,11 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
 
     private val entryModel = EntryViewModel()
 
-    private val entries = LazyLoadingObservableList<Entry>()
+    private val entries = LazyLoadingObservableList<Item>()
 
     private val searchBar: EntriesSearchBar
 
-    private var tableEntries: TableView<Entry> by singleAssign()
+    private var tableEntries: TableView<Item> by singleAssign()
 
     var statusBar: StatusBar? = null
 
@@ -81,13 +81,13 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
     override val root = vbox {
         add(searchBar.root)
 
-        tableEntries = tableview<Entry>(entries) {
-            column(messages["entry.column.header.index"], Entry::entryIndex).prefWidth(46.0)
-            column(messages["entry.column.header.reference"], Entry::referencePreview).weigthedWidth(4.0)
-            column(messages["entry.column.header.preview"], Entry::preview).weigthedWidth(4.0)
-            column(messages["entry.column.header.tags"], Entry::tagsPreview).weigthedWidth(2.0)
-    //        column(messages["entry.column.header.created"], stringBinding(Entry::createdOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
-    //        column(messages["entry.column.header.modified"], stringBinding(Entry::modifiedOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
+        tableEntries = tableview<Item>(entries) {
+            column(messages["entry.column.header.index"], Item::itemIndex).prefWidth(46.0)
+            column(messages["entry.column.header.reference"], Item::referencePreview).weigthedWidth(4.0)
+            column(messages["entry.column.header.preview"], Item::preview).weigthedWidth(4.0)
+            column(messages["entry.column.header.tags"], Item::tagsPreview).weigthedWidth(2.0)
+    //        column(messages["item.column.header.created"], stringBinding(Item::createdOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
+    //        column(messages["item.column.header.modified"], stringBinding(Item::modifiedOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
 
             columnResizePolicy = SmartResize.POLICY
 
@@ -115,10 +115,10 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
         }
     }
 
-    private fun askIfShouldDeleteEntry(entry: Entry) {
+    private fun askIfShouldDeleteEntry(item: Item) {
         dialogService.showConfirmationDialog(dialogService.getLocalization().getLocalizedString("alert.message.really.delete.entry")) { shouldDeleteEntry ->
             if(shouldDeleteEntry) {
-                presenter.deleteEntry(entry)
+                presenter.deleteEntry(item)
             }
         }
     }
@@ -131,10 +131,10 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
 
     /*          IEntriesListView implementation            */
 
-    override fun showEntities(entities: List<Entry>) {
+    override fun showEntities(entities: List<Item>) {
         runLater {
             entries.setAll(entities)
-            tableEntries.refresh() // necessary when count entries stays the same (e.g. when an entry has been updated)
+            tableEntries.refresh() // necessary when count items stays the same (e.g. when an item has been updated)
 
             statusBar?.showCountDisplayedEntriesOnUiThread(entities.size)
         }

@@ -31,7 +31,7 @@ class SpiegelArticleExtractorTest : ArticleExtractorTestBase() {
 
     //  @Test
     //  public void importArticle() {
-    //    Entry importedEntry = testImportArticle("http://www.spiegel.de/panorama/polizisten-funken-goebbels-zitat-vor-g7-gipfel-a-1038563.html");
+    //    Item importedEntry = testImportArticle("http://www.spiegel.de/panorama/polizisten-funken-goebbels-zitat-vor-g7-gipfel-a-1038563.html");
     //    testImportedArticleValues(importedEntry, null, 8626, "14.06.2010", "Armer, reicher Hedgefonds-König", "Wall-Street-Mogul Steve Cohen",
     //        "Er lebt weiter in Saus und Braus, als hätte es die Wirtschaftskrise nie gegeben: Steve Cohen ist einer der legendärsten Hedgefondsmanager der Wall Street - und der wohl meistgehasste. Jetzt offenbart der Milliardär in einem Interview erstmals sein Privatleben.");
     //  }

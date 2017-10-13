@@ -1,7 +1,7 @@
 package net.dankito.deepthought.javafx.dialogs.entry
 
 import net.dankito.deepthought.javafx.di.AppComponent
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import javax.inject.Inject
 
@@ -12,7 +12,7 @@ class EditEntryExtractionResultView : EditEntryViewBase() {
     protected lateinit var articleExtractorManager: ArticleExtractorManager
 
 
-    val extractionResult: EntryExtractionResult by param()
+    val extractionResult: ItemExtractionResult by param()
 
 
     init {
@@ -23,8 +23,8 @@ class EditEntryExtractionResultView : EditEntryViewBase() {
 
 
     private fun showExtractionResult() {
-        val content = if (extractionResult.couldExtractContent) extractionResult.entry.content else ""
-        showData(extractionResult.entry, extractionResult.tags, extractionResult.reference, extractionResult.series, content)
+        val content = if (extractionResult.couldExtractContent) extractionResult.item.content else ""
+        showData(extractionResult.item, extractionResult.tags, extractionResult.source, extractionResult.series, content)
     }
 
 

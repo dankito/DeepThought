@@ -75,7 +75,7 @@ class ReadLaterArticleListPresenter(private val view: IReadLaterArticleView, pri
     }
 
     fun saveAndDeleteReadLaterArticle(article: ReadLaterArticle) {
-        entryPersister.saveEntryAsync(article.entryExtractionResult) { successful ->
+        entryPersister.saveEntryAsync(article.itemExtractionResult) { successful ->
             if(successful) {
                 deleteReadLaterArticle(article)
             }
@@ -89,7 +89,7 @@ class ReadLaterArticleListPresenter(private val view: IReadLaterArticleView, pri
     }
 
     fun copyReferenceUrlToClipboard(article: ReadLaterArticle) {
-        article.referenceUrl?.let { url ->
+        article.sourceUrl?.let { url ->
             clipboardService.copyUrlToClipboard(url)
         }
     }

@@ -56,7 +56,7 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
 
     override fun bindItemToView(viewHolder: TagViewHolder, item: Tag) {
         if(presenter.isTagFilterApplied()) {
-            viewHolder.txtTagDisplayText.text = "${item.name} (${presenter.getCountEntriesForFilteredTag(item)} / ${item.countEntries})"
+            viewHolder.txtTagDisplayText.text = "${item.name} (${presenter.getCountEntriesForFilteredTag(item)} / ${item.countItems})"
         }
         else {
             viewHolder.txtTagDisplayText.text = item.displayText

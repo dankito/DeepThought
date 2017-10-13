@@ -33,8 +33,8 @@ import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.entryPreview
 import net.dankito.deepthought.model.extensions.getPlainTextForHtml
 import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
-import net.dankito.deepthought.model.fields.EntryField
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.fields.ItemField
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
@@ -118,18 +118,18 @@ class EditEntryActivity : BaseActivity() {
     protected lateinit var eventBus: IEventBus
 
 
-    private var entry: Entry? = null
+    private var item: Item? = null
 
     private var readLaterArticle: ReadLaterArticle? = null
 
-    private var entryExtractionResult: EntryExtractionResult? = null
+    private var itemExtractionResult: ItemExtractionResult? = null
 
 
     private var originalInformation: String? = null
 
     private var originalTags: MutableCollection<Tag>? = null
 
-    private var originalReference: Reference? = null
+    private var originalSource: Source? = null
 
     private var originalTitleAbstract: String? = null
 
@@ -138,11 +138,11 @@ class EditEntryActivity : BaseActivity() {
 
     private var abstractToEdit: String? = null
 
-    private var referenceToEdit: Reference? = null
+    private var sourceToEdit: Source? = null
 
     private val tagsOnEntry: MutableList<Tag> = ArrayList()
 
-    private val changedFields = HashSet<EntryField>()
+    private val changedFields = HashSet<ItemField>()
 
     private var forceShowTagsPreview = false
 
@@ -219,7 +219,7 @@ class EditEntryActivity : BaseActivity() {
         savedInstanceState.getString(ENTRY_ID_INTENT_EXTRA_NAME)?.let { entryId -> editEntry(entryId) }
 
         if(savedInstanceState.getString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME) == null && savedInstanceState.getString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME) == null &&
-                savedInstanceState.getString(ENTRY_ID_INTENT_EXTRA_NAME) == null) { // a new Entry is being created then
+                savedInstanceState.getString(ENTRY_ID_INTENT_EXTRA_NAME) == null) { // a new Item is being created then
             createEntry(false) // don't go to EditHtmlTextDialog for content here as we're restoring state, content may already be set
         }
 
@@ -243,13 +243,13 @@ class EditEntryActivity : BaseActivity() {
 
         outState?.let {
             outState.putString(ENTRY_ID_INTENT_EXTRA_NAME, null)
-            entry?.id?.let { entryId -> outState.putString(ENTRY_ID_INTENT_EXTRA_NAME, entryId) }
+            item?.id?.let { entryId -> outState.putString(ENTRY_ID_INTENT_EXTRA_NAME, entryId) }
 
             outState.putString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME, null)
             readLaterArticle?.id?.let { readLaterArticleId -> outState.putString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME, readLaterArticleId) }
 
             outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, null)
-            entryExtractionResult?.let { outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, serializer.serializeObject(it)) }
+            itemExtractionResult?.let { outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, serializer.serializeObject(it)) }
 
             outState.putBoolean(FORCE_SHOW_TAGS_PREVIEW_INTENT_EXTRA_NAME, forceShowTagsPreview)
             outState.putBoolean(FORCE_SHOW_REFERENCE_PREVIEW_INTENT_EXTRA_NAME, forceShowReferencePreview)
@@ -259,7 +259,7 @@ class EditEntryActivity : BaseActivity() {
 
             outState.putString(TAGS_ON_ENTRY_INTENT_EXTRA_NAME, serializer.serializeObject(tagsOnEntry))
 
-            outState.putString(REFERENCE_INTENT_EXTRA_NAME, referenceToEdit?.id)
+            outState.putString(REFERENCE_INTENT_EXTRA_NAME, sourceToEdit?.id)
 
             outState.putString(CONTENT_INTENT_EXTRA_NAME, contentToEdit)
 
@@ -372,13 +372,13 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun webPageCompletelyLoadedOnUiThread(webView: WebView) {
-        // if EntryExtractionResult's entry content hasn't been extracted yet, wait till WebView is loaded and extract entry content then
-        if((entryExtractionResult != null || readLaterArticle != null) && isInReaderMode == false &&
+        // if ItemExtractionResult's item content hasn't been extracted yet, wait till WebView is loaded and extract item content then
+        if((itemExtractionResult != null || readLaterArticle != null) && isInReaderMode == false &&
                 webView.url != "about:blank" && webView.url.startsWith("data:text/html") == false) {
             webView.loadUrl("javascript:$GetHtmlCodeFromWebViewJavaScriptInterfaceName.finishedLoadingSite" +
                     "(document.URL, '<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');")
         }
-        else if(entry != null) {
+        else if(item != null) {
             urlLoadedNow()
         }
     }
@@ -386,8 +386,8 @@ class EditEntryActivity : BaseActivity() {
     private fun siteFinishedLoading(url: String, html: String) {
         urlLoadedNow()
 
-        // now try to extract entry content from WebView's html
-        val extractionResult = entryExtractionResult ?: readLaterArticle?.entryExtractionResult
+        // now try to extract item content from WebView's html
+        val extractionResult = itemExtractionResult ?: readLaterArticle?.itemExtractionResult
         if(extractionResult != null && isInReaderMode == false) {
             webSiteHtml = html
             contentToEdit = html
@@ -414,14 +414,14 @@ class EditEntryActivity : BaseActivity() {
         }
     }
 
-    private fun extractedContentOnUiThread(extractionResult: EntryExtractionResult) { // extractionResult can either be from entryExtractionResult or readLaterArticle
+    private fun extractedContentOnUiThread(extractionResult: ItemExtractionResult) { // extractionResult can either be from itemExtractionResult or readLaterArticle
         wbvwContent.removeJavascriptInterface(GetHtmlCodeFromWebViewJavaScriptInterfaceName)
 
         mnToggleReaderMode?.isVisible = extractionResult.couldExtractContent
         invalidateOptionsMenu()
 
-        entryExtractionResult?.let {
-            editEntryExtractionResult(it, false) // updates reference and abstract, but avoids that extracted content gets shown (this is important according to our
+        itemExtractionResult?.let {
+            editEntryExtractionResult(it, false) // updates source and abstract, but avoids that extracted content gets shown (this is important according to our
             // lawyer, user must click on toggleReaderMode menu first)
         }
 
@@ -467,25 +467,25 @@ class EditEntryActivity : BaseActivity() {
     private fun mayShowSaveEntryChangesHelpOnUIThread() {
         val localSettings = entryService.dataManager.localSettings
 
-        if(localSettings.didShowSaveEntryChangesHelp == false) {
+        if(localSettings.didShowSaveItemChangesHelp == false) {
             contextHelpUtil.showContextHelp(lytContextHelpSave, R.string.context_help_save_entry_changes)
 
-            localSettings.didShowSaveEntryChangesHelp = true
+            localSettings.didShowSaveItemChangesHelp = true
             entryService.dataManager.localSettingsUpdated()
         }
     }
 
-    private fun savedReference(reference: Reference) {
-        referenceChanged(reference)
+    private fun savedReference(source: Source) {
+        referenceChanged(source)
 
-        entryExtractionResult?.series = null // TODO: why did i do this?
-        readLaterArticle?.entryExtractionResult?.series = null
+        itemExtractionResult?.series = null // TODO: why did i do this?
+        readLaterArticle?.itemExtractionResult?.series = null
     }
 
-    private fun referenceChanged(reference: Reference?) {
-        referenceToEdit = reference // do not set reference directly on entry as if entry is not saved yet adding it to reference.entries causes an error
+    private fun referenceChanged(source: Source?) {
+        sourceToEdit = source // do not set source directly on item as if item is not saved yet adding it to source.items causes an error
 
-        updateEntryFieldChangedOnUIThread(EntryField.Reference, originalReference != referenceToEdit)
+        updateEntryFieldChangedOnUIThread(ItemField.Source, originalSource != sourceToEdit)
         setReferencePreviewOnUIThread()
     }
 
@@ -504,7 +504,7 @@ class EditEntryActivity : BaseActivity() {
         contentToEdit = content
 
         runOnUiThread {
-            updateEntryFieldChangedOnUIThread(EntryField.Information, originalInformation != contentToEdit)
+            updateEntryFieldChangedOnUIThread(ItemField.Content, originalInformation != contentToEdit)
             setContentPreviewOnUIThread()
         }
     }
@@ -514,7 +514,7 @@ class EditEntryActivity : BaseActivity() {
         entryPropertySet()
 
         runOnUiThread {
-            updateEntryFieldChangedOnUIThread(EntryField.TitleAbstract, didAbstractChange)
+            updateEntryFieldChangedOnUIThread(ItemField.TitleOrSummary, didAbstractChange)
         }
     }
 
@@ -523,7 +523,7 @@ class EditEntryActivity : BaseActivity() {
         entryPropertySet()
 
         runOnUiThread {
-            updateEntryFieldChangedOnUIThread(EntryField.TitleAbstract, didAbstractChange)
+            updateEntryFieldChangedOnUIThread(ItemField.TitleOrSummary, didAbstractChange)
             setAbstractPreviewOnUIThread()
             mayShowSaveEntryChangesHelpOnUIThread()
         }
@@ -532,15 +532,15 @@ class EditEntryActivity : BaseActivity() {
     private fun editReference() {
         setWaitingForResult(EditReferenceActivity.ResultId)
 
-        val reference = referenceToEdit
-        val entry = entry ?: readLaterArticle?.entryExtractionResult?.entry ?: entryExtractionResult?.entry ?: Entry("") // should never be the case that entry is null, just to make compiler happy
+        val reference = sourceToEdit
+        val entry = item ?: readLaterArticle?.itemExtractionResult?.item ?: itemExtractionResult?.item ?: Item("") // should never be the case that item is null, just to make compiler happy
 
         presenter.editReference(reference, entry, getCurrentSeries())
     }
 
     private fun appliedChangesToReference(result: EditReferenceActivityResult) {
         if(result.didSaveReference) {
-            result.savedReference?.let { savedReference(it) }
+            result.savedSource?.let { savedReference(it) }
 
             mayShowSaveEntryChangesHelpOnUIThread()
         }
@@ -565,7 +565,7 @@ class EditEntryActivity : BaseActivity() {
         entryPropertySet()
 
         runOnUiThread {
-            updateEntryFieldChangedOnUIThread(EntryField.Tags, didTagsChange(editedTags))
+            updateEntryFieldChangedOnUIThread(ItemField.Tags, didTagsChange(editedTags))
             setTagsOnEntryPreviewOnUIThread()
             mayShowSaveEntryChangesHelpOnUIThread()
         }
@@ -586,7 +586,7 @@ class EditEntryActivity : BaseActivity() {
         return true
     }
 
-    private fun updateEntryFieldChangedOnUIThread(field: EntryField, didChange: Boolean) {
+    private fun updateEntryFieldChangedOnUIThread(field: ItemField, didChange: Boolean) {
         if(didChange) {
             changedFields.add(field)
         }
@@ -603,15 +603,15 @@ class EditEntryActivity : BaseActivity() {
             mnDeleteExistingEntry?.isVisible = true
         }
         else {
-            mnSaveEntry?.isVisible = entry == null // EntryExtractionResult and ReadLaterArticle always can be saved
+            mnSaveEntry?.isVisible = item == null // ItemExtractionResult and ReadLaterArticle always can be saved
                     || changedFields.size > 0
             mnDeleteExistingEntry?.isVisible = false
         }
     }
 
     private fun haveAllFieldsOfExistingEntryBeenDeleted(): Boolean {
-        if(entry != null && entry?.isPersisted() == true) {
-            return contentToEdit.isNullOrBlank() && tagsOnEntry.isEmpty() && referenceToEdit == null && abstractToEdit.isNullOrBlank()
+        if(item != null && item?.isPersisted() == true) {
+            return contentToEdit.isNullOrBlank() && tagsOnEntry.isEmpty() && sourceToEdit == null && abstractToEdit.isNullOrBlank()
         }
 
         return false
@@ -620,20 +620,20 @@ class EditEntryActivity : BaseActivity() {
     private fun entryPropertySet() {
         val localSettings = entryService.dataManager.localSettings
 
-        if(localSettings.didShowAddEntryPropertiesHelp == false && contentToEdit.isNullOrBlank() == false) {
-            localSettings.didShowAddEntryPropertiesHelp = true
+        if(localSettings.didShowAddItemPropertiesHelp == false && contentToEdit.isNullOrBlank() == false) {
+            localSettings.didShowAddItemPropertiesHelp = true
             entryService.dataManager.localSettingsUpdated()
         }
     }
 
 
     private fun setContentPreviewOnUIThread() {
-        setContentPreviewOnUIThread(referenceToEdit)
+        setContentPreviewOnUIThread(sourceToEdit)
     }
 
-    private fun setContentPreviewOnUIThread(reference: Reference?) {
+    private fun setContentPreviewOnUIThread(source: Source?) {
         val content = contentToEdit
-        val url = reference?.url
+        val url = source?.url
         var showContentOnboarding = true
         prgIsLoadingWebPage.visibility = View.GONE
 
@@ -645,7 +645,7 @@ class EditEntryActivity : BaseActivity() {
             showContentInWebView(webSiteHtml, url)
             showContentOnboarding = false
         }
-        else if(url != null && entry == null) { // then load url (but don't show it for an Entry)
+        else if(url != null && item == null) { // then load url (but don't show it for an Item)
             clearWebViewEntry()
             isLoadingUrl = true
             wbvwContent.elementClickedListener = { true } // disable link clicks during loading url
@@ -659,10 +659,10 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun shouldShowContent(content: String?): Boolean {
-        // TODO: currently we assume that for entry content is always set, this may change in the feature
+        // TODO: currently we assume that for item content is always set, this may change in the feature
         return content.isNullOrBlank() == false &&
-                (entry != null || (isInReaderMode &&
-                        (entryExtractionResult?.couldExtractContent == true || readLaterArticle?.entryExtractionResult?.couldExtractContent == true)) )
+                (item != null || (isInReaderMode &&
+                        (itemExtractionResult?.couldExtractContent == true || readLaterArticle?.itemExtractionResult?.couldExtractContent == true)) )
     }
 
     private fun showContentInWebView(contentParam: String?, url: String?) {
@@ -721,7 +721,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun shouldShowOnboardingForEntryProperties(): Boolean {
-        return entryService.dataManager.localSettings.didShowAddEntryPropertiesHelp == false &&
+        return entryService.dataManager.localSettings.didShowAddItemPropertiesHelp == false &&
                 lytTagsPreview.visibility == View.GONE && lytReferencePreview.visibility == View.GONE && lytAbstractPreview.visibility == View.GONE
     }
 
@@ -744,14 +744,14 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setReferencePreviewOnUIThread() {
-        if(referenceToEdit == null) {
+        if(sourceToEdit == null) {
             lytReferencePreview.setOnboardingTextOnUiThread(R.string.activity_edit_entry_reference_onboarding_text)
         }
         else {
-            lytReferencePreview.setFieldValueOnUiThread(referenceToEdit.getPreviewWithSeriesAndPublishingDate(getCurrentSeries()))
+            lytReferencePreview.setFieldValueOnUiThread(sourceToEdit.getPreviewWithSeriesAndPublishingDate(getCurrentSeries()))
         }
 
-        val showReferencePreview = this.forceShowReferencePreview || referenceToEdit != null
+        val showReferencePreview = this.forceShowReferencePreview || sourceToEdit != null
 
         lytReferencePreview.visibility = if(showReferencePreview) View.VISIBLE else View.GONE
         if(fabEditEntryReference.visibility != View.INVISIBLE) { // visibility already set by FloatingActionMenu
@@ -759,16 +759,16 @@ class EditEntryActivity : BaseActivity() {
         }
         setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread()
 
-        btnClearEntryReference.visibility = if(referenceToEdit == null) View.GONE else View.VISIBLE
-        mnShareEntry?.isVisible = referenceToEdit?.url.isNullOrBlank() == false
+        btnClearEntryReference.visibility = if(sourceToEdit == null) View.GONE else View.VISIBLE
+        mnShareEntry?.isVisible = sourceToEdit?.url.isNullOrBlank() == false
     }
 
     private fun getCurrentSeries(): Series? {
-        readLaterArticle?.let { return it.entryExtractionResult.series }
+        readLaterArticle?.let { return it.itemExtractionResult.series }
 
-        entryExtractionResult?.let { return it.series }
+        itemExtractionResult?.let { return it.series }
 
-        return referenceToEdit?.series
+        return sourceToEdit?.series
     }
 
     private fun setTagsOnEntryPreviewOnUIThread() {
@@ -797,7 +797,7 @@ class EditEntryActivity : BaseActivity() {
 
     private fun setFloatingActionButtonVisibilityOnUIThread() {
         // when user comes to EditEntryDialog, don't show floatingActionMenu till some content has been entered. She/he should focus on the content
-        val hasUserEverEnteredSomeContent = dataManager.localSettings.didShowAddEntryPropertiesHelp || contentToEdit.isNullOrBlank() == false
+        val hasUserEverEnteredSomeContent = dataManager.localSettings.didShowAddItemPropertiesHelp || contentToEdit.isNullOrBlank() == false
 
         floatingActionMenu.setVisibilityOnUIThread(wbvwContent.isInFullscreenMode, hasUserEverEnteredSomeContent)
     }
@@ -832,7 +832,7 @@ class EditEntryActivity : BaseActivity() {
     private fun mayShowEntryInformationFullscreenGesturesHelpOnUIThread(userConfirmedHelpOnUIThread: () -> Unit) {
         val localSettings = entryService.dataManager.localSettings
 
-        if(localSettings.didShowEntryInformationFullscreenGesturesHelp == false) {
+        if(localSettings.didShowItemInformationFullscreenGesturesHelp == false) {
             dialogService.showConfirmationDialog(getString(R.string.context_help_entry_content_fullscreen_gestures), showNoButton = false) {
                 runOnUiThread {
                     wbvwContent.leaveFullscreenMode() // leave fullscreen otherwise a lot of unwanted behaviour occurs
@@ -840,7 +840,7 @@ class EditEntryActivity : BaseActivity() {
                 }
             }
 
-            localSettings.didShowEntryInformationFullscreenGesturesHelp = true
+            localSettings.didShowItemInformationFullscreenGesturesHelp = true
             entryService.dataManager.localSettingsUpdated()
         }
         else {
@@ -872,10 +872,10 @@ class EditEntryActivity : BaseActivity() {
     private fun mayShowEntryInformationFullscreenHelpOnUIThread() {
         val localSettings = entryService.dataManager.localSettings
 
-        if(localSettings.didShowEntryInformationFullscreenHelp == false) {
+        if(localSettings.didShowItemInformationFullscreenHelp == false) {
             contextHelpUtil.showContextHelp(lytContextHelpFullscreenMode, R.string.context_help_entry_content_fullscreen)
 
-            localSettings.didShowEntryInformationFullscreenHelp = true
+            localSettings.didShowItemInformationFullscreenHelp = true
             entryService.dataManager.localSettingsUpdated()
         }
     }
@@ -928,17 +928,17 @@ class EditEntryActivity : BaseActivity() {
         mnDeleteExistingEntry = menu.findItem(R.id.mnDeleteExistingEntry)
 
         mnToggleReaderMode = menu.findItem(R.id.mnToggleReaderMode)
-        mnToggleReaderMode?.isVisible = entryExtractionResult?.couldExtractContent == true || readLaterArticle?.entryExtractionResult?.couldExtractContent == true /*&& webSiteHtml != null*/ // show mnToggleReaderMode only if previously original web site was shown
+        mnToggleReaderMode?.isVisible = itemExtractionResult?.couldExtractContent == true || readLaterArticle?.itemExtractionResult?.couldExtractContent == true /*&& webSiteHtml != null*/ // show mnToggleReaderMode only if previously original web site was shown
         setReaderModeActionStateOnUIThread()
 
         mnSaveEntryExtractionResultForLaterReading = menu.findItem(R.id.mnSaveEntryExtractionResultForLaterReading)
-        mnSaveEntryExtractionResultForLaterReading?.isVisible = entryExtractionResult != null
+        mnSaveEntryExtractionResultForLaterReading?.isVisible = itemExtractionResult != null
 
         mnDeleteReadLaterArticle = menu.findItem(R.id.mnDeleteReadLaterArticle)
         mnDeleteReadLaterArticle?.isVisible = readLaterArticle != null
 
         mnShareEntry = menu.findItem(R.id.mnShareEntry)
-        mnShareEntry?.isVisible = referenceToEdit?.url.isNullOrBlank() == false
+        mnShareEntry?.isVisible = sourceToEdit?.url.isNullOrBlank() == false
 
         setMenuSaveEntryVisibleStateOnUIThread()
 
@@ -1001,8 +1001,8 @@ class EditEntryActivity : BaseActivity() {
         isInReaderMode = !isInReaderMode
 
         if(isInReaderMode) {
-            val extractionResult = entryExtractionResult ?: readLaterArticle?.entryExtractionResult
-            contentToEdit = extractionResult?.entry?.content ?: ""
+            val extractionResult = itemExtractionResult ?: readLaterArticle?.itemExtractionResult
+            contentToEdit = extractionResult?.item?.content ?: ""
         }
         else {
             contentToEdit = webSiteHtml ?: ""
@@ -1022,7 +1022,7 @@ class EditEntryActivity : BaseActivity() {
 
         popup.menuInflater.inflate(R.menu.share_entry_menu, popup.menu)
 
-        val reference = referenceToEdit
+        val reference = sourceToEdit
         if(reference == null || reference.url.isNullOrBlank()) {
             popup.menu.findItem(R.id.mnShareEntryReferenceUrl).isVisible = false
         }
@@ -1057,22 +1057,22 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun shareReferenceUrl() {
-        referenceToEdit?.let { reference ->
+        sourceToEdit?.let { reference ->
             presenter.shareReferenceUrl(reference)
         }
     }
 
     private fun shareEntryContent() {
-        entry?.let { entry ->
-            presenter.shareEntry(entry, entry.reference, entry.reference?.series)
+        item?.let { entry ->
+            presenter.shareEntry(entry, entry.source, entry.source?.series)
         }
 
-        readLaterArticle?.entryExtractionResult?.let {  extractionResult ->
-            presenter.shareEntry(extractionResult.entry, extractionResult.reference, extractionResult.series)
+        readLaterArticle?.itemExtractionResult?.let { extractionResult ->
+            presenter.shareEntry(extractionResult.item, extractionResult.source, extractionResult.series)
         }
 
-        entryExtractionResult?.let { extractionResult ->
-            presenter.shareEntry(extractionResult.entry, extractionResult.reference, extractionResult.series)
+        itemExtractionResult?.let { extractionResult ->
+            presenter.shareEntry(extractionResult.item, extractionResult.source, extractionResult.series)
         }
     }
 
@@ -1098,37 +1098,37 @@ class EditEntryActivity : BaseActivity() {
         val content = contentToEdit ?: ""
         val abstract = abstractToEdit ?: ""
 
-        entry?.let { entry ->
+        item?.let { entry ->
             updateEntry(entry, content, abstract)
-            presenter.saveEntryAsync(entry, referenceToEdit, referenceToEdit?.series, tags = tagsOnEntry) { successful ->
+            presenter.saveEntryAsync(entry, sourceToEdit, sourceToEdit?.series, tags = tagsOnEntry) { successful ->
                 if(successful) {
-                    setActivityResult(EditEntryActivityResult(didSaveEntry = true, savedEntry = entry))
+                    setActivityResult(EditEntryActivityResult(didSaveEntry = true, savedItem = entry))
                 }
                 callback(successful)
             }
         }
 
-        entryExtractionResult?.let { extractionResult ->
+        itemExtractionResult?.let { extractionResult ->
             // TODO: save extracted content when in reader mode and webSiteHtml when not in reader mode
             // TODO: contentToEdit show now always contain the correct value depending on is or is not in reader mode, doesn't it?
 
-            updateEntry(extractionResult.entry, content, abstract)
-            presenter.saveEntryAsync(extractionResult.entry, referenceToEdit, extractionResult.series, tagsOnEntry) { successful ->
+            updateEntry(extractionResult.item, content, abstract)
+            presenter.saveEntryAsync(extractionResult.item, sourceToEdit, extractionResult.series, tagsOnEntry) { successful ->
                 if(successful) {
-                    setActivityResult(EditEntryActivityResult(didSaveEntryExtractionResult = true, savedEntry = extractionResult.entry))
+                    setActivityResult(EditEntryActivityResult(didSaveEntryExtractionResult = true, savedItem = extractionResult.item))
                 }
                 callback(successful)
             }
         }
 
         readLaterArticle?.let { readLaterArticle ->
-            val extractionResult = readLaterArticle.entryExtractionResult
-            updateEntry(extractionResult.entry, content, abstract)
+            val extractionResult = readLaterArticle.itemExtractionResult
+            updateEntry(extractionResult.item, content, abstract)
 
-            presenter.saveEntryAsync(extractionResult.entry, referenceToEdit, extractionResult.series, tagsOnEntry) { successful ->
+            presenter.saveEntryAsync(extractionResult.item, sourceToEdit, extractionResult.series, tagsOnEntry) { successful ->
                 if(successful) {
                     readLaterArticleService.delete(readLaterArticle)
-                    setActivityResult(EditEntryActivityResult(didSaveReadLaterArticle = true, savedEntry = extractionResult.entry))
+                    setActivityResult(EditEntryActivityResult(didSaveReadLaterArticle = true, savedItem = extractionResult.item))
                 }
                 callback(successful)
             }
@@ -1146,8 +1146,8 @@ class EditEntryActivity : BaseActivity() {
     private fun mayShowSavedReadLaterArticleHelp(callback: () -> Unit) {
         val localSettings = entryService.dataManager.localSettings
 
-        if(readLaterArticle != null && localSettings.didShowSavedReadLaterArticleIsNowInEntriesHelp == false) {
-            localSettings.didShowSavedReadLaterArticleIsNowInEntriesHelp = true
+        if(readLaterArticle != null && localSettings.didShowSavedReadLaterArticleIsNowInItemsHelp == false) {
+            localSettings.didShowSavedReadLaterArticleIsNowInItemsHelp = true
             entryService.dataManager.localSettingsUpdated()
 
             dialogService.showConfirmationDialog(getString(R.string.context_help_saved_read_later_article_is_now_in_entries), showNoButton = false) {
@@ -1180,24 +1180,24 @@ class EditEntryActivity : BaseActivity() {
         val content = contentToEdit ?: ""
         val abstract = abstractToEdit ?: ""
 
-        entryExtractionResult?.let { extractionResult ->
-            updateEntry(extractionResult.entry, content, abstract)
-            extractionResult.reference = referenceToEdit
+        itemExtractionResult?.let { extractionResult ->
+            updateEntry(extractionResult.item, content, abstract)
+            extractionResult.source = sourceToEdit
             extractionResult.tags = tagsOnEntry
 
             presenter.saveEntryExtractionResultForLaterReading(extractionResult)
-            setActivityResult(EditEntryActivityResult(didSaveEntryExtractionResult = true, savedEntry = extractionResult.entry))
+            setActivityResult(EditEntryActivityResult(didSaveEntryExtractionResult = true, savedItem = extractionResult.item))
             callback(true)
         }
 
-        if(entryExtractionResult == null) {
+        if(itemExtractionResult == null) {
             callback(false)
         }
     }
 
 
     private fun askIfShouldDeleteExistingEntryAndCloseDialog() {
-        entry?.let { entry ->
+        item?.let { entry ->
             dialogService.showConfirmationDialog(getString(R.string.activity_edit_entry_alert_message_delete_entry, entry.entryPreview)) { deleteEntry ->
                 if(deleteEntry) {
                     mnDeleteExistingEntry?.isEnabled = false
@@ -1227,9 +1227,9 @@ class EditEntryActivity : BaseActivity() {
         parameterHolder.setActivityResult(ResultId, result)
     }
 
-    private fun updateEntry(entry: Entry, content: String, abstract: String) {
-        entry.content = content
-        entry.abstractString = abstract
+    private fun updateEntry(item: Item, content: String, abstract: String) {
+        item.content = content
+        item.summary = abstract
     }
 
 
@@ -1262,11 +1262,11 @@ class EditEntryActivity : BaseActivity() {
 
     private fun showParameters(parameters: EntryActivityParameters?) {
         if(parameters != null) {
-            parameters.entry?.let { editEntry(it) }
+            parameters.item?.let { editEntry(it) }
 
             parameters.readLaterArticle?.let { editReadLaterArticle(it) }
 
-            parameters.entryExtractionResult?.let {
+            parameters.itemExtractionResult?.let {
                 isInReaderMode = it.couldExtractContent
                 editEntryExtractionResult(it)
             }
@@ -1278,7 +1278,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun createEntry(editContent: Boolean = true) {
-        editEntry(Entry(""))
+        editEntry(Item(""))
 
         if(editContent) {
             editContent() // go directly to edit content dialog, there's absolutely nothing to see on this almost empty screen
@@ -1291,10 +1291,10 @@ class EditEntryActivity : BaseActivity() {
         }
     }
 
-    private fun editEntry(entry: Entry) {
-        this.entry = entry
+    private fun editEntry(item: Item) {
+        this.item = item
 
-        editEntry(entry, entry.reference, entry.tags)
+        editEntry(item, item.source, item.tags)
     }
 
     private fun editReadLaterArticle(readLaterArticleId: String) {
@@ -1306,34 +1306,34 @@ class EditEntryActivity : BaseActivity() {
     private fun editReadLaterArticle(readLaterArticle: ReadLaterArticle, updateContentPreview: Boolean = true) {
         this.readLaterArticle = readLaterArticle
 
-        editEntry(readLaterArticle.entryExtractionResult.entry, readLaterArticle.entryExtractionResult.reference, readLaterArticle.entryExtractionResult.tags, updateContentPreview)
+        editEntry(readLaterArticle.itemExtractionResult.item, readLaterArticle.itemExtractionResult.source, readLaterArticle.itemExtractionResult.tags, updateContentPreview)
     }
 
     private fun editEntryExtractionResult(serializedExtractionResult: String) {
-        val extractionResult = serializer.deserializeObject(serializedExtractionResult, EntryExtractionResult::class.java)
+        val extractionResult = serializer.deserializeObject(serializedExtractionResult, ItemExtractionResult::class.java)
 
         editEntryExtractionResult(extractionResult)
     }
 
-    private fun editEntryExtractionResult(extractionResult: EntryExtractionResult, updateContentPreview: Boolean = true) {
-        this.entryExtractionResult = extractionResult
+    private fun editEntryExtractionResult(extractionResult: ItemExtractionResult, updateContentPreview: Boolean = true) {
+        this.itemExtractionResult = extractionResult
 
-        editEntry(entryExtractionResult?.entry, entryExtractionResult?.reference, entryExtractionResult?.tags, updateContentPreview)
+        editEntry(itemExtractionResult?.item, itemExtractionResult?.source, itemExtractionResult?.tags, updateContentPreview)
     }
 
-    private fun editEntry(entry: Entry?, reference: Reference?, tags: MutableCollection<Tag>?, updateContentPreview: Boolean = true) {
-        originalInformation = entry?.content
+    private fun editEntry(item: Item?, source: Source?, tags: MutableCollection<Tag>?, updateContentPreview: Boolean = true) {
+        originalInformation = item?.content
         originalTags = tags
-        originalReference = reference
-        originalTitleAbstract = entry?.abstractString
+        originalSource = source
+        originalTitleAbstract = item?.summary
 
-        contentToEdit = entry?.content
-        abstractToEdit = entry?.abstractString
-        referenceToEdit = reference
+        contentToEdit = item?.content
+        abstractToEdit = item?.summary
+        sourceToEdit = source
 
         if(abstractToEdit.isNullOrBlank() == false) { this.forceShowAbstractPreview = true } // forcing that once it has been shown it doesn't get hidden anymore
 
-        reference?.let { this.forceShowReferencePreview = true } // forcing that once it has been shown it doesn't get hidden anymore
+        source?.let { this.forceShowReferencePreview = true } // forcing that once it has been shown it doesn't get hidden anymore
 
         tags?.forEach { tag ->
             if(tagsOnEntry.contains(tag) == false) { // to avoid have a tag twice we really have to check each single tag
@@ -1342,12 +1342,12 @@ class EditEntryActivity : BaseActivity() {
         }
         forceShowTagsPreview = tags?.size ?: 0 > 0
 
-        updateDisplayedValuesOnUIThread(reference, updateContentPreview)
+        updateDisplayedValuesOnUIThread(source, updateContentPreview)
     }
 
-    private fun updateDisplayedValuesOnUIThread(reference: Reference? = referenceToEdit, updateContentPreview: Boolean = true) {
+    private fun updateDisplayedValuesOnUIThread(source: Source? = sourceToEdit, updateContentPreview: Boolean = true) {
         if(updateContentPreview) {
-            setContentPreviewOnUIThread(reference)
+            setContentPreviewOnUIThread(source)
         }
 
         setTagsOnEntryPreviewOnUIThread()
@@ -1358,7 +1358,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun restoreReference(referenceId: String) {
-        referenceToEdit = referenceService.retrieve(referenceId)
+        sourceToEdit = referenceService.retrieve(referenceId)
 
         runOnUiThread { setReferencePreviewOnUIThread() }
     }
@@ -1378,7 +1378,7 @@ class EditEntryActivity : BaseActivity() {
 
 
     private fun mayRegisterEventBusListener() {
-        if(entry?.isPersisted() ?: false && eventBusListener == null) {
+        if(item?.isPersisted() ?: false && eventBusListener == null) {
             synchronized(this) {
                 val eventBusListenerInit = EventBusListener()
 
@@ -1399,7 +1399,7 @@ class EditEntryActivity : BaseActivity() {
         }
     }
 
-    private fun warnEntryHasBeenEdited(entry: Entry) {
+    private fun warnEntryHasBeenEdited(item: Item) {
         unregisterEventBusListener() // message now gets shown, don't display it a second time
 
         runOnUiThread {
@@ -1415,7 +1415,7 @@ class EditEntryActivity : BaseActivity() {
 
         @Handler
         fun entryChanged(change: EntryChanged) {
-            if(change.entity.id == entry?.id && change.isDependentChange == false) {
+            if(change.entity.id == item?.id && change.isDependentChange == false) {
                 if(change.source == EntityChangeSource.Synchronization) {
                     warnEntryHasBeenEdited(change.entity)
                 }

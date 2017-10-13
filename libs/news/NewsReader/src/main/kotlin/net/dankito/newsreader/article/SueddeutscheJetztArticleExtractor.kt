@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
@@ -29,7 +29,7 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
                 (url.toLowerCase().startsWith("http://jetzt.sueddeutsche.de/") && url.length > "http://jetzt.sueddeutsche.de/".length)
     }
 
-    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
+    override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         // TODO: may re-add extracting old version
         parseHtmlToEntryNewVersion(extractionResult, url, document)
     }
@@ -37,13 +37,13 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
 
     /*        Parsing an SZ Jetzt article of new Homepage Style, introduced beginning 2016      */
 
-    private fun parseHtmlToEntryNewVersion(extractionResult: EntryExtractionResult, articleUrl: String, document: Document) {
+    private fun parseHtmlToEntryNewVersion(extractionResult: ItemExtractionResult, articleUrl: String, document: Document) {
         document.body().select("article").first()?.let { articleElement ->
             articleElement.select(".article__content").first()?.let { articleContentElement ->
                 val content = parseContent(articleContentElement)
                 val abstractString = extractAbstract(articleElement)
 
-                val entry = Entry(content, abstractString)
+                val entry = Item(content, abstractString)
                 val reference = extractReference( articleElement, articleUrl)
 
                 extractionResult.setExtractedContent(entry, reference)
@@ -94,12 +94,12 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
     }
 
 
-    private fun extractReference(articleElement: Element, articleUrl: String): Reference? {
+    private fun extractReference(articleElement: Element, articleUrl: String): Source? {
         val title = extractTitle(articleElement)
         val publishingDate = extractPublishingDate(articleElement)
 
         if(title != null && publishingDate != null) {
-            val articleReference = Reference(articleUrl, title, publishingDate)
+            val articleReference = Source(articleUrl, title, publishingDate)
 
             return articleReference
         }

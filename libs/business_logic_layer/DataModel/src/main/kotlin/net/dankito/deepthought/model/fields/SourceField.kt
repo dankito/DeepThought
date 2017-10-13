@@ -1,7 +1,7 @@
 package net.dankito.deepthought.model.fields
 
 
-enum class ReferenceField {
+enum class SourceField {
 
     Title,
     Series,

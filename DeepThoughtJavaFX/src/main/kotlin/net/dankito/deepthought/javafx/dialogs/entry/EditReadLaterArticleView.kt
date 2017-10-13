@@ -12,7 +12,7 @@ class EditReadLaterArticleView : EditEntryViewBase() {
     init {
         AppComponent.component.inject(this)
 
-        showData(article.entryExtractionResult.entry, article.entryExtractionResult.tags, article.entryExtractionResult.reference, article.entryExtractionResult.series)
+        showData(article.itemExtractionResult.item, article.itemExtractionResult.tags, article.itemExtractionResult.source, article.itemExtractionResult.series)
     }
 
 

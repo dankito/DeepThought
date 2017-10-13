@@ -9,7 +9,7 @@ import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapt
 import net.dankito.deepthought.android.adapter.ReferenceRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.ReferenceEntriesListDialog
-import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.deepthought.ui.presenter.ReferencesListPresenter
@@ -21,7 +21,7 @@ import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class ReferencesListView: MainActivityTabFragment<Reference>(R.menu.reference_contextual_action_menu, R.string.tab_reference_onboarding_text),
+class ReferencesListView: MainActivityTabFragment<Source>(R.menu.reference_contextual_action_menu, R.string.tab_reference_onboarding_text),
         IReferencesListView {
 
     @Inject
@@ -58,16 +58,16 @@ class ReferencesListView: MainActivityTabFragment<Reference>(R.menu.reference_co
         return presenter
     }
 
-    override fun getListAdapter(): MultiSelectListRecyclerSwipeAdapter<Reference, out RecyclerView.ViewHolder> {
+    override fun getListAdapter(): MultiSelectListRecyclerSwipeAdapter<Source, out RecyclerView.ViewHolder> {
         return adapter
     }
 
-    override fun listItemClicked(selectedItem: Reference) {
+    override fun listItemClicked(selectedItem: Source) {
         hideSearchViewKeyboard()
         presenter.showEntriesForReference(selectedItem)
     }
 
-    override fun actionItemSelected(mode: ActionMode, actionItem: MenuItem, selectedItems: Set<Reference>): Boolean {
+    override fun actionItemSelected(mode: ActionMode, actionItem: MenuItem, selectedItems: Set<Source>): Boolean {
         when(actionItem.itemId) {
             R.id.mnEditReference -> {
                 selectedItems.forEach { presenter.editReference(it) }
@@ -106,7 +106,7 @@ class ReferencesListView: MainActivityTabFragment<Reference>(R.menu.reference_co
 
     /*      IReferencesListView implementation      */
 
-    override fun showEntities(entities: List<Reference>) {
+    override fun showEntities(entities: List<Source>) {
         activity?.runOnUiThread {
             adapter.items = entities
 

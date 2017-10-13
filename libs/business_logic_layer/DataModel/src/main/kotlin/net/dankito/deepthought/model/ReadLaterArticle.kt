@@ -1,7 +1,7 @@
 package net.dankito.deepthought.model
 
 import net.dankito.deepthought.model.config.TableConfig
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Lob
@@ -11,16 +11,16 @@ import javax.persistence.Lob
 class ReadLaterArticle(
 
         @Transient
-        var entryExtractionResult: EntryExtractionResult, // do not try to persist EntryExtractionResult as this would persist an unpersisted entry (and may reference)
+        var itemExtractionResult: ItemExtractionResult, // do not try to persist ItemExtractionResult as this would persist an unpersisted item (and may source)
 
-        @Column(name = TableConfig.ReadLaterArticleEntryPreviewColumnName)
-        var entryPreview: String = "",
+        @Column(name = TableConfig.ReadLaterArticleItemPreviewColumnName)
+        var itemPreview: String = "",
 
-        @Column(name = TableConfig.ReadLaterArticleReferencePreviewColumnName)
-        var referencePreview: String = "",
+        @Column(name = TableConfig.ReadLaterArticleSourcePreviewColumnName)
+        var sourcePreview: String = "",
 
-        @Column(name = TableConfig.ReadLaterArticleReferenceUrlColumnName)
-        var referenceUrl: String? = null,
+        @Column(name = TableConfig.ReadLaterArticleSourceUrlColumnName)
+        var sourceUrl: String? = null,
 
         @Column(name = TableConfig.ReadLaterArticlePreviewImageUrlColumnName)
         var previewImageUrl: String? = null
@@ -32,11 +32,11 @@ class ReadLaterArticle(
     }
 
 
-    private constructor() : this(EntryExtractionResult(Entry("")))
+    private constructor() : this(ItemExtractionResult(Item("")))
 
 
-    @Column(name = TableConfig.ReadLaterArticleEntryExtractionResultColumnName)
+    @Column(name = TableConfig.ReadLaterArticleItemExtractionResultColumnName)
     @Lob
-    var serializedEntryExtractionResult: String = ""
+    var serializedItemExtractionResult: String = ""
 
 }

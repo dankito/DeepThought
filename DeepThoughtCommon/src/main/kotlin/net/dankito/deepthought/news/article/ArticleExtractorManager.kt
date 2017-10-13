@@ -3,7 +3,7 @@ package net.dankito.deepthought.news.article
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.Series
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.newsreader.article.IArticleExtractor
 import net.dankito.newsreader.model.ArticleSummaryItem
@@ -34,7 +34,7 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
     }
 
 
-    fun extractArticleAndAddDefaultDataAsync(item: ArticleSummaryItem, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
+    fun extractArticleAndAddDefaultDataAsync(item: ArticleSummaryItem, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
         articleExtractors.getExtractorForItem(item)?.let { extractor ->
             log.info("Using $extractor to extract item ${item.title}")
 
@@ -45,7 +45,7 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
         }
     }
 
-    fun extractArticleAndAddDefaultDataAsync(url: String, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
+    fun extractArticleAndAddDefaultDataAsync(url: String, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
         articleExtractors.getExtractorForUrl(url)?.let { extractor ->
             log.info("Using $extractor to extract url $url")
 
@@ -56,7 +56,7 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
         }
     }
 
-    fun extractArticleAndAddDefaultData(extractionResult: EntryExtractionResult, html: String, url: String) {
+    fun extractArticleAndAddDefaultData(extractionResult: ItemExtractionResult, html: String, url: String) {
         articleExtractors.getExtractorForUrl(url)?.let { extractor ->
             log.info("Using $extractor to extract html from url $url")
 
@@ -64,7 +64,7 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
         }
     }
 
-    fun addDefaultData(item: ArticleSummaryItem, extractionResult: EntryExtractionResult, callback: () -> Unit) {
+    fun addDefaultData(item: ArticleSummaryItem, extractionResult: ItemExtractionResult, callback: () -> Unit) {
         item.articleSummaryExtractorConfig?.tagsToAddOnExtractedArticles?.forEach {
             extractionResult.tags.add(it)
         }
@@ -74,7 +74,7 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
         addDefaultDataForSiteName(siteName, extractionResult, callback)
     }
 
-    private fun addDefaultData(extractor: IArticleExtractor, item: ArticleSummaryItem, extractionResult: EntryExtractionResult, callback: () -> Unit) {
+    private fun addDefaultData(extractor: IArticleExtractor, item: ArticleSummaryItem, extractionResult: ItemExtractionResult, callback: () -> Unit) {
         item.articleSummaryExtractorConfig?.tagsToAddOnExtractedArticles?.forEach {
             extractionResult.tags.add(it)
         }
@@ -84,13 +84,13 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
         addDefaultDataForSiteName(siteName, extractionResult, callback)
     }
 
-    private fun addDefaultData(extractor: IArticleExtractor, url: String, extractionResult: EntryExtractionResult, callback: () -> Unit) {
+    private fun addDefaultData(extractor: IArticleExtractor, url: String, extractionResult: ItemExtractionResult, callback: () -> Unit) {
         val siteName = getSiteName(extractor, url)
 
         addDefaultDataForSiteName(siteName, extractionResult, callback)
     }
 
-    private fun addDefaultDataForSiteName(siteName: String?, extractionResult: EntryExtractionResult, callback: () -> Unit) {
+    private fun addDefaultDataForSiteName(siteName: String?, extractionResult: ItemExtractionResult, callback: () -> Unit) {
         if(siteName == null) {
             callback()
         }
@@ -140,7 +140,7 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
     }
 
 
-    private fun setSeries(extractionResult: EntryExtractionResult, siteName: String, callback: () -> Unit) {
+    private fun setSeries(extractionResult: ItemExtractionResult, siteName: String, callback: () -> Unit) {
         if(extractionResult.series == null || extractionResult.series?.isPersisted() == false) { // series not set to a persisted Series -> try to find an existing one or create and persist a new one
             val seriesTitle = extractionResult.series?.title ?: siteName
 
@@ -156,7 +156,7 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
     }
 
     /**
-     * To avoid that when multiple entries get fetched in parallel that multiple tags get created for one extractor this method synchronizes access to getTagForExtractorName()
+     * To avoid that when multiple items get fetched in parallel that multiple tags get created for one extractor this method synchronizes access to getTagForExtractorName()
      */
     private fun getSeriesForTitleSynchronized(seriesTitle: String, callback: (Series) -> Unit) {
         synchronized(this) {
@@ -176,7 +176,7 @@ class ArticleExtractorManager(private val tagService: TagService, private val se
         searchEngine.searchSeries(SeriesSearch(seriesTitle) { searchResults ->
             if(searchResults.isNotEmpty()) {
                 val exactMatches = searchResults.filter { it.title == seriesTitle } // filter out that ones with a similiar name, e.g. 'SZ Magazin' when searching for 'SZ'
-                callback(exactMatches.sortedByDescending { it.countReferences }.first()) // in case there are several same names, use that one with most references
+                callback(exactMatches.sortedByDescending { it.countSources }.first()) // in case there are several same names, use that one with most sources
                 return@SeriesSearch
             }
 

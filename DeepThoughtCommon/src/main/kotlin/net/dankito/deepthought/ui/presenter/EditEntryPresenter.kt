@@ -4,7 +4,7 @@ import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.getEntryPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.extensions.preview
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.data.EntryPersister
 import net.dankito.service.data.ReadLaterArticleService
@@ -25,17 +25,17 @@ class EditEntryPresenter(private val entryPersister: EntryPersister, private val
     }
 
 
-    fun editReference(reference: Reference?, forEntry: Entry, series: Series?) {
-        router.showEditEntryReferenceView(forEntry, reference, series)
+    fun editReference(source: Source?, forItem: Item, series: Series?) {
+        router.showEditEntryReferenceView(forItem, source, series)
     }
 
-    fun saveEntryAsync(entry: Entry, reference: Reference? = null, series: Series? = null, tags: Collection<Tag> = ArrayList(), callback: (Boolean) -> Unit) {
-        entryPersister.saveEntryAsync(entry, reference, series, tags, callback)
+    fun saveEntryAsync(item: Item, source: Source? = null, series: Series? = null, tags: Collection<Tag> = ArrayList(), callback: (Boolean) -> Unit) {
+        entryPersister.saveEntryAsync(item, source, series, tags, callback)
     }
 
-    fun saveEntryExtractionResultForLaterReading(extractionResult: EntryExtractionResult) {
-        readLaterArticleService.persist(ReadLaterArticle(extractionResult, extractionResult.entry.getEntryPreviewWithSeriesAndPublishingDate(extractionResult.reference, extractionResult.series),
-                extractionResult.reference.preview, extractionResult.reference?.url, extractionResult.reference?.previewImageUrl))
+    fun saveEntryExtractionResultForLaterReading(extractionResult: ItemExtractionResult) {
+        readLaterArticleService.persist(ReadLaterArticle(extractionResult, extractionResult.item.getEntryPreviewWithSeriesAndPublishingDate(extractionResult.source, extractionResult.series),
+                extractionResult.source.preview, extractionResult.source?.url, extractionResult.source?.previewImageUrl))
     }
 
     fun deleteReadLaterArticle(article: ReadLaterArticle) {
@@ -43,12 +43,12 @@ class EditEntryPresenter(private val entryPersister: EntryPersister, private val
     }
 
 
-    fun shareReferenceUrl(reference: Reference) {
-        reference.url?.let { clipboardService.copyUrlToClipboard(it) }
+    fun shareReferenceUrl(source: Source) {
+        source.url?.let { clipboardService.copyUrlToClipboard(it) }
     }
 
-    fun shareEntry(entry: Entry, reference: Reference?, series: Series?) {
-        clipboardService.copyEntryToClipboard(entry, reference, series)
+    fun shareEntry(item: Item, source: Source?, series: Series?) {
+        clipboardService.copyEntryToClipboard(item, source, series)
     }
 
 

@@ -1,7 +1,7 @@
 package net.dankito.deepthought.model.extensions
 
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Series
 
 
@@ -10,19 +10,19 @@ const val SeriesAndPublishingDateAndEntryPreviewSeparator = " | "
 private const val MaxPreviewLength = 400
 
 
-val Entry.abstractPlainText: String
+val Item.abstractPlainText: String
     get() {
-        return this.abstractString.getPlainTextForHtml()
+        return this.summary.getPlainTextForHtml()
     }
 
 
-val Entry.contentPlainText: String
+val Item.contentPlainText: String
     get() {
         return this.content.getPlainTextForHtml()
     }
 
 
-val Entry.entryPreview: String
+val Item.entryPreview: String
     get() {
         var preview = this.abstractPlainText
 
@@ -42,10 +42,10 @@ val Entry.entryPreview: String
     }
 
 
-fun Entry.getEntryPreviewWithSeriesAndPublishingDate(reference: Reference?, series: Series? = null): String {
+fun Item.getEntryPreviewWithSeriesAndPublishingDate(source: Source?, series: Series? = null): String {
     var preview = this.entryPreview
 
-    val seriesAndPublishingDate = reference.getSeriesAndPublishingDatePreview(series)
+    val seriesAndPublishingDate = source.getSeriesAndPublishingDatePreview(series)
     if(seriesAndPublishingDate.isNullOrBlank() == false) {
         if(preview.isNullOrBlank()) {
             preview = seriesAndPublishingDate
@@ -59,9 +59,9 @@ fun Entry.getEntryPreviewWithSeriesAndPublishingDate(reference: Reference?, seri
 }
 
 
-val Entry.referencePreview: String
+val Item.referencePreview: String
     get() {
-        this.reference?.let { reference ->
+        this.source?.let { reference ->
             var preview = reference.title
 
             if(reference.subTitle.isNullOrBlank() == false) {
@@ -75,7 +75,7 @@ val Entry.referencePreview: String
     }
 
 
-val Entry.tagsPreview: String
+val Item.tagsPreview: String
     get() {
         return this.tags.filterNotNull().sortedBy { it.name.toLowerCase() }.joinToString { it.name }
     }

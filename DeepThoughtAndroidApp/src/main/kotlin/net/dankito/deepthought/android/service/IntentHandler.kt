@@ -1,7 +1,7 @@
 package net.dankito.deepthought.android.service
 
 import android.content.Intent
-import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.utils.UrlUtil
@@ -58,7 +58,7 @@ class IntentHandler(private val articleExtractorManager: ArticleExtractorManager
             abstractPlain = intent.getStringExtra(Intent.EXTRA_TITLE)
         }
 
-        router.showEditEntryView(Entry("<p>$sharedText</p>", "<p>$abstractPlain</p>"))
+        router.showEditEntryView(Item("<p>$sharedText</p>", "<p>$abstractPlain</p>"))
     }
 
 

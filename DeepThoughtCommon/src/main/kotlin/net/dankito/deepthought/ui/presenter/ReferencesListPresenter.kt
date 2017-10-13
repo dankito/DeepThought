@@ -1,7 +1,7 @@
 package net.dankito.deepthought.ui.presenter
 
 import net.dankito.deepthought.di.CommonComponent
-import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.IReferencesListView
 import net.dankito.service.data.DeleteEntityService
@@ -38,7 +38,7 @@ class ReferencesListPresenter(private var view: IReferencesListView, router: IRo
         searchReferences(lastSearchTermProperty)
     }
 
-    override fun retrievedSearchResults(result: List<Reference>) {
+    override fun retrievedSearchResults(result: List<Source>) {
         super.retrievedSearchResults(result)
 
         view.showEntities(result)
@@ -50,8 +50,8 @@ class ReferencesListPresenter(private var view: IReferencesListView, router: IRo
 
 
 
-    fun showEntriesForReference(reference: Reference) {
-        router.showEntriesForReference(reference)
+    fun showEntriesForReference(source: Source) {
+        router.showEntriesForReference(source)
     }
 
 

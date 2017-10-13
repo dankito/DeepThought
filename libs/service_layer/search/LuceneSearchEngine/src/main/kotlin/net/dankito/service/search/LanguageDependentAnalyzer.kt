@@ -1,6 +1,6 @@
 package net.dankito.service.search
 
-import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Item
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.language.Language
 import org.apache.lucene.analysis.Analyzer
@@ -56,7 +56,7 @@ class LanguageDependentAnalyzer(private val languageDetector: ILanguageDetector)
     }
 
     override fun getWrappedAnalyzer(fieldName: String): Analyzer {
-        // only Entry's EntryContent and EntryAbstract are analyzed based on current language (so that stop words get removed and words are being stemmed)
+        // only Item's EntryContent and EntryAbstract are analyzed based on current language (so that stop words get removed and words are being stemmed)
         // this is a bit problematic: as we only be the field name, but not the field value, we cannot determine the language of Abstract and Content directly
         if(FieldName.EntryContent == fieldName || FieldName.EntryAbstract == fieldName) {
             return currentLanguageAnalyzer
@@ -138,11 +138,11 @@ class LanguageDependentAnalyzer(private val languageDetector: ILanguageDetector)
      *
      *
      * This is a bit problematic: as we only be the field name, but not the field value, we cannot determine the language of Abstract and Content directly
-     * So before an Entry's Abstract and Content can be analyzed, you have to tell LanguageDependentAnalyzer explicitly which Entry is going to be indexed next.
+     * So before an Item's Abstract and Content can be analyzed, you have to tell LanguageDependentAnalyzer explicitly which Item is going to be indexed next.
      *
-     * @param entry
+     * @param item
      */
-    fun setNextEntryToBeAnalyzed(entry: Entry, contentPlainText: String, abstractPlainText: String) {
+    fun setNextEntryToBeAnalyzed(item: Item, contentPlainText: String, abstractPlainText: String) {
         currentLanguageAnalyzer = getAnalyzerForTextLanguage(abstractPlainText + " " + contentPlainText)
     }
 

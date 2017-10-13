@@ -2,8 +2,8 @@ package net.dankito.deepthought.javafx.service.clipboard
 
 import javafx.scene.input.Clipboard
 import javafx.scene.input.ClipboardContent
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Series
 import net.dankito.utils.ui.IClipboardService
 
@@ -21,7 +21,7 @@ class JavaFXClipboardService : IClipboardService {
         Clipboard.getSystemClipboard().setContent(content)
     }
 
-    override fun copyEntryToClipboard(entry: Entry, reference: Reference?, series: Series?) {
+    override fun copyEntryToClipboard(item: Item, source: Source?, series: Series?) {
     }
 
 }

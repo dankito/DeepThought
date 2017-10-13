@@ -7,15 +7,15 @@ import javax.persistence.*
 import kotlin.collections.ArrayList
 
 
-@Entity(name = TableConfig.EntryTableName)
-data class Entry(
+@Entity(name = TableConfig.ItemTableName)
+data class Item(
 
-        @Column(name = TableConfig.EntryContentColumnName)
+        @Column(name = TableConfig.ItemContentColumnName)
         @Lob
         var content: String,
 
-        @Column(name = TableConfig.EntryAbstractColumnName)
-        var abstractString: String = "" // field cannot be named 'abstract' as this is a Java Keyword
+        @Column(name = TableConfig.ItemSummaryColumnName)
+        var summary: String = ""
 
 ) : BaseEntity(), Serializable {
 
@@ -24,38 +24,38 @@ data class Entry(
     }
 
 
-    @Column(name = TableConfig.EntryEntryIndexColumnName)
-    var entryIndex: Long = 0
+    @Column(name = TableConfig.ItemItemIndexColumnName)
+    var itemIndex: Long = 0
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = TableConfig.EntryTagJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.EntryTagJoinTableEntryIdColumnName)), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.EntryTagJoinTableTagIdColumnName)))
+    @JoinTable(name = TableConfig.ItemTagJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.ItemTagJoinTableItemIdColumnName)), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.ItemTagJoinTableTagIdColumnName)))
     var tags: MutableSet<Tag> = HashSet()
         private set
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "entry", cascade = arrayOf(CascadeType.PERSIST))
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "item", cascade = arrayOf(CascadeType.PERSIST))
     var notes: MutableSet<Note> = HashSet()
         private set
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = TableConfig.EntryAttachedFilesJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.EntryAttachedFilesJoinTableEntryIdColumnName)), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.EntryAttachedFilesJoinTableFileLinkIdColumnName)))
+    @JoinTable(name = TableConfig.ItemAttachedFilesJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.ItemAttachedFilesJoinTableItemIdColumnName)), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.ItemAttachedFilesJoinTableFileLinkIdColumnName)))
     var attachedFiles: MutableSet<FileLink> = HashSet()
         private set
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.MERGE))
-    @JoinColumn(name = TableConfig.EntryReferenceJoinColumnName)
-    var reference: Reference? = null
-        set(reference) {
-            field?.removeEntry(this)
+    @JoinColumn(name = TableConfig.ItemSourceJoinColumnName)
+    var source: Source? = null
+        set(source) {
+            field?.removeItem(this)
 
-            field = reference
+            field = source
 
-            reference?.addEntry(this)
+            source?.addItem(this)
         }
 
-    @Column(name = TableConfig.EntryIndicationColumnName)
+    @Column(name = TableConfig.ItemIndicationColumnName)
     var indication: String = ""
 
-    @Column(name = TableConfig.EntryPreviewColumnName)
+    @Column(name = TableConfig.ItemPreviewColumnName)
     var preview: String = ""
 
 
@@ -63,7 +63,7 @@ data class Entry(
 
 
     fun hasAbstract(): Boolean {
-        return abstractString.isNotBlank()
+        return summary.isNotBlank()
     }
 
     fun hasContent(): Boolean {
@@ -92,7 +92,7 @@ data class Entry(
 
     fun addTag(tag: Tag): Boolean {
         if (tags.add(tag)) {
-            tag.addEntry(this)
+            tag.addItem(this)
 
             return true
         }
@@ -102,7 +102,7 @@ data class Entry(
 
     fun removeTag(tag: Tag): Boolean {
         if (tags.remove(tag)) {
-            tag.removeEntry(this)
+            tag.removeItem(this)
 
             return true
         }
@@ -111,8 +111,8 @@ data class Entry(
     }
 
 
-    fun hasReference(): Boolean {
-        return reference != null
+    fun hasSource(): Boolean {
+        return source != null
     }
 
 
@@ -122,7 +122,7 @@ data class Entry(
 
     fun addNote(note: Note): Boolean {
         if (notes.add(note)) {
-            note.entry = this
+            note.item = this
 
             return true
         }
@@ -132,7 +132,7 @@ data class Entry(
 
     fun removeNote(note: Note): Boolean {
         if (notes.remove(note)) {
-            note.entry = null
+            note.item = null
 
             return true
         }
@@ -147,7 +147,7 @@ data class Entry(
 
     fun addAttachedFile(file: FileLink): Boolean {
         if (attachedFiles.contains(file)) {
-            file.addAsAttachmentToEntry(this)
+            file.addAsAttachmentToItem(this)
 
             return true
         }
@@ -157,7 +157,7 @@ data class Entry(
 
     fun removeAttachedFile(file: FileLink): Boolean {
         if (attachedFiles.remove(file)) {
-            file.removeAsAttachmentFromEntry(this)
+            file.removeAsAttachmentFromItem(this)
 
             return true
         }
@@ -173,7 +173,7 @@ data class Entry(
 
     override fun toString(): String {
         val contentLength = if(content.length > 100) 100 else content.length
-        return "" + entryIndex + ", " + id + ": " + content.substring(0, contentLength) + "; " + reference
+        return "" + itemIndex + ", " + id + ": " + content.substring(0, contentLength) + "; " + source
     }
 
 }

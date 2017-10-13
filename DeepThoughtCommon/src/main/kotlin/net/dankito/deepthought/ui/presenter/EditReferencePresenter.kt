@@ -1,6 +1,6 @@
 package net.dankito.deepthought.ui.presenter
 
-import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.data.ReferencePersister
@@ -60,20 +60,20 @@ class EditReferencePresenter(searchEngine: ISearchEngine, router: IRouter, clipb
     }
 
 
-    fun saveReferenceAsync(reference: Reference, series: Series?, publishingDateInput: Date?, publishingDateStringInput: String?, callback: (Boolean) -> Unit) {
+    fun saveReferenceAsync(source: Source, series: Series?, publishingDateInput: Date?, publishingDateStringInput: String?, callback: (Boolean) -> Unit) {
         val publishingDateString = if(publishingDateStringInput.isNullOrBlank()) null else publishingDateStringInput
         val publishingDate = if(publishingDateInput != null) publishingDateInput
                              else if(publishingDateString != null) parsePublishingDate(publishingDateString)
                              else null
 
-        reference.setPublishingDate(publishingDate, publishingDateString)
+        source.setPublishingDate(publishingDate, publishingDateString)
 
-        referencePersister.saveReferenceAsync(reference, series, callback)
+        referencePersister.saveReferenceAsync(source, series, callback)
     }
 
 
-    fun editSeries(reference: Reference, series: Series?) {
-        router.showEditReferenceSeriesView(reference, series)
+    fun editSeries(source: Source, series: Series?) {
+        router.showEditReferenceSeriesView(source, series)
     }
 
 }

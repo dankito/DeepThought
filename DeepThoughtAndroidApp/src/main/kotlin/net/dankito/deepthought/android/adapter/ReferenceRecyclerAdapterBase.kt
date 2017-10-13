@@ -6,13 +6,13 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.list_item_reference.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.ReferenceViewHolder
-import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.extensions.seriesAndPublishingDatePreview
 import net.dankito.deepthought.ui.presenter.ReferencesPresenterBase
 
 
-abstract class ReferenceRecyclerAdapterBase(private val presenter: ReferencesPresenterBase): MultiSelectListRecyclerSwipeAdapter<Reference, ReferenceViewHolder>() {
+abstract class ReferenceRecyclerAdapterBase(private val presenter: ReferencesPresenterBase): MultiSelectListRecyclerSwipeAdapter<Source, ReferenceViewHolder>() {
 
     abstract val shouldShowImageIsReferenceAddedToEntry: Boolean
 
@@ -20,7 +20,7 @@ abstract class ReferenceRecyclerAdapterBase(private val presenter: ReferencesPre
 
     abstract val shouldShowButtonEditReference: Boolean
 
-    protected open fun isAddedToEntity(reference: Reference): Boolean {
+    protected open fun isAddedToEntity(source: Source): Boolean {
         return false
     }
 
@@ -47,7 +47,7 @@ abstract class ReferenceRecyclerAdapterBase(private val presenter: ReferencesPre
         viewHolder.imgChevronRight.visibility = View.GONE
     }
 
-    override fun bindItemToView(viewHolder: ReferenceViewHolder, item: Reference) {
+    override fun bindItemToView(viewHolder: ReferenceViewHolder, item: Source) {
         var seriesPreview: String? = item.seriesAndPublishingDatePreview
         if(seriesPreview.isNullOrBlank()) seriesPreview = null
 
@@ -58,7 +58,7 @@ abstract class ReferenceRecyclerAdapterBase(private val presenter: ReferencesPre
         viewHolder.imgChevronRight.visibility = if(shouldShowChevronRight) View.VISIBLE else View.GONE
     }
 
-    override fun setupSwipeView(viewHolder: ReferenceViewHolder, item: Reference) {
+    override fun setupSwipeView(viewHolder: ReferenceViewHolder, item: Source) {
         viewHolder.btnEditReference.visibility = if(shouldShowButtonEditReference) View.VISIBLE else View.GONE
         viewHolder.btnShareReference.visibility = if(item.url.isNullOrBlank()) View.GONE else View.VISIBLE
 

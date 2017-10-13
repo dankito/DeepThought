@@ -8,7 +8,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.EntryRecyclerAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EntityEntriesListPresenter
 import net.dankito.service.data.DeleteEntityService
@@ -76,21 +76,21 @@ abstract class EntriesListDialogBase : FullscreenDialogFragment() {
         }
     }
 
-    private fun showEntriesOnUiThread(entries: List<Entry>) {
-        adapter.items = entries
+    private fun showEntriesOnUiThread(items: List<Item>) {
+        adapter.items = items
     }
 
-    private fun showDialogTitleOnUiThread(entries: List<Entry>) {
+    private fun showDialogTitleOnUiThread(items: List<Item>) {
         toolbar?.let { toolbar -> // sometimes toolbar is null (why?)
-            toolbar.title = getDialogTitle(entries)
+            toolbar.title = getDialogTitle(items)
         }
     }
 
-    protected open fun getDialogTitle(entries: List<Entry>): String {
+    protected open fun getDialogTitle(items: List<Item>): String {
         return ""
     }
 
-    protected abstract fun retrieveEntries(callback: (List<Entry>) -> Unit)
+    protected abstract fun retrieveEntries(callback: (List<Item>) -> Unit)
 
 
     fun showDialog(fragmentManager: FragmentManager) {

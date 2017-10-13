@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.text.DateFormat
@@ -30,7 +30,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
 
-    override fun extractArticle(url: String): EntryExtractionResult? {
+    override fun extractArticle(url: String): ItemExtractionResult? {
         var siteUrl = url
         if(siteUrl.contains("?reduced=true")) {
             siteUrl = siteUrl.replace("?reduced=true", "")
@@ -39,7 +39,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         return super.extractArticle(siteUrl)
     }
 
-    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
+    override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         if(isMultiPageArticle(document) && triedToResolveMultiPageArticle == false) { // some multi page articles after fetching read all on one page still have the read all on  page link
             triedToResolveMultiPageArticle = true
             extractArticleWithPost(extractionResult, url, "article.singlePage=true") // -> extractArticleWithPost() would be called endlessly. that's what triedToResolveMultiPageArticle is there for to avoid this
@@ -63,7 +63,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
 
-    private fun extractArticle(extractionResult: EntryExtractionResult, siteContent: Element, siteUrl: String) {
+    private fun extractArticle(extractionResult: ItemExtractionResult, siteContent: Element, siteUrl: String) {
         val reference = extractReference(siteContent, siteUrl)
 
         siteContent.select("#article-body").first()?.let { articleBody ->
@@ -79,7 +79,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
                 content = "<p>" + previewImage.outerHtml() + "</p>" + content
             }
 
-            val entry = Entry(content, abstract)
+            val entry = Item(content, abstract)
 
             extractionResult.setExtractedContent(entry, reference)
         }
@@ -121,7 +121,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
 
-    private fun extractGalleryArticle(extractionResult: EntryExtractionResult, galleryArticleElement: Element, siteUrl: String) {
+    private fun extractGalleryArticle(extractionResult: ItemExtractionResult, galleryArticleElement: Element, siteUrl: String) {
         val reference = extractReference(galleryArticleElement, siteUrl)
 
         val abstract = galleryArticleElement.select(".entry-summary").first()?.text() ?: ""
@@ -132,7 +132,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
             articleBody.select(".offscreen").first()?.let { reference?.publishingDate = parseSueddeutscheDateString(it.text()) }
 
-            extractionResult.setExtractedContent(Entry(content.toString(), abstract), reference)
+            extractionResult.setExtractedContent(Item(content.toString(), abstract), reference)
         }
     }
 
@@ -168,7 +168,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
 
-    private fun extractReference(articleElement: Element, url: String): Reference? {
+    private fun extractReference(articleElement: Element, url: String): Source? {
         articleElement.select(".header").first()?.let { headerElement ->
             headerElement.select("h2").first()?.let { heading ->
                 var subTitle = ""
@@ -179,7 +179,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
                 val publishingDate = extractPublishingDate(headerElement)
 
-                return Reference(url, heading.text(), publishingDate, subTitle = subTitle)
+                return Source(url, heading.text(), publishingDate, subTitle = subTitle)
             }
         }
 

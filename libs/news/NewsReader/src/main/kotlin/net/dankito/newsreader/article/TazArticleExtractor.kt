@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.text.SimpleDateFormat
@@ -24,7 +24,7 @@ class TazArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClien
         return url.toLowerCase().contains("taz.de/") && url.length > (url.toLowerCase().indexOf("taz.de/") + "taz.de/".length)
     }
 
-    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
+    override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select(".sectbody").first()?.let { bodyElement ->
             val reference = extractReference(document, url, bodyElement)
 
@@ -34,18 +34,18 @@ class TazArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClien
             bodyElement.select("h1, h4, .intro, .caption, .rack, .ad_bin, .contentad, .sold").remove()
             val content = bodyElement.children().joinToString("") { it.outerHtml() }
 
-            extractionResult.setExtractedContent(Entry(content, abstract), reference)
+            extractionResult.setExtractedContent(Item(content, abstract), reference)
         }
     }
 
-    private fun extractReference(document: Document, url: String, bodyElement: Element): Reference {
+    private fun extractReference(document: Document, url: String, bodyElement: Element): Source {
         var title = ""
         bodyElement.select("h1").first()?.let { title = it.text().trim() }
 
         var subTitle = ""
         bodyElement.select("h4").first()?.let { subTitle = it.text().trim() }
 
-        val reference = Reference(url, title, subTitle = subTitle)
+        val reference = Source(url, title, subTitle = subTitle)
 
         bodyElement.select(".picture img").first()?.let { reference.previewImageUrl = makeLinkAbsolute(it.attr("src"), url) }
 

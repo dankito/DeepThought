@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.util.*
@@ -20,7 +20,7 @@ class TechStageArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
     }
 
 
-    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
+    override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("#content > article").first()?.let { articleElement ->
             articleElement.select("#article_content").first()?.let { contentElement ->
                 val reference = extractReference(articleElement, contentElement, url)
@@ -29,7 +29,7 @@ class TechStageArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
 
                 cleanContent(contentElement)
 
-                extractionResult.setExtractedContent(Entry(contentElement.outerHtml(), abstract), reference)
+                extractionResult.setExtractedContent(Item(contentElement.outerHtml(), abstract), reference)
             }
         }
     }
@@ -57,7 +57,7 @@ class TechStageArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
     }
 
 
-    private fun extractReference(articleElement: Element, contentElement: Element, url: String): Reference {
+    private fun extractReference(articleElement: Element, contentElement: Element, url: String): Source {
         val title = articleElement.select("h1").first()?.text()?.trim() ?: ""
 
         var previewImageUrl: String? = null
@@ -70,7 +70,7 @@ class TechStageArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
             publishingDate = parseIsoDateTimeString(timeElement.attr("datetime"))
         }
 
-        val reference = Reference(url, title, publishingDate, previewImageUrl)
+        val reference = Source(url, title, publishingDate, previewImageUrl)
 
         return reference
     }

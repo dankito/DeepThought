@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Node
@@ -24,7 +24,7 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
         return url.toLowerCase().contains("://www.spiegel.de/") && url.length > "://www.spiegel.de/".length + 4
     }
 
-    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
+    override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
             val contentElement = document.body().getElementById("content-main")
 
             val articleSectionElements = document.body().getElementsByClass("article-section")
@@ -38,11 +38,11 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
 
     }
 
-    private fun createEntry(articleSectionElements: Elements, articleIntroElements: Elements): Entry {
+    private fun createEntry(articleSectionElements: Elements, articleIntroElements: Elements): Item {
         val content = extractContentFromArticleSection(articleSectionElements)
         val abstractString = extractAbstractFromArticleIntro(articleIntroElements) ?: ""
 
-        return Entry(content, abstractString)
+        return Item(content, abstractString)
     }
 
     private fun extractContentFromArticleSection(articleSectionElements: Elements): String {
@@ -131,13 +131,13 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
         return abstractString
     }
 
-    private fun extractReference(articleUrl: String, contentElement: Element): Reference {
+    private fun extractReference(articleUrl: String, contentElement: Element): Source {
         val title = extractTitle(contentElement)
         val subTitle = extractSubTitle(contentElement)
 
         val publishingDate = extractPublishingDate(contentElement)
 
-        return Reference(articleUrl, title, publishingDate, subTitle = subTitle)
+        return Source(articleUrl, title, publishingDate, subTitle = subTitle)
     }
 
     private fun extractTitle(contentElement: Element): String {

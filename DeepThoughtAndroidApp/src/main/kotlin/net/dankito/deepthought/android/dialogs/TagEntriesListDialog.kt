@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.CalculatedTag
-import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Tag
 import net.dankito.service.data.TagService
 import net.dankito.service.data.messages.TagChanged
@@ -95,19 +95,19 @@ class TagEntriesListDialog : EntriesListDialogBase() {
     }
 
 
-    override fun retrieveEntries(callback: (List<Entry>) -> Unit) {
+    override fun retrieveEntries(callback: (List<Item>) -> Unit) {
         tag?.let {
             retrieveEntries(it, callback)
         }
 
         if(tag == null) {
-            callback(ArrayList<Entry>())
+            callback(ArrayList<Item>())
         }
     }
 
-    private fun retrieveEntries(tag: Tag, callback: (List<Entry>) -> Unit) {
+    private fun retrieveEntries(tag: Tag, callback: (List<Item>) -> Unit) {
         if(tag is CalculatedTag) {
-            callback(tag.entries)
+            callback(tag.items)
         }
         else {
             searchEngine.searchEntries(EntriesSearch(entriesMustHaveTheseTags = mutableListOf(tag, *tagsFilter.toTypedArray())) {
@@ -116,12 +116,12 @@ class TagEntriesListDialog : EntriesListDialogBase() {
         }
     }
 
-    override fun getDialogTitle(entries: List<Entry>): String {
+    override fun getDialogTitle(items: List<Item>): String {
         tag?.let {
-            return it.name + " (" + entries.size + ")"
+            return it.name + " (" + items.size + ")"
         }
 
-        return super.getDialogTitle(entries)
+        return super.getDialogTitle(items)
     }
 
 

@@ -1,6 +1,6 @@
 package net.dankito.service.search.writerandsearcher
 
-import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.extensions.abstractPlainText
 import net.dankito.deepthought.model.extensions.contentPlainText
 import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
@@ -24,15 +24,15 @@ import org.apache.lucene.search.*
 
 
 class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool)
-    : IndexWriterAndSearcher<Entry>(entryService, eventBus, osHelper, threadPool) {
+    : IndexWriterAndSearcher<Item>(entryService, eventBus, osHelper, threadPool) {
 
     companion object {
-        private val MaxEntriesSearchResults = 1000000 // e.g. for AllEntriesCalculatedTag all entries must be returned
+        private val MaxEntriesSearchResults = 1000000 // e.g. for AllEntriesCalculatedTag all items must be returned
     }
 
 
     override fun getDirectoryName(): String {
-        return "entries"
+        return "items"
     }
 
     override fun getIdFieldName(): String {
@@ -40,14 +40,14 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
     }
 
 
-    override fun addEntityFieldsToDocument(entity: Entry, doc: Document) {
+    override fun addEntityFieldsToDocument(entity: Item, doc: Document) {
         val contentPlainText = entity.contentPlainText
         val abstractPlainText = entity.abstractPlainText
 
         doc.add(Field(FieldName.EntryAbstract, abstractPlainText, TextField.TYPE_NOT_STORED))
         doc.add(Field(FieldName.EntryContent, contentPlainText, TextField.TYPE_NOT_STORED))
 
-        doc.add(LongField(FieldName.EntryIndex, entity.entryIndex, Field.Store.YES))
+        doc.add(LongField(FieldName.EntryIndex, entity.itemIndex, Field.Store.YES))
 
         doc.add(LongField(FieldName.EntryCreated, entity.createdOn.time, Field.Store.YES))
 
@@ -61,7 +61,7 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
             doc.add(StringField(FieldName.EntryNoTags, FieldValue.NoTagsFieldValue, Field.Store.NO))
         }
 
-        val reference = entity.reference
+        val reference = entity.source
         if(reference != null) {
             doc.add(Field(FieldName.EntryReference, reference.previewWithSeriesAndPublishingDate, TextField.TYPE_NOT_STORED))
             doc.add(StringField(FieldName.EntryReferenceId, reference.id, Field.Store.YES))
@@ -86,7 +86,7 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
 
         addQueryForSearchTerm(termsToFilterFor, query, search)
 
-        executeQueryForSearchWithCollectionResult(search, query, Entry::class.java, MaxEntriesSearchResults, SortOption(FieldName.EntryCreated, SortOrder.Descending, SortField.Type.LONG))
+        executeQueryForSearchWithCollectionResult(search, query, Item::class.java, MaxEntriesSearchResults, SortOption(FieldName.EntryCreated, SortOrder.Descending, SortField.Type.LONG))
     }
 
     private fun addQueryForOptions(search: EntriesSearch, query: BooleanQuery) {
@@ -103,7 +103,7 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
             query.add(filterEntriesQuery, BooleanClause.Occur.MUST)
         }
 
-        search.entriesMustHaveThisReference?.id?.let { referenceId ->
+        search.entriesMustHaveThisSource?.id?.let { referenceId ->
             val filterReferenceQuery = BooleanQuery()
             filterReferenceQuery.add(TermQuery(Term(FieldName.EntryReferenceId, referenceId)), BooleanClause.Occur.MUST)
 

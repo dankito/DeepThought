@@ -19,8 +19,8 @@ import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
 import net.dankito.deepthought.javafx.ui.controls.JavaFXHtmlEditor
 import net.dankito.deepthought.javafx.util.FXUtils
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
@@ -36,8 +36,8 @@ import javax.inject.Inject
 
 abstract class EditEntryViewBase : DialogFragment() {
 
-    // param values for Entry and EntryExtractionResult are evaluated after root has been initialized -> Entry is null at root initialization stage.
-    // so i had to find a way to mitigate that Entry / EntryExtractionResult is not initialized yet
+    // param values for Item and ItemExtractionResult are evaluated after root has been initialized -> Item is null at root initialization stage.
+    // so i had to find a way to mitigate that Item / ItemExtractionResult is not initialized yet
 
     protected val abstractPlainText = SimpleStringProperty()
 
@@ -68,13 +68,13 @@ abstract class EditEntryViewBase : DialogFragment() {
     private val presenter: EditEntryPresenter
 
 
-    private var entry: Entry? = null
+    private var item: Item? = null
 
     private var abstractToEdit = ""
 
     private val tagsOnEntry: ObservableSet<Tag> = FXCollections.observableSet()
 
-    private var referenceToEdit: Reference? = null
+    private var sourceToEdit: Source? = null
 
     private var seriesToEdit: Series? = null
 
@@ -262,26 +262,26 @@ abstract class EditEntryViewBase : DialogFragment() {
     }
 
 
-    protected fun showData(entry: Entry, tags: Collection<Tag>, reference: Reference?, series: Series?, contentToEdit: String? = null) {
-        this.entry = entry
-        abstractToEdit = entry.abstractString
+    protected fun showData(item: Item, tags: Collection<Tag>, source: Source?, series: Series?, contentToEdit: String? = null) {
+        this.item = item
+        abstractToEdit = item.summary
         tagsOnEntry.addAll(tags) // make a copy
-        referenceToEdit = reference
+        sourceToEdit = source
         seriesToEdit = series
 
         abstractPlainText.value = Jsoup.parseBodyFragment(abstractToEdit).text()
 
-        showContent(entry, reference, contentToEdit)
+        showContent(item, source, contentToEdit)
 
         showTagsPreview(tagsOnEntry)
-        showReferencePreview(reference, series)
+        showReferencePreview(source, series)
     }
 
-    private fun showContent(entry: Entry, reference: Reference?, contentToEdit: String?) {
-        val content = contentToEdit ?: entry.content
+    private fun showContent(item: Item, source: Source?, contentToEdit: String?) {
+        val content = contentToEdit ?: item.content
 
-        if(content.isNullOrBlank() && reference?.url != null) { // content could not get extracted yet -> show url and when its html is loaded try to extract content then
-            reference.url?.let { url ->
+        if(content.isNullOrBlank() && source?.url != null) { // content could not get extracted yet -> show url and when its html is loaded try to extract content then
+            source.url?.let { url ->
                 wbvwShowUrl.engine.load(url)
                 currentlyDisplayedUrl = url
 
@@ -297,8 +297,8 @@ abstract class EditEntryViewBase : DialogFragment() {
         }
     }
 
-    private fun showReferencePreview(reference: Reference?, series: Series?) {
-        this.referencePreview.value = reference?.getPreviewWithSeriesAndPublishingDate(series) ?: ""
+    private fun showReferencePreview(source: Source?, series: Series?) {
+        this.referencePreview.value = source?.getPreviewWithSeriesAndPublishingDate(series) ?: ""
     }
 
     private fun showTagsPreview(tags: Collection<Tag>) {
@@ -316,11 +316,11 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     private fun updateEntryAndSaveAsync(done: () -> Unit) {
         htmlEditor.getHtmlAsync {
-            entry?.let { entry ->
+            item?.let { entry ->
                 entry.content = it
-                entry.abstractString = abstractToEdit
+                entry.summary = abstractToEdit
 
-                presenter.saveEntryAsync(entry, referenceToEdit, seriesToEdit, tagsOnEntry) {
+                presenter.saveEntryAsync(entry, sourceToEdit, seriesToEdit, tagsOnEntry) {
                     done()
                 }
             }
