@@ -227,7 +227,7 @@ abstract class CouchbaseLiteEntityManagerBase(protected var context: Context, pr
     fun getDaoForClass(entityClass: Class<*>): Dao? {
         val dao = mapEntityClassesToDaos[entityClass]
         if (dao == null) {
-            log.error("It was requested to persist or update Entity of type $entityClass, but mapEntityClassesToDaos does not contain an Entry for this Entity.")
+            log.error("It was requested to persist or update Entity of type $entityClass, but mapEntityClassesToDaos does not contain an Item for this Entity.")
         }
 
         return dao
