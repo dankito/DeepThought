@@ -75,12 +75,14 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
             initializeIndexSearchersAndWriters()
 
-            if(indexDirExists == false) {
-                // TODO: inform user that index is going to be rebuilt and that this takes some time
-                rebuildIndex() // do not rebuild index asynchronously as Application depends on some functions of SearchEngine (like Entries without Tags)
-            }
+            dataManager.addInitializationListener {
+                if(indexDirExists == false) {
+                    // TODO: inform user that index is going to be rebuilt and that this takes some time
+                    rebuildIndex() // do not rebuild index asynchronously as Application depends on some functions of SearchEngine (like Entries without Tags)
+                }
 
-            searchEngineInitialized()
+                searchEngineInitialized()
+            }
         } catch (ex: Exception) {
             log.error("Could not open Lucene Index Directory" , ex)
         }
