@@ -12,8 +12,6 @@ interface ISearchEngine {
 
     fun searchTags(search: TagsSearch)
 
-//    fun getEntriesForTagAsync(tag: Tag, listener: SearchCompletedListener<Collection<Entry>>)
-
     fun searchFilteredTags(search: FilteredTagsSearch)
 
     fun searchReferences(search: ReferenceSearch)
