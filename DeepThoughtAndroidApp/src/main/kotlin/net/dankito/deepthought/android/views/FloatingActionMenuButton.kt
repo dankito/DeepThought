@@ -1,10 +1,15 @@
 package net.dankito.deepthought.android.views
 
+import android.os.Bundle
 import android.view.MotionEvent
 import com.github.clans.fab.FloatingActionMenu
 
 
 open class FloatingActionMenuButton(protected val floatingActionMenu: FloatingActionMenu) {
+
+    companion object {
+        private const val IS_OPENED_EXTRA_NAME = "IS_OPENED"
+    }
 
 
     init {
@@ -47,6 +52,21 @@ open class FloatingActionMenuButton(protected val floatingActionMenu: FloatingAc
         }
 
         return false
+    }
+
+
+    fun saveInstanceState(outState: Bundle?) {
+        outState?.let {
+            outState.putBoolean(IS_OPENED_EXTRA_NAME, floatingActionMenu.isOpened)
+        }
+    }
+
+    fun restoreInstanceState(savedInstanceState: Bundle?) {
+        savedInstanceState?.let {
+            if(savedInstanceState.getBoolean(IS_OPENED_EXTRA_NAME, false)) {
+                floatingActionMenu.open(false)
+            }
+        }
     }
 
 }

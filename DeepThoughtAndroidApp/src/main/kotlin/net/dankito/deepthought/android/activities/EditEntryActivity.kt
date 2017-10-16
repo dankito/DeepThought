@@ -233,6 +233,8 @@ class EditEntryActivity : BaseActivity() {
         savedInstanceState.getString(REFERENCE_INTENT_EXTRA_NAME)?.let { referenceID -> restoreReference(referenceID) }
 
         savedInstanceState.getString(TAGS_ON_ENTRY_INTENT_EXTRA_NAME)?.let { tagsOnEntryIds -> restoreTagsOnEntryAsync(tagsOnEntryIds) }
+
+        floatingActionMenu.restoreInstanceState(savedInstanceState)
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -261,6 +263,8 @@ class EditEntryActivity : BaseActivity() {
             outState.putString(CONTENT_INTENT_EXTRA_NAME, contentToEdit)
 
             outState.putString(ABSTRACT_INTENT_EXTRA_NAME, abstractToEdit)
+
+            floatingActionMenu.saveInstanceState(outState)
         }
     }
 

@@ -110,6 +110,19 @@ class MainActivity : BaseActivity() {
     }
 
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+
+        floatingActionMenuButton.saveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        floatingActionMenuButton.restoreInstanceState(savedInstanceState)
+    }
+
+
     override fun onResume() {
         super.onResume()
 
