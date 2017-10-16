@@ -31,7 +31,7 @@ fun Item.getEntryPreview(includeItemSummary: Boolean = true): String {
 
     if(preview.length < MaxPreviewLength) {
         if(preview.isNotEmpty()) {
-            preview += " "
+            preview += "\n"
         }
 
         preview += this.contentPlainText
