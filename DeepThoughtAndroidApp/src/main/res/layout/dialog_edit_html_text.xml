@@ -5,12 +5,21 @@
                 android:layout_height="match_parent"
                 android:background="#FFFFFF"
 >
+
+    <jp.wasabeef.richeditor.RichEditor
+        android:id="@+id/editor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/lytEditorToolbar"
+    />
+
     <LinearLayout
         android:id="@+id/lytEditorToolbar"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dialog_edit_html_text_editor_toolbar_height"
-        android:layout_alignParentTop="true"
+        android:layout_above="@+id/toolbar"
         android:background="@color/toolbar_background_color"
     >
 
@@ -65,14 +74,6 @@
         />
 
     </LinearLayout>
-
-    <jp.wasabeef.richeditor.RichEditor
-        android:id="@+id/editor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/lytEditorToolbar"
-        android:layout_above="@+id/toolbar"
-    />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
