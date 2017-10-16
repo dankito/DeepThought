@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/vwIsAddedToEntityBorder"
         android:layout_toEndOf="@+id/vwIsAddedToEntityBorder"
-        android:src="@drawable/ic_add"
+        android:src="@drawable/ic_add_circle_outline"
     />
 
     <!-- needed to center TextViews vertically -->
