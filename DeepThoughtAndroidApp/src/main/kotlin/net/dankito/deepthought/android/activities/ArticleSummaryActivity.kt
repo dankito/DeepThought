@@ -11,6 +11,7 @@ import android.view.*
 import kotlinx.android.synthetic.main.activity_article_summary.*
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.deepthought.android.R
+import net.dankito.deepthought.android.activities.arguments.ArticleSummaryActivityParameters
 import net.dankito.deepthought.android.adapter.ArticleSummaryItemRecyclerAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.di.AppComponent
@@ -87,6 +88,16 @@ class ArticleSummaryActivity : BaseActivity() {
         savedInstanceState?.let { restoreState(it) }
 
         restoreState(intent)
+
+        if(savedInstanceState == null) {
+            showParameters(getParameters() as? ArticleSummaryActivityParameters)
+        }
+    }
+
+    private fun showParameters(parameters: ArticleSummaryActivityParameters?) {
+        if(parameters != null) {
+            restoreState(parameters.extractorConfig.url, parameters.summary)
+        }
     }
 
     private fun restoreState(intent: Intent) {
@@ -100,11 +111,17 @@ class ArticleSummaryActivity : BaseActivity() {
     private fun restoreState(extractorUrl: String?, serializedLastLoadedSummary: String?) {
         extractorUrl?.let { initializeArticlesSummaryExtractor(it) }
 
-        if(serializedLastLoadedSummary != null) {
-            val summary = serializer.deserializeObject(serializedLastLoadedSummary, ArticleSummary::class.java)
-            presenter.setArticleSummaryExtractorConfigOnItems(summary, this.extractorConfig) // set extractorConfig on restored ArticleSummaryItems
+        val summary = if(serializedLastLoadedSummary != null) serializer.deserializeObject(serializedLastLoadedSummary, ArticleSummary::class.java) else null
+        restoreState(extractorUrl, summary)
+    }
 
-            showArticleSummaryOnUIThread(summary)
+    private fun restoreState(extractorUrl: String?, lastLoadedSummary: ArticleSummary? = null) {
+        extractorUrl?.let { initializeArticlesSummaryExtractor(it) }
+
+        if(lastLoadedSummary != null) {
+            presenter.setArticleSummaryExtractorConfigOnItems(lastLoadedSummary, this.extractorConfig) // set extractorConfig on restored ArticleSummaryItems
+
+            showArticleSummaryOnUIThread(lastLoadedSummary)
         }
         else {
             extractArticlesSummary()

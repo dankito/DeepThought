@@ -3,6 +3,7 @@ package net.dankito.deepthought.android.routing
 import android.content.Context
 import android.content.Intent
 import net.dankito.deepthought.android.activities.*
+import net.dankito.deepthought.android.activities.arguments.ArticleSummaryActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditEntryActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityParameters
@@ -56,11 +57,7 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
         val articleSummaryActivityIntent = Intent(context, ArticleSummaryActivity::class.java)
         articleSummaryActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-        articleSummaryActivityIntent.putExtra(ArticleSummaryActivity.EXTRACTOR_URL_INTENT_EXTRA_NAME, extractor.url)
-
-        summary?.let {
-            articleSummaryActivityIntent.putExtra(ArticleSummaryActivity.LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME, serializer.serializeObject(summary))
-        }
+        addParametersToIntent(articleSummaryActivityIntent, ArticleSummaryActivityParameters(extractor, summary))
 
         context.startActivity(articleSummaryActivityIntent)
     }
