@@ -72,7 +72,8 @@ class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): Mul
 
 
     private fun setTxtEntryPreviewMaxLines(txtEntryPreview: TextView, txtReferencePreview: TextView, item: Item) {
-        var countPreviewLines = if(item.hasSource()) 5 else 6
+        val isShowingReferencePreview = txtReferencePreview.visibility == View.VISIBLE
+        var countPreviewLines = if(isShowingReferencePreview) 5 else 6
 
         if(txtReferencePreview.lineCount == 2 || txtReferencePreview.text.length >= 50) {
             countPreviewLines--
@@ -81,7 +82,7 @@ class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): Mul
         if(item.hasTags()) {
             countPreviewLines--
 
-            if(item.hasSource()) { // if an item has a reference and tag(s) as well, reduce by another line due to space between lines
+            if(isShowingReferencePreview) { // if an item has a reference and tag(s) as well, reduce by another line due to space between lines
                 countPreviewLines--
             }
         }
