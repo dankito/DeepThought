@@ -45,6 +45,7 @@ class HeiseNewsArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
 
         val abstract = articleContentElement.select(".article-content__lead").first()?.text() ?: ""
 
+        cleanContentElement(articleContentElement)
         articleContentElement.select(".article-content__lead").remove()
 
         extractionResult.setExtractedContent(Item(articleContentElement.outerHtml(), abstract), reference)

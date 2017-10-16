@@ -68,11 +68,17 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
 
         val abstract = article.select("p.lead_text").first()?.text()?.trim() ?: ""
 
-        article.select("h1, figure.aufmacherbild, time, span.author, a.comments, p.lead_text, .comment, .btn-toolbar .whatsbroadcast-toolbar, #whatsbroadcast, " +
-                ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta, .widget-werbung, .ad_container, .ad_content").remove()
+        cleanContentElement(article)
+        article.select("h1").remove()
+
         val content = article.html()
 
         extractionResult.setExtractedContent(Item(content, abstract), reference)
+    }
+
+    protected fun cleanContentElement(contentElement: Element) {
+        contentElement.select("h1, figure.aufmacherbild, time, span.author, a.comments, p.lead_text, .comment, .btn-toolbar, .whatsbroadcast-toolbar, #whatsbroadcast, " +
+                ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta, .widget-werbung, .ad_container, .ad_content").remove()
     }
 
     private fun extractMobileArticleReference(article: Element, url: String): Source {
