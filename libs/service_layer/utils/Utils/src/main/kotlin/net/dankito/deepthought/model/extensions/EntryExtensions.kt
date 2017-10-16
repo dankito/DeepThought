@@ -7,7 +7,7 @@ import net.dankito.deepthought.model.Source
 
 const val SeriesAndPublishingDateAndEntryPreviewSeparator = " | "
 
-private const val MaxPreviewLength = 400
+const val MaxPreviewLength = 400
 
 
 val Item.abstractPlainText: String

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.ArticleSummaryItemViewHolder
+import net.dankito.deepthought.model.extensions.MaxPreviewLength
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.newsreader.model.ArticleSummaryItem
 
@@ -35,7 +36,11 @@ class ArticleSummaryItemRecyclerAdapter(activity: AppCompatActivity, private val
         viewHolder.txtTitle.visibility = if(item.title.isBlank()) View.GONE else View.VISIBLE
         viewHolder.txtTitle.text = item.title
 
-        viewHolder.txtSummary.text = item.summary
+        var summary = item.summary
+        if(summary.length > MaxPreviewLength) {
+            summary = summary.substring(0, MaxPreviewLength) + "..."
+        }
+        viewHolder.txtSummary.text = summary
 
         Picasso.with(viewHolder.itemView.context)
                 .load(item.previewImageUrl)
