@@ -3,9 +3,9 @@ package net.dankito.deepthought.android.routing
 import android.content.Context
 import android.content.Intent
 import net.dankito.deepthought.android.activities.*
+import net.dankito.deepthought.android.activities.arguments.EditEntryActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityParameters
-import net.dankito.deepthought.android.activities.arguments.EntryActivityParameters
 import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
 import net.dankito.deepthought.android.dialogs.ReferenceEntriesListDialog
@@ -71,22 +71,22 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
 
 
     override fun showCreateEntryView() {
-        showEditEntryView(EntryActivityParameters(createEntry = true))
+        showEditEntryView(EditEntryActivityParameters(createEntry = true))
     }
 
     override fun showEditEntryView(item: Item) {
-        showEditEntryView(EntryActivityParameters(item))
+        showEditEntryView(EditEntryActivityParameters(item))
     }
 
     override fun showEditEntryView(article: ReadLaterArticle) {
-        showEditEntryView(EntryActivityParameters(readLaterArticle = article))
+        showEditEntryView(EditEntryActivityParameters(readLaterArticle = article))
     }
 
     override fun showEditEntryView(extractionResult: ItemExtractionResult) {
-        showEditEntryView(EntryActivityParameters(itemExtractionResult = extractionResult))
+        showEditEntryView(EditEntryActivityParameters(itemExtractionResult = extractionResult))
     }
 
-    private fun showEditEntryView(parameters: EntryActivityParameters) {
+    private fun showEditEntryView(parameters: EditEntryActivityParameters) {
         val editEntryIntent = Intent(context, EditEntryActivity::class.java)
         editEntryIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 

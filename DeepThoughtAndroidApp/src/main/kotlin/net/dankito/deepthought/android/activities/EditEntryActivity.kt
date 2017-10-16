@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.view_floating_action_button_entry_fields.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditEntryActivityResult
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
-import net.dankito.deepthought.android.activities.arguments.EntryActivityParameters
+import net.dankito.deepthought.android.activities.arguments.EditEntryActivityParameters
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.EditHtmlTextDialog
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
@@ -204,7 +204,7 @@ class EditEntryActivity : BaseActivity() {
         savedInstanceState?.let { restoreState(it) }
 
         if(savedInstanceState == null) {
-            showParameters(getParameters() as? EntryActivityParameters)
+            showParameters(getParameters() as? EditEntryActivityParameters)
         }
     }
 
@@ -1276,7 +1276,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
 
-    private fun showParameters(parameters: EntryActivityParameters?) {
+    private fun showParameters(parameters: EditEntryActivityParameters?) {
         if(parameters != null) {
             parameters.item?.let { editEntry(it) }
 
