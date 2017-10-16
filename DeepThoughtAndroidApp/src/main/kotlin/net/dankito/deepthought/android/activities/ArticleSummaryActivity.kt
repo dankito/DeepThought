@@ -80,8 +80,6 @@ class ArticleSummaryActivity : BaseActivity() {
 
         setupUI()
 
-        savedInstanceState?.let { restoreState(it) }
-
         if(savedInstanceState == null) {
             showParameters(getParameters() as? ArticleSummaryActivityParameters)
         }
@@ -91,6 +89,12 @@ class ArticleSummaryActivity : BaseActivity() {
         if(parameters != null) {
             restoreState(parameters.extractorConfig.url, parameters.summary)
         }
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        savedInstanceState?.let { restoreState(it) }
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
