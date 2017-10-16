@@ -2,7 +2,7 @@ ext {
 
     appVersionName = '0.2'
 
-    appVersionCode = 16
+    appVersionCode = 17
 
     kotlinVersion = '1.1.4-3'
 
