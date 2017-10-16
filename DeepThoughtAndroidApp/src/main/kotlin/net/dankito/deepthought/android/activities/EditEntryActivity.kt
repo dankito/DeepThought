@@ -911,6 +911,9 @@ class EditEntryActivity : BaseActivity() {
             super.onBackPressed()
             return
         }
+        else if(floatingActionMenu.handlesBackButtonPress()) {
+            return
+        }
 
         askIfUnsavedChangesShouldBeSavedAndCloseDialog()
     }
