@@ -18,9 +18,9 @@ import com.github.clans.fab.FloatingActionMenu
 import kotlinx.android.synthetic.main.activity_edit_entry.*
 import kotlinx.android.synthetic.main.view_floating_action_button_entry_fields.*
 import net.dankito.deepthought.android.R
+import net.dankito.deepthought.android.activities.arguments.EditEntryActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditEntryActivityResult
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
-import net.dankito.deepthought.android.activities.arguments.EditEntryActivityParameters
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.EditHtmlTextDialog
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
@@ -45,7 +45,6 @@ import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntryChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.IThreadPool
-import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import net.engio.mbassy.listener.Handler
@@ -105,9 +104,6 @@ class EditEntryActivity : BaseActivity() {
 
     @Inject
     protected lateinit var threadPool: IThreadPool
-
-    @Inject
-    protected lateinit var serializer: ISerializer
 
     @Inject
     protected lateinit var articleExtractorManager: ArticleExtractorManager

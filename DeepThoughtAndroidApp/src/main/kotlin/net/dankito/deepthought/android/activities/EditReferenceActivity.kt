@@ -18,12 +18,12 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.PickDateDialog
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.views.ToolbarUtil
-import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.model.Series
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.fields.SourceField
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditReferencePresenter
-import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.SeriesService
@@ -33,7 +33,6 @@ import net.dankito.service.data.messages.ReferenceChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.ReferenceSearch
-import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import net.engio.mbassy.listener.Handler
@@ -65,9 +64,6 @@ class EditReferenceActivity : BaseActivity() {
 
     @Inject
     protected lateinit var referencePersister: ReferencePersister
-
-    @Inject
-    protected lateinit var serializer: ISerializer
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine

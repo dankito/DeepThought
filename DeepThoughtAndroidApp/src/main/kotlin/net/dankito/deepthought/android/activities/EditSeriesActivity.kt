@@ -16,11 +16,11 @@ import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemD
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.views.ToolbarUtil
-import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.model.Series
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditSeriesPresenter
-import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.ui.view.ISeriesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReferenceService
@@ -31,7 +31,6 @@ import net.dankito.service.data.messages.SeriesChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.IThreadPool
-import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.ui.IDialogService
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
@@ -57,9 +56,6 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
 
     @Inject
     protected lateinit var seriesPersister: SeriesPersister
-
-    @Inject
-    protected lateinit var serializer: ISerializer
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine

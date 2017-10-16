@@ -2,9 +2,12 @@ package net.dankito.deepthought.android.activities
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.deepthought.android.service.ActivityParameterHolder
 import net.dankito.deepthought.android.service.CurrentActivityTracker
+import net.dankito.utils.serialization.ISerializer
 import org.slf4j.LoggerFactory
+import java.io.File
 import javax.inject.Inject
 
 
@@ -24,6 +27,12 @@ open class BaseActivity : AppCompatActivity() {
 
     @Inject
     protected lateinit var parameterHolder: ActivityParameterHolder
+
+    @Inject
+    protected lateinit var fileStorageService: IFileStorageService
+
+    @Inject
+    protected lateinit var serializer: ISerializer
 
 
     private var waitingForResultWithId: String? = null
@@ -117,6 +126,38 @@ open class BaseActivity : AppCompatActivity() {
 
     protected fun clearAllActivityResults() {
         parameterHolder.clearActivityResults()
+    }
+
+
+    /**
+     * When objects are too large to put them into a bundle in onSaveInstance(), write them to disk and put only their temp path to bundle
+     */
+    protected fun serializeToTempFileOnDisk(objectToRestore: Any): String? {
+        try {
+            val serializedObject = serializer.serializeObject(objectToRestore)
+
+            val tempFile = File.createTempFile("ToRestore", ".json")
+            fileStorageService.writeToTextFile(serializedObject, tempFile)
+
+            return tempFile.absolutePath
+        } catch(e: Exception) { log.error("Could not write object to restore $objectToRestore to disk", e) }
+
+        return null
+    }
+
+    protected fun<T>  restoreSerializedObjectFromDisk(id: String, objectClass: Class<T>): T? {
+        try {
+            val file = File(id)
+            fileStorageService.readFromTextFile(file)?.let { serializedObject ->
+                val deserializedObject = serializer.deserializeObject(serializedObject, objectClass)
+
+                try { file.delete() } catch(ignored: Exception) { }
+
+                return deserializedObject
+            }
+        } catch(e: Exception) { log.error("Could not restore object of type $objectClass from $id", e) }
+
+        return null
     }
 
 }

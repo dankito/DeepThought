@@ -23,7 +23,6 @@ import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.utils.ImageCache
-import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import org.slf4j.LoggerFactory
@@ -42,9 +41,6 @@ class ArticleSummaryActivity : BaseActivity() {
 
     @Inject
     protected lateinit var extractorsConfigManager: ArticleSummaryExtractorConfigManager
-
-    @Inject
-    protected lateinit var serializer: ISerializer
 
     @Inject
     protected lateinit var imageCache: ImageCache
