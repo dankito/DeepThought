@@ -19,7 +19,6 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.localization.Localization
-import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.services.network.INetworkConnectivityManager
 import net.dankito.utils.services.network.NetworkHelper
 import net.dankito.utils.settings.ILocalSettingsStore
@@ -84,8 +83,8 @@ class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
-    fun provideRouter(context: Context, parameterHolder: ActivityParameterHolder, activityTracker: CurrentActivityTracker, serializer: ISerializer) : IRouter {
-        return AndroidRouter(context, parameterHolder, activityTracker, serializer)
+    fun provideRouter(context: Context, parameterHolder: ActivityParameterHolder, activityTracker: CurrentActivityTracker) : IRouter {
+        return AndroidRouter(context, parameterHolder, activityTracker)
     }
 
 

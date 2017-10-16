@@ -17,10 +17,9 @@ import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.newsreader.model.ArticleSummary
-import net.dankito.utils.serialization.ISerializer
 
 
-class AndroidRouter(private val context: Context, private val parameterHolder: ActivityParameterHolder, private val activityTracker: CurrentActivityTracker, private val serializer: ISerializer) : IRouter {
+class AndroidRouter(private val context: Context, private val parameterHolder: ActivityParameterHolder, private val activityTracker: CurrentActivityTracker) : IRouter {
 
 
     override fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {
