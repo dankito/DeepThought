@@ -8,6 +8,7 @@ import android.support.v7.widget.PopupMenu
 import android.text.Html
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
@@ -904,6 +905,14 @@ class EditEntryActivity : BaseActivity() {
                     .invoke(wbvwContent)
 
         } catch(ignored: Exception) { }
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if(floatingActionMenu.handlesTouch(event)) { // close menu when menu is opened and touch is outside floatingActionMenuButton
+            return true
+        }
+
+        return super.dispatchTouchEvent(event)
     }
 
     override fun onBackPressed() {
