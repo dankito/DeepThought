@@ -72,7 +72,7 @@ class IsAddedToEntityView : RelativeLayout {
                 vwIsAddedToEntityBorder.visibility = View.VISIBLE
             }
             else {
-                imgIsAddedToEntity.setImageResource(R.drawable.ic_add)
+                imgIsAddedToEntity.setImageResource(R.drawable.ic_add_circle_outline)
                 txtvwEntityName.setTypeface(null, Typeface.NORMAL)
                 vwIsAddedToEntityBorder.visibility = View.INVISIBLE
             }
