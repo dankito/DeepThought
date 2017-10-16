@@ -1082,6 +1082,10 @@ class EditEntryActivity : BaseActivity() {
         mnSaveEntryExtractionResultForLaterReading?.isEnabled = false
         unregisterEventBusListener()
 
+        if(lytAbstractPreview.hasFocus()) { // OnFocusChangeListener doesn't get called when save action gets pressed
+            appliedChangesToAbstract(lytAbstractPreview.didValueChange)
+        }
+
         saveEntryAsync { successful ->
             if(successful) {
                 mayShowSavedReadLaterArticleHelpAndCloseDialog()
