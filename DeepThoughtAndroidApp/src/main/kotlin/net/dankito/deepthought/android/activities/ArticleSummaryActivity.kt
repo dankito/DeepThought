@@ -1,6 +1,5 @@
 package net.dankito.deepthought.android.activities
 
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
@@ -83,8 +82,6 @@ class ArticleSummaryActivity : BaseActivity() {
 
         savedInstanceState?.let { restoreState(it) }
 
-        restoreState(intent)
-
         if(savedInstanceState == null) {
             showParameters(getParameters() as? ArticleSummaryActivityParameters)
         }
@@ -94,10 +91,6 @@ class ArticleSummaryActivity : BaseActivity() {
         if(parameters != null) {
             restoreState(parameters.extractorConfig.url, parameters.summary)
         }
-    }
-
-    private fun restoreState(intent: Intent) {
-        restoreState(intent.getStringExtra(EXTRACTOR_URL_INTENT_EXTRA_NAME), intent.getStringExtra(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME))
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
