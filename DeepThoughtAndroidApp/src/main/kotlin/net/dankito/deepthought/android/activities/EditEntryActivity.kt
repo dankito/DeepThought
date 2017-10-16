@@ -246,7 +246,7 @@ class EditEntryActivity : BaseActivity() {
             readLaterArticle?.id?.let { readLaterArticleId -> outState.putString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME, readLaterArticleId) }
 
             outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, null)
-            itemExtractionResult?.let { outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, serializer.serializeObject(it)) }
+            itemExtractionResult?.let { outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, serializeToTempFileOnDisk(it)) }
 
             outState.putBoolean(FORCE_SHOW_TAGS_PREVIEW_INTENT_EXTRA_NAME, forceShowTagsPreview)
             outState.putBoolean(FORCE_SHOW_REFERENCE_PREVIEW_INTENT_EXTRA_NAME, forceShowReferencePreview)
@@ -1322,9 +1322,9 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun editEntryExtractionResult(serializedExtractionResult: String) {
-        val extractionResult = serializer.deserializeObject(serializedExtractionResult, ItemExtractionResult::class.java)
-
-        editEntryExtractionResult(extractionResult)
+        restoreSerializedObjectFromDisk(serializedExtractionResult, ItemExtractionResult::class.java)?.let { extractionResult ->
+            editEntryExtractionResult(extractionResult)
+        }
     }
 
     private fun editEntryExtractionResult(extractionResult: ItemExtractionResult, updateContentPreview: Boolean = true) {
