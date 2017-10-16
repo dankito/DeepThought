@@ -104,7 +104,7 @@ class OkHttpWebClient : IWebClient {
     }
 
     private fun setPostBody(requestBuilder: Request.Builder, parameters: RequestParameters) {
-        if (parameters.isBodySet()) {
+        if(parameters.isBodySet()) {
             val mediaType = if (parameters.contentType === ContentType.JSON) JSON_MEDIA_TYPE else FORM_URL_ENCODED_MEDIA_TYPE
             val postBody = RequestBody.create(mediaType, parameters.body)
 
@@ -115,13 +115,14 @@ class OkHttpWebClient : IWebClient {
     private fun applyParameters(requestBuilder: Request.Builder, parameters: RequestParameters) {
         requestBuilder.url(parameters.url)
 
-        if (parameters.isUserAgentSet()) {
+        if(parameters.isUserAgentSet()) {
             requestBuilder.header("User-Agent", parameters.userAgent)
         }
 
-        if (parameters.isConnectionTimeoutSet()) {
+        if(parameters.isConnectionTimeoutSet()) {
             client.setConnectTimeout(parameters.connectionTimeoutMillis.toLong(), TimeUnit.MILLISECONDS)
-        } else {
+        }
+        else {
             client.setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT_MILLIS.toLong(), TimeUnit.MILLISECONDS)
         }
 
@@ -129,7 +130,7 @@ class OkHttpWebClient : IWebClient {
     }
 
     private fun setCookieHandling(parameters: RequestParameters) {
-        when (parameters.cookieHandling) {
+        when(parameters.cookieHandling) {
             CookieHandling.ACCEPT_ALL, CookieHandling.ACCEPT_ALL_ONLY_FOR_THIS_CALL -> cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
             CookieHandling.ACCEPT_ORIGINAL_SERVER, CookieHandling.ACCEPT_ORIGINAL_SERVER_ONLY_FOR_THIS_CALL -> cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ORIGINAL_SERVER)
             else -> cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_NONE)
@@ -140,14 +141,15 @@ class OkHttpWebClient : IWebClient {
     private fun executeRequest(parameters: RequestParameters, request: Request): Response {
         val response = client.newCall(request).execute()
 
-        if (parameters.cookieHandling === CookieHandling.ACCEPT_ALL_ONLY_FOR_THIS_CALL || parameters.cookieHandling === CookieHandling.ACCEPT_ORIGINAL_SERVER_ONLY_FOR_THIS_CALL) {
-            cookieManager.getCookieStore().removeAll()
+        if(parameters.cookieHandling === CookieHandling.ACCEPT_ALL_ONLY_FOR_THIS_CALL || parameters.cookieHandling === CookieHandling.ACCEPT_ORIGINAL_SERVER_ONLY_FOR_THIS_CALL) {
+            cookieManager.cookieStore.removeAll()
         }
 
-        if (response.isSuccessful === false && parameters.isCountConnectionRetriesSet()) {
+        if(response.isSuccessful == false && parameters.isCountConnectionRetriesSet()) {
             prepareConnectionRetry(parameters)
             return executeRequest(parameters, request)
-        } else {
+        }
+        else {
             return response
         }
     }
@@ -166,47 +168,52 @@ class OkHttpWebClient : IWebClient {
     }
 
     private fun getRequestFailed(parameters: RequestParameters, e: Exception): WebClientResponse {
-        if (shouldRetryConnection(parameters, e)) {
+        if(shouldRetryConnection(parameters, e)) {
             prepareConnectionRetry(parameters)
             return get(parameters)
-        } else {
+        }
+        else {
             log.error("Could not request url " + parameters.url, e)
             return WebClientResponse(false, e)
         }
     }
 
     private fun asyncGetRequestFailed(parameters: RequestParameters, e: Exception, callback: (response: WebClientResponse) -> Unit) {
-        if (shouldRetryConnection(parameters, e)) {
+        if(shouldRetryConnection(parameters, e)) {
             prepareConnectionRetry(parameters)
             getAsync(parameters, callback)
-        } else {
+        }
+        else {
             callback(WebClientResponse(false, e))
         }
     }
 
     private fun postRequestFailed(parameters: RequestParameters, e: Exception): WebClientResponse {
-        if (shouldRetryConnection(parameters, e)) {
+        if(shouldRetryConnection(parameters, e)) {
             prepareConnectionRetry(parameters)
             return post(parameters)
-        } else {
+        }
+        else {
             return WebClientResponse(false, e)
         }
     }
 
     private fun asyncPostRequestFailed(parameters: RequestParameters, e: Exception, callback: (response: WebClientResponse) -> Unit) {
-        if (shouldRetryConnection(parameters, e)) {
+        if(shouldRetryConnection(parameters, e)) {
             prepareConnectionRetry(parameters)
             postAsync(parameters, callback)
-        } else {
+        }
+        else {
             callback(WebClientResponse(false, e))
         }
     }
 
     private fun asyncRequestFailed(parameters: RequestParameters, request: Request, e: Exception, callback: (response: WebClientResponse) -> Unit) {
-        if (shouldRetryConnection(parameters, e)) {
+        if(shouldRetryConnection(parameters, e)) {
             prepareConnectionRetry(parameters)
             executeRequestAsync(parameters, request, callback)
-        } else {
+        }
+        else {
             log.error("Failure on Request to " + request.urlString(), e)
             callback(WebClientResponse(false, e))
         }
@@ -228,7 +235,7 @@ class OkHttpWebClient : IWebClient {
 
     @Throws(IOException::class)
     private fun getResponse(parameters: RequestParameters, response: Response): WebClientResponse {
-        if (parameters.responseType == ResponseType.String) {
+        if(parameters.responseType == ResponseType.String) {
             return WebClientResponse(true, body = response.body().string())
         }
         else if(parameters.responseType == ResponseType.Stream) {
@@ -251,7 +258,7 @@ class OkHttpWebClient : IWebClient {
             publishProgress(parameters, ByteArray(0), 0L, contentLength)
             while (true) {
                 val read = inputStream!!.read(buffer)
-                if (read == -1) {
+                if(read == -1) {
                     break
                 }
 
@@ -259,7 +266,7 @@ class OkHttpWebClient : IWebClient {
 
                 publishProgress(parameters, buffer, downloaded, contentLength, read)
 
-                if (isCancelled(parameters)) {
+                if(isCancelled(parameters)) {
                     return WebClientResponse(false)
                 }
             }
@@ -280,7 +287,7 @@ class OkHttpWebClient : IWebClient {
     private fun publishProgress(parameters: RequestParameters, buffer: ByteArray, downloaded: Long, contentLength: Long, read: Int) {
         var downloadedData = buffer
 
-        if (read < parameters.downloadBufferSize) {
+        if(read < parameters.downloadBufferSize) {
             downloadedData = Arrays.copyOfRange(buffer, 0, read)
         }
 
@@ -290,7 +297,7 @@ class OkHttpWebClient : IWebClient {
     private fun publishProgress(parameters: RequestParameters, downloadedChunk: ByteArray, currentlyDownloaded: Long, total: Long) {
         val progressListener = parameters.downloadProgressListener
 
-        if (progressListener != null) {
+        if(progressListener != null) {
             val progress = if (total <= 0) java.lang.Float.NaN else currentlyDownloaded / total.toFloat()
             progressListener(progress, downloadedChunk)
         }
