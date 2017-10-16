@@ -34,8 +34,6 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
     companion object {
         protected const val DEFAULT_COUNT_MAX_SEARCH_RESULTS = 100000
 
-        private const val WAIT_TIME_BEFORE_COMMITTING_INDICES_MILLIS = 1500L
-
         private const val InstanceLock = "LOCK"
 
         private val log = LoggerFactory.getLogger(IndexWriterAndSearcher::class.java)
@@ -283,9 +281,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
             getWriter()?.let { writer ->
                 writer.addDocument(doc)
 
-                startCommitIndicesTimer()
-
-                markIndexHasBeenUpdated() // so that on next search updates are reflected
+                commitChangedToWriter()
             }
         } catch (e: Exception) {
             log.error("Could not index Document " + doc, e)
@@ -328,9 +324,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
     private fun removeEntityFromIndex(writer: IndexWriter, entityId: String) {
         writer.deleteDocuments(Term(getIdFieldName(), entityId))
 
-        startCommitIndicesTimer()
-
-        markIndexHasBeenUpdated() // so that on next search updates are reflected
+        commitChangedToWriter()
     }
 
     abstract fun getIdFieldName(): String
@@ -365,20 +359,10 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
      * Calling commit() is a costly operation
      * -> don't call it on each update / deletion, wait some time before commit accumulated changes.
      */
-    @Synchronized protected fun startCommitIndicesTimer() {
-        if(commitIndicesTimer != null) { // timer already started
-            return
-        }
+    @Synchronized protected fun commitChangedToWriter() {
+        getWriter()?.commit()
 
-        commitIndicesTimer = Timer("Commit Indices Timer")
-
-        commitIndicesTimer?.schedule(object : TimerTask() {
-            override fun run() {
-                commitIndicesTimer = null
-
-                getWriter()?.commit()
-            }
-        }, WAIT_TIME_BEFORE_COMMITTING_INDICES_MILLIS)
+        markIndexHasBeenUpdated() // so that on next search updates are reflected
     }
 
 
