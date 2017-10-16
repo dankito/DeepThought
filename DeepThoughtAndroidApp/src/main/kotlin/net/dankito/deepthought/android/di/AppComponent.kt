@@ -18,7 +18,6 @@ import net.dankito.deepthought.android.fragments.ReadLaterArticlesListView
 import net.dankito.deepthought.android.fragments.ReferencesListView
 import net.dankito.deepthought.android.fragments.TagsListView
 import net.dankito.deepthought.android.service.network.NetworkConnectivityChangeBroadcastReceiver
-import net.dankito.deepthought.android.views.html.AndroidHtmlEditor
 import net.dankito.deepthought.di.BaseModule
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.di.CommonDataModule
@@ -83,8 +82,6 @@ interface AppComponent : CommonComponent {
     fun inject(editHtmlTextDialog: EditHtmlTextDialog)
 
     fun inject(tagsOnEntryDialogFragment: TagsOnEntryDialogFragment)
-
-    fun inject(htmlEditor: AndroidHtmlEditor)
 
     fun inject(editReferenceActivity: EditReferenceActivity)
 
