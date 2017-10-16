@@ -5,6 +5,7 @@ import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.data_access.network.webclient.extractor.ExtractorBase
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.extensions.getPlainTextForHtml
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.newsreader.model.ArticleSummaryItem
 import org.jsoup.Jsoup
@@ -135,8 +136,17 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
 
 
     protected fun adjustSourceElements(element: Element) {
-        for (sourceElement in element.select("span.source")) {
+        for(sourceElement in element.select("span.source")) {
             sourceElement.parent().appendChild(Element(org.jsoup.parser.Tag.valueOf("br"), element.baseUri()))
+        }
+    }
+
+
+    protected fun removeEmptyParagraphs(contentElement: Element) {
+        ArrayList(contentElement.select("p, div").toList()).forEach {
+            if(it.html().getPlainTextForHtml().isNullOrBlank()) {
+                it.remove()
+            }
         }
     }
 
