@@ -76,7 +76,7 @@ open class UdpDevicesDiscoverer(val networkConnectivityManager: INetworkConnecti
         receivedPacketsQueue.start()
 
         // * 3.5 = from 3 messages one must be received to be still valued as 'connected'
-        this.connectionsAliveWatcher = ConnectionsAliveWatcher((config.checkForDevicesIntervalMillis * 10.5).toInt())
+        this.connectionsAliveWatcher = ConnectionsAliveWatcher((config.checkForDevicesIntervalMillis * 3.5).toInt())
 
         startListenerAsync(config)
 
