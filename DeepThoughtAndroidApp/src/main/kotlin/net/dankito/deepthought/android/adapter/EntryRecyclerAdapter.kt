@@ -8,6 +8,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.EntryViewHolder
 import net.dankito.deepthought.android.views.TagsPreviewViewHelper
 import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.extensions.abstractPlainText
 import net.dankito.deepthought.model.extensions.getEntryPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.ui.presenter.EntriesListPresenterBase
@@ -40,11 +41,16 @@ class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): Mul
     }
 
     override fun bindItemToView(viewHolder: EntryViewHolder, item: Item) {
-        val referencePreview = item.source.preview
+        var referencePreview = item.source.preview
+        val showEntryTitleInsteadOfReference = referencePreview.isNullOrBlank() && item.summary.isNullOrBlank() == false
+        if(showEntryTitleInsteadOfReference) {
+            referencePreview = item.abstractPlainText
+        }
+
         viewHolder.txtReferencePreview.visibility = if (referencePreview.isNullOrBlank()) View.GONE else View.VISIBLE
         viewHolder.txtReferencePreview.text = referencePreview
 
-        viewHolder.txtEntryPreview.text = item.getEntryPreviewWithSeriesAndPublishingDate(item.source)
+        viewHolder.txtEntryPreview.text = item.getEntryPreviewWithSeriesAndPublishingDate(item.source, includeItemSummary = !showEntryTitleInsteadOfReference)
         setTxtEntryPreviewMaxLines(viewHolder.txtEntryPreview, viewHolder.txtReferencePreview, item)
 
         viewHolder.lytEntryTags.visibility = if (item.hasTags()) View.VISIBLE else View.GONE

@@ -1,8 +1,8 @@
 package net.dankito.deepthought.model.extensions
 
 import net.dankito.deepthought.model.Item
-import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Series
+import net.dankito.deepthought.model.Source
 
 
 const val SeriesAndPublishingDateAndEntryPreviewSeparator = " | "
@@ -23,27 +23,30 @@ val Item.contentPlainText: String
 
 
 val Item.entryPreview: String
-    get() {
-        var preview = this.abstractPlainText
+    get() = getEntryPreview()
 
-        if(preview.length < MaxPreviewLength) {
-            if(preview.isNotEmpty()) {
-                preview += " "
-            }
 
-            preview += this.contentPlainText
+fun Item.getEntryPreview(includeItemSummary: Boolean = true): String {
+    var preview = if(includeItemSummary) this.abstractPlainText else ""
+
+    if(preview.length < MaxPreviewLength) {
+        if(preview.isNotEmpty()) {
+            preview += " "
         }
 
-        if(preview.length > MaxPreviewLength) {
-            preview = preview.substring(0, MaxPreviewLength) + "..."
-        }
-
-        return preview
+        preview += this.contentPlainText
     }
 
+    if(preview.length > MaxPreviewLength) {
+        preview = preview.substring(0, MaxPreviewLength) + "..."
+    }
 
-fun Item.getEntryPreviewWithSeriesAndPublishingDate(source: Source?, series: Series? = null): String {
-    var preview = this.entryPreview
+    return preview
+}
+
+
+fun Item.getEntryPreviewWithSeriesAndPublishingDate(source: Source?, series: Series? = null, includeItemSummary: Boolean = true): String {
+    var preview = this.getEntryPreview(includeItemSummary)
 
     val seriesAndPublishingDate = source.getSeriesAndPublishingDatePreview(series)
     if(seriesAndPublishingDate.isNullOrBlank() == false) {
