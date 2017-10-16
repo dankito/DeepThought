@@ -86,14 +86,11 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
         showEditEntryView(EntryActivityParameters(itemExtractionResult = extractionResult))
     }
 
-    private fun showEditEntryView(parameters: EntryActivityParameters? = null) {
+    private fun showEditEntryView(parameters: EntryActivityParameters) {
         val editEntryIntent = Intent(context, EditEntryActivity::class.java)
         editEntryIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-        parameters?.let {
-            val id = parameterHolder.setParameters(parameters)
-            editEntryIntent.putExtra(BaseActivity.ParametersId, id)
-        }
+        addParametersToIntent(editEntryIntent, parameters)
 
         context.startActivity(editEntryIntent)
     }
