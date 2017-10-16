@@ -128,6 +128,10 @@
     <dimen name="fullscreen_web_view_options_bar_button_height">50dp</dimen>
     <dimen name="fullscreen_web_view_options_bar_button_width">50dp</dimen>
 
+    <dimen name="dialog_edit_html_text_editor_toolbar_height">36dp</dimen>
+    <dimen name="dialog_edit_html_text_editor_toolbar_button_width">36dp</dimen>
+    <dimen name="dialog_edit_html_text_editor_toolbar_button_margin_right">4dp</dimen>
+
     <dimen name="dialog_tags_on_entry_tag_preview_min_height">22dp</dimen>
     <dimen name="dialog_tags_on_entry_tag_preview_text_size">13sp</dimen>
     <dimen name="dialog_tags_on_entry_tag_preview_label_margin_left_right">4dp</dimen>

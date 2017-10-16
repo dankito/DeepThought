@@ -130,6 +130,16 @@
         <item name="backgroundTint">@color/entity_field_divider_color</item>
     </style>
 
+    <style name="HtmlEditorToolbarButton">
+        <item name="android:layout_width">@dimen/dialog_edit_html_text_editor_toolbar_button_width</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginRight">@dimen/dialog_edit_html_text_editor_toolbar_button_margin_right</item>
+        <item name="android:layout_marginEnd">@dimen/dialog_edit_html_text_editor_toolbar_button_margin_right</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
     <style name="ChevronRightStyle">
         <item name="android:layout_width">@dimen/chevron_right_width</item>
         <item name="android:layout_height">wrap_content</item>

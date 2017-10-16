@@ -144,6 +144,7 @@ dependencies {
     compile project(':AndroidFileStorageService')
 
     compile "com.squareup.picasso:picasso:$picassoVersion"
+    compile "jp.wasabeef:richeditor-android:1.2.2"
 
     compile "com.github.clans:fab:$clansFloatingActionButtonVersion"
     compile "com.daimajia.swipelayout:library:$swipeLayoutVersion"

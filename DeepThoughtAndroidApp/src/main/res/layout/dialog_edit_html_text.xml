@@ -5,12 +5,72 @@
                 android:layout_height="match_parent"
                 android:background="#FFFFFF"
 >
+    <LinearLayout
+        android:id="@+id/lytEditorToolbar"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dialog_edit_html_text_editor_toolbar_height"
+        android:layout_alignParentTop="true"
+        android:background="@color/toolbar_background_color"
+    >
 
-    <RelativeLayout
-        android:id="@+id/lytHtmlEditor"
+        <ImageButton
+            android:id="@+id/btnBold"
+            style="@style/HtmlEditorToolbarButton"
+            android:src="@drawable/ic_format_bold_white_48dp"
+        />
+
+        <ImageButton
+            android:id="@+id/btnItalic"
+            style="@style/HtmlEditorToolbarButton"
+            android:src="@drawable/ic_format_italic_white_48dp"
+        />
+
+        <ImageButton
+            android:id="@+id/btnUnderline"
+            style="@style/HtmlEditorToolbarButton"
+            android:src="@drawable/ic_format_underlined_white_48dp"
+        />
+
+        <ImageButton
+            android:id="@+id/btnBackgroundColor"
+            style="@style/HtmlEditorToolbarButton"
+            android:src="@drawable/ic_format_color_fill_white_48dp"
+        />
+
+        <ImageButton
+            android:id="@+id/btnUndo"
+            style="@style/HtmlEditorToolbarButton"
+            android:src="@drawable/ic_undo_white_48dp"
+
+        />
+
+        <ImageButton
+            android:id="@+id/btnRedo"
+            style="@style/HtmlEditorToolbarButton"
+            android:src="@drawable/ic_redo_white_48dp"
+        />
+
+        <ImageButton
+            android:id="@+id/btnInsertBulletList"
+            style="@style/HtmlEditorToolbarButton"
+            android:src="@drawable/ic_format_list_bulleted_white_48dp"
+
+        />
+
+        <ImageButton
+            android:id="@+id/btnInsertNumberedList"
+            style="@style/HtmlEditorToolbarButton"
+            android:src="@drawable/ic_format_list_numbered_white_48dp"
+        />
+
+    </LinearLayout>
+
+    <jp.wasabeef.richeditor.RichEditor
+        android:id="@+id/editor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/lytEditorToolbar"
         android:layout_above="@+id/toolbar"
     />
 

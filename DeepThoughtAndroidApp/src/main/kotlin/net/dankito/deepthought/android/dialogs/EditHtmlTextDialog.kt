@@ -1,23 +1,18 @@
 package net.dankito.deepthought.android.dialogs
 
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
-import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.dialog_edit_html_text.*
 import kotlinx.android.synthetic.main.dialog_edit_html_text.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.hideKeyboard
-import net.dankito.deepthought.android.views.html.AndroidHtmlEditor
-import net.dankito.deepthought.android.views.html.AndroidHtmlEditorPool
+import net.dankito.deepthought.android.service.showKeyboard
 import net.dankito.deepthought.ui.html.HtmlEditorCommon
 import net.dankito.deepthought.ui.html.IHtmlEditorListener
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 
 class EditHtmlTextDialog : FullscreenDialogFragment() {
@@ -31,7 +26,9 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     }
 
 
-    private lateinit var htmlEditor: AndroidHtmlEditor
+    private lateinit var editor: jp.wasabeef.richeditor.RichEditor
+
+    private var currentTextBackgroundColor = Color.WHITE
 
     private lateinit var mnApplyHtmlChanges: MenuItem
 
@@ -40,10 +37,6 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     private var htmlToEditLabelResourceId: Int? = null
 
     private var htmlChangedCallback: ((String) -> Unit)? = null
-
-
-    @Inject
-    protected lateinit var htmlEditorPool: AndroidHtmlEditorPool
 
 
     init {
@@ -70,23 +63,49 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     }
 
     private fun setupHtmlEditor(rootView: View) {
-        htmlEditor = htmlEditorPool.getHtmlEditor(rootView.context, htmlEditorListener)
-
-        rootView.lytHtmlEditor.addView(htmlEditor, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
-
-        val contentEditorParams = htmlEditor.layoutParams as RelativeLayout.LayoutParams
-        contentEditorParams.addRule(RelativeLayout.ALIGN_PARENT_TOP)
-        contentEditorParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
-        contentEditorParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
-        contentEditorParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
-
-        htmlEditor.layoutParams = contentEditorParams
-
-        htmlEditor.requestFocus()
+        editor = rootView.editor
+        editor.setEditorBackgroundColor(Color.WHITE)
+        editor.setEditorHeight(500) // don't know why but it's important to set a height
+        editor.setEditorFontSize(20) // TODO: make settable in settings and then save to LocalSettings
+        editor.setPadding(10, 10, 10, 10)
 
         htmlToSetOnStart?.let {
-            htmlEditor.setHtml(it, true)
+            editor.setHtml(it)
         }
+
+        editor.setOnTextChangeListener { setDidHtmlChange(true) } // TODO: determine if html really changed
+
+        setupEditorToolbar(rootView)
+    }
+
+    private fun setupEditorToolbar(rootView: View) {
+        rootView.btnBold.setOnClickListener { editor.setBold() }
+
+        rootView.btnItalic.setOnClickListener { editor.setItalic() }
+
+        rootView.btnUnderline.setOnClickListener { editor.setUnderline() }
+
+        rootView.btnBackgroundColor.setOnClickListener {
+            currentTextBackgroundColor = if(currentTextBackgroundColor == Color.WHITE) Color.YELLOW else Color.WHITE
+            editor.setTextBackgroundColor(currentTextBackgroundColor)
+        }
+
+        rootView.btnUndo.setOnClickListener { editor.undo() }
+
+        rootView.btnRedo.setOnClickListener { editor.redo() }
+
+        rootView.btnInsertBulletList.setOnClickListener { editor.setBullets() }
+
+        rootView.btnInsertNumberedList.setOnClickListener { editor.setNumbers() }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        editor.postDelayed({
+            editor.showKeyboard()
+            editor.focusEditor()
+        }, 200)
     }
 
     override fun onPause() {
@@ -96,8 +115,6 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     }
 
     override fun onDestroy() {
-        htmlEditorPool.htmlEditorReleased(htmlEditor)
-
         htmlChangedCallback = null
 
         super.onDestroy()
@@ -110,12 +127,7 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         outState?.let {
             htmlToEditLabelResourceId?.let { outState.putInt(HTML_TO_EDIT_LABEL_RESOURCE_ID_EXTRA_NAME, it) }
 
-            val countDownLatch = CountDownLatch(1)
-            htmlEditor.getHtmlAsync { content ->
-                outState.putString(HTML_EXTRA_NAME, content)
-                countDownLatch.countDown()
-            }
-            try { countDownLatch.await(1, TimeUnit.SECONDS) } catch(ignored: Exception) { }
+            outState.putString(HTML_EXTRA_NAME, editor.getHtml())
         }
     }
 
@@ -124,8 +136,8 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
 
         savedInstanceState?.let {
             savedInstanceState.getString(HTML_EXTRA_NAME)?.let { html ->
-                htmlEditor.postDelayed({
-                    htmlEditor.setHtml(html, true)
+                editor.postDelayed({
+                    editor.setHtml(html)
                 }, 100)
             }
 
@@ -140,13 +152,7 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     fun restoreDialog(htmlToEdit: String, htmlChangedCallback: ((String) -> Unit)?) {
         setupDialog(htmlToEdit, htmlChangedCallback)
 
-        htmlEditor.postDelayed({
-            htmlEditor.getHtmlAsync { currentHtml ->
-                if(currentHtml != htmlToEdit) {
-                    setDidHtmlChange(true)
-                }
-            }
-        }, 300) // must be greater than the value of postDelayed in onViewStateRestored()
+        // TODO: set if html changed
     }
 
 
@@ -176,11 +182,9 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     }
 
     private fun applyChangesAndCloseDialog() {
-        htmlEditor.getHtmlAsync { html ->
-            htmlChangedCallback?.invoke(html)
+        htmlChangedCallback?.invoke(editor.getHtml())
 
-            closeDialog()
-        }
+        closeDialog()
     }
 
 
