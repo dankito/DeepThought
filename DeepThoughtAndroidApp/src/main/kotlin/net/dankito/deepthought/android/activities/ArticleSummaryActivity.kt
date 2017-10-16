@@ -104,10 +104,10 @@ class ArticleSummaryActivity : BaseActivity() {
         restoreState(savedInstanceState.getString(EXTRACTOR_URL_INTENT_EXTRA_NAME), savedInstanceState.getString(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME))
     }
 
-    private fun restoreState(extractorUrl: String?, serializedLastLoadedSummary: String?) {
+    private fun restoreState(extractorUrl: String?, serializedLastLoadedSummaryFile: String?) {
         extractorUrl?.let { initializeArticlesSummaryExtractor(it) }
 
-        val summary = if(serializedLastLoadedSummary != null) serializer.deserializeObject(serializedLastLoadedSummary, ArticleSummary::class.java) else null
+        val summary = if(serializedLastLoadedSummaryFile != null) restoreSerializedObjectFromDisk(serializedLastLoadedSummaryFile, ArticleSummary::class.java) else null
         restoreState(extractorUrl, summary)
     }
 
@@ -130,7 +130,7 @@ class ArticleSummaryActivity : BaseActivity() {
         outState?.putString(EXTRACTOR_URL_INTENT_EXTRA_NAME, extractorConfig?.url)
 
         outState?.putString(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME, null) // fallback
-        presenter.lastLoadedSummary?.let { outState?.putString(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME, serializer.serializeObject(it)) }
+        presenter.lastLoadedSummary?.let { outState?.putString(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME, serializeToTempFileOnDisk(it)) }
     }
 
 
