@@ -24,7 +24,7 @@ ext {
 
     commonsLangVersion = '3.6'
 
-    okHttpVersion = '2.5.0'
+    okHttpVersion = '2.7.5'
 
     jsoupVersion = '1.10.2'
 
