@@ -128,8 +128,6 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-        super.onRestoreInstanceState(savedInstanceState)
-
         savedInstanceState?.let {
             savedInstanceState.getString(SERIES_ID_BUNDLE_EXTRA_NAME)?.let { seriesId -> showSeries(seriesId) }
 
@@ -138,6 +136,8 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
             selectedAnotherSeries = savedInstanceState.getBoolean(SELECTED_ANOTHER_SERIES_BUNDLE_EXTRA_NAME, false)
             savedInstanceState.getBoolean(DID_SERIES_CHANGE_BUNDLE_EXTRA_NAME)?.let { didSeriesChange -> updateDidSeriesChangeOnUiThread(didSeriesChange) }
         }
+
+        super.onRestoreInstanceState(savedInstanceState) // important: Call super method after restoring series so that all EditEntityFields with their modified values don't get overwritten by original series' values
     }
 
     private fun setupUI() {

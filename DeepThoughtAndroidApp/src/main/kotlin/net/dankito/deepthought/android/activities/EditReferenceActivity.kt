@@ -151,8 +151,6 @@ class EditReferenceActivity : BaseActivity() {
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-        super.onRestoreInstanceState(savedInstanceState)
-
         savedInstanceState?.let {
             savedInstanceState.getString(REFERENCE_ID_BUNDLE_EXTRA_NAME)?.let { referenceId -> showReference(referenceId) }
 
@@ -177,6 +175,8 @@ class EditReferenceActivity : BaseActivity() {
                 lytSetEntryReferenceControls.visibility = View.VISIBLE
             }
         }
+
+        super.onRestoreInstanceState(savedInstanceState) // important: Call super method after restoring reference so that all EditEntityFields with their modified values don't get overwritten by original reference's values
     }
 
     private fun setupUI() {
