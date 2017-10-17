@@ -12,6 +12,9 @@ import android.widget.LinearLayout
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.views.ToolbarUtil
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.LinkedHashMap
+import kotlin.collections.LinkedHashSet
 import kotlin.concurrent.schedule
 
 
@@ -29,7 +32,7 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
 
     private var toolbarUtil = ToolbarUtil()
 
-    private val selectedItemsInContextualActionMode = LinkedHashSet<T>()
+    private val selectedItemsInContextualActionMode = LinkedHashMap<Int, T>()
 
 
     private var activity: Activity? = null
@@ -74,11 +77,11 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
     }
 
     protected open fun toggleSelection(item: T, position: Int) {
-        if(selectedItemsInContextualActionMode.contains(item)) {
-            selectedItemsInContextualActionMode.remove(item)
+        if(selectedItemsInContextualActionMode.contains(position)) {
+            selectedItemsInContextualActionMode.remove(position)
         }
         else {
-            selectedItemsInContextualActionMode.add(item)
+            selectedItemsInContextualActionMode.put(position, item)
         }
 
         notifyItemChanged(position)
@@ -100,7 +103,7 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
         if(isInMultiSelectMode()) { // otherwise due to isPressed flag item would also get shown as selected
             viewHolder.itemView.isPressed = false
         }
-        viewHolder.itemView.isActivated = selectedItemsInContextualActionMode.contains(item)
+        viewHolder.itemView.isActivated = selectedItemsInContextualActionMode.contains(position)
     }
 
 
@@ -136,7 +139,7 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
 
         override fun onActionItemClicked(mode: android.view.ActionMode, item: MenuItem): Boolean {
             actionItemClickListener?.let { actionItemClickListener ->
-                return actionItemClickListener.invoke(mode, item, selectedItemsInContextualActionMode)
+                return actionItemClickListener.invoke(mode, item, LinkedHashSet(selectedItemsInContextualActionMode.values))
             }
 
             return false
