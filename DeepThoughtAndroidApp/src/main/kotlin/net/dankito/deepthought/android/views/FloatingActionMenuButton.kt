@@ -12,6 +12,9 @@ open class FloatingActionMenuButton(protected val floatingActionMenu: FloatingAc
     }
 
 
+    private var isClosingMenu = false
+
+
     init {
         setup()
     }
@@ -19,15 +22,17 @@ open class FloatingActionMenuButton(protected val floatingActionMenu: FloatingAc
 
     private fun setup() {
         floatingActionMenu.setClosedOnTouchOutside(true)
+        floatingActionMenu.setOnMenuToggleListener { isClosingMenu = false }
     }
 
 
     protected fun executeAndCloseMenu(action: () -> Unit) {
-        action()
         closeMenu()
+        action()
     }
 
     private fun closeMenu() {
+        isClosingMenu = true // as closing is animated it takes till animation end till floatingActionMenu.isOpened is set to true
         floatingActionMenu.close(true)
     }
 
@@ -57,7 +62,7 @@ open class FloatingActionMenuButton(protected val floatingActionMenu: FloatingAc
 
     fun saveInstanceState(outState: Bundle?) {
         outState?.let {
-            outState.putBoolean(IS_OPENED_EXTRA_NAME, floatingActionMenu.isOpened)
+            outState.putBoolean(IS_OPENED_EXTRA_NAME, floatingActionMenu.isOpened && isClosingMenu == false)
         }
     }
 
