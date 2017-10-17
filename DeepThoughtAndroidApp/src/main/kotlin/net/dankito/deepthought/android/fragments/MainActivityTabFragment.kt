@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.text.Html
 import android.view.*
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
@@ -369,6 +370,10 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
             val searchManager = activity.getSystemService(Context.SEARCH_SERVICE) as SearchManager
             searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.componentName))
             searchView.queryHint = getQueryHint(activity)
+
+            // if imeOptions aren't set like this searchView would take whole remaining screen when focused in landscape mode (see https://stackoverflow.com/questions/15296129/searchview-and-keyboard)
+            val searchInput = searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text) as? EditText
+            searchInput?.imeOptions = (EditorInfo.IME_ACTION_SEARCH or EditorInfo.IME_FLAG_NO_EXTRACT_UI)
 
             presenter?.getLastSearchTerm()?.let { lastSearchTerm ->
                 if(lastSearchTerm != Search.EmptySearchTerm) {
