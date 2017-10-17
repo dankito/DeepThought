@@ -62,6 +62,7 @@
                     android:layout_marginLeft="@dimen/activity_edit_reference_find_existing_margin_left"
                     android:layout_marginStart="@dimen/activity_edit_reference_find_existing_margin_left"
                     android:inputType="text"
+                    android:imeOptions="flagNoExtractUi"
                 />
 
             </RelativeLayout>

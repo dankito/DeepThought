@@ -24,7 +24,7 @@
         android:inputType="textUri"
         android:layout_marginTop="@dimen/dialog_add_article_summary_extractor_text_feed_or_website_url_margin_top_and_bottom"
         android:layout_marginBottom="@dimen/dialog_add_article_summary_extractor_text_feed_or_website_url_margin_top_and_bottom"
-        android:imeOptions="actionSearch"
+        android:imeOptions="actionSearch|flagNoExtractUi"
     />
 
     <Button
