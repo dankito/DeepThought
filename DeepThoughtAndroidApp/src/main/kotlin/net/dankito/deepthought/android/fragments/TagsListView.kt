@@ -2,7 +2,6 @@ package net.dankito.deepthought.android.fragments
 
 import android.app.Activity
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.SearchView
 import android.view.ActionMode
 import android.view.MenuItem
 import android.view.View
@@ -123,11 +122,7 @@ class TagsListView : MainActivityTabFragment<Tag>(R.menu.tag_contextual_action_m
     }
 
 
-    override fun initSearchView(searchView: SearchView) {
-        super.initSearchView(searchView)
-
-        searchView.imeOptions = searchView.imeOptions or EditorInfo.IME_ACTION_GO
-    }
+    override fun getSearchViewImeOptions() = EditorInfo.IME_ACTION_GO or EditorInfo.IME_FLAG_NO_EXTRACT_UI
 
     override fun getQueryHint(activity: Activity) = activity.getString(R.string.search_hint_tags)
 

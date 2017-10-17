@@ -373,7 +373,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
 
             // if imeOptions aren't set like this searchView would take whole remaining screen when focused in landscape mode (see https://stackoverflow.com/questions/15296129/searchview-and-keyboard)
             val searchInput = searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text) as? EditText
-            searchInput?.imeOptions = (EditorInfo.IME_ACTION_SEARCH or EditorInfo.IME_FLAG_NO_EXTRACT_UI)
+            searchInput?.imeOptions = getSearchViewImeOptions()
 
             presenter?.getLastSearchTerm()?.let { lastSearchTerm ->
                 if(lastSearchTerm != Search.EmptySearchTerm) {
@@ -388,6 +388,8 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
             adjustSearchViewLayout(searchView)
         }
     }
+
+    protected open fun getSearchViewImeOptions() = (EditorInfo.IME_ACTION_SEARCH or EditorInfo.IME_FLAG_NO_EXTRACT_UI)
 
     private fun adjustSearchViewLayout(searchView: SearchView) {
         (searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text) as? EditText)?.let { searchField ->
