@@ -95,6 +95,8 @@ class ArticleSummaryActivity : BaseActivity() {
         super.onRestoreInstanceState(savedInstanceState)
 
         savedInstanceState?.let { restoreState(it) }
+
+        adapter.onRestoreInstanceState(savedInstanceState)
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
@@ -128,6 +130,8 @@ class ArticleSummaryActivity : BaseActivity() {
 
         outState?.putString(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME, null) // fallback
         presenter.lastLoadedSummary?.let { outState?.putString(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME, serializeToTempFileOnDisk(it)) }
+
+        adapter.onSaveInstanceState(outState)
     }
 
 
