@@ -3,6 +3,7 @@ package net.dankito.deepthought.android.dialogs
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.model.CalculatedTag
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Tag
@@ -21,11 +22,16 @@ class TagEntriesListDialog : EntriesListDialogBase() {
         private const val TAG_ID_EXTRA_NAME = "TAG_ID"
 
         private const val TAG_FILTER_IDS_EXTRA_NAME = "TAG_FILTER_IDS"
+
+        private const val CALCULATED_TAG_NAME_EXTRA_NAME = "CALCULATED_TAG_NAME"
     }
 
 
     @Inject
     protected lateinit var tagService: TagService
+
+    @Inject
+    protected lateinit var allCalculatedTags: AllCalculatedTags
 
 
     private var tag: Tag? = null // made it nullable instead of lateinit so that at least application doesn't crash if it cannot be set on restore
@@ -72,7 +78,13 @@ class TagEntriesListDialog : EntriesListDialogBase() {
         super.onSaveInstanceState(outState)
 
         outState?.let {
-            outState.putString(TAG_ID_EXTRA_NAME, tag?.id)
+            if(tag is CalculatedTag) {
+                outState.putString(CALCULATED_TAG_NAME_EXTRA_NAME, tag?.name)
+            }
+            else {
+                outState.putString(TAG_ID_EXTRA_NAME, tag?.id)
+            }
+
             outState.putString(TAG_FILTER_IDS_EXTRA_NAME, tagsFilter.filterNotNull().joinToString(",") { it.id ?: "" })
         }
     }
@@ -80,17 +92,23 @@ class TagEntriesListDialog : EntriesListDialogBase() {
     override fun restoreState(savedInstanceState: Bundle) {
         super.restoreState(savedInstanceState)
 
+        var tag: Tag? = null
+
         savedInstanceState.getString(TAG_ID_EXTRA_NAME)?.let { tagId ->
-            val tag = tagService.retrieve(tagId)
+            tag = tagService.retrieve(tagId)
+        }
+        savedInstanceState.getString(CALCULATED_TAG_NAME_EXTRA_NAME)?.let { calculatedTagName ->
+            tag = allCalculatedTags.getCalculatedTagForName(calculatedTagName)
+        }
 
-            val tagsFilter = ArrayList<Tag>()
-            savedInstanceState.getString(TAG_FILTER_IDS_EXTRA_NAME)?.split(",")?.map { it.trim() }?.forEach {
-                tagService.retrieve(it)?.let { tagsFilter.add(it) }
-            }
 
-            tag?.let {
-                setupDialog(tag, tagsFilter)
-            }
+        val tagsFilter = ArrayList<Tag>()
+        savedInstanceState.getString(TAG_FILTER_IDS_EXTRA_NAME)?.split(",")?.map { it.trim() }?.forEach {
+            tagService.retrieve(it)?.let { tagsFilter.add(it) }
+        }
+
+        tag?.let { restoredTag ->
+            setupDialog(restoredTag, tagsFilter)
         }
     }
 

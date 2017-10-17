@@ -28,4 +28,16 @@ class AllCalculatedTags(private val searchEngine: ISearchEngine, private val eve
 
         hasInitializedCalculatedTags = true
     }
+
+
+    fun getCalculatedTagForName(name: String): Tag? {
+        getCalculatedTags().forEach { tag ->
+            if(tag.name == name) {
+                return tag
+            }
+        }
+
+        return null
+    }
+
 }
