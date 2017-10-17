@@ -33,6 +33,12 @@ import javax.inject.Inject
 abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualActionMenuResourceId: Int, private val onboardingTextResourceId: Int,
                                                        private val optionsMenuResourceId: Int = R.menu.fragment_main_activity_tab_menu) : Fragment() {
 
+    companion object {
+        private const val IS_SEARCH_VIEW_ACTIVATED_EXTRA_NAME = "IS_SEARCH_VIEW_ACTIVATED"
+        private const val LAST_SEARCH_TERM_EXTRA_NAME = "LAST_SEARCH_TERM"
+    }
+
+
     private var presenter: IMainViewSectionPresenter? = null
 
     protected var recyclerView: FullscreenRecyclerView? = null
@@ -58,6 +64,10 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
     private var searchResultTextView: TextView? = null
 
     private var layoutRootOriginalTopMargin = -1
+
+    private var restoreIsSearchViewActivated = false
+
+    private var lastSearchTermToRestore: String? = null
 
 
     var isCurrentSelectedTab = false
@@ -237,6 +247,13 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
 
+        outState?.let {
+            var isSearchViewActivated = false
+            searchView?.let { isSearchViewActivated = !it.isIconified }
+            outState.putBoolean(IS_SEARCH_VIEW_ACTIVATED_EXTRA_NAME, isSearchViewActivated)
+            outState.putString(LAST_SEARCH_TERM_EXTRA_NAME, presenter?.getLastSearchTerm())
+        }
+
         getListAdapter().onSaveInstanceState(outState)
     }
 
@@ -244,6 +261,11 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
         super.onViewStateRestored(savedInstanceState)
 
         getListAdapter().onRestoreInstanceState(savedInstanceState)
+
+        savedInstanceState?.let {
+            restoreIsSearchViewActivated = savedInstanceState.getBoolean(IS_SEARCH_VIEW_ACTIVATED_EXTRA_NAME)
+            lastSearchTermToRestore = savedInstanceState.getString(LAST_SEARCH_TERM_EXTRA_NAME)
+        }
     }
 
 
@@ -375,17 +397,29 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
             val searchInput = searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text) as? EditText
             searchInput?.imeOptions = getSearchViewImeOptions()
 
-            presenter?.getLastSearchTerm()?.let { lastSearchTerm ->
-                if(lastSearchTerm != Search.EmptySearchTerm) {
-                    searchView.isIconified = false
-                    searchView.setQuery(lastSearchTerm, true)
-                }
-            }
-
             searchView.setOnQueryTextListener(entriesQueryTextListener) // move setOnQueryTextListener() behind searchView.setQuery() (in presenter?.getLastSearchTerm()?.let {})
             // as otherwise when lastSearchTerm != null onQuerySubmit gets called (and therefore e.g. tag filter applied)
 
             adjustSearchViewLayout(searchView)
+
+            restoreLastSearchState(searchView)
+        }
+    }
+
+    private fun restoreLastSearchState(searchView: SearchView) {
+        presenter?.getLastSearchTerm()?.let { lastSearchTerm ->
+            if (lastSearchTerm != Search.EmptySearchTerm) {
+                searchView.isIconified = false
+                searchView.setQuery(lastSearchTerm, false)
+            }
+        }
+
+        if(restoreIsSearchViewActivated == true) {
+            searchView.isIconified = false
+
+            lastSearchTermToRestore?.let {
+                searchView.setQuery(it, false)
+            }
         }
     }
 
