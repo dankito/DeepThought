@@ -14,8 +14,12 @@ import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.android.service.communication.AndroidDeviceRegistrationHandler
 import net.dankito.deepthought.android.service.network.AndroidNetworkConnectivityManager
 import net.dankito.deepthought.android.service.settings.AndroidLocalSettingsStore
+import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.service.data.event.EntityChangedNotifier
+import net.dankito.service.eventbus.IEventBus
+import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.services.network.INetworkConnectivityManager
@@ -78,6 +82,12 @@ class ActivitiesModule(private val applicationContext: Context) {
     @Singleton
     fun provideRouter(context: Context, parameterHolder: ActivityParameterHolder, activityTracker: CurrentActivityTracker) : IRouter {
         return AndroidRouter(context, parameterHolder, activityTracker)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAllCalculatedTags(searchEngine: ISearchEngine, eventBus: IEventBus, entityChangedNotifier: EntityChangedNotifier, localization: Localization) : AllCalculatedTags {
+        return AllCalculatedTags(searchEngine, eventBus, entityChangedNotifier, localization)
     }
 
 

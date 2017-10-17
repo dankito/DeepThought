@@ -14,10 +14,7 @@ import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapt
 import net.dankito.deepthought.android.adapter.TagRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.TagEntriesListDialog
-import net.dankito.deepthought.model.BaseEntity
-import net.dankito.deepthought.model.CalculatedTag
-import net.dankito.deepthought.model.LocalSettings
-import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.*
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.deepthought.ui.presenter.TagsListPresenter
@@ -51,6 +48,9 @@ class TagsListView : MainActivityTabFragment<Tag>(R.menu.tag_contextual_action_m
     @Inject
     protected lateinit var router: IRouter
 
+    @Inject
+    protected lateinit var allCalculatedTags: AllCalculatedTags
+
 
     private lateinit var presenter: TagsListPresenter
 
@@ -65,7 +65,7 @@ class TagsListView : MainActivityTabFragment<Tag>(R.menu.tag_contextual_action_m
 
 
     override fun initPresenter(): IMainViewSectionPresenter {
-        presenter = TagsListPresenter(this, dataManager, searchEngine, searchResultsUtil, tagService, deleteEntityService, dialogService, router)
+        presenter = TagsListPresenter(this, allCalculatedTags, searchEngine, searchResultsUtil, tagService, deleteEntityService, dialogService, router)
 
         adapter = TagRecyclerAdapter(presenter)
 
