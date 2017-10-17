@@ -1,6 +1,7 @@
 package net.dankito.deepthought.android.adapter
 
 import android.app.Activity
+import android.os.Bundle
 import android.support.v7.widget.ActionBarContextView
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
@@ -21,6 +22,12 @@ import kotlin.concurrent.schedule
 abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(list: List<T> = ArrayList<T>()) :
         ListRecyclerSwipeAdapter<T, THolder>(list) {
 
+    companion object {
+        private const val IS_MULTI_SELECT_MODE_ENABLED_EXTRA_NAME = "IS_MULTI_SELECT_MODE_ENABLED"
+        private const val SELECTED_ITEMS_IN_MULTI_SELECT_MODE_EXTRA_NAME = "SELECTED_ITEMS_IN_MULTI_SELECT_MODE"
+    }
+
+
     var actionModeBar: ActionBarContextView? = null
 
     var actionItemClickListener: ((mode: android.view.ActionMode, actionItem: MenuItem, selectedItems: Set<T>) -> Boolean)? = null
@@ -33,6 +40,11 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
     private var toolbarUtil = ToolbarUtil()
 
     private val selectedItemsInContextualActionMode = LinkedHashMap<Int, T>()
+
+
+    private var goToMultiSelectModeOnRestore: Boolean = false
+
+    private var selectedItemsToRestore: Collection<Int>? = null
 
 
     private var activity: Activity? = null
@@ -57,13 +69,17 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
     override fun itemLongClicked(viewHolder: RecyclerView.ViewHolder, item: T, position: Int) {
         if(isMultiSelectModeEnabled()) {
             if(actionMode == null) {
-                activity?.startActionMode(actionModeCallback)
+                startActionMode()
             }
 
             toggleSelection(item, position)
         }
 
         super.itemLongClicked(viewHolder, item, position)
+    }
+
+    private fun startActionMode() {
+        activity?.startActionMode(actionModeCallback)
     }
 
     override fun itemClicked(viewHolder: RecyclerView.ViewHolder, item: T, position: Int): Boolean {
@@ -115,6 +131,37 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
         return actionMode != null
     }
 
+
+    fun onSaveInstanceState(outState: Bundle?) {
+        outState?.let {
+            outState.putBoolean(IS_MULTI_SELECT_MODE_ENABLED_EXTRA_NAME, isInMultiSelectMode())
+            outState.putIntegerArrayList(SELECTED_ITEMS_IN_MULTI_SELECT_MODE_EXTRA_NAME, ArrayList(selectedItemsInContextualActionMode.keys))
+        }
+    }
+
+    fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        savedInstanceState?.let {
+            goToMultiSelectModeOnRestore = savedInstanceState.getBoolean(IS_MULTI_SELECT_MODE_ENABLED_EXTRA_NAME, false)
+
+            selectedItemsToRestore = savedInstanceState.getIntegerArrayList(SELECTED_ITEMS_IN_MULTI_SELECT_MODE_EXTRA_NAME)
+        }
+    }
+
+    override fun itemsHaveBeenSet(value: List<T>) {
+        super.itemsHaveBeenSet(value)
+
+        selectedItemsToRestore?.let {
+            if(goToMultiSelectModeOnRestore) {
+                startActionMode()
+            }
+
+            it.forEach { position ->
+                toggleSelection(getItem(position), position)
+            }
+
+            selectedItemsToRestore = null // selected items are restored now
+        }
+    }
 
 
     private val actionModeCallback = object : AbsListView.MultiChoiceModeListener {

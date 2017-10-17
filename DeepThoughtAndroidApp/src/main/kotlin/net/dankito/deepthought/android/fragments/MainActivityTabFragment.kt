@@ -233,6 +233,19 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
     }
 
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+
+        getListAdapter().onSaveInstanceState(outState)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+
+        getListAdapter().onRestoreInstanceState(savedInstanceState)
+    }
+
+
     protected fun retrievedEntitiesOnUiThread(entities: List<T>) {
         if(recyclerView == null) { // view not initialized yet
             entitiesToCheckForOnboardingOnViewCreation = entities
