@@ -126,7 +126,7 @@ class TagsListView : MainActivityTabFragment<Tag>(R.menu.tag_contextual_action_m
     override fun initSearchView(searchView: SearchView) {
         super.initSearchView(searchView)
 
-        searchView.imeOptions = EditorInfo.IME_ACTION_GO
+        searchView.imeOptions = searchView.imeOptions or EditorInfo.IME_ACTION_GO
     }
 
     override fun getQueryHint(activity: Activity) = activity.getString(R.string.search_hint_tags)
