@@ -1356,7 +1356,10 @@ class EditEntryActivity : BaseActivity() {
                 tagsOnEntry.add(tag)
             }
         }
-        forceShowTagsPreview = tags?.size ?: 0 > 0
+
+        if(tags?.size ?: 0 > 0) {
+            forceShowTagsPreview = true
+        }
 
         updateDisplayedValuesOnUIThread(source, updateContentPreview)
     }
