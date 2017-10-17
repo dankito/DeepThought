@@ -17,6 +17,7 @@ import net.dankito.deepthought.javafx.service.communication.JavaFXDeviceRegistra
 import net.dankito.deepthought.javafx.service.import_export.DataImporterExporterManager
 import net.dankito.deepthought.javafx.service.network.JavaFXNetworkConnectivityManager
 import net.dankito.deepthought.javafx.service.settings.JavaFXLocalSettingsStore
+import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
@@ -24,6 +25,8 @@ import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractorsManager
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.TagService
+import net.dankito.service.data.event.EntityChangedNotifier
+import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.IThreadPool
@@ -102,6 +105,12 @@ class JavaFXModule(private val flavorInstanceProvider: JavaFXInstanceProvider, p
     @Singleton
     fun provideImplementedArticleSummaryExtractorsManager(webClient: IWebClient) : IImplementedArticleSummaryExtractorsManager {
         return flavorInstanceProvider.provideImplementedArticleSummaryExtractorsManager(webClient)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAllCalculatedTags(searchEngine: ISearchEngine, eventBus: IEventBus, entityChangedNotifier: EntityChangedNotifier, localization: Localization) : AllCalculatedTags {
+        return AllCalculatedTags(searchEngine, eventBus, entityChangedNotifier, localization)
     }
 
 
