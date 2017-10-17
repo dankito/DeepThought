@@ -144,19 +144,29 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
             goToMultiSelectModeOnRestore = savedInstanceState.getBoolean(IS_MULTI_SELECT_MODE_ENABLED_EXTRA_NAME, false)
 
             selectedItemsToRestore = savedInstanceState.getIntegerArrayList(SELECTED_ITEMS_IN_MULTI_SELECT_MODE_EXTRA_NAME)
+
+            if(items.isNotEmpty()) { // in same views as in ArticleSummaryActivity items are already available when restoring view
+                restoreSelectedItems()
+            }
         }
     }
 
     override fun itemsHaveBeenSet(value: List<T>) {
         super.itemsHaveBeenSet(value)
 
+        restoreSelectedItems() // in most cases we have to wait till items are available before we can restore selected items
+    }
+
+    private fun restoreSelectedItems() {
         selectedItemsToRestore?.let {
             if(goToMultiSelectModeOnRestore) {
                 startActionMode()
             }
 
             it.forEach { position ->
-                toggleSelection(getItem(position), position)
+                if(position < itemCount) {
+                    toggleSelection(getItem(position), position)
+                }
             }
 
             selectedItemsToRestore = null // selected items are restored now
