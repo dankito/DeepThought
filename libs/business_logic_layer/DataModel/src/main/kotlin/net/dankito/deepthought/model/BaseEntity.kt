@@ -71,6 +71,7 @@ open class BaseEntity : Serializable {
     @PreRemove
     protected open fun preRemove() {
         modifiedOn = Date()
+        deleted = true
     }
 
     @PostLoad
