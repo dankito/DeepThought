@@ -1,6 +1,7 @@
 package net.dankito.deepthought.ui.tags
 
 import net.dankito.deepthought.model.Tag
+import net.dankito.service.search.SearchEngineBase
 import net.dankito.service.search.specific.TagsSearchResults
 
 
@@ -29,7 +30,7 @@ class TagsSearchResultsUtil {
 
 
     fun getButtonStateForSearchResult(searchResults: TagsSearchResults?, tagsOnEntry: Collection<Tag>): TagsSearcherButtonState {
-        if (searchResults == null || searchResults.overAllSearchTerm.isBlank()) {
+        if(searchResults == null || searchResults.overAllSearchTerm.isBlank()) {
             return TagsSearcherButtonState.DISABLED
         }
 
@@ -50,8 +51,23 @@ class TagsSearchResultsUtil {
     }
 
     private fun containsOnlyNotExistingTags(searchResults: TagsSearchResults): Boolean {
-        return searchResults.getSearchTermsWithoutMatches().size == searchResults.tagNamesToSearchFor.size ||
-                (searchResults.tagNamesToSearchFor.size == 1 && searchResults.lastResult?.hasExactMatches() == false)  // first result doesn't have an exact match -> show Create
+        return containsOnlySearchResultsWithoutMatches(searchResults) ||
+                containsOnlyOneSearchResultAndThatWithoutExactMatch(searchResults)  // first result doesn't have an exact match -> show Create
+    }
+
+    private fun containsOnlySearchResultsWithoutMatches(searchResults: TagsSearchResults): Boolean {
+        return searchResults.getSearchTermsWithoutMatches().size == searchResults.tagNamesToSearchFor.size
+    }
+
+    private fun containsOnlyOneSearchResultAndThatWithoutExactMatch(searchResults: TagsSearchResults): Boolean {
+        if(searchResults.tagNamesToSearchFor.size == 1 && searchResults.lastResult?.hasExactMatches() == false) {
+            // if there has been already entered a comma (= TagsSearchTermSeparator), also check if first result doesn't have matches
+            if(searchResults.overAllSearchTerm.contains(SearchEngineBase.TagsSearchTermSeparator) == false || searchResults.lastResult?.hasMatches == false) {
+                return true
+            }
+        }
+
+        return false
     }
 
     private fun containsOnlyAddedTags(tagsOnEntry: Collection<Tag>, searchResults: TagsSearchResults): Boolean {
