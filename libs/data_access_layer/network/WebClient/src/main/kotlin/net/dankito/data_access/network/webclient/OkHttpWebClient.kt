@@ -1,13 +1,12 @@
 package net.dankito.data_access.network.webclient
 
-import com.squareup.okhttp.*
+import okhttp3.*
 import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.io.InputStream
-import java.net.CookieManager
-import java.net.CookiePolicy
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 
 class OkHttpWebClient : IWebClient {
@@ -16,23 +15,34 @@ class OkHttpWebClient : IWebClient {
         private val FORM_URL_ENCODED_MEDIA_TYPE = MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8")
         private val JSON_MEDIA_TYPE = MediaType.parse("application/json; charset=UTF-8")
 
-        private const val DEFAULT_CONNECTION_TIMEOUT_MILLIS = 10000
-
         private val log = LoggerFactory.getLogger(OkHttpWebClient::class.java)
     }
 
 
-    private var cookieManager = CookieManager()
+    private val cookieJar = object : CookieJar {
+
+        override fun saveFromResponse(url: HttpUrl?, cookies: MutableList<Cookie>?) {
+        }
+
+        override fun loadForRequest(url: HttpUrl?): MutableList<Cookie> {
+            return ArrayList()
+        }
+
+    }
 
     // avoid creating several instances, should be singleton
-    private var client = OkHttpClient()
+    private val client: OkHttpClient
 
 
     init {
-        client.followRedirects = true
-        client.retryOnConnectionFailure = true
+        val builder = OkHttpClient.Builder()
 
-        client.cookieHandler = cookieManager
+        builder.followRedirects(true)
+        builder.retryOnConnectionFailure(true)
+        builder.connectTimeout(RequestParameters.DEFAULT_CONNECTION_TIMEOUT_MILLIS.toLong(), TimeUnit.MILLISECONDS) // TODO: find a way to set per call
+        builder.cookieJar(cookieJar)
+
+        client = builder.build()
     }
 
 
@@ -46,7 +56,6 @@ class OkHttpWebClient : IWebClient {
         } catch (e: Exception) {
             return getRequestFailed(parameters, e)
         }
-
     }
 
     override fun getAsync(parameters: RequestParameters, callback: (response: WebClientResponse) -> Unit) {
@@ -119,31 +128,33 @@ class OkHttpWebClient : IWebClient {
             requestBuilder.header("User-Agent", parameters.userAgent)
         }
 
-        if(parameters.isConnectionTimeoutSet()) {
-            client.setConnectTimeout(parameters.connectionTimeoutMillis.toLong(), TimeUnit.MILLISECONDS)
-        }
-        else {
-            client.setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT_MILLIS.toLong(), TimeUnit.MILLISECONDS)
-        }
+        // TODO: re-enable setting connection timeout
+//        if(parameters.isConnectionTimeoutSet()) {
+//            client.setConnectTimeout(parameters.connectionTimeoutMillis.toLong(), TimeUnit.MILLISECONDS)
+//        }
+//        else {
+//            client.setConnectTimeout(RequestParameters.DEFAULT_CONNECTION_TIMEOUT_MILLIS.toLong(), TimeUnit.MILLISECONDS)
+//        }
 
+        // TODO: re-enable setting cookie handling (e.g. via adding com.squareup.okhttp3:okhttp-urlconnection dependency)
         setCookieHandling(parameters)
     }
 
     private fun setCookieHandling(parameters: RequestParameters) {
-        when(parameters.cookieHandling) {
-            CookieHandling.ACCEPT_ALL, CookieHandling.ACCEPT_ALL_ONLY_FOR_THIS_CALL -> cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
-            CookieHandling.ACCEPT_ORIGINAL_SERVER, CookieHandling.ACCEPT_ORIGINAL_SERVER_ONLY_FOR_THIS_CALL -> cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ORIGINAL_SERVER)
-            else -> cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_NONE)
-        }
+//        when(parameters.cookieHandling) {
+//            CookieHandling.ACCEPT_ALL, CookieHandling.ACCEPT_ALL_ONLY_FOR_THIS_CALL -> cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
+//            CookieHandling.ACCEPT_ORIGINAL_SERVER, CookieHandling.ACCEPT_ORIGINAL_SERVER_ONLY_FOR_THIS_CALL -> cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ORIGINAL_SERVER)
+//            else -> cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_NONE)
+//        }
     }
 
     @Throws(Exception::class)
     private fun executeRequest(parameters: RequestParameters, request: Request): Response {
         val response = client.newCall(request).execute()
 
-        if(parameters.cookieHandling === CookieHandling.ACCEPT_ALL_ONLY_FOR_THIS_CALL || parameters.cookieHandling === CookieHandling.ACCEPT_ORIGINAL_SERVER_ONLY_FOR_THIS_CALL) {
-            cookieManager.cookieStore.removeAll()
-        }
+//        if(parameters.cookieHandling === CookieHandling.ACCEPT_ALL_ONLY_FOR_THIS_CALL || parameters.cookieHandling === CookieHandling.ACCEPT_ORIGINAL_SERVER_ONLY_FOR_THIS_CALL) {
+//            cookieManager.cookieStore.removeAll()
+//        }
 
         if(response.isSuccessful == false && parameters.isCountConnectionRetriesSet()) {
             prepareConnectionRetry(parameters)
@@ -156,12 +167,12 @@ class OkHttpWebClient : IWebClient {
 
     private fun executeRequestAsync(parameters: RequestParameters, request: Request, callback: (response: WebClientResponse) -> Unit) {
         client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(request: Request, e: IOException) {
+            override fun onFailure(call: Call, e: IOException) {
                 asyncRequestFailed(parameters, request, e, callback)
             }
 
             @Throws(IOException::class)
-            override fun onResponse(response: Response) {
+            override fun onResponse(call: Call, response: Response) {
                 callback(getResponse(parameters, response))
             }
         })
@@ -214,7 +225,7 @@ class OkHttpWebClient : IWebClient {
             executeRequestAsync(parameters, request, callback)
         }
         else {
-            log.error("Failure on Request to " + request.urlString(), e)
+            log.error("Failure on Request to " + request.url(), e)
             callback(WebClientResponse(false, e))
         }
     }
@@ -236,10 +247,10 @@ class OkHttpWebClient : IWebClient {
     @Throws(IOException::class)
     private fun getResponse(parameters: RequestParameters, response: Response): WebClientResponse {
         if(parameters.responseType == ResponseType.String) {
-            return WebClientResponse(true, body = response.body().string())
+            return WebClientResponse(true, body = response.body()?.string())
         }
         else if(parameters.responseType == ResponseType.Stream) {
-            return WebClientResponse(true, responseStream = response.body().byteStream())
+            return WebClientResponse(true, responseStream = response.body()?.byteStream())
         }
         else {
             return streamBinaryResponse(parameters, response)
@@ -249,11 +260,11 @@ class OkHttpWebClient : IWebClient {
     private fun streamBinaryResponse(parameters: RequestParameters, response: Response): WebClientResponse {
         var inputStream: InputStream? = null
         try {
-            inputStream = response.body().byteStream()
+            inputStream = response.body()?.byteStream()
 
             val buffer = ByteArray(parameters.downloadBufferSize)
             var downloaded: Long = 0
-            val contentLength = response.body().contentLength()
+            val contentLength = response.body()?.contentLength() ?: 0
 
             publishProgress(parameters, ByteArray(0), 0L, contentLength)
             while (true) {
