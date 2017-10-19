@@ -254,7 +254,7 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
     fun deleteConfig(config: ArticleSummaryExtractorConfig) {
         configurations.remove(config.url)
 
-        favorites.remove(config)
+        removeFavorite(config)
 
         configService.delete(config)
     }
