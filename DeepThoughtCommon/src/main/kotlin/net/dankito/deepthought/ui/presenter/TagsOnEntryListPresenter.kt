@@ -8,7 +8,6 @@ import net.dankito.deepthought.ui.view.ITagsOnEntryListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
-import net.dankito.service.search.SearchEngineBase
 import net.dankito.service.search.specific.TagsSearchResult
 import net.dankito.utils.ui.IDialogService
 
@@ -29,10 +28,13 @@ class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryList
         return searchResultsUtil.getButtonStateForSearchResult(lastTagsSearchResults, tagsOnEntry)
     }
 
-    fun createNewTags(enteredText: String, tagsOnEntry: MutableCollection<Tag>) {
+    fun createNewTags(tagsOnEntry: MutableCollection<Tag>) {
         lastTagsSearchResults?.let { searchResults ->
-            enteredText.split(SearchEngineBase.TagsSearchTermSeparator).map { it.trim() }.forEach { tagName ->
-                tagsOnEntry.add(createNewTag(tagName))
+            searchResults.results.forEach { result ->
+                val term = result.searchTerm
+                if(term.isNullOrBlank() == false) { // should actually never be the case
+                    tagsOnEntry.add(createNewTag(term))
+                }
             }
 
             searchTags(searchResults.overAllSearchTerm)

@@ -271,7 +271,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
     }
 
     private fun createNewTags() {
-        presenter.createNewTags(edtxtEditEntrySearchTag.editableText.toString(), adapter.tagsOnEntry)
+        presenter.createNewTags(adapter.tagsOnEntry)
 
         setTagsOnEntryPreviewOnUIThread()
     }

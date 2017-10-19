@@ -158,7 +158,7 @@ class TagsOnEntryDialog : DialogFragment(), ITagsOnEntryListView {
 
     private fun createOrToggleTags() {
         if(btnCreateOrToggleTagsState == TagsSearcherButtonState.CREATE_TAG) {
-            presenter.createNewTags(txtfldSearchTags.text, tagsOnEntry)
+            presenter.createNewTags(tagsOnEntry)
         }
         else {
             toggleTagsOnEntry()
