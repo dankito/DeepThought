@@ -220,7 +220,7 @@ class EditEntryActivity : BaseActivity() {
             createEntry(false) // don't go to EditHtmlTextDialog for content here as we're restoring state, content may already be set
         }
 
-        savedInstanceState.getString(CONTENT_INTENT_EXTRA_NAME)?.let { content ->
+        getAndClearStringState(CONTENT_INTENT_EXTRA_NAME)?.let { content ->
             contentToEdit = content
             setContentPreviewOnUIThread()
         }
@@ -260,12 +260,12 @@ class EditEntryActivity : BaseActivity() {
 
             outState.putString(REFERENCE_INTENT_EXTRA_NAME, sourceToEdit?.id)
 
-            outState.putString(CONTENT_INTENT_EXTRA_NAME, contentToEdit)
-
             outState.putString(ABSTRACT_INTENT_EXTRA_NAME, abstractToEdit)
 
             floatingActionMenu.saveInstanceState(outState)
         }
+
+        storeState(CONTENT_INTENT_EXTRA_NAME, contentToEdit) // application crashes if objects put into bundle are too large (> 1 MB) for Android
     }
 
 

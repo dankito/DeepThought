@@ -9,6 +9,7 @@ import net.dankito.deepthought.android.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.android.dialogs.AndroidDialogService
 import net.dankito.deepthought.android.routing.AndroidRouter
 import net.dankito.deepthought.android.service.ActivityParameterHolder
+import net.dankito.deepthought.android.service.ActivityStateHolder
 import net.dankito.deepthought.android.service.AndroidClipboardService
 import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.android.service.communication.AndroidDeviceRegistrationHandler
@@ -63,6 +64,12 @@ class ActivitiesModule(private val applicationContext: Context) {
     @Singleton
     fun provideActivityParameterHolder() : ActivityParameterHolder {
         return ActivityParameterHolder()
+    }
+
+    @Provides
+    @Singleton
+    fun provideActivityStateHolder() : ActivityStateHolder {
+        return ActivityStateHolder()
     }
 
     @Provides
