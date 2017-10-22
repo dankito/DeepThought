@@ -35,28 +35,32 @@ class ZeitArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryExtract
     }
 
     private fun mapArticleElementToArticleSummaryItem(articleElement: Element): ArticleSummaryItem? {
-        if(articleElement.className().contains("--inhouse") == false) { // --inhouse: filter out advertisements
+        if(articleElement.className().contains("--inhouse") == false) { // --inhouse: filter out advertisements ('VERLAGSANGEBOT')
             articleElement.select("div[class~=__container]").first()?.let { articleDiv ->
                 articleDiv.select("p").first()?.let { summaryParagraph ->
                     val summary = summaryParagraph.text().trim()
 
                     articleDiv.select("h2 a").first()?.let { headerAnchor ->
-                        val item = ArticleSummaryItem(headerAnchor.attr("href"), headerAnchor.attr("title").trim(), ZeitArticleExtractor::class.java, summary)
-
-                        item.previewImageUrl = extractPreviewImageUrl(articleElement)
-                        item.publishedDate = extractPublishingDate(articleDiv)
-
-                        if(articleElement.attr("data-zplus") == "zplus-register") {
-                            item.title = "ZeitPlus: " + item.title
-                        }
-
-                        return item
+                        return extractItemFromHeaderAnchor(headerAnchor, summary, articleElement, articleDiv)
                     }
                 }
             }
         }
 
         return null
+    }
+
+    private fun extractItemFromHeaderAnchor(headerAnchor: Element, summary: String, articleElement: Element, articleDiv: Element): ArticleSummaryItem {
+        val item = ArticleSummaryItem(headerAnchor.attr("href"), headerAnchor.attr("title").trim(), ZeitArticleExtractor::class.java, summary)
+
+        item.previewImageUrl = extractPreviewImageUrl(articleElement)
+        item.publishedDate = extractPublishingDate(articleDiv)
+
+        if(articleElement.attr("data-zplus") == "zplus-register") {
+            item.title = "ZeitPlus: " + item.title
+        }
+
+        return item
     }
 
     private fun extractPreviewImageUrl(articleElement: Element): String? {
