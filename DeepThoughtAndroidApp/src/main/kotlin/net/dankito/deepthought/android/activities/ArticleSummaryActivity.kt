@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v7.widget.LinearLayoutManager
 import android.util.TypedValue
 import android.view.*
@@ -81,6 +80,8 @@ class ArticleSummaryActivity : BaseActivity() {
 
         setupUI()
 
+        savedInstanceState?.let { restoreState(it) }
+
         if(savedInstanceState == null) {
             showParameters(getParameters() as? ArticleSummaryActivityParameters)
         }
@@ -92,25 +93,8 @@ class ArticleSummaryActivity : BaseActivity() {
         }
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-        super.onRestoreInstanceState(savedInstanceState)
-
-        adapter.onRestoreInstanceState(savedInstanceState)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onRestoreInstanceState(savedInstanceState, persistentState)
-
-        savedInstanceState?.let {
-            restoreState(savedInstanceState.getString(EXTRACTOR_URL_INTENT_EXTRA_NAME), savedInstanceState.getString(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME))
-        }
-    }
-
-    private fun restoreState(extractorUrl: String?, serializedLastLoadedSummaryFile: String?) {
-        extractorUrl?.let { initializeArticlesSummaryExtractor(it) }
-
-        val summary = if(serializedLastLoadedSummaryFile != null) restoreSerializedObjectFromDisk(serializedLastLoadedSummaryFile, ArticleSummary::class.java) else null
-        restoreState(extractorUrl, summary)
+    private fun restoreState(savedInstanceState: Bundle) {
+        restoreState(savedInstanceState.getString(EXTRACTOR_URL_INTENT_EXTRA_NAME), getAndClearState(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME) as? ArticleSummary)
     }
 
     private fun restoreState(extractorUrl: String?, lastLoadedSummary: ArticleSummary? = null) {
@@ -131,8 +115,7 @@ class ArticleSummaryActivity : BaseActivity() {
 
         outState?.putString(EXTRACTOR_URL_INTENT_EXTRA_NAME, extractorConfig?.url)
 
-        outState?.putString(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME, null) // fallback
-        presenter.lastLoadedSummary?.let { outState?.putString(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME, serializeToTempFileOnDisk(it)) }
+        presenter.lastLoadedSummary?.let { storeState(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME, it) }
 
         adapter.onSaveInstanceState(outState)
     }
