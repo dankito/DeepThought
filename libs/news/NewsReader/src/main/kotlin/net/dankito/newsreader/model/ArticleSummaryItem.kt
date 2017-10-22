@@ -11,4 +11,10 @@ data class ArticleSummaryItem(val url : String, var title : String, val articleE
                               var articleSummaryExtractorConfig: ArticleSummaryExtractorConfig? = null) {
 
     private constructor() : this("", "", null) // for Jackson
+
+
+    override fun toString(): String {
+        return "$title: $summary ($url; $previewImageUrl)"
+    }
+
 }
