@@ -46,6 +46,10 @@ class ZeitArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryExtract
                         item.previewImageUrl = extractPreviewImageUrl(articleElement)
                         item.publishedDate = extractPublishingDate(articleDiv)
 
+                        if(articleElement.attr("data-zplus") == "zplus-register") {
+                            item.title = "ZeitPlus: " + item.title
+                        }
+
                         return item
                     }
                 }
