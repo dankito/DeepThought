@@ -211,11 +211,11 @@ class EditEntryActivity : BaseActivity() {
 
         this.isInReaderMode = savedInstanceState.getBoolean(IS_IN_READER_MODE_INTENT_EXTRA_NAME, false)
 
-        savedInstanceState.getString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)?.let { editEntryExtractionResult(it) }
+        (getAndClearState(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME) as? ItemExtractionResult)?.let { editEntryExtractionResult(it) }
         savedInstanceState.getString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME)?.let { readLaterArticleId -> editReadLaterArticle(readLaterArticleId) }
         savedInstanceState.getString(ENTRY_ID_INTENT_EXTRA_NAME)?.let { entryId -> editEntry(entryId) }
 
-        if(savedInstanceState.getString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME) == null && savedInstanceState.getString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME) == null &&
+        if(itemExtractionResult == null && savedInstanceState.getString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME) == null &&
                 savedInstanceState.getString(ENTRY_ID_INTENT_EXTRA_NAME) == null) { // a new Item is being created then
             createEntry(false) // don't go to EditHtmlTextDialog for content here as we're restoring state, content may already be set
         }
@@ -247,8 +247,7 @@ class EditEntryActivity : BaseActivity() {
             outState.putString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME, null)
             readLaterArticle?.id?.let { readLaterArticleId -> outState.putString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME, readLaterArticleId) }
 
-            outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, null)
-            itemExtractionResult?.let { outState.putString(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, serializeToTempFileOnDisk(it)) }
+            itemExtractionResult?.let { storeState(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, it) }
 
             outState.putBoolean(FORCE_SHOW_TAGS_PREVIEW_INTENT_EXTRA_NAME, forceShowTagsPreview)
             outState.putBoolean(FORCE_SHOW_REFERENCE_PREVIEW_INTENT_EXTRA_NAME, forceShowReferencePreview)
