@@ -37,9 +37,8 @@ class ZeitArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryExtract
     private fun mapArticleElementToArticleSummaryItem(articleElement: Element): ArticleSummaryItem? {
         if(articleElement.className().contains("--inhouse") == false) { // --inhouse: filter out advertisements ('VERLAGSANGEBOT')
             articleElement.select("div[class~=__container]").first()?.let { articleDiv ->
-                articleDiv.select("p").first()?.let { summaryParagraph ->
-                    val summary = summaryParagraph.text().trim()
-
+                val summary = articleDiv.select("p").first()?.text()?.trim() ?: ""
+                if(summary.isNotBlank() || articleElement.className()?.contains("teaser-topic-") == true) { // teaser topics don't have a summary
                     articleDiv.select("h2 a").first()?.let { headerAnchor ->
                         return extractItemFromHeaderAnchor(headerAnchor, summary, articleElement, articleDiv)
                     }
