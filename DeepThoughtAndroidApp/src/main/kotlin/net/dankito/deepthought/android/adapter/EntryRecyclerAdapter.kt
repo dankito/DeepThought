@@ -42,15 +42,14 @@ class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): Mul
 
     override fun bindItemToView(viewHolder: EntryViewHolder, item: Item) {
         var referencePreview = item.source.preview
-        val showEntryTitleInsteadOfReference = referencePreview.isNullOrBlank() && item.summary.isNullOrBlank() == false
-        if(showEntryTitleInsteadOfReference) {
+        if(referencePreview.isNullOrBlank() && item.summary.isNullOrBlank() == false) {
             referencePreview = item.abstractPlainText
         }
 
         viewHolder.txtReferencePreview.visibility = if (referencePreview.isNullOrBlank()) View.GONE else View.VISIBLE
         viewHolder.txtReferencePreview.text = referencePreview
 
-        viewHolder.txtEntryPreview.text = item.getEntryPreviewWithSeriesAndPublishingDate(item.source, includeItemSummary = !showEntryTitleInsteadOfReference)
+        viewHolder.txtEntryPreview.text = item.getEntryPreviewWithSeriesAndPublishingDate(item.source)
         setTxtEntryPreviewMaxLines(viewHolder.txtEntryPreview, viewHolder.txtReferencePreview, item)
 
         viewHolder.lytEntryTags.visibility = if (item.hasTags()) View.VISIBLE else View.GONE
