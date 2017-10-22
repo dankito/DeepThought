@@ -75,7 +75,7 @@ class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): Mul
         val isShowingReferencePreview = txtReferencePreview.visibility == View.VISIBLE
         var countPreviewLines = if(isShowingReferencePreview) 5 else 6
 
-        if(txtReferencePreview.lineCount == 2 || (txtReferencePreview.lineCount == 0 && txtReferencePreview.text.length >= 46)) {
+        if(txtReferencePreview.lineCount == 2 || (txtReferencePreview.lineCount == 0 && txtReferencePreview.text.length >= 46)) { // txtReferencePreview.lineCount == 0 -> lineCount not calculated yet
             countPreviewLines--
         }
 
