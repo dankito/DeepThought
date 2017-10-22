@@ -98,7 +98,7 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
 
         if(contentElement == null) { // it seems the print version has no .content element anymore
             if(articleElement.select("header, .printversion__back-to-article, .printversion__logo").size >= 3) { // ok, articleElement is already the contentElement -> remove clutter
-                articleElement.select("header, .printversion__back-to-article, .printversion__logo, .aufmacherbild, .printversion__copyright").remove()
+                articleElement.select("header, .printversion__back-to-article, .printversion__logo, .printversion__copyright").remove()
                 contentElement = articleElement
             }
         }
