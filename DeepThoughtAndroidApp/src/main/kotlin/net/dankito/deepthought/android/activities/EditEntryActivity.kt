@@ -220,7 +220,7 @@ class EditEntryActivity : BaseActivity() {
             createEntry(false) // don't go to EditHtmlTextDialog for content here as we're restoring state, content may already be set
         }
 
-        getAndClearStringState(CONTENT_INTENT_EXTRA_NAME)?.let { content ->
+        getAndClearStringState(getKeyForState(CONTENT_INTENT_EXTRA_NAME))?.let { content ->
             contentToEdit = content
             setContentPreviewOnUIThread()
         }
@@ -265,7 +265,25 @@ class EditEntryActivity : BaseActivity() {
             floatingActionMenu.saveInstanceState(outState)
         }
 
-        storeState(CONTENT_INTENT_EXTRA_NAME, contentToEdit) // application crashes if objects put into bundle are too large (> 1 MB) for Android
+        storeState(getKeyForState(CONTENT_INTENT_EXTRA_NAME), contentToEdit) // application crashes if objects put into bundle are too large (> 1 MB) for Android
+    }
+
+    private fun getKeyForState(stateName: String): String {
+        return getStateNamePrefix() + "_" + stateName
+    }
+
+    /**
+     * As there may be multiple EditEntryActivities opened at a time (e.g. when the user selected multiple articles to view), get a unique key prefix for each opened activity as
+     * otherwise they overwrite their states.
+     */
+    private fun getStateNamePrefix(): String {
+        item?.id?.let { return it }
+
+        readLaterArticle?.id?.let { return it }
+
+        itemExtractionResult?.source?.url?.let { return it }
+
+        return "" // an unpersisted Item -> currently there's no way to have two EditEntryActivities for two unpersisted items in parallel
     }
 
 
