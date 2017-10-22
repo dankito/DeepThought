@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.v7.widget.LinearLayoutManager
 import android.util.TypedValue
 import android.view.*
@@ -94,13 +95,15 @@ class ArticleSummaryActivity : BaseActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
 
-        savedInstanceState?.let { restoreState(it) }
-
         adapter.onRestoreInstanceState(savedInstanceState)
     }
 
-    private fun restoreState(savedInstanceState: Bundle) {
-        restoreState(savedInstanceState.getString(EXTRACTOR_URL_INTENT_EXTRA_NAME), savedInstanceState.getString(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME))
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState)
+
+        savedInstanceState?.let {
+            restoreState(savedInstanceState.getString(EXTRACTOR_URL_INTENT_EXTRA_NAME), savedInstanceState.getString(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME))
+        }
     }
 
     private fun restoreState(extractorUrl: String?, serializedLastLoadedSummaryFile: String?) {
