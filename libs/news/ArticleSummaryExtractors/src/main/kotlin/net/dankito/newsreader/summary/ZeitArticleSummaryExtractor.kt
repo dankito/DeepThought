@@ -7,6 +7,7 @@ import net.dankito.newsreader.model.ArticleSummaryItem
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.util.*
+import kotlin.collections.HashMap
 
 class ZeitArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryExtractorBase(webClient) {
 
@@ -31,17 +32,19 @@ class ZeitArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryExtract
     }
 
     private fun extractArticleElements(document: Document): Collection<ArticleSummaryItem> {
-        return document.body().select("article").map { mapArticleElementToArticleSummaryItem(it) }.filterNotNull()
+        val alreadyExtractedArticles = HashMap<String, ArticleSummaryItem>()
+
+        return document.body().select("article").map { mapArticleElementToArticleSummaryItem(it, alreadyExtractedArticles) }.filterNotNull()
     }
 
-    private fun mapArticleElementToArticleSummaryItem(articleElement: Element): ArticleSummaryItem? {
+    private fun mapArticleElementToArticleSummaryItem(articleElement: Element, alreadyExtractedArticles: HashMap<String, ArticleSummaryItem>): ArticleSummaryItem? {
         if(articleElement.className().contains("--inhouse") == false) { // --inhouse: filter out advertisements ('VERLAGSANGEBOT')
             articleElement.select("div[class~=__container]").first()?.let { articleDiv ->
                 val summary = articleDiv.select("p").first()?.text()?.trim() ?: ""
                 if(summary.isNotBlank() || articleElement.className()?.contains("teaser-topic-") == true
                         || articleElement.className()?.contains("teaser-buzzboard") == true) { // teaser topics don't have a summary
                     articleDiv.select("h2 a").first()?.let { headerAnchor ->
-                        return extractItemFromHeaderAnchor(headerAnchor, summary, articleElement, articleDiv)
+                        return extractItemFromHeaderAnchor(headerAnchor, summary, articleElement, articleDiv, alreadyExtractedArticles)
                     }
                 }
             }
@@ -50,17 +53,38 @@ class ZeitArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryExtract
         return null
     }
 
-    private fun extractItemFromHeaderAnchor(headerAnchor: Element, summary: String, articleElement: Element, articleDiv: Element): ArticleSummaryItem {
-        val item = ArticleSummaryItem(headerAnchor.attr("href"), headerAnchor.attr("title").trim(), ZeitArticleExtractor::class.java, summary)
+    private fun extractItemFromHeaderAnchor(headerAnchor: Element, summary: String, articleElement: Element, articleDiv: Element, alreadyExtractedArticles: HashMap<String, ArticleSummaryItem>): ArticleSummaryItem? {
+        val url = headerAnchor.attr("href")
 
-        item.previewImageUrl = extractPreviewImageUrl(articleElement)
-        item.publishedDate = extractPublishingDate(articleDiv)
+        if(shouldAddArticle(url, summary, alreadyExtractedArticles)) {
+            val item = ArticleSummaryItem(url, headerAnchor.attr("title").trim(), ZeitArticleExtractor::class.java, summary)
 
-        if(articleElement.attr("data-zplus") == "zplus-register") {
-            item.title = "ZeitPlus: " + item.title
+            item.previewImageUrl = extractPreviewImageUrl(articleElement)
+            item.publishedDate = extractPublishingDate(articleDiv)
+
+            if(articleElement.attr("data-zplus") == "zplus-register") {
+                item.title = "ZeitPlus: " + item.title
+            }
+
+            alreadyExtractedArticles.put(url, item)
+            return item
         }
 
-        return item
+        return null
+    }
+
+    private fun shouldAddArticle(url: String, summary: String, alreadyExtractedArticles: HashMap<String, ArticleSummaryItem>): Boolean {
+        if(alreadyExtractedArticles.containsKey(url) == false) {
+            return true
+        }
+
+        alreadyExtractedArticles[url]?.let { alreadyExtractedArticle ->
+            if(alreadyExtractedArticle.summary.isBlank() && summary.isBlank() == false) {
+                return true
+            }
+        }
+
+        return false
     }
 
     private fun extractPreviewImageUrl(articleElement: Element): String? {
