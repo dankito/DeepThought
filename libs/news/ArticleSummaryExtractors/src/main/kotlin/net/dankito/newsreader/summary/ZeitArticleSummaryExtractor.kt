@@ -38,7 +38,8 @@ class ZeitArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryExtract
         if(articleElement.className().contains("--inhouse") == false) { // --inhouse: filter out advertisements ('VERLAGSANGEBOT')
             articleElement.select("div[class~=__container]").first()?.let { articleDiv ->
                 val summary = articleDiv.select("p").first()?.text()?.trim() ?: ""
-                if(summary.isNotBlank() || articleElement.className()?.contains("teaser-topic-") == true) { // teaser topics don't have a summary
+                if(summary.isNotBlank() || articleElement.className()?.contains("teaser-topic-") == true
+                        || articleElement.className()?.contains("teaser-buzzboard") == true) { // teaser topics don't have a summary
                     articleDiv.select("h2 a").first()?.let { headerAnchor ->
                         return extractItemFromHeaderAnchor(headerAnchor, summary, articleElement, articleDiv)
                     }
