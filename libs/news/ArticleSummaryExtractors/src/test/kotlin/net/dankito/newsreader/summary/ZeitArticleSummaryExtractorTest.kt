@@ -13,4 +13,8 @@ class ZeitArticleSummaryExtractorTest : ArticleSummaryExtractorTestBase() {
         return false
     }
 
+    override fun areEmptyArticleSummariesAllowed(): Boolean {
+        return true
+    }
+
 }
