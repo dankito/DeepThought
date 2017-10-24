@@ -172,16 +172,6 @@ class TagsSearchResults(val overAllSearchTerm: String) {
         return lastResult!!.hasSingleMatch() && lastResult.getSingleMatch() == tag
     }
 
-    fun isMatchOfLastResult(tag: Tag): Boolean {
-        if (hasEmptySearchTerm)
-        // no exact or relevant matches
-            return false
-        if (hasLastResult())
-            return false
-
-        return lastResult!!.allMatches.contains(tag)
-    }
-
 
     private fun getExactOrSingleMatchesNotOfLastResult(): List<Tag> {
         exactOrSingleMatchesNotOfLastResultProperty?.let { return it }
