@@ -62,7 +62,7 @@ class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryList
             val notExistingEnteredTags = ArrayList<String>()
 
             searchResults.results.forEach { result ->
-                toggleTagOnEntry(tagsOnEntry, result, state, notExistingEnteredTags)
+                toggleTagOnEntry(tagsOnEntry, result, result == searchResults.lastResult, state, notExistingEnteredTags)
             }
 
             if(notExistingEnteredTags.isNotEmpty()) {
@@ -71,14 +71,17 @@ class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryList
         }
     }
 
-    private fun toggleTagOnEntry(tagsOnEntry: MutableCollection<Tag>, result: TagsSearchResult, state: TagsSearcherButtonState, notExistingEnteredTags: ArrayList<String>) {
+    private fun toggleTagOnEntry(tagsOnEntry: MutableCollection<Tag>, result: TagsSearchResult, isLastSearchResult: Boolean, state: TagsSearcherButtonState, notExistingEnteredTags: ArrayList<String>) {
         if(result.hasExactMatches()) {
             result.exactMatches.forEach { toggleTagAffiliation(it, tagsOnEntry, state) }
+        }
+        else if(isLastSearchResult == false && result.hasSingleMatch()) {
+            result.getSingleMatch()?.let { toggleTagAffiliation(it, tagsOnEntry, state) }
         }
         else if (result.hasMatches == false) {
             notExistingEnteredTags.add(result.searchTerm)
         }
-        else {
+        else if(isLastSearchResult) {
             result.allMatches.filterNotNull().forEach { toggleTagAffiliation(it, tagsOnEntry, state) }
         }
     }
