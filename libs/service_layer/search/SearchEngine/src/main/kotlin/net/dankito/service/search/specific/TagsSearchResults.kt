@@ -8,7 +8,7 @@ import net.dankito.service.search.util.CombinedLazyLoadingList
 class TagsSearchResults(val overAllSearchTerm: String) {
 
 
-    val hasEmptySearchTerm = overAllSearchTerm.isNullOrBlank()
+    val hasEmptySearchTerm = overAllSearchTerm.isBlank()
 
     var tagNamesToSearchFor: List<String> = listOf()
 
@@ -35,7 +35,7 @@ class TagsSearchResults(val overAllSearchTerm: String) {
 
     val relevantMatchesCount: Int
         get() {
-            getRelevantMatchesSorted()?.let { it.size }
+            getRelevantMatchesSorted().size
 
             return 0
         }
