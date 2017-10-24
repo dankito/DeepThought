@@ -27,7 +27,7 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
     }
 
 
-    private var configurations: MutableList<ArticleSummaryExtractorConfig> = ArrayList()
+    private var configurations: MutableSet<ArticleSummaryExtractorConfig> = HashSet()
 
     private var configurationsPerUrl: MutableMap<String, List<ArticleSummaryExtractorConfig>>? = null
 
