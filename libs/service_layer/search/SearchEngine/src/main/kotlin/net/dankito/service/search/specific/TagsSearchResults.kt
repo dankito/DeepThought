@@ -220,7 +220,7 @@ class TagsSearchResults(val overAllSearchTerm: String) {
     private fun determineMatchesNotOfLastResult(): List<Tag> {
         val nonLastResultNotExactOrSingleMatches = ArrayList<Tag>()
 
-        for (i in 0..results.size - 1 - 1) {
+        for(i in 0..results.size - 2) {
             val result = results[i]
             if (result.hasExactMatches() == false && result.hasSingleMatch() == false)
                 nonLastResultNotExactOrSingleMatches.addAll(result.allMatches)
