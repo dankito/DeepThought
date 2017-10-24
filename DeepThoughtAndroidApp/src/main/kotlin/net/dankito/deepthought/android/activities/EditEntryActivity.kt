@@ -57,6 +57,8 @@ import kotlin.concurrent.schedule
 class EditEntryActivity : BaseActivity() {
 
     companion object {
+        private const val STATE_NAME_PREFIX_INTENT_EXTRA_NAME = "STATE_NAME_PREFIX"
+
         private const val ENTRY_ID_INTENT_EXTRA_NAME = "ENTRY_ID"
         private const val READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME = "READ_LATER_ARTICLE_ID"
         private const val ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ENTRY_EXTRACTION_RESULT"
@@ -205,13 +207,15 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
+        val stateNamePrefix = savedInstanceState.getString(STATE_NAME_PREFIX_INTENT_EXTRA_NAME)
+
         this.forceShowTagsPreview = savedInstanceState.getBoolean(FORCE_SHOW_TAGS_PREVIEW_INTENT_EXTRA_NAME, false)
         this.forceShowReferencePreview = savedInstanceState.getBoolean(FORCE_SHOW_REFERENCE_PREVIEW_INTENT_EXTRA_NAME, false)
         this.forceShowAbstractPreview = savedInstanceState.getBoolean(FORCE_SHOW_ABSTRACT_PREVIEW_INTENT_EXTRA_NAME, false)
 
         this.isInReaderMode = savedInstanceState.getBoolean(IS_IN_READER_MODE_INTENT_EXTRA_NAME, false)
 
-        (getAndClearState(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME) as? ItemExtractionResult)?.let { editEntryExtractionResult(it) }
+        (getAndClearState(getKeyForState(stateNamePrefix, ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)) as? ItemExtractionResult)?.let { editEntryExtractionResult(it) }
         savedInstanceState.getString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME)?.let { readLaterArticleId -> editReadLaterArticle(readLaterArticleId) }
         savedInstanceState.getString(ENTRY_ID_INTENT_EXTRA_NAME)?.let { entryId -> editEntry(entryId) }
 
@@ -220,7 +224,7 @@ class EditEntryActivity : BaseActivity() {
             createEntry(false) // don't go to EditHtmlTextDialog for content here as we're restoring state, content may already be set
         }
 
-        getAndClearStringState(getKeyForState(CONTENT_INTENT_EXTRA_NAME))?.let { content ->
+        getAndClearStringState(getKeyForState(stateNamePrefix, CONTENT_INTENT_EXTRA_NAME))?.let { content ->
             contentToEdit = content
             setContentPreviewOnUIThread()
         }
@@ -241,13 +245,16 @@ class EditEntryActivity : BaseActivity() {
         super.onSaveInstanceState(outState)
 
         outState?.let {
+            val stateNamePrefix = getStateNamePrefix()
+            outState.putString(STATE_NAME_PREFIX_INTENT_EXTRA_NAME, stateNamePrefix) // we need to save the state name prefix as on restore we wouldn't otherwise know how to  restore ItemExtractionResult as state name prefix is derived from it
+
             outState.putString(ENTRY_ID_INTENT_EXTRA_NAME, null)
             item?.id?.let { entryId -> outState.putString(ENTRY_ID_INTENT_EXTRA_NAME, entryId) }
 
             outState.putString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME, null)
             readLaterArticle?.id?.let { readLaterArticleId -> outState.putString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME, readLaterArticleId) }
 
-            itemExtractionResult?.let { storeState(ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME, it) }
+            itemExtractionResult?.let { storeState(getKeyForState(stateNamePrefix, ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME), it) }
 
             outState.putBoolean(FORCE_SHOW_TAGS_PREVIEW_INTENT_EXTRA_NAME, forceShowTagsPreview)
             outState.putBoolean(FORCE_SHOW_REFERENCE_PREVIEW_INTENT_EXTRA_NAME, forceShowReferencePreview)
@@ -261,14 +268,14 @@ class EditEntryActivity : BaseActivity() {
 
             outState.putString(ABSTRACT_INTENT_EXTRA_NAME, abstractToEdit)
 
+            storeState(getKeyForState(stateNamePrefix, CONTENT_INTENT_EXTRA_NAME), contentToEdit) // application crashes if objects put into bundle are too large (> 1 MB) for Android
+
             floatingActionMenu.saveInstanceState(outState)
         }
-
-        storeState(getKeyForState(CONTENT_INTENT_EXTRA_NAME), contentToEdit) // application crashes if objects put into bundle are too large (> 1 MB) for Android
     }
 
-    private fun getKeyForState(stateName: String): String {
-        return getStateNamePrefix() + "_" + stateName
+    private fun getKeyForState(stateNamePrefix: String, stateName: String): String {
+        return stateNamePrefix + "_" + stateName
     }
 
     /**
