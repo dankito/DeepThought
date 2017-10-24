@@ -2,15 +2,10 @@ package net.dankito.service.search.specific
 
 
 import net.dankito.deepthought.model.Tag
-import net.dankito.service.search.Search
 import net.dankito.service.search.util.CombinedLazyLoadingList
 
 
 class TagsSearchResults(val overAllSearchTerm: String) {
-
-    companion object {
-        val EmptySearchResults = TagsSearchResults(Search.EmptySearchTerm, ArrayList<Tag>())
-    }
 
 
     val hasEmptySearchTerm = overAllSearchTerm.isNullOrBlank()
@@ -26,18 +21,11 @@ class TagsSearchResults(val overAllSearchTerm: String) {
 
     private var relevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossibleProperty: List<Tag>? = null
 
-    private var exactMatchesProperty: List<Tag>? = null
-
     private var exactOrSingleMatchesNotOfLastResultProperty: List<Tag>? = null
 
     private var matchesButOfLastResult: List<Tag>? = null
 
     private var searchTermsWithoutMatchesProperty: List<String>? = null
-
-
-    constructor(overAllSearchTerm: String, relevantMatchesSorted: List<Tag>) : this(overAllSearchTerm) {
-        setRelevantMatchesSorted(relevantMatchesSorted)
-    }
 
 
     fun addSearchResult(result: TagsSearchResult): Boolean {
@@ -106,25 +94,6 @@ class TagsSearchResults(val overAllSearchTerm: String) {
     }
 
 
-    fun getExactMatches(): List<Tag> {
-        if (exactMatchesProperty == null) {
-            exactMatchesProperty = determineExactMatches()
-        }
-
-        return exactMatchesProperty ?: listOf()
-    }
-
-    fun determineExactMatches(): List<Tag> {
-        val exactMatches = ArrayList<Tag>()
-
-        for(result in results) {
-            exactMatches.addAll(result.exactMatches)
-        }
-
-        return exactMatches
-    }
-
-
     fun isExactOrSingleMatchButNotOfLastResult(tag: Tag): Boolean {
         if (hasEmptySearchTerm)
         // no exact or relevant matches
@@ -185,7 +154,7 @@ class TagsSearchResults(val overAllSearchTerm: String) {
     private fun determineExactOrSingleMatchesNotOfLastResult(): List<Tag> {
         val nonLastResultExactOrSingleMatches = ArrayList<Tag>()
 
-        for (i in 0..results.size - 1 - 1) {
+        for (i in 0..results.size - 2) {
             val result = results[i]
 
             nonLastResultExactOrSingleMatches.addAll(result.exactMatches)
@@ -239,18 +208,6 @@ class TagsSearchResults(val overAllSearchTerm: String) {
         return results.size > 0 // no result (and therefore not last result) at all
     }
 
-    fun hasLastResultExactMatch(): Boolean {
-        if (hasLastResult() == false) {
-            return false
-        }
-
-        lastResult?.let { lastResult ->
-            return lastResult.hasExactMatches()
-        }
-
-        return false
-    }
-
     val lastResult: TagsSearchResult?
         get() {
             if (results.size == 0) {
@@ -258,15 +215,6 @@ class TagsSearchResults(val overAllSearchTerm: String) {
             }
 
             return results[results.size - 1]
-        }
-
-    val exactMatchesOfLastResult: List<Tag>
-        get() {
-            lastResult?.let { lastResult ->
-                return lastResult.exactMatches
-            }
-
-            return listOf()
         }
 
 
