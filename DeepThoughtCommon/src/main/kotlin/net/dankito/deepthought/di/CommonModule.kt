@@ -121,8 +121,8 @@ class CommonModule {
 
     @Provides
     @Singleton
-    fun provideArticleExtractorManager(tagService: TagService, seriesService: SeriesService, searchEngine: ISearchEngine) : ArticleExtractorManager {
-        return ArticleExtractorManager(tagService, seriesService, searchEngine)
+    fun provideArticleExtractorManager(seriesService: SeriesService, searchEngine: ISearchEngine) : ArticleExtractorManager {
+        return ArticleExtractorManager(seriesService, searchEngine)
     }
 
     @Provides

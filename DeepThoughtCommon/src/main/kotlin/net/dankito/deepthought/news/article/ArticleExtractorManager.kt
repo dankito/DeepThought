@@ -8,7 +8,6 @@ import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.newsreader.article.IArticleExtractor
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.service.data.SeriesService
-import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.SeriesSearch
 import org.slf4j.LoggerFactory
@@ -18,7 +17,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-class ArticleExtractorManager(private val tagService: TagService, private val seriesService: SeriesService, private val searchEngine: ISearchEngine) {
+class ArticleExtractorManager(private val seriesService: SeriesService, private val searchEngine: ISearchEngine) {
 
     companion object {
         private val log = LoggerFactory.getLogger(ArticleExtractorManager::class.java)
