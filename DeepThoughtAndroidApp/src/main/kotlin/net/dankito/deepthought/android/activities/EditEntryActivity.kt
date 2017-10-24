@@ -1342,12 +1342,6 @@ class EditEntryActivity : BaseActivity() {
         editEntry(readLaterArticle.itemExtractionResult.item, readLaterArticle.itemExtractionResult.source, readLaterArticle.itemExtractionResult.tags, updateContentPreview)
     }
 
-    private fun editEntryExtractionResult(serializedExtractionResult: String) {
-        restoreSerializedObjectFromDisk(serializedExtractionResult, ItemExtractionResult::class.java)?.let { extractionResult ->
-            editEntryExtractionResult(extractionResult)
-        }
-    }
-
     private fun editEntryExtractionResult(extractionResult: ItemExtractionResult, updateContentPreview: Boolean = true) {
         this.itemExtractionResult = extractionResult
 
