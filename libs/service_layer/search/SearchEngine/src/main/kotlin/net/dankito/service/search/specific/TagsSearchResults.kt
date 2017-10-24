@@ -137,12 +137,12 @@ class TagsSearchResults(val overAllSearchTerm: String) {
     }
 
     fun isMatchButNotOfLastResult(tag: Tag): Boolean {
-        if (hasEmptySearchTerm)
-        // no exact or relevant matches
+        if(hasEmptySearchTerm) { // no exact or relevant matches
             return false
-        if (results.size < 2)
-        // no or only one (= last) result
+        }
+        if(results.size < 2) { // no or only one (= last) result
             return false
+        }
 
         return matchesNotOfLastResult.contains(tag)
     }
