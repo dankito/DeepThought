@@ -55,7 +55,7 @@ class TagsSearchResults(val overAllSearchTerm: String) {
     fun getRelevantMatchesSorted(): List<Tag> {
         relevantMatchesSortedProperty?.let { return it }
 
-        return getAllMatches()
+        return getAllMatches() // TODO: this is wrong
     }
 
     fun setRelevantMatchesSorted(relevantMatchesSorted: List<Tag>) {
@@ -86,8 +86,8 @@ class TagsSearchResults(val overAllSearchTerm: String) {
             if(result.hasExactMatches()) {
                 matches.addAll(result.exactMatches)
             }
-            else {
-                matches.addAll(result.allMatches)
+            else if(result.hasSingleMatch()) {
+                result.getSingleMatch()?.let { matches.add(it) }
             }
         }
 
@@ -222,8 +222,12 @@ class TagsSearchResults(val overAllSearchTerm: String) {
 
         for(i in 0..results.size - 2) {
             val result = results[i]
-            if (result.hasExactMatches() == false && result.hasSingleMatch() == false)
-                nonLastResultNotExactOrSingleMatches.addAll(result.allMatches)
+            if(result.hasExactMatches()) {
+                nonLastResultNotExactOrSingleMatches.addAll(result.exactMatches)
+            }
+            else if(result.hasSingleMatch()) {
+                result.getSingleMatch()?.let { nonLastResultNotExactOrSingleMatches.add(it) }
+            }
         }
 
         return nonLastResultNotExactOrSingleMatches

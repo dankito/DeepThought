@@ -131,11 +131,11 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osH
             }
 
             val searchTerm = QueryParser.escape(result.searchTerm.toLowerCase())
-            if(result.hasExactMatches() && result !== search.results.lastResult) { // from last TagSearchResult only use exact matches, but from all others all matches
-                sortRelevantTagsQuery.add(TermQuery(Term(FieldName.TagName, searchTerm)), BooleanClause.Occur.SHOULD)
-            }
-            else {
+            if(result == search.results.lastResult || result.hasSingleMatch()) { // from last TagSearchResult use all matches, but from all others only exact or single matches
                 sortRelevantTagsQuery.add(WildcardQuery(Term(FieldName.TagName, "*$searchTerm*")), BooleanClause.Occur.SHOULD)
+            }
+            else if(result.hasExactMatches()) {
+                sortRelevantTagsQuery.add(TermQuery(Term(FieldName.TagName, searchTerm)), BooleanClause.Occur.SHOULD)
             }
         }
 
