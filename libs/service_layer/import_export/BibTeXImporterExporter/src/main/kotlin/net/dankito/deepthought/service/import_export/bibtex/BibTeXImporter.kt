@@ -88,6 +88,7 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
         val reference = Source("")
         referencePersister.saveReference(reference)
 
+        try { entry.itemIndex = bibTeXEntry.key.value.toLong() } catch(ignored: Exception) { } // only works for BibTeX exported by DeepThought
         bibTeXEntry.fields.forEach { key, value ->
             mapEntryField(entry, tags, reference, key, value, latexParser, latexPrinter)
         }
