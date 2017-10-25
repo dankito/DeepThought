@@ -11,9 +11,11 @@ class EntryService(dataManager: DataManager, entityChangedNotifier: EntityChange
     override fun onPrePersist(entity: Item) {
         super.onPrePersist(entity)
 
-        dataManager.deepThought.let { deepThought ->
-            entity.itemIndex = deepThought.increaseNextItemIndex()
-            dataManager.entityManager.updateEntity(deepThought) // update DeepThought in Db as otherwise new nextItemIndex doesn't get saved
+        if(entity.itemIndex <= 0) {
+            dataManager.deepThought.let { deepThought ->
+                entity.itemIndex = deepThought.increaseNextItemIndex()
+                dataManager.entityManager.updateEntity(deepThought) // update DeepThought in Db as otherwise new nextItemIndex doesn't get saved
+            }
         }
 
         updatePreview(entity)
