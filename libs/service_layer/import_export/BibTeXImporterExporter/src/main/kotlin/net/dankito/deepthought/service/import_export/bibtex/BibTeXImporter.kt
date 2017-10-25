@@ -51,6 +51,7 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
     }
 
     override fun import(bibTeXFile: File): Collection<Item> {
+        log.info("Going to parse BibTeX file $bibTeXFile ...")
         val reader = FileReader(bibTeXFile)
         val filterReader = CharacterFilterReader(reader)
 
@@ -74,6 +75,7 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
     }
 
     private fun mapDatabaseToEntries(database: BibTeXDatabase): Collection<Item> {
+        log.info("Parsed BibTeX file with ${database.entries.size} entries, going to map them to items ...")
         val latexParser = LaTeXParser()
         val latexPrinter = LaTeXPrinter()
 
