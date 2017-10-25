@@ -18,7 +18,7 @@ import net.dankito.utils.ui.InputType
 import org.slf4j.LoggerFactory
 
 
-abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataManager, protected val initialSyncManager: InitialSyncManager, protected val dialogService: IDialogService,
+abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataManager, private val initialSyncManager: InitialSyncManager, protected val dialogService: IDialogService,
                                              protected val localization: Localization) : IDeviceRegistrationHandler {
 
     companion object {
@@ -42,7 +42,7 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
     abstract fun showUnknownDeviceDiscoveredView(unknownDevice: DiscoveredDevice, callback: (Boolean, Boolean) -> Unit)
 
 
-    protected fun askForRegistration(clientCommunicator: IClientCommunicator, remoteDevice: DiscoveredDevice) {
+    private fun askForRegistration(clientCommunicator: IClientCommunicator, remoteDevice: DiscoveredDevice) {
         clientCommunicator.requestPermitSynchronization(remoteDevice) { response ->
             response.body?.let { body ->
                 if(body.result == RequestPermitSynchronizationResult.RESPOND_TO_CHALLENGE) {
@@ -59,7 +59,7 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
         }
     }
 
-    protected fun getChallengeResponseFromUser(clientCommunicator: IClientCommunicator, remoteDevice: DiscoveredDevice, nonce: String, wasCodePreviouslyWronglyEntered: Boolean) {
+    private fun getChallengeResponseFromUser(clientCommunicator: IClientCommunicator, remoteDevice: DiscoveredDevice, nonce: String, wasCodePreviouslyWronglyEntered: Boolean) {
         var questionText = localization.getLocalizedString("alert.title.enter.response.code.for.permitting.synchronization", remoteDevice.device.getDisplayText())
         if(wasCodePreviouslyWronglyEntered) {
             questionText = localization.getLocalizedString("alert.title.entered.response.code.was.wrong", remoteDevice.device.getDisplayText())
@@ -75,7 +75,7 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
         }
     }
 
-    protected fun sendChallengeResponseToRemote(clientCommunicator: IClientCommunicator, remoteDevice: DiscoveredDevice, nonce: String, enteredResponse: String) {
+    private fun sendChallengeResponseToRemote(clientCommunicator: IClientCommunicator, remoteDevice: DiscoveredDevice, nonce: String, enteredResponse: String) {
         callRequestingToSynchronizeWithRemoteListeners(remoteDevice) // opens synchronization port needed in respondToSynchronizationPermittingChallenge()
 
         clientCommunicator.respondToSynchronizationPermittingChallenge(remoteDevice, nonce, enteredResponse, createSyncInfo()) { response ->
@@ -94,7 +94,7 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
     }
 
 
-    protected fun handleEnteredChallengeResponse(clientCommunicator: IClientCommunicator, remoteDevice: DiscoveredDevice, response: Response<RespondToSynchronizationPermittingChallengeResponseBody>, nonce: String) {
+    private fun handleEnteredChallengeResponse(clientCommunicator: IClientCommunicator, remoteDevice: DiscoveredDevice, response: Response<RespondToSynchronizationPermittingChallengeResponseBody>, nonce: String) {
         response.error?.let { showErrorMessage(it) }
 
         response.body?.let { body ->
@@ -107,7 +107,7 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
         }
     }
 
-    protected fun remoteAllowedSynchronization(remoteDevice: DiscoveredDevice, body: RespondToSynchronizationPermittingChallengeResponseBody) {
+    private fun remoteAllowedSynchronization(remoteDevice: DiscoveredDevice, body: RespondToSynchronizationPermittingChallengeResponseBody) {
         log.info("Remote allowed synchronization: $remoteDevice")
 
         body.syncInfo?.let { syncInfo ->
