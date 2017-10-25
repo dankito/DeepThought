@@ -118,7 +118,7 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
         val localConfigs = entityManager.getAllEntitiesOfType(ArticleSummaryExtractorConfig::class.java)
 
         remoteSyncInfo.articleSummaryExtractorConfigs.forEach { remoteConfig ->
-            val localConfig = localConfigs.filter { it.url == remoteConfig.url }.firstOrNull()
+            val localConfig = localConfigs.firstOrNull { it.url == remoteConfig.url }
 
             if(localConfig == null) {
                 entityManager.persistEntity(remoteConfig)
