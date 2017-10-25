@@ -114,10 +114,11 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
             // this is kind a dirty hack, newly synchronized device has to be added on both sides as otherwise it may gets overwritten. Don't know how to solve this otherwise
             initialSyncManager.syncUserDevices(dataManager.deepThought, syncInfo)
 
-            if(syncInfo.useCallerUserName == false) {
-                initialSyncManager.syncUserInformationWithRemoteOnes(dataManager.localUser, syncInfo.user)
-            }
             if(syncInfo.useCallerDatabaseIds == false) {
+                if(syncInfo.useCallerUserName == false) { // ensure that localUser object gets changed only on one side, otherwise there will be a conflict and chances are 50:50 which version will be used
+                    initialSyncManager.syncUserInformationWithRemoteOnes(dataManager.localUser, syncInfo.user)
+                }
+
                 initialSyncManager.syncLocalDatabaseIdsWithRemoteOnes(dataManager.deepThought, syncInfo)
             }
         }
@@ -156,10 +157,11 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
             // this is kind a dirty hack, newly synchronized device has to be added on both sides as otherwise it may gets overwritten. Don't know how to solve this otherwise
             initialSyncManager.syncUserDevices(dataManager.deepThought, remoteSyncInfo)
 
-            if(useCallerUserName) {
-                initialSyncManager.syncUserInformationWithRemoteOnes(localUser, remoteSyncInfo.user)
-            }
             if(useCallerDatabaseIds) {
+                if(useCallerUserName) { // ensure that localUser object gets changed only on one side, otherwise there will be a conflict and chances are 50:50 which version will be used
+                    initialSyncManager.syncUserInformationWithRemoteOnes(localUser, remoteSyncInfo.user)
+                }
+
                 initialSyncManager.syncLocalDatabaseIdsWithRemoteOnes(dataManager.deepThought, remoteSyncInfo)
             }
 
