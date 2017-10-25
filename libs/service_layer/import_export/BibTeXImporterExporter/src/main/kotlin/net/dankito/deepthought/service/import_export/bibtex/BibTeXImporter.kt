@@ -146,6 +146,10 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
     }
 
     private fun mapEntryTags(tags: MutableList<Tag>, tagNames: String) {
+        if(tagNames.isBlank()) {
+            return
+        }
+
         val tagNamesAdjusted = tagNames.replace(TagsSeparator, SearchEngineBase.TagsSearchTermSeparator) // tags or often separated by ';' in BibTeX
 
         val countDownLatch = CountDownLatch(1)
