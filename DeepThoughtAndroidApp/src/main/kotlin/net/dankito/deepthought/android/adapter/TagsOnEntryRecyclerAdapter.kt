@@ -111,6 +111,6 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
         }
     }
 
-    private fun getDefaultBackgroundColor() = android.R.color.transparent
+    private fun getDefaultBackgroundColor() = R.color.tag_state_default
 
 }
