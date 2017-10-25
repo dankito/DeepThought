@@ -51,7 +51,6 @@
          has opacity at the beginning, JavaFX at the end) -->
 
     <color name="tag_state_exact_or_single_match_but_not_of_last_result">#80008000</color>
-    <color name="tag_state_match_but_not_of_last_result">#8090ee90</color>
     <color name="tag_state_exact_match_of_last_result">#806495ed</color>
     <color name="tag_state_single_match_of_last_result">#8087cefa</color>
     <color name="tag_state_default">@android:color/transparent</color>
