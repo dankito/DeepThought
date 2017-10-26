@@ -308,22 +308,22 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
 
     override fun startSynchronizingWithNewlyRegisteredDevice(device: DiscoveredDevice) {
         // TODO: the whole process should actually run in a transaction
-        addDeviceToKnownSynchronizedDevicesAndCallListeners(device)
+        doInitialSyncWithNewlyRegisteredDeviceAndCallListeners(device)
     }
 
     override fun remoteDeviceStartedSynchronizingWithUs(remoteDevice: Device) {
         getDiscoveredDeviceForDevice(remoteDevice).let { discoveredRemoteDevice ->
             for(discoveredDevice in discoveredDevices.values) {
                 if(discoveredDevice == discoveredRemoteDevice) {
-                    addDeviceToKnownSynchronizedDevicesAndCallListeners(discoveredDevice)
+                    doInitialSyncWithNewlyRegisteredDeviceAndCallListeners(discoveredDevice)
                     break
                 }
             }
         }
     }
 
-    private fun addDeviceToKnownSynchronizedDevicesAndCallListeners(device: DiscoveredDevice) {
-        if (addDeviceToKnownSynchronizedDevices(device)) {
+    private fun doInitialSyncWithNewlyRegisteredDeviceAndCallListeners(device: DiscoveredDevice) {
+        if(doInitialSyncWithNewlyRegisteredDevice(device)) {
 
             callDiscoveredDeviceDisconnectedListeners(device)
             callDiscoveredDeviceConnectedListeners(device, DiscoveredDeviceType.KNOWN_SYNCHRONIZED_DEVICE)
@@ -332,7 +332,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
         }
     }
 
-    private fun addDeviceToKnownSynchronizedDevices(device: DiscoveredDevice): Boolean {
+    private fun doInitialSyncWithNewlyRegisteredDevice(device: DiscoveredDevice): Boolean {
         val deviceInfoKey = getDeviceKeyForDevice(device)
 
         if(deviceInfoKey != null) {
@@ -347,10 +347,6 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
         return false
     }
 
-    private fun addDeviceToKnownSynchronizedDevices(deviceInfoKey: String, device: DiscoveredDevice) {
-        knownSynchronizedDevices.put(deviceInfoKey, device)
-    }
-
     private fun startSynchronizingWithDevice(device: DiscoveredDevice) {
         startSynchronizingWithDevice(getDeviceKeyForDevice(device), device)
 
@@ -363,6 +359,10 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
         networkSettings.addConnectedDevicePermittedToSynchronize(device)
 
         addDeviceToKnownSynchronizedDevices(deviceInfoKey, device)
+    }
+
+    private fun addDeviceToKnownSynchronizedDevices(deviceInfoKey: String, device: DiscoveredDevice) {
+        knownSynchronizedDevices.put(deviceInfoKey, device)
     }
 
 
