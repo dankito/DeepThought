@@ -119,7 +119,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
         return writer
     }
 
-    protected fun getWriter(): IndexWriter? {
+    private fun getWriter(): IndexWriter? {
         synchronized(InstanceLock) {
             if(writer == null) {
                 writer = createIndexWriter(defaultAnalyzer)
@@ -143,7 +143,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
         indexSearcher = IndexSearcher(directoryReader)
     }
 
-    protected fun getIndexSearcher(): IndexSearcher? {
+    private fun getIndexSearcher(): IndexSearcher? {
         synchronized(InstanceLock) {
             if(indexSearcher == null) {
                 try {
@@ -276,7 +276,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
     abstract fun addEntityFieldsToDocument(entity: TEntity, doc: Document)
 
-    protected fun indexDocument(doc: Document) {
+    private fun indexDocument(doc: Document) {
         try {
             getWriter()?.let { writer ->
                 writer.addDocument(doc)
@@ -298,16 +298,16 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
         }
     }
 
-    fun updateEntityInIndex(entity: TEntity) {
+    private fun updateEntityInIndex(entity: TEntity) {
         removeEntityFromIndex(entity)
         indexEntity(entity)
     }
 
-    protected fun removeEntityFromIndex(removedEntity: TEntity) {
+    private fun removeEntityFromIndex(removedEntity: TEntity) {
         removedEntity.id?.let { removeEntityFromIndex(it) }
     }
 
-    protected fun removeEntityFromIndex(entityId: String) {
+    private fun removeEntityFromIndex(entityId: String) {
         if(isReadOnly) {
             return
         }
@@ -359,7 +359,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
      * Calling commit() is a costly operation
      * -> don't call it on each update / deletion, wait some time before commit accumulated changes.
      */
-    @Synchronized protected fun commitChangesToWriter() {
+    @Synchronized private fun commitChangesToWriter() {
         getWriter()?.commit()
 
         markIndexHasBeenUpdated() // so that on next search updates are reflected
@@ -391,7 +391,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
         return listOf()
     }
 
-    protected fun getSorting(sortOptions: List<SortOption>): Sort {
+    private fun getSorting(sortOptions: List<SortOption>): Sort {
         val sort = Sort()
 
         if(sortOptions.isNotEmpty()) {
