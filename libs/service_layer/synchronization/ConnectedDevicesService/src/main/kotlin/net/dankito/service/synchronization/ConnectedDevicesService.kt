@@ -311,17 +311,6 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
         doInitialSyncWithNewlyRegisteredDeviceAndCallListeners(device)
     }
 
-    override fun remoteDeviceStartedSynchronizingWithUs(remoteDevice: Device) {
-        getDiscoveredDeviceForDevice(remoteDevice).let { discoveredRemoteDevice ->
-            for(discoveredDevice in discoveredDevices.values) {
-                if(discoveredDevice == discoveredRemoteDevice) {
-                    doInitialSyncWithNewlyRegisteredDeviceAndCallListeners(discoveredDevice)
-                    break
-                }
-            }
-        }
-    }
-
     private fun doInitialSyncWithNewlyRegisteredDeviceAndCallListeners(device: DiscoveredDevice) {
         if(doInitialSyncWithNewlyRegisteredDevice(device)) {
 
