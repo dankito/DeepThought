@@ -281,7 +281,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
             getWriter()?.let { writer ->
                 writer.addDocument(doc)
 
-                commitChangedToWriter()
+                commitChangesToWriter()
             }
         } catch (e: Exception) {
             log.error("Could not index Document " + doc, e)
@@ -324,7 +324,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
     private fun removeEntityFromIndex(writer: IndexWriter, entityId: String) {
         writer.deleteDocuments(Term(getIdFieldName(), entityId))
 
-        commitChangedToWriter()
+        commitChangesToWriter()
     }
 
     abstract fun getIdFieldName(): String
@@ -359,7 +359,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
      * Calling commit() is a costly operation
      * -> don't call it on each update / deletion, wait some time before commit accumulated changes.
      */
-    @Synchronized protected fun commitChangedToWriter() {
+    @Synchronized protected fun commitChangesToWriter() {
         getWriter()?.commit()
 
         markIndexHasBeenUpdated() // so that on next search updates are reflected
