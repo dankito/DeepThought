@@ -26,7 +26,8 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
 
     override fun canExtractEntryFromUrl(url: String): Boolean {
         return (url.toLowerCase().startsWith("http://www.jetzt.de/") && url.length > "http://www.jetzt.de/".length) ||
-                (url.toLowerCase().startsWith("http://jetzt.sueddeutsche.de/") && url.length > "http://jetzt.sueddeutsche.de/".length)
+                (url.toLowerCase().startsWith("http://jetzt.sueddeutsche.de/") && url.length > "http://jetzt.sueddeutsche.de/".length) ||
+                (url.toLowerCase().startsWith("http://jetzt.de/") && url.length > "http://jetzt.de/".length)
     }
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
