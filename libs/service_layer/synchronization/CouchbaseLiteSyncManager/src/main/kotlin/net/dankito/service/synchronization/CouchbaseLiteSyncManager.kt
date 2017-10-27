@@ -15,6 +15,7 @@ import java.net.MalformedURLException
 import java.net.URL
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.TimeUnit
 
 
 class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityManagerBase, private val synchronizedChangesHandler: SynchronizedChangesHandler,
@@ -286,22 +287,46 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
 
     private val httpClientFactory = object : CouchbaseLiteHttpClientFactory(database.persistentCookieStore) {
 
-        private val client: OkHttpClient
+        private var client: OkHttpClient? = null
 
-        init {
-            val builder = OkHttpClient.Builder()
-
-            builder.followRedirects(true)
-            // fixes unexpected end of stream bug, see https://github.com/square/okhttp/issues/2738
-            builder.retryOnConnectionFailure(true)
-//            builder.connectTimeout(RequestParameters.DEFAULT_CONNECTION_TIMEOUT_MILLIS.toLong(), TimeUnit.MILLISECONDS) // TODO: find a way to set per call
-            builder.cookieJar(this.cookieStore)
-
-            client = builder.build()
-        }
 
         override fun getOkHttpClient(): OkHttpClient {
-            return client
+            client?.let { return it }
+
+            // this is kind of bad as in this way a second OkHttpClient gets instantiated, but there's no other way to access parent's OkHttpClient.Builder's values
+            val newClient = createFromParentOkHttpClient(super.getOkHttpClient())
+            this.client = newClient
+
+            return newClient
+        }
+
+        private fun createFromParentOkHttpClient(parentOkHttpClient: OkHttpClient): OkHttpClient {
+            val builder = OkHttpClient.Builder()
+
+            copyValuesFromParentOkHttpClient(builder, parentOkHttpClient)
+
+            // fixes unexpected end of stream bug, see https://github.com/square/okhttp/issues/2738
+            builder.retryOnConnectionFailure(true)
+
+            return builder.build()
+        }
+
+        private fun copyValuesFromParentOkHttpClient(builder: OkHttpClient.Builder, parentOkHttpClient: OkHttpClient) {
+            builder.connectTimeout(parentOkHttpClient.connectTimeoutMillis().toLong(), TimeUnit.MILLISECONDS)
+                    .writeTimeout(parentOkHttpClient.writeTimeoutMillis().toLong(), TimeUnit.MILLISECONDS)
+                    .readTimeout(parentOkHttpClient.readTimeoutMillis().toLong(), TimeUnit.MILLISECONDS)
+
+            if(parentOkHttpClient.sslSocketFactory() != null) {
+                builder.sslSocketFactory(parentOkHttpClient.sslSocketFactory())
+            }
+
+            if(parentOkHttpClient.hostnameVerifier() != null) {
+                builder.hostnameVerifier(parentOkHttpClient.hostnameVerifier())
+            }
+
+            builder.cookieJar(parentOkHttpClient.cookieJar())
+
+            builder.followRedirects(parentOkHttpClient.followRedirects())
         }
     }
 
