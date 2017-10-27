@@ -18,7 +18,8 @@ import java.util.concurrent.ConcurrentHashMap
 
 
 class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityManagerBase, private val synchronizedChangesHandler: SynchronizedChangesHandler,
-                               private val networkSettings: INetworkSettings, private val alsoUsePullReplication: Boolean = true) : ISyncManager {
+                               private val networkSettings: INetworkSettings, private val usePushReplication: Boolean = false, private val usePullReplication: Boolean = true) :
+        ISyncManager {
 
     companion object {
         val PortNotSet = -1
@@ -229,15 +230,18 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
     }
 
     private fun startReplication(syncUrl: URL, device: DiscoveredDevice) {
-        val pushReplication = Replication(database, syncUrl, Replication.Direction.PUSH, httpClientFactory)
-        pushReplication.filter = EntitiesFilterName
-        pushReplication.isContinuous = true
+        if(usePushReplication) {
+            val pushReplication = Replication(database, syncUrl, Replication.Direction.PUSH, httpClientFactory)
 
-        pushReplications.put(device, pushReplication)
+            pushReplication.filter = EntitiesFilterName
+            pushReplication.isContinuous = true
 
-        pushReplication.start()
+            pushReplications.put(device, pushReplication)
 
-        if(alsoUsePullReplication) {
+            pushReplication.start()
+        }
+
+        if(usePullReplication) {
             val pullReplication = Replication(database, syncUrl, Replication.Direction.PULL, httpClientFactory)
             pullReplication.filter = EntitiesFilterName
             pullReplication.isContinuous = true
