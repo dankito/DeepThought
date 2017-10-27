@@ -16,7 +16,6 @@ import net.dankito.deepthought.ui.presenter.ReferencesListPresenter
 import net.dankito.deepthought.ui.view.IReferencesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReferenceService
-import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
@@ -26,9 +25,6 @@ class ReferencesListView: MainActivityTabFragment<Source>(R.menu.reference_conte
 
     @Inject
     protected lateinit var referenceService: ReferenceService
-
-    @Inject
-    protected lateinit var searchEngine: ISearchEngine
 
     @Inject
     protected lateinit var router: IRouter

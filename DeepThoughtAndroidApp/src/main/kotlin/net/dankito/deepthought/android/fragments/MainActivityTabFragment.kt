@@ -26,6 +26,7 @@ import net.dankito.deepthought.android.views.FullscreenRecyclerView
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
+import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
 import javax.inject.Inject
 
@@ -37,6 +38,13 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
         private const val IS_SEARCH_VIEW_ACTIVATED_EXTRA_NAME = "IS_SEARCH_VIEW_ACTIVATED"
         private const val LAST_SEARCH_TERM_EXTRA_NAME = "LAST_SEARCH_TERM"
     }
+
+
+    @Inject
+    protected lateinit var dataManager: DataManager
+
+    @Inject
+    protected lateinit var searchEngine: ISearchEngine
 
 
     private var presenter: IMainViewSectionPresenter? = null
@@ -72,9 +80,6 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
 
     var isCurrentSelectedTab = false
 
-
-    @Inject
-    protected lateinit var dataManager: DataManager
 
 
     protected open fun setupUI(rootView: View) { }
@@ -227,7 +232,9 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
         }
 
         presenter?.let { presenter ->
-            searchEntities(presenter.getLastSearchTerm()) // TODO: may add a searchEngine.initializationListener
+            searchEngine.addInitializationListener {
+                searchEntities(presenter.getLastSearchTerm())
+            }
         }
     }
 
@@ -340,7 +347,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
     }
 
     private fun addSearchResultTextViewToSearchView(searchView: SearchView) {
-        (searchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn) as? View)?.let { searchCloseButton ->
+        searchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn)?.let { searchCloseButton ->
             (searchCloseButton.parent as? LinearLayout)?.let { searchLayout ->
                 val index = searchLayout.indexOfChild(searchCloseButton)
 

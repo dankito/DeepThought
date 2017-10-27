@@ -17,7 +17,6 @@ import net.dankito.deepthought.ui.presenter.EntriesListPresenter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.deepthought.ui.view.IEntriesListView
 import net.dankito.service.data.DeleteEntityService
-import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
@@ -26,9 +25,6 @@ class EntriesListView : MainActivityTabFragment<Item>(R.menu.entry_contextual_ac
 
     @Inject
     protected lateinit var deleteEntityService: DeleteEntityService
-
-    @Inject
-    protected lateinit var searchEngine: ISearchEngine
 
     @Inject
     protected lateinit var router: IRouter
