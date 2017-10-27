@@ -4,14 +4,11 @@ import com.couchbase.lite.Database
 import com.couchbase.lite.listener.Credentials
 import com.couchbase.lite.listener.LiteListener
 import com.couchbase.lite.replicator.Replication
-import com.couchbase.lite.support.ClearableCookieJar
 import com.couchbase.lite.support.CouchbaseLiteHttpClientFactory
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.deepthought.model.*
 import net.dankito.jpa.couchbaselite.Dao
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
-import okhttp3.Cookie
-import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
 import java.net.MalformedURLException
@@ -283,25 +280,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
     }
 
 
-    private val cookieJar = object : ClearableCookieJar {
-
-        override fun saveFromResponse(url: HttpUrl?, cookies: MutableList<Cookie>?) {
-        }
-
-        override fun loadForRequest(url: HttpUrl?): MutableList<Cookie> {
-            return ArrayList()
-        }
-
-        override fun clear() {
-        }
-
-        override fun clearExpired(date: Date?): Boolean {
-            return true
-        }
-
-    }
-
-    private val httpClientFactory = object : CouchbaseLiteHttpClientFactory(cookieJar) {
+    private val httpClientFactory = object : CouchbaseLiteHttpClientFactory(database.persistentCookieStore) {
 
         private val client: OkHttpClient
 
@@ -312,7 +291,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
             // fixes unexpected end of stream bug, see https://github.com/square/okhttp/issues/2738
             builder.retryOnConnectionFailure(true)
 //            builder.connectTimeout(RequestParameters.DEFAULT_CONNECTION_TIMEOUT_MILLIS.toLong(), TimeUnit.MILLISECONDS) // TODO: find a way to set per call
-            builder.cookieJar(cookieJar)
+            builder.cookieJar(this.cookieStore)
 
             client = builder.build()
         }
