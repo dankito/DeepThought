@@ -3,6 +3,7 @@ package net.dankito.deepthought.android.views
 import android.app.Activity
 import android.content.Context
 import android.os.Build
+import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AppCompatActivity
 import android.util.AttributeSet
@@ -31,6 +32,9 @@ class FullscreenWebView : WebView {
         private const val DefaultScrollUpDifferenceYThreshold = -10
 
         private const val AfterTogglingNotHandleScrollEventsForMillis = 500
+
+        private const val SCROLL_X_BUNDLE_NAME = "SCROLL_X"
+        private const val SCROLL_Y_BUNDLE_NAME = "SCROLL_Y"
 
 
         private const val NON_FULLSCREEN_MODE_SYSTEM_UI_FLAGS = 0
@@ -91,6 +95,10 @@ class FullscreenWebView : WebView {
     private var checkIfScrollingStoppedTimer = Timer()
 
     private var checkIfScrollingStoppedTimerTask: TimerTask? = null
+
+    private var scrollXToRestore: Int? = null
+
+    private var scrollYToRestore: Int? = null
 
 
     constructor(context: Context) : super(context) { setupUI(context) }
@@ -293,30 +301,63 @@ class FullscreenWebView : WebView {
     }
 
 
+    fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(SCROLL_X_BUNDLE_NAME, scrollX)
+        outState.putInt(SCROLL_Y_BUNDLE_NAME, scrollY)
+    }
+
+    fun restoreInstanceState(savedInstanceState: Bundle) {
+        scrollXToRestore = savedInstanceState.getInt(SCROLL_X_BUNDLE_NAME)
+        scrollYToRestore = savedInstanceState.getInt(SCROLL_Y_BUNDLE_NAME)
+    }
+
+
     /*      Ensure that a scroll due to loadData() doesn't toggle Fullscreen        */
 
     override fun loadData(data: String?, mimeType: String?, encoding: String?) {
         updateLastOnScrollFullscreenModeTogglingTimestamp()
         super.loadData(data, mimeType, encoding)
+
+        mayRestoreScrollPosition()
     }
 
     override fun loadDataWithBaseURL(baseUrl: String?, data: String?, mimeType: String?, encoding: String?, historyUrl: String?) {
         updateLastOnScrollFullscreenModeTogglingTimestamp()
         super.loadDataWithBaseURL(baseUrl, data, mimeType, encoding, historyUrl)
+
+        mayRestoreScrollPosition()
     }
 
     override fun loadUrl(url: String?) {
         updateLastOnScrollFullscreenModeTogglingTimestamp()
         super.loadUrl(url)
+
+        mayRestoreScrollPosition()
     }
 
     override fun loadUrl(url: String?, additionalHttpHeaders: MutableMap<String, String>?) {
         updateLastOnScrollFullscreenModeTogglingTimestamp()
         super.loadUrl(url, additionalHttpHeaders)
+
+        mayRestoreScrollPosition()
     }
 
     private fun updateLastOnScrollFullscreenModeTogglingTimestamp() {
         lastOnScrollFullscreenModeTogglingTimestamp = Date()
+    }
+
+    private fun mayRestoreScrollPosition() {
+        postDelayed({ // older devices need a delay as otherwise scroll position gets applied before content is loaded (and therefore scroll view grew to its extend)
+            scrollXToRestore?.let {
+                scrollX = it
+                scrollXToRestore = null
+            }
+
+            scrollYToRestore?.let {
+                scrollY = it
+                scrollYToRestore = null
+            }
+        }, 250)
     }
 
 }

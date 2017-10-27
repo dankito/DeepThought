@@ -238,6 +238,8 @@ class EditEntryActivity : BaseActivity() {
 
         savedInstanceState.getString(TAGS_ON_ENTRY_INTENT_EXTRA_NAME)?.let { tagsOnEntryIds -> restoreTagsOnEntryAsync(tagsOnEntryIds) }
 
+        wbvwContent.restoreInstanceState(savedInstanceState)
+
         floatingActionMenu.restoreInstanceState(savedInstanceState)
     }
 
@@ -269,6 +271,8 @@ class EditEntryActivity : BaseActivity() {
             outState.putString(ABSTRACT_INTENT_EXTRA_NAME, abstractToEdit)
 
             storeState(getKeyForState(stateNamePrefix, CONTENT_INTENT_EXTRA_NAME), contentToEdit) // application crashes if objects put into bundle are too large (> 1 MB) for Android
+
+            wbvwContent.onSaveInstanceState(outState)
 
             floatingActionMenu.saveInstanceState(outState)
         }
