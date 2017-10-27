@@ -280,13 +280,13 @@ class FullscreenWebView : WebView {
     }
 
 
-    fun scrollToEndDelayed() {
+    private fun scrollToEndDelayed() {
         postDelayed({
             scrollToEnd()
         }, 50)
     }
 
-    fun scrollToEnd() {
+    private fun scrollToEnd() {
         updateLastOnScrollFullscreenModeTogglingTimestamp() // we also have to set lastOnScrollFullscreenModeTogglingTimestamp as otherwise scrolling may is large enough to re-enter fullscreen mode
         scrollY = computeVerticalScrollRange() - computeVerticalScrollExtent()
         updateLastOnScrollFullscreenModeTogglingTimestamp() // to be on the safe side
