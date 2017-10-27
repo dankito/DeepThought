@@ -216,6 +216,8 @@ class ArticleSummaryActivity : BaseActivity() {
 
         mnLoadMore = menu?.findItem(R.id.mnLoadMore)
 
+        presenter.lastLoadedSummary?.let { setMenuItemLoadMore(it) }
+
         return true
     }
 
@@ -315,8 +317,7 @@ class ArticleSummaryActivity : BaseActivity() {
     }
 
     private fun showArticleSummaryOnUIThread(summary: ArticleSummary) {
-        mnLoadMore?.isEnabled = true // disable so that button cannot be pressed till loadMoreItems() result is received
-        mnLoadMore?.isVisible = summary.canLoadMoreItems
+        setMenuItemLoadMore(summary)
 
         adapter.items = summary.articles
 
@@ -324,6 +325,11 @@ class ArticleSummaryActivity : BaseActivity() {
             val centerOffset = (rcyArticleSummaryItems.height - resources.getDimension(R.dimen.list_item_read_later_article_min_height)) / 2
             (rcyArticleSummaryItems.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(summary.indexOfAddedItems, centerOffset.toInt())
         }
+    }
+
+    private fun setMenuItemLoadMore(summary: ArticleSummary) {
+        mnLoadMore?.isEnabled = true
+        mnLoadMore?.isVisible = summary.canLoadMoreItems
     }
 
     private fun articleClicked(item: ArticleSummaryItem) {
