@@ -4,13 +4,19 @@ import com.couchbase.lite.Database
 import com.couchbase.lite.listener.Credentials
 import com.couchbase.lite.listener.LiteListener
 import com.couchbase.lite.replicator.Replication
+import com.couchbase.lite.support.ClearableCookieJar
+import com.couchbase.lite.support.CouchbaseLiteHttpClientFactory
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.deepthought.model.*
 import net.dankito.jpa.couchbaselite.Dao
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
+import okhttp3.Cookie
+import okhttp3.HttpUrl
+import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
 import java.net.MalformedURLException
 import java.net.URL
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 
@@ -226,7 +232,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
     }
 
     private fun startReplication(syncUrl: URL, device: DiscoveredDevice) {
-        val pushReplication = database.createPushReplication(syncUrl)
+        val pushReplication = Replication(database, syncUrl, Replication.Direction.PUSH, httpClientFactory)
         pushReplication.filter = EntitiesFilterName
         pushReplication.isContinuous = true
 
@@ -235,7 +241,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
         pushReplication.start()
 
         if(alsoUsePullReplication) {
-            val pullReplication = database.createPullReplication(syncUrl)
+            val pullReplication = Replication(database, syncUrl, Replication.Direction.PULL, httpClientFactory)
             pullReplication.filter = EntitiesFilterName
             pullReplication.isContinuous = true
 
@@ -274,6 +280,46 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
 
     private val databaseChangeListener = Database.ChangeListener { event ->
         synchronizedChangesHandler.handleChange(event)
+    }
+
+
+    private val cookieJar = object : ClearableCookieJar {
+
+        override fun saveFromResponse(url: HttpUrl?, cookies: MutableList<Cookie>?) {
+        }
+
+        override fun loadForRequest(url: HttpUrl?): MutableList<Cookie> {
+            return ArrayList()
+        }
+
+        override fun clear() {
+        }
+
+        override fun clearExpired(date: Date?): Boolean {
+            return true
+        }
+
+    }
+
+    private val httpClientFactory = object : CouchbaseLiteHttpClientFactory(cookieJar) {
+
+        private val client: OkHttpClient
+
+        init {
+            val builder = OkHttpClient.Builder()
+
+            builder.followRedirects(true)
+            // fixes unexpected end of stream bug, see https://github.com/square/okhttp/issues/2738
+            builder.retryOnConnectionFailure(true)
+//            builder.connectTimeout(RequestParameters.DEFAULT_CONNECTION_TIMEOUT_MILLIS.toLong(), TimeUnit.MILLISECONDS) // TODO: find a way to set per call
+            builder.cookieJar(cookieJar)
+
+            client = builder.build()
+        }
+
+        override fun getOkHttpClient(): OkHttpClient {
+            return client
+        }
     }
 
 }
