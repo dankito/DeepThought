@@ -18,6 +18,8 @@ class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): Mul
 
     private val tagsPreviewViewHelper = TagsPreviewViewHelper()
 
+    private val recycledTagViews = ArrayList<View>()
+
 
     override fun getSwipeLayoutResourceId(position: Int): Int {
         return R.id.entrySwipeLayout
@@ -53,7 +55,7 @@ class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): Mul
         setTxtEntryPreviewMaxLines(viewHolder.txtEntryPreview, viewHolder.txtReferencePreview, item)
 
         viewHolder.lytEntryTags.visibility = if (item.hasTags()) View.VISIBLE else View.GONE
-        tagsPreviewViewHelper.showTagsPreview(viewHolder.lytEntryTags, item.tags)
+        tagsPreviewViewHelper.showTagsPreview(viewHolder.lytEntryTags, item.tags, recycledTagViews)
     }
 
     override fun setupSwipeView(viewHolder: EntryViewHolder, item: Item) {
