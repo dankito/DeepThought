@@ -117,7 +117,7 @@ abstract class EditEntryViewBase : DialogFragment() {
             cursor = Cursor.HAND
             setOnMouseClicked { abstractPreviewClicked(it) }
 
-            label(messages["edit.entry.abstract.label"]) {
+            label(messages["edit.item.summary.label"]) {
                 minWidth = Control.USE_PREF_SIZE // guarantee that label keeps its calculated size
                 useMaxWidth = true
             }
@@ -138,7 +138,7 @@ abstract class EditEntryViewBase : DialogFragment() {
             maxHeight = 70.0
             prefWidthProperty().bind(this@vbox.widthProperty())
 
-            label(messages["edit.entry.reference.label"]) {
+            label(messages["edit.item.source.label"]) {
                 minWidth = Control.USE_PREF_SIZE
                 useMaxWidth = true
             }
@@ -164,7 +164,7 @@ abstract class EditEntryViewBase : DialogFragment() {
             cursor = Cursor.HAND
             setOnMouseClicked { tagsPreviewClicked(it) }
 
-            label(messages["edit.entry.tags.label"]) {
+            label(messages["edit.item.tags.label"]) {
                 minWidth = Control.USE_PREF_SIZE
                 useMaxWidth = true
             }
@@ -237,7 +237,7 @@ abstract class EditEntryViewBase : DialogFragment() {
         if(event.button == MouseButton.PRIMARY) {
             if(tagsOnEntryDialog == null) {
                 tagsOnEntryDialog = find(TagsOnEntryDialog::class, mapOf(TagsOnEntryDialog::tagsOnEntry to tagsOnEntry))
-                tagsOnEntryDialog?.show(messages["tags.on.entry.dialog.title"], stageStyle = StageStyle.UTILITY, owner = currentStage) // TODO: add icon
+                tagsOnEntryDialog?.show(messages["tags.on.item.dialog.title"], stageStyle = StageStyle.UTILITY, owner = currentStage) // TODO: add icon
             }
             else {
                 tagsOnEntryDialog?.close()
@@ -250,7 +250,7 @@ abstract class EditEntryViewBase : DialogFragment() {
         if(event.button == MouseButton.PRIMARY) {
             if(editAbstractDialog == null) {
                 editAbstractDialog = find(EditHtmlDialog::class)
-                editAbstractDialog?.show(abstractToEdit, messages["edit.entry.abstract.dialog.title"], currentStage, { this.editAbstractDialog = null } ) { // TODO: add icon
+                editAbstractDialog?.show(abstractToEdit, messages["edit.item.summary.dialog.title"], currentStage, { this.editAbstractDialog = null } ) { // TODO: add icon
                     abstractToEdit = it
                     abstractPlainText.value = Jsoup.parseBodyFragment(abstractToEdit).text()
                 }

@@ -28,7 +28,7 @@ class EntriesSearchBar(private val entriesListView: EntriesListView, private val
                         marginLeftRight(6.0)
                     }
 
-                    promptText = messages["search.entries.prompt.text"]
+                    promptText = messages["search.items.prompt.text"]
 
                     textProperty().addListener { _, _, newValue -> entriesListView.searchEntities(newValue) }
                     setOnKeyReleased { event ->

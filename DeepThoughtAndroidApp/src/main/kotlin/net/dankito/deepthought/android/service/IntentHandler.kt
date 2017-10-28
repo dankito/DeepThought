@@ -70,7 +70,7 @@ class IntentHandler(private val articleExtractorManager: ArticleExtractorManager
 
 
     private fun showErrorMessage(error: Exception, articleUrl: String) {
-        dialogService.showErrorMessage(dialogService.getLocalization().getLocalizedString("alert.message.could.not.extract.entry.from.url", articleUrl), exception = error)
+        dialogService.showErrorMessage(dialogService.getLocalization().getLocalizedString("alert.message.could.not.extract.item.from.url", articleUrl), exception = error)
     }
 
 }

@@ -48,7 +48,7 @@ class DeleteEntityService(private val entryService: EntryService, private val ta
 
     private fun mayAlsoDeleteReference(source: Source?) {
         if (source?.hasItems() == false) { // this was the only Item on which Source has been set -> ask user if we should delete Source as well?
-            val localizedMessage = dialogService.getLocalization().getLocalizedString("alert.message.entry.was.only.entry.on.reference.delete.as.well", source.title)
+            val localizedMessage = dialogService.getLocalization().getLocalizedString("alert.message.item.was.only.item.on.source.delete.as.well", source.title)
             dialogService.showConfirmationDialog(localizedMessage) { shouldAlsoDeleteReference ->
                 if(shouldAlsoDeleteReference) {
                     deleteReference(source)

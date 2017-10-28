@@ -88,7 +88,7 @@ class MainMenuBar : View() {
 
                 menu(messages["main.window.menu.view"]) {
                     isVisible = false
-                    checkmenuitem(messages["main.window.menu.view.show.quick.edit.entry.pane"], KeyCombination.keyCombination("F4")) {
+                    checkmenuitem(messages["main.window.menu.view.show.quick.edit.item.pane"], KeyCombination.keyCombination("F4")) {
                         selectedProperty().addListener(ChangeListener<Boolean> { observable, oldValue, newValue ->
 
                         })
@@ -166,7 +166,7 @@ class MainMenuBar : View() {
         mnitmFileClipboard.items.clear()
 
         clipboardContent.url?.let { url ->
-            val extractContentFromUrlMenuItem = MenuItem(messages["main.window.menu.file.extract.entry.from.url"])
+            val extractContentFromUrlMenuItem = MenuItem(messages["main.window.menu.file.extract.item.from.url"])
             extractContentFromUrlMenuItem.action { extractEntryFromUrl(url) }
             mnitmFileClipboard.items.add(extractContentFromUrlMenuItem)
         }
@@ -180,7 +180,7 @@ class MainMenuBar : View() {
     }
 
     private fun showErrorMessage(error: Exception, articleUrl: String) {
-        dialogService.showErrorMessage(dialogService.getLocalization().getLocalizedString("alert.message.could.not.extract.entry.from.url", articleUrl), exception = error)
+        dialogService.showErrorMessage(dialogService.getLocalization().getLocalizedString("alert.message.could.not.extract.item.from.url", articleUrl), exception = error)
     }
 
 }

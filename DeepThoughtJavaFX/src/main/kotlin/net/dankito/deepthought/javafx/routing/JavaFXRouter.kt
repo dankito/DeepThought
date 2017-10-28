@@ -54,7 +54,7 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
 
 
     override fun showCreateEntryView() {
-        showEditEntryView(Item(""), FX.messages["create.entry.window.title"])
+        showEditEntryView(Item(""), FX.messages["create.item.window.title"])
     }
 
     override fun showEditEntryView(item: Item) {

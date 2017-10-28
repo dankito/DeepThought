@@ -58,7 +58,7 @@ class StatusBar : View() {
     }
 
     fun showCountDisplayedEntriesOnUiThread(countEntries: Int) {
-        statusLabelCountEntries.text = String.format(messages["main.window.status.bar.count.displayed.entries"], countEntries)
+        statusLabelCountEntries.text = String.format(messages["main.window.status.bar.count.displayed.items"], countEntries)
     }
 
 }

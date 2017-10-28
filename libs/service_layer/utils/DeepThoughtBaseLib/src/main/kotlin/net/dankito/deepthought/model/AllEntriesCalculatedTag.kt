@@ -8,7 +8,7 @@ import net.dankito.utils.localization.Localization
 
 
 class AllEntriesCalculatedTag(searchEngine: ISearchEngine, eventBus: IEventBus, entityChangedNotifier: EntityChangedNotifier, localization: Localization)
-    : CalculatedTag(localization.getLocalizedString("calculated.tag.all.entries"), searchEngine, eventBus, entityChangedNotifier) {
+    : CalculatedTag(localization.getLocalizedString("calculated.tag.all.items"), searchEngine, eventBus, entityChangedNotifier) {
 
     override fun retrieveEntriesAsync(done: (List<Item>) -> Unit) {
         searchEngine.searchEntries(EntriesSearch {

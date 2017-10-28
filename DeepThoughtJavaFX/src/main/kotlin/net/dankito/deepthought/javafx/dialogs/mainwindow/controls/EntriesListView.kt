@@ -82,10 +82,10 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
         add(searchBar.root)
 
         tableEntries = tableview<Item>(entries) {
-            column(messages["entry.column.header.index"], Item::itemIndex).prefWidth(46.0)
-            column(messages["entry.column.header.reference"], Item::referencePreview).weigthedWidth(4.0)
-            column(messages["entry.column.header.preview"], Item::preview).weigthedWidth(4.0)
-            column(messages["entry.column.header.tags"], Item::tagsPreview).weigthedWidth(2.0)
+            column(messages["item.column.header.index"], Item::itemIndex).prefWidth(46.0)
+            column(messages["item.column.header.source"], Item::referencePreview).weigthedWidth(4.0)
+            column(messages["item.column.header.preview"], Item::preview).weigthedWidth(4.0)
+            column(messages["item.column.header.tags"], Item::tagsPreview).weigthedWidth(2.0)
     //        column(messages["item.column.header.created"], stringBinding(Item::createdOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
     //        column(messages["item.column.header.modified"], stringBinding(Item::modifiedOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
 
@@ -98,7 +98,7 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
             onDoubleClick { router.showEditEntryView(selectionModel.selectedItem) }
 
             contextmenu {
-                item(messages["context.menu.entry.copy.url.to.clipboard"]) {
+                item(messages["context.menu.item.copy.url.to.clipboard"]) {
                     action {
                         selectedItem?.let { presenter.copyReferenceUrlToClipboard(it) }
                     }
@@ -106,7 +106,7 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
 
                 separator()
 
-                item(messages["context.menu.entry.delete"]) {
+                item(messages["context.menu.item.delete"]) {
                     action {
                         selectedItem?.let { askIfShouldDeleteEntry(it) }
                     }
@@ -116,7 +116,7 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
     }
 
     private fun askIfShouldDeleteEntry(item: Item) {
-        dialogService.showConfirmationDialog(dialogService.getLocalization().getLocalizedString("alert.message.really.delete.entry")) { shouldDeleteEntry ->
+        dialogService.showConfirmationDialog(dialogService.getLocalization().getLocalizedString("alert.message.really.delete.item")) { shouldDeleteEntry ->
             if(shouldDeleteEntry) {
                 presenter.deleteEntry(item)
             }

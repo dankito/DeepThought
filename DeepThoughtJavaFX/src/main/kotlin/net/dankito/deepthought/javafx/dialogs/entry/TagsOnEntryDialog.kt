@@ -95,7 +95,7 @@ class TagsOnEntryDialog : DialogFragment(), ITagsOnEntryListView {
                 }
             }
 
-            btnCreateOrToggleTags = button(messages["tags.on.entry.dialog.create.tag"]) {
+            btnCreateOrToggleTags = button(messages["tags.on.item.dialog.create.tag"]) {
                 action { createOrToggleTags() }
             }
         }
@@ -142,16 +142,16 @@ class TagsOnEntryDialog : DialogFragment(), ITagsOnEntryListView {
             button.isDisable = state == TagsSearcherButtonState.DISABLED
 
             if(state == TagsSearcherButtonState.CREATE_TAG) {
-                button.text = messages["tags.on.entry.dialog.create.tag"]
+                button.text = messages["tags.on.item.dialog.create.tag"]
             }
             else if(state == TagsSearcherButtonState.ADD_TAGS) {
-                button.text = messages["tags.on.entry.dialog.add.tags"]
+                button.text = messages["tags.on.item.dialog.add.tags"]
             }
             else if(state == TagsSearcherButtonState.REMOVE_TAGS) {
-                button.text = messages["tags.on.entry.dialog.remove.tags"]
+                button.text = messages["tags.on.item.dialog.remove.tags"]
             }
             else if(state == TagsSearcherButtonState.TOGGLE_TAGS) {
-                button.text = messages["tags.on.entry.dialog.toggle.tags"]
+                button.text = messages["tags.on.item.dialog.toggle.tags"]
             }
         }
     }
