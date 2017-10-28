@@ -63,27 +63,27 @@
 
     <!-- Removed <p></p> from last paragraph as otherwise txtOnboardingText has some padding at end and and PointToFloatingActionButtonArrow therefore doesn't reach to text -->
     <string name="tab_items_onboarding_text"><![CDATA[
-        <p>Klicken Sie auf das + Symbol unten rechts und wählen Sie \'Eintrag\' um einen Eintrag anzulegen.</p>
-        Wählen Sie \'Zeitungsartikel\'um einen Artikel anzulegen.
+        <p>Klicken Sie auf das <b>(+) Symbol</b> unten rechts und wählen Sie <b>Eintrag</b> um einen Eintrag anzulegen.</p>
+        Wählen Sie <b>Zeitungsartikel</b> um einen Artikel anzulegen.
     ]]>
     </string>
     <string name="tab_tags_onboarding_text"><![CDATA[
         <p>Schlagworte helfen Ihnen dabei Einträge schneller wiederzufinden.</p>
         <p>Sie haben noch keine Schlagworte angelegt.</p>
-        <p>Wählen Sie unter \'Einträge\' einen Eintrag aus und fügen Sie diesem Schlagworte hinzu.</p>
+        <p>Wählen Sie unter <b>Einträge</b> in den Tabs unten links einen Eintrag aus und fügen Sie diesem Schlagworte hinzu.</p>
     ]]>
     </string>
     <string name="tab_source_onboarding_text"><![CDATA[
         <p>Fügen Sie Ihren Einträgen Quellen hinzu, um sich zu erinnern, wo Sie den Inhalt gefunden haben.</p>
         <p>Sie haben noch keine Quellen hinzugefügt.</p>
-        <p>Wählen Sie unter \'Einträge\' einen Eintrag aus und fügen Sie eine Quelle hinzu.</p>
+        <p>Wählen Sie unter <b>Einträge</b> in den Tabs unten links einen Eintrag aus und fügen Sie eine Quelle hinzu.</p>
 
     ]]>
     </string>
     <string name="tab_read_later_articles_onboarding_text"><![CDATA[
         <p>Vorgemerkte Artikel werden offline gespeichert, so dass Sie diese später lesen können – auch ohne Internetverbindung. Vorgemerkte Artikel werden vorerst nicht in Ihre Einträge-Sammlung übernommen.</p>
         <p>Sie haben noch keine Artikel vorgemerkt.</p>
-        <p>Legen Sie bei Bedarf über \'Einträge\' einen Artikel an und wählen Sie \'Vormerken\'. </p>
+        <p>Drücken Sie das <b>(+) Symbol</b>, wählen <b>Zeitungsartikel</b> und drücken dort bei einem Artikel <b>Vormerken</b>.</p>
     ]]>
     </string>
 
@@ -97,7 +97,7 @@
     </string>
 
     <string name="activity_edit_item_add_item_properties_onboarding_text"><![CDATA[
-        Klicken sie auf das + Symbol unten rechts, um Schlagworte, eine Quelle oder eine Zusammenfassung zu Ihrem Eintrag hinzuzufügen.
+        Klicken sie auf das <b>(+) Symbol</b> unten rechts, um Schlagworte, eine Quelle oder eine Zusammenfassung zu Ihrem Eintrag hinzuzufügen.
     ]]>
     </string>
 
@@ -118,6 +118,8 @@
     <!-- Wenn man im Hauptfenster unter Schlagworte im Suchfeld oben mindestens 30 Buchstaben eingegeben hat -->
 
     <string name="context_help_search_tags">Um nach mehreren Schlagworten zu suchen, trennen Sie diese durch ein Komma (,).
+        \nUm ein neues Schlagwort anzulegen oder das eingegebene hinzuzufügen, drücken Sie auf Ihrer Tastatur \'Enter\'.
+        \n(Und doppelt \'Enter\' um die Änderungen gleich noch zu übernehmen.)
     </string>
 
 
@@ -130,7 +132,7 @@
 
     <!-- Wenn man im Eintrag bearbeiten Fenster etwas bearbeitet hat (z. B. den Inhalt, die Schlagworte, ...) und auf 'Übernehmen' geklickt hast -->
 
-    <string name="context_help_save_item_changes">Um Ihre Änderungen zu speichern, drücken Sie den \'Speichern\' Button unten rechts.
+    <string name="context_help_save_item_changes">Um Ihre Änderungen zu speichern, drücken Sie den <b>Speichern</b> Button unten rechts.
     </string>
 
     <string name="context_help_item_content_fullscreen">Scrollen oder Doppelklicken startet den Vollbildmodus.\nDurch erneutes Doppelklicken können Sie den Vollbildmodus
@@ -139,11 +141,11 @@
 
     <string name="context_help_item_content_fullscreen_gestures"> Sie haben im Vollbildmodus eine der folgenden Handlungen ausgeführt\n\n- Schnell von rechts nach links
         wischen:
-        Eintrag bearbeiten Dialog verlassen\n- Schnell von links nach rechts wischen: Schlagworte bearbeiten\nDoppelt tippen: Vollbildmodus verlassen
+        Eintrag bearbeiten Dialog verlassen\n- Schnell von links nach rechts wischen: Schlagworte bearbeiten\n- Doppelt tippen: Vollbildmodus verlassen
     </string>
 
-    <string name="context_help_saved_read_later_article_is_now_in_items">Der Artikel wurde nun gespeichert.\n\nD.h. er befindet sich nun in \'Einträge\' und nicht mehr in
-        \'Vorgemerkt\'.
+    <string name="context_help_saved_read_later_article_is_now_in_items">Der Artikel wurde nun gespeichert.\n\nD.h. er befindet sich nun in <b>Einträge</b> und nicht mehr in
+        <b>Vorgemerkt</b>.
     </string>
 
 
