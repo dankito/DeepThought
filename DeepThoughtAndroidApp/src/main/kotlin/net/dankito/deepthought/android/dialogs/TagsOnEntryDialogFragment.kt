@@ -224,7 +224,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
 
         if(localSettings.countTagsOnItemSearches >= LocalSettings.ShowSetTagsOnItemHelpOnCountSearches && localSettings.didShowSetTagsOnItemHelp == false) {
             localSettings.didShowSetTagsOnItemHelp = true
-            showContextHelpOnUiThread(R.string.context_help_set_tags_on_entry)
+            showContextHelpOnUiThread(R.string.context_help_set_tags_on_item)
 
             dataManager.localSettingsUpdated()
         }
@@ -247,16 +247,16 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
             button.isEnabled = state != TagsSearcherButtonState.DISABLED
 
             if(state == TagsSearcherButtonState.CREATE_TAG) {
-                button.setText(R.string.dialog_tags_on_entry_create_tag)
+                button.setText(R.string.dialog_tags_on_item_create_tag)
             }
             else if(state == TagsSearcherButtonState.ADD_TAGS) {
-                button.setText(R.string.dialog_tags_on_entry_add_tags)
+                button.setText(R.string.dialog_tags_on_item_add_tags)
             }
             else if(state == TagsSearcherButtonState.REMOVE_TAGS) {
-                button.setText(R.string.dialog_tags_on_entry_remove_tags)
+                button.setText(R.string.dialog_tags_on_item_remove_tags)
             }
             else if(state == TagsSearcherButtonState.TOGGLE_TAGS) {
-                button.setText(R.string.dialog_tags_on_entry_toggle_tags)
+                button.setText(R.string.dialog_tags_on_item_toggle_tags)
             }
         }
     }
@@ -394,12 +394,12 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
     private fun getShouldCreateNotExistingTagsQuestionText(notExistingTags: List<String>): String {
         val lastTagName = notExistingTags[notExistingTags.size - 1]
 
-        if (notExistingTags.size == 1)
-            return resources.getQuantityString(R.plurals.dialog_tags_on_entry_confirm_create_tags, notExistingTags.size, lastTagName)
+        if(notExistingTags.size == 1)
+            return resources.getQuantityString(R.plurals.dialog_tags_on_item_confirm_create_tags, notExistingTags.size, lastTagName)
         else {
             val otherTagNames = notExistingTags.subList(0, notExistingTags.size - 1).joinToString(", ")
 
-            return resources.getQuantityString(R.plurals.dialog_tags_on_entry_confirm_create_tags, notExistingTags.size, otherTagNames, lastTagName)
+            return resources.getQuantityString(R.plurals.dialog_tags_on_item_confirm_create_tags, notExistingTags.size, otherTagNames, lastTagName)
         }
     }
 

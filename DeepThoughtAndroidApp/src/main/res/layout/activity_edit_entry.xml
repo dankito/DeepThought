@@ -86,7 +86,7 @@
             android:layout_centerHorizontal="true"
             android:textAlignment="center"
             android:gravity="center_horizontal"
-            android:text="@string/activity_edit_entry_content_label"
+            android:text="@string/activity_edit_item_content_label"
         />
 
         <ProgressBar
@@ -201,7 +201,7 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
-                app:title="@string/activity_edit_entry_title"
+                app:title="@string/activity_edit_item_title"
                 style="@style/ToolbarStyle"/>
 
         </android.support.design.widget.AppBarLayout>

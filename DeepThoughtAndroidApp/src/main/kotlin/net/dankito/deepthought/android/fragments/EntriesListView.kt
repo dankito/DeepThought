@@ -21,7 +21,7 @@ import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class EntriesListView : MainActivityTabFragment<Item>(R.menu.entry_contextual_action_menu, R.string.tab_entries_onboarding_text), IEntriesListView {
+class EntriesListView : MainActivityTabFragment<Item>(R.menu.entry_contextual_action_menu, R.string.tab_items_onboarding_text), IEntriesListView {
 
     @Inject
     protected lateinit var deleteEntityService: DeleteEntityService
@@ -79,7 +79,7 @@ class EntriesListView : MainActivityTabFragment<Item>(R.menu.entry_contextual_ac
     }
 
 
-    override fun getQueryHint(activity: Activity) = activity.getString(R.string.search_hint_entries)
+    override fun getQueryHint(activity: Activity) = activity.getString(R.string.search_hint_items)
 
     override fun searchEntities(query: String) {
         presenter.searchEntries(query)

@@ -308,14 +308,14 @@ class EditEntryActivity : BaseActivity() {
             actionBar.setDisplayShowHomeEnabled(true)
         }
 
-        lytAbstractPreview.setFieldNameOnUiThread(R.string.activity_edit_entry_abstract_label) { didAbstractChange -> abstractChanged(didAbstractChange) }
+        lytAbstractPreview.setFieldNameOnUiThread(R.string.activity_edit_item_summary_label) { didAbstractChange -> abstractChanged(didAbstractChange) }
         lytAbstractPreview.fieldValueFocusChangedListener = { hasFocus ->
             if(hasFocus == false) {
                 appliedChangesToAbstract(lytAbstractPreview.didValueChange)
             }
         }
-        lytReferencePreview.setFieldNameOnUiThread(getString(R.string.activity_edit_entry_source_label))
-        lytTagsPreview.setFieldNameOnUiThread(getString(R.string.activity_edit_entry_tags_label))
+        lytReferencePreview.setFieldNameOnUiThread(getString(R.string.activity_edit_item_source_label))
+        lytTagsPreview.setFieldNameOnUiThread(getString(R.string.activity_edit_item_tags_label))
 
         lytReferencePreview.setOnClickListener { editReference() }
         btnClearEntryReference.setOnClickListener { referenceCleared() }
@@ -482,7 +482,7 @@ class EditEntryActivity : BaseActivity() {
 
         (supportFragmentManager.findFragmentByTag(EditHtmlTextDialog.TAG) as? EditHtmlTextDialog)?.let { dialog ->
             (dialog.view?.findViewById(R.id.toolbar) as? android.support.v7.widget.Toolbar)?.title?.let { toolbarTitle ->
-                if(toolbarTitle == getString(R.string.activity_edit_entry_edit_content_title)) {
+                if(toolbarTitle == getString(R.string.activity_edit_item_edit_content_title)) {
                     dialog.restoreDialog(contentToEdit ?: "") { appliedChangesToContent(it) }
                 }
             }
@@ -497,7 +497,7 @@ class EditEntryActivity : BaseActivity() {
         val localSettings = entryService.dataManager.localSettings
 
         if(localSettings.didShowSaveItemChangesHelp == false) {
-            contextHelpUtil.showContextHelp(lytContextHelpSave, R.string.context_help_save_entry_changes)
+            contextHelpUtil.showContextHelp(lytContextHelpSave, R.string.context_help_save_item_changes)
 
             localSettings.didShowSaveItemChangesHelp = true
             entryService.dataManager.localSettingsUpdated()
@@ -523,7 +523,7 @@ class EditEntryActivity : BaseActivity() {
         contentToEdit?.let { content ->
             val editHtmlTextDialog = EditHtmlTextDialog()
 
-            editHtmlTextDialog.showDialog(supportFragmentManager, content, R.string.activity_edit_entry_edit_content_title) {
+            editHtmlTextDialog.showDialog(supportFragmentManager, content, R.string.activity_edit_item_edit_content_title) {
                 appliedChangesToContent(it)
             }
         }
@@ -725,7 +725,7 @@ class EditEntryActivity : BaseActivity() {
             lytOnboardingText.visibility = View.VISIBLE
             lytContentWebViewAndOnboardingText.setOnClickListener { editContent() } // only enable editing content by clicking on lytContentWebViewAndOnboardingText when showing onboarding text
 
-            val onboardingTextId = if(showContentOnboarding == true) R.string.activity_edit_entry_edit_content_onboarding_text else R.string.activity_edit_entry_add_entry_properties_onboarding_text
+            val onboardingTextId = if(showContentOnboarding == true) R.string.activity_edit_item_edit_content_onboarding_text else R.string.activity_edit_item_add_item_properties_onboarding_text
             val onboardingText = if(showContentOnboarding == true) getText(onboardingTextId).toString() else getText(onboardingTextId).toString()
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 txtOnboardingText.text = Html.fromHtml(onboardingText, Html.FROM_HTML_MODE_LEGACY)
@@ -774,7 +774,7 @@ class EditEntryActivity : BaseActivity() {
 
     private fun setReferencePreviewOnUIThread() {
         if(sourceToEdit == null) {
-            lytReferencePreview.setOnboardingTextOnUiThread(R.string.activity_edit_entry_source_onboarding_text)
+            lytReferencePreview.setOnboardingTextOnUiThread(R.string.activity_edit_item_source_onboarding_text)
         }
         else {
             lytReferencePreview.setFieldValueOnUiThread(sourceToEdit.getPreviewWithSeriesAndPublishingDate(getCurrentSeries()))
@@ -802,7 +802,7 @@ class EditEntryActivity : BaseActivity() {
 
     private fun setTagsOnEntryPreviewOnUIThread() {
         if(tagsOnEntry.filterNotNull().isEmpty()) {
-            lytTagsPreview.setOnboardingTextOnUiThread(R.string.activity_edit_entry_tags_onboarding_text)
+            lytTagsPreview.setOnboardingTextOnUiThread(R.string.activity_edit_item_tags_onboarding_text)
         }
         else {
             val tagsPreview = tagsOnEntry.filterNotNull().sortedBy { it.name.toLowerCase() }.joinToString { it.name }
@@ -862,7 +862,7 @@ class EditEntryActivity : BaseActivity() {
         val localSettings = entryService.dataManager.localSettings
 
         if(localSettings.didShowItemInformationFullscreenGesturesHelp == false) {
-            dialogService.showConfirmationDialog(getString(R.string.context_help_entry_content_fullscreen_gestures), showNoButton = false) {
+            dialogService.showConfirmationDialog(getString(R.string.context_help_item_content_fullscreen_gestures), showNoButton = false) {
                 runOnUiThread {
                     wbvwContent.leaveFullscreenMode() // leave fullscreen otherwise a lot of unwanted behaviour occurs
                     userConfirmedHelpOnUIThread()
@@ -902,7 +902,7 @@ class EditEntryActivity : BaseActivity() {
         val localSettings = entryService.dataManager.localSettings
 
         if(localSettings.didShowItemInformationFullscreenHelp == false) {
-            contextHelpUtil.showContextHelp(lytContextHelpFullscreenMode, R.string.context_help_entry_content_fullscreen)
+            contextHelpUtil.showContextHelp(lytContextHelpFullscreenMode, R.string.context_help_item_content_fullscreen)
 
             localSettings.didShowItemInformationFullscreenHelp = true
             entryService.dataManager.localSettingsUpdated()
@@ -1194,7 +1194,7 @@ class EditEntryActivity : BaseActivity() {
             localSettings.didShowSavedReadLaterArticleIsNowInItemsHelp = true
             entryService.dataManager.localSettingsUpdated()
 
-            dialogService.showConfirmationDialog(getString(R.string.context_help_saved_read_later_article_is_now_in_entries), showNoButton = false) {
+            dialogService.showConfirmationDialog(getString(R.string.context_help_saved_read_later_article_is_now_in_items), showNoButton = false) {
                 callback()
             }
         }
@@ -1242,7 +1242,7 @@ class EditEntryActivity : BaseActivity() {
 
     private fun askIfShouldDeleteExistingEntryAndCloseDialog() {
         item?.let { entry ->
-            dialogService.showConfirmationDialog(getString(R.string.activity_edit_entry_alert_message_delete_entry, entry.entryPreview)) { deleteEntry ->
+            dialogService.showConfirmationDialog(getString(R.string.activity_edit_item_alert_message_delete_item, entry.entryPreview)) { deleteEntry ->
                 if(deleteEntry) {
                     mnDeleteExistingEntry?.isEnabled = false
                     unregisterEventBusListener()
@@ -1287,7 +1287,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun askIfUnsavedChangesShouldBeSaved() {
-        dialogService.showConfirmationDialog(getString(R.string.activity_edit_entry_alert_message_entry_contains_unsaved_changes)) { shouldChangesGetSaved ->
+        dialogService.showConfirmationDialog(getString(R.string.activity_edit_item_alert_message_item_contains_unsaved_changes)) { shouldChangesGetSaved ->
             runOnUiThread {
                 if(shouldChangesGetSaved) {
                     saveEntryAndCloseDialog()
@@ -1444,7 +1444,7 @@ class EditEntryActivity : BaseActivity() {
         unregisterEventBusListener() // message now gets shown, don't display it a second time
 
         runOnUiThread {
-            dialogService.showInfoMessage(getString(R.string.activity_edit_entry_alert_message_entry_has_been_edited))
+            dialogService.showInfoMessage(getString(R.string.activity_edit_item_alert_message_item_has_been_edited))
         }
     }
 

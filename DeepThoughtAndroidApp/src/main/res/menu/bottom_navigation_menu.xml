@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/btnvEntries"
-        android:title="@string/tab_entries_title"
+        android:title="@string/tab_items_title"
         android:icon="@drawable/ic_entry"
         android:orderInCategory="0"
         />

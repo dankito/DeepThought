@@ -8,7 +8,7 @@
 
     <item
         android:id="@+id/mnShareEntryContent"
-        android:title="@string/menu_share_entry_content"
+        android:title="@string/menu_share_item_content"
     />
 
 </menu>

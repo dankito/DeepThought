@@ -2,7 +2,7 @@
 
     <string name="move_upward_behaviour" translatable="false">net.dankito.deepthought.android.views.MoveUpwardBehavior</string>
 
-    <string name="tab_entries_title">Entries</string>
+    <string name="tab_items_title">Items</string>
     <string name="tab_tags_title">Tags</string>
     <string name="tab_sources_title">Sources</string>
     <string name="tab_read_later_articles_title">Read later</string>
@@ -10,8 +10,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="floating_action_menu_add_entry">Entry</string>
-    <string name="floating_action_menu_add_tag">Tag</string>
+    <string name="floating_action_menu_add_item">Item</string>
     <string name="floating_action_menu_add_newspaper_article">Newspaper Article</string>
     <string name="floating_action_button_add_article_of_newspaper">%s Article</string>
 
@@ -36,7 +35,7 @@
         <item quantity="one">%d result</item>
         <item quantity="other">%d results</item>
     </plurals>
-    <string name="search_hint_entries">Find Entries</string>
+    <string name="search_hint_items">Find Items</string>
     <string name="search_hint_tags">Find Tags</string>
     <string name="search_hint_sources">Find Sources</string>
     <string name="search_hint_read_later_articles">Find to \'Read later\'</string>
@@ -44,38 +43,38 @@
     <string name="fragment_main_activity_tabs_filtered_entities_label">Filtered:</string>
 
     <!-- Removed <p></p> from last paragraph as otherwise txtOnboardingText has some padding at end and and PointToFloatingActionButtonArrow therefore doesn't reach to text -->
-    <string name="tab_entries_onboarding_text"><![CDATA[
-        <p>To add a new entry, press the + button and select \'Entry\'.</p>
+    <string name="tab_items_onboarding_text"><![CDATA[
+        <p>To add a new item, press the + button and select \'Item\'.</p>
         To add a newspaper article, press the + button and select \'Newspaper Article\'.
     ]]>
     </string>
     <string name="tab_tags_onboarding_text"><![CDATA[
-        <p>Tags help you to find entries faster. </p>
+        <p>Tags help you to find items faster. </p>
         <p>You have not yet created any tags. </p>
-        <p>Select an entry under \' Entries\' and add tags to it</p>
+        <p>Select an item under \'Items\' and add tags to it</p>
     ]]>
     </string>
     <string name="tab_source_onboarding_text"><![CDATA[
-        <p>Add sources to your entries to remember where you found the content.</p>
+        <p>Add sources to your items to remember where you found the content.</p>
         <p>You have not added any sources yet.</p>
-        <p>Select an entry under \' Entries\' and add a source.</p>
+        <p>Select an item under \'Items\' and add a source.</p>
 
     ]]>
     </string>
     <string name="tab_read_later_articles_onboarding_text"><![CDATA[
-        <p>Articles for later reading are stored offline so that you can read them without internet connection. They are not yet part of your entries collection.</p>
-        <p>Choose a newspaper article via \'Entries\' and tab \'Read later\' .</p>
+        <p>Articles for later reading are stored offline so that you can read them without internet connection. They are not yet part of your items collection.</p>
+        <p>Press the + button, select \'Newspaper Article\' and tap \'Read later\' .</p>
     ]]>
     </string>
 
 
-    <string name="activity_edit_entry_edit_content_onboarding_text"><![CDATA[
+    <string name="activity_edit_item_edit_content_onboarding_text"><![CDATA[
         Click here to create your content.
     ]]>
     </string>
 
-    <string name="activity_edit_entry_add_entry_properties_onboarding_text"><![CDATA[
-        Tab + button to set title, source and tags.
+    <string name="activity_edit_item_add_item_properties_onboarding_text"><![CDATA[
+        Tap + button to set title, source and tags.
     ]]>
     </string>
 
@@ -88,22 +87,22 @@
         \nTo to create a new keyword or add the keyword you entered, press \' Enter\' on your keyboard.
     </string>
 
-    <string name="context_help_set_tags_on_entry">To select multiple tags, enter a comma (,).\nTo
+    <string name="context_help_set_tags_on_item">To select multiple tags, enter a comma (,).\nTo
         create a new or toggle entered tags, press the action button (\'Enter\') on keyboard.
     </string>
 
-    <string name="context_help_save_entry_changes">The changes done are now only applied, to save them press the \'Save\' button at bottom right.
+    <string name="context_help_save_item_changes">The changes done are now only applied, to save them press the \'Save\' button at bottom right.
     </string>
 
-    <string name="context_help_entry_content_fullscreen">Scrolling entry\'s content as you just did starts fullscreen mode.\nYou can leave it by simply tapping
+    <string name="context_help_item_content_fullscreen">Scrolling item\'s content as you just did starts fullscreen mode.\nYou can leave it by simply tapping
         anywhere except on links and images in the screen.
     </string>
 
-    <string name="context_help_entry_content_fullscreen_gestures">You just invoked one of the fullscreen gestures:\n\n- Fast swipe from right to left:
-        Leave edit entry view\n- Fast swipe from left to right: Edit entry\'s tags\n- Double tap: Save entry and close edit entry view.
+    <string name="context_help_item_content_fullscreen_gestures">You just invoked one of the fullscreen gestures:\n\n- Fast swipe from right to left:
+        Leave edit item view\n- Fast swipe from left to right: Edit item\'s tags\n- Double tap: Leave fullscreen view.
     </string>
 
-    <string name="context_help_saved_read_later_article_is_now_in_entries">The article is saved now.\n\nThat means you now find it in \'Entries\', not in \'Read later\' anymore.
+    <string name="context_help_saved_read_later_article_is_now_in_items">The article is saved now.\n\nThat means you now find it in \'Items\', not in \'Read later\' anymore.
     </string>
 
 
@@ -119,31 +118,31 @@
     <string name="dialog_article_summary_extractor_alert_message_delete_config" formatted="false">Really delete news site %s?</string>
 
     <string name="menu_share_source_url">Url</string>
-    <string name="menu_share_entry_content">content</string>
+    <string name="menu_share_item_content">content</string>
 
-    <string name="activity_edit_entry_title">Entry</string>
-    <string name="activity_edit_entry_content_label">content</string>
-    <string name="activity_edit_entry_edit_content_title">content</string>
-    <string name="activity_edit_entry_abstract_label">Title / Abstract</string>
-    <string name="activity_edit_entry_edit_abstract_title">Title / Abstract</string>
-    <string name="activity_edit_entry_source_label">Source</string>
-    <string name="activity_edit_entry_tags_label">Tags</string>
-    <string name="activity_edit_entry_tags_onboarding_text">Add meaningful tags, so that you can find it later easily</string>
-    <string name="activity_edit_entry_source_onboarding_text">Save where you have found this information</string>
-    <string name="activity_edit_entry_abstract_onboarding_text">Title or summary for this information</string>
-    <string name="activity_edit_entry_alert_message_entry_contains_unsaved_changes">Entry contains unsaved changes.\n\nShould these changes now be saved?</string>
+    <string name="activity_edit_item_title">Item</string>
+    <string name="activity_edit_item_content_label">content</string>
+    <string name="activity_edit_item_edit_content_title">content</string>
+    <string name="activity_edit_item_summary_label">Title / Summary</string>
+    <string name="activity_edit_item_edit_summary_title">Title / Summary</string>
+    <string name="activity_edit_item_source_label">Source</string>
+    <string name="activity_edit_item_tags_label">Tags</string>
+    <string name="activity_edit_item_tags_onboarding_text">Add meaningful tags, so that you can find it later easily</string>
+    <string name="activity_edit_item_source_onboarding_text">Save where you have found this information</string>
+    <string name="activity_edit_item_summary_onboarding_text">Title or summary for this information</string>
+    <string name="activity_edit_item_alert_message_item_contains_unsaved_changes">Item contains unsaved changes.\n\nShould these changes now be saved?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
-    <string name="activity_edit_entry_alert_message_entry_has_been_edited">Entry has been edited (probably on a synchronized device).\n\nWhen
-        you now save the entry the other changes get overwritten.</string>
-    <string name="activity_edit_entry_alert_message_delete_entry">Would you like to delete entry \'%s\'?</string>
+    <string name="activity_edit_item_alert_message_item_has_been_edited">Item has been edited (probably on a synchronized device).\n\nWhen
+        you now save the item the other changes get overwritten.</string>
+    <string name="activity_edit_item_alert_message_delete_item">Would you like to delete item \'%s\'?</string>
 
-    <string name="dialog_tags_on_entry_title">Tags</string>
-    <string name="dialog_tags_on_entry_tags_label">Tags:</string>
-    <string name="dialog_tags_on_entry_create_tag">New</string>
-    <string name="dialog_tags_on_entry_add_tags">Add</string>
-    <string name="dialog_tags_on_entry_remove_tags">Remove</string>
-    <string name="dialog_tags_on_entry_toggle_tags">Add / Remove</string>
-    <plurals name="dialog_tags_on_entry_confirm_create_tags">
+    <string name="dialog_tags_on_item_title">Tags</string>
+    <string name="dialog_tags_on_item_tags_label">Tags:</string>
+    <string name="dialog_tags_on_item_create_tag">New</string>
+    <string name="dialog_tags_on_item_add_tags">Add</string>
+    <string name="dialog_tags_on_item_remove_tags">Remove</string>
+    <string name="dialog_tags_on_item_toggle_tags">Add / Remove</string>
+    <plurals name="dialog_tags_on_item_confirm_create_tags">
         <item quantity="one">Tag %1$s does not exist.\nWould you like to create it?</item>
         <item quantity="other">Tags %1$s and %2$s do not exist.\nWould you like to create them?</item>
     </plurals>

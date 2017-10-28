@@ -2,7 +2,7 @@
 
     <!-- Die Tabs auf der Hauptseite -->
 
-    <string name="tab_entries_title">Einträge</string>
+    <string name="tab_items_title">Einträge</string>
     <string name="tab_tags_title">Schlagworte</string>
     <string name="tab_sources_title">Quellen</string>
     <string name="tab_read_later_articles_title">Vorgemerkt</string>
@@ -16,8 +16,7 @@
     <!-- Floating Action Button ist der + Button auf der Startseite. Die Werte hier werden dann im Menü angezeigt, wenn ich auf diesen Button klicke -->
     <!-- In Platzhalter wie '%s' füge ich dann im Code etwas ein (z. B. hier: SZ) -->
 
-    <string name="floating_action_menu_add_entry">Eintrag</string>
-    <string name="floating_action_menu_add_tag">Schlagwort</string>
+    <string name="floating_action_menu_add_item">Eintrag</string>
     <string name="floating_action_menu_add_newspaper_article">Zeitungsartikel</string>
     <string name="floating_action_button_add_article_of_newspaper">%s Artikel</string>
 
@@ -48,7 +47,7 @@
         <item quantity="one">%d Ergebnis</item>
         <item quantity="other">%d Ergebnisse</item>
     </plurals>
-    <string name="search_hint_entries">Einträge suchen</string>
+    <string name="search_hint_items">Einträge suchen</string>
     <string name="search_hint_tags">Schlagworte suchen</string>
     <string name="search_hint_sources">Quellen suchen</string>
     <string name="search_hint_read_later_articles">Vorgemerkte Artikel suchen</string>
@@ -63,7 +62,7 @@
     <!-- Alles was mit tab_ beginnt befindet sich wieder auf der Hauptseite und wird angezeigt, wenn in der entsprechenden Kategorie noch nichts angelegt wurde. -->
 
     <!-- Removed <p></p> from last paragraph as otherwise txtOnboardingText has some padding at end and and PointToFloatingActionButtonArrow therefore doesn't reach to text -->
-    <string name="tab_entries_onboarding_text"><![CDATA[
+    <string name="tab_items_onboarding_text"><![CDATA[
         <p>Klicken Sie auf das + Symbol unten rechts und wählen Sie \'Eintrag\' um einen Eintrag anzulegen.</p>
         Wählen Sie \'Zeitungsartikel\'um einen Artikel anzulegen.
     ]]>
@@ -92,12 +91,12 @@
     <!-- Diese Hilfe wird im Eintrag bearbeiten Bildschirm (+ Button im Hauptbildschirm, dann Eintrag auswählen) angezeigt, wenn kein Inhalt eingegeben wurde -->
     <!-- In der kommenden Version werden zunächst auch die Schlagworte ausgeblendet, d. h. dann kann man alles über den + Button hinzufügen. -->
 
-    <string name="activity_edit_entry_edit_content_onboarding_text"><![CDATA[
+    <string name="activity_edit_item_edit_content_onboarding_text"><![CDATA[
         Klicken Sie hier um Ihren Inhalt einzugeben.
     ]]>
     </string>
 
-    <string name="activity_edit_entry_add_entry_properties_onboarding_text"><![CDATA[
+    <string name="activity_edit_item_add_item_properties_onboarding_text"><![CDATA[
         Klicken sie auf das + Symbol unten rechts, um Schlagworte, eine Quelle oder eine Zusammenfassung zu Ihrem Eintrag hinzuzufügen.
     ]]>
     </string>
@@ -124,26 +123,26 @@
 
     <!-- Wenn man im Eintrag bearbeiten Fenster die Schlagworte bearbeitet und im Suchfeld unten mindestens 30 Buchstaben eingegeben hat -->
 
-    <string name="context_help_set_tags_on_entry">Um mehrere Schlagworte auszuwählen, trennen Sie diese im Suchfeld durch ein Komma (,).\nUm
+    <string name="context_help_set_tags_on_item">Um mehrere Schlagworte auszuwählen, trennen Sie diese im Suchfeld durch ein Komma (,).\nUm
         ein neues Schlagwort anzulegen oder die eingegebenen hinzuzufügen, drücken Sie auf Ihrer Tastatur \'Enter\'.
     </string>
 
 
     <!-- Wenn man im Eintrag bearbeiten Fenster etwas bearbeitet hat (z. B. den Inhalt, die Schlagworte, ...) und auf 'Übernehmen' geklickt hast -->
 
-    <string name="context_help_save_entry_changes">Um Ihre Änderungen zu speichern, drücken Sie den \'Speichern\' Button unten rechts.
+    <string name="context_help_save_item_changes">Um Ihre Änderungen zu speichern, drücken Sie den \'Speichern\' Button unten rechts.
     </string>
 
-    <string name="context_help_entry_content_fullscreen">Scrollen oder Doppelklicken startet den Vollbildmodus.\nDurch erneutes Doppelklicken können Sie den Vollbildmodus
+    <string name="context_help_item_content_fullscreen">Scrollen oder Doppelklicken startet den Vollbildmodus.\nDurch erneutes Doppelklicken können Sie den Vollbildmodus
         wieder verlassen.
     </string>
 
-    <string name="context_help_entry_content_fullscreen_gestures"> Sie haben im Vollbildmodus eine der folgenden Handlungen ausgeführt\n\n- Schnell von rechts nach links
+    <string name="context_help_item_content_fullscreen_gestures"> Sie haben im Vollbildmodus eine der folgenden Handlungen ausgeführt\n\n- Schnell von rechts nach links
         wischen:
-        Eintrag bearbeiten Dialog verlassen\n- Schnell von links nach rechts wischen: Schlagworte bearbeiten
+        Eintrag bearbeiten Dialog verlassen\n- Schnell von links nach rechts wischen: Schlagworte bearbeiten\nDoppelt tippen: Vollbildmodus verlassen
     </string>
 
-    <string name="context_help_saved_read_later_article_is_now_in_entries">Der Artikel wurde nun gespeichert.\n\nD.h. er befindet sich nun in \'Einträge\' und nicht mehr in
+    <string name="context_help_saved_read_later_article_is_now_in_items">Der Artikel wurde nun gespeichert.\n\nD.h. er befindet sich nun in \'Einträge\' und nicht mehr in
         \'Vorgemerkt\'.
     </string>
 
@@ -160,32 +159,32 @@
     <string name="dialog_article_summary_extractor_alert_message_delete_config" formatted="false">Nachrichtenseite %s wirklich löschen?</string>
 
     <string name="menu_share_source_url">Link</string>
-    <string name="menu_share_entry_content">Text</string>
+    <string name="menu_share_item_content">Text</string>
 
-    <string name="activity_edit_entry_title">Eintrag</string>
-    <string name="activity_edit_entry_content_label">Text</string>
-    <string name="activity_edit_entry_edit_content_title">Text</string>
-    <string name="activity_edit_entry_abstract_label">Titel / Zusammenfassung</string>
-    <string name="activity_edit_entry_edit_abstract_title">Titel / Zusammenfassung</string>
-    <string name="activity_edit_entry_source_label">Quelle</string>
-    <string name="activity_edit_entry_tags_label">Schlagworte</string>
-    <string name="activity_edit_entry_tags_onboarding_text">Geben Sie Ihrem Eintrag aussagekräftige Schlagworte, um ihn später leichter wiederzufinden.</string>
-    <string name="activity_edit_entry_source_onboarding_text">Speichern Sie, wo Sie diesen Text gefunden haben.</string>
-    <string name="activity_edit_entry_abstract_onboarding_text">Fügen Sie Ihrem Eintrag einen Titel oder eine Zusammenfassung hinzu. </string>
-    <string name="activity_edit_entry_alert_message_entry_contains_unsaved_changes">Ihr Eintrag enthält nicht gespeicherte Änderungen.\n\nWollen Sie Ihre Änderungen
+    <string name="activity_edit_item_title">Eintrag</string>
+    <string name="activity_edit_item_content_label">Text</string>
+    <string name="activity_edit_item_edit_content_title">Text</string>
+    <string name="activity_edit_item_summary_label">Titel / Zusammenfassung</string>
+    <string name="activity_edit_item_edit_summary_title">Titel / Zusammenfassung</string>
+    <string name="activity_edit_item_source_label">Quelle</string>
+    <string name="activity_edit_item_tags_label">Schlagworte</string>
+    <string name="activity_edit_item_tags_onboarding_text">Geben Sie Ihrem Eintrag aussagekräftige Schlagworte, um ihn später leichter wiederzufinden.</string>
+    <string name="activity_edit_item_source_onboarding_text">Speichern Sie, wo Sie diesen Text gefunden haben.</string>
+    <string name="activity_edit_item_summary_onboarding_text">Fügen Sie Ihrem Eintrag einen Titel oder eine Zusammenfassung hinzu. </string>
+    <string name="activity_edit_item_alert_message_item_contains_unsaved_changes">Ihr Eintrag enthält nicht gespeicherte Änderungen.\n\nWollen Sie Ihre Änderungen
         speichern?</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
-    <string name="activity_edit_entry_alert_message_entry_has_been_edited">Ihr Eintrag wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\n\nWenn
+    <string name="activity_edit_item_alert_message_item_has_been_edited">Ihr Eintrag wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\n\nWenn
         Sie den Eintrag jetzt speichern überschreiben Sie diese Änderungen. </string>
-    <string name="activity_edit_entry_alert_message_delete_entry">Möchten Sie den Eintrag \'%s\' wirklich löschen?</string>
+    <string name="activity_edit_item_alert_message_delete_item">Möchten Sie den Eintrag \'%s\' wirklich löschen?</string>
 
-    <string name="dialog_tags_on_entry_title">Schlagworte</string>
-    <string name="dialog_tags_on_entry_tags_label">Schlagworte:</string>
-    <string name="dialog_tags_on_entry_create_tag">Neu</string>
-    <string name="dialog_tags_on_entry_add_tags">Hinzufügen</string>
-    <string name="dialog_tags_on_entry_remove_tags">Entfernen</string>
-    <string name="dialog_tags_on_entry_toggle_tags">Hinzufügen / Entfernen</string>
-    <plurals name="dialog_tags_on_entry_confirm_create_tags">
+    <string name="dialog_tags_on_item_title">Schlagworte</string>
+    <string name="dialog_tags_on_item_tags_label">Schlagworte:</string>
+    <string name="dialog_tags_on_item_create_tag">Neu</string>
+    <string name="dialog_tags_on_item_add_tags">Hinzufügen</string>
+    <string name="dialog_tags_on_item_remove_tags">Entfernen</string>
+    <string name="dialog_tags_on_item_toggle_tags">Hinzufügen / Entfernen</string>
+    <plurals name="dialog_tags_on_item_confirm_create_tags">
         <item quantity="one">Es gibt kein Schlagwort mit Namen %1$s.\nMöchten Sie es erstellen?</item> <!-- Alternative, klingt aber ein bisschen doof im Pluaral -->
         <item quantity="other">Die Schlagworte %1$s und %2$s existieren nicht.\nMöchten Sie sie erstellen?</item>
     </plurals>

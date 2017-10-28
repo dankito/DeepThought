@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/MenuButtonsStyle"
-        fab:fab_label="@string/activity_edit_entry_abstract_label"
+        fab:fab_label="@string/activity_edit_item_summary_label"
     />
 
     <com.github.clans.fab.FloatingActionButton
@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/MenuButtonsStyle"
-        fab:fab_label="@string/activity_edit_entry_source_label"
+        fab:fab_label="@string/activity_edit_item_source_label"
     />
 
     <com.github.clans.fab.FloatingActionButton
@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/MenuButtonsStyle"
-        fab:fab_label="@string/activity_edit_entry_tags_label"
+        fab:fab_label="@string/activity_edit_item_tags_label"
     />
 
 </com.github.clans.fab.FloatingActionMenu>
