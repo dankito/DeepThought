@@ -1,12 +1,13 @@
 package net.dankito.deepthought.ui.presenter
 
+import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.*
+import net.dankito.deepthought.model.extensions.entryPreview
 import net.dankito.deepthought.model.extensions.getEntryPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.data.EntryPersister
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IClipboardService
@@ -34,6 +35,8 @@ class EditEntryPresenter(private val entryPersister: EntryPersister, private val
     }
 
     fun saveEntryExtractionResultForLaterReading(extractionResult: ItemExtractionResult) {
+        extractionResult.item.preview = extractionResult.item.entryPreview
+
         readLaterArticleService.persist(ReadLaterArticle(extractionResult, extractionResult.item.getEntryPreviewWithSeriesAndPublishingDate(extractionResult.source, extractionResult.series),
                 extractionResult.source.preview, extractionResult.source?.url, extractionResult.source?.previewImageUrl))
     }
