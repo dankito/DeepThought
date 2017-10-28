@@ -38,7 +38,7 @@
     <string name="search_hint_items">Find Items</string>
     <string name="search_hint_tags">Find Tags</string>
     <string name="search_hint_sources">Find Sources</string>
-    <string name="search_hint_read_later_articles">Find to \'Read later\'</string>
+    <string name="search_hint_read_later_articles">Find Read later articles</string>
 
     <string name="fragment_main_activity_tabs_filtered_entities_label">Filtered:</string>
 
