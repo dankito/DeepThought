@@ -172,6 +172,8 @@ class EditEntityField : RelativeLayout {
     }
 
     fun hideActionIconOnUiThread() {
+        btnEntityFieldAction.setImageBitmap(null)
+
         btnEntityFieldAction.visibility = View.INVISIBLE
 
         btnEntityFieldAction.setOnClickListener(null)
