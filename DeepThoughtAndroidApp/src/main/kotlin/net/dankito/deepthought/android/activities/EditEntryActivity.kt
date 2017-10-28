@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.support.v7.widget.ActionMenuView
 import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.PopupMenu
-import android.text.Html
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -25,6 +24,7 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.EditHtmlTextDialog
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
+import net.dankito.deepthought.android.service.StringUtil
 import net.dankito.deepthought.android.views.ContextHelpUtil
 import net.dankito.deepthought.android.views.EditEntryActivityFloatingActionMenuButton
 import net.dankito.deepthought.android.views.FullscreenWebView
@@ -158,6 +158,8 @@ class EditEntryActivity : BaseActivity() {
 
     private var isLoadingUrl = false
 
+
+    private val stringUtil = StringUtil()
 
     private val contextHelpUtil = ContextHelpUtil()
 
@@ -727,12 +729,7 @@ class EditEntryActivity : BaseActivity() {
 
             val onboardingTextId = if(showContentOnboarding == true) R.string.activity_edit_item_edit_content_onboarding_text else R.string.activity_edit_item_add_item_properties_onboarding_text
             val onboardingText = if(showContentOnboarding == true) getText(onboardingTextId).toString() else getText(onboardingTextId).toString()
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                txtOnboardingText.text = Html.fromHtml(onboardingText, Html.FROM_HTML_MODE_LEGACY)
-            }
-            else {
-                txtOnboardingText.text = Html.fromHtml(onboardingText)
-            }
+            txtOnboardingText.text = stringUtil.getSpannedFromHtml(onboardingText)
 
             arrowToFloatingActionButton.visibility = if(showContentOnboarding != true && showOnboardingForEntryProperties) View.VISIBLE else View.GONE
         }

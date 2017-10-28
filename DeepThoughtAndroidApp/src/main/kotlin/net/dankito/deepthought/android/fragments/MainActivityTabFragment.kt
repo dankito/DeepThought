@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
-import android.text.Html
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -20,6 +19,7 @@ import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
+import net.dankito.deepthought.android.service.StringUtil
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.views.ContextHelpUtil
 import net.dankito.deepthought.android.views.FullscreenRecyclerView
@@ -52,6 +52,8 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
     protected var recyclerView: FullscreenRecyclerView? = null
 
     protected var recyclerAdapter: MultiSelectListRecyclerSwipeAdapter<T, out RecyclerView.ViewHolder>? = null
+
+    private val stringUtil = StringUtil()
 
     private val contextHelpUtil = ContextHelpUtil()
 
@@ -304,12 +306,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
         txtOnboardingText?.let { txtOnboardingText ->
             lytOnboardingText?.visibility = View.VISIBLE
 
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(onboardingTextResourceId).toString(), Html.FROM_HTML_MODE_LEGACY)
-            }
-            else {
-                txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(onboardingTextResourceId).toString())
-            }
+            txtOnboardingText.text = stringUtil.getSpannedFromHtml(txtOnboardingText.context.getText(onboardingTextResourceId).toString())
         }
 
         searchMenuItem?.isVisible = false
