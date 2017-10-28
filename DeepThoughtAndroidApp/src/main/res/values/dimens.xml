@@ -26,7 +26,7 @@
     <dimen name="chevron_right_text_size">20sp</dimen>
     <dimen name="chevron_right_margin_left">8dp</dimen>
 
-    <dimen name="view_context_help_height">96dp</dimen>
+    <dimen name="view_context_help_text_min_height">60dp</dimen>
     <dimen name="view_context_help_padding">8dp</dimen>
     <dimen name="view_context_help_image_margin_right">8dp</dimen>
     <dimen name="view_context_help_text_line_spacing">2dp</dimen>

@@ -49,12 +49,12 @@ class ContextHelpUtil {
 
         lytContextHelp.findViewById(R.id.btnDismissContextHelp)?.visibility = View.GONE
 
+        lytContextHelp.findViewById(R.id.lytConfirmButtons)?.visibility = View.VISIBLE
+
         val btnDeny = lytContextHelp.findViewById(R.id.btnDeny) as Button
-        btnDeny.visibility = View.VISIBLE
         btnDeny.setOnClickListener { hide(lytContextHelp) }
 
         val btnConfirm = lytContextHelp.findViewById(R.id.btnConfirm) as Button
-        btnConfirm.visibility = View.VISIBLE
         btnConfirm.setOnClickListener {
             didConfirm()
             hide(lytContextHelp)
