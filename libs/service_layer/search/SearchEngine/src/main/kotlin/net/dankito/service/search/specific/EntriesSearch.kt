@@ -15,7 +15,7 @@ class EntriesSearch(searchTerm: String = Search.EmptySearchTerm, val filterConte
                     completedListener: (List<Item>) -> Unit) : SearchWithCollectionResult<Item>(searchTerm, completedListener) {
 
     fun isSearchingForEntryIds(): Boolean {
-        return searchTerm == Search.EmptySearchTerm && filterOnlyEntriesWithoutTags == false && entriesMustHaveTheseTags.isEmpty() &&
+        return searchTerm.isBlank() && filterOnlyEntriesWithoutTags == false && entriesMustHaveTheseTags.isEmpty() &&
                 entriesMustHaveThisSource == null && entriesMustHaveThisSeries == null
     }
 
