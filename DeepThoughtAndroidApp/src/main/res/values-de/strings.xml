@@ -132,7 +132,9 @@
 
     <!-- Wenn man im Eintrag bearbeiten Fenster etwas bearbeitet hat (z. B. den Inhalt, die Schlagworte, ...) und auf 'Übernehmen' geklickt hast -->
 
-    <string name="context_help_save_item_changes">Um Ihre Änderungen zu speichern, drücken Sie den <b>Speichern</b> Button unten rechts.
+    <string name="context_help_save_item_changes"><![CDATA[
+        Um Ihre Änderungen zu speichern, drücken Sie den <b>Speichern</b> Button unten rechts.
+    ]]>
     </string>
 
     <string name="context_help_item_content_fullscreen">Scrollen oder Doppelklicken startet den Vollbildmodus.\nDurch erneutes Doppelklicken können Sie den Vollbildmodus
@@ -144,8 +146,10 @@
         Eintrag bearbeiten Dialog verlassen\n- Schnell von links nach rechts wischen: Schlagworte bearbeiten\n- Doppelt tippen: Vollbildmodus verlassen
     </string>
 
-    <string name="context_help_saved_read_later_article_is_now_in_items">Der Artikel wurde nun gespeichert.\n\nD.h. er befindet sich nun in <b>Einträge</b> und nicht mehr in
+    <string name="context_help_saved_read_later_article_is_now_in_items"><![CDATA[
+        <p>Der Artikel wurde nun gespeichert.</p>D.h. er befindet sich nun in <b>Einträge</b> und nicht mehr in
         <b>Vorgemerkt</b>.
+    ]]>
     </string>
 
 
