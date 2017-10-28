@@ -74,7 +74,7 @@
     </string>
 
     <string name="activity_edit_item_add_item_properties_onboarding_text"><![CDATA[
-        Tap <b>(+) button</b> to set title, source and tags.
+        Tap <b>(+) button</b> to set <b>tags</b>, <b>source</b> and <b>title</b>.
     ]]>
     </string>
 
