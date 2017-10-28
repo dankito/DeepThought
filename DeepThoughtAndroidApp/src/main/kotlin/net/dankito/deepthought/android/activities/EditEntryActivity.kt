@@ -535,6 +535,7 @@ class EditEntryActivity : BaseActivity() {
         runOnUiThread {
             updateEntryFieldChangedOnUIThread(ItemField.Content, originalInformation != contentToEdit)
             setContentPreviewOnUIThread()
+            mayShowSaveEntryChangesHelpOnUIThread()
         }
     }
 
