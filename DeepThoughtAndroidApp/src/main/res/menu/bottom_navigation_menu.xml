@@ -4,7 +4,7 @@
     <item
         android:id="@+id/btnvEntries"
         android:title="@string/tab_items_title"
-        android:icon="@drawable/ic_entry"
+        android:icon="@drawable/ic_tab_item"
         android:orderInCategory="0"
         />
 
