@@ -1308,7 +1308,10 @@ class EditEntryActivity : BaseActivity() {
         if(parameters != null) {
             parameters.item?.let { editEntry(it) }
 
-            parameters.readLaterArticle?.let { editReadLaterArticle(it) }
+            parameters.readLaterArticle?.let {
+                isInReaderMode = it.itemExtractionResult.couldExtractContent
+                editReadLaterArticle(it)
+            }
 
             parameters.itemExtractionResult?.let {
                 isInReaderMode = it.couldExtractContent
