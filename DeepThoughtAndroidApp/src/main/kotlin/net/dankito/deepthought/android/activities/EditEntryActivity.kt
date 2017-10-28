@@ -233,7 +233,7 @@ class EditEntryActivity : BaseActivity() {
             setAbstractPreviewOnUIThread()
         }
 
-        savedInstanceState.getString(REFERENCE_INTENT_EXTRA_NAME)?.let { referenceID -> restoreReference(referenceID) }
+        restoreReference(savedInstanceState.getString(REFERENCE_INTENT_EXTRA_NAME))
 
         savedInstanceState.getString(TAGS_ON_ENTRY_INTENT_EXTRA_NAME)?.let { tagsOnEntryIds -> restoreTagsOnEntryAsync(tagsOnEntryIds) }
 
@@ -1396,8 +1396,13 @@ class EditEntryActivity : BaseActivity() {
         setAbstractPreviewOnUIThread()
     }
 
-    private fun restoreReference(referenceId: String) {
-        sourceToEdit = referenceService.retrieve(referenceId)
+    private fun restoreReference(referenceId: String?) {
+        if(referenceId != null) {
+            sourceToEdit = referenceService.retrieve(referenceId)
+        }
+        else {
+            sourceToEdit = null
+        }
 
         runOnUiThread { setReferencePreviewOnUIThread() }
     }
