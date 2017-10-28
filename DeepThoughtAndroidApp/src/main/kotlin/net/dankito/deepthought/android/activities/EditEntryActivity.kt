@@ -313,12 +313,12 @@ class EditEntryActivity : BaseActivity() {
                 appliedChangesToAbstract(lytAbstractPreview.didValueChange)
             }
         }
-        lytReferencePreview.setFieldNameOnUiThread(getString(R.string.activity_edit_item_source_label))
-        lytTagsPreview.setFieldNameOnUiThread(getString(R.string.activity_edit_item_tags_label))
 
-        lytReferencePreview.setOnClickListener { editReference() }
-        btnClearEntryReference.setOnClickListener { referenceCleared() }
-        lytTagsPreview.setOnClickListener { editTagsOnEntry() }
+        lytReferencePreview.setFieldNameOnUiThread(R.string.activity_edit_item_source_label, false)
+        lytReferencePreview.fieldClickedListener = { editReference() }
+
+        lytTagsPreview.setFieldNameOnUiThread(R.string.activity_edit_item_tags_label, false)
+        lytTagsPreview.fieldClickedListener = { editTagsOnEntry() }
 
         wbvwContent?.requestFocus() // avoid that lytAbstractPreview gets focus and keyboard therefore gets show on activity start
 
@@ -771,9 +771,11 @@ class EditEntryActivity : BaseActivity() {
     private fun setReferencePreviewOnUIThread() {
         if(sourceToEdit == null) {
             lytReferencePreview.setOnboardingTextOnUiThread(R.string.activity_edit_item_source_onboarding_text)
+            lytReferencePreview.hideActionIconOnUiThread()
         }
         else {
             lytReferencePreview.setFieldValueOnUiThread(sourceToEdit.getPreviewWithSeriesAndPublishingDate(getCurrentSeries()))
+            lytReferencePreview.showActionIconOnUiThread(android.R.drawable.ic_delete) { referenceCleared() }
         }
 
         val showReferencePreview = this.forceShowReferencePreview || sourceToEdit != null
@@ -784,7 +786,6 @@ class EditEntryActivity : BaseActivity() {
         }
         setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread()
 
-        btnClearEntryReference.visibility = if(sourceToEdit == null) View.GONE else View.VISIBLE
         mnShareEntry?.isVisible = sourceToEdit?.url.isNullOrBlank() == false
     }
 
