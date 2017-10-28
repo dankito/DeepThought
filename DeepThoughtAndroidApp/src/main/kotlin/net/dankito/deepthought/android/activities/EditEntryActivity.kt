@@ -496,7 +496,7 @@ class EditEntryActivity : BaseActivity() {
         val localSettings = entryService.dataManager.localSettings
 
         if(localSettings.didShowSaveItemChangesHelp == false &&
-                (contentToEdit.isNullOrBlank() == false || tagsOnEntry.size > 0 || sourceToEdit != null)) { // only show context help when really a value is set (summary should be obvious)
+                (tagsOnEntry.size > 0 || sourceToEdit != null)) { // only show context help when really a value is set (summary should be obvious)
             contextHelpUtil.showContextHelp(lytContextHelpSave, R.string.context_help_save_item_changes)
 
             localSettings.didShowSaveItemChangesHelp = true
