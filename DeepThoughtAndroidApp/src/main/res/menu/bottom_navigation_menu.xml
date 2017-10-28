@@ -17,7 +17,7 @@
 
     <item
         android:id="@+id/btnvReferences"
-        android:title="@string/tab_references_title"
+        android:title="@string/tab_sources_title"
         android:icon="@drawable/ic_reference"
         android:orderInCategory="2"
     />

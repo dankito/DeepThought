@@ -191,14 +191,14 @@ class EditReferenceActivity : BaseActivity() {
         setupFindExistingReferenceSection()
 
 
-        lytEditReferenceTitle.setFieldNameOnUiThread(R.string.activity_edit_reference_title_label) { updateDidReferenceChangeOnUiThread(SourceField.Title, it) }
+        lytEditReferenceTitle.setFieldNameOnUiThread(R.string.activity_edit_source_title_label) { updateDidReferenceChangeOnUiThread(SourceField.Title, it) }
 
-        lytEditReferenceSeries.setFieldNameOnUiThread(R.string.activity_edit_reference_series_label, false)
+        lytEditReferenceSeries.setFieldNameOnUiThread(R.string.activity_edit_source_series_label, false)
         lytEditReferenceSeries.fieldClickedListener = { editSeries() }
 
-        lytEditReferenceIssue.setFieldNameOnUiThread(R.string.activity_edit_reference_issue_label) { updateDidReferenceChangeOnUiThread(SourceField.Issue, it) }
+        lytEditReferenceIssue.setFieldNameOnUiThread(R.string.activity_edit_source_issue_label) { updateDidReferenceChangeOnUiThread(SourceField.Issue, it) }
 
-        lytEditReferencePublishingDate.setFieldNameOnUiThread(R.string.activity_edit_reference_publishing_date_label) { updateDidReferenceChangeOnUiThread(SourceField.PublishingDate, it) }
+        lytEditReferencePublishingDate.setFieldNameOnUiThread(R.string.activity_edit_source_publishing_date_label) { updateDidReferenceChangeOnUiThread(SourceField.PublishingDate, it) }
         lytEditReferencePublishingDate.showActionIconOnUiThread(R.drawable.ic_date_range_white_48dp) { showDatePickerDialog() }
         lytEditReferencePublishingDate.fieldValueFocusChangedListener = { hasFocus ->
             if(hasFocus == false) {
@@ -206,7 +206,7 @@ class EditReferenceActivity : BaseActivity() {
             }
         }
 
-        lytEditReferenceUrl.setFieldNameOnUiThread(R.string.activity_edit_reference_url_label) { updateDidReferenceChangeOnUiThread(SourceField.Url, it) }
+        lytEditReferenceUrl.setFieldNameOnUiThread(R.string.activity_edit_source_url_label) { updateDidReferenceChangeOnUiThread(SourceField.Url, it) }
     }
 
     private fun setupFindExistingReferenceSection() {
@@ -307,7 +307,7 @@ class EditReferenceActivity : BaseActivity() {
     }
 
     private fun askIfUnsavedChangesShouldBeSaved() {
-        dialogService.showConfirmationDialog(getString(R.string.activity_edit_reference_alert_message_reference_contains_unsaved_changes)) { shouldChangesGetSaved ->
+        dialogService.showConfirmationDialog(getString(R.string.activity_edit_source_alert_message_source_contains_unsaved_changes)) { shouldChangesGetSaved ->
             runOnUiThread {
                 if(shouldChangesGetSaved) {
                     saveReferenceAndCloseDialog()
@@ -405,7 +405,7 @@ class EditReferenceActivity : BaseActivity() {
     }
 
     private fun askIfANewReferenceShouldBeCreated() {
-        dialogService.showConfirmationDialog(getString(R.string.activity_edit_reference_alert_message_create_new_reference)) { createNewReference ->
+        dialogService.showConfirmationDialog(getString(R.string.activity_edit_source_alert_message_create_new_source)) { createNewReference ->
             if(createNewReference) {
                 if(didReferenceChange) {
                     askIfCurrentReferenceChangesShouldGetSaved()
@@ -418,7 +418,7 @@ class EditReferenceActivity : BaseActivity() {
     }
 
     private fun askIfCurrentReferenceChangesShouldGetSaved() {
-        dialogService.showConfirmationDialog(getString(R.string.activity_edit_reference_alert_message_create_new_reference_current_one_has_unsaved_changes)) { saveChanges ->
+        dialogService.showConfirmationDialog(getString(R.string.activity_edit_source_alert_message_create_new_source_current_one_has_unsaved_changes)) { saveChanges ->
             if(saveChanges) {
                 saveReferenceAsync { // TODO: show error message in case of failure
                     runOnUiThread { createReference() }
@@ -541,7 +541,7 @@ class EditReferenceActivity : BaseActivity() {
         unregisterEventBusListener() // message now gets shown, don't display it a second time
 
         runOnUiThread {
-            dialogService.showInfoMessage(getString(R.string.activity_edit_reference_alert_message_reference_has_been_edited))
+            dialogService.showInfoMessage(getString(R.string.activity_edit_source_alert_message_source_has_been_edited))
         }
     }
 

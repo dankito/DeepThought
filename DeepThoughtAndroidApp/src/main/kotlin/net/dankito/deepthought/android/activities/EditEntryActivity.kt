@@ -314,7 +314,7 @@ class EditEntryActivity : BaseActivity() {
                 appliedChangesToAbstract(lytAbstractPreview.didValueChange)
             }
         }
-        lytReferencePreview.setFieldNameOnUiThread(getString(R.string.activity_edit_entry_reference_label))
+        lytReferencePreview.setFieldNameOnUiThread(getString(R.string.activity_edit_entry_source_label))
         lytTagsPreview.setFieldNameOnUiThread(getString(R.string.activity_edit_entry_tags_label))
 
         lytReferencePreview.setOnClickListener { editReference() }
@@ -774,7 +774,7 @@ class EditEntryActivity : BaseActivity() {
 
     private fun setReferencePreviewOnUIThread() {
         if(sourceToEdit == null) {
-            lytReferencePreview.setOnboardingTextOnUiThread(R.string.activity_edit_entry_reference_onboarding_text)
+            lytReferencePreview.setOnboardingTextOnUiThread(R.string.activity_edit_entry_source_onboarding_text)
         }
         else {
             lytReferencePreview.setFieldValueOnUiThread(sourceToEdit.getPreviewWithSeriesAndPublishingDate(getCurrentSeries()))

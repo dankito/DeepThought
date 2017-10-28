@@ -4,7 +4,7 @@
 
     <string name="tab_entries_title">Entries</string>
     <string name="tab_tags_title">Tags</string>
-    <string name="tab_references_title">Sources</string>
+    <string name="tab_sources_title">Sources</string>
     <string name="tab_read_later_articles_title">Read later</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -38,7 +38,7 @@
     </plurals>
     <string name="search_hint_entries">Find Entries</string>
     <string name="search_hint_tags">Find Tags</string>
-    <string name="search_hint_references">Find Sources</string>
+    <string name="search_hint_sources">Find Sources</string>
     <string name="search_hint_read_later_articles">Find to \'Read later\'</string>
 
     <string name="fragment_main_activity_tabs_filtered_entities_label">Filtered:</string>
@@ -55,7 +55,7 @@
         <p>Select an entry under \' Entries\' and add tags to it</p>
     ]]>
     </string>
-    <string name="tab_reference_onboarding_text"><![CDATA[
+    <string name="tab_source_onboarding_text"><![CDATA[
         <p>Add sources to your entries to remember where you found the content.</p>
         <p>You have not added any sources yet.</p>
         <p>Select an entry under \' Entries\' and add a source.</p>
@@ -118,7 +118,7 @@
     <string name="dialog_article_summary_extractor_config_select_icon">Select icon:</string>
     <string name="dialog_article_summary_extractor_alert_message_delete_config" formatted="false">Really delete news site %s?</string>
 
-    <string name="menu_share_reference_url">Url</string>
+    <string name="menu_share_source_url">Url</string>
     <string name="menu_share_entry_content">content</string>
 
     <string name="activity_edit_entry_title">Entry</string>
@@ -126,10 +126,10 @@
     <string name="activity_edit_entry_edit_content_title">content</string>
     <string name="activity_edit_entry_abstract_label">Title / Abstract</string>
     <string name="activity_edit_entry_edit_abstract_title">Title / Abstract</string>
-    <string name="activity_edit_entry_reference_label">Source</string>
+    <string name="activity_edit_entry_source_label">Source</string>
     <string name="activity_edit_entry_tags_label">Tags</string>
     <string name="activity_edit_entry_tags_onboarding_text">Add meaningful tags, so that you can find it later easily</string>
-    <string name="activity_edit_entry_reference_onboarding_text">Save where you have found this information</string>
+    <string name="activity_edit_entry_source_onboarding_text">Save where you have found this information</string>
     <string name="activity_edit_entry_abstract_onboarding_text">Title or summary for this information</string>
     <string name="activity_edit_entry_alert_message_entry_contains_unsaved_changes">Entry contains unsaved changes.\n\nShould these changes now be saved?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
@@ -148,23 +148,23 @@
         <item quantity="other">Tags %1$s and %2$s do not exist.\nWould you like to create them?</item>
     </plurals>
 
-    <string name="activity_edit_reference_title">Source</string>
-    <string name="activity_edit_reference_use_existing_label">Select existing source:</string>
-    <string name="activity_edit_reference_create_reference">New …</string>
-    <string name="activity_edit_reference_create_reference_from_isbn">From ISBN …</string>
-    <string name="activity_edit_reference_title_label">Title</string>
-    <string name="activity_edit_reference_series_label">Series</string>
-    <string name="activity_edit_reference_issue_label">Issue</string>
-    <string name="activity_edit_reference_publishing_date_label">Publishing date</string>
-    <string name="activity_edit_reference_url_label">Url</string>
-    <string name="activity_edit_reference_error_could_not_parse_publishing_date" formatted="false">Cannot parse %s to date</string>
-    <string name="activity_edit_reference_alert_message_create_new_reference">Do you really want to create a new reference?\n\nThe current reference then
+    <string name="activity_edit_source_title">Source</string>
+    <string name="activity_edit_source_use_existing_label">Select existing source:</string>
+    <string name="activity_edit_source_create_source">New …</string>
+    <string name="activity_edit_source_create_source_from_isbn">From ISBN …</string>
+    <string name="activity_edit_source_title_label">Title</string>
+    <string name="activity_edit_source_series_label">Series</string>
+    <string name="activity_edit_source_issue_label">Issue</string>
+    <string name="activity_edit_source_publishing_date_label">Publishing date</string>
+    <string name="activity_edit_source_url_label">Url</string>
+    <string name="activity_edit_source_error_could_not_parse_publishing_date" formatted="false">Cannot parse %s to date</string>
+    <string name="activity_edit_source_alert_message_create_new_source">Do you really want to create a new source?\n\nThe current source then
         gets discarded and a new one will be created.</string>
-    <string name="activity_edit_reference_alert_message_create_new_reference_current_one_has_unsaved_changes">Current reference has unsaved changes.\n\nDo you want to
+    <string name="activity_edit_source_alert_message_create_new_source_current_one_has_unsaved_changes">Current source has unsaved changes.\n\nDo you want to
         save these before?</string>
-    <string name="activity_edit_reference_alert_message_reference_contains_unsaved_changes">Reference contains unsaved changes.\n\nShould these changes now be saved?</string>
+    <string name="activity_edit_source_alert_message_source_contains_unsaved_changes">Source contains unsaved changes.\n\nShould these changes now be saved?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
-    <string name="activity_edit_reference_alert_message_reference_has_been_edited">Source has been edited (probably on a synchronized device).\n\nWhen
+    <string name="activity_edit_source_alert_message_source_has_been_edited">Source has been edited (probably on a synchronized device).\n\nWhen
         you now save the source the other changes get overwritten.</string>
 
     <string name="activity_edit_series_title">Series</string>

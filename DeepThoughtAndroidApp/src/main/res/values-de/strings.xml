@@ -4,7 +4,7 @@
 
     <string name="tab_entries_title">Einträge</string>
     <string name="tab_tags_title">Schlagworte</string>
-    <string name="tab_references_title">Quellen</string>
+    <string name="tab_sources_title">Quellen</string>
     <string name="tab_read_later_articles_title">Vorgemerkt</string>
 
 
@@ -50,7 +50,7 @@
     </plurals>
     <string name="search_hint_entries">Einträge suchen</string>
     <string name="search_hint_tags">Schlagworte suchen</string>
-    <string name="search_hint_references">Quellen suchen</string>
+    <string name="search_hint_sources">Quellen suchen</string>
     <string name="search_hint_read_later_articles">Vorgemerkte Artikel suchen</string>
 
 
@@ -74,7 +74,7 @@
         <p>Wählen Sie unter \'Einträge\' einen Eintrag aus und fügen Sie diesem Schlagworte hinzu.</p>
     ]]>
     </string>
-    <string name="tab_reference_onboarding_text"><![CDATA[
+    <string name="tab_source_onboarding_text"><![CDATA[
         <p>Fügen Sie Ihren Einträgen Quellen hinzu, um sich zu erinnern, wo Sie den Inhalt gefunden haben.</p>
         <p>Sie haben noch keine Quellen hinzugefügt.</p>
         <p>Wählen Sie unter \'Einträge\' einen Eintrag aus und fügen Sie eine Quelle hinzu.</p>
@@ -159,7 +159,7 @@
     <string name="dialog_article_summary_extractor_config_select_icon">Icon auswählen:</string>
     <string name="dialog_article_summary_extractor_alert_message_delete_config" formatted="false">Nachrichtenseite %s wirklich löschen?</string>
 
-    <string name="menu_share_reference_url">Link</string>
+    <string name="menu_share_source_url">Link</string>
     <string name="menu_share_entry_content">Text</string>
 
     <string name="activity_edit_entry_title">Eintrag</string>
@@ -167,10 +167,10 @@
     <string name="activity_edit_entry_edit_content_title">Text</string>
     <string name="activity_edit_entry_abstract_label">Titel / Zusammenfassung</string>
     <string name="activity_edit_entry_edit_abstract_title">Titel / Zusammenfassung</string>
-    <string name="activity_edit_entry_reference_label">Quelle</string>
+    <string name="activity_edit_entry_source_label">Quelle</string>
     <string name="activity_edit_entry_tags_label">Schlagworte</string>
     <string name="activity_edit_entry_tags_onboarding_text">Geben Sie Ihrem Eintrag aussagekräftige Schlagworte, um ihn später leichter wiederzufinden.</string>
-    <string name="activity_edit_entry_reference_onboarding_text">Speichern Sie, wo Sie diesen Text gefunden haben.</string>
+    <string name="activity_edit_entry_source_onboarding_text">Speichern Sie, wo Sie diesen Text gefunden haben.</string>
     <string name="activity_edit_entry_abstract_onboarding_text">Fügen Sie Ihrem Eintrag einen Titel oder eine Zusammenfassung hinzu. </string>
     <string name="activity_edit_entry_alert_message_entry_contains_unsaved_changes">Ihr Eintrag enthält nicht gespeicherte Änderungen.\n\nWollen Sie Ihre Änderungen
         speichern?</string>
@@ -190,24 +190,24 @@
         <item quantity="other">Die Schlagworte %1$s und %2$s existieren nicht.\nMöchten Sie sie erstellen?</item>
     </plurals>
 
-    <string name="activity_edit_reference_title">Quelle</string>
-    <string name="activity_edit_reference_use_existing_label">Bestehende verwenden:</string>
-    <string name="activity_edit_reference_create_reference">Neu …</string>
-    <string name="activity_edit_reference_create_reference_from_isbn">Von ISBN …</string>
-    <string name="activity_edit_reference_title_label">Titel</string>
-    <string name="activity_edit_reference_series_label">Reihe</string>
-    <string name="activity_edit_reference_issue_label">Ausgabe</string>
-    <string name="activity_edit_reference_publishing_date_label">Veröffentlichungsdatum</string>
-    <string name="activity_edit_reference_url_label">URL</string>
-    <string name="activity_edit_reference_error_could_not_parse_publishing_date" formatted="false">Kann %s nicht in ein Datum umwandeln</string>
-    <string name="activity_edit_reference_alert_message_create_new_reference">Möchten Sie wirklich eine neue Quelle erstellen?\n\nDie aktuelle wird dann verworfen
+    <string name="activity_edit_source_title">Quelle</string>
+    <string name="activity_edit_source_use_existing_label">Bestehende verwenden:</string>
+    <string name="activity_edit_source_create_source">Neu …</string>
+    <string name="activity_edit_source_create_source_from_isbn">Von ISBN …</string>
+    <string name="activity_edit_source_title_label">Titel</string>
+    <string name="activity_edit_source_series_label">Reihe</string>
+    <string name="activity_edit_source_issue_label">Ausgabe</string>
+    <string name="activity_edit_source_publishing_date_label">Veröffentlichungsdatum</string>
+    <string name="activity_edit_source_url_label">URL</string>
+    <string name="activity_edit_source_error_could_not_parse_publishing_date" formatted="false">Kann %s nicht in ein Datum umwandeln</string>
+    <string name="activity_edit_source_alert_message_create_new_source">Möchten Sie wirklich eine neue Quelle erstellen?\n\nDie aktuelle wird dann verworfen
         und eine neue Quelle wird angelegt.</string>
-    <string name="activity_edit_reference_alert_message_create_new_reference_current_one_has_unsaved_changes">Die aktuelle Quelle enthält nicht gespeicherte
+    <string name="activity_edit_source_alert_message_create_new_source_current_one_has_unsaved_changes">Die aktuelle Quelle enthält nicht gespeicherte
         Änderungen.\n\nSollen diese Änderungen zuvor gespeichert werden?</string>
-    <string name="activity_edit_reference_alert_message_reference_contains_unsaved_changes">Quelle enthält nicht gespeicherte Änderungen.\n\nSollen diese Änderungen gespeichert
+    <string name="activity_edit_source_alert_message_source_contains_unsaved_changes">Quelle enthält nicht gespeicherte Änderungen.\n\nSollen diese Änderungen gespeichert
         werden?</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
-    <string name="activity_edit_reference_alert_message_reference_has_been_edited">Quelle wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\n\nWenn
+    <string name="activity_edit_source_alert_message_source_has_been_edited">Quelle wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\n\nWenn
         Sie die Quelle nun speichern, überschreiben Sie diese Änderungen.</string>
 
     <string name="activity_edit_series_title">Reihe</string>

@@ -20,7 +20,7 @@ import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class ReferencesListView: MainActivityTabFragment<Source>(R.menu.reference_contextual_action_menu, R.string.tab_reference_onboarding_text),
+class ReferencesListView: MainActivityTabFragment<Source>(R.menu.reference_contextual_action_menu, R.string.tab_source_onboarding_text),
         IReferencesListView {
 
     @Inject
@@ -80,7 +80,7 @@ class ReferencesListView: MainActivityTabFragment<Source>(R.menu.reference_conte
     }
 
 
-    override fun getQueryHint(activity: Activity) = activity.getString(R.string.search_hint_references)
+    override fun getQueryHint(activity: Activity) = activity.getString(R.string.search_hint_sources)
 
     override fun searchEntities(query: String) {
         presenter.searchReferences(query)

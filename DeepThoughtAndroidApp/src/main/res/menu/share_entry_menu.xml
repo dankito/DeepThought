@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/mnShareEntryReferenceUrl"
-        android:title="@string/menu_share_reference_url"
+        android:title="@string/menu_share_source_url"
     />
 
     <item
