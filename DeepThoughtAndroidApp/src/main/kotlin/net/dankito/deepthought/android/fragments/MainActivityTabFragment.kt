@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
-import net.dankito.deepthought.android.service.StringUtil
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.views.ContextHelpUtil
 import net.dankito.deepthought.android.views.FullscreenRecyclerView
@@ -52,8 +51,6 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
     protected var recyclerView: FullscreenRecyclerView? = null
 
     protected var recyclerAdapter: MultiSelectListRecyclerSwipeAdapter<T, out RecyclerView.ViewHolder>? = null
-
-    private val stringUtil = StringUtil()
 
     private val contextHelpUtil = ContextHelpUtil()
 
@@ -306,7 +303,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
         txtOnboardingText?.let { txtOnboardingText ->
             lytOnboardingText?.visibility = View.VISIBLE
 
-            txtOnboardingText.text = stringUtil.getSpannedFromHtml(txtOnboardingText.context.getText(onboardingTextResourceId).toString())
+            txtOnboardingText.text = contextHelpUtil.stringUtil.getSpannedFromHtml(txtOnboardingText.context.getText(onboardingTextResourceId).toString())
         }
 
         searchMenuItem?.isVisible = false

@@ -24,7 +24,6 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.EditHtmlTextDialog
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
-import net.dankito.deepthought.android.service.StringUtil
 import net.dankito.deepthought.android.views.ContextHelpUtil
 import net.dankito.deepthought.android.views.EditEntryActivityFloatingActionMenuButton
 import net.dankito.deepthought.android.views.FullscreenWebView
@@ -158,8 +157,6 @@ class EditEntryActivity : BaseActivity() {
 
     private var isLoadingUrl = false
 
-
-    private val stringUtil = StringUtil()
 
     private val contextHelpUtil = ContextHelpUtil()
 
@@ -729,7 +726,7 @@ class EditEntryActivity : BaseActivity() {
 
             val onboardingTextId = if(showContentOnboarding == true) R.string.activity_edit_item_edit_content_onboarding_text else R.string.activity_edit_item_add_item_properties_onboarding_text
             val onboardingText = if(showContentOnboarding == true) getText(onboardingTextId).toString() else getText(onboardingTextId).toString()
-            txtOnboardingText.text = stringUtil.getSpannedFromHtml(onboardingText)
+            txtOnboardingText.text = contextHelpUtil.stringUtil.getSpannedFromHtml(onboardingText)
 
             arrowToFloatingActionButton.visibility = if(showContentOnboarding != true && showOnboardingForEntryProperties) View.VISIBLE else View.GONE
         }
@@ -1191,7 +1188,8 @@ class EditEntryActivity : BaseActivity() {
             localSettings.didShowSavedReadLaterArticleIsNowInItemsHelp = true
             entryService.dataManager.localSettingsUpdated()
 
-            dialogService.showConfirmationDialog(getString(R.string.context_help_saved_read_later_article_is_now_in_items), showNoButton = false) {
+            val helpText = getText(R.string.context_help_saved_read_later_article_is_now_in_items).toString()
+            dialogService.showConfirmationDialog(contextHelpUtil.stringUtil.getSpannedFromHtml(helpText), showNoButton = false) {
                 callback()
             }
         }
