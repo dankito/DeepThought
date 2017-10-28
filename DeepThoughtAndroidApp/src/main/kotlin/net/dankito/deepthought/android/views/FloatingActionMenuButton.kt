@@ -27,8 +27,8 @@ open class FloatingActionMenuButton(protected val floatingActionMenu: FloatingAc
 
 
     protected fun executeAndCloseMenu(action: () -> Unit) {
+        action() // first execute action and then close menu as when action sets menu items visibility closeMenu() would otherwise overwrite this value
         closeMenu()
-        action()
     }
 
     private fun closeMenu() {
