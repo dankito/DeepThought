@@ -959,9 +959,9 @@ class EditEntryActivity : BaseActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.activity_edit_entry_menu, menu)
-        toolbarUtil.setupActionItemsLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
 
         mnSaveEntry = menu.findItem(R.id.mnSaveEntry)
+        readLaterArticle?.let { mnSaveEntry?.setIcon(R.drawable.ic_tab_item) }
         mnDeleteExistingEntry = menu.findItem(R.id.mnDeleteExistingEntry)
 
         mnToggleReaderMode = menu.findItem(R.id.mnToggleReaderMode)
@@ -978,6 +978,8 @@ class EditEntryActivity : BaseActivity() {
         mnShareEntry?.isVisible = sourceToEdit?.url.isNullOrBlank() == false
 
         setMenuSaveEntryVisibleStateOnUIThread()
+
+        toolbarUtil.setupActionItemsLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
 
         return true
     }
@@ -1348,6 +1350,7 @@ class EditEntryActivity : BaseActivity() {
     private fun editReadLaterArticle(readLaterArticle: ReadLaterArticle, updateContentPreview: Boolean = true) {
         this.readLaterArticle = readLaterArticle
 
+        mnSaveEntry?.setIcon(R.drawable.ic_tab_item)
         editEntry(readLaterArticle.itemExtractionResult.item, readLaterArticle.itemExtractionResult.source, readLaterArticle.itemExtractionResult.tags, updateContentPreview)
     }
 
