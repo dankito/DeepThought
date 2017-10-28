@@ -74,7 +74,7 @@
     ]]>
     </string>
     <string name="tab_source_onboarding_text"><![CDATA[
-        <p>Fügen Sie Ihren Einträgen Quellen hinzu, um sich zu erinnern, wo Sie den Inhalt gefunden haben.</p>
+        <p>Fügen Sie Ihren Einträgen Quellen hinzu, um sich zu erinnern, wo Sie diese Information gefunden haben.</p>
         <p>Sie haben noch keine Quellen hinzugefügt.</p>
         <p>Wählen Sie unter <b>Einträge</b> in den Tabs unten links einen Eintrag aus und fügen Sie eine Quelle hinzu.</p>
 
@@ -92,7 +92,7 @@
     <!-- In der kommenden Version werden zunächst auch die Schlagworte ausgeblendet, d. h. dann kann man alles über den + Button hinzufügen. -->
 
     <string name="activity_edit_item_edit_content_onboarding_text"><![CDATA[
-        Klicken Sie hier um Ihren Inhalt einzugeben.
+        Klicken Sie hier um die zu speichernde Information einzugeben.
     ]]>
     </string>
 
@@ -161,17 +161,17 @@
     <string name="dialog_article_summary_extractor_alert_message_delete_config" formatted="false">Nachrichtenseite %s wirklich löschen?</string>
 
     <string name="menu_share_source_url">Link</string>
-    <string name="menu_share_item_content">Text</string>
+    <string name="menu_share_item_content">Information</string>
 
     <string name="activity_edit_item_title">Eintrag</string>
-    <string name="activity_edit_item_content_label">Text</string>
-    <string name="activity_edit_item_edit_content_title">Text</string>
+    <string name="activity_edit_item_content_label">Information</string>
+    <string name="activity_edit_item_edit_content_title">Information</string>
     <string name="activity_edit_item_summary_label">Titel / Zusammenfassung</string>
     <string name="activity_edit_item_edit_summary_title">Titel / Zusammenfassung</string>
     <string name="activity_edit_item_source_label">Quelle</string>
     <string name="activity_edit_item_tags_label">Schlagworte</string>
     <string name="activity_edit_item_tags_onboarding_text">Geben Sie Ihrem Eintrag aussagekräftige Schlagworte, um ihn später leichter wiederzufinden.</string>
-    <string name="activity_edit_item_source_onboarding_text">Speichern Sie, wo Sie diesen Text gefunden haben.</string>
+    <string name="activity_edit_item_source_onboarding_text">Speichern Sie, wo Sie diese Information gefunden haben.</string>
     <string name="activity_edit_item_summary_onboarding_text">Fügen Sie Ihrem Eintrag einen Titel oder eine Zusammenfassung hinzu. </string>
     <string name="activity_edit_item_alert_message_item_contains_unsaved_changes">Ihr Eintrag enthält nicht gespeicherte Änderungen.\n\nWollen Sie Ihre Änderungen
         speichern?</string>
