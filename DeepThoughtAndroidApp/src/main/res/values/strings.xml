@@ -4,7 +4,7 @@
 
     <string name="tab_entries_title">Entries</string>
     <string name="tab_tags_title">Tags</string>
-    <string name="tab_references_title">References</string>
+    <string name="tab_references_title">Sources</string>
     <string name="tab_read_later_articles_title">Read later</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -38,8 +38,8 @@
     </plurals>
     <string name="search_hint_entries">Find Entries</string>
     <string name="search_hint_tags">Find Tags</string>
-    <string name="search_hint_references">Find References</string>
-    <string name="search_hint_read_later_articles">Find \'Read later\'articles </string>
+    <string name="search_hint_references">Find Sources</string>
+    <string name="search_hint_read_later_articles">Find to \'Read later\'</string>
 
     <string name="fragment_main_activity_tabs_filtered_entities_label">Filtered:</string>
 
@@ -50,15 +50,16 @@
     ]]>
     </string>
     <string name="tab_tags_onboarding_text"><![CDATA[
-        <p>Tags are used to organize your entries.</p>
-        <p>You don\'t have any tags yet.</p>
-        <p>To add a tag to an entry, select an entry in tab \'Entries\' and tab \'Tags\'. </p>
+        <p>Tags help you to find entries faster. </p>
+        <p>You have not yet created any tags. </p>
+        <p>Select an entry under \' Entries\' and add tags to it</p>
     ]]>
     </string>
     <string name="tab_reference_onboarding_text"><![CDATA[
-        <p>You can add references to your entries to remember where you found them.</p>
-        <p>You don\'t have any references yet.</p>
-        <p>To add a reference to an entry, select an entry in tab \'Entries\' and tab \'Reference\'.</p>
+        <p>Add sources to your entries to remember where you found the content.</p>
+        <p>You have not added any sources yet.</p>
+        <p>Select an entry under \' Entries\' and add a source.</p>
+
     ]]>
     </string>
     <string name="tab_read_later_articles_onboarding_text"><![CDATA[
@@ -74,7 +75,7 @@
     </string>
 
     <string name="activity_edit_entry_add_entry_properties_onboarding_text"><![CDATA[
-        Tab + button to add tags, a reference or a summary to your entry.
+        Tab + button to set title, source and tags.
     ]]>
     </string>
 
@@ -83,8 +84,8 @@
         you want to execute an action on multiple items, long press each item.\nThis also works for other lists.
     </string>
 
-    <string name="context_help_search_tags">To search for multiple tags, enter a comma (,).\nTo
-        filter entered tags, press the action button (\'Enter\') on keyboard.
+    <string name="context_help_search_tags">To to select multiple keywords, separate them in the search field with a comma (,).
+        \nTo to create a new keyword or add the keyword you entered, press \' Enter\' on your keyboard.
     </string>
 
     <string name="context_help_set_tags_on_entry">To select multiple tags, enter a comma (,).\nTo
@@ -125,7 +126,7 @@
     <string name="activity_edit_entry_edit_content_title">content</string>
     <string name="activity_edit_entry_abstract_label">Title / Abstract</string>
     <string name="activity_edit_entry_edit_abstract_title">Title / Abstract</string>
-    <string name="activity_edit_entry_reference_label">Reference</string>
+    <string name="activity_edit_entry_reference_label">Source</string>
     <string name="activity_edit_entry_tags_label">Tags</string>
     <string name="activity_edit_entry_tags_onboarding_text">Add meaningful tags, so that you can find it later easily</string>
     <string name="activity_edit_entry_reference_onboarding_text">Save where you have found this information</string>
@@ -147,8 +148,8 @@
         <item quantity="other">Tags %1$s and %2$s do not exist.\nWould you like to create them?</item>
     </plurals>
 
-    <string name="activity_edit_reference_title">Reference</string>
-    <string name="activity_edit_reference_use_existing_label">Select existing reference:</string>
+    <string name="activity_edit_reference_title">Source</string>
+    <string name="activity_edit_reference_use_existing_label">Select existing source:</string>
     <string name="activity_edit_reference_create_reference">New …</string>
     <string name="activity_edit_reference_create_reference_from_isbn">From ISBN …</string>
     <string name="activity_edit_reference_title_label">Title</string>
@@ -163,8 +164,8 @@
         save these before?</string>
     <string name="activity_edit_reference_alert_message_reference_contains_unsaved_changes">Reference contains unsaved changes.\n\nShould these changes now be saved?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
-    <string name="activity_edit_reference_alert_message_reference_has_been_edited">Reference has been edited (probably on a synchronized device).\n\nWhen
-        you now save the reference the other changes get overwritten.</string>
+    <string name="activity_edit_reference_alert_message_reference_has_been_edited">Source has been edited (probably on a synchronized device).\n\nWhen
+        you now save the source the other changes get overwritten.</string>
 
     <string name="activity_edit_series_title">Series</string>
     <string name="activity_edit_series_use_existing_label">Select existing series:</string>
