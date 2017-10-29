@@ -133,7 +133,7 @@ class CommunicationManagerTest {
 
     private val localEventBus = MBassadorEventBus()
 
-    private val localEntityChangedNotifier = EntityChangedNotifier(localEventBus, localThreadPool)
+    private val localEntityChangedNotifier = EntityChangedNotifier(localEventBus)
 
     private lateinit var localSynchronizedChangesHandler: SynchronizedChangesHandler
 
@@ -188,7 +188,7 @@ class CommunicationManagerTest {
 
     private val remoteEventBus = MBassadorEventBus()
 
-    private val remoteEntityChangedNotifier = EntityChangedNotifier(remoteEventBus, remoteThreadPool)
+    private val remoteEntityChangedNotifier = EntityChangedNotifier(remoteEventBus)
 
     private lateinit var remoteSynchronizedChangesHandler: SynchronizedChangesHandler
 

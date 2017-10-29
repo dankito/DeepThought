@@ -40,8 +40,8 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideEntityChangedNotifier(eventBus: IEventBus, threadPool: IThreadPool) : EntityChangedNotifier {
-        return EntityChangedNotifier(eventBus, threadPool)
+    fun provideEntityChangedNotifier(eventBus: IEventBus) : EntityChangedNotifier {
+        return EntityChangedNotifier(eventBus)
     }
 
 
