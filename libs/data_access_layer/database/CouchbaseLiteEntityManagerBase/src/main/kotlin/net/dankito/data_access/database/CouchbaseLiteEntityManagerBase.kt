@@ -9,6 +9,7 @@ import net.dankito.jpa.cache.DaoCache
 import net.dankito.jpa.cache.ObjectCache
 import net.dankito.jpa.couchbaselite.Dao
 import net.dankito.jpa.util.DatabaseCompacter
+import net.dankito.utils.AsyncProducerConsumerQueue
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.version.Versions
 import org.slf4j.LoggerFactory
@@ -234,60 +235,53 @@ abstract class CouchbaseLiteEntityManagerBase(protected var context: Context, pr
     }
 
 
-    override fun <T> getAllEntitiesUpdatedAfter(lastUpdateTime: Date): List<ChangedEntity<T>> {
-        val lastUpdateTimeMillis = lastUpdateTime.time
-
+    override fun <T> getAllEntitiesUpdatedAfter(lastUpdateTimeMillis: Long, queue: AsyncProducerConsumerQueue<ChangedEntity<T>>) {
         val query = database.createAllDocumentsQuery()
         query.allDocsMode = Query.AllDocsMode.ALL_DOCS
         query.setIncludeDeleted(true)
 
-        return getUpdatedEntitiesFromQueryEnumerator(query.run(), lastUpdateTimeMillis)
+        getUpdatedEntitiesFromQueryEnumerator(query.run(), lastUpdateTimeMillis, queue)
     }
 
-    private fun <T> getUpdatedEntitiesFromQueryEnumerator(queryEnumerator: QueryEnumerator, lastUpdateTimeMillis: Long): List<ChangedEntity<T>> {
-        val updatedEntities = ArrayList<ChangedEntity<T>>()
+    private fun <T> getUpdatedEntitiesFromQueryEnumerator(queryEnumerator: QueryEnumerator, lastUpdateTimeMillis: Long, queue: AsyncProducerConsumerQueue<ChangedEntity<T>>) {
         val anyDao = mapEntityClassesToDaos.values.first()
 
         while(queryEnumerator.hasNext()) {
             val document = queryEnumerator.next().document
 
-            getUpdatedEntityFromDocument(document, lastUpdateTimeMillis, anyDao, updatedEntities)
+            getUpdatedEntityFromDocument(document, lastUpdateTimeMillis, anyDao, queue)
         }
-
-        log.info("Retrieved ${updatedEntities.size} updated entities")
-
-        return updatedEntities
     }
 
-    private fun <T> getUpdatedEntityFromDocument(document: Document, lastUpdateTimeMillis: Long, anyDao: Dao, updatedEntities: ArrayList<ChangedEntity<T>>) {
+    private fun <T> getUpdatedEntityFromDocument(document: Document, lastUpdateTimeMillis: Long, anyDao: Dao, queue: AsyncProducerConsumerQueue<ChangedEntity<T>>) {
         if(document.isDeleted || document.getProperty(Dao.DELETED_SYSTEM_COLUMN_NAME) == true) {
-            getDeletedEntityFromDocument(document, lastUpdateTimeMillis, updatedEntities)
+            getDeletedEntityFromDocument(document, lastUpdateTimeMillis, queue)
         }
         else {
             (document.getProperty(TableConfig.BaseEntityModifiedOnColumnName) as? Long)?.let { modifiedOn ->
                 if(modifiedOn > lastUpdateTimeMillis) {
                     anyDao.getEntityClassFromDocument(document)?.let { entityClass ->
-                        getObjectForDocument(entityClass as Class<T>, document, updatedEntities)
+                        getObjectForDocument(entityClass as Class<T>, document, queue)
                     }
                 }
             }
         }
     }
 
-    private fun <T> getObjectForDocument(entityClass: Class<T>, document: Document, updatedEntities: ArrayList<ChangedEntity<T>>) {
+    private fun <T> getObjectForDocument(entityClass: Class<T>, document: Document, queue: AsyncProducerConsumerQueue<ChangedEntity<T>>) {
         (objectCache.get(entityClass, document.id) as? T)?.let { // first check if an object for that id is already cached
-            updatedEntities.add(ChangedEntity<T>(entityClass, it, (it as BaseEntity).id))
+            queue.add(ChangedEntity<T>(entityClass, it, (it as BaseEntity).id))
             return
         }
 
         getDaoForClass(entityClass)?.let { dao ->
             (dao.createObjectFromDocument(document, document.id, entityClass) as? T)?.let { entity ->
-                updatedEntities.add(ChangedEntity<T>(entityClass, entity, (entity as BaseEntity).id))
+                queue.add(ChangedEntity<T>(entityClass, entity, (entity as BaseEntity).id))
             }
         }
     }
 
-    private fun <T> getDeletedEntityFromDocument(document: Document, lastUpdateTimeMillis: Long, updatedEntities: ArrayList<ChangedEntity<T>>) {
+    private fun <T> getDeletedEntityFromDocument(document: Document, lastUpdateTimeMillis: Long, queue: AsyncProducerConsumerQueue<ChangedEntity<T>>) {
         val lastUndeletedRevision = findLastUndeletedRevision(document)
 
         if(lastUndeletedRevision != null) {
@@ -295,13 +289,13 @@ abstract class CouchbaseLiteEntityManagerBase(protected var context: Context, pr
                 try {
                     (lastUndeletedRevision.getProperty(TableConfig.BaseEntityModifiedOnColumnName) as? Long)?.let { modifiedOn ->
                         if(modifiedOn > lastUpdateTimeMillis) {
-                            updatedEntities.add(ChangedEntity(entityType as Class<T>, null, document.id, true))
+                            queue.add(ChangedEntity(entityType as Class<T>, null, document.id, true))
                         }
                         return
                     }
                 } catch(e: Exception) { log.error("Could not get deleted entity for entity $entityType with id ${document.id}", e) }
 
-                updatedEntities.add(ChangedEntity(entityType as Class<T>, null, document.id, true))
+                queue.add(ChangedEntity(entityType as Class<T>, null, document.id, true))
             }
         }
     }

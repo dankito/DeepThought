@@ -7,6 +7,7 @@ import net.dankito.service.data.*
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.specific.*
 import net.dankito.service.search.writerandsearcher.*
+import net.dankito.utils.AsyncProducerConsumerQueue
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.OsHelper
 import net.dankito.utils.language.ILanguageDetector
@@ -113,9 +114,9 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
         val startTime = Date()
         log.info("Starting updating index with last index update time ${dataManager.localSettings.lastSearchIndexUpdateTime}")
 
-        dataManager.entityManager.getAllEntitiesUpdatedAfter<BaseEntity>(dataManager.localSettings.lastSearchIndexUpdateTime).forEach { changedEntity ->
-            updateEntityInIndex(changedEntity)
-        }
+        dataManager.entityManager.getAllEntitiesUpdatedAfter<BaseEntity>(dataManager.localSettings.lastSearchIndexUpdateTime.time, AsyncProducerConsumerQueue<ChangedEntity<BaseEntity>>(2) {
+            updateEntityInIndex(it)
+        })
 
         dataManager.localSettings.lastSearchIndexUpdateTime = startTime
         dataManager.localSettingsUpdated()

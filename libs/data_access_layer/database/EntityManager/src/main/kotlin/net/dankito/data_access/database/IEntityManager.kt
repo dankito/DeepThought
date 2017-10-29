@@ -1,6 +1,6 @@
 package net.dankito.data_access.database
 
-import java.util.*
+import net.dankito.utils.AsyncProducerConsumerQueue
 
 
 interface IEntityManager {
@@ -26,6 +26,6 @@ interface IEntityManager {
     fun <T> getEntitiesById(type: Class<T>, ids: Collection<String>, keepOrderingOfIds: Boolean): List<T>
     fun <T> getAllEntitiesOfType(type: Class<T>): List<T>
 
-    fun <T> getAllEntitiesUpdatedAfter(lastUpdateTime: Date): List<ChangedEntity<T>>
+    fun <T> getAllEntitiesUpdatedAfter(lastUpdateTimeMillis: Long, queue: AsyncProducerConsumerQueue<ChangedEntity<T>>)
 
 }
