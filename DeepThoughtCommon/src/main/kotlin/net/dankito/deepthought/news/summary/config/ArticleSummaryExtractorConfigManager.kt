@@ -14,9 +14,9 @@ import net.dankito.service.data.messages.ArticleSummaryExtractorConfigChanged
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.eventbus.EventBusPriorities
 import net.dankito.service.eventbus.IEventBus
+import net.dankito.utils.IThreadPool
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
-import kotlin.concurrent.thread
 
 
 class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplementedArticleSummaryExtractorsManager, private val configService: ArticleSummaryExtractorConfigService,
@@ -40,6 +40,10 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
     @Inject
     protected lateinit var eventBus: IEventBus
 
+    @Inject
+    protected lateinit var threadPool: IThreadPool
+
+
     private var favorites: MutableList<ArticleSummaryExtractorConfig> = ArrayList()
 
     private var highestSortOrder = -1
@@ -56,7 +60,7 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
         CommonComponent.component.inject(this)
 
         configService.dataManager.addInitializationListener {
-            thread {
+            threadPool.runAsync {
                 readPersistedConfigs()
                 initiallyRetrievedSummaryExtractorConfigs()
             }
