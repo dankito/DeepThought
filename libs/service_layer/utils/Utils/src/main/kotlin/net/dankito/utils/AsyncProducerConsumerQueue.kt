@@ -8,7 +8,7 @@ import java.util.concurrent.LinkedBlockingQueue
 
 class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItemsToQueue: Int = AsyncProducerConsumerQueue.NO_LIMIT_ITEMS_TO_QUEUE,
                                     minimumMillisecondsToWaitBeforeConsumingItem: Int = AsyncProducerConsumerQueue.WAITING_BEFORE_CONSUMING_ITEM_DISABLED, autoStart: Boolean = true,
-                                    private val consumerListener: ConsumerListener<T>) {
+                                    private val consumerListener: (item: T) -> Unit) {
 
     companion object {
 
@@ -116,7 +116,7 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
 
     protected fun passConsumedItemOnToListener(nextItemToConsume: T) {
         try {
-            consumerListener.consumeItem(nextItemToConsume)
+            consumerListener(nextItemToConsume)
         } catch (e: Exception) { // urgently catch exceptions. otherwise if an uncaught exception occurs during handling, response loop would catch this exception and stop proceeding
             log.error("An error occurred while consuming produced item " + nextItemToConsume, e)
         }

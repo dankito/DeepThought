@@ -1,7 +1,6 @@
 package net.dankito.data_access.network.discovery
 
 import net.dankito.utils.AsyncProducerConsumerQueue
-import net.dankito.utils.ConsumerListener
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.services.network.INetworkConnectivityManager
 import net.dankito.utils.services.network.NetworkHelper
@@ -54,16 +53,11 @@ open class UdpDevicesDiscoverer(val networkConnectivityManager: INetworkConnecti
     private var foundDevices: MutableList<String> = CopyOnWriteArrayList()
 
 
-    protected var receivedPacketsHandler: ConsumerListener<ReceivedUdpDevicesDiscovererPacket> = object : ConsumerListener<ReceivedUdpDevicesDiscovererPacket> {
-        override fun consumeItem(receivedPacket: ReceivedUdpDevicesDiscovererPacket) {
+    init {
+        receivedPacketsQueue = AsyncProducerConsumerQueue(3, autoStart = false) { receivedPacket ->
             handleReceivedPacket(receivedPacket.receivedData, receivedPacket.senderAddress, receivedPacket.localDeviceInfo,
                     receivedPacket.discoveryMessagePrefix, receivedPacket.listener)
         }
-    }
-
-
-    init {
-        receivedPacketsQueue = AsyncProducerConsumerQueue(3, autoStart = false, consumerListener = receivedPacketsHandler)
     }
 
 
