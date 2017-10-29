@@ -6,6 +6,7 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.service.data.ReferenceService
+import net.dankito.service.data.messages.EntryChanged
 import net.dankito.service.data.messages.ReferenceChanged
 import net.dankito.service.search.specific.EntriesSearch
 import net.engio.mbassy.listener.Handler
@@ -94,6 +95,11 @@ class ReferenceEntriesListDialog: EntriesListDialogBase() {
             if(referenceChanged.entity.id == source?.id) {
                 retrieveAndShowEntries()
             }
+        }
+
+        @Handler
+        fun entriesChanged(entryChanged: EntryChanged) {
+            retrieveAndShowEntries()
         }
 
     }
