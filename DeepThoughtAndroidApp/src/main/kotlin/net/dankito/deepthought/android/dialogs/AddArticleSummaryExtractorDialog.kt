@@ -3,7 +3,6 @@ package net.dankito.deepthought.android.dialogs
 import android.app.Activity
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import android.support.v7.app.AlertDialog
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
@@ -26,7 +25,6 @@ import net.dankito.feedaddressextractor.FeedType
 import net.dankito.newsreader.feed.IFeedReader
 import net.dankito.newsreader.model.FeedArticleSummary
 import net.dankito.utils.ui.IDialogService
-import java.net.URI
 import javax.inject.Inject
 
 
@@ -143,20 +141,7 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
             feedOrWebsiteUrl = "http:" + slashesToAdd + feedOrWebsiteUrl // TODO: what about https variant?
         }
 
-        mayShowEasterEgg(feedOrWebsiteUrl)
-
         return feedOrWebsiteUrl
-    }
-
-    private fun mayShowEasterEgg(enteredFeedOrWebsiteUrl: String) {
-        try {
-            val url = URI(enteredFeedOrWebsiteUrl)
-            if(url.host?.toLowerCase()?.contains("bild.de") ?: false) {
-                AlertDialog.Builder(activity).setMessage(R.string.bild_easter_egg)
-                        .setNegativeButton(android.R.string.ok, { _, _ -> throw Exception("Du hast bild.de eingegeben") })
-                        .create().show()
-            }
-        } catch(ignored: Exception) { }
     }
 
     private fun handleExtractFeedAddressesResult(feedOrWebsiteUrl: String, asyncResult: AsyncResult<List<FeedAddress>>) {
