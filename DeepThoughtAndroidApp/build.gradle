@@ -49,6 +49,8 @@ android {
             ext.alwaysUpdateBuildId = false
         }
         release {
+            resValue "string", "app_name", "DeepThought"
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
