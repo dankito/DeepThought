@@ -1,6 +1,7 @@
 package net.dankito.deepthought.android.reporting
 
 import android.content.Context
+import com.appsee.Appsee
 import com.crashlytics.android.BuildConfig
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.core.CrashlyticsCore
@@ -19,9 +20,13 @@ class FabricCrashReporter : ICrashReporter {
 
         Fabric.with(context, crashlyticsKit)
 
+        Appsee.start("9e1f961ecef546e98e20eb1a8d498636")
+
         dataManager.addInitializationListener {
             Crashlytics.setUserIdentifier(dataManager.localDevice.id)
             Crashlytics.setUserName(dataManager.localUser.id)
+
+            Appsee.setUserId(dataManager.localUser.id)
         }
     }
 
