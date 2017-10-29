@@ -108,19 +108,9 @@
     <dimen name="divider_height">1dp</dimen>
     <dimen name="divider_margin_left_right">20dp</dimen>
 
-    <dimen name="activity_edit_entry_label_margin_right">4dp</dimen>
     <dimen name="activity_edit_entry_fields_margin_top">8dp</dimen>
-    <dimen name="activity_edit_entry_field_margin_top">4dp</dimen>
     <dimen name="activity_edit_entry_field_margin_left">12dp</dimen>
     <dimen name="activity_edit_entry_field_margin_right">12dp</dimen>
-    <dimen name="activity_edit_entry_field_padding_top">2dp</dimen>
-    <dimen name="activity_edit_entry_field_padding_left_right">8dp</dimen>
-    <dimen name="activity_edit_entry_field_padding_left_right_minus_edit_text_padding_left">4dp</dimen>
-    <dimen name="activity_edit_entry_field_negative_view_edit_entity_field_margin_bottom">-8dp</dimen>
-    <dimen name="activity_edit_entry_field_padding_bottom">4dp</dimen>
-    <dimen name="activity_edit_entry_field_name_margin_top">1dp</dimen>
-    <dimen name="activity_edit_entry_field_name_margin_bottom">4dp</dimen>
-    <dimen name="activity_edit_entry_field_divider_thickness">1dp</dimen>
     <dimen name="activity_edit_entry_content_label_margin_bottom">4dp</dimen>
     <dimen name="activity_edit_entry_progress_is_loading_web_page_width">18dp</dimen>
     <dimen name="activity_edit_entry_onboarding_left_right_margin">20dp</dimen>
