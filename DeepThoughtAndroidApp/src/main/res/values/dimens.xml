@@ -9,7 +9,7 @@
 
     <dimen name="toolbar_height">40dp</dimen>
 
-    <dimen name="action_item_width">56dp</dimen>
+    <dimen name="action_item_width">58dp</dimen>
     <dimen name="action_title_height">13dp</dimen>
     <dimen name="action_title_text_size">10sp</dimen>
     <dimen name="action_padding_top_bottom">6dp</dimen>
