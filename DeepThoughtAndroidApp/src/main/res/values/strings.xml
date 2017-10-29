@@ -123,11 +123,11 @@
     <string name="dialog_article_summary_extractor_alert_message_delete_config" formatted="false">Really delete news site %s?</string>
 
     <string name="menu_share_source_url">Url</string>
-    <string name="menu_share_item_content">content</string>
+    <string name="menu_share_item_content">Content</string>
 
     <string name="activity_edit_item_title">Item</string>
-    <string name="activity_edit_item_content_label">content</string>
-    <string name="activity_edit_item_edit_content_title">content</string>
+    <string name="activity_edit_item_content_label">Content</string>
+    <string name="activity_edit_item_edit_content_title">Content</string>
     <string name="activity_edit_item_summary_label">Title / Summary</string>
     <string name="activity_edit_item_edit_summary_title">Title / Summary</string>
     <string name="activity_edit_item_source_label">Source</string>
