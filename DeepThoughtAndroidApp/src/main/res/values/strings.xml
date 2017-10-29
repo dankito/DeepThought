@@ -78,17 +78,23 @@
     </string>
 
 
-    <string name="context_help_list_item_actions">If you want to execute an action on only one item, swipe the item from right to left.\nIf
-        you want to execute an action on multiple items, long press each item.\nThis also works for other lists.
+    <string name="context_help_list_item_actions"><![CDATA[
+        If you want to execute an action on only one item, swipe the item from right to left.<br />
+        If you want to execute an action on multiple items, long press each item.<br />
+        This also works for other lists.
+    ]]>
     </string>
 
-    <string name="context_help_search_tags">To to select multiple keywords, separate them in the search field with a comma (,).
-        \nTo to create a new keyword or add the keyword you entered, press the button or \'Enter\' on your keyboard.
-        \n(And double tap \'Enter\' to also apply changes.)
+    <string name="context_help_search_tags"><![CDATA[
+        To to select multiple keywords, separate them in the search field with a comma (,).
+    ]]>
     </string>
 
-    <string name="context_help_set_tags_on_item">To select multiple tags, enter a comma (,).\nTo
-        create a new or toggle entered tags, press the button or \'Enter\' on your keyboard.
+    <string name="context_help_set_tags_on_item"><![CDATA[
+        To select multiple tags, enter a comma (,).<br />
+        To create a new or toggle entered tags, press the button or \'Enter\' on your keyboard.<br />
+        (And double tap \'Enter\' to also apply changes.)
+    ]]>
     </string>
 
     <string name="context_help_save_item_changes"><![CDATA[
@@ -96,8 +102,10 @@
     ]]>
     </string>
 
-    <string name="context_help_item_content_fullscreen">Scrolling item\'s content as you just did starts fullscreen mode.\nYou can leave it by simply tapping
-        anywhere except on links and images in the screen.
+    <string name="context_help_item_content_fullscreen"><![CDATA[
+        Scrolling item\'s content as you just did starts fullscreen mode.<br />
+        You can leave it by simply tapping anywhere except on links and images in the screen.
+    ]]>
     </string>
 
     <string name="context_help_item_content_fullscreen_gestures">You just performed one of the fullscreen gestures:\n\n- Fast swipe from right to left:
@@ -105,7 +113,7 @@
     </string>
 
     <string name="context_help_saved_read_later_article_is_now_in_items"><![CDATA[
-        <p>The article is saved now.</p>That means you now find it in <b>Items</b>, not in <b>Read later</b> anymore.
+        <p>The article got now saved in your Items collection.</p>That means you now find it in <b>Items</b>, not in <b>Read later</b> anymore.
     ]]>
     </string>
 

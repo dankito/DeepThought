@@ -105,24 +105,29 @@
     <!-- Ein einzelner Eintrag in solch einer Liste wird im Englischen (oder zumindest bei den Programmiereren *g*) als Item bezeichnet. -->
     <!-- \n bedeutet: Neue Zeile (Wenn dir zwei neue Zeilen zu viel sind, kannst du auch nur eine nehmen) -->
 
-    <string name="context_help_list_item_actions">Wischen Sie von rechts nach links über einen Listeneintrag, um eine Aktion auszuführen.\n\nWenn
-        Sie eine Aktion für mehrere Listeneinträge ausführen möchten, halten Sie einen Listeneintrag lange gedrückt.\n\nDies
-        funktioniert auch für andere Listen.
+    <string name="context_help_list_item_actions"><![CDATA[
+        Wischen Sie von rechts nach links über einen Listeneintrag, um eine Aktion auszuführen.<br />
+        Wenn Sie eine Aktion für mehrere Listeneinträge ausführen möchten, halten Sie einen Listeneintrag lange gedrückt.<br />
+        Dies funktioniert auch für andere Listen.
+    ]]>
     </string>
 
 
     <!-- Wenn man im Hauptfenster unter Schlagworte im Suchfeld oben mindestens 30 Buchstaben eingegeben hat -->
 
-    <string name="context_help_search_tags">Um nach mehreren Schlagworten zu suchen, trennen Sie diese durch ein Komma (,).
-        \nUm ein neues Schlagwort anzulegen oder das eingegebene hinzuzufügen, drücken Sie den Button oder auf Ihrer Tastatur \'Enter\'.
-        \n(Und doppelt \'Enter\' um die Änderungen zugleich zu übernehmen.)
+    <string name="context_help_search_tags"><![CDATA[
+        Um nach mehreren Schlagworten zu suchen, trennen Sie diese durch ein Komma (,).
+    ]]>
     </string>
 
 
     <!-- Wenn man im Eintrag bearbeiten Fenster die Schlagworte bearbeitet und im Suchfeld unten mindestens 30 Buchstaben eingegeben hat -->
 
-    <string name="context_help_set_tags_on_item">Um mehrere Schlagworte auszuwählen, trennen Sie diese im Suchfeld durch ein Komma (,).\nUm
-        ein neues Schlagwort anzulegen oder die eingegebenen hinzuzufügen, drücken Sie den Button oder auf Ihrer Tastatur \'Enter\'.
+    <string name="context_help_set_tags_on_item"><![CDATA[
+        Um mehrere Schlagworte auszuwählen, trennen Sie diese im Suchfeld durch ein Komma (,).<br />
+        Um ein neues Schlagwort anzulegen oder die eingegebenen hinzuzufügen, drücken Sie den Button oder auf Ihrer Tastatur \'Enter\'.<br />
+        (Und doppelt \'Enter\' um die Änderungen zugleich zu übernehmen.)
+    ]]>
     </string>
 
 
@@ -133,8 +138,10 @@
     ]]>
     </string>
 
-    <string name="context_help_item_content_fullscreen">Scrollen oder Doppelklicken startet den Vollbildmodus.\nDurch erneutes Doppelklicken können Sie den Vollbildmodus
-        wieder verlassen.
+    <string name="context_help_item_content_fullscreen"><![CDATA[
+        Scrollen oder Doppelklicken startet den Vollbildmodus.<br />
+        Durch erneutes Doppelklicken können Sie den Vollbildmodus wieder verlassen.
+    ]]>
     </string>
 
     <string name="context_help_item_content_fullscreen_gestures">Sie haben im Vollbildmodus eine der folgenden Gesten ausgeführt\n\n- Schnell von rechts nach links
@@ -142,7 +149,7 @@
     </string>
 
     <string name="context_help_saved_read_later_article_is_now_in_items"><![CDATA[
-        <p>Der Artikel wurde nun gespeichert.</p>D.h. er befindet sich nun in <b>Einträge</b> und nicht mehr in <b>Gemerkt</b>.
+        <p>Der Artikel wurde nun in Ihrer Einträge Sammlung gespeichert.</p>D.h. er befindet sich nun in <b>Einträge</b> und nicht mehr in <b>Gemerkt</b>.
     ]]>
     </string>
 
