@@ -123,7 +123,7 @@ class EditEntryActivity : BaseActivity() {
     private var itemExtractionResult: ItemExtractionResult? = null
 
 
-    private var originalInformation: String? = null
+    private var originalContent: String? = null
 
     private var originalTags: MutableCollection<Tag>? = null
 
@@ -233,7 +233,9 @@ class EditEntryActivity : BaseActivity() {
             setAbstractPreviewOnUIThread()
         }
 
-        restoreReference(savedInstanceState.getString(REFERENCE_INTENT_EXTRA_NAME))
+        if(savedInstanceState.containsKey(REFERENCE_INTENT_EXTRA_NAME)) {
+            restoreReference(savedInstanceState.getString(REFERENCE_INTENT_EXTRA_NAME))
+        }
 
         savedInstanceState.getString(TAGS_ON_ENTRY_INTENT_EXTRA_NAME)?.let { tagsOnEntryIds -> restoreTagsOnEntryAsync(tagsOnEntryIds) }
 
@@ -265,11 +267,15 @@ class EditEntryActivity : BaseActivity() {
 
             outState.putString(TAGS_ON_ENTRY_INTENT_EXTRA_NAME, serializer.serializeObject(tagsOnEntry))
 
-            outState.putString(REFERENCE_INTENT_EXTRA_NAME, sourceToEdit?.id)
+            if(sourceToEdit == null || sourceToEdit?.id != null) { // save value only if source has been deleted or a persisted source is set (-> don't store ItemExtractionResult's or ReadLaterArticle's unpersisted source)
+                outState.putString(REFERENCE_INTENT_EXTRA_NAME, sourceToEdit?.id)
+            }
 
             outState.putString(ABSTRACT_INTENT_EXTRA_NAME, abstractToEdit)
 
-            storeState(getKeyForState(stateNamePrefix, CONTENT_INTENT_EXTRA_NAME), contentToEdit) // application crashes if objects put into bundle are too large (> 1 MB) for Android
+            if(contentToEdit != originalContent) {
+                storeState(getKeyForState(stateNamePrefix, CONTENT_INTENT_EXTRA_NAME), contentToEdit) // application crashes if objects put into bundle are too large (> 1 MB) for Android
+            }
 
             wbvwContent.onSaveInstanceState(outState)
 
@@ -533,7 +539,7 @@ class EditEntryActivity : BaseActivity() {
         contentToEdit = content
 
         runOnUiThread {
-            updateEntryFieldChangedOnUIThread(ItemField.Content, originalInformation != contentToEdit)
+            updateEntryFieldChangedOnUIThread(ItemField.Content, originalContent != contentToEdit)
             setContentPreviewOnUIThread()
             mayShowSaveEntryChangesHelpOnUIThread()
         }
@@ -1364,7 +1370,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun editEntry(item: Item?, source: Source?, tags: MutableCollection<Tag>?, updateContentPreview: Boolean = true) {
-        originalInformation = item?.content
+        originalContent = item?.content
         originalTags = tags
         originalSource = source
         originalTitleAbstract = item?.summary
