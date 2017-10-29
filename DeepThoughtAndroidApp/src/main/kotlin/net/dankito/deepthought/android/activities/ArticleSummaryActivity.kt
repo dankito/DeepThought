@@ -101,7 +101,7 @@ class ArticleSummaryActivity : BaseActivity() {
         extractorUrl?.let { initializeArticlesSummaryExtractor(it) }
 
         if(lastLoadedSummary != null) {
-            presenter.setArticleSummaryExtractorConfigOnItems(lastLoadedSummary, this.extractorConfig) // set extractorConfig on restored ArticleSummaryItems
+            presenter.retrievedArticleSummary(lastLoadedSummary, this.extractorConfig) // set extractorConfig and restored ArticleSummaryItems
 
             showArticleSummaryOnUIThread(lastLoadedSummary)
         }

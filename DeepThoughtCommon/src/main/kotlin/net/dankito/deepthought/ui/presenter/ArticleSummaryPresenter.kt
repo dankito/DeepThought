@@ -58,8 +58,7 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
     private fun retrievedArticleSummary(result: AsyncResult<out ArticleSummary>, extractorConfig: ArticleSummaryExtractorConfig?, callback: (AsyncResult<out ArticleSummary>) -> Unit) {
         result.result?.let { summary ->
-            this.lastLoadedSummary = summary
-            setArticleSummaryExtractorConfigOnItems(summary, extractorConfig)
+            retrievedArticleSummary(summary, extractorConfig)
         }
 
         result.error?.let { error -> showError("alert.message.could.not.load.article.summary", error) }
@@ -67,8 +66,10 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
         callback(result)
     }
 
-    fun setArticleSummaryExtractorConfigOnItems(articleSummary: ArticleSummary, extractorConfig: ArticleSummaryExtractorConfig?) {
-        articleSummary.articles.forEach { it.articleSummaryExtractorConfig = extractorConfig }
+    fun retrievedArticleSummary(summary: ArticleSummary, extractorConfig: ArticleSummaryExtractorConfig?) {
+        this.lastLoadedSummary = summary
+
+        summary.articles.forEach { it.articleSummaryExtractorConfig = extractorConfig }
     }
 
 
