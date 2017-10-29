@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Add your Fabric API key here -->
+    <string name="com.crashlytics.android.build_id"></string>
+
+</resources>
