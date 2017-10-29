@@ -151,11 +151,11 @@ dependencies {
     compile project(':AndroidFileStorageService')
 
     compile "com.squareup.picasso:picasso:$picassoVersion"
-    compile "jp.wasabeef:richeditor-android:1.2.2"
 
     compile "com.github.clans:fab:$clansFloatingActionButtonVersion"
     compile "com.daimajia.swipelayout:library:$swipeLayoutVersion"
     compile "com.google.android:flexbox:$flexboxVersion"
+    compile project(':richeditor')
 
     compile "org.slf4j:slf4j-android:$slf4jVersion"
 
