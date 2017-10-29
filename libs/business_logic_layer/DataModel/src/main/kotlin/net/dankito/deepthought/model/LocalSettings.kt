@@ -21,8 +21,8 @@ data class LocalSettings(
         @Column(name = TableConfig.LocalSettingsLastDatabaseOptimizationTimeColumnName)
         var lastDatabaseOptimizationTime: Date,
 
-        @Column(name = TableConfig.LocalSettingsLastSearchIndexUpdateTimeColumnName)
-        var lastSearchIndexUpdateTime: Date,
+        @Column(name = TableConfig.LocalSettingsLastSearchIndexUpdateSequenceNumberColumnName)
+        var lastSearchIndexUpdateSequenceNumber: Long,
 
         @Column(name = TableConfig.LocalSettingsLastSearchIndexOptimizationTimeColumnName)
         var lastSearchIndexOptimizationTime: Date,
@@ -69,6 +69,6 @@ data class LocalSettings(
     }
 
 
-    internal constructor() : this(0, 0, 0, Date(0), Date(0), Date(0))
+    internal constructor() : this(0, 0, 0, Date(0), 0, Date(0))
 
 }

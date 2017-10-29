@@ -108,17 +108,17 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
     /**
      * There are many reasons why the index isn't in sync anymore with database (e.g. an entity got synchronized but app gets closed before it gets indexed).
-     * This methods (re-)indexes all entities with changes since dataManager.localSettings.lastSearchIndexUpdateTime to ensure index is up to date again
+     * This methods (re-)indexes all entities with changes since dataManager.localSettings.lastSearchIndexUpdateSequenceNumber to ensure index is up to date again
      */
     private fun updateIndex() {
-        val startTime = Date()
-        log.info("Starting updating index with last index update time ${dataManager.localSettings.lastSearchIndexUpdateTime}")
+        log.info("Starting updating index with last index update sequence number ${dataManager.localSettings.lastSearchIndexUpdateSequenceNumber}")
 
-        dataManager.entityManager.getAllEntitiesUpdatedAfter<BaseEntity>(dataManager.localSettings.lastSearchIndexUpdateTime.time, AsyncProducerConsumerQueue<ChangedEntity<BaseEntity>>(2) {
+        val currentSequenceNumber = dataManager.entityManager.getAllEntitiesUpdatedAfter<BaseEntity>(dataManager.localSettings.lastSearchIndexUpdateSequenceNumber,
+                AsyncProducerConsumerQueue<ChangedEntity<BaseEntity>>(2) {
             updateEntityInIndex(it)
         })
 
-        dataManager.localSettings.lastSearchIndexUpdateTime = startTime
+        dataManager.localSettings.lastSearchIndexUpdateSequenceNumber = currentSequenceNumber
         dataManager.localSettingsUpdated()
 
         log.info("Done updating index")
