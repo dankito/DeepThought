@@ -49,8 +49,7 @@
     ]]>
     </string>
     <string name="tab_tags_onboarding_text"><![CDATA[
-        <p>Tags help you to find items faster. </p>
-        <p>You have not yet created any tags. </p>
+        <p>Tags help you to organize your items and to find them faster.</p>
         <p>Select an item under the <b>Items</b> tab on the bottom left and add tags to it</p>
     ]]>
     </string>
@@ -84,12 +83,12 @@
     </string>
 
     <string name="context_help_search_tags">To to select multiple keywords, separate them in the search field with a comma (,).
-        \nTo to create a new keyword or add the keyword you entered, press \'Enter\' on your keyboard.
+        \nTo to create a new keyword or add the keyword you entered, press the button or \'Enter\' on your keyboard.
         \n(And double tap \'Enter\' to also apply changes.)
     </string>
 
     <string name="context_help_set_tags_on_item">To select multiple tags, enter a comma (,).\nTo
-        create a new or toggle entered tags, press the action button (\'Enter\') on keyboard.
+        create a new or toggle entered tags, press the button or \'Enter\' on your keyboard.
     </string>
 
     <string name="context_help_save_item_changes"><![CDATA[
@@ -101,7 +100,7 @@
         anywhere except on links and images in the screen.
     </string>
 
-    <string name="context_help_item_content_fullscreen_gestures">You just invoked one of the fullscreen gestures:\n\n- Fast swipe from right to left:
+    <string name="context_help_item_content_fullscreen_gestures">You just performed one of the fullscreen gestures:\n\n- Fast swipe from right to left:
         Leave edit item view\n- Fast swipe from left to right: Edit item\'s tags\n- Double tap: Leave fullscreen view.
     </string>
 
@@ -133,7 +132,7 @@
     <string name="activity_edit_item_source_label">Source</string>
     <string name="activity_edit_item_tags_label">Tags</string>
     <string name="activity_edit_item_tags_onboarding_text">Add meaningful tags, so that you can find it later easily</string>
-    <string name="activity_edit_item_source_onboarding_text">Save where you have found this information</string>
+    <string name="activity_edit_item_source_onboarding_text">Save where you have found this information (link, book)</string>
     <string name="activity_edit_item_summary_onboarding_text">Title or summary for this information</string>
     <string name="activity_edit_item_alert_message_item_contains_unsaved_changes">Item contains unsaved changes.\n\nShould these changes now be saved?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
@@ -196,10 +195,5 @@
 
     <string name="error_no_rss_or_atom_feed_found_for_url" formatted="false">No RSS or Atom feed found for url %s</string>
     <string name="error_cannot_read_feed_or_extract_feed_addresses_from_url" formatted="false">Cannot read feed or extract feed addresses from url %s: %s</string>
-
-    <string name="bild_easter_egg">Wir respektieren selbstverständlich die Meinungsfreiheit.\nWir haben jedoch sehr viel Zeit und Mühe in diese App gesteckt und
-        möchten nicht, dass unsere Mühen verwendet werden solch ein hetzerisches und verlogenes Machwerk wie die Bild zu lesen. Die Welt wäre eine bessere ohne Bild.\nDie
-        App wird zur Strafe nun abstürzen.
-    </string>
 
 </resources>

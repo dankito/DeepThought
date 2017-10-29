@@ -5,7 +5,7 @@
     <string name="tab_items_title">Einträge</string>
     <string name="tab_tags_title">Schlagworte</string>
     <string name="tab_sources_title">Quellen</string>
-    <string name="tab_read_later_articles_title">Vorgemerkt</string>
+    <string name="tab_read_later_articles_title">Gemerkt</string>
 
 
     <!-- Diese ignorieren -->
@@ -27,7 +27,7 @@
     <string name="action_save">Speichern</string>
     <string name="action_share">Teilen</string>
     <string name="action_view">Anzeigen</string>
-    <string name="action_read_article_later">Vormerken</string>
+    <string name="action_read_article_later">Später lesen</string>
     <string name="action_website_view">Webansicht</string>
     <string name="action_reader_view">Leseansicht</string>
     <string name="action_delete">Löschen</string>
@@ -50,7 +50,7 @@
     <string name="search_hint_items">Einträge suchen</string>
     <string name="search_hint_tags">Schlagworte suchen</string>
     <string name="search_hint_sources">Quellen suchen</string>
-    <string name="search_hint_read_later_articles">Vorgemerkte Artikel suchen</string>
+    <string name="search_hint_read_later_articles">Gemerkte Artikel suchen</string>
 
 
     <!-- Wenn du im Hauptfenster bei den Schlagwörtern auf das Filtersymbol eines Schlagwortes tippst -->
@@ -64,26 +64,22 @@
     <!-- Removed <p></p> from last paragraph as otherwise txtOnboardingText has some padding at end and and PointToFloatingActionButtonArrow therefore doesn't reach to text -->
     <string name="tab_items_onboarding_text"><![CDATA[
         <p>Klicken Sie auf das <b>(+) Symbol</b> unten rechts und wählen Sie <b>Eintrag</b> um einen Eintrag anzulegen.</p>
-        Wählen Sie <b>Zeitungsartikel</b> um einen Artikel anzulegen.
+        Wählen Sie <b>Zeitungsartikel</b> um einen RSS Feed hinzuzufügen und einen Artikel zu speichern.
     ]]>
     </string>
     <string name="tab_tags_onboarding_text"><![CDATA[
-        <p>Schlagworte helfen Ihnen dabei Einträge schneller wiederzufinden.</p>
-        <p>Sie haben noch keine Schlagworte angelegt.</p>
+        <p>Schlagworte helfen Ihnen dabei Ihre Einträge zu ordnen und sie schneller wiederzufinden.</p>
         <p>Wählen Sie unter <b>Einträge</b> in den Tabs unten links einen Eintrag aus und fügen Sie diesem Schlagworte hinzu.</p>
     ]]>
     </string>
     <string name="tab_source_onboarding_text"><![CDATA[
-        <p>Fügen Sie Ihren Einträgen Quellen hinzu, um sich zu erinnern, wo Sie diese Information gefunden haben.</p>
-        <p>Sie haben noch keine Quellen hinzugefügt.</p>
+        <p>Fügen Sie Ihren Einträgen eine Quelle hinzu, um sich zu erinnern, wo Sie diese Information gefunden haben (unter welcher Webadresse, in welchem Buch, in welcher Zeitung, …).</p>
         <p>Wählen Sie unter <b>Einträge</b> in den Tabs unten links einen Eintrag aus und fügen Sie eine Quelle hinzu.</p>
 
-    ]]>
-    </string>
+    ]]></string>
     <string name="tab_read_later_articles_onboarding_text"><![CDATA[
-        <p>Vorgemerkte Artikel werden offline gespeichert, so dass Sie diese später lesen können – auch ohne Internetverbindung. Vorgemerkte Artikel werden vorerst nicht in Ihre Einträge-Sammlung übernommen.</p>
-        <p>Sie haben noch keine Artikel vorgemerkt.</p>
-        <p>Drücken Sie das <b>(+) Symbol</b>, wählen <b>Zeitungsartikel</b> und drücken dort bei einem Artikel <b>Vormerken</b>.</p>
+        <p>Gemerkte Artikel werden offline gespeichert, so dass Sie diese später lesen können – auch ohne Internetverbindung. Gemerkte Artikel werden vorerst nicht in Ihre Einträge-Sammlung übernommen.</p>
+        <p>Drücken Sie das <b>(+) Symbol</b>, wählen <b>Zeitungsartikel</b> und drücken dort bei einem Artikel <b>Später lesen</b>.</p>
     ]]>
     </string>
 
@@ -118,15 +114,15 @@
     <!-- Wenn man im Hauptfenster unter Schlagworte im Suchfeld oben mindestens 30 Buchstaben eingegeben hat -->
 
     <string name="context_help_search_tags">Um nach mehreren Schlagworten zu suchen, trennen Sie diese durch ein Komma (,).
-        \nUm ein neues Schlagwort anzulegen oder das eingegebene hinzuzufügen, drücken Sie auf Ihrer Tastatur \'Enter\'.
-        \n(Und doppelt \'Enter\' um die Änderungen gleich noch zu übernehmen.)
+        \nUm ein neues Schlagwort anzulegen oder das eingegebene hinzuzufügen, drücken Sie den Button oder auf Ihrer Tastatur \'Enter\'.
+        \n(Und doppelt \'Enter\' um die Änderungen zugleich zu übernehmen.)
     </string>
 
 
     <!-- Wenn man im Eintrag bearbeiten Fenster die Schlagworte bearbeitet und im Suchfeld unten mindestens 30 Buchstaben eingegeben hat -->
 
     <string name="context_help_set_tags_on_item">Um mehrere Schlagworte auszuwählen, trennen Sie diese im Suchfeld durch ein Komma (,).\nUm
-        ein neues Schlagwort anzulegen oder die eingegebenen hinzuzufügen, drücken Sie auf Ihrer Tastatur \'Enter\'.
+        ein neues Schlagwort anzulegen oder die eingegebenen hinzuzufügen, drücken Sie den Button oder auf Ihrer Tastatur \'Enter\'.
     </string>
 
 
@@ -141,14 +137,12 @@
         wieder verlassen.
     </string>
 
-    <string name="context_help_item_content_fullscreen_gestures"> Sie haben im Vollbildmodus eine der folgenden Handlungen ausgeführt\n\n- Schnell von rechts nach links
-        wischen:
-        Eintrag bearbeiten Dialog verlassen\n- Schnell von links nach rechts wischen: Schlagworte bearbeiten\n- Doppelt tippen: Vollbildmodus verlassen
+    <string name="context_help_item_content_fullscreen_gestures">Sie haben im Vollbildmodus eine der folgenden Gesten ausgeführt\n\n- Schnell von rechts nach links
+        wischen: Eintrag bearbeiten Dialog verlassen\n- Schnell von links nach rechts wischen: Schlagworte bearbeiten\n- Doppelt tippen: Vollbildmodus verlassen
     </string>
 
     <string name="context_help_saved_read_later_article_is_now_in_items"><![CDATA[
-        <p>Der Artikel wurde nun gespeichert.</p>D.h. er befindet sich nun in <b>Einträge</b> und nicht mehr in
-        <b>Vorgemerkt</b>.
+        <p>Der Artikel wurde nun gespeichert.</p>D.h. er befindet sich nun in <b>Einträge</b> und nicht mehr in <b>Gemerkt</b>.
     ]]>
     </string>
 
@@ -175,13 +169,13 @@
     <string name="activity_edit_item_source_label">Quelle</string>
     <string name="activity_edit_item_tags_label">Schlagworte</string>
     <string name="activity_edit_item_tags_onboarding_text">Geben Sie Ihrem Eintrag aussagekräftige Schlagworte, um ihn später leichter wiederzufinden.</string>
-    <string name="activity_edit_item_source_onboarding_text">Speichern Sie, wo Sie diese Information gefunden haben.</string>
-    <string name="activity_edit_item_summary_onboarding_text">Fügen Sie Ihrem Eintrag einen Titel oder eine Zusammenfassung hinzu. </string>
+    <string name="activity_edit_item_source_onboarding_text">Speichern Sie, wo Sie diese Information gefunden haben (Webadresse, Buch, …).</string>
+    <string name="activity_edit_item_summary_onboarding_text">Fügen Sie Ihrem Eintrag einen Titel oder eine Zusammenfassung hinzu.</string>
     <string name="activity_edit_item_alert_message_item_contains_unsaved_changes">Ihr Eintrag enthält nicht gespeicherte Änderungen.\n\nWollen Sie Ihre Änderungen
         speichern?</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
     <string name="activity_edit_item_alert_message_item_has_been_edited">Ihr Eintrag wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\n\nWenn
-        Sie den Eintrag jetzt speichern überschreiben Sie diese Änderungen. </string>
+        Sie den Eintrag jetzt speichern überschreiben Sie diese Änderungen.</string>
     <string name="activity_edit_item_alert_message_delete_item">Möchten Sie den Eintrag \'%s\' wirklich löschen?</string>
 
     <string name="dialog_tags_on_item_title">Schlagworte</string>
@@ -240,8 +234,5 @@
 
     <string formatted="false" name="error_no_rss_or_atom_feed_found_for_url">Kein RSS oder Atom Feed gefunden für URL %s</string>
     <string formatted="false" name="error_cannot_read_feed_or_extract_feed_addresses_from_url">Konnte Feed nicht lesen oder Feed Adressen nicht extrahieren von URL %s: %s</string>
-
-    <string name="bild_easter_egg">Für die Bild-Zeitung steht diese Funktion leider nicht zur Verfügung.
-    </string>
 
 </resources>
