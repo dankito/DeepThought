@@ -62,6 +62,7 @@
             android:id="@+id/txtEntryContentLabel"
             android:layout_width="wrap_content"
             android:layout_below="@+id/lytEntryFieldsPreview"
+            android:layout_marginTop="@dimen/activity_edit_entry_content_label_margin_top"
             android:layout_marginLeft="@dimen/activity_edit_entry_field_margin_left"
             android:layout_marginStart="@dimen/activity_edit_entry_field_margin_left"
             android:layout_marginRight="@dimen/activity_edit_entry_field_margin_right"
