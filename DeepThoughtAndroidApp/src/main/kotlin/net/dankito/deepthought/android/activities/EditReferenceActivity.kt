@@ -467,7 +467,7 @@ class EditReferenceActivity : BaseActivity() {
 
         if(series != null) {
             lytEditReferenceSeries.setFieldValueOnUiThread(series.title)
-            lytEditReferenceSeries.showActionIconOnUiThread(android.R.drawable.ic_delete) {
+            lytEditReferenceSeries.showActionIconOnUiThread(android.R.drawable.ic_delete, false) {
                 setAndShowSeriesOnUiThread(null)
             }
         }

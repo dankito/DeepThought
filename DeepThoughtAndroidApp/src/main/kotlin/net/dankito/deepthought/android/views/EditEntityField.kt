@@ -17,6 +17,7 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.view_edit_entity_field.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.extensions.setTextColorToColorResource
+import net.dankito.deepthought.android.extensions.setTintColor
 import net.dankito.deepthought.android.service.showKeyboard
 
 
@@ -153,12 +154,12 @@ class EditEntityField : RelativeLayout {
     }
 
 
-    fun showActionIconOnUiThread(iconResourceId: Int) {
-        showActionIconOnUiThread(iconResourceId, null)
+    fun showActionIconOnUiThread(iconResourceId: Int, useAccentColorAsTintColor: Boolean = true) {
+        showActionIconOnUiThread(iconResourceId, useAccentColorAsTintColor, null)
     }
 
-    fun showActionIconOnUiThread(iconResourceId: Int, actionIconClickedListener: (() -> Unit)?) {
-        btnEntityFieldAction.setImageResource(iconResourceId)
+    fun showActionIconOnUiThread(iconResourceId: Int, useAccentColorAsTintColor: Boolean = true, actionIconClickedListener: (() -> Unit)?) {
+        setActionImageAndTintColor(iconResourceId, useAccentColorAsTintColor)
 
         btnEntityFieldAction.visibility = View.VISIBLE
 
@@ -169,6 +170,17 @@ class EditEntityField : RelativeLayout {
         }
 
         this.actionIconClickedListener = actionIconClickedListener
+    }
+
+    private fun setActionImageAndTintColor(iconResourceId: Int, useAccentColorAsTintColor: Boolean) {
+        btnEntityFieldAction.setImageResource(iconResourceId)
+
+        if(useAccentColorAsTintColor) {
+            btnEntityFieldAction.setTintColor(R.color.colorAccent)
+        }
+        else {
+            btnEntityFieldAction.clearColorFilter()
+        }
     }
 
     fun hideActionIconOnUiThread() {

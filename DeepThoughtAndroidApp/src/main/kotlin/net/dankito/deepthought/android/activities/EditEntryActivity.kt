@@ -782,7 +782,7 @@ class EditEntryActivity : BaseActivity() {
         }
         else {
             lytReferencePreview.setFieldValueOnUiThread(sourceToEdit.getPreviewWithSeriesAndPublishingDate(getCurrentSeries()))
-            lytReferencePreview.showActionIconOnUiThread(android.R.drawable.ic_delete) { referenceCleared() }
+            lytReferencePreview.showActionIconOnUiThread(android.R.drawable.ic_delete, false) { referenceCleared() }
         }
 
         val showReferencePreview = this.forceShowReferencePreview || sourceToEdit != null
