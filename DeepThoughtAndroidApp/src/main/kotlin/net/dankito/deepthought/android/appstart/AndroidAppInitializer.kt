@@ -5,11 +5,9 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.android.service.network.NetworkConnectivityChangeBroadcastReceiver
 import net.dankito.deepthought.android.service.reporting.ICrashReporter
 import net.dankito.deepthought.service.data.DataManager
-import net.dankito.deepthought.ui.html.HtmlEditorExtractor
 import net.dankito.service.search.ISearchEngine
 import javax.inject.Inject
 
@@ -24,16 +22,10 @@ class AndroidAppInitializer {
     protected lateinit var context: Context
 
     @Inject
-    protected lateinit var activityTracker: CurrentActivityTracker
-
-    @Inject
     protected lateinit var dataManager: DataManager
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
-
-    @Inject
-    protected lateinit var htmlEditorExtractor: HtmlEditorExtractor
 
     @Inject
     protected lateinit var communicationManagerStarter: CommunicationManagerStarter // same here: just create instance, CommunicationManagerStarter initializes itself
