@@ -303,7 +303,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
         txtOnboardingText?.let { txtOnboardingText ->
             lytOnboardingText?.visibility = View.VISIBLE
 
-            txtOnboardingText.text = contextHelpUtil.stringUtil.getSpannedFromHtml(txtOnboardingText.context.getText(onboardingTextResourceId).toString(), context, android.R.color.black)
+            txtOnboardingText.text = contextHelpUtil.stringUtil.getSpannedFromHtmlWithImages(txtOnboardingText.context.getText(onboardingTextResourceId).toString(), context, android.R.color.black)
         }
 
         searchMenuItem?.isVisible = false

@@ -8,11 +8,15 @@ import android.text.Spanned
 
 class StringUtil {
 
+    fun getSpannedFromHtml(html: String): Spanned {
+        return getSpannedFromHtmlWithImages(html)
+    }
+
     /**
      * context is only needed if html contains images.
      * tintColorResourceId is only needed if you want to colorize the images in html
      */
-    fun getSpannedFromHtml(html: String, context: Context? = null, tintColorResourceId: Int? = null): Spanned {
+    fun getSpannedFromHtmlWithImages(html: String, context: Context? = null, tintColorResourceId: Int? = null): Spanned {
         val imageGetter = if(context != null) HtmlLocalResourceImageGetter(context, tintColorResourceId) else null
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
