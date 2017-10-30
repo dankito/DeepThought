@@ -71,17 +71,32 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
             var content = loadLazyLoadingElementsAndGetContent(siteContent, articleBody)
 
-            siteContent.select(".topenrichment figure img").first()?.let { previewImage ->
-                val previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(previewImage, "src", siteUrl)
-                reference?.previewImageUrl = previewImageUrl
-                previewImage.attr("src", previewImageUrl)
-                content = "<div>" + previewImage.outerHtml() + "</div>" + content
+            extractTopEnrichment(siteContent, reference, siteUrl)?.let { topEnrichment ->
+                content = "<div>" + topEnrichment.outerHtml() + "</div>" + content
             }
 
             val entry = Item(content, abstract)
 
             extractionResult.setExtractedContent(entry, reference)
         }
+    }
+
+    private fun extractTopEnrichment(siteContent: Element, reference: Source?, siteUrl: String): Element? {
+        siteContent.select(".topenrichment").first()?.let { topEnrichment ->
+            topEnrichment.select("figure img").first()?.let { previewImage ->
+                val previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(previewImage, "src", siteUrl)
+                reference?.previewImageUrl = previewImageUrl
+                previewImage.attr("src", previewImageUrl)
+
+                return previewImage
+            }
+
+            topEnrichment.select(".enrichment-inline-video").first()?.let { previewVideo ->
+                return previewVideo
+            }
+        }
+
+        return null
     }
 
     private fun loadLazyLoadingElementsAndGetContent(siteContent: Element, articleBody: Element): String {

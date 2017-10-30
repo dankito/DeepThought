@@ -53,6 +53,15 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun extractArticleWithVideoInSummary() {
+        getAndTestArticle("http://www.sueddeutsche.de/politik/spanien-madrid-uebernimmt-offiziell-kontrolle-in-katalonien-1.3728513",
+                "Madrid übernimmt offiziell Kontrolle in Katalonien",
+                null,
+                null,
+                2000, subTitle = "Spanien") // first page has a length of little more than 2900
+    }
+
+    @Test
     fun extractMultiPageArticle() {
         getAndTestArticle("http://www.sueddeutsche.de/medien/im-visier-der-nachbarn-al-jazeera-gefuerchtete-stimme-der-massen-1.3558089",
                 "Al Jazeera - gefürchtete Stimme der Massen",
