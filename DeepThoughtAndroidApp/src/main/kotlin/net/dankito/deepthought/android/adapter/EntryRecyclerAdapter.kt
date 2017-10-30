@@ -51,6 +51,7 @@ class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): Mul
         viewHolder.txtReferencePreview.visibility = if (referencePreview.isNullOrBlank()) View.GONE else View.VISIBLE
         viewHolder.txtReferencePreview.text = referencePreview
 
+        viewHolder.txtEntryPreview.visibility = View.VISIBLE
         viewHolder.txtEntryPreview.text = item.getEntryPreviewWithSeriesAndPublishingDate(item.source)
         setTxtEntryPreviewMaxLines(viewHolder.txtEntryPreview, viewHolder.txtReferencePreview, item)
 
