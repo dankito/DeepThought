@@ -83,6 +83,8 @@ class WebPageMetaDataExtractor(webClient: IWebClient) : ExtractorBase(webClient)
 
         parseIsoDateTimeStringWithoutTimezone(publishingDateString)?.let { return it }
 
+        parseVeryDetailedDateTimeString(publishingDateString)?.let { return it }
+
         return null
     }
 
