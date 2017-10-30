@@ -126,7 +126,10 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
     private fun updateEntityInIndex(changedEntity: ChangedEntity<BaseEntity>) {
         when(changedEntity.entityClass) {
-            Item::class.java -> entryIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Item>)
+            Item::class.java -> {
+                entryIdsIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Item>)
+                entryIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Item>)
+            }
             Tag::class.java -> tagIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Tag>)
             Series::class.java -> seriesIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Series>)
             Source::class.java -> referenceIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Source>)
