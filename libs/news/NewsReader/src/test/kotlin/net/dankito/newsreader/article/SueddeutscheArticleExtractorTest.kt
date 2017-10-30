@@ -36,6 +36,14 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun extractArticleWithInlineImageCarousel() {
+        getAndTestArticle("http://www.sueddeutsche.de/reise/uebernachten-im-wald-traeumen-unter-baeumen-1.3713211",
+                "Träumen unter Bäumen",
+                "Nachts im Wald, da kann einem schon mal mulmig werden. Aber nicht in diesen Unterkünften. Tipps zum Übernachten vom Ufo am Polarkreis bis zum Hobbit-Haus in Hessen.",
+                null, 10500, subTitle = "Übernachten im Wald")
+    }
+
+    @Test
     fun extractArticleWithInlineIFrame() {
         getAndTestArticle("http://www.sueddeutsche.de/stil/test-nicht-nur-fuer-oma-1.3644869",
                 "Nicht nur für Omas: Das ist das beste Trockenshampoo",

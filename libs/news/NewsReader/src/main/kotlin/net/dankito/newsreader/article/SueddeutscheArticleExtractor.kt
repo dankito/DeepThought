@@ -69,14 +69,13 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         siteContent.select("#article-body").first()?.let { articleBody ->
             val abstract = articleBody.select(".entry-summary").first()?.html() ?: ""
 
-            cleanArticleBody(articleBody)
             var content = loadLazyLoadingElementsAndGetContent(siteContent, articleBody)
 
             siteContent.select(".topenrichment figure img").first()?.let { previewImage ->
                 val previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(previewImage, "src", siteUrl)
                 reference?.previewImageUrl = previewImageUrl
                 previewImage.attr("src", previewImageUrl)
-                content = "<p>" + previewImage.outerHtml() + "</p>" + content
+                content = "<div>" + previewImage.outerHtml() + "</div>" + content
             }
 
             val entry = Item(content, abstract)
@@ -85,15 +84,11 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         }
     }
 
-    private fun cleanArticleBody(articleBody: Element) {
-        articleBody.select(".entry-summary, #article-sidebar-wrapper, #sharingbaranchor, .ad, .authors, .teaserable-layout, .flexible-teaser").remove()
-
-        // remove scripts with try{window.performance.mark('monitor_articleTeaser');}catch(e){};
-        articleBody.select("script").filter { it.html().contains("window.performance.mark") }.forEach { it.remove() }
-    }
-
     private fun loadLazyLoadingElementsAndGetContent(siteContent: Element, articleBody: Element): String {
         extractInlineGalleries(articleBody)
+        extractInlineCarousels(articleBody)
+
+        cleanArticleBody(articleBody)
 
         super.loadLazyLoadingElements(articleBody)
 
@@ -109,6 +104,13 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         return content
     }
 
+    private fun cleanArticleBody(articleBody: Element) {
+        articleBody.select(".entry-summary, #article-sidebar-wrapper, #sharingbaranchor, .ad, .authors, .teaserable-layout, .flexible-teaser").remove()
+
+        // remove scripts with try{window.performance.mark('monitor_articleTeaser');}catch(e){};
+        articleBody.select("script").filter { it.html().contains("window.performance.mark") }.forEach { it.remove() }
+    }
+
     private fun extractInlineGalleries(articleBody: Element) {
         articleBody.select("figure.gallery.inline").forEach { inlineGallery ->
             inlineGallery.select(".navigation").remove()
@@ -117,6 +119,21 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
                 imageListElement.remove()
                 inlineGallery.append("<p>" + imageListElement.html() + "</p>")
             }
+        }
+    }
+
+    private fun extractInlineCarousels(articleBody: Element) {
+        articleBody.select("figure.js-biga").forEach { inlineCarousel ->
+            var childIndex = inlineCarousel.siblingIndex()
+
+            inlineCarousel.select("ul.biga__carousel__list li.js-carousel-item").forEach { carouselItem ->
+                val img = carouselItem.select("img.biga__carousel__list__item-image").first()
+                // may also add caption: div.biga__carousel__list__item-source
+                inlineCarousel.parent().insertChildren(childIndex, Arrays.asList(img))
+                childIndex = childIndex + 2
+            }
+
+            inlineCarousel.remove()
         }
     }
 
