@@ -8,19 +8,27 @@
 >
 
     <TextView
-        android:id="@+id/txtFeedOrWebsiteUrl"
+        android:id="@+id/txtNewsPageUrlLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/Header1Style"
+        android:text="@string/dialog_add_article_summary_extractor_news_page_url_label"
+    />
+
+    <TextView
+        android:id="@+id/txtFeedUrlHintLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtNewsPageUrlLabel"
         style="@style/TextBodyStyle"
-        android:textSize="@dimen/dialog_add_article_summary_extractor_text_feed_or_website_url_text_size"
-        android:text="@string/dialog_add_article_summary_extractor_feed_or_website_url"
+        android:text="@string/dialog_add_article_summary_extractor_feed_url_hint"
     />
 
     <EditText
         android:id="@+id/edtxtFeedOrWebsiteUrl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtFeedOrWebsiteUrl"
+        android:layout_below="@+id/txtFeedUrlHintLabel"
         android:inputType="textUri"
         android:layout_marginTop="@dimen/dialog_add_article_summary_extractor_text_feed_or_website_url_margin_top_and_bottom"
         android:layout_marginBottom="@dimen/dialog_add_article_summary_extractor_text_feed_or_website_url_margin_top_and_bottom"
