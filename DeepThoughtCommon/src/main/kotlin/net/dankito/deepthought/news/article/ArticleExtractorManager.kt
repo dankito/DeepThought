@@ -174,9 +174,11 @@ class ArticleExtractorManager(private val seriesService: SeriesService, private 
     private fun getSeriesForTitle(seriesTitle: String, callback: (Series) -> Unit) {
         searchEngine.searchSeries(SeriesSearch(seriesTitle) { searchResults ->
             if(searchResults.isNotEmpty()) {
-                val exactMatches = searchResults.filter { it.title == seriesTitle } // filter out that ones with a similiar name, e.g. 'SZ Magazin' when searching for 'SZ'
-                callback(exactMatches.sortedByDescending { it.countSources }.first()) // in case there are several same names, use that one with most sources
-                return@SeriesSearch
+                val exactMatches = searchResults.filter { it.title == seriesTitle } // filter out that ones with a similar name, e.g. 'SZ Magazin' when searching for 'SZ'
+                exactMatches.sortedByDescending { it.countSources }.firstOrNull()?.let {  // in case there are several same names, use that one with most sources
+                    callback(it)
+                    return@SeriesSearch
+                }
             }
 
             val series = Series(seriesTitle) // no Series with name 'seriesTitle' found -> create new one
