@@ -1,17 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#FFFFFF"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
 >
+
+    <TextView
+        android:id="@+id/txtHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="4dp"
+        style="@style/TextBodyStyle"
+        android:textSize="16sp"
+        android:visibility="gone"
+    />
 
     <jp.wasabeef.richeditor.RichEditor
         android:id="@+id/editor"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_above="@+id/lytEditorToolbar"
+        android:layout_height="0dp"
+        android:layout_weight="10"
     />
 
     <LinearLayout
@@ -19,7 +33,6 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dialog_edit_html_text_editor_toolbar_height"
-        android:layout_above="@+id/toolbar"
         android:background="@color/toolbar_background_color"
     >
 
@@ -78,7 +91,6 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/ToolbarStyle"
-        android:layout_alignParentBottom="true"
     />
 
-</RelativeLayout>
+</LinearLayout>

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import kotlinx.android.synthetic.main.dialog_edit_html_text.*
 import kotlinx.android.synthetic.main.dialog_edit_html_text.view.*
 import net.dankito.deepthought.android.R
@@ -23,6 +24,8 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         private const val HTML_EXTRA_NAME = "HTML"
 
         private const val HTML_TO_EDIT_LABEL_RESOURCE_ID_EXTRA_NAME = "HTML_TO_EDIT_LABEL_RESOURCE_ID"
+
+        private const val HINT_LABEL_RESOURCE_ID_EXTRA_NAME = "HINT_LABEL_RESOURCE_ID"
     }
 
 
@@ -35,6 +38,8 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     private var htmlToSetOnStart: String? = null
 
     private var htmlToEditLabelResourceId: Int? = null
+
+    private var hintLabelResourceId: Int? = null
 
     private var htmlChangedCallback: ((String) -> Unit)? = null
 
@@ -55,11 +60,19 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
 
         htmlToEditLabelResourceId?.let { setTitle(rootView.toolbar, it) }
 
+        hintLabelResourceId?.let { showHint(rootView.txtHint, it) }
+
         setupHtmlEditor(rootView)
     }
 
     private fun setTitle(toolbar: android.support.v7.widget.Toolbar, it: Int) {
         toolbar.title = getString(it)
+    }
+
+    private fun showHint(txtHint: TextView, hintLabelResourceId: Int) {
+        txtHint.text = txtHint.context.getString(hintLabelResourceId)
+
+        txtHint.visibility = View.VISIBLE
     }
 
     private fun setupHtmlEditor(rootView: View) {
@@ -127,6 +140,8 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         outState?.let {
             htmlToEditLabelResourceId?.let { outState.putInt(HTML_TO_EDIT_LABEL_RESOURCE_ID_EXTRA_NAME, it) }
 
+            hintLabelResourceId?.let { outState.putInt(HINT_LABEL_RESOURCE_ID_EXTRA_NAME, it) }
+
             outState.putString(HTML_EXTRA_NAME, editor.getHtml())
         }
     }
@@ -141,10 +156,16 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
                 }, 100)
             }
 
-            val resourceId = savedInstanceState.getInt(HTML_TO_EDIT_LABEL_RESOURCE_ID_EXTRA_NAME)
-            if(resourceId > 0) {
-                this.htmlToEditLabelResourceId = resourceId
-                setTitle(toolbar, resourceId)
+            val htmlToEditResourceId = savedInstanceState.getInt(HTML_TO_EDIT_LABEL_RESOURCE_ID_EXTRA_NAME)
+            if(htmlToEditResourceId > 0) {
+                this.htmlToEditLabelResourceId = htmlToEditResourceId
+                setTitle(toolbar, htmlToEditResourceId)
+            }
+
+            val hintLabelResourceId = savedInstanceState.getInt(HINT_LABEL_RESOURCE_ID_EXTRA_NAME)
+            if(hintLabelResourceId > 0) {
+                this.hintLabelResourceId = hintLabelResourceId
+                showHint(txtHint, hintLabelResourceId)
             }
         }
     }
@@ -168,9 +189,11 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     }
 
 
-    fun showDialog(fragmentManager: FragmentManager, htmlToEdit: String, htmlToEditLabelResourceId: Int? = null, htmlChangedCallback: ((String) -> Unit)?) {
+    fun showDialog(fragmentManager: FragmentManager, htmlToEdit: String, htmlToEditLabelResourceId: Int? = null, hintLabelResourceId: Int? = null, htmlChangedCallback: ((String) -> Unit)?) {
         setupDialog(htmlToEdit, htmlChangedCallback)
+
         this.htmlToEditLabelResourceId = htmlToEditLabelResourceId
+        this.hintLabelResourceId = hintLabelResourceId
 
         showInFullscreen(fragmentManager, false)
     }
