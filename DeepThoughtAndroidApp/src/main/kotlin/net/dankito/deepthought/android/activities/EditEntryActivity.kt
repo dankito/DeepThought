@@ -528,8 +528,9 @@ class EditEntryActivity : BaseActivity() {
     private fun editContent() {
         contentToEdit?.let { content ->
             val editHtmlTextDialog = EditHtmlTextDialog()
+            val hintResourceId = if(content.isBlank() == false || dataManager.localSettings.didShowAddItemPropertiesHelp) null else R.string.activity_edit_item_edit_content_hint
 
-            editHtmlTextDialog.showDialog(supportFragmentManager, content, R.string.activity_edit_item_edit_content_title) {
+            editHtmlTextDialog.showDialog(supportFragmentManager, content, R.string.activity_edit_item_edit_content_title, hintResourceId) {
                 appliedChangesToContent(it)
             }
         }
