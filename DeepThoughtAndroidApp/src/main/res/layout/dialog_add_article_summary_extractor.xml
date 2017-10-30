@@ -44,6 +44,7 @@
         android:layout_alignTop="@+id/btnCheckFeedOrWebsiteUrl"
         android:layout_alignBottom="@+id/btnCheckFeedOrWebsiteUrl"
         style="?android:attr/buttonBarButtonStyle"
+        android:textColor="@color/button_text_color"
         android:text="@android:string/cancel"
     />
 
@@ -55,6 +56,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         style="?android:attr/buttonBarButtonStyle"
+        android:textColor="@color/button_text_color"
         android:text="@string/dialog_add_article_summary_extractor_check_feed_or_website_url"
         android:enabled="false"
     />
