@@ -202,7 +202,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
     private fun extractReference(articleElement: Element, url: String): Source? {
         articleElement.select(".header").first()?.let { headerElement ->
-            headerElement.select("h2").first()?.let { heading ->
+            headerElement.select("h2, h1").first()?.let { heading -> // don't know why, but sometimes (on mobile sites?) they're using h1
                 var subTitle = ""
                 heading.select("strong").first()?.let {
                     subTitle = it.text()
