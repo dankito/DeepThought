@@ -65,7 +65,7 @@
     <string name="tab_items_onboarding_text"><![CDATA[
         <p>Klicken Sie auf das <b>(+) Symbol</b> unten rechts und wählen Sie <b>Eintrag</b> um einen Eintrag anzulegen.</p>
         <p>Wählen Sie <b>Zeitungsartikel</b> um einen RSS Feed hinzuzufügen und einen Artikel zu speichern.</p>
-        Oder speichern Sie eine <b>Webseite</b> indem Sie in Ihrem Browser im Share Menü DeepThought wählen.
+        Oder speichern Sie eine <b>Webseite</b> indem Sie in Ihrem Browser im Share Menü (<img src=\"ic_share_white_48dp\" />) DeepThought wählen.
     ]]>
     </string>
     <string name="tab_tags_onboarding_text"><![CDATA[

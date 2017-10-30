@@ -46,7 +46,7 @@
     <string name="tab_items_onboarding_text"><![CDATA[
         <p>To add a new item, press the <b>(+) button</b> and select <b>Item</b>.</p>
         <p>To add a newspaper article, press the <b>(+) button</b> and select <b>Newspaper Article</b>.</p>
-        Or save a <b>Web page</b> by selecting DeepThought in your browser's share menu.
+        Or save a <b>Web page</b> by selecting DeepThought in your browser\'s share menu (<img src=\"ic_share_white_48dp\" />).
     ]]>
     </string>
     <string name="tab_tags_onboarding_text"><![CDATA[
