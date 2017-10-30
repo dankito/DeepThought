@@ -97,20 +97,20 @@
     <style name="Header1Style">
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">#212121</item>
+        <item name="android:textColor">@color/header_1_text_color</item>
         <item name="android:typeface">serif</item>
     </style>
 
     <style name="Header2Style">
         <item name="android:textStyle">italic</item>
         <item name="android:textSize">13sp</item>
-        <item name="android:textColor">#999999</item>
+        <item name="android:textColor">@color/header_2_text_color</item>
     </style>
 
     <style name="TextBodyStyle">
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">12sp</item>
-        <item name="android:textColor">#b8b8b8</item>
+        <item name="android:textColor">@color/text_body_text_color</item>
     </style>
 
     <style name="EntityFieldName">

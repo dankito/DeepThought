@@ -17,6 +17,11 @@
 
     <color name="toolbar_background_color">@color/colorPrimary</color>
 
+
+    <color name="header_1_text_color">#212121</color>
+    <color name="header_2_text_color">#999999</color>
+    <color name="text_body_text_color">#b8b8b8</color>
+
     <!-- this is the same background color as for Snackbars -->
     <color name="context_help_background_color">#323232</color>
     <color name="context_help_text_color">#E76999</color>
