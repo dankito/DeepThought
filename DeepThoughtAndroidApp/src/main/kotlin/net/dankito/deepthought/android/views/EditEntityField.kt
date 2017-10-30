@@ -153,13 +153,11 @@ class EditEntityField : RelativeLayout {
     }
 
 
-    fun showActionIconOnUiThread(iconResourceId: Int, actionIconClickedListener: (() -> Unit)?) {
-        showActionIconOnUiThread(iconResourceId)
-
-        this.actionIconClickedListener = actionIconClickedListener
+    fun showActionIconOnUiThread(iconResourceId: Int) {
+        showActionIconOnUiThread(iconResourceId, null)
     }
 
-    fun showActionIconOnUiThread(iconResourceId: Int) {
+    fun showActionIconOnUiThread(iconResourceId: Int, actionIconClickedListener: (() -> Unit)?) {
         btnEntityFieldAction.setImageResource(iconResourceId)
 
         btnEntityFieldAction.visibility = View.VISIBLE
@@ -169,6 +167,8 @@ class EditEntityField : RelativeLayout {
             btnEntityFieldAction.requestFocus()
             actionIconClickedListener?.invoke()
         }
+
+        this.actionIconClickedListener = actionIconClickedListener
     }
 
     fun hideActionIconOnUiThread() {
