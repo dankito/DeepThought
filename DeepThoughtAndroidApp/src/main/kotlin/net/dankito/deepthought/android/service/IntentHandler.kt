@@ -34,8 +34,9 @@ class IntentHandler(private val articleExtractorManager: ArticleExtractorManager
 
     private fun handleReceivedPlainText(intent: Intent) {
         intent.getStringExtra(Intent.EXTRA_TEXT)?.let { sharedText ->
-            if(urlUtil.isHttpUri(sharedText)) {
-                articleExtractorManager.extractArticleAndAddDefaultDataAsync(sharedText) {
+            val trimmedText = sharedText.trim() // K9 Mail sometimes add empty lines at the end
+            if(urlUtil.isHttpUri(trimmedText)) {
+                articleExtractorManager.extractArticleAndAddDefaultDataAsync(trimmedText) {
                     it.result?.let { router.showEditEntryView(it) }
                     it.error?.let { showErrorMessage(it, sharedText) }
                 }
