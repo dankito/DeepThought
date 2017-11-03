@@ -7,6 +7,3 @@
 [submodule "libs/data_access_layer/database/jpa-apt"]
 	path = libs/data_access_layer/database/jpa-apt
 	url = https://github.com/dankito/jpa-apt
-[submodule "libs/ui_layer/Android/richeditor-android"]
-	path = libs/ui_layer/Android/richeditor-android
-	url = https://github.com/dankito/richeditor-android
