@@ -7,3 +7,6 @@
 [submodule "libs/data_access_layer/database/jpa-apt"]
 	path = libs/data_access_layer/database/jpa-apt
 	url = https://github.com/dankito/jpa-apt
+[submodule "libs/ui_layer/RichTextEditor"]
+	path = libs/ui_layer/RichTextEditor
+	url = https://github.com/dankito/RichTextEditor

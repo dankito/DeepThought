@@ -14,6 +14,7 @@ import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.service.showKeyboard
 import net.dankito.deepthought.ui.html.HtmlEditorCommon
 import net.dankito.deepthought.ui.html.IHtmlEditorListener
+import net.dankito.richtexteditor.android.RichTextEditor
 
 
 class EditHtmlTextDialog : FullscreenDialogFragment() {
@@ -29,7 +30,7 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     }
 
 
-    private lateinit var editor: jp.wasabeef.richeditor.RichEditor
+    private lateinit var editor: RichTextEditor
 
     private var currentTextBackgroundColor = Color.WHITE
 
@@ -86,7 +87,7 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
             editor.setHtml(it)
         }
 
-        editor.setOnTextChangeListener { setDidHtmlChange(true) } // TODO: determine if html really changed
+        editor.addHtmlChangedListener { setDidHtmlChange(true) } // TODO: determine if html really changed
 
         setupEditorToolbar(rootView)
     }
@@ -107,9 +108,9 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
 
         rootView.btnRedo.setOnClickListener { editor.redo() }
 
-        rootView.btnInsertBulletList.setOnClickListener { editor.setBullets() }
+        rootView.btnInsertBulletList.setOnClickListener { editor.insertBulletList() }
 
-        rootView.btnInsertNumberedList.setOnClickListener { editor.setNumbers() }
+        rootView.btnInsertNumberedList.setOnClickListener { editor.insertNumberedList() }
     }
 
     override fun onResume() {

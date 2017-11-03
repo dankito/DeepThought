@@ -21,7 +21,7 @@
         android:visibility="gone"
     />
 
-    <jp.wasabeef.richeditor.RichEditor
+    <net.dankito.richtexteditor.android.RichTextEditor
         android:id="@+id/editor"
         android:layout_width="match_parent"
         android:layout_height="0dp"

@@ -155,6 +155,7 @@ dependencies {
     compile "com.github.clans:fab:$clansFloatingActionButtonVersion"
     compile "com.daimajia.swipelayout:library:$swipeLayoutVersion"
     compile "com.google.android:flexbox:$flexboxVersion"
+    compile project(':RichTextEditorAndroid')
 
     compile "org.slf4j:slf4j-android:$slf4jVersion"
 

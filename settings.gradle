@@ -2,6 +2,8 @@
 /*      UI Layer            */
 
 include ':DeepThoughtAndroidApp'
+include ':RichTextEditor'
+include ':RichTextEditorAndroid'
 
 include ':DeepThoughtJavaFX'
 include ':DeepThoughtJavaFXExtended'
@@ -120,3 +122,5 @@ project(':jpa-apt').projectDir = "$rootDir/libs/data_access_layer/database/jpa-a
 project(':JPAAnnotationReaderAPI').projectDir = "$rootDir/libs/data_access_layer/database/jpa-apt/JPAAnnotationReaderAPI" as File
 project(':JPAAnnotationProcessor').projectDir = "$rootDir/libs/data_access_layer/database/jpa-apt/JPAAnnotationProcessor" as File
 
+project(':RichTextEditor').projectDir = "$rootDir/libs/ui_layer/RichTextEditor" as File
+project(':RichTextEditorAndroid').projectDir = "$rootDir/libs/ui_layer/RichTextEditor/RichTextEditorAndroid" as File
