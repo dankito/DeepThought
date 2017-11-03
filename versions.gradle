@@ -4,7 +4,7 @@ ext {
 
     appVersionCode = 20
 
-    kotlinVersion = '1.1.4-3'
+    kotlinVersion = '1.1.51'
 
     androidCompileSdkVersion = 25
 
