@@ -15,6 +15,7 @@ import net.dankito.deepthought.android.service.showKeyboard
 import net.dankito.deepthought.ui.html.HtmlEditorCommon
 import net.dankito.deepthought.ui.html.IHtmlEditorListener
 import net.dankito.richtexteditor.android.RichTextEditor
+import net.dankito.richtexteditor.android.command.*
 
 
 class EditHtmlTextDialog : FullscreenDialogFragment() {
@@ -31,8 +32,6 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
 
 
     private lateinit var editor: RichTextEditor
-
-    private var currentTextBackgroundColor = Color.WHITE
 
     private lateinit var mnApplyHtmlChanges: MenuItem
 
@@ -93,24 +92,19 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     }
 
     private fun setupEditorToolbar(rootView: View) {
-        rootView.btnBold.setOnClickListener { editor.setBold() }
+        val editorToolbar = rootView.editorToolbar
+        editorToolbar.editor = editor
 
-        rootView.btnItalic.setOnClickListener { editor.setItalic() }
+        editorToolbar.addCommand(BoldCommand())
+        editorToolbar.addCommand(ItalicCommand())
+        editorToolbar.addCommand(UnderlineCommand())
+        editorToolbar.addCommand(SwitchTextBackgroundColorOnOffCommand())
 
-        rootView.btnUnderline.setOnClickListener { editor.setUnderline() }
+        editorToolbar.addCommand(UndoCommand())
+        editorToolbar.addCommand(RedoCommand())
 
-        rootView.btnBackgroundColor.setOnClickListener {
-            currentTextBackgroundColor = if(currentTextBackgroundColor == Color.WHITE) Color.YELLOW else Color.WHITE
-            editor.setTextBackgroundColor(currentTextBackgroundColor)
-        }
-
-        rootView.btnUndo.setOnClickListener { editor.undo() }
-
-        rootView.btnRedo.setOnClickListener { editor.redo() }
-
-        rootView.btnInsertBulletList.setOnClickListener { editor.insertBulletList() }
-
-        rootView.btnInsertNumberedList.setOnClickListener { editor.insertNumberedList() }
+        editorToolbar.addCommand(InsertBulletListCommand())
+        editorToolbar.addCommand(InsertNumberedListCommand())
     }
 
     override fun onResume() {
