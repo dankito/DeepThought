@@ -75,10 +75,11 @@ class TagsSearchResultsUtil {
             return false
         }
 
-        val remainingMatches = ArrayList(searchResults.getRelevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossible())
-        remainingMatches.removeAll(tagsOnEntry)
+        val allMatches = searchResults.getRelevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossible()
+        val remainingMatches = ArrayList(allMatches)
+        remainingMatches.retainAll(tagsOnEntry)
 
-        return remainingMatches.size <= searchResults.getSearchTermsWithoutMatches().size
+        return remainingMatches.size + searchResults.getSearchTermsWithoutMatches().size == allMatches.size // contains only added tags or search terms without matches
     }
 
     private fun containsAddedTags(tagsOnEntry: Collection<Tag>, searchResults: TagsSearchResults): Boolean {
