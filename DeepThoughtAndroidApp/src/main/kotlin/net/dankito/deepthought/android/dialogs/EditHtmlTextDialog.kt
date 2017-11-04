@@ -1,6 +1,5 @@
 package net.dankito.deepthought.android.dialogs
 
-import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.view.MenuItem
@@ -76,10 +75,9 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
 
     private fun setupHtmlEditor(rootView: View) {
         editor = rootView.editor
-        editor.setEditorBackgroundColor(Color.WHITE)
         editor.setEditorHeight(500) // don't know why but it's important to set a height
         editor.setEditorFontSize(18) // TODO: make settable in settings and then save to LocalSettings
-        editor.setPadding(10, 10, 10, 10)
+        editor.setPadding(10)
 
         htmlToSetOnStart?.let {
             setHtml(it)
