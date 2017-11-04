@@ -8,10 +8,7 @@ import net.dankito.deepthought.android.appstart.AndroidAppInitializer
 import net.dankito.deepthought.android.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.android.dialogs.AndroidDialogService
 import net.dankito.deepthought.android.routing.AndroidRouter
-import net.dankito.deepthought.android.service.ActivityParameterHolder
-import net.dankito.deepthought.android.service.ActivityStateHolder
-import net.dankito.deepthought.android.service.AndroidClipboardService
-import net.dankito.deepthought.android.service.CurrentActivityTracker
+import net.dankito.deepthought.android.service.*
 import net.dankito.deepthought.android.service.communication.AndroidDeviceRegistrationHandler
 import net.dankito.deepthought.android.service.network.AndroidNetworkConnectivityManager
 import net.dankito.deepthought.android.service.settings.AndroidLocalSettingsStore
@@ -52,6 +49,12 @@ class ActivitiesModule(private val applicationContext: Context) {
     @Singleton
     fun provideLocalSettingsStore(context: Context) : ILocalSettingsStore {
         return AndroidLocalSettingsStore(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAppLifeCycleListener() : AppLifeCycleListener {
+        return AppLifeCycleListener()
     }
 
     @Provides
