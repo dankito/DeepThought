@@ -234,7 +234,7 @@
     <string name="activity_edit_series_alert_message_series_has_been_edited">Reihe wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\n\nWenn
         Sie die Reihe nun speichern, überschreiben Sie diese Änderungen.</string>
 
-    <string name="snackbar_extract_item_from_url">Zwischenablage enthält einen Link:\nMöchten Sie einen Eintrag extrahieren von %1$s?</string>
+    <string name="snackbar_extract_item_from_url">Zwischenablage enthält einen Link von %1$s. Möchten Sie hieraus einen Eintrag erstellen?</string>
 
     <string name="synchronize_data_with_this_device">Daten synchronisieren mit</string>
     <string name="never_ask_again">Nicht mehr fragen</string>
