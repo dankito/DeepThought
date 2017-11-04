@@ -31,6 +31,8 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     }
 
 
+    private var setHtml: String? = null
+
     private lateinit var editor: RichTextEditor
 
     private lateinit var mnApplyHtmlChanges: MenuItem
@@ -83,10 +85,10 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         editor.setPadding(10, 10, 10, 10)
 
         htmlToSetOnStart?.let {
-            editor.setHtml(it)
+            setHtml(it)
         }
 
-        editor.addHtmlChangedListener { setDidHtmlChange(true) } // TODO: determine if html really changed
+        editor.addHtmlChangedListener { setDidHtmlChange(it != setHtml) }
         editor.postDelayed({
             editor.focusEditorAndShowKeyboard()
         }, 500)
@@ -150,7 +152,7 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         savedInstanceState?.let {
             savedInstanceState.getString(HTML_EXTRA_NAME)?.let { html ->
                 editor.postDelayed({
-                    editor.setHtml(html)
+                    setHtml(html)
                 }, 100)
             }
 
@@ -206,6 +208,13 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         htmlChangedCallback?.invoke(editor.getHtml())
 
         closeDialog()
+    }
+
+
+    private fun setHtml(html: String) {
+        setHtml = html
+
+        editor.setHtml(html)
     }
 
 
