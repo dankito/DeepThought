@@ -17,7 +17,9 @@ import net.dankito.deepthought.android.fragments.EntriesListView
 import net.dankito.deepthought.android.fragments.ReadLaterArticlesListView
 import net.dankito.deepthought.android.fragments.ReferencesListView
 import net.dankito.deepthought.android.fragments.TagsListView
+import net.dankito.deepthought.android.service.AndroidClipboardService
 import net.dankito.deepthought.android.service.ExtractArticleHandler
+import net.dankito.deepthought.android.service.SnackbarService
 import net.dankito.deepthought.android.service.network.NetworkConnectivityChangeBroadcastReceiver
 import net.dankito.deepthought.di.BaseModule
 import net.dankito.deepthought.di.CommonComponent
@@ -51,6 +53,10 @@ interface AppComponent : CommonComponent {
     fun inject(communicationManagerStarter: CommunicationManagerStarter)
 
     fun inject(networkConnectivityChangeBroadcastReceiver: NetworkConnectivityChangeBroadcastReceiver)
+
+    fun inject(snackbarService: SnackbarService)
+
+    fun inject(androidClipboardService: AndroidClipboardService)
 
     fun inject(extractArticleHandler: ExtractArticleHandler)
 

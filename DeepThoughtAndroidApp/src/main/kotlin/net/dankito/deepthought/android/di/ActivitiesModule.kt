@@ -74,6 +74,7 @@ class ActivitiesModule(private val applicationContext: Context) {
     fun provideActivityStateHolder() : ActivityStateHolder {
         return ActivityStateHolder()
     }
+
     @Provides
     @Singleton
     fun provideExtractArticleHandler() : ExtractArticleHandler {
@@ -82,8 +83,14 @@ class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
-    fun provideClipboardService(activityTracker: CurrentActivityTracker) : IClipboardService {
-        return AndroidClipboardService(activityTracker)
+    fun provideSnackbarService() : SnackbarService {
+        return SnackbarService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideClipboardService() : IClipboardService {
+        return AndroidClipboardService()
     }
 
     @Provides

@@ -196,6 +196,8 @@
         you now save the series the other changes get overwritten.
     </string>
 
+    <string name="snackbar_extract_item_from_url">Detected a link in clipboard:\nWould you like to create an item from %1$s?</string>
+
     <string name="synchronize_data_with_this_device">Synchronize data with</string>
     <string name="never_ask_again">Never ask again</string>
     <string name="alert_title_permit_device_to_synchronize">Device asks for Permission</string>
