@@ -88,7 +88,7 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         editor.addHtmlChangedListener { setDidHtmlChange(it != setHtml) }
 
         editor.addLoadedListener {
-            editor.focusEditorAndShowKeyboard()
+            activity?.runOnUiThread { editor.focusEditorAndShowKeyboard() }
         }
 
         setupEditorToolbar(rootView)
