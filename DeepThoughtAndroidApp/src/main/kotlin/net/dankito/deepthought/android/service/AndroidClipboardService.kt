@@ -5,12 +5,12 @@ import android.content.*
 import android.os.Build
 import android.support.v7.widget.ShareActionProvider
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Series
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.extensions.abstractPlainText
 import net.dankito.deepthought.model.extensions.contentPlainText
 import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
-import net.dankito.deepthought.model.Item
-import net.dankito.deepthought.model.Source
-import net.dankito.deepthought.model.Series
 import net.dankito.utils.UrlUtil
 import net.dankito.utils.ui.IClipboardService
 import org.slf4j.LoggerFactory
@@ -74,8 +74,8 @@ class AndroidClipboardService : IClipboardService {
 
         var content = item.contentPlainText
 
-        if(source != null) { // TODO: Replace System.lineSeparator by PlatformConfig.getNewLineChar()
-            content = content + System.lineSeparator() + System.lineSeparator() + "(" + source.getPreviewWithSeriesAndPublishingDate(series) + ": " + source.url + ")"
+        if(source != null) {
+            content = "$content\n\n(${source.getPreviewWithSeriesAndPublishingDate(series)}: ${source.url})"
         }
 
         shareIntent.putExtra(Intent.EXTRA_TEXT, content)
