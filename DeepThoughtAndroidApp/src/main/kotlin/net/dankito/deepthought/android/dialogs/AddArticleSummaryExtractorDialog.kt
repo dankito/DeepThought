@@ -1,6 +1,7 @@
 package net.dankito.deepthought.android.dialogs
 
 import android.app.Activity
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.text.Editable
@@ -17,6 +18,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.FoundFeedAddressesAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
+import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.feedaddressextractor.FeedAddress
 import net.dankito.feedaddressextractor.FeedAddressExtractor
@@ -39,6 +41,9 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
 
     @Inject
     protected lateinit var feedAddressExtractor:FeedAddressExtractor
+
+    @Inject
+    protected lateinit var articleExtractorManager: ArticleExtractorManager
 
     @Inject
     protected lateinit var router: IRouter
@@ -114,11 +119,47 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
                 this.showingFeedAddressesForUrl = null // feed address entered, so we don't need entered text as siteUrl
                 addFeed(feedOrWebsiteUrl, it.result as FeedArticleSummary)
             }
-            else {
-                feedAddressExtractor.extractFeedAddressesAsync(feedOrWebsiteUrl) { asyncResult ->
-                    handleExtractFeedAddressesResult(feedOrWebsiteUrl, asyncResult)
-                }
+            // a lot of users entered an article url here. if so extract and show item // TODO: show hint how to correctly do it
+            else if(couldBeArticleUrl(enteredFeedOrWebsiteUrl)) {
+                tryToExtractArticle(feedOrWebsiteUrl)
             }
+            else {
+                tryToExtractFeedAdresses(feedOrWebsiteUrl)
+            }
+        }
+    }
+
+    private fun couldBeArticleUrl(enteredFeedOrWebsiteUrl: String): Boolean {
+        try {
+            val uri = Uri.parse(enteredFeedOrWebsiteUrl)
+            val removedSchemeAndHost = uri.toString().replace(uri.scheme, "").replace("//", "").replace(uri.host, "").replace("www.", "")
+
+            if(uri.path == null) {
+                return false
+            }
+            else {
+                return uri.query != null || uri.fragment != null || removedSchemeAndHost.length > 15 || uri.path.count { it == '/' } > 1
+            }
+        } catch(ignored: Exception) { }
+
+        return false
+    }
+
+    private fun tryToExtractArticle(feedOrWebsiteUrl: String) {
+        articleExtractorManager.extractArticleAndAddDefaultDataAsync(feedOrWebsiteUrl) {
+            if(it.result?.couldExtractContent == true) {
+                it.result?.let { router.showEditEntryView(it) }
+                dismiss()
+            }
+            else {
+                tryToExtractFeedAdresses(feedOrWebsiteUrl)
+            }
+        }
+    }
+
+    private fun tryToExtractFeedAdresses(feedOrWebsiteUrl: String) {
+        feedAddressExtractor.extractFeedAddressesAsync(feedOrWebsiteUrl) { asyncResult ->
+            handleExtractFeedAddressesResult(feedOrWebsiteUrl, asyncResult)
         }
     }
 
