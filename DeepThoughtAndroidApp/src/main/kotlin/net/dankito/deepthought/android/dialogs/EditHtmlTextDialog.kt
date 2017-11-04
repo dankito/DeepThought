@@ -11,7 +11,6 @@ import kotlinx.android.synthetic.main.dialog_edit_html_text.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.hideKeyboard
-import net.dankito.deepthought.android.service.showKeyboard
 import net.dankito.richtexteditor.android.RichTextEditor
 import net.dankito.richtexteditor.android.command.*
 
@@ -87,9 +86,10 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         }
 
         editor.addHtmlChangedListener { setDidHtmlChange(it != setHtml) }
-        editor.postDelayed({
+
+        editor.addLoadedListener {
             editor.focusEditorAndShowKeyboard()
-        }, 500)
+        }
 
         setupEditorToolbar(rootView)
     }
@@ -108,15 +108,6 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
 
         editorToolbar.addCommand(InsertBulletListCommand())
         editorToolbar.addCommand(InsertNumberedListCommand())
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        editor.postDelayed({
-            editor.showKeyboard()
-            editor.focusEditor()
-        }, 200)
     }
 
     override fun onPause() {
