@@ -5,7 +5,7 @@
     <string name="tab_items_title">Einträge</string>
     <string name="tab_tags_title">Schlagworte</string>
     <string name="tab_sources_title">Quellen</string>
-    <string name="tab_read_later_articles_title">Gemerkt</string>
+    <string name="tab_read_later_articles_title">Später lesen</string>
 
 
     <!-- Diese ignorieren -->
@@ -50,7 +50,7 @@
     <string name="search_hint_items">Einträge suchen</string>
     <string name="search_hint_tags">Schlagworte suchen</string>
     <string name="search_hint_sources">Quellen suchen</string>
-    <string name="search_hint_read_later_articles">Gemerkte Artikel suchen</string>
+    <string name="search_hint_read_later_articles">Später lesen Artikel suchen</string>
 
 
     <!-- Wenn du im Hauptfenster bei den Schlagwörtern auf das Filtersymbol eines Schlagwortes tippst -->
@@ -79,7 +79,7 @@
 
     ]]></string>
     <string name="tab_read_later_articles_onboarding_text"><![CDATA[
-        <p>Gemerkte Artikel werden offline gespeichert, so dass Sie diese später lesen können – auch ohne Internetverbindung. Gemerkte Artikel werden vorerst nicht in Ihre Einträge-Sammlung übernommen.</p>
+        <p>Artikel zum später Lesen werden offline gespeichert, so dass Sie diese später lesen können – auch ohne Internetverbindung. Später lesen Artikel werden vorerst nicht in Ihre Einträge-Sammlung übernommen.</p>
         <p>Drücken Sie das <b>(+) Symbol</b>, wählen <b>Zeitungsartikel</b> und drücken dort bei einem Artikel <b>Später lesen</b>.</p>
     ]]>
     </string>
@@ -150,7 +150,7 @@
     </string>
 
     <string name="context_help_saved_read_later_article_is_now_in_items"><![CDATA[
-        <p>Der Artikel wurde nun in Ihrer Einträge-Sammlung gespeichert.</p>D.h. er befindet sich nun in <b>Einträge</b> und nicht mehr in <b>Gemerkt</b>.
+        <p>Der Artikel wurde nun in Ihrer Einträge-Sammlung gespeichert.</p>D.h. er befindet sich nun in <b>Einträge</b> und nicht mehr in <b>Später lesen</b>.
     ]]>
     </string>
 
