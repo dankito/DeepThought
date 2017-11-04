@@ -15,8 +15,6 @@
     <!-- according to design actually #319B7C should be used -->
     <color name="colorPrimaryGradientEnd">#309c7c</color>
 
-    <color name="toolbar_background_color">@color/colorPrimary</color>
-
 
     <color name="header_1_text_color">#212121</color>
     <color name="header_2_text_color">#999999</color>
