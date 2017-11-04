@@ -105,19 +105,23 @@ class AndroidClipboardService : IClipboardService {
         try {
             val clipboardManager = currentActivity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             if(clipboardManager.hasPrimaryClip()) {
-                val clipItem = clipboardManager.primaryClip.getItemAt(0)
-                val description = clipboardManager.primaryClipDescription
-
-                getUrlFromClipItem(clipItem, description)?.let { url ->
-                    if(url != lastSnackbarShownForUrl) {
-                        lastSnackbarShownForUrl = url
-                        snackbarService.showUrlInClipboardDetectedSnackbar(currentActivity, url) { extractArticleHandler.extractArticle(url) }
-                    }
-                }
+                checkIfClipboardContainsUrl(clipboardManager, currentActivity)
             }
         } catch(e: Exception) { log.error("Could not handle Clipboard content", e) }
 
         lifeCycleListener.addActivityResumedListener(activityResumedListener)
+    }
+
+    private fun checkIfClipboardContainsUrl(clipboardManager: ClipboardManager, currentActivity: Activity) {
+        val clipItem = clipboardManager.primaryClip.getItemAt(0)
+        val description = clipboardManager.primaryClipDescription
+
+        getUrlFromClipItem(clipItem, description)?.let { url ->
+            if(url != lastSnackbarShownForUrl) {
+                lastSnackbarShownForUrl = url
+                snackbarService.showUrlInClipboardDetectedSnackbar(currentActivity, url) { extractArticleHandler.extractArticle(url) }
+            }
+        }
     }
 
     private fun getUrlFromClipItem(item: ClipData.Item, description: ClipDescription): String? {
