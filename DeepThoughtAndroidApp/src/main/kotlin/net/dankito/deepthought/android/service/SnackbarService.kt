@@ -33,6 +33,8 @@ class SnackbarService {
 
     private var currentSnackbar: Snackbar? = null
 
+    private val stringUtil = StringUtil()
+
 
     init {
         AppComponent.component.inject(this)
@@ -47,7 +49,8 @@ class SnackbarService {
                 host = host.substring(4)
             }
 
-            val text = activity.getString(R.string.snackbar_extract_item_from_url, host)
+            val unformattedText = activity.getText(R.string.snackbar_extract_item_from_url).toString().replace("%1\$s", host)
+            val text = stringUtil.getSpannedFromHtml(unformattedText)
             showSnackbar(text, activity, { customizeUrlInClipboardDetectedSnackbar(activity, it) }, actionInvokedListener)
         } catch(e: Exception) { log.error("Could not show snackbar for Clipboard url $url", e) }
     }
@@ -69,7 +72,7 @@ class SnackbarService {
     }
 
 
-    private fun showSnackbar(text: String, activity: Activity, customizeSnackbarListener: ((Snackbar) -> Unit)? = null, actionInvokedListener: () -> Unit) {
+    private fun showSnackbar(text: CharSequence, activity: Activity, customizeSnackbarListener: ((Snackbar) -> Unit)? = null, actionInvokedListener: () -> Unit) {
         var rootView = activity.findViewById(R.id.content_layout_root) // content_layout_root only works for MainActivity -> find a generic solution
         if(rootView == null) {
             rootView = activity.findViewById(android.R.id.content)
