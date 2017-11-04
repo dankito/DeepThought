@@ -21,8 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtNewsPageUrlLabel"
         android:inputType="textUri"
-        android:layout_marginTop="@dimen/dialog_add_article_summary_extractor_text_feed_or_website_url_margin_top_and_bottom"
-        android:layout_marginBottom="@dimen/dialog_add_article_summary_extractor_text_feed_or_website_url_margin_top_and_bottom"
+        android:layout_marginTop="@dimen/dialog_add_article_summary_extractor_text_feed_or_website_url_margin_top"
         android:imeOptions="actionSearch|flagNoExtractUi"
     />
 
@@ -57,6 +56,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/btnCheckFeedOrWebsiteUrl"
+        android:layout_marginTop="@dimen/dialog_add_article_summary_extractor_label_feed_search_results_margin_top"
         style="@style/Header1Style"
         android:textSize="@dimen/dialog_add_article_summary_extractor_label_feed_search_results_text_size"
         android:textColor="@color/colorAccent"
