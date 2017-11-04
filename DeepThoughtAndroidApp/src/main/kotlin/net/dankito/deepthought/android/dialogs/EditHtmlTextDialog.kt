@@ -78,7 +78,7 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         editor = rootView.editor
         editor.setEditorBackgroundColor(Color.WHITE)
         editor.setEditorHeight(500) // don't know why but it's important to set a height
-        editor.setEditorFontSize(20) // TODO: make settable in settings and then save to LocalSettings
+        editor.setEditorFontSize(18) // TODO: make settable in settings and then save to LocalSettings
         editor.setPadding(10, 10, 10, 10)
 
         htmlToSetOnStart?.let {
