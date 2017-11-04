@@ -95,6 +95,9 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         editor.setPadding(10)
 
         editor.focusEditorAndShowKeyboard()
+        editor.postDelayed({ // older androids would like to have an extra invitation
+            editor.focusEditorAndShowKeyboard()
+        }, 500)
     }
 
     private fun setupEditorToolbar(rootView: View) {
