@@ -75,9 +75,7 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
 
     private fun setupHtmlEditor(rootView: View) {
         editor = rootView.editor
-        editor.setEditorHeight(500) // don't know why but it's important to set a height
-        editor.setEditorFontSize(18) // TODO: make settable in settings and then save to LocalSettings
-        editor.setPadding(10)
+        editor.setEditorHeight(500) // don't know why but it's important to set a height (at least on some older Androids)
 
         htmlToSetOnStart?.let {
             setHtml(it)
@@ -86,10 +84,17 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         editor.addDidHtmlChangeListener { setDidHtmlChange(it) }
 
         editor.addLoadedListener {
-            activity?.runOnUiThread { editor.focusEditorAndShowKeyboard() }
+            activity?.runOnUiThread { editorHasLoaded() }
         }
 
         setupEditorToolbar(rootView)
+    }
+
+    private fun editorHasLoaded() {
+        editor.setEditorFontSize(18) // TODO: make settable in settings and then save to LocalSettings
+        editor.setPadding(10)
+
+        editor.focusEditorAndShowKeyboard()
     }
 
     private fun setupEditorToolbar(rootView: View) {
