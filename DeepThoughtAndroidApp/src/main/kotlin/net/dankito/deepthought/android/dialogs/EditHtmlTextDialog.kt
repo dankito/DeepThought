@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.dialog_edit_html_text.*
 import kotlinx.android.synthetic.main.dialog_edit_html_text.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.android.extensions.getColorFromResourceId
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.richtexteditor.android.RichTextEditor
 import net.dankito.richtexteditor.android.command.*
@@ -103,6 +104,8 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     private fun setupEditorToolbar(rootView: View) {
         val editorToolbar = rootView.editorToolbar
         editorToolbar.editor = editor
+
+        editorToolbar.commandStyle.isActivatedColor = context.getColorFromResourceId(R.color.colorPrimaryDark)
 
         editorToolbar.addCommand(BoldCommand())
         editorToolbar.addCommand(ItalicCommand())
