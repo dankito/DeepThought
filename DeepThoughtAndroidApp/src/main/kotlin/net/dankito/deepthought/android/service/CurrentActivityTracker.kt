@@ -10,7 +10,7 @@ class CurrentActivityTracker {
 
     var currentActivity: BaseActivity? = null
         set(value) {
-            field = value
+            field = value // TODO: check field != value
 
             if(value != null) {
                 callAndClearNextActivitySetListeners(value)
