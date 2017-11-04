@@ -70,8 +70,16 @@ class AndroidClipboardService : IClipboardService {
 
     override fun copyEntryToClipboard(item: Item, source: Source?, series: Series?) {
         val shareIntent = Intent()
-        shareIntent.action = Intent.ACTION_SEND
 
+        shareIntent.action = Intent.ACTION_SEND
+        shareIntent.type = "text/plain"
+
+        addItemToShareIntent(shareIntent, item, source, series)
+
+        share(shareIntent)
+    }
+
+    private fun addItemToShareIntent(shareIntent: Intent, item: Item, source: Source?, series: Series?) {
         var content = item.contentPlainText
 
         if(source != null) {
@@ -84,10 +92,6 @@ class AndroidClipboardService : IClipboardService {
         }
 
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, item.abstractPlainText)
-
-        shareIntent.type = "text/plain"
-
-        share(shareIntent)
     }
 
     private fun share(shareIntent: Intent) {
