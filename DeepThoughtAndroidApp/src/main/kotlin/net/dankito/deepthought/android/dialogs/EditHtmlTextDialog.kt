@@ -110,10 +110,14 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         editorToolbar.addCommand(BoldCommand())
         editorToolbar.addCommand(ItalicCommand())
         editorToolbar.addCommand(UnderlineCommand())
-        editorToolbar.addCommand(SwitchTextBackgroundColorOnOffCommand())
+        val switchBackgroundColorCommand = SwitchTextBackgroundColorOnOffCommand()
+        switchBackgroundColorCommand.style.marginRightDp = ToolbarCommandStyle.GroupDefaultMarginRightDp
+        editorToolbar.addCommand(switchBackgroundColorCommand)
 
         editorToolbar.addCommand(UndoCommand())
-        editorToolbar.addCommand(RedoCommand())
+        val redoCommand = RedoCommand()
+        redoCommand.style.marginRightDp = ToolbarCommandStyle.GroupDefaultMarginRightDp
+        editorToolbar.addCommand(redoCommand)
 
         editorToolbar.addCommand(InsertBulletListCommand())
         editorToolbar.addCommand(InsertNumberedListCommand())
