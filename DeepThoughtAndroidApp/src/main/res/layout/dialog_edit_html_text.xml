@@ -32,7 +32,7 @@
         android:id="@+id/editorToolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dialog_edit_html_text_editor_toolbar_height"
-        android:background="@color/toolbar_background_color"
+        android:background="@color/colorAccent"
         />
 
     <android.support.v7.widget.Toolbar
