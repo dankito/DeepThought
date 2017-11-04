@@ -38,7 +38,7 @@ class IntentHandler(private val articleExtractorManager: ArticleExtractorManager
             if(urlUtil.isHttpUri(trimmedText)) {
                 articleExtractorManager.extractArticleAndAddDefaultDataAsync(trimmedText) {
                     it.result?.let { router.showEditEntryView(it) }
-                    it.error?.let { showErrorMessage(it, sharedText) }
+                    it.error?.let { showCouldNotExtractItemErrorMessage(it, sharedText) }
                 }
             }
             else {
@@ -70,7 +70,7 @@ class IntentHandler(private val articleExtractorManager: ArticleExtractorManager
     }
 
 
-    private fun showErrorMessage(error: Exception, articleUrl: String) {
+    private fun showCouldNotExtractItemErrorMessage(error: Exception, articleUrl: String) {
         dialogService.showErrorMessage(dialogService.getLocalization().getLocalizedString("alert.message.could.not.extract.item.from.url", articleUrl), exception = error)
     }
 
