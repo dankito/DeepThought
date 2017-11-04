@@ -87,6 +87,9 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         }
 
         editor.addHtmlChangedListener { setDidHtmlChange(true) } // TODO: determine if html really changed
+        editor.postDelayed({
+            editor.focusEditorAndShowKeyboard()
+        }, 500)
 
         setupEditorToolbar(rootView)
     }
