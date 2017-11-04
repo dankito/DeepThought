@@ -12,8 +12,6 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.service.showKeyboard
-import net.dankito.deepthought.ui.html.HtmlEditorCommon
-import net.dankito.deepthought.ui.html.IHtmlEditorListener
 import net.dankito.richtexteditor.android.RichTextEditor
 import net.dankito.richtexteditor.android.command.*
 
@@ -215,22 +213,6 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         setHtml = html
 
         editor.setHtml(html)
-    }
-
-
-    private val htmlEditorListener = object : IHtmlEditorListener {
-
-        override fun editorHasLoaded(editor: HtmlEditorCommon) {
-        }
-
-        override fun htmlCodeUpdated() {
-            setDidHtmlChange(true)
-        }
-
-        override fun htmlCodeHasBeenReset() {
-            setDidHtmlChange(false)
-        }
-
     }
 
     private fun setDidHtmlChange(didChange: Boolean) {
