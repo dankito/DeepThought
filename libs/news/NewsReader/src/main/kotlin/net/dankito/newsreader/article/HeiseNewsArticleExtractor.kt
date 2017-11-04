@@ -48,6 +48,8 @@ class HeiseNewsArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
         cleanContentElement(articleContentElement)
         articleContentElement.select(".article-content__lead").remove()
 
+        makeLinksAbsolute(articleContentElement, url)
+
         extractionResult.setExtractedContent(Item(articleContentElement.outerHtml(), abstract), reference)
     }
 
