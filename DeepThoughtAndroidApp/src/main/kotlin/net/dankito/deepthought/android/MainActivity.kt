@@ -14,15 +14,14 @@ import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.adapter.MainActivitySectionsPagerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.fragments.MainActivityTabFragment
+import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.IntentHandler
 import net.dankito.deepthought.android.views.MainActivityFloatingActionMenuButton
 import net.dankito.deepthought.model.BaseEntity
-import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.UrlUtil
-import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
 
 
@@ -51,10 +50,7 @@ class MainActivity : BaseActivity() {
     protected lateinit var summaryExtractorManager: ArticleSummaryExtractorConfigManager
 
     @Inject
-    protected lateinit var articleExtractorManager: ArticleExtractorManager
-
-    @Inject
-    protected lateinit var dialogService: IDialogService
+    protected lateinit var extractArticleHandler: ExtractArticleHandler
 
 
     init {
@@ -161,7 +157,7 @@ class MainActivity : BaseActivity() {
             return
         }
 
-        IntentHandler(articleExtractorManager, router, urlUtil, dialogService).handle(intent)
+        IntentHandler(extractArticleHandler, router, urlUtil).handle(intent)
     }
 
 
