@@ -17,7 +17,6 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.FoundFeedAddressesAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
-import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.feedaddressextractor.FeedAddress
 import net.dankito.feedaddressextractor.FeedAddressExtractor
@@ -34,9 +33,6 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
         const val TAG = "ADD_ARTICLE_SUMMARY_EXTRACTOR_DIALOG"
     }
 
-
-    @Inject
-    protected lateinit var extractorsConfigManager: ArticleSummaryExtractorConfigManager
 
     @Inject
     protected lateinit var feedReader: IFeedReader
