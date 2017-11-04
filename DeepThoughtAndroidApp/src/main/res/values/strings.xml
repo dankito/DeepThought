@@ -131,7 +131,7 @@
     <string name="dialog_article_summary_extractor_config_select_icon">Select icon:</string>
     <string name="dialog_article_summary_extractor_alert_message_delete_config" formatted="false">Really delete news site %s?</string>
 
-    <string name="menu_share_source_url">Url</string>
+    <string name="menu_share_source_url">Link</string>
     <string name="menu_share_item_content">Content</string>
 
     <string name="activity_edit_item_title">Item</string>
@@ -170,7 +170,7 @@
     <string name="activity_edit_source_series_label">Series</string>
     <string name="activity_edit_source_issue_label">Issue</string>
     <string name="activity_edit_source_publishing_date_label">Publishing date</string>
-    <string name="activity_edit_source_url_label">Url</string>
+    <string name="activity_edit_source_url_label">Web address</string>
     <string name="activity_edit_source_error_could_not_parse_publishing_date" formatted="false">Cannot parse %s to date</string>
     <string name="activity_edit_source_alert_message_create_new_source">Do you really want to create a new source?\n\nThe current source then
         gets discarded and a new one will be created.</string>
@@ -209,7 +209,7 @@
     <string name="alert_title_enter_response_code_for_permitting_synchronization" formatted="false">Enter Code shown on %s:</string>
     <string name="alert_title_entered_response_code_was_wrong">Entered Code was wrong.\nEnter Code shown on %s:</string>
 
-    <string name="error_no_rss_or_atom_feed_found_for_url" formatted="false">No RSS or Atom feed found for url %s</string>
-    <string name="error_cannot_read_feed_or_extract_feed_addresses_from_url" formatted="false">Cannot read feed or extract feed addresses from url %s: %s</string>
+    <string name="error_no_rss_or_atom_feed_found_for_url" formatted="false">No RSS or Atom feed found for address %s</string>
+    <string name="error_cannot_read_feed_or_extract_feed_addresses_from_url" formatted="false">Cannot read feed or extract feed addresses from %s: %s</string>
 
 </resources>
