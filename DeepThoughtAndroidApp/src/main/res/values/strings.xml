@@ -56,9 +56,7 @@
     </string>
     <string name="tab_source_onboarding_text"><![CDATA[
         <p>Add sources to your items to remember where you found the content.</p>
-        <p>You have not added any sources yet.</p>
         <p>Select an item under the <b>Items</b> tab on the bottom left and add a source.</p>
-
     ]]>
     </string>
     <string name="tab_read_later_articles_onboarding_text"><![CDATA[
