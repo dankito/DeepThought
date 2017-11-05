@@ -62,6 +62,8 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
 
     protected lateinit var arrowToFloatingActionButton: View
 
+    protected lateinit var vwStartingWhereTranslatedTextViewOnboardingTextEnds: View
+
     private var entitiesToCheckForOnboardingOnViewCreation: List<T>? = null
 
     private var searchMenuItem: MenuItem? = null
@@ -110,6 +112,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
             btnClearFilteredEntities?.setOnClickListener { clearFilteredEntities() }
 
             arrowToFloatingActionButton = rootView.arrowToFloatingActionButton
+            vwStartingWhereTranslatedTextViewOnboardingTextEnds = rootView.vwStartingWhereTranslatedTextViewOnboardingTextEnds
 
             setupListView(it)
 
