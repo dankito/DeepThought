@@ -250,4 +250,10 @@
     <string formatted="false" name="error_no_rss_or_atom_feed_found_for_url">Kein RSS oder Atom Feed gefunden für Adresse %s</string>
     <string formatted="false" name="error_cannot_read_feed_or_extract_feed_addresses_from_url">Konnte Feed nicht lesen oder Feed Adressen nicht extrahieren von %s: %s</string>
 
+
+    <!-- Widget on home screen to quick access all items -->
+
+    <string name="widget_items_label">Einträge</string>
+    <string name="widget_items_empty_list">Sie haben noch keine Einträge gespeichert.</string>
+
 </resources>

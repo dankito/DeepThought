@@ -21,6 +21,7 @@ import net.dankito.deepthought.android.service.AndroidClipboardService
 import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.SnackbarService
 import net.dankito.deepthought.android.service.network.NetworkConnectivityChangeBroadcastReceiver
+import net.dankito.deepthought.android.widget.ItemsRemoteViewsFactory
 import net.dankito.deepthought.di.BaseModule
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.di.CommonDataModule
@@ -95,5 +96,7 @@ interface AppComponent : CommonComponent {
     fun inject(editReferenceActivity: EditReferenceActivity)
 
     fun inject(editSeriesActivity: EditSeriesActivity)
+
+    fun inject(itemsRemoteViewsFactory: ItemsRemoteViewsFactory)
 
 }
