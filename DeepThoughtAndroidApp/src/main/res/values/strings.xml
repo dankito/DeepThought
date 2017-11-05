@@ -31,11 +31,11 @@
     <string name="action_no">No</string>
 
     <string name="permanent_notification_title" translatable="false">DeepThought</string>
-    <string name="permanent_notification_content">Quickly create entries</string>
-    <string name="permanent_notification_create_entry_action">Create entry</string>
-    <string name="permanent_notification_create_entry_label">Input entry information</string>
-    <string name="permanent_notification_reply_successfully_saved_entry">Saved entry</string>
-    <string name="permanent_notification_reply_could_not_save_entry">Could not save entry</string>
+    <string name="permanent_notification_content">Quickly create items</string>
+    <string name="permanent_notification_create_item_action">Create item</string>
+    <string name="permanent_notification_create_item_label">Input item information</string>
+    <string name="permanent_notification_reply_successfully_saved_item">Saved item</string>
+    <string name="permanent_notification_reply_could_not_save_item">Could not save item</string>
 
     <string name="search_title">Search</string>
     <plurals name="search_count_results">

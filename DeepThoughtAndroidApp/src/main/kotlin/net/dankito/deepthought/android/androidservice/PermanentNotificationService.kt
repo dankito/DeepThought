@@ -13,7 +13,7 @@ import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.model.Item
 
 
-class PermanentNotificationService(private val context: Context, private val entryPersister: EntryPersister) {
+class PermanentNotificationService(private val context: Context, private val itemPersister: EntryPersister) {
 
     companion object {
         const val PermanentNotificationNotificationId = 27388
@@ -40,7 +40,7 @@ class PermanentNotificationService(private val context: Context, private val ent
         val pendingIntent = PendingIntent.getActivity(context, PermanentNotificationRequestCode, startActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         builder.setContentIntent(pendingIntent)
 
-        builder.addAction(createCreateEntryAction(pendingIntent))
+        builder.addAction(createCreateItemAction(pendingIntent))
 
         val notification = builder.build()
         notification.flags = Notification.FLAG_NO_CLEAR
@@ -49,12 +49,12 @@ class PermanentNotificationService(private val context: Context, private val ent
         notificationManager.notify(PermanentNotificationNotificationId, notification)
     }
 
-    private fun createCreateEntryAction(pendingIntent: PendingIntent?): NotificationCompat.Action? {
-        val replyLabel = context.getString(R.string.permanent_notification_create_entry_label)
+    private fun createCreateItemAction(pendingIntent: PendingIntent?): NotificationCompat.Action? {
+        val replyLabel = context.getString(R.string.permanent_notification_create_item_label)
         val remoteInput = RemoteInput.Builder(PermanentNotificationTextInputKey).setLabel(replyLabel).build()
 
         val action = NotificationCompat.Action.Builder(android.R.drawable.ic_menu_add,
-                context.getString(R.string.permanent_notification_create_entry_action), pendingIntent)
+                context.getString(R.string.permanent_notification_create_item_action), pendingIntent)
                 .addRemoteInput(remoteInput)
                 .build()
         return action
@@ -65,7 +65,7 @@ class PermanentNotificationService(private val context: Context, private val ent
         RemoteInput.getResultsFromIntent(intent)?.let { remoteInput ->
             val input = remoteInput.getCharSequence(PermanentNotificationTextInputKey)
 
-            entryPersister.saveEntryAsync(Item(input.toString())) { successful ->
+            itemPersister.saveEntryAsync(Item(input.toString())) { successful ->
                 showResultToUser(successful)
             }
 
@@ -77,10 +77,10 @@ class PermanentNotificationService(private val context: Context, private val ent
 
     private fun showResultToUser(successful: Boolean) {
         if (successful) {
-            showNotification(R.string.permanent_notification_reply_successfully_saved_entry)
+            showNotification(R.string.permanent_notification_reply_successfully_saved_item)
         }
         else {
-            showNotification(R.string.permanent_notification_reply_could_not_save_entry)
+            showNotification(R.string.permanent_notification_reply_could_not_save_item)
         }
     }
 
