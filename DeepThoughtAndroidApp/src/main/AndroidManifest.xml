@@ -111,6 +111,8 @@
                  android:permission="android.permission.BIND_REMOTEVIEWS"
         />
 
+        <service android:name=".androidservice.PermanentNotificationAndroidService" />
+
     </application>
 
 </manifest>

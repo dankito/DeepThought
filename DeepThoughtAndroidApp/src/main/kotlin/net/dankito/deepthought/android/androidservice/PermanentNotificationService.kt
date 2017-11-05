@@ -7,7 +7,6 @@ import android.content.Intent
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import android.support.v4.app.RemoteInput
-import net.dankito.deepthought.android.MainActivity
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.model.Item
@@ -34,10 +33,9 @@ class PermanentNotificationService(private val context: Context, private val ite
                 .setOngoing(true)
         //                        .setChannelId(CHANNEL_ID)
 
-        // TODO: use a background service instead of an activity
-        val startActivityIntent = Intent(context, MainActivity::class.java)
+        val startAndroidServiceIntent = Intent(context, PermanentNotificationAndroidService::class.java)
 
-        val pendingIntent = PendingIntent.getActivity(context, PermanentNotificationRequestCode, startActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getService(context, PermanentNotificationRequestCode, startAndroidServiceIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         builder.setContentIntent(pendingIntent)
 
         builder.addAction(createCreateItemAction(pendingIntent))

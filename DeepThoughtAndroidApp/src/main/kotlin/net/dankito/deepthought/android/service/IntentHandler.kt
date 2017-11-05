@@ -7,7 +7,7 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.utils.UrlUtil
 
 
-class IntentHandler(private val extractArticleHandler: ExtractArticleHandler, private val router: IRouter, private val urlUtil: UrlUtil, private val permanentNotificationService: PermanentNotificationService) {
+class IntentHandler(private val extractArticleHandler: ExtractArticleHandler, private val router: IRouter, private val urlUtil: UrlUtil) {
 
     fun handle(intent: Intent) {
         val action = intent.action
@@ -18,9 +18,6 @@ class IntentHandler(private val extractArticleHandler: ExtractArticleHandler, pr
         }
         else if(Intent.ACTION_SEND_MULTIPLE == action && type != null) {
             handleActionSendMultipleIntent()
-        }
-        else if(permanentNotificationService.handlesIntent(intent)) {
-
         }
     }
 

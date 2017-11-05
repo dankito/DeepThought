@@ -10,6 +10,7 @@ import net.dankito.deepthought.android.activities.EditSeriesActivity
 import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorIconsAdapter
 import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorsAdapter
 import net.dankito.deepthought.android.androidservice.DeepThoughtBackgroundAndroidService
+import net.dankito.deepthought.android.androidservice.PermanentNotificationAndroidService
 import net.dankito.deepthought.android.appstart.AndroidAppInitializer
 import net.dankito.deepthought.android.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.android.dialogs.*
@@ -98,5 +99,7 @@ interface AppComponent : CommonComponent {
     fun inject(editSeriesActivity: EditSeriesActivity)
 
     fun inject(itemsRemoteViewsFactory: ItemsRemoteViewsFactory)
+
+    fun inject(permanentNotificationAndroidService: PermanentNotificationAndroidService)
 
 }
