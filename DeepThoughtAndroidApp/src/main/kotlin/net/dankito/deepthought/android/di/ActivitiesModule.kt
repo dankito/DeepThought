@@ -13,10 +13,10 @@ import net.dankito.deepthought.android.service.*
 import net.dankito.deepthought.android.service.communication.AndroidDeviceRegistrationHandler
 import net.dankito.deepthought.android.service.network.AndroidNetworkConnectivityManager
 import net.dankito.deepthought.android.service.settings.AndroidLocalSettingsStore
+import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
