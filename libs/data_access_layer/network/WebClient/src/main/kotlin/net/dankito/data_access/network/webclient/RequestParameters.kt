@@ -4,8 +4,10 @@ package net.dankito.data_access.network.webclient
 data class RequestParameters(val url: String, var body: String? = null,
                              var contentType: ContentType = ContentType.FORM_URL_ENCODED,
                              var userAgent: String? = RequestParameters.DEFAULT_USER_AGENT,
-                             var cookieHandling: CookieHandling = CookieHandling.ACCEPT_NONE,
-                             var connectionTimeoutMillis: Int = RequestParameters.DEFAULT_CONNECTION_TIMEOUT_MILLIS,
+                            // TODO: re-enable setting cookie handling (e.g. via adding com.squareup.okhttp3:okhttp-urlconnection dependency)
+//                             var cookieHandling: CookieHandling = CookieHandling.ACCEPT_NONE,
+                            // TODO: re-enable setting connection timeout
+//                             var connectionTimeoutMillis: Int = RequestParameters.DEFAULT_CONNECTION_TIMEOUT_MILLIS,
                              var countConnectionRetries: Int = RequestParameters.DEFAULT_COUNT_CONNECTION_RETRIES,
                              var responseType: ResponseType = ResponseType.String,
                              var downloadBufferSize: Int = RequestParameters.DEFAULT_DOWNLOAD_BUFFER_SIZE,
@@ -32,9 +34,9 @@ data class RequestParameters(val url: String, var body: String? = null,
         return !userAgent.isNullOrBlank()
     }
 
-    fun isConnectionTimeoutSet(): Boolean {
-        return connectionTimeoutMillis > 0
-    }
+//    fun isConnectionTimeoutSet(): Boolean {
+//        return connectionTimeoutMillis > 0
+//    }
 
     fun isCountConnectionRetriesSet(): Boolean {
         return countConnectionRetries > 0

@@ -3,9 +3,10 @@ package net.dankito.newsreader.article
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.data_access.network.webclient.extractor.ExtractorBase
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.extensions.getPlainTextForHtml
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.newsreader.model.ArticleSummaryItem
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -25,7 +26,7 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
     private val metaDataExtractor = WebPageMetaDataExtractor(webClient)
 
 
-    override fun extractArticleAsync(item : ArticleSummaryItem, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
+    override fun extractArticleAsync(item : ArticleSummaryItem, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
         extractArticleAsync(item.url) { extractionResult ->
             extractionResult.result?.let {
                 setInfoFromArticleSummaryItemOnExtractionResult(item, it)
@@ -35,12 +36,12 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
         }
     }
 
-    private fun setInfoFromArticleSummaryItemOnExtractionResult(item: ArticleSummaryItem, extractionResult: EntryExtractionResult) {
-        if(extractionResult.entry.abstractString.isNullOrBlank()) {
-            extractionResult.entry.abstractString = item.summary
+    private fun setInfoFromArticleSummaryItemOnExtractionResult(item: ArticleSummaryItem, extractionResult: ItemExtractionResult) {
+        if(extractionResult.item.summary.isNullOrBlank()) {
+            extractionResult.item.summary = item.summary
         }
 
-        extractionResult.reference?.let { reference ->
+        extractionResult.source?.let { reference ->
             if (reference.previewImageUrl == null) {
                 reference.previewImageUrl = item.previewImageUrl
             }
@@ -48,14 +49,14 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
     }
 
 
-    override fun extractArticleAsync(url : String, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
+    override fun extractArticleAsync(url : String, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
         thread {
             try {
                 val extractionResult = extractArticle(url)
 
                 if(extractionResult != null) {
-                    extractionResult.reference?.url = url // explicitly set reference's url as for multipage articles article may gets extracted from a url different than url parameter
-                    extractionResult.reference?.lastAccessDate = Date()
+                    extractionResult.source?.url = url // explicitly set source's url as for multipage articles article may gets extracted from a url different than url parameter
+                    extractionResult.source?.lastAccessDate = Date()
 
                     callback(AsyncResult(true, result = extractionResult))
                 }
@@ -69,10 +70,10 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
         }
     }
 
-    protected open fun extractArticle(url: String): EntryExtractionResult? {
+    protected open fun extractArticle(url: String): ItemExtractionResult? {
         requestUrl(url).let { document ->
             val contentHtml = document.outerHtml()
-            val extractionResult = EntryExtractionResult(Entry(contentHtml), Reference(url, url, null))
+            val extractionResult = ItemExtractionResult(Item(contentHtml), Source(url, url, null))
             parseMetaData(extractionResult, document)
 
             parseHtmlToArticle(extractionResult, document, url)
@@ -83,7 +84,7 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
         }
     }
 
-    protected open fun extractArticleWithPost(extractionResult: EntryExtractionResult, url: String, body: String? = null) {
+    protected open fun extractArticleWithPost(extractionResult: ItemExtractionResult, url: String, body: String? = null) {
         try {
             requestUrlWithPost(url, body).let { document ->
                 parseHtmlToArticle(extractionResult, document, url)
@@ -94,26 +95,26 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
         }
     }
 
-    override fun parseHtml(extractionResult: EntryExtractionResult, html: String, url: String) {
+    override fun parseHtml(extractionResult: ItemExtractionResult, html: String, url: String) {
         val document = Jsoup.parse(html, url)
         parseMetaData(extractionResult, document)
 
         parseHtmlToArticle(extractionResult, document, url)
     }
 
-    abstract protected fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String)
+    abstract protected fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String)
 
 
-    private fun parseMetaData(extractionResult: EntryExtractionResult, document: Document) {
+    private fun parseMetaData(extractionResult: ItemExtractionResult, document: Document) {
         val metaData = metaDataExtractor.extractMetaData(document)
 
-        metaData.title?.let { extractionResult.reference?.title = it }
+        metaData.title?.let { extractionResult.source?.title = it }
 
-        metaData.description?.let { extractionResult.entry.abstractString = it }
+        metaData.description?.let { extractionResult.item.summary = it }
 
-        extractionResult.reference?.previewImageUrl = metaData.previewImageUrl
+        extractionResult.source?.previewImageUrl = metaData.previewImageUrl
 
-        extractionResult.reference?.setPublishingDate(metaData.publishingDate, metaData.publishingDateString)
+        extractionResult.source?.setPublishingDate(metaData.publishingDate, metaData.publishingDateString)
 
         // TODO: what about series / siteName?
     }
@@ -135,8 +136,17 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
 
 
     protected fun adjustSourceElements(element: Element) {
-        for (sourceElement in element.select("span.source")) {
+        for(sourceElement in element.select("span.source")) {
             sourceElement.parent().appendChild(Element(org.jsoup.parser.Tag.valueOf("br"), element.baseUri()))
+        }
+    }
+
+
+    protected fun removeEmptyParagraphs(contentElement: Element) {
+        ArrayList(contentElement.select("p, div").toList()).forEach {
+            if(it.html().getPlainTextForHtml().isNullOrBlank()) {
+                it.remove()
+            }
         }
     }
 

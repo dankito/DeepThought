@@ -17,8 +17,11 @@ import net.dankito.deepthought.android.fragments.EntriesListView
 import net.dankito.deepthought.android.fragments.ReadLaterArticlesListView
 import net.dankito.deepthought.android.fragments.ReferencesListView
 import net.dankito.deepthought.android.fragments.TagsListView
+import net.dankito.deepthought.android.service.AndroidClipboardService
+import net.dankito.deepthought.android.service.ExtractArticleHandler
+import net.dankito.deepthought.android.service.SnackbarService
 import net.dankito.deepthought.android.service.network.NetworkConnectivityChangeBroadcastReceiver
-import net.dankito.deepthought.android.views.html.AndroidHtmlEditor
+import net.dankito.deepthought.android.widget.ItemsRemoteViewsFactory
 import net.dankito.deepthought.di.BaseModule
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.di.CommonDataModule
@@ -52,6 +55,12 @@ interface AppComponent : CommonComponent {
 
     fun inject(networkConnectivityChangeBroadcastReceiver: NetworkConnectivityChangeBroadcastReceiver)
 
+    fun inject(snackbarService: SnackbarService)
+
+    fun inject(androidClipboardService: AndroidClipboardService)
+
+    fun inject(extractArticleHandler: ExtractArticleHandler)
+
     fun inject(entriesListView: EntriesListView)
 
     fun inject(tagsListView: TagsListView)
@@ -84,10 +93,10 @@ interface AppComponent : CommonComponent {
 
     fun inject(tagsOnEntryDialogFragment: TagsOnEntryDialogFragment)
 
-    fun inject(htmlEditor: AndroidHtmlEditor)
-
     fun inject(editReferenceActivity: EditReferenceActivity)
 
     fun inject(editSeriesActivity: EditSeriesActivity)
+
+    fun inject(itemsRemoteViewsFactory: ItemsRemoteViewsFactory)
 
 }

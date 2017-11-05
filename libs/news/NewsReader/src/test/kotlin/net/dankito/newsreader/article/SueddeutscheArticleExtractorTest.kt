@@ -36,12 +36,29 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun extractArticleWithInlineImageCarousel() {
+        getAndTestArticle("http://www.sueddeutsche.de/reise/uebernachten-im-wald-traeumen-unter-baeumen-1.3713211",
+                "Träumen unter Bäumen",
+                "Nachts im Wald, da kann einem schon mal mulmig werden. Aber nicht in diesen Unterkünften. Tipps zum Übernachten vom Ufo am Polarkreis bis zum Hobbit-Haus in Hessen.",
+                null, 10500, subTitle = "Übernachten im Wald")
+    }
+
+    @Test
     fun extractArticleWithInlineIFrame() {
         getAndTestArticle("http://www.sueddeutsche.de/stil/test-nicht-nur-fuer-oma-1.3644869",
                 "Nicht nur für Omas: Das ist das beste Trockenshampoo",
                 "Sie sind besser für die Kopfhaut und sparen Zeit: Trockenshampoos feiern gerade ein Revival. Wir haben acht Produkte getestet.",
                 null,
                 2000) // first page has a length of little more than 2900
+    }
+
+    @Test
+    fun extractArticleWithVideoInSummary() {
+        getAndTestArticle("http://www.sueddeutsche.de/politik/spanien-madrid-uebernimmt-offiziell-kontrolle-in-katalonien-1.3728513",
+                "Madrid übernimmt offiziell Kontrolle in Katalonien",
+                null,
+                null,
+                2000, subTitle = "Spanien") // first page has a length of little more than 2900
     }
 
     @Test

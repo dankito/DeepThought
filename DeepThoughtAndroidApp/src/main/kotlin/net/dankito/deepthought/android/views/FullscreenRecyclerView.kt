@@ -46,6 +46,8 @@ class FullscreenRecyclerView : RecyclerView {
     }
 
 
+    var disableFullscreenMode = false
+
     var minimumCountItemsToActivateFullscreenMode = 15
 
     var enterFullscreenModeListener: (() -> Unit)? = null
@@ -128,7 +130,7 @@ class FullscreenRecyclerView : RecyclerView {
     }
 
     private fun enterFullscreenModeIfHasEnoughItemsOnUiThread() {
-        if(adapter.itemCount >= minimumCountItemsToActivateFullscreenMode) {
+        if(adapter.itemCount >= minimumCountItemsToActivateFullscreenMode && disableFullscreenMode == false) {
             enterFullscreenModeOnUiThread()
         }
     }

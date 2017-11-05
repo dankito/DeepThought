@@ -1,10 +1,18 @@
 package net.dankito.deepthought.android.views
 
+import android.os.Bundle
 import android.view.MotionEvent
 import com.github.clans.fab.FloatingActionMenu
 
 
 open class FloatingActionMenuButton(protected val floatingActionMenu: FloatingActionMenu) {
+
+    companion object {
+        private const val IS_OPENED_EXTRA_NAME = "IS_OPENED"
+    }
+
+
+    private var isClosingMenu = false
 
 
     init {
@@ -14,15 +22,17 @@ open class FloatingActionMenuButton(protected val floatingActionMenu: FloatingAc
 
     private fun setup() {
         floatingActionMenu.setClosedOnTouchOutside(true)
+        floatingActionMenu.setOnMenuToggleListener { isClosingMenu = false }
     }
 
 
     protected fun executeAndCloseMenu(action: () -> Unit) {
-        action()
+        action() // first execute action and then close menu as when action sets menu items visibility closeMenu() would otherwise overwrite this value
         closeMenu()
     }
 
     private fun closeMenu() {
+        isClosingMenu = true // as closing is animated it takes till animation end till floatingActionMenu.isOpened is set to true
         floatingActionMenu.close(true)
     }
 
@@ -47,6 +57,21 @@ open class FloatingActionMenuButton(protected val floatingActionMenu: FloatingAc
         }
 
         return false
+    }
+
+
+    fun saveInstanceState(outState: Bundle?) {
+        outState?.let {
+            outState.putBoolean(IS_OPENED_EXTRA_NAME, floatingActionMenu.isOpened && isClosingMenu == false)
+        }
+    }
+
+    fun restoreInstanceState(savedInstanceState: Bundle?) {
+        savedInstanceState?.let {
+            if(savedInstanceState.getBoolean(IS_OPENED_EXTRA_NAME, false)) {
+                floatingActionMenu.open(false)
+            }
+        }
     }
 
 }

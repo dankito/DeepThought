@@ -6,6 +6,7 @@ targetCompatibility = "1.7"
 
 dependencies {
     compile project(':DataModel')
+    compile project(':Utils')
     compile project(':WebClient')
 
     compile project(':Crux')
@@ -14,4 +15,9 @@ dependencies {
         exclude group: 'org.hamcrest', module: 'hamcrest-core'
     })
     testCompile "org.hamcrest:hamcrest-library:$hamcrestVersion"
+}
+
+
+test {
+    ignoreFailures = true
 }

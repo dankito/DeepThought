@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import org.jsoup.nodes.Comment
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -19,15 +19,15 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
     }
 
 
-    abstract protected fun parseArticle(extractionResult: EntryExtractionResult, headerElement: Element, articleElement: Element, url: String, title: String)
+    abstract protected fun parseArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleElement: Element, url: String, title: String)
 
 
-    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
+    override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("article").first()?.let { article ->
             getReadAllOnOnePageUrl(article, url)?.let { allOnOnePageUrl ->
                 extractArticle(allOnOnePageUrl)?.let {
                     if(it.couldExtractContent) {
-                        extractionResult.setExtractedContent(it.entry, it.reference)
+                        extractionResult.setExtractedContent(it.item, it.source)
                         return
                     }
                 }
@@ -63,22 +63,30 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         return url.contains("://m.heise.de/")
     }
 
-    private fun parseMobileArticle(extractionResult: EntryExtractionResult, article: Element, url: String) {
+    private fun parseMobileArticle(extractionResult: ItemExtractionResult, article: Element, url: String) {
         val reference = extractMobileArticleReference(article, url)
 
         val abstract = article.select("p.lead_text").first()?.text()?.trim() ?: ""
 
-        article.select("h1, figure.aufmacherbild, time, span.author, a.comments, p.lead_text, .comment, .btn-toolbar .whatsbroadcast-toolbar, #whatsbroadcast, " +
-                ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta, .widget-werbung, .ad_container, .ad_content").remove()
+        cleanContentElement(article)
+        article.select("h1").remove()
+
         val content = article.html()
 
-        extractionResult.setExtractedContent(Entry(content, abstract), reference)
+        extractionResult.setExtractedContent(Item(content, abstract), reference)
     }
 
-    private fun extractMobileArticleReference(article: Element, url: String): Reference {
+    protected fun cleanContentElement(contentElement: Element) {
+        contentElement.select("h1, time, span.author, a.comments, p.lead_text, .comment, .btn-toolbar, .whatsbroadcast-toolbar, #whatsbroadcast, " +
+                ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta, .widget-werbung, .ad_container, .ad_content").remove()
+
+        removeEmptyParagraphs(contentElement)
+    }
+
+    private fun extractMobileArticleReference(article: Element, url: String): Source {
         val title = article.select("h1").first()?.text()?.trim() ?: ""
 
-        val reference = Reference(url, title)
+        val reference = Source(url, title)
 
         article.select("figure.aufmacherbild img").first()?.let {
             reference.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
@@ -97,6 +105,11 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
 
     protected open fun getContentElementHtml(element: Element, url: String) : String {
         makeLinksAbsolute(element, url)
+
+        if(element.hasClass("gallery") && element.hasClass("compact") && element.hasAttr("data-data-url")) {
+
+        }
+
         return element.outerHtml()
     }
 

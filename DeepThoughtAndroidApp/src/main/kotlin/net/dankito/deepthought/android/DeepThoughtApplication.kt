@@ -12,6 +12,7 @@ import net.dankito.deepthought.android.appstart.AndroidAppInitializer
 import net.dankito.deepthought.android.di.ActivitiesModule
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.di.DaggerAppComponent
+import net.dankito.deepthought.android.service.AppLifeCycleListener
 import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.di.CommonModule
@@ -22,6 +23,9 @@ class DeepThoughtApplication : MultiDexApplication() {
 
     @Inject
     protected lateinit var appInitializer: AndroidAppInitializer
+
+    @Inject
+    protected lateinit var lifeCycleListener: AppLifeCycleListener
 
 
     private var service: DeepThoughtBackgroundAndroidService? = null
@@ -54,6 +58,9 @@ class DeepThoughtApplication : MultiDexApplication() {
     }
 
     private fun setupLogic() {
+        registerActivityLifecycleCallbacks(lifeCycleListener)
+        registerComponentCallbacks(lifeCycleListener)
+
         appInitializer.initializeApp()
     }
 

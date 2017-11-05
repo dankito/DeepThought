@@ -15,15 +15,14 @@ import net.dankito.deepthought.android.adapter.MainActivitySectionsPagerAdapter
 import net.dankito.deepthought.android.androidservice.PermanentNotificationService
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.fragments.MainActivityTabFragment
+import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.IntentHandler
 import net.dankito.deepthought.android.views.MainActivityFloatingActionMenuButton
 import net.dankito.deepthought.model.BaseEntity
-import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.UrlUtil
-import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
 
 
@@ -52,10 +51,7 @@ class MainActivity : BaseActivity() {
     protected lateinit var summaryExtractorManager: ArticleSummaryExtractorConfigManager
 
     @Inject
-    protected lateinit var articleExtractorManager: ArticleExtractorManager
-
-    @Inject
-    protected lateinit var dialogService: IDialogService
+    protected lateinit var extractArticleHandler: ExtractArticleHandler
 
     @Inject
     protected lateinit var permanentNotificationService: PermanentNotificationService
@@ -94,7 +90,7 @@ class MainActivity : BaseActivity() {
 
         setCurrentlyVisibleFragment(0) // set currentlyVisibleFragment on start otherwise back button won't work on first displayed fragment
 
-        floatingActionMenuButton = MainActivityFloatingActionMenuButton(fab_menu, summaryExtractorManager, router, eventBus)
+        floatingActionMenuButton = MainActivityFloatingActionMenuButton(floatingActionMenu, summaryExtractorManager, router, eventBus)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -114,11 +110,24 @@ class MainActivity : BaseActivity() {
     }
 
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+
+        floatingActionMenuButton.saveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        floatingActionMenuButton.restoreInstanceState(savedInstanceState)
+    }
+
+
     override fun onResume() {
         super.onResume()
 
         clearAllActivityResults() // important, so that the results from Activities opened from one of the tabs aren't displayed later in another activity (e.g. opening
-        // EditReferenceActivity from ReferenceListView tab first, then going to EditEntryActivity -> Reference of first called EditReferenceActivity is then shown in second EditEntryActivity
+        // EditReferenceActivity from ReferenceListView tab first, then going to EditEntryActivity -> Source of first called EditReferenceActivity is then shown in second EditEntryActivity
     }
 
     override fun onBackPressed() {
@@ -152,7 +161,7 @@ class MainActivity : BaseActivity() {
             return
         }
 
-        IntentHandler(articleExtractorManager, router, urlUtil, dialogService, permanentNotificationService).handle(intent)
+        IntentHandler(extractArticleHandler, router, urlUtil, permanentNotificationService).handle(intent)
     }
 
 

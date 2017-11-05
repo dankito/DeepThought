@@ -1,6 +1,5 @@
 package net.dankito.deepthought.android.activities
 
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
@@ -11,6 +10,7 @@ import android.view.*
 import kotlinx.android.synthetic.main.activity_article_summary.*
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.deepthought.android.R
+import net.dankito.deepthought.android.activities.arguments.ArticleSummaryActivityParameters
 import net.dankito.deepthought.android.adapter.ArticleSummaryItemRecyclerAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.di.AppComponent
@@ -22,7 +22,6 @@ import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.utils.ImageCache
-import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import org.slf4j.LoggerFactory
@@ -41,9 +40,6 @@ class ArticleSummaryActivity : BaseActivity() {
 
     @Inject
     protected lateinit var extractorsConfigManager: ArticleSummaryExtractorConfigManager
-
-    @Inject
-    protected lateinit var serializer: ISerializer
 
     @Inject
     protected lateinit var imageCache: ImageCache
@@ -86,25 +82,28 @@ class ArticleSummaryActivity : BaseActivity() {
 
         savedInstanceState?.let { restoreState(it) }
 
-        restoreState(intent)
+        if(savedInstanceState == null) {
+            showParameters(getParameters() as? ArticleSummaryActivityParameters)
+        }
     }
 
-    private fun restoreState(intent: Intent) {
-        restoreState(intent.getStringExtra(EXTRACTOR_URL_INTENT_EXTRA_NAME), intent.getStringExtra(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME))
+    private fun showParameters(parameters: ArticleSummaryActivityParameters?) {
+        if(parameters != null) {
+            restoreState(parameters.extractorConfig.url, parameters.summary)
+        }
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
-        restoreState(savedInstanceState.getString(EXTRACTOR_URL_INTENT_EXTRA_NAME), savedInstanceState.getString(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME))
+        restoreState(savedInstanceState.getString(EXTRACTOR_URL_INTENT_EXTRA_NAME), getAndClearState(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME) as? ArticleSummary)
     }
 
-    private fun restoreState(extractorUrl: String?, serializedLastLoadedSummary: String?) {
+    private fun restoreState(extractorUrl: String?, lastLoadedSummary: ArticleSummary? = null) {
         extractorUrl?.let { initializeArticlesSummaryExtractor(it) }
 
-        if(serializedLastLoadedSummary != null) {
-            val summary = serializer.deserializeObject(serializedLastLoadedSummary, ArticleSummary::class.java)
-            presenter.setArticleSummaryExtractorConfigOnItems(summary, this.extractorConfig) // set extractorConfig on restored ArticleSummaryItems
+        if(lastLoadedSummary != null) {
+            presenter.retrievedArticleSummary(lastLoadedSummary, this.extractorConfig) // set extractorConfig and restored ArticleSummaryItems
 
-            showArticleSummaryOnUIThread(summary)
+            showArticleSummaryOnUIThread(lastLoadedSummary)
         }
         else {
             extractArticlesSummary()
@@ -116,8 +115,9 @@ class ArticleSummaryActivity : BaseActivity() {
 
         outState?.putString(EXTRACTOR_URL_INTENT_EXTRA_NAME, extractorConfig?.url)
 
-        outState?.putString(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME, null) // fallback
-        presenter.lastLoadedSummary?.let { outState?.putString(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME, serializer.serializeObject(it)) }
+        presenter.lastLoadedSummary?.let { storeState(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME, it) }
+
+        adapter.onSaveInstanceState(outState)
     }
 
 
@@ -125,11 +125,13 @@ class ArticleSummaryActivity : BaseActivity() {
         setContentView(R.layout.activity_article_summary)
 
         setSupportActionBar(toolbar)
+        toolbarUtil.adjustToolbarLayoutDelayed(toolbar)
 
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         rcyArticleSummaryItems.addItemDecoration(HorizontalDividerItemDecoration(this))
+        rcyArticleSummaryItems.disableFullscreenMode = true
         rcyArticleSummaryItems.enterFullscreenModeListener = { recyclerViewEnteredFullscreenMode() }
         rcyArticleSummaryItems.leaveFullscreenModeListener = { recyclerViewLeftFullscreenMode() }
 
@@ -215,6 +217,8 @@ class ArticleSummaryActivity : BaseActivity() {
 
         mnLoadMore = menu?.findItem(R.id.mnLoadMore)
 
+        presenter.lastLoadedSummary?.let { setMenuItemLoadMore(it) }
+
         return true
     }
 
@@ -261,8 +265,8 @@ class ArticleSummaryActivity : BaseActivity() {
     private fun showExtractorIconInActionBar(iconPath: File, config: ArticleSummaryExtractorConfig) {
         try {
             val icon = BitmapFactory.decodeFile(iconPath.path)
-            val scaledSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24.toFloat(), resources.displayMetrics).toInt()
-            val scaledIcon = Bitmap.createScaledBitmap(icon, scaledSize, scaledSize, false)
+
+            val scaledIcon = getScaledIcon(icon)
 
             if(icon != scaledIcon) { // if icon didn't get scaled scaledIcon equals icon -> recycling would cause an app crash
                 icon.recycle()
@@ -274,6 +278,19 @@ class ArticleSummaryActivity : BaseActivity() {
         } catch(e: Exception) {
             log.error("Could not load icon from url " + config.iconUrl, e)
         }
+    }
+
+    private fun getScaledIcon(icon: Bitmap): Bitmap? {
+        val maxWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 88f, resources.displayMetrics).toInt()
+        var scaledHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24f, resources.displayMetrics).toInt()
+        var scaledWidth = if (icon.height == 0) scaledHeight else (scaledHeight * (icon.width / icon.height.toFloat())).toInt()
+
+        if(scaledWidth > maxWidth) { // if scaledWidth is now larger then maximum width, scale down to maxWidth
+            scaledWidth = maxWidth
+            scaledHeight = if (icon.width == 0) scaledWidth else (scaledWidth * (icon.height / icon.width.toFloat())).toInt()
+        }
+
+        return Bitmap.createScaledBitmap(icon, scaledWidth, scaledHeight, false)
     }
 
     private fun extractArticlesSummary() {
@@ -301,8 +318,7 @@ class ArticleSummaryActivity : BaseActivity() {
     }
 
     private fun showArticleSummaryOnUIThread(summary: ArticleSummary) {
-        mnLoadMore?.isEnabled = true // disable so that button cannot be pressed till loadMoreItems() result is received
-        mnLoadMore?.isVisible = summary.canLoadMoreItems
+        setMenuItemLoadMore(summary)
 
         adapter.items = summary.articles
 
@@ -310,6 +326,11 @@ class ArticleSummaryActivity : BaseActivity() {
             val centerOffset = (rcyArticleSummaryItems.height - resources.getDimension(R.dimen.list_item_read_later_article_min_height)) / 2
             (rcyArticleSummaryItems.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(summary.indexOfAddedItems, centerOffset.toInt())
         }
+    }
+
+    private fun setMenuItemLoadMore(summary: ArticleSummary) {
+        mnLoadMore?.isEnabled = true
+        mnLoadMore?.isVisible = summary.canLoadMoreItems
     }
 
     private fun articleClicked(item: ArticleSummaryItem) {

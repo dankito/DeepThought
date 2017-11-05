@@ -8,8 +8,8 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
-import android.text.Html
 import android.view.*
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
@@ -25,12 +25,26 @@ import net.dankito.deepthought.android.views.FullscreenRecyclerView
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
+import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
 import javax.inject.Inject
 
 
 abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualActionMenuResourceId: Int, private val onboardingTextResourceId: Int,
                                                        private val optionsMenuResourceId: Int = R.menu.fragment_main_activity_tab_menu) : Fragment() {
+
+    companion object {
+        private const val IS_SEARCH_VIEW_ACTIVATED_EXTRA_NAME = "IS_SEARCH_VIEW_ACTIVATED"
+        private const val LAST_SEARCH_TERM_EXTRA_NAME = "LAST_SEARCH_TERM"
+    }
+
+
+    @Inject
+    protected lateinit var dataManager: DataManager
+
+    @Inject
+    protected lateinit var searchEngine: ISearchEngine
+
 
     private var presenter: IMainViewSectionPresenter? = null
 
@@ -48,6 +62,8 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
 
     protected lateinit var arrowToFloatingActionButton: View
 
+    protected lateinit var vwStartingWhereTranslatedTextViewOnboardingTextEnds: View
+
     private var entitiesToCheckForOnboardingOnViewCreation: List<T>? = null
 
     private var searchMenuItem: MenuItem? = null
@@ -58,12 +74,13 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
 
     private var layoutRootOriginalTopMargin = -1
 
+    private var restoreIsSearchViewActivated = false
+
+    private var lastSearchTermToRestore: String? = null
+
 
     var isCurrentSelectedTab = false
 
-
-    @Inject
-    protected lateinit var dataManager: DataManager
 
 
     protected open fun setupUI(rootView: View) { }
@@ -95,6 +112,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
             btnClearFilteredEntities?.setOnClickListener { clearFilteredEntities() }
 
             arrowToFloatingActionButton = rootView.arrowToFloatingActionButton
+            vwStartingWhereTranslatedTextViewOnboardingTextEnds = rootView.vwStartingWhereTranslatedTextViewOnboardingTextEnds
 
             setupListView(it)
 
@@ -137,7 +155,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
     }
 
     protected open fun multiSelectActionModeBarVisibilityChanged(visible: Boolean) {
-        activity?.findViewById(R.id.fab_menu)?.visibility = if(visible) View.GONE else View.VISIBLE
+        activity?.findViewById(R.id.floatingActionMenu)?.visibility = if(visible) View.GONE else View.VISIBLE
         activity?.findViewById(R.id.bottomViewNavigation)?.visibility = if(visible) View.GONE else View.VISIBLE
 
         if(visible) {
@@ -178,12 +196,12 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
 
         if(recyclerAdapter?.isInMultiSelectMode() == false) {
             if(isCurrentSelectedTab) { // don't set fab_menu's visibility when another tab fragment is currently selected
-                activity.findViewById(R.id.fab_menu)?.visibility = viewVisibility
+                activity.findViewById(R.id.floatingActionMenu)?.visibility = viewVisibility
             }
         }
         else {
             recyclerAdapter?.actionModeBar?.visibility = viewVisibility
-            activity.findViewById(R.id.fab_menu)?.visibility = View.GONE
+            activity.findViewById(R.id.floatingActionMenu)?.visibility = View.GONE
         }
 
         if(topMargin >= 0) {
@@ -216,7 +234,9 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
         }
 
         presenter?.let { presenter ->
-            searchEntities(presenter.getLastSearchTerm()) // TODO: may add a searchEngine.initializationListener
+            searchEngine.addInitializationListener {
+                searchEntities(presenter.getLastSearchTerm())
+            }
         }
     }
 
@@ -230,6 +250,31 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
         }
 
         return false
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+
+        outState?.let {
+            var isSearchViewActivated = false
+            searchView?.let { isSearchViewActivated = !it.isIconified }
+            outState.putBoolean(IS_SEARCH_VIEW_ACTIVATED_EXTRA_NAME, isSearchViewActivated)
+            outState.putString(LAST_SEARCH_TERM_EXTRA_NAME, presenter?.getLastSearchTerm())
+        }
+
+        getListAdapter().onSaveInstanceState(outState)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+
+        getListAdapter().onRestoreInstanceState(savedInstanceState)
+
+        savedInstanceState?.let {
+            restoreIsSearchViewActivated = savedInstanceState.getBoolean(IS_SEARCH_VIEW_ACTIVATED_EXTRA_NAME)
+            lastSearchTermToRestore = savedInstanceState.getString(LAST_SEARCH_TERM_EXTRA_NAME)
+        }
     }
 
 
@@ -261,12 +306,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
         txtOnboardingText?.let { txtOnboardingText ->
             lytOnboardingText?.visibility = View.VISIBLE
 
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(onboardingTextResourceId).toString(), Html.FROM_HTML_MODE_LEGACY)
-            }
-            else {
-                txtOnboardingText.text = Html.fromHtml(txtOnboardingText.context.getText(onboardingTextResourceId).toString())
-            }
+            txtOnboardingText.text = contextHelpUtil.stringUtil.getSpannedFromHtmlWithImages(txtOnboardingText.context.getText(onboardingTextResourceId).toString(), context, android.R.color.black)
         }
 
         searchMenuItem?.isVisible = false
@@ -304,7 +344,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
     }
 
     private fun addSearchResultTextViewToSearchView(searchView: SearchView) {
-        (searchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn) as? View)?.let { searchCloseButton ->
+        searchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn)?.let { searchCloseButton ->
             (searchCloseButton.parent as? LinearLayout)?.let { searchLayout ->
                 val index = searchLayout.indexOfChild(searchCloseButton)
 
@@ -357,19 +397,37 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
             searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.componentName))
             searchView.queryHint = getQueryHint(activity)
 
-            presenter?.getLastSearchTerm()?.let { lastSearchTerm ->
-                if(lastSearchTerm != Search.EmptySearchTerm) {
-                    searchView.isIconified = false
-                    searchView.setQuery(lastSearchTerm, true)
-                }
-            }
+            // if imeOptions aren't set like this searchView would take whole remaining screen when focused in landscape mode (see https://stackoverflow.com/questions/15296129/searchview-and-keyboard)
+            val searchInput = searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text) as? EditText
+            searchInput?.imeOptions = getSearchViewImeOptions()
 
             searchView.setOnQueryTextListener(entriesQueryTextListener) // move setOnQueryTextListener() behind searchView.setQuery() (in presenter?.getLastSearchTerm()?.let {})
             // as otherwise when lastSearchTerm != null onQuerySubmit gets called (and therefore e.g. tag filter applied)
 
             adjustSearchViewLayout(searchView)
+
+            restoreLastSearchState(searchView)
         }
     }
+
+    private fun restoreLastSearchState(searchView: SearchView) {
+        presenter?.getLastSearchTerm()?.let { lastSearchTerm ->
+            if (lastSearchTerm != Search.EmptySearchTerm) {
+                searchView.isIconified = false
+                searchView.setQuery(lastSearchTerm, false)
+            }
+        }
+
+        if(restoreIsSearchViewActivated == true) {
+            searchView.isIconified = false
+
+            lastSearchTermToRestore?.let {
+                searchView.setQuery(it, false)
+            }
+        }
+    }
+
+    protected open fun getSearchViewImeOptions() = (EditorInfo.IME_ACTION_SEARCH or EditorInfo.IME_FLAG_NO_EXTRACT_UI)
 
     private fun adjustSearchViewLayout(searchView: SearchView) {
         (searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text) as? EditText)?.let { searchField ->

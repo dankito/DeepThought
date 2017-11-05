@@ -3,9 +3,10 @@ package net.dankito.deepthought.android.dialogs
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
 import net.dankito.service.data.ReferenceService
+import net.dankito.service.data.messages.EntryChanged
 import net.dankito.service.data.messages.ReferenceChanged
 import net.dankito.service.search.specific.EntriesSearch
 import net.engio.mbassy.listener.Handler
@@ -25,7 +26,7 @@ class ReferenceEntriesListDialog: EntriesListDialogBase() {
     protected lateinit var referenceService: ReferenceService
 
 
-    private var reference: Reference? = null // made it nullable instead of lateinit so that at least application doesn't crash if it cannot be set on restore
+    private var source: Source? = null // made it nullable instead of lateinit so that at least application doesn't crash if it cannot be set on restore
 
     private val eventBusListener = EventBusListener()
 
@@ -38,8 +39,8 @@ class ReferenceEntriesListDialog: EntriesListDialogBase() {
     override fun getDialogTag() = TAG
 
 
-    fun showDialog(fragmentManager: FragmentManager, reference: Reference) {
-        this.reference = reference
+    fun showDialog(fragmentManager: FragmentManager, source: Source) {
+        this.source = source
 
         showDialog(fragmentManager)
     }
@@ -61,7 +62,7 @@ class ReferenceEntriesListDialog: EntriesListDialogBase() {
         super.onSaveInstanceState(outState)
 
         outState?.let {
-            outState.putString(REFERENCE_ID_EXTRA_NAME, reference?.id)
+            outState.putString(REFERENCE_ID_EXTRA_NAME, source?.id)
         }
     }
 
@@ -70,20 +71,20 @@ class ReferenceEntriesListDialog: EntriesListDialogBase() {
 
         savedInstanceState.getString(REFERENCE_ID_EXTRA_NAME)?.let { referenceId ->
             referenceService.retrieve(referenceId)?.let {
-                this.reference = it
+                this.source = it
             }
         }
     }
 
 
-    override fun retrieveEntries(callback: (List<Entry>) -> Unit) {
-        searchEngine.searchEntries(EntriesSearch(entriesMustHaveThisReference = reference) {
+    override fun retrieveEntries(callback: (List<Item>) -> Unit) {
+        searchEngine.searchEntries(EntriesSearch(entriesMustHaveThisSource = source) {
             callback(it)
         })
     }
 
-    override fun getDialogTitle(entries: List<Entry>): String {
-        return reference?.title ?: super.getDialogTitle(entries)
+    override fun getDialogTitle(items: List<Item>): String {
+        return source?.title ?: super.getDialogTitle(items)
     }
 
 
@@ -91,9 +92,14 @@ class ReferenceEntriesListDialog: EntriesListDialogBase() {
 
         @Handler
         fun tagChanged(referenceChanged: ReferenceChanged) {
-            if(referenceChanged.entity.id == reference?.id) {
+            if(referenceChanged.entity.id == source?.id) {
                 retrieveAndShowEntries()
             }
+        }
+
+        @Handler
+        fun entriesChanged(entryChanged: EntryChanged) {
+            retrieveAndShowEntries()
         }
 
     }

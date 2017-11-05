@@ -1,6 +1,6 @@
 package net.dankito.service.search.writerandsearcher
 
-import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Item
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.messages.EntryChanged
 import net.dankito.service.eventbus.EventBusPriorities
@@ -21,18 +21,18 @@ import org.apache.lucene.search.WildcardQuery
 
 
 /**
- * An Index that only contains entry ids so that searching for all entries (e.g. on app start) is a little bit faster than searching in big EntryIndexWriterAndSearcher
+ * An Index that only contains item ids so that searching for all items (e.g. on app start) is a little bit faster than searching in big EntryIndexWriterAndSearcher
  */
 class EntryIdsIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool)
-    : IndexWriterAndSearcher<Entry>(entryService, eventBus, osHelper, threadPool) {
+    : IndexWriterAndSearcher<Item>(entryService, eventBus, osHelper, threadPool) {
 
     companion object {
-        private val MaxEntriesSearchResults = 1000000 // e.g. for AllEntriesCalculatedTag all entries must be returned
+        private val MaxEntriesSearchResults = 1000000 // e.g. for AllEntriesCalculatedTag all items must be returned
     }
 
 
     override fun getDirectoryName(): String {
-        return "entry_ids"
+        return "item_ids"
     }
 
     override fun getIdFieldName(): String {
@@ -40,8 +40,8 @@ class EntryIdsIndexWriterAndSearcher(entryService: EntryService, eventBus: IEven
     }
 
 
-    override fun addEntityFieldsToDocument(entity: Entry, doc: Document) {
-        // nothing to do here, entry's id is already added in parent to doc
+    override fun addEntityFieldsToDocument(entity: Item, doc: Document) {
+        // nothing to do here, item's id is already added in parent to doc
 
         doc.add(LongField(FieldName.EntryIdsCreated, entity.createdOn.time, Field.Store.YES))
     }
@@ -50,7 +50,7 @@ class EntryIdsIndexWriterAndSearcher(entryService: EntryService, eventBus: IEven
     fun searchEntryIds(search: EntriesSearch, termsToFilterFor: List<String>) {
         val query = WildcardQuery(Term(getIdFieldName(), "*"))
 
-        executeQueryForSearchWithCollectionResult(search, query, Entry::class.java, MaxEntriesSearchResults, SortOption(FieldName.EntryCreated, SortOrder.Descending, SortField.Type.LONG))
+        executeQueryForSearchWithCollectionResult(search, query, Item::class.java, MaxEntriesSearchResults, SortOption(FieldName.EntryCreated, SortOrder.Descending, SortField.Type.LONG))
     }
 
 

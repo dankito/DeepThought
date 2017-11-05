@@ -1,15 +1,15 @@
 package net.dankito.deepthought.javafx.dialogs.entry
 
-import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Item
 
 
 class EditEntryView : EditEntryViewBase() {
 
-    val entry: Entry by param()
+    val item: Item by param()
 
 
     init {
-        showData(entry, entry.tags, entry.reference, entry.reference?.series)
+        showData(item, item.tags, item.source, item.source?.series)
 
         hasUnsavedChanges.value = false
     }

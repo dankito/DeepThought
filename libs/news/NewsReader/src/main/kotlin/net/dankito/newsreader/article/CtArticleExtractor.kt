@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
@@ -33,7 +33,7 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
         return (url.toLowerCase().contains("://www.heise.de/ct/") || url.toLowerCase().contains("://m.heise.de/ct/")) && url.length > "://m.heise.de/ct/".length + 5
     }
 
-    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
+    override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("main section").first()?.let { sectionElement ->
             parseDesktopSite(url, sectionElement, extractionResult)
             return
@@ -45,7 +45,7 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
     }
 
 
-    private fun parseDesktopSite(url: String, sectionElement: Element, extractionResult: EntryExtractionResult) {
+    private fun parseDesktopSite(url: String, sectionElement: Element, extractionResult: ItemExtractionResult) {
         val articleEntry = createEntry(url, sectionElement)
 
         val reference = createReference(url, sectionElement)
@@ -53,7 +53,7 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
         extractionResult.setExtractedContent(articleEntry, reference)
     }
 
-    private fun createEntry(url: String, sectionElement: Element): Entry {
+    private fun createEntry(url: String, sectionElement: Element): Item {
         val abstractString = sectionElement.select("p.article_page_intro strong").html()
 
         var content = ""
@@ -76,7 +76,7 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
 
         content += extractPatchesIfAny(sectionElement)
 
-        return Entry(content, abstractString)
+        return Item(content, abstractString)
     }
 
     private fun extractPatchesIfAny(sectionElement: Element): String {
@@ -105,7 +105,7 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
     }
 
 
-    private fun createReference(articleUrl: String, sectionElement: Element): Reference {
+    private fun createReference(articleUrl: String, sectionElement: Element): Source {
         val headerElement = sectionElement.select("header").first()
 
         val title = headerElement.select("h1").text()
@@ -117,26 +117,26 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
 
         val publishingDate = extractDate(sectionElement)
 
-        return Reference(articleUrl, title, publishingDate, subTitle = subTitle)
+        return Source(articleUrl, title, publishingDate, subTitle = subTitle)
     }
 
 
-    private fun parseMobileSite(url: String, article: Element, extractionResult: EntryExtractionResult) {
+    private fun parseMobileSite(url: String, article: Element, extractionResult: ItemExtractionResult) {
         val reference = extractMobileArticleReference(article, url)
 
         val abstract = article.select("p.lead_text").first()?.text()?.trim() ?: ""
 
-        article.select("h1, figure.aufmacherbild, time, span.author, a.comments, p.lead_text, .comment, .btn-toolbar .whatsbroadcast-toolbar, #whatsbroadcast, " +
+        article.select("h1, time, span.author, a.comments, p.lead_text, .comment, .btn-toolbar .whatsbroadcast-toolbar, #whatsbroadcast, " +
                 ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta, .widget-werbung").remove()
         val content = article.html()
 
-        extractionResult.setExtractedContent(Entry(content, abstract), reference)
+        extractionResult.setExtractedContent(Item(content, abstract), reference)
     }
 
-    private fun extractMobileArticleReference(article: Element, url: String): Reference {
+    private fun extractMobileArticleReference(article: Element, url: String): Source {
         val title = article.select("h1").first()?.text()?.trim() ?: ""
 
-        val reference = Reference(url, title)
+        val reference = Source(url, title)
 
         article.select("figure.aufmacherbild img").first()?.let {
             reference.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)

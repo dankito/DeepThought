@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/txtAskExtractorNameLabel"
         android:layout_marginTop="@dimen/dialog_article_summary_extractor_config_enter_name_margin_top"
+        android:imeOptions="flagNoExtractUi"
     />
 
 

@@ -2,7 +2,6 @@ package net.dankito.deepthought.android.fragments
 
 import android.app.Activity
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.SearchView
 import android.view.ActionMode
 import android.view.MenuItem
 import android.view.View
@@ -14,10 +13,7 @@ import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapt
 import net.dankito.deepthought.android.adapter.TagRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.TagEntriesListDialog
-import net.dankito.deepthought.model.BaseEntity
-import net.dankito.deepthought.model.CalculatedTag
-import net.dankito.deepthought.model.LocalSettings
-import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.*
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.deepthought.ui.presenter.TagsListPresenter
@@ -25,16 +21,12 @@ import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.view.ITagsListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
-import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
 import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
 
 
 class TagsListView : MainActivityTabFragment<Tag>(R.menu.tag_contextual_action_menu, R.string.tab_tags_onboarding_text), ITagsListView {
-
-    @Inject
-    protected lateinit var searchEngine: ISearchEngine
 
     @Inject
     protected lateinit var searchResultsUtil: TagsSearchResultsUtil
@@ -51,6 +43,9 @@ class TagsListView : MainActivityTabFragment<Tag>(R.menu.tag_contextual_action_m
     @Inject
     protected lateinit var router: IRouter
 
+    @Inject
+    protected lateinit var allCalculatedTags: AllCalculatedTags
+
 
     private lateinit var presenter: TagsListPresenter
 
@@ -65,7 +60,7 @@ class TagsListView : MainActivityTabFragment<Tag>(R.menu.tag_contextual_action_m
 
 
     override fun initPresenter(): IMainViewSectionPresenter {
-        presenter = TagsListPresenter(this, dataManager, searchEngine, searchResultsUtil, tagService, deleteEntityService, dialogService, router)
+        presenter = TagsListPresenter(this, allCalculatedTags, searchEngine, searchResultsUtil, tagService, deleteEntityService, dialogService, router)
 
         adapter = TagRecyclerAdapter(presenter)
 
@@ -123,11 +118,7 @@ class TagsListView : MainActivityTabFragment<Tag>(R.menu.tag_contextual_action_m
     }
 
 
-    override fun initSearchView(searchView: SearchView) {
-        super.initSearchView(searchView)
-
-        searchView.imeOptions = EditorInfo.IME_ACTION_GO
-    }
+    override fun getSearchViewImeOptions() = EditorInfo.IME_ACTION_GO or EditorInfo.IME_FLAG_NO_EXTRACT_UI
 
     override fun getQueryHint(activity: Activity) = activity.getString(R.string.search_hint_tags)
 

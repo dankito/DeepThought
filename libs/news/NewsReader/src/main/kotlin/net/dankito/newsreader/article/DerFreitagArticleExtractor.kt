@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
@@ -27,7 +27,7 @@ class DerFreitagArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
         return url.toLowerCase().contains("://www.freitag.de/") && url.length > "://www.freitag.de/".length + 5
     }
 
-    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
+    override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("article").first()?.let { articleElement ->
             val articleEntry = createEntry(articleElement, url)
 
@@ -37,12 +37,12 @@ class DerFreitagArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
         }
     }
 
-    private fun createEntry(articleElement: Element, url: String): Entry {
+    private fun createEntry(articleElement: Element, url: String): Item {
         val abstractString = extractAbstract(articleElement)
 
         val content = extractContent(articleElement, url)
 
-        return Entry(content, abstractString)
+        return Item(content, abstractString)
     }
 
     private fun extractAbstract(articleElement: Element): String {
@@ -88,7 +88,7 @@ class DerFreitagArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
         return ""
     }
 
-    private fun createReference(articleUrl: String, articleElement: Element): Reference {
+    private fun createReference(articleUrl: String, articleElement: Element): Source {
         var title = ""
 
         articleElement.select("h1.title").first()?.let { titleElement ->
@@ -97,7 +97,7 @@ class DerFreitagArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
 
         val publishingDate = extractDate(articleElement)
 
-        val articleReference = Reference(articleUrl, title, publishingDate)
+        val articleReference = Source(articleUrl, title, publishingDate)
         articleReference.issue = tryToGetIssue(articleElement)
 
         tryToExtractPreviewImage(articleElement, articleReference)
@@ -105,9 +105,9 @@ class DerFreitagArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
         return articleReference
     }
 
-    private fun tryToExtractPreviewImage(articleElement: Element, articleReference: Reference) {
+    private fun tryToExtractPreviewImage(articleElement: Element, articleSource: Source) {
         articleElement.select(".c-article-image__media").first()?.let { previewImageElement ->
-            articleReference.previewImageUrl = previewImageElement.attr("data-src")
+            articleSource.previewImageUrl = previewImageElement.attr("data-src")
         }
     }
 

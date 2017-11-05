@@ -2,16 +2,15 @@
 
     <string name="move_upward_behaviour" translatable="false">net.dankito.deepthought.android.views.MoveUpwardBehavior</string>
 
-    <string name="tab_entries_title">Entries</string>
+    <string name="tab_items_title">Items</string>
     <string name="tab_tags_title">Tags</string>
-    <string name="tab_references_title">References</string>
+    <string name="tab_sources_title">Sources</string>
     <string name="tab_read_later_articles_title">Read later</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="floating_action_menu_add_entry">Entry</string>
-    <string name="floating_action_menu_add_tag">Tag</string>
+    <string name="floating_action_menu_add_item">Item</string>
     <string name="floating_action_menu_add_newspaper_article">Newspaper Article</string>
     <string name="floating_action_button_add_article_of_newspaper">%s Article</string>
 
@@ -27,6 +26,7 @@
     <string name="action_load_more">Load more</string>
     <string name="contextual_action_menu_count_items_selected" formatted="false">%d / %d</string>
     <string name="action_apply">Apply</string>
+    <string name="action_ok">OK</string>
     <string name="action_yes">Yes</string>
     <string name="action_no">No</string>
 
@@ -42,74 +42,92 @@
         <item quantity="one">%d result</item>
         <item quantity="other">%d results</item>
     </plurals>
-    <string name="search_hint_entries">Search Entries</string>
-    <string name="search_hint_tags">Search Tags</string>
-    <string name="search_hint_references">Search References</string>
-    <string name="search_hint_read_later_articles">Search Read later Articles</string>
+    <string name="search_hint_items">Find Items</string>
+    <string name="search_hint_tags">Find Tags</string>
+    <string name="search_hint_sources">Find Sources</string>
+    <string name="search_hint_read_later_articles">Find Read later articles</string>
 
     <string name="fragment_main_activity_tabs_filtered_entities_label">Filtered:</string>
 
     <!-- Removed <p></p> from last paragraph as otherwise txtOnboardingText has some padding at end and and PointToFloatingActionButtonArrow therefore doesn't reach to text -->
-    <string name="tab_entries_onboarding_text"><![CDATA[
-        <p>To add a new entry, press the + button at the bottom right corner and select \'Entry\'.</p>
-        To add a newspaper article, press the + button at the bottom right corner, select \'Newspaper Article\' and enter the url of a newspaper site or a RSS feed url.
-    ]]>
-    </string>
+    <string name="tab_items_onboarding_text"><![CDATA[
+        <p>There are 3 ways to add content to DeepThought:</p>
+        <p>For <b>own texts (thoughts, notes, …)</b>, press the <b>(+) button</b> and select <b>Item</b>.</p>
+        <p>To save a <b>Web page</b> select DeepThought in your <b>browser\'s <u>Share</u> menu</b> (in <img src=\"ic_more_vert_white_48dp\" /> / <img src=\"ic_share_white_48dp\" />).</p>
+        To add a <b>newspaper article via RSS feed</b>, press the <b>(+) button</b> and select <b>Newspaper Article</b>.
+    ]]></string>
     <string name="tab_tags_onboarding_text"><![CDATA[
-        <p>Tags are used to organize your entries.</p>
-        <p>To add a tag to an entry, select an entry in tab \'Entries\' and press on \'Tags\'. Enter the name of your new tag and press \'New\'.</p>
+        <p>Tags help you to organize your items and to find them faster.</p>
+        <p>Select an item under the <b>Items</b> tab on the bottom left and add tags to it</p>
     ]]>
     </string>
-    <string name="tab_reference_onboarding_text"><![CDATA[
-        <p>You can add references to your entries to remember where you found that entry.</p>
-        <p>To add a reference to an entry, select an entry in tab \'Entries\' and press on \'Reference\'. <br /> Enter the title of your new reference and press the save icon.</p>
+    <string name="tab_source_onboarding_text"><![CDATA[
+        <p>Add sources to your items to remember where you found the content.</p>
+        <p>Select an item under the <b>Items</b> tab on the bottom left and add a source.</p>
     ]]>
     </string>
     <string name="tab_read_later_articles_onboarding_text"><![CDATA[
-        <p>If you don\'t have time to read an article now or will come soon to an area with bad internet
-        connection you can save an article for later reading.</p>
-        <p>Articles for later reading are stored offline so that you can read them without internet connection, but are not saved yet to your entries collection.</p>
-        <p>To add an article for later reading, press the + button at the bottom right corner, press \'Newspaper Article\', select a newspaper site and in the new window with all
-            articles of that newspaper site, long press an article and select \'Read later\' at the bottom.</p>
+        <p>Articles for later reading are stored offline so that you can read them without internet connection. They are not yet part of your items collection.</p>
+        <p>Press the <b>(+) button</b>, select <b>Newspaper Article</b> and press there on an article <b>Read later</b>.</p>
     ]]>
     </string>
 
 
-    <string name="activity_edit_entry_edit_content_onboarding_text"><![CDATA[
-        <p>Click here to set entry\'s information (the data you actually want to save).</p>
-        <p>(Click on the fields above or the + button at bottom right edge to set entry\'s abstract, reference and tags.)</p>
+    <string name="activity_edit_item_edit_content_onboarding_text"><![CDATA[
+        Click here to create your content.
+    ]]>
+    </string>
+
+    <string name="activity_edit_item_add_item_properties_onboarding_text"><![CDATA[
+        Tap <b>(+) button</b> to set <b>tags</b>, <b>source</b> and <b>title</b>.
     ]]>
     </string>
 
 
-    <string name="context_help_list_item_actions">If you want to execute an action on only one item, swipe the item from right to left.\nIf
-        you want to execute an action on multiple items, long press that item.\nThis
-        behaviour is valid for almost all lists. Try it.
+    <string name="context_help_list_item_actions"><![CDATA[
+        If you want to execute an action on only one item, swipe the item from right to left.<br />
+        If you want to execute an action on multiple items, long press each item.<br />
+        This also works for other lists.
+    ]]>
     </string>
 
-    <string name="context_help_search_tags">To search for multiple tags, enter a comma (,).\nTo
-        filter entered tags, press the action button (\'Enter\') on keyboard.
+    <string name="context_help_search_tags"><![CDATA[
+        To to select multiple keywords, separate them in the search field with a comma (,).
+    ]]>
     </string>
 
-    <string name="context_help_set_tags_on_entry">To select multiple tags, enter a comma (,).\nTo
-        create a new or toggle entered tags, press the action button (\'Enter\') on keyboard.
+    <string name="context_help_set_tags_on_item"><![CDATA[
+        To select multiple tags, enter a comma (,).<br />
+        To create a new or toggle entered tags, press the button or \'Enter\' on your keyboard.<br />
+        (And double tap \'Enter\' to also apply changes.)
+    ]]>
     </string>
 
-    <string name="context_help_save_entry_changes">The changes done are now only applied, to save them press the \'Save\' button at bottom right.
+    <string name="context_help_save_item_changes"><![CDATA[
+        The changes done are now only applied, to save them press the <b>Save</b> button at bottom right.
+    ]]>
     </string>
 
-    <string name="context_help_entry_information_fullscreen">Scrolling entry\'s information as you just did starts fullscreen mode.\nYou can leave it by simply tapping
-        anywhere except on links and images in the screen.
+    <string name="context_help_item_content_fullscreen"><![CDATA[
+        Scrolling item\'s content as you just did starts fullscreen mode.<br />
+        You can leave it by simply tapping anywhere except on links and images in the screen.
+    ]]>
     </string>
 
-    <string name="context_help_entry_information_fullscreen_gestures">You just invoked one of the fullscreen gestures:\n\n- Fast swipe from right to left:
-        Leave edit entry view\n- Fast swipe from left to right: Edit entry\'s tags\n- Double tap: Save entry and close edit entry view.
+    <string name="context_help_item_content_fullscreen_gestures">You just performed one of the fullscreen gestures:\n\n- Fast swipe from right to left:
+        Leave edit item view\n- Fast swipe from left to right: Edit item\'s tags\n- Double tap: Leave fullscreen view.
+    </string>
+
+    <string name="context_help_saved_read_later_article_is_now_in_items"><![CDATA[
+        <p>The article got now saved in your items collection.</p>That means you now find it in <b>Items</b>, not in <b>Read later</b> anymore.
+    ]]>
     </string>
 
 
     <string name="dialog_article_summary_extractors_add_extractor">Add</string>
 
-    <string name="dialog_add_article_summary_extractor_feed_or_website_url">Feed or website url\n(e.g. nytimes.com or https://www.theguardian.com/uk/rss)</string>
+    <string name="dialog_add_article_summary_extractor_news_page_url_label">To add a RSS Feed enter the address of a news page, e.g. \"nytimes.com\" or
+        \"theguardian.com\".</string>
     <string name="dialog_add_article_summary_extractor_check_feed_or_website_url">Check</string>
     <string name="dialog_add_article_summary_extractor_found_feeds">Found feeds:</string>
     <string name="dialog_add_article_summary_extractor_recommended_feed_title_addition">(recommended)</string>
@@ -118,59 +136,74 @@
     <string name="dialog_article_summary_extractor_config_select_icon">Select icon:</string>
     <string name="dialog_article_summary_extractor_alert_message_delete_config" formatted="false">Really delete news site %s?</string>
 
-    <string name="menu_share_reference_url">Url</string>
-    <string name="menu_share_entry_content">Information</string>
+    <string name="menu_share_source_url">Link</string>
+    <string name="menu_share_item_content">Content</string>
 
-    <string name="activity_edit_entry_title">Entry</string>
-    <string name="activity_edit_entry_content_label">Information</string>
-    <string name="activity_edit_entry_edit_content_title">Information</string>
-    <string name="activity_edit_entry_abstract_label">Title / Abstract</string>
-    <string name="activity_edit_entry_edit_abstract_title">Title / Abstract</string>
-    <string name="activity_edit_entry_reference_label">Reference</string>
-    <string name="activity_edit_entry_tags_label">Tags</string>
-    <string name="activity_edit_entry_tags_onboarding_text">Add meaningful tags, so that you can find it later easily</string>
-    <string name="activity_edit_entry_reference_onboarding_text">Save where you have found this information</string>
-    <string name="activity_edit_entry_abstract_onboarding_text">Title or summary for this information</string>
-    <string name="activity_edit_entry_alert_message_entry_contains_unsaved_changes">Entry contains unsaved changes.\n\nShould these changes now be saved?</string>
+    <string name="activity_edit_item_title">Item</string>
+    <string name="activity_edit_item_content_label">Content</string>
+    <string name="activity_edit_item_edit_content_title">Content</string>
+    <string name="activity_edit_item_edit_content_hint">What do you want to keep (thought, note, quote, etc.)?</string>
+    <string name="activity_edit_item_summary_label">Title / Summary</string>
+    <string name="activity_edit_item_edit_summary_title">Title / Summary</string>
+    <string name="activity_edit_item_source_label">Source</string>
+    <string name="activity_edit_item_tags_label">Tags</string>
+    <string name="activity_edit_item_tags_onboarding_text">Add meaningful tags, so that you can find it later easily</string>
+    <string name="activity_edit_item_source_onboarding_text">Save where you have found this information (link, book)</string>
+    <string name="activity_edit_item_summary_onboarding_text">Title or summary for this information</string>
+    <string name="activity_edit_item_alert_message_item_contains_unsaved_changes">Item contains unsaved changes.\n\nShould these changes now be saved?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
-    <string name="activity_edit_entry_alert_message_entry_has_been_edited">Entry has been edited (probably on a synchronized device).\n\nWhen
-        you now save the entry the other changes get overwritten.</string>
-    <string name="activity_edit_entry_alert_message_delete_entry">Would you like to delete entry \'%s\'?</string>
+    <string name="activity_edit_item_alert_message_item_has_been_edited">Item has been edited (probably on a synchronized device).\n\nWhen
+        you now save the item the other changes get overwritten.</string>
+    <string name="activity_edit_item_alert_message_delete_item">Would you like to delete item \'%s\'?</string>
 
-    <string name="dialog_tags_on_entry_title">Tags</string>
-    <string name="dialog_tags_on_entry_tags_label">Tags:</string>
-    <string name="dialog_tags_on_entry_create_tag">New</string>
-    <string name="dialog_tags_on_entry_toggle_tags">Toggle</string>
-    <plurals name="dialog_tags_on_entry_confirm_create_tags">
+    <string name="dialog_tags_on_item_title">Tags</string>
+    <string name="dialog_tags_on_item_tags_label">Tags:</string>
+    <string name="dialog_tags_on_item_create_tag">New</string>
+    <string name="dialog_tags_on_item_add_tags">Add</string>
+    <string name="dialog_tags_on_item_remove_tags">Remove</string>
+    <string name="dialog_tags_on_item_toggle_tags">Add / Remove</string>
+    <plurals name="dialog_tags_on_item_confirm_create_tags">
         <item quantity="one">Tag %1$s does not exist.\nWould you like to create it?</item>
         <item quantity="other">Tags %1$s and %2$s do not exist.\nWould you like to create them?</item>
     </plurals>
 
-    <string name="activity_edit_reference_title">Reference</string>
-    <string name="activity_edit_reference_use_existing_label">Use existing:</string>
-    <string name="activity_edit_reference_create_reference">New …</string>
-    <string name="activity_edit_reference_create_reference_from_isbn">From ISBN …</string>
-    <string name="activity_edit_reference_title_label">Title</string>
-    <string name="activity_edit_reference_series_label">Series</string>
-    <string name="activity_edit_reference_issue_label">Issue</string>
-    <string name="activity_edit_reference_publishing_date_label">Publishing date</string>
-    <string name="activity_edit_reference_url_label">Url</string>
-    <string name="activity_edit_reference_error_could_not_parse_publishing_date" formatted="false">Cannot parse %s to date</string>
-    <string name="activity_edit_reference_alert_message_reference_contains_unsaved_changes">Reference contains unsaved changes.\n\nShould these changes now be saved?</string>
+    <string name="activity_edit_source_title">Source</string>
+    <string name="activity_edit_source_use_existing_label">Select existing source:</string>
+    <string name="activity_edit_source_create_source">New …</string>
+    <string name="activity_edit_source_create_source_from_isbn">From ISBN …</string>
+    <string name="activity_edit_source_title_label">Title</string>
+    <string name="activity_edit_source_series_label">Series</string>
+    <string name="activity_edit_source_issue_label">Issue</string>
+    <string name="activity_edit_source_publishing_date_label">Publishing date</string>
+    <string name="activity_edit_source_url_label">Web address</string>
+    <string name="activity_edit_source_error_could_not_parse_publishing_date" formatted="false">Cannot parse %s to date</string>
+    <string name="activity_edit_source_alert_message_create_new_source">Do you really want to create a new source?\n\nThe current source then
+        gets discarded and a new one will be created.</string>
+    <string name="activity_edit_source_alert_message_create_new_source_current_one_has_unsaved_changes">Current source has unsaved changes.\n\nDo you want to
+        save these before?</string>
+    <string name="activity_edit_source_alert_message_source_contains_unsaved_changes">Source contains unsaved changes.\n\nShould these changes now be saved?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
-    <string name="activity_edit_reference_alert_message_reference_has_been_edited">Reference has been edited (probably on a synchronized device).\n\nWhen
-        you now save the reference the other changes get overwritten.</string>
+    <string name="activity_edit_source_alert_message_source_has_been_edited">Source has been edited (probably on a synchronized device).\n\nWhen
+        you now save the source the other changes get overwritten.</string>
 
     <string name="activity_edit_series_title">Series</string>
-    <string name="activity_edit_series_use_existing_label">Use existing:</string>
+    <string name="activity_edit_series_use_existing_label">Select existing series:</string>
     <string name="activity_edit_series_create_series">New …</string>
     <string name="activity_edit_series_create_series_from_isbn">From ISBN …</string>
-    <string name="activity_edit_series_title_label">Title</string>
-    <string name="activity_edit_series_alert_message_series_contains_unsaved_changes">Reihe enthält nicht gespeicherte Änderungen.\n\nSollen diese Änderungen nun
-        gespeichert werden?</string>
+    <string name="activity_edit_series_title_label">Series title</string>
+    <string name="activity_edit_series_alert_message_create_new_series">Do you really want to create a new Series?\n\nThe current series then
+        gets discarded and a new one will be created.</string>
+    <string name="activity_edit_series_alert_message_create_new_series_current_one_has_unsaved_changes">Current series has unsaved changes.\n\nDo you want to
+        save these before?</string>
+    <string name="activity_edit_series_alert_message_series_contains_unsaved_changes">Series has unsaved changes.\n\nDo you want to save these changes?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
     <string name="activity_edit_series_alert_message_series_has_been_edited">Series has been edited (probably on a synchronized device).\n\nWhen
         you now save the series the other changes get overwritten.
+    </string>
+
+    <string name="snackbar_extract_item_from_url"><![CDATA[
+        Detected a link in clipboard from <b><u>%1$s</u></b>. Would you like to create an item from it?
+    ]]>
     </string>
 
     <string name="synchronize_data_with_this_device">Synchronize data with</string>
@@ -181,12 +214,13 @@
     <string name="alert_title_enter_response_code_for_permitting_synchronization" formatted="false">Enter Code shown on %s:</string>
     <string name="alert_title_entered_response_code_was_wrong">Entered Code was wrong.\nEnter Code shown on %s:</string>
 
-    <string name="error_no_rss_or_atom_feed_found_for_url" formatted="false">No RSS or Atom feed found for url %s</string>
-    <string name="error_cannot_read_feed_or_extract_feed_addresses_from_url" formatted="false">Cannot read feed or extract feed addresses from url %s: %s</string>
+    <string name="error_no_rss_or_atom_feed_found_for_url" formatted="false">No RSS or Atom feed found for address %s</string>
+    <string name="error_cannot_read_feed_or_extract_feed_addresses_from_url" formatted="false">Cannot read feed or extract feed addresses from %s: %s</string>
 
-    <string name="bild_easter_egg">Wir respektieren selbstverständlich die Meinungsfreiheit.\nWir haben jedoch sehr viel Zeit und Mühe in diese App gesteckt und
-        möchten nicht, dass unsere Mühen verwendet werden solch ein hetzerisches und verlogenes Machwerk wie die Bild zu lesen. Die Welt wäre eine bessere ohne Bild.\nDie
-        App wird zur Strafe nun abstürzen.
-    </string>
+
+    <!-- Widget on home screen to quick access all items -->
+
+    <string name="widget_items_label">Items</string>
+    <string name="widget_items_empty_list">You have no saved items yet.</string>
 
 </resources>

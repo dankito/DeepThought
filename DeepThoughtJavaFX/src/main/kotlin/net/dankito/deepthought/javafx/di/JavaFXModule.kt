@@ -4,6 +4,9 @@ import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.ReferencePersister
+import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.javafx.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.javafx.appstart.JavaFXAppInitializer
 import net.dankito.deepthought.javafx.dialogs.JavaFXDialogService
@@ -11,16 +14,22 @@ import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardService
 import net.dankito.deepthought.javafx.service.communication.JavaFXDeviceRegistrationHandler
+import net.dankito.deepthought.javafx.service.import_export.DataImporterExporterManager
 import net.dankito.deepthought.javafx.service.network.JavaFXNetworkConnectivityManager
 import net.dankito.deepthought.javafx.service.settings.JavaFXLocalSettingsStore
+import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
-import net.dankito.deepthought.ui.presenter.util.EntryPersister
 import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractorsManager
 import net.dankito.service.data.ReadLaterArticleService
+import net.dankito.service.data.TagService
+import net.dankito.service.data.event.EntityChangedNotifier
+import net.dankito.service.eventbus.IEventBus
+import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
+import net.dankito.utils.IThreadPool
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.services.network.INetworkConnectivityManager
 import net.dankito.utils.services.network.NetworkHelper
@@ -96,6 +105,22 @@ class JavaFXModule(private val flavorInstanceProvider: JavaFXInstanceProvider, p
     @Singleton
     fun provideImplementedArticleSummaryExtractorsManager(webClient: IWebClient) : IImplementedArticleSummaryExtractorsManager {
         return flavorInstanceProvider.provideImplementedArticleSummaryExtractorsManager(webClient)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAllCalculatedTags(searchEngine: ISearchEngine, eventBus: IEventBus, entityChangedNotifier: EntityChangedNotifier, localization: Localization) : AllCalculatedTags {
+        return AllCalculatedTags(searchEngine, eventBus, entityChangedNotifier, localization)
+    }
+
+
+    // TODO: move to CommonModule again as soon as importing/exporting is implemented in Android
+    @Provides
+    @Singleton
+    fun provideDataImporterExporterManager(searchEngine: ISearchEngine, entryPersister: EntryPersister, tagService: TagService,
+                                           referencePersister: ReferencePersister, seriesPersister: SeriesPersister, threadPool: IThreadPool)
+            : DataImporterExporterManager {
+        return DataImporterExporterManager(searchEngine, entryPersister, tagService, referencePersister, seriesPersister, threadPool)
     }
 
 }

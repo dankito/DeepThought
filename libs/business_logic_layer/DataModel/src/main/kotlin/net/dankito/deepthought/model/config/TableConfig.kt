@@ -22,7 +22,7 @@ class TableConfig {
         const val DeepThoughtLocalUserJoinColumnName = "local_user_id"
         const val DeepThoughtLocalDeviceJoinColumnName = "local_device_id"
         const val DeepThoughtLocalSettingsJoinColumnName = "local_settings_id"
-        const val DeepThoughtNextEntryIndexColumnName = "next_entry_index"
+        const val DeepThoughtNextItemIndexColumnName = "next_item_index"
 
 
         /*          User Table Config        */
@@ -75,45 +75,47 @@ class TableConfig {
         const val LocalSettingsSearchIndexVersionColumnName = "search_index_version"
         const val LocalSettingsHtmlEditorVersionColumnName = "html_editor_version"
         const val LocalSettingsLastDatabaseOptimizationTimeColumnName = "last_database_optimization_time"
-        const val LocalSettingsLastSearchIndexUpdateTimeColumnName = "last_search_index_update_time"
+        const val LocalSettingsLastSearchIndexUpdateSequenceNumberColumnName = "last_search_index_update_sequence_number"
         const val LocalSettingsLastSearchIndexOptimizationTimeColumnName = "last_search_index_optimization_time"
         const val LocalSettingsDidShowListItemActionsHelpColumnName = "did_show_list_item_actions_help"
         const val LocalSettingsDidShowSearchTagsHelpColumnName = "did_show_search_tags_help"
         const val LocalSettingsCountTagSearchesColumnName = "count_tag_searches"
-        const val LocalSettingsDidShowSetTagsOnEntryHelpColumnName = "did_show_set_tags_on_entry_help"
-        const val LocalSettingsCountTagsOnEntrySearchesColumnName = "count_tags_on_entry_searches"
-        const val LocalSettingsDidShowSaveEntryChangesHelpColumnName = "did_show_save_entry_changes_help"
-        const val LocalSettingsDidShowEntryInformationFullscreenHelpColumnName = "entry_information_fullscreen_help"
-        const val LocalSettingsDidShowEntryInformationFullscreenGesturesHelpColumnName = "entry_information_fullscreen_gestures_help"
+        const val LocalSettingsDidShowSetTagsOnItemHelpColumnName = "did_show_set_tags_on_item_help"
+        const val LocalSettingsCountTagsOnItemSearchesColumnName = "count_tags_on_item_searches"
+        const val LocalSettingsDidShowAddItemPropertiesHelpColumnName = "did_show_add_item_properties_help"
+        const val LocalSettingsDidShowSaveItemChangesHelpColumnName = "did_show_save_item_changes_help"
+        const val LocalSettingsDidShowItemInformationFullscreenHelpColumnName = "item_information_fullscreen_help"
+        const val LocalSettingsDidShowItemInformationFullscreenGesturesHelpColumnName = "item_information_fullscreen_gestures_help"
+        const val LocalSettingsDidShowSavedReadLaterArticleIsNowInItemsHelpColumnName = "did_show_saved_read_later_article_is_now_in_items_help"
 
 
-        /*          Entry Table Config        */
+        /*          Item Table Config        */
 
-        const val EntryTableName = "entry"
+        const val ItemTableName = "item"
 
-        const val EntryAbstractColumnName = "abstract"
-        const val EntryContentColumnName = "content"
-        const val EntryReferenceJoinColumnName = "reference_id"
-        const val EntryIndicationColumnName = "indication"
-        const val EntryPreviewColumnName = "preview"
+        const val ItemSummaryColumnName = "summary"
+        const val ItemContentColumnName = "content"
+        const val ItemSourceJoinColumnName = "source_id"
+        const val ItemIndicationColumnName = "indication"
+        const val ItemPreviewColumnName = "preview"
 
-        const val EntryEntryIndexColumnName = "entry_index"
-
-
-        /*          Entry Tag Join Table Config        */
-
-        const val EntryTagJoinTableName = "entry_tag_join_table"
-
-        const val EntryTagJoinTableEntryIdColumnName = "entry_id"
-        const val EntryTagJoinTableTagIdColumnName = "tag_id"
+        const val ItemItemIndexColumnName = "item_index"
 
 
-        /*          Entry Attached Files Join Table Config        */
+        /*          Item Tag Join Table Config        */
 
-        const val EntryAttachedFilesJoinTableName = "entry_attached_files_join_table"
+        const val ItemTagJoinTableName = "item_tag_join_table"
 
-        const val EntryAttachedFilesJoinTableEntryIdColumnName = "entry_id"
-        const val EntryAttachedFilesJoinTableFileLinkIdColumnName = "file_id"
+        const val ItemTagJoinTableItemIdColumnName = "item_id"
+        const val ItemTagJoinTableTagIdColumnName = "tag_id"
+
+
+        /*          Item Attached Files Join Table Config        */
+
+        const val ItemAttachedFilesJoinTableName = "item_attached_files_join_table"
+
+        const val ItemAttachedFilesJoinTableItemIdColumnName = "item_id"
+        const val ItemAttachedFilesJoinTableFileLinkIdColumnName = "file_id"
 
 
         /*          Tag Table Config        */
@@ -130,7 +132,7 @@ class TableConfig {
 
         const val NoteNoteColumnName = "notes"
         const val NoteNoteTypeJoinColumnName = "note_type_id"
-        const val NoteEntryJoinColumnName = "entry_id"
+        const val NoteItemJoinColumnName = "item_id"
 
 
         /*          FileLink Table Config        */
@@ -145,41 +147,41 @@ class TableConfig {
         const val FileLinkSourceUriColumnName = "source_uri"
 
 
-        /*          Reference Table Config        */
+        /*          Source Table Config        */
 
-        const val ReferenceTableName = "reference"
+        const val SourceTableName = "source"
 
-        const val ReferenceTitleColumnName = "title"
-        const val ReferenceSubTitleColumnName = "sub_title"
-        const val ReferenceAbstractColumnName = "abstract"
-        const val ReferenceLengthColumnName = "length"
-        const val ReferenceUrlColumnName = "url"
-        const val ReferenceLastAccessDateColumnName = "last_access_date"
-        const val ReferenceNotesColumnName = "notes"
-        const val ReferencePreviewImageUrlColumnName = "preview_image_url"
-        const val ReferencePreviewImageJoinColumnName = "preview_image_id"
+        const val SourceTitleColumnName = "title"
+        const val SourceSubTitleColumnName = "sub_title"
+        const val SourceAbstractColumnName = "abstract"
+        const val SourceLengthColumnName = "length"
+        const val SourceUrlColumnName = "url"
+        const val SourceLastAccessDateColumnName = "last_access_date"
+        const val SourceNotesColumnName = "notes"
+        const val SourcePreviewImageUrlColumnName = "preview_image_url"
+        const val SourcePreviewImageJoinColumnName = "preview_image_id"
 
-        const val ReferenceSeriesJoinColumnName = "series_id"
-        const val ReferenceTableOfContentsColumnName = "table_of_contents"
-        const val ReferenceIssueColumnName = "issue"
-        const val ReferenceIsbnOrIssnColumnName = "isbn_or_issn"
-        const val ReferencePublishingDateColumnName = "publishing_date"
-        const val ReferencePublishingDateStringColumnName = "publishing_date_string"
+        const val SourceSeriesJoinColumnName = "series_id"
+        const val SourceTableOfContentsColumnName = "table_of_contents"
+        const val SourceIssueColumnName = "issue"
+        const val SourceIsbnOrIssnColumnName = "isbn_or_issn"
+        const val SourcePublishingDateColumnName = "publishing_date"
+        const val SourcePublishingDateStringColumnName = "publishing_date_string"
 
 
-        /*          Reference Table Config        */
+        /*          Series Table Config        */
 
         const val SeriesTableName = "series"
 
         const val SeriesTitleColumnName = "title"
 
 
-        /*          Reference Attached Files Join Table Config        */
+        /*          Source Attached Files Join Table Config        */
 
-        const val ReferenceBaseAttachedFileJoinTableName = "reference_base_attached_files_join_table"
+        const val SourceAttachedFileJoinTableName = "source_attached_files_join_table"
 
-        const val ReferenceBaseAttachedFileJoinTableReferenceBaseIdColumnName = "reference_base_id"
-        const val ReferenceBaseAttachedFileJoinTableFileLinkIdColumnName = "file_id"
+        const val SourceAttachedFileJoinTableSourceBaseIdColumnName = "source_id"
+        const val SourceAttachedFileJoinTableFileLinkIdColumnName = "file_id"
 
 
         /*          ExtensibleEnumeration Table Config        */
@@ -228,11 +230,11 @@ class TableConfig {
 
         const val ReadLaterArticleTableName = "read_later_article"
 
-        const val ReadLaterArticleEntryPreviewColumnName = "entry_preview"
-        const val ReadLaterArticleReferencePreviewColumnName = "reference_preview"
-        const val ReadLaterArticleReferenceUrlColumnName = "reference_url"
+        const val ReadLaterArticleItemPreviewColumnName = "item_preview"
+        const val ReadLaterArticleSourcePreviewColumnName = "source_preview"
+        const val ReadLaterArticleSourceUrlColumnName = "source_url"
         const val ReadLaterArticlePreviewImageUrlColumnName = "preview_image_url"
-        const val ReadLaterArticleEntryExtractionResultColumnName = "entry_extraction_result"
+        const val ReadLaterArticleItemExtractionResultColumnName = "item_extraction_result"
 
     }
 }

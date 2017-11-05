@@ -1,6 +1,6 @@
 package net.dankito.deepthought.ui.presenter
 
-import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.search.ISearchEngine
@@ -15,7 +15,7 @@ abstract class ReferencesPresenterBase(private var searchEngine: ISearchEngine, 
     protected var lastSearchTermProperty = Search.EmptySearchTerm
 
 
-    fun searchReferences(searchTerm: String, searchCompleted: ((List<Reference>) -> Unit)? = null) {
+    fun searchReferences(searchTerm: String, searchCompleted: ((List<Source>) -> Unit)? = null) {
         lastSearchTermProperty = searchTerm
 
         searchEngine.searchReferences(ReferenceSearch(searchTerm) { result ->
@@ -25,21 +25,21 @@ abstract class ReferencesPresenterBase(private var searchEngine: ISearchEngine, 
         })
     }
 
-    protected open fun retrievedSearchResults(result: List<Reference>) {
+    protected open fun retrievedSearchResults(result: List<Source>) {
 
     }
 
 
-    fun editReference(reference: Reference) {
-        router.showEditReferenceView(reference)
+    fun editReference(source: Source) {
+        router.showEditReferenceView(source)
     }
 
-    fun copyReferenceUrlToClipboard(reference: Reference) {
-        reference.url?.let { clipboardService.copyUrlToClipboard(it) }
+    fun copyReferenceUrlToClipboard(source: Source) {
+        source.url?.let { clipboardService.copyUrlToClipboard(it) }
     }
 
-    fun deleteReference(reference: Reference) {
-        deleteEntityService.deleteReference(reference)
+    fun deleteReference(source: Source) {
+        deleteEntityService.deleteReference(source)
     }
 
 }

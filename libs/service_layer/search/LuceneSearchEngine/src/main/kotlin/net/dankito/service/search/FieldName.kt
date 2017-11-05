@@ -10,18 +10,18 @@ object FieldName {
 
     /*      Entries      */
 
-    val EntryIdsId = "entry_ids_id"
+    val EntryIdsId = "item_ids_id"
 
     val EntryIdsCreated = "created"
 
 
-    val EntryId = "entry_id"
+    val EntryId = "item_id"
 
-    val EntryAbstract = "abstract"
+    val EntryAbstract = "summary"
 
     val EntryContent = "content"
 
-    val EntryIndex = "entry_index"
+    val EntryIndex = "item_index"
 
     val EntryCreated = "created"
 
@@ -29,10 +29,10 @@ object FieldName {
     val EntryTagsNames = "tags_names"
     val EntryNoTags = "no_tags"
 
-    val EntryReference = "reference"
-    val EntryReferenceId = "reference_id"
-    val EntryReferenceSeriesId = "reference_series_id"
-    val EntryNoReference = "no_reference"
+    val EntryReference = "source"
+    val EntryReferenceId = "source_id"
+    val EntryReferenceSeriesId = "source_series_id"
+    val EntryNoReference = "no_source"
 
     val EntryNotes = "notes"
     val EntryNoNotes = "no_notes"
@@ -47,15 +47,15 @@ object FieldName {
 
     /*      References      */
 
-    val ReferenceId = "reference_id"
+    val ReferenceId = "source_id"
 
-    val ReferenceTitle = "reference_title"
-    val ReferenceSubTitle = "reference_subtitle"
-    val ReferenceSeries = "reference_series"
-    val ReferenceSeriesId = "reference_series_id"
-    val ReferenceIssue = "reference_issue"
-    val ReferencePublishingDate = "reference_publishing_date"
-    val ReferencePublishingDateString = "reference_publishing_date_string"
+    val ReferenceTitle = "source_title"
+    val ReferenceSubTitle = "source_subtitle"
+    val ReferenceSeries = "source_series"
+    val ReferenceSeriesId = "source_series_id"
+    val ReferenceIssue = "source_issue"
+    val ReferencePublishingDate = "source_publishing_date"
+    val ReferencePublishingDateString = "source_publishing_date_string"
 
 
     /*      Series      */
@@ -69,8 +69,8 @@ object FieldName {
 
     val ReadLaterArticleId = "read_later_article_id"
 
-    val ReadLaterArticleEntry = "read_later_article_entry"
-    val ReadLaterArticleReference = "read_later_article_reference"
+    val ReadLaterArticleEntry = "read_later_article_item"
+    val ReadLaterArticleReference = "read_later_article_source"
 
 
     /*      Notes      */
@@ -96,13 +96,13 @@ object FieldName {
 
     val FileDescription = "file_description"
 
-    val FileIsAttachedToEntries = "file_attached_to_entries"
+    val FileIsAttachedToEntries = "file_attached_to_item"
 
-    val FileIsEmbeddedInEntries = "file_embedded_in_entries"
+    val FileIsEmbeddedInEntries = "file_embedded_in_item"
 
-    val FileIsAttachedToReferenceBase = "file_attached_in_reference_bases"
+    val FileIsAttachedToReferenceBase = "file_attached_to_source"
 
-    val FileIsEmbeddedInReferenceBase = "file_embedded_to_reference_bases"
+    val FileIsEmbeddedInReferenceBase = "file_embedded_in_source"
 
 
 }

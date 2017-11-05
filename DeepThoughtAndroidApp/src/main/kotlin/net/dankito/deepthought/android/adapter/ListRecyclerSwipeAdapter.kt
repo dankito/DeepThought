@@ -25,7 +25,11 @@ abstract class ListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(li
             field = value
 
             notifyDataSetChanged()
+
+            itemsHaveBeenSet(value)
         }
+
+    protected open fun itemsHaveBeenSet(value: List<T>) { }
 
     override fun getItemCount() = items.size
 

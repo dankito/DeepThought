@@ -29,7 +29,7 @@ abstract class CalculatedTag(name: String, protected val searchEngine: ISearchEn
 
     private fun retrieveAndUpdateEntriesAsync(informUIOfUpdate: Boolean) {
         retrieveEntriesAsync {
-            this.entries = it
+            this.items = it
 
             if(informUIOfUpdate) {
                 entityChangedNotifier.notifyListenersOfEntityChangeAsync(this, EntityChangeType.Updated, EntityChangeSource.Local)
@@ -37,7 +37,7 @@ abstract class CalculatedTag(name: String, protected val searchEngine: ISearchEn
         }
     }
 
-    protected abstract fun retrieveEntriesAsync(done: (List<Entry>) -> Unit)
+    protected abstract fun retrieveEntriesAsync(done: (List<Item>) -> Unit)
 
 
     inner class EventBusListener {

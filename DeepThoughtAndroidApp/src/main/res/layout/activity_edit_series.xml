@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
+    android:background="@color/edit_entity_activity_background"
 >
     <!-- Set focusable and focusableInTouchMode to true so that keyboard doesn't get shown on Activity start -->
 
@@ -26,7 +27,10 @@
             android:layout_marginBottom="@dimen/activity_edit_series_find_existing_controls_margin_bottom"
             android:layout_marginLeft="@dimen/edit_text_padding_left"
             android:layout_marginStart="@dimen/edit_text_padding_left"
-            android:padding="@dimen/activity_edit_series_padding"
+            android:paddingLeft="@dimen/activity_edit_series_padding"
+            android:paddingStart="@dimen/activity_edit_series_padding"
+            android:paddingRight="@dimen/activity_edit_series_padding"
+            android:paddingEnd="@dimen/activity_edit_series_padding"
             android:visibility="gone"
         >
 
@@ -58,6 +62,7 @@
                     android:layout_marginLeft="@dimen/activity_edit_series_find_existing_margin_left"
                     android:layout_marginStart="@dimen/activity_edit_series_find_existing_margin_left"
                     android:inputType="text"
+                    android:imeOptions="flagNoExtractUi"
                 />
 
             </RelativeLayout>
@@ -104,8 +109,18 @@
                 android:layout_below="@+id/lytEditReferenceSeriesControls"
                 android:layout_alignParentBottom="true"
                 app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                android:scrollbars="vertical"
                 android:longClickable="true"
                 android:visibility="gone"
+            />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/find_existing_entity_divider_height"
+                android:layout_below="@+id/rcyExistingSeriesSearchResults"
+                android:layout_marginTop="@dimen/find_existing_entity_margin_top_bottom"
+                android:layout_marginBottom="@dimen/find_existing_entity_margin_top_bottom"
+                android:background="@color/divider_line_color"
             />
 
         </RelativeLayout>
@@ -116,7 +131,11 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/lytSetReferenceSeriesControls"
             android:layout_above="@id/toolbar"
-            android:padding="@dimen/activity_edit_series_padding"
+            android:paddingTop="@dimen/activity_edit_series_padding"
+            android:paddingLeft="@dimen/activity_edit_series_padding"
+            android:paddingStart="@dimen/activity_edit_series_padding"
+            android:paddingRight="@dimen/activity_edit_series_padding"
+            android:paddingEnd="@dimen/activity_edit_series_padding"
         >
 
             <net.dankito.deepthought.android.views.EditEntityField

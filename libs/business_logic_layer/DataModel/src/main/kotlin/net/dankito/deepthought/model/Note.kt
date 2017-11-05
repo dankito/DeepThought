@@ -28,8 +28,8 @@ data class Note(
         }
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = TableConfig.NoteEntryJoinColumnName)
-    var entry: Entry? = null
+    @JoinColumn(name = TableConfig.NoteItemJoinColumnName)
+    var item: Item? = null
         internal set
 
 

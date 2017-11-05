@@ -3,9 +3,9 @@ package net.dankito.newsreader.article
 import com.chimbori.crux.articles.Article
 import com.chimbori.crux.articles.ArticleExtractor
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import org.jsoup.nodes.Document
 
 
@@ -19,7 +19,7 @@ class CruxArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
         return true
     }
 
-    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
+    override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         val article = ArticleExtractor(url, document)
                 .extractMetadata()
                 .extractContent()
@@ -27,8 +27,8 @@ class CruxArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
 
         val content = mayAddPreviewImageToContent(article, article.document?.outerHtml() ?: "")
 
-        extractionResult.setExtractedContent(Entry(content, article.description),
-                Reference(url, article.title, previewImageUrl = makeLinkAbsolute(article.imageUrl, url)))
+        extractionResult.setExtractedContent(Item(content, article.description),
+                Source(url, article.title, previewImageUrl = makeLinkAbsolute(article.imageUrl, url)))
     }
 
     private fun mayAddPreviewImageToContent(article: Article, content: String): String {

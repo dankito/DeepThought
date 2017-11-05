@@ -35,6 +35,10 @@ class WebPageMetaDataExtractor(webClient: IWebClient) : ExtractorBase(webClient)
 
         document.head().select("meta[property=\"og:title\"]").first()?.attr("content")?.let { return it }
 
+        document.head().select("meta[name=\"title\"]").first()?.attr("content")?.let { return it }
+
+        document.head().select("meta[name=\"fulltitle\"]").first()?.attr("content")?.let { return it }
+
         return document.title()
     }
 
@@ -78,6 +82,8 @@ class WebPageMetaDataExtractor(webClient: IWebClient) : ExtractorBase(webClient)
         parseIsoDateTimeString(publishingDateString)?.let { return it }
 
         parseIsoDateTimeStringWithoutTimezone(publishingDateString)?.let { return it }
+
+        parseVeryDetailedDateTimeString(publishingDateString)?.let { return it }
 
         return null
     }

@@ -21,8 +21,8 @@ data class LocalSettings(
         @Column(name = TableConfig.LocalSettingsLastDatabaseOptimizationTimeColumnName)
         var lastDatabaseOptimizationTime: Date,
 
-        @Column(name = TableConfig.LocalSettingsLastSearchIndexUpdateTimeColumnName)
-        var lastSearchIndexUpdateTime: Date,
+        @Column(name = TableConfig.LocalSettingsLastSearchIndexUpdateSequenceNumberColumnName)
+        var lastSearchIndexUpdateSequenceNumber: Long,
 
         @Column(name = TableConfig.LocalSettingsLastSearchIndexOptimizationTimeColumnName)
         var lastSearchIndexOptimizationTime: Date,
@@ -36,20 +36,26 @@ data class LocalSettings(
         @Column(name = TableConfig.LocalSettingsCountTagSearchesColumnName)
         var countTagSearches: Int = 0,
 
-        @Column(name = TableConfig.LocalSettingsDidShowSetTagsOnEntryHelpColumnName)
-        var didShowSetTagsOnEntryHelp: Boolean = false,
+        @Column(name = TableConfig.LocalSettingsDidShowSetTagsOnItemHelpColumnName)
+        var didShowSetTagsOnItemHelp: Boolean = false,
 
-        @Column(name = TableConfig.LocalSettingsCountTagsOnEntrySearchesColumnName)
-        var countTagsOnEntrySearches: Int = 0,
+        @Column(name = TableConfig.LocalSettingsCountTagsOnItemSearchesColumnName)
+        var countTagsOnItemSearches: Int = 0,
 
-        @Column(name = TableConfig.LocalSettingsDidShowSaveEntryChangesHelpColumnName)
-        var didShowSaveEntryChangesHelp: Boolean = false,
+        @Column(name = TableConfig.LocalSettingsDidShowAddItemPropertiesHelpColumnName)
+        var didShowAddItemPropertiesHelp: Boolean = false,
 
-        @Column(name = TableConfig.LocalSettingsDidShowEntryInformationFullscreenHelpColumnName)
-        var didShowEntryInformationFullscreenHelp: Boolean = false,
+        @Column(name = TableConfig.LocalSettingsDidShowSaveItemChangesHelpColumnName)
+        var didShowSaveItemChangesHelp: Boolean = false,
 
-        @Column(name = TableConfig.LocalSettingsDidShowEntryInformationFullscreenGesturesHelpColumnName)
-        var didShowEntryInformationFullscreenGesturesHelp: Boolean = false
+        @Column(name = TableConfig.LocalSettingsDidShowItemInformationFullscreenHelpColumnName)
+        var didShowItemInformationFullscreenHelp: Boolean = false,
+
+        @Column(name = TableConfig.LocalSettingsDidShowItemInformationFullscreenGesturesHelpColumnName)
+        var didShowItemInformationFullscreenGesturesHelp: Boolean = false,
+
+        @Column(name = TableConfig.LocalSettingsDidShowSavedReadLaterArticleIsNowInItemsHelpColumnName)
+        var didShowSavedReadLaterArticleIsNowInItemsHelp: Boolean = false
 
 ) : BaseEntity() {
 
@@ -57,12 +63,12 @@ data class LocalSettings(
     companion object {
         const val ShowSearchTagsHelpOnCountSearches = 30
 
-        const val ShowSetTagsOnEntryHelpOnCountSearches = 30
+        const val ShowSetTagsOnItemHelpOnCountSearches = 30
 
         private const val serialVersionUID = 7190724856152328858L
     }
 
 
-    internal constructor() : this(0, 0, 0, Date(0), Date(0), Date(0))
+    internal constructor() : this(0, 0, 0, Date(0), 0, Date(0))
 
 }

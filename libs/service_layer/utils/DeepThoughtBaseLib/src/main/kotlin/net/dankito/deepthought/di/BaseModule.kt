@@ -5,6 +5,8 @@ import dagger.Provides
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
+import net.dankito.utils.IThreadPool
+import net.dankito.utils.ThreadPool
 import net.dankito.utils.UrlUtil
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.language.NoOpLanguageDetector
@@ -19,6 +21,12 @@ class BaseModule {
     @Singleton
     fun provideEventBus() : IEventBus {
         return MBassadorEventBus()
+    }
+
+    @Provides
+    @Singleton
+    fun provideThreadPool() : IThreadPool {
+        return ThreadPool()
     }
 
     @Provides

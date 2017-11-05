@@ -66,11 +66,21 @@ class RomeFeedReader(private val webClient: IWebClient) : IFeedReader {
 
         item.summary = extractSummary(syndEntry, abstractHtml)
 
-        abstractHtml?.let {  Jsoup.parse(it)?.let {
-            item.previewImageUrl = it.select("img").firstOrNull()?.attr("src")
-        } }
+        item.previewImageUrl = tryToFindPreviewImage(abstractHtml)
 
         return item
+    }
+
+    private fun tryToFindPreviewImage(abstractHtml: String?): String? {
+        abstractHtml?.let {
+            Jsoup.parse(it)?.let { document ->
+                document.select(".feedflare").remove() // remove useless icons of FeedBurner feeds
+
+                return document.select("img").firstOrNull()?.attr("src")
+            }
+        }
+
+        return null
     }
 
     private fun tryToFindAbstractHtml(syndEntry: SyndEntry): String? {

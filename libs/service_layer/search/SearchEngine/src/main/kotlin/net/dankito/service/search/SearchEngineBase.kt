@@ -31,7 +31,7 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
         var tagNamesToFilterFor: List<String> = ArrayList<String>()
 
         if (search.searchTerm.isNullOrBlank() == false) {
-            tagNamesToFilterFor = getSingleSearchTerms(search.searchTerm, TagsSearchTermSeparator)
+            tagNamesToFilterFor = getSingleSearchTerms(search.searchTerm, TagsSearchTermSeparator, false)
         }
 
         search.results.tagNamesToSearchFor = tagNamesToFilterFor
@@ -82,9 +82,10 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
     abstract fun searchReadLaterArticles(search: ReadLaterArticleSearch, termsToSearchFor: List<String>)
 
 
-    private fun getSingleSearchTerms(overallSearchTerm: String, separator: String): List<String> {
+    private fun getSingleSearchTerms(overallSearchTerm: String, separator: String, lowerCaseSearchTerm: Boolean = true): List<String> {
+        val searchTerm = if(lowerCaseSearchTerm) overallSearchTerm.toLowerCase() else overallSearchTerm
         // make overallSearchTerm lower case, split it at all separators and trim resulting single search terms
-        return overallSearchTerm.split(separator).map { it.trim() }.filter { it.isNullOrBlank() == false }.dropLastWhile { it.isEmpty() }
+        return searchTerm.split(separator).map { it.trim() }.filter { it.isNullOrBlank() == false }.dropLastWhile { it.isEmpty() }
     }
 
 

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="@dimen/list_item_entry_padding"
+              android:background="#FFFFFF"
+>
+
+    <TextView
+        android:id="@+id/txtReferencePreview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/list_item_entry_reference_preview_min_height"
+        android:layout_marginBottom="@dimen/list_item_entry_reference_preview_margin_bottom"
+        android:maxLines="2"
+        android:ellipsize="end"
+        style="@style/Header1Style"
+    />
+
+    <TextView
+        android:id="@+id/txtItemPreview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/list_item_entry_preview_height"
+        android:maxHeight="@dimen/list_item_entry_height"
+        android:maxLines="4"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        style="@style/TextBodyStyle"
+    />
+
+    <TextView
+        android:id="@+id/txtItemTags"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_item_entry_tags_height"
+        android:layout_marginTop="@dimen/list_item_entry_tags_margin_top"
+        android:maxLines="1"
+    />
+
+</LinearLayout>

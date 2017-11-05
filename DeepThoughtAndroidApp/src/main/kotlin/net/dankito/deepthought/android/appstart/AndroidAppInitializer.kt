@@ -7,12 +7,9 @@ import android.net.wifi.WifiManager
 import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.androidservice.PermanentNotificationService
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.android.service.network.NetworkConnectivityChangeBroadcastReceiver
 import net.dankito.deepthought.android.service.reporting.ICrashReporter
-import net.dankito.deepthought.android.views.html.AndroidHtmlEditorPool
 import net.dankito.deepthought.service.data.DataManager
-import net.dankito.deepthought.ui.html.HtmlEditorExtractor
 import net.dankito.service.search.ISearchEngine
 import javax.inject.Inject
 
@@ -27,19 +24,10 @@ class AndroidAppInitializer {
     protected lateinit var context: Context
 
     @Inject
-    protected lateinit var activityTracker: CurrentActivityTracker
-
-    @Inject
     protected lateinit var dataManager: DataManager
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
-
-    @Inject
-    protected lateinit var htmlEditorExtractor: HtmlEditorExtractor
-
-    @Inject
-    protected lateinit var htmlEditorPool: AndroidHtmlEditorPool
 
     @Inject
     protected lateinit var communicationManagerStarter: CommunicationManagerStarter // same here: just create instance, CommunicationManagerStarter initializes itself
@@ -58,8 +46,6 @@ class AndroidAppInitializer {
 
         initializeNetworkConnectivityChangeBroadcastReceiver()
 
-        initializeHtmlEditorExtractor()
-
         initializePermanentNotification()
     }
 
@@ -76,30 +62,6 @@ class AndroidAppInitializer {
         intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION) // TODO: not equal to AndroidManifest and not handled in NetworkConnectivityChangeBroadcastReceiver
 
         context.registerReceiver(NetworkConnectivityChangeBroadcastReceiver(), intentFilter)
-    }
-
-
-    private fun initializeHtmlEditorExtractor() {
-        // start extracting HtmlEditor only after DataManager is initialized as both to a lot of disk i/o
-        dataManager.addInitializationListener {
-            htmlEditorExtractor.extractHtmlEditorIfNeededAsync()
-
-            htmlEditorExtractor.addHtmlEditorExtractedListener {
-                searchEngine.addInitializationListener {
-                    val currentActivity = activityTracker.currentActivity
-
-                    if (currentActivity != null) {
-                        preloadHtmlEditors(currentActivity)
-                    } else {
-                        activityTracker.addNextActivitySetListener { preloadHtmlEditors(it) }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun preloadHtmlEditors(currentActivity: BaseActivity) {
-        currentActivity.runOnUiThread { htmlEditorPool.preloadHtmlEditors(currentActivity, 2) }
     }
 
 

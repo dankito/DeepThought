@@ -1,9 +1,9 @@
 package net.dankito.deepthought.android.dialogs
 
 import android.app.Activity
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import android.support.v7.app.AlertDialog
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
@@ -18,14 +18,14 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.FoundFeedAddressesAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
-import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
+import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.feedaddressextractor.FeedAddress
 import net.dankito.feedaddressextractor.FeedAddressExtractor
 import net.dankito.feedaddressextractor.FeedType
 import net.dankito.newsreader.feed.IFeedReader
 import net.dankito.newsreader.model.FeedArticleSummary
-import java.net.URI
+import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
 
 
@@ -37,16 +37,20 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
 
 
     @Inject
-    protected lateinit var extractorsConfigManager: ArticleSummaryExtractorConfigManager
-
-    @Inject
     protected lateinit var feedReader: IFeedReader
 
     @Inject
     protected lateinit var feedAddressExtractor:FeedAddressExtractor
 
     @Inject
+    protected lateinit var articleExtractorManager: ArticleExtractorManager
+
+    @Inject
     protected lateinit var router: IRouter
+
+    @Inject
+    protected lateinit var dialogService: IDialogService
+
 
     private val feedAddressesAdapter = FoundFeedAddressesAdapter()
 
@@ -85,6 +89,7 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
         }
 
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE) // so that keyboard doesn't cover OK and Cancel buttons
+        dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
 
         return view
     }
@@ -114,11 +119,47 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
                 this.showingFeedAddressesForUrl = null // feed address entered, so we don't need entered text as siteUrl
                 addFeed(feedOrWebsiteUrl, it.result as FeedArticleSummary)
             }
-            else {
-                feedAddressExtractor.extractFeedAddressesAsync(feedOrWebsiteUrl) { asyncResult ->
-                    handleExtractFeedAddressesResult(feedOrWebsiteUrl, asyncResult)
-                }
+            // a lot of users entered an article url here. if so extract and show item // TODO: show hint how to correctly do it
+            else if(couldBeArticleUrl(enteredFeedOrWebsiteUrl)) {
+                tryToExtractArticle(feedOrWebsiteUrl)
             }
+            else {
+                tryToExtractFeedAdresses(feedOrWebsiteUrl)
+            }
+        }
+    }
+
+    private fun couldBeArticleUrl(enteredFeedOrWebsiteUrl: String): Boolean {
+        try {
+            val uri = Uri.parse(enteredFeedOrWebsiteUrl)
+            val removedSchemeAndHost = uri.toString().replace(uri.scheme, "").replace("//", "").replace(uri.host, "").replace("www.", "")
+
+            if(uri.path == null) {
+                return false
+            }
+            else {
+                return uri.query != null || uri.fragment != null || removedSchemeAndHost.length > 15 || uri.path.count { it == '/' } > 1
+            }
+        } catch(ignored: Exception) { }
+
+        return false
+    }
+
+    private fun tryToExtractArticle(feedOrWebsiteUrl: String) {
+        articleExtractorManager.extractArticleAndAddDefaultDataAsync(feedOrWebsiteUrl) {
+            if(it.result?.couldExtractContent == true) {
+                it.result?.let { router.showEditEntryView(it) }
+                dismiss()
+            }
+            else {
+                tryToExtractFeedAdresses(feedOrWebsiteUrl)
+            }
+        }
+    }
+
+    private fun tryToExtractFeedAdresses(feedOrWebsiteUrl: String) {
+        feedAddressExtractor.extractFeedAddressesAsync(feedOrWebsiteUrl) { asyncResult ->
+            handleExtractFeedAddressesResult(feedOrWebsiteUrl, asyncResult)
         }
     }
 
@@ -137,20 +178,7 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
             feedOrWebsiteUrl = "http:" + slashesToAdd + feedOrWebsiteUrl // TODO: what about https variant?
         }
 
-        mayShowEasterEgg(feedOrWebsiteUrl)
-
         return feedOrWebsiteUrl
-    }
-
-    private fun mayShowEasterEgg(enteredFeedOrWebsiteUrl: String) {
-        try {
-            val url = URI(enteredFeedOrWebsiteUrl)
-            if(url.host?.toLowerCase()?.contains("bild.de") ?: false) {
-                AlertDialog.Builder(activity).setMessage(R.string.bild_easter_egg)
-                        .setNegativeButton(android.R.string.ok, { _, _ -> throw Exception("Du hast bild.de eingegeben") })
-                        .create().show()
-            }
-        } catch(ignored: Exception) { }
     }
 
     private fun handleExtractFeedAddressesResult(feedOrWebsiteUrl: String, asyncResult: AsyncResult<List<FeedAddress>>) {
@@ -220,30 +248,18 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
 
     private fun showNoFeedAddressesFoundError(feedOrWebsiteUrl: String) {
         activity?.let {
-            showErrorThreadSafe(getString(R.string.error_no_rss_or_atom_feed_found_for_url, feedOrWebsiteUrl))
+            showError(getString(R.string.error_no_rss_or_atom_feed_found_for_url, feedOrWebsiteUrl))
         }
     }
 
     private fun showError(feedOrWebsiteUrl: String, error: Exception) {
         activity?.let { // it happened that activity was not set -> getString() throws an exception
-            showErrorThreadSafe(getString(R.string.error_cannot_read_feed_or_extract_feed_addresses_from_url, feedOrWebsiteUrl, error.localizedMessage))
+            showError(getString(R.string.error_cannot_read_feed_or_extract_feed_addresses_from_url, feedOrWebsiteUrl, error.localizedMessage))
         }
     }
 
-    private fun showErrorThreadSafe(error: String) {
-        activity?.let { activity ->
-            activity.runOnUiThread { showError(activity, error) }
-        }
-    }
-
-    private fun showError(activity: Activity, error: String) {
-        val builder = AlertDialog.Builder(activity)
-
-        builder.setMessage(error)
-
-        builder.setNegativeButton(android.R.string.ok, null)
-
-        builder.create().show()
+    private fun showError(error: String) {
+        dialogService.showErrorMessage(error)
     }
 
 

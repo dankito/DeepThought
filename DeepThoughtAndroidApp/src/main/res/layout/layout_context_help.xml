@@ -4,7 +4,6 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="@dimen/view_context_help_height"
     android:background="@color/context_help_background_color"
     android:visibility="gone"
 >
@@ -12,6 +11,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="@dimen/view_context_help_text_min_height"
         android:padding="@dimen/view_context_help_padding"
     >
 
@@ -59,9 +59,11 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/lytConfirmButtons"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="@dimen/view_context_help_confirm_button_height"
+        android:visibility="gone"
     >
 
         <Button
@@ -73,7 +75,6 @@
             style="?android:attr/buttonBarButtonStyle"
             android:textColor="@color/context_help_text_color"
             android:text="@string/action_no"
-            android:visibility="gone"
         />
 
         <Button
@@ -85,7 +86,6 @@
             style="?android:attr/buttonBarButtonStyle"
             android:textColor="@color/context_help_text_color"
             android:text="@string/action_yes"
-            android:visibility="gone"
         />
 
     </LinearLayout>

@@ -69,23 +69,48 @@
             android:name=".activities.ArticleSummaryActivity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
         />
 
         <activity
             android:name=".activities.EditEntryActivity"
             android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
         />
 
         <activity
             android:name=".activities.EditReferenceActivity"
             android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
         />
 
         <activity
             android:name=".activities.EditSeriesActivity"
-            android:label="@string/activity_edit_reference_title"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="@string/activity_edit_source_title"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
+        >
         </activity>
+
+        <receiver
+            android:icon="@mipmap/app_icon"
+            android:label="@string/widget_items_label"
+            android:name=".widget.ItemsAppWidgetProvider" >
+
+            <intent-filter >
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/items_widget_info" />
+
+        </receiver>
+
+        <service android:name=".widget.ItemsRemoteViewsService"
+                 android:permission="android.permission.BIND_REMOTEVIEWS"
+        />
+
     </application>
 
 </manifest>

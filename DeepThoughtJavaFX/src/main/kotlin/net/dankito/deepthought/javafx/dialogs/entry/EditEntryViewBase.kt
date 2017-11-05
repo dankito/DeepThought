@@ -19,14 +19,14 @@ import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
 import net.dankito.deepthought.javafx.ui.controls.JavaFXHtmlEditor
 import net.dankito.deepthought.javafx.util.FXUtils
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
-import net.dankito.deepthought.ui.presenter.util.EntryPersister
+import net.dankito.deepthought.data.EntryPersister
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.utils.ui.IClipboardService
 import org.jsoup.Jsoup
@@ -36,8 +36,8 @@ import javax.inject.Inject
 
 abstract class EditEntryViewBase : DialogFragment() {
 
-    // param values for Entry and EntryExtractionResult are evaluated after root has been initialized -> Entry is null at root initialization stage.
-    // so i had to find a way to mitigate that Entry / EntryExtractionResult is not initialized yet
+    // param values for Item and ItemExtractionResult are evaluated after root has been initialized -> Item is null at root initialization stage.
+    // so i had to find a way to mitigate that Item / ItemExtractionResult is not initialized yet
 
     protected val abstractPlainText = SimpleStringProperty()
 
@@ -68,13 +68,13 @@ abstract class EditEntryViewBase : DialogFragment() {
     private val presenter: EditEntryPresenter
 
 
-    private var entry: Entry? = null
+    private var item: Item? = null
 
     private var abstractToEdit = ""
 
     private val tagsOnEntry: ObservableSet<Tag> = FXCollections.observableSet()
 
-    private var referenceToEdit: Reference? = null
+    private var sourceToEdit: Source? = null
 
     private var seriesToEdit: Series? = null
 
@@ -117,7 +117,7 @@ abstract class EditEntryViewBase : DialogFragment() {
             cursor = Cursor.HAND
             setOnMouseClicked { abstractPreviewClicked(it) }
 
-            label(messages["edit.entry.abstract.label"]) {
+            label(messages["edit.item.summary.label"]) {
                 minWidth = Control.USE_PREF_SIZE // guarantee that label keeps its calculated size
                 useMaxWidth = true
             }
@@ -138,7 +138,7 @@ abstract class EditEntryViewBase : DialogFragment() {
             maxHeight = 70.0
             prefWidthProperty().bind(this@vbox.widthProperty())
 
-            label(messages["edit.entry.reference.label"]) {
+            label(messages["edit.item.source.label"]) {
                 minWidth = Control.USE_PREF_SIZE
                 useMaxWidth = true
             }
@@ -164,7 +164,7 @@ abstract class EditEntryViewBase : DialogFragment() {
             cursor = Cursor.HAND
             setOnMouseClicked { tagsPreviewClicked(it) }
 
-            label(messages["edit.entry.tags.label"]) {
+            label(messages["edit.item.tags.label"]) {
                 minWidth = Control.USE_PREF_SIZE
                 useMaxWidth = true
             }
@@ -237,7 +237,7 @@ abstract class EditEntryViewBase : DialogFragment() {
         if(event.button == MouseButton.PRIMARY) {
             if(tagsOnEntryDialog == null) {
                 tagsOnEntryDialog = find(TagsOnEntryDialog::class, mapOf(TagsOnEntryDialog::tagsOnEntry to tagsOnEntry))
-                tagsOnEntryDialog?.show(messages["tags.on.entry.dialog.title"], stageStyle = StageStyle.UTILITY, owner = currentStage) // TODO: add icon
+                tagsOnEntryDialog?.show(messages["tags.on.item.dialog.title"], stageStyle = StageStyle.UTILITY, owner = currentStage) // TODO: add icon
             }
             else {
                 tagsOnEntryDialog?.close()
@@ -250,7 +250,7 @@ abstract class EditEntryViewBase : DialogFragment() {
         if(event.button == MouseButton.PRIMARY) {
             if(editAbstractDialog == null) {
                 editAbstractDialog = find(EditHtmlDialog::class)
-                editAbstractDialog?.show(abstractToEdit, messages["edit.entry.abstract.dialog.title"], currentStage, { this.editAbstractDialog = null } ) { // TODO: add icon
+                editAbstractDialog?.show(abstractToEdit, messages["edit.item.summary.dialog.title"], currentStage, { this.editAbstractDialog = null } ) { // TODO: add icon
                     abstractToEdit = it
                     abstractPlainText.value = Jsoup.parseBodyFragment(abstractToEdit).text()
                 }
@@ -262,26 +262,26 @@ abstract class EditEntryViewBase : DialogFragment() {
     }
 
 
-    protected fun showData(entry: Entry, tags: Collection<Tag>, reference: Reference?, series: Series?, contentToEdit: String? = null) {
-        this.entry = entry
-        abstractToEdit = entry.abstractString
+    protected fun showData(item: Item, tags: Collection<Tag>, source: Source?, series: Series?, contentToEdit: String? = null) {
+        this.item = item
+        abstractToEdit = item.summary
         tagsOnEntry.addAll(tags) // make a copy
-        referenceToEdit = reference
+        sourceToEdit = source
         seriesToEdit = series
 
         abstractPlainText.value = Jsoup.parseBodyFragment(abstractToEdit).text()
 
-        showContent(entry, reference, contentToEdit)
+        showContent(item, source, contentToEdit)
 
         showTagsPreview(tagsOnEntry)
-        showReferencePreview(reference, series)
+        showReferencePreview(source, series)
     }
 
-    private fun showContent(entry: Entry, reference: Reference?, contentToEdit: String?) {
-        val content = contentToEdit ?: entry.content
+    private fun showContent(item: Item, source: Source?, contentToEdit: String?) {
+        val content = contentToEdit ?: item.content
 
-        if(content.isNullOrBlank() && reference?.url != null) { // content could not get extracted yet -> show url and when its html is loaded try to extract content then
-            reference.url?.let { url ->
+        if(content.isNullOrBlank() && source?.url != null) { // content could not get extracted yet -> show url and when its html is loaded try to extract content then
+            source.url?.let { url ->
                 wbvwShowUrl.engine.load(url)
                 currentlyDisplayedUrl = url
 
@@ -297,8 +297,8 @@ abstract class EditEntryViewBase : DialogFragment() {
         }
     }
 
-    private fun showReferencePreview(reference: Reference?, series: Series?) {
-        this.referencePreview.value = reference?.getPreviewWithSeriesAndPublishingDate(series) ?: ""
+    private fun showReferencePreview(source: Source?, series: Series?) {
+        this.referencePreview.value = source?.getPreviewWithSeriesAndPublishingDate(series) ?: ""
     }
 
     private fun showTagsPreview(tags: Collection<Tag>) {
@@ -316,11 +316,11 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     private fun updateEntryAndSaveAsync(done: () -> Unit) {
         htmlEditor.getHtmlAsync {
-            entry?.let { entry ->
+            item?.let { entry ->
                 entry.content = it
-                entry.abstractString = abstractToEdit
+                entry.summary = abstractToEdit
 
-                presenter.saveEntryAsync(entry, referenceToEdit, seriesToEdit, tagsOnEntry) {
+                presenter.saveEntryAsync(entry, sourceToEdit, seriesToEdit, tagsOnEntry) {
                     done()
                 }
             }

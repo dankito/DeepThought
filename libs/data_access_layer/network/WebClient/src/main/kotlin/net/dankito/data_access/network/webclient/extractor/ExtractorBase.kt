@@ -18,6 +18,8 @@ abstract class ExtractorBase(val webClient : IWebClient) {
         protected val isoDateTimeFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
 
         protected val isoDateTimeFormatWithoutTimezone: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+
+        protected val detailedDateTimeFormat: DateFormat = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z")
     }
 
 
@@ -151,6 +153,17 @@ abstract class ExtractorBase(val webClient : IWebClient) {
     protected fun parseIsoDateTimeStringWithoutTimezone(isoDateTimeString: String): Date? {
         try {
             return isoDateTimeFormatWithoutTimezone.parse(isoDateTimeString)
+        } catch (e: Exception) { }
+
+        return null
+    }
+
+    /**
+     * Parses a date time string like Mo, 30 Okt 2017 12:36:45 MEZ
+     */
+    protected fun parseVeryDetailedDateTimeString(detailedDateTimeString: String): Date? {
+        try {
+            return detailedDateTimeFormat.parse(detailedDateTimeString)
         } catch (e: Exception) { }
 
         return null

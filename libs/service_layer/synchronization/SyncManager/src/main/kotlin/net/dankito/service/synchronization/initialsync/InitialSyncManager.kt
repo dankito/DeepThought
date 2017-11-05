@@ -31,7 +31,7 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
         syncUserDevices(localDeepThought, localDeepThought.localUser, remoteSyncInfo.deepThought, remoteSyncInfo.user)
     }
 
-    fun syncUserDevices(localDeepThought: DeepThought, localUser: User, remoteDeepThought: DeepThoughtSyncInfo, remoteUser: UserSyncInfo) {
+    private fun syncUserDevices(localDeepThought: DeepThought, localUser: User, remoteDeepThought: DeepThoughtSyncInfo, remoteUser: UserSyncInfo) {
         addSynchronizedDevice(localUser, remoteDeepThought.localDeviceId)
         addSynchronizedDevice(localUser, localDeepThought.localDevice.id!!) // fix: so that remote also sees us as synchronized device
 
@@ -118,7 +118,7 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
         val localConfigs = entityManager.getAllEntitiesOfType(ArticleSummaryExtractorConfig::class.java)
 
         remoteSyncInfo.articleSummaryExtractorConfigs.forEach { remoteConfig ->
-            val localConfig = localConfigs.filter { it.url == remoteConfig.url }.firstOrNull()
+            val localConfig = localConfigs.firstOrNull { it.url == remoteConfig.url }
 
             if(localConfig == null) {
                 entityManager.persistEntity(remoteConfig)
@@ -186,10 +186,10 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
     }
 
     @Throws(IllegalStateException::class)
-    fun shouldUseLocalDatabaseIds(localDeepThought: DeepThought, localUser: User,
+    private fun shouldUseLocalDatabaseIds(localDeepThought: DeepThought, localUser: User,
                                   remoteDeepThought: DeepThoughtSyncInfo, remoteUser: UserSyncInfo): Boolean {
         val localCountSynchronizingDevices = localUser.synchronizedDevices.size
-        val remoteCountSynchronizingDevices = remoteUser.synchronizedDevicesIds.size;
+        val remoteCountSynchronizingDevices = remoteUser.synchronizedDevicesIds.size
 
         if(localCountSynchronizingDevices > 0 && remoteCountSynchronizingDevices == 0) {
             return true

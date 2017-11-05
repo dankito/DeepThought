@@ -1,13 +1,14 @@
 package net.dankito.data_access.database
 
 import com.couchbase.lite.*
-import net.dankito.deepthought.model.config.TableConfig
+import net.dankito.deepthought.model.BaseEntity
 import net.dankito.jpa.apt.config.EntityConfig
 import net.dankito.jpa.apt.config.JPAEntityConfiguration
 import net.dankito.jpa.cache.DaoCache
 import net.dankito.jpa.cache.ObjectCache
 import net.dankito.jpa.couchbaselite.Dao
 import net.dankito.jpa.util.DatabaseCompacter
+import net.dankito.utils.AsyncProducerConsumerQueue
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.version.Versions
 import org.slf4j.LoggerFactory
@@ -226,59 +227,150 @@ abstract class CouchbaseLiteEntityManagerBase(protected var context: Context, pr
     fun getDaoForClass(entityClass: Class<*>): Dao? {
         val dao = mapEntityClassesToDaos[entityClass]
         if (dao == null) {
-            log.error("It was requested to persist or update Entity of type $entityClass, but mapEntityClassesToDaos does not contain an Entry for this Entity.")
+            log.error("It was requested to persist or update Entity of type $entityClass, but mapEntityClassesToDaos does not contain an Item for this Entity.")
         }
 
         return dao
     }
 
 
-    override fun <T> getAllEntitiesUpdatedAfter(lastUpdateTime: Date): List<T> {
-        val lastUpdateTimeMillis = lastUpdateTime.time
+    /**
+     * Passes all entities that have been updated after (Couchbase database) sequenceNumber on to queue.
+     * Using a AsyncProducerConsumerQueue so that retrieved entities can be consumed immediately and not loading all of them into memory first
+     * which could result in an OutOfMemory exception when there are too many changes for little Android's memory.
+     */
+    override fun <T> getAllEntitiesUpdatedAfter(sequenceNumber: Long, queue: AsyncProducerConsumerQueue<ChangedEntity<T>>): Long {
+        val currentSequenceNumber = database.lastSequenceNumber
 
-        val view = database.getView("UPDATED_ENTITIES")
-        view.setMap({ document, emitter ->
-            (document[TableConfig.BaseEntityModifiedOnColumnName] as? Long)?.let { modifiedOn ->
-                if(modifiedOn > lastUpdateTimeMillis) {
-                    emitter.emit(document[Dao.ID_SYSTEM_COLUMN_NAME], null)
-                }
-            }
-        }, "1")
+        val options = ChangesOptions(Int.MAX_VALUE, true, true, true)
+        val changes = database.changesSince(sequenceNumber, options, null, null)
+        log.info("Retrieved ${changes.allDocIds.size} changes since $sequenceNumber")
 
-        val updatedEntities = getEntitiesFromView<T>(view)
-        view.delete()
-        log.info("Retrieved ${updatedEntities.size} updated entities")
+        val anyDao = mapEntityClassesToDaos.values.first()
+        changes.allDocIds.forEach { docId ->
+            getUpdatedEntityFromDocument(docId, anyDao, queue)
+        }
 
-        return updatedEntities
+        return currentSequenceNumber
     }
 
-    private fun <T> getEntitiesFromView(view: View): ArrayList<T> {
-        val updatedEntities = ArrayList<T>()
+    private fun <T> getUpdatedEntityFromDocument(documentId: String, anyDao: Dao, queue: AsyncProducerConsumerQueue<ChangedEntity<T>>) {
+        try {
+            database.getDocument(documentId)?.let {
+                getUpdatedEntityFromDocument(it, anyDao, queue)
+            }
+        } catch(e: Exception) {
+            log.error("Could not get updated entity for document id $documentId", e)
+        }
+    }
 
-        val queryEnumerator = view.createQuery().run()
-        val anyDao = mapEntityClassesToDaos.values.first()
-
-        while(queryEnumerator.hasNext()) {
-            val document = queryEnumerator.next().document
-
+    private fun <T> getUpdatedEntityFromDocument(document: Document, anyDao: Dao, queue: AsyncProducerConsumerQueue<ChangedEntity<T>>) {
+        if(document.isDeleted || document.getProperty(Dao.DELETED_SYSTEM_COLUMN_NAME) == true) {
+            getDeletedEntityFromDocument(document, queue)
+        }
+        else {
             anyDao.getEntityClassFromDocument(document)?.let { entityClass ->
-                getObjectForDocument(entityClass, document, updatedEntities)
+                getObjectForDocument(entityClass as Class<T>, document, queue)
             }
         }
-        return updatedEntities
     }
 
-    private fun <T> getObjectForDocument(entityClass: Class<*>, document: Document, updatedEntities: ArrayList<T>) {
+    private fun <T> getObjectForDocument(entityClass: Class<T>, document: Document, queue: AsyncProducerConsumerQueue<ChangedEntity<T>>) {
         (objectCache.get(entityClass, document.id) as? T)?.let { // first check if an object for that id is already cached
-            updatedEntities.add(it)
+            queue.add(ChangedEntity<T>(entityClass, it, (it as BaseEntity).id))
             return
         }
 
         getDaoForClass(entityClass)?.let { dao ->
             (dao.createObjectFromDocument(document, document.id, entityClass) as? T)?.let { entity ->
-                updatedEntities.add(entity)
+                queue.add(ChangedEntity<T>(entityClass, entity, (entity as BaseEntity).id))
             }
         }
+    }
+
+    private fun <T> getDeletedEntityFromDocument(document: Document, queue: AsyncProducerConsumerQueue<ChangedEntity<T>>) {
+        findLastUndeletedRevision(document)?.let { lastUndeletedRevision ->
+            getEntityTypeFromRevision(lastUndeletedRevision)?.let { entityType ->
+                try {
+                    queue.add(ChangedEntity(entityType as Class<T>, null, document.id, true))
+                } catch(e: Exception) { log.error("Could not get deleted entity for entity $entityType with id ${document.id}", e) }
+            }
+        }
+    }
+
+
+    private fun loadDeletedEntity(documentId: String): BaseEntity? {
+        val document = database.getDocument(documentId)
+        if (document != null) {
+            val lastUndeletedRevision = findLastUndeletedRevision(document)
+
+            if (lastUndeletedRevision != null) {
+                val entityType = getEntityTypeFromRevision(lastUndeletedRevision)
+                if (entityType != null) {
+                    return getDeletedEntity(documentId, entityType, lastUndeletedRevision.document)
+                }
+            }
+        }
+
+        return null
+    }
+
+    private fun getDeletedEntity(id: String, entityType: Class<out BaseEntity>, document: Document): BaseEntity? {
+//        getEntityById(entityType, id)?.let {
+//            return it
+//        }
+
+        val dao = getDaoForClass(entityType)
+        dao?.createObjectFromDocument(document, id, entityType)?.let {
+            return it as? BaseEntity
+        }
+
+        return null
+    }
+
+    private fun findLastUndeletedRevision(document: Document): SavedRevision? {
+        try {
+            val leafRevisions = document.leafRevisions
+            if (leafRevisions.size > 0) {
+                var parentId: String? = leafRevisions[0].parentId
+
+                while(parentId != null) {
+                    val parentRevision = document.getRevision(parentId)
+
+                    if(parentRevision == null) {
+                        return null
+                    }
+
+                    if (parentRevision.isDeletion == false) {
+                        return parentRevision
+                    }
+
+                    parentId = parentRevision.getParentId()
+                }
+            }
+        } catch (e: Exception) {
+            log.error("Could not get Revision History for deleted Document with id " + document.getId(), e)
+        }
+
+        return null
+    }
+
+    private fun getEntityTypeFromRevision(revision: SavedRevision): Class<out BaseEntity>? {
+        val entityTypeString = revision.getProperty(Dao.TYPE_COLUMN_NAME) as String
+
+        return getEntityTypeFromEntityTypeString(entityTypeString)
+    }
+
+    private fun getEntityTypeFromEntityTypeString(entityTypeString: String?): Class<out BaseEntity>? {
+        if (entityTypeString != null) { // sometimes there are documents without type or any other column/property except Couchbase's system properties (like _id)
+            try {
+                return Class.forName(entityTypeString) as? Class<out BaseEntity>
+            } catch (e: Exception) {
+                log.error("Could not get class for entity type " + entityTypeString)
+            }
+        }
+
+        return null
     }
 
 }

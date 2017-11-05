@@ -5,6 +5,8 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
+// Put Fabric plugin after Android plugin
+apply plugin: 'io.fabric'
 apply plugin: 'testfairy'
 
 apply from: '../keys.gradle'
@@ -12,6 +14,7 @@ apply from: '../keys.gradle'
 
 repositories {
     maven { url 'https://www.testfairy.com/maven' }
+    maven { url 'https://maven.fabric.io/public' }
 }
 
 
@@ -36,14 +39,18 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix = ".test"
-            resValue "string", "app_name", "DeepThought Debug"
+            applicationIdSuffix = ".beta"
+            resValue "string", "app_name", "DeepThought Beta"
 
             testCoverageEnabled = true
 
             ext.enableCrashlytics = false
+            // Only use this flag on builds you don't proguard or upload to beta-by-crashlytics
+            ext.alwaysUpdateBuildId = false
         }
         release {
+            resValue "string", "app_name", "DeepThought"
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -148,16 +155,22 @@ dependencies {
     compile "com.github.clans:fab:$clansFloatingActionButtonVersion"
     compile "com.daimajia.swipelayout:library:$swipeLayoutVersion"
     compile "com.google.android:flexbox:$flexboxVersion"
+    compile project(':RichTextEditorAndroid')
 
     compile "org.slf4j:slf4j-android:$slf4jVersion"
 
     compile 'com.android.support:multidex:1.0.1'
 
     compile "com.android.support:appcompat-v7:$androidAppCompatVersion"
+    compile "com.android.support:cardview-v7:$androidAppCompatVersion"
     compile "com.android.support:design:$androidDesignVersion"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     betaCompile 'testfairy:testfairy-android-sdk:1.+@aar'
+    betaCompile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
+    betaCompile 'com.appsee:appsee-android:+'
 
     extendedCompile project(':ArticleSummaryExtractors') // not published to Play Store
 
@@ -169,6 +182,8 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+    kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
 }
 
 

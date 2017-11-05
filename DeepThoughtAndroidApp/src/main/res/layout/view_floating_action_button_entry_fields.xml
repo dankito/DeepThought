@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
 
-    android:id="@+id/fabEntryFieldsMenu"
+    android:id="@+id/floatingActionMenu"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
 
@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/MenuButtonsStyle"
-        fab:fab_label="@string/activity_edit_entry_abstract_label"
+        fab:fab_label="@string/activity_edit_item_summary_label"
     />
 
     <com.github.clans.fab.FloatingActionButton
@@ -30,7 +30,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/MenuButtonsStyle"
-        fab:fab_label="@string/activity_edit_entry_reference_label"
+        fab:fab_label="@string/activity_edit_item_source_label"
+    />
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fabEditEntryTags"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/MenuButtonsStyle"
+        fab:fab_label="@string/activity_edit_item_tags_label"
     />
 
 </com.github.clans.fab.FloatingActionMenu>

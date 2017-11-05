@@ -1,11 +1,17 @@
 package net.dankito.deepthought.android.views
 
+import android.app.Activity
 import android.content.Context
 import android.os.Build
+import android.os.Bundle
+import android.support.v4.app.DialogFragment
+import android.support.v7.app.AppCompatActivity
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.WebView
+import kotlinx.android.synthetic.main.activity_edit_entry.view.*
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import java.util.*
 
@@ -26,6 +32,9 @@ class FullscreenWebView : WebView {
         private const val DefaultScrollUpDifferenceYThreshold = -10
 
         private const val AfterTogglingNotHandleScrollEventsForMillis = 500
+
+        private const val SCROLL_X_BUNDLE_NAME = "SCROLL_X"
+        private const val SCROLL_Y_BUNDLE_NAME = "SCROLL_Y"
 
 
         private const val NON_FULLSCREEN_MODE_SYSTEM_UI_FLAGS = 0
@@ -67,12 +76,29 @@ class FullscreenWebView : WebView {
 
     var swipeListener: ((isInFullscreen: Boolean, OnSwipeTouchListener.SwipeDirection) -> Unit)? = null
 
+    /**
+     * Should return true if Android's url loading should be disabled
+     */
+    var elementClickedListener: ((elementType: Int) -> Boolean)? = null
+
 
     private var hasReachedEnd = false
+
+    private var disableScrolling = false
 
     private var lastOnScrollFullscreenModeTogglingTimestamp: Date? = null
 
     private lateinit var swipeTouchListener: OnSwipeTouchListener
+
+    private var lytFullscreenWebViewOptionsBar: ViewGroup? = null
+
+    private var checkIfScrollingStoppedTimer = Timer()
+
+    private var checkIfScrollingStoppedTimerTask: TimerTask? = null
+
+    private var scrollXToRestore: Int? = null
+
+    private var scrollYToRestore: Int? = null
 
 
     constructor(context: Context) : super(context) { setupUI(context) }
@@ -87,6 +113,13 @@ class FullscreenWebView : WebView {
 
         swipeTouchListener.singleTapListener = { handleWebViewSingleTap() }
         swipeTouchListener.doubleTapListener = { handleWebViewDoubleTap() }
+    }
+
+
+    fun setOptionsBar(lytFullscreenWebViewOptionsBar: ViewGroup) {
+        this.lytFullscreenWebViewOptionsBar = lytFullscreenWebViewOptionsBar
+
+        lytFullscreenWebViewOptionsBar.btnLeaveFullscreen.setOnClickListener { leaveFullscreenMode() }
     }
 
 
@@ -107,9 +140,34 @@ class FullscreenWebView : WebView {
      * WebView doesn't fire click event, so we had to implement this our self
      */
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        swipeTouchListener.onTouch(this, event)
+        if(isDialogInForeground() == false) { // touches from dialogs (e.g. TagsOnEntryDialog) if not handled there also come here -> avoid handling these
+            swipeTouchListener.onTouch(this, event)
+        }
+
+        if(event.action == MotionEvent.ACTION_UP && elementClickedListener != null) {
+            val hitResult = hitTestResult
+            val type = hitResult.type
+
+            elementClickedListener?.let { return it.invoke(type) } // this is bad: in most cases type is UNKNOWN, even though clicked on images etc. -> we cannot determine if user clicked an element or simply the background
+        }
+
+        if(disableScrolling) { // if both taps of a double tap weren't exactly on the same place may a large scroll occur after transition to fullscreen / not-fullscreen mode -> disable scrolling during this time
+            return event.action == MotionEvent.ACTION_MOVE || event.action == MotionEvent.ACTION_UP // somehow we also have to catch the last ACTION_UP as otherwise text gets selected
+        }
 
         return super.onTouchEvent(event)
+    }
+
+    private fun isDialogInForeground(): Boolean {
+        (context as? AppCompatActivity)?.supportFragmentManager?.fragments?.let { fragments ->
+            fragments.forEach {
+                if(it is DialogFragment) {
+                    return true
+                }
+            }
+        }
+
+        return false
     }
 
     private fun handleWebViewSingleTap() {
@@ -119,15 +177,24 @@ class FullscreenWebView : WebView {
         // leave the functionality for clicking on links, phone numbers, geo coordinates, ... Only go to fullscreen mode when clicked somewhere else in the WebView or on an image
         if(type == WebView.HitTestResult.UNKNOWN_TYPE || type == WebView.HitTestResult.IMAGE_TYPE) {
             singleTapListener?.invoke(isInFullscreenMode)
-
-            if(isInFullscreenMode) {
-                leaveFullscreenMode()
-            }
         }
     }
 
     private fun handleWebViewDoubleTap() {
+        disableScrolling = true // otherwise double tap may triggers a large scroll
+
+        if(isInFullscreenMode) {
+            leaveFullscreenMode()
+        }
+        else {
+            enterFullscreenMode()
+        }
+
         doubleTapListener?.invoke(isInFullscreenMode)
+
+        postDelayed({
+            disableScrolling = false
+        }, 300)
     }
 
     private fun handleWebViewSwipe(swipeDirection: OnSwipeTouchListener.SwipeDirection) {
@@ -150,6 +217,9 @@ class FullscreenWebView : WebView {
 
         val tolerance = computeVerticalScrollExtent() / 10
         this.hasReachedEnd = scrollY >= computeVerticalScrollRange() - computeVerticalScrollExtent() - tolerance
+
+        hideOptionsBarOnUiThread()
+        startCheckIfScrollingStopped()
     }
 
     private fun checkShouldEnterFullscreenMode(differenceY: Int) {
@@ -158,10 +228,39 @@ class FullscreenWebView : WebView {
         }
     }
 
+    private fun startCheckIfScrollingStopped() {
+        checkIfScrollingStoppedTimerTask?.cancel()
+
+        checkIfScrollingStoppedTimerTask = object: TimerTask() {
+            override fun run() {
+                showOptionsBar()
+            }
+        }
+
+        checkIfScrollingStoppedTimer.schedule(checkIfScrollingStoppedTimerTask, 300)
+    }
+
+    private fun hideOptionsBarOnUiThread() {
+        lytFullscreenWebViewOptionsBar?.visibility = View.GONE
+    }
+
+    private fun showOptionsBar() {
+        (lytFullscreenWebViewOptionsBar?.context as? Activity)?.let { activity ->
+            activity.runOnUiThread {
+                showOptionsBarOnUiThread()
+            }
+        }
+    }
+
+    private fun showOptionsBarOnUiThread() {
+        lytFullscreenWebViewOptionsBar?.visibility = View.VISIBLE
+    }
+
 
     private fun enterFullscreenMode() {
         isInFullscreenMode = true
         updateLastOnScrollFullscreenModeTogglingTimestamp()
+        lytFullscreenWebViewOptionsBar?.visibility = View.VISIBLE
 
         changeFullscreenModeListener?.invoke(FullscreenMode.Enter)
 
@@ -171,6 +270,8 @@ class FullscreenWebView : WebView {
 
     fun leaveFullscreenMode() {
         isInFullscreenMode = false
+        updateLastOnScrollFullscreenModeTogglingTimestamp()
+        hideOptionsBarOnUiThread()
 
         changeFullscreenModeListener?.invoke(FullscreenMode.Leave)
 
@@ -187,15 +288,27 @@ class FullscreenWebView : WebView {
     }
 
 
-    fun scrollToEndDelayed() {
+    private fun scrollToEndDelayed() {
         postDelayed({
             scrollToEnd()
         }, 50)
     }
 
-    fun scrollToEnd() {
+    private fun scrollToEnd() {
         updateLastOnScrollFullscreenModeTogglingTimestamp() // we also have to set lastOnScrollFullscreenModeTogglingTimestamp as otherwise scrolling may is large enough to re-enter fullscreen mode
         scrollY = computeVerticalScrollRange() - computeVerticalScrollExtent()
+        updateLastOnScrollFullscreenModeTogglingTimestamp() // to be on the safe side
+    }
+
+
+    fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(SCROLL_X_BUNDLE_NAME, scrollX)
+        outState.putInt(SCROLL_Y_BUNDLE_NAME, scrollY)
+    }
+
+    fun restoreInstanceState(savedInstanceState: Bundle) {
+        scrollXToRestore = savedInstanceState.getInt(SCROLL_X_BUNDLE_NAME)
+        scrollYToRestore = savedInstanceState.getInt(SCROLL_Y_BUNDLE_NAME)
     }
 
 
@@ -204,25 +317,47 @@ class FullscreenWebView : WebView {
     override fun loadData(data: String?, mimeType: String?, encoding: String?) {
         updateLastOnScrollFullscreenModeTogglingTimestamp()
         super.loadData(data, mimeType, encoding)
+
+        mayRestoreScrollPosition()
     }
 
     override fun loadDataWithBaseURL(baseUrl: String?, data: String?, mimeType: String?, encoding: String?, historyUrl: String?) {
         updateLastOnScrollFullscreenModeTogglingTimestamp()
         super.loadDataWithBaseURL(baseUrl, data, mimeType, encoding, historyUrl)
+
+        mayRestoreScrollPosition()
     }
 
     override fun loadUrl(url: String?) {
         updateLastOnScrollFullscreenModeTogglingTimestamp()
         super.loadUrl(url)
+
+        mayRestoreScrollPosition()
     }
 
     override fun loadUrl(url: String?, additionalHttpHeaders: MutableMap<String, String>?) {
         updateLastOnScrollFullscreenModeTogglingTimestamp()
         super.loadUrl(url, additionalHttpHeaders)
+
+        mayRestoreScrollPosition()
     }
 
     private fun updateLastOnScrollFullscreenModeTogglingTimestamp() {
         lastOnScrollFullscreenModeTogglingTimestamp = Date()
+    }
+
+    private fun mayRestoreScrollPosition() {
+        postDelayed({ // older devices need a delay as otherwise scroll position gets applied before content is loaded (and therefore scroll view grew to its extend)
+            scrollXToRestore?.let {
+                scrollX = it
+                scrollXToRestore = null
+            }
+
+            scrollYToRestore?.let {
+                scrollY = it
+                scrollYToRestore = null
+            }
+        }, 250)
     }
 
 }

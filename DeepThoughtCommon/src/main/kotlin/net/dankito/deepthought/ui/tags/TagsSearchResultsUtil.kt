@@ -1,6 +1,7 @@
 package net.dankito.deepthought.ui.tags
 
 import net.dankito.deepthought.model.Tag
+import net.dankito.service.search.SearchEngineBase
 import net.dankito.service.search.specific.TagsSearchResults
 
 
@@ -28,16 +29,68 @@ class TagsSearchResultsUtil {
     }
 
 
-    fun getButtonStateForSearchResult(searchResults: TagsSearchResults?): TagsSearcherButtonState {
-        if (searchResults == null || searchResults.overAllSearchTerm.isBlank()) {
+    fun getButtonStateForSearchResult(searchResults: TagsSearchResults?, tagsOnEntry: Collection<Tag>): TagsSearcherButtonState {
+        if(searchResults == null || searchResults.overAllSearchTerm.isBlank()) {
             return TagsSearcherButtonState.DISABLED
         }
 
-        if(searchResults.getSearchTermsWithoutMatches().size == searchResults.tagNamesToSearchFor.size) {
+        if(containsOnlyNotExistingTags(searchResults)) {
             return TagsSearcherButtonState.CREATE_TAG
         }
 
+        if(containsOnlyAddedTags(tagsOnEntry, searchResults)) {
+            return TagsSearcherButtonState.REMOVE_TAGS
+        }
+
+        if(containsAddedTags(tagsOnEntry, searchResults) == false) {
+            return TagsSearcherButtonState.ADD_TAGS
+        }
+
+        // as we have excluded all other cases above, this is the only one that remains
         return TagsSearcherButtonState.TOGGLE_TAGS
+    }
+
+    private fun containsOnlyNotExistingTags(searchResults: TagsSearchResults): Boolean {
+        return containsOnlySearchResultsWithoutMatches(searchResults) ||
+                containsOnlyOneSearchResultAndThatWithoutExactMatch(searchResults)  // first result doesn't have an exact match -> show Create
+    }
+
+    private fun containsOnlySearchResultsWithoutMatches(searchResults: TagsSearchResults): Boolean {
+        return searchResults.getSearchTermsWithoutMatches().size == searchResults.tagNamesToSearchFor.size
+    }
+
+    private fun containsOnlyOneSearchResultAndThatWithoutExactMatch(searchResults: TagsSearchResults): Boolean {
+        if(searchResults.tagNamesToSearchFor.size == 1 && searchResults.lastResult?.hasExactMatches() == false) {
+            // if there has been already entered a comma (= TagsSearchTermSeparator), also check if first result doesn't have matches
+            if(searchResults.overAllSearchTerm.contains(SearchEngineBase.TagsSearchTermSeparator) == false || searchResults.lastResult?.hasMatches == false) {
+                return true
+            }
+        }
+
+        return false
+    }
+
+    private fun containsOnlyAddedTags(tagsOnEntry: Collection<Tag>, searchResults: TagsSearchResults): Boolean {
+        if(tagsOnEntry.isEmpty() || searchResults.getRelevantMatchesSorted().size > (tagsOnEntry.size + searchResults.getSearchTermsWithoutMatches().size)) {
+            return false
+        }
+
+        val allMatches = searchResults.getRelevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossible()
+        val remainingMatches = ArrayList(allMatches)
+        remainingMatches.retainAll(tagsOnEntry)
+
+        return remainingMatches.size + searchResults.getSearchTermsWithoutMatches().size == allMatches.size // contains only added tags or search terms without matches
+    }
+
+    private fun containsAddedTags(tagsOnEntry: Collection<Tag>, searchResults: TagsSearchResults): Boolean {
+        if(tagsOnEntry.isEmpty() || searchResults.getRelevantMatchesSorted().size > (tagsOnEntry.size + searchResults.getSearchTermsWithoutMatches().size)) {
+            return false
+        }
+
+        val remainingMatches = ArrayList(searchResults.getRelevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossible())
+        remainingMatches.removeAll(tagsOnEntry)
+
+        return remainingMatches.size < searchResults.getRelevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossible().size
     }
 
 }

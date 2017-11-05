@@ -16,11 +16,11 @@ import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemD
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.views.ToolbarUtil
-import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.model.Series
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditSeriesPresenter
-import net.dankito.deepthought.ui.presenter.util.SeriesPersister
 import net.dankito.deepthought.ui.view.ISeriesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReferenceService
@@ -31,7 +31,6 @@ import net.dankito.service.data.messages.SeriesChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.IThreadPool
-import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.ui.IDialogService
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
@@ -59,9 +58,6 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
     protected lateinit var seriesPersister: SeriesPersister
 
     @Inject
-    protected lateinit var serializer: ISerializer
-
-    @Inject
     protected lateinit var searchEngine: ISearchEngine
 
     @Inject
@@ -82,7 +78,7 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
 
     private var series: Series? = null
 
-    private var referenceToSetSeriesOn: Reference? = null
+    private var sourceToSetSeriesOn: Source? = null
 
     private val presenter: EditSeriesPresenter
 
@@ -124,7 +120,7 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
         outState?.let {
             outState.putString(SERIES_ID_BUNDLE_EXTRA_NAME, series?.id)
 
-            referenceToSetSeriesOn?.let { outState.putString(REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME, serializer.serializeObject(it)) }
+            sourceToSetSeriesOn?.let { outState.putString(REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME, serializer.serializeObject(it)) }
 
             outState.putBoolean(SELECTED_ANOTHER_SERIES_BUNDLE_EXTRA_NAME, selectedAnotherSeries)
             outState.putBoolean(DID_SERIES_CHANGE_BUNDLE_EXTRA_NAME, didSeriesChange)
@@ -132,22 +128,23 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-        super.onRestoreInstanceState(savedInstanceState)
-
         savedInstanceState?.let {
             savedInstanceState.getString(SERIES_ID_BUNDLE_EXTRA_NAME)?.let { seriesId -> showSeries(seriesId) }
 
-            savedInstanceState.getString(REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME)?.let { setReferenceToSetSeriesOn(serializer.deserializeObject(it, Reference::class.java)) }
+            savedInstanceState.getString(REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME)?.let { setReferenceToSetSeriesOn(serializer.deserializeObject(it, Source::class.java)) }
 
             selectedAnotherSeries = savedInstanceState.getBoolean(SELECTED_ANOTHER_SERIES_BUNDLE_EXTRA_NAME, false)
             savedInstanceState.getBoolean(DID_SERIES_CHANGE_BUNDLE_EXTRA_NAME)?.let { didSeriesChange -> updateDidSeriesChangeOnUiThread(didSeriesChange) }
         }
+
+        super.onRestoreInstanceState(savedInstanceState) // important: Call super method after restoring series so that all EditEntityFields with their modified values don't get overwritten by original series' values
     }
 
     private fun setupUI() {
         setContentView(R.layout.activity_edit_series)
 
         setSupportActionBar(toolbar)
+        toolbarUtil.adjustToolbarLayoutDelayed(toolbar)
 
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -158,7 +155,7 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
     }
 
     private fun setupFindExistingSeriesSection() {
-        btnCreateNewSeries.setOnClickListener { createSeries() } // TODO: check if previous series contains unsaved changes
+        btnCreateNewSeries.setOnClickListener { askIfANewSeriesShouldBeCreated() }
 
         rcyExistingSeriesSearchResults.addItemDecoration(HorizontalDividerItemDecoration(this))
         rcyExistingSeriesSearchResults.adapter = existingSeriesSearchResultsAdapter
@@ -293,15 +290,41 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
                 createSeries()
             }
 
-            if(parameters.forReference != null) {
-                setReferenceToSetSeriesOn(parameters.forReference)
+            if(parameters.forSource != null) {
+                setReferenceToSetSeriesOn(parameters.forSource)
             }
         }
     }
 
-    private fun setReferenceToSetSeriesOn(reference: Reference) {
-        referenceToSetSeriesOn = reference
+    private fun setReferenceToSetSeriesOn(source: Source) {
+        sourceToSetSeriesOn = source
         lytSetReferenceSeriesControls.visibility = View.VISIBLE
+    }
+
+    private fun askIfANewSeriesShouldBeCreated() {
+        dialogService.showConfirmationDialog(getString(R.string.activity_edit_series_alert_message_create_new_series)) { createNewSeries ->
+            if(createNewSeries) {
+                if(didSeriesChange) {
+                    askIfCurrentSeriesChangesShouldGetSaved()
+                }
+                else {
+                    createSeries()
+                }
+            }
+        }
+    }
+
+    private fun askIfCurrentSeriesChangesShouldGetSaved() {
+        dialogService.showConfirmationDialog(getString(R.string.activity_edit_series_alert_message_create_new_series_current_one_has_unsaved_changes)) { saveChanges ->
+            if(saveChanges) {
+                saveSeriesAsync { // TODO: show error message in case of failure
+                    runOnUiThread { createSeries() }
+                }
+            }
+            else {
+                createSeries()
+            }
+        }
     }
 
     private fun createSeries() {

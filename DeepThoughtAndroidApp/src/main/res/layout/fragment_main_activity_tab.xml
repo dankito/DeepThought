@@ -24,6 +24,7 @@
             android:layout_alignParentTop="true"
             android:layout_above="@+id/lytFilteredEntities"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            android:scrollbars="vertical"
             android:longClickable="true"
         />
 
@@ -90,14 +91,26 @@
             android:layout_marginRight="@dimen/fragment_tab_entries_onboarding_left_right_margin"
             android:layout_marginEnd="@dimen/fragment_tab_entries_onboarding_left_right_margin"
             android:textAlignment="center"
+            android:textSize="@dimen/fragment_tab_entries_onboarding_text_size"
             android:gravity="center_horizontal"
+        />
+
+        <!-- In EntriesListView i'd like to show txtOnboardingText a bit above the center as it looks more naturally and leaves more place for arrowToFloatingActionButton -->
+        <!-- So i added vwStartingWhereTranslatedTextViewOnboardingTextEnds which takes txtOnboardingText's translationY into account and align arrowToFloatingActionButton to it -->
+
+        <View
+            android:id="@+id/vwStartingWhereTranslatedTextViewOnboardingTextEnds"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_alignBottom="@+id/txtOnboardingText"
+            android:background="@android:color/transparent"
         />
 
         <net.dankito.deepthought.android.views.PointToFloatingActionButtonArrow
             android:id="@+id/arrowToFloatingActionButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txtOnboardingText"
+            android:layout_alignTop="@+id/vwStartingWhereTranslatedTextViewOnboardingTextEnds"
             android:layout_alignParentBottom="true"
             android:visibility="gone"
         />

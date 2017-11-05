@@ -36,14 +36,14 @@ class ReadLaterArticleIndexWriterAndSearcher(readLaterArticleService: ReadLaterA
 
 
     override fun addEntityFieldsToDocument(entity: ReadLaterArticle, doc: Document) {
-        val entry = entity.entryExtractionResult.entry
+        val entry = entity.itemExtractionResult.item
 
         val textToIndex = entry.abstractPlainText + " " + entry.contentPlainText
         if(textToIndex.isNotBlank()) { // Lucene crashes when trying to index empty strings
             doc.add(Field(FieldName.ReadLaterArticleEntry, textToIndex, TextField.TYPE_NOT_STORED))
         }
 
-        entity.entryExtractionResult.reference?.let { reference ->
+        entity.itemExtractionResult.source?.let { reference ->
             val referencePreview = reference.previewWithSeriesAndPublishingDate
             if(referencePreview.isNotEmpty()) {
                 doc.add(Field(FieldName.ReadLaterArticleReference, referencePreview, TextField.TYPE_NOT_STORED))

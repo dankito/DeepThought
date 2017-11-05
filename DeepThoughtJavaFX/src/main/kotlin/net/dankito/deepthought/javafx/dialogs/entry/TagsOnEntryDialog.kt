@@ -95,7 +95,7 @@ class TagsOnEntryDialog : DialogFragment(), ITagsOnEntryListView {
                 }
             }
 
-            btnCreateOrToggleTags = button(messages["tags.on.entry.dialog.create.tag"]) {
+            btnCreateOrToggleTags = button(messages["tags.on.item.dialog.create.tag"]) {
                 action { createOrToggleTags() }
             }
         }
@@ -130,7 +130,7 @@ class TagsOnEntryDialog : DialogFragment(), ITagsOnEntryListView {
 
 
     private fun setButtonState() {
-        val buttonState = presenter.getButtonStateForSearchResult()
+        val buttonState = presenter.getButtonStateForSearchResult(tagsOnEntry)
 
         applyButtonState(buttonState)
     }
@@ -142,17 +142,23 @@ class TagsOnEntryDialog : DialogFragment(), ITagsOnEntryListView {
             button.isDisable = state == TagsSearcherButtonState.DISABLED
 
             if(state == TagsSearcherButtonState.CREATE_TAG) {
-                button.text = messages["tags.on.entry.dialog.create.tag"]
+                button.text = messages["tags.on.item.dialog.create.tag"]
+            }
+            else if(state == TagsSearcherButtonState.ADD_TAGS) {
+                button.text = messages["tags.on.item.dialog.add.tags"]
+            }
+            else if(state == TagsSearcherButtonState.REMOVE_TAGS) {
+                button.text = messages["tags.on.item.dialog.remove.tags"]
             }
             else if(state == TagsSearcherButtonState.TOGGLE_TAGS) {
-                button.text = messages["tags.on.entry.dialog.toggle.tags"]
+                button.text = messages["tags.on.item.dialog.toggle.tags"]
             }
         }
     }
 
     private fun createOrToggleTags() {
         if(btnCreateOrToggleTagsState == TagsSearcherButtonState.CREATE_TAG) {
-            presenter.createNewTags(txtfldSearchTags.text, tagsOnEntry)
+            presenter.createNewTags(tagsOnEntry)
         }
         else {
             toggleTagsOnEntry()
@@ -160,7 +166,9 @@ class TagsOnEntryDialog : DialogFragment(), ITagsOnEntryListView {
     }
 
     private fun toggleTagsOnEntry() {
-        presenter.toggleTagsOnEntry(tagsOnEntry)
+        presenter.toggleTagsOnEntry(tagsOnEntry, btnCreateOrToggleTagsState)
+
+        setButtonState()
     }
 
     private fun toggleTagOnEntry(tag: Tag?) {

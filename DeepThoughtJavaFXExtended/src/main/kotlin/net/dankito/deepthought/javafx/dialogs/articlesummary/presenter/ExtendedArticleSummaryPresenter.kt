@@ -3,7 +3,7 @@ package net.dankito.deepthought.javafx.dialogs.articlesummary.presenter
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
-import net.dankito.deepthought.ui.presenter.util.EntryPersister
+import net.dankito.deepthought.data.EntryPersister
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.utils.ui.IClipboardService

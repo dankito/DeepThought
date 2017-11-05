@@ -42,8 +42,8 @@ data class DeepThought(
         private set
 
 
-    @Column(name = TableConfig.DeepThoughtNextEntryIndexColumnName)
-    var nextEntryIndex = 0L
+    @Column(name = TableConfig.DeepThoughtNextItemIndexColumnName)
+    var nextItemIndex = 0L
         private set
 
 
@@ -75,9 +75,9 @@ data class DeepThought(
     }
 
 
-    fun increaseNextEntryIndex(): Long {
+    fun increaseNextItemIndex(): Long {
         synchronized(this) {
-            return ++nextEntryIndex
+            return ++nextItemIndex
         }
     }
 

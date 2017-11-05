@@ -6,6 +6,7 @@ import javafx.scene.control.TableView
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.TagViewModel
+import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
@@ -56,10 +57,14 @@ class TagsListView : EntitiesListView(), ITagsListView {
     @Inject
     protected lateinit var router: IRouter
 
+    @Inject
+    protected lateinit var allCalculatedTags: AllCalculatedTags
+
+
     init {
         AppComponent.component.inject(this)
 
-        presenter = TagsListPresenter(this, dataManager, searchEngine, searchResultsUtil, tagService, deleteEntityService, dialogService, router)
+        presenter = TagsListPresenter(this, allCalculatedTags, searchEngine, searchResultsUtil, tagService, deleteEntityService, dialogService, router)
         searchBar = TagsSearchBar(this)
 
         searchEngine.addInitializationListener {

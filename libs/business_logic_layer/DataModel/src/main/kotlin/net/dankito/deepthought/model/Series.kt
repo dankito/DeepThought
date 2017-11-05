@@ -22,29 +22,29 @@ data class Series(
 
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "series")
-    var references: MutableList<Reference> = ArrayList() // TODO: don't expose a mutable list to the outside
+    var sources: MutableList<Source> = ArrayList() // TODO: don't expose a mutable list to the outside
         private set
 
 
-    fun hasReferences(): Boolean {
-        return references.size > 0
+    fun hasSources(): Boolean {
+        return sources.size > 0
     }
 
-    val countReferences: Int
-        get() = references.size
+    val countSources: Int
+        get() = sources.size
 
-    internal fun addReference(reference: Reference): Boolean {
-        return references.add(reference)
+    internal fun addSource(source: Source): Boolean {
+        return sources.add(source)
     }
 
-    internal fun removeReference(reference: Reference): Boolean {
-        return references.remove(reference)
+    internal fun removeSource(source: Source): Boolean {
+        return sources.remove(source)
     }
 
 
     val displayText: String
         @Transient
-        get() = "$title ($countReferences)"
+        get() = "$title ($countSources)"
 
     override fun toString(): String {
         return displayText

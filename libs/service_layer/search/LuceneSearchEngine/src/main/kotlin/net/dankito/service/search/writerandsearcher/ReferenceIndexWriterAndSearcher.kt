@@ -1,6 +1,6 @@
 package net.dankito.service.search.writerandsearcher
 
-import net.dankito.deepthought.model.Reference
+import net.dankito.deepthought.model.Source
 import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.messages.ReferenceChanged
 import net.dankito.service.eventbus.EventBusPriorities
@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat
 
 
 class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool)
-    : IndexWriterAndSearcher<Reference>(referenceService, eventBus, osHelper, threadPool) {
+    : IndexWriterAndSearcher<Source>(referenceService, eventBus, osHelper, threadPool) {
 
     companion object {
         private val PublishingDateIndexFormat = SimpleDateFormat("dd MM yyyy")
@@ -28,7 +28,7 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
 
 
     override fun getDirectoryName(): String {
-        return "references"
+        return "sources"
     }
 
     override fun getIdFieldName(): String {
@@ -36,7 +36,7 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
     }
 
 
-    override fun addEntityFieldsToDocument(entity: Reference, doc: Document) {
+    override fun addEntityFieldsToDocument(entity: Source, doc: Document) {
         if(entity.title.isNotEmpty()) { // Lucene crashes when trying to index empty strings
             doc.add(Field(FieldName.ReferenceTitle, entity.title, TextField.TYPE_NOT_STORED))
         }
@@ -61,7 +61,7 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
         indexPublishingDate(entity, doc)
     }
 
-    private fun indexPublishingDate(entity: Reference, doc: Document) {
+    private fun indexPublishingDate(entity: Source, doc: Document) {
         entity.publishingDate?.let { publishingDate -> doc.add(LongField(FieldName.ReferencePublishingDate, publishingDate.time, Field.Store.YES)) }
 
         val publishingDateString = if(entity.publishingDateString != null) entity.publishingDateString
@@ -81,7 +81,7 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
 
         addQueryForSearchTerm(termsToSearchFor, query, search)
 
-        executeQueryForSearchWithCollectionResult(search, query, Reference::class.java, sortOptions = *arrayOf(
+        executeQueryForSearchWithCollectionResult(search, query, Source::class.java, sortOptions = *arrayOf(
                 SortOption(FieldName.ReferenceSeries, SortOrder.Ascending, SortField.Type.STRING),
                 SortOption(FieldName.ReferencePublishingDate, SortOrder.Descending, SortField.Type.LONG),
                 SortOption(FieldName.ReferenceTitle, SortOrder.Ascending, SortField.Type.STRING)

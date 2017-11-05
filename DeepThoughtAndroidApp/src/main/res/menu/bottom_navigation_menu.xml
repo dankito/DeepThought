@@ -3,8 +3,8 @@
 
     <item
         android:id="@+id/btnvEntries"
-        android:title="@string/tab_entries_title"
-        android:icon="@drawable/ic_entry"
+        android:title="@string/tab_items_title"
+        android:icon="@drawable/ic_tab_item"
         android:orderInCategory="0"
         />
 
@@ -17,7 +17,7 @@
 
     <item
         android:id="@+id/btnvReferences"
-        android:title="@string/tab_references_title"
+        android:title="@string/tab_sources_title"
         android:icon="@drawable/ic_reference"
         android:orderInCategory="2"
     />

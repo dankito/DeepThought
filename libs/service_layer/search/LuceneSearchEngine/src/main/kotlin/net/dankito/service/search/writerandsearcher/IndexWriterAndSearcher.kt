@@ -1,5 +1,6 @@
 package net.dankito.service.search.writerandsearcher
 
+import net.dankito.data_access.database.ChangedEntity
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.service.data.EntityServiceBase
 import net.dankito.service.data.messages.EntityChangeType
@@ -32,8 +33,6 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
     companion object {
         protected const val DEFAULT_COUNT_MAX_SEARCH_RESULTS = 100000
-
-        private const val WAIT_TIME_BEFORE_COMMITTING_INDICES_MILLIS = 1500L
 
         private const val InstanceLock = "LOCK"
 
@@ -120,7 +119,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
         return writer
     }
 
-    protected fun getWriter(): IndexWriter? {
+    private fun getWriter(): IndexWriter? {
         synchronized(InstanceLock) {
             if(writer == null) {
                 writer = createIndexWriter(defaultAnalyzer)
@@ -144,7 +143,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
         indexSearcher = IndexSearcher(directoryReader)
     }
 
-    protected fun getIndexSearcher(): IndexSearcher? {
+    private fun getIndexSearcher(): IndexSearcher? {
         synchronized(InstanceLock) {
             if(indexSearcher == null) {
                 try {
@@ -277,14 +276,12 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
     abstract fun addEntityFieldsToDocument(entity: TEntity, doc: Document)
 
-    protected fun indexDocument(doc: Document) {
+    private fun indexDocument(doc: Document) {
         try {
             getWriter()?.let { writer ->
                 writer.addDocument(doc)
 
-                startCommitIndicesTimer()
-
-                markIndexHasBeenUpdated() // so that on next search updates are reflected
+                commitChangesToWriter()
             }
         } catch (e: Exception) {
             log.error("Could not index Document " + doc, e)
@@ -292,31 +289,42 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
     }
 
 
-    fun updateEntityInIndex(entity: TEntity) {
+    fun updateEntityInIndex(changedEntity: ChangedEntity<TEntity>) {
+        if(changedEntity.isDeleted) {
+            changedEntity.id?.let { removeEntityFromIndex(it) }
+        }
+        else if(changedEntity.entity != null) {
+            changedEntity.entity?.let { updateEntityInIndex(it) }
+        }
+    }
+
+    private fun updateEntityInIndex(entity: TEntity) {
         removeEntityFromIndex(entity)
         indexEntity(entity)
     }
 
-    protected fun removeEntityFromIndex(removedEntity: TEntity) {
+    private fun removeEntityFromIndex(removedEntity: TEntity) {
+        removedEntity.id?.let { removeEntityFromIndex(it) }
+    }
+
+    private fun removeEntityFromIndex(entityId: String) {
         if(isReadOnly) {
             return
         }
 
         try {
             getWriter()?.let { writer ->
-                removedEntity.id?.let { removeEntityFromIndex(writer, it) }
+                removeEntityFromIndex(writer, entityId)
             }
         } catch (e: Exception) {
-            log.error("Could not delete Document for removed entity " + removedEntity, e)
+            log.error("Could not delete Document for removed entity with id " + entityId, e)
         }
     }
 
     private fun removeEntityFromIndex(writer: IndexWriter, entityId: String) {
         writer.deleteDocuments(Term(getIdFieldName(), entityId))
 
-        startCommitIndicesTimer()
-
-        markIndexHasBeenUpdated() // so that on next search updates are reflected
+        commitChangesToWriter()
     }
 
     abstract fun getIdFieldName(): String
@@ -351,20 +359,10 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
      * Calling commit() is a costly operation
      * -> don't call it on each update / deletion, wait some time before commit accumulated changes.
      */
-    @Synchronized protected fun startCommitIndicesTimer() {
-        if(commitIndicesTimer != null) { // timer already started
-            return
-        }
+    @Synchronized private fun commitChangesToWriter() {
+        getWriter()?.commit()
 
-        commitIndicesTimer = Timer("Commit Indices Timer")
-
-        commitIndicesTimer?.schedule(object : TimerTask() {
-            override fun run() {
-                commitIndicesTimer = null
-
-                getWriter()?.commit()
-            }
-        }, WAIT_TIME_BEFORE_COMMITTING_INDICES_MILLIS)
+        markIndexHasBeenUpdated() // so that on next search updates are reflected
     }
 
 
@@ -393,7 +391,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
         return listOf()
     }
 
-    protected fun getSorting(sortOptions: List<SortOption>): Sort {
+    private fun getSorting(sortOptions: List<SortOption>): Sort {
         val sort = Sort()
 
         if(sortOptions.isNotEmpty()) {

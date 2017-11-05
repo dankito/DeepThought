@@ -38,6 +38,7 @@
                 android:layout_marginRight="@dimen/dialog_tags_on_entry_tag_list_tags_margin"
                 android:layout_marginBottom="@dimen/dialog_tags_on_entry_tag_list_tags_margin_bottom"
                 app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                android:scrollbars="vertical"
             />
 
         </LinearLayout>
@@ -58,7 +59,7 @@
                 android:layout_marginLeft="@dimen/dialog_tags_on_entry_tag_preview_label_margin_left_right"
                 android:layout_marginRight="@dimen/dialog_tags_on_entry_tag_preview_label_margin_left_right"
                 android:textSize="@dimen/dialog_tags_on_entry_tag_preview_text_size"
-                android:text="@string/dialog_tags_on_entry_tags_label"
+                android:text="@string/dialog_tags_on_item_tags_label"
             />
 
             <com.google.android.flexbox.FlexboxLayout
@@ -99,6 +100,7 @@
                     android:layout_marginEnd="@dimen/dialog_tags_on_entry_tag_search_tags_margin_right"
                     android:textSize="@dimen/dialog_tags_on_entry_tag_search_tags_text_size"
                     android:inputType="text"
+                    android:imeOptions="flagNoExtractUi"
                 />
 
                 <Button
@@ -107,7 +109,7 @@
                     android:layout_height="wrap_content"
                     android:minWidth="@dimen/dialog_tags_on_entry_tag_search_tags_button_min_width"
                     android:textSize="@dimen/dialog_tags_on_entry_tag_search_tags_text_size"
-                    android:text="@string/dialog_tags_on_entry_create_tag"
+                    android:text="@string/dialog_tags_on_item_create_tag"
                     android:enabled="false"
                 />
 
@@ -129,7 +131,7 @@
         android:id="@+id/toolbar"
         android:layout_alignParentBottom="true"
         style="@style/ToolbarStyle"
-        app:title="@string/dialog_tags_on_entry_title"
+        app:title="@string/dialog_tags_on_item_title"
         />
 
 </RelativeLayout>

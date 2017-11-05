@@ -1,14 +1,13 @@
 package net.dankito.service.search
 
+import net.dankito.data_access.database.ChangedEntity
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.*
-import net.dankito.service.data.messages.EntitiesOfTypeChanged
-import net.dankito.service.data.messages.EntityChangeSource
-import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.specific.*
 import net.dankito.service.search.writerandsearcher.*
+import net.dankito.utils.AsyncProducerConsumerQueue
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.OsHelper
 import net.dankito.utils.language.ILanguageDetector
@@ -77,12 +76,14 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
             initializeIndexSearchersAndWriters()
 
-            if(indexDirExists == false) {
-                // TODO: inform user that index is going to be rebuilt and that this takes some time
-                rebuildIndex() // do not rebuild index asynchronously as Application depends on some functions of SearchEngine (like Entries without Tags)
-            }
+            dataManager.addInitializationListener {
+                if(indexDirExists == false) {
+                    // TODO: inform user that index is going to be rebuilt and that this takes some time
+                    rebuildIndex() // do not rebuild index asynchronously as Application depends on some functions of SearchEngine (like Entries without Tags)
+                }
 
-            searchEngineInitialized()
+                searchEngineInitialized()
+            }
         } catch (ex: Exception) {
             log.error("Could not open Lucene Index Directory" , ex)
         }
@@ -107,37 +108,32 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
     /**
      * There are many reasons why the index isn't in sync anymore with database (e.g. an entity got synchronized but app gets closed before it gets indexed).
-     * This methods (re-)indexes all entities with changes since dataManager.localSettings.lastSearchIndexUpdateTime to ensure index is up to date again
+     * This methods (re-)indexes all entities with changes since dataManager.localSettings.lastSearchIndexUpdateSequenceNumber to ensure index is up to date again
      */
     private fun updateIndex() {
-        val startTime = Date()
-        log.info("Starting updating index with last index update time ${dataManager.localSettings.lastSearchIndexUpdateTime}")
+        log.info("Starting updating index with last index update sequence number ${dataManager.localSettings.lastSearchIndexUpdateSequenceNumber}")
 
-        dataManager.entityManager.getAllEntitiesUpdatedAfter<BaseEntity>(dataManager.localSettings.lastSearchIndexUpdateTime).forEach { entity ->
-            updateEntityInIndex(entity)
-        }
+        val currentSequenceNumber = dataManager.entityManager.getAllEntitiesUpdatedAfter<BaseEntity>(dataManager.localSettings.lastSearchIndexUpdateSequenceNumber,
+                AsyncProducerConsumerQueue<ChangedEntity<BaseEntity>>(2) {
+            updateEntityInIndex(it)
+        })
 
-        dataManager.localSettings.lastSearchIndexUpdateTime = startTime
+        dataManager.localSettings.lastSearchIndexUpdateSequenceNumber = currentSequenceNumber
         dataManager.localSettingsUpdated()
 
         log.info("Done updating index")
     }
 
-    private fun updateEntityInIndex(entity: BaseEntity) {
-        if(entity is Entry) {
-            entryIndexWriterAndSearcher.updateEntityInIndex(entity)
-        }
-        else if(entity is Tag) {
-            tagIndexWriterAndSearcher.updateEntityInIndex(entity)
-        }
-        else if(entity is Series) {
-            seriesIndexWriterAndSearcher.updateEntityInIndex(entity)
-        }
-        else if(entity is Reference) {
-            referenceIndexWriterAndSearcher.updateEntityInIndex(entity)
-        }
-        else if(entity is ReadLaterArticle) {
-            readLaterArticleIndexWriterAndSearcher.updateEntityInIndex(entity)
+    private fun updateEntityInIndex(changedEntity: ChangedEntity<BaseEntity>) {
+        when(changedEntity.entityClass) {
+            Item::class.java -> {
+                entryIdsIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Item>)
+                entryIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Item>)
+            }
+            Tag::class.java -> tagIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Tag>)
+            Series::class.java -> seriesIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Series>)
+            Source::class.java -> referenceIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Source>)
+            ReadLaterArticleService::class.java -> readLaterArticleIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<ReadLaterArticle>)
         }
     }
 

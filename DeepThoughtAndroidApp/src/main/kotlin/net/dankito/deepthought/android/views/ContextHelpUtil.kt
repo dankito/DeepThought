@@ -9,6 +9,7 @@ import android.view.animation.AccelerateInterpolator
 import android.widget.Button
 import android.widget.TextView
 import net.dankito.deepthought.android.R
+import net.dankito.deepthought.android.service.StringUtil
 
 
 class ContextHelpUtil {
@@ -18,13 +19,16 @@ class ContextHelpUtil {
     }
 
 
+    val stringUtil = StringUtil()
+
+
     fun showContextHelp(lytContextHelp: View, helpTextResourceId: Int) {
-        showContextHelp(lytContextHelp, lytContextHelp.context.getString(helpTextResourceId))
+        showContextHelp(lytContextHelp, lytContextHelp.context.getText(helpTextResourceId).toString())
     }
 
     fun showContextHelp(lytContextHelp: View, helpText: String) {
         val txtContextHelpText = lytContextHelp.findViewById(R.id.txtContextHelpText) as TextView
-        txtContextHelpText.text = helpText
+        txtContextHelpText.text = stringUtil.getSpannedFromHtml(helpText)
 
         val btnDismissContextHelp = lytContextHelp.findViewById(R.id.btnDismissContextHelp) as Button
         btnDismissContextHelp.setOnClickListener { animateHideContextHelp(lytContextHelp) }
@@ -36,21 +40,21 @@ class ContextHelpUtil {
 
 
     fun showAsConfirmation(lytContextHelp: View, confirmationTextResourceId: Int, didConfirm: () -> Unit) {
-        showAsConfirmation(lytContextHelp, lytContextHelp.context.getString(confirmationTextResourceId), didConfirm)
+        showAsConfirmation(lytContextHelp, lytContextHelp.context.getText(confirmationTextResourceId).toString(), didConfirm)
     }
 
     fun showAsConfirmation(lytContextHelp: View, confirmationText: String, didConfirm: () -> Unit) {
         val txtContextHelpText = lytContextHelp.findViewById(R.id.txtContextHelpText) as TextView
-        txtContextHelpText.text = confirmationText
+        txtContextHelpText.text = stringUtil.getSpannedFromHtml(confirmationText)
 
         lytContextHelp.findViewById(R.id.btnDismissContextHelp)?.visibility = View.GONE
 
+        lytContextHelp.findViewById(R.id.lytConfirmButtons)?.visibility = View.VISIBLE
+
         val btnDeny = lytContextHelp.findViewById(R.id.btnDeny) as Button
-        btnDeny.visibility = View.VISIBLE
         btnDeny.setOnClickListener { hide(lytContextHelp) }
 
         val btnConfirm = lytContextHelp.findViewById(R.id.btnConfirm) as Button
-        btnConfirm.visibility = View.VISIBLE
         btnConfirm.setOnClickListener {
             didConfirm()
             hide(lytContextHelp)
@@ -62,7 +66,7 @@ class ContextHelpUtil {
 
     // TODO: animation currently only works on top off screen, not in other places
     private fun animateShowContextHelp(lytContextHelp: View) {
-        if (lytContextHelp.measuredHeight == 0) { // in this case we have to wait till height is determined -> set OnGlobalLayoutListener
+        if(lytContextHelp.measuredHeight == 0) { // in this case we have to wait till height is determined -> set OnGlobalLayoutListener
             var layoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null // have to do it that complicated otherwise in OnGlobalLayoutListener we cannot access layoutListener variable
             layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
                 removeOnGlobalLayoutListener(lytContextHelp, layoutListener)
@@ -71,7 +75,8 @@ class ContextHelpUtil {
             }
 
             lytContextHelp.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
-        } else {
+        }
+        else {
             animateShowContextHelpAfterMeasuringHeight(lytContextHelp)
         }
     }

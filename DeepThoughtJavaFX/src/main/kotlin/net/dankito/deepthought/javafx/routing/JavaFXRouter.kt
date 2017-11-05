@@ -9,7 +9,7 @@ import net.dankito.deepthought.javafx.dialogs.readlaterarticle.ReadLaterArticleL
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.IEntriesListView
 import net.dankito.newsreader.model.ArticleSummary
@@ -29,7 +29,7 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
         entriesListView.showEntriesForTag(tag, tagsFilter)
     }
 
-    override fun showEntriesForReference(reference: Reference) {
+    override fun showEntriesForReference(source: Source) {
         // TODO
     }
 
@@ -54,40 +54,40 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
 
 
     override fun showCreateEntryView() {
-        showEditEntryView(Entry(""), FX.messages["create.entry.window.title"])
+        showEditEntryView(Item(""), FX.messages["create.item.window.title"])
     }
 
-    override fun showEditEntryView(entry: Entry) {
-        // TODO: set title when Reference is not set
-        showEditEntryView(entry, entry.reference.previewWithSeriesAndPublishingDate)
+    override fun showEditEntryView(item: Item) {
+        // TODO: set title when Source is not set
+        showEditEntryView(item, item.source.previewWithSeriesAndPublishingDate)
     }
 
-    private fun showEditEntryView(entry: Entry, title: String?) {
+    private fun showEditEntryView(item: Item, title: String?) {
         runLater {
-            mainWindowController.find(EditEntryView::class, mapOf(EditEntryView::entry to entry)).show(title)
+            mainWindowController.find(EditEntryView::class, mapOf(EditEntryView::item to item)).show(title)
         }
     }
 
     override fun showEditEntryView(article: ReadLaterArticle) {
         runLater {
-            // TODO: set title when Reference is not set
-            mainWindowController.find(EditReadLaterArticleView::class, mapOf(EditReadLaterArticleView::article to article)).show(article.entryExtractionResult.reference?.preview)
+            // TODO: set title when Source is not set
+            mainWindowController.find(EditReadLaterArticleView::class, mapOf(EditReadLaterArticleView::article to article)).show(article.itemExtractionResult.source?.preview)
         }
     }
 
-    override fun showEditEntryView(extractionResult: EntryExtractionResult) {
+    override fun showEditEntryView(extractionResult: ItemExtractionResult) {
         runLater {
-            // TODO: set title when Reference is not set
-            mainWindowController.find(EditEntryExtractionResultView::class, mapOf(EditEntryExtractionResultView::extractionResult to extractionResult)).show(extractionResult.reference?.preview)
+            // TODO: set title when Source is not set
+            mainWindowController.find(EditEntryExtractionResultView::class, mapOf(EditEntryExtractionResultView::extractionResult to extractionResult)).show(extractionResult.source?.preview)
         }
     }
 
 
-    override fun showEditReferenceView(reference: Reference) {
+    override fun showEditReferenceView(source: Source) {
         // TODO
     }
 
-    override fun showEditEntryReferenceView(forEntry: Entry, reference: Reference?, series: Series?) {
+    override fun showEditEntryReferenceView(forItem: Item, source: Source?, series: Series?) {
         // there should be no need for this on JavaFX
     }
 
@@ -96,7 +96,7 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
         // TODO
     }
 
-    override fun showEditReferenceSeriesView(forReference: Reference, series: Series?) {
+    override fun showEditReferenceSeriesView(forSource: Source, series: Series?) {
         // there should be no need for this on JavaFX
     }
 

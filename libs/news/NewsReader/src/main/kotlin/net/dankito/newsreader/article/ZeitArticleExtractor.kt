@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
@@ -30,13 +30,13 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
         return url.toLowerCase().contains("://www.zeit.de/") && url.length > "://www.zeit.de/".length + 5
     }
 
-    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
+    override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("article").first()?.let { articleElement ->
             val multiPageArticleArticleOnOnePageUrl = getArticleOnOnePageUrlForMultiPageArticles(articleElement)
             if(multiPageArticleArticleOnOnePageUrl != null) {
                 extractArticle(multiPageArticleArticleOnOnePageUrl)?.let {
                     if(it.couldExtractContent) {
-                        extractionResult.setExtractedContent(it.entry, it.reference)
+                        extractionResult.setExtractedContent(it.item, it.source)
                         return
                     }
                 }
@@ -60,7 +60,7 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
         return null
     }
 
-    private fun createEntry(articleBodyElement: Element): Entry {
+    private fun createEntry(articleBodyElement: Element): Item {
         val abstractString = articleBodyElement.select("div.summary").text()
 
         var content = ""
@@ -69,21 +69,21 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
             content += previewImageElement.outerHtml()
         }
 
-        for(articleElement in articleBodyElement.select("p.article__item, .article__subheading")) { // articleBodyElement.select("p .paragraph .article__item")
+        for(articleElement in articleBodyElement.select("p.article__item, .article__subheading, .gate--register")) { // .gate--register to show to user that you have to register for viewing this article
             content += articleElement.outerHtml()
         }
 
-        return Entry(content, abstractString)
+        return Item(content, abstractString)
     }
 
-    private fun createReference(articleUrl: String, articleBodyElement: Element): Reference {
+    private fun createReference(articleUrl: String, articleBodyElement: Element): Source {
         val title = articleBodyElement.select(".article-heading__title").text()
 
         val subTitle = articleBodyElement.select(".article-heading__kicker").text()
 
         val publishingDate = parseDate(articleBodyElement)
 
-        val reference = Reference(articleUrl, title, publishingDate, subTitle = subTitle)
+        val reference = Source(articleUrl, title, publishingDate, subTitle = subTitle)
 
         articleBodyElement.parent().select(".article__media-item").first()?.let { previewImageElement ->
             reference.previewImageUrl = previewImageElement.attr("src")

@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import org.jsoup.nodes.Element
 
 
@@ -24,7 +24,7 @@ class HeiseNewsArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
     }
 
 
-    override fun parseArticle(extractionResult: EntryExtractionResult, headerElement: Element, articleElement: Element, url: String, title: String) {
+    override fun parseArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleElement: Element, url: String, title: String) {
         articleElement.select(".meldung_wrapper").first()?.let { contentElement ->
             parseMeldungWrapperArticle(extractionResult, headerElement, articleElement, contentElement, url, title)
             return
@@ -37,27 +37,30 @@ class HeiseNewsArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
 
 
     // new version
-    private fun parseArticleContentArticle(extractionResult: EntryExtractionResult, headerElement: Element, articleContentElement: Element, url: String, title: String) {
-        val reference = Reference(url, title, extractPublishingDate(headerElement))
+    private fun parseArticleContentArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleContentElement: Element, url: String, title: String) {
+        val reference = Source(url, title, extractPublishingDate(headerElement))
         articleContentElement.select(".aufmacherbild img").first()?.let { previewImageElement ->
             reference.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), url)
         }
 
         val abstract = articleContentElement.select(".article-content__lead").first()?.text() ?: ""
 
+        cleanContentElement(articleContentElement)
         articleContentElement.select(".article-content__lead").remove()
 
-        extractionResult.setExtractedContent(Entry(articleContentElement.outerHtml(), abstract), reference)
+        makeLinksAbsolute(articleContentElement, url)
+
+        extractionResult.setExtractedContent(Item(articleContentElement.outerHtml(), abstract), reference)
     }
 
 
     // old version
-    private fun parseMeldungWrapperArticle(extractionResult: EntryExtractionResult, headerElement: Element, articleElement: Element, contentElement: Element, url: String, title: String) {
-        val entry = Entry(extractContent(articleElement, url))
-        contentElement.select(".meldung_anrisstext").first()?.text()?.let { entry.abstractString = it }
+    private fun parseMeldungWrapperArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleElement: Element, contentElement: Element, url: String, title: String) {
+        val entry = Item(extractContent(articleElement, url))
+        contentElement.select(".meldung_anrisstext").first()?.text()?.let { entry.summary = it }
 
         val publishingDate = extractPublishingDate(headerElement)
-        val reference = Reference(url, title, publishingDate)
+        val reference = Source(url, title, publishingDate)
         reference.previewImageUrl = makeLinkAbsolute(contentElement.select(".aufmacherbild img").first()?.attr("src") ?: "", url)
 
         extractionResult.setExtractedContent(entry, reference)

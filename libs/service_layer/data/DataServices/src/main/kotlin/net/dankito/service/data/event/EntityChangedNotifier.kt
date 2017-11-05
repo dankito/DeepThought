@@ -3,15 +3,21 @@ package net.dankito.service.data.event
 import net.dankito.deepthought.model.*
 import net.dankito.service.data.messages.*
 import net.dankito.service.eventbus.IEventBus
-import net.dankito.utils.IThreadPool
+import net.dankito.utils.AsyncProducerConsumerQueue
 
 
-class EntityChangedNotifier(private val eventBus: IEventBus, private val threadPool: IThreadPool) {
+class EntityChangedNotifier(private val eventBus: IEventBus) {
+
+    data class QueuedChange(val entity: BaseEntity, val changeType: EntityChangeType, val source: EntityChangeSource, val didChangesAffectingDependentEntities: Boolean)
+
+
+    private val queue = AsyncProducerConsumerQueue<QueuedChange>(1) { item ->
+        notifyListenersOfEntityChange(item.entity, item.changeType, item.source, item.didChangesAffectingDependentEntities)
+    }
+
 
     fun notifyListenersOfEntityChangeAsync(entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource, didChangesAffectingDependentEntities: Boolean = false) {
-        threadPool.runAsync {
-            notifyListenersOfEntityChange(entity, changeType, source, didChangesAffectingDependentEntities)
-        }
+        queue.add(QueuedChange(entity, changeType, source, didChangesAffectingDependentEntities))
     }
 
     fun notifyListenersOfEntityChange(entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource, didChangesAffectingDependentEntities: Boolean = false, isDependentChange: Boolean = false) {
@@ -42,34 +48,34 @@ class EntityChangedNotifier(private val eventBus: IEventBus, private val threadP
         else if(entityClass == Series::class.java) {
             dispatchMessagesForSeriesDependentEntities(entity as Series, source)
         }
-        else if(entityClass == Reference::class.java) {
-            dispatchMessagesForReferenceDependentEntities(entity as Reference, source)
+        else if(entityClass == Source::class.java) {
+            dispatchMessagesForReferenceDependentEntities(entity as Source, source)
         }
     }
 
     private fun dispatchMessagesForTagDependentEntities(tag: Tag, source: EntityChangeSource) {
-        tag.entries.filterNotNull().forEach { entry ->
+        tag.items.filterNotNull().forEach { entry ->
             notifyListenersOfEntityChange(entry, EntityChangeType.Updated, source)
         }
     }
 
     private fun dispatchMessagesForSeriesDependentEntities(series: Series, source: EntityChangeSource) {
-        series.references.filterNotNull().forEach { reference ->
+        series.sources.filterNotNull().forEach { reference ->
             notifyListenersOfEntityChange(reference, EntityChangeType.Updated, source)
         }
     }
 
-    private fun dispatchMessagesForReferenceDependentEntities(reference: Reference, source: EntityChangeSource) {
-        reference.entries.filterNotNull().forEach { entry ->
+    private fun dispatchMessagesForReferenceDependentEntities(reference: Source, source: EntityChangeSource) {
+        reference.items.filterNotNull().forEach { entry ->
             notifyListenersOfEntityChange(entry, EntityChangeType.Updated, source)
         }
     }
 
     private fun createEntityChangedMessage(entityClass: Class<out BaseEntity>, entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource): EntityChanged<out BaseEntity>? {
         when(entityClass) {
-            Entry::class.java -> return EntryChanged(entity as Entry, changeType, source)
+            Item::class.java -> return EntryChanged(entity as Item, changeType, source)
             Tag::class.java -> return TagChanged(entity as Tag, changeType, source)
-            Reference::class.java -> return ReferenceChanged(entity as Reference, changeType, source)
+            Source::class.java -> return ReferenceChanged(entity as Source, changeType, source)
             Series::class.java -> return SeriesChanged(entity as Series, changeType, source)
             ReadLaterArticle::class.java -> return ReadLaterArticleChanged(entity as ReadLaterArticle, changeType, source)
             ArticleSummaryExtractorConfig::class.java -> return ArticleSummaryExtractorConfigChanged(entity as ArticleSummaryExtractorConfig, changeType, source)

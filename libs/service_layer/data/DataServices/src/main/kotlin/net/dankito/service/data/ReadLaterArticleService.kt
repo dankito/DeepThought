@@ -2,7 +2,7 @@ package net.dankito.service.data
 
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.model.extensions.entryPreview
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.utils.serialization.ISerializer
@@ -20,9 +20,9 @@ class ReadLaterArticleService(dataManager: DataManager, entityChangedNotifier: E
     override fun onPrePersist(entity: ReadLaterArticle) {
         super.onPrePersist(entity)
 
-        entity.entryExtractionResult.entry.preview = entity.entryExtractionResult.entry.entryPreview
+        entity.itemExtractionResult.item.preview = entity.itemExtractionResult.item.entryPreview
 
-        entity.serializedEntryExtractionResult = serializer.serializeObject(entity.entryExtractionResult)
+        entity.serializedItemExtractionResult = serializer.serializeObject(entity.itemExtractionResult)
     }
 
     override fun getAll(): List<ReadLaterArticle> {
@@ -43,9 +43,9 @@ class ReadLaterArticleService(dataManager: DataManager, entityChangedNotifier: E
 
 
     fun deserializeEntryExtractionResult(readLaterArticle: ReadLaterArticle) {
-        if(readLaterArticle.entryExtractionResult.entry.content.isBlank()) { // entryExtractionResult not deserialized yet
+        if(readLaterArticle.itemExtractionResult.item.content.isBlank()) { // itemExtractionResult not deserialized yet
             try {
-                readLaterArticle.entryExtractionResult = serializer.deserializeObject(readLaterArticle.serializedEntryExtractionResult, EntryExtractionResult::class.java)
+                readLaterArticle.itemExtractionResult = serializer.deserializeObject(readLaterArticle.serializedItemExtractionResult, ItemExtractionResult::class.java)
             } catch(e: Exception) {
                 log.error("Could not deserialize ReadLaterArticle $readLaterArticle", e)
             }

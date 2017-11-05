@@ -8,45 +8,45 @@
 >
 
     <TextView
-        android:id="@+id/txtFeedOrWebsiteUrl"
+        android:id="@+id/txtNewsPageUrlLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/TextBodyStyle"
-        android:textSize="@dimen/dialog_add_article_summary_extractor_text_feed_or_website_url_text_size"
-        android:text="@string/dialog_add_article_summary_extractor_feed_or_website_url"
+        style="@style/Header1Style"
+        android:text="@string/dialog_add_article_summary_extractor_news_page_url_label"
     />
 
     <EditText
         android:id="@+id/edtxtFeedOrWebsiteUrl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtFeedOrWebsiteUrl"
+        android:layout_below="@+id/txtNewsPageUrlLabel"
         android:inputType="textUri"
-        android:layout_marginTop="@dimen/dialog_add_article_summary_extractor_text_feed_or_website_url_margin_top_and_bottom"
-        android:layout_marginBottom="@dimen/dialog_add_article_summary_extractor_text_feed_or_website_url_margin_top_and_bottom"
-        android:imeOptions="actionSearch"
+        android:layout_marginTop="@dimen/dialog_add_article_summary_extractor_text_feed_or_website_url_margin_top"
+        android:imeOptions="actionSearch|flagNoExtractUi"
     />
 
     <Button
         android:id="@+id/btnCancel"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dialog_add_article_summary_extractor_buttons_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/btnCheckFeedOrWebsiteUrl"
         android:layout_alignBottom="@+id/btnCheckFeedOrWebsiteUrl"
         style="?android:attr/buttonBarButtonStyle"
+        android:textColor="@color/button_text_color"
         android:text="@android:string/cancel"
     />
 
     <Button
         android:id="@+id/btnCheckFeedOrWebsiteUrl"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dialog_add_article_summary_extractor_buttons_height"
         android:layout_below="@+id/edtxtFeedOrWebsiteUrl"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         style="?android:attr/buttonBarButtonStyle"
+        android:textColor="@color/button_text_color"
         android:text="@string/dialog_add_article_summary_extractor_check_feed_or_website_url"
         android:enabled="false"
     />

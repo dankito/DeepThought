@@ -35,6 +35,7 @@ import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.localization.Localization
+import net.dankito.utils.serialization.JacksonJsonSerializer
 import net.dankito.utils.services.hashing.IBase64Service
 import net.dankito.utils.services.network.NetworkConnectivityManagerBase
 import net.dankito.utils.services.network.NetworkHelper
@@ -86,6 +87,8 @@ class CommunicationManagerTest {
     private val base64Service: IBase64Service = mock()
 
     private val fileStorageService = JavaFileStorageService()
+
+    private val serializer = JacksonJsonSerializer(mock(), mock())
 
 
     private lateinit var localDevice: Device
@@ -231,7 +234,7 @@ class CommunicationManagerTest {
             localRegistrationHandler = createDeviceRegistrationHandler(localRegisterAtRemote, localPermitRemoteToSynchronize, localCorrectChallengeResponse, localDataManager,
                     localInitialSyncManager, localDialogService, localization)
 
-            localClientCommunicator = TcpSocketClientCommunicator(localNetworkSettings, localRegistrationHandler, localEntityManager, base64Service, localThreadPool)
+            localClientCommunicator = TcpSocketClientCommunicator(localNetworkSettings, localRegistrationHandler, localEntityManager, serializer, base64Service, localThreadPool)
 
             localConnectedDevicesService = ConnectedDevicesService(localDevicesDiscoverer, localClientCommunicator, localSyncManager, localRegistrationHandler, localNetworkSettings, localEntityManager)
 
@@ -268,7 +271,7 @@ class CommunicationManagerTest {
 //            remoteRegistrationHandler = spy<IDeviceRegistrationHandler>(registrationHandlerInstance)
             remoteRegistrationHandler = registrationHandlerInstance
 
-            remoteClientCommunicator = TcpSocketClientCommunicator(remoteNetworkSettings, remoteRegistrationHandler, remoteEntityManager, base64Service, remoteThreadPool)
+            remoteClientCommunicator = TcpSocketClientCommunicator(remoteNetworkSettings, remoteRegistrationHandler, remoteEntityManager, serializer, base64Service, remoteThreadPool)
 
             remoteConnectedDevicesService = ConnectedDevicesService(remoteDevicesDiscoverer, remoteClientCommunicator, remoteSyncManager, remoteRegistrationHandler, remoteNetworkSettings, remoteEntityManager)
 
@@ -642,11 +645,11 @@ class CommunicationManagerTest {
         val newTag = Tag("New Tag")
         localEntityManager.persistEntity(newTag)
 
-        val newReference = Reference("New Reference")
+        val newReference = Source("New Source")
         localEntityManager.persistEntity(newReference)
 
-        val newEntry = Entry("New Entry")
-        newEntry.reference = newReference
+        val newEntry = Item("New Item")
+        newEntry.source = newReference
         newEntry.addTag(newTag)
         localEntityManager.persistEntity(newEntry)
 
@@ -654,7 +657,7 @@ class CommunicationManagerTest {
         val collectedChanges = mutableListOf<EntitiesOfTypeChanged>()
         val syncAfterReconnectLatch = CountDownLatch(1)
 
-        waitTillEntityOfTypeIsSynchronized(remoteEventBus, Entry::class.java, syncAfterReconnectLatch)
+        waitTillEntityOfTypeIsSynchronized(remoteEventBus, Item::class.java, syncAfterReconnectLatch)
 
         collectSynchronizedChanges(remoteEventBus, collectedChanges)
 
@@ -663,20 +666,20 @@ class CommunicationManagerTest {
 
         assertThat(collectedChanges.size, greaterThanOrEqualTo(3))
 
-        assertThat(collectedChanges.filter { it.entityType == Entry::class.java }.firstOrNull(), notNullValue())
-        assertThat(collectedChanges.filter { it.entityType == Entry::class.java }.firstOrNull()?.changeType, `is`(EntityChangeType.Created))
+        assertThat(collectedChanges.filter { it.entityType == Item::class.java }.firstOrNull(), notNullValue())
+        assertThat(collectedChanges.filter { it.entityType == Item::class.java }.firstOrNull()?.changeType, `is`(EntityChangeType.Created))
 
-        assertThat(collectedChanges.filter { it.entityType == Reference::class.java }.firstOrNull(), notNullValue())
-        assertThat(collectedChanges.filter { it.entityType == Reference::class.java }.firstOrNull()?.changeType, `is`(EntityChangeType.Created))
+        assertThat(collectedChanges.filter { it.entityType == Source::class.java }.firstOrNull(), notNullValue())
+        assertThat(collectedChanges.filter { it.entityType == Source::class.java }.firstOrNull()?.changeType, `is`(EntityChangeType.Created))
 
         assertThat(collectedChanges.filter { it.entityType == Tag::class.java }.firstOrNull(), notNullValue())
         assertThat(collectedChanges.filter { it.entityType == Tag::class.java }.firstOrNull()?.changeType, `is`(EntityChangeType.Created))
 
-        assertThat(remoteEntityManager.getEntityById(Entry::class.java, newEntry.id!!), notNullValue())
-        assertThat(remoteEntityManager.getEntityById(Entry::class.java, newEntry.id!!)?.modifiedOn, `is`(newEntry.modifiedOn))
+        assertThat(remoteEntityManager.getEntityById(Item::class.java, newEntry.id!!), notNullValue())
+        assertThat(remoteEntityManager.getEntityById(Item::class.java, newEntry.id!!)?.modifiedOn, `is`(newEntry.modifiedOn))
 
-        assertThat(remoteEntityManager.getEntityById(Reference::class.java, newReference.id!!), notNullValue())
-        assertThat(remoteEntityManager.getEntityById(Reference::class.java, newReference.id!!)?.modifiedOn, `is`(newReference.modifiedOn))
+        assertThat(remoteEntityManager.getEntityById(Source::class.java, newReference.id!!), notNullValue())
+        assertThat(remoteEntityManager.getEntityById(Source::class.java, newReference.id!!)?.modifiedOn, `is`(newReference.modifiedOn))
 
         assertThat(remoteEntityManager.getEntityById(Tag::class.java, newTag.id!!), notNullValue())
         assertThat(remoteEntityManager.getEntityById(Tag::class.java, newTag.id!!)?.modifiedOn, `is`(newTag.modifiedOn))
@@ -692,11 +695,11 @@ class CommunicationManagerTest {
         val newTag = Tag("New Tag")
         localEntityManager.persistEntity(newTag)
 
-        val newReference = Reference("New Reference")
+        val newReference = Source("New Source")
         localEntityManager.persistEntity(newReference)
 
-        val newEntry = Entry("New Entry")
-        newEntry.reference = newReference
+        val newEntry = Item("New Item")
+        newEntry.source = newReference
         newEntry.addTag(newTag)
         localEntityManager.persistEntity(newEntry)
         val entryId = newEntry.id!!
@@ -705,7 +708,7 @@ class CommunicationManagerTest {
 
         mockDialogServiceTextInput(localDialogService, remoteCorrectChallengeResponse)
 
-        waitTillEntityOfTypeIsSynchronized(remoteEventBus, Entry::class.java, countDownLatch)
+        waitTillEntityOfTypeIsSynchronized(remoteEventBus, Item::class.java, countDownLatch)
 
         startCommunicationManagersAndWait(countDownLatch)
 
@@ -721,7 +724,7 @@ class CommunicationManagerTest {
         val collectedChanges = mutableListOf<EntitiesOfTypeChanged>()
         val syncAfterReconnectLatch = CountDownLatch(1)
 
-        waitTillEntityOfTypeIsSynchronized(remoteEventBus, Entry::class.java, syncAfterReconnectLatch)
+        waitTillEntityOfTypeIsSynchronized(remoteEventBus, Item::class.java, syncAfterReconnectLatch)
 
         collectSynchronizedChanges(remoteEventBus, collectedChanges)
 
@@ -729,8 +732,8 @@ class CommunicationManagerTest {
 
 
         assertThat(collectedChanges.size, greaterThanOrEqualTo(1))
-        assertThat(collectedChanges.filter { it.entityType == Entry::class.java }.firstOrNull(), notNullValue())
-        assertThat(collectedChanges.filter { it.entityType == Entry::class.java }.firstOrNull()?.changeType, `is`(EntityChangeType.Deleted))
+        assertThat(collectedChanges.filter { it.entityType == Item::class.java }.firstOrNull(), notNullValue())
+        assertThat(collectedChanges.filter { it.entityType == Item::class.java }.firstOrNull()?.changeType, `is`(EntityChangeType.Deleted))
 
         assertThat(remoteEntityManager.database.getDocument(entryId).isDeleted, `is`(true))
     }

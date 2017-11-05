@@ -4,20 +4,15 @@ import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
-import android.widget.RelativeLayout
+import android.widget.TextView
 import kotlinx.android.synthetic.main.dialog_edit_html_text.*
 import kotlinx.android.synthetic.main.dialog_edit_html_text.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.android.extensions.getColorFromResourceId
 import net.dankito.deepthought.android.service.hideKeyboard
-import net.dankito.deepthought.android.views.html.AndroidHtmlEditor
-import net.dankito.deepthought.android.views.html.AndroidHtmlEditorPool
-import net.dankito.deepthought.ui.html.HtmlEditorCommon
-import net.dankito.deepthought.ui.html.IHtmlEditorListener
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
+import net.dankito.richtexteditor.android.RichTextEditor
+import net.dankito.richtexteditor.android.command.*
 
 
 class EditHtmlTextDialog : FullscreenDialogFragment() {
@@ -28,10 +23,14 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         private const val HTML_EXTRA_NAME = "HTML"
 
         private const val HTML_TO_EDIT_LABEL_RESOURCE_ID_EXTRA_NAME = "HTML_TO_EDIT_LABEL_RESOURCE_ID"
+
+        private const val HINT_LABEL_RESOURCE_ID_EXTRA_NAME = "HINT_LABEL_RESOURCE_ID"
     }
 
 
-    private lateinit var htmlEditor: AndroidHtmlEditor
+    private var setHtml: String? = null
+
+    private lateinit var editor: RichTextEditor
 
     private lateinit var mnApplyHtmlChanges: MenuItem
 
@@ -39,11 +38,9 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
 
     private var htmlToEditLabelResourceId: Int? = null
 
+    private var hintLabelResourceId: Int? = null
+
     private var htmlChangedCallback: ((String) -> Unit)? = null
-
-
-    @Inject
-    protected lateinit var htmlEditorPool: AndroidHtmlEditorPool
 
 
     init {
@@ -62,6 +59,8 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
 
         htmlToEditLabelResourceId?.let { setTitle(rootView.toolbar, it) }
 
+        hintLabelResourceId?.let { showHint(rootView.txtHint, it) }
+
         setupHtmlEditor(rootView)
     }
 
@@ -69,24 +68,59 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         toolbar.title = getString(it)
     }
 
+    private fun showHint(txtHint: TextView, hintLabelResourceId: Int) {
+        txtHint.text = txtHint.context.getString(hintLabelResourceId)
+
+        txtHint.visibility = View.VISIBLE
+    }
+
     private fun setupHtmlEditor(rootView: View) {
-        htmlEditor = htmlEditorPool.getHtmlEditor(rootView.context, htmlEditorListener)
-
-        rootView.lytHtmlEditor.addView(htmlEditor, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
-
-        val contentEditorParams = htmlEditor.layoutParams as RelativeLayout.LayoutParams
-        contentEditorParams.addRule(RelativeLayout.ALIGN_PARENT_TOP)
-        contentEditorParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
-        contentEditorParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
-        contentEditorParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
-
-        htmlEditor.layoutParams = contentEditorParams
-
-        htmlEditor.requestFocus()
+        editor = rootView.editor
+        editor.setEditorHeight(500) // don't know why but it's important to set a height (at least on some older Androids)
 
         htmlToSetOnStart?.let {
-            htmlEditor.setHtml(it, true)
+            setHtml(it)
         }
+
+        editor.addDidHtmlChangeListener { setDidHtmlChange(it) }
+
+        editor.addLoadedListener {
+            activity?.runOnUiThread { editorHasLoaded() }
+        }
+
+        setupEditorToolbar(rootView)
+    }
+
+    private fun editorHasLoaded() {
+        editor.setEditorFontSize(18) // TODO: make settable in settings and then save to LocalSettings
+        editor.setPadding(10)
+
+        editor.focusEditorAndShowKeyboard()
+        editor.postDelayed({ // older androids would like to have an extra invitation
+            editor.focusEditorAndShowKeyboard()
+        }, 500)
+    }
+
+    private fun setupEditorToolbar(rootView: View) {
+        val editorToolbar = rootView.editorToolbar
+        editorToolbar.editor = editor
+
+        editorToolbar.commandStyle.isActivatedColor = context.getColorFromResourceId(R.color.colorPrimaryDark)
+
+        editorToolbar.addCommand(BoldCommand())
+        editorToolbar.addCommand(ItalicCommand())
+        editorToolbar.addCommand(UnderlineCommand())
+        val switchBackgroundColorCommand = SwitchTextBackgroundColorOnOffCommand()
+        switchBackgroundColorCommand.style.marginRightDp = ToolbarCommandStyle.GroupDefaultMarginRightDp
+        editorToolbar.addCommand(switchBackgroundColorCommand)
+
+        editorToolbar.addCommand(UndoCommand())
+        val redoCommand = RedoCommand()
+        redoCommand.style.marginRightDp = ToolbarCommandStyle.GroupDefaultMarginRightDp
+        editorToolbar.addCommand(redoCommand)
+
+        editorToolbar.addCommand(InsertBulletListCommand())
+        editorToolbar.addCommand(InsertNumberedListCommand())
     }
 
     override fun onPause() {
@@ -96,8 +130,6 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     }
 
     override fun onDestroy() {
-        htmlEditorPool.htmlEditorReleased(htmlEditor)
-
         htmlChangedCallback = null
 
         super.onDestroy()
@@ -110,12 +142,9 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         outState?.let {
             htmlToEditLabelResourceId?.let { outState.putInt(HTML_TO_EDIT_LABEL_RESOURCE_ID_EXTRA_NAME, it) }
 
-            val countDownLatch = CountDownLatch(1)
-            htmlEditor.getHtmlAsync { content ->
-                outState.putString(HTML_EXTRA_NAME, content)
-                countDownLatch.countDown()
-            }
-            try { countDownLatch.await(1, TimeUnit.SECONDS) } catch(ignored: Exception) { }
+            hintLabelResourceId?.let { outState.putInt(HINT_LABEL_RESOURCE_ID_EXTRA_NAME, it) }
+
+            outState.putString(HTML_EXTRA_NAME, editor.getHtml())
         }
     }
 
@@ -124,15 +153,21 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
 
         savedInstanceState?.let {
             savedInstanceState.getString(HTML_EXTRA_NAME)?.let { html ->
-                htmlEditor.postDelayed({
-                    htmlEditor.setHtml(html, true)
+                editor.postDelayed({
+                    setHtml(html)
                 }, 100)
             }
 
-            val resourceId = savedInstanceState.getInt(HTML_TO_EDIT_LABEL_RESOURCE_ID_EXTRA_NAME)
-            if(resourceId > 0) {
-                this.htmlToEditLabelResourceId = resourceId
-                setTitle(toolbar, resourceId)
+            val htmlToEditResourceId = savedInstanceState.getInt(HTML_TO_EDIT_LABEL_RESOURCE_ID_EXTRA_NAME)
+            if(htmlToEditResourceId > 0) {
+                this.htmlToEditLabelResourceId = htmlToEditResourceId
+                setTitle(toolbar, htmlToEditResourceId)
+            }
+
+            val hintLabelResourceId = savedInstanceState.getInt(HINT_LABEL_RESOURCE_ID_EXTRA_NAME)
+            if(hintLabelResourceId > 0) {
+                this.hintLabelResourceId = hintLabelResourceId
+                showHint(txtHint, hintLabelResourceId)
             }
         }
     }
@@ -140,13 +175,7 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     fun restoreDialog(htmlToEdit: String, htmlChangedCallback: ((String) -> Unit)?) {
         setupDialog(htmlToEdit, htmlChangedCallback)
 
-        htmlEditor.postDelayed({
-            htmlEditor.getHtmlAsync { currentHtml ->
-                if(currentHtml != htmlToEdit) {
-                    setDidHtmlChange(true)
-                }
-            }
-        }, 300) // must be greater than the value of postDelayed in onViewStateRestored()
+        // TODO: set if html changed
     }
 
 
@@ -162,9 +191,11 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     }
 
 
-    fun showDialog(fragmentManager: FragmentManager, htmlToEdit: String, htmlToEditLabelResourceId: Int? = null, htmlChangedCallback: ((String) -> Unit)?) {
+    fun showDialog(fragmentManager: FragmentManager, htmlToEdit: String, htmlToEditLabelResourceId: Int? = null, hintLabelResourceId: Int? = null, htmlChangedCallback: ((String) -> Unit)?) {
         setupDialog(htmlToEdit, htmlChangedCallback)
+
         this.htmlToEditLabelResourceId = htmlToEditLabelResourceId
+        this.hintLabelResourceId = hintLabelResourceId
 
         showInFullscreen(fragmentManager, false)
     }
@@ -176,27 +207,16 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     }
 
     private fun applyChangesAndCloseDialog() {
-        htmlEditor.getHtmlAsync { html ->
-            htmlChangedCallback?.invoke(html)
+        htmlChangedCallback?.invoke(editor.getHtml())
 
-            closeDialog()
-        }
+        closeDialog()
     }
 
 
-    private val htmlEditorListener = object : IHtmlEditorListener {
+    private fun setHtml(html: String) {
+        setHtml = html
 
-        override fun editorHasLoaded(editor: HtmlEditorCommon) {
-        }
-
-        override fun htmlCodeUpdated() {
-            setDidHtmlChange(true)
-        }
-
-        override fun htmlCodeHasBeenReset() {
-            setDidHtmlChange(false)
-        }
-
+        editor.setHtml(html)
     }
 
     private fun setDidHtmlChange(didChange: Boolean) {

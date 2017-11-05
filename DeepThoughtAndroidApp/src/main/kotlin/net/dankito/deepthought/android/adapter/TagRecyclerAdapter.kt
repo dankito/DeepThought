@@ -49,12 +49,14 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
     override fun bindViewForNullValue(viewHolder: TagViewHolder) {
         super.bindViewForNullValue(viewHolder)
 
+        viewHolder.txtTagDisplayText.text = ""
+        viewHolder.imgFilter.visibility = View.INVISIBLE
         setBackgroundForDefaultState(viewHolder.itemView)
     }
 
     override fun bindItemToView(viewHolder: TagViewHolder, item: Tag) {
         if(presenter.isTagFilterApplied()) {
-            viewHolder.txtTagDisplayText.text = "${item.name} (${presenter.getCountEntriesForFilteredTag(item)} / ${item.countEntries})"
+            viewHolder.txtTagDisplayText.text = "${item.name} (${presenter.getCountEntriesForFilteredTag(item)} / ${item.countItems})"
         }
         else {
             viewHolder.txtTagDisplayText.text = item.displayText
@@ -112,9 +114,8 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
     private fun getColorForState(state: TagSearchResultState): Int {
         when(state) {
             TagSearchResultState.EXACT_OR_SINGLE_MATCH_BUT_NOT_OF_LAST_RESULT -> return R.color.tag_state_exact_or_single_match_but_not_of_last_result
-            TagSearchResultState.MATCH_BUT_NOT_OF_LAST_RESULT -> return R.color.tag_state_match_but_not_of_last_result
-            TagSearchResultState.EXACT_MATCH_OF_LAST_RESULT -> return R.color.tag_state_exact_match_of_last_result
-            TagSearchResultState.SINGLE_MATCH_OF_LAST_RESULT -> return R.color.tag_state_single_match_of_last_result
+            TagSearchResultState.EXACT_MATCH_OF_LAST_RESULT -> return R.color.tag_state_exact_or_single_match_of_last_result
+            TagSearchResultState.SINGLE_MATCH_OF_LAST_RESULT -> return R.color.tag_state_exact_or_single_match_of_last_result
             else -> return getDefaultBackgroundColor()
         }
     }

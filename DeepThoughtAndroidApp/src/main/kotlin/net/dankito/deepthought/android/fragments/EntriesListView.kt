@@ -10,25 +10,21 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.EntryRecyclerAdapter
 import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.model.Entry
+import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EntriesListPresenter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.deepthought.ui.view.IEntriesListView
 import net.dankito.service.data.DeleteEntityService
-import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class EntriesListView : MainActivityTabFragment<Entry>(R.menu.entry_contextual_action_menu, R.string.tab_entries_onboarding_text), IEntriesListView {
+class EntriesListView : MainActivityTabFragment<Item>(R.menu.entry_contextual_action_menu, R.string.tab_items_onboarding_text), IEntriesListView {
 
     @Inject
     protected lateinit var deleteEntityService: DeleteEntityService
-
-    @Inject
-    protected lateinit var searchEngine: ISearchEngine
 
     @Inject
     protected lateinit var router: IRouter
@@ -41,7 +37,7 @@ class EntriesListView : MainActivityTabFragment<Entry>(R.menu.entry_contextual_a
 
     private val entryAdapter: EntryRecyclerAdapter
 
-    private var entriesToShowOnAttach: List<Entry>? = null
+    private var entriesToShowOnAttaches: List<Item>? = null
 
     var mainNavigationView: View? = null
 
@@ -58,15 +54,15 @@ class EntriesListView : MainActivityTabFragment<Entry>(R.menu.entry_contextual_a
         return presenter
     }
 
-    override fun getListAdapter(): MultiSelectListRecyclerSwipeAdapter<Entry, out RecyclerView.ViewHolder> {
+    override fun getListAdapter(): MultiSelectListRecyclerSwipeAdapter<Item, out RecyclerView.ViewHolder> {
         return entryAdapter
     }
 
-    override fun listItemClicked(selectedItem: Entry) {
+    override fun listItemClicked(selectedItem: Item) {
         presenter.showEntry(selectedItem)
     }
 
-    override fun actionItemSelected(mode: ActionMode, actionItem: MenuItem, selectedItems: Set<Entry>): Boolean {
+    override fun actionItemSelected(mode: ActionMode, actionItem: MenuItem, selectedItems: Set<Item>): Boolean {
         when(actionItem.itemId) {
             R.id.mnEditEntry -> {
                 selectedItems.forEach { presenter.showEntry(it) }
@@ -83,7 +79,7 @@ class EntriesListView : MainActivityTabFragment<Entry>(R.menu.entry_contextual_a
     }
 
 
-    override fun getQueryHint(activity: Activity) = activity.getString(R.string.search_hint_entries)
+    override fun getQueryHint(activity: Activity) = activity.getString(R.string.search_hint_items)
 
     override fun searchEntities(query: String) {
         presenter.searchEntries(query)
@@ -93,9 +89,9 @@ class EntriesListView : MainActivityTabFragment<Entry>(R.menu.entry_contextual_a
     override fun onAttach(context: Context?) {
         super.onAttach(context)
 
-        entriesToShowOnAttach?.let {
+        entriesToShowOnAttaches?.let {
             showEntities(it)
-            entriesToShowOnAttach = null
+            entriesToShowOnAttaches = null
         }
     }
 
@@ -105,19 +101,26 @@ class EntriesListView : MainActivityTabFragment<Entry>(R.menu.entry_contextual_a
 
         mainNavigationView?.visibility = View.GONE
         arrowToFloatingActionButton.visibility = View.VISIBLE
+
+        // show txtOnboardingText a little bit above the center as it looks more natural and leaves more room for arrowToFloatingActionButton
+        val translationY = 50 * context.resources.displayMetrics.density
+        txtOnboardingText?.translationY = -1 * translationY
+        vwStartingWhereTranslatedTextViewOnboardingTextEnds.layoutParams.height = translationY.toInt()
     }
 
     override fun hideOnboardingView() {
         super.hideOnboardingView()
 
-        mainNavigationView?.visibility = View.VISIBLE
-        arrowToFloatingActionButton.visibility = View.GONE
+        if(entryAdapter.isInMultiSelectMode() == false) {
+            mainNavigationView?.visibility = View.VISIBLE
+            arrowToFloatingActionButton.visibility = View.GONE
+        }
     }
 
 
     /*          IEntriesListView implementation            */
 
-    override fun showEntities(entities: List<Entry>) {
+    override fun showEntities(entities: List<Item>) {
         val activity = this.activity
 
         if(activity != null) {
@@ -128,7 +131,7 @@ class EntriesListView : MainActivityTabFragment<Entry>(R.menu.entry_contextual_a
             }
         }
         else {
-            entriesToShowOnAttach = entities
+            entriesToShowOnAttaches = entities
         }
     }
 

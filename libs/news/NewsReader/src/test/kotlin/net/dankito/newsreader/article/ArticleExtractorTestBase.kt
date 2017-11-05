@@ -2,7 +2,7 @@ package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.OkHttpWebClient
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.Matchers.greaterThan
 import org.junit.Assert.assertThat
@@ -27,8 +27,8 @@ abstract class ArticleExtractorTestBase {
         testArticle(article, url, title, abstract, previewImageUrl, minContentLength, canPublishingDateBeNull, subTitle)
     }
 
-    protected open fun getArticle(url: String) : EntryExtractionResult? {
-        var extractionResult: EntryExtractionResult? = null
+    protected open fun getArticle(url: String) : ItemExtractionResult? {
+        var extractionResult: ItemExtractionResult? = null
         val countDownLatch = CountDownLatch(1)
 
         underTest.extractArticleAsync(url) {
@@ -42,23 +42,23 @@ abstract class ArticleExtractorTestBase {
         return extractionResult
     }
 
-    protected open fun testArticle(extractionResult: EntryExtractionResult?, url: String, title: String, abstract: String?, previewImageUrl: String? = null, minContentLength: Int? = null, canPublishingDateBeNull: Boolean = false, subTitle: String?) {
+    protected open fun testArticle(extractionResult: ItemExtractionResult?, url: String, title: String, abstract: String?, previewImageUrl: String? = null, minContentLength: Int? = null, canPublishingDateBeNull: Boolean = false, subTitle: String?) {
         assertThat(extractionResult, notNullValue())
 
         extractionResult?.let {
             assertThat(extractionResult.couldExtractContent, `is`(true))
             assertThat(extractionResult.error, nullValue())
 
-            assertThat(extractionResult.entry.content.isNullOrBlank(), `is`(false))
-            abstract?.let { assertThat(extractionResult.entry.abstractString, `is`(abstract)) }
+            assertThat(extractionResult.item.content.isNullOrBlank(), `is`(false))
+            abstract?.let { assertThat(extractionResult.item.summary, `is`(abstract)) }
 
-//            previewImageUrl?.let { assertThat(extractionResult.reference?.previewImageUrl, `is`(previewImageUrl)) }
-            previewImageUrl?.let { assertThat(extractionResult.reference?.previewImageUrl.isNullOrBlank(), `is`(false)) }
-            minContentLength?.let { assertThat(extractionResult.entry.content.length, `is`(greaterThan(it))) }
+//            previewImageUrl?.let { assertThat(extractionResult.source?.previewImageUrl, `is`(previewImageUrl)) }
+            previewImageUrl?.let { assertThat(extractionResult.source?.previewImageUrl.isNullOrBlank(), `is`(false)) }
+            minContentLength?.let { assertThat(extractionResult.item.content.length, `is`(greaterThan(it))) }
 
-            assertThat(extractionResult.reference, notNullValue())
+            assertThat(extractionResult.source, notNullValue())
 
-            extractionResult.reference?.let { reference ->
+            extractionResult.source?.let { reference ->
                 assertThat(reference.url, `is`(url))
                 assertThat(reference.title, `is`(title))
                 if(canPublishingDateBeNull == false) {

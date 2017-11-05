@@ -3,7 +3,6 @@ package net.dankito.deepthought.android.service.communication
 import android.app.Activity
 import android.content.Context
 import android.support.design.widget.Snackbar
-import android.text.Html
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -12,6 +11,7 @@ import net.dankito.data_access.network.communication.callback.DeviceRegistration
 import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.service.CurrentActivityTracker
+import net.dankito.deepthought.android.service.StringUtil
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.service.data.DataManager
@@ -47,7 +47,7 @@ class AndroidDeviceRegistrationHandler(private var context: Context, dataManager
 
     override fun showResponseToEnterOnOtherDeviceNonBlocking(remoteDeviceInfo: DeviceInfo, correctResponse: String) {
         val htmlFormattedMessage = context.getString(R.string.alert_message_enter_this_code_on_remote_device, remoteDeviceInfo.toString(), correctResponse)
-        val message = Html.fromHtml(htmlFormattedMessage)
+        val message = StringUtil().getSpannedFromHtml(htmlFormattedMessage)
 
         dialogService.showInfoMessage(message)
     }

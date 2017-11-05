@@ -11,7 +11,9 @@ import java.util.*
 
 class PickDateDialog : DialogFragment(), DatePickerDialog.OnDateSetListener {
 
-    // TODO: save and restore dialog
+    companion object {
+        val TAG: String = javaClass.name
+    }
 
 
     private var date: Date? = null
@@ -44,7 +46,12 @@ class PickDateDialog : DialogFragment(), DatePickerDialog.OnDateSetListener {
         this.date = date
         this.dateSetListener = dateSetListener
 
-        show(fragmentManager, javaClass.name)
+        show(fragmentManager, TAG)
+    }
+
+
+    fun restoreDialog(dateSetListener: (Date) -> Unit) {
+        this.dateSetListener = dateSetListener
     }
 
 }

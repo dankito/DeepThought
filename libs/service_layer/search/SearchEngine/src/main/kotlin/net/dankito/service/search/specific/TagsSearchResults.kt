@@ -2,18 +2,13 @@ package net.dankito.service.search.specific
 
 
 import net.dankito.deepthought.model.Tag
-import net.dankito.service.search.Search
 import net.dankito.service.search.util.CombinedLazyLoadingList
 
 
 class TagsSearchResults(val overAllSearchTerm: String) {
 
-    companion object {
-        val EmptySearchResults = TagsSearchResults(Search.EmptySearchTerm, ArrayList<Tag>())
-    }
 
-
-    val hasEmptySearchTerm = overAllSearchTerm.isNullOrBlank()
+    val hasEmptySearchTerm = overAllSearchTerm.isBlank()
 
     var tagNamesToSearchFor: List<String> = listOf()
 
@@ -24,20 +19,13 @@ class TagsSearchResults(val overAllSearchTerm: String) {
 
     private var relevantMatchesSortedProperty: List<Tag>? = null
 
-    private var relevantMatchesSortedButOnlyExactMatchesFromLastResultProperty: List<Tag>? = null
-
-    private var exactMatchesProperty: List<Tag>? = null
+    private var relevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossibleProperty: List<Tag>? = null
 
     private var exactOrSingleMatchesNotOfLastResultProperty: List<Tag>? = null
 
     private var matchesButOfLastResult: List<Tag>? = null
 
     private var searchTermsWithoutMatchesProperty: List<String>? = null
-
-
-    constructor(overAllSearchTerm: String, relevantMatchesSorted: List<Tag>) : this(overAllSearchTerm) {
-        setRelevantMatchesSorted(relevantMatchesSorted)
-    }
 
 
     fun addSearchResult(result: TagsSearchResult): Boolean {
@@ -47,7 +35,7 @@ class TagsSearchResults(val overAllSearchTerm: String) {
 
     val relevantMatchesCount: Int
         get() {
-            getRelevantMatchesSorted()?.let { it.size }
+            getRelevantMatchesSorted().size
 
             return 0
         }
@@ -55,44 +43,7 @@ class TagsSearchResults(val overAllSearchTerm: String) {
     fun getRelevantMatchesSorted(): List<Tag> {
         relevantMatchesSortedProperty?.let { return it }
 
-        return getAllMatches()
-    }
-
-    /**
-     * Returns almost the same result as getRelevantMatchesSorted(), but from last TagsSearchResults returns not allMatches but exactMatches.
-     * As it's currently only used for tags filter (and therefore with not so many tags), we do calculate the result in memory and not via search engine
-     */
-    fun getRelevantMatchesSortedButOnlyExactMatchesFromLastResult(): List<Tag> {
-        relevantMatchesSortedButOnlyExactMatchesFromLastResultProperty?.let { return it }
-
-        return determineRelevantMatchesSortedButOnlyExactMatchesFromLastResult()
-    }
-
-    private fun determineRelevantMatchesSortedButOnlyExactMatchesFromLastResult(): List<Tag> {
-        val matches = ArrayList<Tag>()
-
-        // from last TagSearchResult only use exact matches, but from all others all matches
-        results.forEach { result ->
-            if(result != lastResult) {
-                matches.addAll(result.allMatches)
-            }
-        }
-
-        lastResult?.let { lastResult ->
-            if(lastResult.hasExactMatches()) {
-                matches.addAll(lastResult.exactMatches)
-            }
-            else if(lastResult.hasSingleMatch()) { // ok, if lastResult doesn't have exact matches, take single match or as last resort allMatches
-                lastResult.getSingleMatch()?.let { matches.add(it) }
-            }
-            else {
-                matches.addAll(lastResult.allMatches)
-            }
-        }
-
-        relevantMatchesSortedButOnlyExactMatchesFromLastResultProperty = matches.sortedBy { it.name }
-
-        return relevantMatchesSortedButOnlyExactMatchesFromLastResultProperty!!
+        return getAllMatches() // TODO: this is wrong
     }
 
     fun setRelevantMatchesSorted(relevantMatchesSorted: List<Tag>) {
@@ -105,31 +56,41 @@ class TagsSearchResults(val overAllSearchTerm: String) {
     }
 
 
+    /**
+     * Returns almost the same result as getRelevantMatchesSorted(), but from last TagsSearchResults returns only exactMatches if available. If not it returns all matches from last result as well.
+     * As it's currently only used for tags filter (and therefore with not so many tags), we do calculate the result in memory and not via search engine
+     */
+    fun getRelevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossible(): List<Tag> {
+        relevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossibleProperty?.let { return it }
+
+        return determineRelevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossible()
+    }
+
+    private fun determineRelevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossible(): List<Tag> {
+        val matches = ArrayList<Tag>()
+
+        // actually the same applies for all other results as for last result: if there are exact matches, use these, otherwise allMatches
+        results.forEach { result ->
+            if(result.hasExactMatches()) {
+                matches.addAll(result.exactMatches)
+            }
+            else if(result.hasSingleMatch()) {
+                result.getSingleMatch()?.let { matches.add(it) }
+            }
+        }
+
+        relevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossibleProperty = matches.sortedBy { it.name }
+
+        return relevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossibleProperty!!
+    }
+
+
     fun getAllMatches(): List<Tag> {
         if(allMatchesProperty == null) {
             allMatchesProperty = determineAllMatches()
         }
 
         return allMatchesProperty ?: listOf()
-    }
-
-
-    fun getExactMatches(): List<Tag> {
-        if (exactMatchesProperty == null) {
-            exactMatchesProperty = determineExactMatches()
-        }
-
-        return exactMatchesProperty ?: listOf()
-    }
-
-    fun determineExactMatches(): List<Tag> {
-        val exactMatches = ArrayList<Tag>()
-
-        for(result in results) {
-            exactMatches.addAll(result.exactMatches)
-        }
-
-        return exactMatches
     }
 
 
@@ -145,12 +106,12 @@ class TagsSearchResults(val overAllSearchTerm: String) {
     }
 
     fun isMatchButNotOfLastResult(tag: Tag): Boolean {
-        if (hasEmptySearchTerm)
-        // no exact or relevant matches
+        if(hasEmptySearchTerm) { // no exact or relevant matches
             return false
-        if (results.size < 2)
-        // no or only one (= last) result
+        }
+        if(results.size < 2) { // no or only one (= last) result
             return false
+        }
 
         return matchesNotOfLastResult.contains(tag)
     }
@@ -180,16 +141,6 @@ class TagsSearchResults(val overAllSearchTerm: String) {
         return lastResult!!.hasSingleMatch() && lastResult.getSingleMatch() == tag
     }
 
-    fun isMatchOfLastResult(tag: Tag): Boolean {
-        if (hasEmptySearchTerm)
-        // no exact or relevant matches
-            return false
-        if (hasLastResult())
-            return false
-
-        return lastResult!!.allMatches.contains(tag)
-    }
-
 
     private fun getExactOrSingleMatchesNotOfLastResult(): List<Tag> {
         exactOrSingleMatchesNotOfLastResultProperty?.let { return it }
@@ -203,7 +154,7 @@ class TagsSearchResults(val overAllSearchTerm: String) {
     private fun determineExactOrSingleMatchesNotOfLastResult(): List<Tag> {
         val nonLastResultExactOrSingleMatches = ArrayList<Tag>()
 
-        for (i in 0..results.size - 1 - 1) {
+        for (i in 0..results.size - 2) {
             val result = results[i]
 
             nonLastResultExactOrSingleMatches.addAll(result.exactMatches)
@@ -228,10 +179,14 @@ class TagsSearchResults(val overAllSearchTerm: String) {
     private fun determineMatchesNotOfLastResult(): List<Tag> {
         val nonLastResultNotExactOrSingleMatches = ArrayList<Tag>()
 
-        for (i in 0..results.size - 1 - 1) {
+        for(i in 0..results.size - 2) {
             val result = results[i]
-            if (result.hasExactMatches() == false && result.hasSingleMatch() == false)
-                nonLastResultNotExactOrSingleMatches.addAll(result.allMatches)
+            if(result.hasExactMatches()) {
+                nonLastResultNotExactOrSingleMatches.addAll(result.exactMatches)
+            }
+            else if(result.hasSingleMatch()) {
+                result.getSingleMatch()?.let { nonLastResultNotExactOrSingleMatches.add(it) }
+            }
         }
 
         return nonLastResultNotExactOrSingleMatches
@@ -253,18 +208,6 @@ class TagsSearchResults(val overAllSearchTerm: String) {
         return results.size > 0 // no result (and therefore not last result) at all
     }
 
-    fun hasLastResultExactMatch(): Boolean {
-        if (hasLastResult() == false) {
-            return false
-        }
-
-        lastResult?.let { lastResult ->
-            return lastResult.hasExactMatches()
-        }
-
-        return false
-    }
-
     val lastResult: TagsSearchResult?
         get() {
             if (results.size == 0) {
@@ -272,15 +215,6 @@ class TagsSearchResults(val overAllSearchTerm: String) {
             }
 
             return results[results.size - 1]
-        }
-
-    val exactMatchesOfLastResult: List<Tag>
-        get() {
-            lastResult?.let { lastResult ->
-                return lastResult.exactMatches
-            }
-
-            return listOf()
         }
 
 

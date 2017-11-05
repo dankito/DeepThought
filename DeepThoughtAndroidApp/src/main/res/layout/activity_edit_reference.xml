@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
+    android:background="@color/edit_entity_activity_background"
 >
     <!-- Set focusable and focusableInTouchMode to true so that keyboard doesn't get shown on Activity start -->
 
@@ -47,7 +48,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_alignBaseline="@+id/edtxtFindReferences"
-                    android:text="@string/activity_edit_reference_use_existing_label"
+                    android:text="@string/activity_edit_source_use_existing_label"
                 />
 
                 <EditText
@@ -61,6 +62,7 @@
                     android:layout_marginLeft="@dimen/activity_edit_reference_find_existing_margin_left"
                     android:layout_marginStart="@dimen/activity_edit_reference_find_existing_margin_left"
                     android:inputType="text"
+                    android:imeOptions="flagNoExtractUi"
                 />
 
             </RelativeLayout>
@@ -83,7 +85,7 @@
                     android:paddingLeft="0dp"
                     android:paddingStart="0dp"
                     android:textSize="@dimen/activity_edit_reference_create_buttons_text_size"
-                    android:text="@string/activity_edit_reference_create_reference"
+                    android:text="@string/activity_edit_source_create_source"
                 />
 
                 <Button
@@ -94,7 +96,7 @@
                     android:layout_toRightOf="@+id/btnCreateNewReference"
                     android:layout_toEndOf="@+id/btnCreateNewReference"
                     android:textSize="@dimen/activity_edit_reference_create_buttons_text_size"
-                    android:text="@string/activity_edit_reference_create_reference_from_isbn"
+                    android:text="@string/activity_edit_source_create_source_from_isbn"
                     android:enabled="false"
                 />
 
@@ -107,8 +109,18 @@
                 android:layout_below="@+id/lytEditEntryReferenceControls"
                 android:layout_alignParentBottom="true"
                 app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                android:scrollbars="vertical"
                 android:longClickable="true"
                 android:visibility="gone"
+            />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/find_existing_entity_divider_height"
+                android:layout_below="@+id/rcyExistingReferencesSearchResults"
+                android:layout_marginTop="@dimen/find_existing_entity_margin_top_bottom"
+                android:layout_marginBottom="@dimen/find_existing_entity_margin_top_bottom"
+                android:background="@color/divider_line_color"
             />
 
         </RelativeLayout>
@@ -120,6 +132,7 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/lytSetEntryReferenceControls"
             android:layout_above="@id/toolbar"
+            android:paddingTop="@dimen/activity_edit_reference_padding_left_right"
             android:paddingLeft="@dimen/activity_edit_reference_padding_left_right"
             android:paddingStart="@dimen/activity_edit_reference_padding_left_right"
             android:paddingRight="@dimen/activity_edit_reference_padding_left_right"
@@ -174,7 +187,7 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_alignParentBottom="true"
-            app:title="@string/activity_edit_reference_title"
+            app:title="@string/activity_edit_source_title"
             style="@style/ToolbarStyle"
         />
 

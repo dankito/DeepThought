@@ -2,9 +2,9 @@ package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.newsreader.model.ArticleSummaryItem
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -28,15 +28,15 @@ class TagesschauArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
     }
 
 
-    override fun extractArticleAsync(item: ArticleSummaryItem, callback: (AsyncResult<EntryExtractionResult>) -> Unit) {
+    override fun extractArticleAsync(item: ArticleSummaryItem, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
         super.extractArticleAsync(item) {
-            it.result?.let { it.entry.abstractString = item.summary } // it's very hard to extract abstract from html code, so use that one from ArticleSummaryItem
+            it.result?.let { it.item.summary = item.summary } // it's very hard to extract abstract from html code, so use that one from ArticleSummaryItem
 
             callback(it)
         }
     }
 
-    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
+    override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("#content .storywrapper").first()?.let { contentElement ->
             extractEntry(contentElement)?.let { entry ->
                 val reference = extractReference(url, contentElement)
@@ -46,7 +46,7 @@ class TagesschauArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
         }
     }
 
-    private fun extractEntry(contentElement: Element): Entry? {
+    private fun extractEntry(contentElement: Element): Item? {
         contentElement.select(".sectionZ .modParagraph").first()?.let { articleContentElement ->
             val abstract = extractAbstract(articleContentElement)
 
@@ -54,7 +54,7 @@ class TagesschauArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
 
             val content = articleContentElement.outerHtml()
 
-            return Entry(content, abstract)
+            return Item(content, abstract)
         }
 
         return null
@@ -95,14 +95,14 @@ class TagesschauArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
         }
     }
 
-    private fun extractReference(url: String, contentElement: Element): Reference? {
+    private fun extractReference(url: String, contentElement: Element): Source? {
         contentElement.select(".sectionA .box").first()?.let { headerElement ->
             val title = headerElement.select(".headline").first()?.text()?.trim() ?: ""
             val subTitle = headerElement.select(".dachzeile").first()?.text()?.trim() ?: ""
 
             val publishingDate = extractPublishingDate(headerElement)
 
-            val reference = Reference(url, title, publishingDate, subTitle = subTitle)
+            val reference = Source(url, title, publishingDate, subTitle = subTitle)
 
             headerElement.select(".media img").first()?.let { previewImageElement ->
                 reference.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), url)

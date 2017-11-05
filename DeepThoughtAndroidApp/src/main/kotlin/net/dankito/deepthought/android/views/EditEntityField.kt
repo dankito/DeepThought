@@ -17,6 +17,8 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.view_edit_entity_field.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.extensions.setTextColorToColorResource
+import net.dankito.deepthought.android.extensions.setTintColor
+import net.dankito.deepthought.android.service.showKeyboard
 
 
 class EditEntityField : RelativeLayout {
@@ -34,7 +36,7 @@ class EditEntityField : RelativeLayout {
     private lateinit var btnEntityFieldAction: ImageButton
 
 
-    private var didValueChange = false
+    var didValueChange = false
 
     private var originalValue = ""
 
@@ -152,28 +154,46 @@ class EditEntityField : RelativeLayout {
     }
 
 
-    fun showActionIconOnUiThread(iconResourceId: Int, actionIconClickedListener: (() -> Unit)?) {
-        showActionIconOnUiThread(iconResourceId)
-
-        this.actionIconClickedListener = actionIconClickedListener
+    fun showActionIconOnUiThread(iconResourceId: Int, useAccentColorAsTintColor: Boolean = true) {
+        showActionIconOnUiThread(iconResourceId, useAccentColorAsTintColor, null)
     }
 
-    fun showActionIconOnUiThread(iconResourceId: Int) {
-        btnEntityFieldAction.setImageResource(iconResourceId)
+    fun showActionIconOnUiThread(iconResourceId: Int, useAccentColorAsTintColor: Boolean = true, actionIconClickedListener: (() -> Unit)?) {
+        setActionImageAndTintColor(iconResourceId, useAccentColorAsTintColor)
 
         btnEntityFieldAction.visibility = View.VISIBLE
 
         btnEntityFieldAction.setOnClickListener {
-            edtxtEntityFieldValue.clearFocus() // ensure edtxtEntityFieldValue loses focus so that e.g. Reference.publishingDate gets updated before PickDateDialog with not updated date gets shown
+            edtxtEntityFieldValue.clearFocus() // ensure edtxtEntityFieldValue loses focus so that e.g. Source.publishingDate gets updated before PickDateDialog with not updated date gets shown
             btnEntityFieldAction.requestFocus()
             actionIconClickedListener?.invoke()
+        }
+
+        this.actionIconClickedListener = actionIconClickedListener
+    }
+
+    private fun setActionImageAndTintColor(iconResourceId: Int, useAccentColorAsTintColor: Boolean) {
+        btnEntityFieldAction.setImageResource(iconResourceId)
+
+        if(useAccentColorAsTintColor) {
+            btnEntityFieldAction.setTintColor(R.color.colorAccent)
+        }
+        else {
+            btnEntityFieldAction.clearColorFilter()
         }
     }
 
     fun hideActionIconOnUiThread() {
+        btnEntityFieldAction.setImageBitmap(null)
+
         btnEntityFieldAction.visibility = View.INVISIBLE
 
         btnEntityFieldAction.setOnClickListener(null)
+    }
+
+
+    fun startEditing() {
+        edtxtEntityFieldValue.showKeyboard()
     }
 
 

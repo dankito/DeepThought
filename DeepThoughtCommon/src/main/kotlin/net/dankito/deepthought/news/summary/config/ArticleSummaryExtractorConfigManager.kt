@@ -14,9 +14,9 @@ import net.dankito.service.data.messages.ArticleSummaryExtractorConfigChanged
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.eventbus.EventBusPriorities
 import net.dankito.service.eventbus.IEventBus
+import net.dankito.utils.IThreadPool
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
-import kotlin.concurrent.thread
 
 
 class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplementedArticleSummaryExtractorsManager, private val configService: ArticleSummaryExtractorConfigService,
@@ -27,7 +27,9 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
     }
 
 
-    private var configurations: MutableMap<String, ArticleSummaryExtractorConfig> = linkedMapOf()
+    private var configurations: MutableSet<ArticleSummaryExtractorConfig> = HashSet()
+
+    private var configurationsPerUrl: MutableMap<String, List<ArticleSummaryExtractorConfig>>? = null
 
     @Inject
     protected lateinit var faviconExtractor: FaviconExtractor
@@ -37,6 +39,10 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
 
     @Inject
     protected lateinit var eventBus: IEventBus
+
+    @Inject
+    protected lateinit var threadPool: IThreadPool
+
 
     private var favorites: MutableList<ArticleSummaryExtractorConfig> = ArrayList()
 
@@ -54,7 +60,7 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
         CommonComponent.component.inject(this)
 
         configService.dataManager.addInitializationListener {
-            thread {
+            threadPool.runAsync {
                 readPersistedConfigs()
                 initiallyRetrievedSummaryExtractorConfigs()
             }
@@ -70,7 +76,7 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
         favorites.clear()
 
         summaryExtractorConfigs.forEach { config ->
-            configurations.put(config.url, config)
+            addConfig(config)
 
             if(config.iconUrl == null) {
                 loadIconAsync(config)
@@ -83,25 +89,29 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
     }
 
     private fun initiallyRetrievedSummaryExtractorConfigs() {
+        configurateExtractors()
+
+        configManagerInitialized()
+    }
+
+    private fun configurateExtractors() {
         initImplementedExtractors()
 
         initFeedExtractors()
 
         handleConfigsWithoutExtractors()
 
-        favorites = configurations.values.filter { it.isFavorite }.sortedBy { it.favoriteIndex }.toMutableList()
-
-        configManagerInitialized()
+        determineFavorites()
     }
 
     private fun initImplementedExtractors() {
         extractorManager.getImplementedExtractors().forEach { implementedExtractor ->
-            var config = configurations.get(implementedExtractor.getUrl())
+            var config = getConfig(implementedExtractor.getUrl())
 
             if(config == null) { // a new, unpersisted ArticleSummaryExtractor
                 config = ArticleSummaryExtractorConfig(implementedExtractor.getUrl(), implementedExtractor.getName())
                 config.extractor = implementedExtractor
-                addConfig(config)
+                addNewConfig(config)
             }
             else {
                 config.extractor = implementedExtractor
@@ -110,7 +120,7 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
     }
 
     private fun initFeedExtractors() {
-        configurations.forEach { (_, config) ->
+        configurations.forEach { config ->
             if(config.siteUrl != null) { // currently only Feeds have siteUrl set
                 config.extractor = FeedArticleSummaryExtractor(config.url, feedReader)
             }
@@ -121,9 +131,9 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
      * Handles ArticleSummaryExtractorConfig which's ArticleSummaryExtractor hasn't been found (e.g. a synchronized device knows this extractor but we don't)
      */
     private fun handleConfigsWithoutExtractors() {
-        ArrayList(configurations.values).forEach { config ->
+        ArrayList(configurations).forEach { config ->
             if(config.extractor == null) { // currently only Feed have siteUrl set
-                configurations.remove(config.url)
+                removeConfig(config)
             }
         }
     }
@@ -148,13 +158,50 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
         }
     }
 
+    private fun determineFavorites() {
+        favorites = configurations.filter { it.isFavorite }.sortedBy { it.favoriteIndex }.toMutableList()
+    }
+
+
+    private fun articleSummaryExtractorConfigUpdated() {
+        readPersistedConfigs()
+        configurateExtractors()
+    }
+
 
     fun getConfigs() : List<ArticleSummaryExtractorConfig> {
-        return configurations.values.sortedBy { it.sortOrder }
+        return configurations.sortedBy { it.sortOrder }
     }
 
     fun getConfig(url: String) : ArticleSummaryExtractorConfig? {
-        return configurations[url]
+        if(configurationsPerUrl == null) {
+            configurationsPerUrl = determineConfigsPerUrl()
+        }
+
+        configurationsPerUrl?.get(url)?.let { configs ->
+            if(configs.size == 1) {
+                return configs[0]
+            }
+            else if(configs.size > 1) {
+                return configs.sortedByDescending { it.tagsToAddOnExtractedArticles.size }.first()
+            }
+        }
+
+        return null
+    }
+
+    private fun determineConfigsPerUrl(): MutableMap<String, List<ArticleSummaryExtractorConfig>> {
+        val configsPerUrl = HashMap<String, List<ArticleSummaryExtractorConfig>>()
+
+        configurations.forEach { config ->
+            if(configsPerUrl[config.url] == null) {
+                configsPerUrl.put(config.url, ArrayList())
+            }
+
+            (configsPerUrl[config.url] as? MutableList)?.let { it.add(config) }
+        }
+
+        return configsPerUrl
     }
 
 
@@ -183,14 +230,18 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
     private fun removeFavorite(extractorConfig: ArticleSummaryExtractorConfig) {
         favorites.remove(extractorConfig)
 
-        extractorConfig.favoriteIndex?.let {
-            for (i in it..favorites.size - 1) {
-                val favorite = favorites.get(i)
-                favorite.favoriteIndex?.let { favorite.favoriteIndex = it - 1 }
+        extractorConfig.favoriteIndex = null
+
+        for(i in 0..favorites.size - 1) {
+            val favorite = favorites.get(i)
+            val indexBefore = favorite.favoriteIndex
+
+            favorite.favoriteIndex = i
+
+            if(indexBefore != favorite.favoriteIndex) {
+                updateConfig(favorite)
             }
         }
-
-        extractorConfig.favoriteIndex = null
     }
 
 
@@ -209,21 +260,27 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
         config.iconUrl = iconUrl
         config.extractor = FeedArticleSummaryExtractor(feedUrl, feedReader)
 
-        addConfig(config)
+        addNewConfig(config)
 
         callback(config)
     }
 
-    private fun addConfig(config: ArticleSummaryExtractorConfig) {
+    private fun addNewConfig(config: ArticleSummaryExtractorConfig) {
         config.sortOrder = ++highestSortOrder
 
-        configurations.put(config.url, config)
-
         saveConfig(config)
+
+        addConfig(config)
 
         if(config.iconUrl == null) {
             loadIconAsync(config)
         }
+    }
+
+    private fun addConfig(config: ArticleSummaryExtractorConfig) {
+        configurations.add(config)
+
+        configurationsPerUrl = null
     }
 
     fun configurationUpdated(config: ArticleSummaryExtractorConfig) {
@@ -240,11 +297,17 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
 
 
     fun deleteConfig(config: ArticleSummaryExtractorConfig) {
-        configurations.remove(config.url)
-
-        favorites.remove(config)
+        removeConfig(config)
 
         configService.delete(config)
+    }
+
+    private fun removeConfig(config: ArticleSummaryExtractorConfig) {
+        configurationsPerUrl = null
+
+        configurations.remove(config)
+
+        removeFavorite(config)
     }
 
 
@@ -277,7 +340,7 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
         @Handler(priority = EventBusPriorities.EntityService)
         fun configChanged(change: ArticleSummaryExtractorConfigChanged) {
             if(change.source == EntityChangeSource.Synchronization) {
-                readPersistedConfigs()
+                articleSummaryExtractorConfigUpdated()
             }
         }
 

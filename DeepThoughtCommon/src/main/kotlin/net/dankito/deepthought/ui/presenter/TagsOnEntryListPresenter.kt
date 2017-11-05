@@ -8,7 +8,6 @@ import net.dankito.deepthought.ui.view.ITagsOnEntryListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
-import net.dankito.service.search.SearchEngineBase
 import net.dankito.service.search.specific.TagsSearchResult
 import net.dankito.utils.ui.IDialogService
 
@@ -25,14 +24,17 @@ class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryList
     }
 
 
-    fun getButtonStateForSearchResult(): TagsSearcherButtonState {
-        return searchResultsUtil.getButtonStateForSearchResult(lastTagsSearchResults)
+    fun getButtonStateForSearchResult(tagsOnEntry: Collection<Tag>): TagsSearcherButtonState {
+        return searchResultsUtil.getButtonStateForSearchResult(lastTagsSearchResults, tagsOnEntry)
     }
 
-    fun createNewTags(enteredText: String, tagsOnEntry: MutableCollection<Tag>) {
+    fun createNewTags(tagsOnEntry: MutableCollection<Tag>) {
         lastTagsSearchResults?.let { searchResults ->
-            enteredText.split(SearchEngineBase.TagsSearchTermSeparator).map { it.trim() }.forEach { tagName ->
-                tagsOnEntry.add(createNewTag(tagName))
+            searchResults.results.forEach { result ->
+                val term = result.searchTerm
+                if(term.isNullOrBlank() == false) { // should actually never be the case
+                    tagsOnEntry.add(createNewTag(term))
+                }
             }
 
             searchTags(searchResults.overAllSearchTerm)
@@ -55,12 +57,12 @@ class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryList
         return newTag
     }
 
-    fun toggleTagsOnEntry(tagsOnEntry: MutableCollection<Tag>) {
+    fun toggleTagsOnEntry(tagsOnEntry: MutableCollection<Tag>, state: TagsSearcherButtonState) {
         lastTagsSearchResults?.let { searchResults ->
             val notExistingEnteredTags = ArrayList<String>()
 
             searchResults.results.forEach { result ->
-                toggleTagOnEntry(tagsOnEntry, result, notExistingEnteredTags)
+                toggleTagOnEntry(tagsOnEntry, result, result == searchResults.lastResult, state, notExistingEnteredTags)
             }
 
             if(notExistingEnteredTags.isNotEmpty()) {
@@ -69,24 +71,31 @@ class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryList
         }
     }
 
-    private fun toggleTagOnEntry(tagsOnEntry: MutableCollection<Tag>, result: TagsSearchResult, notExistingEnteredTags: ArrayList<String>) {
+    private fun toggleTagOnEntry(tagsOnEntry: MutableCollection<Tag>, result: TagsSearchResult, isLastSearchResult: Boolean, state: TagsSearcherButtonState, notExistingEnteredTags: ArrayList<String>) {
         if(result.hasExactMatches()) {
-            result.exactMatches.forEach { toggleTagAffiliation(it, tagsOnEntry) }
+            result.exactMatches.forEach { toggleTagAffiliation(it, tagsOnEntry, state) }
+        }
+        else if(isLastSearchResult == false && result.hasSingleMatch()) {
+            result.getSingleMatch()?.let { toggleTagAffiliation(it, tagsOnEntry, state) }
         }
         else if (result.hasMatches == false) {
             notExistingEnteredTags.add(result.searchTerm)
         }
-        else {
-            result.allMatches.filterNotNull().forEach { toggleTagAffiliation(it, tagsOnEntry) }
+        else if(isLastSearchResult) {
+            result.allMatches.filterNotNull().forEach { toggleTagAffiliation(it, tagsOnEntry, state) }
         }
     }
 
-    private fun toggleTagAffiliation(tag: Tag, tagsOnEntry: MutableCollection<Tag>) {
-        if (tagsOnEntry.contains(tag)) {
-            tagsOnEntry.remove(tag)
+    private fun toggleTagAffiliation(tag: Tag, tagsOnEntry: MutableCollection<Tag>, state: TagsSearcherButtonState) {
+        if(tagsOnEntry.contains(tag)) {
+            if(state == TagsSearcherButtonState.REMOVE_TAGS || state == TagsSearcherButtonState.TOGGLE_TAGS) {
+                tagsOnEntry.remove(tag)
+            }
         }
         else {
-            tagsOnEntry.add(tag)
+            if(state == TagsSearcherButtonState.ADD_TAGS || state == TagsSearcherButtonState.TOGGLE_TAGS) {
+                tagsOnEntry.add(tag)
+            }
         }
     }
 

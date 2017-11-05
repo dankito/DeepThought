@@ -1,18 +1,17 @@
 package net.dankito.data_access.network.discovery
 
 import net.dankito.utils.AsyncProducerConsumerQueue
-import net.dankito.utils.ConsumerListener
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.services.network.INetworkConnectivityManager
 import net.dankito.utils.services.network.NetworkHelper
 import net.dankito.utils.services.network.NetworkInterfaceState
 import org.slf4j.LoggerFactory
-import java.io.IOException
 import java.net.*
 import java.nio.charset.Charset
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
+import kotlin.concurrent.schedule
 
 
 open class UdpDevicesDiscoverer(val networkConnectivityManager: INetworkConnectivityManager, protected var threadPool: IThreadPool) : IDevicesDiscoverer {
@@ -54,16 +53,11 @@ open class UdpDevicesDiscoverer(val networkConnectivityManager: INetworkConnecti
     private var foundDevices: MutableList<String> = CopyOnWriteArrayList()
 
 
-    protected var receivedPacketsHandler: ConsumerListener<ReceivedUdpDevicesDiscovererPacket> = object : ConsumerListener<ReceivedUdpDevicesDiscovererPacket> {
-        override fun consumeItem(receivedPacket: ReceivedUdpDevicesDiscovererPacket) {
+    init {
+        receivedPacketsQueue = AsyncProducerConsumerQueue(3, autoStart = false) { receivedPacket ->
             handleReceivedPacket(receivedPacket.receivedData, receivedPacket.senderAddress, receivedPacket.localDeviceInfo,
                     receivedPacket.discoveryMessagePrefix, receivedPacket.listener)
         }
-    }
-
-
-    init {
-        receivedPacketsQueue = AsyncProducerConsumerQueue(3, autoStart = false, consumerListener = receivedPacketsHandler)
     }
 
 
@@ -76,7 +70,7 @@ open class UdpDevicesDiscoverer(val networkConnectivityManager: INetworkConnecti
         receivedPacketsQueue.start()
 
         // * 3.5 = from 3 messages one must be received to be still valued as 'connected'
-        this.connectionsAliveWatcher = ConnectionsAliveWatcher((config.checkForDevicesIntervalMillis * 10.5).toInt())
+        this.connectionsAliveWatcher = ConnectionsAliveWatcher((config.checkForDevicesIntervalMillis * 3.5).toInt())
 
         startListenerAsync(config)
 
@@ -324,22 +318,11 @@ open class UdpDevicesDiscoverer(val networkConnectivityManager: INetworkConnecti
 
             broadcastSocket.soTimeout = 10000
 
-            while (broadcastSocket.isClosed == false) {
-                try {
-                    sendBroadcastOnSocket(broadcastSocket, broadcastAddress, config)
-                } catch (e: Exception) {
-                    log.error("Could not send Broadcast to Address " + broadcastAddress, e)
-
-                    synchronized(broadcastThreads) {
-                        openedBroadcastSockets.remove(broadcastSocket)
-                    }
-                    broadcastSocket.close()
-
-                    restartBroadcastForBroadcastAddress(broadcastAddress, config)
-
-                    break
+            val timer = Timer()
+            timer.schedule(config.checkForDevicesIntervalMillis.toLong(), config.checkForDevicesIntervalMillis.toLong()) {
+                if(broadcastSocket.isClosed || sendBroadcastOnSocket(broadcastSocket, broadcastAddress, config) == false) {
+                    timer.cancel()
                 }
-
             }
         } catch (e: Exception) {
             log.error("Could not start broadcast for address ${broadcastAddress.hostAddress}", e)
@@ -347,16 +330,24 @@ open class UdpDevicesDiscoverer(val networkConnectivityManager: INetworkConnecti
 
     }
 
-    @Throws(IOException::class)
-    protected fun sendBroadcastOnSocket(broadcastSocket: DatagramSocket, broadcastAddress: InetAddress, config: DevicesDiscovererConfig) {
-        val searchDevicesPacket = createSearchDevicesDatagramPacket(broadcastAddress, config)
-        broadcastSocket.send(searchDevicesPacket)
-
+    private fun sendBroadcastOnSocket(broadcastSocket: DatagramSocket, broadcastAddress: InetAddress, config: DevicesDiscovererConfig): Boolean {
         try {
-            Thread.sleep(config.checkForDevicesIntervalMillis.toLong())
-        } catch (ignored: Exception) {
+            val searchDevicesPacket = createSearchDevicesDatagramPacket(broadcastAddress, config)
+            broadcastSocket.send(searchDevicesPacket)
+        } catch (e: Exception) {
+            log.error("Could not send Broadcast to Address " + broadcastAddress, e)
+
+            synchronized(broadcastThreads) {
+                openedBroadcastSockets.remove(broadcastSocket)
+            }
+            broadcastSocket.close()
+
+            restartBroadcastForBroadcastAddress(broadcastAddress, config)
+
+            return false
         }
 
+        return true
     }
 
     protected fun restartBroadcastForBroadcastAddress(broadcastAddress: InetAddress, config: DevicesDiscovererConfig) {

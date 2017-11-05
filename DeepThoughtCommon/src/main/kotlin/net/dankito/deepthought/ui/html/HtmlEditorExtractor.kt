@@ -89,14 +89,15 @@ class HtmlEditorExtractor(private val dataManager: DataManager, private val osHe
                         continue
                     }
 
-                    if(entry.name == HtmlEditorCommon.HtmlEditorFolderAndFileName) {
-                        val file = File(htmlEditorDirectory, entry.name)
-                        val url = file.toURI().toURL()
-                        htmlEditorPath = url.toExternalForm()
-                    }
-
                     if(entry.name.startsWith(HtmlEditorCommon.HtmlEditorFolderName)) {
                         extractJarFileEntry(jar, entry, htmlEditorDirectory)
+
+                        // curious behaviour here: on Windows HtmlEditorFolderAndFileName is separated by '\', but entry.name by '/' -> check startsWith(), endsWith() and length
+                        if(entry.name.endsWith(HtmlEditorCommon.HtmlEditorFileName) && entry.name.length == HtmlEditorCommon.HtmlEditorFolderAndFileName.length) {
+                            val file = File(htmlEditorDirectory, entry.name)
+                            val url = file.toURI().toURL()
+                            htmlEditorPath = url.toExternalForm()
+                        }
                     }
                 }
             }

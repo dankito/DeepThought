@@ -4,18 +4,23 @@ import com.couchbase.lite.Database
 import com.couchbase.lite.listener.Credentials
 import com.couchbase.lite.listener.LiteListener
 import com.couchbase.lite.replicator.Replication
+import com.couchbase.lite.support.CouchbaseLiteHttpClientFactory
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.deepthought.model.*
 import net.dankito.jpa.couchbaselite.Dao
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
+import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
 import java.net.MalformedURLException
 import java.net.URL
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.TimeUnit
 
 
 class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityManagerBase, private val synchronizedChangesHandler: SynchronizedChangesHandler,
-                               private val networkSettings: INetworkSettings, private val alsoUsePullReplication: Boolean = true) : ISyncManager {
+                               private val networkSettings: INetworkSettings, private val usePushReplication: Boolean = false, private val usePullReplication: Boolean = true) :
+        ISyncManager {
 
     companion object {
         val PortNotSet = -1
@@ -226,16 +231,19 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
     }
 
     private fun startReplication(syncUrl: URL, device: DiscoveredDevice) {
-        val pushReplication = database.createPushReplication(syncUrl)
-        pushReplication.filter = EntitiesFilterName
-        pushReplication.isContinuous = true
+        if(usePushReplication) {
+            val pushReplication = Replication(database, syncUrl, Replication.Direction.PUSH, httpClientFactory)
 
-        pushReplications.put(device, pushReplication)
+            pushReplication.filter = EntitiesFilterName
+            pushReplication.isContinuous = true
 
-        pushReplication.start()
+            pushReplications.put(device, pushReplication)
 
-        if(alsoUsePullReplication) {
-            val pullReplication = database.createPullReplication(syncUrl)
+            pushReplication.start()
+        }
+
+        if(usePullReplication) {
+            val pullReplication = Replication(database, syncUrl, Replication.Direction.PULL, httpClientFactory)
             pullReplication.filter = EntitiesFilterName
             pullReplication.isContinuous = true
 
@@ -274,6 +282,52 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
 
     private val databaseChangeListener = Database.ChangeListener { event ->
         synchronizedChangesHandler.handleChange(event)
+    }
+
+
+    private val httpClientFactory = object : CouchbaseLiteHttpClientFactory(database.persistentCookieStore) {
+
+        private var client: OkHttpClient? = null
+
+
+        override fun getOkHttpClient(): OkHttpClient {
+            client?.let { return it }
+
+            // this is kind of bad as in this way a second OkHttpClient gets instantiated, but there's no other way to access parent's OkHttpClient.Builder's values
+            val newClient = createFromParentOkHttpClient(super.getOkHttpClient())
+            this.client = newClient
+
+            return newClient
+        }
+
+        private fun createFromParentOkHttpClient(parentOkHttpClient: OkHttpClient): OkHttpClient {
+            val builder = OkHttpClient.Builder()
+
+            copyValuesFromParentOkHttpClient(builder, parentOkHttpClient)
+
+            // fixes unexpected end of stream bug, see https://github.com/square/okhttp/issues/2738
+            builder.retryOnConnectionFailure(true)
+
+            return builder.build()
+        }
+
+        private fun copyValuesFromParentOkHttpClient(builder: OkHttpClient.Builder, parentOkHttpClient: OkHttpClient) {
+            builder.connectTimeout(parentOkHttpClient.connectTimeoutMillis().toLong(), TimeUnit.MILLISECONDS)
+                    .writeTimeout(parentOkHttpClient.writeTimeoutMillis().toLong(), TimeUnit.MILLISECONDS)
+                    .readTimeout(parentOkHttpClient.readTimeoutMillis().toLong(), TimeUnit.MILLISECONDS)
+
+            if(parentOkHttpClient.sslSocketFactory() != null) {
+                builder.sslSocketFactory(parentOkHttpClient.sslSocketFactory())
+            }
+
+            if(parentOkHttpClient.hostnameVerifier() != null) {
+                builder.hostnameVerifier(parentOkHttpClient.hostnameVerifier())
+            }
+
+            builder.cookieJar(parentOkHttpClient.cookieJar())
+
+            builder.followRedirects(parentOkHttpClient.followRedirects())
+        }
     }
 
 }

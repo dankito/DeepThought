@@ -37,6 +37,7 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
     override fun bindViewForNullValue(viewHolder: TagsOnEntryViewHolder) {
         super.bindViewForNullValue(viewHolder)
 
+        viewHolder.vwIsTagOnEntry.showState("", false)
         setBackgroundForDefaultState(viewHolder.itemView)
     }
 
@@ -104,13 +105,12 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
     private fun getColorForState(state: TagSearchResultState): Int {
         when(state) {
             TagSearchResultState.EXACT_OR_SINGLE_MATCH_BUT_NOT_OF_LAST_RESULT -> return R.color.tag_state_exact_or_single_match_but_not_of_last_result
-            TagSearchResultState.MATCH_BUT_NOT_OF_LAST_RESULT -> return R.color.tag_state_match_but_not_of_last_result
-            TagSearchResultState.EXACT_MATCH_OF_LAST_RESULT -> return R.color.tag_state_exact_match_of_last_result
-            TagSearchResultState.SINGLE_MATCH_OF_LAST_RESULT -> return R.color.tag_state_single_match_of_last_result
+            TagSearchResultState.EXACT_MATCH_OF_LAST_RESULT -> return R.color.tag_state_exact_or_single_match_of_last_result
+            TagSearchResultState.SINGLE_MATCH_OF_LAST_RESULT -> return R.color.tag_state_exact_or_single_match_of_last_result
             else -> return getDefaultBackgroundColor()
         }
     }
 
-    private fun getDefaultBackgroundColor() = android.R.color.transparent
+    private fun getDefaultBackgroundColor() = R.color.tag_state_default
 
 }

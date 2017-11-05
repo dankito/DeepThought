@@ -9,19 +9,19 @@ import net.dankito.deepthought.android.appstart.AndroidAppInitializer
 import net.dankito.deepthought.android.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.android.dialogs.AndroidDialogService
 import net.dankito.deepthought.android.routing.AndroidRouter
-import net.dankito.deepthought.android.service.ActivityParameterHolder
-import net.dankito.deepthought.android.service.AndroidClipboardService
-import net.dankito.deepthought.android.service.CurrentActivityTracker
+import net.dankito.deepthought.android.service.*
 import net.dankito.deepthought.android.service.communication.AndroidDeviceRegistrationHandler
 import net.dankito.deepthought.android.service.network.AndroidNetworkConnectivityManager
 import net.dankito.deepthought.android.service.settings.AndroidLocalSettingsStore
-import net.dankito.deepthought.android.views.html.AndroidHtmlEditorPool
+import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.util.EntryPersister
+import net.dankito.service.data.event.EntityChangedNotifier
+import net.dankito.service.eventbus.IEventBus
+import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.localization.Localization
-import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.services.network.INetworkConnectivityManager
 import net.dankito.utils.services.network.NetworkHelper
 import net.dankito.utils.settings.ILocalSettingsStore
@@ -55,6 +55,12 @@ class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
+    fun provideAppLifeCycleListener() : AppLifeCycleListener {
+        return AppLifeCycleListener()
+    }
+
+    @Provides
+    @Singleton
     fun provideCurrentActivityTracker() : CurrentActivityTracker {
         return CurrentActivityTracker()
     }
@@ -67,8 +73,26 @@ class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
-    fun provideClipboardService(activityTracker: CurrentActivityTracker) : IClipboardService {
-        return AndroidClipboardService(activityTracker)
+    fun provideActivityStateHolder() : ActivityStateHolder {
+        return ActivityStateHolder()
+    }
+
+    @Provides
+    @Singleton
+    fun provideExtractArticleHandler() : ExtractArticleHandler {
+        return ExtractArticleHandler()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSnackbarService() : SnackbarService {
+        return SnackbarService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideClipboardService() : IClipboardService {
+        return AndroidClipboardService()
     }
 
     @Provides
@@ -76,6 +100,7 @@ class ActivitiesModule(private val applicationContext: Context) {
     fun provideDialogService(currentActivityTracker: CurrentActivityTracker, localization: Localization) : IDialogService {
         return AndroidDialogService(currentActivityTracker, localization)
     }
+
 
     @Provides
     @Singleton
@@ -85,15 +110,14 @@ class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
-    fun provideAndroidHtmlEditorPool() : AndroidHtmlEditorPool {
-        return AndroidHtmlEditorPool()
+    fun provideRouter(context: Context, parameterHolder: ActivityParameterHolder, activityTracker: CurrentActivityTracker) : IRouter {
+        return AndroidRouter(context, parameterHolder, activityTracker)
     }
-
 
     @Provides
     @Singleton
-    fun provideRouter(context: Context, parameterHolder: ActivityParameterHolder, activityTracker: CurrentActivityTracker, serializer: ISerializer) : IRouter {
-        return AndroidRouter(context, parameterHolder, activityTracker, serializer)
+    fun provideAllCalculatedTags(searchEngine: ISearchEngine, eventBus: IEventBus, entityChangedNotifier: EntityChangedNotifier, localization: Localization) : AllCalculatedTags {
+        return AllCalculatedTags(searchEngine, eventBus, entityChangedNotifier, localization)
     }
 
 

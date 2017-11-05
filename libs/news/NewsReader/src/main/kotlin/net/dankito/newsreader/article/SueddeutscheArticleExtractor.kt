@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.model.Reference
-import net.dankito.deepthought.model.util.EntryExtractionResult
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.text.DateFormat
@@ -30,7 +30,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
 
-    override fun extractArticle(url: String): EntryExtractionResult? {
+    override fun extractArticle(url: String): ItemExtractionResult? {
         var siteUrl = url
         if(siteUrl.contains("?reduced=true")) {
             siteUrl = siteUrl.replace("?reduced=true", "")
@@ -39,7 +39,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         return super.extractArticle(siteUrl)
     }
 
-    override fun parseHtmlToArticle(extractionResult: EntryExtractionResult, document: Document, url: String) {
+    override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         if(isMultiPageArticle(document) && triedToResolveMultiPageArticle == false) { // some multi page articles after fetching read all on one page still have the read all on  page link
             triedToResolveMultiPageArticle = true
             extractArticleWithPost(extractionResult, url, "article.singlePage=true") // -> extractArticleWithPost() would be called endlessly. that's what triedToResolveMultiPageArticle is there for to avoid this
@@ -63,37 +63,47 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
 
-    private fun extractArticle(extractionResult: EntryExtractionResult, siteContent: Element, siteUrl: String) {
+    private fun extractArticle(extractionResult: ItemExtractionResult, siteContent: Element, siteUrl: String) {
         val reference = extractReference(siteContent, siteUrl)
 
         siteContent.select("#article-body").first()?.let { articleBody ->
             val abstract = articleBody.select(".entry-summary").first()?.html() ?: ""
 
-            cleanArticleBody(articleBody)
             var content = loadLazyLoadingElementsAndGetContent(siteContent, articleBody)
 
-            siteContent.select(".topenrichment figure img").first()?.let { previewImage ->
-                val previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(previewImage, "src", siteUrl)
-                reference?.previewImageUrl = previewImageUrl
-                previewImage.attr("src", previewImageUrl)
-                content = "<p>" + previewImage.outerHtml() + "</p>" + content
+            extractTopEnrichment(siteContent, reference, siteUrl)?.let { topEnrichment ->
+                content = "<div>" + topEnrichment.outerHtml() + "</div>" + content
             }
 
-            val entry = Entry(content, abstract)
+            val entry = Item(content, abstract)
 
             extractionResult.setExtractedContent(entry, reference)
         }
     }
 
-    private fun cleanArticleBody(articleBody: Element) {
-        articleBody.select(".entry-summary, #article-sidebar-wrapper, #sharingbaranchor, .ad, .authors, .teaserable-layout, .flexible-teaser").remove()
+    private fun extractTopEnrichment(siteContent: Element, reference: Source?, siteUrl: String): Element? {
+        siteContent.select(".topenrichment").first()?.let { topEnrichment ->
+            topEnrichment.select("figure img").first()?.let { previewImage ->
+                val previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(previewImage, "src", siteUrl)
+                reference?.previewImageUrl = previewImageUrl
+                previewImage.attr("src", previewImageUrl)
 
-        // remove scripts with try{window.performance.mark('monitor_articleTeaser');}catch(e){};
-        articleBody.select("script").filter { it.html().contains("window.performance.mark") }.forEach { it.remove() }
+                return previewImage
+            }
+
+            topEnrichment.select(".enrichment-inline-video").first()?.let { previewVideo ->
+                return previewVideo
+            }
+        }
+
+        return null
     }
 
     private fun loadLazyLoadingElementsAndGetContent(siteContent: Element, articleBody: Element): String {
         extractInlineGalleries(articleBody)
+        extractInlineCarousels(articleBody)
+
+        cleanArticleBody(articleBody)
 
         super.loadLazyLoadingElements(articleBody)
 
@@ -109,6 +119,13 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         return content
     }
 
+    private fun cleanArticleBody(articleBody: Element) {
+        articleBody.select(".entry-summary, #article-sidebar-wrapper, #sharingbaranchor, .ad, .authors, .teaserable-layout, .flexible-teaser").remove()
+
+        // remove scripts with try{window.performance.mark('monitor_articleTeaser');}catch(e){};
+        articleBody.select("script").filter { it.html().contains("window.performance.mark") }.forEach { it.remove() }
+    }
+
     private fun extractInlineGalleries(articleBody: Element) {
         articleBody.select("figure.gallery.inline").forEach { inlineGallery ->
             inlineGallery.select(".navigation").remove()
@@ -120,8 +137,23 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         }
     }
 
+    private fun extractInlineCarousels(articleBody: Element) {
+        articleBody.select("figure.js-biga").forEach { inlineCarousel ->
+            var childIndex = inlineCarousel.siblingIndex()
 
-    private fun extractGalleryArticle(extractionResult: EntryExtractionResult, galleryArticleElement: Element, siteUrl: String) {
+            inlineCarousel.select("ul.biga__carousel__list li.js-carousel-item").forEach { carouselItem ->
+                val img = carouselItem.select("img.biga__carousel__list__item-image").first()
+                // may also add caption: div.biga__carousel__list__item-source
+                inlineCarousel.parent().insertChildren(childIndex, Arrays.asList(img))
+                childIndex = childIndex + 2
+            }
+
+            inlineCarousel.remove()
+        }
+    }
+
+
+    private fun extractGalleryArticle(extractionResult: ItemExtractionResult, galleryArticleElement: Element, siteUrl: String) {
         val reference = extractReference(galleryArticleElement, siteUrl)
 
         val abstract = galleryArticleElement.select(".entry-summary").first()?.text() ?: ""
@@ -132,7 +164,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
             articleBody.select(".offscreen").first()?.let { reference?.publishingDate = parseSueddeutscheDateString(it.text()) }
 
-            extractionResult.setExtractedContent(Entry(content.toString(), abstract), reference)
+            extractionResult.setExtractedContent(Item(content.toString(), abstract), reference)
         }
     }
 
@@ -168,9 +200,9 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
 
-    private fun extractReference(articleElement: Element, url: String): Reference? {
+    private fun extractReference(articleElement: Element, url: String): Source? {
         articleElement.select(".header").first()?.let { headerElement ->
-            headerElement.select("h2").first()?.let { heading ->
+            headerElement.select("h2, h1").first()?.let { heading -> // don't know why, but sometimes (on mobile sites?) they're using h1
                 var subTitle = ""
                 heading.select("strong").first()?.let {
                     subTitle = it.text()
@@ -179,7 +211,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
                 val publishingDate = extractPublishingDate(headerElement)
 
-                return Reference(url, heading.text(), publishingDate, subTitle = subTitle)
+                return Source(url, heading.text(), publishingDate, subTitle = subTitle)
             }
         }
 
