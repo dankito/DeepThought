@@ -9,8 +9,8 @@ import android.support.v4.app.NotificationManagerCompat
 import android.support.v4.app.RemoteInput
 import net.dankito.deepthought.android.MainActivity
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.model.Entry
-import net.dankito.deepthought.ui.presenter.util.EntryPersister
+import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.model.Item
 
 
 class PermanentNotificationService(private val context: Context, private val entryPersister: EntryPersister) {
@@ -65,7 +65,7 @@ class PermanentNotificationService(private val context: Context, private val ent
         RemoteInput.getResultsFromIntent(intent)?.let { remoteInput ->
             val input = remoteInput.getCharSequence(PermanentNotificationTextInputKey)
 
-            entryPersister.saveEntryAsync(Entry(input.toString())) { successful ->
+            entryPersister.saveEntryAsync(Item(input.toString())) { successful ->
                 showResultToUser(successful)
             }
 
