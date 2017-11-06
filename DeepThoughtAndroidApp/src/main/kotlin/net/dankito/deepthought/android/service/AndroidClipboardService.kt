@@ -14,7 +14,9 @@ import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishin
 import net.dankito.utils.UrlUtil
 import net.dankito.utils.ui.IClipboardService
 import org.slf4j.LoggerFactory
+import java.util.*
 import javax.inject.Inject
+import kotlin.concurrent.schedule
 
 
 class AndroidClipboardService : IClipboardService {
@@ -119,7 +121,7 @@ class AndroidClipboardService : IClipboardService {
         getUrlFromClipItem(clipItem, description)?.let { url ->
             if(url != lastSnackbarShownForUrl) {
                 lastSnackbarShownForUrl = url
-                snackbarService.showUrlInClipboardDetectedSnackbar(currentActivity, url) { extractArticleHandler.extractArticle(url) }
+                showUrlInClipboardDetectedSnackbarWithDelayOnAppStartCheck(url, currentActivity)
             }
         }
     }
@@ -136,6 +138,21 @@ class AndroidClipboardService : IClipboardService {
         }
 
         return null
+    }
+
+    private fun showUrlInClipboardDetectedSnackbarWithDelayOnAppStartCheck(url: String, currentActivity: Activity) {
+        if(lifeCycleListener.didAppJustStart()) {
+            Timer().schedule(2000L) { // on app start wait some time before showing Snackbar
+                currentActivity.runOnUiThread { showUrlInClipboardDetectedSnackbar(currentActivity, url) }
+            }
+        }
+        else {
+            showUrlInClipboardDetectedSnackbar(currentActivity, url)
+        }
+    }
+
+    private fun showUrlInClipboardDetectedSnackbar(currentActivity: Activity, url: String) {
+        snackbarService.showUrlInClipboardDetectedSnackbar(currentActivity, url) { extractArticleHandler.extractArticle(url) }
     }
 
 }
