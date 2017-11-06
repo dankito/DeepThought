@@ -69,7 +69,8 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
             content += previewImageElement.outerHtml()
         }
 
-        for(articleElement in articleBodyElement.select("p.article__item, .article__subheading, .gate--register, .gate")) { // .gate--register to show to user that you have to register for viewing this article
+        // .gate--register to show to user that you have to  register for viewing this article
+        for(articleElement in articleBodyElement.select("p.article__item, .article__subheading, .article-heading__podcast-player, .gate--register, .gate")) {
             content += articleElement.outerHtml()
         }
 
@@ -79,7 +80,10 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
     private fun createReference(articleUrl: String, articleBodyElement: Element): Source {
         val title = articleBodyElement.select(".article-heading__title").text()
 
-        val subTitle = articleBodyElement.select(".article-heading__kicker").text()
+        var subTitle = articleBodyElement.select(".article-heading__kicker").text()
+        if(subTitle.isNullOrBlank()) {
+            subTitle = articleBodyElement.select(".article-heading__series").text().trim()
+        }
 
         val publishingDate = parseDate(articleBodyElement)
 

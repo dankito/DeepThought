@@ -21,6 +21,15 @@ class ZeitArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun importPodcastArticle() {
+        getAndTestArticle("http://www.zeit.de/wissen/gesundheit/2017-11/sexualitaet-weiblicher-orgasmus-hoehepunkt-probleme",
+                "Der weibliche Orgasmus",
+                "Jetzt stellen Hörer(innen) die Fragen: Unsere Sexpodcastfolgen zum Höhepunkt haben einiges ausgelöst. Deshalb gibt es noch mehr Wissen und Tipps zum Orgasmus der Frau.",
+                null, 5500, false, "Podcast: Ist das normal / Sexualität"
+        )
+    }
+
+    @Test
     fun ensureZeitPlusNotificationGetsShown() {
         getAndTestArticle("http://www.zeit.de/2017/45/afd-netzwerk-zeitschriften-stiftungen-verlage",
                 "Ein aktives Netzwerk",
