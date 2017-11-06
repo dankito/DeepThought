@@ -27,7 +27,7 @@ class SpeechToTextConverter(private val context: Context) {
 //            intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Jetzt sog wos g'scheids");
 //            //... put other settings in the Intent
 //            startActivityForResult(intent, 1)
-//        } catch(e: Exception) { println("Could not start speech to text: $e") }
+//        } catch(e: Exception) { log.error("Could not start speech to text: $e") }
 
         try {
             if(recognizer == null) {
@@ -42,7 +42,7 @@ class SpeechToTextConverter(private val context: Context) {
 
             intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS,5)
             recognizer?.startListening(intent)
-        } catch(e: Exception) { println("Could not start SpeechRecognizer: $e") }
+        } catch(e: Exception) { log.error("Could not start SpeechRecognizer: $e") }
     }
 
     private val speechRecognitionListener = object : RecognitionListener {
