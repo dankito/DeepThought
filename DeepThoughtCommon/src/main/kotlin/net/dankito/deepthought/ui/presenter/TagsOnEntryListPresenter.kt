@@ -78,7 +78,7 @@ class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryList
         else if(isLastSearchResult == false && result.hasSingleMatch()) {
             result.getSingleMatch()?.let { toggleTagAffiliation(it, tagsOnEntry, state) }
         }
-        else if (result.hasMatches == false) {
+        else if(result.hasMatches == false || (isLastSearchResult == false && result.hasSingleMatch() == false)) {
             notExistingEnteredTags.add(result.searchTerm)
         }
         else if(isLastSearchResult) {
