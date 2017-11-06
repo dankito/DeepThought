@@ -28,15 +28,18 @@ abstract class EntityServiceBase<T : BaseEntity>(val entityClass: Class<T>, val 
         synchronized(this) {
             onPrePersist(entity)
 
-            // we first have to persist an entity so that it gets an id and than can add it to DeepThought (otherwise it would be added to DeepThought with id null)
             entityManager.persistEntity(entity)
         }
 
-        callEntitiesUpdatedListeners(entity, EntityChangeType.Created)
+        callEntitiesUpdatedListenersForCreatedEntity(entity)
     }
 
     protected open fun onPrePersist(entity: T) {
         // may be overwritten in sub class
+    }
+
+    protected open fun callEntitiesUpdatedListenersForCreatedEntity(entity: T) {
+        callEntitiesUpdatedListeners(entity, EntityChangeType.Created)
     }
 
 
@@ -59,11 +62,11 @@ abstract class EntityServiceBase<T : BaseEntity>(val entityClass: Class<T>, val 
     }
 
 
-    private fun callEntitiesUpdatedListeners(entity: T, changeType: EntityChangeType, didChangesAffectingDependentEntities: Boolean = false) {
+    protected fun callEntitiesUpdatedListeners(entity: T, changeType: EntityChangeType, didChangesAffectingDependentEntities: Boolean = false) {
         entityChangedNotifier.notifyListenersOfEntityChangeAsync(entity, changeType, EntityChangeSource.Local, didChangesAffectingDependentEntities)
     }
 
-    private fun callEntitiesUpdatedListenersSynchronously(entity: T, changeType: EntityChangeType, didChangesAffectingDependentEntities: Boolean = false) {
+    protected fun callEntitiesUpdatedListenersSynchronously(entity: T, changeType: EntityChangeType, didChangesAffectingDependentEntities: Boolean = false) {
         entityChangedNotifier.notifyListenersOfEntityChange(entity, changeType, EntityChangeSource.Local, didChangesAffectingDependentEntities)
     }
 
