@@ -47,6 +47,8 @@ class WebPageMetaDataExtractor(webClient: IWebClient) : ExtractorBase(webClient)
 
         document.head().select("meta[name=\"og:description\"]").first()?.attr("content")?.let { return it }
 
+        document.head().select("meta[property=\"og:description\"]").first()?.attr("content")?.let { return it }
+
         return null
     }
 
@@ -54,6 +56,17 @@ class WebPageMetaDataExtractor(webClient: IWebClient) : ExtractorBase(webClient)
         document.head().select("meta[name=\"publisher\"]").first()?.attr("content")?.let { return it }
 
         document.head().select("meta[name=\"og:site_name\"]").first()?.attr("content")?.let { return it }
+
+        document.head().select("meta[property=\"og:site_name\"]").first()?.attr("content")?.let { return it }
+
+        document.head().select("meta[name=\"application-name\"]").first()?.attr("content")?.let { return it }
+
+        document.head().select("meta[name=\"twitter:site\"]").first()?.attr("content")?.let {
+            if(it.startsWith('@')) {
+                return it.substring(1)
+            }
+            return it
+        }
 
         return null
     }
