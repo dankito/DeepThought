@@ -69,7 +69,7 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
             content += previewImageElement.outerHtml()
         }
 
-        for(articleElement in articleBodyElement.select("p.article__item, .article__subheading, .gate--register")) { // .gate--register to show to user that you have to register for viewing this article
+        for(articleElement in articleBodyElement.select("p.article__item, .article__subheading, .gate--register, .gate")) { // .gate--register to show to user that you have to register for viewing this article
             content += articleElement.outerHtml()
         }
 

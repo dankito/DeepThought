@@ -21,6 +21,15 @@ class ZeitArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun ensureZeitPlusNotificationGetsShown() {
+        getAndTestArticle("http://www.zeit.de/2017/45/afd-netzwerk-zeitschriften-stiftungen-verlage",
+                "Ein aktives Netzwerk",
+                "Ihr Ziel ist eine Revolution von rechts: Um die AfD scharen sich Dutzende Denkfabriken, Zeitschriften und Stiftungen. Wer sind ihre Vordenker?",
+                null, 3400, false, "AfD"
+        )
+    }
+
+    @Test
     fun importMultiPageArticle() {
         getAndTestArticle("http://www.zeit.de/digital/internet/2017-08/dna-malware-hacker",
                 "Mit Spucke einen Computer hacken",
