@@ -7,6 +7,7 @@ import net.dankito.deepthought.model.Tag
 
 
 data class ItemExtractionResult(var item: Item, var source: Source? = null, var series: Series? = null, var tags: MutableList<Tag> = ArrayList(),
+                                var seriesTitle: String? = null,
                                 var couldExtractContent: Boolean = false,
                                 var error: Exception? = null) {
 

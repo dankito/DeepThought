@@ -116,7 +116,7 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
 
         extractionResult.source?.setPublishingDate(metaData.publishingDate, metaData.publishingDateString)
 
-        // TODO: what about series / siteName?
+        metaData.siteName?.let { extractionResult.seriesTitle = it }
     }
 
 
