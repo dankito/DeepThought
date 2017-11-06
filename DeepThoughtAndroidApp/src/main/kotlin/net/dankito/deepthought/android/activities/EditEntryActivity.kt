@@ -541,6 +541,10 @@ class EditEntryActivity : BaseActivity() {
 
 
     private fun editContent() {
+        if(isLoadingUrl) { // while WebView is still loading contentToEdit is not set yet (contentToEdit gets set when loading finishes
+            return
+        }
+
         contentToEdit?.let { content ->
             val editHtmlTextDialog = EditHtmlTextDialog()
             val hintResourceId = if(content.isBlank() == false || dataManager.localSettings.didShowAddItemPropertiesHelp) null else R.string.activity_edit_item_edit_content_hint
