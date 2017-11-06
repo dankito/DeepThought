@@ -49,6 +49,11 @@ class AppLifeCycleListener : Application.ActivityLifecycleCallbacks, ComponentCa
     }
 
 
+    fun didAppJustStart(): Boolean {
+        return justStartedApp
+    }
+
+
     fun addActivityResumedListener(listener: (Activity) -> Unit) {
         activityResumedListeners.add(listener)
     }
