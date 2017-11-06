@@ -116,8 +116,8 @@ class ActivitiesModule(private val applicationContext: Context) {
     @Provides
     @Singleton
     fun provideDeviceRegistrationHandler(context: Context, dataManager: DataManager, initialSyncManager: InitialSyncManager, dialogService: IDialogService,
-                                           localization: Localization, currentActivityTracker: CurrentActivityTracker) : IDeviceRegistrationHandler {
-        return AndroidDeviceRegistrationHandler(context, dataManager, initialSyncManager, dialogService, localization, currentActivityTracker)
+                                         localization: Localization, snackbarService: SnackbarService) : IDeviceRegistrationHandler {
+        return AndroidDeviceRegistrationHandler(context, dataManager, initialSyncManager, dialogService, localization, snackbarService)
     }
 
     @Provides
