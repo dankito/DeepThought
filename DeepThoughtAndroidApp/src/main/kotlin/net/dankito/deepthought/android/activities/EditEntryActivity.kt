@@ -987,7 +987,7 @@ class EditEntryActivity : BaseActivity() {
         menuInflater.inflate(R.menu.activity_edit_entry_menu, menu)
 
         mnSaveEntry = menu.findItem(R.id.mnSaveEntry)
-        readLaterArticle?.let { mnSaveEntry?.setIcon(R.drawable.ic_tab_item) }
+        readLaterArticle?.let { mnSaveEntry?.setIcon(R.drawable.ic_tab_items) }
         mnDeleteExistingEntry = menu.findItem(R.id.mnDeleteExistingEntry)
 
         mnToggleReaderMode = menu.findItem(R.id.mnToggleReaderMode)
@@ -1379,7 +1379,7 @@ class EditEntryActivity : BaseActivity() {
     private fun editReadLaterArticle(readLaterArticle: ReadLaterArticle, updateContentPreview: Boolean = true) {
         this.readLaterArticle = readLaterArticle
 
-        mnSaveEntry?.setIcon(R.drawable.ic_tab_item)
+        mnSaveEntry?.setIcon(R.drawable.ic_tab_items)
         editEntry(readLaterArticle.itemExtractionResult.item, readLaterArticle.itemExtractionResult.source, readLaterArticle.itemExtractionResult.tags, updateContentPreview)
     }
 
