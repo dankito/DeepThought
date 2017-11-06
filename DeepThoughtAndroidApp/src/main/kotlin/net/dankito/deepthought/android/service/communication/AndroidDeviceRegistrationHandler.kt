@@ -5,6 +5,8 @@ import android.content.Context
 import android.support.design.widget.Snackbar
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.CheckBox
 import android.widget.TextView
 import kotlinx.android.synthetic.main.snackbar_ask_sync_data_with_device.view.*
 import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
@@ -106,18 +108,16 @@ class AndroidDeviceRegistrationHandler(private var context: Context, dataManager
                 }
             })
 
-            snackbar.setAction(android.R.string.ok) { callback(true, false) }
-
             // Warning: Actually a Snackbar's Design should not be manipulated:
             // "Don't customize the Snackbar. It should not contain any more elements than a short text and one action. See Google Material design guidelines."
             // Code found at: http://stackoverflow.com/questions/32453946/how-to-customize-snackbars-layout
-            customizeAskToSyncDataWithDeviceSnackbar(snackbar, currentActivity, remoteDevice, rootView.getWidth())
+            customizeAskToSyncDataWithDeviceSnackbar(snackbar, currentActivity, remoteDevice, callback)
 
             snackbar.show()
         }
     }
 
-    private fun customizeAskToSyncDataWithDeviceSnackbar(snackbar: Snackbar, activity: Activity, device: DiscoveredDevice, windowWidth: Int) {
+    private fun customizeAskToSyncDataWithDeviceSnackbar(snackbar: Snackbar, activity: Activity, device: DiscoveredDevice, callback: (Boolean, Boolean) -> Unit) {
         val layout = snackbar.view as Snackbar.SnackbarLayout
         centerActionTextViewVertically(layout)
 
@@ -138,7 +138,20 @@ class AndroidDeviceRegistrationHandler(private var context: Context, dataManager
 
         snackView.txtvwAskSynchronizeDataWithThisDevice.setTextColor(txtvwSnackbarStandardText.currentTextColor)
 
+        snackbar.setAction(android.R.string.ok) {
+            val neverAskAgain = (snackView.chkbxNeverAskAgainToConnectWithThisDevice as CheckBox).isChecked
+            callback(!neverAskAgain, neverAskAgain)
+        }
+
         snackView.chkbxNeverAskAgainToConnectWithThisDevice.setTextColor(txtvwSnackbarStandardText.currentTextColor)
+        snackView.chkbxNeverAskAgainToConnectWithThisDevice.setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked) {
+                (layout.findViewById(android.support.design.R.id.snackbar_action) as Button).setText(R.string.action_never)
+            }
+            else {
+                (layout.findViewById(android.support.design.R.id.snackbar_action) as Button).setText(android.R.string.ok)
+            }
+        }
 
         // Add the view to the Snackbar's layout
         layout.addView(snackView, 0)

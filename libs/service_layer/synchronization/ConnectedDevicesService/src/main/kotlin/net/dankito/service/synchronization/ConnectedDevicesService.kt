@@ -59,6 +59,8 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
 
         registrationHandler.addNewDeviceRegisteredListener { remoteDevice -> startSynchronizingWithNewlyRegisteredDevice(remoteDevice) }
 
+        registrationHandler.addIgnoreDeviceListener { remoteDevice -> addDeviceToIgnoreList(remoteDevice) }
+
         clientCommunicator.addRemoteRequestedToStartSynchronizationListener { remoteDevice -> startSynchronizingWithDevice(remoteDevice) }
     }
 
@@ -371,8 +373,8 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
     }
 
     override fun addDeviceToIgnoreList(device: DiscoveredDevice) {
-        if (localUser.addIgnoredDevice(device.device)) {
-            if (entityManager.updateEntity(localUser)) {
+        if(localUser.addIgnoredDevice(device.device)) {
+            if(entityManager.updateEntity(localUser)) {
                 val deviceInfoKey = getDeviceKeyForDevice(device)
                 unknownDevices.remove(deviceInfoKey)
                 knownIgnoredDevices.put(deviceInfoKey, device)
@@ -384,7 +386,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
     }
 
     override fun startSynchronizingWithIgnoredDevice(device: DiscoveredDevice) {
-        if (localUser.removeIgnoredDevice(device.device)) {
+        if(localUser.removeIgnoredDevice(device.device)) {
             if (entityManager.updateEntity(localUser)) {
                 val deviceInfoKey = getDeviceKeyForDevice(device)
                 knownIgnoredDevices.remove(deviceInfoKey)
