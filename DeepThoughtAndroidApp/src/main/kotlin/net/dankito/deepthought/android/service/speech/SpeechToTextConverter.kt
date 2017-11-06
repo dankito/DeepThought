@@ -16,10 +16,7 @@ class SpeechToTextConverter(private val context: Context) {
     }
 
 
-    private var recognizer: SpeechRecognizer? = null
-
-
-    fun startSpeechToTextConversion() {
+    fun startSpeechToTextConversion(resultListener: (List<String>) -> Unit) {
 //        try {
 //            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
 //            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
@@ -30,22 +27,22 @@ class SpeechToTextConverter(private val context: Context) {
 //        } catch(e: Exception) { log.error("Could not start speech to text: $e") }
 
         try {
-            if(recognizer == null) {
-                recognizer = SpeechRecognizer.createSpeechRecognizer(context)
-                recognizer?.setRecognitionListener(speechRecognitionListener)
-            }
-
             val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-            intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Jetzt sog wos g'scheids")
+            intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Jetzt sog wos g'scheids") // TODO: add translated string
             intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, context.applicationInfo.packageName)
 
             intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS,5)
+
+            val recognizer = SpeechRecognizer.createSpeechRecognizer(context)
+            recognizer?.setRecognitionListener(SpeechRecognitionListener(resultListener))
+
             recognizer?.startListening(intent)
         } catch(e: Exception) { log.error("Could not start SpeechRecognizer: $e") }
     }
 
-    private val speechRecognitionListener = object : RecognitionListener {
+    inner class SpeechRecognitionListener(private val resultListener: (List<String>) -> Unit) : RecognitionListener {
+
         override fun onReadyForSpeech(params: Bundle?) {
             log.info("Yeah, ready for speech recognition")
         }
@@ -75,6 +72,8 @@ class SpeechToTextConverter(private val context: Context) {
         override fun onResults(results: Bundle?) {
             val data = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
             log.info("Got speech recognition results: $data")
+
+            data?.let { resultListener(data) }
         }
 
     }
