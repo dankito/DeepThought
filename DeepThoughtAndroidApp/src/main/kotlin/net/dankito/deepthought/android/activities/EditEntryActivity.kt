@@ -9,10 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
-import android.webkit.JavascriptInterface
-import android.webkit.WebChromeClient
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import com.github.clans.fab.FloatingActionMenu
 import kotlinx.android.synthetic.main.activity_edit_entry.*
 import kotlinx.android.synthetic.main.view_floating_action_button_entry_fields.*
@@ -368,7 +365,9 @@ class EditEntryActivity : BaseActivity() {
         wbvwContent.singleTapListener = { handleWebViewSingleTap(it) }
         wbvwContent.swipeListener = { isInFullscreen, swipeDirection -> handleWebViewSwipe(isInFullscreen, swipeDirection) }
 
-        val settings = wbvwContent.getSettings()
+        fixThatWebViewIsLoadingVerySlow()
+
+        val settings = wbvwContent.settings
         settings.defaultTextEncodingName = "UTF-8" // otherwise non ASCII text doesn't get displayed correctly
         settings.defaultFontSize = 18 // default font is too small
         settings.domStorageEnabled = true // otherwise images may not load, see https://stackoverflow.com/questions/29888395/images-not-loading-in-android-webview
@@ -399,6 +398,22 @@ class EditEntryActivity : BaseActivity() {
                 }
             }
         })
+    }
+
+    private fun fixThatWebViewIsLoadingVerySlow() {
+        // avoid that WebView is loading very, very slow, see https://stackoverflow.com/questions/7422427/android-webview-slow
+        // but actually had no effect on my side
+
+        wbvwContent.settings.cacheMode = WebSettings.LOAD_NO_CACHE
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            wbvwContent.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+        }
+        else {
+            wbvwContent.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+
+            wbvwContent.settings.setRenderPriority(WebSettings.RenderPriority.HIGH)
+        }
     }
 
     private fun webPageCompletelyLoaded(webView: WebView) {
