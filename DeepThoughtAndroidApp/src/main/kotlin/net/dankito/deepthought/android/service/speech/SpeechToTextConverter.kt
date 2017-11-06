@@ -19,7 +19,7 @@ class SpeechToTextConverter(private val context: Context) {
     private var recognizer: SpeechRecognizer? = null
 
 
-    private fun startSpeechToTextConversion() {
+    fun startSpeechToTextConversion() {
 //        try {
 //            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
 //            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
