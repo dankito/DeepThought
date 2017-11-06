@@ -9,6 +9,7 @@ import android.support.v4.app.NotificationManagerCompat
 import android.support.v4.app.RemoteInput
 import net.dankito.deepthought.android.MainActivity
 import net.dankito.deepthought.android.R
+import net.dankito.deepthought.android.service.speech.SpeechToTextConverter
 import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.model.Item
 
@@ -21,6 +22,7 @@ class PermanentNotificationService(private val context: Context, private val ite
         const val PermanentNotificationTextInputKey = "deepthought_text_input_key"
 
         const val TextInputAction = "TextInputAction"
+        const val SpeechToTextAction = "Speech-to-TextAction"
     }
 
 
@@ -41,6 +43,8 @@ class PermanentNotificationService(private val context: Context, private val ite
         builder.setContentIntent(pendingIntent)
 
         builder.addAction(createCreateItemAction())
+
+        builder.addAction(createCreateItemFromSpeechToTextAction())
 
         val notification = builder.build()
         notification.flags = Notification.FLAG_NO_CLEAR
@@ -65,10 +69,24 @@ class PermanentNotificationService(private val context: Context, private val ite
         return action
     }
 
+    private fun createCreateItemFromSpeechToTextAction(): NotificationCompat.Action? {
+        val startAndroidServiceIntent = Intent(context, PermanentNotificationAndroidService::class.java)
+        startAndroidServiceIntent.action = SpeechToTextAction
+
+        val pendingIntent = PendingIntent.getService(context, PermanentNotificationRequestCode, startAndroidServiceIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        return NotificationCompat.Action.Builder(android.R.drawable.ic_btn_speak_now,
+                context.getString(R.string.permanent_notification_create_item_from_speech_to_text_action), pendingIntent)
+                .build()
+    }
+
 
     fun handlesIntent(intent: Intent): Boolean {
         if(intent.action == TextInputAction) {
             return handleNotificationTextInput(intent)
+        }
+        else if(intent.action == SpeechToTextAction) {
+            return startSpeechToText()
         }
 
         return false
@@ -90,11 +108,30 @@ class PermanentNotificationService(private val context: Context, private val ite
     }
 
     private fun showResultToUser(successful: Boolean) {
-        if (successful) {
+        if(successful) {
             showNotification(R.string.permanent_notification_reply_successfully_saved_item)
         }
         else {
             showNotification(R.string.permanent_notification_reply_could_not_save_item)
+        }
+    }
+
+
+    private fun startSpeechToText(): Boolean {
+        val speechToTextConverter = SpeechToTextConverter(context)
+
+        speechToTextConverter.startSpeechToTextConversion { recognizedData ->
+            handleSpeechRecognitionResult(recognizedData)
+        }
+
+        return true
+    }
+
+    private fun handleSpeechRecognitionResult(recognizedData: List<String>) {
+        val content = "Speech recognition result:\n" + recognizedData.joinToString("\n") { it } // TODO: create real content
+
+        itemPersister.saveEntryAsync(Item(content)) {
+
         }
     }
 

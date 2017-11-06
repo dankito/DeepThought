@@ -44,6 +44,7 @@
     <string name="permanent_notification_create_item_label">Information eingeben</string>
     <string name="permanent_notification_reply_successfully_saved_item">Eintrag gespeichert</string>
     <string name="permanent_notification_reply_could_not_save_item">Eintrag konnte nicht gespeichert werden</string>
+    <string name="permanent_notification_create_item_from_speech_to_text_action">Sog wos</string>
 
 
     <!-- Für die Suche im Hauptfenster oben (Stimmt: Im Deutschen heißt es Suchen, im Englischen Find) -->

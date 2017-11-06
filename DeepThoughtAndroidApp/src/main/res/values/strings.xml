@@ -36,6 +36,7 @@
     <string name="permanent_notification_create_item_label">Input item information</string>
     <string name="permanent_notification_reply_successfully_saved_item">Saved item</string>
     <string name="permanent_notification_reply_could_not_save_item">Could not save item</string>
+    <string name="permanent_notification_create_item_from_speech_to_text_action">Sog wos</string>
 
     <string name="search_title">Search</string>
     <plurals name="search_count_results">
