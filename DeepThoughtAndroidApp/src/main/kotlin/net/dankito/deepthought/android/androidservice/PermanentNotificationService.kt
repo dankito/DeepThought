@@ -7,6 +7,7 @@ import android.content.Intent
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import android.support.v4.app.RemoteInput
+import net.dankito.deepthought.android.MainActivity
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.model.Item
@@ -18,6 +19,8 @@ class PermanentNotificationService(private val context: Context, private val ite
         const val PermanentNotificationNotificationId = 27388
         const val PermanentNotificationRequestCode = 27388
         const val PermanentNotificationTextInputKey = "deepthought_text_input_key"
+
+        const val TextInputAction = "TextInputAction"
     }
 
 
@@ -33,12 +36,11 @@ class PermanentNotificationService(private val context: Context, private val ite
                 .setOngoing(true)
         //                        .setChannelId(CHANNEL_ID)
 
-        val startAndroidServiceIntent = Intent(context, PermanentNotificationAndroidService::class.java)
-
-        val pendingIntent = PendingIntent.getService(context, PermanentNotificationRequestCode, startAndroidServiceIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val startMainActivityServiceIntent = Intent(context, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(context, PermanentNotificationRequestCode, startMainActivityServiceIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         builder.setContentIntent(pendingIntent)
 
-        builder.addAction(createCreateItemAction(pendingIntent))
+        builder.addAction(createCreateItemAction())
 
         val notification = builder.build()
         notification.flags = Notification.FLAG_NO_CLEAR
@@ -47,7 +49,12 @@ class PermanentNotificationService(private val context: Context, private val ite
         notificationManager.notify(PermanentNotificationNotificationId, notification)
     }
 
-    private fun createCreateItemAction(pendingIntent: PendingIntent?): NotificationCompat.Action? {
+    private fun createCreateItemAction(): NotificationCompat.Action? {
+        val startAndroidServiceIntent = Intent(context, PermanentNotificationAndroidService::class.java)
+        startAndroidServiceIntent.action = TextInputAction
+
+        val pendingIntent = PendingIntent.getService(context, PermanentNotificationRequestCode, startAndroidServiceIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
         val replyLabel = context.getString(R.string.permanent_notification_create_item_label)
         val remoteInput = RemoteInput.Builder(PermanentNotificationTextInputKey).setLabel(replyLabel).build()
 
@@ -60,6 +67,15 @@ class PermanentNotificationService(private val context: Context, private val ite
 
 
     fun handlesIntent(intent: Intent): Boolean {
+        if(intent.action == TextInputAction) {
+            return handleNotificationTextInput(intent)
+        }
+
+        return false
+    }
+
+
+    private fun handleNotificationTextInput(intent: Intent): Boolean {
         RemoteInput.getResultsFromIntent(intent)?.let { remoteInput ->
             val input = remoteInput.getCharSequence(PermanentNotificationTextInputKey)
 
@@ -70,7 +86,7 @@ class PermanentNotificationService(private val context: Context, private val ite
             return true
         }
 
-        return false
+        return true
     }
 
     private fun showResultToUser(successful: Boolean) {
