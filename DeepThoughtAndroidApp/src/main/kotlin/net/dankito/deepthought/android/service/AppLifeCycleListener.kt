@@ -10,6 +10,8 @@ import android.os.Bundle
 class AppLifeCycleListener : Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
 
 
+    private var justStartedApp = true
+
     private val activityResumedListeners = HashSet<(Activity) -> Unit>()
 
 
@@ -24,6 +26,7 @@ class AppLifeCycleListener : Application.ActivityLifecycleCallbacks, ComponentCa
     }
 
     override fun onActivityPaused(activity: Activity) {
+        justStartedApp = false
     }
 
     override fun onActivityStopped(activity: Activity) {
@@ -43,6 +46,11 @@ class AppLifeCycleListener : Application.ActivityLifecycleCallbacks, ComponentCa
     }
 
     override fun onTrimMemory(level: Int) {
+    }
+
+
+    fun didAppJustStart(): Boolean {
+        return justStartedApp
     }
 
 

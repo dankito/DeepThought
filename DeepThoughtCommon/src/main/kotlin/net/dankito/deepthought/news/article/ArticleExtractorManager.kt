@@ -68,7 +68,7 @@ class ArticleExtractorManager(private val seriesService: SeriesService, private 
             extractionResult.tags.add(it)
         }
 
-        val siteName = getSiteName(item)
+        val siteName = getSiteName(item, extractionResult)
 
         addDefaultDataForSiteName(siteName, extractionResult, callback)
     }
@@ -78,13 +78,13 @@ class ArticleExtractorManager(private val seriesService: SeriesService, private 
             extractionResult.tags.add(it)
         }
 
-        val siteName = getSiteName(extractor, item)
+        val siteName = getSiteName(extractor, item, extractionResult)
 
         addDefaultDataForSiteName(siteName, extractionResult, callback)
     }
 
     private fun addDefaultData(extractor: IArticleExtractor, url: String, extractionResult: ItemExtractionResult, callback: () -> Unit) {
-        val siteName = getSiteName(extractor, url)
+        val siteName = getSiteName(extractor, url, extractionResult)
 
         addDefaultDataForSiteName(siteName, extractionResult, callback)
     }
@@ -98,8 +98,12 @@ class ArticleExtractorManager(private val seriesService: SeriesService, private 
         }
     }
 
-    private fun getSiteName(item: ArticleSummaryItem): String? {
+    private fun getSiteName(item: ArticleSummaryItem, extractionResult: ItemExtractionResult): String? {
         var siteName = item.articleSummaryExtractorConfig?.name
+
+        if(siteName == null) {
+            siteName = extractionResult.seriesTitle
+        }
 
         if(siteName == null) {
             siteName = getSiteNameForUrl(item.url)
@@ -108,8 +112,8 @@ class ArticleExtractorManager(private val seriesService: SeriesService, private 
         return siteName
     }
 
-    private fun getSiteName(extractor: IArticleExtractor, item: ArticleSummaryItem): String? {
-        var siteName = getSiteName(extractor, item.url)
+    private fun getSiteName(extractor: IArticleExtractor, item: ArticleSummaryItem, extractionResult: ItemExtractionResult): String? {
+        var siteName = getSiteName(extractor, item.url, extractionResult)
 
         if(siteName == null) {
             siteName = item.articleSummaryExtractorConfig?.name
@@ -118,8 +122,12 @@ class ArticleExtractorManager(private val seriesService: SeriesService, private 
         return siteName
     }
 
-    private fun getSiteName(extractor: IArticleExtractor, urlString: String): String? {
+    private fun getSiteName(extractor: IArticleExtractor, urlString: String, extractionResult: ItemExtractionResult): String? {
         var siteName = extractor.getName()
+
+        if(siteName == null) {
+            siteName = extractionResult.seriesTitle
+        }
 
         if(siteName == null) { // when extractor is default article extractor, use host name for default tag and series
             siteName = getSiteNameForUrl(urlString)
