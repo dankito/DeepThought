@@ -124,6 +124,25 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
         // remove scripts with try{window.performance.mark('monitor_articleTeaser');}catch(e){};
         articleBody.select("script").filter { it.html().contains("window.performance.mark") }.forEach { it.remove() }
+
+        showSZPlusFrame(articleBody)
+    }
+
+    private fun showSZPlusFrame(articleBody: Element) {
+        articleBody.select(".opc-placeholder").first()?.let { szPlusPlaceHolder ->
+            var dataBind = szPlusPlaceHolder.attr("data-bind")
+            dataBind = dataBind.replace("&quot;", "\"")
+
+            val urlStartIndex = dataBind.indexOf("url\": \"") + "url\": \"".length
+            if (urlStartIndex > 0) {
+                var url = dataBind.substring(urlStartIndex)
+                url = url.substring(0, url.indexOf('\"'))
+
+                val iframeElement = Element("iframe")
+                iframeElement.attr("src", url)
+                szPlusPlaceHolder.replaceWith(iframeElement)
+            }
+        }
     }
 
     private fun extractInlineGalleries(articleBody: Element) {
