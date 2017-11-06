@@ -172,11 +172,10 @@ class FullscreenWebView : WebView {
     }
 
     private fun handleWebViewSingleTap() {
-        val hitResult = hitTestResult
-        val type = hitResult.type
+        val type = hitTestResult?.type
 
         // leave the functionality for clicking on links, phone numbers, geo coordinates, ... Only go to fullscreen mode when clicked somewhere else in the WebView or on an image
-        if(type == WebView.HitTestResult.UNKNOWN_TYPE || type == WebView.HitTestResult.IMAGE_TYPE) {
+        if(type == null || type == WebView.HitTestResult.UNKNOWN_TYPE || type == WebView.HitTestResult.IMAGE_TYPE) {
             singleTapListener?.invoke(isInFullscreenMode)
         }
     }
