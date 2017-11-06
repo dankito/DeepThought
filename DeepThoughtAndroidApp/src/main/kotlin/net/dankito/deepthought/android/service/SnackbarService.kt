@@ -29,6 +29,8 @@ import kotlin.concurrent.schedule
 class SnackbarService {
 
     companion object {
+        private const val PeriodToWaitBeforeShowingNextSnackbar = 2000L
+
         private val log = LoggerFactory.getLogger(SnackbarService::class.java)
     }
 
@@ -88,7 +90,7 @@ class SnackbarService {
 
 
     private fun showUnknownDeviceDiscoveredViewAfterDelay(unknownDevice: DiscoveredDevice, callback: (Boolean, Boolean) -> Unit) {
-        Timer().schedule(1000) {
+        Timer().schedule(PeriodToWaitBeforeShowingNextSnackbar) {
             showUnknownDeviceDiscoveredView(unknownDevice, callback)
         }
     }
