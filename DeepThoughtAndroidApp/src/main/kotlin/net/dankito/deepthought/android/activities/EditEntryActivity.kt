@@ -503,7 +503,7 @@ class EditEntryActivity : BaseActivity() {
         (supportFragmentManager.findFragmentByTag(EditHtmlTextDialog.TAG) as? EditHtmlTextDialog)?.let { dialog ->
             (dialog.view?.findViewById(R.id.toolbar) as? android.support.v7.widget.Toolbar)?.title?.let { toolbarTitle ->
                 if(toolbarTitle == getString(R.string.activity_edit_item_edit_content_title)) {
-                    dialog.restoreDialog(contentToEdit ?: "") { appliedChangesToContent(it) }
+                    dialog.restoreDialog(contentToEdit ?: "", sourceToEdit?.url) { appliedChangesToContent(it) }
                 }
             }
         }
@@ -545,7 +545,7 @@ class EditEntryActivity : BaseActivity() {
             val editHtmlTextDialog = EditHtmlTextDialog()
             val hintResourceId = if(content.isBlank() == false || dataManager.localSettings.didShowAddItemPropertiesHelp) null else R.string.activity_edit_item_edit_content_hint
 
-            editHtmlTextDialog.showDialog(supportFragmentManager, content, R.string.activity_edit_item_edit_content_title, hintResourceId) {
+            editHtmlTextDialog.showDialog(supportFragmentManager, content, sourceToEdit?.url, R.string.activity_edit_item_edit_content_title, hintResourceId) {
                 appliedChangesToContent(it)
             }
         }

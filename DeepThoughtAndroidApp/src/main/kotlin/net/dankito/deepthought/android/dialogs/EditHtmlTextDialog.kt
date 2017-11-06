@@ -30,6 +30,8 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
 
     private var setHtml: String? = null
 
+    private var baseUrl: String? = null
+
     private lateinit var editor: RichTextEditor
 
     private lateinit var mnApplyHtmlChanges: MenuItem
@@ -172,8 +174,8 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         }
     }
 
-    fun restoreDialog(htmlToEdit: String, htmlChangedCallback: ((String) -> Unit)?) {
-        setupDialog(htmlToEdit, htmlChangedCallback)
+    fun restoreDialog(htmlToEdit: String, baseUrl: String? = null, htmlChangedCallback: ((String) -> Unit)?) {
+        setupDialog(htmlToEdit, baseUrl, htmlChangedCallback)
 
         // TODO: set if html changed
     }
@@ -191,8 +193,9 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     }
 
 
-    fun showDialog(fragmentManager: FragmentManager, htmlToEdit: String, htmlToEditLabelResourceId: Int? = null, hintLabelResourceId: Int? = null, htmlChangedCallback: ((String) -> Unit)?) {
-        setupDialog(htmlToEdit, htmlChangedCallback)
+    fun showDialog(fragmentManager: FragmentManager, htmlToEdit: String, baseUrl: String? = null, htmlToEditLabelResourceId: Int? = null, hintLabelResourceId: Int? = null,
+                   htmlChangedCallback: ((String) -> Unit)?) {
+        setupDialog(htmlToEdit, baseUrl, htmlChangedCallback)
 
         this.htmlToEditLabelResourceId = htmlToEditLabelResourceId
         this.hintLabelResourceId = hintLabelResourceId
@@ -200,8 +203,9 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         showInFullscreen(fragmentManager, false)
     }
 
-    private fun setupDialog(htmlToEdit: String, htmlChangedCallback: ((String) -> Unit)?) {
+    private fun setupDialog(htmlToEdit: String, baseUrl: String? = null, htmlChangedCallback: ((String) -> Unit)?) {
         this.htmlToSetOnStart = htmlToEdit
+        this.baseUrl = baseUrl
 
         this.htmlChangedCallback = htmlChangedCallback
     }
@@ -216,7 +220,7 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     private fun setHtml(html: String) {
         setHtml = html
 
-        editor.setHtml(html)
+        editor.setHtml(html, baseUrl)
     }
 
     private fun setDidHtmlChange(didChange: Boolean) {
