@@ -6,9 +6,15 @@ import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
+import org.slf4j.LoggerFactory
 
 
 class SpeechToTextConverter(private val context: Context) {
+
+    companion object {
+        private val log = LoggerFactory.getLogger(SpeechToTextConverter::class.java)
+    }
+
 
     private var recognizer: SpeechRecognizer? = null
 
@@ -41,7 +47,7 @@ class SpeechToTextConverter(private val context: Context) {
 
     private val speechRecognitionListener = object : RecognitionListener {
         override fun onReadyForSpeech(params: Bundle?) {
-            println("Yeah, ready for speech recognition")
+            log.info("Yeah, ready for speech recognition")
         }
 
         override fun onRmsChanged(rmsdB: Float) {
@@ -63,12 +69,12 @@ class SpeechToTextConverter(private val context: Context) {
         }
 
         override fun onError(error: Int) {
-            println("Speech recognition error: $error")
+            log.info("Speech recognition error: $error")
         }
 
         override fun onResults(results: Bundle?) {
             val data = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-            println("Got speech recognition results: $data")
+            log.info("Got speech recognition results: $data")
         }
 
     }
