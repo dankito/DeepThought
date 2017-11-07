@@ -44,6 +44,7 @@ import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import net.engio.mbassy.listener.Handler
+import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -73,6 +74,8 @@ class EditEntryActivity : BaseActivity() {
         const val ResultId = "EDIT_ENTRY_ACTIVITY_RESULT"
 
         private const val GetHtmlCodeFromWebViewJavaScriptInterfaceName = "HtmlViewer"
+
+        private val log = LoggerFactory.getLogger(EditEntryActivity::class.java)
     }
 
 
@@ -403,6 +406,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private val webViewClient = object : WebViewClient() {
+
         @TargetApi(Build.VERSION_CODES.N)
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
             request?.url?.toString()?.let { url ->
@@ -1508,7 +1512,7 @@ class EditEntryActivity : BaseActivity() {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(url)
             startActivity(intent)
-        } catch(e: Exception) { }
+        } catch(e: Exception) { log.error("Could not open url $url with other app", e) }
     }
 
 
