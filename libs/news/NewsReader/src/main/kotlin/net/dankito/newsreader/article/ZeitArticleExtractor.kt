@@ -65,9 +65,8 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
 
         var content = ""
 
-        articleBodyElement.parent().select("figure.article__item").first()?.let { previewImageElement ->
-            content += previewImageElement.outerHtml()
-        }
+        // remove <noscript> elements which impede that <img>s in <figure> get loaded
+        removeNoscriptElements(articleBodyElement)
 
         for(articleElement in articleBodyElement.select("p.article__item, ul.article__item, figure.article__item, .article__subheading, .article-heading__podcast-player, " +
                 ".gate--register, .gate")) { // .gate--register to show to user that you have to  register for viewing this article
@@ -75,6 +74,17 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
         }
 
         return Item(content, abstractString)
+    }
+
+    private fun removeNoscriptElements(articleBodyElement: Element) {
+        articleBodyElement.parent().select("noscript").forEach { noscriptElement ->
+            noscriptElement.children().forEach { child ->
+                child.remove()
+                noscriptElement.parent().insertChildren(noscriptElement.siblingIndex(), Arrays.asList(child))
+            }
+
+            noscriptElement.remove()
+        }
     }
 
     private fun createReference(articleUrl: String, articleBodyElement: Element): Source {
