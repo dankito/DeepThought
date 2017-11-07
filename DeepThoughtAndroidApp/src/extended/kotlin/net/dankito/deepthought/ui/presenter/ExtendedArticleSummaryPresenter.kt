@@ -13,9 +13,11 @@ class ExtendedArticleSummaryPresenter(entryPersister: EntryPersister, readLaterA
                                       router: IRouter, clipboardService: IClipboardService, dialogService: IDialogService)
     : ArticleSummaryPresenter(entryPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService) {
 
-    override fun getAndShowArticle(item: ArticleSummaryItem) {
+    override fun getAndShowArticle(item: ArticleSummaryItem, callback: ((Boolean) -> Unit)?) {
         getArticle(item) {
             it.result?.let { showArticle(it) }
+
+            callback?.invoke(it.successful)
         }
     }
 
