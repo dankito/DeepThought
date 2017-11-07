@@ -200,6 +200,10 @@
         <item quantity="other">Die Schlagworte %1$s und %2$s existieren nicht.\nMöchten Sie sie erstellen?</item>
     </plurals>
 
+    <string name="menu_open_url_open_in_same_activity">In diesem Fenster öffnen</string>
+    <string name="menu_open_url_open_in_new_activity">In neuem Fenster öffnen</string>
+    <string name="menu_open_url_with_other_app">Mit anderer App öffnen</string>
+
     <string name="activity_edit_source_title">Quelle</string>
     <string name="activity_edit_source_use_existing_label">Bestehende verwenden:</string>
     <string name="activity_edit_source_create_source">Neu …</string>

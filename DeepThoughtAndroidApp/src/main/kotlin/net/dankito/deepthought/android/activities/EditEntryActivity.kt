@@ -1,5 +1,8 @@
 package net.dankito.deepthought.android.activities
 
+import android.annotation.TargetApi
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.widget.ActionMenuView
@@ -21,10 +24,7 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.EditHtmlTextDialog
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
-import net.dankito.deepthought.android.views.ContextHelpUtil
-import net.dankito.deepthought.android.views.EditEntryActivityFloatingActionMenuButton
-import net.dankito.deepthought.android.views.FullscreenWebView
-import net.dankito.deepthought.android.views.ToolbarUtil
+import net.dankito.deepthought.android.views.*
 import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.entryPreview
@@ -158,6 +158,8 @@ class EditEntryActivity : BaseActivity() {
     private val contextHelpUtil = ContextHelpUtil()
 
     private val toolbarUtil = ToolbarUtil()
+
+    private val openUrlOptionsView = OpenUrlOptionsView()
 
     private var mnSaveEntry: MenuItem? = null
 
@@ -400,6 +402,24 @@ class EditEntryActivity : BaseActivity() {
         })
     }
 
+    private val webViewClient = object : WebViewClient() {
+        @TargetApi(Build.VERSION_CODES.N)
+        override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+            request?.url?.toString()?.let { url ->
+                userClickedOnUrl(url)
+            }
+
+            return true
+        }
+
+        @SuppressWarnings("deprecation")
+        override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+            userClickedOnUrl(url)
+
+            return true
+        }
+    }
+
     private fun fixThatWebViewIsLoadingVerySlow() {
         // avoid that WebView is loading very, very slow, see https://stackoverflow.com/questions/7422427/android-webview-slow
         // but actually had no effect on my side
@@ -458,7 +478,7 @@ class EditEntryActivity : BaseActivity() {
         wbvwContent.elementClickedListener = null
 
         runOnUiThread {
-            wbvwContent.setWebViewClient(null) // now reactivate default url handling
+            wbvwContent.setWebViewClient(webViewClient) // now reactivate default url handling
             prgIsLoadingWebPage.visibility = View.GONE
         }
     }
@@ -1450,6 +1470,45 @@ class EditEntryActivity : BaseActivity() {
         tagsOnEntry.addAll(restoredTagsOnEntry)
 
         runOnUiThread { setTagsOnEntryPreviewOnUIThread() }
+    }
+
+
+    private fun userClickedOnUrl(url: String) {
+        openUrlOptionsView.showMenuCenter(txtEntryContentLabel) { selectedOption ->
+            when(selectedOption) {
+                OpenUrlOptionsView.OpenUrlOption.OpenInSameActivity -> executeUserClickedUrlAction { showUrlInCurrentActivity(url) }
+                OpenUrlOptionsView.OpenUrlOption.OpenInNewActivity -> executeUserClickedUrlAction { showUrlInNewActivity(url) }
+                OpenUrlOptionsView.OpenUrlOption.OpenWithOtherApp -> executeUserClickedUrlAction { openUrlWithOtherApp(url) }
+            }
+        }
+    }
+
+    private fun executeUserClickedUrlAction(action: () -> Unit) {
+        wbvwContent.leaveFullscreenMode()
+
+        action()
+    }
+
+    private fun showUrlInCurrentActivity(url: String) {
+        item = null
+        readLaterArticle = null
+        itemExtractionResult = null
+
+        isInReaderMode = false
+
+        editEntryExtractionResult(ItemExtractionResult(Item(""), Source(url, url)))
+    }
+
+    private fun showUrlInNewActivity(url: String) {
+        router.showEditEntryView(ItemExtractionResult(Item(""), Source(url, url)))
+    }
+
+    private fun openUrlWithOtherApp(url: String) {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(url)
+            startActivity(intent)
+        } catch(e: Exception) { }
     }
 
 

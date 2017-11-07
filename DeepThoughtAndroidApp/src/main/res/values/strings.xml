@@ -161,6 +161,10 @@
         <item quantity="other">Tags %1$s and %2$s do not exist.\nWould you like to create them?</item>
     </plurals>
 
+    <string name="menu_open_url_open_in_same_activity">Open in this window</string>
+    <string name="menu_open_url_open_in_new_activity">Open in new window</string>
+    <string name="menu_open_url_with_other_app">Open with an app</string>
+
     <string name="activity_edit_source_title">Source</string>
     <string name="activity_edit_source_use_existing_label">Select existing source:</string>
     <string name="activity_edit_source_create_source">New …</string>
