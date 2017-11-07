@@ -55,14 +55,26 @@
                     android:id="@+id/edtxtFindSeries"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/dialog_tags_on_entry_tag_search_tags_height"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
                     android:layout_toRightOf="@+id/txtFindSeriesLabel"
                     android:layout_toEndOf="@+id/txtFindSeriesLabel"
+                    android:layout_toLeftOf="@+id/btnExpandCollapseExistingSeriesSearchResults"
+                    android:layout_toStartOf="@+id/btnExpandCollapseExistingSeriesSearchResults"
                     android:layout_marginLeft="@dimen/activity_edit_series_find_existing_margin_left"
                     android:layout_marginStart="@dimen/activity_edit_series_find_existing_margin_left"
                     android:inputType="text"
                     android:imeOptions="flagNoExtractUi"
+                />
+
+                <ImageButton
+                    android:id="@+id/btnExpandCollapseExistingSeriesSearchResults"
+                    android:layout_width="@dimen/dialog_tags_on_entry_tag_search_tags_height"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignTop="@+id/edtxtFindSeries"
+                    android:layout_alignBottom="@+id/edtxtFindSeries"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_arrow_down"
                 />
 
             </RelativeLayout>

@@ -217,6 +217,13 @@ class EditReferenceActivity : BaseActivity() {
         existingReferencesSearchResultsAdapter.itemClickListener = { item -> existingReferenceSelected(item) }
 
         edtxtFindReferences.addTextChangedListener(edtxtFindReferencesTextWatcher)
+        edtxtFindReferences.setOnFocusChangeListener { _, hasFocus ->
+            if(hasFocus) {
+                showRecyclerViewExistingReferencesSearchResultsWithResults()
+            }
+        }
+
+        btnExpandCollapseExistingReferencesSearchResults.setOnClickListener { toggleShowRecyclerViewExistingReferencesSearchResults() }
     }
 
 
@@ -547,14 +554,9 @@ class EditReferenceActivity : BaseActivity() {
 
 
     private fun searchExistingReferences(query: String) {
-        if(query.isNullOrBlank()) {
-            hideRecyclerViewExistingReferencesSearchResults()
-        }
-        else {
-            searchEngine.searchReferences(ReferenceSearch(query) {
-                runOnUiThread { retrievedExistingReferencesSearchResultsOnUiThread(it) }
-            })
-        }
+        searchEngine.searchReferences(ReferenceSearch(query) {
+            runOnUiThread { retrievedExistingReferencesSearchResultsOnUiThread(it) }
+        })
     }
 
     private fun retrievedExistingReferencesSearchResultsOnUiThread(searchResults: List<Source>) {
@@ -577,6 +579,19 @@ class EditReferenceActivity : BaseActivity() {
         mayRegisterEventBusListener()
     }
 
+    private fun toggleShowRecyclerViewExistingReferencesSearchResults() {
+        if(rcyExistingReferencesSearchResults.visibility == View.VISIBLE) {
+            hideRecyclerViewExistingReferencesSearchResults()
+        }
+        else {
+            showRecyclerViewExistingReferencesSearchResultsWithResults()
+        }
+    }
+
+    private fun showRecyclerViewExistingReferencesSearchResultsWithResults() {
+        searchExistingReferences(edtxtFindReferences.text.toString())
+    }
+
     private fun showRecyclerViewExistingReferencesSearchResults() {
         rcyExistingReferencesSearchResults.visibility = View.VISIBLE
         scrEditReference.visibility = View.GONE
@@ -584,6 +599,8 @@ class EditReferenceActivity : BaseActivity() {
         (lytSetEntryReferenceControls.layoutParams as? RelativeLayout.LayoutParams)?.let { layoutParams ->
             layoutParams.addRule(RelativeLayout.ABOVE, toolbar.id)
         }
+
+        btnExpandCollapseExistingReferencesSearchResults.setImageResource(R.drawable.ic_arrow_up)
     }
 
     private fun hideRecyclerViewExistingReferencesSearchResults() {
@@ -593,6 +610,11 @@ class EditReferenceActivity : BaseActivity() {
         (lytSetEntryReferenceControls.layoutParams as? RelativeLayout.LayoutParams)?.let { layoutParams ->
             layoutParams.addRule(RelativeLayout.ABOVE, 0)
         }
+
+        edtxtFindReferences.hideKeyboard()
+        edtxtFindReferences.clearFocus()
+
+        btnExpandCollapseExistingReferencesSearchResults.setImageResource(R.drawable.ic_arrow_down)
     }
 
     private val edtxtFindReferencesTextWatcher = object : TextWatcher {
