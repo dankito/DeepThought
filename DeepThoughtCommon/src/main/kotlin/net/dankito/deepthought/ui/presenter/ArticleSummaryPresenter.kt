@@ -20,6 +20,7 @@ import net.dankito.utils.IThreadPool
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
+import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 
 
@@ -75,17 +76,21 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
     fun getAndShowArticlesAsync(items: Collection<ArticleSummaryItem>, done: (() -> Unit)?) {
         threadPool.runAsync {
-            items.forEach { getAndShowArticle(it) }
+            doActionOnEachItem(items) { item, callback ->
+                getAndShowArticle(item, callback)
+            }
 
             done?.invoke()
         }
     }
 
-    open fun getAndShowArticle(item: ArticleSummaryItem) {
+    open fun getAndShowArticle(item: ArticleSummaryItem, callback: ((Boolean) -> Unit)? = null) {
         val extractionResult = ItemExtractionResult(Item("", item.summary), Source(item.title, item.url, item.publishedDate, item.previewImageUrl))
 
         articleExtractorManager.addDefaultData(item, extractionResult) {
             showArticle(extractionResult)
+
+            callback?.invoke(true)
         }
     }
 
@@ -96,15 +101,19 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
     fun getAndSaveArticlesAsync(items: Collection<ArticleSummaryItem>, done: (() -> Unit)?) {
         threadPool.runAsync {
-            items.forEach { getAndSaveArticle(it) }
+            doActionOnEachItem(items) { item, callback ->
+                getAndSaveArticle(item, callback)
+            }
 
             done?.invoke()
         }
     }
 
-    fun getAndSaveArticle(item: ArticleSummaryItem) {
+    fun getAndSaveArticle(item: ArticleSummaryItem, callback: ((Boolean) -> Unit)? = null) {
         getArticle(item) {
             it.result?.let { saveArticle(item, it) }
+
+            callback?.invoke(it.successful)
         }
     }
 
@@ -119,15 +128,19 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
     fun getAndSaveArticlesForLaterReadingAsync(items: Collection<ArticleSummaryItem>, done: (() -> Unit)?) {
         threadPool.runAsync {
-            items.forEach { getAndSaveArticleForLaterReading(it) }
+            doActionOnEachItem(items) { item, callback ->
+                getAndSaveArticleForLaterReading(item, callback)
+            }
 
             done?.invoke()
         }
     }
 
-    fun getAndSaveArticleForLaterReading(item: ArticleSummaryItem) {
+    fun getAndSaveArticleForLaterReading(item: ArticleSummaryItem, callback: ((Boolean) -> Unit)? = null) {
         getArticle(item) {
             it.result?.let { saveArticleForLaterReading(item, it) }
+
+            callback?.invoke(it.successful)
         }
     }
 
@@ -157,6 +170,22 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
             callback(asyncResult)
         }
+    }
+
+    private fun doActionOnEachItem(items: Collection<ArticleSummaryItem>, action: (ArticleSummaryItem, (Boolean) -> Unit) -> Unit) {
+        val countDownLatch = CountDownLatch(items.size)
+
+        ArrayList(items).forEach { item ->
+            action(item) { successful ->
+                if(successful) {
+                    (items as? MutableCollection)?.remove(item)
+                }
+
+                countDownLatch.countDown()
+            }
+        }
+
+        try { countDownLatch.await() } catch(ignored: Exception) { }
     }
 
 

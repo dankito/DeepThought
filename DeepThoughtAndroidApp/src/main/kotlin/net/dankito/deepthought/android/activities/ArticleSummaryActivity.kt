@@ -177,19 +177,19 @@ class ArticleSummaryActivity : BaseActivity() {
         when(actionItem.itemId) {
             R.id.mnViewArticle -> {
                 presenter.getAndShowArticlesAsync(selectedItems) {
-                    runOnUiThread { mode.finish() }
+                    finishActionModeIfAllSelectedItemsCouldBeHandled(selectedItems, mode)
                 }
                 return true
             }
             R.id.mnSaveArticleForLaterReading -> {
                 presenter.getAndSaveArticlesForLaterReadingAsync(selectedItems) {
-                    runOnUiThread { mode.finish() }
+                    finishActionModeIfAllSelectedItemsCouldBeHandled(selectedItems, mode)
                 }
                 return true
             }
             R.id.mnSaveArticle -> {
                 presenter.getAndSaveArticlesAsync(selectedItems) {
-                    runOnUiThread { mode.finish() }
+                    finishActionModeIfAllSelectedItemsCouldBeHandled(selectedItems, mode)
                 }
                 return true
             }
@@ -198,6 +198,12 @@ class ArticleSummaryActivity : BaseActivity() {
                 return true
             }
             else -> return false
+        }
+    }
+
+    private fun finishActionModeIfAllSelectedItemsCouldBeHandled(selectedItems: Set<ArticleSummaryItem>, mode: ActionMode) {
+        if(selectedItems.isEmpty()) {
+            runOnUiThread { mode.finish() }
         }
     }
 
