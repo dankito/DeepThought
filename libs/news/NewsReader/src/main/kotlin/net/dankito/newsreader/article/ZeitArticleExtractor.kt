@@ -69,7 +69,7 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
         removeNoscriptElements(articleBodyElement)
 
         for(articleElement in articleBodyElement.select("p.article__item, ul.article__item, figure.article__item, .article__subheading, .article-heading__podcast-player, " +
-                ".gate--register, .gate")) { // .gate--register to show to user that you have to  register for viewing this article
+                ".article--video, .gate--register, .gate")) { // .gate--register to show to user that you have to  register for viewing this article
             content += articleElement.outerHtml()
         }
 
