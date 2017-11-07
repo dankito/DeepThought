@@ -82,7 +82,7 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
     }
 
     open fun getAndShowArticle(item: ArticleSummaryItem) {
-        val extractionResult = ItemExtractionResult(Item("", item.summary), Source(item.url, item.title, item.publishedDate, item.previewImageUrl))
+        val extractionResult = ItemExtractionResult(Item("", item.summary), Source(item.title, item.url, item.publishedDate, item.previewImageUrl))
 
         articleExtractorManager.addDefaultData(item, extractionResult) {
             showArticle(extractionResult)

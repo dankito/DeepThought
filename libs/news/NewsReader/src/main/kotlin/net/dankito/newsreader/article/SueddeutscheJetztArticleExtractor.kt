@@ -100,7 +100,7 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
         val publishingDate = extractPublishingDate(articleElement)
 
         if(title != null && publishingDate != null) {
-            val articleReference = Source(articleUrl, title, publishingDate)
+            val articleReference = Source(title, articleUrl, publishingDate)
 
             return articleReference
         }

@@ -71,7 +71,7 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
     }
 
     private fun extractReference(headerElement: Element, articleElement: Element, url: String, title: String): Source? {
-        val reference = Source(url, title, extractPublishingDate(headerElement))
+        val reference = Source(title, url, extractPublishingDate(headerElement))
 
         articleElement.select(".aufmacherbild img").first()?.let { previewImageElement ->
             reference.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), url)
@@ -172,7 +172,7 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
         val title = articleElement.select("h1").first()?.text()?.trim() ?: ""
         val publishingDate = articleElement.select(".publish-info").first()?.let { extractPublishingDate(it) }
 
-        val reference = Source(url, title, publishingDate)
+        val reference = Source(title, url, publishingDate)
 
         articleElement.select(".aufmacherbild img").first()?.let { previewImageElement ->
             reference.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), url)

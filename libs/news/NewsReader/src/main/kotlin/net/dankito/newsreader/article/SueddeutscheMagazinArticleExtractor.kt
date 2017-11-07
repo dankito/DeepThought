@@ -83,7 +83,7 @@ class SueddeutscheMagazinArticleExtractor(webClient: IWebClient) : ArticleExtrac
         document.body().select("#artikelhead").first()?.let { articleHeader ->
             articleHeader.select(".vorspann").first()?.let { vorspanElement ->
                 vorspanElement.select("h1").first()?.let { titleElement ->
-                    source = Source(siteUrl, titleElement.text())
+                    source = Source(titleElement.text(), siteUrl)
                     titleElement.remove()
                     vorspanElement.select(".autor").remove()
                     abstract = convertNonBreakableSpans(vorspanElement.text())

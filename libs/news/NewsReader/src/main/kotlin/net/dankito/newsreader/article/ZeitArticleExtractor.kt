@@ -87,7 +87,7 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
 
         val publishingDate = parseDate(articleBodyElement)
 
-        val reference = Source(articleUrl, title, publishingDate, subTitle = subTitle)
+        val reference = Source(title, articleUrl, publishingDate, subTitle = subTitle)
 
         articleBodyElement.parent().select(".article__media-item").first()?.let { previewImageElement ->
             reference.previewImageUrl = previewImageElement.attr("src")

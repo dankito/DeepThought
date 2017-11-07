@@ -102,7 +102,7 @@ class TagesschauArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
 
             val publishingDate = extractPublishingDate(headerElement)
 
-            val reference = Source(url, title, publishingDate, subTitle = subTitle)
+            val reference = Source(title, url, publishingDate, subTitle = subTitle)
 
             headerElement.select(".media img").first()?.let { previewImageElement ->
                 reference.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), url)

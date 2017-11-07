@@ -97,7 +97,7 @@ class DerFreitagArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
 
         val publishingDate = extractDate(articleElement)
 
-        val articleReference = Source(articleUrl, title, publishingDate)
+        val articleReference = Source(title, articleUrl, publishingDate)
         articleReference.issue = tryToGetIssue(articleElement)
 
         tryToExtractPreviewImage(articleElement, articleReference)

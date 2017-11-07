@@ -70,7 +70,7 @@ class TechStageArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
             publishingDate = parseIsoDateTimeString(timeElement.attr("datetime"))
         }
 
-        val reference = Source(url, title, publishingDate, previewImageUrl)
+        val reference = Source(title, url, publishingDate, previewImageUrl)
 
         return reference
     }

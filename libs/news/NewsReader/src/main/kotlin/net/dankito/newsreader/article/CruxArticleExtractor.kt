@@ -28,7 +28,7 @@ class CruxArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
         val content = mayAddPreviewImageToContent(article, article.document?.outerHtml() ?: "")
 
         extractionResult.setExtractedContent(Item(content, article.description),
-                Source(url, article.title, previewImageUrl = makeLinkAbsolute(article.imageUrl, url)))
+                Source(article.title, url, previewImageUrl = makeLinkAbsolute(article.imageUrl, url)))
     }
 
     private fun mayAddPreviewImageToContent(article: Article, content: String): String {
