@@ -3,6 +3,7 @@ package net.dankito.newsreader.article
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.deepthought.model.util.ItemExtractionResult
+import net.dankito.newsreader.article.recipes.ChefkochArticleExtractor
 import net.dankito.newsreader.model.ArticleSummaryItem
 import java.util.*
 
@@ -30,6 +31,8 @@ class ArticleExtractors(webClient: IWebClient) {
         implementedExtractors.put(GuardianArticleExtractor::class.java, GuardianArticleExtractor(webClient))
         implementedExtractors.put(PostillonArticleExtractor::class.java, PostillonArticleExtractor(webClient))
         implementedExtractors.put(TagesschauArticleExtractor::class.java, TagesschauArticleExtractor(webClient))
+
+        implementedExtractors.put(ChefkochArticleExtractor::class.java, ChefkochArticleExtractor(webClient))
     }
 
 
