@@ -438,7 +438,7 @@ class EditReferenceActivity : BaseActivity() {
     }
 
     private fun createReference() {
-        showReference(Source(""))
+        showReference(Source())
     }
 
     private fun showReference(referenceId: String) {
