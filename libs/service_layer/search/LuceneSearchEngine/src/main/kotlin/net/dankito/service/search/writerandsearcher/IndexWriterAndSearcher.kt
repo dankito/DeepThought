@@ -8,6 +8,7 @@ import net.dankito.service.data.messages.EntityChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.*
 import net.dankito.service.search.results.LazyLoadingLuceneSearchResultsList
+import net.dankito.service.search.writerandsearcher.sorting.CorrectStringComparatorSource
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.OsHelper
 import net.engio.mbassy.listener.Synchronized
@@ -400,7 +401,12 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
             for(i in sortOptions.indices) {
                 val (fieldName, order, type) = sortOptions[i]
 
-                sortFields[i] = SortField(fieldName, type, order === SortOrder.Descending)
+                if(type == SortField.Type.STRING || type == SortField.Type.STRING_VAL) { // TODO: only use one CorrectStringComparatorSource() instance?
+                    sortFields[i] = SortField(fieldName, CorrectStringComparatorSource(), order === SortOrder.Descending)
+                }
+                else {
+                    sortFields[i] = SortField(fieldName, type, order === SortOrder.Descending)
+                }
             }
 
             sort.setSort(*sortFields)
