@@ -28,7 +28,7 @@ import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishin
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
 import net.dankito.service.data.ReadLaterArticleService
-import net.dankito.utils.extensions.sorted
+import net.dankito.utils.extensions.toSortedString
 import net.dankito.utils.ui.IClipboardService
 import org.jsoup.Jsoup
 import tornadofx.*
@@ -303,7 +303,7 @@ abstract class EditEntryViewBase : DialogFragment() {
     }
 
     private fun showTagsPreview(tags: Collection<Tag>) {
-        this.tagsPreview.value = tags.sorted().joinToString { it.name }
+        this.tagsPreview.value = tags.toSortedString()
     }
 
 

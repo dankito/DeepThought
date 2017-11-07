@@ -26,3 +26,7 @@ inline fun <T> Iterable<T>.sortedByStrings(crossinline selector: (T) -> String):
 fun Iterable<Tag>.sorted(): List<Tag> {
     return this.filterNotNull().sortedByStrings { it.name }
 }
+
+fun Iterable<Tag>.toSortedString(): String {
+    return this.sorted().joinToString { it.name }
+}
