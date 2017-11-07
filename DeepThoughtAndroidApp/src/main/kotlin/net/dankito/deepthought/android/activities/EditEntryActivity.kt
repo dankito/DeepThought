@@ -41,7 +41,7 @@ import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntryChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.IThreadPool
-import net.dankito.utils.extensions.sortedByStrings
+import net.dankito.utils.extensions.sorted
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import net.engio.mbassy.listener.Handler
@@ -853,7 +853,7 @@ class EditEntryActivity : BaseActivity() {
             lytTagsPreview.setOnboardingTextOnUiThread(R.string.activity_edit_item_tags_onboarding_text)
         }
         else {
-            val tagsPreview = tagsOnEntry.filterNotNull().sortedByStrings { it.name.toLowerCase() }.joinToString { it.name }
+            val tagsPreview = tagsOnEntry.sorted().joinToString { it.name }
             lytTagsPreview.setFieldValueOnUiThread(tagsPreview)
         }
 

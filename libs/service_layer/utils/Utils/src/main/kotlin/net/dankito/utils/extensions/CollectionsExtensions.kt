@@ -1,5 +1,6 @@
 package net.dankito.utils.extensions
 
+import net.dankito.deepthought.model.Tag
 import java.text.Collator
 
 
@@ -20,4 +21,8 @@ class CollectionsExtensions {
  */
 inline fun <T> Iterable<T>.sortedByStrings(crossinline selector: (T) -> String): List<T> {
     return sortedWith(kotlin.Comparator { o1, o2 -> CollectionsExtensions.collator.compare(selector(o1), selector(o2)) })
+}
+
+fun Iterable<Tag>.sorted(): List<Tag> {
+    return this.filterNotNull().sortedByStrings { it.name }
 }

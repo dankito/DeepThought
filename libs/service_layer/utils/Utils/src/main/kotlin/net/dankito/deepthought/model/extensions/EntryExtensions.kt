@@ -3,7 +3,7 @@ package net.dankito.deepthought.model.extensions
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
-import net.dankito.utils.extensions.sortedByStrings
+import net.dankito.utils.extensions.sorted
 
 
 const val SeriesAndPublishingDateAndEntryPreviewSeparator = " | "
@@ -79,5 +79,5 @@ val Item.referencePreview: String
 
 val Item.tagsPreview: String
     get() {
-        return this.tags.filterNotNull().sortedByStrings { it.name.toLowerCase() }.joinToString { it.name }
+        return this.tags.sorted().joinToString { it.name }
     }
