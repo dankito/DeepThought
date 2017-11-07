@@ -5,13 +5,12 @@ import net.dankito.newsreader.article.ArticleExtractorTestBase
 import net.dankito.newsreader.article.IArticleExtractor
 import org.junit.Test
 
+
 class ChefkochArticleExtractorTest : ArticleExtractorTestBase() {
 
     override fun createArticleExtractor(webClient: IWebClient): IArticleExtractor {
         return ChefkochArticleExtractor(webClient)
     }
-
-
 
 
     @Test
