@@ -21,6 +21,15 @@ class ZeitArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun importVideoArticle() {
+        getAndTestArticle("http://www.zeit.de/politik/ausland/2017-10/spaniens-staatsanwaltschaft-erhebt-anklage-gegen-puigdemont",
+                "Staatsanwaltschaft erhebt Anklage gegen Puigdemont",
+                "Dem Regierungschef Kataloniens werden unter anderem Rebellion und Auflehnung gegen die Staatsgewalt vorgeworfen. Puigdemont soll nach Brüssel gereist sein.",
+                null, 4000, false, "Spanien"
+        )
+    }
+
+    @Test
     fun importPodcastArticle() {
         getAndTestArticle("http://www.zeit.de/wissen/gesundheit/2017-11/sexualitaet-weiblicher-orgasmus-hoehepunkt-probleme",
                 "Der weibliche Orgasmus",

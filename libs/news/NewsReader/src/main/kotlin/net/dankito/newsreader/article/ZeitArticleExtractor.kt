@@ -65,12 +65,12 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
 
         var content = ""
 
-        articleBodyElement.parent().select(".article__media-container").first()?.let { previewImageElement ->
+        articleBodyElement.parent().select("figure.article__item").first()?.let { previewImageElement ->
             content += previewImageElement.outerHtml()
         }
 
-        // .gate--register to show to user that you have to  register for viewing this article
-        for(articleElement in articleBodyElement.select("p.article__item, ul.article__item, .article__subheading, .article-heading__podcast-player, .gate--register, .gate")) {
+        for(articleElement in articleBodyElement.select("p.article__item, ul.article__item, figure.article__item, .article__subheading, .article-heading__podcast-player, " +
+                ".gate--register, .gate")) { // .gate--register to show to user that you have to  register for viewing this article
             content += articleElement.outerHtml()
         }
 
