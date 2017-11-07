@@ -3,6 +3,7 @@ package net.dankito.service.search.specific
 
 import net.dankito.deepthought.model.Tag
 import net.dankito.service.search.util.CombinedLazyLoadingList
+import net.dankito.utils.extensions.sortedByStrings
 
 
 class TagsSearchResults(val overAllSearchTerm: String) {
@@ -79,7 +80,7 @@ class TagsSearchResults(val overAllSearchTerm: String) {
             }
         }
 
-        relevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossibleProperty = matches.sortedBy { it.name }
+        relevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossibleProperty = matches.sortedByStrings { it.name }
 
         return relevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossibleProperty!!
     }

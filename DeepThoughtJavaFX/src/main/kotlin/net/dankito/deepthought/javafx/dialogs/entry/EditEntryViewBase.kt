@@ -14,20 +14,21 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Priority
 import javafx.scene.web.WebView
 import javafx.stage.StageStyle
+import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
 import net.dankito.deepthought.javafx.ui.controls.JavaFXHtmlEditor
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.Item
-import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Series
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
-import net.dankito.deepthought.data.EntryPersister
 import net.dankito.service.data.ReadLaterArticleService
+import net.dankito.utils.extensions.sortedByStrings
 import net.dankito.utils.ui.IClipboardService
 import org.jsoup.Jsoup
 import tornadofx.*
@@ -302,7 +303,7 @@ abstract class EditEntryViewBase : DialogFragment() {
     }
 
     private fun showTagsPreview(tags: Collection<Tag>) {
-        this.tagsPreview.value = tags.sortedBy { it.name.toLowerCase() }.joinToString { it.name }
+        this.tagsPreview.value = tags.sortedByStrings { it.name.toLowerCase() }.joinToString { it.name }
     }
 
 
