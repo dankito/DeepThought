@@ -54,9 +54,14 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
         val isBaseEntity = entityType != null && BaseEntity::class.java.isAssignableFrom(entityType)
 
         if(isBaseEntity) { // sometimes only some Couchbase internal data is synchronized without any user data -> skip these
-            handleChange(change, entityType!!) // entityType has to be != null after check above
+            if(isEntityDeleted(change)) {
+                handleDeletedEntity(change, entityType!!)
+            }
+            else {
+                handleChange(change, entityType!!) // entityType has to be != null after check above
+            }
         }
-        else if (isEntityDeleted(change)) {
+        else if(isEntityDeleted(change)) {
             handleDeletedEntity(change)
         }
     }
@@ -105,17 +110,28 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
     private fun handleDeletedEntity(change: DocumentChange) {
         val id = change.documentId
         val document = entityManager.database.getDocument(id)
-        if (document != null) {
+        if(document != null) {
             val lastUndeletedRevision = findLastUndeletedRevision(document)
 
-            if (lastUndeletedRevision != null) {
+            if(lastUndeletedRevision != null) {
                 val entityType = getEntityTypeFromRevision(lastUndeletedRevision)
-                if (entityType != null) {
-                    getDeletedEntity(id, entityType, document)?.let { deletedEntity ->
-                        changeNotifier.notifyListenersOfEntityChangeAsync(deletedEntity, EntityChangeType.Deleted, EntityChangeSource.Synchronization)
-                    }
+                if(entityType != null) {
+                    handleDeletedEntity(id, entityType, document)
                 }
             }
+        }
+    }
+
+    private fun handleDeletedEntity(change: DocumentChange, entityType: Class<out BaseEntity>) {
+        val id = change.documentId
+        entityManager.database.getDocument(id)?.let {
+            handleDeletedEntity(id, entityType, it)
+        }
+    }
+
+    private fun handleDeletedEntity(id: String, entityType: Class<out BaseEntity>, document: Document) {
+        getDeletedEntity(id, entityType, document)?.let { deletedEntity ->
+            changeNotifier.notifyListenersOfEntityChangeAsync(deletedEntity, EntityChangeType.Deleted, EntityChangeSource.Synchronization)
         }
     }
 
