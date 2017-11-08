@@ -75,6 +75,8 @@ class CommunicationManagerTest {
         const val RemoteDeviceName = "Remote"
         val RemoteOsType = OsType.DESKTOP
 
+        const val IntegrationTestDevicesDiscoveryPrefix = "DeepThought_IntegrationTest"
+
         const val InitializationTimeoutInSeconds = 5L
         const val FindRemoteDeviceTimeoutInSeconds = 300L // it really takes a long time till Couchbase opens its listener port
 
@@ -225,7 +227,7 @@ class CommunicationManagerTest {
 
         localDataManager.addInitializationListener {
             localDevice = localDataManager.localDevice
-            localNetworkSettings = NetworkSettings(localDevice, localDataManager.localUser)
+            localNetworkSettings = NetworkSettings(localDevice, localDataManager.localUser, IntegrationTestDevicesDiscoveryPrefix) // set different discovery message prefix to not interfere with production device in same local network
 
             localSynchronizedChangesHandler = SynchronizedChangesHandler(localEntityManager, localEntityChangedNotifier)
 
@@ -260,7 +262,7 @@ class CommunicationManagerTest {
 
         remoteDataManager.addInitializationListener {
             remoteDevice = remoteDataManager.localDevice
-            remoteNetworkSettings = NetworkSettings(remoteDevice, remoteDataManager.localUser)
+            remoteNetworkSettings = NetworkSettings(remoteDevice, remoteDataManager.localUser, IntegrationTestDevicesDiscoveryPrefix)
 
             remoteSynchronizedChangesHandler = SynchronizedChangesHandler(remoteEntityManager, remoteEntityChangedNotifier)
 

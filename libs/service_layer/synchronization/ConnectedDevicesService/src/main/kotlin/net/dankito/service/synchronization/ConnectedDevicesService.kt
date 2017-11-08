@@ -68,7 +68,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
         val localDeviceInfoKey = getDeviceInfoKey(networkSettings)
 
         devicesDiscoverer.startAsync(DevicesDiscovererConfig(localDeviceInfoKey, ConnectedDevicesServiceConfig.DEVICES_DISCOVERER_PORT,
-                ConnectedDevicesServiceConfig.CHECK_FOR_DEVICES_INTERVAL_MILLIS, ConnectedDevicesServiceConfig.DISCOVERY_MESSAGE_PREFIX, discovererListener))
+                ConnectedDevicesServiceConfig.CHECK_FOR_DEVICES_INTERVAL_MILLIS, networkSettings.deviceDiscoveryMessagePrefix, discovererListener))
     }
 
     override fun stop() {

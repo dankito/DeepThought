@@ -3,9 +3,15 @@ package net.dankito.deepthought.model
 
 interface INetworkSettings {
 
+    companion object {
+        const val DefaultDeviceDiscoveryMessagePrefix = "DeepThought"
+    }
+
     val localHostDevice: Device
 
     val localUser: User
+
+    val deviceDiscoveryMessagePrefix: String
 
     var messagePort: Int
 
