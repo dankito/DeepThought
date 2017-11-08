@@ -62,7 +62,7 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
-    fun ensureQuestionGetsRemoved() {
+    fun ensureSurveysGetsRemoved() {
         getAndTestArticle("http://www.sueddeutsche.de/panorama/eil-bundesverfassungsgericht-fordert-drittes-geschlecht-im-geburtenregister-1.3740223",
                 "Bundesverfassungsgericht fordert drittes Geschlecht im Geburtenregister",
                 null,
