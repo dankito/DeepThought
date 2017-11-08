@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Build
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
@@ -26,6 +27,8 @@ class OpenUrlOptionsView {
 
     private val optionItemsStringResourceIds = HashMap<OpenUrlOption, Int>()
 
+    private var displayedPopupWindow: PopupWindow? = null
+
 
     init {
         optionItemsStringResourceIds.put(OpenUrlOption.OpenInSameActivity, R.string.menu_open_url_open_in_same_activity)
@@ -35,6 +38,8 @@ class OpenUrlOptionsView {
 
 
     fun showMenuCenter(anyViewInHierarchyJustForAnchor: View, optionSelectedListener: (OpenUrlOption) -> Unit) {
+        displayedPopupWindow?.let { closeMenu(it) }
+
         val context = anyViewInHierarchyJustForAnchor.context
 
         val optionsListView = ListView(context)
@@ -44,12 +49,42 @@ class OpenUrlOptionsView {
         val popupWindow = PopupWindow(context)
         popupWindow.contentView = optionsListView
         popupWindow.showAtLocation(anyViewInHierarchyJustForAnchor, Gravity.CENTER, 0, 0)
+        this.displayedPopupWindow = popupWindow
 
         optionsListView.setOnItemClickListener { _, _, position, _ ->
-            popupWindow.dismiss()
+            closeMenu(popupWindow)
 
             optionSelectedListener(optionItems[position])
         }
+    }
+
+    private fun closeMenu(popupWindow: PopupWindow) {
+        popupWindow.dismiss()
+
+        displayedPopupWindow = null
+    }
+
+
+    fun handlesBackButtonPress(): Boolean {
+        displayedPopupWindow?.let {
+            closeMenu(it)
+
+            return true
+        }
+
+        return false
+    }
+
+    fun handlesTouch(event: MotionEvent): Boolean {
+        displayedPopupWindow?.let { popupWindow ->
+            if(popupWindow.contentView.isTouchInsideView(event) == false) { // if menu is opened and user clicked somewhere else in the view, close menu
+                closeMenu(popupWindow)
+
+                return true
+            }
+        }
+
+        return false
     }
 
 
