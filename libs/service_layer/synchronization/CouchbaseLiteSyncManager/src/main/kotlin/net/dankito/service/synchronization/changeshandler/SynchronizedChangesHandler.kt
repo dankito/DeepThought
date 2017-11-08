@@ -43,15 +43,21 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
 
     private fun handleSynchronizedChanges(changes: List<DocumentChange>) {
         for(change in changes) {
-            val entityType = getEntityTypeFromDocumentChange(change)
-            val isBaseEntity = entityType != null && BaseEntity::class.java.isAssignableFrom(entityType)
+            try {
+                handleChange(change)
+            } catch(e: Exception) { log.error("Could not handle change for document ${change.documentId}: $change", e) }
+        }
+    }
 
-            if(isBaseEntity) { // sometimes only some Couchbase internal data is synchronized without any user data -> skip these
-                handleChange(change, entityType!!) // entityType has to be != null after check above
-            }
-            else if (isEntityDeleted(change)) {
-                handleDeletedEntity(change)
-            }
+    private fun handleChange(change: DocumentChange) {
+        val entityType = getEntityTypeFromDocumentChange(change)
+        val isBaseEntity = entityType != null && BaseEntity::class.java.isAssignableFrom(entityType)
+
+        if(isBaseEntity) { // sometimes only some Couchbase internal data is synchronized without any user data -> skip these
+            handleChange(change, entityType!!) // entityType has to be != null after check above
+        }
+        else if (isEntityDeleted(change)) {
+            handleDeletedEntity(change)
         }
     }
 
