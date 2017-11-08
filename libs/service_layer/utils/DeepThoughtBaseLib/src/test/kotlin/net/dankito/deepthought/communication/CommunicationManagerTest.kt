@@ -342,8 +342,8 @@ class CommunicationManagerTest {
 
 
     @Test
-    fun localDeviceRequestsSynchronization_EnteredResponseIsWrong_SynchronizationIsAllowed() {
-        val wrongResponse: String = "not_valid"
+    fun localDeviceRequestsSynchronization_FirstEnterFalseResponse_ThenEnterCorrectResponse_SynchronizationIsAllowed() {
+        val wrongResponse = "not_valid"
 
         localRegisterAtRemote.set(true)
         remotePermitRemoteToSynchronize.set(true)
@@ -352,7 +352,7 @@ class CommunicationManagerTest {
         var countAskForChallenge = 0
 
         whenever(localDialogService.askForTextInput(any<CharSequence>(), anyOrNull(), anyOrNull(), any(), any())).thenAnswer { invocation ->
-            val callback = invocation.arguments[3] as (Boolean, String?) -> Unit
+            val callback = invocation.arguments[4] as (Boolean, String?) -> Unit
             countAskForChallenge++
 
             if(countAskForChallenge == 1) { // at first call return a false response
