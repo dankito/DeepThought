@@ -83,7 +83,7 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
 
 
         if(synchronizedEntity != null) {
-            changeNotifier.notifyListenersOfEntityChangeAsync(synchronizedEntity, entityChangeType, EntityChangeSource.Synchronization)
+            notifyOfSynchronizedChange(synchronizedEntity, entityChangeType)
         }
     }
 
@@ -131,7 +131,7 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
 
     private fun handleDeletedEntity(id: String, entityType: Class<out BaseEntity>, document: Document) {
         getDeletedEntity(id, entityType, document)?.let { deletedEntity ->
-            changeNotifier.notifyListenersOfEntityChangeAsync(deletedEntity, EntityChangeType.Deleted, EntityChangeSource.Synchronization)
+            notifyOfSynchronizedChange(deletedEntity, EntityChangeType.Deleted)
         }
     }
 
@@ -201,6 +201,11 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
         }
 
         return null
+    }
+
+
+    private fun notifyOfSynchronizedChange(synchronizedEntity: BaseEntity, changeType: EntityChangeType) {
+        changeNotifier.notifyListenersOfEntityChangeAsync(synchronizedEntity, changeType, EntityChangeSource.Synchronization)
     }
 
 }
