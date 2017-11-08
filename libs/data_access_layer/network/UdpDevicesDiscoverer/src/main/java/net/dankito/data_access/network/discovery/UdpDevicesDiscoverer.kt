@@ -208,12 +208,10 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
 
     private fun handleReceivedRemotePacket(remoteDeviceInfo: String, senderAddress: String, listener: DevicesDiscovererListener) {
         val remoteDeviceKey = createDeviceKey(senderAddress, remoteDeviceInfo)
+        connectionsAliveWatcher?.receivedMessageFromDevice(remoteDeviceKey) // if device just reconnected it's better to update its timestamp immediately
 
         if(hasDeviceAlreadyBeenFound(remoteDeviceKey) == false) {
             deviceFound(remoteDeviceKey, remoteDeviceInfo, senderAddress, listener)
-        }
-        else {
-            connectionsAliveWatcher?.receivedMessageFromDevice(remoteDeviceKey)
         }
     }
 
