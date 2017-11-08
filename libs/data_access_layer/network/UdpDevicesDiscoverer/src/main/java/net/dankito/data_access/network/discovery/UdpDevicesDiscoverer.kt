@@ -197,10 +197,10 @@ open class UdpDevicesDiscoverer(val networkConnectivityManager: INetworkConnecti
     protected fun handleReceivedPacket(receivedData: ByteArray, senderAddress: String, localDeviceInfo: String, discoveryMessagePrefix: String, listener: DevicesDiscovererListener) {
         val receivedMessage = parseBytesToString(receivedData, receivedData.size)
 
-        if (isSearchingForDevicesMessage(receivedMessage, discoveryMessagePrefix)) {
+        if(isSearchingForDevicesMessage(receivedMessage, discoveryMessagePrefix)) {
             val remoteDeviceInfo = getDeviceInfoFromMessage(receivedMessage)
 
-            if (isSelfSentPacket(remoteDeviceInfo, localDeviceInfo) == false) {
+            if(isSelfSentPacket(remoteDeviceInfo, localDeviceInfo) == false) {
                 handleReceivedRemotePacket(remoteDeviceInfo, senderAddress, listener)
             }
         }
@@ -209,15 +209,16 @@ open class UdpDevicesDiscoverer(val networkConnectivityManager: INetworkConnecti
     protected fun handleReceivedRemotePacket(remoteDeviceInfo: String, senderAddress: String, listener: DevicesDiscovererListener) {
         val remoteDeviceKey = createDeviceKey(senderAddress, remoteDeviceInfo)
 
-        if (hasDeviceAlreadyBeenFound(remoteDeviceKey) == false) {
+        if(hasDeviceAlreadyBeenFound(remoteDeviceKey) == false) {
             deviceFound(remoteDeviceKey, remoteDeviceInfo, senderAddress, listener)
-        } else {
+        }
+        else {
             connectionsAliveWatcher?.receivedMessageFromDevice(remoteDeviceKey)
         }
     }
 
     protected fun isSearchingForDevicesMessage(receivedMessage: String, discoveryMessagePrefix: String): Boolean {
-        return receivedMessage.startsWith(discoveryMessagePrefix)
+        return receivedMessage.startsWith(discoveryMessagePrefix + MESSAGE_HEADER_AND_BODY_SEPARATOR)
     }
 
     protected fun isSelfSentPacket(remoteDeviceInfo: String, localDeviceInfo: String): Boolean {
@@ -227,7 +228,7 @@ open class UdpDevicesDiscoverer(val networkConnectivityManager: INetworkConnecti
     protected fun hasDeviceAlreadyBeenFound(deviceInfo: String): Boolean {
         val foundDevicesCopy = ArrayList(foundDevices)
 
-        for (foundDevice in foundDevicesCopy) {
+        for(foundDevice in foundDevicesCopy) {
             if (foundDevice == deviceInfo) {
                 return true
             }
@@ -242,7 +243,7 @@ open class UdpDevicesDiscoverer(val networkConnectivityManager: INetworkConnecti
         synchronized(this) {
             foundDevices.add(remoteDeviceKey)
 
-            if (foundDevices.size == 1) {
+            if(foundDevices.size == 1) {
                 startConnectionsAliveWatcher(listener)
             }
         }
