@@ -125,14 +125,22 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         // remove scripts with try{window.performance.mark('monitor_articleTeaser');}catch(e){};
         articleBody.select("script").filter { it.html().contains("window.performance.mark") }.forEach { it.remove() }
 
-        removeSurveys(articleBody)
+        removeBaseBoxes(articleBody)
 
         showSZPlusFrame(articleBody)
     }
 
-    private fun removeSurveys(articleBody: Element) {
-        articleBody.select("div#rawr-embed-1OIsE").forEach { questionElement ->
-            questionElement.parent().remove()
+    private fun removeBaseBoxes(articleBody: Element) {
+        articleBody.select("div.basebox").forEach { baseBox ->
+            if(baseBox.select("div#rawr-embed-1OIsE").size > 0) {
+                baseBox.remove()
+            }
+
+            baseBox.select("iframe").forEach { iframe ->
+                if(iframe.attr("data-src").contains("http://www.nl-services.com/subscribe/")) {
+                    baseBox.remove()
+                }
+            }
         }
     }
 
