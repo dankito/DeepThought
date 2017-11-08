@@ -62,6 +62,15 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun ensureQuestionGetsRemoved() {
+        getAndTestArticle("http://www.sueddeutsche.de/panorama/eil-bundesverfassungsgericht-fordert-drittes-geschlecht-im-geburtenregister-1.3740223",
+                "Bundesverfassungsgericht fordert drittes Geschlecht im Geburtenregister",
+                null,
+                null,
+                3200, subTitle = "Urteil zur Intersexualität")
+    }
+
+    @Test
     fun ensureSZPlusNotificationGetsShown() {
         getAndTestArticle("http://www.sueddeutsche.de/wissen/menschen-ueber-wie-man-alt-und-zufrieden-wird-1.3733043?reduced=true",
                 "Wie man alt und zufrieden wird",
