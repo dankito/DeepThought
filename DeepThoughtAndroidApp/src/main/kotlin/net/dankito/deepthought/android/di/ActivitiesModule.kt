@@ -17,6 +17,7 @@ import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.service.data.TagService
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
@@ -104,8 +105,8 @@ class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
-    fun providePermanentNotificationService(context: Context, entryPersister: EntryPersister) : PermanentNotificationService {
-        return PermanentNotificationService(context, entryPersister)
+    fun providePermanentNotificationService(context: Context, entryPersister: EntryPersister, searchEngine: ISearchEngine, tagService: TagService) : PermanentNotificationService {
+        return PermanentNotificationService(context, entryPersister, searchEngine, tagService)
     }
 
     @Provides

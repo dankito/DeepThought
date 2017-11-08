@@ -12,9 +12,15 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.service.speech.SpeechToTextConverter
 import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Tag
+import net.dankito.service.data.TagService
+import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.specific.TagsSearch
+import net.dankito.service.search.specific.TagsSearchResults
+import java.util.concurrent.CountDownLatch
 
 
-class PermanentNotificationService(private val context: Context, private val itemPersister: EntryPersister) {
+class PermanentNotificationService(private val context: Context, private val itemPersister: EntryPersister, private val searchEngine: ISearchEngine, private val tagService: TagService) {
 
     companion object {
         const val PermanentNotificationNotificationId = 27388
@@ -97,14 +103,70 @@ class PermanentNotificationService(private val context: Context, private val ite
         RemoteInput.getResultsFromIntent(intent)?.let { remoteInput ->
             val input = remoteInput.getCharSequence(PermanentNotificationTextInputKey)
 
-            itemPersister.saveEntryAsync(Item(input.toString())) { successful ->
-                showResultToUser(successful)
-            }
+            val tags = ArrayList<Tag>()
+            val itemContent = extractEnteredTags(input.toString(), tags)
+
+            persistNewItem(itemContent, tags)
 
             return true
         }
 
         return true
+    }
+
+    private fun persistNewItem(itemContent: String, tags: ArrayList<Tag>) {
+        val newItem = Item(itemContent)
+        tags.forEach { newItem.addTag(it) }
+
+        itemPersister.saveEntryAsync(newItem, tags = tags) { successful ->
+            showResultToUser(successful)
+        }
+    }
+
+    private fun extractEnteredTags(input: String, tags: MutableList<Tag>): String {
+        var itemContent = input
+
+        val hashIndex = itemContent.lastIndexOf('#')
+        if(hashIndex > 0) {
+            val tagSearchTerm = itemContent.substring(hashIndex + 1).trim()
+            itemContent = itemContent.substring(0, hashIndex).trimEnd()
+
+            addTags(tags, tagSearchTerm)
+        }
+
+        return itemContent
+    }
+
+    private fun addTags(tags: MutableList<Tag>, tagSearchTerm: String) {
+        val countDownLatch = CountDownLatch(1)
+
+        searchEngine.searchTags(TagsSearch(tagSearchTerm) { tagsSearchResults ->
+            addTags(tagsSearchResults, tags)
+
+            addTagsForSearchTermsWithoutMatches(tagsSearchResults, tags)
+
+            countDownLatch.countDown()
+        })
+
+        try { countDownLatch.await() } catch(ignored: Exception) { }
+    }
+
+    private fun addTags(tagsSearchResults: TagsSearchResults, tags: MutableList<Tag>) {
+        tagsSearchResults.results.forEach { result ->
+            if (result.hasExactMatches()) {
+                tags.addAll(result.exactMatches)
+            } else if (result.hasSingleMatch()) {
+                result.getSingleMatch()?.let { tags.add(it) }
+            }
+        }
+    }
+
+    private fun addTagsForSearchTermsWithoutMatches(tagsSearchResults: TagsSearchResults, tags: MutableList<Tag>) {
+        tagsSearchResults.getSearchTermsWithoutMatches().forEach { newTagName ->
+            val newTag = Tag(newTagName)
+            tagService.persist(newTag)
+            tags.add(newTag)
+        }
     }
 
     private fun showResultToUser(successful: Boolean) {
