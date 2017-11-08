@@ -720,10 +720,12 @@ class EditEntryActivity : BaseActivity() {
 
         if(shouldShowContent(content)) {
             showContentInWebView(content, url)
+            wbvwContent.setWebViewClient(webViewClient)
             showContentOnboarding = false
         }
         else if(isInReaderMode == false && webSiteHtml != null) {
             showContentInWebView(webSiteHtml, url)
+            wbvwContent.setWebViewClient(webViewClient)
             showContentOnboarding = false
         }
         else if(url != null && item == null) { // then load url (but don't show it for an Item)
@@ -984,7 +986,10 @@ class EditEntryActivity : BaseActivity() {
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if(floatingActionMenu.handlesTouch(event)) { // close menu when menu is opened and touch is outside floatingActionMenuButton
+        if(openUrlOptionsView.handlesTouch(event)) {
+            return true
+        }
+        else if(floatingActionMenu.handlesTouch(event)) { // close menu when menu is opened and touch is outside floatingActionMenuButton
             return true
         }
 
@@ -994,6 +999,9 @@ class EditEntryActivity : BaseActivity() {
     override fun onBackPressed() {
         if(isEditEntryFieldDialogVisible()) { // let TagEntriesListDialog handle back button press
             super.onBackPressed()
+            return
+        }
+        else if(openUrlOptionsView.handlesBackButtonPress()) {
             return
         }
         else if(floatingActionMenu.handlesBackButtonPress()) {
