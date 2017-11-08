@@ -125,12 +125,12 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         // remove scripts with try{window.performance.mark('monitor_articleTeaser');}catch(e){};
         articleBody.select("script").filter { it.html().contains("window.performance.mark") }.forEach { it.remove() }
 
-        removeQuestions(articleBody)
+        removeSurveys(articleBody)
 
         showSZPlusFrame(articleBody)
     }
 
-    private fun removeQuestions(articleBody: Element) {
+    private fun removeSurveys(articleBody: Element) {
         articleBody.select("div#rawr-embed-1OIsE").forEach { questionElement ->
             questionElement.parent().remove()
         }
