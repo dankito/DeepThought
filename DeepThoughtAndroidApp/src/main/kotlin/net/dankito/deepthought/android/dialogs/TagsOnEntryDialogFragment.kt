@@ -262,11 +262,13 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
     }
 
     private fun handleCreateNewTagOrToggleTagsAction() {
-        if(btnEditEntryCreateOrToggleTagsState == TagsSearcherButtonState.CREATE_TAG) {
-            createNewTags()
-        }
-        else {
-            toggleTagsOnEntry()
+        if(btnEditEntryCreateOrToggleTagsState != TagsSearcherButtonState.DISABLED) { // don't handle pressing action when button is disabled
+            if(btnEditEntryCreateOrToggleTagsState == TagsSearcherButtonState.CREATE_TAG) {
+                createNewTags()
+            }
+            else {
+                toggleTagsOnEntry()
+            }
         }
     }
 
