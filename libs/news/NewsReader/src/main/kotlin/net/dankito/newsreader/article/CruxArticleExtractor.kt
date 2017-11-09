@@ -45,7 +45,7 @@ class CruxArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
                 }
             }
 
-            return "<figure><img src=\"${article.imageUrl}\" alt=\"preview image\" /></figure>${content}"
+            return "<figure><img src=\"${article.imageUrl}\" alt=\"preview image\" style=\"max-height:400px; width:auto;\" /></figure>${content}"
         }
 
         return content
