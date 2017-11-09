@@ -173,6 +173,10 @@ class WebPageMetaDataExtractor(webClient: IWebClient) : ExtractorBase(webClient)
 
         document.head().select("meta[property=\"twitter:image\"]").first()?.attr("content")?.let { return it }
 
+        document.head().select("link[rel=\"image_src\"]").first()?.attr("href")?.let { return it }
+
+        document.head().select("meta[name=\"thumbnail\"]").first()?.attr("content")?.let { return it } // TODO: really try thumbnail?
+
         return null
     }
 
