@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import kotlinx.android.synthetic.main.activity_edit_entry.view.*
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
-import org.slf4j.LoggerFactory
 import java.util.*
 
 
@@ -126,8 +125,6 @@ class FullscreenWebView : WebView {
     }
 
 
-    private val log = LoggerFactory.getLogger(FullscreenWebView::class.java)
-
     override fun onWindowSystemUiVisibilityChanged(flags: Int) {
         if(flags == 0) {
             isInFullscreenMode = false // otherwise isInFullscreenMode stays true and full screen mode isn't entered anymore on resume
@@ -139,7 +136,6 @@ class FullscreenWebView : WebView {
             leftFullscreenCallback?.invoke()
         }
 
-        log.info("Tags: onWindowSystemUiVisibilityChanged() changed to $flags")
         super.onWindowSystemUiVisibilityChanged(flags)
     }
 
