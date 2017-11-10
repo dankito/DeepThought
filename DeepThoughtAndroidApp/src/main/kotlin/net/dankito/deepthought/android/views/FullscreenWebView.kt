@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import kotlinx.android.synthetic.main.activity_edit_entry.view.*
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
+import org.slf4j.LoggerFactory
 import java.util.*
 
 
@@ -70,6 +71,8 @@ class FullscreenWebView : WebView {
 
     var changeFullscreenModeListener: ((FullscreenMode) -> Unit)? = null
 
+    private var leftFullscreenCallback: (() -> Unit)? = null
+
     var singleTapListener: ((isInFullscreen: Boolean) -> Unit)? = null
 
     var doubleTapListener: ((isInFullscreen: Boolean) -> Unit)? = null
@@ -123,6 +126,8 @@ class FullscreenWebView : WebView {
     }
 
 
+    private val log = LoggerFactory.getLogger(FullscreenWebView::class.java)
+
     override fun onWindowSystemUiVisibilityChanged(flags: Int) {
         if(flags == 0) {
             isInFullscreenMode = false // otherwise isInFullscreenMode stays true and full screen mode isn't entered anymore on resume
@@ -131,8 +136,10 @@ class FullscreenWebView : WebView {
         // as immersive fullscreen is only available for KitKat and above leave immersive fullscreen mode by swiping from screen top or bottom is also only available on these  devices
         if(flags == NON_FULLSCREEN_MODE_SYSTEM_UI_FLAGS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             leaveFullscreenMode()
+            leftFullscreenCallback?.invoke()
         }
 
+        log.info("Tags: onWindowSystemUiVisibilityChanged() changed to $flags")
         super.onWindowSystemUiVisibilityChanged(flags)
     }
 
@@ -268,7 +275,13 @@ class FullscreenWebView : WebView {
     }
 
 
-    fun leaveFullscreenMode() {
+    fun leaveFullscreenModeAndWaitTillLeft(leftFullscreenCallback: () -> Unit) {
+        this.leftFullscreenCallback = leftFullscreenCallback
+
+        leaveFullscreenMode()
+    }
+
+    private fun leaveFullscreenMode() {
         isInFullscreenMode = false
         updateLastOnScrollFullscreenModeTogglingTimestamp()
         hideOptionsBarOnUiThread()
