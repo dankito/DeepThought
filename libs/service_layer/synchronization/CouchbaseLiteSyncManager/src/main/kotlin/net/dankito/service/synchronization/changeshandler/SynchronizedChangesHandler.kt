@@ -51,6 +51,8 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
         val entityType = getEntityTypeFromDocumentChange(change)
         val isBaseEntity = entityType != null && BaseEntity::class.java.isAssignableFrom(entityType)
 
+        log.info("Handling synchronized change of type $entityType with id ${change.documentId} for revision ${change.addedRevision.revID}, isBaseEntity = $isBaseEntity")
+
         if(isBaseEntity) { // sometimes only some Couchbase internal data is synchronized without any user data -> skip these
             if(isEntityDeleted(change)) {
                 handleDeletedEntity(change, entityType!!)
@@ -81,6 +83,9 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
 
 
         if(synchronizedEntity != null) {
+            if(change.isConflict) {
+                log.warn("$synchronizedEntity has a conflict")
+            }
             notifyOfSynchronizedChange(synchronizedEntity, entityChangeType)
         }
     }
@@ -203,6 +208,9 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
 
 
     private fun notifyOfSynchronizedChange(synchronizedEntity: BaseEntity, changeType: EntityChangeType) {
+        try { log.info("Calling notifyListenersOfEntityChange() for $synchronizedEntity of type $changeType") } // toString() may throws an exception for deleted entities
+        catch(ignored: Exception) { log.info("Calling notifyListenersOfEntityChange() for ${synchronizedEntity.id} of type $changeType") }
+
         changeNotifier.notifyListenersOfEntityChangeAsync(synchronizedEntity, changeType, EntityChangeSource.Synchronization)
     }
 
