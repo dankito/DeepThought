@@ -914,8 +914,9 @@ class EditEntryActivity : BaseActivity() {
         if(localSettings.didShowItemInformationFullscreenGesturesHelp == false) {
             dialogService.showConfirmationDialog(getString(R.string.context_help_item_content_fullscreen_gestures), showNoButton = false) {
                 runOnUiThread {
-                    wbvwContent.leaveFullscreenMode() // leave fullscreen otherwise a lot of unwanted behaviour occurs
-                    userConfirmedHelpOnUIThread()
+                    wbvwContent.leaveFullscreenModeAndWaitTillLeft { // leave fullscreen otherwise a lot of unwanted behaviour occurs
+                        userConfirmedHelpOnUIThread()
+                    }
                 }
             }
 
@@ -923,8 +924,9 @@ class EditEntryActivity : BaseActivity() {
             entryService.dataManager.localSettingsUpdated()
         }
         else {
-            wbvwContent.leaveFullscreenMode() // leave fullscreen otherwise a lot of unwanted behaviour occurs
-            userConfirmedHelpOnUIThread()
+            wbvwContent.leaveFullscreenModeAndWaitTillLeft {// leave fullscreen otherwise a lot of unwanted behaviour occurs
+                userConfirmedHelpOnUIThread()
+            }
         }
     }
 
@@ -1497,9 +1499,9 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun executeUserClickedUrlAction(action: () -> Unit) {
-        wbvwContent.leaveFullscreenMode()
-
-        action()
+        wbvwContent.leaveFullscreenModeAndWaitTillLeft {
+            action()
+        }
     }
 
     private fun showUrlInCurrentActivity(url: String) {
