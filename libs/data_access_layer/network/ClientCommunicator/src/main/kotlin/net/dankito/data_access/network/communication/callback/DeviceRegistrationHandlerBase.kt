@@ -30,11 +30,16 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
 
     private val newDeviceRegisteredListeners = HashSet<(DiscoveredDevice) -> Unit>()
 
+    private val ignoreDeviceListeners = HashSet<(DiscoveredDevice) -> Unit>()
+
 
     override fun showUnknownDeviceDiscovered(clientCommunicator: IClientCommunicator, unknownDevice: DiscoveredDevice) {
         showUnknownDeviceDiscoveredView(unknownDevice) { likesToRegister, neverAskAgainForThisDevice ->
             if(likesToRegister) {
                 askForRegistration(clientCommunicator, unknownDevice)
+            }
+            if(neverAskAgainForThisDevice) {
+                callIgnoreDeviceListeners(unknownDevice)
             }
         }
     }
@@ -192,6 +197,14 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
 
     private fun callNewDeviceRegisteredListeners(remoteDevice: DiscoveredDevice) {
         newDeviceRegisteredListeners.forEach { it(remoteDevice) }
+    }
+
+    override fun addIgnoreDeviceListener(listener: (remoteDevice: DiscoveredDevice) -> Unit) {
+        ignoreDeviceListeners.add(listener)
+    }
+
+    private fun callIgnoreDeviceListeners(remoteDevice: DiscoveredDevice) {
+        ignoreDeviceListeners.forEach { it(remoteDevice) }
     }
 
 }

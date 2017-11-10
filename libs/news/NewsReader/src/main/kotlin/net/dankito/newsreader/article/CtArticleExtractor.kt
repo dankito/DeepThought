@@ -117,7 +117,7 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
 
         val publishingDate = extractDate(sectionElement)
 
-        return Source(articleUrl, title, publishingDate, subTitle = subTitle)
+        return Source(title, articleUrl, publishingDate, subTitle = subTitle)
     }
 
 
@@ -136,7 +136,7 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
     private fun extractMobileArticleReference(article: Element, url: String): Source {
         val title = article.select("h1").first()?.text()?.trim() ?: ""
 
-        val reference = Source(url, title)
+        val reference = Source(title, url)
 
         article.select("figure.aufmacherbild img").first()?.let {
             reference.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)

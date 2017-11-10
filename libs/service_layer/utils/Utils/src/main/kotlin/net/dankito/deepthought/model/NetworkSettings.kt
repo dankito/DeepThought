@@ -3,7 +3,8 @@ package net.dankito.deepthought.model
 import java.util.concurrent.CopyOnWriteArrayList
 
 
-class NetworkSettings(override val localHostDevice: Device, override val localUser: User) : INetworkSettings {
+class NetworkSettings(override val localHostDevice: Device, override val localUser: User,
+                      override val deviceDiscoveryMessagePrefix: String = INetworkSettings.DefaultDeviceDiscoveryMessagePrefix) : INetworkSettings {
 
     override var messagePort: Int = 0
         set(value) {

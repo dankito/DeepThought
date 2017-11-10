@@ -70,6 +70,8 @@ class FullscreenWebView : WebView {
 
     var changeFullscreenModeListener: ((FullscreenMode) -> Unit)? = null
 
+    private var leftFullscreenCallback: (() -> Unit)? = null
+
     var singleTapListener: ((isInFullscreen: Boolean) -> Unit)? = null
 
     var doubleTapListener: ((isInFullscreen: Boolean) -> Unit)? = null
@@ -131,6 +133,7 @@ class FullscreenWebView : WebView {
         // as immersive fullscreen is only available for KitKat and above leave immersive fullscreen mode by swiping from screen top or bottom is also only available on these  devices
         if(flags == NON_FULLSCREEN_MODE_SYSTEM_UI_FLAGS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             leaveFullscreenMode()
+            leftFullscreenCallback?.invoke()
         }
 
         super.onWindowSystemUiVisibilityChanged(flags)
@@ -268,7 +271,13 @@ class FullscreenWebView : WebView {
     }
 
 
-    fun leaveFullscreenMode() {
+    fun leaveFullscreenModeAndWaitTillLeft(leftFullscreenCallback: () -> Unit) {
+        this.leftFullscreenCallback = leftFullscreenCallback
+
+        leaveFullscreenMode()
+    }
+
+    private fun leaveFullscreenMode() {
         isInFullscreenMode = false
         updateLastOnScrollFullscreenModeTogglingTimestamp()
         hideOptionsBarOnUiThread()

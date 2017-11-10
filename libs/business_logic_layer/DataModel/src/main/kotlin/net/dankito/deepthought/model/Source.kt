@@ -88,9 +88,9 @@ data class Source(
     var previewImage: FileLink? = null
 
 
-    private constructor() : this("")
+    constructor() : this("")
 
-    constructor(url: String, title: String, publishingDate: Date? = null, previewImageUrl: String? = null, subTitle: String = "", series: Series? = null) : this(title) {
+    constructor(title: String, url: String, publishingDate: Date? = null, previewImageUrl: String? = null, subTitle: String = "", series: Series? = null) : this(title) {
         this.url = url
         this.publishingDate = publishingDate
         this.previewImageUrl = previewImageUrl

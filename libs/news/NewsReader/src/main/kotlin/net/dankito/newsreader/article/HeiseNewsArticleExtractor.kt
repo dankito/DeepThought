@@ -38,7 +38,7 @@ class HeiseNewsArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
 
     // new version
     private fun parseArticleContentArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleContentElement: Element, url: String, title: String) {
-        val reference = Source(url, title, extractPublishingDate(headerElement))
+        val reference = Source(title, url, extractPublishingDate(headerElement))
         articleContentElement.select(".aufmacherbild img").first()?.let { previewImageElement ->
             reference.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), url)
         }
@@ -60,7 +60,7 @@ class HeiseNewsArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
         contentElement.select(".meldung_anrisstext").first()?.text()?.let { entry.summary = it }
 
         val publishingDate = extractPublishingDate(headerElement)
-        val reference = Source(url, title, publishingDate)
+        val reference = Source(title, url, publishingDate)
         reference.previewImageUrl = makeLinkAbsolute(contentElement.select(".aufmacherbild img").first()?.attr("src") ?: "", url)
 
         extractionResult.setExtractedContent(entry, reference)

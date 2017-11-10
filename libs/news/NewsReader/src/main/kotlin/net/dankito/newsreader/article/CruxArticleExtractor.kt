@@ -27,8 +27,10 @@ class CruxArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
 
         val content = mayAddPreviewImageToContent(article, article.document?.outerHtml() ?: "")
 
+        val previewImageUrl = if(article.imageUrl != null) makeLinkAbsolute(article.imageUrl, url) else null // article.imageUrl may be null
+
         extractionResult.setExtractedContent(Item(content, article.description),
-                Source(url, article.title, previewImageUrl = makeLinkAbsolute(article.imageUrl, url)))
+                Source(article.title, url, previewImageUrl = previewImageUrl))
     }
 
     private fun mayAddPreviewImageToContent(article: Article, content: String): String {
@@ -43,7 +45,7 @@ class CruxArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
                 }
             }
 
-            return "<figure><img src=\"${article.imageUrl}\" alt=\"preview image\" /></figure>${content}"
+            return "<figure><img src=\"${article.imageUrl}\" alt=\"preview image\" style=\"max-height:400px; width:auto;\" /></figure>${content}"
         }
 
         return content

@@ -42,6 +42,8 @@ class ConnectionsAliveWatcher(protected var connectionTimeout: Int) {
 
                 connectionsAliveCheckTimer!!.cancel()
                 connectionsAliveCheckTimer = null
+
+                lastMessageReceivedFromDeviceTimestamps.clear()
             }
         }
     }
@@ -55,22 +57,45 @@ class ConnectionsAliveWatcher(protected var connectionTimeout: Int) {
     protected fun checkIfConnectedDevicesStillAreConnected(foundDevices: List<String>, listener: ConnectionsAliveWatcherListener) {
         val now = Date().time
 
-        for (foundDeviceKey in foundDevices) {
-            if (hasDeviceExpired(foundDeviceKey, now)) {
+        for(foundDeviceKey in foundDevices) {
+            if(hasDeviceExpired(foundDeviceKey, now)) {
                 lastMessageReceivedFromDeviceTimestamps[foundDeviceKey]?.let { timestamp ->
-                    log.info("Device " + foundDeviceKey + " has disconnected, last message received at " +
-                            Date(timestamp) + ", now = " + Date(now))
+                    log.info("Device $foundDeviceKey has disconnected, last message received at ${Date(timestamp)}, now = ${Date(now)}. " +
+                            "Remaining keys = ${lastMessageReceivedFromDeviceTimestamps.keys}")
                 }
                 deviceDisconnected(foundDeviceKey, listener)
             }
         }
     }
 
-    protected fun hasDeviceExpired(foundDeviceKey: String, now: Long?): Boolean {
+    protected fun hasDeviceExpired(foundDeviceKey: String, now: Long): Boolean {
         val lastMessageReceivedFromDeviceTimestamp = lastMessageReceivedFromDeviceTimestamps[foundDeviceKey]
 
-        if (lastMessageReceivedFromDeviceTimestamp != null) {
-            return lastMessageReceivedFromDeviceTimestamp < now!! - connectionTimeout
+        if(lastMessageReceivedFromDeviceTimestamp != null) {
+            val hasExpired = lastMessageReceivedFromDeviceTimestamp < now - connectionTimeout
+            if(hasExpired) {
+                if(hasReconnected(foundDeviceKey)) {
+                    lastMessageReceivedFromDeviceTimestamps.remove(foundDeviceKey)
+                }
+                else {
+                    return true
+                }
+            }
+        }
+
+        return false
+    }
+
+    private fun hasReconnected(deviceKey: String): Boolean {
+        val index = deviceKey.lastIndexOf(":") // this is actually bad as it uses knowledge from ConnectedDevicesService.MESSAGES_PORT_AND_BASIC_DATA_SYNC_PORT_SEPARATOR
+        if(index > 0) {
+            val deviceKeyWithoutBasicDataSyncPort = deviceKey.substring(0, index)
+
+            for(otherDeviceKey in lastMessageReceivedFromDeviceTimestamps.keys) {
+                if(otherDeviceKey.startsWith(deviceKeyWithoutBasicDataSyncPort)) { // device just reconnected shortly with different basic data sync port
+                    return true
+                }
+            }
         }
 
         return false

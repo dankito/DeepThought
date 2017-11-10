@@ -9,6 +9,8 @@ import kotlinx.android.synthetic.main.view_tag.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.extensions.setRightMargin
 import net.dankito.deepthought.model.Tag
+import net.dankito.utils.extensions.sorted
+import net.dankito.utils.extensions.sortedByStrings
 
 
 class TagsPreviewViewHelper {
@@ -20,7 +22,7 @@ class TagsPreviewViewHelper {
         val inflater = layout.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val addMarginManually = layout is FlexboxLayout == false
 
-        val sortedTags = tags.filterNotNull().sortedBy { it.name.toLowerCase() }
+        val sortedTags = tags.sorted()
         for(i in 0..sortedTags.size - 1) {
             val addSpaceToTheRight = addMarginManually && i < sortedTags.size - 1 // don't add space to last item
 

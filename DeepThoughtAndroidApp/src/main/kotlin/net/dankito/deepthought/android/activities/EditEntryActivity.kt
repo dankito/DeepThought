@@ -1,5 +1,8 @@
 package net.dankito.deepthought.android.activities
 
+import android.annotation.TargetApi
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.widget.ActionMenuView
@@ -21,10 +24,7 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.EditHtmlTextDialog
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
-import net.dankito.deepthought.android.views.ContextHelpUtil
-import net.dankito.deepthought.android.views.EditEntryActivityFloatingActionMenuButton
-import net.dankito.deepthought.android.views.FullscreenWebView
-import net.dankito.deepthought.android.views.ToolbarUtil
+import net.dankito.deepthought.android.views.*
 import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.entryPreview
@@ -41,9 +41,11 @@ import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntryChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.extensions.toSortedString
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import net.engio.mbassy.listener.Handler
+import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -73,6 +75,8 @@ class EditEntryActivity : BaseActivity() {
         const val ResultId = "EDIT_ENTRY_ACTIVITY_RESULT"
 
         private const val GetHtmlCodeFromWebViewJavaScriptInterfaceName = "HtmlViewer"
+
+        private val log = LoggerFactory.getLogger(EditEntryActivity::class.java)
     }
 
 
@@ -158,6 +162,8 @@ class EditEntryActivity : BaseActivity() {
     private val contextHelpUtil = ContextHelpUtil()
 
     private val toolbarUtil = ToolbarUtil()
+
+    private val openUrlOptionsView = OpenUrlOptionsView()
 
     private var mnSaveEntry: MenuItem? = null
 
@@ -400,6 +406,25 @@ class EditEntryActivity : BaseActivity() {
         })
     }
 
+    private val webViewClient = object : WebViewClient() {
+
+        @TargetApi(Build.VERSION_CODES.N)
+        override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+            request?.url?.toString()?.let { url ->
+                userClickedOnUrl(url)
+            }
+
+            return true
+        }
+
+        @SuppressWarnings("deprecation")
+        override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+            userClickedOnUrl(url)
+
+            return true
+        }
+    }
+
     private fun fixThatWebViewIsLoadingVerySlow() {
         // avoid that WebView is loading very, very slow, see https://stackoverflow.com/questions/7422427/android-webview-slow
         // but actually had no effect on my side
@@ -458,7 +483,7 @@ class EditEntryActivity : BaseActivity() {
         wbvwContent.elementClickedListener = null
 
         runOnUiThread {
-            wbvwContent.setWebViewClient(null) // now reactivate default url handling
+            wbvwContent.setWebViewClient(webViewClient) // now reactivate default url handling
             prgIsLoadingWebPage.visibility = View.GONE
         }
     }
@@ -695,10 +720,12 @@ class EditEntryActivity : BaseActivity() {
 
         if(shouldShowContent(content)) {
             showContentInWebView(content, url)
+            wbvwContent.setWebViewClient(webViewClient)
             showContentOnboarding = false
         }
         else if(isInReaderMode == false && webSiteHtml != null) {
             showContentInWebView(webSiteHtml, url)
+            wbvwContent.setWebViewClient(webViewClient)
             showContentOnboarding = false
         }
         else if(url != null && item == null) { // then load url (but don't show it for an Item)
@@ -828,7 +855,7 @@ class EditEntryActivity : BaseActivity() {
             lytTagsPreview.setOnboardingTextOnUiThread(R.string.activity_edit_item_tags_onboarding_text)
         }
         else {
-            val tagsPreview = tagsOnEntry.filterNotNull().sortedBy { it.name.toLowerCase() }.joinToString { it.name }
+            val tagsPreview = tagsOnEntry.toSortedString()
             lytTagsPreview.setFieldValueOnUiThread(tagsPreview)
         }
 
@@ -887,8 +914,9 @@ class EditEntryActivity : BaseActivity() {
         if(localSettings.didShowItemInformationFullscreenGesturesHelp == false) {
             dialogService.showConfirmationDialog(getString(R.string.context_help_item_content_fullscreen_gestures), showNoButton = false) {
                 runOnUiThread {
-                    wbvwContent.leaveFullscreenMode() // leave fullscreen otherwise a lot of unwanted behaviour occurs
-                    userConfirmedHelpOnUIThread()
+                    wbvwContent.leaveFullscreenModeAndWaitTillLeft { // leave fullscreen otherwise a lot of unwanted behaviour occurs
+                        userConfirmedHelpOnUIThread()
+                    }
                 }
             }
 
@@ -896,8 +924,9 @@ class EditEntryActivity : BaseActivity() {
             entryService.dataManager.localSettingsUpdated()
         }
         else {
-            wbvwContent.leaveFullscreenMode() // leave fullscreen otherwise a lot of unwanted behaviour occurs
-            userConfirmedHelpOnUIThread()
+            wbvwContent.leaveFullscreenModeAndWaitTillLeft {// leave fullscreen otherwise a lot of unwanted behaviour occurs
+                userConfirmedHelpOnUIThread()
+            }
         }
     }
 
@@ -959,7 +988,10 @@ class EditEntryActivity : BaseActivity() {
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if(floatingActionMenu.handlesTouch(event)) { // close menu when menu is opened and touch is outside floatingActionMenuButton
+        if(openUrlOptionsView.handlesTouch(event)) {
+            return true
+        }
+        else if(floatingActionMenu.handlesTouch(event)) { // close menu when menu is opened and touch is outside floatingActionMenuButton
             return true
         }
 
@@ -969,6 +1001,9 @@ class EditEntryActivity : BaseActivity() {
     override fun onBackPressed() {
         if(isEditEntryFieldDialogVisible()) { // let TagEntriesListDialog handle back button press
             super.onBackPressed()
+            return
+        }
+        else if(openUrlOptionsView.handlesBackButtonPress()) {
             return
         }
         else if(floatingActionMenu.handlesBackButtonPress()) {
@@ -1450,6 +1485,45 @@ class EditEntryActivity : BaseActivity() {
         tagsOnEntry.addAll(restoredTagsOnEntry)
 
         runOnUiThread { setTagsOnEntryPreviewOnUIThread() }
+    }
+
+
+    private fun userClickedOnUrl(url: String) {
+        openUrlOptionsView.showMenuCenter(txtEntryContentLabel) { selectedOption ->
+            when(selectedOption) {
+                OpenUrlOptionsView.OpenUrlOption.OpenInSameActivity -> executeUserClickedUrlAction { showUrlInCurrentActivity(url) }
+                OpenUrlOptionsView.OpenUrlOption.OpenInNewActivity -> executeUserClickedUrlAction { showUrlInNewActivity(url) }
+                OpenUrlOptionsView.OpenUrlOption.OpenWithOtherApp -> executeUserClickedUrlAction { openUrlWithOtherApp(url) }
+            }
+        }
+    }
+
+    private fun executeUserClickedUrlAction(action: () -> Unit) {
+        wbvwContent.leaveFullscreenModeAndWaitTillLeft {
+            action()
+        }
+    }
+
+    private fun showUrlInCurrentActivity(url: String) {
+        item = null
+        readLaterArticle = null
+        itemExtractionResult = null
+
+        isInReaderMode = false
+
+        editEntryExtractionResult(ItemExtractionResult(Item(""), Source(url, url)))
+    }
+
+    private fun showUrlInNewActivity(url: String) {
+        router.showEditEntryView(ItemExtractionResult(Item(""), Source(url, url)))
+    }
+
+    private fun openUrlWithOtherApp(url: String) {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(url)
+            startActivity(intent)
+        } catch(e: Exception) { log.error("Could not open url $url with other app", e) }
     }
 
 

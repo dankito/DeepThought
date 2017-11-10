@@ -86,7 +86,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
     private fun extractMobileArticleReference(article: Element, url: String): Source {
         val title = article.select("h1").first()?.text()?.trim() ?: ""
 
-        val reference = Source(url, title)
+        val reference = Source(title, url)
 
         article.select("figure.aufmacherbild img").first()?.let {
             reference.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)

@@ -32,7 +32,7 @@ class NetzPolitikOrgArticleExtractor(webClient: IWebClient) : ArticleExtractorBa
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("article").first()?.let { articleElement ->
             val title = articleElement.select(".entry-title").first()?.text() ?: ""
-            val reference = Source(url, title, parsePublishingDate(articleElement), articleElement.select("figure img").first()?.attr("src"))
+            val reference = Source(title, url, parsePublishingDate(articleElement), articleElement.select("figure img").first()?.attr("src"))
 
             val abstract = articleElement.select(".entry-excerpt").first()?.html() ?: ""
 

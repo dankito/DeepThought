@@ -55,4 +55,15 @@ class DerFreitagArticleExtractorTest : ArticleExtractorTestBase() {
         )
     }
 
+    @Test
+    @Throws(ParseException::class)
+    fun ensureSurveyGetRemoved() {
+        getAndTestArticle("https://www.freitag.de/autoren/der-freitag/keine-nebensaechlichkeiten-des-wahlkampfes",
+                "Keine \"Nebensächlichkeiten des Wahlkampfes\"",
+                "Gastbeitrag Will die SPD wieder linke Volkspartei werden, braucht sie emanzipatorische Alternativen zum Kapitalismus, schreibt Dierk Hirschel, Mitglied der SPD-Grundwertekommission",
+                "https://www.freitag.de/autoren/der-freitag/keine-nebensaechlichkeiten-des-wahlkampfes/@@images/5c672e04-42c9-477f-9a9f-0ab2411baa2a.jpeg",
+                22800, false
+        )
+    }
+
 }

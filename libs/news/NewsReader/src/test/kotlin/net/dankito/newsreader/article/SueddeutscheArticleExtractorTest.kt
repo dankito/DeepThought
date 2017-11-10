@@ -58,7 +58,25 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
                 "Madrid übernimmt offiziell Kontrolle in Katalonien",
                 null,
                 null,
-                2000, subTitle = "Spanien") // first page has a length of little more than 2900
+                2000, subTitle = "Spanien")
+    }
+
+    @Test
+    fun ensureSurveysGetsRemoved() {
+        getAndTestArticle("http://www.sueddeutsche.de/panorama/eil-bundesverfassungsgericht-fordert-drittes-geschlecht-im-geburtenregister-1.3740223",
+                "Bundesverfassungsgericht fordert drittes Geschlecht im Geburtenregister",
+                null,
+                null,
+                3200, subTitle = "Urteil zur Intersexualität")
+    }
+
+    @Test
+    fun ensureSZPlusNotificationGetsShown() {
+        getAndTestArticle("http://www.sueddeutsche.de/wissen/menschen-ueber-wie-man-alt-und-zufrieden-wird-1.3733043?reduced=true",
+                "Wie man alt und zufrieden wird",
+                "Allein in Deutschland sind etwa 17 000 Menschen älter als 100 Jahre, und ihre Zahl steigt stetig. Studien zeigen, warum sie nicht nur ein langes, sondern oft auch zufriedenes Leben führen - und was Jüngere daraus lernen können.",
+                null,
+                1300, subTitle = "Menschen über 100")
     }
 
     @Test

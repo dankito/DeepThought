@@ -75,6 +75,8 @@ class CommunicationManagerTest {
         const val RemoteDeviceName = "Remote"
         val RemoteOsType = OsType.DESKTOP
 
+        const val IntegrationTestDevicesDiscoveryPrefix = "DeepThought_IntegrationTest"
+
         const val InitializationTimeoutInSeconds = 5L
         const val FindRemoteDeviceTimeoutInSeconds = 300L // it really takes a long time till Couchbase opens its listener port
 
@@ -225,7 +227,7 @@ class CommunicationManagerTest {
 
         localDataManager.addInitializationListener {
             localDevice = localDataManager.localDevice
-            localNetworkSettings = NetworkSettings(localDevice, localDataManager.localUser)
+            localNetworkSettings = NetworkSettings(localDevice, localDataManager.localUser, IntegrationTestDevicesDiscoveryPrefix) // set different discovery message prefix to not interfere with production device in same local network
 
             localSynchronizedChangesHandler = SynchronizedChangesHandler(localEntityManager, localEntityChangedNotifier)
 
@@ -260,7 +262,7 @@ class CommunicationManagerTest {
 
         remoteDataManager.addInitializationListener {
             remoteDevice = remoteDataManager.localDevice
-            remoteNetworkSettings = NetworkSettings(remoteDevice, remoteDataManager.localUser)
+            remoteNetworkSettings = NetworkSettings(remoteDevice, remoteDataManager.localUser, IntegrationTestDevicesDiscoveryPrefix)
 
             remoteSynchronizedChangesHandler = SynchronizedChangesHandler(remoteEntityManager, remoteEntityChangedNotifier)
 
@@ -340,8 +342,8 @@ class CommunicationManagerTest {
 
 
     @Test
-    fun localDeviceRequestsSynchronization_EnteredResponseIsWrong_SynchronizationIsAllowed() {
-        val wrongResponse: String = "not_valid"
+    fun localDeviceRequestsSynchronization_FirstEnterFalseResponse_ThenEnterCorrectResponse_SynchronizationIsAllowed() {
+        val wrongResponse = "not_valid"
 
         localRegisterAtRemote.set(true)
         remotePermitRemoteToSynchronize.set(true)
@@ -350,7 +352,7 @@ class CommunicationManagerTest {
         var countAskForChallenge = 0
 
         whenever(localDialogService.askForTextInput(any<CharSequence>(), anyOrNull(), anyOrNull(), any(), any())).thenAnswer { invocation ->
-            val callback = invocation.arguments[3] as (Boolean, String?) -> Unit
+            val callback = invocation.arguments[4] as (Boolean, String?) -> Unit
             countAskForChallenge++
 
             if(countAskForChallenge == 1) { // at first call return a false response

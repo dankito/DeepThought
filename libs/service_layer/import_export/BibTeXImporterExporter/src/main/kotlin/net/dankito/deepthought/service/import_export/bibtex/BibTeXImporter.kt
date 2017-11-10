@@ -85,7 +85,7 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
     private fun mapBibTeXEntryToEntry(bibTeXEntry: BibTeXEntry, latexParser: LaTeXParser, latexPrinter: LaTeXPrinter): Item {
         val entry = Item("")
         val tags = ArrayList<Tag>()
-        val reference = Source("")
+        val reference = Source()
         referencePersister.saveReference(reference)
 
         try { entry.itemIndex = bibTeXEntry.key.value.toLong() } catch(ignored: Exception) { } // only works for BibTeX exported by DeepThought

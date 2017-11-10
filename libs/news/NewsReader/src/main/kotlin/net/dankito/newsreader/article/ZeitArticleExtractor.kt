@@ -65,25 +65,40 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
 
         var content = ""
 
-        articleBodyElement.parent().select(".article__media-container").first()?.let { previewImageElement ->
-            content += previewImageElement.outerHtml()
-        }
+        // remove <noscript> elements which impede that <img>s in <figure> get loaded
+        removeNoscriptElements(articleBodyElement)
+        articleBodyElement.select(".sharing-menu, .metadata").remove()
 
-        for(articleElement in articleBodyElement.select("p.article__item, .article__subheading, .gate--register")) { // .gate--register to show to user that you have to register for viewing this article
+        for(articleElement in articleBodyElement.select("p.article__item, ul.article__item, figure.article__item, .article__subheading, .article-heading__podcast-player, " +
+                ".article--video, .gate--register, .gate")) { // .gate--register to show to user that you have to  register for viewing this article
             content += articleElement.outerHtml()
         }
 
         return Item(content, abstractString)
     }
 
+    private fun removeNoscriptElements(articleBodyElement: Element) {
+        articleBodyElement.parent().select("noscript").forEach { noscriptElement ->
+            noscriptElement.children().forEach { child ->
+                child.remove()
+                noscriptElement.parent().insertChildren(noscriptElement.siblingIndex(), Arrays.asList(child))
+            }
+
+            noscriptElement.remove()
+        }
+    }
+
     private fun createReference(articleUrl: String, articleBodyElement: Element): Source {
         val title = articleBodyElement.select(".article-heading__title").text()
 
-        val subTitle = articleBodyElement.select(".article-heading__kicker").text()
+        var subTitle = articleBodyElement.select(".article-heading__kicker").text()
+        if(subTitle.isNullOrBlank()) {
+            subTitle = articleBodyElement.select(".article-heading__series").text().trim()
+        }
 
         val publishingDate = parseDate(articleBodyElement)
 
-        val reference = Source(articleUrl, title, publishingDate, subTitle = subTitle)
+        val reference = Source(title, articleUrl, publishingDate, subTitle = subTitle)
 
         articleBodyElement.parent().select(".article__media-item").first()?.let { previewImageElement ->
             reference.previewImageUrl = previewImageElement.attr("src")

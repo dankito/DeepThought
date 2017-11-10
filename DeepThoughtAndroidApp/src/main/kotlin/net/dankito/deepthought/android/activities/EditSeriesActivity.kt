@@ -160,6 +160,14 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
         rcyExistingSeriesSearchResults.addItemDecoration(HorizontalDividerItemDecoration(this))
         rcyExistingSeriesSearchResults.adapter = existingSeriesSearchResultsAdapter
         existingSeriesSearchResultsAdapter.itemClickListener = { item -> existingSeriesSelected(item) }
+
+        edtxtFindSeries.setOnFocusChangeListener { _, hasFocus ->
+            if(hasFocus) {
+                showRecyclerViewExistingSeriesSearchResultsWithResults()
+            }
+        }
+
+        btnExpandCollapseExistingSeriesSearchResults.setOnClickListener { toggleShowRecyclerViewExistingSeriesSearchResults() }
     }
 
 
@@ -380,13 +388,8 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
 
 
     private fun searchExistingSeries(query: String) {
-        if(query.isNullOrBlank()) {
-            hideRecyclerViewExistingSeriesSearchResults()
-        }
-        else {
-            presenter.searchSeries(query) {
-                runOnUiThread { showRecyclerViewExistingSeriesSearchResults() }
-            }
+        presenter.searchSeries(query) {
+            runOnUiThread { showRecyclerViewExistingSeriesSearchResults() }
         }
     }
 
@@ -408,6 +411,19 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
         mayRegisterEventBusListener()
     }
 
+    private fun toggleShowRecyclerViewExistingSeriesSearchResults() {
+        if(rcyExistingSeriesSearchResults.visibility == View.VISIBLE) {
+            hideRecyclerViewExistingSeriesSearchResults()
+        }
+        else {
+            showRecyclerViewExistingSeriesSearchResultsWithResults()
+        }
+    }
+
+    private fun showRecyclerViewExistingSeriesSearchResultsWithResults() {
+        searchExistingSeries(edtxtFindSeries.text.toString())
+    }
+
     private fun showRecyclerViewExistingSeriesSearchResults() {
         rcyExistingSeriesSearchResults.visibility = View.VISIBLE
         scrEditSeries.visibility = View.GONE
@@ -415,6 +431,8 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
         (lytSetReferenceSeriesControls.layoutParams as? RelativeLayout.LayoutParams)?.let { layoutParams ->
             layoutParams.addRule(RelativeLayout.ABOVE, toolbar.id)
         }
+
+        btnExpandCollapseExistingSeriesSearchResults.setImageResource(R.drawable.ic_arrow_up)
     }
 
     private fun hideRecyclerViewExistingSeriesSearchResults() {
@@ -424,6 +442,11 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
         (lytSetReferenceSeriesControls.layoutParams as? RelativeLayout.LayoutParams)?.let { layoutParams ->
             layoutParams.addRule(RelativeLayout.ABOVE, 0)
         }
+
+        edtxtFindSeries.hideKeyboard()
+        edtxtFindSeries.clearFocus()
+
+        btnExpandCollapseExistingSeriesSearchResults.setImageResource(R.drawable.ic_arrow_down)
     }
 
     private val edtxtFindSeriesTextWatcher = object : TextWatcher {

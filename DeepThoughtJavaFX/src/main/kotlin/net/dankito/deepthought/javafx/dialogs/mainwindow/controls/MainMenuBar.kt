@@ -15,6 +15,7 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.EntriesSearch
 import net.dankito.utils.UrlUtil
+import net.dankito.utils.extensions.sortedByStrings
 import net.dankito.utils.ui.IDialogService
 import tornadofx.*
 import java.io.File
@@ -126,13 +127,13 @@ class MainMenuBar : View() {
     }
 
     private fun addImporterAndExporter() {
-        importerExporterManager.importer.sortedBy { it.name }.forEach { importer ->
+        importerExporterManager.importer.sortedByStrings { it.name }.forEach { importer ->
             mnitmFileImport.item(importer.name) {
                 action { getFileToImport()?.let { importer.importAsync(it) { } } }
             }
         }
 
-        importerExporterManager.exporter.sortedBy { it.name }.forEach { exporter ->
+        importerExporterManager.exporter.sortedByStrings { it.name }.forEach { exporter ->
             mnitmFileExport.item(exporter.name) {
                 action { getFileToExportTo()?.let { file ->
                     searchEngine.searchEntries(EntriesSearch {

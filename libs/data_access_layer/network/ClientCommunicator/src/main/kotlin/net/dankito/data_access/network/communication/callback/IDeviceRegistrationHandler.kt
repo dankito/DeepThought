@@ -26,4 +26,6 @@ interface IDeviceRegistrationHandler {
 
     fun addNewDeviceRegisteredListener(listener: (remoteDevice: DiscoveredDevice) -> Unit)
 
+    fun addIgnoreDeviceListener(listener: (remoteDevice: DiscoveredDevice) -> Unit)
+
 }

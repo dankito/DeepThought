@@ -45,7 +45,7 @@ class TazArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClien
         var subTitle = ""
         bodyElement.select("h4").first()?.let { subTitle = it.text().trim() }
 
-        val reference = Source(url, title, subTitle = subTitle)
+        val reference = Source(title, url, subTitle = subTitle)
 
         bodyElement.select(".picture img").first()?.let { reference.previewImageUrl = makeLinkAbsolute(it.attr("src"), url) }
 

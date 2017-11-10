@@ -17,8 +17,6 @@ import org.slf4j.LoggerFactory
 class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityManagerBase, private val changeNotifier: EntityChangedNotifier) {
 
     companion object {
-        private val MILLIS_TO_WAIT_BEFORE_PROCESSING_SYNCHRONIZED_ENTITY = 1500
-
         private val log = LoggerFactory.getLogger(SynchronizedChangesHandler::class.java)
     }
 
@@ -28,7 +26,7 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
 
     // wait some time before processing synchronized entities as they may have dependent entities which haven't been synchronized yet
     // yeah, i not, it would be better solving this event based instead of simply waiting, but currently i have no clue how this could be solved
-    private var changeQueue = AsyncProducerConsumerQueue<Database.ChangeEvent>(1, minimumMillisecondsToWaitBeforeConsumingItem = MILLIS_TO_WAIT_BEFORE_PROCESSING_SYNCHRONIZED_ENTITY) { changeEvent ->
+    private var changeQueue = AsyncProducerConsumerQueue<Database.ChangeEvent>(1) { changeEvent ->
         handleSynchronizedChanges(changeEvent.changes)
     }
 
@@ -43,15 +41,28 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
 
     private fun handleSynchronizedChanges(changes: List<DocumentChange>) {
         for(change in changes) {
-            val entityType = getEntityTypeFromDocumentChange(change)
-            val isBaseEntity = entityType != null && BaseEntity::class.java.isAssignableFrom(entityType)
+            try {
+                handleChange(change)
+            } catch(e: Exception) { log.error("Could not handle change for document ${change.documentId}: $change", e) }
+        }
+    }
 
-            if(isBaseEntity) { // sometimes only some Couchbase internal data is synchronized without any user data -> skip these
+    private fun handleChange(change: DocumentChange) {
+        val entityType = getEntityTypeFromDocumentChange(change)
+        val isBaseEntity = entityType != null && BaseEntity::class.java.isAssignableFrom(entityType)
+
+        log.info("Handling synchronized change of type $entityType with id ${change.documentId} for revision ${change.addedRevision.revID}, isBaseEntity = $isBaseEntity")
+
+        if(isBaseEntity) { // sometimes only some Couchbase internal data is synchronized without any user data -> skip these
+            if(isEntityDeleted(change)) {
+                handleDeletedEntity(change, entityType!!)
+            }
+            else {
                 handleChange(change, entityType!!) // entityType has to be != null after check above
             }
-            else if (isEntityDeleted(change)) {
-                handleDeletedEntity(change)
-            }
+        }
+        else if(isEntityDeleted(change)) {
+            handleDeletedEntity(change)
         }
     }
 
@@ -72,7 +83,10 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
 
 
         if(synchronizedEntity != null) {
-            changeNotifier.notifyListenersOfEntityChangeAsync(synchronizedEntity, entityChangeType, EntityChangeSource.Synchronization)
+            if(change.isConflict) {
+                log.warn("$synchronizedEntity has a conflict")
+            }
+            notifyOfSynchronizedChange(synchronizedEntity, entityChangeType)
         }
     }
 
@@ -99,17 +113,28 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
     private fun handleDeletedEntity(change: DocumentChange) {
         val id = change.documentId
         val document = entityManager.database.getDocument(id)
-        if (document != null) {
+        if(document != null) {
             val lastUndeletedRevision = findLastUndeletedRevision(document)
 
-            if (lastUndeletedRevision != null) {
+            if(lastUndeletedRevision != null) {
                 val entityType = getEntityTypeFromRevision(lastUndeletedRevision)
-                if (entityType != null) {
-                    getDeletedEntity(id, entityType, document)?.let { deletedEntity ->
-                        changeNotifier.notifyListenersOfEntityChangeAsync(deletedEntity, EntityChangeType.Deleted, EntityChangeSource.Synchronization)
-                    }
+                if(entityType != null) {
+                    handleDeletedEntity(id, entityType, document)
                 }
             }
+        }
+    }
+
+    private fun handleDeletedEntity(change: DocumentChange, entityType: Class<out BaseEntity>) {
+        val id = change.documentId
+        entityManager.database.getDocument(id)?.let {
+            handleDeletedEntity(id, entityType, it)
+        }
+    }
+
+    private fun handleDeletedEntity(id: String, entityType: Class<out BaseEntity>, document: Document) {
+        getDeletedEntity(id, entityType, document)?.let { deletedEntity ->
+            notifyOfSynchronizedChange(deletedEntity, EntityChangeType.Deleted)
         }
     }
 
@@ -179,6 +204,14 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
         }
 
         return null
+    }
+
+
+    private fun notifyOfSynchronizedChange(synchronizedEntity: BaseEntity, changeType: EntityChangeType) {
+        try { log.info("Calling notifyListenersOfEntityChange() for $synchronizedEntity of type $changeType") } // toString() may throws an exception for deleted entities
+        catch(ignored: Exception) { log.info("Calling notifyListenersOfEntityChange() for ${synchronizedEntity.id} of type $changeType") }
+
+        changeNotifier.notifyListenersOfEntityChangeAsync(synchronizedEntity, changeType, EntityChangeSource.Synchronization)
     }
 
 }

@@ -56,6 +56,7 @@ class DerFreitagArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
     private fun extractContent(articleElement: Element, url: String): String {
         // or .x-article-text ?
         articleElement.select(".s-article-text").first()?.let { textElement ->
+            removeSurveys(textElement)
             makeLinksAbsolute(textElement, url)
             loadLazyLoadingElements(textElement)
             adjustSourceElements(textElement)
@@ -73,6 +74,14 @@ class DerFreitagArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
         }
         
         return ""
+    }
+
+    private fun removeSurveys(textElement: Element) {
+        textElement.select("iframe").forEach { iframe ->
+            if(iframe.attr("src").contains("://widget.civey.com/") || iframe.attr("data-src").contains("://widget.civey.com/")) {
+                iframe.remove()
+            }
+        }
     }
 
     private fun extractImageGallery(imageGalleryElement: Element): String {
@@ -97,7 +106,7 @@ class DerFreitagArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
 
         val publishingDate = extractDate(articleElement)
 
-        val articleReference = Source(articleUrl, title, publishingDate)
+        val articleReference = Source(title, articleUrl, publishingDate)
         articleReference.issue = tryToGetIssue(articleElement)
 
         tryToExtractPreviewImage(articleElement, articleReference)

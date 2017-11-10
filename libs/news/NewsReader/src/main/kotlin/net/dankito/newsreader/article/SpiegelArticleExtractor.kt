@@ -137,7 +137,7 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
 
         val publishingDate = extractPublishingDate(contentElement)
 
-        return Source(articleUrl, title, publishingDate, subTitle = subTitle)
+        return Source(title, articleUrl, publishingDate, subTitle = subTitle)
     }
 
     private fun extractTitle(contentElement: Element): String {

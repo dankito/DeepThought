@@ -3,6 +3,9 @@ package net.dankito.newsreader.article
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.deepthought.model.util.ItemExtractionResult
+import net.dankito.newsreader.article.recipes.ChefkochArticleExtractor
+import net.dankito.newsreader.article.recipes.KochbarArticleExtractor
+import net.dankito.newsreader.article.sites.WikipediaArticleExtractor
 import net.dankito.newsreader.model.ArticleSummaryItem
 import java.util.*
 
@@ -14,6 +17,8 @@ class ArticleExtractors(webClient: IWebClient) {
     private val implementedExtractors = LinkedHashMap<Class<out IArticleExtractor>, IArticleExtractor>()
 
     init {
+        implementedExtractors.put(WikipediaArticleExtractor::class.java, WikipediaArticleExtractor(webClient))
+
         implementedExtractors.put(SueddeutscheArticleExtractor::class.java, SueddeutscheArticleExtractor(webClient))
         implementedExtractors.put(SueddeutscheMagazinArticleExtractor::class.java, SueddeutscheMagazinArticleExtractor(webClient))
         implementedExtractors.put(SueddeutscheJetztArticleExtractor::class.java, SueddeutscheJetztArticleExtractor(webClient))
@@ -30,6 +35,9 @@ class ArticleExtractors(webClient: IWebClient) {
         implementedExtractors.put(GuardianArticleExtractor::class.java, GuardianArticleExtractor(webClient))
         implementedExtractors.put(PostillonArticleExtractor::class.java, PostillonArticleExtractor(webClient))
         implementedExtractors.put(TagesschauArticleExtractor::class.java, TagesschauArticleExtractor(webClient))
+
+        implementedExtractors.put(ChefkochArticleExtractor::class.java, ChefkochArticleExtractor(webClient))
+        implementedExtractors.put(KochbarArticleExtractor::class.java, KochbarArticleExtractor(webClient))
     }
 
 
