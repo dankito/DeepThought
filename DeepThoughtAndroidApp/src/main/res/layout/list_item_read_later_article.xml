@@ -54,6 +54,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="@dimen/list_item_read_later_article_content_padding_top"
+        android:layout_marginBottom="@dimen/list_item_read_later_article_content_margin_bottom"
+        android:layout_marginRight="@dimen/list_item_read_later_article_content_margin_right"
+        android:layout_marginEnd="@dimen/list_item_read_later_article_content_margin_right"
         android:background="@drawable/list_item_background">
 
         <ImageView

@@ -82,6 +82,9 @@
 
     <dimen name="list_item_read_later_article_min_height">84dp</dimen>
     <dimen name="list_item_read_later_article_button_width">84dp</dimen>
+    <dimen name="list_item_read_later_article_content_margin_right">6dp</dimen>
+    <dimen name="list_item_read_later_article_content_padding_top">4dp</dimen>
+    <dimen name="list_item_read_later_article_content_margin_bottom">2dp</dimen>
     <dimen name="list_item_read_later_article_preview_image_size">80dp</dimen>
     <dimen name="list_item_read_later_article_preview_image_margin_right">6dp</dimen>
     <dimen name="list_item_read_later_article_title_text_size">12sp</dimen>
