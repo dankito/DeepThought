@@ -132,12 +132,14 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
     private fun removeBaseBoxes(articleBody: Element) {
         articleBody.select("div.basebox").forEach { baseBox ->
-            if(baseBox.select("div#rawr-embed-1OIsE").size > 0) {
-                baseBox.remove()
+            baseBox.select("script").first()?.let { script ->
+                if(script.attr("src").startsWith("https://cdn-rawr-production.global.ssl.fastly.net/api/v2/embed/rawr/")) { // a survey
+                    baseBox.remove()
+                }
             }
 
             baseBox.select("iframe").forEach { iframe ->
-                if(iframe.attr("data-src").contains("http://www.nl-services.com/subscribe/")) {
+                if(iframe.attr("data-src").contains("http://www.nl-services.com/subscribe/")) { // subscribe to newsletter
                     baseBox.remove()
                 }
             }
