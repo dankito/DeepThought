@@ -35,6 +35,8 @@ import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.ReferenceSearch
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.model.ConfirmationDialogButton
+import net.dankito.utils.ui.model.ConfirmationDialogConfig
 import net.engio.mbassy.listener.Handler
 import java.util.*
 import javax.inject.Inject
@@ -314,12 +316,13 @@ class EditReferenceActivity : BaseActivity() {
     }
 
     private fun askIfUnsavedChangesShouldBeSaved() {
-        dialogService.showConfirmationDialog(getString(R.string.activity_edit_source_alert_message_source_contains_unsaved_changes)) { shouldChangesGetSaved ->
+        val config = ConfirmationDialogConfig(true, getString(R.string.action_cancel), true, getString(R.string.action_dismiss), getString(R.string.action_save))
+        dialogService.showConfirmationDialog(getString(R.string.activity_edit_source_alert_message_source_contains_unsaved_changes), config = config) { selectedButton ->
             runOnUiThread {
-                if(shouldChangesGetSaved) {
+                if(selectedButton == ConfirmationDialogButton.Confirm) {
                     saveReferenceAndCloseDialog()
                 }
-                else {
+                else if(selectedButton == ConfirmationDialogButton.ThirdButton) {
                     closeDialog()
                 }
             }
@@ -412,8 +415,8 @@ class EditReferenceActivity : BaseActivity() {
     }
 
     private fun askIfANewReferenceShouldBeCreated() {
-        dialogService.showConfirmationDialog(getString(R.string.activity_edit_source_alert_message_create_new_source)) { createNewReference ->
-            if(createNewReference) {
+        dialogService.showConfirmationDialog(getString(R.string.activity_edit_source_alert_message_create_new_source)) { selectedButton ->
+            if(selectedButton == ConfirmationDialogButton.Confirm) {
                 if(didReferenceChange) {
                     askIfCurrentReferenceChangesShouldGetSaved()
                 }
@@ -425,8 +428,8 @@ class EditReferenceActivity : BaseActivity() {
     }
 
     private fun askIfCurrentReferenceChangesShouldGetSaved() {
-        dialogService.showConfirmationDialog(getString(R.string.activity_edit_source_alert_message_create_new_source_current_one_has_unsaved_changes)) { saveChanges ->
-            if(saveChanges) {
+        dialogService.showConfirmationDialog(getString(R.string.activity_edit_source_alert_message_create_new_source_current_one_has_unsaved_changes)) { selectedButton ->
+            if(selectedButton == ConfirmationDialogButton.Confirm) {
                 saveReferenceAsync { // TODO: show error message in case of failure
                     runOnUiThread { createReference() }
                 }

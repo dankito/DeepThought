@@ -12,6 +12,7 @@ import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.service.synchronization.initialsync.model.SyncInfo
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.model.ConfirmationDialogButton
 
 
 class AndroidDeviceRegistrationHandler(private var context: Context, dataManager: DataManager, initialSyncManager: InitialSyncManager, dialogService: IDialogService,
@@ -23,8 +24,8 @@ class AndroidDeviceRegistrationHandler(private var context: Context, dataManager
         val message = context.getString(R.string.alert_message_permit_device_to_synchronize, remoteDeviceInfo)
         val alertTitle = context.getString(R.string.alert_title_permit_device_to_synchronize)
 
-        dialogService.showConfirmationDialog(message, alertTitle) { permitsSynchronization ->
-            callback(remoteDeviceInfo, permitsSynchronization)
+        dialogService.showConfirmationDialog(message, alertTitle) { selectedButton ->
+            callback(remoteDeviceInfo, selectedButton == ConfirmationDialogButton.Confirm)
         }
     }
 

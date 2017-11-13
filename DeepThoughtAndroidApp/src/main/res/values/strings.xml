@@ -29,6 +29,8 @@
     <string name="action_ok">OK</string>
     <string name="action_yes">Yes</string>
     <string name="action_no">No</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_dismiss">Dismiss</string>
     <string name="action_never">Never</string>
 
     <string name="search_title">Search</string>
@@ -144,7 +146,7 @@
     <string name="activity_edit_item_tags_onboarding_text">Add meaningful tags, so that you can find it later easily</string>
     <string name="activity_edit_item_source_onboarding_text">Save where you have found this information (link, book)</string>
     <string name="activity_edit_item_summary_onboarding_text">Title or summary for this information</string>
-    <string name="activity_edit_item_alert_message_item_contains_unsaved_changes">Item contains unsaved changes.\n\nShould these changes now be saved?</string>
+    <string name="activity_edit_item_alert_message_item_contains_unsaved_changes">Item contains unsaved changes.\n\nShould these changes now get saved?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
     <string name="activity_edit_item_alert_message_item_has_been_edited">Item has been edited (probably on a synchronized device).\n\nWhen
         you now save the item the other changes get overwritten.</string>
@@ -179,7 +181,7 @@
         gets discarded and a new one will be created.</string>
     <string name="activity_edit_source_alert_message_create_new_source_current_one_has_unsaved_changes">Current source has unsaved changes.\n\nDo you want to
         save these before?</string>
-    <string name="activity_edit_source_alert_message_source_contains_unsaved_changes">Source contains unsaved changes.\n\nShould these changes now be saved?</string>
+    <string name="activity_edit_source_alert_message_source_contains_unsaved_changes">Source contains unsaved changes.\n\nShould these changes now get saved?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
     <string name="activity_edit_source_alert_message_source_has_been_edited">Source has been edited (probably on a synchronized device).\n\nWhen
         you now save the source the other changes get overwritten.</string>

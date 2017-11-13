@@ -11,6 +11,8 @@ import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.android.service.showKeyboardDelayed
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.model.ConfirmationDialogButton
+import net.dankito.utils.ui.model.ConfirmationDialogConfig
 
 
 class AndroidDialogService(private val currentActivityTracker: CurrentActivityTracker, private val localizationProperty: Localization) : IDialogService {
@@ -42,30 +44,41 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
         buildAndShowDialog(builder)
     }
 
-    override fun showConfirmationDialog(message: CharSequence, alertTitle: CharSequence?, showNoButton: Boolean, optionSelected: (Boolean) -> Unit) {
+    override fun showConfirmationDialog(message: CharSequence, alertTitle: CharSequence?, config: ConfirmationDialogConfig, optionSelected: (ConfirmationDialogButton) -> Unit) {
         currentActivityTracker.currentActivity?.let { activity ->
             if(Looper.getMainLooper().getThread() == Thread.currentThread()) {
-                showConfirmMessageOnUiThread(activity, message, alertTitle, showNoButton, optionSelected)
+                showConfirmMessageOnUiThread(activity, message, alertTitle, config, optionSelected)
             }
             else {
-                activity.runOnUiThread { showConfirmMessageOnUiThread(activity, message, alertTitle, showNoButton, optionSelected) }
+                activity.runOnUiThread { showConfirmMessageOnUiThread(activity, message, alertTitle, config, optionSelected) }
             }
         }
     }
 
-    private fun showConfirmMessageOnUiThread(activity: Activity, message: CharSequence, alertTitle: CharSequence?, showNoButton: Boolean, optionSelected: (Boolean) -> Unit) {
+    private fun showConfirmMessageOnUiThread(activity: Activity, message: CharSequence, alertTitle: CharSequence?, config: ConfirmationDialogConfig, optionSelected: (ConfirmationDialogButton) -> Unit) {
         val builder = createDialog(activity, message, alertTitle)
 
-        if(showNoButton) {
-            builder.setNegativeButton(R.string.action_no, { _, _ -> optionSelected(false) })
+        if(config.showNoButton) {
+            builder.setNegativeButton(getConfirmButtonText(activity, R.string.action_no, config.noButtonText), { _, _ -> optionSelected(ConfirmationDialogButton.No) })
         }
         else {
             builder.setNegativeButton(null, null)
         }
 
-        builder.setPositiveButton(if(showNoButton) R.string.action_yes else R.string.action_ok, { _, _ -> optionSelected(true) })
+        if(config.showThirdButton) {
+            builder.setNeutralButton(getConfirmButtonText(activity, R.string.action_cancel, config.thirdButtonText), { _, _ -> optionSelected(ConfirmationDialogButton.ThirdButton) })
+        }
+
+        val confirmButtonText = getConfirmButtonText(activity, if(config.showNoButton) R.string.action_yes else R.string.action_ok, config.confirmButtonText)
+        builder.setPositiveButton(confirmButtonText, { _, _ -> optionSelected(ConfirmationDialogButton.Confirm) })
 
         buildAndShowDialog(builder)
+    }
+
+    private fun getConfirmButtonText(activity: Activity, defaultTextResourceId: Int, customText: String?): String {
+        customText?.let { return it }
+
+        return activity.getString(defaultTextResourceId)
     }
 
     override fun showErrorMessage(errorMessage: CharSequence, alertTitle: CharSequence?, exception: Exception?) {

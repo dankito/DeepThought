@@ -44,6 +44,8 @@ import net.dankito.utils.IThreadPool
 import net.dankito.utils.extensions.toSortedString
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.model.ConfirmationDialogButton
+import net.dankito.utils.ui.model.ConfirmationDialogConfig
 import net.engio.mbassy.listener.Handler
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -912,7 +914,7 @@ class EditEntryActivity : BaseActivity() {
         val localSettings = entryService.dataManager.localSettings
 
         if(localSettings.didShowItemInformationFullscreenGesturesHelp == false) {
-            dialogService.showConfirmationDialog(getString(R.string.context_help_item_content_fullscreen_gestures), showNoButton = false) {
+            dialogService.showConfirmationDialog(getString(R.string.context_help_item_content_fullscreen_gestures), config = ConfirmationDialogConfig(false)) {
                 runOnUiThread {
                     wbvwContent.leaveFullscreenModeAndWaitTillLeft { // leave fullscreen otherwise a lot of unwanted behaviour occurs
                         userConfirmedHelpOnUIThread()
@@ -1255,7 +1257,7 @@ class EditEntryActivity : BaseActivity() {
             entryService.dataManager.localSettingsUpdated()
 
             val helpText = getText(R.string.context_help_saved_read_later_article_is_now_in_items).toString()
-            dialogService.showConfirmationDialog(contextHelpUtil.stringUtil.getSpannedFromHtml(helpText), showNoButton = false) {
+            dialogService.showConfirmationDialog(contextHelpUtil.stringUtil.getSpannedFromHtml(helpText), config = ConfirmationDialogConfig(false)) {
                 callback()
             }
         }
@@ -1303,8 +1305,8 @@ class EditEntryActivity : BaseActivity() {
 
     private fun askIfShouldDeleteExistingEntryAndCloseDialog() {
         item?.let { entry ->
-            dialogService.showConfirmationDialog(getString(R.string.activity_edit_item_alert_message_delete_item, entry.entryPreview)) { deleteEntry ->
-                if(deleteEntry) {
+            dialogService.showConfirmationDialog(getString(R.string.activity_edit_item_alert_message_delete_item, entry.entryPreview)) { selectedButton ->
+                if(selectedButton == ConfirmationDialogButton.Confirm) {
                     mnDeleteExistingEntry?.isEnabled = false
                     unregisterEventBusListener()
 
@@ -1348,12 +1350,13 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun askIfUnsavedChangesShouldBeSaved() {
-        dialogService.showConfirmationDialog(getString(R.string.activity_edit_item_alert_message_item_contains_unsaved_changes)) { shouldChangesGetSaved ->
+        val config = ConfirmationDialogConfig(true, getString(R.string.action_cancel), true, getString(R.string.action_dismiss), getString(R.string.action_save))
+        dialogService.showConfirmationDialog(getString(R.string.activity_edit_item_alert_message_item_contains_unsaved_changes), config = config) { selectedButton ->
             runOnUiThread {
-                if(shouldChangesGetSaved) {
+                if(selectedButton == ConfirmationDialogButton.Confirm) {
                     saveEntryAndCloseDialog()
                 }
-                else {
+                else if(selectedButton == ConfirmationDialogButton.ThirdButton) {
                     closeDialog()
                 }
             }

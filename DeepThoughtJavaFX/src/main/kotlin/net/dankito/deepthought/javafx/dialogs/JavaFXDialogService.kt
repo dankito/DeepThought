@@ -11,6 +11,8 @@ import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.InputType
+import net.dankito.utils.ui.model.ConfirmationDialogButton
+import net.dankito.utils.ui.model.ConfirmationDialogConfig
 import java.io.PrintWriter
 import java.io.StringWriter
 
@@ -41,25 +43,30 @@ class JavaFXDialogService(private val localizationProperty: Localization) : IDia
     }
 
 
-    override fun showConfirmationDialog(message: CharSequence, alertTitle: CharSequence?, showNoButton: Boolean, optionSelected: (Boolean) -> Unit) {
-        showConfirmationDialog(message, alertTitle, showNoButton, null, optionSelected)
+    override fun showConfirmationDialog(message: CharSequence, alertTitle: CharSequence?, config: ConfirmationDialogConfig, optionSelected: (ConfirmationDialogButton) -> Unit) {
+        showConfirmationDialog(message, alertTitle, config, null, optionSelected)
     }
 
-    fun showConfirmationDialog(message: CharSequence, alertTitle: CharSequence?, showNoButton: Boolean = true, owner: Stage?, optionSelected: (Boolean) -> Unit) {
-        FXUtils.runOnUiThread { showConfirmationDialogOnUiThread(message, alertTitle, showNoButton, owner, optionSelected) }
+    fun showConfirmationDialog(message: CharSequence, alertTitle: CharSequence?, config: ConfirmationDialogConfig = ConfirmationDialogConfig(), owner: Stage?, optionSelected: (ConfirmationDialogButton) -> Unit) {
+        FXUtils.runOnUiThread { showConfirmationDialogOnUiThread(message, alertTitle, config, owner, optionSelected) }
     }
 
-    private fun showConfirmationDialogOnUiThread(message: CharSequence, alertTitle: CharSequence?, showNoButton: Boolean, owner: Stage?, optionSelected: (Boolean) -> Unit) {
+    private fun showConfirmationDialogOnUiThread(message: CharSequence, alertTitle: CharSequence?, config: ConfirmationDialogConfig, owner: Stage?, optionSelected: (ConfirmationDialogButton) -> Unit) {
         val buttons = ArrayList<ButtonType>()
-        if(showNoButton) {
+        if(config.showNoButton) {
             buttons.add(ButtonType.NO)
+        }
+        if(config.showThirdButton) {
+            buttons.add(ButtonType.CANCEL) // TODO: test
         }
         buttons.add(ButtonType.YES)
 
         val alert = createDialog(Alert.AlertType.CONFIRMATION, message, alertTitle, owner, *buttons.toTypedArray())
 
-        val result = alert.showAndWait()
-        return optionSelected(result.get() == ButtonType.YES)
+        when(alert.showAndWait().get()) {
+            ButtonType.NO -> return optionSelected(ConfirmationDialogButton.No)
+            else -> return optionSelected(ConfirmationDialogButton.Confirm)
+        }
     }
 
 

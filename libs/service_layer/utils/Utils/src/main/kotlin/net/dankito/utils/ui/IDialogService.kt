@@ -1,6 +1,8 @@
 package net.dankito.utils.ui
 
 import net.dankito.utils.localization.Localization
+import net.dankito.utils.ui.model.ConfirmationDialogButton
+import net.dankito.utils.ui.model.ConfirmationDialogConfig
 
 
 interface IDialogService {
@@ -9,7 +11,7 @@ interface IDialogService {
 
     fun showInfoMessage(infoMessage: CharSequence, alertTitle: CharSequence? = null)
 
-    fun showConfirmationDialog(message: CharSequence, alertTitle: CharSequence? = null, showNoButton: Boolean = true, optionSelected: (Boolean) -> Unit)
+    fun showConfirmationDialog(message: CharSequence, alertTitle: CharSequence? = null, config: ConfirmationDialogConfig = ConfirmationDialogConfig(), optionSelected: (ConfirmationDialogButton) -> Unit)
 
     fun showErrorMessage(errorMessage: CharSequence, alertTitle: CharSequence? = null, exception: Exception? = null)
 

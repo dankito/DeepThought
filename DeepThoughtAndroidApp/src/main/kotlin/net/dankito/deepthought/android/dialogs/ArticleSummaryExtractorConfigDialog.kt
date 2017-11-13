@@ -20,6 +20,7 @@ import net.dankito.faviconextractor.FaviconExtractor
 import net.dankito.faviconextractor.FaviconType
 import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractor
 import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.model.ConfirmationDialogButton
 import javax.inject.Inject
 
 
@@ -201,8 +202,8 @@ class ArticleSummaryExtractorConfigDialog {
     }
 
     private fun deleteConfig(config: ArticleSummaryExtractorConfig, dialog: DialogInterface, activity: Activity) {
-        dialogService.showConfirmationDialog(activity.getString(R.string.dialog_article_summary_extractor_alert_message_delete_config, config.name)) { shouldDeleteConfig ->
-            if(shouldDeleteConfig) {
+        dialogService.showConfirmationDialog(activity.getString(R.string.dialog_article_summary_extractor_alert_message_delete_config, config.name)) { selectedButton ->
+            if(selectedButton == ConfirmationDialogButton.Confirm) {
                 presenter.deleteConfigAsync(config) {
                     activity.runOnUiThread { dialog.cancel() }
                 }
