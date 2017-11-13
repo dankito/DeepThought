@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.ArticleSummaryItemViewHolder
+import net.dankito.deepthought.android.extensions.setTypefaceToRobotoSlabBold
 import net.dankito.deepthought.model.extensions.MaxPreviewLength
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.newsreader.model.ArticleSummaryItem
@@ -24,9 +25,12 @@ class ArticleSummaryItemRecyclerAdapter(activity: AppCompatActivity, private val
 
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ArticleSummaryItemViewHolder {
-        val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_read_later_article, parent, false)
+        val context = parent?.context
+        val itemView = LayoutInflater.from(context).inflate(R.layout.list_item_read_later_article, parent, false)
 
         val viewHolder = ArticleSummaryItemViewHolder(itemView)
+
+        viewHolder.txtTitle.setTypefaceToRobotoSlabBold(context)
 
         viewHolderCreated(viewHolder)
         return viewHolder
