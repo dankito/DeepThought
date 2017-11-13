@@ -191,6 +191,8 @@
         Sie den Eintrag jetzt speichern überschreiben Sie diese Änderungen.</string>
     <string name="activity_edit_item_alert_message_delete_item">Möchten Sie den Eintrag \'%s\' wirklich löschen?</string>
 
+    <string name="dialog_edit_html_alert_message_html_contains_unsaved_changes">Die Information wurde geändert.\n\nMöchten Sie diese Änderungen übernehmen?</string>
+
     <string name="dialog_tags_on_item_title">Schlagworte</string>
     <string name="dialog_tags_on_item_tags_label">Schlagworte:</string>
     <string name="dialog_tags_on_item_create_tag">Neu</string>
@@ -201,6 +203,7 @@
         <item quantity="one">Es gibt kein Schlagwort mit Namen %1$s.\nMöchten Sie es erstellen?</item> <!-- Alternative, klingt aber ein bisschen doof im Pluaral -->
         <item quantity="other">Die Schlagworte %1$s und %2$s existieren nicht.\nMöchten Sie sie erstellen?</item>
     </plurals>
+    <string name="dialog_tags_on_item_alert_message_html_contains_unsaved_changes">Schlagworte wurden geändert.\n\nMöchten Sie diese Änderungen übernehmen?</string>
 
     <string name="menu_open_url_open_in_same_activity">In diesem Fenster öffnen</string>
     <string name="menu_open_url_open_in_new_activity">In neuem Fenster öffnen</string>

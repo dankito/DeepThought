@@ -152,6 +152,8 @@
         you now save the item the other changes get overwritten.</string>
     <string name="activity_edit_item_alert_message_delete_item">Would you like to delete item \'%s\'?</string>
 
+    <string name="dialog_edit_html_alert_message_html_contains_unsaved_changes">Content has changed.\n\nDo you want to apply these changes?</string>
+
     <string name="dialog_tags_on_item_title">Tags</string>
     <string name="dialog_tags_on_item_tags_label">Tags:</string>
     <string name="dialog_tags_on_item_create_tag">New</string>
@@ -162,6 +164,7 @@
         <item quantity="one">Tag %1$s does not exist.\nWould you like to create it?</item>
         <item quantity="other">Tags %1$s and %2$s do not exist.\nWould you like to create them?</item>
     </plurals>
+    <string name="dialog_tags_on_item_alert_message_html_contains_unsaved_changes">Tags have changed.\n\nDo you want to apply these changes?</string>
 
     <string name="menu_open_url_open_in_same_activity">Open in this window</string>
     <string name="menu_open_url_open_in_new_activity">Open in new window</string>
