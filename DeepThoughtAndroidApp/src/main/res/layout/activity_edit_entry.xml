@@ -35,24 +35,24 @@
         >
 
             <net.dankito.deepthought.android.views.EditEntityField
-                android:id="@+id/lytAbstractPreview"
-                android:layout_width="match_parent"
+                android:id="@+id/lytReferencePreview"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
             />
 
             <net.dankito.deepthought.android.views.EditEntityField
-                android:id="@+id/lytReferencePreview"
-                android:layout_width="wrap_content"
+                android:id="@+id/lytAbstractPreview"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/lytAbstractPreview"
+                android:layout_below="@+id/lytReferencePreview"
             />
 
             <net.dankito.deepthought.android.views.EditEntityField
                 android:id="@+id/lytTagsPreview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/lytReferencePreview"
+                android:layout_below="@+id/lytAbstractPreview"
             />
 
         </RelativeLayout>
