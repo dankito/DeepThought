@@ -88,6 +88,10 @@ abstract class FullscreenDialogFragment : DialogFragment() {
     }
 
 
+    open fun handlesBackButtonPress(): Boolean {
+        return false
+    }
+
     protected open fun closeDialog() {
         activity?.let { activity ->
             closeDialogOnUiThread(activity)

@@ -185,6 +185,15 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
         return false
     }
 
+    override fun handlesBackButtonPress(): Boolean {
+        if(mnApplyTagsOnEntryChanges?.isVisible == true) {
+            askIfUnsavedChangesShouldBeSaved()
+            return true
+        }
+
+        return super.handlesBackButtonPress()
+    }
+
 
     private fun askIfUnsavedChangesShouldBeSavedAndCloseDialog() {
         if(mnApplyTagsOnEntryChanges?.isVisible == true) {

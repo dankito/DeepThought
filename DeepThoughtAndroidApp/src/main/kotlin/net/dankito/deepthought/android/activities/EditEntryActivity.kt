@@ -22,6 +22,7 @@ import net.dankito.deepthought.android.activities.arguments.EditEntryActivityRes
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.EditHtmlTextDialog
+import net.dankito.deepthought.android.dialogs.FullscreenDialogFragment
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import net.dankito.deepthought.android.views.*
@@ -1001,8 +1002,8 @@ class EditEntryActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        if(isEditEntryFieldDialogVisible()) { // let TagEntriesListDialog handle back button press
-            super.onBackPressed()
+        val visibleEditEntryFieldDialog = getVisibleEditEntryFieldDialog()
+        if(visibleEditEntryFieldDialog != null && visibleEditEntryFieldDialog.handlesBackButtonPress()) {
             return
         }
         else if(openUrlOptionsView.handlesBackButtonPress()) {
@@ -1015,8 +1016,13 @@ class EditEntryActivity : BaseActivity() {
         askIfUnsavedChangesShouldBeSavedAndCloseDialog()
     }
 
-    private fun isEditEntryFieldDialogVisible(): Boolean {
-        return supportFragmentManager.findFragmentByTag(EditHtmlTextDialog.TAG) != null || supportFragmentManager.findFragmentByTag(TagsOnEntryDialogFragment.TAG) != null
+    private fun getVisibleEditEntryFieldDialog(): FullscreenDialogFragment? {
+        val editHtmlDialog = supportFragmentManager.findFragmentByTag(EditHtmlTextDialog.TAG) as? EditHtmlTextDialog
+        if(editHtmlDialog != null) {
+            return editHtmlDialog
+        }
+
+        return supportFragmentManager.findFragmentByTag(TagsOnEntryDialogFragment.TAG) as? TagsOnEntryDialogFragment
     }
 
 

@@ -201,6 +201,15 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         return false
     }
 
+    override fun handlesBackButtonPress(): Boolean {
+        if(mnApplyHtmlChanges.isVisible) {
+            askIfUnsavedChangesShouldBeSaved()
+            return true
+        }
+
+        return super.handlesBackButtonPress()
+    }
+
 
     private fun askIfUnsavedChangesShouldBeSavedAndCloseDialog() {
         if(mnApplyHtmlChanges.isVisible) {
