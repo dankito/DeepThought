@@ -319,7 +319,7 @@ class EditEntryActivity : BaseActivity() {
             actionBar.setDisplayShowHomeEnabled(true)
         }
 
-        lytAbstractPreview.setFieldNameOnUiThread(R.string.activity_edit_item_summary_label) { didAbstractChange -> abstractChanged(didAbstractChange) }
+        lytAbstractPreview.setFieldNameOnUiThread(R.string.activity_edit_item_title_summary_label) { didAbstractChange -> abstractChanged(didAbstractChange) }
         lytAbstractPreview.fieldValueFocusChangedListener = { hasFocus ->
             if(hasFocus == false) {
                 appliedChangesToAbstract(lytAbstractPreview.didValueChange)
@@ -808,6 +808,8 @@ class EditEntryActivity : BaseActivity() {
 
 
     private fun setAbstractPreviewOnUIThread() {
+        lytAbstractPreview.setFieldNameOnUiThread(if(alsoShowTitleForSummary()) R.string.activity_edit_item_title_summary_label else R.string.activity_edit_item_summary_only_label)
+
         if(abstractToEdit.isNullOrBlank()) {
 //            lytAbstractPreview.setOnboardingTextOnUiThread(R.string.activity_edit_entry_abstract_onboarding_text)
         }
@@ -822,6 +824,10 @@ class EditEntryActivity : BaseActivity() {
             fabEditEntryAbstract.visibility = if(showAbstractPreview) View.GONE else View.VISIBLE
         }
         setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread()
+    }
+
+    private fun alsoShowTitleForSummary(): Boolean {
+        return sourceToEdit?.url == null && (abstractToEdit?.length ?: 0) < 35
     }
 
     private fun setReferencePreviewOnUIThread() {

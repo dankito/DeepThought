@@ -139,7 +139,8 @@
     <string name="activity_edit_item_content_label">Content</string>
     <string name="activity_edit_item_edit_content_title">Content</string>
     <string name="activity_edit_item_edit_content_hint">What do you want to keep (thought, note, quote, etc.)?</string>
-    <string name="activity_edit_item_summary_label">Title / Summary</string>
+    <string name="activity_edit_item_title_summary_label">Title / Summary</string>
+    <string name="activity_edit_item_summary_only_label">Summary</string>
     <string name="activity_edit_item_edit_summary_title">Title / Summary</string>
     <string name="activity_edit_item_source_label">Source</string>
     <string name="activity_edit_item_tags_label">Tags</string>

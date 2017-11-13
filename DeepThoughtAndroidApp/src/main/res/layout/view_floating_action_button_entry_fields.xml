@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/MenuButtonsStyle"
-        fab:fab_label="@string/activity_edit_item_summary_label"
+        fab:fab_label="@string/activity_edit_item_title_summary_label"
     />
 
     <com.github.clans.fab.FloatingActionButton

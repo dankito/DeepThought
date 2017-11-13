@@ -177,7 +177,8 @@
     <string name="activity_edit_item_content_label">Information</string>
     <string name="activity_edit_item_edit_content_title">Information</string>
     <string name="activity_edit_item_edit_content_hint">Was möchten Sie speichern (Gedanke, Notiz, Zitat, …)?</string>
-    <string name="activity_edit_item_summary_label">Titel / Zusammenfassung</string>
+    <string name="activity_edit_item_title_summary_label">Titel / Zusammenfassung</string>
+    <string name="activity_edit_item_summary_only_label">Zusammenfassung</string>
     <string name="activity_edit_item_edit_summary_title">Titel / Zusammenfassung</string>
     <string name="activity_edit_item_source_label">Quelle</string>
     <string name="activity_edit_item_tags_label">Schlagworte</string>
