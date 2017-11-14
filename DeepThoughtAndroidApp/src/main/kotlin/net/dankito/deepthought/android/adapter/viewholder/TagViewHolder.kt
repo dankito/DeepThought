@@ -12,6 +12,8 @@ class TagViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     val txtTagDisplayText: TextView = itemView.txtTagDisplayText
 
+    val lytFilterIconClickArea: View = itemView.lytFilterIconClickArea
+
     val imgFilter: ImageView = itemView.imgFilter
 
     val btnEditTag: ImageButton = itemView.btnEditTag
