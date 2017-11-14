@@ -35,6 +35,7 @@
     <dimen name="view_context_help_confirm_button_height">36dp</dimen>
 
     <dimen name="list_item_entry_height">118dp</dimen>
+    <dimen name="list_item_entry_button_width">118dp</dimen>
     <dimen name="list_item_entry_padding">8dp</dimen>
     <dimen name="list_item_entry_reference_preview_min_height">18dp</dimen>
     <dimen name="list_item_entry_reference_preview_text_size">11sp</dimen>
@@ -44,7 +45,6 @@
     <dimen name="list_item_entry_tags_height">20dp</dimen>
     <dimen name="list_item_entry_tags_text_size">11sp</dimen>
     <dimen name="list_item_entry_tags_margin_top">4dp</dimen>
-    <dimen name="list_item_entry_button_width">80dp</dimen>
 
     <dimen name="view_tag_corner_radius">18dp</dimen>
     <dimen name="view_tag_text_padding_left_right">8dp</dimen>
@@ -69,6 +69,7 @@
     <dimen name="list_item_series_margin_left">12dp</dimen>
 
     <dimen name="list_item_article_summary_extractor_height">60dp</dimen>
+    <dimen name="list_item_article_summary_extractor_button_width">60dp</dimen>
     <dimen name="list_item_article_summary_extractor_margin">4dp</dimen>
     <dimen name="list_item_article_summary_extractor_preview_image_size">50dp</dimen>
     <dimen name="list_item_article_summary_extractor_preview_image_margin_right">6dp</dimen>
@@ -77,7 +78,6 @@
     <dimen name="list_item_article_summary_extractor_is_favorite_margin_right">10dp</dimen>
     <dimen name="list_item_article_summary_extractor_favorite_icon_margin_right">10dp</dimen>
     <dimen name="list_item_article_summary_extractor_favorite_index_bottom_margin">10dp</dimen>
-    <dimen name="list_item_article_summary_extractor_button_width">60dp</dimen>
 
     <dimen name="list_item_read_later_article_min_height">84dp</dimen>
     <dimen name="list_item_read_later_article_button_width">84dp</dimen>
