@@ -1009,7 +1009,10 @@ class EditEntryActivity : BaseActivity() {
 
     override fun onBackPressed() {
         val visibleEditEntryFieldDialog = getVisibleEditEntryFieldDialog()
-        if(visibleEditEntryFieldDialog != null && visibleEditEntryFieldDialog.handlesBackButtonPress()) {
+        if(visibleEditEntryFieldDialog != null) {
+            if(visibleEditEntryFieldDialog.handlesBackButtonPress() == false) {
+                super.onBackPressed()
+            }
             return
         }
         else if(openUrlOptionsView.handlesBackButtonPress()) {
