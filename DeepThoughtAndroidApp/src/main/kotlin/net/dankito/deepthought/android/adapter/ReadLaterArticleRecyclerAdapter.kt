@@ -52,7 +52,7 @@ class ReadLaterArticleRecyclerAdapter(private val presenter: ReadLaterArticleLis
             closeSwipeView(viewHolder)
         }
 
-        viewHolder.btnShareReadLaterArticle.visibility = if(item.itemExtractionResult?.source?.url?.isNullOrBlank() ?: false) View.GONE else View.VISIBLE
+        viewHolder.btnShareReadLaterArticle.visibility = if(item.itemExtractionResult.source?.url.isNullOrBlank()) View.GONE else View.VISIBLE
         viewHolder.btnShareReadLaterArticle.setOnClickListener {
             presenter.copyReferenceUrlToClipboard(item) // TODO: actually there should also be the option to share article's text
             closeSwipeView(viewHolder)
