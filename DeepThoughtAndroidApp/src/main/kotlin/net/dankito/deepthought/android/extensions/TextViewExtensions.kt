@@ -21,5 +21,10 @@ fun TextView.setTypefaceToRobotoSlabBold(context: Context?) {
 }
 
 fun TextView.setCustomTypeface(context: Context?, typefaceName: String) {
-    this.typeface = Typeface.createFromAsset(context?.assets, "fonts/$typefaceName")
+    var filename = typefaceName
+    if(filename.endsWith(".ttf") == false) {
+        filename += ".ttf"
+    }
+
+    this.typeface = Typeface.createFromAsset(context?.assets, "fonts/$filename")
 }

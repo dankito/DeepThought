@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.EntryViewHolder
-import net.dankito.deepthought.android.extensions.setTypefaceToRobotoSlabBold
 import net.dankito.deepthought.android.views.TagsPreviewViewHelper
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.extensions.abstractPlainText
@@ -27,12 +26,9 @@ class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): Mul
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): EntryViewHolder {
-        val context = parent?.context
-        val itemView = LayoutInflater.from(context).inflate(R.layout.list_item_entry, parent, false)
+        val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_entry, parent, false)
 
         val viewHolder = EntryViewHolder(itemView)
-
-        viewHolder.txtReferencePreview.setTypefaceToRobotoSlabBold(context)
 
         viewHolderCreated(viewHolder)
         return viewHolder

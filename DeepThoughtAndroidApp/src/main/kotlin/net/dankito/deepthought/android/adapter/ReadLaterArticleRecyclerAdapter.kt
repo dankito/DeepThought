@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.ReadLaterArticleViewHolder
-import net.dankito.deepthought.android.extensions.setTypefaceToRobotoSlabBold
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.ui.presenter.ReadLaterArticleListPresenter
 
@@ -17,12 +16,9 @@ class ReadLaterArticleRecyclerAdapter(private val presenter: ReadLaterArticleLis
 
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ReadLaterArticleViewHolder {
-        val context = parent?.context
-        val itemView = LayoutInflater.from(context).inflate(R.layout.list_item_read_later_article, parent, false)
+        val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_read_later_article, parent, false)
 
         val viewHolder = ReadLaterArticleViewHolder(itemView)
-
-        viewHolder.txtTitle.setTypefaceToRobotoSlabBold(context)
 
         viewHolderCreated(viewHolder)
         return viewHolder

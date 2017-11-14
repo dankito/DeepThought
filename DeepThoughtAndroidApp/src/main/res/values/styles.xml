@@ -99,6 +99,7 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/header_1_text_color</item>
         <item name="android:typeface">serif</item>
+        <item name="customFont">RobotoSlab-Bold</item>
     </style>
 
     <style name="Header2Style">
