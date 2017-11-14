@@ -1,0 +1,18 @@
+Store all your data in one place, may it be notes, thoughts, recipes, quotes, interesting facts, own texts, to dos, book excerpts, text collection for your scholarly or academic work, news paper articles, web pages and the more.
+
+Locally. Nothing is ever sent to the cloud. Your data is yours.
+So you always have your data at the hand, no matter where you are and how bad the internet connection is.
+Find your wanted information within seconds by powerful full text search operations or self applied tags.
+
+Synchronize your data across all your Android devices and desktop computers (<a href="https://dankito.net/downloads/DeepThoughtJavaFX.jar" >https://dankito.net/downloads/DeepThoughtJavaFX.jar</a>, requires Java). Over the local network. Did we say nothing is ever sent to the cloud?
+As soon as two devices are on the same local network their data gets synchronized.
+
+You can enter your own texts, save web sites via a browser's share menu and for news junkies we also have a RSS / Atom feed reader.
+
+Do you also have too many tabs open or too many bookmarks? No problem, save all your web pages to DeepThought and find them later by simply entering any word from the web page with our powerful full text search.
+Or do you also have a lot of recipes and want to find them again within seconds, no matter if you enter its name or that of an ingredient?
+Or do you also read a lot of books and newspaper articles and want to keep quotes or excerpts from it by simply taking a foto of it? You can find them later by simply entering any word of the text, the foto gets automatically converted to (and saved as) text.
+All this can DeepThought do for you, it's a note keeper, a knowledge data base and a news reader in one. So you always have all your knowledge in one place and by the hand.
+
+We do not collect any of your data, usage statistics, location data, ... simply: nothing.
+So this app is really free, no paid pro version, no in-app purchases, no adds and we don't sell (as we don't collect) your data.
