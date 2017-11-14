@@ -39,14 +39,6 @@
     </style>
 
 
-    <style name="SwipeButtonStyle">
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_margin">@dimen/swipe_button_margin</item>
-        <item name="android:scaleType">fitCenter</item>
-        <item name="android:background">@drawable/swipe_button_background</item>
-    </style>
-
-
     <style name="FullscreenDialog" parent="AppTheme" >
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
@@ -99,6 +91,7 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/header_1_text_color</item>
         <item name="android:typeface">serif</item>
+        <item name="customFont">RobotoSlab-Bold</item>
     </style>
 
     <style name="Header2Style">

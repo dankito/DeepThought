@@ -1,11 +1,12 @@
 package net.dankito.service.data
 
 import net.dankito.deepthought.model.Item
-import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Series
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Tag
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.model.ConfirmationDialogButton
 
 
 /**
@@ -49,8 +50,8 @@ class DeleteEntityService(private val entryService: EntryService, private val ta
     private fun mayAlsoDeleteReference(source: Source?) {
         if (source?.hasItems() == false) { // this was the only Item on which Source has been set -> ask user if we should delete Source as well?
             val localizedMessage = dialogService.getLocalization().getLocalizedString("alert.message.item.was.only.item.on.source.delete.as.well", source.title)
-            dialogService.showConfirmationDialog(localizedMessage) { shouldAlsoDeleteReference ->
-                if(shouldAlsoDeleteReference) {
+            dialogService.showConfirmationDialog(localizedMessage) { selectedButton ->
+                if(selectedButton == ConfirmationDialogButton.Confirm) {
                     deleteReference(source)
                 }
             }

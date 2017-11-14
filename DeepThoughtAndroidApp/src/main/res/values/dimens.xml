@@ -16,6 +16,7 @@
     <dimen name="action_margin_right">1dp</dimen>
 
     <dimen name="swipe_button_margin">3dp</dimen>
+    <dimen name="swipe_button_max_icon_height">55dp</dimen>
     <dimen name="swipe_button_corner_radius">6dp</dimen>
 
     <dimen name="fragment_tab_entries_filtered_entities_margin_top">12dp</dimen>
@@ -35,6 +36,7 @@
     <dimen name="view_context_help_confirm_button_height">36dp</dimen>
 
     <dimen name="list_item_entry_height">118dp</dimen>
+    <dimen name="list_item_entry_button_width">84dp</dimen>
     <dimen name="list_item_entry_padding">8dp</dimen>
     <dimen name="list_item_entry_reference_preview_min_height">18dp</dimen>
     <dimen name="list_item_entry_reference_preview_text_size">11sp</dimen>
@@ -44,7 +46,6 @@
     <dimen name="list_item_entry_tags_height">20dp</dimen>
     <dimen name="list_item_entry_tags_text_size">11sp</dimen>
     <dimen name="list_item_entry_tags_margin_top">4dp</dimen>
-    <dimen name="list_item_entry_button_width">80dp</dimen>
 
     <dimen name="view_tag_corner_radius">18dp</dimen>
     <dimen name="view_tag_text_padding_left_right">8dp</dimen>
@@ -55,21 +56,21 @@
     <dimen name="view_tag_button_height">20dp</dimen>
     <dimen name="view_tag_button_padding_right">4dp</dimen>
 
-    <dimen name="list_item_tag_height">44dp</dimen>
-    <dimen name="list_item_tag_button_width">66dp</dimen>
-    <dimen name="list_item_tag_margin_left">12dp</dimen>
-    <dimen name="list_item_tag_filter_icon_width">26dp</dimen>
-    <dimen name="list_item_tag_filter_icon_height">26dp</dimen>
-    <dimen name="list_item_tag_filter_icon_margin_right">4dp</dimen>
+    <dimen name="list_item_tag_height">48dp</dimen>
+    <dimen name="list_item_tag_button_width">48dp</dimen>
+    <dimen name="list_item_tag_filter_icon_click_area_width">48dp</dimen>
+    <dimen name="list_item_tag_filter_icon_width">22dp</dimen>
+    <dimen name="list_item_tag_filter_icon_height">22dp</dimen>
 
     <dimen name="list_item_reference_height">72dp</dimen>
     <dimen name="list_item_reference_button_width">72dp</dimen>
 
-    <dimen name="list_item_series_height">54dp</dimen>
-    <dimen name="list_item_series_button_width">54dp</dimen>
+    <dimen name="list_item_series_height">48dp</dimen>
+    <dimen name="list_item_series_button_width">48dp</dimen>
     <dimen name="list_item_series_margin_left">12dp</dimen>
 
     <dimen name="list_item_article_summary_extractor_height">60dp</dimen>
+    <dimen name="list_item_article_summary_extractor_button_width">60dp</dimen>
     <dimen name="list_item_article_summary_extractor_margin">4dp</dimen>
     <dimen name="list_item_article_summary_extractor_preview_image_size">50dp</dimen>
     <dimen name="list_item_article_summary_extractor_preview_image_margin_right">6dp</dimen>
@@ -78,10 +79,12 @@
     <dimen name="list_item_article_summary_extractor_is_favorite_margin_right">10dp</dimen>
     <dimen name="list_item_article_summary_extractor_favorite_icon_margin_right">10dp</dimen>
     <dimen name="list_item_article_summary_extractor_favorite_index_bottom_margin">10dp</dimen>
-    <dimen name="list_item_article_summary_extractor_button_width">70dp</dimen>
 
     <dimen name="list_item_read_later_article_min_height">84dp</dimen>
     <dimen name="list_item_read_later_article_button_width">84dp</dimen>
+    <dimen name="list_item_read_later_article_content_margin_right">6dp</dimen>
+    <dimen name="list_item_read_later_article_content_padding_top">4dp</dimen>
+    <dimen name="list_item_read_later_article_content_margin_bottom">2dp</dimen>
     <dimen name="list_item_read_later_article_preview_image_size">80dp</dimen>
     <dimen name="list_item_read_later_article_preview_image_margin_right">6dp</dimen>
     <dimen name="list_item_read_later_article_title_text_size">12sp</dimen>
@@ -136,8 +139,8 @@
     <dimen name="dialog_tags_on_entry_tag_list_tags_margin">4dp</dimen>
     <dimen name="dialog_tags_on_entry_tag_list_tags_margin_bottom">12dp</dimen>
 
-    <dimen name="list_item_tag_on_entry_height">40dp</dimen>
-    <dimen name="list_item_tag_on_entry_button_width">40dp</dimen>
+    <dimen name="list_item_tag_on_entry_height">48dp</dimen>
+    <dimen name="list_item_tag_on_entry_button_width">48dp</dimen>
 
     <dimen name="activity_edit_reference_padding_left_right">8dp</dimen>
     <dimen name="activity_edit_reference_find_existing_margin_left">6dp</dimen>
@@ -160,6 +163,7 @@
 
     <dimen name="view_edit_entity_field_padding_left">4dp</dimen>
     <dimen name="view_edit_entity_field_margin_bottom">8dp</dimen>
+    <dimen name="view_edit_entity_field_value_margin_top">-10dp</dimen>
     <dimen name="view_edit_entity_field_value_margin_right">4dp</dimen>
     <dimen name="view_edit_entity_field_icon_max_size">32dp</dimen>
 

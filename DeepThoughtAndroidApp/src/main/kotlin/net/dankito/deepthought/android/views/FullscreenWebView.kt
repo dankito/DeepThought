@@ -133,7 +133,9 @@ class FullscreenWebView : WebView {
         // as immersive fullscreen is only available for KitKat and above leave immersive fullscreen mode by swiping from screen top or bottom is also only available on these  devices
         if(flags == NON_FULLSCREEN_MODE_SYSTEM_UI_FLAGS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             leaveFullscreenMode()
+
             leftFullscreenCallback?.invoke()
+            leftFullscreenCallback = null
         }
 
         super.onWindowSystemUiVisibilityChanged(flags)

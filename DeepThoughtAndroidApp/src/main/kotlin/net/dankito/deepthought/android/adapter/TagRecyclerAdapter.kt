@@ -50,7 +50,8 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
         super.bindViewForNullValue(viewHolder)
 
         viewHolder.txtTagDisplayText.text = ""
-        viewHolder.imgFilter.visibility = View.INVISIBLE
+        viewHolder.lytFilterIconClickArea.visibility = View.INVISIBLE
+        viewHolder.lytFilterIconClickArea.setOnClickListener(null)
         setBackgroundForDefaultState(viewHolder.itemView)
     }
 
@@ -63,7 +64,7 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
         }
 
         setFilterIconDependingOnTagState(item, viewHolder.imgFilter)
-        viewHolder.imgFilter.setOnClickListener { presenter.toggleFilterTag(item) }
+        viewHolder.lytFilterIconClickArea.setOnClickListener { presenter.toggleFilterTag(item) }
 
         setBackgroundColor(viewHolder.itemView, item)
 

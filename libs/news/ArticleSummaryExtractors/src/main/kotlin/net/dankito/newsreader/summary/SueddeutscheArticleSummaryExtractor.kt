@@ -25,8 +25,8 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
         val articles = mutableListOf<ArticleSummaryItem>()
 
         extractTeasers(articles, url, document)
-        extractTileTeasers(articles, url, document)
         extractTeaserListItems(articles, url, document)
+        extractTileTeasers(articles, url, document)
 
         return ArticleSummary(articles)
     }

@@ -1,9 +1,9 @@
 package net.dankito.deepthought.ui.presenter
 
+import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.ui.view.IReadLaterArticleView
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.messages.ReadLaterArticleChanged
@@ -68,9 +68,11 @@ class ReadLaterArticleListPresenter(private val view: IReadLaterArticleView, pri
     }
 
 
-    fun showArticle(article: ReadLaterArticle) {
+    fun deserializeEntryExtractionResult(article: ReadLaterArticle) {
         readLaterArticleService.deserializeEntryExtractionResult(article)
+    }
 
+    fun showArticle(article: ReadLaterArticle) {
         router.showEditEntryView(article)
     }
 

@@ -18,6 +18,7 @@ import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.model.ConfirmationDialogButton
 import tornadofx.*
 import java.text.DateFormat
 import javax.inject.Inject
@@ -118,8 +119,8 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
     }
 
     private fun askIfShouldDeleteEntry(item: Item) {
-        dialogService.showConfirmationDialog(dialogService.getLocalization().getLocalizedString("alert.message.really.delete.item")) { shouldDeleteEntry ->
-            if(shouldDeleteEntry) {
+        dialogService.showConfirmationDialog(dialogService.getLocalization().getLocalizedString("alert.message.really.delete.item")) { selectedButton ->
+            if(selectedButton == ConfirmationDialogButton.Confirm) {
                 presenter.deleteEntry(item)
             }
         }

@@ -32,6 +32,7 @@ abstract class ReferenceRecyclerAdapterBase(private val presenter: ReferencesPre
         val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_reference, parent, false)
 
         itemView.vwIsReferenceSetOnEntity.isShowAddedViewEnabled = shouldShowImageIsReferenceAddedToEntry
+        itemView.vwIsReferenceSetOnEntity.setEntityNameTextSize(14f)
 
         val viewHolder = ReferenceViewHolder(itemView)
 

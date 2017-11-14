@@ -1,5 +1,7 @@
 package net.dankito.deepthought.android.extensions
 
+import android.content.Context
+import android.graphics.Typeface
 import android.os.Build
 import android.widget.TextView
 
@@ -11,4 +13,18 @@ fun TextView.setTextColorToColorResource(colorResourceId: Int) {
     else {
         this.setTextColor(this.context.resources.getColor(colorResourceId))
     }
+}
+
+
+fun TextView.setTypefaceToRobotoSlabBold(context: Context?) {
+    setCustomTypeface(context, "RobotoSlab-Bold.ttf")
+}
+
+fun TextView.setCustomTypeface(context: Context?, typefaceName: String) {
+    var filename = typefaceName
+    if(filename.endsWith(".ttf") == false) {
+        filename += ".ttf"
+    }
+
+    this.typeface = Typeface.createFromAsset(context?.assets, "fonts/$filename")
 }

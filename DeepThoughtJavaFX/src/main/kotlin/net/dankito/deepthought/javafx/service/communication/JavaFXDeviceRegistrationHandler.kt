@@ -9,6 +9,7 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.model.ConfirmationDialogButton
 import tornadofx.*
 
 
@@ -19,8 +20,8 @@ class JavaFXDeviceRegistrationHandler(dataManager: DataManager, initialSyncManag
         val message = localization.getLocalizedString("alert.message.permit.device.to.synchronize", remoteDeviceInfo);
         val alertTitle = localization.getLocalizedString("alert.title.permit.device.to.synchronize");
 
-        dialogService.showConfirmationDialog(message, alertTitle) { permitsSynchronization ->
-            callback(remoteDeviceInfo, permitsSynchronization)
+        dialogService.showConfirmationDialog(message, alertTitle) { selectedButton ->
+            callback(remoteDeviceInfo, selectedButton == ConfirmationDialogButton.Confirm)
         }
     }
 
@@ -45,8 +46,8 @@ class JavaFXDeviceRegistrationHandler(dataManager: DataManager, initialSyncManag
 
         message += localization.getLocalizedString("ip.address", unknownDevice.address)
 
-        dialogService.showConfirmationDialog(message, localization.getLocalizedString("alert.title.ask.synchronize.data.with.device")) { likesToSyncData ->
-            if(likesToSyncData) {
+        dialogService.showConfirmationDialog(message, localization.getLocalizedString("alert.title.ask.synchronize.data.with.device")) { selectedButton ->
+            if(selectedButton == ConfirmationDialogButton.Confirm) {
                 callback(true, false)
             }
         }

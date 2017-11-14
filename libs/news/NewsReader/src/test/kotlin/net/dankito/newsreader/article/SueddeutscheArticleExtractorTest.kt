@@ -71,6 +71,15 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun ensureSurveysGetsRemoved2() {
+        getAndTestArticle("http://www.sueddeutsche.de/wirtschaft/agentur-fuer-arbeit-stellt-die-arbeitsagentur-hartz-iv-empfaenger-bloss-1.3747073",
+                "Stellt die Arbeitsagentur Hartz-IV-Empfänger bloß?",
+                null,
+                null,
+                5100, subTitle = "Agentur für Arbeit")
+    }
+
+    @Test
     fun ensureSZPlusNotificationGetsShown() {
         getAndTestArticle("http://www.sueddeutsche.de/wissen/menschen-ueber-wie-man-alt-und-zufrieden-wird-1.3733043?reduced=true",
                 "Wie man alt und zufrieden wird",

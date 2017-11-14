@@ -13,6 +13,10 @@ import net.dankito.deepthought.android.extensions.getColorFromResourceId
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.richtexteditor.android.RichTextEditor
 import net.dankito.richtexteditor.android.command.*
+import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.model.ConfirmationDialogButton
+import net.dankito.utils.ui.model.ConfirmationDialogConfig
+import javax.inject.Inject
 
 
 class EditHtmlTextDialog : FullscreenDialogFragment() {
@@ -26,6 +30,10 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
 
         private const val HINT_LABEL_RESOURCE_ID_EXTRA_NAME = "HINT_LABEL_RESOURCE_ID"
     }
+
+
+    @Inject
+    protected lateinit var dialogService: IDialogService
 
 
     private var setHtml: String? = null
@@ -57,6 +65,7 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
     override fun setupUI(rootView: View) {
         rootView.toolbar.inflateMenu(R.menu.dialog_edit_html_text_menu)
         rootView.toolbar.setOnMenuItemClickListener { item -> menuItemClicked(item) }
+        rootView.toolbar.setNavigationOnClickListener { askIfUnsavedChangesShouldBeSavedAndCloseDialog() }
         mnApplyHtmlChanges = rootView.toolbar.menu.findItem(R.id.mnApplyHtmlChanges)
 
         htmlToEditLabelResourceId?.let { setTitle(rootView.toolbar, it) }
@@ -190,6 +199,37 @@ class EditHtmlTextDialog : FullscreenDialogFragment() {
         }
 
         return false
+    }
+
+    override fun handlesBackButtonPress(): Boolean {
+        if(mnApplyHtmlChanges.isVisible) {
+            askIfUnsavedChangesShouldBeSaved()
+            return true
+        }
+
+        return super.handlesBackButtonPress()
+    }
+
+
+    private fun askIfUnsavedChangesShouldBeSavedAndCloseDialog() {
+        if(mnApplyHtmlChanges.isVisible) {
+            askIfUnsavedChangesShouldBeSaved()
+        }
+        else {
+            closeDialog()
+        }
+    }
+
+    private fun askIfUnsavedChangesShouldBeSaved() {
+        val config = ConfirmationDialogConfig(true, getString(R.string.action_cancel), true, getString(R.string.action_dismiss), getString(R.string.action_apply))
+        dialogService.showConfirmationDialog(getString(R.string.dialog_edit_html_alert_message_html_contains_unsaved_changes), config = config) { selectedButton ->
+            if(selectedButton == ConfirmationDialogButton.Confirm) {
+                applyChangesAndCloseDialog()
+            }
+            else if(selectedButton == ConfirmationDialogButton.ThirdButton) {
+                closeDialog()
+            }
+        }
     }
 
 

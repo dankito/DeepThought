@@ -32,6 +32,8 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.model.ConfirmationDialogButton
+import net.dankito.utils.ui.model.ConfirmationDialogConfig
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 
@@ -228,12 +230,13 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
     }
 
     private fun askIfUnsavedChangesShouldBeSaved() {
-        dialogService.showConfirmationDialog(getString(R.string.activity_edit_series_alert_message_series_has_been_edited)) { shouldChangesGetSaved ->
+        val config = ConfirmationDialogConfig(true, getString(R.string.action_cancel), true, getString(R.string.action_dismiss), getString(R.string.action_save))
+        dialogService.showConfirmationDialog(getString(R.string.activity_edit_series_alert_message_series_has_been_edited), config = config) { selectedButton ->
             runOnUiThread {
-                if(shouldChangesGetSaved) {
+                if(selectedButton == ConfirmationDialogButton.Confirm) {
                     saveSeriesAndCloseDialog()
                 }
-                else {
+                else if(selectedButton == ConfirmationDialogButton.ThirdButton) {
                     closeDialog()
                 }
             }
@@ -310,8 +313,8 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
     }
 
     private fun askIfANewSeriesShouldBeCreated() {
-        dialogService.showConfirmationDialog(getString(R.string.activity_edit_series_alert_message_create_new_series)) { createNewSeries ->
-            if(createNewSeries) {
+        dialogService.showConfirmationDialog(getString(R.string.activity_edit_series_alert_message_create_new_series)) { selectedButton ->
+            if(selectedButton == ConfirmationDialogButton.Confirm) {
                 if(didSeriesChange) {
                     askIfCurrentSeriesChangesShouldGetSaved()
                 }
@@ -323,8 +326,8 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
     }
 
     private fun askIfCurrentSeriesChangesShouldGetSaved() {
-        dialogService.showConfirmationDialog(getString(R.string.activity_edit_series_alert_message_create_new_series_current_one_has_unsaved_changes)) { saveChanges ->
-            if(saveChanges) {
+        dialogService.showConfirmationDialog(getString(R.string.activity_edit_series_alert_message_create_new_series_current_one_has_unsaved_changes)) { selectedButton ->
+            if(selectedButton == ConfirmationDialogButton.Confirm) {
                 saveSeriesAsync { // TODO: show error message in case of failure
                     runOnUiThread { createSeries() }
                 }

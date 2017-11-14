@@ -6,6 +6,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.list_item_article_summary_extractor.view.*
+import net.dankito.deepthought.android.views.SwipeButton
 
 
 class ArticleSummaryExtractorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)  {
@@ -18,8 +19,8 @@ class ArticleSummaryExtractorViewHolder(itemView: View) : RecyclerView.ViewHolde
 
     val txtFavoriteIndex: TextView = itemView.txtFavoriteIndex
 
-    val btnEditArticleSummaryExtractorConfig: ImageButton = itemView.btnEditArticleSummaryExtractorConfig
+    val btnEditArticleSummaryExtractorConfig: SwipeButton = itemView.btnEditArticleSummaryExtractorConfig
 
-    val btnDeleteArticleSummaryExtractorConfig: ImageButton = itemView.btnDeleteArticleSummaryExtractorConfig
+    val btnDeleteArticleSummaryExtractorConfig: SwipeButton = itemView.btnDeleteArticleSummaryExtractorConfig
 
 }

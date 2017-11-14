@@ -38,6 +38,8 @@
     <string name="action_ok">OK</string>
     <string name="action_yes">Ja</string>
     <string name="action_no">Nein</string>
+    <string name="action_cancel">Abbrechen</string>
+    <string name="action_dismiss">Verwerfen</string>
     <string name="action_never">Nie</string>
 
     <string name="permanent_notification_content">Einträge schnell erstellen</string>
@@ -182,7 +184,8 @@
     <string name="activity_edit_item_content_label">Information</string>
     <string name="activity_edit_item_edit_content_title">Information</string>
     <string name="activity_edit_item_edit_content_hint">Was möchten Sie speichern (Gedanke, Notiz, Zitat, …)?</string>
-    <string name="activity_edit_item_summary_label">Titel / Zusammenfassung</string>
+    <string name="activity_edit_item_title_summary_label">Titel / Zusammenfassung</string>
+    <string name="activity_edit_item_summary_only_label">Zusammenfassung</string>
     <string name="activity_edit_item_edit_summary_title">Titel / Zusammenfassung</string>
     <string name="activity_edit_item_source_label">Quelle</string>
     <string name="activity_edit_item_tags_label">Schlagworte</string>
@@ -196,6 +199,8 @@
         Sie den Eintrag jetzt speichern überschreiben Sie diese Änderungen.</string>
     <string name="activity_edit_item_alert_message_delete_item">Möchten Sie den Eintrag \'%s\' wirklich löschen?</string>
 
+    <string name="dialog_edit_html_alert_message_html_contains_unsaved_changes">Die Information wurde geändert.\n\nMöchten Sie diese Änderungen übernehmen?</string>
+
     <string name="dialog_tags_on_item_title">Schlagworte</string>
     <string name="dialog_tags_on_item_tags_label">Schlagworte:</string>
     <string name="dialog_tags_on_item_create_tag">Neu</string>
@@ -206,6 +211,7 @@
         <item quantity="one">Es gibt kein Schlagwort mit Namen %1$s.\nMöchten Sie es erstellen?</item> <!-- Alternative, klingt aber ein bisschen doof im Pluaral -->
         <item quantity="other">Die Schlagworte %1$s und %2$s existieren nicht.\nMöchten Sie sie erstellen?</item>
     </plurals>
+    <string name="dialog_tags_on_item_alert_message_html_contains_unsaved_changes">Schlagworte wurden geändert.\n\nMöchten Sie diese Änderungen übernehmen?</string>
 
     <string name="menu_open_url_open_in_same_activity">In diesem Fenster öffnen</string>
     <string name="menu_open_url_open_in_new_activity">In neuem Fenster öffnen</string>
@@ -215,7 +221,7 @@
     <string name="activity_edit_source_use_existing_label">Bestehende verwenden:</string>
     <string name="activity_edit_source_create_source">Neu …</string>
     <string name="activity_edit_source_create_source_from_isbn">Von ISBN …</string>
-    <string name="activity_edit_source_title_label">Titel</string>
+    <string name="activity_edit_source_title_label">Titel der Quelle</string>
     <string name="activity_edit_source_series_label">Reihe</string>
     <string name="activity_edit_source_issue_label">Ausgabe</string>
     <string name="activity_edit_source_publishing_date_label">Veröffentlichungsdatum</string>
@@ -235,7 +241,7 @@
     <string name="activity_edit_series_use_existing_label">Bestehende verwenden:</string>
     <string name="activity_edit_series_create_series">Neu …</string>
     <string name="activity_edit_series_create_series_from_isbn">Von ISBN …</string>
-    <string name="activity_edit_series_title_label">Reihentitel</string>
+    <string name="activity_edit_series_title_label">Titel der Reihe</string>
     <string name="activity_edit_series_alert_message_create_new_series">Möchten Sie wirklich eine neue Reihe erstellen?\n\nDie aktuelle wird dann verworfen
         und eine neue Reihe wird angelegt.</string>
     <string name="activity_edit_series_alert_message_create_new_series_current_one_has_unsaved_changes">Die aktuelle Reihe enthält nicht gespeicherte Änderungen.\n\nSollen diese

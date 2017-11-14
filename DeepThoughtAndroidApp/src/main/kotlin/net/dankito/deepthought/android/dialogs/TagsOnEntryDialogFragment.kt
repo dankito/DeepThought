@@ -31,6 +31,8 @@ import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
 import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.model.ConfirmationDialogButton
+import net.dankito.utils.ui.model.ConfirmationDialogConfig
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -107,6 +109,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
     override fun setupUI(rootView: View) {
         rootView.toolbar.inflateMenu(R.menu.dialog_tags_on_entry_menu)
         rootView.toolbar.setOnMenuItemClickListener { item -> menuItemClicked(item) }
+        rootView.toolbar.setNavigationOnClickListener { askIfUnsavedChangesShouldBeSavedAndCloseDialog() }
         mnApplyTagsOnEntryChanges = rootView.toolbar.menu.findItem(R.id.mnApplyTagsOnEntryChanges)
 
         rootView.rcyTags.adapter = adapter
@@ -180,6 +183,37 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
         }
 
         return false
+    }
+
+    override fun handlesBackButtonPress(): Boolean {
+        if(mnApplyTagsOnEntryChanges?.isVisible == true) {
+            askIfUnsavedChangesShouldBeSaved()
+            return true
+        }
+
+        return super.handlesBackButtonPress()
+    }
+
+
+    private fun askIfUnsavedChangesShouldBeSavedAndCloseDialog() {
+        if(mnApplyTagsOnEntryChanges?.isVisible == true) {
+            askIfUnsavedChangesShouldBeSaved()
+        }
+        else {
+            closeDialog()
+        }
+    }
+
+    private fun askIfUnsavedChangesShouldBeSaved() {
+        val config = ConfirmationDialogConfig(true, getString(R.string.action_cancel), true, getString(R.string.action_dismiss), getString(R.string.action_apply))
+        dialogService.showConfirmationDialog(getString(R.string.dialog_tags_on_item_alert_message_html_contains_unsaved_changes), config = config) { selectedButton ->
+            if(selectedButton == ConfirmationDialogButton.Confirm) {
+                applyChangesAndCloseDialog()
+            }
+            else if(selectedButton == ConfirmationDialogButton.ThirdButton) {
+                closeDialog()
+            }
+        }
     }
 
 

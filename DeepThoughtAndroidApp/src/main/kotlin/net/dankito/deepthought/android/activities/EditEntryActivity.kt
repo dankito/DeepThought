@@ -22,6 +22,7 @@ import net.dankito.deepthought.android.activities.arguments.EditEntryActivityRes
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.EditHtmlTextDialog
+import net.dankito.deepthought.android.dialogs.FullscreenDialogFragment
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import net.dankito.deepthought.android.views.*
@@ -44,6 +45,8 @@ import net.dankito.utils.IThreadPool
 import net.dankito.utils.extensions.toSortedString
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.model.ConfirmationDialogButton
+import net.dankito.utils.ui.model.ConfirmationDialogConfig
 import net.engio.mbassy.listener.Handler
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -316,7 +319,7 @@ class EditEntryActivity : BaseActivity() {
             actionBar.setDisplayShowHomeEnabled(true)
         }
 
-        lytAbstractPreview.setFieldNameOnUiThread(R.string.activity_edit_item_summary_label) { didAbstractChange -> abstractChanged(didAbstractChange) }
+        lytAbstractPreview.setFieldNameOnUiThread(R.string.activity_edit_item_title_summary_label) { didAbstractChange -> abstractChanged(didAbstractChange) }
         lytAbstractPreview.fieldValueFocusChangedListener = { hasFocus ->
             if(hasFocus == false) {
                 appliedChangesToAbstract(lytAbstractPreview.didValueChange)
@@ -805,6 +808,8 @@ class EditEntryActivity : BaseActivity() {
 
 
     private fun setAbstractPreviewOnUIThread() {
+        lytAbstractPreview.setFieldNameOnUiThread(if(alsoShowTitleForSummary()) R.string.activity_edit_item_title_summary_label else R.string.activity_edit_item_summary_only_label)
+
         if(abstractToEdit.isNullOrBlank()) {
 //            lytAbstractPreview.setOnboardingTextOnUiThread(R.string.activity_edit_entry_abstract_onboarding_text)
         }
@@ -819,6 +824,10 @@ class EditEntryActivity : BaseActivity() {
             fabEditEntryAbstract.visibility = if(showAbstractPreview) View.GONE else View.VISIBLE
         }
         setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread()
+    }
+
+    private fun alsoShowTitleForSummary(): Boolean {
+        return sourceToEdit?.url == null && (abstractToEdit?.length ?: 0) < 35
     }
 
     private fun setReferencePreviewOnUIThread() {
@@ -912,7 +921,7 @@ class EditEntryActivity : BaseActivity() {
         val localSettings = entryService.dataManager.localSettings
 
         if(localSettings.didShowItemInformationFullscreenGesturesHelp == false) {
-            dialogService.showConfirmationDialog(getString(R.string.context_help_item_content_fullscreen_gestures), showNoButton = false) {
+            dialogService.showConfirmationDialog(getString(R.string.context_help_item_content_fullscreen_gestures), config = ConfirmationDialogConfig(false)) {
                 runOnUiThread {
                     wbvwContent.leaveFullscreenModeAndWaitTillLeft { // leave fullscreen otherwise a lot of unwanted behaviour occurs
                         userConfirmedHelpOnUIThread()
@@ -999,8 +1008,11 @@ class EditEntryActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        if(isEditEntryFieldDialogVisible()) { // let TagEntriesListDialog handle back button press
-            super.onBackPressed()
+        val visibleEditEntryFieldDialog = getVisibleEditEntryFieldDialog()
+        if(visibleEditEntryFieldDialog != null) {
+            if(visibleEditEntryFieldDialog.handlesBackButtonPress() == false) {
+                super.onBackPressed()
+            }
             return
         }
         else if(openUrlOptionsView.handlesBackButtonPress()) {
@@ -1013,8 +1025,13 @@ class EditEntryActivity : BaseActivity() {
         askIfUnsavedChangesShouldBeSavedAndCloseDialog()
     }
 
-    private fun isEditEntryFieldDialogVisible(): Boolean {
-        return supportFragmentManager.findFragmentByTag(EditHtmlTextDialog.TAG) != null || supportFragmentManager.findFragmentByTag(TagsOnEntryDialogFragment.TAG) != null
+    private fun getVisibleEditEntryFieldDialog(): FullscreenDialogFragment? {
+        val editHtmlDialog = supportFragmentManager.findFragmentByTag(EditHtmlTextDialog.TAG) as? EditHtmlTextDialog
+        if(editHtmlDialog != null) {
+            return editHtmlDialog
+        }
+
+        return supportFragmentManager.findFragmentByTag(TagsOnEntryDialogFragment.TAG) as? TagsOnEntryDialogFragment
     }
 
 
@@ -1255,7 +1272,7 @@ class EditEntryActivity : BaseActivity() {
             entryService.dataManager.localSettingsUpdated()
 
             val helpText = getText(R.string.context_help_saved_read_later_article_is_now_in_items).toString()
-            dialogService.showConfirmationDialog(contextHelpUtil.stringUtil.getSpannedFromHtml(helpText), showNoButton = false) {
+            dialogService.showConfirmationDialog(contextHelpUtil.stringUtil.getSpannedFromHtml(helpText), config = ConfirmationDialogConfig(false)) {
                 callback()
             }
         }
@@ -1303,8 +1320,8 @@ class EditEntryActivity : BaseActivity() {
 
     private fun askIfShouldDeleteExistingEntryAndCloseDialog() {
         item?.let { entry ->
-            dialogService.showConfirmationDialog(getString(R.string.activity_edit_item_alert_message_delete_item, entry.entryPreview)) { deleteEntry ->
-                if(deleteEntry) {
+            dialogService.showConfirmationDialog(getString(R.string.activity_edit_item_alert_message_delete_item, entry.entryPreview)) { selectedButton ->
+                if(selectedButton == ConfirmationDialogButton.Confirm) {
                     mnDeleteExistingEntry?.isEnabled = false
                     unregisterEventBusListener()
 
@@ -1348,12 +1365,13 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun askIfUnsavedChangesShouldBeSaved() {
-        dialogService.showConfirmationDialog(getString(R.string.activity_edit_item_alert_message_item_contains_unsaved_changes)) { shouldChangesGetSaved ->
+        val config = ConfirmationDialogConfig(true, getString(R.string.action_cancel), true, getString(R.string.action_dismiss), getString(R.string.action_save))
+        dialogService.showConfirmationDialog(getString(R.string.activity_edit_item_alert_message_item_contains_unsaved_changes), config = config) { selectedButton ->
             runOnUiThread {
-                if(shouldChangesGetSaved) {
+                if(selectedButton == ConfirmationDialogButton.Confirm) {
                     saveEntryAndCloseDialog()
                 }
-                else {
+                else if(selectedButton == ConfirmationDialogButton.ThirdButton) {
                     closeDialog()
                 }
             }

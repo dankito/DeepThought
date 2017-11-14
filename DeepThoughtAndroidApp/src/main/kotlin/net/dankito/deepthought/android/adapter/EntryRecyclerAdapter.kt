@@ -60,7 +60,7 @@ class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): Mul
     }
 
     override fun setupSwipeView(viewHolder: EntryViewHolder, item: Item) {
-        viewHolder.btnShareEntry.visibility = if (item.source != null) View.VISIBLE else View.GONE
+        viewHolder.btnShareEntry.visibility = if (item.source?.url.isNullOrBlank() == false) View.VISIBLE else View.GONE
         viewHolder.btnShareEntry.setOnClickListener {
             presenter.copyReferenceUrlToClipboard(item)
             closeSwipeView(viewHolder)

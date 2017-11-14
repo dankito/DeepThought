@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/swipe_button_margin"
+                android:background="@drawable/swipe_button_background"
+>
+
+    <!-- Without setting focusable to false ImageButton would receive focus and RelativeLayout would therefore not be clickable -->
+
+    <ImageButton
+        android:id="@+id/imgIcon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxWidth="@dimen/swipe_button_max_icon_height"
+        android:maxHeight="@dimen/swipe_button_max_icon_height"
+        android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:focusable="false"
+        android:background="@android:color/transparent"
+    />
+
+</RelativeLayout>
