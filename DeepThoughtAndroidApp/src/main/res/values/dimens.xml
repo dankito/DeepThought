@@ -65,8 +65,8 @@
     <dimen name="list_item_reference_height">72dp</dimen>
     <dimen name="list_item_reference_button_width">72dp</dimen>
 
-    <dimen name="list_item_series_height">54dp</dimen>
-    <dimen name="list_item_series_button_width">54dp</dimen>
+    <dimen name="list_item_series_height">48dp</dimen>
+    <dimen name="list_item_series_button_width">48dp</dimen>
     <dimen name="list_item_series_margin_left">12dp</dimen>
 
     <dimen name="list_item_article_summary_extractor_height">60dp</dimen>
@@ -139,8 +139,8 @@
     <dimen name="dialog_tags_on_entry_tag_list_tags_margin">4dp</dimen>
     <dimen name="dialog_tags_on_entry_tag_list_tags_margin_bottom">12dp</dimen>
 
-    <dimen name="list_item_tag_on_entry_height">40dp</dimen>
-    <dimen name="list_item_tag_on_entry_button_width">40dp</dimen>
+    <dimen name="list_item_tag_on_entry_height">48dp</dimen>
+    <dimen name="list_item_tag_on_entry_button_width">48dp</dimen>
 
     <dimen name="activity_edit_reference_padding_left_right">8dp</dimen>
     <dimen name="activity_edit_reference_find_existing_margin_left">6dp</dimen>

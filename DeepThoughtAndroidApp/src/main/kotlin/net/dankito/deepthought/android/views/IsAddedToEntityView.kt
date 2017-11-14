@@ -3,6 +3,7 @@ package net.dankito.deepthought.android.views
 import android.content.Context
 import android.graphics.Typeface
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
@@ -90,6 +91,11 @@ class IsAddedToEntityView : RelativeLayout {
             txtvwEntitySecondaryInformation.text = secondaryInformation
             txtvwEntitySecondaryInformation.visibility = View.VISIBLE
         }
+    }
+
+
+    fun setEntityNameTextSize(textSizeInSP: Float) {
+        txtvwEntityName.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSizeInSP)
     }
 
 }
