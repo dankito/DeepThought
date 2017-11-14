@@ -16,6 +16,7 @@
     <dimen name="action_margin_right">1dp</dimen>
 
     <dimen name="swipe_button_margin">3dp</dimen>
+    <dimen name="swipe_button_max_icon_height">55dp</dimen>
     <dimen name="swipe_button_corner_radius">6dp</dimen>
 
     <dimen name="fragment_tab_entries_filtered_entities_margin_top">12dp</dimen>
@@ -35,7 +36,7 @@
     <dimen name="view_context_help_confirm_button_height">36dp</dimen>
 
     <dimen name="list_item_entry_height">118dp</dimen>
-    <dimen name="list_item_entry_button_width">118dp</dimen>
+    <dimen name="list_item_entry_button_width">84dp</dimen>
     <dimen name="list_item_entry_padding">8dp</dimen>
     <dimen name="list_item_entry_reference_preview_min_height">18dp</dimen>
     <dimen name="list_item_entry_reference_preview_text_size">11sp</dimen>

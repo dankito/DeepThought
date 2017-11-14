@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <net.dankito.deepthought.android.views.FixedSwipeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/referenceSwipeLayout"
     android:layout_width="match_parent"
     android:layout_height="@dimen/list_item_reference_height"
@@ -15,25 +16,25 @@
         android:orientation="horizontal"
     >
 
-        <ImageButton
+        <net.dankito.deepthought.android.views.SwipeButton
             android:id="@+id/btnEditReference"
             android:layout_width="@dimen/list_item_reference_button_width"
-            style="@style/SwipeButtonStyle"
-            android:src="@drawable/ic_mode_edit_white_48dp"
+            android:layout_height="match_parent"
+            app:icon="@drawable/ic_mode_edit_white_48dp"
         />
 
-        <ImageButton
+        <net.dankito.deepthought.android.views.SwipeButton
             android:id="@+id/btnShareReference"
             android:layout_width="@dimen/list_item_reference_button_width"
-            style="@style/SwipeButtonStyle"
-            android:src="@drawable/ic_share_white_48dp"
+            android:layout_height="match_parent"
+            app:icon="@drawable/ic_share_white_48dp"
         />
 
-        <ImageButton
+        <net.dankito.deepthought.android.views.SwipeButton
             android:id="@+id/btnDeleteReference"
             android:layout_width="@dimen/list_item_reference_button_width"
-            style="@style/SwipeButtonStyle"
-            android:src="@drawable/ic_delete_white_48dp"
+            android:layout_height="match_parent"
+            app:icon="@drawable/ic_delete_white_48dp"
         />
 
     </LinearLayout>
