@@ -214,7 +214,7 @@
     <string name="activity_edit_source_use_existing_label">Bestehende verwenden:</string>
     <string name="activity_edit_source_create_source">Neu …</string>
     <string name="activity_edit_source_create_source_from_isbn">Von ISBN …</string>
-    <string name="activity_edit_source_title_label">Titel</string>
+    <string name="activity_edit_source_title_label">Titel der Quelle</string>
     <string name="activity_edit_source_series_label">Reihe</string>
     <string name="activity_edit_source_issue_label">Ausgabe</string>
     <string name="activity_edit_source_publishing_date_label">Veröffentlichungsdatum</string>
@@ -234,7 +234,7 @@
     <string name="activity_edit_series_use_existing_label">Bestehende verwenden:</string>
     <string name="activity_edit_series_create_series">Neu …</string>
     <string name="activity_edit_series_create_series_from_isbn">Von ISBN …</string>
-    <string name="activity_edit_series_title_label">Reihentitel</string>
+    <string name="activity_edit_series_title_label">Titel der Reihe</string>
     <string name="activity_edit_series_alert_message_create_new_series">Möchten Sie wirklich eine neue Reihe erstellen?\n\nDie aktuelle wird dann verworfen
         und eine neue Reihe wird angelegt.</string>
     <string name="activity_edit_series_alert_message_create_new_series_current_one_has_unsaved_changes">Die aktuelle Reihe enthält nicht gespeicherte Änderungen.\n\nSollen diese

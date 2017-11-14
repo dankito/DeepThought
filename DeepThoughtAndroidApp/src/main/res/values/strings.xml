@@ -175,7 +175,7 @@
     <string name="activity_edit_source_use_existing_label">Select existing source:</string>
     <string name="activity_edit_source_create_source">New …</string>
     <string name="activity_edit_source_create_source_from_isbn">From ISBN …</string>
-    <string name="activity_edit_source_title_label">Title</string>
+    <string name="activity_edit_source_title_label">Source title</string>
     <string name="activity_edit_source_series_label">Series</string>
     <string name="activity_edit_source_issue_label">Issue</string>
     <string name="activity_edit_source_publishing_date_label">Publishing date</string>
