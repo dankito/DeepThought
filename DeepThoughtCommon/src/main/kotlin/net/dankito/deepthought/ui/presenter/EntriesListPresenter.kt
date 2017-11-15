@@ -8,7 +8,7 @@ import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.IEntriesListView
 import net.dankito.service.data.DeleteEntityService
-import net.dankito.service.data.messages.EntryChanged
+import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
@@ -95,8 +95,10 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
     inner class EventBusListener {
 
         @Handler()
-        fun entriesChanged(entryChanged: EntryChanged) {
-            searchEntries(lastSearchTermProperty)
+        fun entityChanged(entityChanged: EntitiesOfTypeChanged) {
+            if(entityChanged.entityType == Item::class.java) {
+                searchEntries(lastSearchTermProperty)
+            }
         }
 
     }

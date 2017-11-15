@@ -6,7 +6,7 @@ import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.IReadLaterArticleView
 import net.dankito.service.data.ReadLaterArticleService
-import net.dankito.service.data.messages.ReadLaterArticleChanged
+import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
@@ -100,8 +100,10 @@ class ReadLaterArticleListPresenter(private val view: IReadLaterArticleView, pri
     inner class EventBusListener {
 
         @Handler
-        fun readLaterArticleChanged(readLaterArticleChanged: ReadLaterArticleChanged) {
-            getReadLaterArticles()
+        fun entityChanged(entityChanged: EntitiesOfTypeChanged) {
+            if(entityChanged.entityType == ReadLaterArticle::class.java) {
+                getReadLaterArticles()
+            }
         }
 
     }

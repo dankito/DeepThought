@@ -39,6 +39,9 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
     }
 
 
+    val isEmpty: Boolean
+        get() = queuedItemsCount == 0
+
     val queuedItemsCount: Int
         get() = producedItemsQueue.size
 
