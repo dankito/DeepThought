@@ -26,22 +26,28 @@ val Item.contentPlainText: String
 val Item.entryPreview: String
     get()  {
         val includeItemSummary = this.referencePreview.isNullOrBlank() == false
-        var preview = if(includeItemSummary) this.abstractPlainText else ""
 
-        if(preview.length < MaxPreviewLength) {
-            if(preview.isNotEmpty()) {
-                preview += " - "
-            }
-
-            preview += this.contentPlainText
-        }
-
-        if(preview.length > MaxPreviewLength) {
-            preview = preview.substring(0, MaxPreviewLength) + "..."
-        }
-
-        return preview
+        return getEntryPreview(includeItemSummary)
     }
+
+
+fun Item.getEntryPreview(includeItemSummary: Boolean): String {
+    var preview = if(includeItemSummary) this.abstractPlainText else ""
+
+    if(preview.length < MaxPreviewLength) {
+        if(preview.isNotEmpty()) {
+            preview += " - "
+        }
+
+        preview += this.contentPlainText
+    }
+
+    if(preview.length > MaxPreviewLength) {
+        preview = preview.substring(0, MaxPreviewLength) + "..."
+    }
+
+    return preview
+}
 
 
 fun Item.getEntryPreviewWithSeriesAndPublishingDate(source: Source?, series: Series? = null): String {
