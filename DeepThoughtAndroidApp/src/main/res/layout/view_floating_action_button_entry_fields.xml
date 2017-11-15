@@ -18,19 +18,19 @@
 
 
     <com.github.clans.fab.FloatingActionButton
-        android:id="@+id/fabEditEntryAbstract"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/MenuButtonsStyle"
-        fab:fab_label="@string/activity_edit_item_title_summary_label"
-    />
-
-    <com.github.clans.fab.FloatingActionButton
         android:id="@+id/fabEditEntryReference"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/MenuButtonsStyle"
         fab:fab_label="@string/activity_edit_item_source_label"
+    />
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fabEditEntryAbstract"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/MenuButtonsStyle"
+        fab:fab_label="@string/activity_edit_item_title_summary_label"
     />
 
     <com.github.clans.fab.FloatingActionButton
