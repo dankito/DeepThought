@@ -28,7 +28,6 @@ import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import net.dankito.deepthought.android.views.*
 import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.model.*
-import net.dankito.deepthought.model.extensions.entryPreview
 import net.dankito.deepthought.model.extensions.getPlainTextForHtml
 import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.fields.ItemField
@@ -1320,7 +1319,7 @@ class EditEntryActivity : BaseActivity() {
 
     private fun askIfShouldDeleteExistingEntryAndCloseDialog() {
         item?.let { entry ->
-            dialogService.showConfirmationDialog(getString(R.string.activity_edit_item_alert_message_delete_item, entry.entryPreview)) { selectedButton ->
+            dialogService.showConfirmationDialog(getString(R.string.activity_edit_item_alert_message_delete_item, entry.preview)) { selectedButton ->
                 if(selectedButton == ConfirmationDialogButton.Confirm) {
                     mnDeleteExistingEntry?.isEnabled = false
                     unregisterEventBusListener()
