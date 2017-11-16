@@ -46,7 +46,7 @@
             android:maxLines="2"
             android:ellipsize="end"
             style="@style/Header1Style"
-            android:textSize="18sp"
+            android:textSize="@dimen/header_1_very_large_text_size"
         />
 
         <TextView

@@ -11,6 +11,7 @@
 
     <dimen name="header_1_text_size">14sp</dimen>
     <dimen name="header_1_larger_text_size">15sp</dimen>
+    <dimen name="header_1_very_large_text_size">18sp</dimen>
     <dimen name="header_2_text_size">13sp</dimen>
     <dimen name="text_body_text_size">12sp</dimen>
 
