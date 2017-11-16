@@ -1,7 +1,7 @@
 package net.dankito.newsreader.model
 
 import java.util.*
-import kotlin.collections.ArrayList
+import kotlin.collections.LinkedHashMap
 
 
 open class ArticleSummary(var articles: List<ArticleSummaryItem> = listOf(), var time : Date = Date(),
@@ -15,9 +15,14 @@ open class ArticleSummary(var articles: List<ArticleSummaryItem> = listOf(), var
             indexOfAddedItems = -1
         }
 
-        val mergedArticles = ArrayList(articles)
-        mergedArticles.addAll(nextItemsSummary.articles)
-        articles = mergedArticles
+        val mergedArticles = LinkedHashMap<String, ArticleSummaryItem>() // avoids duplicates
+        articles.forEach { article ->
+            mergedArticles.put(article.url, article)
+        }
+        nextItemsSummary.articles.forEach { newArticle ->
+            mergedArticles.put(newArticle.url, newArticle)
+        }
+        articles = mergedArticles.values.toList()
 
         canLoadMoreItems = nextItemsSummary.canLoadMoreItems
         nextItemsUrl = nextItemsSummary.nextItemsUrl
