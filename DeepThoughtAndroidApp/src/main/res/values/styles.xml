@@ -88,7 +88,7 @@
 
     <style name="Header1Style">
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/header_1_text_size</item>
         <item name="android:textColor">@color/header_1_text_color</item>
         <item name="android:typeface">serif</item>
         <item name="customFont">RobotoSlab-Bold</item>
@@ -96,13 +96,13 @@
 
     <style name="Header2Style">
         <item name="android:textStyle">italic</item>
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">@dimen/header_2_text_size</item>
         <item name="android:textColor">@color/header_2_text_color</item>
     </style>
 
     <style name="TextBodyStyle">
         <item name="android:textStyle">normal</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/text_body_text_size</item>
         <item name="android:textColor">@color/text_body_text_color</item>
     </style>
 
