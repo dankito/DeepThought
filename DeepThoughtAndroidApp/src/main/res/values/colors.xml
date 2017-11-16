@@ -19,7 +19,8 @@
     <color name="header_1_text_color">#212121</color>
     <color name="header_2_text_color">#999999</color>
     <!-- Should actually be #b8b8b8 according to design guideline -->
-    <color name="text_body_text_color">#999999</color>
+    <!-- May change to 666666 (like Heise, but there it looks brighter to me) or 888888 -->
+    <color name="text_body_text_color">#777777</color>
 
     <!-- this is the same background color as for Snackbars -->
     <color name="context_help_background_color">#323232</color>
