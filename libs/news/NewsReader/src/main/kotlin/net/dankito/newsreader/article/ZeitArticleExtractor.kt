@@ -66,7 +66,7 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
         var content = ""
 
         // remove <noscript> elements which impede that <img>s in <figure> get loaded
-        removeNoscriptElements(articleBodyElement)
+        unwrapImagesFromNoscriptElements(articleBodyElement)
         articleBodyElement.select(".sharing-menu, .metadata").remove()
 
         for(articleElement in articleBodyElement.select("p.article__item, ul.article__item, figure.article__item, .article__subheading, .article-heading__podcast-player, " +
@@ -75,17 +75,6 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
         }
 
         return Item(content, abstractString)
-    }
-
-    private fun removeNoscriptElements(articleBodyElement: Element) {
-        articleBodyElement.parent().select("noscript").forEach { noscriptElement ->
-            noscriptElement.children().forEach { child ->
-                child.remove()
-                noscriptElement.parent().insertChildren(noscriptElement.siblingIndex(), Arrays.asList(child))
-            }
-
-            noscriptElement.remove()
-        }
     }
 
     private fun createReference(articleUrl: String, articleBodyElement: Element): Source {
