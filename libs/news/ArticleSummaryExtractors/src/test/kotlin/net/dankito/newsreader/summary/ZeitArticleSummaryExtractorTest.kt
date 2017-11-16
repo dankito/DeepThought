@@ -9,8 +9,8 @@ class ZeitArticleSummaryExtractorTest : ArticleSummaryExtractorTestBase() {
     }
 
 
-    override fun urlHasHttpsPrefix(): Boolean {
-        return false
+    override fun getArticleUrlScheme(): ArticleUrlScheme {
+        return ArticleUrlScheme.HttpOnly
     }
 
     override fun areEmptyArticleSummariesAllowed(): Boolean {

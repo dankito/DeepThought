@@ -2,8 +2,7 @@ package net.dankito.newsreader.summary
 
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.newsreader.model.ArticleSummary
-import org.hamcrest.CoreMatchers.`is`
-import org.hamcrest.CoreMatchers.startsWith
+import org.hamcrest.CoreMatchers.*
 import org.junit.Assert.assertThat
 import org.junit.Test
 import java.util.concurrent.CountDownLatch
@@ -16,9 +15,14 @@ class HeiseNewsArticleSummaryExtractorTest : ArticleSummaryExtractorTestBase() {
     }
 
 
+    override fun areEmptyArticleSummariesAllowed(): Boolean {
+        return true
+    }
+
     override fun testCanLoadMoreItems(summary: ArticleSummary) {
         assertThat(summary.canLoadMoreItems, `is`(true))
-        assertThat(summary.nextItemsUrl, startsWith("https://www.heise.de/newsticker/seite-"))
+        assertThat(summary.nextItemsUrl, startsWith("https://www.heise.de/"))
+        assertThat(summary.nextItemsUrl, containsString("/seite-"))
     }
 
 

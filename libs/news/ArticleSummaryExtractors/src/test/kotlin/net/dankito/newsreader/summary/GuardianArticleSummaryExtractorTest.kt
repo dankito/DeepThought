@@ -9,10 +9,6 @@ class GuardianArticleSummaryExtractorTest : ArticleSummaryExtractorTestBase() {
     }
 
 
-    override fun urlHasHttpsPrefix(): Boolean {
-        return true
-    }
-
     override fun areEmptyArticleSummariesAllowed(): Boolean {
         return true
     }

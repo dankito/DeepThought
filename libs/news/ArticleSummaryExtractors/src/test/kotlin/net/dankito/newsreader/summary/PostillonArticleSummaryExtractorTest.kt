@@ -1,7 +1,7 @@
 package net.dankito.newsreader.summary
 
-import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.newsreader.model.ArticleSummary
 import org.hamcrest.CoreMatchers
 import org.junit.Assert
 
@@ -18,8 +18,8 @@ class PostillonArticleSummaryExtractorTest : ArticleSummaryExtractorTestBase() {
     }
 
 
-    override fun urlHasHttpsPrefix(): Boolean {
-        return false
+    override fun getArticleUrlScheme(): ArticleUrlScheme {
+        return ArticleUrlScheme.HttpOnly
     }
 
     override fun areEmptyArticleSummariesAllowed(): Boolean {

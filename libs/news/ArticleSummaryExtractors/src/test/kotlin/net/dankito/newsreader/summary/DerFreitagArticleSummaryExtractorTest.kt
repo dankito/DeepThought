@@ -8,4 +8,9 @@ class DerFreitagArticleSummaryExtractorTest : ArticleSummaryExtractorTestBase() 
         return DerFreitagArticleSummaryExtractor(webClient)
     }
 
+
+    override fun getArticleUrlScheme(): ArticleUrlScheme {
+        return ArticleUrlScheme.HttpAndHttpsMixed
+    }
+
 }

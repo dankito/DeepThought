@@ -27,8 +27,8 @@ class SueddeutscheArticleSummaryExtractorTest : ArticleSummaryExtractorTestBase(
     }
 
 
-    override fun urlHasHttpsPrefix(): Boolean {
-        return false
+    override fun getArticleUrlScheme(): ArticleUrlScheme {
+        return ArticleUrlScheme.HttpAndHttpsMixed
     }
 
 
