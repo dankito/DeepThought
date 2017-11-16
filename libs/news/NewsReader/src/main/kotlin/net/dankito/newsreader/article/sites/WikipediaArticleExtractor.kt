@@ -31,6 +31,7 @@ class WikipediaArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
 
         document.body().select("#bodyContent").first()?.let { bodyContent ->
             bodyContent.select(".edit-page, #toc").remove() // of course i'd like to have to table of contents, but element is empty
+            unwrapImagesFromNoscriptElements(bodyContent) // so that images get displayed
             makeLinksAbsolute(bodyContent, url)
 
             content += bodyContent.outerHtml()
