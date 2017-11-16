@@ -98,4 +98,8 @@ class IsAddedToEntityView : RelativeLayout {
         txtvwEntityName.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSizeInSP)
     }
 
+    fun setEntityNameTextSizeToHeader1TextSize() {
+        txtvwEntityName.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.resources.getDimension(R.dimen.header_1_text_size))
+    }
+
 }
