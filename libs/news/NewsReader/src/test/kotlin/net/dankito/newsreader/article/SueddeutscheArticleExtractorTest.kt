@@ -80,6 +80,15 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun ensureAuthorBiographyGetsRemoved() {
+        getAndTestArticle("http://www.sueddeutsche.de/kultur/filmstarts-der-woche-welche-filme-sich-lohnen-und-welche-nicht-1.3751472",
+                "Welche Filme sich lohnen und welche nicht",
+                "In \"Animals\" steht Birgit Minichmayr im Mittelpunkt eines komisch-gruseligen Verwirrspiels und mit \"The Big Sick\" ist Michael Showalter eine wunderbar unverkrampfte Indie-Komödie gelungen.",
+                null,
+                5100, subTitle = "Filmstarts der Woche ")
+    }
+
+    @Test
     fun ensureSZPlusNotificationGetsShown() {
         getAndTestArticle("http://www.sueddeutsche.de/wissen/menschen-ueber-wie-man-alt-und-zufrieden-wird-1.3733043?reduced=true",
                 "Wie man alt und zufrieden wird",
