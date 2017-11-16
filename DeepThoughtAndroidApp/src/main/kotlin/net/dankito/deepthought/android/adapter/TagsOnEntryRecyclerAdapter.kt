@@ -23,9 +23,12 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
 
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TagsOnEntryViewHolder {
-        val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_tag_on_entry, parent, false)
+        val context = parent?.context
+        val itemView = LayoutInflater.from(context).inflate(R.layout.list_item_tag_on_entry, parent, false)
 
         val viewHolder = TagsOnEntryViewHolder(itemView)
+
+        viewHolder.vwIsTagOnEntry.setEntityNameTextSize(context?.resources?.getDimension(R.dimen.header_1_text_size) ?: 14f)
 
         (itemView as? SwipeLayout)?.addRevealListener(itemView.id) { _, _, _, _ -> viewHolder.lastItemSwipeTime = Date() }
 
