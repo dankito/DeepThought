@@ -48,6 +48,15 @@ class ZeitArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun importArticleWithDataCollection() {
+        getAndTestArticle("http://www.zeit.de/politik/deutschland/2017-11/jamaika-koalition-sondierungsgespraeche-letzter-tag",
+                "FDP bringt Verlängerung der Sondierung ins Gespräch",
+                "Mehrere FDP-Politiker spekulieren über eine Verlängerung der Jamaika-Sondierungen. Die CDU ist dagegen. Zurzeit tagen die Verhandlungsführer der Parteien gemeinsam.",
+                null, 8200, false, "Jamaika-Koalition"
+        )
+    }
+
+    @Test
     fun ensureZeitPlusNotificationGetsShown() {
         getAndTestArticle("http://www.zeit.de/2017/45/afd-netzwerk-zeitschriften-stiftungen-verlage",
                 "Ein aktives Netzwerk",
