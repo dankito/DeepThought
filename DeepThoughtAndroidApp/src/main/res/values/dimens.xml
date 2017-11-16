@@ -40,9 +40,10 @@
     <dimen name="view_context_help_button_width">48dp</dimen>
     <dimen name="view_context_help_confirm_button_height">36dp</dimen>
 
-    <dimen name="list_item_entry_height">118dp</dimen>
+    <dimen name="list_item_entry_height">110dp</dimen>
     <dimen name="list_item_entry_button_width">84dp</dimen>
-    <dimen name="list_item_entry_padding">8dp</dimen>
+    <dimen name="list_item_entry_padding_top_bottom">4dp</dimen>
+    <dimen name="list_item_entry_padding_left_right">8dp</dimen>
     <dimen name="list_item_entry_reference_preview_min_height">18dp</dimen>
     <dimen name="list_item_entry_reference_preview_text_size">11sp</dimen>
     <dimen name="list_item_entry_reference_preview_margin_bottom">2dp</dimen>
