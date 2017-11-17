@@ -233,8 +233,13 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
             didOriginalTagsOnEntryChange = true // so that we can notify EditEntryActivity that it's tags changed
         }
 
+        removeTagFromCurrentTagsOnEntry(tag)
+    }
+
+    private fun removeTagFromCurrentTagsOnEntry(tag: Tag) {
         if(adapter.tagsOnEntry.contains(tag)) {
             adapter.tagsOnEntry.remove(tag)
+
             activity?.runOnUiThread {
                 adapter.notifyDataSetChanged()
                 setTagsOnEntryPreviewOnUIThread()
@@ -349,7 +354,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
     }
 
     private fun setTagsOnEntryPreviewOnUIThread(tagsOnEntry: MutableList<Tag>) {
-        lytTagsPreview?.let { tagsPreviewViewHelper.showTagsPreview(it, tagsOnEntry, showButtonRemoveTag = true) { removeTagFromEntry(it) } }
+        lytTagsPreview?.let { tagsPreviewViewHelper.showTagsPreview(it, tagsOnEntry, showButtonRemoveTag = true) { removeTagFromCurrentTagsOnEntry(it) } }
 
         mnApplyTagsOnEntryChanges?.isVisible = didTagsOnEntryChange(tagsOnEntry)
     }
