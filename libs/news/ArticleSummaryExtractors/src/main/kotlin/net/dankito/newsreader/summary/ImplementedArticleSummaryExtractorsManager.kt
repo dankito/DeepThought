@@ -15,6 +15,7 @@ class ImplementedArticleSummaryExtractorsManager(val webClient: IWebClient) : II
         extractors.put(NetzPolitikOrgArticleSummaryExtractor::class.java, NetzPolitikOrgArticleSummaryExtractor(webClient))
         extractors.put(DerFreitagArticleSummaryExtractor::class.java, DerFreitagArticleSummaryExtractor(webClient))
         extractors.put(ZeitArticleSummaryExtractor::class.java, ZeitArticleSummaryExtractor(webClient))
+        extractors.put(SpiegelArticleSummaryExtractor::class.java, SpiegelArticleSummaryExtractor(webClient))
         extractors.put(GuardianArticleSummaryExtractor::class.java, GuardianArticleSummaryExtractor(webClient))
         extractors.put(PostillonArticleSummaryExtractor::class.java, PostillonArticleSummaryExtractor(webClient))
     }
