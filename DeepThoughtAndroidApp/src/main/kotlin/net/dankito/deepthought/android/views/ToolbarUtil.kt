@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.contextual_action_mode_item_action_layout.view.*
 import net.dankito.deepthought.android.extensions.setRightMargin
 import org.slf4j.LoggerFactory
@@ -30,11 +31,13 @@ class ToolbarUtil {
     }
 
     fun setupActionItemsLayout(menuItem: MenuItem?, onClickListener: ((MenuItem) -> Unit)? = null) {
-        menuItem?.actionView?.let { actionView ->
-            setTitleAndIcon(actionView, menuItem)
+        menuItem?.let {
+            (menuItem.actionView as? RelativeLayout)?.let { actionView -> // cast to RelativeLayout = check if it's contextual_action_mode_item_action_layout and not a SearchView etc.
+                setTitleAndIcon(actionView, menuItem)
 
-            actionView.setOnClickListener {
-                onClickListener?.invoke(menuItem)
+                actionView.setOnClickListener {
+                    onClickListener?.invoke(menuItem)
+                }
             }
         }
     }
