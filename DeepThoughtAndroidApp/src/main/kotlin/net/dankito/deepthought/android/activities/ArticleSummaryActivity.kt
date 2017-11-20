@@ -1,12 +1,17 @@
 package net.dankito.deepthought.android.activities
 
+import android.app.SearchManager
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.SearchView
 import android.util.TypedValue
 import android.view.*
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import kotlinx.android.synthetic.main.activity_article_summary.*
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.deepthought.android.R
@@ -64,6 +69,10 @@ class ArticleSummaryActivity : BaseActivity() {
     private var recyclerViewMarginBottom: Int = -1
 
     private var mnLoadMore: MenuItem? = null
+
+    private var mnSearch: MenuItem? = null
+
+    private var searchView: SearchView? = null
 
     private val toolbarUtil = ToolbarUtil()
 
@@ -225,7 +234,27 @@ class ArticleSummaryActivity : BaseActivity() {
 
         presenter.lastLoadedSummary?.let { setMenuItemLoadMore(it) }
 
+        // Associate searchable configuration with the SearchView if available
+        this.mnSearch = menu.findItem(R.id.mnSearch)
+
+        (mnSearch?.actionView as? SearchView)?.let { searchView ->
+            this.searchView = searchView
+
+            initSearchView(searchView)
+        }
+
         return true
+    }
+
+    protected open fun initSearchView(searchView: SearchView) {
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(this.componentName))
+
+        // if imeOptions aren't set like this searchView would take whole remaining screen when focused in landscape mode (see https://stackoverflow.com/questions/15296129/searchview-and-keyboard)
+        val searchInput = searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text) as? EditText
+        searchInput?.imeOptions = EditorInfo.IME_ACTION_SEARCH or EditorInfo.IME_FLAG_NO_EXTRACT_UI
+
+        searchView.setOnQueryTextListener(searchArticleSummaryItemsTextListener)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -242,6 +271,19 @@ class ArticleSummaryActivity : BaseActivity() {
         else {
             return super.onOptionsItemSelected(item)
         }
+    }
+
+
+    override fun onBackPressed() {
+        searchView?.let { searchView ->
+            if(searchView.isIconified == false) { // close search view again
+                searchView.setQuery("", false)
+                searchView.isIconified = true
+                return
+            }
+        }
+
+        super.onBackPressed()
     }
 
 
@@ -341,6 +383,42 @@ class ArticleSummaryActivity : BaseActivity() {
 
     private fun articleClicked(item: ArticleSummaryItem) {
         presenter.getAndShowArticle(item)
+    }
+
+
+    private val searchArticleSummaryItemsTextListener: SearchView.OnQueryTextListener = object : SearchView.OnQueryTextListener {
+        override fun onQueryTextChange(query: String): Boolean {
+            searchArticleSummaryItems(query)
+            return true
+        }
+
+        override fun onQueryTextSubmit(query: String): Boolean {
+            return true
+        }
+    }
+
+    private fun searchArticleSummaryItems(query: String) {
+        presenter.lastLoadedSummary?.let { summary ->
+            if(query.isBlank()) {
+                adapter.items = summary.articles
+            }
+            else {
+                searchArticleSummaryItems(query, summary)
+            }
+        }
+    }
+
+    private fun searchArticleSummaryItems(query: String, summary: ArticleSummary) {
+        val searchResult = ArrayList<ArticleSummaryItem>()
+        val lowerCaseSearchTerm = query.toLowerCase()
+
+        summary.articles.forEach { article ->
+            if (article.summary.toLowerCase().contains(lowerCaseSearchTerm) || article.title.toLowerCase().contains(lowerCaseSearchTerm)) {
+                searchResult.add(article)
+            }
+        }
+
+        adapter.items = searchResult
     }
 
 }
