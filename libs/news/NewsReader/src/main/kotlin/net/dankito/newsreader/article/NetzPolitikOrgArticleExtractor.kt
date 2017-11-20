@@ -25,7 +25,7 @@ class NetzPolitikOrgArticleExtractor(webClient: IWebClient) : ArticleExtractorBa
     }
 
     override fun canExtractEntryFromUrl(url: String): Boolean {
-        return url.startsWith("https://netzpolitik.org/") && url.length > "https://netzpolitik.org/".length
+        return isHttpOrHttpsUrlFromHost(url, "netzpolitik.org/")
     }
 
 

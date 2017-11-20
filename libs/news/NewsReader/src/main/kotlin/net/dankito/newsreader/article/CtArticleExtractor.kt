@@ -30,7 +30,7 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
     }
 
     override fun canExtractEntryFromUrl(url: String): Boolean {
-        return (url.toLowerCase().contains("://www.heise.de/ct/") || url.toLowerCase().contains("://m.heise.de/ct/")) && url.length > "://m.heise.de/ct/".length + 5
+        return isHttpOrHttpsUrlFromHost(url, "www.heise.de/ct/") || isHttpOrHttpsUrlFromHost(url, "m.heise.de/ct/")
     }
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {

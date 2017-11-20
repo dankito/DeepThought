@@ -26,7 +26,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
     override fun canExtractEntryFromUrl(url: String): Boolean {
-        return url.startsWith("http://www.sueddeutsche.de/") && url.length > "http://www.sueddeutsche.de/".length
+        return isHttpOrHttpsUrlFromHost(url, "www.sueddeutsche.de/")
     }
 
 

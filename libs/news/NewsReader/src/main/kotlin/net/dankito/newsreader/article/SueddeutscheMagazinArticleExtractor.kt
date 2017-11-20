@@ -17,7 +17,7 @@ class SueddeutscheMagazinArticleExtractor(webClient: IWebClient) : ArticleExtrac
     }
 
     override fun canExtractEntryFromUrl(url: String): Boolean {
-        return url.startsWith("http://sz-magazin.sueddeutsche.de/texte/")
+        return isHttpOrHttpsUrlFromHost(url, "sz-magazin.sueddeutsche.de/texte/")
     }
 
 

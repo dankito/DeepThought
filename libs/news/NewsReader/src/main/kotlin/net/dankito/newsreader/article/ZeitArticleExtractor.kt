@@ -28,7 +28,7 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
     }
 
     override fun canExtractEntryFromUrl(url: String): Boolean {
-        return url.toLowerCase().contains("://www.zeit.de/") && url.length > "://www.zeit.de/".length + 5
+        return isHttpOrHttpsUrlFromHost(url, "www.zeit.de/")
     }
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {

@@ -13,12 +13,15 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
 import java.util.*
+import java.util.regex.Pattern
 import kotlin.concurrent.thread
 
 
 abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webClient), IArticleExtractor {
 
     companion object {
+        private val StartsWithHttpOrHttpsMatcher = Pattern.compile("^https?://", Pattern.CASE_INSENSITIVE)
+
         private val log = LoggerFactory.getLogger(ArticleExtractorBase::class.java)
     }
 
@@ -170,6 +173,15 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
                 noscript.unwrap()
             }
         }
+    }
+
+
+    protected fun isHttpOrHttpsUrlFromHost(url: String, expectedHostAndPath: String): Boolean {
+        return startsWithHttpOrHttps(url) && url.contains(expectedHostAndPath) && url.length > expectedHostAndPath.length + 7
+    }
+
+    protected fun startsWithHttpOrHttps(hostAndPath: String): Boolean {
+        return StartsWithHttpOrHttpsMatcher.matcher(hostAndPath).find()
     }
 
 }

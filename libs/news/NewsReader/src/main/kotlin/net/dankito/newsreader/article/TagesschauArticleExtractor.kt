@@ -24,7 +24,7 @@ class TagesschauArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
     }
 
     override fun canExtractEntryFromUrl(url: String): Boolean {
-        return url.startsWith("http://www.tagesschau.de/") && url.length > "http://www.tagesschau.de/".length
+        return isHttpOrHttpsUrlFromHost(url, "www.tagesschau.de/")
     }
 
 

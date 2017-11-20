@@ -21,7 +21,7 @@ class TazArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClien
     }
 
     override fun canExtractEntryFromUrl(url: String): Boolean {
-        return url.toLowerCase().contains("taz.de/") && url.length > (url.toLowerCase().indexOf("taz.de/") + "taz.de/".length)
+        return isHttpOrHttpsUrlFromHost(url, "taz.de/")
     }
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
