@@ -63,8 +63,7 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
             viewHolder.txtTagDisplayText.text = item.displayText
         }
 
-        setFilterIconDependingOnTagState(item, viewHolder.imgFilter)
-        viewHolder.lytFilterIconClickArea.setOnClickListener { presenter.toggleFilterTag(item) }
+        setFilterIconDependingOnTagState(item, viewHolder.imgFilter, viewHolder.lytFilterIconClickArea)
 
         setBackgroundColor(viewHolder.itemView, item)
 
@@ -88,12 +87,14 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
     }
 
 
-    private fun setFilterIconDependingOnTagState(tag: Tag, imgFilter: ImageView) {
+    private fun setFilterIconDependingOnTagState(tag: Tag, imgFilter: ImageView, lytFilterIconClickArea: View) {
         if(tag is CalculatedTag) {
             imgFilter.visibility = View.INVISIBLE
+            lytFilterIconClickArea.setOnClickListener(null)
         }
         else {
             imgFilter.visibility = View.VISIBLE
+            lytFilterIconClickArea.setOnClickListener { presenter.toggleFilterTag(tag) }
 
             when(presenter.isTagFiltered(tag)) { // setting tintList to is_entity_selected_icon_color and then setting itemView.isActivated does not work here as MultiSelectListRecyclerSwipeAdapter overwrites isActivated
                 true -> imgFilter.setTintColor(R.color.colorAccent)
