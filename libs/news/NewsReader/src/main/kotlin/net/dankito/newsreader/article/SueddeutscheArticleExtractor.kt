@@ -205,7 +205,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         }
     }
 
-    private fun readHtmlOfAllImagesInGallery(imageHtml: StringBuilder, articleBody: Element, siteUrl: String) {
+    private fun readHtmlOfAllImagesInGallery(imageHtml: StringBuilder, articleBody: Element, currentImageUrl: String) {
         articleBody.select("img").first()?.let {
             imageHtml.append(loadLazyLoadingElement(it).outerHtml())
         }
@@ -216,7 +216,9 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         }
 
         getUrlOfNextImageInGallery(articleBody)?.let { nextImageUrl ->
-            readHtmlOfAllImagesInGallery(imageHtml, nextImageUrl)
+            if(currentImageUrl.contains(nextImageUrl) == false || nextImageUrl.endsWith("-1")) { // otherwise image gallery starts over again with first image -> would cause an infinite loop
+                readHtmlOfAllImagesInGallery(imageHtml, nextImageUrl)
+            }
         }
     }
 
