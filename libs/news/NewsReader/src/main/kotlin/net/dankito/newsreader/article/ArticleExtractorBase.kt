@@ -14,6 +14,7 @@ import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
 import java.util.*
 import java.util.regex.Pattern
+import kotlin.collections.ArrayList
 import kotlin.concurrent.thread
 
 
@@ -145,9 +146,11 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
     }
 
 
-    protected fun removeEmptyParagraphs(contentElement: Element) {
+    protected fun removeEmptyParagraphs(contentElement: Element, classNamesToPreserve: Collection<String> = ArrayList()) {
+        val preserveRegex = classNamesToPreserve.joinToString("|").toRegex(RegexOption.IGNORE_CASE)
+
         ArrayList(contentElement.select("p, div").toList()).forEach {
-            if(it.html().getPlainTextForHtml().isNullOrBlank()) {
+            if(it.html().getPlainTextForHtml().isNullOrBlank() && preserveRegex.containsMatchIn(it.className()) == false) {
                 it.remove()
             }
         }

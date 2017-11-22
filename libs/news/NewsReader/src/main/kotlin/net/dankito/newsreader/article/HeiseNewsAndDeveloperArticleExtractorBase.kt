@@ -80,7 +80,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         contentElement.select("h1, time, span.author, a.comments, p.lead_text, .comment, .btn-toolbar, .whatsbroadcast-toolbar, #whatsbroadcast, " +
                 ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta, .widget-werbung, .ad_container, .ad_content").remove()
 
-        removeEmptyParagraphs(contentElement)
+        removeEmptyParagraphs(contentElement, Arrays.asList("video"))
     }
 
     private fun extractMobileArticleReference(article: Element, url: String): Source {
