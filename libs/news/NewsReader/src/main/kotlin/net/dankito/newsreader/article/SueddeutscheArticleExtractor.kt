@@ -216,10 +216,15 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         }
 
         getUrlOfNextImageInGallery(articleBody)?.let { nextImageUrl ->
-            if(currentImageUrl.contains(nextImageUrl) == false || nextImageUrl.endsWith("-1")) { // otherwise image gallery starts over again with first image -> would cause an infinite loop
+            if(imageUrlAlreadyLoaded(currentImageUrl, nextImageUrl, imageHtml) == false) {
+                // otherwise image gallery starts over again with first image -> would cause an infinite loop
                 readHtmlOfAllImagesInGallery(imageHtml, nextImageUrl)
             }
         }
+    }
+
+    private fun imageUrlAlreadyLoaded(currentImageUrl: String, nextImageUrl: String, imageHtml: StringBuilder): Boolean {
+        return currentImageUrl.contains(nextImageUrl) || imageHtml.contains(nextImageUrl)
     }
 
     private fun getUrlOfNextImageInGallery(articleBody: Element): String? {
