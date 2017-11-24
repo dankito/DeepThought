@@ -975,6 +975,10 @@ class EditEntryActivity : BaseActivity() {
     override fun onPause() {
         unregisterEventBusListener()
 
+        if(wbvwContent.isInFullscreenMode) {
+            wbvwContent.leaveFullscreenModeAndWaitTillLeft {  }
+        }
+
         super.onPause()
     }
 
