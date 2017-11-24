@@ -152,7 +152,7 @@ class AndroidClipboardService : IClipboardService {
     }
 
     private fun showUrlInClipboardDetectedSnackbar(currentActivity: Activity, url: String) {
-        snackbarService.showUrlInClipboardDetectedSnackbar(currentActivity, url) { extractArticleHandler.extractArticle(url) }
+        snackbarService.showUrlInClipboardDetectedSnackbar(currentActivity, url) { extractArticleHandler.extractAndShowArticleUserDidNotSeeBefore(url) }
     }
 
 }
