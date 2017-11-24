@@ -5,9 +5,7 @@ import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.extensions.extractor
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
-import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.ReadLaterArticle
-import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
@@ -83,10 +81,8 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
     }
 
     open fun getAndShowArticle(item: ArticleSummaryItem, callback: ((Boolean) -> Unit)? = null) {
-        val extractionResult = ItemExtractionResult(Item("", item.summary), Source(item.title, item.url, item.publishedDate, item.previewImageUrl))
-
-        articleExtractorManager.addDefaultData(item, extractionResult) {
-            showArticle(extractionResult)
+        articleExtractorManager.extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(item) { result ->
+            result.result?.let { showArticle(it) }
 
             callback?.invoke(true)
         }

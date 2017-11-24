@@ -46,6 +46,14 @@ class ArticleExtractorManager(private val seriesService: SeriesService, private 
         }
     }
 
+    fun extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(item: ArticleSummaryItem, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
+        val extractionResult = ItemExtractionResult(Item("", item.summary), Source(item.title, item.url, item.publishedDate, item.previewImageUrl))
+
+        addDefaultData(item, extractionResult) {
+            callback(AsyncResult(true, result = extractionResult))
+        }
+    }
+
     fun extractArticleUserDidSeeBeforeAndAddDefaultDataAsync(url: String, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
         articleExtractors.getExtractorForUrl(url)?.let { extractor ->
             log.info("Using $extractor to extract url $url")
@@ -73,7 +81,8 @@ class ArticleExtractorManager(private val seriesService: SeriesService, private 
         }
     }
 
-    fun addDefaultData(item: ArticleSummaryItem, extractionResult: ItemExtractionResult, callback: () -> Unit) {
+
+    private fun addDefaultData(item: ArticleSummaryItem, extractionResult: ItemExtractionResult, callback: () -> Unit) {
         item.articleSummaryExtractorConfig?.tagsToAddOnExtractedArticles?.forEach {
             extractionResult.tags.add(it)
         }
