@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-class ArticleExtractorManager(private val seriesService: SeriesService, private val searchEngine: ISearchEngine) {
+open class ArticleExtractorManager(private val seriesService: SeriesService, private val searchEngine: ISearchEngine) {
 
     companion object {
         private val log = LoggerFactory.getLogger(ArticleExtractorManager::class.java)
@@ -46,7 +46,10 @@ class ArticleExtractorManager(private val seriesService: SeriesService, private 
         }
     }
 
-    fun extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(item: ArticleSummaryItem, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
+    /**
+     * Do to legal issues, don't extract an article from a url the user didn't for sure see before. Show her/him original web page before
+     */
+    open fun extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(item: ArticleSummaryItem, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
         val extractionResult = ItemExtractionResult(Item("", item.summary), Source(item.title, item.url, item.publishedDate, item.previewImageUrl))
 
         addDefaultData(item, extractionResult) {
@@ -65,7 +68,10 @@ class ArticleExtractorManager(private val seriesService: SeriesService, private 
         }
     }
 
-    fun extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(url: String, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
+    /**
+     * Do to legal issues, don't extract an article from a url the user didn't for sure see before. Show her/him original web page before
+     */
+    open fun extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(url: String, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
         val extractionResult = ItemExtractionResult(Item(""), Source(url, url))
 
         addDefaultData(url, extractionResult) {
