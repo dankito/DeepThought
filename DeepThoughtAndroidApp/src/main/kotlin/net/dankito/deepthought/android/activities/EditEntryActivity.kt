@@ -1547,6 +1547,7 @@ class EditEntryActivity : BaseActivity() {
         itemExtractionResult = null
 
         isInReaderMode = extractionResult.couldExtractContent
+        webSiteHtml = null
 
         editEntryExtractionResult(extractionResult)
     }
