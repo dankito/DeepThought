@@ -1533,11 +1533,9 @@ class EditEntryActivity : BaseActivity() {
 
     private fun showUrlInCurrentActivity(url: String) {
         articleExtractorManager.extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(url) { result ->
-            result.result?.let {
-                runOnUiThread { showUrlInCurrentActivity(it) }
-            }
+            result.result?.let { runOnUiThread { showUrlInCurrentActivity(it) } }
 
-            result.error?.let { showCouldNotExtractItemErrorMessage(it, url) }
+            result.error?.let { runOnUiThread { showCouldNotExtractItemErrorMessage(it, url) } }
         }
     }
 
