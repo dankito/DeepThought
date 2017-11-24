@@ -193,7 +193,7 @@ class MainMenuBar : View() {
     }
 
     private fun extractEntryFromUrl(url: String) {
-        articleExtractorManager.extractArticleUserDidSeeBeforeAndAddDefaultDataAsync(url) {
+        articleExtractorManager.extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(url) {
             it.result?.let { router.showEditEntryView(it) }
             it.error?.let { showErrorMessage(it, url) }
         }

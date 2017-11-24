@@ -2,7 +2,9 @@ package net.dankito.deepthought.news.article
 
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.deepthought.di.CommonComponent
+import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Series
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.newsreader.article.IArticleExtractor
@@ -55,6 +57,14 @@ class ArticleExtractorManager(private val seriesService: SeriesService, private 
         }
     }
 
+    fun extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(url: String, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
+        val extractionResult = ItemExtractionResult(Item(""), Source(url, url))
+
+        addDefaultData(url, extractionResult) {
+            callback(AsyncResult(true, result = extractionResult))
+        }
+    }
+
     fun extractArticleUserDidSeeBefore(extractionResult: ItemExtractionResult, html: String, url: String) {
         articleExtractors.getExtractorForUrl(url)?.let { extractor ->
             log.info("Using $extractor to extract html from url $url")
@@ -79,6 +89,12 @@ class ArticleExtractorManager(private val seriesService: SeriesService, private 
         }
 
         val siteName = getSiteName(extractor, item, extractionResult)
+
+        addDefaultDataForSiteName(siteName, extractionResult, callback)
+    }
+
+    private fun addDefaultData(url: String, extractionResult: ItemExtractionResult, callback: () -> Unit) {
+        val siteName = getSiteNameForUrl(url)
 
         addDefaultDataForSiteName(siteName, extractionResult, callback)
     }
