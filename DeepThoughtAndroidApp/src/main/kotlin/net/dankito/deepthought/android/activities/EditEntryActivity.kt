@@ -24,6 +24,7 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.EditHtmlTextDialog
 import net.dankito.deepthought.android.dialogs.FullscreenDialogFragment
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
+import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import net.dankito.deepthought.android.views.*
 import net.dankito.deepthought.data.EntryPersister
@@ -111,6 +112,9 @@ class EditEntryActivity : BaseActivity() {
 
     @Inject
     protected lateinit var articleExtractorManager: ArticleExtractorManager
+
+    @Inject
+    protected lateinit var extractArticleHandler: ExtractArticleHandler
 
     @Inject
     protected lateinit var dialogService: IDialogService
@@ -1524,17 +1528,31 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun showUrlInCurrentActivity(url: String) {
+        articleExtractorManager.extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(url) { result ->
+            result.result?.let {
+                runOnUiThread { showUrlInCurrentActivity(it) }
+            }
+
+            result.error?.let { showCouldNotExtractItemErrorMessage(it, url) }
+        }
+    }
+
+    private fun showUrlInCurrentActivity(extractionResult: ItemExtractionResult) {
         item = null
         readLaterArticle = null
         itemExtractionResult = null
 
-        isInReaderMode = false
+        isInReaderMode = extractionResult.couldExtractContent
 
-        editEntryExtractionResult(ItemExtractionResult(Item(""), Source(url, url)))
+        editEntryExtractionResult(extractionResult)
+    }
+
+    private fun showCouldNotExtractItemErrorMessage(error: Exception, articleUrl: String) {
+        dialogService.showErrorMessage(dialogService.getLocalization().getLocalizedString("alert.message.could.not.extract.item.from.url", articleUrl), exception = error)
     }
 
     private fun showUrlInNewActivity(url: String) {
-        router.showEditEntryView(ItemExtractionResult(Item(""), Source(url, url)))
+        extractArticleHandler.extractAndShowArticleUserDidNotSeeBefore(url)
     }
 
     private fun openUrlWithOtherApp(url: String) {
