@@ -44,7 +44,7 @@ class ArticleExtractorManager(private val seriesService: SeriesService, private 
         }
     }
 
-    fun extractArticleAndAddDefaultDataAsync(url: String, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
+    fun extractArticleUserDidSeeBeforeAndAddDefaultDataAsync(url: String, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
         articleExtractors.getExtractorForUrl(url)?.let { extractor ->
             log.info("Using $extractor to extract url $url")
 

@@ -25,7 +25,7 @@ class ExtractArticleHandler {
 
 
     fun extractArticle(url: String) {
-        articleExtractorManager.extractArticleAndAddDefaultDataAsync(url) {
+        articleExtractorManager.extractArticleUserDidSeeBeforeAndAddDefaultDataAsync(url) {
             it.result?.let { router.showEditEntryView(it) }
             it.error?.let { showCouldNotExtractItemErrorMessage(it, url) }
         }
