@@ -236,6 +236,7 @@ class ArticleSummaryActivity : BaseActivity() {
 
         // Associate searchable configuration with the SearchView if available
         this.mnSearch = menu.findItem(R.id.mnSearch)
+        mnSearch?.isVisible = false // TODO: just for release, re-enable afterwards again
 
         (mnSearch?.actionView as? SearchView)?.let { searchView ->
             this.searchView = searchView
