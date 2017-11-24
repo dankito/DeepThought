@@ -35,7 +35,7 @@ class ArticleExtractorManager(private val seriesService: SeriesService, private 
     }
 
 
-    fun extractArticleAndAddDefaultDataAsync(item: ArticleSummaryItem, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
+    fun extractArticleUserDidSeeBeforeAndAddDefaultDataAsync(item: ArticleSummaryItem, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
         articleExtractors.getExtractorForItem(item)?.let { extractor ->
             log.info("Using $extractor to extract item ${item.title}")
 

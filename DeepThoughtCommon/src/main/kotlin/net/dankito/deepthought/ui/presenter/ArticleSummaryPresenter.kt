@@ -150,7 +150,7 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
 
 
     protected fun getArticle(item: ArticleSummaryItem, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
-        articleExtractorManager.extractArticleAndAddDefaultDataAsync(item) { asyncResult ->
+        articleExtractorManager.extractArticleUserDidSeeBeforeAndAddDefaultDataAsync(item) { asyncResult ->
             asyncResult.error?.let {
                 showError("alert.message.could.not.load.article", it)
             }
