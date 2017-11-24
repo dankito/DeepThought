@@ -55,7 +55,7 @@ class ArticleExtractorManager(private val seriesService: SeriesService, private 
         }
     }
 
-    fun extractArticleAndAddDefaultData(extractionResult: ItemExtractionResult, html: String, url: String) {
+    fun extractArticleUserDidSeeBefore(extractionResult: ItemExtractionResult, html: String, url: String) {
         articleExtractors.getExtractorForUrl(url)?.let { extractor ->
             log.info("Using $extractor to extract html from url $url")
 

@@ -31,7 +31,7 @@ class EditEntryExtractionResultView : EditEntryViewBase() {
     override fun urlLoaded(url: String, html: String) {
         super.urlLoaded(url, html)
 
-        articleExtractorManager.extractArticleAndAddDefaultData(extractionResult, html, url)
+        articleExtractorManager.extractArticleUserDidSeeBefore(extractionResult, html, url)
 
         if(extractionResult.couldExtractContent) { // now content could get extracted, therefore show it
             showExtractionResult()

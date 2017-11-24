@@ -470,7 +470,7 @@ class EditEntryActivity : BaseActivity() {
 
             if(extractionResult?.couldExtractContent == false) {
                 extractionResult?.let { extractionResult ->
-                    articleExtractorManager.extractArticleAndAddDefaultData(extractionResult, html, url)
+                    articleExtractorManager.extractArticleUserDidSeeBefore(extractionResult, html, url)
 
                     if(extractionResult.couldExtractContent) {
                         runOnUiThread { extractedContentOnUiThread(extractionResult) }
