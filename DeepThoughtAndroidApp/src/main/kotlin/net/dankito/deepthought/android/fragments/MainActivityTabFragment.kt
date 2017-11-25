@@ -128,8 +128,16 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
         recyclerView = rootView.rcyEntities
         recyclerView?.addItemDecoration(HorizontalDividerItemDecoration(rootView.context))
 
-        recyclerView?.enterFullscreenModeListener = { recyclerViewEnteredFullscreenMode() }
-        recyclerView?.leaveFullscreenModeListener = { recyclerViewLeftFullscreenMode() }
+        recyclerView?.disableFullscreenMode = true
+//        recyclerView?.enterFullscreenModeListener = { recyclerViewEnteredFullscreenMode() }
+//        recyclerView?.leaveFullscreenModeListener = { recyclerViewLeftFullscreenMode() }
+        recyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+                activity.findViewById(R.id.floatingActionMenu)?.visibility = if(newState == RecyclerView.SCROLL_STATE_IDLE) View.VISIBLE else View.GONE
+
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+        })
 
         setupAdapter()
 
@@ -191,7 +199,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
     }
 
     private fun setLayoutForTogglingFullscreenMode(activity: Activity, viewVisibility: Int, topMargin: Int) {
-        activity.findViewById(R.id.appBarLayout)?.visibility = viewVisibility
+        activity.findViewById(R.id.appBarLayout)?.visibility = viewVisibility // TODO: bug here, don't show appBarLayout when in MultiSelectMode
         activity.findViewById(R.id.bottomViewNavigation)?.visibility = viewVisibility
 
         if(recyclerAdapter?.isInMultiSelectMode() == false) {

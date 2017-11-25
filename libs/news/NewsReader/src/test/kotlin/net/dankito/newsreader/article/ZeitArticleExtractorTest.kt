@@ -34,7 +34,7 @@ class ZeitArticleExtractorTest : ArticleExtractorTestBase() {
         getAndTestArticle("http://www.zeit.de/video/2017-11/5636670005001/deutsche-kueche-spaghetti-lassen-sich-besser-mit-staebchen-essen",
                 "\"Spaghetti lassen sich besser mit Stäbchen essen\"",
                 "Kommt der Käsekuchen wirklich aus Deutschland und wieso grüßen die Kollegen im Büro ständig mit \"Mahlzeit\"? Eine neue Videofolge \"Typisch deutsch\"",
-                null, 4000, false, "Deutsche Küche"
+                null, 3200, false, "Deutsche Küche"
         )
     }
 
@@ -44,6 +44,15 @@ class ZeitArticleExtractorTest : ArticleExtractorTestBase() {
                 "Der weibliche Orgasmus",
                 "Jetzt stellen Hörer(innen) die Fragen: Unsere Sexpodcastfolgen zum Höhepunkt haben einiges ausgelöst. Deshalb gibt es noch mehr Wissen und Tipps zum Orgasmus der Frau.",
                 null, 8500, false, "Podcast: Ist das normal / Sexualität"
+        )
+    }
+
+    @Test
+    fun importArticleWithDataCollection() {
+        getAndTestArticle("http://www.zeit.de/politik/deutschland/2017-11/jamaika-koalition-sondierungsgespraeche-letzter-tag",
+                "FDP bringt Verlängerung der Sondierung ins Gespräch",
+                "Mehrere FDP-Politiker spekulieren über eine Verlängerung der Jamaika-Sondierungen. Die CDU ist dagegen. Zurzeit tagen die Verhandlungsführer der Parteien gemeinsam.",
+                null, 8200, false, "Jamaika-Koalition"
         )
     }
 

@@ -5,7 +5,7 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.IReferencesListView
 import net.dankito.service.data.DeleteEntityService
-import net.dankito.service.data.messages.ReferenceChanged
+import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.ui.IClipboardService
@@ -63,8 +63,10 @@ class ReferencesListPresenter(private var view: IReferencesListView, router: IRo
     inner class EventBusListener {
 
         @Handler()
-        fun entityChanged(referenceChanged: ReferenceChanged) {
-            retrieveAndShowReferences()
+        fun entityChanged(entityChanged: EntitiesOfTypeChanged) {
+            if(entityChanged.entityType == Source::class.java) {
+                retrieveAndShowReferences()
+            }
         }
 
     }

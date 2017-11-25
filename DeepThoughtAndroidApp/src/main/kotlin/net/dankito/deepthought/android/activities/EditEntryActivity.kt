@@ -28,7 +28,6 @@ import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import net.dankito.deepthought.android.views.*
 import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.model.*
-import net.dankito.deepthought.model.extensions.entryPreview
 import net.dankito.deepthought.model.extensions.getPlainTextForHtml
 import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.fields.ItemField
@@ -684,12 +683,10 @@ class EditEntryActivity : BaseActivity() {
     private fun setMenuSaveEntryVisibleStateOnUIThread() {
         if(haveAllFieldsOfExistingEntryBeenDeleted()) {
             mnSaveEntry?.isVisible = false
-            mnDeleteExistingEntry?.isVisible = true
         }
         else {
             mnSaveEntry?.isVisible = item == null // ItemExtractionResult and ReadLaterArticle always can be saved
                     || changedFields.size > 0
-            mnDeleteExistingEntry?.isVisible = false
         }
     }
 
@@ -1040,7 +1037,9 @@ class EditEntryActivity : BaseActivity() {
 
         mnSaveEntry = menu.findItem(R.id.mnSaveEntry)
         readLaterArticle?.let { mnSaveEntry?.setIcon(R.drawable.ic_tab_items) }
+
         mnDeleteExistingEntry = menu.findItem(R.id.mnDeleteExistingEntry)
+        mnDeleteExistingEntry?.isVisible = item?.isPersisted() == true
 
         mnToggleReaderMode = menu.findItem(R.id.mnToggleReaderMode)
         mnToggleReaderMode?.isVisible = itemExtractionResult?.couldExtractContent == true || readLaterArticle?.itemExtractionResult?.couldExtractContent == true /*&& webSiteHtml != null*/ // show mnToggleReaderMode only if previously original web site was shown
@@ -1320,7 +1319,7 @@ class EditEntryActivity : BaseActivity() {
 
     private fun askIfShouldDeleteExistingEntryAndCloseDialog() {
         item?.let { entry ->
-            dialogService.showConfirmationDialog(getString(R.string.activity_edit_item_alert_message_delete_item, entry.entryPreview)) { selectedButton ->
+            dialogService.showConfirmationDialog(getString(R.string.activity_edit_item_alert_message_delete_item, entry.preview)) { selectedButton ->
                 if(selectedButton == ConfirmationDialogButton.Confirm) {
                     mnDeleteExistingEntry?.isEnabled = false
                     unregisterEventBusListener()
@@ -1419,6 +1418,8 @@ class EditEntryActivity : BaseActivity() {
 
     private fun editEntry(item: Item) {
         this.item = item
+
+        mnDeleteExistingEntry?.isVisible = item.isPersisted()
 
         editEntry(item, item.source, item.tags)
     }

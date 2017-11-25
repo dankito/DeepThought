@@ -3,6 +3,8 @@ package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 import javafx.beans.value.ChangeListener
 import javafx.scene.control.Menu
 import javafx.scene.control.MenuItem
+import javafx.scene.input.KeyCode
+import javafx.scene.input.KeyCodeCombination
 import javafx.scene.input.KeyCombination
 import javafx.scene.layout.Priority
 import javafx.stage.FileChooser
@@ -19,6 +21,7 @@ import net.dankito.utils.extensions.sortedByStrings
 import net.dankito.utils.ui.IDialogService
 import tornadofx.*
 import java.io.File
+import java.net.URI
 import javax.inject.Inject
 
 
@@ -167,10 +170,26 @@ class MainMenuBar : View() {
         mnitmFileClipboard.items.clear()
 
         clipboardContent.url?.let { url ->
-            val extractContentFromUrlMenuItem = MenuItem(messages["main.window.menu.file.extract.item.from.url"])
+            val extractContentFromUrlMenuItem = MenuItem(String.format(messages["main.window.menu.file.extract.item.from.url"], getHostName(url)))
+            extractContentFromUrlMenuItem.accelerator = KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN)
             extractContentFromUrlMenuItem.action { extractEntryFromUrl(url) }
             mnitmFileClipboard.items.add(extractContentFromUrlMenuItem)
         }
+    }
+
+    private fun getHostName(url: String): String? {
+        try {
+            val uri = URI.create(url)
+            var host = uri.host
+
+            if(host.startsWith("www.")) {
+                host = host.substring(4)
+            }
+
+            return host
+        } catch(e: Exception) { }
+
+        return "URL"
     }
 
     private fun extractEntryFromUrl(url: String) {

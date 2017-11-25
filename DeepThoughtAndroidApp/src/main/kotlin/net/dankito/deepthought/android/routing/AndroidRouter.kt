@@ -15,11 +15,13 @@ import net.dankito.deepthought.android.service.ActivityParameterHolder
 import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.ItemExtractionResult
+import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.newsreader.model.ArticleSummary
 
 
-class AndroidRouter(private val context: Context, private val parameterHolder: ActivityParameterHolder, private val activityTracker: CurrentActivityTracker) : IRouter {
+class AndroidRouter(private val context: Context, private val parameterHolder: ActivityParameterHolder, private val activityTracker: CurrentActivityTracker,
+                    private val dataManager: DataManager) : IRouter {
 
 
     override fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {
@@ -83,12 +85,14 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
     }
 
     private fun showEditEntryView(parameters: EditEntryActivityParameters) {
-        val editEntryIntent = Intent(context, EditEntryActivity::class.java)
-        editEntryIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        dataManager.addInitializationListener { // if you have a very large data set and are very, very quick, you can enter EditEntryActivity before DataManager is initialized -> localSettings is null
+            val editEntryIntent = Intent(context, EditEntryActivity::class.java)
+            editEntryIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-        addParametersToIntent(editEntryIntent, parameters)
+            addParametersToIntent(editEntryIntent, parameters)
 
-        context.startActivity(editEntryIntent)
+            context.startActivity(editEntryIntent)
+        }
     }
 
 

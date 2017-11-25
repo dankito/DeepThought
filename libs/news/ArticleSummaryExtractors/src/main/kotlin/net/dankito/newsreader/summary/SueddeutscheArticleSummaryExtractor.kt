@@ -24,13 +24,22 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
     override fun parseHtmlToArticleSummary(url: String, document: Document, forLoadingMoreItems: Boolean): ArticleSummary {
         val articles = mutableListOf<ArticleSummaryItem>()
 
+        if(forLoadingMoreItems == false) {
+            loadArticlesFromHomePage(articles, url, document)
+        }
+        else {
+            loadArticlesForSubSections(articles, url, document)
+        }
+
+        return ArticleSummary(articles, canLoadMoreItems = !forLoadingMoreItems, nextItemsUrl = url)
+    }
+
+
+    private fun loadArticlesFromHomePage(articles: MutableList<ArticleSummaryItem>, url: String, document: Document) {
         extractTeasers(articles, url, document)
         extractTeaserListItems(articles, url, document)
         extractTileTeasers(articles, url, document)
-
-        return ArticleSummary(articles)
     }
-
 
     private fun extractTeasers(articles: MutableList<ArticleSummaryItem>, siteUrl: String, document: Document) {
         document.body().select("#sitecontent").first()?.let { siteContent ->
@@ -115,6 +124,28 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
         }
 
         return SueddeutscheArticleExtractor::class.java
+    }
+
+
+    private fun loadArticlesForSubSections(articles: MutableList<ArticleSummaryItem>, url: String, document: Document) {
+        loadArticlesForSubSection(articles, url, document, "politik")
+
+        loadArticlesForSubSection(articles, url, document, "wirtschaft")
+
+        loadArticlesForSubSection(articles, url, document, "münchen")
+
+        loadArticlesForSubSection(articles, url, document, "kultur")
+
+        loadArticlesForSubSection(articles, url, document, "wissen_gesundheit")
+    }
+
+    private fun loadArticlesForSubSection(articles: MutableList<ArticleSummaryItem>, siteUrl: String, document: Document, subSectionName: String) {
+        document.body().select("li[data-name='$subSectionName'].nav-department a").first()?.let { politicsNavigationElement ->
+            val sectionUrl = politicsNavigationElement.attr("href")
+
+            val subSectionDoc = requestUrl(sectionUrl)
+            extractTeasers(articles, siteUrl, subSectionDoc)
+        }
     }
 
 }

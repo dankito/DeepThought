@@ -6,6 +6,7 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import org.jsoup.nodes.TextNode
 import org.slf4j.LoggerFactory
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -66,26 +67,37 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
         var content = ""
 
         // remove <noscript> elements which impede that <img>s in <figure> get loaded
-        removeNoscriptElements(articleBodyElement)
+        unwrapImagesFromNoscriptElements(articleBodyElement)
         articleBodyElement.select(".sharing-menu, .metadata").remove()
 
         for(articleElement in articleBodyElement.select("p.article__item, ul.article__item, figure.article__item, .article__subheading, .article-heading__podcast-player, " +
-                ".article--video, .gate--register, .gate")) { // .gate--register to show to user that you have to  register for viewing this article
+                ".article--video, div[data-collection-template], .gate--register, .gate")) { // .gate--register to show to user that you have to  register for viewing this article
             content += articleElement.outerHtml()
+
+            if(articleElement.attr("data-collection-template").isBlank() == false) {
+                content += loadDataCollection(articleElement)
+            }
         }
 
         return Item(content, abstractString)
     }
 
-    private fun removeNoscriptElements(articleBodyElement: Element) {
-        articleBodyElement.parent().select("noscript").forEach { noscriptElement ->
-            noscriptElement.children().forEach { child ->
-                child.remove()
-                noscriptElement.parent().insertChildren(noscriptElement.siblingIndex(), Arrays.asList(child))
+    private fun loadDataCollection(articleElement: Element): String {
+        var dataCollectionScriptsAndStyles = ""
+        var nextSibling = articleElement.nextSibling()
+
+        while(nextSibling != null) {
+            if(nextSibling is Element && ("script" == nextSibling.tagName() || "link" == nextSibling.tagName())) {
+                dataCollectionScriptsAndStyles += nextSibling.outerHtml()
+            }
+            else if(nextSibling is TextNode == false) {
+                break
             }
 
-            noscriptElement.remove()
+            nextSibling = nextSibling.nextSibling()
         }
+
+        return dataCollectionScriptsAndStyles
     }
 
     private fun createReference(articleUrl: String, articleBodyElement: Element): Source {

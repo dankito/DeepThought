@@ -14,6 +14,13 @@ import java.util.concurrent.TimeUnit
 
 abstract class ArticleSummaryExtractorTestBase {
 
+    enum class ArticleUrlScheme {
+        HttpOnly,
+        HttpsOnly,
+        HttpAndHttpsMixed
+    }
+
+
     protected val underTest: IArticleSummaryExtractor
 
     init {
@@ -55,11 +62,15 @@ abstract class ArticleSummaryExtractorTestBase {
     }
 
     private fun testArticleSummaryItem(article: ArticleSummaryItem) {
-        if(urlHasHttpsPrefix()) {
+        if(getArticleUrlScheme() == ArticleUrlScheme.HttpsOnly) {
             assertThat(article.url, startsWith("https://"))
         }
-        else {
+        else if(getArticleUrlScheme() == ArticleUrlScheme.HttpOnly) {
             assertThat(article.url, startsWith("http://"))
+        }
+        else {
+            assertThat(article.url, startsWith("http"))
+            assertThat(article.url, containsString("://"))
         }
 
         assertThat(article.title.length, `is`(not(0)))
@@ -69,8 +80,8 @@ abstract class ArticleSummaryExtractorTestBase {
         }
     }
 
-    open protected fun urlHasHttpsPrefix() : Boolean {
-        return true
+    open protected fun getArticleUrlScheme() : ArticleUrlScheme {
+        return ArticleUrlScheme.HttpAndHttpsMixed
     }
 
     open protected fun areEmptyArticleSummariesAllowed() : Boolean {

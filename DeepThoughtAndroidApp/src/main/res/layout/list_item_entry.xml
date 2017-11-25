@@ -39,7 +39,12 @@
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:gravity="center_vertical"
-          android:padding="@dimen/list_item_entry_padding"
+          android:paddingTop="@dimen/list_item_entry_padding_top_bottom"
+          android:paddingLeft="@dimen/list_item_entry_padding_left_right"
+          android:paddingStart="@dimen/list_item_entry_padding_left_right"
+          android:paddingRight="@dimen/list_item_entry_padding_left_right"
+          android:paddingEnd="@dimen/list_item_entry_padding_left_right"
+          android:paddingBottom="@dimen/list_item_entry_padding_top_bottom"
         >
 
         <net.dankito.deepthought.android.views.CustomFontTextView
@@ -56,6 +61,7 @@
             android:maxLines="2"
             android:ellipsize="end"
             style="@style/Header1Style"
+            android:textSize="@dimen/header_1_larger_text_size"
             />
 
         <TextView

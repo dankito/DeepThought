@@ -4,6 +4,9 @@ import net.dankito.data_access.database.ChangedEntity
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.*
+import net.dankito.service.data.messages.EntitiesOfTypeChanged
+import net.dankito.service.data.messages.EntityChangeSource
+import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.specific.*
 import net.dankito.service.search.writerandsearcher.*
@@ -16,11 +19,12 @@ import org.apache.lucene.store.FSDirectory
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.*
+import kotlin.collections.HashSet
 import kotlin.concurrent.schedule
 import kotlin.concurrent.thread
 
 
-class LuceneSearchEngine(private val dataManager: DataManager, private val languageDetector: ILanguageDetector, osHelper: OsHelper, threadPool: IThreadPool, eventBus: IEventBus,
+class LuceneSearchEngine(private val dataManager: DataManager, private val languageDetector: ILanguageDetector, osHelper: OsHelper, threadPool: IThreadPool, private val eventBus: IEventBus,
                          entryService: EntryService, tagService: TagService, referenceService: ReferenceService, seriesService: SeriesService, readLaterArticleService: ReadLaterArticleService)
     : SearchEngineBase(threadPool) {
 
@@ -113,13 +117,19 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
     private fun updateIndex() {
         log.info("Starting updating index with last index update sequence number ${dataManager.localSettings.lastSearchIndexUpdateSequenceNumber}")
 
-        val currentSequenceNumber = dataManager.entityManager.getAllEntitiesUpdatedAfter<BaseEntity>(dataManager.localSettings.lastSearchIndexUpdateSequenceNumber,
-                AsyncProducerConsumerQueue<ChangedEntity<BaseEntity>>(2) {
+        val updatedEntityTypes = HashSet<Class<BaseEntity>>()
+        val queue = AsyncProducerConsumerQueue<ChangedEntity<BaseEntity>>(2) {
+            updatedEntityTypes.add(it.entityClass)
             updateEntityInIndex(it)
-        })
+        }
+
+        val currentSequenceNumber = dataManager.entityManager.getAllEntitiesUpdatedAfter<BaseEntity>(dataManager.localSettings.lastSearchIndexUpdateSequenceNumber, queue)
 
         dataManager.localSettings.lastSearchIndexUpdateSequenceNumber = currentSequenceNumber
         dataManager.localSettingsUpdated()
+
+        while(queue.isEmpty == false) { try { Thread.sleep(50) } catch(ignored: Exception) { } } // wait till queue is empty otherwise not all entity types would get added to updatedEntityTypes
+        updatedEntityTypes.forEach { eventBus.postAsync(EntitiesOfTypeChanged(it, EntityChangeType.Updated, EntityChangeSource.Local)) }
 
         log.info("Done updating index")
     }

@@ -211,8 +211,8 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         }
 
         articleBody.select(".caption").first()?.let { caption ->
-            caption.select("#article-sidebar-wrapper, .article-sidebar-wrapper, .date-copy").remove()
-            imageHtml.append("<br/>" + caption.html())
+            caption.select("#article-sidebar-wrapper, .article-sidebar-wrapper, .authors, .date-copy").remove()
+            imageHtml.append("<p>" + caption.html() + "</p>")
         }
 
         getUrlOfNextImageInGallery(articleBody)?.let { nextImageUrl ->
