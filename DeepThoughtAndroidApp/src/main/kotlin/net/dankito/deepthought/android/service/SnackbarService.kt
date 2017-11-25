@@ -176,7 +176,7 @@ class SnackbarService {
     fun checkIfSnackbarForDeviceShouldBeDismissed(device: DiscoveredDevice) {
         if(currentSnackbarId == device.device.id) {
             currentActivityTracker.currentActivity?.let { activity ->
-                currentSnackbar?.dismiss()
+                activity.runOnUiThread { currentSnackbar?.dismiss() }
             }
         }
     }
