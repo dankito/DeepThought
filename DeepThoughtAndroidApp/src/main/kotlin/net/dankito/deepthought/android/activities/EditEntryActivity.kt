@@ -388,7 +388,7 @@ class EditEntryActivity : BaseActivity() {
         settings.displayZoomControls = false
         settings.javaScriptEnabled = true // so that embedded videos etc. work
 
-        enableWebViewContentJavascriptInterface()
+        wbvwContent.addJavascriptInterface(GetHtmlCodeFromWebViewJavaScripInterface { url, html -> siteFinishedLoading(url, html) }, GetHtmlCodeFromWebViewJavaScriptInterfaceName)
 
         wbvwContent.setWebChromeClient(object : WebChromeClient() {
             private var hasCompletelyFinishedLoadingPage = false
@@ -410,10 +410,6 @@ class EditEntryActivity : BaseActivity() {
                 }
             }
         })
-    }
-
-    private fun enableWebViewContentJavascriptInterface() {
-        wbvwContent.addJavascriptInterface(GetHtmlCodeFromWebViewJavaScripInterface { url, html -> siteFinishedLoading(url, html) }, GetHtmlCodeFromWebViewJavaScriptInterfaceName)
     }
 
     private val webViewClient = object : WebViewClient() {
@@ -1522,7 +1518,6 @@ class EditEntryActivity : BaseActivity() {
     private fun userClickedOnUrl(url: String) {
         openUrlOptionsView.showMenuCenter(txtEntryContentLabel) { selectedOption ->
             when(selectedOption) {
-                OpenUrlOptionsView.OpenUrlOption.OpenInSameActivity -> executeUserClickedUrlAction { showUrlInCurrentActivity(url) }
                 OpenUrlOptionsView.OpenUrlOption.OpenInNewActivity -> executeUserClickedUrlAction { showUrlInNewActivity(url) }
                 OpenUrlOptionsView.OpenUrlOption.OpenWithOtherApp -> executeUserClickedUrlAction { openUrlWithOtherApp(url) }
             }
@@ -1533,30 +1528,6 @@ class EditEntryActivity : BaseActivity() {
         wbvwContent.leaveFullscreenModeAndWaitTillLeft {
             action()
         }
-    }
-
-    private fun showUrlInCurrentActivity(url: String) {
-        articleExtractorManager.extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(url) { result ->
-            result.result?.let { runOnUiThread { showUrlInCurrentActivity(it) } }
-
-            result.error?.let { runOnUiThread { showCouldNotExtractItemErrorMessage(it, url) } }
-        }
-    }
-
-    private fun showUrlInCurrentActivity(extractionResult: ItemExtractionResult) {
-        item = null
-        readLaterArticle = null
-        itemExtractionResult = null
-
-        isInReaderMode = extractionResult.couldExtractContent
-        webSiteHtml = null
-        enableWebViewContentJavascriptInterface()
-
-        editEntryExtractionResult(extractionResult)
-    }
-
-    private fun showCouldNotExtractItemErrorMessage(error: Exception, articleUrl: String) {
-        dialogService.showErrorMessage(dialogService.getLocalization().getLocalizedString("alert.message.could.not.extract.item.from.url", articleUrl), exception = error)
     }
 
     private fun showUrlInNewActivity(url: String) {

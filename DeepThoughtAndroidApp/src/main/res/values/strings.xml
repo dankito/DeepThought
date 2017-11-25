@@ -167,7 +167,6 @@
     </plurals>
     <string name="dialog_tags_on_item_alert_message_html_contains_unsaved_changes">Tags have changed.\n\nDo you want to apply these changes?</string>
 
-    <string name="menu_open_url_open_in_same_activity">Open in this window</string>
     <string name="menu_open_url_open_in_new_activity">Open in DeepThought</string>
     <string name="menu_open_url_with_other_app">Open with an app</string>
 
