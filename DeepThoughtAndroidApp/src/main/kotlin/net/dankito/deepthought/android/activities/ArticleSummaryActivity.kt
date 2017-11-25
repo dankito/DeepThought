@@ -247,7 +247,7 @@ class ArticleSummaryActivity : BaseActivity() {
         return true
     }
 
-    protected open fun initSearchView(searchView: SearchView) {
+    private fun initSearchView(searchView: SearchView) {
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView.setSearchableInfo(searchManager.getSearchableInfo(this.componentName))
 
