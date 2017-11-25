@@ -142,7 +142,7 @@ class AndroidClipboardService : IClipboardService {
 
     private fun showUrlInClipboardDetectedSnackbarWithDelayOnAppStartCheck(url: String, currentActivity: Activity) {
         if(lifeCycleListener.didAppJustStart()) {
-            Timer().schedule(2000L) { // on app start wait some time before showing Snackbar
+            Timer().schedule(SnackbarService.PeriodToWaitBeforeShowingFirstSnackbarOnStartUp) { // on app start wait some time before showing Snackbar
                 currentActivity.runOnUiThread { showUrlInClipboardDetectedSnackbar(currentActivity, url) }
             }
         }

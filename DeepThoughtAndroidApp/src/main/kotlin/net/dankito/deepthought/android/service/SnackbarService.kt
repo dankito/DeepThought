@@ -29,6 +29,8 @@ import kotlin.concurrent.schedule
 class SnackbarService {
 
     companion object {
+        const val PeriodToWaitBeforeShowingFirstSnackbarOnStartUp = 2000L
+
         private const val PeriodToWaitBeforeShowingNextSnackbar = 2000L
 
         private val log = LoggerFactory.getLogger(SnackbarService::class.java)
