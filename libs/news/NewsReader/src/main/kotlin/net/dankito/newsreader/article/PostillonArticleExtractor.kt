@@ -26,7 +26,7 @@ class PostillonArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
     }
 
     override fun canExtractEntryFromUrl(url: String): Boolean {
-        return url.startsWith("http://www.der-postillon.com/") && url.length > "http://www.der-postillon.com/".length
+        return isHttpOrHttpsUrlFromHost(url, "www.der-postillon.com/")
     }
 
 

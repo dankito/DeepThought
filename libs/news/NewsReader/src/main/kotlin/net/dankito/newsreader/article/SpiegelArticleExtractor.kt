@@ -21,7 +21,7 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
     }
 
     override fun canExtractEntryFromUrl(url: String): Boolean {
-        return url.toLowerCase().contains("://www.spiegel.de/") && url.length > "://www.spiegel.de/".length + 4
+        return isHttpOrHttpsUrlFromHost(url, "www.spiegel.de/")
     }
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {

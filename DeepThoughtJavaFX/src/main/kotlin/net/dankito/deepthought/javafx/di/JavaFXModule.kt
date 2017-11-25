@@ -24,6 +24,7 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractorsManager
 import net.dankito.service.data.ReadLaterArticleService
+import net.dankito.service.data.SeriesService
 import net.dankito.service.data.TagService
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
@@ -98,7 +99,13 @@ class JavaFXModule(private val flavorInstanceProvider: JavaFXInstanceProvider, p
     @Singleton
     fun provideArticleSummaryPresenter(entryPersister: EntryPersister, readLaterArticleService: ReadLaterArticleService, articleExtractorManager: ArticleExtractorManager,
                                        router: IRouter, clipboardService: IClipboardService, dialogService: IDialogService) : ArticleSummaryPresenter {
-        return flavorInstanceProvider.provideArticleSummaryPresenter(entryPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService)
+        return ArticleSummaryPresenter(entryPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideArticleExtractorManager(seriesService: SeriesService, searchEngine: ISearchEngine) : ArticleExtractorManager {
+        return flavorInstanceProvider.provideArticleExtractorManager(seriesService, searchEngine)
     }
 
     @Provides

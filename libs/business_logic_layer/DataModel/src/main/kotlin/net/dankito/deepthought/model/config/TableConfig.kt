@@ -77,6 +77,7 @@ class TableConfig {
         const val LocalSettingsLastDatabaseOptimizationTimeColumnName = "last_database_optimization_time"
         const val LocalSettingsLastSearchIndexUpdateSequenceNumberColumnName = "last_search_index_update_sequence_number"
         const val LocalSettingsLastSearchIndexOptimizationTimeColumnName = "last_search_index_optimization_time"
+        const val LocalSettingsDidUserCreateDataEntityColumnName = "did_user_create_data_entity"
         const val LocalSettingsDidShowListItemActionsHelpColumnName = "did_show_list_item_actions_help"
         const val LocalSettingsDidShowSearchTagsHelpColumnName = "did_show_search_tags_help"
         const val LocalSettingsCountTagSearchesColumnName = "count_tag_searches"

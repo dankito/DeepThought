@@ -12,7 +12,7 @@ import java.util.*
 
 class ArticleExtractors(webClient: IWebClient) {
 
-    val cruxArticleExtractor = CruxArticleExtractor(webClient)
+    val readability4JArticleExtractor = Readability4JArticleExtractor(webClient)
 
     private val implementedExtractors = LinkedHashMap<Class<out IArticleExtractor>, IArticleExtractor>()
 
@@ -52,7 +52,7 @@ class ArticleExtractors(webClient: IWebClient) {
             return it
         }
 
-        return cruxArticleExtractor
+        return readability4JArticleExtractor
     }
 
     private fun findImplementedExtractorThatCanExtractEntryFromUrl(url: String): IArticleExtractor? {

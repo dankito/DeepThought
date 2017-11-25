@@ -16,7 +16,7 @@ class TechStageArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
     }
 
     override fun canExtractEntryFromUrl(url: String): Boolean {
-        return url.startsWith("http") && url.contains("://www.techstage.de/") && url.length > "://www.techstage.de/".length + 4
+        return isHttpOrHttpsUrlFromHost(url, "www.techstage.de/")
     }
 
 

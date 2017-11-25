@@ -39,8 +39,6 @@ class EntriesListView : MainActivityTabFragment<Item>(R.menu.entry_contextual_ac
 
     private var entriesToShowOnAttaches: List<Item>? = null
 
-    var mainNavigationView: View? = null
-
 
     init {
         AppComponent.component.inject(this)
@@ -99,7 +97,6 @@ class EntriesListView : MainActivityTabFragment<Item>(R.menu.entry_contextual_ac
     override fun showOnboardingView() {
         super.showOnboardingView()
 
-        mainNavigationView?.visibility = View.GONE
         arrowToFloatingActionButton.visibility = View.VISIBLE
 
         // show txtOnboardingText a little bit above the center as it looks more natural and leaves more room for arrowToFloatingActionButton
@@ -112,7 +109,6 @@ class EntriesListView : MainActivityTabFragment<Item>(R.menu.entry_contextual_ac
         super.hideOnboardingView()
 
         if(entryAdapter.isInMultiSelectMode() == false) {
-            mainNavigationView?.visibility = View.VISIBLE
             arrowToFloatingActionButton.visibility = View.GONE
         }
     }

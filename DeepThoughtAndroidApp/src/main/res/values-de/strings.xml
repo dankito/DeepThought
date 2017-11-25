@@ -75,7 +75,7 @@
     <string name="tab_items_onboarding_text"><![CDATA[
         <p>Es gibt drei Wege Daten zu DeepThought hinzuzufügen:</p>
         <p>Für <b>eigene Texte (Notizen, Gedanken, …)</b> klicken Sie auf das <b>(+) Symbol</b> unten rechts und wählen <b>Eintrag</b>.</p>
-        <p>Um eine <b>Webseite</b> zu speichern wählen Sie in Ihrem <b>Browser im Menü <u>Teilen</u></b> (unter <img src=\"ic_more_vert_white_48dp\" /> / <img src=\"ic_share_white_48dp\" />) DeepThought.</p>
+        <p>Um eine <b>Webseite</b> zu speichern wählen Sie in Ihrem Browser im <b>Teilen Menü</b> (unter <img src=\"ic_more_vert_white_48dp\" /> / <img src=\"ic_share_white_48dp\" />) DeepThought.</p>
         Um einen <b>Zeitungsartikel mittels eines RSS Feeds</b> zu speichern, klicken Sie auf das <b>(+) Symbol</b> unten rechts und wählen <b>Zeitungsartikel</b>.
     ]]></string>
     <string name="tab_tags_onboarding_text"><![CDATA[
@@ -213,8 +213,7 @@
     </plurals>
     <string name="dialog_tags_on_item_alert_message_html_contains_unsaved_changes">Schlagworte wurden geändert.\n\nMöchten Sie diese Änderungen übernehmen?</string>
 
-    <string name="menu_open_url_open_in_same_activity">In diesem Fenster öffnen</string>
-    <string name="menu_open_url_open_in_new_activity">In neuem Fenster öffnen</string>
+    <string name="menu_open_url_open_in_new_activity">In DeepThought öffnen</string>
     <string name="menu_open_url_with_other_app">Mit anderer App öffnen</string>
 
     <string name="activity_edit_source_title">Quelle</string>

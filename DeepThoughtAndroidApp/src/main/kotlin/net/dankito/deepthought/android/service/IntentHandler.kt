@@ -35,7 +35,7 @@ class IntentHandler(private val extractArticleHandler: ExtractArticleHandler, pr
         intent.getStringExtra(Intent.EXTRA_TEXT)?.let { sharedText ->
             val trimmedText = sharedText.trim() // K9 Mail sometimes add empty lines at the end
             if(urlUtil.isHttpUri(trimmedText)) {
-                extractArticleHandler.extractArticle(trimmedText)
+                extractArticleHandler.extractAndShowArticleUserDidSeeBefore(trimmedText)
             }
             else {
                 handleReceivedText(intent, sharedText)

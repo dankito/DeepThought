@@ -10,6 +10,7 @@ dependencies {
     compile project(':WebClient')
 
     compile project(':Crux')
+    compile project(':Readability4J')
 
     testCompile ("junit:junit:$junitVersion", {
         exclude group: 'org.hamcrest', module: 'hamcrest-core'

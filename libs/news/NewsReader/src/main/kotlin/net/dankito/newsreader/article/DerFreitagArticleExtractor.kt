@@ -24,7 +24,7 @@ class DerFreitagArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
     }
 
     override fun canExtractEntryFromUrl(url: String): Boolean {
-        return url.toLowerCase().contains("://www.freitag.de/") && url.length > "://www.freitag.de/".length + 5
+        return isHttpOrHttpsUrlFromHost(url, "www.freitag.de/")
     }
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {

@@ -2,7 +2,9 @@ package net.dankito.deepthought.news.article
 
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.deepthought.di.CommonComponent
+import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Series
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.newsreader.article.IArticleExtractor
@@ -17,7 +19,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-class ArticleExtractorManager(private val seriesService: SeriesService, private val searchEngine: ISearchEngine) {
+open class ArticleExtractorManager(private val seriesService: SeriesService, private val searchEngine: ISearchEngine) {
 
     companion object {
         private val log = LoggerFactory.getLogger(ArticleExtractorManager::class.java)
@@ -33,7 +35,7 @@ class ArticleExtractorManager(private val seriesService: SeriesService, private 
     }
 
 
-    fun extractArticleAndAddDefaultDataAsync(item: ArticleSummaryItem, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
+    fun extractArticleUserDidSeeBeforeAndAddDefaultDataAsync(item: ArticleSummaryItem, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
         articleExtractors.getExtractorForItem(item)?.let { extractor ->
             log.info("Using $extractor to extract item ${item.title}")
 
@@ -44,7 +46,18 @@ class ArticleExtractorManager(private val seriesService: SeriesService, private 
         }
     }
 
-    fun extractArticleAndAddDefaultDataAsync(url: String, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
+    /**
+     * Do to legal issues, don't extract an article from a url the user didn't for sure see before. Show her/him original web page before
+     */
+    open fun extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(item: ArticleSummaryItem, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
+        val extractionResult = ItemExtractionResult(Item("", item.summary), Source(item.title, item.url, item.publishedDate, item.previewImageUrl))
+
+        addDefaultData(item, extractionResult) {
+            callback(AsyncResult(true, result = extractionResult))
+        }
+    }
+
+    fun extractArticleUserDidSeeBeforeAndAddDefaultDataAsync(url: String, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
         articleExtractors.getExtractorForUrl(url)?.let { extractor ->
             log.info("Using $extractor to extract url $url")
 
@@ -55,7 +68,18 @@ class ArticleExtractorManager(private val seriesService: SeriesService, private 
         }
     }
 
-    fun extractArticleAndAddDefaultData(extractionResult: ItemExtractionResult, html: String, url: String) {
+    /**
+     * Do to legal issues, don't extract an article from a url the user didn't for sure see before. Show her/him original web page before
+     */
+    open fun extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(url: String, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
+        val extractionResult = ItemExtractionResult(Item(""), Source(url, url))
+
+        addDefaultData(url, extractionResult) {
+            callback(AsyncResult(true, result = extractionResult))
+        }
+    }
+
+    fun extractArticleUserDidSeeBefore(extractionResult: ItemExtractionResult, html: String, url: String) {
         articleExtractors.getExtractorForUrl(url)?.let { extractor ->
             log.info("Using $extractor to extract html from url $url")
 
@@ -63,7 +87,8 @@ class ArticleExtractorManager(private val seriesService: SeriesService, private 
         }
     }
 
-    fun addDefaultData(item: ArticleSummaryItem, extractionResult: ItemExtractionResult, callback: () -> Unit) {
+
+    private fun addDefaultData(item: ArticleSummaryItem, extractionResult: ItemExtractionResult, callback: () -> Unit) {
         item.articleSummaryExtractorConfig?.tagsToAddOnExtractedArticles?.forEach {
             extractionResult.tags.add(it)
         }
@@ -79,6 +104,12 @@ class ArticleExtractorManager(private val seriesService: SeriesService, private 
         }
 
         val siteName = getSiteName(extractor, item, extractionResult)
+
+        addDefaultDataForSiteName(siteName, extractionResult, callback)
+    }
+
+    private fun addDefaultData(url: String, extractionResult: ItemExtractionResult, callback: () -> Unit) {
+        val siteName = getSiteNameForUrl(url)
 
         addDefaultDataForSiteName(siteName, extractionResult, callback)
     }

@@ -27,6 +27,9 @@ data class LocalSettings(
         @Column(name = TableConfig.LocalSettingsLastSearchIndexOptimizationTimeColumnName)
         var lastSearchIndexOptimizationTime: Date,
 
+        @Column(name = TableConfig.LocalSettingsDidUserCreateDataEntityColumnName)
+        var didUserCreateDataEntity: Boolean = false,
+
         @Column(name = TableConfig.LocalSettingsDidShowListItemActionsHelpColumnName)
         var didShowListItemActionsHelp: Boolean = false,
 

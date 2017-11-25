@@ -24,8 +24,15 @@ class ExtractArticleHandler {
     }
 
 
-    fun extractArticle(url: String) {
-        articleExtractorManager.extractArticleAndAddDefaultDataAsync(url) {
+    fun extractAndShowArticleUserDidSeeBefore(url: String) {
+        articleExtractorManager.extractArticleUserDidSeeBeforeAndAddDefaultDataAsync(url) {
+            it.result?.let { router.showEditEntryView(it) }
+            it.error?.let { showCouldNotExtractItemErrorMessage(it, url) }
+        }
+    }
+
+    fun extractAndShowArticleUserDidNotSeeBefore(url: String) {
+        articleExtractorManager.extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(url) {
             it.result?.let { router.showEditEntryView(it) }
             it.error?.let { showCouldNotExtractItemErrorMessage(it, url) }
         }

@@ -57,7 +57,7 @@
     <string name="tab_items_onboarding_text"><![CDATA[
         <p>There are 3 ways to add content to DeepThought:</p>
         <p>For <b>own texts (thoughts, notes, …)</b>, press the <b>(+) button</b> and select <b>Item</b>.</p>
-        <p>To save a <b>Web page</b> select DeepThought in your <b>browser\'s <u>Share</u> menu</b> (in <img src=\"ic_more_vert_white_48dp\" /> / <img src=\"ic_share_white_48dp\" />).</p>
+        <p>To save a <b>Web page</b> select DeepThought in your browser\'s <b>Share menu</b> (in <img src=\"ic_more_vert_white_48dp\" /> / <img src=\"ic_share_white_48dp\" />).</p>
         To add a <b>newspaper article via RSS feed</b>, press the <b>(+) button</b> and select <b>Newspaper Article</b>.
     ]]></string>
     <string name="tab_tags_onboarding_text"><![CDATA[
@@ -159,7 +159,7 @@
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
     <string name="activity_edit_item_alert_message_item_has_been_edited">Item has been edited (probably on a synchronized device).\n\nWhen
         you now save the item the other changes get overwritten.</string>
-    <string name="activity_edit_item_alert_message_delete_item">Would you like to delete item \'%s\'?</string>
+    <string name="activity_edit_item_alert_message_delete_item">Would you really like to delete item \'%s\'?</string>
 
     <string name="dialog_edit_html_alert_message_html_contains_unsaved_changes">Content has changed.\n\nDo you want to apply these changes?</string>
 
@@ -175,8 +175,7 @@
     </plurals>
     <string name="dialog_tags_on_item_alert_message_html_contains_unsaved_changes">Tags have changed.\n\nDo you want to apply these changes?</string>
 
-    <string name="menu_open_url_open_in_same_activity">Open in this window</string>
-    <string name="menu_open_url_open_in_new_activity">Open in new window</string>
+    <string name="menu_open_url_open_in_new_activity">Open in DeepThought</string>
     <string name="menu_open_url_with_other_app">Open with an app</string>
 
     <string name="activity_edit_source_title">Source</string>

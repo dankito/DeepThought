@@ -9,6 +9,7 @@
         android:id="@+id/txtAskExtractorNameLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         style="@style/Header1Style"
         android:text="@string/dialog_article_summary_extractor_config_enter_name"
     />

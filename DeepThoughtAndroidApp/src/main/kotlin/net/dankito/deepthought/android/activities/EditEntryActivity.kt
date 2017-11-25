@@ -24,6 +24,7 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.EditHtmlTextDialog
 import net.dankito.deepthought.android.dialogs.FullscreenDialogFragment
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
+import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import net.dankito.deepthought.android.views.*
 import net.dankito.deepthought.data.EntryPersister
@@ -111,6 +112,9 @@ class EditEntryActivity : BaseActivity() {
 
     @Inject
     protected lateinit var articleExtractorManager: ArticleExtractorManager
+
+    @Inject
+    protected lateinit var extractArticleHandler: ExtractArticleHandler
 
     @Inject
     protected lateinit var dialogService: IDialogService
@@ -470,7 +474,7 @@ class EditEntryActivity : BaseActivity() {
 
             if(extractionResult?.couldExtractContent == false) {
                 extractionResult?.let { extractionResult ->
-                    articleExtractorManager.extractArticleAndAddDefaultData(extractionResult, html, url)
+                    articleExtractorManager.extractArticleUserDidSeeBefore(extractionResult, html, url)
 
                     if(extractionResult.couldExtractContent) {
                         runOnUiThread { extractedContentOnUiThread(extractionResult) }
@@ -970,6 +974,10 @@ class EditEntryActivity : BaseActivity() {
 
     override fun onPause() {
         unregisterEventBusListener()
+
+        if(wbvwContent.isInFullscreenMode) {
+            wbvwContent.leaveFullscreenModeAndWaitTillLeft {  }
+        }
 
         super.onPause()
     }
@@ -1510,7 +1518,6 @@ class EditEntryActivity : BaseActivity() {
     private fun userClickedOnUrl(url: String) {
         openUrlOptionsView.showMenuCenter(txtEntryContentLabel) { selectedOption ->
             when(selectedOption) {
-                OpenUrlOptionsView.OpenUrlOption.OpenInSameActivity -> executeUserClickedUrlAction { showUrlInCurrentActivity(url) }
                 OpenUrlOptionsView.OpenUrlOption.OpenInNewActivity -> executeUserClickedUrlAction { showUrlInNewActivity(url) }
                 OpenUrlOptionsView.OpenUrlOption.OpenWithOtherApp -> executeUserClickedUrlAction { openUrlWithOtherApp(url) }
             }
@@ -1523,18 +1530,8 @@ class EditEntryActivity : BaseActivity() {
         }
     }
 
-    private fun showUrlInCurrentActivity(url: String) {
-        item = null
-        readLaterArticle = null
-        itemExtractionResult = null
-
-        isInReaderMode = false
-
-        editEntryExtractionResult(ItemExtractionResult(Item(""), Source(url, url)))
-    }
-
     private fun showUrlInNewActivity(url: String) {
-        router.showEditEntryView(ItemExtractionResult(Item(""), Source(url, url)))
+        extractArticleHandler.extractAndShowArticleUserDidNotSeeBefore(url)
     }
 
     private fun openUrlWithOtherApp(url: String) {

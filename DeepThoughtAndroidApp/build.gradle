@@ -68,6 +68,11 @@ android {
             dimension = "default"
         }
         extended {
+            applicationIdSuffix = ".extended"
+            resValue "string", "app_name", "DeepThought Extended"
+
+            ext.enableCrashlytics = false
+
             dimension = "default"
         }
     }

@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
+import android.view.View
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.view_floating_action_button_main.*
 import net.dankito.deepthought.android.activities.BaseActivity
@@ -17,11 +18,15 @@ import net.dankito.deepthought.android.fragments.MainActivityTabFragment
 import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.IntentHandler
 import net.dankito.deepthought.android.views.MainActivityFloatingActionMenuButton
-import net.dankito.deepthought.model.BaseEntity
+import net.dankito.deepthought.model.*
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
+import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.service.data.messages.EntitiesOfTypeChanged
+import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.UrlUtil
+import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 
 
@@ -36,6 +41,8 @@ class MainActivity : BaseActivity() {
 
     private lateinit var floatingActionMenuButton: MainActivityFloatingActionMenuButton
 
+    private var eventBusListener: EventBusListener? = null
+
 
     @Inject
     protected lateinit var router: IRouter
@@ -45,6 +52,9 @@ class MainActivity : BaseActivity() {
 
     @Inject
     protected lateinit var eventBus: IEventBus
+
+    @Inject
+    protected lateinit var dataManager: DataManager
 
     @Inject
     protected lateinit var summaryExtractorManager: ArticleSummaryExtractorConfigManager
@@ -63,6 +73,8 @@ class MainActivity : BaseActivity() {
 
         setupUI()
 
+        dataManager.addInitializationListener { initializedDataManager() }
+
         handleIntent(intent)
     }
 
@@ -78,7 +90,7 @@ class MainActivity : BaseActivity() {
         setSupportActionBar(toolbar)
 
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener)
-        sectionsPagerAdapter = MainActivitySectionsPagerAdapter(supportFragmentManager, bottomViewNavigation)
+        sectionsPagerAdapter = MainActivitySectionsPagerAdapter(supportFragmentManager)
         viewPager.adapter = sectionsPagerAdapter
 
         bottomViewNavigation.disableShiftMode()
@@ -103,6 +115,34 @@ class MainActivity : BaseActivity() {
         currentlyVisibleFragment = sectionsPagerAdapter.getItem(position)
         currentlyVisibleFragment?.isCurrentSelectedTab = true
         currentlyVisibleFragment?.viewCameIntoView()
+    }
+
+    private fun initializedDataManager() {
+        if(dataManager.localSettings.didUserCreateDataEntity == false) {
+            val eventBusListener = EventBusListener()
+            this.eventBusListener = eventBusListener
+            eventBus.register(eventBusListener)
+        }
+
+        setBottomNavigationVisibility()
+    }
+
+    private fun userCreatedDataEntity() {
+        eventBusListener?.let {
+            eventBus.unregister(it)
+            this.eventBusListener = null
+        }
+
+        dataManager.localSettings.didUserCreateDataEntity = true
+        dataManager.localSettingsUpdated()
+
+        setBottomNavigationVisibility()
+    }
+
+    private fun setBottomNavigationVisibility() {
+        runOnUiThread {
+            bottomViewNavigation.visibility = if (dataManager.localSettings.didUserCreateDataEntity) View.VISIBLE else View.GONE
+        }
     }
 
 
@@ -191,6 +231,24 @@ class MainActivity : BaseActivity() {
 
         override fun onPageScrollStateChanged(state: Int) {
 
+        }
+    }
+
+
+    inner class EventBusListener {
+
+        @Handler
+        fun entryChanged(change: EntitiesOfTypeChanged) {
+            if(change.changeType == EntityChangeType.Created) {
+                when(change.entityType) {
+                    Item::class.java,
+                    Tag::class.java,
+                    Source::class.java,
+                    Series::class.java,
+                    ReadLaterArticle::class.java ->
+                        userCreatedDataEntity()
+                }
+            }
         }
     }
 

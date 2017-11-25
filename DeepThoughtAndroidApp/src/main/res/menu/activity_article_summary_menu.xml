@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item android:id="@+id/mnSearch"
+          app:showAsAction="always"
+          android:orderInCategory="100"
+          android:title="@string/search_title"
+          android:icon="@drawable/ic_search_white_48dp"
+          app:actionViewClass="android.support.v7.widget.SearchView" />
+
     <item
         android:id="@+id/mnReload"
         app:showAsAction="always"
-        android:orderInCategory="100"
+        android:orderInCategory="200"
         android:title="@string/action_reload"
         android:icon="@android:drawable/stat_notify_sync"
         app:actionLayout="@layout/contextual_action_mode_item_action_layout"
@@ -13,7 +20,7 @@
     <item
         android:id="@+id/mnLoadMore"
         app:showAsAction="always"
-        android:orderInCategory="200"
+        android:orderInCategory="300"
         android:title="@string/action_load_more"
         android:icon="@drawable/ic_forward_white_48dp"
         app:actionLayout="@layout/contextual_action_mode_item_action_layout"

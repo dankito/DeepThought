@@ -21,13 +21,21 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
     }
 
     fun notifyListenersOfEntityChange(entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource, didChangesAffectingDependentEntities: Boolean = false, isDependentChange: Boolean = false) {
-        val entityClass = entity.javaClass
+        val entityClass = getEntityClass(entity)
 
         dispatchMessagesForChangedEntity(entityClass, entity, changeType, source, isDependentChange)
 
         if(didChangesAffectingDependentEntities) {
             dispatchMessagesForDependentEntities(entityClass, entity, changeType, source)
         }
+    }
+
+    private fun getEntityClass(entity: BaseEntity): Class<out BaseEntity> {
+        if(entity is Tag) { // to also pass Tag's class for calculated tags
+            return Tag::class.java
+        }
+
+        return entity.javaClass
     }
 
     private fun dispatchMessagesForChangedEntity(entityClass: Class<out BaseEntity>, entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource, isDependentChange: Boolean) {
@@ -41,7 +49,7 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
         eventBus.postAsync(EntitiesOfTypeChanged(entityClass, changeType, source, isDependentChange))
     }
 
-    private fun dispatchMessagesForDependentEntities(entityClass: Class<BaseEntity>, entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource) {
+    private fun dispatchMessagesForDependentEntities(entityClass: Class<out BaseEntity>, entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource) {
         if(entityClass == Tag::class.java) {
             dispatchMessagesForTagDependentEntities(entity as Tag, source)
         }

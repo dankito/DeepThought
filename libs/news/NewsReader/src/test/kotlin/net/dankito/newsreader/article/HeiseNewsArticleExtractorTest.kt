@@ -35,4 +35,12 @@ class HeiseNewsArticleExtractorTest : ArticleExtractorTestBase() {
                 "https://m.f.ix.de/scale/geometry/1280/q50/imgs/18/2/2/7/5/9/6/5/urn-newsml-dpa-com-20090101-150429-99-07406_large_4_3-28dd2171e1a4fa1c.jpeg@jpg", 4300)
     }
 
+    @Test
+    fun extractVideoArticle() {
+        getAndTestArticle("https://m.heise.de/newsticker/meldung/EWE-und-Uni-Jena-Salzstoecke-koennen-als-grosse-Stromspeicher-dienen-3898223.html",
+                "EWE und Uni Jena: Salzstöcke können als große Stromspeicher dienen",
+                "Die beiden Projektpartner haben die Technik, bei der Strom in einer solebasierten Batterie gespeichert wird, nach eigenen Angaben erfolgreich getestet.",
+                "https://1.f.ix.de/scale/geometry/700/q75/imgs/18/2/3/2/2/9/4/2/ewe-0dd4e09255e81e38.jpeg", 3000)
+    }
+
 }

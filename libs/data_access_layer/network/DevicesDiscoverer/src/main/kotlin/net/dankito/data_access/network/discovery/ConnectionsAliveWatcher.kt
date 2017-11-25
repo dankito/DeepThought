@@ -92,7 +92,7 @@ class ConnectionsAliveWatcher(protected var connectionTimeout: Int) {
             val deviceKeyWithoutBasicDataSyncPort = deviceKey.substring(0, index)
 
             for(otherDeviceKey in lastMessageReceivedFromDeviceTimestamps.keys) {
-                if(otherDeviceKey.startsWith(deviceKeyWithoutBasicDataSyncPort)) { // device just reconnected shortly with different basic data sync port
+                if(deviceKey != otherDeviceKey && otherDeviceKey.startsWith(deviceKeyWithoutBasicDataSyncPort)) { // device just reconnected shortly with different basic data sync port
                     return true
                 }
             }
