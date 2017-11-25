@@ -207,7 +207,7 @@
     <string name="dialog_tags_on_item_alert_message_html_contains_unsaved_changes">Schlagworte wurden geändert.\n\nMöchten Sie diese Änderungen übernehmen?</string>
 
     <string name="menu_open_url_open_in_same_activity">In diesem Fenster öffnen</string>
-    <string name="menu_open_url_open_in_new_activity">In neuem Fenster öffnen</string>
+    <string name="menu_open_url_open_in_new_activity">In DeepThought öffnen</string>
     <string name="menu_open_url_with_other_app">Mit anderer App öffnen</string>
 
     <string name="activity_edit_source_title">Quelle</string>

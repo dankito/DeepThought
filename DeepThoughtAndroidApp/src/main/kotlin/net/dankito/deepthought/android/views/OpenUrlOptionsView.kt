@@ -23,7 +23,7 @@ class OpenUrlOptionsView {
     }
 
 
-    private val optionItems = OpenUrlOption.values().toList()
+    private val optionItems = OpenUrlOption.values().filter { it != OpenUrlOption.OpenInSameActivity }.toList()
 
     private val optionItemsStringResourceIds = HashMap<OpenUrlOption, Int>()
 
@@ -31,7 +31,7 @@ class OpenUrlOptionsView {
 
 
     init {
-        optionItemsStringResourceIds.put(OpenUrlOption.OpenInSameActivity, R.string.menu_open_url_open_in_same_activity)
+//        optionItemsStringResourceIds.put(OpenUrlOption.OpenInSameActivity, R.string.menu_open_url_open_in_same_activity)
         optionItemsStringResourceIds.put(OpenUrlOption.OpenInNewActivity, R.string.menu_open_url_open_in_new_activity)
         optionItemsStringResourceIds.put(OpenUrlOption.OpenWithOtherApp, R.string.menu_open_url_with_other_app)
     }
