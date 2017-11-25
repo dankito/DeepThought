@@ -29,8 +29,6 @@ class WebPageMetaDataExtractor(webClient: IWebClient) : ExtractorBase(webClient)
             metaData.publishingDate = tryToParsePublishingDateString(it)
         }
 
-        // TODO: what about keywords (property=article:tag)?
-
         return metaData
     }
 
