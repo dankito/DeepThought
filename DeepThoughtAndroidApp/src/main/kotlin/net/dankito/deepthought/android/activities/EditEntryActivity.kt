@@ -388,7 +388,7 @@ class EditEntryActivity : BaseActivity() {
         settings.displayZoomControls = false
         settings.javaScriptEnabled = true // so that embedded videos etc. work
 
-        wbvwContent.addJavascriptInterface(GetHtmlCodeFromWebViewJavaScripInterface { url, html -> siteFinishedLoading(url, html) }, GetHtmlCodeFromWebViewJavaScriptInterfaceName)
+        enableWebViewContentJavascriptInterface()
 
         wbvwContent.setWebChromeClient(object : WebChromeClient() {
             private var hasCompletelyFinishedLoadingPage = false
@@ -410,6 +410,10 @@ class EditEntryActivity : BaseActivity() {
                 }
             }
         })
+    }
+
+    private fun enableWebViewContentJavascriptInterface() {
+        wbvwContent.addJavascriptInterface(GetHtmlCodeFromWebViewJavaScripInterface { url, html -> siteFinishedLoading(url, html) }, GetHtmlCodeFromWebViewJavaScriptInterfaceName)
     }
 
     private val webViewClient = object : WebViewClient() {
@@ -1546,6 +1550,7 @@ class EditEntryActivity : BaseActivity() {
 
         isInReaderMode = extractionResult.couldExtractContent
         webSiteHtml = null
+        enableWebViewContentJavascriptInterface()
 
         editEntryExtractionResult(extractionResult)
     }
