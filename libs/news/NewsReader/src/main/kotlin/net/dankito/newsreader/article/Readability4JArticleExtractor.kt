@@ -22,8 +22,19 @@ class Readability4JArticleExtractor(webClient: IWebClient) : ArticleExtractorBas
         val article = readability.parse()
 
         article.content?.let { articleContent ->
-            extractionResult.setExtractedContent(Item(articleContent, article.excerpt ?: extractionResult.item.summary), null) // WebPageMetaDataExtractor should make a better job than Readability when it comes to extracting metadata
+            val content = mayAddPreviewImageToContent(extractionResult, articleContent)
+            extractionResult.setExtractedContent(Item(content, article.excerpt ?: extractionResult.item.summary), null) // WebPageMetaDataExtractor should make a better job than Readability when it comes to extracting metadata
         }
+    }
+
+    private fun mayAddPreviewImageToContent(extractionResult: ItemExtractionResult, content: String): String {
+        extractionResult.source?.previewImageUrl?.let { previewImageUrl ->
+            if(content.contains("<img") == false && content.contains(previewImageUrl) == false) {
+                return "<figure><img src=\"$previewImageUrl\" alt=\"preview image\" style=\"max-height:400px; width:auto;\" /></figure>${content}"
+            }
+        }
+
+        return content
     }
 
 }
