@@ -12,7 +12,7 @@ class WebPageMetaDataExtractor(webClient: IWebClient) : ExtractorBase(webClient)
     fun extractMetaData(document: Document): WebPageMetaData {
         val metaData = WebPageMetaData()
 
-        metaData.title = extractTitle(document)
+        metaData.title = extractAndRemoveSiteNameFromTitle(document)
 
         metaData.description = extractDescription(document)
 
@@ -34,6 +34,16 @@ class WebPageMetaDataExtractor(webClient: IWebClient) : ExtractorBase(webClient)
         return metaData
     }
 
+    private fun extractAndRemoveSiteNameFromTitle(document: Document): String? {
+        val extractedTitle = extractTitle(document)
+
+        extractedTitle?.let {
+            return removeSiteNameFromTitle(it)
+        }
+
+        return extractedTitle
+    }
+
     private fun extractTitle(document: Document): String? {
         // html's title sometimes has website name in it, so try og:title first
         document.head().select("meta[name=\"og:title\"]").first()?.attr("content")?.let { return it }
@@ -50,6 +60,37 @@ class WebPageMetaDataExtractor(webClient: IWebClient) : ExtractorBase(webClient)
 
         return document.title()
     }
+
+    private fun removeSiteNameFromTitle(extractedTitle: String): String {
+        var adjustedTitle = extractedTitle
+
+        if(extractedTitle.contains(" [\\|\\-\\/>»] ".toRegex())) {
+            adjustedTitle = extractedTitle.replace("(.*)[\\|\\-\\/>»] .*".toRegex(RegexOption.IGNORE_CASE), "$1")
+
+            // If the resulting title is too short (3 words or fewer), remove
+            // the first part instead:
+            if(wordCount(adjustedTitle) < 3) {
+                adjustedTitle = adjustedTitle.replace("[^\\|\\-\\/>»]*[\\|\\-\\/>»](.*)".toRegex(RegexOption.IGNORE_CASE), "$1")
+            }
+
+            return adjustedTitle
+        }
+        else if(extractedTitle.contains(": ")) {
+            adjustedTitle = adjustedTitle.substring(adjustedTitle.lastIndexOf(':') + 1)
+
+            // If the title is now too short, try the first colon instead:
+            if(wordCount(adjustedTitle) < 3) {
+                adjustedTitle = adjustedTitle.substring(adjustedTitle.indexOf(':') + 1)
+            }
+        }
+
+        return adjustedTitle
+    }
+
+    private fun wordCount(string: String): Int {
+        return string.split("\\s+".toRegex()).size
+    }
+
 
     private fun extractDescription(document: Document): String? {
         document.head().select("meta[name=\"description\"]").first()?.attr("content")?.let { return it }
