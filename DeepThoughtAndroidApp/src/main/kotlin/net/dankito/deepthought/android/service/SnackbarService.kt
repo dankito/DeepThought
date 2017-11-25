@@ -179,6 +179,8 @@ class SnackbarService {
                 activity.runOnUiThread { currentSnackbar?.dismiss() }
             }
         }
+
+        unknownDevicesWaitingToShowNotificationToUser.remove(device)
     }
 
 
