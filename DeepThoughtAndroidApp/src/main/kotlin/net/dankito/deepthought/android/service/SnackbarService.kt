@@ -4,6 +4,7 @@ import android.app.Activity
 import android.net.Uri
 import android.support.design.internal.SnackbarContentLayout
 import android.support.design.widget.Snackbar
+import android.text.Spanned
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -60,18 +61,23 @@ class SnackbarService {
 
     fun showUrlInClipboardDetectedSnackbar(activity: Activity, url: String, actionInvokedListener: () -> Unit) {
         try {
-            val uri = Uri.parse(url)
-            var host = uri.host
-            if(host.startsWith("www.")) {
-                host = host.substring(4)
-            }
-
-            val unformattedText = activity.getText(R.string.snackbar_extract_item_from_url).toString().replace("%1\$s", host)
-            val text = stringUtil.getSpannedFromHtml(unformattedText)
+            val text = showUrlInClipboardDetectedSnackbarText(url, activity)
             showSnackbar(text, url, activity, { customizeUrlInClipboardDetectedSnackbar(activity, it) }) {
                 actionInvokedListener()
             }
         } catch(e: Exception) { log.error("Could not show snackbar for Clipboard url $url", e) }
+    }
+
+    private fun showUrlInClipboardDetectedSnackbarText(url: String, activity: Activity): Spanned {
+        val uri = Uri.parse(url)
+        var host = uri.host
+        if (host.startsWith("www.")) {
+            host = host.substring(4)
+        }
+
+        val unformattedText = activity.getText(R.string.snackbar_extract_item_from_url).toString().replace("%1\$s", host)
+
+        return stringUtil.getSpannedFromHtml(unformattedText)
     }
 
     private fun customizeUrlInClipboardDetectedSnackbar(activity: Activity, snackbar: Snackbar) {
