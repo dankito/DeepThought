@@ -68,7 +68,7 @@
     <string name="tab_items_onboarding_text"><![CDATA[
         <p>Es gibt drei Wege Daten zu DeepThought hinzuzufügen:</p>
         <p>Für <b>eigene Texte (Notizen, Gedanken, …)</b> klicken Sie auf das <b>(+) Symbol</b> unten rechts und wählen <b>Eintrag</b>.</p>
-        <p>Um eine <b>Webseite</b> zu speichern wählen Sie in Ihrem <b>Browser im Menü <u>Teilen</u></b> (unter <img src=\"ic_more_vert_white_48dp\" /> / <img src=\"ic_share_white_48dp\" />) DeepThought.</p>
+        <p>Um eine <b>Webseite</b> zu speichern wählen Sie in Ihrem Browser im <b>Teilen Menü</b> (unter <img src=\"ic_more_vert_white_48dp\" /> / <img src=\"ic_share_white_48dp\" />) DeepThought.</p>
         Um einen <b>Zeitungsartikel mittels eines RSS Feeds</b> zu speichern, klicken Sie auf das <b>(+) Symbol</b> unten rechts und wählen <b>Zeitungsartikel</b>.
     ]]></string>
     <string name="tab_tags_onboarding_text"><![CDATA[
