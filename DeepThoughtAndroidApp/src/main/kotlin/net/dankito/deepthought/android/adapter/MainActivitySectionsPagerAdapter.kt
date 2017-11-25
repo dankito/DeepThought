@@ -2,12 +2,11 @@ package net.dankito.deepthought.android.adapter
 
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import android.view.View
 import net.dankito.deepthought.android.fragments.*
 import net.dankito.deepthought.model.BaseEntity
 
 
-class MainActivitySectionsPagerAdapter(private val fragmentManager: FragmentManager, private val mainNavigationView: View) : FragmentPagerAdapter(fragmentManager) {
+class MainActivitySectionsPagerAdapter(private val fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
 
     companion object {
         private var hasAdapterBeenCreatedBefore = false
@@ -76,8 +75,6 @@ class MainActivitySectionsPagerAdapter(private val fragmentManager: FragmentMana
         if(entriesListView == null) {
             entriesListView = EntriesListView()
         }
-
-        entriesListView?.mainNavigationView = mainNavigationView
 
         return entriesListView!!
     }
