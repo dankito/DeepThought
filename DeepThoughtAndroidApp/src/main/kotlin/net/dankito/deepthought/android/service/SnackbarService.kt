@@ -42,6 +42,9 @@ class SnackbarService {
     protected lateinit var currentActivityTracker: CurrentActivityTracker
 
     @Inject
+    protected lateinit var lifeCycleListener: AppLifeCycleListener
+
+    @Inject
     protected lateinit var router: IRouter
 
 
@@ -59,10 +62,21 @@ class SnackbarService {
     }
 
 
-    fun showUrlInClipboardDetectedSnackbar(activity: Activity, url: String, actionInvokedListener: () -> Unit) {
+    fun showUrlInClipboardDetectedSnackbarOnUiThread(activity: Activity, url: String, actionInvokedListener: () -> Unit) {
+        if(lifeCycleListener.didAppJustStart()) {
+            showSnackbarAfterAppStartupDelay { activity.runOnUiThread {
+                doShowUrlInClipboardDetectedSnackbarOnUiThread(activity, url, actionInvokedListener)
+            } }
+        }
+        else {
+            doShowUrlInClipboardDetectedSnackbarOnUiThread(activity, url, actionInvokedListener)
+        }
+    }
+
+    private fun doShowUrlInClipboardDetectedSnackbarOnUiThread(activity: Activity, url: String, actionInvokedListener: () -> Unit) {
         try {
             val text = showUrlInClipboardDetectedSnackbarText(url, activity)
-            showSnackbar(text, url, activity, { customizeUrlInClipboardDetectedSnackbar(activity, it) }) {
+            showSnackbarOnUiThread(text, url, activity, { customizeUrlInClipboardDetectedSnackbar(activity, it) }) {
                 actionInvokedListener()
             }
         } catch(e: Exception) { log.error("Could not show snackbar for Clipboard url $url", e) }
@@ -111,17 +125,19 @@ class SnackbarService {
 
         val activity = currentActivityTracker.currentActivity
         if(activity != null) {
-            activity.runOnUiThread { askUserToSyncDataWithDeviceOnMainThread(activity, unknownDevice, callback) }
+            activity.runOnUiThread { askUserToSyncDataWithDeviceOnUiThread(activity, unknownDevice, callback) }
         }
         else { // when there's not current activity, e.g. only DeepThoughtBackgroundAndroidService is running but no UI is displayed, wait till UI is available again
             currentActivityTracker.addNextActivitySetListener {
-                showUnknownDeviceDiscoveredViewAfterDelay(unknownDevice, callback)
+                showSnackbarAfterAppStartupDelay { // wait PeriodToWaitBeforeShowingFirstSnackbarOnStartUp and PeriodToWaitBeforeShowingNextSnackbar so that Snackbar for discovered URL gets shown before Snackbar for unknown device
+                    showUnknownDeviceDiscoveredViewAfterDelay(unknownDevice, callback)
+                }
             }
         }
     }
 
-    private fun askUserToSyncDataWithDeviceOnMainThread(currentActivity: Activity, remoteDevice: DiscoveredDevice, callback: (Boolean, Boolean) -> Unit) {
-        showSnackbar("", remoteDevice.device.id ?: "", currentActivity, { customizeAskToSyncDataWithDeviceSnackbar(it, currentActivity, remoteDevice) }) {
+    private fun askUserToSyncDataWithDeviceOnUiThread(currentActivity: Activity, remoteDevice: DiscoveredDevice, callback: (Boolean, Boolean) -> Unit) {
+        showSnackbarOnUiThread("", remoteDevice.device.id ?: "", currentActivity, { customizeAskToSyncDataWithDeviceSnackbar(it, currentActivity, remoteDevice) }) {
             val neverAskAgain = it.view.chkbxNeverAskAgainToConnectWithThisDevice.isChecked
             callback(!neverAskAgain, neverAskAgain)
         }
@@ -192,7 +208,14 @@ class SnackbarService {
     }
 
 
-    private fun showSnackbar(text: CharSequence, snackbarId: Any, activity: Activity, customizeSnackbarListener: ((Snackbar) -> Unit)? = null, actionInvokedListener: (Snackbar) -> Unit) {
+    private fun showSnackbarAfterAppStartupDelay(showSnackbarAction: () -> Unit) {
+        Timer().schedule(PeriodToWaitBeforeShowingFirstSnackbarOnStartUp) { // on app start wait some time before showing Snackbar
+            showSnackbarAction()
+        }
+    }
+
+
+    private fun showSnackbarOnUiThread(text: CharSequence, snackbarId: Any, activity: Activity, customizeSnackbarListener: ((Snackbar) -> Unit)? = null, actionInvokedListener: (Snackbar) -> Unit) {
         var rootView = activity.findViewById(R.id.content_layout_root) // content_layout_root only works for MainActivity -> find a generic solution
         if(rootView == null) {
             rootView = activity.findViewById(android.R.id.content)
