@@ -187,6 +187,17 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
+
+    androidTestCompile 'com.squareup.spoon:spoon-client:1.7.1'
+    androidTestCompile('com.jraska:falcon-spoon-compat:1.0.4') {
+        exclude group: 'com.squareup.spoon', module: 'spoon-client'
+    }
+
+    // you need to install fastlane first (install Ruby Package Manager gem): sudo gem install fastlane
+    androidTestCompile('tools.fastlane:screengrab:1.0.2') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+
     kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
 }
 

@@ -12,6 +12,7 @@ import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import net.dankito.deepthought.android.fragments.EntriesListView
 import net.dankito.deepthought.android.util.TestUtil
+import net.dankito.deepthought.android.util.screenshot.TakeScreenshotOnErrorTestRule
 import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.core.AllOf
@@ -25,6 +26,9 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
 
     @get:Rule
     val testRule = DeepThoughtActivityTestRule<MainActivity>(MainActivity::class.java)
+
+    @get:Rule
+    var takeScreenshotOnError = TakeScreenshotOnErrorTestRule()
 
 
     @Test
