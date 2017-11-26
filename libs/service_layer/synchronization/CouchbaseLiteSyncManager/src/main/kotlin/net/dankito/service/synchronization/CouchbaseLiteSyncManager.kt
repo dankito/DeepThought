@@ -216,7 +216,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
 
         openSynchronizationPort() // as at this stage it may not be opened yet but is needed for synchronization
 
-        log.info("Starting Replication with Device " + device)
+        log.info("Starting Replication with Device $device on ${device.address}:${device.synchronizationPort}")
 
         val syncUrl: URL
         try {
