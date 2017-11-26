@@ -65,7 +65,7 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
 
     private fun clickOnFloatingActionButton() {
         // FloatingActionMenu adds a FloatingActionButton without id which
-        onView(AllOf.allOf(isDescendantOfA(CoreMatchers.instanceOf(FloatingActionMenu::class.java)), withId(-1), CoreMatchers.instanceOf(FloatingActionButton::class.java)))
+        onView(AllOf.allOf(isDescendantOfA(CoreMatchers.instanceOf(FloatingActionMenu::class.java)), withId(-1), CoreMatchers.instanceOf(FloatingActionButton::class.java), isDisplayed()))
                 .perform(click())
     }
 
