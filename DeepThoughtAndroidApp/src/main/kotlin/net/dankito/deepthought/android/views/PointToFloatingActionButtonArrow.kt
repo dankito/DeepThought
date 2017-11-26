@@ -33,7 +33,7 @@ class PointToFloatingActionButtonArrow : View {
         arrowPaint.strokeWidth = StrokeWidth
         arrowPaint.strokeCap = Paint.Cap.ROUND
         arrowPaint.pathEffect = DashPathEffect(floatArrayOf(DashLength, DashLength), 0f)
-        arrowPaint.color = Color.parseColor("#CCCCCC")
+        arrowPaint.color = Color.parseColor("#999999")
     }
 
 
