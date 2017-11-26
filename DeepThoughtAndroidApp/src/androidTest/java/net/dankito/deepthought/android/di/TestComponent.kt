@@ -1,11 +1,7 @@
-package net.dankito.deepthought.android.test
+package net.dankito.deepthought.android.di
 
 import dagger.Component
 import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
-import net.dankito.deepthought.android.di.ActivitiesModule
-import net.dankito.deepthought.android.di.AndroidCommonModule
-import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.di.FlavorModule
 import net.dankito.deepthought.di.BaseModule
 import net.dankito.deepthought.di.CommonDataModule
 import net.dankito.deepthought.di.CommonModule
