@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="tag_quote_name">Zitat</string>
+    <string name="tag_quote_ashleight_brilliant">Ashleigh Brilliant</string>
+    <string name="tag_quote_h_l_mencken">H. L. Mencken</string>
+    <string name="tag_example_newspaper_item_1">Gesetze</string>
+    <string name="tag_example_newspaper_item_2">Gerichtsurteil</string>
+
+    <string name="series_example_newspaper_item">Die Zeit</string>
+
+    <string name="source_example_newspaper_item_title">Ärztin verurteilt wegen Website mit Abtreibungsinformationen</string>
+
+    <string name="item_content_ashleigh_brilliant_quote">Besser das Leben hat keinen Sinn, als dass es einen hat, dem ich nicht zustimmen kann.</string>
+    <string name="item_content_mencken_quote">Für jedes Problem gibt es eine Lösung, die einfach, klar und falsch ist.</string>
+    <string name="item_abstract_example_newspaper_item">Eine Ärztin wurde vom Amtsgericht Gießen zu einer Strafe von 6.000 € verurteilt. Sie hatte auf Ihrer Webseite
+            Informationen zum Schwangerschaftsabbruch bereitgestellt, dies ist gesetzlich nicht erlaubt.</string>
+
+
+    <string name="item_content_editor_introduction_line">Guck, was ich alles kann:</string>
+
+    <string name="item_content_editor_bold">Fett</string>
+    <string name="item_content_editor_italic">Kursiv</string>
+    <string name="item_content_editor_underline">Unterstrichen</string>
+
+    <string name="item_content_editor_text_color_introduction">Text</string>
+    <string name="item_content_editor_text_background_color">hintergrund</string>
+    <string name="item_content_editor_text_color_end">farbe</string>
+
+    <!-- TODO: sending unicode strings to webview is not supported -->
+    <string name="item_content_editor_ordered_list">Nummerierte Liste</string>
+    <string name="item_content_editor_unordered_list">Aufzaehlungsliste</string>
+    <string name="item_content_editor_redo">Rueckgaengig</string>
+    <string name="item_content_editor_undo">Wiederherstellen</string>
+
+</resources>

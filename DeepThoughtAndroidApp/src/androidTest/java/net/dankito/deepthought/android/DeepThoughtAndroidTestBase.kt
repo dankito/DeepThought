@@ -11,8 +11,7 @@ import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.di.CommonModule
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.data.DataManager
-import net.dankito.service.data.DeleteEntityService
-import net.dankito.service.data.ReadLaterArticleService
+import net.dankito.service.data.*
 import net.dankito.utils.version.Versions
 import java.util.*
 import javax.inject.Inject
@@ -27,8 +26,22 @@ abstract class DeepThoughtAndroidTestBase {
     protected lateinit var deleteEntityService: DeleteEntityService
 
     @Inject
+    protected lateinit var itemService: EntryService
+
+    @Inject
+    protected lateinit var tagService: TagService
+
+    @Inject
+    protected lateinit var sourceService: ReferenceService
+
+    @Inject
+    protected lateinit var seriesService: SeriesService
+
+    @Inject
     protected lateinit var readLaterArticleService: ReadLaterArticleService
 
+
+    protected val res = InstrumentationRegistry.getInstrumentation().context.resources
 
     protected val navigator = UiNavigator()
 
@@ -81,6 +94,32 @@ abstract class DeepThoughtAndroidTestBase {
 
         // delete sources before items as otherwise alert gets shown 'this was single item with that source, do you also want to delete that source?' and app would block / end
         entityManager.getAllEntitiesOfType(Item::class.java).forEach { deleteEntityService.deleteEntry(it) }
+    }
+
+
+    protected open fun persistItem(item: Item) {
+        itemService.persist(item)
+    }
+
+    protected open fun persistTag(tag: Tag) {
+        tagService.persist(tag)
+    }
+
+    protected open fun persistSource(source: Source) {
+        sourceService.persist(source)
+    }
+
+    protected open fun persistSeries(series: Series) {
+        seriesService.persist(series)
+    }
+
+    protected open fun persistReadLaterArticle(article: ReadLaterArticle) {
+        readLaterArticleService.persist(article)
+    }
+
+
+    protected open fun getString(resourceId: Int): String {
+        return res.getString(resourceId)
     }
 
 }

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="tag_quote_name">Quote</string>
+    <string name="tag_ashleight_brilliant">Ashleigh Brilliant</string>
+    <string name="tag_h_l_mencken">H. L. Mencken</string>
+    <string name="tag_example_newspaper_item_1">Zimbabwe</string>
+    <string name="tag_example_newspaper_item_2">Mugabe</string>
+
+    <string name="series_example_newspaper_item">New York Times</string>
+
+    <string name="source_example_newspaper_item_title">Robert Mugabe Resigns as Zimbabwe’s President, Ending 37-Year Rule</string>
+
+    <string name="item_content_ashleigh_brilliant_quote">Life may have no meaning. Or even worse, it may have a meaning of which I disapprove.</string>
+    <string name="item_content_mencken_quote">For every problem there is a solution which is simple, clean and wrong.</string>
+    <string name="item_abstract_example_newspaper_item">After 37 years in rule Robert Mugabe stepped down. Mugabe was in power since independence 1980.</string>
+
+
+    <string name="item_content_editor_introduction_line">Look, which formatting I support:</string>
+
+    <string name="item_content_editor_bold">Bold</string>
+    <string name="item_content_editor_italic">Italic</string>
+    <string name="item_content_editor_underline">Underline</string>
+
+    <string name="item_content_editor_text_color_introduction">"Text "</string>
+    <string name="item_content_editor_text_background_color">background</string>
+    <string name="item_content_editor_text_color_end">"color "</string>
+
+    <string name="item_content_editor_ordered_list">Numbered lists</string>
+    <string name="item_content_editor_unordered_list">Bullet lists</string>
+    <string name="item_content_editor_redo">Redo</string>
+    <string name="item_content_editor_undo">Undo</string>
+
+</resources>
