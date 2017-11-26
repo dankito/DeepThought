@@ -21,7 +21,7 @@ import org.junit.runner.RunWith
 
 
 @RunWith(AndroidJUnit4::class)
-class MainActivityOnboardingTest {
+class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
 
     @get:Rule
     val testRule = DeepThoughtActivityTestRule<MainActivity>(MainActivity::class.java)
