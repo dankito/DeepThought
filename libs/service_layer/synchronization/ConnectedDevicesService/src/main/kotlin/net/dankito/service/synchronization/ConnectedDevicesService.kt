@@ -330,6 +330,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
             unknownDevices.remove(deviceInfoKey)
             knownIgnoredDevices.remove(deviceInfoKey)
 
+            // TODO: call syncManager.startSynchronizationWithDevice() with a flag that this is the first synchronization with this device. May helps to handle big data sets on initial sync
             startSynchronizingWithDevice(deviceInfoKey, device)
 
             return true
