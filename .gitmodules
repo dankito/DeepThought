@@ -10,9 +10,6 @@
 [submodule "libs/ui_layer/RichTextEditor"]
 	path = libs/ui_layer/RichTextEditor
 	url = https://github.com/dankito/RichTextEditor
-[submodule "libs/news/Readability4J"]
-	path = libs/news/Readability4J
-	url = https://github.com/dankito/Readability4J
 [submodule "libs/news/Readability4JAdvanced"]
 	path = libs/news/Readability4JAdvanced
 	url = https://github.com/dankito/Readability4JAdvanced
