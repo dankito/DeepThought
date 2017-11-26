@@ -71,14 +71,16 @@ abstract class DeepThoughtAndroidTestBase {
     protected open fun clearAllUserData() {
         val entityManager = dataManager.entityManager
 
-        entityManager.getAllEntitiesOfType(Item::class.java).forEach { deleteEntityService.deleteEntry(it) }
-
-        entityManager.getAllEntitiesOfType(Tag::class.java).forEach { deleteEntityService.deleteTag(it) }
-
         entityManager.getAllEntitiesOfType(Source::class.java).forEach { deleteEntityService.deleteReference(it) }
 
         entityManager.getAllEntitiesOfType(Series::class.java).forEach { deleteEntityService.deleteSeries(it) }
 
         entityManager.getAllEntitiesOfType(ReadLaterArticle::class.java).forEach { readLaterArticleService.delete(it) }
+
+        entityManager.getAllEntitiesOfType(Tag::class.java).forEach { deleteEntityService.deleteTag(it) }
+
+        // delete sources before items as otherwise alert gets shown 'this was single item with that source, do you also want to delete that source?' and app would block / end
+        entityManager.getAllEntitiesOfType(Item::class.java).forEach { deleteEntityService.deleteEntry(it) }
     }
+
 }
