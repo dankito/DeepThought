@@ -11,7 +11,7 @@ import android.support.test.runner.AndroidJUnit4
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import net.dankito.deepthought.android.fragments.EntriesListView
-import net.dankito.deepthought.android.test.TestUtil
+import net.dankito.deepthought.android.util.TestUtil
 import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.core.AllOf

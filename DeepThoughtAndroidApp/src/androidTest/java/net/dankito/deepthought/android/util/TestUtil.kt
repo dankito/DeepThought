@@ -1,4 +1,4 @@
-package net.dankito.deepthought.android.test
+package net.dankito.deepthought.android.util
 
 
 class TestUtil {
