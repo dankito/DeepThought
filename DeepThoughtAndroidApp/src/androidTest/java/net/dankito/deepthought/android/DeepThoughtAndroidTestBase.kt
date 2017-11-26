@@ -5,6 +5,7 @@ import net.dankito.deepthought.android.di.ActivitiesModule
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.di.DaggerTestComponent
 import net.dankito.deepthought.android.di.TestComponent
+import net.dankito.deepthought.android.util.UiNavigator
 import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.di.CommonModule
@@ -27,6 +28,9 @@ abstract class DeepThoughtAndroidTestBase {
 
     @Inject
     protected lateinit var readLaterArticleService: ReadLaterArticleService
+
+
+    protected val navigator = UiNavigator()
 
 
     init {
