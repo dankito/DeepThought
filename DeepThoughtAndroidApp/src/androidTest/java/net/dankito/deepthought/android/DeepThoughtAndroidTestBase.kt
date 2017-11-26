@@ -3,8 +3,8 @@ package net.dankito.deepthought.android
 import android.support.test.InstrumentationRegistry
 import net.dankito.deepthought.android.di.ActivitiesModule
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.test.DaggerTestComponent
-import net.dankito.deepthought.android.test.TestComponent
+import net.dankito.deepthought.android.di.DaggerTestComponent
+import net.dankito.deepthought.android.di.TestComponent
 import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.di.CommonModule
@@ -32,6 +32,7 @@ abstract class DeepThoughtAndroidTestBase {
     init {
         setupDi()
 
+        // deleting database is not possible as target app gets started before we even have a chance to execute code -> delete database entities
         dataManager.addInitializationListener {
             clearAllData()
         }
