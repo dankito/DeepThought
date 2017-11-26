@@ -57,7 +57,7 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
         onView(withId(R.id.fab_add_entry)).perform(click())
 
         TestUtil.sleep(2000)
-        onView(withId(R.id.lytHtmlEditor)).perform(click())
+        onView(withId(R.id.editor)).perform(click())
         InstrumentationRegistry.getInstrumentation().sendStringSync(information)
         onView(withId(R.id.mnApplyHtmlChanges)).perform(click())
         onView(withId(R.id.mnSaveEntry)).perform(click())
