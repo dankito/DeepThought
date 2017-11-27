@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory
 import tools.fastlane.screengrab.Screengrab
 import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy
 import tools.fastlane.screengrab.locale.LocaleTestRule
-import java.util.*
+import java.text.SimpleDateFormat
 import javax.inject.Inject
 
 
@@ -137,13 +137,13 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
         navigator.clickOnEditorCommand(Command.INSERTORDEREDLIST)
 
         takeScreenShot(RichTextEditorScreenshotName)
+
+        navigator.navigateFromEditItemActivityContentEditorToMainActivity()
+        TestUtil.sleep(1000L)
     }
 
 
     private fun createSearchScreenshot() {
-        navigator.navigateFromEditItemActivityContentEditorToMainActivity()
-        TestUtil.sleep(1000L)
-
         navigator.search(getString(net.dankito.deepthought.preview.test.R.string.search_items_query))
         navigator.hideKeyboard()
         TestUtil.sleep(1000L)
@@ -181,6 +181,12 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
         val tagQuote = Tag(getString(R.string.tag_quote_name))
         persistTag(tagQuote)
 
+        val tagGauchoMarx = Tag(getString(R.string.tag_gaucho_marx))
+        persistTag(tagGauchoMarx)
+
+        val tagSimpsons = Tag(getString(R.string.tag_simpsons))
+        persistTag(tagSimpsons)
+
         val tagHLMencken = Tag(getString(R.string.tag_quote_h_l_mencken))
         persistTag(tagHLMencken)
 
@@ -193,20 +199,41 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
         val tagExampleNewspaperItem2 = Tag(getString(R.string.tag_example_newspaper_item_2))
         persistTag(tagExampleNewspaperItem2)
 
+        val tagNonAlternativeFacts = Tag(getString(R.string.tag_non_alternative_facts))
+        persistTag(tagNonAlternativeFacts)
+
 
         val seriesExampleNewspaper = Series(getString(R.string.series_example_newspaper_item))
         persistSeries(seriesExampleNewspaper)
 
-        val sourceExampleNewspaperArticle = Source(getString(R.string.source_example_newspaper_item_title), "", Date(2017, 10, 26), series = seriesExampleNewspaper)
+        val dateFormate = SimpleDateFormat("dd.MM.yyyy")
+        val sourceExampleNewspaperArticle = Source(getString(R.string.source_example_newspaper_item_title),
+                getString(R.string.source_example_newspaper_item_url),
+                dateFormate.parse(getString(R.string.source_example_newspaper_item_publishing_date)),
+                series = seriesExampleNewspaper)
         persistSource(sourceExampleNewspaperArticle)
 
 
-        val itemAshleighBrilliantQuote = Item(getString(R.string.item_content_ashleigh_brilliant_quote))
+        val itemGauchoMarxQuote = Item(getString(R.string.item_content_gaucho_marx_quote), tagGauchoMarx.name)
+        itemGauchoMarxQuote.addTag(tagQuote)
+        itemGauchoMarxQuote.addTag(tagGauchoMarx)
+        persistItem(itemGauchoMarxQuote)
+
+        val itemSimpsonsQuote = Item(getString(R.string.item_content_simpsons_quote), getString(R.string.item_title_simpsons_quote))
+        itemSimpsonsQuote.addTag(tagQuote)
+        itemSimpsonsQuote.addTag(tagSimpsons)
+        persistItem(itemSimpsonsQuote)
+
+        val itemAshleighBrilliantQuote = Item(getString(R.string.item_content_ashleigh_brilliant_quote), tagAshleighBrilliant.name)
         itemAshleighBrilliantQuote.addTag(tagQuote)
         itemAshleighBrilliantQuote.addTag(tagAshleighBrilliant)
         persistItem(itemAshleighBrilliantQuote)
 
-        val itemMenckenQuote = Item(getString(R.string.item_content_mencken_quote))
+        val itemFactInternetAccess = Item(getString(R.string.item_content_fact_internet_access), getString(R.string.tag_internet))
+        itemFactInternetAccess.addTag(tagNonAlternativeFacts)
+        persistItem(itemFactInternetAccess)
+
+        val itemMenckenQuote = Item(getString(R.string.item_content_mencken_quote), tagHLMencken.name)
         itemMenckenQuote.addTag(tagQuote)
         itemMenckenQuote.addTag(tagHLMencken)
         persistItem(itemMenckenQuote)

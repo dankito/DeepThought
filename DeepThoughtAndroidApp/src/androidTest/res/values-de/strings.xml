@@ -2,16 +2,27 @@
 <resources>
 
     <string name="tag_quote_name">Zitat</string>
+    <string name="tag_gaucho_marx">Gaucho Marx</string>
+    <string name="tag_simpsons">Simpons</string>
     <string name="tag_quote_ashleight_brilliant">Ashleigh Brilliant</string>
     <string name="tag_quote_h_l_mencken">H. L. Mencken</string>
     <string name="tag_example_newspaper_item_1">Gesetze</string>
     <string name="tag_example_newspaper_item_2">Gerichtsurteil</string>
+    <string name="tag_non_alternative_facts">Alternativlose Fakten</string>
+    <string name="tag_internet">Internet</string>
 
     <string name="series_example_newspaper_item">Die Zeit</string>
 
     <string name="source_example_newspaper_item_title">Ärztin verurteilt wegen Website mit Abtreibungsinformationen</string>
+    <string name="source_example_newspaper_item_url">http://www.zeit.de/wissen/gesundheit/2017-11/schwangerschaftsabbruch-aerztin-giessen-werbung-amtsgericht-urteil</string>
+    <string name="source_example_newspaper_item_publishing_date">24.11.2017</string>
 
+    <string name="item_content_gaucho_marx_quote">Ich möchte keinem Klub angehören, der mich als sein Mitglied akzeptiert.</string>
+    <!--<string name="item_content_simpsons_quote">Trinken wir auf den Alkohol, die Ursache und die Lösung aller Probleme!</string>-->
+    <string name="item_content_simpsons_quote">Ihr habt euer Bestes versucht und seid kläglich gescheitert. Was lernen wir daraus? - Es erst gar nicht versuchen! </string>
+    <string name="item_title_simpsons_quote">Homer Simpson</string>
     <string name="item_content_ashleigh_brilliant_quote">Besser das Leben hat keinen Sinn, als dass es einen hat, dem ich nicht zustimmen kann.</string>
+    <string name="item_content_fact_internet_access">Nur 48 % der Weltbevölkerung haben Zugang zum Internet</string>
     <string name="item_content_mencken_quote">Für jedes Problem gibt es eine Lösung, die einfach, klar und falsch ist.</string>
     <string name="item_abstract_example_newspaper_item">Eine Ärztin wurde vom Amtsgericht Gießen zu einer Strafe von 6.000 € verurteilt. Sie hatte auf Ihrer Webseite
             Informationen zum Schwangerschaftsabbruch bereitgestellt, dies ist gesetzlich nicht erlaubt.</string>
