@@ -33,4 +33,7 @@
     <string name="item_content_editor_redo">Rueckgaengig</string>
     <string name="item_content_editor_undo">Wiederherstellen</string>
 
+
+    <string name="search_query">zitat</string>
+
 </resources>

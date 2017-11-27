@@ -1,9 +1,12 @@
 package net.dankito.deepthought.android.util
 
 import android.support.test.InstrumentationRegistry
+import android.support.test.espresso.Espresso
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions
 import android.support.test.espresso.action.ViewActions.click
+import android.support.test.espresso.action.ViewActions.typeText
+import android.support.test.espresso.matcher.RootMatchers.isDialog
 import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.*
 import com.github.clans.fab.FloatingActionButton
@@ -46,6 +49,28 @@ open class UiNavigator {
                 .perform(ViewActions.click())
     }
 
+
+    open fun navigateFromEditItemActivityContentEditorToMainActivity() {
+        navigateFromEditItemActivityContentEditorToEditItemActivity()
+
+        pressBack()
+    }
+
+    open fun navigateFromEditItemActivityContentEditorToEditItemActivity() {
+        pressBack()
+
+        onView(withText(R.string.action_dismiss)).inRoot(isDialog()).perform(click())
+    }
+
+
+    open fun search(query: String) {
+        onView(withId(net.dankito.deepthought.android.R.id.search)).perform(click())
+        TestUtil.sleep(500L)
+
+        onView(withId(android.support.design.R.id.search_src_text)).perform(typeText(query))
+    }
+
+
     open fun enterText(stringResourceId: Int) {
         enterText(InstrumentationRegistry.getInstrumentation().context.resources.getText(stringResourceId).toString())
     }
@@ -62,6 +87,15 @@ open class UiNavigator {
 
     open fun clickOnEditorCommand(command: Command) {
         onView(withTagValue(`is`(command))).perform(click())
+    }
+
+
+    open fun hideKeyboard() {
+        Espresso.closeSoftKeyboard()
+    }
+
+    open fun pressBack() {
+        Espresso.pressBack()
     }
 
 }

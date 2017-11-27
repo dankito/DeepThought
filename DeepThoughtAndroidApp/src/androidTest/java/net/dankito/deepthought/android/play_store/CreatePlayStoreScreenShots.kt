@@ -1,6 +1,5 @@
 package net.dankito.deepthought.android.play_store
 
-import android.support.test.espresso.Espresso
 import net.dankito.deepthought.android.DeepThoughtActivityTestRule
 import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
 import net.dankito.deepthought.android.MainActivity
@@ -36,6 +35,8 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
 
         const val RichTextEditorScreenshotName = "02_Rich_Text_Editor"
 
+        const val SearchScreenshotName = "03_Search"
+
 
         private val log = LoggerFactory.getLogger(CreatePlayStoreScreenShots::class.java)
     }
@@ -66,6 +67,8 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
 
         createRichTextEditorScreenshot()
 
+        createSearchScreenshot()
+
         Thread.sleep(100 * 1000L)
     }
 
@@ -73,7 +76,7 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
         navigator.navigateFromMainActivityToEditItemActivityContentEditor()
         TestUtil.sleep(500L)
 
-        Espresso.closeSoftKeyboard()
+        navigator.hideKeyboard()
 
         navigator.enterText(R.string.item_content_editor_introduction_line)
 
@@ -118,6 +121,18 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
         navigator.clickOnEditorCommand(Command.INSERTORDEREDLIST)
 
         takeScreenShot(RichTextEditorScreenshotName)
+    }
+
+
+    private fun createSearchScreenshot() {
+        navigator.navigateFromEditItemActivityContentEditorToMainActivity()
+        TestUtil.sleep(1000L)
+
+        navigator.search(getString(net.dankito.deepthought.preview.test.R.string.search_query))
+        navigator.hideKeyboard()
+        TestUtil.sleep(1000L)
+
+        takeScreenShot(SearchScreenshotName)
     }
 
 
