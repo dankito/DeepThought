@@ -5,7 +5,7 @@ import android.support.test.espresso.Espresso
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions
 import android.support.test.espresso.action.ViewActions.click
-import android.support.test.espresso.action.ViewActions.typeText
+import android.support.test.espresso.action.ViewActions.replaceText
 import android.support.test.espresso.matcher.RootMatchers.isDialog
 import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.*
@@ -67,7 +67,8 @@ open class UiNavigator {
         onView(withId(net.dankito.deepthought.android.R.id.search)).perform(click())
         TestUtil.sleep(500L)
 
-        onView(withId(android.support.design.R.id.search_src_text)).perform(typeText(query))
+        // for Unicode support use replaceText() instead of typeText() (works for for EditTexts)
+        onView(withId(android.support.design.R.id.search_src_text)).perform(replaceText(query))
     }
 
 
