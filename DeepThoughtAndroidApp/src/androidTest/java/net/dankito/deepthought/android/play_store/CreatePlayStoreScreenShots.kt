@@ -12,6 +12,7 @@ import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.preview.test.R
 import net.dankito.richtexteditor.android.command.Command
+import net.dankito.service.search.specific.TagsSearch
 import org.junit.Before
 import org.junit.ClassRule
 import org.junit.Rule
@@ -21,6 +22,7 @@ import tools.fastlane.screengrab.Screengrab
 import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy
 import tools.fastlane.screengrab.locale.LocaleTestRule
 import java.text.SimpleDateFormat
+import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 
 
@@ -81,9 +83,9 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
 
         createSearchScreenshot()
 
-        createTagsListScreenshot()
-
         createSyncDataScreenshot()
+
+        createTagsListScreenshot() // take tag list screenshot at last as it alters tags and items
 
         Thread.sleep(5 * 1000L)
     }
@@ -157,6 +159,8 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
 
 
     private fun createTagsListScreenshot() {
+        updateTestDataForTagListScreenshot()
+
         TestUtil.sleep(1000L)
         navigator.navigateToTabTags()
 
@@ -194,7 +198,7 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
         val tagHLMencken = Tag(getString(R.string.tag_henry_louis_mencken))
         persistTag(tagHLMencken)
 
-        val tagAshleighBrilliant = Tag(getString(R.string.tag_quote_ashleight_brilliant))
+        val tagAshleighBrilliant = Tag(getString(R.string.tag_ashleight_brilliant))
         persistTag(tagAshleighBrilliant)
 
         val tagExampleNewspaperItem1 = Tag(getString(R.string.tag_example_newspaper_item_1))
@@ -234,6 +238,43 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
 
         val itemNewspaper = Item("", getString(R.string.item_abstract_example_newspaper_item))
         persistItem(itemNewspaper, sourceExampleNewspaperArticle, tagExampleNewspaperItem1, tagExampleNewspaperItem2)
+    }
+
+    private fun updateTestDataForTagListScreenshot() {
+        deleteTagWithName(getString(R.string.tag_ashleight_brilliant))
+        deleteTagWithName(getString(R.string.tag_henry_louis_mencken))
+
+        addItemsToTag(getString(R.string.tag_non_alternative_facts), 4)
+        addItemsToTag(getString(R.string.tag_gaucho_marx), 1)
+        addItemsToTag(getString(R.string.tag_example_newspaper_item_1), 2)
+    }
+
+    private fun addItemsToTag(tagName: String, countItems: Int) {
+        searchTagWithNameAndExecuteActionOnItSynchronized(tagName) { tag ->
+            for(i in 0..countItems - 1) {
+                persistItem(Item(""), null, tag)
+            }
+        }
+    }
+
+    private fun deleteTagWithName(tagName: String) {
+        searchTagWithNameAndExecuteActionOnItSynchronized(tagName) { tag ->
+            deleteEntityService.deleteTag(tag)
+        }
+    }
+
+    private fun searchTagWithNameAndExecuteActionOnItSynchronized(tagName: String, action: (Tag) -> Unit) {
+        var tag: Tag? = null
+        val waitLatch = CountDownLatch(1)
+
+        searchEngine.searchTags(TagsSearch(tagName) { result ->
+            tag = result.getRelevantMatchesSorted().first()
+            waitLatch.countDown()
+        })
+
+        try { waitLatch.await() } catch (ignored: Exception) { }
+
+        tag?.let{ action(it) }
     }
 
 
