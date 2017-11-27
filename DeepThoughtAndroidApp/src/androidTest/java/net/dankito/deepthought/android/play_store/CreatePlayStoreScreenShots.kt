@@ -209,40 +209,27 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
         val dateFormate = SimpleDateFormat("dd.MM.yyyy")
         val sourceExampleNewspaperArticle = Source(getString(R.string.source_example_newspaper_item_title),
                 getString(R.string.source_example_newspaper_item_url),
-                dateFormate.parse(getString(R.string.source_example_newspaper_item_publishing_date)),
-                series = seriesExampleNewspaper)
-        persistSource(sourceExampleNewspaperArticle)
+                dateFormate.parse(getString(R.string.source_example_newspaper_item_publishing_date)))
+        persistSource(sourceExampleNewspaperArticle, seriesExampleNewspaper)
 
 
         val itemGauchoMarxQuote = Item(getString(R.string.item_content_gaucho_marx_quote), tagGauchoMarx.name)
-        itemGauchoMarxQuote.addTag(tagQuote)
-        itemGauchoMarxQuote.addTag(tagGauchoMarx)
-        persistItem(itemGauchoMarxQuote)
+        persistItem(itemGauchoMarxQuote, null, tagQuote, tagGauchoMarx)
 
         val itemSimpsonsQuote = Item(getString(R.string.item_content_simpsons_quote), getString(R.string.item_title_simpsons_quote))
-        itemSimpsonsQuote.addTag(tagQuote)
-        itemSimpsonsQuote.addTag(tagSimpsons)
-        persistItem(itemSimpsonsQuote)
+        persistItem(itemSimpsonsQuote, null, tagQuote, tagSimpsons)
 
         val itemAshleighBrilliantQuote = Item(getString(R.string.item_content_ashleigh_brilliant_quote), tagAshleighBrilliant.name)
-        itemAshleighBrilliantQuote.addTag(tagQuote)
-        itemAshleighBrilliantQuote.addTag(tagAshleighBrilliant)
-        persistItem(itemAshleighBrilliantQuote)
+        persistItem(itemAshleighBrilliantQuote, null, tagQuote, tagAshleighBrilliant)
 
         val itemFactInternetAccess = Item(getString(R.string.item_content_fact_internet_access), getString(R.string.tag_internet))
-        itemFactInternetAccess.addTag(tagNonAlternativeFacts)
-        persistItem(itemFactInternetAccess)
+        persistItem(itemFactInternetAccess, null, tagNonAlternativeFacts)
 
         val itemMenckenQuote = Item(getString(R.string.item_content_mencken_quote), tagHLMencken.name)
-        itemMenckenQuote.addTag(tagQuote)
-        itemMenckenQuote.addTag(tagHLMencken)
-        persistItem(itemMenckenQuote)
+        persistItem(itemMenckenQuote, null, tagQuote, tagHLMencken)
 
         val itemNewspaper = Item("", getString(R.string.item_abstract_example_newspaper_item))
-        itemNewspaper.addTag(tagExampleNewspaperItem1)
-        itemNewspaper.addTag(tagExampleNewspaperItem2)
-        itemNewspaper.source = sourceExampleNewspaperArticle
-        persistItem(itemNewspaper)
+        persistItem(itemNewspaper, sourceExampleNewspaperArticle, tagExampleNewspaperItem1, tagExampleNewspaperItem2)
     }
 
 

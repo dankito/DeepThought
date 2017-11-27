@@ -5,13 +5,19 @@ import net.dankito.deepthought.android.di.ActivitiesModule
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.di.DaggerTestComponent
 import net.dankito.deepthought.android.di.TestComponent
+import net.dankito.deepthought.android.util.TestUtil
 import net.dankito.deepthought.android.util.UiNavigator
+import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.di.CommonModule
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.data.DataManager
-import net.dankito.service.data.*
+import net.dankito.service.data.DeleteEntityService
+import net.dankito.service.data.ReadLaterArticleService
+import net.dankito.service.data.SeriesService
+import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.version.Versions
 import java.util.*
@@ -28,13 +34,13 @@ abstract class DeepThoughtAndroidTestBase {
     protected lateinit var deleteEntityService: DeleteEntityService
 
     @Inject
-    protected lateinit var itemService: EntryService
+    protected lateinit var itemPersister: EntryPersister
 
     @Inject
     protected lateinit var tagService: TagService
 
     @Inject
-    protected lateinit var sourceService: ReferenceService
+    protected lateinit var sourcePersister: ReferencePersister
 
     @Inject
     protected lateinit var seriesService: SeriesService
@@ -113,16 +119,21 @@ abstract class DeepThoughtAndroidTestBase {
     }
 
 
-    protected open fun persistItem(item: Item) {
-        itemService.persist(item)
+    protected open fun persistItem(item: Item, source: Source? = null, vararg tags: Tag) {
+        val waitLatch = CountDownLatch(1)
+
+        itemPersister.saveEntryAsync(item, source, tags = tags.toList()) { waitLatch.countDown() }
+
+        try { waitLatch.await() } catch(ignored: Exception) { }
+        TestUtil.sleep(200L)
     }
 
     protected open fun persistTag(tag: Tag) {
         tagService.persist(tag)
     }
 
-    protected open fun persistSource(source: Source) {
-        sourceService.persist(source)
+    protected open fun persistSource(source: Source, series: Series? = null) {
+        sourcePersister.saveReference(source, series)
     }
 
     protected open fun persistSeries(series: Series) {
