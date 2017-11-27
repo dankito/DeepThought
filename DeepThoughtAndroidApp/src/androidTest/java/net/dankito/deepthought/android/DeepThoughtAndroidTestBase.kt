@@ -12,8 +12,10 @@ import net.dankito.deepthought.di.CommonModule
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.*
+import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.version.Versions
 import java.util.*
+import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 
 
@@ -40,6 +42,9 @@ abstract class DeepThoughtAndroidTestBase {
     @Inject
     protected lateinit var readLaterArticleService: ReadLaterArticleService
 
+    @Inject
+    protected lateinit var searchEngine: ISearchEngine
+
 
     protected val res = InstrumentationRegistry.getInstrumentation().context.resources
 
@@ -49,10 +54,7 @@ abstract class DeepThoughtAndroidTestBase {
     init {
         setupDi()
 
-        // deleting database is not possible as target app gets started before we even have a chance to execute code -> delete database entities
-        dataManager.addInitializationListener {
-            clearAllData()
-        }
+        clearAllDataSynchronously()
     }
 
 
@@ -70,6 +72,20 @@ abstract class DeepThoughtAndroidTestBase {
         TestComponent.component.inject(this)
     }
 
+
+    private fun clearAllDataSynchronously() {
+        // deleting database is not possible as target app gets started before we even have a chance to execute code -> delete database entities
+        val countDownLatch = CountDownLatch(1)
+
+        dataManager.addInitializationListener {
+            searchEngine.addInitializationListener { // we have to wait till search engine is initialized as otherwise index won't get updated and deleted entities still exist in index
+                clearAllData()
+                countDownLatch.countDown()
+            }
+        }
+
+        try { countDownLatch.await() } catch (ignored: Exception) { } // wait on UI thread as otherwise it would run on on already start with creating entities which clearAllData() may already deletes again
+    }
 
     private fun clearAllData() {
         clearLocalSettings()
