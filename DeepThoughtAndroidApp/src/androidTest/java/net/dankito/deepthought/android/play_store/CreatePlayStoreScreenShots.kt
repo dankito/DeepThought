@@ -159,12 +159,15 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
 
 
     private fun createTagsListScreenshot() {
-        updateTestDataForTagListScreenshot()
+        val createdItems = updateTestDataForTagListScreenshot()
 
         TestUtil.sleep(1000L)
         navigator.navigateToTabTags()
 
         takeScreenShot(TagsListScreenshotName)
+
+        createdItems.forEach { deleteEntityService.deleteEntry(it) }
+        TestUtil.sleep(1000L)
     }
 
 
@@ -240,19 +243,25 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
         persistItem(itemNewspaper, sourceExampleNewspaperArticle, tagExampleNewspaperItem1, tagExampleNewspaperItem2)
     }
 
-    private fun updateTestDataForTagListScreenshot() {
+    private fun updateTestDataForTagListScreenshot(): Collection<Item> {
         deleteTagWithName(getString(R.string.tag_ashleight_brilliant))
         deleteTagWithName(getString(R.string.tag_henry_louis_mencken))
 
-        addItemsToTag(getString(R.string.tag_non_alternative_facts), 4)
-        addItemsToTag(getString(R.string.tag_gaucho_marx), 1)
-        addItemsToTag(getString(R.string.tag_example_newspaper_item_1), 2)
+        val createdItems = ArrayList<Item>()
+
+        addItemsToTag(getString(R.string.tag_non_alternative_facts), 4, createdItems)
+        addItemsToTag(getString(R.string.tag_gaucho_marx), 1, createdItems)
+        addItemsToTag(getString(R.string.tag_example_newspaper_item_1), 2, createdItems)
+
+        return createdItems
     }
 
-    private fun addItemsToTag(tagName: String, countItems: Int) {
+    private fun addItemsToTag(tagName: String, countItems: Int, createdItems: MutableCollection<Item>) {
         searchTagWithNameAndExecuteActionOnItSynchronized(tagName) { tag ->
             for(i in 0..countItems - 1) {
-                persistItem(Item(""), null, tag)
+                val item = Item("")
+                persistItem(item, null, tag)
+                createdItems.add(item)
             }
         }
     }
