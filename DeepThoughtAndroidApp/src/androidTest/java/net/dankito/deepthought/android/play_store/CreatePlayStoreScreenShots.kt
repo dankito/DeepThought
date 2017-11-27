@@ -169,11 +169,15 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
         navigator.navigateToTabItems()
 
         val device = Device("name", "id", OsType.DESKTOP, getString(R.string.sync_data_os_name), getString(R.string.sync_data_os_version))
+        dataManager.entityManager.persistEntity(device)
         val discoveredDevice = DiscoveredDevice(device, getString(R.string.sync_data_ip_address))
         (deviceRegistrationHandler as DeviceRegistrationHandlerBase).showUnknownDeviceDiscoveredView(discoveredDevice) { _, _ -> }
         TestUtil.sleep(1000L)
 
         takeScreenShot(SyncDataScreenshotName)
+
+        (deviceRegistrationHandler as DeviceRegistrationHandlerBase).unknownDeviceDisconnected(discoveredDevice)
+        dataManager.entityManager.deleteEntity(device)
     }
 
 
