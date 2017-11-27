@@ -122,7 +122,7 @@ abstract class DeepThoughtAndroidTestBase {
     protected open fun persistItem(item: Item, source: Source? = null, vararg tags: Tag) {
         val waitLatch = CountDownLatch(1)
 
-        itemPersister.saveEntryAsync(item, source, tags = tags.toList()) { waitLatch.countDown() }
+        itemPersister.saveEntryAsync(item, source, source?.series, tags = tags.toList()) { waitLatch.countDown() }
 
         try { waitLatch.await() } catch(ignored: Exception) { }
         TestUtil.sleep(200L)
