@@ -18,8 +18,8 @@
     <string name="source_example_newspaper_item_publishing_date">21.11.2017</string>
 
     <string name="item_content_gaucho_marx_quote">I Don’t Want to Belong to Any Club That Will Accept Me as a Member.</string>
-    <!--<string name="item_content_simpsons_quote">To alcohol! The cause of, and solution to, all of life’s problems.</string>-->
-    <string name="item_content_simpsons_quote">You tried your best and you failed miserably. The lesson is: Never try.</string>
+    <string name="item_content_simpsons_quote">To alcohol! The cause of, and solution to, all of life’s problems.</string>
+    <!--<string name="item_content_simpsons_quote">You tried your best and you failed miserably. The lesson is: Never try.</string>-->
     <string name="item_title_simpsons_quote">Homer Simpson</string>
     <string name="item_content_ashleigh_brilliant_quote">Life may have no meaning. Or even worse, it may have a meaning of which I disapprove.</string>
     <string name="item_content_fact_internet_access">Only 48% of the world’s population have access to the Internet</string>
