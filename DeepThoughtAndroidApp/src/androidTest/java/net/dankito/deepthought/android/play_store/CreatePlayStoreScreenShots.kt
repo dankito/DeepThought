@@ -187,7 +187,7 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
         val tagSimpsons = Tag(getString(R.string.tag_simpsons))
         persistTag(tagSimpsons)
 
-        val tagHLMencken = Tag(getString(R.string.tag_quote_h_l_mencken))
+        val tagHLMencken = Tag(getString(R.string.tag_henry_louis_mencken))
         persistTag(tagHLMencken)
 
         val tagAshleighBrilliant = Tag(getString(R.string.tag_quote_ashleight_brilliant))
