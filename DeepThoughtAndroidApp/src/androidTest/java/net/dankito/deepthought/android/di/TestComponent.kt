@@ -2,6 +2,7 @@ package net.dankito.deepthought.android.di
 
 import dagger.Component
 import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
+import net.dankito.deepthought.android.play_store.CreatePlayStoreScreenShots
 import net.dankito.deepthought.di.BaseModule
 import net.dankito.deepthought.di.CommonDataModule
 import net.dankito.deepthought.di.CommonModule
@@ -23,5 +24,7 @@ interface TestComponent : AppComponent {
 
 
     fun inject(deepThoughtAndroidTestBase: DeepThoughtAndroidTestBase)
+
+    fun inject(createPlayStoreScreenShots: CreatePlayStoreScreenShots)
 
 }

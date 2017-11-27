@@ -1,14 +1,15 @@
 package net.dankito.deepthought.android.play_store
 
+import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
+import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.deepthought.android.DeepThoughtActivityTestRule
 import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
 import net.dankito.deepthought.android.MainActivity
+import net.dankito.deepthought.android.di.TestComponent
 import net.dankito.deepthought.android.util.TestUtil
 import net.dankito.deepthought.android.util.screenshot.TakeScreenshotOnErrorTestRule
-import net.dankito.deepthought.model.Item
-import net.dankito.deepthought.model.Series
-import net.dankito.deepthought.model.Source
-import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.*
+import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.preview.test.R
 import net.dankito.richtexteditor.android.command.Command
 import org.junit.Before
@@ -20,6 +21,7 @@ import tools.fastlane.screengrab.Screengrab
 import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy
 import tools.fastlane.screengrab.locale.LocaleTestRule
 import java.util.*
+import javax.inject.Inject
 
 
 class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
@@ -37,6 +39,10 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
 
         const val SearchScreenshotName = "03_Search"
 
+        const val TagsListScreenshotName = "04_Tags"
+
+        const val SyncDataScreenshotName = "06_Sync_Data"
+
 
         private val log = LoggerFactory.getLogger(CreatePlayStoreScreenShots::class.java)
     }
@@ -50,9 +56,15 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
     var takeScreenshotOnError = TakeScreenshotOnErrorTestRule()
 
 
+    @Inject
+    protected lateinit var deviceRegistrationHandler: IDeviceRegistrationHandler
+
+
 
     @Before
     fun setUp() {
+        TestComponent.component.inject(this)
+
         Screengrab.setDefaultScreenshotStrategy(UiAutomatorScreenshotStrategy())
 
         createTestData()
@@ -69,7 +81,11 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
 
         createSearchScreenshot()
 
-        Thread.sleep(100 * 1000L)
+        createTagsListScreenshot()
+
+        createSyncDataScreenshot()
+
+        Thread.sleep(5 * 1000L)
     }
 
     private fun createRichTextEditorScreenshot() {
@@ -128,11 +144,36 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
         navigator.navigateFromEditItemActivityContentEditorToMainActivity()
         TestUtil.sleep(1000L)
 
-        navigator.search(getString(net.dankito.deepthought.preview.test.R.string.search_query))
+        navigator.search(getString(net.dankito.deepthought.preview.test.R.string.search_items_query))
         navigator.hideKeyboard()
         TestUtil.sleep(1000L)
 
         takeScreenShot(SearchScreenshotName)
+
+        TestUtil.sleep(1000L)
+        navigator.pressBack()
+        navigator.pressBack()
+    }
+
+
+    private fun createTagsListScreenshot() {
+        TestUtil.sleep(1000L)
+        navigator.navigateToTabTags()
+
+        takeScreenShot(TagsListScreenshotName)
+    }
+
+
+    private fun createSyncDataScreenshot() {
+        TestUtil.sleep(1000L)
+        navigator.navigateToTabItems()
+
+        val device = Device("name", "id", OsType.DESKTOP, getString(R.string.sync_data_os_name), getString(R.string.sync_data_os_version))
+        val discoveredDevice = DiscoveredDevice(device, getString(R.string.sync_data_ip_address))
+        (deviceRegistrationHandler as DeviceRegistrationHandlerBase).showUnknownDeviceDiscoveredView(discoveredDevice) { _, _ -> }
+        TestUtil.sleep(1000L)
+
+        takeScreenShot(SyncDataScreenshotName)
     }
 
 

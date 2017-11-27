@@ -34,6 +34,11 @@
     <string name="item_content_editor_undo">Wiederherstellen</string>
 
 
-    <string name="search_query">zitat</string>
+    <string name="search_items_query">zitat</string>
+
+
+    <string name="sync_data_os_name">Windows 10</string>
+    <string name="sync_data_os_version">16299</string>
+    <string name="sync_data_ip_address">192.168.1.27</string>
 
 </resources>

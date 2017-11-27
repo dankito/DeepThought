@@ -30,6 +30,18 @@ open class UiNavigator {
         onView(withId(R.id.mnSaveEntry)).perform(click())
     }
 
+
+    open fun navigateToTabItems() {
+        onView(withId(net.dankito.deepthought.android.R.id.btnvEntries)).perform(click())
+        TestUtil.sleep(1000L)
+    }
+
+    open fun navigateToTabTags() {
+        onView(withId(net.dankito.deepthought.android.R.id.btnvTags)).perform(click())
+        TestUtil.sleep(1000L)
+    }
+
+
     open fun navigateFromMainActivityToEditItemActivity() {
         TestUtil.sleep(1000)
         clickOnMainActivityFloatingActionButton()
