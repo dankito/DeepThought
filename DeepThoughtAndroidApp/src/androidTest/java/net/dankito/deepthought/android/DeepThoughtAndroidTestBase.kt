@@ -100,7 +100,10 @@ abstract class DeepThoughtAndroidTestBase {
     }
 
     protected open fun clearLocalSettings() {
-        dataManager.localSettings = LocalSettings(Versions.CommunicationProtocolVersion, Versions.SearchIndexVersion, Versions.HtmlEditorVersion, Date(0), 0, Date(0))
+        val defaultSettings = LocalSettings(Versions.CommunicationProtocolVersion, Versions.SearchIndexVersion, Versions.HtmlEditorVersion, Date(0), 0, Date(0))
+//        defaultSettings.didShowAddItemPropertiesHelp = true
+
+        dataManager.localSettings = defaultSettings
     }
 
     protected open fun clearAllUserData() {
