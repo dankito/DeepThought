@@ -33,6 +33,7 @@ class InMemoryEntityManager : IEntityManager {
     }
 
     override fun close() {
+        entitiesStore.clear()
     }
 
 
