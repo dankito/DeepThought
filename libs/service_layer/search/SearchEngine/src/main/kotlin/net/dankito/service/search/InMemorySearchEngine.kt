@@ -8,6 +8,7 @@ import net.dankito.service.search.specific.*
 import net.dankito.utils.IThreadPool
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
 
 
 class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool: IThreadPool) : SearchEngineBase(threadPool) {
@@ -52,7 +53,7 @@ class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool
 
         if(termsToSearchFor.isEmpty()) {
             search.addResult(TagsSearchResult(search.searchTerm, tags))
-            search.setRelevantMatchesSorted(tags)
+            search.setRelevantMatchesSorted(tags.sortedBy { it.name.toLowerCase() })
         }
         else {
             termsToSearchFor.map { it.toLowerCase() }.forEach { term ->
@@ -64,6 +65,10 @@ class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool
                 }
                 search.addResult(TagsSearchResult(term, result))
             }
+
+            val relevantMatchesSorted = HashSet<Tag>()
+            search.results.results.forEach { relevantMatchesSorted.addAll(it.allMatches) }
+            search.setRelevantMatchesSorted(relevantMatchesSorted.sortedBy { it.name.toLowerCase() })
         }
 
         search.fireSearchCompleted()
