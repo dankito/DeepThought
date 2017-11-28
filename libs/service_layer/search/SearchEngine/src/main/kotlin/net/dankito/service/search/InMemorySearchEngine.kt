@@ -56,10 +56,11 @@ class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool
             search.setRelevantMatchesSorted(tags.sortedBy { it.name.toLowerCase() })
         }
         else {
-            termsToSearchFor.map { it.toLowerCase() }.forEach { term ->
+            termsToSearchFor.forEach { term ->
                 val result = ArrayList<Tag>()
+                val termLowerCased = term.toLowerCase()
                 tags.forEach { tag ->
-                    if(tag.name.toLowerCase().contains(term)) {
+                    if(tag.name.toLowerCase().contains(termLowerCased)) {
                         result.add(tag)
                     }
                 }
