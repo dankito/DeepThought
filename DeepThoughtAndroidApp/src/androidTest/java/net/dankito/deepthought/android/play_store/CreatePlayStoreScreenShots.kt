@@ -75,7 +75,7 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
 
     @Test
     fun createScreenshots() {
-        TestUtil.sleep(1000L)
+        TestUtil.sleep(1000)
         takeScreenShot(ItemsListScreenshotName)
 
 
@@ -87,12 +87,12 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
 
         createTagsListScreenshot() // take tag list screenshot at last as it alters tags and items
 
-        Thread.sleep(5 * 1000L)
+        Thread.sleep(5 * 1000)
     }
 
     private fun createRichTextEditorScreenshot() {
         navigator.navigateFromMainActivityToEditItemActivityContentEditor()
-        TestUtil.sleep(500L)
+        TestUtil.sleep(500)
 
         navigator.hideKeyboard()
 
@@ -141,18 +141,18 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
         takeScreenShot(RichTextEditorScreenshotName)
 
         navigator.navigateFromEditItemActivityContentEditorToMainActivity()
-        TestUtil.sleep(1000L)
+        TestUtil.sleep(1000)
     }
 
 
     private fun createSearchScreenshot() {
         navigator.search(getString(net.dankito.deepthought.preview.test.R.string.search_items_query))
         navigator.hideKeyboard()
-        TestUtil.sleep(1000L)
+        TestUtil.sleep(1000)
 
         takeScreenShot(SearchScreenshotName)
 
-        TestUtil.sleep(1000L)
+        TestUtil.sleep(1000)
         navigator.pressBack()
         navigator.pressBack()
     }
@@ -161,25 +161,25 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
     private fun createTagsListScreenshot() {
         val createdItems = updateTestDataForTagListScreenshot()
 
-        TestUtil.sleep(1000L)
+        TestUtil.sleep(1000)
         navigator.navigateToTabTags()
 
         takeScreenShot(TagsListScreenshotName)
 
         createdItems.forEach { deleteEntityService.deleteEntry(it) }
-        TestUtil.sleep(1000L)
+        TestUtil.sleep(1000)
     }
 
 
     private fun createSyncDataScreenshot() {
-        TestUtil.sleep(1000L)
+        TestUtil.sleep(1000)
         navigator.navigateToTabItems()
 
         val device = Device("name", "id", OsType.DESKTOP, getString(R.string.sync_data_os_name), getString(R.string.sync_data_os_version))
         dataManager.entityManager.persistEntity(device)
         val discoveredDevice = DiscoveredDevice(device, getString(R.string.sync_data_ip_address))
         (deviceRegistrationHandler as DeviceRegistrationHandlerBase).showUnknownDeviceDiscoveredView(discoveredDevice) { _, _ -> }
-        TestUtil.sleep(1000L)
+        TestUtil.sleep(1000)
 
         takeScreenShot(SyncDataScreenshotName)
 

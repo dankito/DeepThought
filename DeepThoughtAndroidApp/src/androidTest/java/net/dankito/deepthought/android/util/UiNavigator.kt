@@ -25,7 +25,7 @@ open class UiNavigator {
         navigateFromMainActivityToEditItemActivityContentEditor()
 
         enterText(content)
-        TestUtil.sleep(500L)
+        TestUtil.sleep(500)
 
         applyContentEditorChanges()
 
@@ -37,10 +37,10 @@ open class UiNavigator {
     open fun createTagFromMainActivity(tagName: String) {
         navigateFromMainActivityToEditItemActivity()
         enterText(" ")
-        TestUtil.sleep(1000L)
+        TestUtil.sleep(1000)
 
         applyContentEditorChanges()
-        TestUtil.sleep(500L)
+        TestUtil.sleep(500)
 
         createTagsInEditItemActivity(tagName)
 
@@ -51,25 +51,25 @@ open class UiNavigator {
     private fun createTagsInEditItemActivity(vararg tagNames: String) {
         clickOnEditItemActivityFloatingActionButton()
         onView(withId(R.id.fabEditEntryTags)).perform(click())
-        TestUtil.sleep(500L)
+        TestUtil.sleep(500)
 
         tagNames.forEach { tagName ->
             setEditTextText(R.id.edtxtEditEntrySearchTag, tagName)
             onView(withId(R.id.btnEditEntryCreateOrToggleTags)).perform(click())
-            TestUtil.sleep(1000L)
+            TestUtil.sleep(1000)
         }
 
         onView(withId(R.id.mnApplyTagsOnEntryChanges)).perform(click())
-        TestUtil.sleep(500L)
+        TestUtil.sleep(500)
     }
 
     open fun createSourceFromMainActivity(sourceTitle: String) {
         navigateFromMainActivityToEditItemActivity()
         enterText(" ")
-        TestUtil.sleep(1000L)
+        TestUtil.sleep(1000)
 
         applyContentEditorChanges()
-        TestUtil.sleep(500L)
+        TestUtil.sleep(500)
 
         createSourceInEditItemActivity(sourceTitle)
 
@@ -80,14 +80,14 @@ open class UiNavigator {
     private fun createSourceInEditItemActivity(sourceTitle: String, seriesTitle: String? = null) {
         clickOnEditItemActivityFloatingActionButton()
         onView(withId(R.id.fabEditEntryReference)).perform(click())
-        TestUtil.sleep(1000L)
+        TestUtil.sleep(1000)
 
         setValueOfEditEntityField(R.id.lytEditReferenceTitle, sourceTitle)
 
         seriesTitle?.let { createSeriesInEditSourceActivity(it) }
 
         onView(withId(R.id.mnSaveReference)).perform(click())
-        TestUtil.sleep(500L)
+        TestUtil.sleep(500)
     }
 
     private fun createSeriesInEditSourceActivity(seriesTitle: String) {
@@ -96,7 +96,7 @@ open class UiNavigator {
         setValueOfEditEntityField(R.id.lytEditSeriesTitle, seriesTitle)
 
         onView(withId(R.id.mnSaveSeries)).perform(click())
-        TestUtil.sleep(500L)
+        TestUtil.sleep(500)
     }
 
 
@@ -105,7 +105,7 @@ open class UiNavigator {
 
         clickOnEditItemActivityFloatingActionButton()
         onView(withId(R.id.fabEditEntryAbstract)).perform(click())
-        TestUtil.sleep(1000L)
+        TestUtil.sleep(1000)
         setValueOfEditEntityField(R.id.lytAbstractPreview, itemSummary)
 
         createSourceInEditItemActivity(sourceTitle, seriesTitle)
@@ -118,22 +118,22 @@ open class UiNavigator {
 
     open fun navigateToTabItems() {
         onView(withId(net.dankito.deepthought.android.R.id.btnvEntries)).perform(click())
-        TestUtil.sleep(1000L)
+        TestUtil.sleep(1000)
     }
 
     open fun navigateToTabTags() {
         onView(withId(net.dankito.deepthought.android.R.id.btnvTags)).perform(click())
-        TestUtil.sleep(1000L)
+        TestUtil.sleep(1000)
     }
 
     open fun navigateToTabSources() {
         onView(withId(net.dankito.deepthought.android.R.id.btnvReferences)).perform(click())
-        TestUtil.sleep(1000L)
+        TestUtil.sleep(1000)
     }
 
     open fun navigateToTabReadLaterArticles() {
         onView(withId(net.dankito.deepthought.android.R.id.btnvReadLaterArticles)).perform(click())
-        TestUtil.sleep(1000L)
+        TestUtil.sleep(1000)
     }
 
 
@@ -172,7 +172,7 @@ open class UiNavigator {
 
     open fun search(query: String) {
         onView(withId(net.dankito.deepthought.android.R.id.search)).perform(click())
-        TestUtil.sleep(500L)
+        TestUtil.sleep(500)
 
         setEditTextText(android.support.design.R.id.search_src_text, query)
     }
@@ -194,13 +194,15 @@ open class UiNavigator {
     open fun setEditTextText(editTextId: Int, text: String) {
         // for Unicode support use replaceText() instead of typeText() (works for for EditTexts)
         onView(withId(editTextId)).perform(replaceText(text))
+
+        TestUtil.sleep(500)
     }
 
     private fun setValueOfEditEntityField(entityFieldId: Int, value: String) {
         onView(AllOf.allOf(withId(R.id.edtxtEntityFieldValue), isDescendantOfA(withId(entityFieldId)))) // find edtxtEntityFieldValue in EditEntityField
                 .perform(replaceText(value))
 
-        TestUtil.sleep(500L)
+        TestUtil.sleep(500)
     }
 
 
