@@ -172,9 +172,9 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     betaCompile 'testfairy:testfairy-android-sdk:1.+@aar'
-    betaCompile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true
-    }
+//    betaCompile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+//        transitive = true
+//    }
 
     extendedCompile project(':ArticleSummaryExtractors') // not published to Play Store
 
