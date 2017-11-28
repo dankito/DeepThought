@@ -2,6 +2,7 @@ package net.dankito.deepthought.android.util
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso
+import android.support.test.espresso.Espresso.onData
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions
 import android.support.test.espresso.action.ViewActions.click
@@ -13,8 +14,7 @@ import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import net.dankito.deepthought.android.R
 import net.dankito.richtexteditor.android.command.Command
-import org.hamcrest.CoreMatchers.`is`
-import org.hamcrest.CoreMatchers.instanceOf
+import org.hamcrest.CoreMatchers.*
 import org.hamcrest.core.AllOf
 
 
@@ -170,6 +170,28 @@ open class UiNavigator {
     }
 
 
+    open fun createRssFeed(feedUrl: String, feedName: String) {
+        clickOnEditItemActivityFloatingActionButton()
+        onView(withId(R.id.fab_add_newspaper_article)).perform(click())
+        TestUtil.sleep(1000)
+
+        setEditTextText(R.id.edtxtFeedOrWebsiteUrl, feedUrl)
+        onView(withId(R.id.btnCheckFeedOrWebsiteUrl)).perform(click())
+        TestUtil.sleep(5000)
+
+        onData(anything())
+                .inAdapterView(withId(R.id.lstFeedSearchResults))
+                .atPosition(0)
+                .perform(click())
+        TestUtil.sleep(3000)
+
+        onView(withId(R.id.edtxtAskExtractorName)).inRoot(isDialog()).perform(replaceText(feedName))
+        TestUtil.sleep(500)
+        onView(withText(android.R.string.ok)).inRoot(isDialog()).perform(click())
+        TestUtil.sleep(2000)
+    }
+
+
     open fun search(query: String) {
         onView(withId(net.dankito.deepthought.android.R.id.search)).perform(click())
         TestUtil.sleep(500)
@@ -199,7 +221,7 @@ open class UiNavigator {
     }
 
     private fun setValueOfEditEntityField(entityFieldId: Int, value: String) {
-        onView(AllOf.allOf(withId(R.id.edtxtEntityFieldValue), isDescendantOfA(withId(entityFieldId)))) // find edtxtEntityFieldValue in EditEntityField
+        onView(allOf(withId(R.id.edtxtEntityFieldValue), isDescendantOfA(withId(entityFieldId)))) // find edtxtEntityFieldValue in EditEntityField
                 .perform(replaceText(value))
 
         TestUtil.sleep(500)
@@ -217,7 +239,7 @@ open class UiNavigator {
 
     open fun clickOnEditItemActivityFloatingActionButton() {
         // FloatingActionMenu adds a FloatingActionButton without id which
-        onView(AllOf.allOf(ViewMatchers.isDescendantOfA(instanceOf(FloatingActionMenu::class.java)), withId(-1),
+        onView(allOf(ViewMatchers.isDescendantOfA(instanceOf(FloatingActionMenu::class.java)), withId(-1),
                 instanceOf(FloatingActionButton::class.java), isDisplayed()))
                 .perform(ViewActions.click())
     }
