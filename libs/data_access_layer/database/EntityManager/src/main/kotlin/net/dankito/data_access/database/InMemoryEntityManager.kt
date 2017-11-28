@@ -46,7 +46,7 @@ class InMemoryEntityManager : IEntityManager {
         }
 
         val id = createAndSetId(entity)
-        var result = typeStore?.put(id, entity) != null
+        var result = typeStore.put(id, entity) != null
 
         result = result and cascadePersist(entity)
 
@@ -84,7 +84,10 @@ class InMemoryEntityManager : IEntityManager {
 
     override fun updateEntity(entity: Any): Boolean {
         entitiesStore[entity.javaClass]?.let { typeStore ->
-            return typeStore.put(getId(entity), entity) != null
+            val id = getId(entity)
+            if(typeStore.containsKey(id)) {
+                return typeStore.put(id, entity) != null
+            }
         }
 
         return false
