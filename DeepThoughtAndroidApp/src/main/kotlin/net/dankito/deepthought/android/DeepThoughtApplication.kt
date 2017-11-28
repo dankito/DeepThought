@@ -19,7 +19,7 @@ import net.dankito.deepthought.di.CommonModule
 import javax.inject.Inject
 
 
-class DeepThoughtApplication : MultiDexApplication() {
+open class DeepThoughtApplication : MultiDexApplication() {
 
     @Inject
     protected lateinit var appInitializer: AndroidAppInitializer
@@ -34,7 +34,8 @@ class DeepThoughtApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
 
-        setupDependencyInjection()
+        val component = setupDependencyInjection()
+        component.inject(this)
 
         setupLogic()
 
@@ -44,18 +45,23 @@ class DeepThoughtApplication : MultiDexApplication() {
     }
 
 
-    private fun setupDependencyInjection() {
+    protected open fun setupDependencyInjection(): AppComponent {
         val component = DaggerAppComponent.builder()
                 .commonModule(CommonModule())
                 .activitiesModule(ActivitiesModule(this))
                 .build()
 
+        setComponent(component)
+
+        return component
+    }
+
+    protected open fun setComponent(component: AppComponent) {
         BaseComponent.component = component
         CommonComponent.component = component
         AppComponent.setComponentInstance(component)
-
-        component.inject(this)
     }
+
 
     private fun setupLogic() {
         registerActivityLifecycleCallbacks(lifeCycleListener)

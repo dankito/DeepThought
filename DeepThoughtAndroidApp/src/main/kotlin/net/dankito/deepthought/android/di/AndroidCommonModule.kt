@@ -21,37 +21,37 @@ import javax.inject.Singleton
 
 
 @Module
-class AndroidCommonModule {
+open class AndroidCommonModule {
 
     @Provides
     @Singleton
-    fun providePlatformConfiguration(context: Context) : IPlatformConfiguration {
+    open fun providePlatformConfiguration(context: Context) : IPlatformConfiguration {
         return AndroidPlatformConfiguration(context)
     }
 
 
     @Provides
     @Singleton
-    fun provideEntityManager(context: Context, configuration: EntityManagerConfiguration, localSettingsStore: ILocalSettingsStore) : IEntityManager {
+    open fun provideEntityManager(context: Context, configuration: EntityManagerConfiguration, localSettingsStore: ILocalSettingsStore) : IEntityManager {
         return AndroidCouchbaseLiteEntityManager(context, localSettingsStore)
     }
 
     @Provides
     @Singleton
-    fun provideDevicesDiscoverer(context: Context, networkConnectivityManager: INetworkConnectivityManager, threadPool: IThreadPool) : IDevicesDiscoverer {
+    open fun provideDevicesDiscoverer(context: Context, networkConnectivityManager: INetworkConnectivityManager, threadPool: IThreadPool) : IDevicesDiscoverer {
         return AndroidUdpDevicesDiscoverer(context, networkConnectivityManager, threadPool)
     }
 
     @Provides
     @Singleton
-    fun provideFileStorageService(context: Context) : IFileStorageService {
+    open fun provideFileStorageService(context: Context) : IFileStorageService {
         return AndroidFileStorageService(context)
     }
 
 
     @Provides
     @Singleton
-    fun provideBase64Service() : IBase64Service {
+    open fun provideBase64Service() : IBase64Service {
         return AndroidBase64Service()
     }
 
