@@ -49,7 +49,7 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
         assertIsNotVisible(R.id.bottomViewNavigation)
 
 
-        navigator.createEntry("Test info")
+        navigator.createItemFromMainActivity("Test info")
         TestUtil.sleep(2000)
 
 
@@ -61,7 +61,7 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
     fun addItem_AllOtherOnboardingsStillAreDisplayed() {
         assertIsNotVisible(R.id.bottomViewNavigation)
 
-        navigator.createEntry("Test info")
+        navigator.createItemFromMainActivity("Test info")
         TestUtil.sleep(2000)
 
 
@@ -80,7 +80,7 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
         assertIsNotVisible(R.id.bottomViewNavigation)
 
 
-        navigator.createTag("Test tag")
+        navigator.createTagFromMainActivity("Test tag")
         TestUtil.sleep(2000)
 
 
@@ -101,7 +101,7 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
         assertIsNotVisible(R.id.bottomViewNavigation)
 
 
-        navigator.createSource("Test source")
+        navigator.createSourceFromMainActivity("Test source")
         TestUtil.sleep(2000)
 
 

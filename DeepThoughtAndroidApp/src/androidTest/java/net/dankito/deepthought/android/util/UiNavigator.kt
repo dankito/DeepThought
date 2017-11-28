@@ -21,17 +21,20 @@ import org.hamcrest.core.AllOf
 open class UiNavigator {
 
 
-    open fun createEntry(content: String) {
+    open fun createItemFromMainActivity(content: String, alsoSaveItem: Boolean = true) {
         navigateFromMainActivityToEditItemActivityContentEditor()
 
         enterText(content)
         TestUtil.sleep(500L)
 
         applyContentEditorChanges()
-        saveItemInEditItemActivity()
+
+        if(alsoSaveItem) {
+            saveItemInEditItemActivity()
+        }
     }
 
-    open fun createTag(tagName: String) {
+    open fun createTagFromMainActivity(tagName: String) {
         navigateFromMainActivityToEditItemActivity()
         enterText(" ")
         TestUtil.sleep(1000L)
@@ -39,22 +42,28 @@ open class UiNavigator {
         applyContentEditorChanges()
         TestUtil.sleep(500L)
 
+        createTagsInEditItemActivity(tagName)
+
+        pressBack()
+        onView(withText(R.string.action_dismiss)).inRoot(isDialog()).perform(click())
+    }
+
+    private fun createTagsInEditItemActivity(vararg tagNames: String) {
         clickOnEditItemActivityFloatingActionButton()
         onView(withId(R.id.fabEditEntryTags)).perform(click())
         TestUtil.sleep(500L)
 
-        setEditTextText(R.id.edtxtEditEntrySearchTag, tagName)
-        onView(withId(R.id.btnEditEntryCreateOrToggleTags)).perform(click())
-        TestUtil.sleep(1000L)
+        tagNames.forEach { tagName ->
+            setEditTextText(R.id.edtxtEditEntrySearchTag, tagName)
+            onView(withId(R.id.btnEditEntryCreateOrToggleTags)).perform(click())
+            TestUtil.sleep(1000L)
+        }
 
         onView(withId(R.id.mnApplyTagsOnEntryChanges)).perform(click())
         TestUtil.sleep(500L)
-
-        pressBack()
-        onView(withText(R.string.action_dismiss)).inRoot(isDialog()).perform(click())
     }
 
-    open fun createSource(sourceTitle: String) {
+    open fun createSourceFromMainActivity(sourceTitle: String) {
         navigateFromMainActivityToEditItemActivity()
         enterText(" ")
         TestUtil.sleep(1000L)
@@ -62,19 +71,48 @@ open class UiNavigator {
         applyContentEditorChanges()
         TestUtil.sleep(500L)
 
+        createSourceInEditItemActivity(sourceTitle)
+
+        pressBack()
+        onView(withText(R.string.action_dismiss)).inRoot(isDialog()).perform(click())
+    }
+
+    private fun createSourceInEditItemActivity(sourceTitle: String, seriesTitle: String? = null) {
         clickOnEditItemActivityFloatingActionButton()
         onView(withId(R.id.fabEditEntryReference)).perform(click())
         TestUtil.sleep(1000L)
 
-        onView(AllOf.allOf(withId(R.id.edtxtEntityFieldValue), ViewMatchers.isDescendantOfA(withId(R.id.lytEditReferenceTitle)))) // find edtxtEntityFieldValue in lytEditReferenceTitle
-                .perform(replaceText(sourceTitle))
-        TestUtil.sleep(500L)
+        setValueOfEditEntityField(R.id.lytEditReferenceTitle, sourceTitle)
+
+        seriesTitle?.let { createSeriesInEditSourceActivity(it) }
 
         onView(withId(R.id.mnSaveReference)).perform(click())
         TestUtil.sleep(500L)
+    }
 
-        pressBack()
-        onView(withText(R.string.action_dismiss)).inRoot(isDialog()).perform(click())
+    private fun createSeriesInEditSourceActivity(seriesTitle: String) {
+        onView(withId(R.id.lytEditReferenceSeries)).perform(click())
+
+        setValueOfEditEntityField(R.id.lytEditSeriesTitle, seriesTitle)
+
+        onView(withId(R.id.mnSaveSeries)).perform(click())
+        TestUtil.sleep(500L)
+    }
+
+
+    open fun createEntities(itemContent: String, itemSummary: String, sourceTitle: String, seriesTitle: String, vararg tagNames: String) {
+        createItemFromMainActivity(itemContent, false)
+
+        clickOnEditItemActivityFloatingActionButton()
+        onView(withId(R.id.fabEditEntryAbstract)).perform(click())
+        TestUtil.sleep(1000L)
+        setValueOfEditEntityField(R.id.lytAbstractPreview, itemSummary)
+
+        createSourceInEditItemActivity(sourceTitle, seriesTitle)
+
+        createTagsInEditItemActivity(*tagNames)
+
+        saveItemInEditItemActivity()
     }
 
 
@@ -156,6 +194,13 @@ open class UiNavigator {
     open fun setEditTextText(editTextId: Int, text: String) {
         // for Unicode support use replaceText() instead of typeText() (works for for EditTexts)
         onView(withId(editTextId)).perform(replaceText(text))
+    }
+
+    private fun setValueOfEditEntityField(entityFieldId: Int, value: String) {
+        onView(AllOf.allOf(withId(R.id.edtxtEntityFieldValue), isDescendantOfA(withId(entityFieldId)))) // find edtxtEntityFieldValue in EditEntityField
+                .perform(replaceText(value))
+
+        TestUtil.sleep(500L)
     }
 
 
