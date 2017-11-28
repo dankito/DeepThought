@@ -21,13 +21,30 @@ class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool
     }
 
     override fun searchEntries(search: EntriesSearch, termsToSearchFor: List<String>) {
-        searchForEntitiesOfType(Item::class.java, search, termsToSearchFor) { item ->
-            val entityValues = Arrays.asList(item.contentPlainText.toLowerCase(), item.abstractPlainText.toLowerCase(), item.source?.title?.toLowerCase() ?: "",
-                    item.source?.publishingDateString ?: "", item.source?.series?.title?.toLowerCase() ?: "").toMutableList()
-            entityValues.addAll(item.tags.map { it.name.toLowerCase() })
-
-            entityValues
+        if(search.filterOnlyEntriesWithoutTags) {
+            getItemsWithoutTags(search)
         }
+        else {
+            searchForEntitiesOfType(Item::class.java, search, termsToSearchFor) { item ->
+                val entityValues = Arrays.asList(item.contentPlainText.toLowerCase(), item.abstractPlainText.toLowerCase(), item.source?.title?.toLowerCase() ?: "",
+                        item.source?.publishingDateString ?: "", item.source?.series?.title?.toLowerCase() ?: "").toMutableList()
+                entityValues.addAll(item.tags.map { it.name.toLowerCase() })
+
+                entityValues
+            }
+        }
+    }
+
+    private fun getItemsWithoutTags(search: EntriesSearch) {
+        val items = entityManager.getAllEntitiesOfType(Item::class.java)
+
+        items.forEach { item ->
+            if(item.hasTags() == false) {
+                search.addResult(item)
+            }
+        }
+
+        search.fireSearchCompleted()
     }
 
     override fun searchTags(search: TagsSearch, termsToSearchFor: List<String>) {
