@@ -13,6 +13,8 @@ import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.SeriesService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
+import org.junit.After
+import java.util.*
 import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 
@@ -51,6 +53,14 @@ abstract class DeepThoughtAndroidTestBase {
 
     init {
         TestComponent.component.inject(this)
+    }
+
+
+    @After
+    fun tearDown() {
+        dataManager.entityManager.close()
+        // as same application instance is used for all test cases, restore default values
+        dataManager.localSettings = LocalSettings(1, 1, 1, Date(0), 0, Date(0))
     }
 
 
