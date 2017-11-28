@@ -34,6 +34,7 @@ import net.dankito.service.search.LuceneSearchEngine
 import net.dankito.service.synchronization.ConnectedDevicesService
 import net.dankito.service.synchronization.CouchbaseLiteSyncManager
 import net.dankito.service.synchronization.ISyncManager
+import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.IPlatformConfiguration
@@ -166,13 +167,13 @@ class CommonModule {
 
     @Provides
     @Singleton
-    fun provideSynchronizedChangesHandler(entityManager: IEntityManager, changesNotifier: EntityChangedNotifier) : SynchronizedChangesHandler {
+    fun provideSynchronizedChangesHandler(entityManager: IEntityManager, changesNotifier: EntityChangedNotifier) : ISynchronizedChangesHandler {
         return SynchronizedChangesHandler(entityManager as CouchbaseLiteEntityManagerBase, changesNotifier)
     }
 
     @Provides
     @Singleton
-    fun provideSyncManager(entityManager: IEntityManager, changesHandler: SynchronizedChangesHandler, networkSettings: INetworkSettings) : ISyncManager {
+    fun provideSyncManager(entityManager: IEntityManager, changesHandler: ISynchronizedChangesHandler, networkSettings: INetworkSettings) : ISyncManager {
         return CouchbaseLiteSyncManager(entityManager as CouchbaseLiteEntityManagerBase, changesHandler, networkSettings)
     }
 

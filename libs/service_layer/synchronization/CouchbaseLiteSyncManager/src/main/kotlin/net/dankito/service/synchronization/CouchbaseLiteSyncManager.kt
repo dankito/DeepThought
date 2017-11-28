@@ -8,7 +8,7 @@ import com.couchbase.lite.support.CouchbaseLiteHttpClientFactory
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.deepthought.model.*
 import net.dankito.jpa.couchbaselite.Dao
-import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
+import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
 import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
 import java.net.MalformedURLException
@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 
 
-class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityManagerBase, private val synchronizedChangesHandler: SynchronizedChangesHandler,
+class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityManagerBase, private val synchronizedChangesHandler: ISynchronizedChangesHandler,
                                private val networkSettings: INetworkSettings, private val usePushReplication: Boolean = false, private val usePullReplication: Boolean = true) :
         ISyncManager {
 
