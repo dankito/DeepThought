@@ -54,6 +54,29 @@ open class UiNavigator {
         onView(withText(R.string.action_dismiss)).inRoot(isDialog()).perform(click())
     }
 
+    open fun createSource(sourceTitle: String) {
+        navigateFromMainActivityToEditItemActivity()
+        enterText(" ")
+        TestUtil.sleep(1000L)
+
+        applyContentEditorChanges()
+        TestUtil.sleep(500L)
+
+        clickOnEditItemActivityFloatingActionButton()
+        onView(withId(R.id.fabEditEntryReference)).perform(click())
+        TestUtil.sleep(1000L)
+
+        onView(AllOf.allOf(withId(R.id.edtxtEntityFieldValue), ViewMatchers.isDescendantOfA(withId(R.id.lytEditReferenceTitle)))) // find edtxtEntityFieldValue in lytEditReferenceTitle
+                .perform(replaceText(sourceTitle))
+        TestUtil.sleep(500L)
+
+        onView(withId(R.id.mnSaveReference)).perform(click())
+        TestUtil.sleep(500L)
+
+        pressBack()
+        onView(withText(R.string.action_dismiss)).inRoot(isDialog()).perform(click())
+    }
+
 
     open fun navigateToTabItems() {
         onView(withId(net.dankito.deepthought.android.R.id.btnvEntries)).perform(click())
