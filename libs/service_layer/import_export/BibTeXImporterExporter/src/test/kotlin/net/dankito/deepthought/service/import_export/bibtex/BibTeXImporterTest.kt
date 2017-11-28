@@ -6,6 +6,7 @@ import com.nhaarman.mockito_kotlin.whenever
 import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.data.SeriesPersister
+import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Tag
 import net.dankito.service.data.TagService
@@ -65,9 +66,7 @@ class BibTeXImporterTest {
     @Test
     @Throws(Exception::class)
     fun importZoteroFile() {
-        val bibTexFile = File("/media/data/Android/data/Zotero/MyLibrary/MyLibrary.bib")
-
-        val result = importer.import(bibTexFile)
+        val result = readTestFile("ZoteroExport.bib")
 
         assertThat(result.size, `is`(5))
     }
@@ -75,11 +74,17 @@ class BibTeXImporterTest {
     @Test
     @Throws(Exception::class)
     fun importCitaviFile() {
-        val bibTexFile = File("/media/data/Android/data/Citavi/CitaviExport.bib")
-
-        val result = importer.import(bibTexFile)
+        val result = readTestFile("CitaviExport.bib")
 
         assertThat(result.size, `is`(99))
+    }
+
+
+    private fun readTestFile(filename: String): Collection<Item> {
+        val url = this.javaClass.classLoader.getResource("test-data/$filename")
+        val bibTexFile = File(url.toURI())
+
+        return importer.import(bibTexFile)
     }
 
 }
