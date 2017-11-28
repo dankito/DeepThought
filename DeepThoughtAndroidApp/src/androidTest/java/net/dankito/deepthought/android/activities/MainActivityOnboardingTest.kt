@@ -1,4 +1,4 @@
-package net.dankito.deepthought.android
+package net.dankito.deepthought.android.activities
 
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.assertion.ViewAssertions
@@ -6,6 +6,10 @@ import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.runner.AndroidJUnit4
+import net.dankito.deepthought.android.DeepThoughtActivityTestRule
+import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
+import net.dankito.deepthought.android.MainActivity
+import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.fragments.EntriesListView
 import net.dankito.deepthought.android.fragments.ReadLaterArticlesListView
 import net.dankito.deepthought.android.fragments.ReferencesListView
