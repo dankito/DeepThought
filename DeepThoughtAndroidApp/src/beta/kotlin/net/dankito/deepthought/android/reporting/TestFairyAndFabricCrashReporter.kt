@@ -9,13 +9,13 @@ class TestFairyAndFabricCrashReporter : ICrashReporter {
 
     private val testFairyCrashReporter = TestFairyCrashReporter()
 
-    private val fabricCrashReporter = FabricCrashReporter()
+//    private val fabricCrashReporter = FabricCrashReporter()
 
 
     override fun init(context: Context, dataManager: DataManager) {
         testFairyCrashReporter.init(context, dataManager)
 
-        fabricCrashReporter.init(context, dataManager)
+//        fabricCrashReporter.init(context, dataManager)
     }
 
 }
