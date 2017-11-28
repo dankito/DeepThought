@@ -71,6 +71,27 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
         assertOnboardingIsDisplayedInTab(ReadLaterArticlesListView::class.java)
     }
 
+    @Test
+    fun addTag_TagOnboardingThenGetsHidden() {
+        assertIsNotVisible(R.id.bottomViewNavigation)
+
+
+        navigator.createTag("Test tag")
+        TestUtil.sleep(2000)
+
+
+        assertOnboardingIsDisplayedInTab(EntriesListView::class.java)
+
+        navigator.navigateToTabTags()
+        assertOnboardingIsHiddenInTab(TagsListView::class.java)
+
+        navigator.navigateToTabSources()
+        assertOnboardingIsDisplayedInTab(ReferencesListView::class.java)
+
+        navigator.navigateToTabReadLaterArticles()
+        assertOnboardingIsDisplayedInTab(ReadLaterArticlesListView::class.java)
+    }
+
 
     private fun assertOnboardingIsDisplayedInTab(tabClass: Any, isRecyclerViewVisible: Boolean = false) {
         assertIsVisibleInTab(R.id.lytOnboardingText, tabClass)

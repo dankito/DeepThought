@@ -31,6 +31,29 @@ open class UiNavigator {
         saveItemInEditItemActivity()
     }
 
+    open fun createTag(tagName: String) {
+        navigateFromMainActivityToEditItemActivity()
+        enterText(" ")
+        TestUtil.sleep(1000L)
+
+        applyContentEditorChanges()
+        TestUtil.sleep(500L)
+
+        clickOnEditItemActivityFloatingActionButton()
+        onView(withId(R.id.fabEditEntryTags)).perform(click())
+        TestUtil.sleep(500L)
+
+        setEditTextText(R.id.edtxtEditEntrySearchTag, tagName)
+        onView(withId(R.id.btnEditEntryCreateOrToggleTags)).perform(click())
+        TestUtil.sleep(1000L)
+
+        onView(withId(R.id.mnApplyTagsOnEntryChanges)).perform(click())
+        TestUtil.sleep(500L)
+
+        pressBack()
+        onView(withText(R.string.action_dismiss)).inRoot(isDialog()).perform(click())
+    }
+
 
     open fun navigateToTabItems() {
         onView(withId(net.dankito.deepthought.android.R.id.btnvEntries)).perform(click())
@@ -90,8 +113,7 @@ open class UiNavigator {
         onView(withId(net.dankito.deepthought.android.R.id.search)).perform(click())
         TestUtil.sleep(500L)
 
-        // for Unicode support use replaceText() instead of typeText() (works for for EditTexts)
-        onView(withId(android.support.design.R.id.search_src_text)).perform(replaceText(query))
+        setEditTextText(android.support.design.R.id.search_src_text, query)
     }
 
 
@@ -108,6 +130,11 @@ open class UiNavigator {
         enterText("\n")
     }
 
+    open fun setEditTextText(editTextId: Int, text: String) {
+        // for Unicode support use replaceText() instead of typeText() (works for for EditTexts)
+        onView(withId(editTextId)).perform(replaceText(text))
+    }
+
 
     open fun clickOnEditorCommand(command: Command) {
         onView(withTagValue(`is`(command))).perform(click())
@@ -115,6 +142,14 @@ open class UiNavigator {
 
     private fun saveItemInEditItemActivity() {
         onView(withId(R.id.mnSaveEntry)).perform(click())
+    }
+
+
+    open fun clickOnEditItemActivityFloatingActionButton() {
+        // FloatingActionMenu adds a FloatingActionButton without id which
+        onView(AllOf.allOf(ViewMatchers.isDescendantOfA(instanceOf(FloatingActionMenu::class.java)), withId(-1),
+                instanceOf(FloatingActionButton::class.java), isDisplayed()))
+                .perform(ViewActions.click())
     }
 
     private fun applyContentEditorChanges() {
