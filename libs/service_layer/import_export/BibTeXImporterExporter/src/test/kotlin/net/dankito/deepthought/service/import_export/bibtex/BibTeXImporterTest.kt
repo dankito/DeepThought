@@ -14,6 +14,7 @@ import net.dankito.service.search.SearchEngineBase
 import net.dankito.service.search.specific.SeriesSearch
 import net.dankito.service.search.specific.TagsSearch
 import net.dankito.service.search.specific.TagsSearchResult
+import net.dankito.utils.IThreadPool
 import org.hamcrest.CoreMatchers.`is`
 import org.junit.Assert.assertThat
 import org.junit.Before
@@ -33,7 +34,9 @@ class BibTeXImporterTest {
 
     private val seriesPersisterMock: SeriesPersister = mock()
 
-    private val importer = BibTeXImporter(searchEngineMock, entryPersisterMock, tagServiceMock, referencePersisterMock, seriesPersisterMock)
+    private val threadPool: IThreadPool = mock()
+
+    private val importer = BibTeXImporter(searchEngineMock, entryPersisterMock, tagServiceMock, referencePersisterMock, seriesPersisterMock, threadPool)
 
 
     @Before
