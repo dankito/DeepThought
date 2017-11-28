@@ -7,6 +7,9 @@ import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.runner.AndroidJUnit4
 import net.dankito.deepthought.android.fragments.EntriesListView
+import net.dankito.deepthought.android.fragments.ReadLaterArticlesListView
+import net.dankito.deepthought.android.fragments.ReferencesListView
+import net.dankito.deepthought.android.fragments.TagsListView
 import net.dankito.deepthought.android.util.TestUtil
 import net.dankito.deepthought.android.util.screenshot.TakeScreenshotOnErrorTestRule
 import org.hamcrest.CoreMatchers.`is`
@@ -27,16 +30,16 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
 
 
     @Test
-    fun noEntries_OboardingShouldBeShown() {
-        assertOnboardingIsShownInTab(EntriesListView::class.java)
+    fun noItems_OnboardingShouldBeDisplayed() {
+        assertOnboardingIsDisplayedInTab(EntriesListView::class.java)
 
         assertIsVisibleInTab(R.id.arrowToFloatingActionButton, EntriesListView::class.java)
         assertIsNotVisible(R.id.bottomViewNavigation)
     }
 
     @Test
-    fun addEntities_OnboardingThenGetsHidden() {
-        assertOnboardingIsShownInTab(EntriesListView::class.java)
+    fun addItem_ItemOnboardingThenGetsHidden() {
+        assertOnboardingIsDisplayedInTab(EntriesListView::class.java)
 
         assertIsVisibleInTab(R.id.arrowToFloatingActionButton, EntriesListView::class.java)
         assertIsNotVisible(R.id.bottomViewNavigation)
@@ -46,16 +49,41 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
         TestUtil.sleep(2000)
 
 
+        assertIsVisible(R.id.bottomViewNavigation)
         assertOnboardingIsHiddenInTab(EntriesListView::class.java)
     }
 
+    @Test
+    fun addItem_AllOtherOnboardingsStillAreDisplayed() {
+        assertIsNotVisible(R.id.bottomViewNavigation)
 
-    private fun assertOnboardingIsShownInTab(tabClass: Any) {
+        navigator.createEntry("Test info")
+        TestUtil.sleep(2000)
+
+
+        navigator.navigateToTabTags()
+        assertOnboardingIsDisplayedInTab(TagsListView::class.java, true)
+
+        navigator.navigateToTabSources()
+        assertOnboardingIsDisplayedInTab(ReferencesListView::class.java)
+
+        navigator.navigateToTabReadLaterArticles()
+        assertOnboardingIsDisplayedInTab(ReadLaterArticlesListView::class.java)
+    }
+
+
+    private fun assertOnboardingIsDisplayedInTab(tabClass: Any, isRecyclerViewVisible: Boolean = false) {
         assertIsVisibleInTab(R.id.lytOnboardingText, tabClass)
 
         onView(withId(R.id.search)).check(ViewAssertions.doesNotExist())
 
-        assertIsNotVisibleInTab(R.id.rcyEntities, tabClass)
+        if(isRecyclerViewVisible) {
+            assertIsVisibleInTab(R.id.rcyEntities, tabClass)
+        }
+        else {
+            assertIsNotVisibleInTab(R.id.rcyEntities, tabClass)
+        }
+
         assertIsNotVisibleInTab(R.id.lytFilteredEntities, tabClass)
         assertIsNotVisibleInTab(R.id.lytContextHelp, tabClass)
     }
@@ -63,7 +91,7 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
     private fun assertOnboardingIsHiddenInTab(tabClass: Any) {
         assertIsNotVisibleInTab(R.id.lytOnboardingText, tabClass)
 
-        onView(withId(R.id.search)).check(matches(isDisplayed()))
+        assertIsVisible(R.id.search)
 
         assertIsVisibleInTab(R.id.rcyEntities, tabClass)
         assertIsNotVisibleInTab(R.id.lytFilteredEntities, tabClass)
@@ -78,6 +106,10 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
     private fun assertIsNotVisibleInTab(viewId: Int, tabClass: Any) {
         onView(AllOf.allOf(withId(viewId), isDescendantOfA(ViewMatchers.withTagValue(`is`(tabClass)))))
                 .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)))
+    }
+
+    private fun assertIsVisible(viewId: Int) {
+        onView(withId(viewId)).check(matches(isDisplayed()))
     }
 
     private fun assertIsNotVisible(viewId: Int) {

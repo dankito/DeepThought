@@ -25,9 +25,10 @@ open class UiNavigator {
         navigateFromMainActivityToEditItemActivityContentEditor()
 
         enterText(content)
+        TestUtil.sleep(500L)
 
-        onView(withId(R.id.mnApplyHtmlChanges)).perform(click())
-        onView(withId(R.id.mnSaveEntry)).perform(click())
+        applyContentEditorChanges()
+        saveItemInEditItemActivity()
     }
 
 
@@ -38,6 +39,16 @@ open class UiNavigator {
 
     open fun navigateToTabTags() {
         onView(withId(net.dankito.deepthought.android.R.id.btnvTags)).perform(click())
+        TestUtil.sleep(1000L)
+    }
+
+    open fun navigateToTabSources() {
+        onView(withId(net.dankito.deepthought.android.R.id.btnvReferences)).perform(click())
+        TestUtil.sleep(1000L)
+    }
+
+    open fun navigateToTabReadLaterArticles() {
+        onView(withId(net.dankito.deepthought.android.R.id.btnvReadLaterArticles)).perform(click())
         TestUtil.sleep(1000L)
     }
 
@@ -100,6 +111,14 @@ open class UiNavigator {
 
     open fun clickOnEditorCommand(command: Command) {
         onView(withTagValue(`is`(command))).perform(click())
+    }
+
+    private fun saveItemInEditItemActivity() {
+        onView(withId(R.id.mnSaveEntry)).perform(click())
+    }
+
+    private fun applyContentEditorChanges() {
+        onView(withId(R.id.mnApplyHtmlChanges)).perform(click())
     }
 
 
