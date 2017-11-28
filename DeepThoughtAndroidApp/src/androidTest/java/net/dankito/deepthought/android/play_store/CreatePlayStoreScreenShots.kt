@@ -217,10 +217,10 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
         val seriesExampleNewspaper = Series(getString(R.string.series_example_newspaper_item))
         persistSeries(seriesExampleNewspaper)
 
-        val dateFormate = SimpleDateFormat("dd.MM.yyyy")
+        val dateFormat = SimpleDateFormat("dd.MM.yyyy")
         val sourceExampleNewspaperArticle = Source(getString(R.string.source_example_newspaper_item_title),
                 getString(R.string.source_example_newspaper_item_url),
-                dateFormate.parse(getString(R.string.source_example_newspaper_item_publishing_date)))
+                dateFormat.parse(getString(R.string.source_example_newspaper_item_publishing_date)))
         persistSource(sourceExampleNewspaperArticle, seriesExampleNewspaper)
 
 
