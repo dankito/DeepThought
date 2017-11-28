@@ -18,7 +18,7 @@ interface IEntityManager {
     fun persistEntity(entity: Any): Boolean
 
     fun updateEntity(entity: Any): Boolean
-    fun updateEntities(entities: List<*>): Boolean
+    fun updateEntities(entities: List<Any>): Boolean
 
     fun deleteEntity(entity: Any): Boolean
 
