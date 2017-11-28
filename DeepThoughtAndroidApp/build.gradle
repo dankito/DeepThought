@@ -6,7 +6,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 // Put Fabric plugin after Android plugin
-apply plugin: 'io.fabric'
+//apply plugin: 'io.fabric'
 apply plugin: 'testfairy'
 
 apply from: '../keys.gradle'

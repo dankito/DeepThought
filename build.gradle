@@ -22,7 +22,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         classpath 'com.testfairy.plugins.gradle:testfairy:1.+'
-        classpath 'io.fabric.tools:gradle:1.24.2'
+//        classpath 'io.fabric.tools:gradle:1.24.2'
 
         // for SonarQube
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.5"
