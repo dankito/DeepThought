@@ -82,7 +82,7 @@ class TagsOnEntryDialog : DialogFragment(), ITagsOnEntryListView {
                     marginLeftRight(6.0)
                 }
 
-                promptText = messages["search.tags.prompt.text"]
+                promptText = messages["find.tags.prompt.text"]
 
                 textProperty().addListener { _, _, newValue -> presenter.searchTags(newValue) }
                 setOnKeyReleased { event ->
