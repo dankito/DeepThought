@@ -40,9 +40,9 @@ abstract class EditEntryViewBase : DialogFragment() {
     // param values for Item and ItemExtractionResult are evaluated after root has been initialized -> Item is null at root initialization stage.
     // so i had to find a way to mitigate that Item / ItemExtractionResult is not initialized yet
 
-    protected val abstractPlainText = SimpleStringProperty()
-
     protected val referencePreview = SimpleStringProperty()
+
+    protected val abstractPlainText = SimpleStringProperty()
 
     protected val tagsPreview = SimpleStringProperty()
 
@@ -112,6 +112,29 @@ abstract class EditEntryViewBase : DialogFragment() {
 
         hbox {
             prefHeight = 20.0
+            maxHeight = 70.0
+            prefWidthProperty().bind(this@vbox.widthProperty())
+
+            label(messages["edit.item.source.label"]) {
+                minWidth = Control.USE_PREF_SIZE
+                useMaxWidth = true
+            }
+
+            txtReference = label {
+                isWrapText = false
+
+                textProperty().bind(referencePreview)
+
+                hgrow = Priority.ALWAYS
+            }
+
+            vboxConstraints {
+                marginBottom = 6.0
+            }
+        }
+
+        hbox {
+            prefHeight = 20.0
             maxHeight = 100.0
             prefWidthProperty().bind(this@vbox.widthProperty())
 
@@ -127,29 +150,6 @@ abstract class EditEntryViewBase : DialogFragment() {
                 isWrapText = true
 
                 textProperty().bind(abstractPlainText)
-            }
-
-            vboxConstraints {
-                marginBottom = 6.0
-            }
-        }
-
-        hbox {
-            prefHeight = 20.0
-            maxHeight = 70.0
-            prefWidthProperty().bind(this@vbox.widthProperty())
-
-            label(messages["edit.item.source.label"]) {
-                minWidth = Control.USE_PREF_SIZE
-                useMaxWidth = true
-            }
-
-            txtReference = label {
-                isWrapText = false
-
-                textProperty().bind(referencePreview)
-
-                hgrow = Priority.ALWAYS
             }
 
             vboxConstraints {
