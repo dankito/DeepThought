@@ -1,4 +1,4 @@
-package net.dankito.deepthought.javafx.dialogs.entry
+package net.dankito.deepthought.javafx.dialogs.entry.model
 
 import javafx.beans.property.SimpleStringProperty
 import net.dankito.deepthought.model.Source

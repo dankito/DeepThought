@@ -1,6 +1,7 @@
 package net.dankito.deepthought.javafx.dialogs.entry
 
 import javafx.geometry.Pos
+import net.dankito.deepthought.javafx.dialogs.entry.model.SourceViewModel
 import net.dankito.deepthought.model.Source
 import tornadofx.*
 
