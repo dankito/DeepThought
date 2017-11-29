@@ -1,4 +1,4 @@
-package net.dankito.deepthought.javafx.dialogs.entry
+package net.dankito.deepthought.javafx.dialogs.entry.controls
 
 import javafx.geometry.Pos
 import net.dankito.deepthought.javafx.dialogs.entry.model.SourceViewModel
