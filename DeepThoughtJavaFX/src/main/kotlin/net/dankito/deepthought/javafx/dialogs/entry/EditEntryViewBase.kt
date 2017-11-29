@@ -3,12 +3,16 @@ package net.dankito.deepthought.javafx.dialogs.entry
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
+import javafx.collections.ObservableList
 import javafx.collections.ObservableSet
 import javafx.collections.SetChangeListener
 import javafx.concurrent.Worker
 import javafx.scene.Cursor
 import javafx.scene.control.Control
 import javafx.scene.control.Label
+import javafx.scene.control.ListView
+import javafx.scene.control.TextField
+import javafx.scene.input.KeyCode
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Priority
@@ -28,6 +32,8 @@ import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishin
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
 import net.dankito.service.data.ReadLaterArticleService
+import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.specific.ReferenceSearch
 import net.dankito.utils.extensions.toSortedString
 import net.dankito.utils.ui.IClipboardService
 import org.jsoup.Jsoup
@@ -40,7 +46,11 @@ abstract class EditEntryViewBase : DialogFragment() {
     // param values for Item and ItemExtractionResult are evaluated after root has been initialized -> Item is null at root initialization stage.
     // so i had to find a way to mitigate that Item / ItemExtractionResult is not initialized yet
 
-    protected val referencePreview = SimpleStringProperty()
+    protected val isSourceSet = SimpleBooleanProperty()
+
+    protected val sourcePreview = SimpleStringProperty()
+
+    protected val showSourceSearchResult = SimpleBooleanProperty()
 
     protected val abstractPlainText = SimpleStringProperty()
 
@@ -53,7 +63,11 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     private var txtAbstract: Label by singleAssign()
 
-    private var txtReference: Label by singleAssign()
+    private var txtfldSearchSource: TextField by singleAssign()
+
+    private var txtSourcePreview: Label by singleAssign()
+
+    private var lstSourceSearchResult: ListView<Source> by singleAssign()
 
     private var txtTags: Label by singleAssign()
 
@@ -67,6 +81,10 @@ abstract class EditEntryViewBase : DialogFragment() {
 
 
     private val presenter: EditEntryPresenter
+
+    private val sourceSearchResults: ObservableList<Source> = FXCollections.observableArrayList()
+
+    private var lastSourceSearch: ReferenceSearch? = null
 
 
     private var item: Item? = null
@@ -87,6 +105,9 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     @Inject
     protected lateinit var readLaterArticleService: ReadLaterArticleService
+
+    @Inject
+    protected lateinit var searchEngine: ISearchEngine
 
     @Inject
     protected lateinit var clipboardService: IClipboardService
@@ -120,17 +141,49 @@ abstract class EditEntryViewBase : DialogFragment() {
                 useMaxWidth = true
             }
 
-            txtReference = label {
+            txtSourcePreview = label {
                 isWrapText = false
 
-                textProperty().bind(referencePreview)
+                textProperty().bind(sourcePreview)
+                visibleProperty().bind(isSourceSet)
+                FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
 
                 hgrow = Priority.ALWAYS
+            }
+
+            txtfldSearchSource = textfield {
+                visibleProperty().bind(isSourceSet.not())
+                FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
+
+                hgrow = Priority.ALWAYS
+
+                promptText = messages["find.source.prompt.text"]
+
+                textProperty().addListener { _, _, newValue -> searchSources(newValue) }
+                setOnKeyReleased { event ->
+                    if(event.code == KeyCode.ENTER) {
+                        createOrSelectSource()
+                    }
+                    else if(event.code == KeyCode.ESCAPE) {
+                        clear()
+                        hideSourceSearchResult()
+                    }
+                }
             }
 
             vboxConstraints {
                 marginBottom = 6.0
             }
+        }
+
+        lstSourceSearchResult = listview(sourceSearchResults) {
+            vgrow = Priority.ALWAYS
+            visibleProperty().bind(showSourceSearchResult)
+            FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
+
+            cellFragment(SourceListCellFragment::class)
+
+            onDoubleClick { setSource(selectionModel.selectedItem) }
         }
 
         hbox {
@@ -191,14 +244,14 @@ abstract class EditEntryViewBase : DialogFragment() {
         contentHtml.onChange { htmlEditor.setHtml(contentHtml.value) }
 
         wbvwShowUrl = webview {
-            isVisible = false
             useMaxWidth = true
+            isVisible = false
+            FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
 
             vboxConstraints {
                 vgrow = Priority.ALWAYS
             }
         }
-        FXUtils.ensureNodeOnlyUsesSpaceIfVisible(wbvwShowUrl)
 
         wbvwShowUrl.engine.loadWorker.stateProperty().addListener { _, _, newState ->
             if(newState === Worker.State.SUCCEEDED) {
@@ -210,6 +263,43 @@ abstract class EditEntryViewBase : DialogFragment() {
         val buttons = DialogButtonBar({ closeDialog() }, { saveEntryAsync(it) }, hasUnsavedChanges.value, messages["action.save"])
         add(buttons)
     }
+
+    private fun searchSources(searchTerm: String) {
+        lastSourceSearch?.interrupt()
+
+        lastSourceSearch = ReferenceSearch(searchTerm) { result ->
+            FXUtils.runOnUiThread { retrievedSourceSearchResultsOnUiThread(result) }
+        }
+
+        lastSourceSearch?.let { searchEngine.searchReferences(it) }
+    }
+
+    private fun retrievedSourceSearchResultsOnUiThread(result: List<Source>) {
+        sourceSearchResults.setAll(result)
+        showSourceSearchResult.value = true
+    }
+
+    private fun createOrSelectSource() {
+        if(sourceSearchResults.size == 1) {
+            setSource(sourceSearchResults[0])
+        }
+        else if(sourceSearchResults.size == 0 && txtfldSearchSource.text.isNotBlank()) {
+            hideSourceSearchResult()
+            // TODO: create Source
+        }
+    }
+
+    private fun setSource(source: Source?) {
+        sourceToEdit = source
+
+        hideSourceSearchResult()
+        showSourcePreview(source, source?.series)
+    }
+
+    private fun hideSourceSearchResult() {
+        showSourceSearchResult.value = false
+    }
+
 
     protected open fun urlLoaded(url: String, html: String) {
 
@@ -275,7 +365,7 @@ abstract class EditEntryViewBase : DialogFragment() {
         showContent(item, source, contentToEdit)
 
         showTagsPreview(tagsOnEntry)
-        showReferencePreview(source, series)
+        showSourcePreview(source, series)
     }
 
     private fun showContent(item: Item, source: Source?, contentToEdit: String?) {
@@ -298,8 +388,9 @@ abstract class EditEntryViewBase : DialogFragment() {
         }
     }
 
-    private fun showReferencePreview(source: Source?, series: Series?) {
-        this.referencePreview.value = source?.getPreviewWithSeriesAndPublishingDate(series) ?: ""
+    private fun showSourcePreview(source: Source?, series: Series?) {
+        this.isSourceSet.value = source != null
+        this.sourcePreview.value = source?.getPreviewWithSeriesAndPublishingDate(series) ?: ""
     }
 
     private fun showTagsPreview(tags: Collection<Tag>) {
