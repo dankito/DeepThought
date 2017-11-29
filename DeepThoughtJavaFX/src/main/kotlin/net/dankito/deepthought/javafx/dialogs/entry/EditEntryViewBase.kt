@@ -7,6 +7,7 @@ import javafx.collections.ObservableList
 import javafx.collections.ObservableSet
 import javafx.collections.SetChangeListener
 import javafx.concurrent.Worker
+import javafx.geometry.Pos
 import javafx.scene.Cursor
 import javafx.scene.control.Control
 import javafx.scene.control.Label
@@ -22,6 +23,7 @@ import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.javafx.dialogs.entry.controls.SourceListCellFragment
+import net.dankito.deepthought.javafx.dialogs.source.EditSourceDialog
 import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
 import net.dankito.deepthought.javafx.ui.controls.JavaFXHtmlEditor
 import net.dankito.deepthought.javafx.util.FXUtils
@@ -80,6 +82,8 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     private var editAbstractDialog: EditHtmlDialog? = null
 
+    private var editSourceDialog: EditSourceDialog? = null
+
 
     private val presenter: EditEntryPresenter
 
@@ -135,6 +139,7 @@ abstract class EditEntryViewBase : DialogFragment() {
         hbox {
             prefHeight = 20.0
             maxHeight = 70.0
+            alignment = Pos.CENTER_LEFT
             prefWidthProperty().bind(this@vbox.widthProperty())
 
             label(messages["edit.item.source.label"]) {
@@ -148,6 +153,9 @@ abstract class EditEntryViewBase : DialogFragment() {
                 textProperty().bind(sourcePreview)
                 visibleProperty().bind(isSourceSet)
                 FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
+
+                cursor = Cursor.HAND
+                setOnMouseClicked { sourceClicked(it) }
 
                 hgrow = Priority.ALWAYS
             }
@@ -261,7 +269,9 @@ abstract class EditEntryViewBase : DialogFragment() {
             }
         }
 
-        val buttons = DialogButtonBar({ closeDialog() }, { saveEntryAsync(it) }, hasUnsavedChanges.value, messages["action.save"])
+        // TODO: we're not setting hasUnsavedChanges when there are changes so set hasUnsavedChanges to true in order to enable save button
+        hasUnsavedChanges.value = true
+        val buttons = DialogButtonBar({ closeDialog() }, { saveEntryAsync(it) }, hasUnsavedChanges, messages["action.save"])
         add(buttons)
     }
 
@@ -349,6 +359,18 @@ abstract class EditEntryViewBase : DialogFragment() {
             }
             else {
                 editAbstractDialog?.currentStage?.requestFocus()
+            }
+        }
+    }
+
+    private fun sourceClicked(event: MouseEvent) {
+        if(event.button == MouseButton.PRIMARY) {
+            if(editSourceDialog == null) {
+                editSourceDialog = find(EditSourceDialog::class, mapOf(EditSourceDialog::source to (sourceToEdit ?: Source(""))))
+                editSourceDialog?.show(messages["edit.item.summary.dialog.title"], owner = currentStage ) // TODO: add icon
+            }
+            else {
+                editSourceDialog?.currentStage?.requestFocus()
             }
         }
     }
