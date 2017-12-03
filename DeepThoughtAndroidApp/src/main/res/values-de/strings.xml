@@ -53,7 +53,7 @@
     <string name="search_hint_items">Einträge suchen</string>
     <string name="search_hint_tags">Schlagworte suchen</string>
     <string name="search_hint_sources">Quellen suchen</string>
-    <string name="search_hint_read_later_articles">Später lesen Artikel suchen</string>
+    <string name="search_hint_read_later_articles">Vorgemerkte Artikel suchen</string>
 
 
     <!-- Wenn du im Hauptfenster bei den Schlagwörtern auf das Filtersymbol eines Schlagwortes tippst -->
@@ -67,23 +67,24 @@
     <!-- Removed <p></p> from last paragraph as otherwise txtOnboardingText has some padding at end and and PointToFloatingActionButtonArrow therefore doesn't reach to text -->
     <string name="tab_items_onboarding_text"><![CDATA[
         <p>Es gibt drei Wege Daten zu DeepThought hinzuzufügen:</p>
-        <p>Für <b>eigene Texte (Notizen, Gedanken, …)</b> klicken Sie auf das <b>(+) Symbol</b> unten rechts und wählen <b>Eintrag</b>.</p>
-        <p>Um eine <b>Webseite</b> zu speichern wählen Sie in Ihrem Browser im <b>Teilen Menü</b> (unter <img src=\"ic_more_vert_white_48dp\" /> / <img src=\"ic_share_white_48dp\" />) DeepThought.</p>
-        Um einen <b>Zeitungsartikel mittels eines RSS Feeds</b> zu speichern, klicken Sie auf das <b>(+) Symbol</b> unten rechts und wählen <b>Zeitungsartikel</b>.
+        <p>Um <b>eigene Texte </b> anzulegen, klicken Sie auf den <b>(+)</b> Button unten rechts und wählen Sie <b>Eintrag</b>.</p>
+        <p>Um eine <b>Webseite</b> zu speichern, rufen Sie die Seite in Ihrem Browser auf und wählen unter&nbsp;<img src=\"ic_more_vert_white_48dp\" /> Teilen bzw. <img src=\"ic_share_white_48dp\" /> und dann DeepThought.</p>
+        Um einen <b>Zeitungsartikel mittels eines RSS Feeds</b> zu speichern, klicken Sie auf den <b>(+)</b> Button unten rechts und wählen <b>Zeitungsartikel</b>.
     ]]></string>
     <string name="tab_tags_onboarding_text"><![CDATA[
-        <p>Schlagworte helfen Ihnen dabei Ihre Einträge zu ordnen und sie schneller wiederzufinden.</p>
-        <p>Wählen Sie unter <b>Einträge</b> in den Tabs unten links einen Eintrag aus und fügen Sie diesem Schlagworte hinzu.</p>
+        <p>Schlagworte helfen Ihnen dabei Ihre Einträge zu ordnen und schneller wiederzufinden.</p>
+        <p>Bisher haben Sie noch keine Schlagworte vergeben.</p>
+        <p>Wählen Sie unter <b>Einträge</b> unten links einen bestehenden Eintrag aus und fügen Sie diesem über den (+)Button Schlagworte hinzu.</p>
     ]]>
     </string>
     <string name="tab_source_onboarding_text"><![CDATA[
-        <p>Fügen Sie Ihren Einträgen eine Quelle hinzu, um sich zu erinnern, wo Sie diese Information gefunden haben (unter welcher Webadresse, in welchem Buch, in welcher Zeitung, …).</p>
-        <p>Wählen Sie unter <b>Einträge</b> in den Tabs unten links einen Eintrag aus und fügen Sie eine Quelle hinzu.</p>
+        <p>Fügen Sie Ihren Einträgen eine Quelle hinzu, um sich zu erinnern, in welchem Buch, unter welcher Webadresse oder an welchem anderen Ort Sie einen Text gefunden haben.</p>
+        <p>Wählen Sie unter <b>Einträge</b> unten links einen Eintrag aus und fügen Sie eine Quelle hinzu.</p>
 
     ]]></string>
     <string name="tab_read_later_articles_onboarding_text"><![CDATA[
-        <p>Artikel zum später Lesen werden offline gespeichert, so dass Sie diese später lesen können – auch ohne Internetverbindung. Später lesen Artikel werden vorerst nicht in Ihre Einträge-Sammlung übernommen.</p>
-        <p>Drücken Sie das <b>(+) Symbol</b>, wählen <b>Zeitungsartikel</b> und drücken dort bei einem Artikel <b>Später lesen</b>.</p>
+        <p>Artikel zum später Lesen werden offline gespeichert, so dass Sie diese später lesen können – auch ohne Internetverbindung. Diese Artikel werden vorerst nicht in Ihre Einträge-Sammlung übernommen.</p>
+        <p>Legen Sie über den <b>(+)</b> Button einen <b>Zeitungsartikel</b> an und klicken dort auf <b>Später lesen</b>.</p>
     ]]>
     </string>
 
@@ -92,12 +93,12 @@
     <!-- In der kommenden Version werden zunächst auch die Schlagworte ausgeblendet, d. h. dann kann man alles über den + Button hinzufügen. -->
 
     <string name="activity_edit_item_edit_content_onboarding_text"><![CDATA[
-        Klicken Sie hier um die zu speichernde Information einzugeben.
+        Klicken Sie hier, um die Information einzugeben, die sie speichern möchten.
     ]]>
     </string>
 
     <string name="activity_edit_item_add_item_properties_onboarding_text"><![CDATA[
-        Klicken sie auf das <b>(+) Symbol</b> unten rechts, um <b>Schlagworte</b>, eine <b>Quelle</b> oder einen <b>Titel</b> zu Ihrem Eintrag hinzuzufügen.
+        Klicken sie auf den <b>(+)</b> Button unten rechts, um Ihrem Eintrag ein <b>Schlagworte</b>, eine <b>Quelle</b> oder einen <b>Titel</b> hinzuzufügen.
     ]]>
     </string>
 
