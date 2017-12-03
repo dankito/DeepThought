@@ -1,40 +1,32 @@
 package net.dankito.deepthought.android
 
 import android.app.Activity
-import android.support.test.InstrumentationRegistry.getTargetContext
+import android.support.test.InstrumentationRegistry.getInstrumentation
+import android.support.test.espresso.core.deps.guava.collect.Iterables
 import android.support.test.rule.ActivityTestRule
-import net.dankito.deepthought.android.di.ActivitiesModule
-import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.test.DaggerTestComponent
-import net.dankito.deepthought.android.test.TestComponent
-import net.dankito.deepthought.di.BaseComponent
-import net.dankito.deepthought.di.CommonComponent
-import net.dankito.deepthought.di.CommonModule
-import net.dankito.deepthought.model.*
-import net.dankito.deepthought.service.data.DataManager
-import net.dankito.service.data.DeleteEntityService
-import net.dankito.service.data.ReadLaterArticleService
-import javax.inject.Inject
+import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
+import android.support.test.runner.lifecycle.Stage
 
 
 class DeepThoughtActivityTestRule<T : Activity>(activityClass: Class<T>) : ActivityTestRule<T>(activityClass) {
 
 
-    init {
-        setupDi()
-    }
+    /**
+     * Returns the currently displayed Activity.
+     * @return
+     */
+    fun getCurrentActivity(): Activity {
+        getInstrumentation().waitForIdleSync()
+        val activity = arrayOfNulls<Activity>(1)
 
+        getInstrumentation().runOnMainSync(Runnable {
+            val activities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED)
+            if (activities.size > 0) {
+                activity[0] = Iterables.getOnlyElement(activities)
+            }
+        })
 
-    private fun setupDi() {
-        val component = DaggerTestComponent.builder()
-                .commonModule(CommonModule())
-                .activitiesModule(ActivitiesModule(getTargetContext()))
-                .build()
-
-        BaseComponent.component = component
-        CommonComponent.component = component
-        AppComponent.setComponentInstance(component)
-        TestComponent.setComponentInstance(component)
+        return activity[0]!!
     }
 
 

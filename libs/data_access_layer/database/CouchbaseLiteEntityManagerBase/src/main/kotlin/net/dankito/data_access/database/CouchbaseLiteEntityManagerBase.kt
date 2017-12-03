@@ -152,11 +152,11 @@ abstract class CouchbaseLiteEntityManagerBase(protected var context: Context, pr
         return false
     }
 
-    override fun updateEntities(entities: List<*>): Boolean {
+    override fun updateEntities(entities: List<Any>): Boolean {
         var result = true
 
-        for (entity in entities) {
-            result = result and updateEntity(entity as Any)
+        for(entity in entities) {
+            result = result and updateEntity(entity)
         }
 
         return result

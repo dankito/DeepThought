@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+            package="net.dankito.deepthought.android.test">
+
+
+    <instrumentation
+        android:name="android.support.test.runner.AndroidJUnitRunner"
+        android:functionalTest="false"
+        android:handleProfiling="false"
+        android:label="Tests for DeepThought"
+        android:targetPackage="net.dankito.deepthought.android" />
+
+
+    <application
+        android:icon="@mipmap/app_icon"
+        android:label="DeepThought UI Test Runner"
+    >
+
+    </application>
+
+</manifest>

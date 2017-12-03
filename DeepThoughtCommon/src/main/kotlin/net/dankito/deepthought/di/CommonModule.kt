@@ -34,6 +34,7 @@ import net.dankito.service.search.LuceneSearchEngine
 import net.dankito.service.synchronization.ConnectedDevicesService
 import net.dankito.service.synchronization.CouchbaseLiteSyncManager
 import net.dankito.service.synchronization.ISyncManager
+import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.IPlatformConfiguration
@@ -49,56 +50,56 @@ import javax.inject.Singleton
 
 
 @Module
-class CommonModule {
+open class CommonModule {
 
     @Provides
     @Singleton
-    fun provideLocalization() : Localization {
+    open fun provideLocalization() : Localization {
         return Localization()
     }
 
 
     @Provides
     @Singleton
-    fun provideWebClient() : IWebClient {
+    open fun provideWebClient() : IWebClient {
         return OkHttpWebClient()
     }
 
     @Provides
     @Singleton
-    fun provideNetworkHelper() : NetworkHelper {
+    open fun provideNetworkHelper() : NetworkHelper {
         return NetworkHelper()
     }
 
 
     @Provides
     @Singleton
-    fun provideOsHelper(platformConfiguration: IPlatformConfiguration) : OsHelper {
+    open fun provideOsHelper(platformConfiguration: IPlatformConfiguration) : OsHelper {
         return OsHelper(platformConfiguration)
     }
 
     @Provides
     @Singleton
-    fun provideHtmlEditorExtractor(dataManager: DataManager, osHelper: OsHelper) : HtmlEditorExtractor {
+    open fun provideHtmlEditorExtractor(dataManager: DataManager, osHelper: OsHelper) : HtmlEditorExtractor {
         return HtmlEditorExtractor(dataManager, osHelper)
     }
 
     @Provides
     @Singleton
-    fun provideImageCache(webClient: IWebClient, serializer: ISerializer, fileStorageService: IFileStorageService) : ImageCache {
+    open fun provideImageCache(webClient: IWebClient, serializer: ISerializer, fileStorageService: IFileStorageService) : ImageCache {
         return ImageCache(webClient,serializer, fileStorageService)
     }
 
     @Provides
     @Singleton
-    fun provideTagsSearchResultsUtil() : TagsSearchResultsUtil {
+    open fun provideTagsSearchResultsUtil() : TagsSearchResultsUtil {
         return TagsSearchResultsUtil()
     }
 
 
     @Provides
     @Singleton
-    fun provideSearchEngine(dataManager: DataManager, languageDetector: ILanguageDetector, threadPool: IThreadPool, osHelper: OsHelper, eventBus: IEventBus,
+    open fun provideSearchEngine(dataManager: DataManager, languageDetector: ILanguageDetector, threadPool: IThreadPool, osHelper: OsHelper, eventBus: IEventBus,
                             entryService: EntryService, tagService: TagService,
                             referenceService: ReferenceService, seriesService: SeriesService, readLaterArticleService: ReadLaterArticleService) : ISearchEngine {
         return LuceneSearchEngine(dataManager, languageDetector, osHelper, threadPool, eventBus, entryService, tagService, referenceService, seriesService, readLaterArticleService)
@@ -107,85 +108,85 @@ class CommonModule {
 
     @Provides
     @Singleton
-    fun provideFaviconExtractor(webClient: IWebClient) : FaviconExtractor {
+    open fun provideFaviconExtractor(webClient: IWebClient) : FaviconExtractor {
         return FaviconExtractor(webClient)
     }
 
     @Provides
     @Singleton
-    fun provideFaviconComparator(webClient: IWebClient) : FaviconComparator {
+    open fun provideFaviconComparator(webClient: IWebClient) : FaviconComparator {
         return FaviconComparator(webClient)
     }
 
 
     @Provides
     @Singleton
-    fun provideArticleSummaryExtractorConfigManager(extractorManager: IImplementedArticleSummaryExtractorsManager, configService: ArticleSummaryExtractorConfigService, feedReader: IFeedReader)
+    open fun provideArticleSummaryExtractorConfigManager(extractorManager: IImplementedArticleSummaryExtractorsManager, configService: ArticleSummaryExtractorConfigService, feedReader: IFeedReader)
             : ArticleSummaryExtractorConfigManager {
         return ArticleSummaryExtractorConfigManager(extractorManager, configService, feedReader)
     }
 
     @Provides
     @Singleton
-    fun provideArticleExtractors(webClient: IWebClient) : ArticleExtractors {
+    open fun provideArticleExtractors(webClient: IWebClient) : ArticleExtractors {
         return ArticleExtractors(webClient)
     }
 
 
     @Provides
     @Singleton
-    fun provideFeedAddressExtractor(webClient: IWebClient) : FeedAddressExtractor {
+    open fun provideFeedAddressExtractor(webClient: IWebClient) : FeedAddressExtractor {
         return FeedAddressExtractor(webClient)
     }
 
     @Provides
     @Singleton
-    fun provideFeedReader(webClient: IWebClient) : IFeedReader {
+    open fun provideFeedReader(webClient: IWebClient) : IFeedReader {
         return RomeFeedReader(webClient)
     }
 
 
     @Provides
     @Singleton
-    fun provideNetworkSettings(dataManager: DataManager) : INetworkSettings {
+    open fun provideNetworkSettings(dataManager: DataManager) : INetworkSettings {
         return NetworkSettings(dataManager.localDevice, dataManager.localUser)
     }
 
     @Provides
     @Singleton
-    fun provideClientCommunicator(networkSettings: INetworkSettings, registrationHandler: IDeviceRegistrationHandler, entityManager: IEntityManager,
+    open fun provideClientCommunicator(networkSettings: INetworkSettings, registrationHandler: IDeviceRegistrationHandler, entityManager: IEntityManager,
                                   serializer: ISerializer, base64Service: IBase64Service, threadPool: IThreadPool) : IClientCommunicator {
         return TcpSocketClientCommunicator(networkSettings, registrationHandler, entityManager, serializer, base64Service, threadPool)
     }
 
     @Provides
     @Singleton
-    fun provideInitialSyncManager(entityManager: IEntityManager, localization: Localization) : InitialSyncManager {
+    open fun provideInitialSyncManager(entityManager: IEntityManager, localization: Localization) : InitialSyncManager {
         return InitialSyncManager(entityManager, localization)
     }
 
     @Provides
     @Singleton
-    fun provideSynchronizedChangesHandler(entityManager: IEntityManager, changesNotifier: EntityChangedNotifier) : SynchronizedChangesHandler {
+    open fun provideSynchronizedChangesHandler(entityManager: IEntityManager, changesNotifier: EntityChangedNotifier) : ISynchronizedChangesHandler {
         return SynchronizedChangesHandler(entityManager as CouchbaseLiteEntityManagerBase, changesNotifier)
     }
 
     @Provides
     @Singleton
-    fun provideSyncManager(entityManager: IEntityManager, changesHandler: SynchronizedChangesHandler, networkSettings: INetworkSettings) : ISyncManager {
+    open fun provideSyncManager(entityManager: IEntityManager, changesHandler: ISynchronizedChangesHandler, networkSettings: INetworkSettings) : ISyncManager {
         return CouchbaseLiteSyncManager(entityManager as CouchbaseLiteEntityManagerBase, changesHandler, networkSettings)
     }
 
     @Provides
     @Singleton
-    fun provideConnectedDevicesService(devicesDiscoverer: IDevicesDiscoverer, clientCommunicator: IClientCommunicator, syncManager: ISyncManager, registrationHandler: IDeviceRegistrationHandler,
+    open fun provideConnectedDevicesService(devicesDiscoverer: IDevicesDiscoverer, clientCommunicator: IClientCommunicator, syncManager: ISyncManager, registrationHandler: IDeviceRegistrationHandler,
                                        networkSettings: INetworkSettings, entityManager: IEntityManager) : ConnectedDevicesService {
         return ConnectedDevicesService(devicesDiscoverer, clientCommunicator, syncManager, registrationHandler, networkSettings, entityManager)
     }
 
     @Provides
     @Singleton
-    fun provideCommunicationManager(connectedDevicesService: ConnectedDevicesService, syncManager: ISyncManager, clientCommunicator: IClientCommunicator, networkSettings: INetworkSettings)
+    open fun provideCommunicationManager(connectedDevicesService: ConnectedDevicesService, syncManager: ISyncManager, clientCommunicator: IClientCommunicator, networkSettings: INetworkSettings)
             : ICommunicationManager {
         return CommunicationManager(connectedDevicesService, syncManager, clientCommunicator, networkSettings)
     }

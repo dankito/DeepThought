@@ -11,6 +11,12 @@ sourceSets {
 }
 
 
+test {
+    ignoreFailures = true
+    testLogging.showStandardStreams = true
+}
+
+
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
@@ -56,9 +62,4 @@ dependencies {
     testCompile project(':JavaCouchbaseLiteEntityManager')
     testCompile project(':CouchbaseLiteSyncManager')
     testCompile project(':FileStorageService')
-}
-
-
-test {
-    ignoreFailures = true
 }

@@ -15,8 +15,10 @@ class AllCalculatedTags(private val searchEngine: ISearchEngine, private val eve
 
 
     fun getCalculatedTags(): List<Tag> {
-        if(hasInitializedCalculatedTags == false) {
-            initCalculatedTags()
+        synchronized(this) {
+            if(hasInitializedCalculatedTags == false) {
+                initCalculatedTags()
+            }
         }
 
         return calculatedTags
