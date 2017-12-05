@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
-import kotlinx.android.synthetic.main.view_floating_action_button_main.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
@@ -26,17 +25,19 @@ class MainActivityFloatingActionMenuButton(floatingActionMenu: FloatingActionMen
     init {
         setup()
 
-        summaryExtractorsManager.addInitializationListener { setFavoriteArticleSummaryExtractors() }
+//        summaryExtractorsManager.addInitializationListener { setFavoriteArticleSummaryExtractors() }
     }
 
 
     private fun setup() {
-        floatingActionMenu.fab_add_entry.setOnClickListener { executeAndCloseMenu { router.showCreateEntryView() } }
-        floatingActionMenu.fab_add_newspaper_article.setOnClickListener { executeAndCloseMenu { router.showArticleSummaryExtractorsView() } }
+        floatingActionMenu.setOnMenuButtonClickListener { router.showCreateEntryView() }
 
-        setFavoriteArticleSummaryExtractors()
-
-        setupEventBusListener()
+//        floatingActionMenu.fab_add_entry.setOnClickListener { executeAndCloseMenu { router.showCreateEntryView() } }
+//        floatingActionMenu.fab_add_newspaper_article.setOnClickListener { executeAndCloseMenu { router.showArticleSummaryExtractorsView() } }
+//
+//        setFavoriteArticleSummaryExtractors()
+//
+//        setupEventBusListener()
     }
 
     private fun setupEventBusListener() {
