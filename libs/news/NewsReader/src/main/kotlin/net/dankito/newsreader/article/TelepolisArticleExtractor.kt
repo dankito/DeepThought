@@ -61,13 +61,11 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
     override fun parseArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleElement: Element, url: String, title: String) {
         val reference = extractReference(headerElement, articleElement, url, title)
 
-        val abstract = articleElement.select(".beitraganriss").first()?.text()?.trim() ?: ""
-
-        articleElement.select("header, footer, .beitraganriss").remove()
+        articleElement.select("header, footer").remove()
         makeLinksAbsolute(articleElement, url)
         val content = articleElement.children().joinToString("") { it.outerHtml()}
 
-        extractionResult.setExtractedContent(Item(content, abstract), reference)
+        extractionResult.setExtractedContent(Item(content), reference)
     }
 
     private fun extractReference(headerElement: Element, articleElement: Element, url: String, title: String): Source? {
@@ -84,11 +82,9 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
     private fun parsePrintVersionToArticle(extractionResult: ItemExtractionResult, articleElement: Element, url: String) {
         val reference = extractReferenceForPrintVersion(articleElement, url)
 
-        val abstract = articleElement.ownerDocument().head().select("meta[property=og:description]").first()?.attr("content")?.trim() ?: ""
-
         val content = extractContentForPringVersion(articleElement, url)
 
-        extractionResult.setExtractedContent(Item(content, abstract), reference)
+        extractionResult.setExtractedContent(Item(content), reference)
     }
 
     private fun extractContentForPringVersion(articleElement: Element, url: String): String {

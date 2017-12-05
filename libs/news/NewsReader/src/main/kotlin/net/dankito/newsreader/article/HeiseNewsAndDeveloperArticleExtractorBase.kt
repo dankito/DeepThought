@@ -66,18 +66,16 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
     private fun parseMobileArticle(extractionResult: ItemExtractionResult, article: Element, url: String) {
         val reference = extractMobileArticleReference(article, url)
 
-        val abstract = article.select("p.lead_text").first()?.text()?.trim() ?: ""
-
         cleanContentElement(article)
         article.select("h1").remove()
 
         val content = article.html()
 
-        extractionResult.setExtractedContent(Item(content, abstract), reference)
+        extractionResult.setExtractedContent(Item(content), reference)
     }
 
     protected fun cleanContentElement(contentElement: Element) {
-        contentElement.select("h1, time, span.author, a.comments, p.lead_text, .comment, .btn-toolbar, .whatsbroadcast-toolbar, #whatsbroadcast, " +
+        contentElement.select("h1, time, span.author, a.comments, .comment, .btn-toolbar, .whatsbroadcast-toolbar, #whatsbroadcast, " +
                 ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta, .widget-werbung, .ad_container, .ad_content").remove()
 
         removeEmptyParagraphs(contentElement, Arrays.asList("video"))

@@ -21,7 +21,6 @@ class HeiseDeveloperArticleExtractor(webClient: IWebClient) : HeiseNewsAndDevelo
     override fun parseArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleElement: Element, url: String, title: String) {
         articleElement.select(".article-content").first()?.let { contentElement ->
             val entry = Item(extractContent(articleElement, url))
-            contentElement.select(".article-content__lead").first()?.text()?.let { entry.summary = it }
 
             val publishingDate = extractPublishingDate(headerElement)
             val reference = Source(title, url, publishingDate)
@@ -38,7 +37,7 @@ class HeiseDeveloperArticleExtractor(webClient: IWebClient) : HeiseNewsAndDevelo
     }
 
     private fun shouldFilterElement(element: Element): Boolean {
-        return element.hasClass("article-content__lead") || element.hasClass("widget-werbung")
+        return element.hasClass("widget-werbung")
     }
 
 }

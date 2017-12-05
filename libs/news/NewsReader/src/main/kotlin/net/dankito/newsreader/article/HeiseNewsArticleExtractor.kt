@@ -43,14 +43,11 @@ class HeiseNewsArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
             reference.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), url)
         }
 
-        val abstract = articleContentElement.select(".article-content__lead").first()?.text() ?: ""
-
         cleanContentElement(articleContentElement)
-        articleContentElement.select(".article-content__lead").remove()
 
         makeLinksAbsolute(articleContentElement, url)
 
-        extractionResult.setExtractedContent(Item(articleContentElement.outerHtml(), abstract), reference)
+        extractionResult.setExtractedContent(Item(articleContentElement.outerHtml()), reference)
     }
 
 

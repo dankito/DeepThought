@@ -67,15 +67,13 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         val reference = extractReference(siteContent, siteUrl)
 
         siteContent.select("#article-body").first()?.let { articleBody ->
-            val abstract = articleBody.select(".entry-summary").first()?.html() ?: ""
-
             var content = loadLazyLoadingElementsAndGetContent(siteContent, articleBody)
 
             extractTopEnrichment(siteContent, reference, siteUrl)?.let { topEnrichment ->
                 content = "<div>" + topEnrichment.outerHtml() + "</div>" + content
             }
 
-            val entry = Item(content, abstract)
+            val entry = Item(content)
 
             extractionResult.setExtractedContent(entry, reference)
         }
@@ -120,7 +118,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
     private fun cleanArticleBody(articleBody: Element) {
-        articleBody.select(".entry-summary, #article-sidebar-wrapper, #sharingbaranchor, .ad, .authors, .teaserable-layout, .flexible-teaser").remove()
+        articleBody.select("#article-sidebar-wrapper, #sharingbaranchor, .ad, .authors, .teaserable-layout, .flexible-teaser").remove()
 
         // remove scripts with try{window.performance.mark('monitor_articleTeaser');}catch(e){};
         articleBody.select("script").filter { it.html().contains("window.performance.mark") }.forEach { it.remove() }
@@ -193,15 +191,13 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     private fun extractGalleryArticle(extractionResult: ItemExtractionResult, galleryArticleElement: Element, siteUrl: String) {
         val reference = extractReference(galleryArticleElement, siteUrl)
 
-        val abstract = galleryArticleElement.select(".entry-summary").first()?.text() ?: ""
-
         galleryArticleElement.select("#article-body").first()?.let { articleBody ->
             val content = StringBuilder()
             readHtmlOfAllImagesInGallery(content, articleBody, siteUrl)
 
             articleBody.select(".offscreen").first()?.let { reference?.publishingDate = parseSueddeutscheDateString(it.text()) }
 
-            extractionResult.setExtractedContent(Item(content.toString(), abstract), reference)
+            extractionResult.setExtractedContent(Item(content.toString()), reference)
         }
     }
 

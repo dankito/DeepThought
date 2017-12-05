@@ -1,11 +1,9 @@
 package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
-import net.dankito.newsreader.model.ArticleSummaryItem
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Node
@@ -29,14 +27,6 @@ class PostillonArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
         return isHttpOrHttpsUrlFromHost(url, "www.der-postillon.com/")
     }
 
-
-    override fun extractArticleAsync(item: ArticleSummaryItem, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
-        super.extractArticleAsync(item) {
-            it.result?.let { it.item.summary = item.summary } // it's very hard to extract abstract from html code, so use that one from ArticleSummaryItem
-
-            callback(it)
-        }
-    }
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select(".post").first()?.let { postElement ->
