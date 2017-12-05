@@ -45,7 +45,7 @@ class TechStageArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
     }
 
     private fun cleanContent(contentElement: Element) {
-        contentElement.select("#article_comments, #article_navigation, .meta, .rectangle_ad, .ad_container ,.ad_content, #pvg-deals-anchor, .pvgs, .a-pvgs, " +
+        contentElement.select("#article_comments, #article_navigation, .meta, .rectangle_ad, .ad_container ,.ad_content, #pvg-deals-anchor, .pvgs, .a-pvgs, .a-pvg, " +
                 ".article_tags_hl, .article_tags").remove()
 
         contentElement.parent().select("#article_content > aside").first()?.let { asideElement ->

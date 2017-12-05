@@ -5,9 +5,7 @@ import tornadofx.*
 
 
 class DialogButtonBar(private val closeDialogListener: () -> Unit, private val saveChangesListener: (done: () -> Unit) -> Unit,
-                      hasUnsavedChangesInitialValue: Boolean = false, okButtonTitle: String? = null) : View() {
-
-    val hasUnsavedChanges = SimpleBooleanProperty(hasUnsavedChangesInitialValue)
+                      private val hasUnsavedChanges: SimpleBooleanProperty = SimpleBooleanProperty(true), okButtonTitle: String? = null) : View() {
 
     private val okButtonTitleValue = okButtonTitle ?: messages["action.ok"]
 
@@ -37,7 +35,7 @@ class DialogButtonBar(private val closeDialogListener: () -> Unit, private val s
                 maxHeight = 40.0
                 prefWidth = 150.0
 
-                disableProperty().bind(hasUnsavedChanges)
+                disableProperty().bind(hasUnsavedChanges.not())
 
                 action { saveChangesAndCloseDialog() }
             }
