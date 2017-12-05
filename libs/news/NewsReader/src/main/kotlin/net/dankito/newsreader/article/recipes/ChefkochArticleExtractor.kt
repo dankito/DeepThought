@@ -22,7 +22,6 @@ class ChefkochArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(web
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("div.content-wrapper.clearfix").first()?.let { contentWrapper ->
             var title = ""
-            var summary = ""
             var content = ""
 
             contentWrapper.select("h1.page-title").first()?.let { pageTitle ->
@@ -31,7 +30,6 @@ class ChefkochArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(web
             }
 
             contentWrapper.select("div.summary").first()?.let { summaryElement ->
-                summary = summaryElement.text().trim()
                 content += summaryElement.outerHtml()
             }
 
@@ -50,7 +48,7 @@ class ChefkochArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(web
                 content += mainContent.outerHtml()
             }
 
-            extractionResult.setExtractedContent(Item(content, summary), Source(title, url))
+            extractionResult.setExtractedContent(Item(content), Source(title, url))
         }
     }
 

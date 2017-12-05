@@ -54,8 +54,6 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
     }
 
     private fun createEntry(url: String, sectionElement: Element): Item {
-        val abstractString = sectionElement.select("p.article_page_intro strong").html()
-
         var content = ""
 
         makeLinksAbsolute(sectionElement, url)
@@ -63,6 +61,10 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
 
         sectionElement.select("div.article_page_img img").first()?.let { pageImgElement ->
             content += pageImgElement.outerHtml()
+        }
+
+        sectionElement.select("p.article_page_intro strong").first()?.let { summaryElement ->
+            content += summaryElement.parent().outerHtml()
         }
 
         sectionElement.select("div.article_page_text").first()?.let { articlePageTextElement ->
@@ -76,7 +78,7 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
 
         content += extractPatchesIfAny(sectionElement)
 
-        return Item(content, abstractString)
+        return Item(content)
     }
 
     private fun extractPatchesIfAny(sectionElement: Element): String {
@@ -124,13 +126,11 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
     private fun parseMobileSite(url: String, article: Element, extractionResult: ItemExtractionResult) {
         val reference = extractMobileArticleReference(article, url)
 
-        val abstract = article.select("p.lead_text").first()?.text()?.trim() ?: ""
-
-        article.select("h1, time, span.author, a.comments, p.lead_text, .comment, .btn-toolbar .whatsbroadcast-toolbar, #whatsbroadcast, " +
+        article.select("h1, time, span.author, a.comments, .comment, .btn-toolbar .whatsbroadcast-toolbar, #whatsbroadcast, " +
                 ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta, .widget-werbung").remove()
         val content = article.html()
 
-        extractionResult.setExtractedContent(Item(content, abstract), reference)
+        extractionResult.setExtractedContent(Item(content), reference)
     }
 
     private fun extractMobileArticleReference(article: Element, url: String): Source {

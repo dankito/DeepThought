@@ -1,11 +1,9 @@
 package net.dankito.newsreader.article
 
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
-import net.dankito.newsreader.model.ArticleSummaryItem
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.text.SimpleDateFormat
@@ -28,14 +26,6 @@ class TagesschauArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
     }
 
 
-    override fun extractArticleAsync(item: ArticleSummaryItem, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
-        super.extractArticleAsync(item) {
-            it.result?.let { it.item.summary = item.summary } // it's very hard to extract abstract from html code, so use that one from ArticleSummaryItem
-
-            callback(it)
-        }
-    }
-
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("#content .storywrapper").first()?.let { contentElement ->
             extractEntry(contentElement)?.let { entry ->
@@ -48,33 +38,14 @@ class TagesschauArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
 
     private fun extractEntry(contentElement: Element): Item? {
         contentElement.select(".sectionZ .modParagraph").first()?.let { articleContentElement ->
-            val abstract = extractAbstract(articleContentElement)
-
             cleanArticleContentElement(articleContentElement)
 
             val content = articleContentElement.outerHtml()
 
-            return Item(content, abstract)
+            return Item(content)
         }
 
         return null
-    }
-
-    private fun extractAbstract(articleContentElement: Element): String {
-        var abstract = ""
-
-        val firstChild = articleContentElement.child(0)
-        if(isAbstractElement(firstChild)) {
-            abstract = firstChild.child(0).text().trim()
-            firstChild.remove()
-        }
-
-        return abstract
-    }
-
-    private fun isAbstractElement(firstChild: Element?): Boolean {
-        return firstChild != null && firstChild.hasClass("text") &&
-                firstChild.child(0) != null && firstChild.child(0).tagName() == "strong"
     }
 
     private fun cleanArticleContentElement(articleContentElement: Element) {

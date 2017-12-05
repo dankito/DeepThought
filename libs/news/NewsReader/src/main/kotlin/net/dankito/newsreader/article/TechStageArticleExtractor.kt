@@ -25,28 +25,17 @@ class TechStageArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
             articleElement.select("#article_content").first()?.let { contentElement ->
                 val reference = extractReference(articleElement, contentElement, url)
 
-                val abstract = extractAbstract(contentElement)
-
                 cleanContent(contentElement)
 
-                extractionResult.setExtractedContent(Item(contentElement.outerHtml(), abstract), reference)
+                extractionResult.setExtractedContent(Item(contentElement.outerHtml()), reference)
             }
         }
     }
 
-    private fun extractAbstract(contentElement: Element): String {
-        var abstract = ""
-        val abstractParagraph = contentElement.select("p > strong").first()
-        abstractParagraph?.let {
-            abstract = abstractParagraph.text().trim()
-            abstractParagraph.remove()
-        }
-        return abstract
-    }
-
     private fun cleanContent(contentElement: Element) {
+        // TODO: remove asides ?
         contentElement.select("#article_comments, #article_navigation, .meta, .rectangle_ad, .ad_container ,.ad_content, #pvg-deals-anchor, .pvgs, .a-pvgs, .a-pvg, " +
-                ".article_tags_hl, .article_tags").remove()
+                ".techstage--aside-pvg-header, .article_tags_hl, .article_tags").remove()
 
         contentElement.parent().select("#article_content > aside").first()?.let { asideElement ->
             ArrayList(asideElement.children()).forEach { childElement ->

@@ -28,13 +28,10 @@ class TazArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClien
         document.body().select(".sectbody").first()?.let { bodyElement ->
             val reference = extractReference(document, url, bodyElement)
 
-            var abstract = ""
-            bodyElement.select("p.intro").first()?.let { abstract = it.text().trim() }
-
-            bodyElement.select("h1, h4, .intro, .caption, .rack, .ad_bin, .contentad, .sold").remove()
+            bodyElement.select("h1, h4, .caption, .rack, .ad_bin, .contentad, .sold").remove()
             val content = bodyElement.children().joinToString("") { it.outerHtml() }
 
-            extractionResult.setExtractedContent(Item(content, abstract), reference)
+            extractionResult.setExtractedContent(Item(content), reference)
         }
     }
 

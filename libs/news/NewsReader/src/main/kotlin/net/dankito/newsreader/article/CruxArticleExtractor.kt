@@ -29,7 +29,7 @@ class CruxArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
 
         val previewImageUrl = if(article.imageUrl != null) makeLinkAbsolute(article.imageUrl, url) else null // article.imageUrl may be null
 
-        extractionResult.setExtractedContent(Item(content, article.description),
+        extractionResult.setExtractedContent(Item(content),
                 Source(article.title, url, previewImageUrl = previewImageUrl))
     }
 

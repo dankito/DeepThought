@@ -24,7 +24,7 @@ class HeiseDeveloperArticleExtractorTest : ArticleExtractorTestBase() {
         getAndTestArticle("https://m.heise.de/developer/meldung/Java-EE-soll-unter-dem-Dach-der-Eclipse-Foundation-landen-3830121.html",
                 "Java EE soll unter dem Dach der Eclipse Foundation landen",
                 "Nach Gesprächen vor allem mit IBM und Red Hat veröffentlicht Oracle konkrete Pläne für die Zukunft von Java EE. So sollen unter anderem Referenzimplementierungen und Technology Compatibility Kits künftig an die Eclipse Foundation relizenziert werden.",
-                "https://m.f.ix.de/scale/geometry/1280/q50/imgs/18/2/2/7/7/6/0/1/java-maschine-8e017762725b1260.jpeg@jpg", 4500)
+                "https://m.f.ix.de/scale/geometry/1280/q50/imgs/18/2/2/7/7/6/0/1/java-maschine-8e017762725b1260.jpeg@jpg", 4300)
     }
 
     @Test

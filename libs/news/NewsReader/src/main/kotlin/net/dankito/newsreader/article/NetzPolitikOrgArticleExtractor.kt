@@ -34,9 +34,7 @@ class NetzPolitikOrgArticleExtractor(webClient: IWebClient) : ArticleExtractorBa
             val title = articleElement.select(".entry-title").first()?.text() ?: ""
             val reference = Source(title, url, parsePublishingDate(articleElement), articleElement.select("figure img").first()?.attr("src"))
 
-            val abstract = articleElement.select(".entry-excerpt").first()?.html() ?: ""
-
-            val entry = Item(extractContent(articleElement), abstract)
+            val entry = Item(extractContent(articleElement))
 
             extractionResult.setExtractedContent(entry, reference)
         }
@@ -48,8 +46,9 @@ class NetzPolitikOrgArticleExtractor(webClient: IWebClient) : ArticleExtractorBa
             contentElement.select(".vgwort").remove()
 
             val previewImageHtml = articleElement.select("figure").first()?.outerHtml() ?: ""
+            val abstract = articleElement.select(".entry-excerpt").first()?.html() ?: ""
 
-            return previewImageHtml + contentElement.outerHtml()
+            return previewImageHtml + abstract + contentElement.outerHtml()
         }
 
         log.error("Could not find element with class 'entry-content'")

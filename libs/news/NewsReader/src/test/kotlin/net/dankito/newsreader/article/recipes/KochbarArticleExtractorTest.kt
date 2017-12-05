@@ -17,7 +17,7 @@ class KochbarArticleExtractorTest : ArticleExtractorTestBase() {
         getAndTestArticle("https://www.kochbar.de/rezept/528990/Joghurt-Maracuja-Torte.html",
                 "Joghurt-Maracuja-Torte",
                 "-frisch-fruchtig-fluffig-locker-leicht-",
-                null, 7600, true)
+                null, 6500, true)
     }
 
 }

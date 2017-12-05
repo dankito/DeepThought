@@ -54,7 +54,6 @@ class HeiseNewsArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
     // old version
     private fun parseMeldungWrapperArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleElement: Element, contentElement: Element, url: String, title: String) {
         val entry = Item(extractContent(articleElement, url))
-        contentElement.select(".meldung_anrisstext").first()?.text()?.let { entry.summary = it }
 
         val publishingDate = extractPublishingDate(headerElement)
         val reference = Source(title, url, publishingDate)
@@ -70,6 +69,6 @@ class HeiseNewsArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
     }
 
     private fun shouldFilterElement(element: Element): Boolean {
-        return element.hasClass("meldung_anrisstext") || element.hasClass("widget-werbung") || containsOnlyComment(element)
+        return element.hasClass("widget-werbung") || containsOnlyComment(element)
     }
 }

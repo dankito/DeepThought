@@ -24,7 +24,7 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
         getAndTestArticle("http://www.sueddeutsche.de/leben/kommune-revolution-am-bettrand-1.3544828",
                 "Revolution am Bettrand",
                 "Thomas Hesterberg machte 1967 das legendäre Foto der Kommune 1, auf dem die Bewohner ihre nackten Hintern der Kamera entgegenstrecken. Tatsächlich ging es in der Wohngemeinschaft gar nicht so freizügig zu.",
-                null, 10500)
+                null, 9000)
     }
 
     @Test
@@ -55,10 +55,10 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
     @Test
     fun extractArticleWithVideoInSummary() {
         getAndTestArticle("http://www.sueddeutsche.de/politik/spanien-madrid-uebernimmt-offiziell-kontrolle-in-katalonien-1.3728513",
-                "Madrid übernimmt offiziell Kontrolle in Katalonien",
+                "Madrid ruft Puigdemont zur Teilnahme bei Neuwahl in Katalonien auf",
                 null,
                 null,
-                2000, subTitle = "Spanien")
+                2000, subTitle = "Katalonien")
     }
 
     @Test
@@ -76,7 +76,7 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
                 "Stellt die Arbeitsagentur Hartz-IV-Empfänger bloß?",
                 null,
                 null,
-                5100, subTitle = "Agentur für Arbeit")
+                4900, subTitle = "Agentur für Arbeit")
     }
 
     @Test
@@ -85,7 +85,7 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
                 "Welche Filme sich lohnen und welche nicht",
                 "In \"Animals\" steht Birgit Minichmayr im Mittelpunkt eines komisch-gruseligen Verwirrspiels und mit \"The Big Sick\" ist Michael Showalter eine wunderbar unverkrampfte Indie-Komödie gelungen.",
                 null,
-                5100, subTitle = "Filmstarts der Woche ")
+                5100, subTitle = "Filmstarts der Woche")
     }
 
     @Test

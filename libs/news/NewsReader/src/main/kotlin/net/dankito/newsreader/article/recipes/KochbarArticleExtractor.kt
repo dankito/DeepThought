@@ -22,7 +22,6 @@ class KochbarArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
         document.body().select(".rezepte").first()?.let { recipeElement ->
             var title = ""
             var content = ""
-            var summary = ""
 
             recipeElement.select(".kb-recipe-headline h1").first()?.let { titleElement ->
                 title = titleElement.text().trim()
@@ -30,7 +29,6 @@ class KochbarArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
             }
 
             recipeElement.select(".subheadline").first()?.let { subHeadLine ->
-                summary = subHeadLine.text().trim()
                 content += subHeadLine.outerHtml()
             }
 
@@ -56,7 +54,7 @@ class KochbarArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
             }
 
 
-            extractionResult.setExtractedContent(Item(content, summary), source)
+            extractionResult.setExtractedContent(Item(content), source)
         }
     }
 

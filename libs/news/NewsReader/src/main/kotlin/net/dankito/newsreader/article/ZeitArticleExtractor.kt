@@ -62,16 +62,14 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
     }
 
     private fun createEntry(articleBodyElement: Element): Item {
-        val abstractString = articleBodyElement.select("div.summary").text()
-
         var content = ""
 
         // remove <noscript> elements which impede that <img>s in <figure> get loaded
         unwrapImagesFromNoscriptElements(articleBodyElement)
         articleBodyElement.select(".sharing-menu, .metadata").remove()
 
-        for(articleElement in articleBodyElement.select("p.article__item, ul.article__item, figure.article__item, .article__subheading, .article-heading__podcast-player, " +
-                ".article--video, div[data-collection-template], .gate--register, .gate")) { // .gate--register to show to user that you have to  register for viewing this article
+        for(articleElement in articleBodyElement.select("div.summary, p.article__item, ul.article__item, figure.article__item, .article__subheading, " +
+                ".article-heading__podcast-player, .article--video, div[data-collection-template], .gate--register, .gate")) { // .gate--register to show to user that you have to  register for viewing this article
             content += articleElement.outerHtml()
 
             if(articleElement.attr("data-collection-template").isBlank() == false) {
@@ -79,7 +77,7 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
             }
         }
 
-        return Item(content, abstractString)
+        return Item(content)
     }
 
     private fun loadDataCollection(articleElement: Element): String {

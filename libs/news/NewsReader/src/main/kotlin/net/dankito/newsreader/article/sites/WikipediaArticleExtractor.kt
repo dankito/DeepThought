@@ -22,7 +22,6 @@ class WikipediaArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         var title = ""
         var content = ""
-        var summary = ""
 
         document.body().select(".heading-holder h1").first()?.let { heading ->
             title = heading.text().trim()
@@ -35,8 +34,6 @@ class WikipediaArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
             makeLinksAbsolute(bodyContent, url)
 
             content += bodyContent.outerHtml()
-
-            tryToExtractSummary(bodyContent)?.let { summary = it }
         }
 
         var previewImageUrl: String? = null
@@ -44,7 +41,7 @@ class WikipediaArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
             previewImageUrl = makeLinkAbsolute(infoImage.attr("src"), url)
         }
 
-        extractionResult.setExtractedContent(Item(content, summary), Source(title, url, previewImageUrl = previewImageUrl))
+        extractionResult.setExtractedContent(Item(content), Source(title, url, previewImageUrl = previewImageUrl))
     }
 
     private fun tryToExtractSummary(bodyContent: Element): String? {

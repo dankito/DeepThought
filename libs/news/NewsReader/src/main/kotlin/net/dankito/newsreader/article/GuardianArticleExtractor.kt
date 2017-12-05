@@ -33,9 +33,10 @@ class GuardianArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(web
     }
 
     private fun extractArticle(extractionResult: ItemExtractionResult, url: String, articleElement: Element, titleElement: Element, contentMainElement: Element) {
-        val entry = Item(extractContent(contentMainElement))
+        val entry = Item(extractContent(contentMainElement, articleElement))
 
-        articleElement.select(".content__standfirst").first()?.let { entry.summary = it.text() }
+        // TODO: but then we don't have summary in database / index anymore -> try to add it to content
+//        articleElement.select(".content__standfirst").first()?.let { entry.summary = it.text() }
 
 
         val reference = Source(titleElement.text(), url, extractPublishingDate(contentMainElement))
@@ -57,10 +58,17 @@ class GuardianArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(web
         return null
     }
 
-    private fun extractContent(bodyElement: Element): String {
-        return bodyElement.children().filter { shouldFilterElement(it) == false }.joinToString(separator = "") {
+    private fun extractContent(bodyElement: Element, articleElement: Element): String {
+        val summary = articleElement.select(".content__standfirst").first()?.html()
+        return summary + bodyElement.children().filter { shouldFilterElement(it) == false }.joinToString(separator = "") {
             cleanHtml(it)
-            it.outerHtml()
+
+            if(it.hasClass("content__article-body") || it.attr("itemprop") == "articleBody") {
+                summary + it.outerHtml()
+            }
+            else {
+                it.outerHtml()
+            }
         }
     }
 

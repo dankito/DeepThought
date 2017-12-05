@@ -27,10 +27,7 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
             val contentElement = document.body().getElementById("content-main")
 
-            val articleSectionElements = document.body().getElementsByClass("article-section")
-            val articleIntroElements = contentElement.getElementsByClass("article-intro")
-
-            val entry = createEntry(articleSectionElements, articleIntroElements)
+            val entry = createEntry(contentElement)
 
             val reference = extractReference(url, contentElement)
 
@@ -38,11 +35,14 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
 
     }
 
-    private fun createEntry(articleSectionElements: Elements, articleIntroElements: Elements): Item {
-        val content = extractContentFromArticleSection(articleSectionElements)
-        val abstractString = extractAbstractFromArticleIntro(articleIntroElements) ?: ""
+    private fun createEntry(contentElement: Element): Item {
+        val articleSectionElements = contentElement.ownerDocument().body().getElementsByClass("article-section")
 
-        return Item(content, abstractString)
+        var content = contentElement.select("#js-article-top-wide-asset").first()?.outerHtml() ?: "" // preview image
+        content += contentElement.select(".article-intro").first()?.outerHtml() ?: "" // summary
+        content += extractContentFromArticleSection(articleSectionElements) // article body
+
+        return Item(content)
     }
 
     private fun extractContentFromArticleSection(articleSectionElements: Elements): String {
@@ -107,28 +107,6 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
 
     private fun resolveTextLinks(contentHtml: String): String {
         return contentHtml.replace("<a href=\"/", "<a href=\"http:www.spiegel.de/")
-    }
-
-    private fun extractAbstractFromArticleIntro(articleIntroElements: Elements): String? {
-        for (articleIntroElement in articleIntroElements) {
-            if ("p" == articleIntroElement.nodeName()) {
-                return extractAbstractFromArticleIntro(articleIntroElement)
-            }
-        }
-
-        return null
-    }
-
-    private fun extractAbstractFromArticleIntro(articleIntroElement: Element): String {
-        var abstractString = ""
-        for (child in articleIntroElement.children()) {
-            if ("strong" == child.nodeName())
-                abstractString += child.html()
-            else
-                abstractString += child.html()
-        }
-
-        return abstractString
     }
 
     private fun extractReference(articleUrl: String, contentElement: Element): Source {

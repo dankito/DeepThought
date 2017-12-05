@@ -82,12 +82,13 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
     private fun parsePrintVersionToArticle(extractionResult: ItemExtractionResult, articleElement: Element, url: String) {
         val reference = extractReferenceForPrintVersion(articleElement, url)
 
-        val content = extractContentForPringVersion(articleElement, url)
+        // TODO: now we don't have the summary anymore (print version doesn't have it in Fliesstext) -> try to add it
+        val content = extractContentForPrintVersion(articleElement, url)
 
         extractionResult.setExtractedContent(Item(content), reference)
     }
 
-    private fun extractContentForPringVersion(articleElement: Element, url: String): String {
+    private fun extractContentForPrintVersion(articleElement: Element, url: String): String {
         var content = ""
 
         var contentElement = articleElement.select(".content").first()

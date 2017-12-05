@@ -29,28 +29,12 @@ class DerFreitagArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("article").first()?.let { articleElement ->
-            val articleEntry = createEntry(articleElement, url)
+            val articleEntry = Item(extractContent(articleElement, url))
 
             val reference = createReference(url, articleElement)
             
             extractionResult.setExtractedContent(articleEntry, reference)
         }
-    }
-
-    private fun createEntry(articleElement: Element, url: String): Item {
-        val abstractString = extractAbstract(articleElement)
-
-        val content = extractContent(articleElement, url)
-
-        return Item(content, abstractString)
-    }
-
-    private fun extractAbstract(articleElement: Element): String {
-        articleElement.select(".abstract").first()?.let { abstractElement ->
-            return abstractElement.text()
-        }
-
-        return ""
     }
 
     private fun extractContent(articleElement: Element, url: String): String {
@@ -61,7 +45,8 @@ class DerFreitagArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
             loadLazyLoadingElements(textElement)
             adjustSourceElements(textElement)
 
-            var content = textElement.outerHtml()
+            var content = articleElement.select(".abstract").first()?.outerHtml() ?: ""
+            content += textElement.outerHtml()
 
             articleElement.select(".c-article-image--lead").first()?.let { previewImageElement ->
                 if(previewImageElement.html().isNotBlank()) {

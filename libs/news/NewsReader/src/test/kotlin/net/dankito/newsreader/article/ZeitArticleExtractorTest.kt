@@ -32,7 +32,7 @@ class ZeitArticleExtractorTest : ArticleExtractorTestBase() {
     @Test
     fun importVideoArticle() {
         getAndTestArticle("http://www.zeit.de/video/2017-11/5636670005001/deutsche-kueche-spaghetti-lassen-sich-besser-mit-staebchen-essen",
-                "\"Spaghetti lassen sich besser mit Stäbchen essen\"",
+                "»Spaghetti lassen sich besser mit Stäbchen essen«",
                 "Kommt der Käsekuchen wirklich aus Deutschland und wieso grüßen die Kollegen im Büro ständig mit \"Mahlzeit\"? Eine neue Videofolge \"Typisch deutsch\"",
                 null, 3200, false, "Deutsche Küche"
         )

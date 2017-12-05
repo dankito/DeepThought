@@ -39,10 +39,9 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
     private fun parseHtmlToEntryNewVersion(extractionResult: ItemExtractionResult, articleUrl: String, document: Document) {
         document.body().select("article").first()?.let { articleElement ->
             articleElement.select(".article__content").first()?.let { articleContentElement ->
-                val content = parseContent(articleContentElement)
-                val abstractString = extractAbstract(articleElement)
+                val content = extractAbstract(articleElement) + parseContent(articleContentElement)
 
-                val entry = Item(content, abstractString)
+                val entry = Item(content)
                 val reference = extractReference( articleElement, articleUrl)
 
                 extractionResult.setExtractedContent(entry, reference)
@@ -51,11 +50,7 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
     }
 
     private fun extractAbstract(articleElement: Element): String {
-        articleElement.select("div.article__header-teaser").first()?.let { teaserElement ->
-            return teaserElement.html()
-        }
-        
-        return ""
+        return articleElement.select("div.article__header-teaser").first()?.outerHtml() ?: ""
     }
 
     private fun parseContent(articleContentElement: Element): String {

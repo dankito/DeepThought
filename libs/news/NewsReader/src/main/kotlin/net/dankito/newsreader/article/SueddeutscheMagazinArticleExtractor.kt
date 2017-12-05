@@ -27,13 +27,14 @@ class SueddeutscheMagazinArticleExtractor(webClient: IWebClient) : ArticleExtrac
         document.body().select(".content").first()?.let { contentElement ->
 
             contentElement.select(".maincontent").first()?.let { mainContent ->
-                val entry = Item(extractContent(mainContent), referenceAndAbstract?.second ?: "")
+                val entry = Item((referenceAndAbstract?.second ?: "") + extractContent(mainContent))
 
+                val reference = referenceAndAbstract?.first
                 mainContent.select(".text-image-container img, .img-text-fullwidth-container img").first()?.let {
-                    referenceAndAbstract?.first?.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
+                    reference?.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
                 }
 
-                extractionResult.setExtractedContent(entry, referenceAndAbstract?.first)
+                extractionResult.setExtractedContent(entry, reference)
             }
         }
     }
@@ -86,7 +87,7 @@ class SueddeutscheMagazinArticleExtractor(webClient: IWebClient) : ArticleExtrac
                     source = Source(titleElement.text(), siteUrl)
                     titleElement.remove()
                     vorspanElement.select(".autor").remove()
-                    abstract = convertNonBreakableSpans(vorspanElement.text())
+                    abstract = convertNonBreakableSpans(vorspanElement.outerHtml())
                 }
             }
 

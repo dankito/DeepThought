@@ -37,7 +37,7 @@ abstract class ArticleExtractorTestBase {
             countDownLatch.countDown()
         }
 
-        countDownLatch.await(20, TimeUnit.SECONDS)
+        countDownLatch.await(20, TimeUnit.MINUTES)
 
         return extractionResult
     }
@@ -50,7 +50,7 @@ abstract class ArticleExtractorTestBase {
             assertThat(extractionResult.error, nullValue())
 
             assertThat(extractionResult.item.content.isNullOrBlank(), `is`(false))
-            abstract?.let { assertThat(extractionResult.item.summary, `is`(abstract)) }
+            assertThat(extractionResult.item.summary.isNullOrBlank(), `is`(true))
 
 //            previewImageUrl?.let { assertThat(extractionResult.source?.previewImageUrl, `is`(previewImageUrl)) }
             previewImageUrl?.let { assertThat(extractionResult.source?.previewImageUrl.isNullOrBlank(), `is`(false)) }
