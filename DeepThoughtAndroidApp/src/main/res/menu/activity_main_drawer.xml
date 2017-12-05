@@ -3,36 +3,53 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import"/>
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery"/>
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow"/>
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools"/>
-    </group>
-
-    <item android:title="Communicate">
+    <item android:title="@string/nav_menu_entities_header_title">
         <menu>
+
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share"/>
+                android:id="@+id/navTags"
+                android:icon="@drawable/ic_tab_tags"
+                android:title="@string/nav_menu_tags_title"/>
+
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send"/>
+                android:id="@+id/navSources"
+                android:icon="@drawable/ic_tab_sources"
+                android:title="@string/nav_menu_sources_title"/>
+
+            <item
+                android:id="@+id/navSeries"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="@string/nav_menu_series_title"/>
+
+            <item
+                android:id="@+id/navReadLaterArticles"
+                android:icon="@drawable/ic_tab_read_later_articles"
+                android:title="@string/nav_menu_read_later_articles_title"/>
+
         </menu>
     </item>
+
+    <group android:checkableBehavior="none">
+
+        <item
+            android:id="@+id/navArticleSummaryExtractors"
+            android:icon="@drawable/ic_menu_send"
+            android:title="@string/nav_menu_article_summary_extractors_title"/>
+
+        <item
+            android:id="@+id/navDeviceManagement"
+            android:icon="@drawable/ic_android"
+            android:title="@string/nav_menu_device_management_title"/>
+
+        <item
+            android:id="@+id/navSettings"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/nav_menu_settings_title"/>
+
+        <item
+            android:id="@+id/navAbout"
+            android:title="@string/nav_menu_about_title"/>
+
+    </group>
 
 </menu>

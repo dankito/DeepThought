@@ -18,19 +18,10 @@
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/bottomViewNavigation"
+        android:layout_above="@+id/multiSelectModeAppBarLayout"
         android:layout_alignParentTop="true"
         tools:context=".MainActivity"
         />
-
-    <net.dankito.deepthought.android.views.AdvancedBottomNavigationView
-        android:id="@+id/bottomViewNavigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="?android:attr/windowBackground"
-        app:menu="@menu/bottom_navigation_menu"
-    />
 
     <!-- An extra AppBarLayout to show contextual action mode bar in -->
     <android.support.design.widget.AppBarLayout

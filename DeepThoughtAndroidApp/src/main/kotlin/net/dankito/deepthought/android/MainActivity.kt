@@ -2,13 +2,15 @@ package net.dankito.deepthought.android
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
-import android.support.v4.view.ViewPager
+import android.support.design.widget.NavigationView
+import android.support.v4.view.GravityCompat
+import android.support.v4.widget.DrawerLayout
+import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
-import android.view.View
+import android.widget.TextView
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.view_floating_action_button_main.*
 import net.dankito.deepthought.android.activities.BaseActivity
@@ -27,15 +29,18 @@ import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.UrlUtil
 import net.engio.mbassy.listener.Handler
+import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 
 class MainActivity : BaseActivity() {
 
+    companion object {
+        private val log = LoggerFactory.getLogger(MainActivity::class.java)
+    }
+
 
     private lateinit var sectionsPagerAdapter: MainActivitySectionsPagerAdapter
-
-    private var currentlySelectedNavigationItem: MenuItem? = null
 
     private var currentlyVisibleFragment: MainActivityTabFragment<out BaseEntity>? = null
 
@@ -89,16 +94,32 @@ class MainActivity : BaseActivity() {
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
-        viewPager.addOnPageChangeListener(viewPagerPageChangeListener)
+        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
+        val toggle = ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        drawer.addDrawerListener(toggle)
+        toggle.syncState()
+
+        val navigationView = findViewById(R.id.nav_view) as NavigationView
+        showAppVersion(navigationView)
+        navigationView.setNavigationItemSelectedListener(navigationListener)
+
         sectionsPagerAdapter = MainActivitySectionsPagerAdapter(supportFragmentManager)
         viewPager.adapter = sectionsPagerAdapter
-
-        bottomViewNavigation.disableShiftMode()
-        bottomViewNavigation.setOnNavigationItemSelectedListener(bottomViewNavigationItemSelectedListener)
 
         setCurrentlyVisibleFragment(0) // set currentlyVisibleFragment on start otherwise back button won't work on first displayed fragment
 
         floatingActionMenuButton = MainActivityFloatingActionMenuButton(floatingActionMenu, summaryExtractorManager, router, eventBus)
+    }
+
+    private fun showAppVersion(navigationView: NavigationView) {
+        try {
+            val packageInfo = this.packageManager.getPackageInfo(packageName, 0)
+            val version = packageInfo.versionName
+            (navigationView.getHeaderView(0).findViewById(R.id.txtAppVersion) as? TextView)?.text = version
+        } catch (e: Exception) {
+            log.error("Could not read application version")
+        }
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -123,8 +144,6 @@ class MainActivity : BaseActivity() {
             this.eventBusListener = eventBusListener
             eventBus.register(eventBusListener)
         }
-
-        setBottomNavigationVisibility()
     }
 
     private fun userCreatedDataEntity() {
@@ -135,14 +154,6 @@ class MainActivity : BaseActivity() {
 
         dataManager.localSettings.didUserCreateDataEntity = true
         dataManager.localSettingsUpdated()
-
-        setBottomNavigationVisibility()
-    }
-
-    private fun setBottomNavigationVisibility() {
-        runOnUiThread {
-            bottomViewNavigation.visibility = if (dataManager.localSettings.didUserCreateDataEntity) View.VISIBLE else View.GONE
-        }
     }
 
 
@@ -176,19 +187,27 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
-//            R.id.action_settings -> return true
             else -> return super.onOptionsItemSelected(item)
         }
+    }
+
+    private val navigationListener = NavigationView.OnNavigationItemSelectedListener { item ->
+        when (item.itemId) {
+            R.id.navArticleSummaryExtractors -> {
+                router.showArticleSummaryExtractorsView()
+            }
+        }
+
+        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
+        drawer.closeDrawer(GravityCompat.START)
+
+        true
     }
 
 
@@ -200,39 +219,6 @@ class MainActivity : BaseActivity() {
         IntentHandler(extractArticleHandler, router, urlUtil).handle(intent)
     }
 
-
-    private val bottomViewNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        viewPager.setCurrentItem(item.order, true)
-
-        return@OnNavigationItemSelectedListener true
-    }
-
-    private val viewPagerPageChangeListener = object : ViewPager.OnPageChangeListener {
-
-        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
-        }
-
-        override fun onPageSelected(position: Int) {
-            val previous = currentlySelectedNavigationItem
-            if (previous != null) {
-                previous.isChecked = false
-            }
-            else {
-                bottomViewNavigation.menu.getItem(0).isChecked = false
-            }
-
-            val currentItem = bottomViewNavigation.menu.getItem(position)
-            currentItem.isChecked = true
-            currentlySelectedNavigationItem = currentItem
-
-            setCurrentlyVisibleFragment(position)
-        }
-
-        override fun onPageScrollStateChanged(state: Int) {
-
-        }
-    }
 
 
     inner class EventBusListener {

@@ -2,13 +2,21 @@
 
     <string name="move_upward_behaviour" translatable="false">net.dankito.deepthought.android.views.MoveUpwardBehavior</string>
 
-    <string name="tab_items_title">Items</string>
-    <string name="tab_tags_title">Tags</string>
-    <string name="tab_sources_title">Sources</string>
-    <string name="tab_read_later_articles_title">Read later</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="nav_menu_entities_header_title">Lists</string>
+    <string name="nav_menu_tags_title">Tags</string>
+    <string name="nav_menu_sources_title">Sources</string>
+    <string name="nav_menu_series_title">Series</string>
+    <string name="nav_menu_read_later_articles_title">Read later</string>
+
+    <string name="nav_menu_article_summary_extractors_title">Newspaper Articles</string>
+    <string name="nav_menu_device_management_title">Device management</string>
+    <string name="nav_menu_settings_title">Settings</string>
+    <string name="nav_menu_about_title">About</string>
+
+    <string name="nav_menu_version_label">Version\u0020</string>
 
     <string name="floating_action_menu_add_item">Item</string>
     <string name="floating_action_menu_add_newspaper_article">Newspaper Article</string>

@@ -164,7 +164,6 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
 
     protected open fun multiSelectActionModeBarVisibilityChanged(visible: Boolean) {
         activity?.findViewById(R.id.floatingActionMenu)?.visibility = if(visible) View.GONE else View.VISIBLE
-        activity?.findViewById(R.id.bottomViewNavigation)?.visibility = if(visible) View.GONE else View.VISIBLE
 
         if(visible) {
             checkIfContextHelpListItemActionsHasBeenShownToUserOnUiThread()
@@ -200,7 +199,6 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
 
     private fun setLayoutForTogglingFullscreenMode(activity: Activity, viewVisibility: Int, topMargin: Int) {
         activity.findViewById(R.id.appBarLayout)?.visibility = viewVisibility // TODO: bug here, don't show appBarLayout when in MultiSelectMode
-        activity.findViewById(R.id.bottomViewNavigation)?.visibility = viewVisibility
 
         if(recyclerAdapter?.isInMultiSelectMode() == false) {
             if(isCurrentSelectedTab) { // don't set fab_menu's visibility when another tab fragment is currently selected
