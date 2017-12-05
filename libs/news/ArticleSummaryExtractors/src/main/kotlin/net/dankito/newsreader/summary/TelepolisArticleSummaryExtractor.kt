@@ -6,9 +6,15 @@ import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import org.slf4j.LoggerFactory
 
 
 class TelepolisArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryExtractorBase(webClient) {
+
+    companion object {
+        private val log = LoggerFactory.getLogger(TelepolisArticleSummaryExtractor::class.java)
+    }
+
 
     override fun getName(): String {
         return "Telepolis"
@@ -43,7 +49,7 @@ class TelepolisArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
     }
 
     private fun determineHasMore(summary: ArticleSummary, url: String, document: Document) {
-        var weitereMeldungenElement = document.body().select("a.seite_weiter").firstOrNull()
+        val weitereMeldungenElement = document.body().select("a.seite_weiter").firstOrNull()
 
         summary.canLoadMoreItems = weitereMeldungenElement != null
         summary.nextItemsUrl = weitereMeldungenElement?.let { makeLinkAbsolute(it.attr("href"), url) }
@@ -81,7 +87,9 @@ class TelepolisArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
 
     private fun mapArticleElementToArticleSummaryItem(siteUrl: String, articleElement: Element): ArticleSummaryItem? {
         articleElement.select(".tp_title").first()?.let { titleAnchor ->
-            val item = ArticleSummaryItem(makeLinkAbsolute(articleElement.parent().attr("href"), siteUrl), titleAnchor.text().trim(), getArticleExtractor())
+            val url = extractUrl(articleElement, siteUrl)
+
+            val item = ArticleSummaryItem(url, titleAnchor.text().trim(), getArticleExtractor())
 
             articleElement.select("p").first()?.let { summaryElement ->
                 item.summary = summaryElement.text().trim()
@@ -95,6 +103,15 @@ class TelepolisArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
         }
 
         return null
+    }
+
+    private fun extractUrl(articleElement: Element, siteUrl: String): String {
+        articleElement.select("a").first()?.let { articleAnchor ->
+            return makeLinkAbsolute(articleAnchor.attr("href"), siteUrl)
+        }
+
+        log.warn("Could not extract article url from ${articleElement.outerHtml()}")
+        return "" // TODO: what to do in this case
     }
 
 
