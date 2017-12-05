@@ -16,6 +16,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
 
     companion object {
         private val DateTimeFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        private val MultiPageMobileArticleDateTimeFormat = SimpleDateFormat("yyyy-MM-dd")
     }
 
 
@@ -91,9 +92,22 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         }
         article.select("time").first()?.let {
             reference.publishingDate = parseIsoDateTimeString(it.attr("datetime"))
+            if(reference.publishingDate == null) {
+                reference.publishingDate = tryToParseMultiPageMobileArticleDate(it.attr("datetime"))
+            }
         }
 
         return reference
+    }
+
+    private fun tryToParseMultiPageMobileArticleDate(date: String?): Date? {
+        try {
+            date?.let {
+                return MultiPageMobileArticleDateTimeFormat.parse(it)
+            }
+        } catch(ignored: Exception) { }
+
+        return null
     }
 
 
