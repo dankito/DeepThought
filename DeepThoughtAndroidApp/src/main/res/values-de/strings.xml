@@ -163,8 +163,9 @@
 
     <string name="dialog_article_summary_extractors_add_extractor">Hinzufügen</string>
 
-    <string name="dialog_add_article_summary_extractor_news_page_url_label">Um einen RSS Feed hinzuzufügen geben Sie die Adresse einer Nachrichtenseite ein,
-        z.B. \"spiegel.de\" oder \"sz.de\".</string>
+    <string name="dialog_add_article_summary_extractor_news_page_url_label">Geben Sie einfach die Adresse einer Nachrichtenseite ein,
+        z.B. \"spiegel.de\" oder \"sz.de\", wir versuchen dann den RSS Feed für Sie zu finden.</string>
+    <string name="dialog_add_article_summary_extractor_news_page_url_hint">Z.B. spiegel.de oder sz.de</string>
     <string name="dialog_add_article_summary_extractor_check_feed_or_website_url">Suchen</string>
     <string name="dialog_add_article_summary_extractor_found_feeds">Gefundene Feeds:</string>
     <string name="dialog_add_article_summary_extractor_recommended_feed_title_addition">(empfohlen)</string>
