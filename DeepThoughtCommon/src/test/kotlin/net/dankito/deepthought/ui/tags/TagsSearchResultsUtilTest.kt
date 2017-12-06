@@ -25,6 +25,18 @@ class TagsSearchResultsUtilTest {
     }
 
     @Test
+    fun getButtonStateForSearchResult_BlankSearchTerm_StateDisable() {
+        val tagsOnEntry = listOf<Tag>()
+
+        val searchResults = TagsSearchResults("                              ")
+
+        val state = underTest.getButtonStateForSearchResult(searchResults, tagsOnEntry)
+
+        assertThat(state, `is`(TagsSearcherButtonState.DISABLED))
+    }
+
+
+    @Test
     fun getButtonStateForSearchResult_ContainsOneNotAddedTag_StateAdd() {
         val tag1 = Tag("1")
 
@@ -108,16 +120,142 @@ class TagsSearchResultsUtilTest {
     }
 
 
+    @Test
+    fun getButtonStateForSearchResult_OneNotAddedAndOneAddedTag_StateToggle() {
+        val tag1 = Tag("1")
+        val tag2 = Tag("2")
+
+        val tagsOnEntry = listOf<Tag>(tag2)
+
+        val searchResults = createcreateTagsSearchResultsForTagNames(listOf("1", "2"))
+        searchResults.addSearchResult(TagsSearchResult("1", listOf(tag1)))
+        searchResults.addSearchResult(TagsSearchResult("2", listOf(tag2)))
+        searchResults.setRelevantMatchesSorted(tagsOnEntry)
+
+        val state = underTest.getButtonStateForSearchResult(searchResults, tagsOnEntry)
+
+        assertThat(state, `is`(TagsSearcherButtonState.TOGGLE_TAGS))
+    }
+
+    @Test
+    fun getButtonStateForSearchResult_OneAddedAndOneNotAddedTag_StateToggle() {
+        val tag1 = Tag("1")
+        val tag2 = Tag("2")
+
+        val tagsOnEntry = listOf<Tag>(tag1)
+
+        val searchResults = createcreateTagsSearchResultsForTagNames(listOf("1", "2"))
+        searchResults.addSearchResult(TagsSearchResult("1", listOf(tag1)))
+        searchResults.addSearchResult(TagsSearchResult("2", listOf(tag2)))
+        searchResults.setRelevantMatchesSorted(tagsOnEntry)
+
+        val state = underTest.getButtonStateForSearchResult(searchResults, tagsOnEntry)
+
+        assertThat(state, `is`(TagsSearcherButtonState.TOGGLE_TAGS))
+    }
+
+    @Test
+    fun getButtonStateForSearchResult_OneNotAddedAndOneNotExistingTag_StateAdd() {
+        val tag1 = Tag("1")
+
+        val tagsOnEntry = listOf<Tag>()
+
+        val searchResults = createcreateTagsSearchResultsForTagNames(listOf("1", "2"))
+        searchResults.addSearchResult(TagsSearchResult("1", listOf(tag1)))
+        searchResults.addSearchResult(TagsSearchResult("2", listOf()))
+
+        val state = underTest.getButtonStateForSearchResult(searchResults, tagsOnEntry)
+
+        assertThat(state, `is`(TagsSearcherButtonState.ADD_TAGS))
+    }
+
+    @Test
+    fun getButtonStateForSearchResult_OneNotExistingAndOneNotAddedTag_StateAdd() {
+        val tag2 = Tag("2")
+
+        val tagsOnEntry = listOf<Tag>()
+
+        val searchResults = createcreateTagsSearchResultsForTagNames(listOf("1", "2"))
+        searchResults.addSearchResult(TagsSearchResult("1", listOf()))
+        searchResults.addSearchResult(TagsSearchResult("2", listOf(tag2)))
+
+        val state = underTest.getButtonStateForSearchResult(searchResults, tagsOnEntry)
+
+        assertThat(state, `is`(TagsSearcherButtonState.ADD_TAGS))
+    }
+
+    @Test
+    fun getButtonStateForSearchResult_OneAddedAndOneNotExistingTag_StateRemove() {
+        val tag1 = Tag("1")
+
+        val tagsOnEntry = listOf<Tag>(tag1)
+
+        val searchResults = createcreateTagsSearchResultsForTagNames(listOf("1", "2"))
+        searchResults.addSearchResult(TagsSearchResult("1", listOf(tag1)))
+        searchResults.addSearchResult(TagsSearchResult("2", listOf()))
+        searchResults.setRelevantMatchesSorted(tagsOnEntry)
+
+        val state = underTest.getButtonStateForSearchResult(searchResults, tagsOnEntry)
+
+        assertThat(state, `is`(TagsSearcherButtonState.REMOVE_TAGS))
+    }
+
+    @Test
+    fun getButtonStateForSearchResult_OneNotExistingAndOneAddedTag_StateRemove() {
+        val tag2 = Tag("2")
+
+        val tagsOnEntry = listOf<Tag>(tag2)
+
+        val searchResults = createcreateTagsSearchResultsForTagNames(listOf("1", "2"))
+        searchResults.addSearchResult(TagsSearchResult("1", listOf()))
+        searchResults.addSearchResult(TagsSearchResult("2", listOf(tag2)))
+        searchResults.setRelevantMatchesSorted(tagsOnEntry)
+
+        val state = underTest.getButtonStateForSearchResult(searchResults, tagsOnEntry)
+
+        assertThat(state, `is`(TagsSearcherButtonState.REMOVE_TAGS))
+    }
+
+
+    @Test
+    fun getButtonStateForSearchResult_OneNotAddedAndOneNotExistingTagAndWithTagsAlreadyAdded_StateAdd() {
+        val tag1 = Tag("1")
+
+        val tagsOnEntry = listOf<Tag>(Tag("noise 1"), Tag("noise 2"))
+
+        val searchResults = createcreateTagsSearchResultsForTagNames(listOf("1", "2"))
+        searchResults.addSearchResult(TagsSearchResult("1", listOf(tag1)))
+        searchResults.addSearchResult(TagsSearchResult("2", listOf()))
+
+        val state = underTest.getButtonStateForSearchResult(searchResults, tagsOnEntry)
+
+        assertThat(state, `is`(TagsSearcherButtonState.ADD_TAGS))
+    }
+
+    @Test
+    fun getButtonStateForSearchResult_OneAddedAndOneNotExistingTagAndWithOtherTagsAlreadyAdded_StateRemove() {
+        val tag1 = Tag("1")
+
+        val tagsOnEntry = listOf<Tag>(tag1, Tag("noise 1"), Tag("noise 2"))
+
+        val searchResults = createcreateTagsSearchResultsForTagNames(listOf("1", "2"))
+        searchResults.addSearchResult(TagsSearchResult("1", listOf(tag1)))
+        searchResults.addSearchResult(TagsSearchResult("2", listOf()))
+        searchResults.setRelevantMatchesSorted(tagsOnEntry)
+
+        val state = underTest.getButtonStateForSearchResult(searchResults, tagsOnEntry)
+
+        assertThat(state, `is`(TagsSearcherButtonState.REMOVE_TAGS))
+    }
+
+
     private fun createTagsSearchResults(vararg tags: Tag): TagsSearchResults {
-        val searchResults = TagsSearchResults(tags.joinToString(SearchEngineBase.TagsSearchTermSeparator) { it.name } )
-        val tagNamesToSearchFor = ArrayList<String>()
+        val searchResults = createcreateTagsSearchResultsForTagNames(tags.map { it.name })
 
         tags.forEach { tag ->
             searchResults.addSearchResult(createTagsSearchResult(tag))
-            tagNamesToSearchFor.add(tag.name)
         }
-
-        searchResults.tagNamesToSearchFor = tagNamesToSearchFor
+        searchResults.setRelevantMatchesSorted(searchResults.getAllMatches())
 
         return searchResults
     }
@@ -127,13 +265,18 @@ class TagsSearchResultsUtilTest {
     }
 
     private fun createNotExistingTagsTagsSearchResult(tagNames: Collection<String>): TagsSearchResults {
-        val searchResults = TagsSearchResults(tagNames.joinToString(SearchEngineBase.TagsSearchTermSeparator))
+        val searchResults = createcreateTagsSearchResultsForTagNames(tagNames)
 
-        searchResults.tagNamesToSearchFor = tagNames.toList()
         tagNames.forEach { notExistingTagName ->
             searchResults.addSearchResult(TagsSearchResult(notExistingTagName, listOf()))
         }
 
+        return searchResults
+    }
+
+    private fun createcreateTagsSearchResultsForTagNames(tagNames: Collection<String>): TagsSearchResults {
+        val searchResults = TagsSearchResults(tagNames.joinToString(SearchEngineBase.TagsSearchTermSeparator))
+        searchResults.tagNamesToSearchFor = tagNames.toList()
         return searchResults
     }
 
