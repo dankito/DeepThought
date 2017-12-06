@@ -128,6 +128,9 @@
     <string name="dialog_add_article_summary_extractor_found_feeds">Found feeds:</string>
     <string name="dialog_add_article_summary_extractor_recommended_feed_title_addition">(recommended)</string>
 
+    <string name="error_no_rss_or_atom_feed_found_for_url" formatted="false">No RSS or Atom feed found for address %s</string>
+    <string name="error_cannot_read_feed_or_extract_feed_addresses_from_url" formatted="false">Cannot read feed or extract feed addresses from %s: %s</string>
+
     <string name="dialog_article_summary_extractor_config_enter_name">Enter name:</string>
     <string name="dialog_article_summary_extractor_config_select_icon">Select icon:</string>
     <string name="dialog_article_summary_extractor_alert_message_delete_config" formatted="false">Really delete news site %s?</string>
@@ -216,8 +219,5 @@
     <string name="alert_message_enter_this_code_on_remote_device" formatted="false">Enter this code on %s:&lt;br/>&lt;br/>&lt;b>%s&lt;/b></string>
     <string name="alert_title_enter_response_code_for_permitting_synchronization" formatted="false">Enter Code shown on %s:</string>
     <string name="alert_title_entered_response_code_was_wrong">Entered Code was wrong.\nEnter Code shown on %s:</string>
-
-    <string name="error_no_rss_or_atom_feed_found_for_url" formatted="false">No RSS or Atom feed found for address %s</string>
-    <string name="error_cannot_read_feed_or_extract_feed_addresses_from_url" formatted="false">Cannot read feed or extract feed addresses from %s: %s</string>
 
 </resources>

@@ -167,6 +167,9 @@
     <string name="dialog_add_article_summary_extractor_found_feeds">Gefundene Feeds:</string>
     <string name="dialog_add_article_summary_extractor_recommended_feed_title_addition">(empfohlen)</string>
 
+    <string formatted="false" name="error_no_rss_or_atom_feed_found_for_url">Kein RSS oder Atom Feed gefunden für Adresse %s</string>
+    <string formatted="false" name="error_cannot_read_feed_or_extract_feed_addresses_from_url">Konnte Feed nicht lesen oder Feed Adressen nicht extrahieren von %s: %s</string>
+
     <string name="dialog_article_summary_extractor_config_enter_name">Name:</string>
     <string name="dialog_article_summary_extractor_config_select_icon">Icon auswählen:</string>
     <string name="dialog_article_summary_extractor_alert_message_delete_config" formatted="false">Nachrichtenseite %s wirklich löschen?</string>
@@ -257,8 +260,5 @@
     <string name="alert_message_enter_this_code_on_remote_device" formatted="false">Geben Sie diesen Code auf %s ein:&lt;br/>&lt;br/>&lt;b>%s&lt;/b></string>
     <string name="alert_title_enter_response_code_for_permitting_synchronization" formatted="false">Geben Sie den Code ein, der auf %s angezeigt wird:</string>
     <string name="alert_title_entered_response_code_was_wrong">Eingegebener Code ist falsch.\nGeben Sie den Code ein, der auf %s angezeigt wird:</string>
-
-    <string formatted="false" name="error_no_rss_or_atom_feed_found_for_url">Kein RSS oder Atom Feed gefunden für Adresse %s</string>
-    <string formatted="false" name="error_cannot_read_feed_or_extract_feed_addresses_from_url">Konnte Feed nicht lesen oder Feed Adressen nicht extrahieren von %s: %s</string>
 
 </resources>
