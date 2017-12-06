@@ -93,12 +93,12 @@
     <!-- In der kommenden Version werden zunächst auch die Schlagworte ausgeblendet, d. h. dann kann man alles über den + Button hinzufügen. -->
 
     <string name="activity_edit_item_edit_content_onboarding_text"><![CDATA[
-        Klicken Sie hier, um die Information einzugeben, die sie speichern möchten.
+        Klicken Sie hier, um die Information einzugeben, die Sie speichern möchten.
     ]]>
     </string>
 
     <string name="activity_edit_item_add_item_properties_onboarding_text"><![CDATA[
-        Klicken sie auf den <b>(+)</b> Button unten rechts, um Ihrem Eintrag ein <b>Schlagworte</b>, eine <b>Quelle</b> oder einen <b>Titel</b> hinzuzufügen.
+        Klicken Sie auf den <b>(+)</b> Button unten rechts, um Ihrem Eintrag <b>Schlagworte</b>, eine <b>Quelle</b> oder einen <b>Titel</b> hinzuzufügen.
     ]]>
     </string>
 
@@ -145,7 +145,7 @@
 
     <string name="context_help_item_content_fullscreen"><![CDATA[
         Scrollen oder Doppelklicken startet den Vollbildmodus.<br />
-        Durch erneutes Doppelklicken können Sie den Vollbildmodus wieder verlassen.
+        Durch erneutes Doppelklicken oder den Button unten recht können Sie den Vollbildmodus wieder verlassen.
     ]]>
     </string>
 
@@ -154,7 +154,7 @@
     </string>
 
     <string name="context_help_saved_read_later_article_is_now_in_items"><![CDATA[
-        <p>Der Artikel wurde nun in Ihrer Einträge-Sammlung gespeichert.</p>D.h. er befindet sich nun in <b>Einträge</b> und nicht mehr in <b>Später lesen</b>.
+        <p>Der Artikel wurde nun Ihrer Einträge-Sammlung hinzugefügt.</p>D.h. er befindet sich nun in <b>Einträge</b> und nicht mehr in <b>Später lesen</b>.
     ]]>
     </string>
 
@@ -184,13 +184,13 @@
     <string name="activity_edit_item_source_label">Quelle</string>
     <string name="activity_edit_item_tags_label">Schlagworte</string>
     <string name="activity_edit_item_tags_onboarding_text">Geben Sie Ihrem Eintrag aussagekräftige Schlagworte, um ihn später leichter wiederzufinden.</string>
-    <string name="activity_edit_item_source_onboarding_text">Speichern Sie, wo Sie diese Information gefunden haben (Webadresse, Buch, …).</string>
+    <string name="activity_edit_item_source_onboarding_text">Speichern Sie, wo Sie diese Information gefunden haben, z. B. Webadresse, Buch, …</string>
     <string name="activity_edit_item_summary_onboarding_text">Fügen Sie Ihrem Eintrag einen Titel oder eine Zusammenfassung hinzu.</string>
     <string name="activity_edit_item_alert_message_item_contains_unsaved_changes">Ihr Eintrag enthält nicht gespeicherte Änderungen.\n\nWollen Sie Ihre Änderungen
         speichern?</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
-    <string name="activity_edit_item_alert_message_item_has_been_edited">Ihr Eintrag wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\n\nWenn
-        Sie den Eintrag jetzt speichern überschreiben Sie diese Änderungen.</string>
+    <string name="activity_edit_item_alert_message_item_has_been_edited">Ihr Eintrag wurde geändert, wahrscheinlich auf einem synchronisierten Gerät.\n\nWenn
+        Sie den Eintrag hier nun ebenfalls speichern, überschreiben Sie jene Änderungen.</string>
     <string name="activity_edit_item_alert_message_delete_item">Möchten Sie den Eintrag \'%s\' wirklich löschen?</string>
 
     <string name="dialog_edit_html_alert_message_html_contains_unsaved_changes">Die Information wurde geändert.\n\nMöchten Sie diese Änderungen übernehmen?</string>
@@ -227,8 +227,8 @@
     <string name="activity_edit_source_alert_message_source_contains_unsaved_changes">Quelle enthält nicht gespeicherte Änderungen.\n\nSollen diese Änderungen gespeichert
         werden?</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
-    <string name="activity_edit_source_alert_message_source_has_been_edited">Quelle wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\n\nWenn
-        Sie die Quelle nun speichern, überschreiben Sie diese Änderungen.</string>
+    <string name="activity_edit_source_alert_message_source_has_been_edited">Quelle wurde geändert, wahrscheinlich auf einem synchronisierten Gerät.\n\nWenn
+        Sie die Quelle hier nun ebenfalls speichern, überschreiben Sie jene Änderungen.</string>
 
     <string name="activity_edit_series_title">Reihe</string>
     <string name="activity_edit_series_use_existing_label">Bestehende verwenden:</string>
@@ -242,8 +242,8 @@
     <string name="activity_edit_series_alert_message_series_contains_unsaved_changes">Reihe enthält nicht gespeicherte Änderungen.\n\nSollen diese Änderungen gespeichert
         werden?</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
-    <string name="activity_edit_series_alert_message_series_has_been_edited">Reihe wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\n\nWenn
-        Sie die Reihe nun speichern, überschreiben Sie diese Änderungen.</string>
+    <string name="activity_edit_series_alert_message_series_has_been_edited">Reihe wurde geändert, wahrscheinlich auf einem synchronisierten Gerät.\n\nWenn
+        Sie die Reihe hier nun ebenfalls speichern, überschreiben Sie jene Änderungen.</string>
 
     <string name="snackbar_extract_item_from_url"><![CDATA[
         Zwischenablage enthält einen Link von <b><u>%1$s</u></b>. Möchten Sie hieraus einen Eintrag erstellen?
@@ -254,7 +254,7 @@
     <string name="never_ask_again">Nicht mehr fragen</string>
     <string name="alert_title_permit_device_to_synchronize">Gerät fragt um Erlaubnis</string>
     <string name="alert_message_permit_device_to_synchronize" formatted="false">%s erlauben sich zu synchronisieren?</string>
-    <string name="alert_message_enter_this_code_on_remote_device" formatted="false">Geben sie diesen Code auf %s ein:&lt;br/>&lt;br/>&lt;b>%s&lt;/b></string>
+    <string name="alert_message_enter_this_code_on_remote_device" formatted="false">Geben Sie diesen Code auf %s ein:&lt;br/>&lt;br/>&lt;b>%s&lt;/b></string>
     <string name="alert_title_enter_response_code_for_permitting_synchronization" formatted="false">Geben Sie den Code ein, der auf %s angezeigt wird:</string>
     <string name="alert_title_entered_response_code_was_wrong">Eingegebener Code ist falsch.\nGeben Sie den Code ein, der auf %s angezeigt wird:</string>
 
