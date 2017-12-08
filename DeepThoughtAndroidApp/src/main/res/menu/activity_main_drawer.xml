@@ -19,7 +19,9 @@
             <item
                 android:id="@+id/navSeries"
                 android:icon="@drawable/ic_menu_manage"
-                android:title="@string/nav_menu_series_title"/>
+                android:title="@string/nav_menu_series_title"
+                android:visible="false"
+            />
 
             <item
                 android:id="@+id/navReadLaterArticles"
