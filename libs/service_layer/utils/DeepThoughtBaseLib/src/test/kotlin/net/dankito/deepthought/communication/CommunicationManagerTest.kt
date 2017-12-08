@@ -741,6 +741,61 @@ class CommunicationManagerTest {
     }
 
 
+    @Test
+    fun remoteDeviceDisconnectsAndShortlyAfterReconnectsAgain_SynchronizationKeepsOnGoing() {
+        localRegisterAtRemote.set(true)
+        remotePermitRemoteToSynchronize.set(true)
+
+        // create Entities
+        val newTag = Tag("New Tag")
+        localEntityManager.persistEntity(newTag)
+
+        val newReference = Source("New Source")
+        localEntityManager.persistEntity(newReference)
+
+        val newEntry = Item("New Item")
+        newEntry.source = newReference
+        newEntry.addTag(newTag)
+        localEntityManager.persistEntity(newEntry)
+        val entryId = newEntry.id!!
+
+        val countDownLatch = CountDownLatch(1)
+
+        mockDialogServiceTextInput(localDialogService, remoteCorrectChallengeResponse)
+
+        waitTillEntityOfTypeIsSynchronized(remoteEventBus, Item::class.java, countDownLatch)
+
+        startCommunicationManagersAndWait(countDownLatch)
+
+
+        // now disconnect remote, ...
+        remoteCommunicationManager.stop()
+
+        try { Thread.sleep(3000) } catch(ignored: Exception) { }
+
+        // delete entity
+        localEntityManager.deleteEntity(newEntry)
+
+        // and reconnect
+        val collectedChanges = mutableListOf<EntitiesOfTypeChanged>()
+        val syncAfterReconnectLatch = CountDownLatch(1)
+
+        waitTillEntityOfTypeIsSynchronized(remoteEventBus, Item::class.java, syncAfterReconnectLatch)
+
+        collectSynchronizedChanges(remoteEventBus, collectedChanges)
+
+        remoteCommunicationManager.startAsync()
+        syncAfterReconnectLatch.await(FindRemoteDeviceTimeoutInSeconds, TimeUnit.SECONDS)
+
+
+        assertThat(collectedChanges.size, greaterThanOrEqualTo(1))
+        assertThat(collectedChanges.filter { it.entityType == Item::class.java }.firstOrNull(), notNullValue())
+        assertThat(collectedChanges.filter { it.entityType == Item::class.java }.firstOrNull()?.changeType, `is`(EntityChangeType.Deleted))
+
+        assertThat(remoteEntityManager.database.getDocument(entryId).isDeleted, `is`(true))
+    }
+
+
     private fun startCommunicationManagersAndWait(countDownLatch: CountDownLatch) {
         startCommunicationManagersAndWait(countDownLatch, FindRemoteDeviceTimeoutInSeconds)
     }

@@ -53,7 +53,7 @@
     <string name="search_hint_items">Einträge suchen</string>
     <string name="search_hint_tags">Schlagworte suchen</string>
     <string name="search_hint_sources">Quellen suchen</string>
-    <string name="search_hint_read_later_articles">Später lesen Artikel suchen</string>
+    <string name="search_hint_read_later_articles">Vorgemerkte Artikel suchen</string>
 
 
     <!-- Wenn du im Hauptfenster bei den Schlagwörtern auf das Filtersymbol eines Schlagwortes tippst -->
@@ -67,23 +67,26 @@
     <!-- Removed <p></p> from last paragraph as otherwise txtOnboardingText has some padding at end and and PointToFloatingActionButtonArrow therefore doesn't reach to text -->
     <string name="tab_items_onboarding_text"><![CDATA[
         <p>Es gibt drei Wege Daten zu DeepThought hinzuzufügen:</p>
-        <p>Für <b>eigene Texte (Notizen, Gedanken, …)</b> klicken Sie auf das <b>(+) Symbol</b> unten rechts und wählen <b>Eintrag</b>.</p>
-        <p>Um eine <b>Webseite</b> zu speichern wählen Sie in Ihrem Browser im <b>Teilen Menü</b> (unter <img src=\"ic_more_vert_white_48dp\" /> / <img src=\"ic_share_white_48dp\" />) DeepThought.</p>
-        Um einen <b>Zeitungsartikel mittels eines RSS Feeds</b> zu speichern, klicken Sie auf das <b>(+) Symbol</b> unten rechts und wählen <b>Zeitungsartikel</b>.
+        <p>Um <b>eigene Texte </b> anzulegen, klicken Sie auf den <b>(+)</b> Button unten rechts und wählen Sie <b>Eintrag</b>.</p>
+        <p>Um eine <b>Webseite</b> zu speichern, machen Sie es, wie Sie es z.B. auch für WhatsApp machen würden: Rufen Sie die Seite in Ihrem Browser auf,
+        klicken dort neben der Adressleiste auf&nbsp;<b><img src=\"ic_more_vert_white_48dp\" /></b>, dann auf
+        <b>Teilen</b> bzw. <b><img src=\"ic_share_white_48dp\" /></b> und wählen Sie DeepThought.</p>
+        Um einen <b>Zeitungsartikel mittels eines RSS Feeds</b> zu speichern, klicken Sie auf den <b>(+)</b> Button unten rechts und wählen <b>Zeitungsartikel</b>.
     ]]></string>
     <string name="tab_tags_onboarding_text"><![CDATA[
-        <p>Schlagworte helfen Ihnen dabei Ihre Einträge zu ordnen und sie schneller wiederzufinden.</p>
-        <p>Wählen Sie unter <b>Einträge</b> in den Tabs unten links einen Eintrag aus und fügen Sie diesem Schlagworte hinzu.</p>
+        <p>Schlagworte helfen Ihnen dabei Ihre Einträge zu ordnen und schneller wiederzufinden.</p>
+        <p>Bisher haben Sie noch keine Schlagworte vergeben.</p>
+        <p>Wählen Sie unter <b>Einträge</b> unten links einen bestehenden Eintrag aus und fügen Sie diesem über den (+)Button Schlagworte hinzu.</p>
     ]]>
     </string>
     <string name="tab_source_onboarding_text"><![CDATA[
-        <p>Fügen Sie Ihren Einträgen eine Quelle hinzu, um sich zu erinnern, wo Sie diese Information gefunden haben (unter welcher Webadresse, in welchem Buch, in welcher Zeitung, …).</p>
-        <p>Wählen Sie unter <b>Einträge</b> in den Tabs unten links einen Eintrag aus und fügen Sie eine Quelle hinzu.</p>
+        <p>Fügen Sie Ihren Einträgen eine Quelle hinzu, um sich zu erinnern, in welchem Buch, unter welcher Webadresse oder an welchem anderen Ort Sie einen Text gefunden haben.</p>
+        <p>Wählen Sie unter <b>Einträge</b> unten links einen Eintrag aus und fügen Sie eine Quelle hinzu.</p>
 
     ]]></string>
     <string name="tab_read_later_articles_onboarding_text"><![CDATA[
-        <p>Artikel zum später Lesen werden offline gespeichert, so dass Sie diese später lesen können – auch ohne Internetverbindung. Später lesen Artikel werden vorerst nicht in Ihre Einträge-Sammlung übernommen.</p>
-        <p>Drücken Sie das <b>(+) Symbol</b>, wählen <b>Zeitungsartikel</b> und drücken dort bei einem Artikel <b>Später lesen</b>.</p>
+        <p>Artikel zum später Lesen werden offline gespeichert, so dass Sie diese später lesen können – auch ohne Internetverbindung. Diese Artikel werden vorerst nicht in Ihre Einträge-Sammlung übernommen.</p>
+        <p>Legen Sie über den <b>(+)</b> Button einen <b>Zeitungsartikel</b> an und klicken dort auf <b>Später lesen</b>.</p>
     ]]>
     </string>
 
@@ -92,12 +95,12 @@
     <!-- In der kommenden Version werden zunächst auch die Schlagworte ausgeblendet, d. h. dann kann man alles über den + Button hinzufügen. -->
 
     <string name="activity_edit_item_edit_content_onboarding_text"><![CDATA[
-        Klicken Sie hier um die zu speichernde Information einzugeben.
+        Klicken Sie hier, um die Information einzugeben, die Sie speichern möchten.
     ]]>
     </string>
 
     <string name="activity_edit_item_add_item_properties_onboarding_text"><![CDATA[
-        Klicken sie auf das <b>(+) Symbol</b> unten rechts, um <b>Schlagworte</b>, eine <b>Quelle</b> oder einen <b>Titel</b> zu Ihrem Eintrag hinzuzufügen.
+        Klicken Sie auf den <b>(+)</b> Button unten rechts, um Ihrem Eintrag <b>Schlagworte</b>, eine <b>Quelle</b> oder einen <b>Titel</b> hinzuzufügen.
     ]]>
     </string>
 
@@ -144,7 +147,7 @@
 
     <string name="context_help_item_content_fullscreen"><![CDATA[
         Scrollen oder Doppelklicken startet den Vollbildmodus.<br />
-        Durch erneutes Doppelklicken können Sie den Vollbildmodus wieder verlassen.
+        Durch erneutes Doppelklicken oder den Button unten recht können Sie den Vollbildmodus wieder verlassen.
     ]]>
     </string>
 
@@ -153,18 +156,22 @@
     </string>
 
     <string name="context_help_saved_read_later_article_is_now_in_items"><![CDATA[
-        <p>Der Artikel wurde nun in Ihrer Einträge-Sammlung gespeichert.</p>D.h. er befindet sich nun in <b>Einträge</b> und nicht mehr in <b>Später lesen</b>.
+        <p>Der Artikel wurde nun Ihrer Einträge-Sammlung hinzugefügt.</p>D.h. er befindet sich nun in <b>Einträge</b> und nicht mehr in <b>Später lesen</b>.
     ]]>
     </string>
 
 
     <string name="dialog_article_summary_extractors_add_extractor">Hinzufügen</string>
 
-    <string name="dialog_add_article_summary_extractor_news_page_url_label">Um einen RSS Feed hinzuzufügen geben Sie die Adresse einer Nachrichtenseite ein,
-        z.B. \"spiegel.de\" oder \"sz.de\".</string>
+    <string name="dialog_add_article_summary_extractor_news_page_url_label">Geben Sie einfach die Adresse einer Nachrichtenseite ein,
+        z.B. \"spiegel.de\" oder \"sz.de\", wir versuchen dann den RSS Feed für Sie zu finden.</string>
+    <string name="dialog_add_article_summary_extractor_news_page_url_hint">Z.B. spiegel.de oder sz.de</string>
     <string name="dialog_add_article_summary_extractor_check_feed_or_website_url">Suchen</string>
     <string name="dialog_add_article_summary_extractor_found_feeds">Gefundene Feeds:</string>
     <string name="dialog_add_article_summary_extractor_recommended_feed_title_addition">(empfohlen)</string>
+
+    <string formatted="false" name="error_no_rss_or_atom_feed_found_for_url">Kein RSS oder Atom Feed gefunden für Adresse %s</string>
+    <string formatted="false" name="error_cannot_read_feed_or_extract_feed_addresses_from_url">Konnte Feed nicht lesen oder Feed Adressen nicht extrahieren von %s: %s</string>
 
     <string name="dialog_article_summary_extractor_config_enter_name">Name:</string>
     <string name="dialog_article_summary_extractor_config_select_icon">Icon auswählen:</string>
@@ -183,13 +190,13 @@
     <string name="activity_edit_item_source_label">Quelle</string>
     <string name="activity_edit_item_tags_label">Schlagworte</string>
     <string name="activity_edit_item_tags_onboarding_text">Geben Sie Ihrem Eintrag aussagekräftige Schlagworte, um ihn später leichter wiederzufinden.</string>
-    <string name="activity_edit_item_source_onboarding_text">Speichern Sie, wo Sie diese Information gefunden haben (Webadresse, Buch, …).</string>
+    <string name="activity_edit_item_source_onboarding_text">Speichern Sie, wo Sie diese Information gefunden haben, z. B. Webadresse, Buch, …</string>
     <string name="activity_edit_item_summary_onboarding_text">Fügen Sie Ihrem Eintrag einen Titel oder eine Zusammenfassung hinzu.</string>
     <string name="activity_edit_item_alert_message_item_contains_unsaved_changes">Ihr Eintrag enthält nicht gespeicherte Änderungen.\n\nWollen Sie Ihre Änderungen
         speichern?</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
-    <string name="activity_edit_item_alert_message_item_has_been_edited">Ihr Eintrag wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\n\nWenn
-        Sie den Eintrag jetzt speichern überschreiben Sie diese Änderungen.</string>
+    <string name="activity_edit_item_alert_message_item_has_been_edited">Ihr Eintrag wurde geändert, wahrscheinlich auf einem synchronisierten Gerät.\n\nWenn
+        Sie den Eintrag hier nun ebenfalls speichern, überschreiben Sie jene Änderungen.</string>
     <string name="activity_edit_item_alert_message_delete_item">Möchten Sie den Eintrag \'%s\' wirklich löschen?</string>
 
     <string name="dialog_edit_html_alert_message_html_contains_unsaved_changes">Die Information wurde geändert.\n\nMöchten Sie diese Änderungen übernehmen?</string>
@@ -226,8 +233,8 @@
     <string name="activity_edit_source_alert_message_source_contains_unsaved_changes">Quelle enthält nicht gespeicherte Änderungen.\n\nSollen diese Änderungen gespeichert
         werden?</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
-    <string name="activity_edit_source_alert_message_source_has_been_edited">Quelle wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\n\nWenn
-        Sie die Quelle nun speichern, überschreiben Sie diese Änderungen.</string>
+    <string name="activity_edit_source_alert_message_source_has_been_edited">Quelle wurde geändert, wahrscheinlich auf einem synchronisierten Gerät.\n\nWenn
+        Sie die Quelle hier nun ebenfalls speichern, überschreiben Sie jene Änderungen.</string>
 
     <string name="activity_edit_series_title">Reihe</string>
     <string name="activity_edit_series_use_existing_label">Bestehende verwenden:</string>
@@ -241,8 +248,8 @@
     <string name="activity_edit_series_alert_message_series_contains_unsaved_changes">Reihe enthält nicht gespeicherte Änderungen.\n\nSollen diese Änderungen gespeichert
         werden?</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
-    <string name="activity_edit_series_alert_message_series_has_been_edited">Reihe wurde geändert (wahrscheinlich auf einem synchronisierten Gerät).\n\nWenn
-        Sie die Reihe nun speichern, überschreiben Sie diese Änderungen.</string>
+    <string name="activity_edit_series_alert_message_series_has_been_edited">Reihe wurde geändert, wahrscheinlich auf einem synchronisierten Gerät.\n\nWenn
+        Sie die Reihe hier nun ebenfalls speichern, überschreiben Sie jene Änderungen.</string>
 
     <string name="snackbar_extract_item_from_url"><![CDATA[
         Zwischenablage enthält einen Link von <b><u>%1$s</u></b>. Möchten Sie hieraus einen Eintrag erstellen?
@@ -253,11 +260,8 @@
     <string name="never_ask_again">Nicht mehr fragen</string>
     <string name="alert_title_permit_device_to_synchronize">Gerät fragt um Erlaubnis</string>
     <string name="alert_message_permit_device_to_synchronize" formatted="false">%s erlauben sich zu synchronisieren?</string>
-    <string name="alert_message_enter_this_code_on_remote_device" formatted="false">Geben sie diesen Code auf %s ein:&lt;br/>&lt;br/>&lt;b>%s&lt;/b></string>
+    <string name="alert_message_enter_this_code_on_remote_device" formatted="false">Geben Sie diesen Code auf %s ein:&lt;br/>&lt;br/>&lt;b>%s&lt;/b></string>
     <string name="alert_title_enter_response_code_for_permitting_synchronization" formatted="false">Geben Sie den Code ein, der auf %s angezeigt wird:</string>
     <string name="alert_title_entered_response_code_was_wrong">Eingegebener Code ist falsch.\nGeben Sie den Code ein, der auf %s angezeigt wird:</string>
-
-    <string formatted="false" name="error_no_rss_or_atom_feed_found_for_url">Kein RSS oder Atom Feed gefunden für Adresse %s</string>
-    <string formatted="false" name="error_cannot_read_feed_or_extract_feed_addresses_from_url">Konnte Feed nicht lesen oder Feed Adressen nicht extrahieren von %s: %s</string>
 
 </resources>

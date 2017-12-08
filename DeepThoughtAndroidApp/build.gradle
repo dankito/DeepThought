@@ -6,7 +6,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 // Put Fabric plugin after Android plugin
-apply plugin: 'io.fabric'
+//apply plugin: 'io.fabric'
 apply plugin: 'testfairy'
 
 apply from: '../keys.gradle'
@@ -34,7 +34,7 @@ android {
 
         multiDexEnabled true
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "net.dankito.deepthought.android.MockTestRunner"
     }
 
     buildTypes {
@@ -172,9 +172,9 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     betaCompile 'testfairy:testfairy-android-sdk:1.+@aar'
-    betaCompile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true;
-    }
+//    betaCompile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+//        transitive = true
+//    }
 
     extendedCompile project(':ArticleSummaryExtractors') // not published to Play Store
 
@@ -186,6 +186,24 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    androidTestCompile("com.android.support.test.espresso:espresso-contrib:2.2.2") {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+        exclude group: 'com.android.support', module: 'design'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude module: 'recyclerview-v7'
+    }
+
+
+    androidTestCompile 'com.squareup.spoon:spoon-client:1.7.1'
+    androidTestCompile('com.jraska:falcon-spoon-compat:1.0.4') {
+        exclude group: 'com.squareup.spoon', module: 'spoon-client'
+    }
+
+    // you need to install fastlane first (install Ruby Package Manager gem): sudo gem install fastlane
+    androidTestCompile('tools.fastlane:screengrab:1.0.2') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
 
     kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
 }

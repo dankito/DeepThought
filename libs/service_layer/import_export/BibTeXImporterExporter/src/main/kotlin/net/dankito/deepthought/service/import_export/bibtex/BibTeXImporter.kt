@@ -26,6 +26,10 @@ import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 
+// TODO: actually we should get rid of searchEngine and all that persisters.
+// The importer should map the file to Items, Tags etc. and nothing else
+// -> Create an ImportProcessor with methods like ensureTagExists().
+// Another advantage is, all other imports could re-use exactly that functionality.
 class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryPersister: EntryPersister, private val tagService: TagService,
                      private val referencePersister: ReferencePersister, private val seriesPersister: SeriesPersister, private val threadPool: IThreadPool) : IDataImporter {
 

@@ -63,10 +63,10 @@ abstract class ArticleSummaryExtractorTestBase {
 
     private fun testArticleSummaryItem(article: ArticleSummaryItem) {
         if(getArticleUrlScheme() == ArticleUrlScheme.HttpsOnly) {
-            assertThat(article.url, startsWith("https://"))
+            assertThat("${article.url} is not starting with https", article.url, startsWith("https://"))
         }
         else if(getArticleUrlScheme() == ArticleUrlScheme.HttpOnly) {
-            assertThat(article.url, startsWith("http://"))
+            assertThat("${article.url} is not starting with http", article.url, startsWith("http://"))
         }
         else {
             assertThat(article.url, startsWith("http"))
@@ -76,7 +76,7 @@ abstract class ArticleSummaryExtractorTestBase {
         assertThat(article.title.length, `is`(not(0)))
 
         if(areEmptyArticleSummariesAllowed() == false) {
-            assertThat(article.summary.length, `is`(not(0)))
+            assertThat("Summary of article $article should not be empty", article.summary.length, `is`(not(0)))
         }
     }
 

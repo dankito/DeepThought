@@ -4,6 +4,11 @@ sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
 
 
+test {
+    ignoreFailures = true
+}
+
+
 dependencies {
     compile project(':WebClient')
 

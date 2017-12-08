@@ -48,7 +48,7 @@
     <!-- Removed <p></p> from last paragraph as otherwise txtOnboardingText has some padding at end and and PointToFloatingActionButtonArrow therefore doesn't reach to text -->
     <string name="tab_items_onboarding_text"><![CDATA[
         <p>There are 3 ways to add content to DeepThought:</p>
-        <p>For <b>own texts (thoughts, notes, …)</b>, press the <b>(+) button</b> and select <b>Item</b>.</p>
+        <p>For <b>own texts</b>, press the <b>(+) button</b> and select <b>Item</b>.</p>
         <p>To save a <b>Web page</b> select DeepThought in your browser\'s <b>Share menu</b> (in <img src=\"ic_more_vert_white_48dp\" /> / <img src=\"ic_share_white_48dp\" />).</p>
         To add a <b>newspaper article via RSS feed</b>, press the <b>(+) button</b> and select <b>Newspaper Article</b>.
     ]]></string>
@@ -122,11 +122,15 @@
 
     <string name="dialog_article_summary_extractors_add_extractor">Add</string>
 
-    <string name="dialog_add_article_summary_extractor_news_page_url_label">To add a RSS Feed enter the address of a news page, e.g. \"nytimes.com\" or
-        \"theguardian.com\".</string>
+    <string name="dialog_add_article_summary_extractor_news_page_url_label">Simply enter the address of a news page,
+        e. g. \"nytimes.com\" or \"theguardian.com\", we will try to find the RSS feed for you.</string>
+    <string name="dialog_add_article_summary_extractor_news_page_url_hint">e.g. nytimes.com or theguardian.com</string>
     <string name="dialog_add_article_summary_extractor_check_feed_or_website_url">Check</string>
     <string name="dialog_add_article_summary_extractor_found_feeds">Found feeds:</string>
     <string name="dialog_add_article_summary_extractor_recommended_feed_title_addition">(recommended)</string>
+
+    <string name="error_no_rss_or_atom_feed_found_for_url" formatted="false">No RSS or Atom feed found for address %s</string>
+    <string name="error_cannot_read_feed_or_extract_feed_addresses_from_url" formatted="false">Cannot read feed or extract feed addresses from %s: %s</string>
 
     <string name="dialog_article_summary_extractor_config_enter_name">Enter name:</string>
     <string name="dialog_article_summary_extractor_config_select_icon">Select icon:</string>
@@ -216,8 +220,5 @@
     <string name="alert_message_enter_this_code_on_remote_device" formatted="false">Enter this code on %s:&lt;br/>&lt;br/>&lt;b>%s&lt;/b></string>
     <string name="alert_title_enter_response_code_for_permitting_synchronization" formatted="false">Enter Code shown on %s:</string>
     <string name="alert_title_entered_response_code_was_wrong">Entered Code was wrong.\nEnter Code shown on %s:</string>
-
-    <string name="error_no_rss_or_atom_feed_found_for_url" formatted="false">No RSS or Atom feed found for address %s</string>
-    <string name="error_cannot_read_feed_or_extract_feed_addresses_from_url" formatted="false">Cannot read feed or extract feed addresses from %s: %s</string>
 
 </resources>

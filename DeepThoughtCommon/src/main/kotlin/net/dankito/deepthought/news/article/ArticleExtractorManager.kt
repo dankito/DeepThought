@@ -40,8 +40,21 @@ open class ArticleExtractorManager(private val seriesService: SeriesService, pri
             log.info("Using $extractor to extract item ${item.title}")
 
             extractor.extractArticleAsync(item) { asyncResult ->
-                asyncResult.result?.let { addDefaultData(extractor, item, it) { callback(asyncResult) } }
+                asyncResult.result?.let { extractedItem(extractor, item, it, asyncResult, callback) }
                 asyncResult.error?.let { callback(asyncResult) }
+            }
+        }
+    }
+
+    private fun extractedItem(extractor: IArticleExtractor, item: ArticleSummaryItem, extractionResult: ItemExtractionResult, originalAsyncResult: AsyncResult<ItemExtractionResult>,
+                              callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
+        if(extractionResult.couldExtractContent || articleExtractors.isDefaultExtractor(extractor)) {
+            addDefaultData(extractor, item, extractionResult) { callback(originalAsyncResult) }
+        }
+        else { // couldExtractContent == false and extractor != defaultExtractor -> try with default extractor
+            articleExtractors.defaultExtractor.extractArticleAsync(item) { newAsyncResult ->
+                newAsyncResult.result?.let { addDefaultData(extractor, item, it) { callback(newAsyncResult) } }
+                newAsyncResult.error?.let { addDefaultData(extractor, item, extractionResult) { callback(originalAsyncResult) } } // ok, then use original result
             }
         }
     }
@@ -62,8 +75,21 @@ open class ArticleExtractorManager(private val seriesService: SeriesService, pri
             log.info("Using $extractor to extract url $url")
 
             extractor.extractArticleAsync(url) { asyncResult ->
-                asyncResult.result?.let { addDefaultData(extractor, url, it) { callback(asyncResult) } }
+                asyncResult.result?.let { extractedItem(extractor, url, it, asyncResult, callback) }
                 asyncResult.error?.let { callback(asyncResult) }
+            }
+        }
+    }
+
+    private fun extractedItem(extractor: IArticleExtractor, url: String, extractionResult: ItemExtractionResult, originalAsyncResult: AsyncResult<ItemExtractionResult>,
+                              callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
+        if(extractionResult.couldExtractContent || articleExtractors.isDefaultExtractor(extractor)) {
+            addDefaultData(extractor, url, extractionResult) { callback(originalAsyncResult) }
+        }
+        else { // couldExtractContent == false and extractor != defaultExtractor -> try with default extractor
+            articleExtractors.defaultExtractor.extractArticleAsync(url) { newAsyncResult ->
+                newAsyncResult.result?.let { addDefaultData(extractor, url, it) { callback(newAsyncResult) } }
+                newAsyncResult.error?.let { addDefaultData(extractor, url, extractionResult) { callback(originalAsyncResult) } } // ok, then use original result
             }
         }
     }

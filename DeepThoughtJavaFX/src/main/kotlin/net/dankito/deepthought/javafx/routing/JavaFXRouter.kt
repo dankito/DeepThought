@@ -6,6 +6,7 @@ import net.dankito.deepthought.javafx.dialogs.entry.EditEntryView
 import net.dankito.deepthought.javafx.dialogs.entry.EditReadLaterArticleView
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.ReadLaterArticleListView
+import net.dankito.deepthought.javafx.dialogs.source.EditSourceDialog
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
@@ -84,12 +85,15 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
 
 
     override fun showEditReferenceView(source: Source) {
-        // TODO
+        mainWindowController.find(EditSourceDialog::class, mapOf(EditSourceDialog::source to source)).show(getEditSourceDialogTitle(source.title))
     }
 
     override fun showEditEntryReferenceView(forItem: Item, source: Source?, series: Series?) {
-        // there should be no need for this on JavaFX
+        // TODO: set title when Source is not set
+        mainWindowController.find(EditSourceDialog::class, mapOf(EditSourceDialog::source to (source ?: Source("")))).show(getEditSourceDialogTitle(source?.title ?: ""))
     }
+
+    private fun getEditSourceDialogTitle(sourceTitle: String) = String.format(FX.messages["edit.source.dialog.title"], sourceTitle)
 
 
     override fun showEditSeriesView(series: Series) {

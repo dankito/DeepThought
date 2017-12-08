@@ -52,7 +52,7 @@ class ArticleExtractors(webClient: IWebClient) {
             return it
         }
 
-        return readability4JArticleExtractor
+        return defaultExtractor
     }
 
     private fun findImplementedExtractorThatCanExtractEntryFromUrl(url: String): IArticleExtractor? {
@@ -71,5 +71,10 @@ class ArticleExtractors(webClient: IWebClient) {
     fun extractArticleAsync(url: String, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
         getExtractorForUrl(url)?.extractArticleAsync(url, callback)
     }
+
+
+    val defaultExtractor = readability4JArticleExtractor
+
+    fun isDefaultExtractor(extractor: IArticleExtractor) = extractor == defaultExtractor
 
 }

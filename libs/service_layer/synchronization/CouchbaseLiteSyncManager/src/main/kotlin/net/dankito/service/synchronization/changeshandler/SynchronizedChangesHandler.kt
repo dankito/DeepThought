@@ -14,7 +14,7 @@ import net.dankito.utils.AsyncProducerConsumerQueue
 import org.slf4j.LoggerFactory
 
 
-class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityManagerBase, private val changeNotifier: EntityChangedNotifier) {
+class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityManagerBase, private val changeNotifier: EntityChangedNotifier) : ISynchronizedChangesHandler {
 
     companion object {
         private val log = LoggerFactory.getLogger(SynchronizedChangesHandler::class.java)
@@ -32,7 +32,8 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
 
 
 
-    fun handleChange(event: Database.ChangeEvent) {
+
+    override fun handleChange(event: Database.ChangeEvent) {
         if(event.isExternal) {
             changeQueue.add(event)
         }

@@ -21,7 +21,7 @@ class TagsSearchBar(private val tagsListView: TagsListView) : View() {
                 marginLeftRight(6.0)
             }
 
-            promptText = messages["search.tags.prompt.text"]
+            promptText = messages["find.tags.prompt.text"]
 
             textProperty().addListener { _, _, newValue -> tagsListView.searchEntities(newValue) }
             setOnKeyReleased { event ->

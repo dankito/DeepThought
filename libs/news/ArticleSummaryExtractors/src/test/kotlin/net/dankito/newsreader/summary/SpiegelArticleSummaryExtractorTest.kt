@@ -9,4 +9,9 @@ class SpiegelArticleSummaryExtractorTest : ArticleSummaryExtractorTestBase() {
         return SpiegelArticleSummaryExtractor(webClient)
     }
 
+
+    override fun areEmptyArticleSummariesAllowed(): Boolean {
+        return true
+    }
+
 }
