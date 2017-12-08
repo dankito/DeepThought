@@ -37,7 +37,7 @@ class MainActivitySectionsPagerAdapter(private val fragmentManager: FragmentMana
         return 4
     }
 
-    override fun getItem(position: Int): MainActivityTabFragment<out BaseEntity> {
+    override fun getItem(position: Int): EntitiesListViewFragment<out BaseEntity> {
         when(position) {
             0 -> return getEntriesListView() // EntriesListView always seems to work
             1 -> return getTagsListView()

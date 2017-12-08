@@ -6,8 +6,8 @@ import android.view.ActionMode
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import kotlinx.android.synthetic.main.fragment_main_activity_tab.*
-import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
+import kotlinx.android.synthetic.main.fragment_entities_list_view.*
+import kotlinx.android.synthetic.main.fragment_entities_list_view.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.TagRecyclerAdapter
@@ -26,7 +26,7 @@ import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
 
 
-class TagsListView : MainActivityTabFragment<Tag>(R.menu.tag_contextual_action_menu, R.string.tab_tags_onboarding_text), ITagsListView {
+class TagsListView : EntitiesListViewFragment<Tag>(R.menu.tag_contextual_action_menu, R.string.tab_tags_onboarding_text), ITagsListView {
 
     @Inject
     protected lateinit var searchResultsUtil: TagsSearchResultsUtil

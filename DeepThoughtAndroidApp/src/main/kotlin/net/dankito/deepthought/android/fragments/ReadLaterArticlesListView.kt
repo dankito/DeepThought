@@ -19,7 +19,7 @@ import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class ReadLaterArticlesListView : MainActivityTabFragment<ReadLaterArticle>(R.menu.read_later_article_contextual_action_menu,
+class ReadLaterArticlesListView : EntitiesListViewFragment<ReadLaterArticle>(R.menu.read_later_article_contextual_action_menu,
         R.string.tab_read_later_articles_onboarding_text), IReadLaterArticleView {
 
 

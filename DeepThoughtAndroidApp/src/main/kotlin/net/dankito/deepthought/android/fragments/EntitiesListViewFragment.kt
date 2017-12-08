@@ -14,8 +14,8 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
-import kotlinx.android.synthetic.main.fragment_main_activity_tab.*
-import kotlinx.android.synthetic.main.fragment_main_activity_tab.view.*
+import kotlinx.android.synthetic.main.fragment_entities_list_view.*
+import kotlinx.android.synthetic.main.fragment_entities_list_view.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
@@ -30,8 +30,8 @@ import net.dankito.service.search.Search
 import javax.inject.Inject
 
 
-abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualActionMenuResourceId: Int, private val onboardingTextResourceId: Int,
-                                                       private val optionsMenuResourceId: Int = R.menu.fragment_main_activity_tab_menu) : Fragment() {
+abstract class EntitiesListViewFragment<T : BaseEntity>(private val contextualActionMenuResourceId: Int, private val onboardingTextResourceId: Int,
+                                                        private val optionsMenuResourceId: Int = R.menu.fragment_entities_list_view_menu) : Fragment() {
 
     companion object {
         private const val IS_SEARCH_VIEW_ACTIVATED_EXTRA_NAME = "IS_SEARCH_VIEW_ACTIVATED"
@@ -102,7 +102,7 @@ abstract class MainActivityTabFragment<T : BaseEntity>(private val contextualAct
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater?.inflate(R.layout.fragment_main_activity_tab, container, false)
+        val rootView = inflater?.inflate(R.layout.fragment_entities_list_view, container, false)
 
         rootView?.let {
             lytOnboardingText = rootView.lytOnboardingText

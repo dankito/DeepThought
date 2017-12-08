@@ -20,7 +20,7 @@ import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class ReferencesListView: MainActivityTabFragment<Source>(R.menu.reference_contextual_action_menu, R.string.tab_source_onboarding_text),
+class ReferencesListView: EntitiesListViewFragment<Source>(R.menu.reference_contextual_action_menu, R.string.tab_source_onboarding_text),
         IReferencesListView {
 
     @Inject

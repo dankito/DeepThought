@@ -21,7 +21,7 @@ import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class EntriesListView : MainActivityTabFragment<Item>(R.menu.entry_contextual_action_menu, R.string.tab_items_onboarding_text), IEntriesListView {
+class EntriesListView : EntitiesListViewFragment<Item>(R.menu.entry_contextual_action_menu, R.string.tab_items_onboarding_text), IEntriesListView {
 
     @Inject
     protected lateinit var deleteEntityService: DeleteEntityService
