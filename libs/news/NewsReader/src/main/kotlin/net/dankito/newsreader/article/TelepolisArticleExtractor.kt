@@ -61,11 +61,17 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
     override fun parseArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleElement: Element, url: String, title: String) {
         val reference = extractReference(headerElement, articleElement, url, title)
 
-        articleElement.select("header, footer").remove()
+        cleanContent(articleElement)
         makeLinksAbsolute(articleElement, url)
         val content = articleElement.children().joinToString("") { it.outerHtml()}
 
         extractionResult.setExtractedContent(Item(content), reference)
+    }
+
+    private fun cleanContent(articleElement: Element) {
+        articleElement.select("header, footer").remove()
+
+        articleElement.select(".hinweis_anzeige").forEach { it.parent().remove() }
     }
 
     private fun extractReference(headerElement: Element, articleElement: Element, url: String, title: String): Source? {

@@ -12,6 +12,7 @@ import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.utils.IPlatformConfiguration
+import net.dankito.utils.OsHelper
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.utils.localization.Localization
@@ -78,7 +79,8 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         seriesService = SeriesService(dataManager, entityChangedNotifier)
         readLaterArticleService = ReadLaterArticleService(dataManager, entityChangedNotifier, JacksonJsonSerializer(tagService, seriesService))
 
-        underTest = LuceneSearchEngine(dataManager, NoOpLanguageDetector(), ThreadPool(), eventBus, entryService, tagService, referenceService, seriesService, readLaterArticleService)
+        underTest = LuceneSearchEngine(dataManager, NoOpLanguageDetector(), OsHelper(platformConfiguration), ThreadPool(), eventBus,
+                entryService, tagService, referenceService, seriesService, readLaterArticleService)
         initLuceneSearchEngine(underTest)
     }
 
