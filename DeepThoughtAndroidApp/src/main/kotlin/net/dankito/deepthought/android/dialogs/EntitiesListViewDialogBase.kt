@@ -3,7 +3,6 @@ package net.dankito.deepthought.android.dialogs
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
-import android.support.v7.view.SupportMenuInflater
 import android.view.View
 import kotlinx.android.synthetic.main.dialog_entities_list_view.view.*
 import net.dankito.deepthought.android.R
@@ -54,7 +53,7 @@ abstract class EntitiesListViewDialogBase<T : EntitiesListViewFragment<*>> : Ful
                 val toolbar = rootView.toolbar
 
                 fragment?.let { fragment ->
-                    fragment.onCreateOptionsMenu(toolbar.menu, SupportMenuInflater(toolbar.context))
+                    fragment.onCreateOptionsMenu(toolbar.menu, activity.menuInflater)
                     toolbar.setOnMenuItemClickListener { fragment.onOptionsItemSelected(it) ?: false }
                 }
             }
