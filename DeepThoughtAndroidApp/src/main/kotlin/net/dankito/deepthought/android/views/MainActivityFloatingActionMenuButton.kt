@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
+import kotlinx.android.synthetic.main.view_floating_action_button_main.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
@@ -12,12 +13,20 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.data.messages.ArticleSummaryExtractorConfigChanged
 import net.dankito.service.eventbus.IEventBus
 import net.engio.mbassy.listener.Handler
+import org.slf4j.LoggerFactory
 
 
 class MainActivityFloatingActionMenuButton(floatingActionMenu: FloatingActionMenu, private val summaryExtractorsManager: ArticleSummaryExtractorConfigManager, private val router: IRouter,
                                private val eventBus: IEventBus) : FloatingActionMenuButton(floatingActionMenu) {
 
+    companion object {
+        private val log = LoggerFactory.getLogger(MainActivityFloatingActionMenuButton::class.java)
+    }
+
+
     private val favoriteArticleSummaryExtractorsButtons = ArrayList<FloatingActionButton>()
+
+    private var defaultOnMenuButtonClickListener: View.OnClickListener? = null
 
     private val eventBusListener = EventBusListener()
 
@@ -25,19 +34,54 @@ class MainActivityFloatingActionMenuButton(floatingActionMenu: FloatingActionMen
     init {
         setup()
 
-//        summaryExtractorsManager.addInitializationListener { setFavoriteArticleSummaryExtractors() }
+        summaryExtractorsManager.addInitializationListener { setFavoriteArticleSummaryExtractors() }
     }
 
 
     private fun setup() {
-        floatingActionMenu.setOnMenuButtonClickListener { router.showCreateEntryView() }
+        floatingActionMenu.fab_add_entry.setOnClickListener { executeAndCloseMenu { router.showCreateEntryView() } }
+        floatingActionMenu.fab_add_newspaper_article.setOnClickListener { executeAndCloseMenu { router.showArticleSummaryExtractorsView() } }
 
-//        floatingActionMenu.fab_add_entry.setOnClickListener { executeAndCloseMenu { router.showCreateEntryView() } }
-//        floatingActionMenu.fab_add_newspaper_article.setOnClickListener { executeAndCloseMenu { router.showArticleSummaryExtractorsView() } }
-//
-//        setFavoriteArticleSummaryExtractors()
-//
-//        setupEventBusListener()
+        setFavoriteArticleSummaryExtractors()
+
+        setupEventBusListener()
+    }
+
+    /**
+     * Disables the floating action menu.
+     * Is used when there are no favorite ArticleSummaryExtractors. The a click on floating action directly goes to EditEntryActivity to create an item.
+     */
+    private fun disableFloatingActionMenu() {
+        if(defaultOnMenuButtonClickListener == null) {
+            backupDefaultOnMenuButtonClickListener()
+        }
+
+        floatingActionMenu.setOnMenuButtonClickListener { router.showCreateEntryView() }
+    }
+
+    /**
+     * The default OnMenuButtonClick listener - which shows the floating action menu - isn't directly accessible -> get it via reflection
+     */
+    private fun backupDefaultOnMenuButtonClickListener() {
+        try {
+            val mMenuButtonField = floatingActionMenu.javaClass.getDeclaredField("mMenuButton")
+            mMenuButtonField.isAccessible = true
+            val mMenuButton = mMenuButtonField.get(floatingActionMenu)
+
+            val mClickListenerField = mMenuButton.javaClass.getDeclaredField("mClickListener")
+            mClickListenerField.isAccessible = true
+            defaultOnMenuButtonClickListener = mClickListenerField.get(mMenuButton) as View.OnClickListener
+        } catch (e: Exception) {
+            log.error("Could not get defaultOnMenuButtonClickListener", e)
+        }
+    }
+
+    /**
+     * Enables the floating action menu.
+     * Is used when there is at least one favorite ArticleSummaryExtractors.
+     */
+    private fun enableFloatingActionMenu() {
+        floatingActionMenu.setOnMenuButtonClickListener(defaultOnMenuButtonClickListener)
     }
 
     private fun setupEventBusListener() {
@@ -66,10 +110,17 @@ class MainActivityFloatingActionMenuButton(floatingActionMenu: FloatingActionMen
     private fun setFavoriteArticleSummaryExtractorsOnUIThread(activity: Activity, favoriteArticleSummaryExtractors: List<ArticleSummaryExtractorConfig>) {
         clearFavoriteArticleSummaryExtractorsButtons()
 
-        val layoutInflater = activity.layoutInflater
+        if(favoriteArticleSummaryExtractors.size == 0) {
+            disableFloatingActionMenu()
+        }
+        else {
+            enableFloatingActionMenu()
 
-        favoriteArticleSummaryExtractors.forEach { extractorConfig ->
-            addFavoriteArticleSummaryExtractorsButton(layoutInflater, activity, extractorConfig)
+            val layoutInflater = activity.layoutInflater
+
+            favoriteArticleSummaryExtractors.forEach { extractorConfig ->
+                addFavoriteArticleSummaryExtractorsButton(layoutInflater, activity, extractorConfig)
+            }
         }
     }
 
