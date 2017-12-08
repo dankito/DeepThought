@@ -21,11 +21,11 @@ import net.dankito.deepthought.android.activities.arguments.EditEntryActivityPar
 import net.dankito.deepthought.android.activities.arguments.EditEntryActivityResult
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.dialogs.EditHtmlTextDialog
 import net.dankito.deepthought.android.dialogs.FullscreenDialogFragment
 import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
+import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.views.*
 import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.model.*
@@ -68,9 +68,11 @@ class EditEntryActivity : BaseActivity() {
         private const val FORCE_SHOW_REFERENCE_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_REFERENCE_PREVIEW"
         private const val FORCE_SHOW_ABSTRACT_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_ABSTRACT_PREVIEW"
 
+        private const val IS_IN_EDIT_CONTENT_MODE_INTENT_EXTRA_NAME = "IS_IN_EDIT_CONTENT_MODE"
         private const val IS_IN_READER_MODE_INTENT_EXTRA_NAME = "IS_IN_READER_MODE"
 
         private const val CONTENT_INTENT_EXTRA_NAME = "CONTENT"
+        private const val EDIT_CONTENT_HTML_INTENT_EXTRA_NAME = "EDIT_CONTENT_HTML"
         private const val ABSTRACT_INTENT_EXTRA_NAME = "ABSTRACT"
         private const val REFERENCE_INTENT_EXTRA_NAME = "REFERENCE"
         private const val TAGS_ON_ENTRY_INTENT_EXTRA_NAME = "TAGS_ON_ENTRY"
@@ -158,6 +160,8 @@ class EditEntryActivity : BaseActivity() {
 
     private val presenter: EditEntryPresenter
 
+    private var isInEditContentMode = false
+
     private var isInReaderMode = false
 
     private var webSiteHtml: String? = null
@@ -170,6 +174,8 @@ class EditEntryActivity : BaseActivity() {
     private val toolbarUtil = ToolbarUtil()
 
     private val openUrlOptionsView = OpenUrlOptionsView()
+
+    private lateinit var editHtmlView: EditHtmlView
 
     private var mnSaveEntry: MenuItem? = null
 
@@ -221,6 +227,7 @@ class EditEntryActivity : BaseActivity() {
         this.forceShowReferencePreview = savedInstanceState.getBoolean(FORCE_SHOW_REFERENCE_PREVIEW_INTENT_EXTRA_NAME, false)
         this.forceShowAbstractPreview = savedInstanceState.getBoolean(FORCE_SHOW_ABSTRACT_PREVIEW_INTENT_EXTRA_NAME, false)
 
+        this.isInEditContentMode = savedInstanceState.getBoolean(IS_IN_EDIT_CONTENT_MODE_INTENT_EXTRA_NAME, false)
         this.isInReaderMode = savedInstanceState.getBoolean(IS_IN_READER_MODE_INTENT_EXTRA_NAME, false)
 
         (getAndClearState(getKeyForState(stateNamePrefix, ENTRY_EXTRACTION_RESULT_INTENT_EXTRA_NAME)) as? ItemExtractionResult)?.let { editEntryExtractionResult(it) }
@@ -251,6 +258,12 @@ class EditEntryActivity : BaseActivity() {
         wbvwContent.restoreInstanceState(savedInstanceState)
 
         floatingActionMenu.restoreInstanceState(savedInstanceState)
+
+        getAndClearStringState(getKeyForState(stateNamePrefix, EDIT_CONTENT_HTML_INTENT_EXTRA_NAME))?.let { editHtmlView.setHtml(it, sourceToEdit?.url) }
+
+        if(isInEditContentMode) {
+            editContent()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -272,6 +285,7 @@ class EditEntryActivity : BaseActivity() {
             outState.putBoolean(FORCE_SHOW_REFERENCE_PREVIEW_INTENT_EXTRA_NAME, forceShowReferencePreview)
             outState.putBoolean(FORCE_SHOW_ABSTRACT_PREVIEW_INTENT_EXTRA_NAME, forceShowAbstractPreview)
 
+            outState.putBoolean(IS_IN_EDIT_CONTENT_MODE_INTENT_EXTRA_NAME, isInEditContentMode)
             outState.putBoolean(IS_IN_READER_MODE_INTENT_EXTRA_NAME, isInReaderMode)
 
             outState.putString(TAGS_ON_ENTRY_INTENT_EXTRA_NAME, serializer.serializeObject(tagsOnEntry))
@@ -284,6 +298,10 @@ class EditEntryActivity : BaseActivity() {
 
             if(contentToEdit != originalContent) {
                 storeState(getKeyForState(stateNamePrefix, CONTENT_INTENT_EXTRA_NAME), contentToEdit) // application crashes if objects put into bundle are too large (> 1 MB) for Android
+            }
+
+            if(isInEditContentMode) {
+                storeState(getKeyForState(stateNamePrefix, EDIT_CONTENT_HTML_INTENT_EXTRA_NAME), editHtmlView.getHtml()) // application crashes if objects put into bundle are too large (> 1 MB) for Android
             }
 
             wbvwContent.onSaveInstanceState(outState)
@@ -341,6 +359,17 @@ class EditEntryActivity : BaseActivity() {
                 { addReferenceToEntry() }, { addAbstractToEntry() } )
 
         setupEntryContentView()
+
+        setupEntryContentEditor()
+    }
+
+    private fun setupEntryContentEditor() {
+        editHtmlView = EditHtmlView(this)
+        editHtmlView.setupHtmlEditor(lytEditContent)
+
+        editHtmlView.setHtmlChangedCallback { didChange ->
+            runOnUiThread { updateEntryFieldChangedOnUIThread(ItemField.Content,didChange)  }
+        }
     }
 
     private fun addTagsToEntry() {
@@ -531,14 +560,6 @@ class EditEntryActivity : BaseActivity() {
             it.restoreDialog(originalTags ?: ArrayList<Tag>()) { appliedChangesToTags(it) }
         }
 
-        (supportFragmentManager.findFragmentByTag(EditHtmlTextDialog.TAG) as? EditHtmlTextDialog)?.let { dialog ->
-            (dialog.view?.findViewById(R.id.toolbar) as? android.support.v7.widget.Toolbar)?.title?.let { toolbarTitle ->
-                if(toolbarTitle == getString(R.string.activity_edit_item_edit_content_title)) {
-                    dialog.restoreDialog(contentToEdit ?: "", sourceToEdit?.url) { appliedChangesToContent(it) }
-                }
-            }
-        }
-
         setContentPreviewOnUIThread()
 
         mayRegisterEventBusListener()
@@ -572,28 +593,50 @@ class EditEntryActivity : BaseActivity() {
 
 
     private fun editContent() {
-        if(isLoadingUrl) { // while WebView is still loading contentToEdit is not set yet (contentToEdit gets set when loading finishes
+        if(isLoadingUrl) { // while WebView is still loading contentToEdit is not set yet (contentToEdit gets set when loading finishes)
             return
         }
 
         contentToEdit?.let { content ->
-            val editHtmlTextDialog = EditHtmlTextDialog()
-            val hintResourceId = if(content.isBlank() == false || dataManager.localSettings.didShowAddItemPropertiesHelp) null else R.string.activity_edit_item_edit_content_hint
+            editHtmlView.setHtml(content, sourceToEdit?.url)
 
-            editHtmlTextDialog.showDialog(supportFragmentManager, content, sourceToEdit?.url, R.string.activity_edit_item_edit_content_title, hintResourceId) {
-                appliedChangesToContent(it)
-            }
+            txtEnterContentHint.visibility =
+                    if(content.isBlank() == false || dataManager.localSettings.didShowAddItemPropertiesHelp) View.GONE
+                    else View.VISIBLE
+
+            lytEditContent.visibility = View.VISIBLE
+            lytViewContent.visibility = View.GONE
+            lytEntryFieldsPreview.visibility = View.GONE // TODO: animate
+
+            isInEditContentMode = true
+
+            invalidateOptionsMenu()
         }
     }
 
-    private fun appliedChangesToContent(content: String) {
-        contentToEdit = content
+    private fun appliedChangesToContent() {
+        contentToEdit = editHtmlView.getHtml()
 
         runOnUiThread {
+            leaveEditContentView()
+
             updateEntryFieldChangedOnUIThread(ItemField.Content, originalContent != contentToEdit)
             setContentPreviewOnUIThread()
             mayShowSaveEntryChangesHelpOnUIThread()
         }
+    }
+
+    private fun leaveEditContentView() {
+        contentEditor.hideKeyboard()
+
+        lytEditContent.visibility = View.GONE
+
+        lytViewContent.visibility = View.VISIBLE
+        lytEntryFieldsPreview.visibility = View.VISIBLE // TODO: animate
+
+        isInEditContentMode = false
+
+        invalidateOptionsMenu()
     }
 
     private fun abstractChanged(didAbstractChange: Boolean) {
@@ -979,6 +1022,8 @@ class EditEntryActivity : BaseActivity() {
             wbvwContent.leaveFullscreenModeAndWaitTillLeft {  }
         }
 
+        contentEditor.hideKeyboard()
+
         super.onPause()
     }
 
@@ -1026,21 +1071,35 @@ class EditEntryActivity : BaseActivity() {
         else if(floatingActionMenu.handlesBackButtonPress()) {
             return
         }
+        else if(isInEditContentMode) {
+            leaveEditContentView()
+            return
+        }
 
         askIfUnsavedChangesShouldBeSavedAndCloseDialog()
     }
 
     private fun getVisibleEditEntryFieldDialog(): FullscreenDialogFragment? {
-        val editHtmlDialog = supportFragmentManager.findFragmentByTag(EditHtmlTextDialog.TAG) as? EditHtmlTextDialog
-        if(editHtmlDialog != null) {
-            return editHtmlDialog
-        }
-
         return supportFragmentManager.findFragmentByTag(TagsOnEntryDialogFragment.TAG) as? TagsOnEntryDialogFragment
     }
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        if(isInEditContentMode) {
+            createEditHtmlOptionsMenu(menu)
+        }
+        else {
+            createViewHtmlOptionsMenu(menu)
+        }
+
+        return true
+    }
+
+    private fun createEditHtmlOptionsMenu(menu: Menu) {
+        menuInflater.inflate(R.menu.dialog_edit_html_text_menu, menu)
+    }
+
+    private fun createViewHtmlOptionsMenu(menu: Menu) {
         menuInflater.inflate(R.menu.activity_edit_entry_menu, menu)
 
         mnSaveEntry = menu.findItem(R.id.mnSaveEntry)
@@ -1065,8 +1124,6 @@ class EditEntryActivity : BaseActivity() {
         setMenuSaveEntryVisibleStateOnUIThread()
 
         toolbarUtil.setupActionItemsLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
-
-        return true
     }
 
     private fun setReaderModeActionStateOnUIThread() {
@@ -1089,7 +1146,12 @@ class EditEntryActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             android.R.id.home -> {
-                askIfUnsavedChangesShouldBeSavedAndCloseDialog()
+                if(isInEditContentMode) {
+                    leaveEditContentView()
+                }
+                else {
+                    askIfUnsavedChangesShouldBeSavedAndCloseDialog()
+                }
                 return true
             }
             R.id.mnSaveEntry -> {
@@ -1114,6 +1176,10 @@ class EditEntryActivity : BaseActivity() {
             }
             R.id.mnShareEntry -> {
                 showShareEntryPopupMenu()
+                return true
+            }
+            R.id.mnApplyHtmlChanges -> {
+                appliedChangesToContent()
                 return true
             }
         }
