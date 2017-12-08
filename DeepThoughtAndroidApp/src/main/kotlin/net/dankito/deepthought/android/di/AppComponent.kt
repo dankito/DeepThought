@@ -3,10 +3,7 @@ package net.dankito.deepthought.android.di
 import dagger.Component
 import net.dankito.deepthought.android.DeepThoughtApplication
 import net.dankito.deepthought.android.MainActivity
-import net.dankito.deepthought.android.activities.ArticleSummaryActivity
-import net.dankito.deepthought.android.activities.EditEntryActivity
-import net.dankito.deepthought.android.activities.EditReferenceActivity
-import net.dankito.deepthought.android.activities.EditSeriesActivity
+import net.dankito.deepthought.android.activities.*
 import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorIconsAdapter
 import net.dankito.deepthought.android.adapter.ArticleSummaryExtractorsAdapter
 import net.dankito.deepthought.android.androidservice.DeepThoughtBackgroundAndroidService
@@ -45,6 +42,8 @@ interface AppComponent : CommonComponent {
     fun inject(backgroundService: DeepThoughtBackgroundAndroidService)
 
     fun inject(app: DeepThoughtApplication)
+
+    fun inject(baseActivity: BaseActivity)
 
     fun inject(mainActivity: MainActivity)
 

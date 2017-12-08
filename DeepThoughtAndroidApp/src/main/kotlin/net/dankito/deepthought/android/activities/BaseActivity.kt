@@ -3,6 +3,7 @@ package net.dankito.deepthought.android.activities
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import net.dankito.data_access.filesystem.IFileStorageService
+import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.ActivityParameterHolder
 import net.dankito.deepthought.android.service.ActivityStateHolder
 import net.dankito.deepthought.android.service.CurrentActivityTracker
@@ -40,6 +41,11 @@ open class BaseActivity : AppCompatActivity() {
 
 
     private var waitingForResultWithId: String? = null
+
+
+    init {
+        AppComponent.component.inject(this)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

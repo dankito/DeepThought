@@ -31,7 +31,8 @@ import javax.inject.Inject
 
 
 abstract class EntitiesListViewFragment<T : BaseEntity>(private val contextualActionMenuResourceId: Int, private val onboardingTextResourceId: Int,
-                                                        private val optionsMenuResourceId: Int = R.menu.fragment_entities_list_view_menu) : Fragment() {
+                                                        val optionsMenuResourceId: Int = R.menu.fragment_entities_list_view_menu, private val hasToolbarMenu: Boolean = true)
+    : Fragment() {
 
     companion object {
         private const val IS_SEARCH_VIEW_ACTIVATED_EXTRA_NAME = "IS_SEARCH_VIEW_ACTIVATED"
@@ -119,7 +120,7 @@ abstract class EntitiesListViewFragment<T : BaseEntity>(private val contextualAc
             setupUI(rootView)
         }
 
-        setHasOptionsMenu(true)
+        setHasOptionsMenu(hasToolbarMenu)
 
         return rootView
     }
@@ -240,7 +241,7 @@ abstract class EntitiesListViewFragment<T : BaseEntity>(private val contextualAc
     }
 
 
-    fun resumedFragment() {
+    protected open fun resumedFragment() {
         if(presenter == null) { // in some cases resumedFragment() gets called before onAttach() -> ensure presenter then gets initialized anyway
             presenter = initPresenter()
         }
@@ -248,6 +249,14 @@ abstract class EntitiesListViewFragment<T : BaseEntity>(private val contextualAc
         presenter?.let { presenter ->
             searchEngine.addInitializationListener {
                 searchEntities(presenter.getLastSearchTerm())
+            }
+        }
+
+        searchView?.let { searchView ->
+            activity?.let { activity ->
+                if(searchView.queryHint != getQueryHint(activity)) { // activity was null when searchView was created -> initialize now
+                    initSearchView(searchView)
+                }
             }
         }
     }

@@ -13,7 +13,10 @@ import android.view.MotionEvent
 import android.widget.TextView
 import kotlinx.android.synthetic.main.view_floating_action_button_main.*
 import net.dankito.deepthought.android.activities.BaseActivity
+import net.dankito.deepthought.android.activities.ReadLaterArticlesListViewActivity
+import net.dankito.deepthought.android.activities.SourcesListViewActivity
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.android.dialogs.TagsListViewDialog
 import net.dankito.deepthought.android.fragments.EntriesListView
 import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.IntentHandler
@@ -166,9 +169,18 @@ class MainActivity : BaseActivity() {
         if(floatingActionMenuButton.handlesBackButtonPress()) {
 
         }
-        else if(entriesListView.onBackPressed() == false) {
+        else if(dialogHandlesBackButton() == false && entriesListView.onBackPressed() == false) {
             super.onBackPressed() // when not handling by fragment call default back button press handling
         }
+    }
+
+    private fun dialogHandlesBackButton(): Boolean {
+        val tagsListViewDialog = supportFragmentManager.findFragmentByTag(TagsListViewDialog.Tag) as? TagsListViewDialog
+        if(tagsListViewDialog != null) {
+            return tagsListViewDialog.handlesBackButtonPress()
+        }
+
+        return false
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -184,6 +196,12 @@ class MainActivity : BaseActivity() {
 
     private val navigationListener = NavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
+            R.id.navTags -> TagsListViewDialog().show(supportFragmentManager)
+
+            R.id.navSources -> navigateToActivity(SourcesListViewActivity::class.java)
+
+            R.id.navReadLaterArticles -> navigateToActivity(ReadLaterArticlesListViewActivity::class.java)
+
             R.id.navArticleSummaryExtractors -> {
                 router.showArticleSummaryExtractorsView()
             }
@@ -193,6 +211,13 @@ class MainActivity : BaseActivity() {
         drawer.closeDrawer(GravityCompat.START)
 
         true
+    }
+
+    private fun navigateToActivity(activityClass: Class<out BaseActivity>) {
+        val intent = Intent(this, activityClass)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        startActivity(intent)
     }
 
 
