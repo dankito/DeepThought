@@ -12,9 +12,9 @@
     <string name="nav_menu_read_later_articles_title">Read later</string>
 
     <string name="nav_menu_article_summary_extractors_title">Newspaper Articles</string>
-    <string name="nav_menu_device_management_title">Device management</string>
-    <string name="nav_menu_settings_title">Settings</string>
-    <string name="nav_menu_about_title">About</string>
+    <string name="nav_menu_device_management_title">Device management (to do)</string>
+    <string name="nav_menu_settings_title">Settings (to do)</string>
+    <string name="nav_menu_about_title">About (to do)</string>
 
     <string name="nav_menu_version_label">Version\u0020</string>
 
@@ -164,8 +164,6 @@
     <string name="activity_edit_item_alert_message_item_has_been_edited">Item has been edited (probably on a synchronized device).\n\nWhen
         you now save the item the other changes get overwritten.</string>
     <string name="activity_edit_item_alert_message_delete_item">Would you really like to delete item \'%s\'?</string>
-
-    <string name="dialog_edit_html_alert_message_html_contains_unsaved_changes">Content has changed.\n\nDo you want to apply these changes?</string>
 
     <string name="dialog_tags_on_item_title">Tags</string>
     <string name="dialog_tags_on_item_tags_label">Tags:</string>

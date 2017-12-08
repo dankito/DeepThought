@@ -17,9 +17,9 @@
     <string name="nav_menu_read_later_articles_title">Später lesen</string>
 
     <string name="nav_menu_article_summary_extractors_title">Zeitungsartikel</string>
-    <string name="nav_menu_device_management_title">Geräteverwaltung</string>
-    <string name="nav_menu_settings_title">Einstellungen</string>
-    <string name="nav_menu_about_title">Über …</string>
+    <string name="nav_menu_device_management_title">Geräteverwaltung (to do)</string>
+    <string name="nav_menu_settings_title">Einstellungen (to do)</string>
+    <string name="nav_menu_about_title">Über … (to do)</string>
     <string name="nav_menu_version_label">Version\u0020</string>
 
     <!-- Floating Action Button ist der + Button auf der Startseite. Die Werte hier werden dann im Menü angezeigt, wenn ich auf diesen Button klicke -->
