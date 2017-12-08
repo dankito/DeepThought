@@ -14,14 +14,16 @@
     <!-- layout_marginTop: don't know why but by default ViewPager gets displayed below AppBarLayout -> setting AppBarLayout's size as margin top-->
 
 
-    <net.dankito.deepthought.android.views.NonSwipeableViewPager
-        android:id="@+id/viewPager"
+    <fragment
+        class="net.dankito.deepthought.android.fragments.EntriesListView"
+        android:tag="EntriesListView"
+        android:id="@+id/frgmEntriesListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/multiSelectModeAppBarLayout"
         android:layout_alignParentTop="true"
         tools:context=".MainActivity"
-        />
+    />
 
     <!-- An extra AppBarLayout to show contextual action mode bar in -->
     <android.support.design.widget.AppBarLayout

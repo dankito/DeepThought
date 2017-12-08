@@ -11,12 +11,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.widget.TextView
-import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.view_floating_action_button_main.*
 import net.dankito.deepthought.android.activities.BaseActivity
-import net.dankito.deepthought.android.adapter.MainActivitySectionsPagerAdapter
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.fragments.MainActivityTabFragment
+import net.dankito.deepthought.android.fragments.EntriesListView
 import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.IntentHandler
 import net.dankito.deepthought.android.views.MainActivityFloatingActionMenuButton
@@ -40,11 +38,9 @@ class MainActivity : BaseActivity() {
     }
 
 
-    private lateinit var sectionsPagerAdapter: MainActivitySectionsPagerAdapter
-
-    private var currentlyVisibleFragment: MainActivityTabFragment<out BaseEntity>? = null
-
     private lateinit var floatingActionMenuButton: MainActivityFloatingActionMenuButton
+
+    private lateinit var entriesListView: EntriesListView
 
     private var eventBusListener: EventBusListener? = null
 
@@ -104,10 +100,7 @@ class MainActivity : BaseActivity() {
         showAppVersion(navigationView)
         navigationView.setNavigationItemSelectedListener(navigationListener)
 
-        sectionsPagerAdapter = MainActivitySectionsPagerAdapter(supportFragmentManager)
-        viewPager.adapter = sectionsPagerAdapter
-
-        setCurrentlyVisibleFragment(0) // set currentlyVisibleFragment on start otherwise back button won't work on first displayed fragment
+        entriesListView = supportFragmentManager.findFragmentByTag("EntriesListView") as EntriesListView
 
         floatingActionMenuButton = MainActivityFloatingActionMenuButton(floatingActionMenu, summaryExtractorManager, router, eventBus)
     }
@@ -128,14 +121,6 @@ class MainActivity : BaseActivity() {
         }
 
         return super.dispatchTouchEvent(event)
-    }
-
-    private fun setCurrentlyVisibleFragment(position: Int) {
-        currentlyVisibleFragment?.isCurrentSelectedTab = false
-
-        currentlyVisibleFragment = sectionsPagerAdapter.getItem(position)
-        currentlyVisibleFragment?.isCurrentSelectedTab = true
-        currentlyVisibleFragment?.viewCameIntoView()
     }
 
     private fun initializedDataManager() {
@@ -181,7 +166,7 @@ class MainActivity : BaseActivity() {
         if(floatingActionMenuButton.handlesBackButtonPress()) {
 
         }
-        else if(currentlyVisibleFragment?.onBackPressed() == false) {
+        else if(entriesListView.onBackPressed() == false) {
             super.onBackPressed() // when not handling by fragment call default back button press handling
         }
     }

@@ -227,6 +227,12 @@ abstract class EntitiesListViewFragment<T : BaseEntity>(private val contextualAc
         presenter = initPresenter()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        resumedFragment()
+    }
+
     override fun onDestroy() {
         presenter?.cleanUp()
 
@@ -234,8 +240,8 @@ abstract class EntitiesListViewFragment<T : BaseEntity>(private val contextualAc
     }
 
 
-    fun viewCameIntoView() {
-        if(presenter == null) { // in some cases viewCameIntoView() gets called before onAttach() -> ensure presenter then gets initialized anyway
+    fun resumedFragment() {
+        if(presenter == null) { // in some cases resumedFragment() gets called before onAttach() -> ensure presenter then gets initialized anyway
             presenter = initPresenter()
         }
 
