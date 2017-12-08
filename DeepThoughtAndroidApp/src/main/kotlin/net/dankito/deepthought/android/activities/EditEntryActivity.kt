@@ -1023,6 +1023,7 @@ class EditEntryActivity : BaseActivity() {
         }
 
         contentEditor.hideKeyboard()
+        lytAbstractPreview.stopEditing()
 
         super.onPause()
     }

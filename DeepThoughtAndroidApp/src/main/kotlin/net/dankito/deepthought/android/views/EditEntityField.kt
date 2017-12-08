@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.view_edit_entity_field.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.extensions.setTextColorToColorResource
 import net.dankito.deepthought.android.extensions.setTintColor
+import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.service.showKeyboard
 
 
@@ -194,6 +195,10 @@ class EditEntityField : RelativeLayout {
 
     fun startEditing() {
         edtxtEntityFieldValue.showKeyboard()
+    }
+
+    fun stopEditing() {
+        edtxtEntityFieldValue.hideKeyboard()
     }
 
 
