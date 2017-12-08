@@ -1097,7 +1097,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun createEditHtmlOptionsMenu(menu: Menu) {
-        menuInflater.inflate(R.menu.dialog_edit_html_text_menu, menu)
+        menuInflater.inflate(R.menu.activity_edit_entry_edit_content_menu, menu)
     }
 
     private fun createViewHtmlOptionsMenu(menu: Menu) {
