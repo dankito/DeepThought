@@ -611,12 +611,15 @@ class EditEntryActivity : BaseActivity() {
             lytEditContent.visibility = View.VISIBLE
             lytViewContent.visibility = View.GONE
             lytEntryFieldsPreview.visibility = View.GONE // TODO: animate
+            setFloatingActionButtonVisibilityOnUIThread()
 
             isInEditContentMode = true
 
             invalidateOptionsMenu()
         }
     }
+
+    private fun isEditingContent() = lytEditContent.visibility == View.VISIBLE
 
     private fun appliedChangesToContent() {
         contentToEdit = editHtmlView.getHtml()
@@ -637,6 +640,7 @@ class EditEntryActivity : BaseActivity() {
 
         lytViewContent.visibility = View.VISIBLE
         lytEntryFieldsPreview.visibility = View.VISIBLE // TODO: animate
+        setFloatingActionButtonVisibilityOnUIThread()
 
         isInEditContentMode = false
 
@@ -936,7 +940,7 @@ class EditEntryActivity : BaseActivity() {
         // when user comes to EditEntryDialog, don't show floatingActionMenu till some content has been entered. She/he should focus on the content
         val hasUserEverEnteredSomeContent = dataManager.localSettings.didShowAddItemPropertiesHelp || contentToEdit.isNullOrBlank() == false
 
-        floatingActionMenu.setVisibilityOnUIThread(wbvwContent.isInFullscreenMode, hasUserEverEnteredSomeContent)
+        floatingActionMenu.setVisibilityOnUIThread(wbvwContent.isInFullscreenMode || isEditingContent(), hasUserEverEnteredSomeContent)
     }
 
 
