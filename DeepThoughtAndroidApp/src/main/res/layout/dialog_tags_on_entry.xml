@@ -47,7 +47,7 @@
             android:id="@+id/lytEntryTagsPreview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/lytSearchControls"
+            android:layout_above="@+id/edtxtEditEntrySearchTag"
             android:minHeight="@dimen/dialog_tags_on_entry_tag_preview_min_height"
             android:layout_marginTop="@dimen/dialog_tags_on_entry_tag_preview_margin_top"
         >
@@ -77,35 +77,19 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/lytSearchControls"
-            android:orientation="vertical"
+        <EditText
+            android:id="@+id/edtxtEditEntrySearchTag"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dialog_tags_on_entry_tag_search_tags_height"
             android:layout_alignParentTop="false"
             android:layout_alignParentBottom="true"
-        >
-
-            <EditText
-                android:id="@+id/edtxtEditEntrySearchTag"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dialog_tags_on_entry_tag_search_tags_height"
-                android:layout_marginRight="@dimen/dialog_tags_on_entry_tag_search_tags_margin_right"
-                android:layout_marginEnd="@dimen/dialog_tags_on_entry_tag_search_tags_margin_right"
-                android:textSize="@dimen/dialog_tags_on_entry_tag_search_tags_text_size"
-                android:inputType="text"
-                android:imeOptions="flagNoExtractUi"
-                android:hint="@string/dialog_tags_on_item_search_tags_hint"
-            />
-
-            <include
-                layout="@layout/layout_context_help"
-                android:id="@+id/lytConfirmCreateTags"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-            />
-
-        </LinearLayout>
+            android:layout_marginRight="@dimen/dialog_tags_on_entry_tag_search_tags_margin_right"
+            android:layout_marginEnd="@dimen/dialog_tags_on_entry_tag_search_tags_margin_right"
+            android:textSize="@dimen/dialog_tags_on_entry_tag_search_tags_text_size"
+            android:inputType="text"
+            android:imeOptions="flagNoExtractUi"
+            android:hint="@string/dialog_tags_on_item_search_tags_hint"
+        />
 
     </RelativeLayout>
 
