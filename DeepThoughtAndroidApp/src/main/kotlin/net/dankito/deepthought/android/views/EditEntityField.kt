@@ -205,6 +205,7 @@ open class EditEntityField : RelativeLayout {
 
 
     open fun startEditing() {
+        edtxtEntityFieldValue.requestFocus()
         edtxtEntityFieldValue.showKeyboard()
     }
 

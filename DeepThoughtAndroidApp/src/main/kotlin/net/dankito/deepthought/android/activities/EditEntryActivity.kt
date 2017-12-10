@@ -664,12 +664,13 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun editReference() {
-        setWaitingForResult(EditReferenceActivity.ResultId)
+        if(sourceToEdit == null) {
+            sourceToEdit = Source("")
+            lytReferencePreview.setSourceToEdit(sourceToEdit, getCurrentSeries())
+        }
 
-        val reference = sourceToEdit
-        val entry = item ?: readLaterArticle?.itemExtractionResult?.item ?: itemExtractionResult?.item ?: Item("") // should never be the case that item is null, just to make compiler happy
-
-        presenter.editReference(reference, entry, getCurrentSeries())
+        lytReferencePreview.visibility = View.VISIBLE
+        lytReferencePreview.startEditing()
     }
 
     private fun appliedChangesToReference(result: EditReferenceActivityResult) {
