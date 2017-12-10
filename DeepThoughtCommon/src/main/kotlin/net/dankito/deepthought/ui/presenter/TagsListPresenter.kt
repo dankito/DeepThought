@@ -41,7 +41,7 @@ class TagsListPresenter(tagsListView: ITagsListView, private val allCalculatedTa
     override fun getTagsFromSearchTagsWithoutFilterResult(result: TagsSearchResults): List<Tag> {
         if(result.hasEmptySearchTerm) {
 
-            return CombinedLazyLoadingList<Tag>(allCalculatedTags.getCalculatedTags(), result.getRelevantMatchesSorted())
+            return CombinedLazyLoadingList<Tag>(allCalculatedTags.getCalculatedTags(), super.getTagsFromSearchTagsWithoutFilterResult(result))
         }
 
         return super.getTagsFromSearchTagsWithoutFilterResult(result)
