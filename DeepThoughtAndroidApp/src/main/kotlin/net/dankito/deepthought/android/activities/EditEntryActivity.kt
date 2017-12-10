@@ -30,7 +30,6 @@ import net.dankito.deepthought.android.views.*
 import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.getPlainTextForHtml
-import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.fields.ItemField
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.news.article.ArticleExtractorManager
@@ -347,8 +346,9 @@ class EditEntryActivity : BaseActivity() {
             }
         }
 
-        lytReferencePreview.setFieldNameOnUiThread(R.string.activity_edit_item_source_label, false)
-        lytReferencePreview.fieldClickedListener = { editReference() }
+        lytReferencePreview.didValueChangeListener = { didSourceTitleChange -> sourceTitleChanged(didSourceTitleChange) }
+        // TODO
+//        lytReferencePreview.fieldClickedListener = { editReference() }
 
         lytTagsPreview.setFieldNameOnUiThread(R.string.activity_edit_item_tags_label, false)
         lytTagsPreview.fieldClickedListener = { editTagsOnEntry() }
@@ -589,6 +589,10 @@ class EditEntryActivity : BaseActivity() {
 
         updateEntryFieldChangedOnUIThread(ItemField.Source, originalSource != sourceToEdit)
         setReferencePreviewOnUIThread()
+    }
+
+    private fun sourceTitleChanged(didSourceTitleChange: Boolean) {
+        updateEntryFieldChangedOnUIThread(ItemField.SourceTitle, didSourceTitleChange)
     }
 
 
@@ -877,11 +881,11 @@ class EditEntryActivity : BaseActivity() {
     private fun setReferencePreviewOnUIThread() {
         if(sourceToEdit == null) {
             lytReferencePreview.setOnboardingTextOnUiThread(R.string.activity_edit_item_source_onboarding_text)
-            lytReferencePreview.hideActionIconOnUiThread()
         }
         else {
-            lytReferencePreview.setFieldValueOnUiThread(sourceToEdit.getPreviewWithSeriesAndPublishingDate(getCurrentSeries()))
-            lytReferencePreview.showActionIconOnUiThread(android.R.drawable.ic_delete, false) { referenceCleared() }
+            lytReferencePreview.setSourceToEdit(sourceToEdit, getCurrentSeries())
+            // TODO
+//            lytReferencePreview.showActionIconOnUiThread(android.R.drawable.ic_delete, false) { referenceCleared() }
         }
 
         val showReferencePreview = this.forceShowReferencePreview || sourceToEdit != null
@@ -1426,6 +1430,10 @@ class EditEntryActivity : BaseActivity() {
     private fun updateEntry(item: Item, content: String, abstract: String) {
         item.content = content
         item.summary = abstract
+
+        if(changedFields.contains(ItemField.SourceTitle)) {
+            sourceToEdit?.title = lytReferencePreview.getEditedValue() ?: ""
+        }
     }
 
 

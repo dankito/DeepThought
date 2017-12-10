@@ -1,14 +1,49 @@
 package net.dankito.deepthought.android
 
 import android.app.Activity
+import android.content.Intent
 import android.support.test.InstrumentationRegistry.getInstrumentation
 import android.support.test.espresso.core.deps.guava.collect.Iterables
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
 import android.support.test.runner.lifecycle.Stage
+import net.dankito.deepthought.android.activities.BaseActivity
+import net.dankito.deepthought.android.service.ActivityParameterHolder
 
 
-class DeepThoughtActivityTestRule<T : Activity>(activityClass: Class<T>) : ActivityTestRule<T>(activityClass) {
+class DeepThoughtActivityTestRule<T : Activity>(activityClass: Class<T>, private val beforeActivityLaunched: (() -> Unit)? = null) : ActivityTestRule<T>(activityClass) {
+
+
+    private var parameterHolder: ActivityParameterHolder? = null
+
+    private var activityParameters: Any? = null
+
+
+    override fun beforeActivityLaunched() {
+        beforeActivityLaunched?.invoke()
+
+        super.beforeActivityLaunched()
+    }
+
+
+    fun setActivityParameter(parameterHolder: ActivityParameterHolder, activityParameters: Any) {
+        this.parameterHolder = parameterHolder
+        this.activityParameters = activityParameters
+    }
+
+    override fun getActivityIntent(): Intent {
+        val intent = super.getActivityIntent()
+
+        activityParameters?.let { parameters ->
+            parameterHolder?.let { parameterHolder ->
+                val id = parameterHolder.setParameters(parameters)
+
+                intent.putExtra(BaseActivity.ParametersId, id)
+            }
+        }
+
+        return intent
+    }
 
 
     /**

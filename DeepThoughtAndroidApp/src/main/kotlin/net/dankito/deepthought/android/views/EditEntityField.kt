@@ -22,7 +22,7 @@ import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.service.showKeyboard
 
 
-class EditEntityField : RelativeLayout {
+open class EditEntityField : RelativeLayout {
 
     companion object {
         private const val FIELD_NAME_BUNDLE_EXTRA_NAME = "FIELD_NAME"
@@ -30,16 +30,16 @@ class EditEntityField : RelativeLayout {
     }
 
 
-    private lateinit var txtEntityFieldName: TextView
+    protected lateinit var txtEntityFieldName: TextView
 
-    private lateinit var edtxtEntityFieldValue: EditText
+    protected lateinit var edtxtEntityFieldValue: EditText
 
-    private lateinit var btnEntityFieldAction: ImageButton
+    protected lateinit var btnEntityFieldAction: ImageButton
 
 
     var didValueChange = false
 
-    private var originalValue = ""
+    protected var originalValue = ""
 
 
     var didValueChangeListener: ((didValueChange: Boolean) -> Unit)? = null
@@ -96,33 +96,43 @@ class EditEntityField : RelativeLayout {
         edtxtEntityFieldValue = rootView.edtxtEntityFieldValue
         edtxtEntityFieldValue.addTextChangedListener(edtxtEntityFieldValueTextWatcher)
         edtxtEntityFieldValue.setOnClickListener { fieldClickedListener?.invoke() } // remember: setOnClickListener() on an EditText only works if focusable has been set to  false -> call setFieldNameOnUiThread() with isEditable = false
-        edtxtEntityFieldValue.setOnFocusChangeListener { _, hasFocus -> fieldValueFocusChangedListener?.invoke(hasFocus) }
+        edtxtEntityFieldValue.setOnFocusChangeListener { _, hasFocus -> hasFocusChanged(hasFocus) }
 
         btnEntityFieldAction = rootView.btnEntityFieldAction
+
+        doCustomUiInitialization(rootView)
+    }
+
+    protected open fun hasFocusChanged(hasFocus: Boolean) {
+        fieldValueFocusChangedListener?.invoke(hasFocus)
+    }
+
+    protected open fun doCustomUiInitialization(rootView: View) {
+
     }
 
 
-    fun setFieldNameOnUiThread(fieldNameResourceId: Int, isEditable: Boolean = true, didValueChangeListener: ((didValueChange: Boolean) -> Unit)?) {
+    open fun setFieldNameOnUiThread(fieldNameResourceId: Int, isEditable: Boolean = true, didValueChangeListener: ((didValueChange: Boolean) -> Unit)?) {
         setFieldNameOnUiThread(fieldNameResourceId, isEditable)
 
         this.didValueChangeListener = didValueChangeListener
     }
 
-    fun setFieldNameOnUiThread(fieldNameResourceId: Int, isEditable: Boolean = true) {
+    open fun setFieldNameOnUiThread(fieldNameResourceId: Int, isEditable: Boolean = true) {
         txtEntityFieldName.text = context.getString(fieldNameResourceId)
 
         setEditTextEntityFieldValueIsEditableOnUiThread(isEditable)
     }
 
-    fun getCurrentFieldValue(): String {
+    open fun getCurrentFieldValue(): String {
         return edtxtEntityFieldValue.text.toString()
     }
 
-    fun setFieldValueInputTypeOnUiThread(inputType: Int) {
+    open fun setFieldValueInputTypeOnUiThread(inputType: Int) {
         edtxtEntityFieldValue.inputType = inputType
     }
 
-    fun setFieldValueOnUiThread(fieldValue: String) {
+    open fun setFieldValueOnUiThread(fieldValue: String) {
         setEditTextEntityFieldValueOnUiThread(fieldValue)
 
         edtxtEntityFieldValue.setTypeface(null, Typeface.NORMAL)
@@ -132,7 +142,7 @@ class EditEntityField : RelativeLayout {
         updateDidValueChange(false)
     }
 
-    fun setOnboardingTextOnUiThread(onboardingTextResourceId: Int) {
+    open fun setOnboardingTextOnUiThread(onboardingTextResourceId: Int) {
         setEditTextEntityFieldValueOnUiThread(context.getString(onboardingTextResourceId))
 
         edtxtEntityFieldValue.setTypeface(null, Typeface.ITALIC)
@@ -141,25 +151,26 @@ class EditEntityField : RelativeLayout {
         updateDidValueChange(false)
     }
 
-    private fun setEditTextEntityFieldValueOnUiThread(fieldValue: String) {
+    protected open fun setEditTextEntityFieldValueOnUiThread(fieldValue: String) {
         edtxtEntityFieldValue.removeTextChangedListener(edtxtEntityFieldValueTextWatcher)
 
         edtxtEntityFieldValue.setText(fieldValue)
+        edtxtEntityFieldValue.setSelection(fieldValue.length)
 
         edtxtEntityFieldValue.addTextChangedListener(edtxtEntityFieldValueTextWatcher)
     }
 
-    private fun setEditTextEntityFieldValueIsEditableOnUiThread(isEditable: Boolean) {
+    protected open fun setEditTextEntityFieldValueIsEditableOnUiThread(isEditable: Boolean) {
         edtxtEntityFieldValue.isFocusable = isEditable
         edtxtEntityFieldValue.isFocusableInTouchMode = isEditable
     }
 
 
-    fun showActionIconOnUiThread(iconResourceId: Int, useAccentColorAsTintColor: Boolean = true) {
+    open fun showActionIconOnUiThread(iconResourceId: Int, useAccentColorAsTintColor: Boolean = true) {
         showActionIconOnUiThread(iconResourceId, useAccentColorAsTintColor, null)
     }
 
-    fun showActionIconOnUiThread(iconResourceId: Int, useAccentColorAsTintColor: Boolean = true, actionIconClickedListener: (() -> Unit)?) {
+    open fun showActionIconOnUiThread(iconResourceId: Int, useAccentColorAsTintColor: Boolean = true, actionIconClickedListener: (() -> Unit)?) {
         setActionImageAndTintColor(iconResourceId, useAccentColorAsTintColor)
 
         btnEntityFieldAction.visibility = View.VISIBLE
@@ -173,7 +184,7 @@ class EditEntityField : RelativeLayout {
         this.actionIconClickedListener = actionIconClickedListener
     }
 
-    private fun setActionImageAndTintColor(iconResourceId: Int, useAccentColorAsTintColor: Boolean) {
+    protected open fun setActionImageAndTintColor(iconResourceId: Int, useAccentColorAsTintColor: Boolean) {
         btnEntityFieldAction.setImageResource(iconResourceId)
 
         if(useAccentColorAsTintColor) {
@@ -184,7 +195,7 @@ class EditEntityField : RelativeLayout {
         }
     }
 
-    fun hideActionIconOnUiThread() {
+    open fun hideActionIconOnUiThread() {
         btnEntityFieldAction.setImageBitmap(null)
 
         btnEntityFieldAction.visibility = View.INVISIBLE
@@ -193,16 +204,16 @@ class EditEntityField : RelativeLayout {
     }
 
 
-    fun startEditing() {
+    open fun startEditing() {
         edtxtEntityFieldValue.showKeyboard()
     }
 
-    fun stopEditing() {
+    open fun stopEditing() {
         edtxtEntityFieldValue.hideKeyboard()
     }
 
 
-    private val edtxtEntityFieldValueTextWatcher = object : TextWatcher {
+    protected open val edtxtEntityFieldValueTextWatcher = object : TextWatcher {
         override fun afterTextChanged(editable: Editable) {
             updateDidValueChange(editable.toString() != originalValue)
         }
@@ -213,7 +224,7 @@ class EditEntityField : RelativeLayout {
 
     }
 
-    private fun updateDidValueChange(didValueChange: Boolean) {
+    protected open fun updateDidValueChange(didValueChange: Boolean) {
         val previousValue = this.didValueChange
 
         this.didValueChange = didValueChange

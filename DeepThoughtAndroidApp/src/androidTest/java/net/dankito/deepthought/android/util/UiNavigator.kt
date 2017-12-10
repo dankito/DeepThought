@@ -220,7 +220,7 @@ open class UiNavigator {
         TestUtil.sleep(500)
     }
 
-    private fun setValueOfEditEntityField(entityFieldId: Int, value: String) {
+    fun setValueOfEditEntityField(entityFieldId: Int, value: String) {
         onView(allOf(withId(R.id.edtxtEntityFieldValue), isDescendantOfA(withId(entityFieldId)))) // find edtxtEntityFieldValue in EditEntityField
                 .perform(replaceText(value))
 

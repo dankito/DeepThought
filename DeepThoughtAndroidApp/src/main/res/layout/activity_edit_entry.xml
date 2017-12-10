@@ -34,7 +34,7 @@
             android:layout_marginEnd="@dimen/activity_edit_entry_field_margin_right"
         >
 
-            <net.dankito.deepthought.android.views.EditEntityField
+            <net.dankito.deepthought.android.views.EditEntrySourceField
                 android:id="@+id/lytReferencePreview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
