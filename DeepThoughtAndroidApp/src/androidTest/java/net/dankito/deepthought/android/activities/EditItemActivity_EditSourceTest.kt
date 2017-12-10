@@ -13,6 +13,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditEntryActivityParameters
 import net.dankito.deepthought.android.di.TestComponent
 import net.dankito.deepthought.android.service.ActivityParameterHolder
+import net.dankito.deepthought.android.util.TestUtil
 import net.dankito.deepthought.android.util.screenshot.TakeScreenshotOnErrorTestRule
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Series
@@ -97,6 +98,7 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
 
         // now lose focus
         onView(withId(R.id.wbvwContent)).perform(click())
+        TestUtil.sleep(1000)
         onView(withId(R.id.mnApplyHtmlChanges)).perform(click())
         checkDisplayedSourceValue(Source(SourceTitleAfterEditing, "", PublishingDate).getPreviewWithSeriesAndPublishingDate(series))
 
