@@ -39,9 +39,6 @@ data class LocalSettings(
         @Column(name = TableConfig.LocalSettingsCountTagSearchesColumnName)
         var countTagSearches: Int = 0,
 
-        @Column(name = TableConfig.LocalSettingsDidShowSetTagsOnItemHelpColumnName)
-        var didShowSetTagsOnItemHelp: Boolean = false,
-
         @Column(name = TableConfig.LocalSettingsCountTagsOnItemSearchesColumnName)
         var countTagsOnItemSearches: Int = 0,
 
@@ -65,8 +62,6 @@ data class LocalSettings(
 
     companion object {
         const val ShowSearchTagsHelpOnCountSearches = 30
-
-        const val ShowSetTagsOnItemHelpOnCountSearches = 30
 
         private const val serialVersionUID = 7190724856152328858L
     }

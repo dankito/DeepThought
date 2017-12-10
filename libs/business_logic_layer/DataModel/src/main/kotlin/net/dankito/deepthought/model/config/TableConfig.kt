@@ -81,7 +81,6 @@ class TableConfig {
         const val LocalSettingsDidShowListItemActionsHelpColumnName = "did_show_list_item_actions_help"
         const val LocalSettingsDidShowSearchTagsHelpColumnName = "did_show_search_tags_help"
         const val LocalSettingsCountTagSearchesColumnName = "count_tag_searches"
-        const val LocalSettingsDidShowSetTagsOnItemHelpColumnName = "did_show_set_tags_on_item_help"
         const val LocalSettingsCountTagsOnItemSearchesColumnName = "count_tags_on_item_searches"
         const val LocalSettingsDidShowAddItemPropertiesHelpColumnName = "did_show_add_item_properties_help"
         const val LocalSettingsDidShowSaveItemChangesHelpColumnName = "did_show_save_item_changes_help"
