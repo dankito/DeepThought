@@ -137,16 +137,6 @@
     </string>
 
 
-    <!-- Wenn man im Eintrag bearbeiten Fenster die Schlagworte bearbeitet und im Suchfeld unten mindestens 30 Buchstaben eingegeben hat -->
-
-    <string name="context_help_set_tags_on_item"><![CDATA[
-        Um mehrere Schlagworte auszuwählen, trennen Sie diese im Suchfeld durch ein Komma (,).<br />
-        Um ein neues Schlagwort anzulegen oder die eingegebenen hinzuzufügen, drücken Sie den Button oder auf Ihrer Tastatur \'Enter\'.<br />
-        (Und doppelt \'Enter\' um die Änderungen zugleich zu übernehmen.)
-    ]]>
-    </string>
-
-
     <!-- Wenn man im Eintrag bearbeiten Fenster etwas bearbeitet hat (z. B. den Inhalt, die Schlagworte, ...) und auf 'Übernehmen' geklickt hast -->
 
     <string name="context_help_save_item_changes"><![CDATA[
@@ -213,14 +203,7 @@
 
     <string name="dialog_tags_on_item_title">Schlagworte</string>
     <string name="dialog_tags_on_item_tags_label">Schlagworte:</string>
-    <string name="dialog_tags_on_item_create_tag">Neu</string>
-    <string name="dialog_tags_on_item_add_tags">Hinzufügen</string>
-    <string name="dialog_tags_on_item_remove_tags">Entfernen</string>
-    <string name="dialog_tags_on_item_toggle_tags">Hinzufügen / Entfernen</string>
-    <plurals name="dialog_tags_on_item_confirm_create_tags">
-        <item quantity="one">Es gibt kein Schlagwort mit Namen %1$s.\nMöchten Sie es erstellen?</item> <!-- Alternative, klingt aber ein bisschen doof im Pluaral -->
-        <item quantity="other">Die Schlagworte %1$s und %2$s existieren nicht.\nMöchten Sie sie erstellen?</item>
-    </plurals>
+    <string name="dialog_tags_on_item_search_tags_hint">Schlagworte durch Komma trennen</string>
     <string name="dialog_tags_on_item_alert_message_html_contains_unsaved_changes">Schlagworte wurden geändert.\n\nMöchten Sie diese Änderungen übernehmen?</string>
 
     <string name="menu_open_url_open_in_new_activity">In DeepThought öffnen</string>

@@ -4,6 +4,7 @@ import dagger.Component
 import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
 import net.dankito.deepthought.android.activities.EditItemActivity_EditItemWithNoSourceTest
 import net.dankito.deepthought.android.activities.EditItemActivity_EditSourceTest
+import net.dankito.deepthought.android.activities.EditItemActivity_EditTagsTest
 import net.dankito.deepthought.android.play_store.CreatePlayStoreScreenShots
 import net.dankito.deepthought.di.BaseModule
 import net.dankito.deepthought.di.CommonDataModule
@@ -30,6 +31,8 @@ interface TestComponent : AppComponent {
     fun inject(editItemActivity_EditSourceTest: EditItemActivity_EditSourceTest)
 
     fun inject(editItemActivity_EditItemWithNoSourceTest: EditItemActivity_EditItemWithNoSourceTest)
+
+    fun inject(editItemActivity_EditTagsTest: EditItemActivity_EditTagsTest)
 
     fun inject(createPlayStoreScreenShots: CreatePlayStoreScreenShots)
 

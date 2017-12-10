@@ -100,13 +100,6 @@
     ]]>
     </string>
 
-    <string name="context_help_set_tags_on_item"><![CDATA[
-        To select multiple tags, enter a comma (,).<br />
-        To create a new or toggle entered tags, press the button or \'Enter\' on your keyboard.<br />
-        (And double tap \'Enter\' to also apply changes.)
-    ]]>
-    </string>
-
     <string name="context_help_save_item_changes"><![CDATA[
         The changes done are now only applied, to save them press the <b>Save</b> button at bottom right.
     ]]>
@@ -170,14 +163,7 @@
 
     <string name="dialog_tags_on_item_title">Tags</string>
     <string name="dialog_tags_on_item_tags_label">Tags:</string>
-    <string name="dialog_tags_on_item_create_tag">New</string>
-    <string name="dialog_tags_on_item_add_tags">Add</string>
-    <string name="dialog_tags_on_item_remove_tags">Remove</string>
-    <string name="dialog_tags_on_item_toggle_tags">Add / Remove</string>
-    <plurals name="dialog_tags_on_item_confirm_create_tags">
-        <item quantity="one">Tag %1$s does not exist.\nWould you like to create it?</item>
-        <item quantity="other">Tags %1$s and %2$s do not exist.\nWould you like to create them?</item>
-    </plurals>
+    <string name="dialog_tags_on_item_search_tags_hint">Separate tags with comma</string>
     <string name="dialog_tags_on_item_alert_message_html_contains_unsaved_changes">Tags have changed.\n\nDo you want to apply these changes?</string>
 
     <string name="menu_open_url_open_in_new_activity">Open in DeepThought</string>

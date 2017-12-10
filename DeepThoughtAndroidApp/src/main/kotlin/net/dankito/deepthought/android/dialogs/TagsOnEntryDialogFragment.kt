@@ -8,7 +8,6 @@ import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
 import com.google.android.flexbox.FlexboxLayout
 import kotlinx.android.synthetic.main.dialog_tags_on_entry.*
 import kotlinx.android.synthetic.main.dialog_tags_on_entry.view.*
@@ -20,11 +19,9 @@ import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.service.showKeyboardDelayed
 import net.dankito.deepthought.android.views.ContextHelpUtil
 import net.dankito.deepthought.android.views.TagsPreviewViewHelper
-import net.dankito.deepthought.model.LocalSettings
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.presenter.TagsOnEntryListPresenter
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
-import net.dankito.deepthought.ui.tags.TagsSearcherButtonState
 import net.dankito.deepthought.ui.view.ITagsOnEntryListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
@@ -36,6 +33,7 @@ import net.dankito.utils.ui.model.ConfirmationDialogConfig
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
 
 
 class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListView {
@@ -88,17 +86,13 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
 
     private var lytTagsPreview: FlexboxLayout? = null
 
-    private var btnEditEntryCreateOrToggleTags: Button? = null
-
-    private var btnEditEntryCreateOrToggleTagsState: TagsSearcherButtonState = TagsSearcherButtonState.DISABLED
-
 
     init {
         AppComponent.component.inject(this)
 
         presenter = TagsOnEntryListPresenter(this, searchEngine, tagService, deleteEntityService, searchResultsUtil, dialogService)
 
-        adapter = TagsOnEntryRecyclerAdapter(presenter) { activity?.runOnUiThread { setTagsOnEntryPreviewOnUIThread(it) } }
+        adapter = TagsOnEntryRecyclerAdapter(presenter) { activity?.runOnUiThread { setTagsOnEntryPreviewOnUIThread() } }
     }
 
 
@@ -118,9 +112,6 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
 
         lytTagsPreview = rootView.lytTagsPreview
         setTagsOnEntryPreviewOnUIThread()
-
-        btnEditEntryCreateOrToggleTags = rootView.btnEditEntryCreateOrToggleTags
-        rootView.btnEditEntryCreateOrToggleTags.setOnClickListener { handleCreateNewTagOrToggleTagsAction() }
 
         rootView.edtxtEditEntrySearchTag.addTextChangedListener(edtxtEditEntrySearchTagTextWatcher)
         rootView.edtxtEditEntrySearchTag.setOnEditorActionListener { _, actionId, keyEvent -> handleEditEntrySearchTagAction(actionId, keyEvent) }
@@ -250,82 +241,8 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
 
     private fun searchTags(searchTerm: String) {
         presenter.searchTags(searchTerm)
-
-        if(searchTerm != Search.EmptySearchTerm) { // in setupUI() - when view aren't set yet for showContextHelpOnUiThread() - searchTags() is called with an empty search term -> avoid that showContextHelpOnUiThread() gets called
-            activity?.runOnUiThread { checkIfContextHelpSetTagsOnEntryHasBeenShownToUserOnUiThread() }
-        }
     }
 
-    private fun checkIfContextHelpSetTagsOnEntryHasBeenShownToUserOnUiThread() {
-        val dataManager = tagService.dataManager
-        val localSettings = dataManager.localSettings
-        localSettings.countTagsOnItemSearches++
-
-        if(localSettings.countTagsOnItemSearches >= LocalSettings.ShowSetTagsOnItemHelpOnCountSearches && localSettings.didShowSetTagsOnItemHelp == false) {
-            localSettings.didShowSetTagsOnItemHelp = true
-            showContextHelpOnUiThread(R.string.context_help_set_tags_on_item)
-
-            dataManager.localSettingsUpdated()
-        }
-        else if(localSettings.countTagsOnItemSearches < LocalSettings.ShowSetTagsOnItemHelpOnCountSearches) {
-            dataManager.localSettingsUpdated()
-        }
-    }
-
-
-    private fun setButtonState() {
-        val buttonState = presenter.getButtonStateForSearchResult(adapter.tagsOnEntry)
-
-        applyButtonState(buttonState)
-    }
-
-    private fun applyButtonState(state: TagsSearcherButtonState) {
-        this.btnEditEntryCreateOrToggleTagsState = state
-
-        btnEditEntryCreateOrToggleTags?.let { button ->
-            button.isEnabled = state != TagsSearcherButtonState.DISABLED
-
-            if(state == TagsSearcherButtonState.CREATE_TAG) {
-                button.setText(R.string.dialog_tags_on_item_create_tag)
-            }
-            else if(state == TagsSearcherButtonState.ADD_TAGS) {
-                button.setText(R.string.dialog_tags_on_item_add_tags)
-            }
-            else if(state == TagsSearcherButtonState.REMOVE_TAGS) {
-                button.setText(R.string.dialog_tags_on_item_remove_tags)
-            }
-            else if(state == TagsSearcherButtonState.TOGGLE_TAGS) {
-                button.setText(R.string.dialog_tags_on_item_toggle_tags)
-            }
-        }
-    }
-
-    private fun handleCreateNewTagOrToggleTagsAction() {
-        if(btnEditEntryCreateOrToggleTagsState != TagsSearcherButtonState.DISABLED) { // don't handle pressing action when button is disabled
-            if(btnEditEntryCreateOrToggleTagsState == TagsSearcherButtonState.CREATE_TAG) {
-                createNewTags()
-            }
-            else {
-                toggleTagsOnEntry()
-            }
-        }
-    }
-
-    private fun createNewTags() {
-        presenter.createNewTags(adapter.tagsOnEntry)
-
-        setTagsOnEntryPreviewOnUIThread()
-    }
-
-    private fun toggleTagsOnEntry() {
-        presenter.toggleTagsOnEntry(adapter.tagsOnEntry, btnEditEntryCreateOrToggleTagsState)
-
-        activity?.runOnUiThread {
-            adapter.notifyDataSetChanged()
-            setTagsOnEntryPreviewOnUIThread()
-            setButtonState()
-        }
-    }
 
     private fun handleEditEntrySearchTagAction(actionId: Int, keyEvent: KeyEvent?): Boolean {
         if(actionId == EditorInfo.IME_ACTION_DONE || (actionId == EditorInfo.IME_NULL && keyEvent?.action == KeyEvent.ACTION_DOWN)) {
@@ -334,9 +251,6 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
 
             if(wasDoubleTap(lastActionPressTime, previousActionPressTime)) {
                 applyChangesAndCloseDialog()
-            }
-            else {
-                handleCreateNewTagOrToggleTagsAction()
             }
 
             return true
@@ -350,16 +264,25 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
     }
 
     private fun setTagsOnEntryPreviewOnUIThread() {
-        setTagsOnEntryPreviewOnUIThread(adapter.tagsOnEntry)
+        setTagsOnEntryPreviewOnUIThread(getMergedTags())
     }
 
-    private fun setTagsOnEntryPreviewOnUIThread(tagsOnEntry: MutableList<Tag>) {
+    private fun getMergedTags(): Collection<Tag> {
+        val tags = HashSet<Tag>()
+
+        tags.addAll(adapter.tagsOnEntry)
+        tags.addAll(presenter.getTagsFromLastSearchResult())
+
+        return tags
+    }
+
+    private fun setTagsOnEntryPreviewOnUIThread(tagsOnEntry: Collection<Tag>) {
         lytTagsPreview?.let { tagsPreviewViewHelper.showTagsPreview(it, tagsOnEntry, showButtonRemoveTag = true) { removeTagFromCurrentTagsOnEntry(it) } }
 
         mnApplyTagsOnEntryChanges?.isVisible = didTagsOnEntryChange(tagsOnEntry)
     }
 
-    private fun didTagsOnEntryChange(tagsOnEntry: MutableList<Tag>): Boolean {
+    private fun didTagsOnEntryChange(tagsOnEntry: Collection<Tag>): Boolean {
         if(originalTagsOnEntry.size != tagsOnEntry.size) {
             return true
         }
@@ -387,7 +310,16 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
 
     private fun applyChangesAndCloseDialog() {
         didApplyChanges = true
-        tagsChangedCallback?.invoke(adapter.tagsOnEntry)
+
+        val tags = getMergedTags()
+
+        tags.forEach { tag ->
+            if(tag.isPersisted() == false) {
+                tagService.persist(tag)
+            }
+        }
+
+        tagsChangedCallback?.invoke(tags)
 
         closeDialog()
     }
@@ -410,7 +342,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
     override fun showEntities(entities: List<Tag>) {
         activity?.runOnUiThread {
             adapter.items = entities
-            setButtonState()
+            setTagsOnEntryPreviewOnUIThread()
         }
     }
 
@@ -422,26 +354,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
     }
 
     override fun shouldCreateNotExistingTags(notExistingTags: List<String>, tagsShouldGetCreatedCallback: (tagsOnEntry: MutableCollection<Tag>) -> Unit) {
-        activity?.runOnUiThread {
-            val questionText = getShouldCreateNotExistingTagsQuestionText(notExistingTags)
-
-            contextHelpUtil.showAsConfirmation(lytConfirmCreateTags, questionText) {
-                tagsShouldGetCreatedCallback(adapter.tagsOnEntry)
-                setTagsOnEntryPreviewOnUIThread()
-            }
-        }
-    }
-
-    private fun getShouldCreateNotExistingTagsQuestionText(notExistingTags: List<String>): String {
-        val lastTagName = notExistingTags[notExistingTags.size - 1]
-
-        if(notExistingTags.size == 1)
-            return resources.getQuantityString(R.plurals.dialog_tags_on_item_confirm_create_tags, notExistingTags.size, lastTagName)
-        else {
-            val otherTagNames = notExistingTags.subList(0, notExistingTags.size - 1).joinToString(", ")
-
-            return resources.getQuantityString(R.plurals.dialog_tags_on_item_confirm_create_tags, notExistingTags.size, otherTagNames, lastTagName)
-        }
+        // we don't need to handle this anymore
     }
 
 }
