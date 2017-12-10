@@ -7,9 +7,11 @@ import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.action.ViewActions.replaceText
+import android.support.test.espresso.matcher.RootMatchers
 import android.support.test.espresso.matcher.RootMatchers.isDialog
 import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.*
+import android.support.v7.widget.MenuPopupWindow
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import net.dankito.deepthought.android.R
@@ -246,6 +248,39 @@ open class UiNavigator {
 
     private fun applyContentEditorChanges() {
         onView(withId(R.id.mnApplyHtmlChanges)).perform(click())
+    }
+
+
+
+    fun clickOnEditEntityReferenceFieldCreateNewEntityPopupMenu(editEntityReferenceFieldId: Int) {
+        showEditEntityReferenceFieldPopupMenu(editEntityReferenceFieldId)
+
+        clickOnEditEntityReferenceFieldPopupMenuItem(1)
+    }
+
+    fun clickOnEditEntityReferenceFieldEditDetailsPopupMenu(editEntityReferenceFieldId: Int) {
+        showEditEntityReferenceFieldPopupMenu(editEntityReferenceFieldId)
+
+        clickOnEditEntityReferenceFieldPopupMenuItem(0)
+    }
+
+    fun clickOnEditEntityReferenceFieldRemoveEntityPopupMenu(editEntityReferenceFieldId: Int) {
+        showEditEntityReferenceFieldPopupMenu(editEntityReferenceFieldId)
+
+        clickOnEditEntityReferenceFieldPopupMenuItem(2)
+    }
+
+    private fun clickOnEditEntityReferenceFieldPopupMenuItem(itemPosition: Int) {
+        onData(anything())
+                .inRoot(RootMatchers.isPlatformPopup()) // isPlatformPopup() == is in PopupWindow
+                .inAdapterView(instanceOf(MenuPopupWindow.MenuDropDownListView::class.java))
+                .atPosition(itemPosition)
+                .perform(click())
+    }
+
+    private fun showEditEntityReferenceFieldPopupMenu(editEntityReferenceFieldId: Int) {
+        onView(allOf(withId(R.id.btnEntityFieldAction), isDescendantOfA(withId(editEntityReferenceFieldId)))) // find btnEntityFieldAction in EditEntityReferenceField
+                .perform(click())
     }
 
 

@@ -669,12 +669,19 @@ class EditEntryActivity : BaseActivity() {
 
     private fun editReference() {
         if(sourceToEdit == null) {
-            sourceToEdit = Source("")
-            lytReferencePreview.setSourceToEdit(sourceToEdit, getCurrentSeries())
+            setSourceToEdit(Source(""))
         }
 
         lytReferencePreview.visibility = View.VISIBLE
         lytReferencePreview.startEditing()
+    }
+
+    private fun setSourceToEdit(source: Source?) {
+        updateEntryFieldChangedOnUIThread(ItemField.Source, sourceToEdit != source)
+
+        sourceToEdit = source
+
+        setReferencePreviewOnUIThread()
     }
 
     private fun appliedChangesToReference(result: EditReferenceActivityResult) {
@@ -888,7 +895,7 @@ class EditEntryActivity : BaseActivity() {
             lytReferencePreview.setOnboardingTextOnUiThread(R.string.activity_edit_item_source_onboarding_text)
         }
         else {
-            lytReferencePreview.setSourceToEdit(sourceToEdit, getCurrentSeries())
+            lytReferencePreview.setSourceToEdit(sourceToEdit, getCurrentSeries(), router, this) { setSourceToEdit(it) }
             // TODO
 //            lytReferencePreview.showActionIconOnUiThread(android.R.drawable.ic_delete, false) { referenceCleared() }
         }

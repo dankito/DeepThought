@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/mnEditDetails"
+        android:title="@string/activity_edit_item_edit_source_menu_edit_details"
+    />
+
+    <item
+        android:id="@+id/mnCreateNewEntity"
+        android:title="@string/activity_edit_item_edit_source_menu_create_new_entity"
+    />
+
+    <item
+        android:id="@+id/mnRemoveEntity"
+        android:title="@string/activity_edit_item_edit_source_menu_remove_entity"
+    />
+
+</menu>

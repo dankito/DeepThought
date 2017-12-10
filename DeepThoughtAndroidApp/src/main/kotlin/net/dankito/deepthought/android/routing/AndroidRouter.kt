@@ -100,8 +100,8 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
         showEditReferenceView(EditReferenceActivityParameters(source))
     }
 
-    override fun showEditEntryReferenceView(forItem: Item, source: Source?, series: Series?) {
-        showEditReferenceView(EditReferenceActivityParameters(source, forItem, series))
+    override fun showEditEntryReferenceView(source: Source?, series: Series?, editedSourceTitle: String?) {
+        showEditReferenceView(EditReferenceActivityParameters(source, series, editedSourceTitle))
     }
 
     private fun showEditReferenceView(parameters: EditReferenceActivityParameters) {

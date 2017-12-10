@@ -24,6 +24,8 @@
             android:layout_marginLeft="@dimen/edit_text_padding_left"
             android:layout_marginStart="@dimen/edit_text_padding_left"
             style="@style/EntityFieldName"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
         />
 
         <EditText

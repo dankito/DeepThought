@@ -155,6 +155,9 @@
     <string name="activity_edit_item_summary_only_label">Summary</string>
     <string name="activity_edit_item_edit_summary_title">Title / Summary</string>
     <string name="activity_edit_item_source_label">Source</string>
+    <string name="activity_edit_item_edit_source_menu_edit_details">Edit details</string>
+    <string name="activity_edit_item_edit_source_menu_create_new_entity">New one …</string>
+    <string name="activity_edit_item_edit_source_menu_remove_entity">Clear</string>
     <string name="activity_edit_item_tags_label">Tags</string>
     <string name="activity_edit_item_tags_onboarding_text">Add meaningful tags, so that you can find it later easily</string>
     <string name="activity_edit_item_source_onboarding_text">Save where you have found this information (link, book)</string>

@@ -1,19 +1,28 @@
 package net.dankito.deepthought.android.views
 
 import android.content.Context
+import android.support.v7.widget.PopupMenu
 import android.util.AttributeSet
+import net.dankito.deepthought.android.R
 
 
-open class EditEntityEntityReferenceField : EditEntityField {
+abstract class EditEntityEntityReferenceField : EditEntityField {
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
 
-    private var valueToEdit: String? = null
+    protected var valueToEdit: String? = null
 
-    private var valueToShowWhenNotEditing: String? = null
+    protected var valueToShowWhenNotEditing: String? = null
+
+
+    init {
+        showActionIconOnUiThread(R.drawable.ic_settings_white_48dp) {
+            showOptionsPopupMenu()
+        }
+    }
 
 
     open fun setFieldValueOnUiThread(valueToEdit: String, valueToShowWhenNotEditing: String) {
@@ -65,6 +74,30 @@ open class EditEntityEntityReferenceField : EditEntityField {
             setEditTextEntityFieldValueOnUiThread(valueToShowWhenNotEditing ?: "")
         }
     }
+
+
+    private fun showOptionsPopupMenu() {
+        val popup = PopupMenu(context, btnEntityFieldAction)
+
+        popup.menuInflater.inflate(R.menu.edit_entity_reference_field_menu, popup.menu)
+
+        popup.setOnMenuItemClickListener { item ->
+            when(item.itemId) {
+                R.id.mnEditDetails -> editDetails()
+                R.id.mnCreateNewEntity -> createNewEntity()
+                R.id.mnRemoveEntity -> removeEntity()
+            }
+            true
+        }
+
+        popup.show()
+    }
+
+    abstract fun editDetails()
+
+    abstract fun createNewEntity()
+
+    abstract fun removeEntity()
 
 
     fun getEditedValue() = valueToEdit

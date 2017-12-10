@@ -24,10 +24,6 @@ class EditEntryPresenter(private val entryPersister: EntryPersister, private val
     }
 
 
-    fun editReference(source: Source?, forItem: Item, series: Series?) {
-        router.showEditEntryReferenceView(forItem, source, series)
-    }
-
     fun saveEntryAsync(item: Item, source: Source? = null, series: Series? = null, tags: Collection<Tag> = ArrayList(), callback: (Boolean) -> Unit) {
         entryPersister.saveEntryAsync(item, source, series, tags, callback)
     }

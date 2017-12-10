@@ -3,9 +3,7 @@ package net.dankito.deepthought.android.activities
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.matcher.ViewMatchers
-import android.support.test.espresso.matcher.ViewMatchers.withId
-import android.support.test.espresso.matcher.ViewMatchers.withText
+import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.runner.AndroidJUnit4
 import net.dankito.deepthought.android.DeepThoughtActivityTestRule
 import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
@@ -19,8 +17,7 @@ import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
-import org.hamcrest.CoreMatchers
-import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.*
 import org.junit.Assert.assertThat
 import org.junit.Rule
 import org.junit.Test
@@ -35,6 +32,7 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
     companion object {
         private val SourceTitleAtStart = "Unset source title"
         private val SourceTitleAfterEditing = "Now we have changed the source title"
+        private val SourceTitleAfterEditingDetails = "Now we have changed the source title in EditSourceActivity"
 
         private val SeriesTitle = "Series"
 
@@ -47,6 +45,8 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
     @Inject
     protected lateinit var parameterHolder: ActivityParameterHolder
 
+
+    private val testItem = Item("Test Content")
 
     private val series = Series(SeriesTitle)
 
@@ -63,7 +63,6 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
     init {
         TestComponent.component.inject(this)
 
-        val testItem = Item("Test Content")
         testItem.source = source
 
         testRule.setActivityParameter(parameterHolder, EditEntryActivityParameters(testItem))
@@ -107,8 +106,77 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
     }
 
 
+    @Test
+    fun setNewSource() {
+        assertThat(source.title, `is`(SourceTitleAtStart))
+        checkDisplayedSourceValue(Source(SourceTitleAtStart, "", PublishingDate).getPreviewWithSeriesAndPublishingDate(series)) // on start Source title with Series and publishing date preview is displayed
+
+        onView(withId(R.id.lytReferencePreview)).perform(click())
+        checkDisplayedSourceValue(SourceTitleAtStart) // after a click only Source title is displayed and can be edited
+
+        navigator.clickOnEditEntityReferenceFieldCreateNewEntityPopupMenu(R.id.lytReferencePreview)
+        checkDisplayedSourceValue("")
+
+        navigator.setValueOfEditEntityField(R.id.lytReferencePreview, SourceTitleAfterEditing)
+        checkDisplayedSourceValue(SourceTitleAfterEditing)
+
+        onView(withId(R.id.mnSaveEntry)).perform(click())
+        assertThat(testItem.source, `is`(not(source)))
+        assertThat(source.title, `is`(SourceTitleAtStart))
+        assertThat(testItem.source?.title, `is`(SourceTitleAfterEditing))
+    }
+
+    @Test
+    fun clearSource() {
+        assertThat(source.title, `is`(SourceTitleAtStart))
+        checkDisplayedSourceValue(Source(SourceTitleAtStart, "", PublishingDate).getPreviewWithSeriesAndPublishingDate(series)) // on start Source title with Series and publishing date preview is displayed
+
+        onView(withId(R.id.lytReferencePreview)).perform(click())
+        checkDisplayedSourceValue(SourceTitleAtStart) // after a click only Source title is displayed and can be edited
+
+        navigator.clickOnEditEntityReferenceFieldRemoveEntityPopupMenu(R.id.lytReferencePreview)
+        checkDisplayedSourceValue(testRule.activity.getString(R.string.activity_edit_item_source_onboarding_text))
+
+        onView(withId(R.id.mnSaveEntry)).perform(click())
+        assertThat(testItem.source, `is`(not(source)))
+        assertThat(source.title, `is`(SourceTitleAtStart))
+        assertThat(testItem.source, nullValue())
+    }
+
+    @Test
+    fun editDetails() {
+        assertThat(source.title, `is`(SourceTitleAtStart))
+        checkDisplayedSourceValue(Source(SourceTitleAtStart, "", PublishingDate).getPreviewWithSeriesAndPublishingDate(series)) // on start Source title with Series and publishing date preview is displayed
+
+        onView(withId(R.id.lytReferencePreview)).perform(click())
+        checkDisplayedSourceValue(SourceTitleAtStart) // after a click only Source title is displayed and can be edited
+
+        navigator.setValueOfEditEntityField(R.id.lytReferencePreview, SourceTitleAfterEditing)
+        checkDisplayedSourceValue(SourceTitleAfterEditing)
+
+        navigator.clickOnEditEntityReferenceFieldEditDetailsPopupMenu(R.id.lytReferencePreview)
+
+        checkDisplayedValueInEditEntityField(SourceTitleAfterEditing, R.id.lytEditReferenceTitle)
+
+        navigator.setValueOfEditEntityField(R.id.lytEditReferenceTitle, SourceTitleAfterEditingDetails)
+        checkDisplayedValueInEditEntityField(SourceTitleAfterEditingDetails, R.id.lytEditReferenceTitle)
+
+        onView(withId(R.id.mnSaveReference)).perform(click())
+        TestUtil.sleep(1000)
+
+        checkDisplayedSourceValue(SourceTitleAfterEditingDetails)
+
+        assertThat(testItem.source, `is`(source))
+        assertThat(source.title, `is`(SourceTitleAfterEditingDetails))
+    }
+
+
     private fun checkDisplayedSourceValue(valueToMatch: String) {
-        onView(CoreMatchers.allOf(withId(R.id.edtxtEntityFieldValue), ViewMatchers.isDescendantOfA(withId(R.id.lytReferencePreview)))) // find edtxtEntityFieldValue in EditEntityField
+        checkDisplayedValueInEditEntityField(valueToMatch, R.id.lytReferencePreview)
+    }
+
+    private fun checkDisplayedValueInEditEntityField(valueToMatch: String, editEntityFieldId: Int) {
+        onView(allOf(withId(R.id.edtxtEntityFieldValue), isDescendantOfA(withId(editEntityFieldId)))) // find edtxtEntityFieldValue in EditEntityField
                 .check(matches(withText(`is`(valueToMatch))))
     }
 

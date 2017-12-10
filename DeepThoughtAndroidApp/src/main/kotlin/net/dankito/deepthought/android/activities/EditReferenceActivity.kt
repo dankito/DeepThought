@@ -156,6 +156,7 @@ class EditReferenceActivity : BaseActivity() {
         savedInstanceState?.let {
             savedInstanceState.getString(REFERENCE_ID_BUNDLE_EXTRA_NAME)?.let { referenceId -> showReference(referenceId) }
 
+            // TODO: also restore selected Series
             savedInstanceState.getString(UNPERSISTED_REFERENCE_BUNDLE_EXTRA_NAME)?.let { showReference(serializer.deserializeObject(it, Source::class.java)) }
 
             savedInstanceState.getString(ORIGINALLY_SET_REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME)?.let { originallySetSeriesId ->
@@ -402,14 +403,10 @@ class EditReferenceActivity : BaseActivity() {
             if(parameters.source != null) {
                 this.originallySetSeries = parameters.series ?: parameters.source.series
 
-                showReference(parameters.source, parameters.series)
+                showReference(parameters.source, parameters.series, parameters.editedSourceTitle)
             }
             else {
                 createReference()
-            }
-
-            if(parameters.forItem != null) {
-                lytSetEntryReferenceControls.visibility = View.VISIBLE
             }
         }
     }
@@ -450,11 +447,11 @@ class EditReferenceActivity : BaseActivity() {
         }
     }
 
-    private fun showReference(source: Source, series: Series? = null) {
+    private fun showReference(source: Source, series: Series? = null, editedSourceTitle: String? = null) {
         this.source = source
         existingReferencesSearchResultsAdapter.selectedSource = source
 
-        lytEditReferenceTitle.setFieldValueOnUiThread(source.title)
+        lytEditReferenceTitle.setFieldValueOnUiThread(editedSourceTitle ?: source.title)
 
         setAndShowSeriesOnUiThread(series ?: source.series)
 

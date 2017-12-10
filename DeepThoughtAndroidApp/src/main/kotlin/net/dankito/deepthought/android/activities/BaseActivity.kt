@@ -120,7 +120,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
 
-    protected fun setWaitingForResult(targetResultId: String) {
+    internal fun setWaitingForResult(targetResultId: String) {
         waitingForResultWithId = targetResultId
 
         parameterHolder.clearActivityResults(targetResultId)

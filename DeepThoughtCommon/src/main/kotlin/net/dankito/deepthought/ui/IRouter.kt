@@ -32,7 +32,7 @@ interface IRouter {
 
     fun showEditReferenceView(source: Source)
 
-    fun showEditEntryReferenceView(forItem: Item, source: Source?, series: Series?)
+    fun showEditEntryReferenceView(source: Source?, series: Series?, editedSourceTitle: String? = null)
 
 
     fun showEditSeriesView(series: Series)
