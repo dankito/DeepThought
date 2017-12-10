@@ -1,0 +1,9 @@
+DeepThought unterstützt Sie beim Katalogisieren von Wissen: Von interessanten Fakten über eigene Notizen und Buchauszüge bis hin zu Rezepten oder Webseiten. Durch eine leistungsstarke Volltextsuche können Sie Ihre Einträge schnell wieder finden. Alternativ können Sie Ihren Einträgen auch eigene Schlagworte geben.
+
+Für Newsjunkies enthält die App auch einen RSS-Feed, mit dem Sie Artikel bequem vormerken können, um Sie später auch ohne Internetverbindung bequem im Flugzeug oder in der Bahn zu lesen.
+
+Ihre Daten werden ausschließlich lokal gespeichert; nichts landet in der Cloud oder auf irgendwelchen Servern. Trotzdem können Sie Ihre Daten übers WLAN mit weiteren Geräten synchronisieren.
+
+Zum Synchronisieren Ihrer Daten zwischen Android-Geräten oder Desktop Computern über Ihr lokales Netzwerk folgen Sie diesem Link: (<a href="https://dankito.net/downloads/DeepThoughtJavaFX.jar" >https://dankito.net/downloads/DeepThoughtJavaFX.jar</a>, requires Java).
+
+Diese App ist nicht kommerziell. Sprich: Sie steht Ihnen kostenfrei zur Verfügung und enthält keine In-App-Werbung. Wir erheben weder Nutzerstatistiken, noch sammeln wir Standortdaten. Die einzige Person, die die Daten einsehen oder über das lokale Netzwerk mit anderen Geräten synchronisieren kann, sind Sie selbst. Bitte sorgen Sie jedoch selbst für die Sicherheit Ihrer Geräte und Netzwerke.
