@@ -208,11 +208,6 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
     }
 
 
-    private fun showContextHelpOnUiThread(helpTextResourceId: Int) {
-        contextHelpUtil.showContextHelp(lytContextHelp, helpTextResourceId)
-    }
-
-
     private fun deleteTag(tag: Tag) {
         removeTagFromEntry(tag)
 
