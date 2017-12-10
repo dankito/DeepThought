@@ -10,6 +10,7 @@ import android.util.AttributeSet
 import android.view.AbsSavedState
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RelativeLayout
@@ -29,6 +30,8 @@ open class EditEntityField : RelativeLayout {
         private const val FIELD_VALUE_BUNDLE_EXTRA_NAME = "FIELD_VALUE"
     }
 
+
+    protected lateinit var rootView: ViewGroup
 
     protected lateinit var txtEntityFieldName: TextView
 
@@ -88,7 +91,7 @@ open class EditEntityField : RelativeLayout {
 
     private fun setupUI(context: Context) {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val rootView = inflater.inflate(R.layout.view_edit_entity_field, this)
+        rootView = inflater.inflate(R.layout.view_edit_entity_field, this) as ViewGroup
 
         txtEntityFieldName = rootView.txtEntityFieldName
         txtEntityFieldName.setOnClickListener { fieldClickedListener?.invoke() }
@@ -107,7 +110,7 @@ open class EditEntityField : RelativeLayout {
         fieldValueFocusChangedListener?.invoke(hasFocus)
     }
 
-    protected open fun doCustomUiInitialization(rootView: View) {
+    protected open fun doCustomUiInitialization(rootView: ViewGroup) {
 
     }
 
@@ -210,7 +213,12 @@ open class EditEntityField : RelativeLayout {
     }
 
     open fun stopEditing() {
+        clearEditTextFocus()
         edtxtEntityFieldValue.hideKeyboard()
+    }
+
+    private fun clearEditTextFocus() {
+        txtEntityFieldName.requestFocus() // to remove focus from EditText; therefore focusable is set to true on txtEntityFieldName
     }
 
 

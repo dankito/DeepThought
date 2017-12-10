@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,60 +10,82 @@
     card_view:cardCornerRadius="0dp"
 >
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/view_edit_entity_field_padding_left"
-        android:paddingStart="@dimen/view_edit_entity_field_padding_left"
-    >
+        android:layout_height="wrap_content">
 
-        <!-- EditText has a padding of 4dp, so set TextView's padding left also to 4dp so that they are left aligned -->
-        <TextView
-            android:id="@+id/txtEntityFieldName"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/edit_text_padding_left"
-            android:layout_marginStart="@dimen/edit_text_padding_left"
-            style="@style/EntityFieldName"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
+            android:paddingLeft="@dimen/view_edit_entity_field_padding_left"
+            android:paddingStart="@dimen/view_edit_entity_field_padding_left"
+        >
+
+            <!-- EditText has a padding of 4dp, so set TextView's padding left also to 4dp so that they are left aligned -->
+            <TextView
+                android:id="@+id/txtEntityFieldName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/edit_text_padding_left"
+                android:layout_marginStart="@dimen/edit_text_padding_left"
+                style="@style/EntityFieldName"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+            />
+
+            <EditText
+                android:id="@+id/edtxtEntityFieldValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtEntityFieldName"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_toLeftOf="@+id/btnEntityFieldAction"
+                android:layout_toStartOf="@+id/btnEntityFieldAction"
+                android:layout_marginTop="@dimen/view_edit_entity_field_value_margin_top"
+                android:layout_marginRight="@dimen/view_edit_entity_field_value_margin_right"
+                android:layout_marginEnd="@dimen/view_edit_entity_field_value_margin_right"
+                android:maxLines="4"
+                style="@style/EditableEntityFieldValue"
+                android:imeOptions="flagNoExtractUi"
+                android:saveEnabled="false"
+            />
+            <!-- imeOptions="flagNoExtractUi" is needed as otherwise EditText would occupy whole screen when focused in landscape mode -->
+            <!-- Set saveEnabled to false as Android messes up restoring the values -->
+
+            <ImageButton
+                android:id="@+id/btnEntityFieldAction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="@dimen/view_edit_entity_field_icon_max_size"
+                android:maxHeight="@dimen/view_edit_entity_field_icon_max_size"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:adjustViewBounds="true"
+                android:layout_centerVertical="true"
+                android:scaleType="fitCenter"
+                android:background="@android:color/transparent"
+                android:visibility="invisible"
+            />
+
+        </RelativeLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/view_edit_entity_field_search_results_list_margin_top"
+            android:background="@color/edit_entity_activity_background"
         />
 
-        <EditText
-            android:id="@+id/edtxtEntityFieldValue"
-            android:layout_width="wrap_content"
+        <net.dankito.deepthought.android.views.MaxHeightRecyclerView
+            android:id="@+id/rcySearchResults"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/txtEntityFieldName"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@+id/btnEntityFieldAction"
-            android:layout_toStartOf="@+id/btnEntityFieldAction"
-            android:layout_marginTop="@dimen/view_edit_entity_field_value_margin_top"
-            android:layout_marginRight="@dimen/view_edit_entity_field_value_margin_right"
-            android:layout_marginEnd="@dimen/view_edit_entity_field_value_margin_right"
-            android:maxLines="4"
-            style="@style/EditableEntityFieldValue"
-            android:imeOptions="flagNoExtractUi"
-            android:saveEnabled="false"
-        />
-        <!-- imeOptions="flagNoExtractUi" is needed as otherwise EditText would occupy whole screen when focused in landscape mode -->
-        <!-- Set saveEnabled to false as Android messes up restoring the values -->
-
-        <ImageButton
-            android:id="@+id/btnEntityFieldAction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxWidth="@dimen/view_edit_entity_field_icon_max_size"
-            android:maxHeight="@dimen/view_edit_entity_field_icon_max_size"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:adjustViewBounds="true"
-            android:layout_centerVertical="true"
-            android:scaleType="fitCenter"
-            android:background="@android:color/transparent"
-            android:visibility="invisible"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            android:visibility="gone"
         />
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </android.support.v7.widget.CardView>

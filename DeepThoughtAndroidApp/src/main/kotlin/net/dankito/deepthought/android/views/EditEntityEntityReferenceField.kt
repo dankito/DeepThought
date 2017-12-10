@@ -3,7 +3,9 @@ package net.dankito.deepthought.android.views
 import android.content.Context
 import android.support.v7.widget.PopupMenu
 import android.util.AttributeSet
+import android.view.ViewGroup
 import net.dankito.deepthought.android.R
+import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 
 
 abstract class EditEntityEntityReferenceField : EditEntityField {
@@ -17,8 +19,15 @@ abstract class EditEntityEntityReferenceField : EditEntityField {
 
     protected var valueToShowWhenNotEditing: String? = null
 
+    protected lateinit var rcySearchResult: MaxHeightRecyclerView
 
-    init {
+
+    override fun doCustomUiInitialization(rootView: ViewGroup) {
+        super.doCustomUiInitialization(rootView)
+
+        rcySearchResult = rootView.findViewById(R.id.rcySearchResults) as MaxHeightRecyclerView
+        rcySearchResult.addItemDecoration(HorizontalDividerItemDecoration(context))
+
         showActionIconOnUiThread(R.drawable.ic_settings_white_48dp) {
             showOptionsPopupMenu()
         }
