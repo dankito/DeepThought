@@ -94,7 +94,7 @@ private String generateVersionName() {
     String versionName = "${ext.versionMajor}.${ext.versionMinor}.${ext.versionPatch}"
 
     if(ext.versionClassifier != null) {
-        versionName += "-" + ext.versionClassifier
+        versionName += " " + ext.versionClassifier
     }
 
     return versionName
