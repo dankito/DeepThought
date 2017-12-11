@@ -18,13 +18,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_above="@+id/txtvwEntryTagsPreviewLabel"
+            android:layout_above="@+id/txtvwDesignPreviewHint"
             android:layout_marginTop="@dimen/dialog_tags_on_entry_tag_list_tags_margin"
             android:layout_marginLeft="@dimen/dialog_tags_on_entry_tag_list_tags_margin"
             android:layout_marginRight="@dimen/dialog_tags_on_entry_tag_list_tags_margin"
             android:layout_marginBottom="@dimen/dialog_tags_on_entry_tag_list_tags_margin_bottom"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             android:scrollbars="vertical"
+        />
+
+        <TextView
+            android:id="@+id/txtvwDesignPreviewHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/txtvwEntryTagsPreviewLabel"
+            android:layout_marginLeft="@dimen/dialog_tags_on_entry_tag_preview_label_margin_left_right"
+            android:layout_marginBottom="6dp"
+            android:textSize="@dimen/dialog_tags_on_entry_tag_preview_text_size"
+            android:textStyle="italic"
+            android:textColor="#FF0000"
+            android:text="Early design preview - not fully functional"
         />
 
         <TextView
