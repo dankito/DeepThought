@@ -772,7 +772,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setMenuSaveEntryVisibleStateOnUIThread() {
-        if(haveAllFieldsOfExistingEntryBeenDeleted()) {
+        if(haveAllFieldsOfExistingEntryBeenCleared()) {
             mnSaveEntry?.isVisible = false
         }
         else {
@@ -781,12 +781,16 @@ class EditEntryActivity : BaseActivity() {
         }
     }
 
-    private fun haveAllFieldsOfExistingEntryBeenDeleted(): Boolean {
+    private fun haveAllFieldsOfExistingEntryBeenCleared(): Boolean {
         if(item != null && item?.isPersisted() == true) {
-            return contentToEdit.isNullOrBlank() && tagsOnEntry.isEmpty() && sourceToEdit == null && abstractToEdit.isNullOrBlank()
+            return haveAllFieldsBeenCleared()
         }
 
         return false
+    }
+
+    private fun haveAllFieldsBeenCleared(): Boolean {
+        return contentToEdit.isNullOrBlank() && tagsOnEntry.isEmpty() && sourceToEdit == null && abstractToEdit.isNullOrBlank()
     }
 
     private fun entryPropertySet() {
@@ -1117,8 +1121,10 @@ class EditEntryActivity : BaseActivity() {
             return
         }
         else if(isInEditContentMode) {
-            leaveEditContentView()
-            return
+            if(item == null || item?.isPersisted() == true || this.haveAllFieldsBeenCleared() == false) {
+                leaveEditContentView()
+                return
+            }
         }
 
         askIfUnsavedChangesShouldBeSavedAndCloseDialog()
