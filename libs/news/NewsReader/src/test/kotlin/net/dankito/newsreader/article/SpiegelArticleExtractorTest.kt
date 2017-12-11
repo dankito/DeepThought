@@ -14,18 +14,15 @@ class SpiegelArticleExtractorTest : ArticleExtractorTestBase() {
     @Test
     fun importWallStreetMogulSteveCohenArmerReicherHedgefondsKönigArticle() {
         getAndTestArticle("http://www.spiegel.de/wirtschaft/unternehmen/wall-street-mogul-steve-cohen-armer-reicher-hedgefonds-koenig-a-700480.html",
-                "Armer, reicher Hedgefonds-König",
-                "Er lebt weiter in Saus und Braus, als hätte es die Wirtschaftskrise nie gegeben: Steve Cohen ist einer der legendärsten Hedgefondsmanager der Wall Street - und" +
-                        " der wohl meistgehasste. Jetzt offenbart der Milliardär in einem Interview erstmals sein Privatleben.",
-                null, 8600)
+                "Armer, reicher Hedgefonds-König", null,
+                "http://cdn2.spiegel.de/images/image-83501-860_panofree-rmyr-83501.jpg", 8600, subTitle = "Wall-Street-Mogul Steve Cohen")
     }
 
     @Test
     fun importArticleWithUnorderedList() {
         getAndTestArticle("http://www.spiegel.de/wirtschaft/soziales/griechenland-so-gefaehrlich-waere-der-grexit-a-1038609.html",
-                "So gefährlich wäre Griechenlands Euro-Aus",
-                "Der Grexit? Ein Kinderspiel. In Deutschland werden die Folgen eines griechischen Staatsbankrotts und Euro-Austritts kleingeredet. Doch die nervösen Reaktionen an den Börsen zeigen: Das Szenario wäre alles andere als harmlos.",
-                null, 7800
+                "So gefährlich wäre Griechenlands Euro-Aus", null,
+                "http://cdn3.spiegel.de/images/image-860556-breitwandaufmacher-qbik-860556.jpg", 7800, subTitle = "Drohender Staatsbankrott"
                 )
     }
 
