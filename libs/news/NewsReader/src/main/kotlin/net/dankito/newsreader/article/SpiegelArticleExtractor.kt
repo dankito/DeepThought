@@ -30,14 +30,13 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
 
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
-        val contentElement = document.body().getElementById("content-main")
+        document.body().select("#content-main").first()?.let { contentElement ->
+            val source = extractSource(url, contentElement)
 
-        val source = extractSource(url, contentElement)
+            val content = extractContent(contentElement, url)
 
-        val content = extractContent(contentElement, url)
-
-        extractionResult.setExtractedContent(Item(content), source)
-
+            extractionResult.setExtractedContent(Item(content), source)
+        }
     }
 
     private fun extractContent(contentElement: Element, articleUrl: String): String {
