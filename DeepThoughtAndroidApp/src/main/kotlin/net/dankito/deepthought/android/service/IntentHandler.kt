@@ -49,7 +49,7 @@ class IntentHandler(private val extractArticleHandler: ExtractArticleHandler, pr
     }
 
     private fun handleReceivedText(intent: Intent, sharedText: String) {
-        var abstractPlain: String? = intent.getStringExtra(Intent.EXTRA_SUBJECT) // e.g. Firefox also sends Page Title
+        var abstractPlain: String? = intent.getStringExtra(Intent.EXTRA_SUBJECT) // e.g. Firefox also sends Page Title // TODO: shouldn't it then be used as source title?
         if(abstractPlain == null && intent.hasExtra(Intent.EXTRA_TITLE)) {
             abstractPlain = intent.getStringExtra(Intent.EXTRA_TITLE)
         }
