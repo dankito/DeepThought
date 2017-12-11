@@ -14,7 +14,7 @@ import java.util.*
 class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient) {
 
     companion object {
-        private var spiegelTimeFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        private var SpiegelTimeFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
         private val log = LoggerFactory.getLogger(SpiegelArticleExtractor::class.java)
     }
@@ -53,14 +53,18 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
     }
 
     private fun cleanArticleColumn(articleColumn: Element) {
-        articleColumn.select(".article-function-social-media, .article-function-box, .branded_channel_teaser, #branded_channel_teaser," +
-                ".magazin-box-inner, style").remove()
+        try {
+            articleColumn.select(".article-function-social-media, .article-function-box, .branded_channel_teaser, #branded_channel_teaser," +
+                    "br.clearfix, .magazin-box-inner, style").remove()
 
-        articleColumn.select(".asset-box").forEach { assetBox ->
-            if(assetBox.select(".asset-title").first()?.text()?.contains("anzeige", true) == true) {
-                assetBox.remove()
+            articleColumn.select("div div.innen").first()?.parent()?.remove()
+
+            articleColumn.select(".asset-box").forEach { assetBox ->
+                if(assetBox.select(".asset-title").first()?.text()?.contains("anzeige", true) == true) {
+                    assetBox.remove()
+                }
             }
-        }
+        } catch(e: Exception) { log.error("Could not cleanArticleColumn", e) }
     }
 
     private fun extractSource(articleUrl: String, contentElement: Element): Source? {
@@ -83,7 +87,7 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
 
     private fun parseSpiegelTimeFormat(dateTime: String): Date? {
         try {
-            val parsedDate = spiegelTimeFormat.parse(dateTime)
+            val parsedDate = SpiegelTimeFormat.parse(dateTime)
             return parsedDate
         } catch (ex: Exception) {
             log.error("Could not parse Spiegel Date Format " + dateTime, ex)
