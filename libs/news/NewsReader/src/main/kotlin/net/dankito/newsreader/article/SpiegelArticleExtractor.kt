@@ -55,9 +55,15 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
     private fun cleanArticleColumn(articleColumn: Element) {
         try {
             articleColumn.select(".article-function-social-media, .article-function-box, .branded_channel_teaser, #branded_channel_teaser," +
-                    "br.clearfix, .magazin-box-inner, style").remove()
+                    "br.clearfix, .adition, .teads-inread, .magazin-box-inner, .noskimwords, .nointellitxt, .noIntelliTxt, .noSmartTag, .noSmartLink, style").remove()
 
             articleColumn.select("div div.innen").first()?.parent()?.remove()
+
+            articleColumn.select("p").forEach { paragraph ->
+                if(paragraph.text().isBlank()) {
+                    paragraph.remove()
+                }
+            }
 
             articleColumn.select(".asset-box").forEach { assetBox ->
                 if(assetBox.select(".asset-title").first()?.text()?.contains("anzeige", true) == true) {
