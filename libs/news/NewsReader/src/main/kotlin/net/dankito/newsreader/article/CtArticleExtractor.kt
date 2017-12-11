@@ -25,6 +25,9 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
     }
 
 
+    private var triedToResolveMultiPageArticle = false
+
+
     override fun getName(): String? {
         return "c't"
     }
@@ -34,6 +37,10 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
     }
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
+        if(tryToParseMultiPageArticle(extractionResult, document, url)) {
+            return
+        }
+
         document.body().select("main section").first()?.let { sectionElement ->
             parseDesktopSite(url, sectionElement, extractionResult)
             return
@@ -182,6 +189,68 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
         }
 
         return null
+    }
+
+
+    private fun tryToParseMultiPageArticle(extractionResult: ItemExtractionResult, document: Document, url: String): Boolean {
+        if(triedToResolveMultiPageArticle == false) {
+            getAllOnOnePageLink(document, url)?.let { allOnOnePageUrl ->
+                triedToResolveMultiPageArticle = true
+
+                extractArticle(allOnOnePageUrl)?.let { result ->
+                    if(result.couldExtractContent) {
+                        extractionResult.setExtractedContent(result.item, result.source)
+                        return true
+                    }
+                }
+            }
+        }
+
+        triedToResolveMultiPageArticle = false
+
+        return false
+    }
+
+    private fun getAllOnOnePageLink(document: Document, articleUrl: String): String? {
+        document.body().select(".article-pages-summary__onepage").first()?.let { allOnOnePageAnchor ->
+            return makeLinkAbsolute(allOnOnePageAnchor.attr("href"), articleUrl)
+        }
+
+        document.body().select(".seite_weiter, .article_pagination .next").first()?.let { nextPageAnchor ->
+            return tryToGetAllOnOnePageLinkManually(nextPageAnchor, articleUrl)
+        }
+
+        return null
+    }
+
+    private fun tryToGetAllOnOnePageLinkManually(nextPageAnchor: Element, articleUrl: String): String? {
+        val nextPageUrl = makeLinkAbsolute(nextPageAnchor.attr("href"), articleUrl)
+        val index = nextPageUrl.indexOf("seite=")
+
+        if(index > 0) {
+            val pageNumberStartIndex = index + "seite=".length
+            val pageNumberEndIndex = getPageNumberEndIndex(pageNumberStartIndex, nextPageUrl)
+
+            try {
+                return nextPageUrl.replaceRange(pageNumberStartIndex, pageNumberEndIndex, "all")
+            } catch(e: Exception) { log.error("Could not get all on one page url from $nextPageUrl", e) }
+        }
+
+        return null
+    }
+
+    private fun getPageNumberEndIndex(pageNumberStartIndex: Int, nextPageUrl: String): Int {
+        var pageNumberEndIndex = pageNumberStartIndex + 1
+        val indexOfNextAmpersand = nextPageUrl.indexOf('&', pageNumberStartIndex + 1)
+
+        if(nextPageUrl.length - pageNumberStartIndex <= 2) {
+            pageNumberEndIndex = nextPageUrl.length
+        }
+        else if(indexOfNextAmpersand > 0) {
+            pageNumberEndIndex = indexOfNextAmpersand - 1
+        }
+
+        return pageNumberEndIndex
     }
 
 }

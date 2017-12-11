@@ -11,26 +11,26 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient) {
+
+class SpiegelMobileArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient) {
 
     companion object {
-        private var SpiegelTimeFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        private val SpiegelMobileDateTimeFormat: DateFormat = SimpleDateFormat("EEEE, dd.MM.yyyy HH:mm 'Uhr'", Locale.GERMAN)
 
-        private val log = LoggerFactory.getLogger(SpiegelArticleExtractor::class.java)
+        private val log = LoggerFactory.getLogger(SpiegelMobileArticleExtractor::class.java)
     }
 
 
     override fun getName(): String? {
-        return "Spiegel"
+        return "Spiegel Mobile"
     }
 
     override fun canExtractEntryFromUrl(url: String): Boolean {
-        return isHttpOrHttpsUrlFromHost(url, "www.spiegel.de/")
+        return isHttpOrHttpsUrlFromHost(url, "m.spiegel.de/")
     }
 
-
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
-        document.body().select("#content-main").first()?.let { contentElement ->
+        document.body().select(".spArticleContent").first()?.let { contentElement ->
             val source = extractSource(url, contentElement)
 
             val content = extractContent(contentElement, url)
@@ -42,7 +42,7 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
     private fun extractContent(contentElement: Element, articleUrl: String): String {
         var content = contentElement.select(".article-intro").first()?.outerHtml() ?: ""
 
-        contentElement.select("#js-article-column").first()?.let { articleColumn ->
+        contentElement.select(".spArticleContent").first()?.let { articleColumn ->
             cleanArticleColumn(articleColumn)
 
             makeLinksAbsolute(articleColumn, articleUrl)
@@ -54,7 +54,9 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
 
     private fun cleanArticleColumn(articleColumn: Element) {
         try {
-            articleColumn.select(".article-function-social-media, .article-function-box, .branded_channel_teaser, #branded_channel_teaser," +
+            articleColumn.select(".js-author-details-wrapper, .social-media-box-wrapper, .gujAd, .GujAdHidden, .GujAdInUse, .spHeftBox," +
+                    ".spAsset, .asset-social-media," +
+                    ".article-function-social-media, .article-function-box, .branded_channel_teaser, #branded_channel_teaser," +
                     "br.clearfix, .adition, .teads-inread, .magazin-box-inner, .noskimwords, .nointellitxt, .noIntelliTxt, .noSmartTag, .noSmartLink, style").remove()
 
             articleColumn.select("div div.innen").first()?.parent()?.remove()
@@ -70,19 +72,38 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
                     assetBox.remove()
                 }
             }
+            articleColumn.select(".asset-list-box").forEach { assetBox ->
+                if(assetBox.select("h4").first()?.text()?.contains("anzeige", true) == true) {
+                    assetBox.remove()
+                }
+            }
         } catch(e: Exception) { log.error("Could not cleanArticleColumn", e) }
     }
 
     private fun extractSource(articleUrl: String, contentElement: Element): Source? {
-        contentElement.select("h2.article-title").first()?.let { headerElement ->
-            val title = headerElement.select(".headline").first()?.text() ?: ""
-            val subtitle = headerElement.select(".headline-intro").first()?.text() ?: ""
-            val previewImageUrl = contentElement.select("#js-article-top-wide-asset img").first()?.attr("src")
+        var title = ""
+        contentElement.select("h1").first()?.let { header1 ->
+            title = header1.text().trim()
+            header1.remove()
+        }
 
-            val source = Source(title, articleUrl, previewImageUrl = previewImageUrl, subTitle = subtitle)
+        var subTitle = ""
+        contentElement.select("h2").first()?.let { header2 ->
+            subTitle = header2.text().trim()
+            header2.remove()
+        }
 
-            contentElement.select(".article-function-date time").first()?.let { timeElement ->
-                source.publishingDate = parseSpiegelTimeFormat(timeElement.attr("datetime"))
+        var previewImageUrl: String? = null
+        contentElement.select("#spArticleTopAsset img").first()?.let { previewImage ->
+            previewImageUrl = previewImage.attr("src")
+        }
+
+        if(title.isNotBlank()) {
+            val source = Source(subTitle, articleUrl, previewImageUrl = previewImageUrl, subTitle = subTitle)
+
+            contentElement.select("#spShortDate").first()?.let { dateElement ->
+                source.publishingDate = parseSpiegelMobileDateTimeFormat(dateElement.text())
+                dateElement.remove()
             }
 
             return source
@@ -91,10 +112,9 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
         return null
     }
 
-    private fun parseSpiegelTimeFormat(dateTime: String): Date? {
+    private fun parseSpiegelMobileDateTimeFormat(dateTime: String): Date? {
         try {
-            val parsedDate = SpiegelTimeFormat.parse(dateTime)
-            return parsedDate
+            return SpiegelMobileDateTimeFormat.parse(dateTime.replace("&nbsp;", ""))
         } catch (ex: Exception) {
             log.error("Could not parse Spiegel Date Format " + dateTime, ex)
         }

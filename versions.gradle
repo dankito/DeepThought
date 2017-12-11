@@ -1,8 +1,15 @@
 ext {
 
-    appVersionName = '0.3 Design Preview'
+    versionMajor = 0
+    versionMinor = 3
+    versionPatch = 0
+    versionBuild = 0 // for pre-releases
+    versionClassifier = 'Design Preview'
 
-    appVersionCode = 25
+
+    appVersionName = generateVersionName()
+
+    appVersionCode = generateVersionCode()
 
     kotlinVersion = '1.1.51'
 
@@ -74,4 +81,21 @@ ext {
 
     logbackVersion = '1.2.3'
 
+}
+
+
+// Thanks to https://medium.com/@maxirosson/versioning-android-apps-d6ec171cfd82 for providing this idea and code
+
+private Integer generateVersionCode() {
+    return ext.versionMajor * 1000000 + ext.versionMinor * 10000 + ext.versionPatch * 100 + ext.versionBuild
+}
+
+private String generateVersionName() {
+    String versionName = "${ext.versionMajor}.${ext.versionMinor}.${ext.versionPatch}"
+
+    if(ext.versionClassifier != null) {
+        versionName += "-" + ext.versionClassifier
+    }
+
+    return versionName
 }

@@ -4,8 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v7.app.AppCompatActivity
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -131,7 +129,7 @@ class FullscreenWebView : WebView {
         }
 
         // as immersive fullscreen is only available for KitKat and above leave immersive fullscreen mode by swiping from screen top or bottom is also only available on these  devices
-        if(flags == NON_FULLSCREEN_MODE_SYSTEM_UI_FLAGS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if(flags != FULLSCREEN_MODE_SYSTEM_UI_FLAGS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             leaveFullscreenMode()
 
             leftFullscreenCallback?.invoke()
@@ -145,9 +143,7 @@ class FullscreenWebView : WebView {
      * WebView doesn't fire click event, so we had to implement this our self
      */
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if(isDialogInForeground() == false) { // touches from dialogs (e.g. TagsOnEntryDialog) if not handled there also come here -> avoid handling these
-            swipeTouchListener.onTouch(this, event)
-        }
+        swipeTouchListener.onTouch(this, event)
 
         if(event.action == MotionEvent.ACTION_UP && elementClickedListener != null) {
             hitTestResult?.let { hitResult ->
@@ -162,18 +158,6 @@ class FullscreenWebView : WebView {
         }
 
         return super.onTouchEvent(event)
-    }
-
-    private fun isDialogInForeground(): Boolean {
-        (context as? AppCompatActivity)?.supportFragmentManager?.fragments?.let { fragments ->
-            fragments.forEach {
-                if(it is DialogFragment) {
-                    return true
-                }
-            }
-        }
-
-        return false
     }
 
     private fun handleWebViewSingleTap() {

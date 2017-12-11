@@ -31,6 +31,8 @@ abstract class FullscreenDialogFragment : DialogFragment() {
             activity?.let { hideStatusBar(it) }
         }
 
+        rootView.setOnTouchListener { _, _ -> true } // prevent that unhandled touches bubble up to activity
+
         setupToolbar(rootView)
 
         setupUI(rootView)

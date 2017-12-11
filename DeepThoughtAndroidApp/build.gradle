@@ -209,7 +209,6 @@ dependencies {
 }
 
 
-
 check.dependsOn 'checkstyle', 'findbugs', 'pmd'
 
 sonarqube {
