@@ -8,7 +8,6 @@ import net.dankito.deepthought.ui.view.ITagsOnEntryListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
-import net.dankito.service.search.SearchEngineBase
 import net.dankito.service.search.specific.TagsSearchResult
 import net.dankito.utils.ui.IDialogService
 
@@ -36,10 +35,8 @@ class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryList
                 else if(result.hasSingleMatch()) {
                     result.getSingleMatch()?.let { tags.add(it) }
                 }
-                else {
-                    if(result != results.lastResult || results.overAllSearchTerm.trim().endsWith(SearchEngineBase.TagsSearchTermSeparator)) {
-                        tags.add(Tag(result.searchTerm))
-                    }
+                else if(result.searchTerm.isNotBlank()) {
+                    tags.add(Tag(result.searchTerm))
                 }
             }
         }
