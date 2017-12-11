@@ -1,5 +1,7 @@
 package net.dankito.deepthought.android.activities
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.annotation.TargetApi
 import android.content.Intent
 import android.net.Uri
@@ -12,6 +14,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import android.view.animation.AccelerateInterpolator
 import android.webkit.*
 import com.github.clans.fab.FloatingActionMenu
 import kotlinx.android.synthetic.main.activity_edit_entry.*
@@ -36,6 +39,7 @@ import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
+import net.dankito.richtexteditor.android.animation.ShowHideViewAnimator
 import net.dankito.service.data.*
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntryChanged
@@ -79,6 +83,8 @@ class EditEntryActivity : BaseActivity() {
         const val ResultId = "EDIT_ENTRY_ACTIVITY_RESULT"
 
         private const val GetHtmlCodeFromWebViewJavaScriptInterfaceName = "HtmlViewer"
+
+        private const val ShowHideEditContentViewAnimationDurationMillis = 500L
 
         private val log = LoggerFactory.getLogger(EditEntryActivity::class.java)
     }
@@ -175,6 +181,8 @@ class EditEntryActivity : BaseActivity() {
     private val openUrlOptionsView = OpenUrlOptionsView()
 
     private lateinit var editHtmlView: EditHtmlView
+
+    private val animator = ShowHideViewAnimator()
 
     private var mnSaveEntry: MenuItem? = null
 
@@ -608,15 +616,36 @@ class EditEntryActivity : BaseActivity() {
                     if(content.isBlank() == false || dataManager.localSettings.didShowAddItemPropertiesHelp) View.GONE
                     else View.VISIBLE
 
-            lytEditContent.visibility = View.VISIBLE
+            val webViewContentLocation = IntArray(2)
+            wbvwContent.getLocationInWindow(webViewContentLocation)
+            val start = webViewContentLocation[1].toFloat()
             lytViewContent.visibility = View.GONE
-            lytEntryFieldsPreview.visibility = View.GONE // TODO: animate
+            lytEditContent.visibility = View.VISIBLE
+            playShowEditContentViewAnimation(start)
             setFloatingActionButtonVisibilityOnUIThread()
 
             isInEditContentMode = true
 
             invalidateOptionsMenu()
         }
+    }
+
+    private fun playShowEditContentViewAnimation(start: Float) {
+        val interpolator = AccelerateInterpolator()
+
+        val fieldsPreviewYAnimator = ObjectAnimator
+                .ofFloat(lytEntryFieldsPreview, View.Y, lytEntryFieldsPreview.top.toFloat(), -1 * lytEntryFieldsPreview.measuredHeight.toFloat())
+                .setDuration(ShowHideEditContentViewAnimationDurationMillis)
+        fieldsPreviewYAnimator.interpolator = interpolator
+
+        val editContentViewYAnimator = ObjectAnimator
+                .ofFloat(lytEditContent, View.Y, start, 0f)
+                .setDuration(ShowHideEditContentViewAnimationDurationMillis)
+        editContentViewYAnimator.interpolator = interpolator
+
+        val animatorSet = AnimatorSet()
+        animatorSet.playTogether(fieldsPreviewYAnimator, editContentViewYAnimator)
+        animatorSet.start()
     }
 
     private fun isEditingContent() = lytEditContent.visibility == View.VISIBLE
@@ -636,10 +665,9 @@ class EditEntryActivity : BaseActivity() {
     private fun leaveEditContentView() {
         contentEditor.hideKeyboard()
 
+        animator.playShowAnimation(lytEntryFieldsPreview)
         lytEditContent.visibility = View.GONE
-
         lytViewContent.visibility = View.VISIBLE
-        lytEntryFieldsPreview.visibility = View.VISIBLE // TODO: animate
         setFloatingActionButtonVisibilityOnUIThread()
 
         isInEditContentMode = false
