@@ -13,15 +13,10 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.data.messages.ArticleSummaryExtractorConfigChanged
 import net.dankito.service.eventbus.IEventBus
 import net.engio.mbassy.listener.Handler
-import org.slf4j.LoggerFactory
 
 
 class MainActivityFloatingActionMenuButton(floatingActionMenu: FloatingActionMenu, private val summaryExtractorsManager: ArticleSummaryExtractorConfigManager, private val router: IRouter,
                                private val eventBus: IEventBus) : FloatingActionMenuButton(floatingActionMenu) {
-
-    companion object {
-        private val log = LoggerFactory.getLogger(MainActivityFloatingActionMenuButton::class.java)
-    }
 
 
     private val favoriteArticleSummaryExtractorsButtons = ArrayList<FloatingActionButton>()
