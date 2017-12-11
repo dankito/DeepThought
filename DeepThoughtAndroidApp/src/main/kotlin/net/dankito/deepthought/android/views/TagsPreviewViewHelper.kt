@@ -10,7 +10,6 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.extensions.setRightMargin
 import net.dankito.deepthought.model.Tag
 import net.dankito.utils.extensions.sorted
-import net.dankito.utils.extensions.sortedByStrings
 
 
 class TagsPreviewViewHelper {
