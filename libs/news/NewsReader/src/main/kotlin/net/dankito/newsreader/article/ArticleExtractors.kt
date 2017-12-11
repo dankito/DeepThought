@@ -25,6 +25,7 @@ class ArticleExtractors(webClient: IWebClient) {
         implementedExtractors.put(TazArticleExtractor::class.java, TazArticleExtractor(webClient))
         implementedExtractors.put(ZeitArticleExtractor::class.java, ZeitArticleExtractor(webClient))
         implementedExtractors.put(SpiegelArticleExtractor::class.java, SpiegelArticleExtractor(webClient))
+        implementedExtractors.put(SpiegelMobileArticleExtractor::class.java, SpiegelMobileArticleExtractor(webClient))
         implementedExtractors.put(DerFreitagArticleExtractor::class.java, DerFreitagArticleExtractor(webClient))
         implementedExtractors.put(HeiseNewsArticleExtractor::class.java, HeiseNewsArticleExtractor(webClient))
         implementedExtractors.put(HeiseDeveloperArticleExtractor::class.java, HeiseDeveloperArticleExtractor(webClient))
