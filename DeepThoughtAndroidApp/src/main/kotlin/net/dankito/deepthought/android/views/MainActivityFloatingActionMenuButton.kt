@@ -26,8 +26,6 @@ class MainActivityFloatingActionMenuButton(floatingActionMenu: FloatingActionMen
 
     private val favoriteArticleSummaryExtractorsButtons = ArrayList<FloatingActionButton>()
 
-    private var defaultOnMenuButtonClickListener: View.OnClickListener? = null
-
     private val eventBusListener = EventBusListener()
 
 
@@ -52,28 +50,7 @@ class MainActivityFloatingActionMenuButton(floatingActionMenu: FloatingActionMen
      * Is used when there are no favorite ArticleSummaryExtractors. The a click on floating action directly goes to EditEntryActivity to create an item.
      */
     private fun disableFloatingActionMenu() {
-        if(defaultOnMenuButtonClickListener == null) {
-            backupDefaultOnMenuButtonClickListener()
-        }
-
         floatingActionMenu.setOnMenuButtonClickListener { router.showCreateEntryView() }
-    }
-
-    /**
-     * The default OnMenuButtonClick listener - which shows the floating action menu - isn't directly accessible -> get it via reflection
-     */
-    private fun backupDefaultOnMenuButtonClickListener() {
-        try {
-            val mMenuButtonField = floatingActionMenu.javaClass.getDeclaredField("mMenuButton")
-            mMenuButtonField.isAccessible = true
-            val mMenuButton = mMenuButtonField.get(floatingActionMenu)
-
-            val mClickListenerField = mMenuButton.javaClass.getDeclaredField("mClickListener")
-            mClickListenerField.isAccessible = true
-            defaultOnMenuButtonClickListener = mClickListenerField.get(mMenuButton) as View.OnClickListener
-        } catch (e: Exception) {
-            log.error("Could not get defaultOnMenuButtonClickListener", e)
-        }
     }
 
     /**
@@ -81,7 +58,7 @@ class MainActivityFloatingActionMenuButton(floatingActionMenu: FloatingActionMen
      * Is used when there is at least one favorite ArticleSummaryExtractors.
      */
     private fun enableFloatingActionMenu() {
-        floatingActionMenu.setOnMenuButtonClickListener(defaultOnMenuButtonClickListener)
+        floatingActionMenu.setOnMenuButtonClickListener { floatingActionMenu.toggle(floatingActionMenu.isAnimated) } // just copies the default behaviour
     }
 
     private fun setupEventBusListener() {
