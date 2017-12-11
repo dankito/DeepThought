@@ -25,16 +25,16 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
     }
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
-            val contentElement = document.body().getElementById("content-main")
+        val contentElement = document.body().getElementById("content-main")
 
-            val articleSectionElements = document.body().getElementsByClass("article-section")
-            val articleIntroElements = contentElement.getElementsByClass("article-intro")
+        val articleSectionElements = document.body().getElementsByClass("article-section")
+        val articleIntroElements = contentElement.getElementsByClass("article-intro")
 
-            val entry = createEntry(articleSectionElements, articleIntroElements)
+        val entry = createEntry(articleSectionElements, articleIntroElements)
 
-            val reference = extractReference(url, contentElement)
+        val reference = extractReference(url, contentElement)
 
-            extractionResult.setExtractedContent(entry, reference)
+        extractionResult.setExtractedContent(entry, reference)
 
     }
 
