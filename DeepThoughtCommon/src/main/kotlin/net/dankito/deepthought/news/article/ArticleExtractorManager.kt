@@ -63,7 +63,8 @@ open class ArticleExtractorManager(private val seriesService: SeriesService, pri
      * Do to legal issues, don't extract an article from a url the user didn't for sure see before. Show her/him original web page before
      */
     open fun extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(item: ArticleSummaryItem, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
-        val extractionResult = ItemExtractionResult(Item("", item.summary), Source(item.title, item.url, item.publishedDate, item.previewImageUrl))
+        // TODO: what to do with summary then?
+        val extractionResult = ItemExtractionResult(Item(""), Source(item.title, item.url, item.publishedDate, item.previewImageUrl))
 
         addDefaultData(item, extractionResult) {
             callback(AsyncResult(true, result = extractionResult))
