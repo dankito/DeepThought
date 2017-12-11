@@ -927,9 +927,7 @@ class EditEntryActivity : BaseActivity() {
             lytReferencePreview.setOnboardingTextOnUiThread(R.string.activity_edit_item_source_onboarding_text)
         }
         else {
-            lytReferencePreview.setSourceToEdit(sourceToEdit, getCurrentSeries(), router, this) { setSourceToEdit(it) }
-            // TODO
-//            lytReferencePreview.showActionIconOnUiThread(android.R.drawable.ic_delete, false) { referenceCleared() }
+            lytReferencePreview.setSourceToEdit(sourceToEdit, getCurrentSeries(), this) { setSourceToEdit(it) }
         }
 
         val showReferencePreview = this.forceShowReferencePreview || sourceToEdit != null
