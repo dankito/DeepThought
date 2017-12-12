@@ -101,7 +101,9 @@ class EditEntrySourceField : EditEntityEntityReferenceField, IReferencesListView
     override fun updateValueToEdit() {
         super.updateValueToEdit()
 
-        presenter.searchReferences(getCurrentFieldValue())
+        if(edtxtEntityFieldValue.hasFocus()) {
+            presenter.searchReferences(getCurrentFieldValue())
+        }
     }
 
 
