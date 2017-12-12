@@ -4,6 +4,11 @@ sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
 
 
+sourceSets {
+    main.java.srcDirs += 'build/generated/'
+}
+
+
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"

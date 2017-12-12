@@ -4,6 +4,7 @@ import com.couchbase.lite.*
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.jpa.apt.config.EntityConfig
 import net.dankito.jpa.apt.config.JPAEntityConfiguration
+import net.dankito.jpa.apt.generated.GeneratedEntityConfigs
 import net.dankito.jpa.cache.DaoCache
 import net.dankito.jpa.cache.ObjectCache
 import net.dankito.jpa.couchbaselite.Dao
@@ -13,6 +14,7 @@ import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.version.Versions
 import org.slf4j.LoggerFactory
 import java.io.IOException
+import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -57,12 +59,9 @@ abstract class CouchbaseLiteEntityManagerBase(protected var context: Context, pr
     }
 
     private fun loadGeneratedModel(): JPAEntityConfiguration {
-        val generatedConfigsClass = Class.forName("net.dankito.jpa.apt.generated.GeneratedEntityConfigs")
-        val generatedConfigs = generatedConfigsClass.newInstance()
+        val generatedConfigs = GeneratedEntityConfigs()
 
-        val getGeneratedEntityConfigsMethod = generatedConfigsClass.getDeclaredMethod("getGeneratedEntityConfigs")
-
-        val generatedEntityConfigs = getGeneratedEntityConfigsMethod.invoke(generatedConfigs) as List<EntityConfig>
+        val generatedEntityConfigs = generatedConfigs.getGeneratedEntityConfigs()
 
         return JPAEntityConfiguration(generatedEntityConfigs)
     }
