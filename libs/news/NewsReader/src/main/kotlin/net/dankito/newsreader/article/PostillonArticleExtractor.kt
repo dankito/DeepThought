@@ -88,7 +88,7 @@ class PostillonArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
     }
 
     private fun shouldFilterNode(node: Node) : Boolean {
-        return (node is TextNode && node.isBlank) || ("a" == node.nodeName() && "more" == (node as Element).attr("name"))
+        return (node is TextNode && node.isBlank) || node.attr("id") == "narrando_mobil" || ("a" == node.nodeName() && "more" == (node as Element).attr("name"))
     }
 
     private fun extractPublishingDate(postElement: Element): Date? {
