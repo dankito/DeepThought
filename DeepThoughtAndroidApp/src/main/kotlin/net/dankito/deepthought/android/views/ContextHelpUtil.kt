@@ -22,16 +22,19 @@ class ContextHelpUtil {
     val stringUtil = StringUtil()
 
 
-    fun showContextHelp(lytContextHelp: View, helpTextResourceId: Int) {
-        showContextHelp(lytContextHelp, lytContextHelp.context.getText(helpTextResourceId).toString())
+    fun showContextHelp(lytContextHelp: View, helpTextResourceId: Int, okPressed: (() -> Unit)? = null) {
+        showContextHelp(lytContextHelp, lytContextHelp.context.getText(helpTextResourceId).toString(), okPressed)
     }
 
-    fun showContextHelp(lytContextHelp: View, helpText: String) {
+    fun showContextHelp(lytContextHelp: View, helpText: String, okPressed: (() -> Unit)? = null) {
         val txtContextHelpText = lytContextHelp.findViewById(R.id.txtContextHelpText) as TextView
         txtContextHelpText.text = stringUtil.getSpannedFromHtml(helpText)
 
         val btnDismissContextHelp = lytContextHelp.findViewById(R.id.btnDismissContextHelp) as Button
-        btnDismissContextHelp.setOnClickListener { animateHideContextHelp(lytContextHelp) }
+        btnDismissContextHelp.setOnClickListener {
+            animateHideContextHelp(lytContextHelp)
+            okPressed?.invoke()
+        }
 
         lytContextHelp.visibility = View.VISIBLE
 
