@@ -105,6 +105,11 @@
     ]]>
     </string>
 
+    <string name="context_help_reader_view"><![CDATA[
+        The page is now loaded. You can now switch to the reader view by pressing the button below in the middle of the toolbar.
+    ]]>
+    </string>
+
     <string name="context_help_item_content_fullscreen"><![CDATA[
         Scrolling item\'s content as you just did starts fullscreen mode.<br />
         You can leave it by simply tapping anywhere except on links and images in the screen.

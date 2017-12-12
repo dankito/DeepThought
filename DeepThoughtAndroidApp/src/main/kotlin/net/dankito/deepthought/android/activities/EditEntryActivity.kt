@@ -543,6 +543,21 @@ class EditEntryActivity : BaseActivity() {
         }
 
         readLaterArticle?.let { editReadLaterArticle(it, false) }
+
+        mayShowReaderViewHelp()
+    }
+
+    private fun mayShowReaderViewHelp() {
+        val localSettings = entryService.dataManager.localSettings
+        if(localSettings.didShowReaderViewHelp == false) {
+            contextHelpUtil.showContextHelp(lytContextHelpReaderView, R.string.context_help_reader_view) {
+                setFloatingActionButtonVisibilityOnUIThread()
+                localSettings.didShowReaderViewHelp = true
+                entryService.dataManager.localSettingsUpdated()
+            }
+
+            setFloatingActionButtonVisibilityOnUIThread()
+        }
     }
 
 
@@ -977,7 +992,8 @@ class EditEntryActivity : BaseActivity() {
         // when user comes to EditEntryDialog, don't show floatingActionMenu till some content has been entered. She/he should focus on the content
         val hasUserEverEnteredSomeContent = dataManager.localSettings.didShowAddItemPropertiesHelp || contentToEdit.isNullOrBlank() == false
 
-        floatingActionMenu.setVisibilityOnUIThread(wbvwContent.isInFullscreenMode || isEditingContent(), hasUserEverEnteredSomeContent)
+        floatingActionMenu.setVisibilityOnUIThread(wbvwContent.isInFullscreenMode || isEditingContent() || lytContextHelpReaderView.visibility == View.VISIBLE,
+                hasUserEverEnteredSomeContent)
     }
 
 
@@ -1249,6 +1265,23 @@ class EditEntryActivity : BaseActivity() {
 
         setContentPreviewOnUIThread()
         invalidateOptionsMenu()
+
+        checkIsShowingReaderViewHelp()
+    }
+
+    private fun checkIsShowingReaderViewHelp() {
+        val dataManager = entryService.dataManager
+
+        if (dataManager.localSettings.didShowReaderViewHelp == false) {
+            dataManager.localSettings.didShowReaderViewHelp = true
+            dataManager.localSettingsUpdated()
+
+            if(lytContextHelpReaderView.visibility == View.VISIBLE) {
+                contextHelpUtil.animateHideContextHelp(lytContextHelpReaderView) {
+                    setFloatingActionButtonVisibilityOnUIThread()
+                }
+            }
+        }
     }
 
     private fun showShareEntryPopupMenu() {

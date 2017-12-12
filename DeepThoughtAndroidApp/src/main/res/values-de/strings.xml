@@ -144,6 +144,11 @@
     ]]>
     </string>
 
+    <string name="context_help_reader_view"><![CDATA[
+        Die Seite ist nun geladen. Sie können jetzt in den Lesemodus wechseln über den Button unten in der Mitte der Toolbar.
+    ]]>
+    </string>
+
     <string name="context_help_item_content_fullscreen"><![CDATA[
         Scrollen oder Doppelklicken startet den Vollbildmodus.<br />
         Durch erneutes Doppelklicken oder den Button unten recht können Sie den Vollbildmodus wieder verlassen.

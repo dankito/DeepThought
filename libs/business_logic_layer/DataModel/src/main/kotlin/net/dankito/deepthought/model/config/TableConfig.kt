@@ -84,6 +84,7 @@ class TableConfig {
         const val LocalSettingsCountTagsOnItemSearchesColumnName = "count_tags_on_item_searches"
         const val LocalSettingsDidShowAddItemPropertiesHelpColumnName = "did_show_add_item_properties_help"
         const val LocalSettingsDidShowSaveItemChangesHelpColumnName = "did_show_save_item_changes_help"
+        const val LocalSettingsDidShowReaderViewHelpColumnName = "did_show_reader_view_help"
         const val LocalSettingsDidShowItemInformationFullscreenHelpColumnName = "item_information_fullscreen_help"
         const val LocalSettingsDidShowItemInformationFullscreenGesturesHelpColumnName = "item_information_fullscreen_gestures_help"
         const val LocalSettingsDidShowSavedReadLaterArticleIsNowInItemsHelpColumnName = "did_show_saved_read_later_article_is_now_in_items_help"

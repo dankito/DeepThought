@@ -22,18 +22,19 @@ class ContextHelpUtil {
     val stringUtil = StringUtil()
 
 
-    fun showContextHelp(lytContextHelp: View, helpTextResourceId: Int, okPressed: (() -> Unit)? = null) {
-        showContextHelp(lytContextHelp, lytContextHelp.context.getText(helpTextResourceId).toString(), okPressed)
+    fun showContextHelp(lytContextHelp: View, helpTextResourceId: Int, helpDismissedListener: (() -> Unit)? = null) {
+        showContextHelp(lytContextHelp, lytContextHelp.context.getText(helpTextResourceId).toString(), helpDismissedListener)
     }
 
-    fun showContextHelp(lytContextHelp: View, helpText: String, okPressed: (() -> Unit)? = null) {
+    fun showContextHelp(lytContextHelp: View, helpText: String, helpDismissedListener: (() -> Unit)? = null) {
         val txtContextHelpText = lytContextHelp.findViewById(R.id.txtContextHelpText) as TextView
         txtContextHelpText.text = stringUtil.getSpannedFromHtml(helpText)
 
         val btnDismissContextHelp = lytContextHelp.findViewById(R.id.btnDismissContextHelp) as Button
         btnDismissContextHelp.setOnClickListener {
-            animateHideContextHelp(lytContextHelp)
-            okPressed?.invoke()
+            animateHideContextHelp(lytContextHelp) {
+                helpDismissedListener?.invoke()
+            }
         }
 
         lytContextHelp.visibility = View.VISIBLE
@@ -87,17 +88,34 @@ class ContextHelpUtil {
     private fun animateShowContextHelpAfterMeasuringHeight(lytContextHelp: View) {
         // this may works
 //        playAnimation(lytContextHelp, lytContextHelp.y - lytContextHelp.measuredHeight.toFloat(), lytContextHelp.y)
-        playAnimation(lytContextHelp, - lytContextHelp.measuredHeight.toFloat(), 0f)
+        if(isAlmostAtBottom(lytContextHelp)) {
+            playAnimation(lytContextHelp, lytContextHelp.bottom.toFloat(), lytContextHelp.bottom.toFloat() - lytContextHelp.measuredHeight)
+        }
+        else {
+            playAnimation(lytContextHelp, -lytContextHelp.measuredHeight.toFloat(), 0f)
+        }
     }
 
-    private fun animateHideContextHelp(lytContextHelp: View) {
+    fun animateHideContextHelp(lytContextHelp: View, helpDismissedListener: (() -> Unit)? = null) {
         // does not work
 //        playAnimation(lytContextHelp, lytContextHelp.y, lytContextHelp.y - lytContextHelp.measuredHeight.toFloat()) { lytContextHelp.visibility = View.GONE }
-        playAnimation(lytContextHelp, 0f, - lytContextHelp.measuredHeight.toFloat()) { hide(lytContextHelp) }
+        if(isAlmostAtBottom(lytContextHelp)) {
+            playAnimation(lytContextHelp, lytContextHelp.top.toFloat(), lytContextHelp.bottom.toFloat()) { hide(lytContextHelp, helpDismissedListener) }
+        }
+        else {
+            playAnimation(lytContextHelp, 0f, -lytContextHelp.measuredHeight.toFloat()) { hide(lytContextHelp, helpDismissedListener) }
+        }
     }
 
-    private fun hide(lytContextHelp: View) {
+    private fun isAlmostAtBottom(lytContextHelp: View): Boolean {
+        val displayHeight = lytContextHelp.context.resources.displayMetrics.heightPixels
+        return lytContextHelp.bottom / displayHeight.toFloat() > 0.7
+    }
+
+    private fun hide(lytContextHelp: View, animationEndListener: (() -> Unit)? = null) {
         lytContextHelp.visibility = View.GONE
+
+        animationEndListener?.invoke()
     }
 
     private fun playAnimation(lytContextHelp: View, yStart: Float, yEnd: Float, animationEndListener: (() -> Unit)? = null) {

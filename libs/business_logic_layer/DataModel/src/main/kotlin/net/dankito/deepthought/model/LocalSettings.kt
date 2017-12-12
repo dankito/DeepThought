@@ -48,6 +48,9 @@ data class LocalSettings(
         @Column(name = TableConfig.LocalSettingsDidShowSaveItemChangesHelpColumnName)
         var didShowSaveItemChangesHelp: Boolean = false,
 
+        @Column(name = TableConfig.LocalSettingsDidShowReaderViewHelpColumnName)
+        var didShowReaderViewHelp: Boolean = false,
+
         @Column(name = TableConfig.LocalSettingsDidShowItemInformationFullscreenHelpColumnName)
         var didShowItemInformationFullscreenHelp: Boolean = false,
 
