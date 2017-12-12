@@ -65,6 +65,9 @@ android {
             dimension = "default"
         }
         beta {
+            applicationIdSuffix = ".beta"
+            resValue "string", "app_name", "DeepThought Beta"
+
             dimension = "default"
         }
         extended {
