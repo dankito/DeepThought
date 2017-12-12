@@ -59,10 +59,10 @@
         <item quantity="one">%d Ergebnis</item>
         <item quantity="other">%d Ergebnisse</item>
     </plurals>
-    <string name="search_hint_items">Einträge suchen</string>
-    <string name="search_hint_tags">Schlagworte suchen</string>
-    <string name="search_hint_sources">Quellen suchen</string>
-    <string name="search_hint_read_later_articles">Vorgemerkte Artikel suchen</string>
+    <string name="search_hint_items">Inhalt, Schlagworte, Quelle, Datum, Reihe, …</string>
+    <string name="search_hint_tags">Schlagwortnamen</string>
+    <string name="search_hint_sources">Quellentitel, Datum, Reihe, Ausgabe, …</string>
+    <string name="search_hint_read_later_articles">Titel, Text, Datum, Reihe</string>
 
 
     <!-- Wenn du im Hauptfenster bei den Schlagwörtern auf das Filtersymbol eines Schlagwortes tippst -->

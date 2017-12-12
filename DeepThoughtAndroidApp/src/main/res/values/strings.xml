@@ -46,10 +46,10 @@
         <item quantity="one">%d result</item>
         <item quantity="other">%d results</item>
     </plurals>
-    <string name="search_hint_items">Find Items</string>
-    <string name="search_hint_tags">Find Tags</string>
-    <string name="search_hint_sources">Find Sources</string>
-    <string name="search_hint_read_later_articles">Find Read later articles</string>
+    <string name="search_hint_items">Content, tags, source, date, series, …</string>
+    <string name="search_hint_tags">Tag names</string>
+    <string name="search_hint_sources">Source title, date, series, issue, …</string>
+    <string name="search_hint_read_later_articles">Title, summary, date, series</string>
 
     <string name="fragment_main_activity_tabs_filtered_entities_label">Filtered:</string>
 
