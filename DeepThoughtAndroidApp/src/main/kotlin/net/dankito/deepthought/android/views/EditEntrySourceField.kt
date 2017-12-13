@@ -139,8 +139,6 @@ class EditEntrySourceField : EditEntityEntityReferenceField, IReferencesListView
             existingSourcesSearchResultsAdapter.items = entities
 
             rcySearchResult.visibility = if(entities.isEmpty() || edtxtEntityFieldValue.hasFocus() == false) View.GONE else View.VISIBLE
-            rootView.invalidate()
-            rootView.forceLayout()
         }
     }
 
