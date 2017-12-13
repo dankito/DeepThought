@@ -123,8 +123,12 @@ class EditEntrySourceField : EditEntityEntityReferenceField, IReferencesListView
         sourceChangedListener?.invoke(null)
     }
 
-    private fun existingSourceSelected(item: Source) {
-        sourceChangedListener?.invoke(item)
+    private fun existingSourceSelected(source: Source) {
+        existingSourcesSearchResultsAdapter.selectedSource = source
+
+        sourceChangedListener?.invoke(source)
+
+        rcySearchResult.visibility = View.GONE
     }
 
 
