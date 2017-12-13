@@ -224,13 +224,17 @@ open class EditEntityField : RelativeLayout {
 
     protected open val edtxtEntityFieldValueTextWatcher = object : TextWatcher {
         override fun afterTextChanged(editable: Editable) {
-            updateDidValueChange(editable.toString() != originalValue)
+            enteredTextChanged(editable.toString())
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
 
+    }
+
+    protected open fun enteredTextChanged(enteredText: String) {
+        updateDidValueChange(enteredText != originalValue)
     }
 
     protected open fun updateDidValueChange(didValueChange: Boolean) {

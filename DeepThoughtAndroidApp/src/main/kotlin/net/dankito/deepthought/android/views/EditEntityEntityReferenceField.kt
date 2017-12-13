@@ -47,10 +47,10 @@ abstract class EditEntityEntityReferenceField : EditEntityField {
         this.valueToShowWhenNotEditing = valueToShowWhenNotEditing
     }
 
-    override fun updateDidValueChange(didValueChange: Boolean) {
+    override fun enteredTextChanged(enteredText: String) {
         updateValueToEdit()
 
-        super.updateDidValueChange(didValueChange)
+        super.enteredTextChanged(enteredText)
     }
 
     override fun hasFocusChanged(hasFocus: Boolean) {
