@@ -8,7 +8,7 @@ include ':RichTextEditorAndroid'
 include ':DeepThoughtJavaFX'
 include ':DeepThoughtJavaFXExtended'
 
-include ':DeepThoughtCommon'
+include ':DeepThoughtUiCommon'
 include ':DeepThoughtBaseLib'
 
 include ':FaviconExtractor'

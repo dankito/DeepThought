@@ -48,7 +48,7 @@ compileTestKotlin.kotlinOptions.jvmTarget = '1.8'
 
 
 dependencies {
-    compile project(':DeepThoughtCommon')
+    compile project(':DeepThoughtUiCommon')
     compile project(':JavaCouchbaseLiteEntityManager')
     compile project(':UdpDevicesDiscoverer')
 
