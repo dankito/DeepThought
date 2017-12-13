@@ -7,6 +7,10 @@ import net.dankito.deepthought.ui.presenter.ReferencesPresenterBase
 class ReferenceOnEntryRecyclerAdapter(presenter: ReferencesPresenterBase): ReferenceRecyclerAdapterBase(presenter) {
 
     var selectedSource: Source? = null
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
 
     override val shouldShowImageIsReferenceAddedToEntry: Boolean
