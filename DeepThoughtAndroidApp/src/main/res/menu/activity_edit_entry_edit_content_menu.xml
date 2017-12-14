@@ -6,6 +6,7 @@
         app:showAsAction="always"
         android:orderInCategory="100"
         android:icon="@drawable/ic_check_white_48dp"
+        android:title="@string/action_apply"
     />
 
 </menu>
