@@ -24,8 +24,6 @@ import net.dankito.deepthought.android.activities.arguments.EditEntryActivityPar
 import net.dankito.deepthought.android.activities.arguments.EditEntryActivityResult
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.dialogs.FullscreenDialogFragment
-import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import net.dankito.deepthought.android.service.hideKeyboard
@@ -45,7 +43,6 @@ import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntryChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.IThreadPool
-import net.dankito.utils.extensions.toSortedString
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogButton
@@ -355,11 +352,11 @@ class EditEntryActivity : BaseActivity() {
         }
 
         lytReferencePreview.didValueChangeListener = { didSourceTitleChange -> sourceTitleChanged(didSourceTitleChange) }
-        // TODO
-//        lytReferencePreview.fieldClickedListener = { editReference() }
 
-        lytTagsPreview.setFieldNameOnUiThread(R.string.activity_edit_item_tags_label, false)
-        lytTagsPreview.fieldClickedListener = { editTagsOnEntry() }
+        lytTagsPreview.didValueChangeListener = { didTagsChange ->
+            entryPropertySet()
+            updateEntryFieldChangedOnUIThread(ItemField.Tags, didTagsChange)
+        }
 
         wbvwContent?.requestFocus() // avoid that lytAbstractPreview gets focus and keyboard therefore gets show on activity start
 
@@ -579,10 +576,6 @@ class EditEntryActivity : BaseActivity() {
             appliedChangesToReference(result)
         }
 
-        (supportFragmentManager.findFragmentByTag(TagsOnEntryDialogFragment.TAG) as? TagsOnEntryDialogFragment)?.let {
-            it.restoreDialog(originalTags ?: ArrayList<Tag>()) { appliedChangesToTags(it) }
-        }
-
         setContentPreviewOnUIThread()
 
         mayRegisterEventBusListener()
@@ -741,38 +734,8 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun editTagsOnEntry() {
-        val tagsOnEntryDialog = TagsOnEntryDialogFragment()
-
-        tagsOnEntryDialog.show(supportFragmentManager, tagsOnEntry) {
-            appliedChangesToTags(it)
-        }
-    }
-
-    private fun appliedChangesToTags(editedTags: Collection<Tag>) {
-        tagsOnEntry.clear()
-        tagsOnEntry.addAll(editedTags)
-        entryPropertySet()
-
-        runOnUiThread {
-            updateEntryFieldChangedOnUIThread(ItemField.Tags, didTagsChange(editedTags))
-            setTagsOnEntryPreviewOnUIThread()
-            mayShowSaveEntryChangesHelpOnUIThread()
-        }
-    }
-
-    private fun didTagsChange(editedTags: Collection<Tag>): Boolean {
-        originalTags?.let { originalTags ->
-            if(originalTags.size != editedTags.size) {
-                return true
-            }
-
-            val copy = ArrayList(originalTags)
-            copy.removeAll(editedTags)
-
-            return copy.size > 0
-        }
-
-        return true
+        lytTagsPreview.visibility = View.VISIBLE
+        lytTagsPreview.startEditing()
     }
 
     private fun updateEntryFieldChangedOnUIThread(field: ItemField, didChange: Boolean) {
@@ -965,13 +928,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setTagsOnEntryPreviewOnUIThread() {
-        if(tagsOnEntry.filterNotNull().isEmpty()) {
-            lytTagsPreview.setOnboardingTextOnUiThread(R.string.activity_edit_item_tags_onboarding_text)
-        }
-        else {
-            val tagsPreview = tagsOnEntry.toSortedString()
-            lytTagsPreview.setFieldValueOnUiThread(tagsPreview)
-        }
+        lytTagsPreview.setTagsToEdit(tagsOnEntry, this)
 
         val showTagsPreview = this.forceShowTagsPreview || tagsOnEntry.size > 0
 
@@ -1121,14 +1078,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        val visibleEditEntryFieldDialog = getVisibleEditEntryFieldDialog()
-        if(visibleEditEntryFieldDialog != null) {
-            if(visibleEditEntryFieldDialog.handlesBackButtonPress() == false) {
-                super.onBackPressed()
-            }
-            return
-        }
-        else if(openUrlOptionsView.handlesBackButtonPress()) {
+        if(openUrlOptionsView.handlesBackButtonPress()) {
             return
         }
         else if(floatingActionMenu.handlesBackButtonPress()) {
@@ -1142,10 +1092,6 @@ class EditEntryActivity : BaseActivity() {
         }
 
         askIfUnsavedChangesShouldBeSavedAndCloseDialog()
-    }
-
-    private fun getVisibleEditEntryFieldDialog(): FullscreenDialogFragment? {
-        return supportFragmentManager.findFragmentByTag(TagsOnEntryDialogFragment.TAG) as? TagsOnEntryDialogFragment
     }
 
 
@@ -1506,6 +1452,11 @@ class EditEntryActivity : BaseActivity() {
 
         if(changedFields.contains(ItemField.SourceTitle)) {
             sourceToEdit?.title = lytReferencePreview.getEditedValue() ?: ""
+        }
+
+        if(changedFields.contains(ItemField.Tags)) {
+            tagsOnEntry.clear()
+            tagsOnEntry.addAll(lytTagsPreview.applyChangesAndGetTags())
         }
     }
 

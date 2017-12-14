@@ -44,6 +44,19 @@ class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryList
         return tags.sortedBy { it.name }
     }
 
+    fun getTagsSearchResultForTag(tag: Tag): TagsSearchResult? {
+        lastTagsSearchResults?.let {
+            it.results.forEach { result ->
+                if(result.exactMatches.contains(tag) || tag == result.getSingleMatch() ||
+                        (tag.isPersisted() == false && tag.name.toLowerCase() == result.searchTerm.toLowerCase())) {
+                    return result
+                }
+            }
+        }
+
+        return null
+    }
+
     fun getButtonStateForSearchResult(tagsOnEntry: Collection<Tag>): TagsSearcherButtonState {
         return searchResultsUtil.getButtonStateForSearchResult(lastTagsSearchResults, tagsOnEntry)
     }

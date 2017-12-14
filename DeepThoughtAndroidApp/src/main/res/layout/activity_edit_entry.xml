@@ -48,7 +48,7 @@
                 android:layout_below="@+id/lytReferencePreview"
             />
 
-            <net.dankito.deepthought.android.views.EditEntityField
+            <net.dankito.deepthought.android.views.EditEntityTagsField
                 android:id="@+id/lytTagsPreview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

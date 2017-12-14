@@ -18,6 +18,7 @@ import net.dankito.deepthought.android.service.AndroidClipboardService
 import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.SnackbarService
 import net.dankito.deepthought.android.service.network.NetworkConnectivityChangeBroadcastReceiver
+import net.dankito.deepthought.android.views.EditEntityTagsField
 import net.dankito.deepthought.android.views.EditEntrySourceField
 import net.dankito.deepthought.di.BaseModule
 import net.dankito.deepthought.di.CommonComponent
@@ -89,6 +90,8 @@ interface AppComponent : CommonComponent {
     fun inject(editEntryActivity: EditEntryActivity)
 
     fun inject(tagsOnEntryDialogFragment: TagsOnEntryDialogFragment)
+
+    fun inject(editEntityTagsField: EditEntityTagsField)
 
     fun inject(editEntrySourceField: EditEntrySourceField)
 

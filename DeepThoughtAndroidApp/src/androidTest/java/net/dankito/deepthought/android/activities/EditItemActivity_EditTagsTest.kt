@@ -1,32 +1,29 @@
 package net.dankito.deepthought.android.activities
 
 import android.support.test.InstrumentationRegistry
-import android.support.test.espresso.Espresso
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.runner.AndroidJUnit4
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import net.dankito.deepthought.android.DeepThoughtActivityTestRule
 import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditEntryActivityParameters
 import net.dankito.deepthought.android.di.TestComponent
-import net.dankito.deepthought.android.dialogs.TagsOnEntryDialogFragment
 import net.dankito.deepthought.android.service.ActivityParameterHolder
+import net.dankito.deepthought.android.util.matchers.RecyclerViewInViewMatcher
 import net.dankito.deepthought.android.util.matchers.RecyclerViewItemCountAssertion
 import net.dankito.deepthought.android.util.screenshot.TakeScreenshotOnErrorTestRule
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Tag
 import net.dankito.service.search.SearchEngineBase
-import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.allOf
-import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -83,54 +80,48 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
 
     @Test
     fun addNotPersistedTags_TagsGetSaved() {
-        Assert.assertThat(testItem.tags.size, CoreMatchers.`is`(3))
-        checkDisplayedTagsValue(testItem.tags)
-
-        Espresso.onView(ViewMatchers.withId(R.id.lytTagsPreview)).perform(ViewActions.click())
+        assertThat(testItem.tags.size, `is`(3))
         checkDisplayedPreviewTagsMatch(*testItem.tags.toTypedArray())
+
+        onView(withId(R.id.lytTagsPreview)).perform(ViewActions.click())
 
         navigator.enterText(UnPersistedTag1Name)
-        checkDisplayedPreviewTagsMatch(*testItem.tags.toTypedArray())
+        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
 
         navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
         checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
 
         navigator.enterText(UnPersistedTag2Name)
-        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
+        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), Tag(UnPersistedTag2Name), *testItem.tags.toTypedArray())
 
         navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
         checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), Tag(UnPersistedTag2Name), *testItem.tags.toTypedArray())
 
         navigator.enterText(UnPersistedTag3Name)
-        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), Tag(UnPersistedTag2Name), *testItem.tags.toTypedArray())
+        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), Tag(UnPersistedTag2Name), Tag(UnPersistedTag3Name), *testItem.tags.toTypedArray())
 
         navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
         checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), Tag(UnPersistedTag2Name), Tag(UnPersistedTag3Name), *testItem.tags.toTypedArray())
 
-        onView(withId(R.id.mnApplyTagsOnEntryChanges)).perform(click())
+        assertThat(testItem.tags.size, `is`(3)) // Item is not saved yet, but displayed tags preview must get updated
 
-        assertThat(testItem.tags.size, CoreMatchers.`is`(3)) // Item is not saved yet, but displayed tags preview must get updated
-        checkDisplayedTagsValue(listOf(persistedTag1, persistedTag2, persistedTag3, Tag(UnPersistedTag1Name), Tag(UnPersistedTag2Name), Tag(UnPersistedTag3Name)))
+        onView(withId(R.id.mnSaveEntry)).perform(click())
+        assertThat(testItem.tags.size, `is`(6))
         testItem.tags.forEach { tag ->
             assertThat(tag.isPersisted(), `is`(true))
         }
-
-        onView(withId(R.id.mnSaveEntry)).perform(click())
-        assertThat(testItem.tags.size, CoreMatchers.`is`(6))
     }
 
 
     @Test
     fun addPersistedAndNotPersistedTags_TagsGetSaved() {
-        Assert.assertThat(testItem.tags.size, CoreMatchers.`is`(3))
-        checkDisplayedTagsValue(testItem.tags)
-
-        Espresso.onView(ViewMatchers.withId(R.id.lytTagsPreview)).perform(ViewActions.click())
+        assertThat(testItem.tags.size, `is`(3))
         checkDisplayedPreviewTagsMatch(*testItem.tags.toTypedArray())
-        checkCountItemsInRecyclerViewTagSearchResults(3)
+
+        onView(withId(R.id.lytTagsPreview)).perform(ViewActions.click())
 
         navigator.enterText(UnPersistedTag1Name)
-        checkDisplayedPreviewTagsMatch(*testItem.tags.toTypedArray())
+        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
         checkCountItemsInRecyclerViewTagSearchResults(0)
 
         navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
@@ -146,7 +137,7 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
         checkCountItemsInRecyclerViewTagSearchResults(1)
 
         navigator.enterText(UnPersistedTag3Name)
-        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
+        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), Tag(UnPersistedTag3Name), *testItem.tags.toTypedArray())
         checkCountItemsInRecyclerViewTagSearchResults(1)
 
         navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
@@ -161,29 +152,142 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
         checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), Tag(UnPersistedTag3Name), *testItem.tags.toTypedArray())
         checkCountItemsInRecyclerViewTagSearchResults(2)
 
-        onView(withId(R.id.mnApplyTagsOnEntryChanges)).perform(click())
+        assertThat(testItem.tags.size, `is`(3)) // Item is not saved yet, but displayed tags preview must get updated
 
-        assertThat(testItem.tags.size, CoreMatchers.`is`(3)) // Item is not saved yet, but displayed tags preview must get updated
-        checkDisplayedTagsValue(listOf(persistedTag1, persistedTag2, persistedTag3, Tag(UnPersistedTag1Name), Tag(UnPersistedTag3Name)))
+        onView(withId(R.id.mnSaveEntry)).perform(click())
+        assertThat(testItem.tags.size, `is`(5))
         testItem.tags.forEach { tag ->
             assertThat(tag.isPersisted(), `is`(true))
         }
+    }
+
+
+    @Test
+    fun removedEnteredTag_RemovedTagIsAtBeginningOfSearchTerm() {
+        assertThat(testItem.tags.size, `is`(3))
+        checkDisplayedPreviewTagsMatch(*testItem.tags.toTypedArray())
+
+        onView(withId(R.id.lytTagsPreview)).perform(ViewActions.click())
+
+        navigator.enterText(PersistedTag1Name.toLowerCase())
+        navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
+        checkDisplayedPreviewTagsMatch(*testItem.tags.toTypedArray())
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+        navigator.enterText(UnPersistedTag1Name)
+        navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
+        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+        navigator.enterText(UnPersistedTag2Name)
+        navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
+        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag2Name), Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+
+        onView(RecyclerViewInViewMatcher.withRecyclerView(R.id.lytTagsPreview, R.id.rcySearchResults)
+                .atPosition(0))
+                .perform(click())
+
+
+        assertPersistedTag1GotRemoved()
+    }
+
+
+    @Test
+    fun removedEnteredTag_RemovedTagIsInTheMiddleOfSearchTerm() {
+        assertThat(testItem.tags.size, `is`(3))
+        checkDisplayedPreviewTagsMatch(*testItem.tags.toTypedArray())
+
+        onView(withId(R.id.lytTagsPreview)).perform(ViewActions.click())
+
+        navigator.enterText(UnPersistedTag1Name)
+        navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
+        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
+        checkCountItemsInRecyclerViewTagSearchResults(0)
+
+        // Tag to remove soon
+        navigator.enterText(PersistedTag1Name.toLowerCase())
+        navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
+        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+        navigator.enterText(UnPersistedTag2Name)
+        navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
+        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag2Name), Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+
+        onView(RecyclerViewInViewMatcher.withRecyclerView(R.id.lytTagsPreview, R.id.rcySearchResults)
+                .atPosition(0))
+                .perform(click())
+
+
+        assertPersistedTag1GotRemoved()
+    }
+
+    @Test
+    fun removedEnteredTag_RemovedTagIsAtEndOfSearchTerm() {
+        assertThat(testItem.tags.size, `is`(3))
+        checkDisplayedPreviewTagsMatch(*testItem.tags.toTypedArray())
+
+        onView(withId(R.id.lytTagsPreview)).perform(ViewActions.click())
+
+        navigator.enterText(UnPersistedTag1Name)
+        navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
+        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
+        checkCountItemsInRecyclerViewTagSearchResults(0)
+
+        navigator.enterText(UnPersistedTag2Name)
+        navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
+        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag2Name), Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
+        checkCountItemsInRecyclerViewTagSearchResults(0)
+
+        navigator.enterText(PersistedTag1Name.toLowerCase())
+        navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
+        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag2Name), Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+
+        onView(RecyclerViewInViewMatcher.withRecyclerView(R.id.lytTagsPreview, R.id.rcySearchResults)
+                .atPosition(0))
+                .perform(click())
+
+
+        assertPersistedTag1GotRemoved()
+    }
+
+    private fun assertPersistedTag1GotRemoved() {
+        val newDisplayedTags = ArrayList(testItem.tags)
+        newDisplayedTags.remove(persistedTag1)
+        newDisplayedTags.add(Tag(UnPersistedTag1Name))
+        newDisplayedTags.add(Tag(UnPersistedTag2Name))
+        checkDisplayedPreviewTagsMatch(*newDisplayedTags.toTypedArray())
+
+        // now check if PersistedTag1Name got removed from edtxtEntityFieldValue
+        removeWhitespacesEnteredByKeyboardApp() // my keyboard app enters after each comma a white space
+        onView(allOf(withId(R.id.edtxtEntityFieldValue), isDescendantOfA(withId(R.id.lytTagsPreview))))
+                .check(matches(withText(`is`("$UnPersistedTag1Name${SearchEngineBase.TagsSearchTermSeparator}" +
+                        "$UnPersistedTag2Name${SearchEngineBase.TagsSearchTermSeparator}"))))
 
         onView(withId(R.id.mnSaveEntry)).perform(click())
-        assertThat(testItem.tags.size, CoreMatchers.`is`(5))
+        assertThat(testItem.tags.size, `is`(newDisplayedTags.size))
+        testItem.tags.forEach { tag ->
+            assertThat(tag.isPersisted(), `is`(true))
+        }
     }
 
 
     private fun checkDisplayedPreviewTagsMatch(vararg tags: Tag) {
         InstrumentationRegistry.getInstrumentation().runOnMainSync {
-            val tagsOnEntryDialogFragment = testRule.activity.supportFragmentManager.findFragmentByTag(TagsOnEntryDialogFragment.TAG)
-            val lytTagsPreview = tagsOnEntryDialogFragment.view?.findViewById(R.id.lytTagsPreview) as? ViewGroup
+            val lytTagsPreview = testRule.activity.findViewById(R.id.lytTagsPreview) as? ViewGroup
+            val lytCollectionPreview = lytTagsPreview?.findViewById(R.id.lytCollectionPreview) as? ViewGroup
 
-            lytTagsPreview?.let {
+            lytCollectionPreview?.let {
                 val displayedTagNames = ArrayList<String>()
 
-                for(i in 0..lytTagsPreview.childCount) {
-                    val tagView = lytTagsPreview.getChildAt(i)
+                for(i in 0..lytCollectionPreview.childCount) {
+                    val tagView = lytCollectionPreview.getChildAt(i)
                     (tagView?.findViewById(R.id.txtTagName) as? TextView)?.text?.let { tagName -> displayedTagNames.add(tagName.toString()) }
                 }
 
@@ -197,8 +301,19 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
         }
     }
 
+    private fun removeWhitespacesEnteredByKeyboardApp() {
+        InstrumentationRegistry.getInstrumentation().runOnMainSync {
+            val lytTagsPreview = testRule.activity.findViewById(R.id.lytTagsPreview) as? ViewGroup
+            val edtxtEntityFieldValue = lytTagsPreview?.findViewById(R.id.edtxtEntityFieldValue) as? EditText
+
+            edtxtEntityFieldValue?.let {
+                edtxtEntityFieldValue.setText(edtxtEntityFieldValue.text.toString().replace(", ", ","))
+            }
+        }
+    }
+
     private fun checkCountItemsInRecyclerViewTagSearchResults(expectedCount: Int) {
-        onView(allOf(withId(R.id.rcyTags)))
+        onView(allOf(withId(R.id.rcySearchResults), isDescendantOfA(withId(R.id.lytTagsPreview))))
                 .check(RecyclerViewItemCountAssertion(expectedCount))
     }
 

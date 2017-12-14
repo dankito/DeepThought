@@ -92,7 +92,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
 
         presenter = TagsOnEntryListPresenter(this, searchEngine, tagService, deleteEntityService, searchResultsUtil, dialogService)
 
-        adapter = TagsOnEntryRecyclerAdapter(presenter) { activity?.runOnUiThread { setTagsOnEntryPreviewOnUIThread() } }
+        adapter = TagsOnEntryRecyclerAdapter(presenter) { tagChange, tag, _ -> activity?.runOnUiThread { setTagsOnEntryPreviewOnUIThread() } }
     }
 
 

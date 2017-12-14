@@ -22,23 +22,55 @@
             android:paddingStart="@dimen/view_edit_entity_field_padding_left"
         >
 
-            <!-- EditText has a padding of 4dp, so set TextView's padding left also to 4dp so that they are left aligned -->
-            <TextView
-                android:id="@+id/txtEntityFieldName"
-                android:layout_width="match_parent"
+
+            <LinearLayout
+                android:id="@+id/lytFieldNameAndPreview"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/edit_text_padding_left"
-                android:layout_marginStart="@dimen/edit_text_padding_left"
-                style="@style/EntityFieldName"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-            />
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/btnEntityFieldAction"
+                android:layout_toStartOf="@+id/btnEntityFieldAction"
+            >
+
+                <!-- EditText has a padding of 4dp, so set TextView's padding left also to 4dp so that they are left aligned -->
+                <TextView
+                    android:id="@+id/txtEntityFieldName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/edit_text_padding_left"
+                    android:layout_marginStart="@dimen/edit_text_padding_left"
+                    style="@style/EntityFieldName"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                />
+
+                <com.google.android.flexbox.FlexboxLayout
+                    android:id="@+id/lytCollectionPreview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/dialog_tags_on_entry_tag_preview_min_height"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginBottom="2dp"
+                    app:flexWrap="wrap"
+                    app:flexDirection="row"
+                    app:alignItems="flex_start"
+                    app:alignContent="flex_start"
+                    app:justifyContent="flex_start"
+                    app:showDivider="middle"
+                    app:dividerDrawable="@drawable/flexbox_tags_on_entry_divider"
+                    android:visibility="gone"
+                />
+
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/edtxtEntityFieldValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/txtEntityFieldName"
+                android:layout_below="@id/lytFieldNameAndPreview"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_toLeftOf="@+id/btnEntityFieldAction"
