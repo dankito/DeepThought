@@ -173,11 +173,13 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
     private fun removeTagFromCurrentTagsOnEntry(tag: Tag) {
         if(adapter.tagsOnEntry.contains(tag)) {
             adapter.tagsOnEntry.remove(tag)
+        }
 
-            activity?.runOnUiThread {
-                adapter.notifyDataSetChanged()
-                setTagsOnEntryPreviewOnUIThread()
-            }
+        activity?.runOnUiThread {
+            removeRemovedTagFromEnteredSearchTerm(tag)
+
+            adapter.notifyDataSetChanged()
+            setTagsOnEntryPreviewOnUIThread()
         }
     }
 
