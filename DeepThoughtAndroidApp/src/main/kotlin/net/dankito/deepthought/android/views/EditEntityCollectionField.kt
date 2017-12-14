@@ -28,6 +28,8 @@ abstract class EditEntityCollectionField : EditEntityField {
     override fun doCustomUiInitialization(rootView: ViewGroup) {
         super.doCustomUiInitialization(rootView)
 
+        this.disableActionOnKeyboard = true
+
         rcySearchResult = rootView.findViewById(R.id.rcySearchResults) as MaxHeightRecyclerView
         rcySearchResult.addItemDecoration(HorizontalDividerItemDecoration(context))
 

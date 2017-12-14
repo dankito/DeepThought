@@ -7,10 +7,8 @@ import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
-import android.view.AbsSavedState
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RelativeLayout
@@ -43,6 +41,8 @@ open class EditEntityField : RelativeLayout {
     var didValueChange = false
 
     protected var originalValue = ""
+
+    protected var disableActionOnKeyboard = false
 
 
     var didValueChangeListener: ((didValueChange: Boolean) -> Unit)? = null
@@ -98,12 +98,21 @@ open class EditEntityField : RelativeLayout {
 
         edtxtEntityFieldValue = rootView.edtxtEntityFieldValue
         edtxtEntityFieldValue.addTextChangedListener(edtxtEntityFieldValueTextWatcher)
+        edtxtEntityFieldValue.setOnEditorActionListener { _, actionId, keyEvent -> handleEditEntrySearchTagAction(actionId, keyEvent) }
         edtxtEntityFieldValue.setOnClickListener { fieldClickedListener?.invoke() } // remember: setOnClickListener() on an EditText only works if focusable has been set to  false -> call setFieldNameOnUiThread() with isEditable = false
         edtxtEntityFieldValue.setOnFocusChangeListener { _, hasFocus -> hasFocusChanged(hasFocus) }
 
         btnEntityFieldAction = rootView.btnEntityFieldAction
 
         doCustomUiInitialization(rootView)
+    }
+
+    private fun handleEditEntrySearchTagAction(actionId: Int, keyEvent: KeyEvent?): Boolean {
+        if(actionId == EditorInfo.IME_ACTION_DONE || (actionId == EditorInfo.IME_NULL && keyEvent?.action == KeyEvent.ACTION_DOWN)) {
+            return disableActionOnKeyboard
+        }
+
+        return false
     }
 
     protected open fun hasFocusChanged(hasFocus: Boolean) {
