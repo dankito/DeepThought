@@ -6,8 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.flexbox.FlexboxLayout
 import kotlinx.android.synthetic.main.view_edit_entity_field.view.*
-import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 
 
 abstract class EditEntityCollectionField : EditEntityField {
@@ -16,8 +14,6 @@ abstract class EditEntityCollectionField : EditEntityField {
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-
-    protected lateinit var rcySearchResult: MaxHeightRecyclerView
 
     protected lateinit var lytCollectionPreview: FlexboxLayout
 
@@ -29,9 +25,6 @@ abstract class EditEntityCollectionField : EditEntityField {
         super.doCustomUiInitialization(rootView)
 
         this.disableActionOnKeyboard = true
-
-        rcySearchResult = rootView.findViewById(R.id.rcySearchResults) as MaxHeightRecyclerView
-        rcySearchResult.addItemDecoration(HorizontalDividerItemDecoration(context))
 
         lytCollectionPreview = rootView.lytCollectionPreview
         lytCollectionPreview.visibility = View.VISIBLE
@@ -46,7 +39,7 @@ abstract class EditEntityCollectionField : EditEntityField {
             startEditing()
         }
         else {
-            rcySearchResult.visibility = View.GONE
+            hideSearchResultsView()
         }
 
         super.hasFocusChanged(hasFocus)

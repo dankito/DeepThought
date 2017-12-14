@@ -2,7 +2,6 @@ package net.dankito.deepthought.android.views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.activities.EditReferenceActivity
@@ -128,7 +127,7 @@ class EditEntrySourceField : EditEntityEntityReferenceField, IReferencesListView
 
         sourceChangedListener?.invoke(source)
 
-        rcySearchResult.visibility = View.GONE
+        hideSearchResultsView()
     }
 
 
@@ -138,7 +137,12 @@ class EditEntrySourceField : EditEntityEntityReferenceField, IReferencesListView
         activity?.runOnUiThread {
             existingSourcesSearchResultsAdapter.items = entities
 
-            rcySearchResult.visibility = if(entities.isEmpty() || edtxtEntityFieldValue.hasFocus() == false) View.GONE else View.VISIBLE
+            if(entities.isEmpty() || edtxtEntityFieldValue.hasFocus() == false) {
+                hideSearchResultsView()
+            }
+            else {
+                showSearchResultsView()
+            }
         }
     }
 

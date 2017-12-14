@@ -2,7 +2,6 @@ package net.dankito.deepthought.android.views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.adapter.TagsOnEntryRecyclerAdapter
@@ -140,7 +139,12 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
     private fun setTagsOnEntryPreviewOnUIThread(tagsOnEntry: Collection<Tag>) {
         lytCollectionPreview?.let { tagsPreviewViewHelper.showTagsPreview(it, tagsOnEntry, showButtonRemoveTag = true) { removeTagFromCurrentTagsOnEntry(it) } }
 
-        rcySearchResult.visibility = if(tagsOnEntry.isEmpty() || edtxtEntityFieldValue.hasFocus() == false) View.GONE else View.VISIBLE
+        if(tagsOnEntry.isEmpty() || edtxtEntityFieldValue.hasFocus() == false) {
+            hideSearchResultsView()
+        }
+        else {
+            showSearchResultsView()
+        }
 
         updateDidValueChange(didTagsOnEntryChange(tagsOnEntry))
     }

@@ -15,6 +15,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.view_edit_entity_field.view.*
 import net.dankito.deepthought.android.R
+import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.extensions.setTextColorToColorResource
 import net.dankito.deepthought.android.extensions.setTintColor
 import net.dankito.deepthought.android.service.hideKeyboard
@@ -36,6 +37,8 @@ open class EditEntityField : RelativeLayout {
     protected lateinit var edtxtEntityFieldValue: EditText
 
     protected lateinit var btnEntityFieldAction: ImageButton
+
+    protected lateinit var rcySearchResult: MaxHeightRecyclerView
 
 
     var didValueChange = false
@@ -103,6 +106,9 @@ open class EditEntityField : RelativeLayout {
         edtxtEntityFieldValue.setOnFocusChangeListener { _, hasFocus -> hasFocusChanged(hasFocus) }
 
         btnEntityFieldAction = rootView.btnEntityFieldAction
+
+        rcySearchResult = rootView.findViewById(R.id.rcySearchResults) as MaxHeightRecyclerView
+        rcySearchResult.addItemDecoration(HorizontalDividerItemDecoration(context))
 
         doCustomUiInitialization(rootView)
     }
@@ -228,6 +234,17 @@ open class EditEntityField : RelativeLayout {
 
     private fun clearEditTextFocus() {
         txtEntityFieldName.requestFocus() // to remove focus from EditText; therefore focusable is set to true on txtEntityFieldName
+    }
+
+
+    protected fun showSearchResultsView() {
+        rcySearchResult.visibility = View.VISIBLE
+        vwSearchResultsDivider.visibility = View.VISIBLE
+    }
+
+    protected fun hideSearchResultsView() {
+        rcySearchResult.visibility = View.GONE
+        vwSearchResultsDivider.visibility = View.GONE
     }
 
 

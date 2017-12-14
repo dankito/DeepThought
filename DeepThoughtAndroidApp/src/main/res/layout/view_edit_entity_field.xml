@@ -109,9 +109,11 @@
 
 
         <View
+            android:id="@+id/vwSearchResultsDivider"
             android:layout_width="match_parent"
             android:layout_height="@dimen/view_edit_entity_field_search_results_list_margin_top"
             android:background="@color/edit_entity_activity_background"
+            android:visibility="gone"
         />
 
         <net.dankito.deepthought.android.views.MaxHeightRecyclerView
