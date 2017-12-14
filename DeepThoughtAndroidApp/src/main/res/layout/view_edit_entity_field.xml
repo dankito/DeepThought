@@ -40,7 +40,6 @@
                     android:id="@+id/txtEntityFieldName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minHeight="@dimen/view_edit_entity_field_collection_preview_min_height"
                     android:layout_marginLeft="@dimen/edit_text_padding_left"
                     android:layout_marginStart="@dimen/edit_text_padding_left"
                     style="@style/EntityFieldName"

@@ -35,6 +35,8 @@ abstract class EditEntityCollectionField : EditEntityField {
 
         lytCollectionPreview = rootView.lytCollectionPreview
         lytCollectionPreview.visibility = View.VISIBLE
+
+        txtEntityFieldName.minHeight = lytCollectionPreview.minimumHeight
     }
 
 
