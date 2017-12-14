@@ -635,6 +635,7 @@ class EditEntryActivity : BaseActivity() {
             isInEditContentMode = true
 
             invalidateOptionsMenu()
+            contentEditor.focusEditorAndShowKeyboardDelayed()
         }
     }
 
