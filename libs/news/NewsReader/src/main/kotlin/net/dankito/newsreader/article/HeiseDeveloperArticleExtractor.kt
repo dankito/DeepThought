@@ -14,7 +14,7 @@ class HeiseDeveloperArticleExtractor(webClient: IWebClient) : HeiseNewsAndDevelo
     }
 
     override fun canExtractEntryFromUrl(url: String): Boolean {
-        return isHttpOrHttpsUrlFromHost(url, "www.heise.de/developer/meldung/")
+        return isHttpOrHttpsUrlFromHost(url, "www.heise.de/developer/meldung/") || isHttpOrHttpsUrlFromHost(url, "m.heise.de/developer/meldung/")
     }
 
 
