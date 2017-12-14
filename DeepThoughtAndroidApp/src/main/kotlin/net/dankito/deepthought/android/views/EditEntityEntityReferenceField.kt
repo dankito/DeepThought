@@ -31,7 +31,7 @@ abstract class EditEntityEntityReferenceField : EditEntityField {
         rcySearchResult = rootView.findViewById(R.id.rcySearchResults) as MaxHeightRecyclerView
         rcySearchResult.addItemDecoration(HorizontalDividerItemDecoration(context))
 
-        showActionIconOnUiThread(R.drawable.ic_settings_white_48dp) {
+        showActionIconOnUiThread(android.R.drawable.ic_dialog_info) {
             showOptionsPopupMenu()
         }
     }
