@@ -3,6 +3,7 @@ package net.dankito.deepthought.android.views
 import android.content.Context
 import android.support.v7.widget.PopupMenu
 import android.util.AttributeSet
+import android.view.View
 import android.view.ViewGroup
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
@@ -71,6 +72,8 @@ abstract class EditEntityEntityReferenceField : EditEntityField {
 
     protected open fun editTextLostFocus() {
         updateValueToEdit()
+
+        rcySearchResult.visibility = View.GONE
     }
 
     protected open fun updateValueToEdit() {
