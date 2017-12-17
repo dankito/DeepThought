@@ -177,7 +177,8 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
         checkDisplayedSourceValue(SourceTitleAtStart) // after a click only Source title is displayed and can be edited
 
         navigator.clickOnEditEntityReferenceFieldRemoveEntityPopupMenu(R.id.lytReferencePreview)
-        checkDisplayedSourceValue(testRule.activity.getString(R.string.activity_edit_item_source_onboarding_text))
+//        checkDisplayedSourceValue(testRule.activity.getString(R.string.activity_edit_item_source_onboarding_text))
+        checkDisplayedSourceValue("")
 
         onView(withId(R.id.mnSaveEntry)).perform(click())
         assertThat(testItem.source, `is`(not(source)))
