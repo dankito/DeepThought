@@ -4,6 +4,7 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions
 import android.support.test.espresso.action.ViewActions.click
+import android.support.test.espresso.action.ViewActions.pressImeActionButton
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.runner.AndroidJUnit4
@@ -324,6 +325,76 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
     }
 
 
+    @Test
+    fun enterTagNameStartAtBeginning_PressAction_TagGetsAutoCompleted() {
+        persistTag(Tag(UnPersistedTag1Name))
+
+        assertThat(testItem.tags.size, `is`(3))
+        checkDisplayedPreviewTagsMatch(*testItem.tags.toTypedArray())
+
+        onView(withId(R.id.lytTagsPreview)).perform(ViewActions.click())
+
+        navigator.enterText(UnPersistedTag1Name.substring(0, 3)) // only enter first three letters of tag name
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+        pressAction()
+
+        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+        checkDisplayedTagsValue(UnPersistedTag1Name + SearchEngineBase.TagsSearchTermSeparator)
+    }
+
+    @Test
+    fun enterTagNameStartAtEnd_PressAction_TagGetsAutoCompleted() {
+        persistTag(Tag(UnPersistedTag1Name))
+
+        assertThat(testItem.tags.size, `is`(3))
+        checkDisplayedPreviewTagsMatch(*testItem.tags.toTypedArray())
+
+        onView(withId(R.id.lytTagsPreview)).perform(ViewActions.click())
+
+        navigator.enterText(PersistedTag1Name)
+        navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
+
+        navigator.enterText(UnPersistedTag1Name.substring(0, 3)) // only enter first three letters of tag name
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+        pressAction()
+
+        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+        removeWhitespacesEnteredByKeyboardApp()
+        checkDisplayedTagsValue(PersistedTag1Name + SearchEngineBase.TagsSearchTermSeparator + UnPersistedTag1Name + SearchEngineBase.TagsSearchTermSeparator)
+    }
+
+    @Test
+    fun enterTagNameStartAtEndWithTagsSeparator_PressAction_TagGetsAutoCompleted() {
+        persistTag(Tag(UnPersistedTag1Name))
+
+        assertThat(testItem.tags.size, `is`(3))
+        checkDisplayedPreviewTagsMatch(*testItem.tags.toTypedArray())
+
+        onView(withId(R.id.lytTagsPreview)).perform(ViewActions.click())
+
+        navigator.enterText(PersistedTag1Name)
+        navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
+
+        navigator.enterText(UnPersistedTag1Name.substring(0, 3)) // only enter first three letters of tag name
+        navigator.enterText(SearchEngineBase.TagsSearchTermSeparator) // now additionally enter TagsSearchTermSeparator to confuse auto completion
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+        pressAction()
+
+        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+        removeWhitespacesEnteredByKeyboardApp()
+        checkDisplayedTagsValue(PersistedTag1Name + SearchEngineBase.TagsSearchTermSeparator + UnPersistedTag1Name + SearchEngineBase.TagsSearchTermSeparator)
+    }
+
+
     private fun assertPersistedTag1GotRemoved() {
         val newDisplayedTags = ArrayList(testItem.tags)
         newDisplayedTags.remove(persistedTag1)
@@ -348,6 +419,11 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
         onView(RecyclerViewInViewMatcher.withRecyclerView(R.id.lytTagsPreview, R.id.rcySearchResults)
                 .atPosition(0))
                 .perform(click())
+    }
+
+    private fun pressAction() {
+        onView(allOf(withId(R.id.edtxtEntityFieldValue), isDescendantOfA(withId(R.id.lytTagsPreview))))
+                .perform(pressImeActionButton())
     }
 
 

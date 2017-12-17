@@ -73,6 +73,8 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
         rcySearchResult.adapter = adapter
         rcySearchResult.maxHeightInPixel = (context.resources.getDimension(R.dimen.list_item_tag_on_entry_height) * 5.25).toInt() // show at max five list items and a little bit from
         // the next item so that user knows there's more
+
+        this.disableActionOnKeyboard = false
     }
 
 
@@ -100,6 +102,14 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
         }
     }
 
+
+    override fun handleActionPressed(): Boolean {
+        presenter.getFirstTagOfLastSearchResult()?.let { firstTagSearchResult ->
+            addTag(firstTagSearchResult)
+        }
+
+        return true
+    }
 
     private fun tagAddedOrRemoved(tagChange: TagsOnEntryRecyclerAdapter.TagChange, tag: Tag) {
         if(tagChange == TagsOnEntryRecyclerAdapter.TagChange.Added) {

@@ -115,10 +115,18 @@ open class EditEntityField : RelativeLayout {
 
     private fun handleEditEntrySearchTagAction(actionId: Int, keyEvent: KeyEvent?): Boolean {
         if(actionId == EditorInfo.IME_ACTION_DONE || (actionId == EditorInfo.IME_NULL && keyEvent?.action == KeyEvent.ACTION_DOWN)) {
+            if(disableActionOnKeyboard == false) {
+                return handleActionPressed()
+            }
+
             return disableActionOnKeyboard
         }
 
         return false
+    }
+
+    protected open fun handleActionPressed(): Boolean {
+        return disableActionOnKeyboard
     }
 
     protected open fun hasFocusChanged(hasFocus: Boolean) {

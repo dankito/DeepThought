@@ -50,6 +50,22 @@ class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryList
         return tags.sortedBy { it.name }
     }
 
+    fun getFirstTagOfLastSearchResult(): Tag? {
+        lastTagsSearchResults?.lastResult?.let { lastResult ->
+            if(lastResult.hasExactMatches()) {
+                return lastResult.exactMatches[0]
+            }
+            else if(lastResult.hasSingleMatch()) {
+                return lastResult.getSingleMatch()
+            }
+            else if(lastResult.allMatches.size > 0) {
+                return lastResult.allMatches[0]
+            }
+        }
+
+        return null
+    }
+
     fun getTagsSearchResultForTag(tag: Tag): TagsSearchResult? {
         lastTagsSearchResults?.let {
             it.results.forEach { result ->
