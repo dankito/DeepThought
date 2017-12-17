@@ -196,6 +196,7 @@
     <string name="activity_edit_item_edit_source_menu_create_new_entity">Neue erstellen …</string>
     <string name="activity_edit_item_edit_source_menu_remove_entity">Löschen</string>
     <string name="activity_edit_item_tags_label">Schlagworte</string>
+    <string name="activity_edit_item_edit_tags_hint">Schlagworte durch Komma trennen</string>
     <string name="activity_edit_item_tags_onboarding_text">Geben Sie Ihrem Eintrag aussagekräftige Schlagworte, um ihn später leichter wiederzufinden.</string>
     <string name="activity_edit_item_source_onboarding_text">Speichern Sie, wo Sie diese Information gefunden haben, z. B. Webadresse, Buch, …</string>
     <string name="activity_edit_item_summary_onboarding_text">Fügen Sie Ihrem Eintrag einen Titel oder eine Zusammenfassung hinzu.</string>

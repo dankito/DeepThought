@@ -63,6 +63,8 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
 
         presenter = TagsOnEntryListPresenter(this, searchEngine, tagService, deleteEntityService, searchResultsUtil, dialogService)
 
+        edtxtEntityFieldValue.setHint(R.string.activity_edit_item_edit_tags_hint)
+
         adapter = TagsOnEntryRecyclerAdapter(presenter) { tagChange, tag, _ -> activity?.runOnUiThread { tagAddedOrRemoved(tagChange, tag) } }
         adapter.deleteTagListener = { tag -> deleteTag(tag) }
 
