@@ -41,9 +41,6 @@ class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryList
                 if(result.hasExactMatches()) {
                     tags.addAll(result.exactMatches)
                 }
-                else if(result.hasSingleMatch()) {
-                    result.getSingleMatch()?.let { tags.add(it) }
-                }
                 else if(result.searchTerm.isNotBlank()) {
                     tags.add(Tag(result.searchTerm))
                 }
