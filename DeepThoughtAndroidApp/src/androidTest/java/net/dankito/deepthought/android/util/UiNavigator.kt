@@ -4,6 +4,8 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso
 import android.support.test.espresso.Espresso.onData
 import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.UiController
+import android.support.test.espresso.ViewAction
 import android.support.test.espresso.action.ViewActions
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.action.ViewActions.replaceText
@@ -12,11 +14,13 @@ import android.support.test.espresso.matcher.RootMatchers.isDialog
 import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.v7.widget.MenuPopupWindow
+import android.view.View
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import net.dankito.deepthought.android.R
 import net.dankito.richtexteditor.android.command.Command
 import org.hamcrest.CoreMatchers.*
+import org.hamcrest.Matcher
 import org.hamcrest.core.AllOf
 
 
@@ -280,7 +284,21 @@ open class UiNavigator {
 
     private fun showEditEntityReferenceFieldPopupMenu(editEntityReferenceFieldId: Int) {
         onView(allOf(withId(R.id.btnEntityFieldAction), isDescendantOfA(withId(editEntityReferenceFieldId)))) // find btnEntityFieldAction in EditEntityReferenceField
-                .perform(click())
+                .perform(object : ViewAction {
+
+                    override fun getConstraints(): Matcher<View> {
+                        return ViewMatchers.isEnabled() // no constraints, they are checked above
+                    }
+
+                    override fun getDescription(): String {
+                        return "Click btnEntityFieldAction which is not fully (> 90 %) visible"
+                    }
+
+                    override fun perform(uiController: UiController?, view: View?) {
+                        view?.performClick()
+                    }
+
+                })
     }
 
 
