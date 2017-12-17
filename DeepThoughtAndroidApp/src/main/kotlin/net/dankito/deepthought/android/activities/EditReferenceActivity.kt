@@ -460,7 +460,8 @@ class EditReferenceActivity : BaseActivity() {
 
         lytEditReferenceUrl.setFieldValueOnUiThread(source.url ?: "")
 
-        unregisterEventBusListener()
+        unregisterEventBusListener() // TODO: why? i came here from showParameters() and then we need to listen to changes to Source
+        updateDidReferenceChangeOnUiThread()
     }
 
     private fun setAndShowSeriesOnUiThread(seriesId: String) {
@@ -516,14 +517,14 @@ class EditReferenceActivity : BaseActivity() {
     }
 
     private fun updateDidReferenceChangeOnUiThread() {
-        this.didReferenceChange = changedFields.size > 0 || selectedAnotherReference
+        this.didReferenceChange = changedFields.size > 0 || selectedAnotherReference || source?.isPersisted() == false
 
         mnSaveReference?.isVisible = didReferenceChange
     }
 
 
     private fun mayRegisterEventBusListener() {
-        if(source?.isPersisted() ?: false && eventBusListener == null) {
+        if(source?.isPersisted() == true && eventBusListener == null) {
             synchronized(this) {
                 val eventBusListenerInit = EventBusListener()
 
