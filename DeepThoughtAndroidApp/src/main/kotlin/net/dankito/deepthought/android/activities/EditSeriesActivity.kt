@@ -1,27 +1,19 @@
 package net.dankito.deepthought.android.activities
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.activity_edit_series.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityResult
 import net.dankito.deepthought.android.adapter.SeriesOnReferenceRecyclerAdapter
-import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.views.ToolbarUtil
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.model.Series
-import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditSeriesPresenter
-import net.dankito.deepthought.ui.view.ISeriesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.SeriesService
@@ -29,7 +21,6 @@ import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.SeriesChanged
 import net.dankito.service.eventbus.IEventBus
-import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogButton
@@ -38,12 +29,10 @@ import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 
 
-class EditSeriesActivity : BaseActivity(), ISeriesListView {
+class EditSeriesActivity : BaseActivity() {
 
     companion object {
         private const val SERIES_ID_BUNDLE_EXTRA_NAME = "SERIES_ID"
-        private const val REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME = "REFERENCE_ID"
-        private const val SELECTED_ANOTHER_SERIES_BUNDLE_EXTRA_NAME = "SELECTED_ANOTHER_SERIES"
         private const val DID_SERIES_CHANGE_BUNDLE_EXTRA_NAME = "DID_SERIES_CHANGE"
 
         const val ResultId = "EDIT_SERIES_ACTIVITY_RESULT"
@@ -58,9 +47,6 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
 
     @Inject
     protected lateinit var seriesPersister: SeriesPersister
-
-    @Inject
-    protected lateinit var searchEngine: ISearchEngine
 
     @Inject
     protected lateinit var router: IRouter
@@ -80,13 +66,9 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
 
     private var series: Series? = null
 
-    private var sourceToSetSeriesOn: Source? = null
-
     private val presenter: EditSeriesPresenter
 
     private val existingSeriesSearchResultsAdapter: SeriesOnReferenceRecyclerAdapter
-
-    private var selectedAnotherSeries = false
 
     private var didSeriesChange = false
 
@@ -102,7 +84,7 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
     init {
         AppComponent.component.inject(this)
 
-        presenter = EditSeriesPresenter(this, searchEngine, router, deleteEntityService, seriesPersister, threadPool)
+        presenter = EditSeriesPresenter(router, deleteEntityService, seriesPersister, threadPool)
 
         existingSeriesSearchResultsAdapter = SeriesOnReferenceRecyclerAdapter(presenter)
     }
@@ -122,9 +104,6 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
         outState?.let {
             outState.putString(SERIES_ID_BUNDLE_EXTRA_NAME, series?.id)
 
-            sourceToSetSeriesOn?.let { outState.putString(REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME, serializer.serializeObject(it)) }
-
-            outState.putBoolean(SELECTED_ANOTHER_SERIES_BUNDLE_EXTRA_NAME, selectedAnotherSeries)
             outState.putBoolean(DID_SERIES_CHANGE_BUNDLE_EXTRA_NAME, didSeriesChange)
         }
     }
@@ -133,9 +112,6 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
         savedInstanceState?.let {
             savedInstanceState.getString(SERIES_ID_BUNDLE_EXTRA_NAME)?.let { seriesId -> showSeries(seriesId) }
 
-            savedInstanceState.getString(REFERENCE_TO_SET_SERIES_ON_BUNDLE_EXTRA_NAME)?.let { setReferenceToSetSeriesOn(serializer.deserializeObject(it, Source::class.java)) }
-
-            selectedAnotherSeries = savedInstanceState.getBoolean(SELECTED_ANOTHER_SERIES_BUNDLE_EXTRA_NAME, false)
             savedInstanceState.getBoolean(DID_SERIES_CHANGE_BUNDLE_EXTRA_NAME)?.let { didSeriesChange -> updateDidSeriesChangeOnUiThread(didSeriesChange) }
         }
 
@@ -152,38 +128,11 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         lytEditSeriesTitle.setFieldNameOnUiThread(R.string.activity_edit_series_title_label) { updateDidSeriesChangeOnUiThread(it) }
-
-        setupFindExistingSeriesSection()
     }
 
-    private fun setupFindExistingSeriesSection() {
-        btnCreateNewSeries.setOnClickListener { askIfANewSeriesShouldBeCreated() }
-
-        rcyExistingSeriesSearchResults.addItemDecoration(HorizontalDividerItemDecoration(this))
-        rcyExistingSeriesSearchResults.adapter = existingSeriesSearchResultsAdapter
-        existingSeriesSearchResultsAdapter.itemClickListener = { item -> existingSeriesSelected(item) }
-
-        edtxtFindSeries.setOnFocusChangeListener { _, hasFocus ->
-            if(hasFocus) {
-                showRecyclerViewExistingSeriesSearchResultsWithResults()
-            }
-        }
-
-        btnExpandCollapseExistingSeriesSearchResults.setOnClickListener { toggleShowRecyclerViewExistingSeriesSearchResults() }
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-
-        edtxtFindSeries.removeTextChangedListener(edtxtFindSeriesTextWatcher) // don't add edtxtFindSeriesTextWatcher twice
-        edtxtFindSeries.addTextChangedListener(edtxtFindSeriesTextWatcher) // add edtxtFindSeriesTextWatcher here not in setupUI() as when restoring state edtxtFindSeries's text gets restored and edtxtFindSeriesTextWatcher therefore called
-    }
 
     override fun onDestroy() {
         unregisterEventBusListener()
-
-        presenter.cleanUp()
 
         super.onDestroy()
     }
@@ -258,10 +207,6 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
             }
         }
         else {
-            if(selectedAnotherSeries) {
-                setActivityResult(EditSeriesActivityResult(didSaveSeries = true, savedSeries = series))
-            }
-
             closeDialog()
         }
     }
@@ -300,16 +245,7 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
             else {
                 createSeries()
             }
-
-            if(parameters.forSource != null) {
-                setReferenceToSetSeriesOn(parameters.forSource)
-            }
         }
-    }
-
-    private fun setReferenceToSetSeriesOn(source: Source) {
-        sourceToSetSeriesOn = source
-        lytSetReferenceSeriesControls.visibility = View.VISIBLE
     }
 
     private fun askIfANewSeriesShouldBeCreated() {
@@ -390,93 +326,10 @@ class EditSeriesActivity : BaseActivity(), ISeriesListView {
     }
 
 
-    private fun searchExistingSeries(query: String) {
-        presenter.searchSeries(query) {
-            runOnUiThread { showRecyclerViewExistingSeriesSearchResults() }
-        }
-    }
-
-    private fun retrievedExistingSeriesSearchResultsOnUiThread(searchResults: List<Series>) {
-        existingSeriesSearchResultsAdapter.items = searchResults
-    }
-
-    private fun existingSeriesSelected(series: Series) {
-        edtxtFindSeries.hideKeyboard()
-
-        hideRecyclerViewExistingSeriesSearchResults()
-
-        selectedAnotherSeries = series?.id != this.series?.id
-
-        // TODO: check if previous series has unsaved changes
-        showSeries(series)
-
-        updateDidSeriesChangeOnUiThread(true)
-        mayRegisterEventBusListener()
-    }
-
-    private fun toggleShowRecyclerViewExistingSeriesSearchResults() {
-        if(rcyExistingSeriesSearchResults.visibility == View.VISIBLE) {
-            hideRecyclerViewExistingSeriesSearchResults()
-        }
-        else {
-            showRecyclerViewExistingSeriesSearchResultsWithResults()
-        }
-    }
-
-    private fun showRecyclerViewExistingSeriesSearchResultsWithResults() {
-        searchExistingSeries(edtxtFindSeries.text.toString())
-    }
-
-    private fun showRecyclerViewExistingSeriesSearchResults() {
-        rcyExistingSeriesSearchResults.visibility = View.VISIBLE
-        scrEditSeries.visibility = View.GONE
-
-        (lytSetReferenceSeriesControls.layoutParams as? RelativeLayout.LayoutParams)?.let { layoutParams ->
-            layoutParams.addRule(RelativeLayout.ABOVE, toolbar.id)
-        }
-
-        btnExpandCollapseExistingSeriesSearchResults.setImageResource(R.drawable.ic_arrow_up)
-    }
-
-    private fun hideRecyclerViewExistingSeriesSearchResults() {
-        rcyExistingSeriesSearchResults.visibility = View.GONE
-        scrEditSeries.visibility = View.VISIBLE
-
-        (lytSetReferenceSeriesControls.layoutParams as? RelativeLayout.LayoutParams)?.let { layoutParams ->
-            layoutParams.addRule(RelativeLayout.ABOVE, 0)
-        }
-
-        edtxtFindSeries.hideKeyboard()
-        edtxtFindSeries.clearFocus()
-
-        btnExpandCollapseExistingSeriesSearchResults.setImageResource(R.drawable.ic_arrow_down)
-    }
-
-    private val edtxtFindSeriesTextWatcher = object : TextWatcher {
-        override fun afterTextChanged(editable: Editable) {
-            searchExistingSeries(editable.toString())
-        }
-
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
-
-    }
-
-
     private fun updateDidSeriesChangeOnUiThread(didSeriesChange: Boolean) {
         this.didSeriesChange = didSeriesChange
 
         mnSaveSeries?.isVisible = didSeriesChange
-    }
-
-
-    /*     ISeriesListView implementation      */
-    
-    override fun showEntities(entities: List<Series>) {
-        runOnUiThread {
-            retrievedExistingSeriesSearchResultsOnUiThread(entities)
-        }
     }
 
 

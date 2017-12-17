@@ -119,7 +119,7 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
     }
 
     override fun showEditReferenceSeriesView(forSource: Source, series: Series?) {
-        showEditSeriesView(EditSeriesActivityParameters(series, forSource))
+        showEditSeriesView(EditSeriesActivityParameters(series))
     }
 
     private fun showEditSeriesView(parameters: EditSeriesActivityParameters) {
