@@ -357,6 +357,7 @@ class EditEntryActivity : BaseActivity() {
             entryPropertySet()
             updateEntryFieldChangedOnUIThread(ItemField.Tags, didTagsChange)
         }
+        lytTagsPreview.fieldValueFocusChangedListener = { hasFocus -> tagsPreviewFocusChanged(hasFocus) }
 
         wbvwContent?.requestFocus() // avoid that lytAbstractPreview gets focus and keyboard therefore gets show on activity start
 
@@ -399,7 +400,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setupEntryContentView() {
-        txtEntryContentLabel.setOnClickListener { editContent() }
+        lytViewContent.setOnClickListener { lytViewContent.requestFocus() } // so that EditEntityField previews loose focus
 
         wbvwContent.setOptionsBar(lytFullscreenWebViewOptionsBar)
         wbvwContent.changeFullscreenModeListener = { mode -> handleChangeFullscreenModeEvent(mode) }
@@ -890,6 +891,17 @@ class EditEntryActivity : BaseActivity() {
         itemExtractionResult?.let { return it.series }
 
         return sourceToEdit?.series
+    }
+
+    private fun tagsPreviewFocusChanged(hasFocus: Boolean) {
+        if(hasFocus) {
+            lytReferencePreview.visibility = View.GONE
+            lytAbstractPreview.visibility = View.GONE
+        }
+        else {
+            lytReferencePreview.visibility = View.VISIBLE
+            lytAbstractPreview.visibility = View.VISIBLE
+        }
     }
 
     private fun setTagsOnEntryPreviewOnUIThread() {

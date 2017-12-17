@@ -45,6 +45,7 @@ abstract class EditEntityCollectionField : EditEntityField {
 
     override fun startEditing() {
         showEditTextEntityFieldValue()
+        searchEntities(lastSearchTerm)
 
         super.startEditing()
     }

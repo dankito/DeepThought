@@ -64,6 +64,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/lytEntryFieldsPreview"
             android:layout_above="@+id/appBarLayout"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
         >
 
             <TextView
