@@ -7,6 +7,7 @@ import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.runner.AndroidJUnit4
+import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
@@ -251,6 +252,77 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
         assertPersistedTag1GotRemoved()
     }
 
+
+    @Test
+    fun enterTagNameStartAtBeginning_SelectFromResultList_TagGetsAutoCompleted() {
+        persistTag(Tag(UnPersistedTag1Name))
+
+        assertThat(testItem.tags.size, `is`(3))
+        checkDisplayedPreviewTagsMatch(*testItem.tags.toTypedArray())
+
+        onView(withId(R.id.lytTagsPreview)).perform(ViewActions.click())
+
+        navigator.enterText(UnPersistedTag1Name.substring(0, 3)) // only enter first three letters of tag name
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+        clickOnFirstDisplayedTagSearchResult()
+
+        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+        checkDisplayedTagsValue(UnPersistedTag1Name + SearchEngineBase.TagsSearchTermSeparator)
+    }
+
+    @Test
+    fun enterTagNameStartAtEnd_SelectFromResultList_TagGetsAutoCompleted() {
+        persistTag(Tag(UnPersistedTag1Name))
+
+        assertThat(testItem.tags.size, `is`(3))
+        checkDisplayedPreviewTagsMatch(*testItem.tags.toTypedArray())
+
+        onView(withId(R.id.lytTagsPreview)).perform(ViewActions.click())
+
+        navigator.enterText(PersistedTag1Name)
+        navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
+
+        navigator.enterText(UnPersistedTag1Name.substring(0, 3)) // only enter first three letters of tag name
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+        clickOnFirstDisplayedTagSearchResult()
+
+        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+        removeWhitespacesEnteredByKeyboardApp()
+        checkDisplayedTagsValue(PersistedTag1Name + SearchEngineBase.TagsSearchTermSeparator + UnPersistedTag1Name + SearchEngineBase.TagsSearchTermSeparator)
+    }
+
+    @Test
+    fun enterTagNameStartAtEndWithTagsSeparator_SelectFromResultList_TagGetsAutoCompleted() {
+        persistTag(Tag(UnPersistedTag1Name))
+
+        assertThat(testItem.tags.size, `is`(3))
+        checkDisplayedPreviewTagsMatch(*testItem.tags.toTypedArray())
+
+        onView(withId(R.id.lytTagsPreview)).perform(ViewActions.click())
+
+        navigator.enterText(PersistedTag1Name)
+        navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
+
+        navigator.enterText(UnPersistedTag1Name.substring(0, 3)) // only enter first three letters of tag name
+        navigator.enterText(SearchEngineBase.TagsSearchTermSeparator) // now additionally enter TagsSearchTermSeparator to confuse auto completion
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+        clickOnFirstDisplayedTagSearchResult()
+
+        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+        removeWhitespacesEnteredByKeyboardApp()
+        checkDisplayedTagsValue(PersistedTag1Name + SearchEngineBase.TagsSearchTermSeparator + UnPersistedTag1Name + SearchEngineBase.TagsSearchTermSeparator)
+    }
+
+
     private fun assertPersistedTag1GotRemoved() {
         val newDisplayedTags = ArrayList(testItem.tags)
         newDisplayedTags.remove(persistedTag1)
@@ -277,28 +349,39 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
                 .perform(click())
     }
 
-
     private fun checkDisplayedPreviewTagsMatch(vararg tags: Tag) {
+        val displayedTagNames = ArrayList<String>()
+
+        enumerateDisplayedTagsPreviews().forEach { tagView ->
+            (tagView.findViewById(R.id.txtTagName) as? TextView)?.text?.let { tagName -> displayedTagNames.add(tagName.toString()) }
+        }
+
+        tags.forEach { tag ->
+            assertThat("Tag name ${tag.name} not found in displayed tag names $displayedTagNames", displayedTagNames.contains(tag.name), `is`(true))
+        }
+
+        displayedTagNames.removeAll(tags.map { it.name }) // assert that no other tags then in tags are displayed
+        assertThat("Tags that are displayed but shouldn't: $displayedTagNames", displayedTagNames.size, `is`(0))
+    }
+
+    private fun enumerateDisplayedTagsPreviews(): List<View> {
+        val tagPreviews = ArrayList<View>()
+
         InstrumentationRegistry.getInstrumentation().runOnMainSync {
             val lytTagsPreview = testRule.activity.findViewById(R.id.lytTagsPreview) as? ViewGroup
             val lytCollectionPreview = lytTagsPreview?.findViewById(R.id.lytCollectionPreview) as? ViewGroup
 
             lytCollectionPreview?.let {
-                val displayedTagNames = ArrayList<String>()
-
                 for(i in 0..lytCollectionPreview.childCount) {
                     val tagView = lytCollectionPreview.getChildAt(i)
-                    (tagView?.findViewById(R.id.txtTagName) as? TextView)?.text?.let { tagName -> displayedTagNames.add(tagName.toString()) }
+                    if(tagView != null) { // don't know why null is ever returned
+                        tagPreviews.add(tagView)
+                    }
                 }
-
-                tags.forEach { tag ->
-                    assertThat("Tag name ${tag.name} not found in displayed tag names $displayedTagNames", displayedTagNames.contains(tag.name), `is`(true))
-                }
-
-                displayedTagNames.removeAll(tags.map { it.name }) // assert that no other tags then in tags are displayed
-                assertThat("Tags that are displayed but shouldn't: $displayedTagNames", displayedTagNames.size, `is`(0))
             }
         }
+
+        return tagPreviews
     }
 
     private fun removeWhitespacesEnteredByKeyboardApp() {
