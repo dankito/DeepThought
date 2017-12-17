@@ -9,6 +9,7 @@ import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import net.dankito.deepthought.android.DeepThoughtActivityTestRule
@@ -186,7 +187,7 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
         checkCountItemsInRecyclerViewTagSearchResults(0)
 
 
-        clickOnFirstDisplayedTagSearchResult()
+        removeTagWithName(PersistedTag1Name)
 
 
         assertPersistedTag1GotRemoved()
@@ -217,7 +218,7 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
         checkCountItemsInRecyclerViewTagSearchResults(0)
 
 
-        clickOnFirstDisplayedTagSearchResult()
+        removeTagWithName(PersistedTag1Name)
 
 
         assertPersistedTag1GotRemoved()
@@ -246,7 +247,7 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
         checkCountItemsInRecyclerViewTagSearchResults(1)
 
 
-        clickOnFirstDisplayedTagSearchResult()
+        removeTagWithName(PersistedTag1Name)
 
 
         assertPersistedTag1GotRemoved()
@@ -347,6 +348,20 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
         onView(RecyclerViewInViewMatcher.withRecyclerView(R.id.lytTagsPreview, R.id.rcySearchResults)
                 .atPosition(0))
                 .perform(click())
+    }
+
+
+    private fun removeTagWithName(tagNameToRemove: String) {
+        enumerateDisplayedTagsPreviews().forEach { tagView ->
+            (tagView.findViewById(R.id.txtTagName) as? TextView)?.text?.let { tagName ->
+                if(tagName.toString() == tagNameToRemove) {
+                    InstrumentationRegistry.getInstrumentation().runOnMainSync {
+                        (tagView.findViewById(R.id.btnRemoveTagFromEntry) as? Button)?.performClick()
+                    }
+                    return@forEach
+                }
+            }
+        }
     }
 
     private fun checkDisplayedPreviewTagsMatch(vararg tags: Tag) {
