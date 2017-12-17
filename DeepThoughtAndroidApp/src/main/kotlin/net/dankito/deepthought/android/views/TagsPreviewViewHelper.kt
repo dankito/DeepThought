@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.view_tag.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.extensions.setRightMargin
 import net.dankito.deepthought.model.Tag
+import net.dankito.service.search.SearchEngineBase
 import net.dankito.utils.extensions.sorted
 
 
@@ -58,6 +59,24 @@ class TagsPreviewViewHelper {
         if(addSpaceToTheRight) {
             (tagView.layoutParams as? ViewGroup.MarginLayoutParams)?.setRightMargin(rightMargin)
         }
+    }
+
+
+    fun autoCompleteEnteredTextForTag(enteredText: String, tag: Tag): TagAutoCompleteResult {
+        var lastSearchTermStartIndex = enteredText.lastIndexOf(SearchEngineBase.TagsSearchTermSeparator)
+        if(lastSearchTermStartIndex > 0) {
+            if(enteredText.substring(lastSearchTermStartIndex + 1).isBlank()) { // if entered text ends with TagsSearchTermSeparator, take text before
+                lastSearchTermStartIndex = enteredText.lastIndexOf(SearchEngineBase.TagsSearchTermSeparator, lastSearchTermStartIndex - 1)
+            }
+        }
+
+        val enteredTagName = enteredText.substring(lastSearchTermStartIndex + 1)
+        val enteredTagNameWithoutTagsSeparator = enteredTagName.trimEnd().replace(SearchEngineBase.TagsSearchTermSeparator, "")
+        val autoCompletedTagName = tag.name + SearchEngineBase.TagsSearchTermSeparator
+
+        val autoCompletedText = enteredText.replaceRange(lastSearchTermStartIndex + 1, enteredText.length, autoCompletedTagName)
+
+        return TagAutoCompleteResult(enteredText, autoCompletedText, enteredTagName, autoCompletedTagName, enteredTagNameWithoutTagsSeparator)
     }
 
 }

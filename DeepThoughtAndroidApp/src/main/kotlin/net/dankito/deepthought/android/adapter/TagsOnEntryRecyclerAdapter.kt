@@ -12,7 +12,7 @@ import net.dankito.deepthought.ui.tags.TagSearchResultState
 import java.util.*
 
 
-class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter, val listener: (TagChange, Tag, MutableList<Tag>) -> Unit)
+class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter, val listener: (TagChange, Tag, MutableCollection<Tag>) -> Unit)
     : ListRecyclerSwipeAdapter<Tag, TagsOnEntryViewHolder>() {
 
     enum class TagChange {
@@ -21,7 +21,7 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
     }
 
 
-    var tagsOnEntry: MutableList<Tag> = mutableListOf()
+    var tagsOnEntry: MutableSet<Tag> = mutableSetOf()
 
     var deleteTagListener: ((Tag) -> Unit)? = null
 
@@ -84,7 +84,7 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter
     }
 
     private fun toggleTagOnEntryOnUIThread(tag: Tag) {
-        var tagChange: TagChange
+        val tagChange: TagChange
 
         if(tagsOnEntry.contains(tag)) {
             tagsOnEntry.remove(tag)

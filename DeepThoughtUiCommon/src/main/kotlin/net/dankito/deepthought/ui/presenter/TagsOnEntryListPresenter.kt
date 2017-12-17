@@ -33,7 +33,7 @@ class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryList
         return emptyList()
     }
 
-    fun getTagsFromLastSearchResult(): List<Tag> {
+    fun getTagsFromLastSearchResult(replacedTagName: String?): List<Tag> {
         val tags = ArrayList<Tag>()
 
         lastTagsSearchResults?.let { results ->
@@ -41,7 +41,7 @@ class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryList
                 if(result.hasExactMatches()) {
                     tags.addAll(result.exactMatches)
                 }
-                else if(result.searchTerm.isNotBlank()) {
+                else if(result.searchTerm.isNotBlank() && result.searchTerm != replacedTagName) {
                     tags.add(Tag(result.searchTerm))
                 }
             }

@@ -34,6 +34,7 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 import kotlin.collections.HashSet
+import kotlin.collections.LinkedHashSet
 
 
 class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListView {
@@ -266,7 +267,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
         val tags = HashSet<Tag>()
 
         tags.addAll(adapter.tagsOnEntry)
-        tags.addAll(presenter.getTagsFromLastSearchResult())
+        tags.addAll(presenter.getTagsFromLastSearchResult(null))
 
         return tags
     }
@@ -291,7 +292,7 @@ class TagsOnEntryDialogFragment : FullscreenDialogFragment(), ITagsOnEntryListVi
     fun show(fragmentManager: FragmentManager, tagsOnEntry: MutableList<Tag>, tagsChangedCallback: ((Collection<Tag>) -> Unit)?) {
         restoreDialog(tagsOnEntry, tagsChangedCallback)
 
-        adapter.tagsOnEntry = ArrayList(tagsOnEntry) // make a copy so that original collection doesn't get manipulated
+        adapter.tagsOnEntry = LinkedHashSet(tagsOnEntry) // make a copy so that original collection doesn't get manipulated
         setTagsOnEntryPreviewOnUIThread(tagsOnEntry)
 
         showInFullscreen(fragmentManager, false)

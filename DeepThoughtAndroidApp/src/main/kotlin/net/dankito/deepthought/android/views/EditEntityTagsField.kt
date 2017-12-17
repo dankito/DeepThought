@@ -49,6 +49,8 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
 
     private var originalTagsOnEntry: MutableCollection<Tag> = ArrayList<Tag>()
 
+    private var autoCompleteResult: TagAutoCompleteResult? = null
+
     private var activity: BaseActivity? = null
 
     private val tagsPreviewViewHelper = TagsPreviewViewHelper()
@@ -78,12 +80,14 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
         this.originalTagsOnEntry = originalTagsOnEntry
         this.activity = activity
 
-        adapter.tagsOnEntry = ArrayList(originalTagsOnEntry) // make a copy so that original collection doesn't get manipulated
+        adapter.tagsOnEntry = LinkedHashSet(originalTagsOnEntry) // make a copy so that original collection doesn't get manipulated
         setTagsOnEntryPreviewOnUIThread(originalTagsOnEntry)
     }
 
 
     override fun searchEntities(searchTerm: String) {
+        this.autoCompleteResult = null
+
         presenter.searchTags(searchTerm)
     }
 
@@ -98,8 +102,23 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
 
 
     private fun tagAddedOrRemoved(tagChange: TagsOnEntryRecyclerAdapter.TagChange, tag: Tag) {
-        if(tagChange == TagsOnEntryRecyclerAdapter.TagChange.Removed) {
+        if(tagChange == TagsOnEntryRecyclerAdapter.TagChange.Added) {
+            addTag(tag)
+        }
+        else if(tagChange == TagsOnEntryRecyclerAdapter.TagChange.Removed) {
             removeRemovedTagFromEnteredSearchTerm(tag)
+        }
+
+        setTagsOnEntryPreviewOnUIThread()
+    }
+
+    private fun addTag(tag: Tag) {
+        adapter.tagsOnEntry.add(tag)
+
+        if(this.autoCompleteResult == null) { // auto complete already applied, now an additional tag gets added but we cannot replace enteredTagName anymore
+            val autoCompleteResult = tagsPreviewViewHelper.autoCompleteEnteredTextForTag(getCurrentFieldValue(), tag)
+            this.autoCompleteResult = autoCompleteResult
+            setEditTextEntityFieldValueOnUiThread(autoCompleteResult.autoCompletedText)
         }
 
         setTagsOnEntryPreviewOnUIThread()
@@ -133,7 +152,7 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
         val tags = HashSet<Tag>()
 
         tags.addAll(adapter.tagsOnEntry)
-        tags.addAll(presenter.getTagsFromLastSearchResult())
+        tags.addAll(presenter.getTagsFromLastSearchResult(autoCompleteResult?.enteredTagNameWithoutTagsSeparator))
 
         return tags
     }
