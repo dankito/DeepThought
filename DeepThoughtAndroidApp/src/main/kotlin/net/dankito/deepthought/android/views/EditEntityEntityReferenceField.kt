@@ -28,7 +28,7 @@ abstract class EditEntityEntityReferenceField : EditEntityField {
         showActionIconOnUiThread(R.drawable.ic_more_vert_white_48dp, false) {
             showOptionsPopupMenu()
         }
-        btnEntityFieldAction.setTintColor(R.color.darker_gray)
+        btnEntityFieldAction.setTintColor(R.color.gray)
     }
 
 
