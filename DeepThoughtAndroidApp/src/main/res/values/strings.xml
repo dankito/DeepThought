@@ -100,11 +100,6 @@
     ]]>
     </string>
 
-    <string name="context_help_save_item_changes"><![CDATA[
-        The changes done are now only applied, to save them press the <b>Save</b> button at bottom right.
-    ]]>
-    </string>
-
     <string name="context_help_reader_view"><![CDATA[
         The page is now loaded. You can now switch to the reader view by pressing the button below in the middle of the toolbar.
     ]]>

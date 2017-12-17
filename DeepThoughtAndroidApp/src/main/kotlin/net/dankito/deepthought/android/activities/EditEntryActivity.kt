@@ -578,18 +578,6 @@ class EditEntryActivity : BaseActivity() {
         mayRegisterEventBusListener()
     }
 
-    private fun mayShowSaveEntryChangesHelpOnUIThread() {
-        val localSettings = entryService.dataManager.localSettings
-
-        if(localSettings.didShowSaveItemChangesHelp == false &&
-                (tagsOnEntry.size > 0 || sourceToEdit != null)) { // only show context help when really a value is set (summary should be obvious, content would be overkill as items properties onboarding text is shown as well)
-            contextHelpUtil.showContextHelp(lytContextHelpSave, R.string.context_help_save_item_changes)
-
-            localSettings.didShowSaveItemChangesHelp = true
-            entryService.dataManager.localSettingsUpdated()
-        }
-    }
-
     private fun sourceTitleChanged(didSourceTitleChange: Boolean) {
         updateEntryFieldChangedOnUIThread(ItemField.SourceTitle, didSourceTitleChange)
     }
@@ -650,7 +638,6 @@ class EditEntryActivity : BaseActivity() {
 
             updateEntryFieldChangedOnUIThread(ItemField.Content, originalContent != contentToEdit)
             setContentPreviewOnUIThread()
-            mayShowSaveEntryChangesHelpOnUIThread()
         }
     }
 
@@ -683,7 +670,6 @@ class EditEntryActivity : BaseActivity() {
         runOnUiThread {
             updateEntryFieldChangedOnUIThread(ItemField.TitleOrSummary, didAbstractChange)
             setAbstractPreviewOnUIThread()
-            mayShowSaveEntryChangesHelpOnUIThread()
         }
     }
 

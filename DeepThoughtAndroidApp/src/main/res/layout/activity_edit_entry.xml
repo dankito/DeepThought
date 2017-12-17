@@ -14,19 +14,11 @@
         app:layout_behavior="@string/move_upward_behaviour"
     >
 
-        <include
-            layout="@layout/layout_context_help"
-            android:id="@+id/lytContextHelpSave"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-        />
-
         <RelativeLayout
             android:id="@+id/lytEntryFieldsPreview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/lytContextHelpSave"
+            android:layout_alignParentTop="true"
             android:layout_marginTop="@dimen/activity_edit_entry_fields_margin_top"
             android:layout_marginLeft="@dimen/activity_edit_entry_field_margin_left"
             android:layout_marginStart="@dimen/activity_edit_entry_field_margin_left"

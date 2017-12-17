@@ -137,13 +137,6 @@
     </string>
 
 
-    <!-- Wenn man im Eintrag bearbeiten Fenster etwas bearbeitet hat (z. B. den Inhalt, die Schlagworte, ...) und auf 'Übernehmen' geklickt hast -->
-
-    <string name="context_help_save_item_changes"><![CDATA[
-        Um Ihre Änderungen zu speichern, drücken Sie den <b>Speichern</b> Button unten rechts.
-    ]]>
-    </string>
-
     <string name="context_help_reader_view"><![CDATA[
         Die Seite ist nun geladen. Sie können jetzt in den Lesemodus wechseln über den Button unten in der Mitte der Toolbar.
     ]]>
