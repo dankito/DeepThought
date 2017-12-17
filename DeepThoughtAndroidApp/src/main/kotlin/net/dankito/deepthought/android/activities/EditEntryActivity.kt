@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android.activities
 
+import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.TargetApi
@@ -82,6 +83,8 @@ class EditEntryActivity : BaseActivity() {
         private const val GetHtmlCodeFromWebViewJavaScriptInterfaceName = "HtmlViewer"
 
         private const val ShowHideEditContentViewAnimationDurationMillis = 500L
+
+        private const val ShowHideEditTagsAnimationDurationMillis = 250L
 
         private val log = LoggerFactory.getLogger(EditEntryActivity::class.java)
     }
@@ -881,13 +884,96 @@ class EditEntryActivity : BaseActivity() {
 
     private fun tagsPreviewFocusChanged(hasFocus: Boolean) {
         if(hasFocus) {
-            lytReferencePreview.visibility = View.GONE
-            lytAbstractPreview.visibility = View.GONE
+            lytTagsPreview.visibility = View.VISIBLE
+
+            if(lytReferencePreview.visibility == View.VISIBLE || lytAbstractPreview.visibility == View.VISIBLE) {
+                lytTagsPreview.executeActionAfterMeasuringHeight {
+                    playHideOtherItemFieldsPreviewExceptTagsAnimation()
+                }
+            }
         }
         else {
+            restoreLayoutEntryFieldsPreview()
+        }
+    }
+
+    private fun restoreLayoutEntryFieldsPreview() {
+        if(lytReferencePreview.measuredHeight > 0) { // only if it has been visible before
+            lytReferencePreview.y = lytReferencePreview.top.toFloat()
             lytReferencePreview.visibility = View.VISIBLE
+        }
+
+        if(lytAbstractPreview.measuredHeight > 0) {
+            lytAbstractPreview.y = lytAbstractPreview.top.toFloat()
             lytAbstractPreview.visibility = View.VISIBLE
         }
+    }
+
+    private fun playHideOtherItemFieldsPreviewExceptTagsAnimation() {
+        val animatorSet = AnimatorSet()
+        animatorSet.playTogether(createAnimatorsToHideOtherItemFieldsPreviewExceptTags())
+
+        animatorSet.addListener(object : Animator.AnimatorListener {
+
+            override fun onAnimationStart(animation: Animator?) { }
+
+            override fun onAnimationRepeat(animation: Animator?) { }
+
+            override fun onAnimationCancel(animation: Animator?) { }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                forceLayoutUpdateAfterHideOtherItemFieldsPreviewExceptTagsAnimation()
+            }
+
+        })
+
+        animatorSet.start()
+    }
+
+    // don't know why we have to force layout to update
+    private fun forceLayoutUpdateAfterHideOtherItemFieldsPreviewExceptTagsAnimation() {
+        lytReferencePreview.visibility = View.GONE
+        lytAbstractPreview.visibility = View.GONE
+        lytTagsPreview.y = lytTagsPreview.top.toFloat()
+
+        lytEntryFieldsPreview.invalidate()
+        lytEntryFieldsPreview.forceLayout()
+        lytEntryFieldsPreview.invalidate()
+        lytEntryFieldsPreview.forceLayout()
+    }
+
+    private fun createAnimatorsToHideOtherItemFieldsPreviewExceptTags(): ArrayList<Animator> {
+        val animators = ArrayList<Animator>()
+        val interpolator = AccelerateInterpolator()
+
+        if(lytReferencePreview.visibility == View.VISIBLE) {
+            val sourcePreviewYAnimator = ObjectAnimator
+                    .ofFloat(lytReferencePreview, View.Y, lytReferencePreview.top.toFloat(), -1 * lytReferencePreview.measuredHeight.toFloat())
+                    .setDuration(ShowHideEditTagsAnimationDurationMillis)
+            sourcePreviewYAnimator.interpolator = interpolator
+
+            animators.add(sourcePreviewYAnimator)
+        }
+
+        if(lytAbstractPreview.visibility == View.VISIBLE) {
+            val summaryPreviewYAnimator = ObjectAnimator
+                    .ofFloat(lytAbstractPreview, View.Y, lytAbstractPreview.top.toFloat(), -1 * lytAbstractPreview.measuredHeight.toFloat())
+                    .setDuration(ShowHideEditTagsAnimationDurationMillis)
+            summaryPreviewYAnimator.interpolator = interpolator
+
+            animators.add(summaryPreviewYAnimator)
+        }
+
+        val location = IntArray(2)
+        lytEntryFieldsPreview.getLocationOnScreen(location)
+
+        val tagsPreviewYAnimator = ObjectAnimator
+                .ofFloat(lytTagsPreview, View.Y, lytTagsPreview.top.toFloat(), location[1].toFloat())
+                .setDuration(ShowHideEditTagsAnimationDurationMillis)
+        tagsPreviewYAnimator.interpolator = interpolator
+        animators.add(tagsPreviewYAnimator)
+
+        return animators
     }
 
     private fun setTagsOnEntryPreviewOnUIThread() {
