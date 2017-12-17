@@ -1574,7 +1574,7 @@ class EditEntryActivity : BaseActivity() {
         }
 
         runOnUiThread {
-            // TODO: restored source isn't necessarily originalSource, but lytReferencePreview also needs originalSource
+            lytReferencePreview.setOriginalSourceToEdit(sourceToEdit, getCurrentSeries(), this) { setSourceToEdit(it) }
             setReferencePreviewOnUIThread()
         }
     }
