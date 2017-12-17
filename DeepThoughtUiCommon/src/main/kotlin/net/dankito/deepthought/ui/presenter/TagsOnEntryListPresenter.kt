@@ -9,6 +9,7 @@ import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.TagsSearchResult
+import net.dankito.service.search.specific.TagsSearchResults
 import net.dankito.utils.ui.IDialogService
 
 
@@ -23,6 +24,14 @@ class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryList
         initialized()
     }
 
+
+    override fun getTagsFromSearchTagsWithoutFilterResult(result: TagsSearchResults): List<Tag> {
+        result.lastResult?.let {
+            return it.allMatches
+        }
+
+        return emptyList()
+    }
 
     fun getTagsFromLastSearchResult(): List<Tag> {
         val tags = ArrayList<Tag>()
