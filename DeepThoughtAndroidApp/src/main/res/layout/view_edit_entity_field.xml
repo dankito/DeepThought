@@ -51,8 +51,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/edit_text_padding_left"
                     android:layout_marginStart="@dimen/edit_text_padding_left"
-                    android:layout_marginRight="@dimen/view_edit_entity_field_collection_preview_margin_left"
-                    android:layout_marginEnd="@dimen/view_edit_entity_field_collection_preview_margin_left"
                     style="@style/EntityFieldName"
                     app:layout_alignSelf="center"
                     android:focusable="true"
