@@ -207,11 +207,6 @@
         Sie den Eintrag hier nun ebenfalls speichern, überschreiben Sie jene Änderungen.</string>
     <string name="activity_edit_item_alert_message_delete_item">Möchten Sie den Eintrag \'%s\' wirklich löschen?</string>
 
-    <string name="dialog_tags_on_item_title">Schlagworte</string>
-    <string name="dialog_tags_on_item_tags_label">Schlagworte:</string>
-    <string name="dialog_tags_on_item_search_tags_hint">Schlagworte durch Komma trennen</string>
-    <string name="dialog_tags_on_item_alert_message_html_contains_unsaved_changes">Schlagworte wurden geändert.\n\nMöchten Sie diese Änderungen übernehmen?</string>
-
     <string name="menu_open_url_open_in_new_activity">In DeepThought öffnen</string>
     <string name="menu_open_url_with_other_app">Mit anderer App öffnen</string>
 

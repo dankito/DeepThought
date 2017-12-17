@@ -89,8 +89,6 @@ interface AppComponent : CommonComponent {
 
     fun inject(editEntryActivity: EditEntryActivity)
 
-    fun inject(tagsOnEntryDialogFragment: TagsOnEntryDialogFragment)
-
     fun inject(editEntityTagsField: EditEntityTagsField)
 
     fun inject(editEntrySourceField: EditEntrySourceField)

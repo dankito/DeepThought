@@ -167,11 +167,6 @@
         you now save the item the other changes get overwritten.</string>
     <string name="activity_edit_item_alert_message_delete_item">Would you really like to delete item \'%s\'?</string>
 
-    <string name="dialog_tags_on_item_title">Tags</string>
-    <string name="dialog_tags_on_item_tags_label">Tags:</string>
-    <string name="dialog_tags_on_item_search_tags_hint">Separate tags with comma</string>
-    <string name="dialog_tags_on_item_alert_message_html_contains_unsaved_changes">Tags have changed.\n\nDo you want to apply these changes?</string>
-
     <string name="menu_open_url_open_in_new_activity">Open in DeepThought</string>
     <string name="menu_open_url_with_other_app">Open with an app</string>
 

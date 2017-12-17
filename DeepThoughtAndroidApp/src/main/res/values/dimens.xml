@@ -135,18 +135,6 @@
     <dimen name="fullscreen_web_view_options_bar_button_height">50dp</dimen>
     <dimen name="fullscreen_web_view_options_bar_button_width">50dp</dimen>
 
-    <dimen name="dialog_tags_on_entry_tag_preview_min_height">27dp</dimen>
-    <dimen name="dialog_tags_on_entry_tag_preview_text_size">13sp</dimen>
-    <dimen name="dialog_tags_on_entry_tag_preview_label_margin_left_right">4dp</dimen>
-    <dimen name="dialog_tags_on_entry_tag_preview_margin_top">4dp</dimen>
-    <dimen name="dialog_tags_on_entry_tag_search_tags_height">44dp</dimen>
-    <dimen name="dialog_tags_on_entry_tag_search_tags_text_size">13sp</dimen>
-    <dimen name="dialog_tags_on_entry_tag_search_tags_margin_left">2dp</dimen>
-    <dimen name="dialog_tags_on_entry_tag_search_tags_margin_right">6dp</dimen>
-    <dimen name="dialog_tags_on_entry_tag_search_tags_button_min_width">70dp</dimen>
-    <dimen name="dialog_tags_on_entry_tag_list_tags_margin">4dp</dimen>
-    <dimen name="dialog_tags_on_entry_tag_list_tags_margin_bottom">12dp</dimen>
-
     <dimen name="list_item_tag_on_entry_height">40dp</dimen>
     <dimen name="list_item_tag_on_entry_button_width">40dp</dimen>
 
