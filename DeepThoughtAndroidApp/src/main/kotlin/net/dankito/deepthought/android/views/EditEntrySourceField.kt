@@ -73,8 +73,7 @@ class EditEntrySourceField : EditEntityEntityReferenceField, IReferencesListView
         this.activity = activity
         this.sourceChangedListener = sourceChangedListener
 
-        val sourceToEdit = if(source != null) source else Source("")
-        sourceChanged(sourceToEdit, series)
+        sourceChanged(source, series)
     }
 
     override fun editTextLostFocus() {
@@ -92,6 +91,14 @@ class EditEntrySourceField : EditEntityEntityReferenceField, IReferencesListView
 
         if(hasFocus) {
             presenter.searchReferences(presenter.getLastSearchTerm())
+        }
+    }
+
+    override fun enteredTextChanged(enteredText: String) {
+        super.enteredTextChanged(enteredText)
+
+        if(source == null && enteredText.isNotBlank()) { // user entered a title, but source is null -> create a new Source
+            sourceChanged(Source(enteredText))
         }
     }
 
