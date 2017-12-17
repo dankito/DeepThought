@@ -398,10 +398,6 @@ class EditEntryActivity : BaseActivity() {
         lytAbstractPreview.startEditing()
     }
 
-    private fun referenceCleared() {
-        referenceChanged(null)
-    }
-
     private fun setupEntryContentView() {
         txtEntryContentLabel.setOnClickListener { editContent() }
 
@@ -573,7 +569,7 @@ class EditEntryActivity : BaseActivity() {
         super.onResume()
 
         (getAndClearResult(EditReferenceActivity.ResultId) as? EditReferenceActivityResult)?.let { result ->
-            appliedChangesToReference(result)
+            lytReferencePreview.editingSourceDone(result)
         }
 
         setContentPreviewOnUIThread()
@@ -591,20 +587,6 @@ class EditEntryActivity : BaseActivity() {
             localSettings.didShowSaveItemChangesHelp = true
             entryService.dataManager.localSettingsUpdated()
         }
-    }
-
-    private fun savedReference(source: Source) {
-        referenceChanged(source)
-
-        itemExtractionResult?.series = null // TODO: why did i do this?
-        readLaterArticle?.itemExtractionResult?.series = null
-    }
-
-    private fun referenceChanged(source: Source?) {
-        sourceToEdit = source // do not set source directly on item as if item is not saved yet adding it to source.items causes an error
-
-        updateEntryFieldChangedOnUIThread(ItemField.Source, originalSource != sourceToEdit)
-        setReferencePreviewOnUIThread()
     }
 
     private fun sourceTitleChanged(didSourceTitleChange: Boolean) {
@@ -705,33 +687,18 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun editReference() {
-        if(sourceToEdit == null) {
-            setSourceToEdit(Source(""))
-        }
-
         lytReferencePreview.visibility = View.VISIBLE
         lytReferencePreview.startEditing()
     }
 
     private fun setSourceToEdit(source: Source?) {
-        updateEntryFieldChangedOnUIThread(ItemField.Source, sourceToEdit != source)
-
         sourceToEdit = source
 
-        setReferencePreviewOnUIThread()
-    }
+        updateEntryFieldChangedOnUIThread(ItemField.Source, source != originalSource)
 
-    private fun appliedChangesToReference(result: EditReferenceActivityResult) {
-        if(result.didSaveReference) {
-            result.savedSource?.let { savedReference(it) }
+        entryPropertySet() // TODO: still senseful?
 
-            mayShowSaveEntryChangesHelpOnUIThread()
-        }
-        else if(result.didDeleteReference) {
-            referenceCleared()
-        }
-
-        entryPropertySet()
+        updateShowMenuItemShareEntry()
     }
 
     private fun editTagsOnEntry() {
@@ -902,13 +869,6 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setReferencePreviewOnUIThread() {
-        if(sourceToEdit == null) {
-            lytReferencePreview.setOnboardingTextOnUiThread(R.string.activity_edit_item_source_onboarding_text)
-        }
-        else {
-            lytReferencePreview.setSourceToEdit(sourceToEdit, getCurrentSeries(), this) { setSourceToEdit(it) }
-        }
-
         val showReferencePreview = this.forceShowReferencePreview || sourceToEdit != null
 
         lytReferencePreview.visibility = if(showReferencePreview) View.VISIBLE else View.GONE
@@ -917,6 +877,10 @@ class EditEntryActivity : BaseActivity() {
         }
         setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread()
 
+        updateShowMenuItemShareEntry()
+    }
+
+    private fun updateShowMenuItemShareEntry() {
         mnShareEntry?.isVisible = sourceToEdit?.url.isNullOrBlank() == false
     }
 
@@ -1460,6 +1424,11 @@ class EditEntryActivity : BaseActivity() {
             itemExtractionResult?.series = null
         }
 
+        if(sourceToEdit != originalSource) {
+            readLaterArticle?.itemExtractionResult?.series = null
+            itemExtractionResult?.series = null
+        }
+
         if(changedFields.contains(ItemField.Tags)) {
             tagsOnEntry.clear()
             tagsOnEntry.addAll(lytTagsPreview.applyChangesAndGetTags())
@@ -1569,6 +1538,7 @@ class EditEntryActivity : BaseActivity() {
         if(abstractToEdit.isNullOrBlank() == false) { this.forceShowAbstractPreview = true } // forcing that once it has been shown it doesn't get hidden anymore
 
         source?.let { this.forceShowReferencePreview = true } // forcing that once it has been shown it doesn't get hidden anymore
+        lytReferencePreview.setOriginalSourceToEdit(sourceToEdit, getCurrentSeries(), this) { setSourceToEdit(it) }
 
         tags?.forEach { tag ->
             if(tagsOnEntry.contains(tag) == false) { // to avoid have a tag twice we really have to check each single tag
@@ -1603,7 +1573,10 @@ class EditEntryActivity : BaseActivity() {
             sourceToEdit = null
         }
 
-        runOnUiThread { setReferencePreviewOnUIThread() }
+        runOnUiThread {
+            // TODO: restored source isn't necessarily originalSource, but lytReferencePreview also needs originalSource
+            setReferencePreviewOnUIThread()
+        }
     }
 
     private fun restoreTagsOnEntryAsync(tagsOnEntryIdsString: String) {

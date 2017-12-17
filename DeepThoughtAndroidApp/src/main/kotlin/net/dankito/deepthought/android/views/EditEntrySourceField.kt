@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.activities.EditReferenceActivity
+import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
 import net.dankito.deepthought.android.adapter.ReferenceOnEntryRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Series
@@ -68,15 +69,12 @@ class EditEntrySourceField : EditEntityEntityReferenceField, IReferencesListView
     }
 
 
-    fun setSourceToEdit(source: Source?, series: Series?, activity: BaseActivity, sourceChangedListener: (Source?) -> Unit) {
-        this.source = source
-        this.series = series
+    fun setOriginalSourceToEdit(source: Source?, series: Series? = source?.series, activity: BaseActivity, sourceChangedListener: (Source?) -> Unit) {
         this.activity = activity
         this.sourceChangedListener = sourceChangedListener
 
-        existingSourcesSearchResultsAdapter.selectedSource = source
-
-        setFieldValueOnUiThread(source?.title ?: "", source.getPreviewWithSeriesAndPublishingDate(series))
+        val sourceToEdit = if(source != null) source else Source("")
+        sourceChanged(sourceToEdit, series)
     }
 
     override fun editTextLostFocus() {
@@ -113,21 +111,43 @@ class EditEntrySourceField : EditEntityEntityReferenceField, IReferencesListView
     }
 
     override fun createNewEntity() {
-        sourceChangedListener?.invoke(Source(""))
+        sourceChanged(Source(""))
     }
 
     override fun removeEntity() {
-        stopEditing()
+        sourceChanged(null)
 
-        sourceChangedListener?.invoke(null)
+        stopEditing()
     }
 
     private fun existingSourceSelected(source: Source) {
-        existingSourcesSearchResultsAdapter.selectedSource = source
-
-        sourceChangedListener?.invoke(source)
+        sourceChanged(source)
 
         hideSearchResultsView()
+    }
+
+    fun editingSourceDone(result: EditReferenceActivityResult) {
+        if(result.didSaveReference) {
+            setFieldValueForCurrentSourceOnUiThread()
+        }
+        else if(result.didDeleteReference) {
+            removeEntity()
+        }
+    }
+
+    fun sourceChanged(source: Source?, series: Series? = source?.series) {
+        this.source = source
+        this.series = series
+
+        existingSourcesSearchResultsAdapter.selectedSource = source
+
+        setFieldValueForCurrentSourceOnUiThread()
+
+        sourceChangedListener?.invoke(source)
+    }
+
+    private fun setFieldValueForCurrentSourceOnUiThread() {
+        setFieldValueOnUiThread(source?.title ?: "", source.getPreviewWithSeriesAndPublishingDate(series))
     }
 
 
