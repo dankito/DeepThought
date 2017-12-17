@@ -30,8 +30,30 @@ abstract class EditEntityCollectionField : EditEntityField {
         lytCollectionPreview.visibility = View.VISIBLE
 
         txtEntityFieldName.minHeight = lytCollectionPreview.minimumHeight
+
+        hideEditTextEntityFieldValue()
     }
 
+
+    override fun viewClicked() {
+        if(edtxtEntityFieldValue.visibility != View.VISIBLE) {
+            startEditing()
+        }
+
+        super.viewClicked()
+    }
+
+    override fun startEditing() {
+        showEditTextEntityFieldValue()
+
+        super.startEditing()
+    }
+
+    override fun stopEditing() {
+        hideEditTextEntityFieldValue()
+
+        super.stopEditing()
+    }
 
     override fun hasFocusChanged(hasFocus: Boolean) {
         if(hasFocus) {
@@ -39,6 +61,7 @@ abstract class EditEntityCollectionField : EditEntityField {
             startEditing()
         }
         else {
+            hideEditTextEntityFieldValue()
             hideSearchResultsView()
         }
 

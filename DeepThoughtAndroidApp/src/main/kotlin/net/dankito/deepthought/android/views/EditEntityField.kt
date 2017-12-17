@@ -97,18 +97,18 @@ open class EditEntityField : RelativeLayout {
         rootView = inflater.inflate(R.layout.view_edit_entity_field, this) as ViewGroup
 
         txtEntityFieldName = rootView.txtEntityFieldName
-        txtEntityFieldName.setOnClickListener { fieldClickedListener?.invoke() }
 
         edtxtEntityFieldValue = rootView.edtxtEntityFieldValue
         edtxtEntityFieldValue.addTextChangedListener(edtxtEntityFieldValueTextWatcher)
         edtxtEntityFieldValue.setOnEditorActionListener { _, actionId, keyEvent -> handleEditEntrySearchTagAction(actionId, keyEvent) }
-        edtxtEntityFieldValue.setOnClickListener { fieldClickedListener?.invoke() } // remember: setOnClickListener() on an EditText only works if focusable has been set to  false -> call setFieldNameOnUiThread() with isEditable = false
         edtxtEntityFieldValue.setOnFocusChangeListener { _, hasFocus -> hasFocusChanged(hasFocus) }
 
         btnEntityFieldAction = rootView.btnEntityFieldAction
 
         rcySearchResult = rootView.findViewById(R.id.rcySearchResults) as MaxHeightRecyclerView
         rcySearchResult.addItemDecoration(HorizontalDividerItemDecoration(context))
+
+        rootView.setOnClickListener { viewClicked() }
 
         doCustomUiInitialization(rootView)
     }
@@ -123,6 +123,10 @@ open class EditEntityField : RelativeLayout {
 
     protected open fun hasFocusChanged(hasFocus: Boolean) {
         fieldValueFocusChangedListener?.invoke(hasFocus)
+    }
+
+    protected open fun viewClicked() {
+        fieldClickedListener?.invoke() // remember: setOnClickListener() on an EditText only works if focusable has been set to  false -> call setFieldNameOnUiThread() with isEditable = false
     }
 
     protected open fun doCustomUiInitialization(rootView: ViewGroup) {
@@ -236,6 +240,16 @@ open class EditEntityField : RelativeLayout {
         txtEntityFieldName.requestFocus() // to remove focus from EditText; therefore focusable is set to true on txtEntityFieldName
     }
 
+
+    protected fun showEditTextEntityFieldValue() {
+        edtxtEntityFieldValue.visibility = View.VISIBLE
+        vwHorizontalLineWhenEditTextNotShown.visibility = View.GONE
+    }
+
+    protected fun hideEditTextEntityFieldValue() {
+        edtxtEntityFieldValue.visibility = View.GONE
+        vwHorizontalLineWhenEditTextNotShown.visibility = View.VISIBLE
+    }
 
     protected fun showSearchResultsView() {
         rcySearchResult.visibility = View.VISIBLE

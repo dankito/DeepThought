@@ -68,6 +68,25 @@
 
             </LinearLayout>
 
+            <View
+                android:id="@+id/vwHorizontalLineWhenEditTextNotShown"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height"
+                android:layout_below="@id/lytFieldNameAndPreview"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_toLeftOf="@+id/btnEntityFieldAction"
+                android:layout_toStartOf="@+id/btnEntityFieldAction"
+                android:layout_marginTop="@dimen/view_edit_entity_field_horizontal_line_when_edit_text_not_shown_margin_top"
+                android:layout_marginLeft="@dimen/edit_text_padding_left"
+                android:layout_marginStart="@dimen/edit_text_padding_left"
+                android:layout_marginRight="@dimen/view_edit_entity_field_value_margin_right_including_edit_text_padding_left"
+                android:layout_marginEnd="@dimen/view_edit_entity_field_value_margin_right_including_edit_text_padding_left"
+                android:layout_marginBottom="@dimen/view_edit_entity_field_horizontal_line_when_edit_text_not_shown_margin_bottom"
+                android:background="@color/entity_field_divider_color"
+                android:visibility="gone"
+            />
+
             <EditText
                 android:id="@+id/edtxtEntityFieldValue"
                 android:layout_width="wrap_content"
