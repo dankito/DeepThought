@@ -80,6 +80,6 @@ abstract class EditEntityCollectionField : EditEntityField {
         }
     }
 
-    abstract fun searchEntities(query: String)
+    abstract fun searchEntities(searchTerm: String)
 
 }
