@@ -15,7 +15,7 @@ abstract class EditEntityCollectionField : EditEntityField {
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
 
-    protected lateinit var lytCollectionPreview: FlexboxLayout
+    protected lateinit var lytPreview: FlexboxLayout
 
 
     private var lastSearchTerm = ""
@@ -26,10 +26,7 @@ abstract class EditEntityCollectionField : EditEntityField {
 
         this.disableActionOnKeyboard = true
 
-        lytCollectionPreview = rootView.lytCollectionPreview
-        lytCollectionPreview.visibility = View.VISIBLE
-
-        txtEntityFieldName.minHeight = lytCollectionPreview.minimumHeight
+        lytPreview = rootView.lytPreview
 
         hideEditTextEntityFieldValue()
     }

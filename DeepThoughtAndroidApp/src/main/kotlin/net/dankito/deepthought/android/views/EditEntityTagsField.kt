@@ -188,7 +188,7 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
     }
 
     private fun setTagsOnEntryPreviewOnUIThread(tagsOnEntry: Collection<Tag>) {
-        lytCollectionPreview?.let { tagsPreviewViewHelper.showTagsPreview(it, tagsOnEntry, showButtonRemoveTag = true) { removeTagFromCurrentTagsOnEntry(it) } }
+        lytPreview?.let { tagsPreviewViewHelper.showTagsPreview(it, tagsOnEntry, showButtonRemoveTag = true) { removeTagFromCurrentTagsOnEntry(it) } }
 
         if(tagsOnEntry.isEmpty() || edtxtEntityFieldValue.hasFocus() == false) {
             hideSearchResultsView()

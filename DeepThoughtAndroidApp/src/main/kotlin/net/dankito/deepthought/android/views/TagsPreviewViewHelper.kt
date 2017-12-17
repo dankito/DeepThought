@@ -15,6 +15,11 @@ import net.dankito.utils.extensions.sorted
 
 class TagsPreviewViewHelper {
 
+    companion object {
+        const val TagViewTag = "TagView"
+    }
+
+
     fun showTagsPreview(layout: ViewGroup, tags: Collection<Tag>, previouslyRecycledTagViews: ArrayList<View>? = null, showButtonRemoveTag: Boolean = false,
                         tagRemovedListener: ((Tag) -> Unit)? = null) {
         val recycledTagViews = recycleTagViews(layout, previouslyRecycledTagViews) // recycle tag views otherwise scrolling in Items RecyclerView would be much too slow
@@ -33,19 +38,26 @@ class TagsPreviewViewHelper {
     private fun recycleTagViews(layout: ViewGroup, previouslyRecycledTagViews: ArrayList<View>?): ArrayList<View> {
         val recycledTagViews = previouslyRecycledTagViews ?: ArrayList<View>()
 
-        for (i in 0..layout.childCount - 1) {
-            recycledTagViews.add(layout.getChildAt(i))
+        for(i in layout.childCount - 1 downTo 0) {
+            val child = layout.getChildAt(i)
+            if(isTagView(child)) {
+                layout.removeView(child)
+                recycledTagViews.add(child)
+            }
         }
 
-        layout.removeAllViews()
-
         return recycledTagViews
+    }
+
+    private fun isTagView(child: View?): Boolean {
+        return child != null && child.tag == TagViewTag
     }
 
     private fun addTagView(inflater: LayoutInflater, layout: ViewGroup, recycledTagViews: MutableList<View>, tag: Tag, addSpaceToTheRight: Boolean, showButtonRemoveTag: Boolean,
                            tagRemovedListener: ((Tag) -> Unit)?) {
         val tagView = if(recycledTagViews.size > 0) recycledTagViews.removeAt(0)
                         else inflater.inflate(R.layout.view_tag, null)
+        tagView.tag = TagViewTag
 
         tagView.txtTagName.text = tag.name
 

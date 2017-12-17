@@ -22,6 +22,7 @@ import net.dankito.deepthought.android.service.ActivityParameterHolder
 import net.dankito.deepthought.android.util.matchers.RecyclerViewInViewMatcher
 import net.dankito.deepthought.android.util.matchers.RecyclerViewItemCountAssertion
 import net.dankito.deepthought.android.util.screenshot.TakeScreenshotOnErrorTestRule
+import net.dankito.deepthought.android.views.TagsPreviewViewHelper
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Tag
 import net.dankito.service.search.SearchEngineBase
@@ -531,13 +532,13 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
 
         InstrumentationRegistry.getInstrumentation().runOnMainSync {
             val lytTagsPreview = testRule.activity.findViewById(R.id.lytTagsPreview) as? ViewGroup
-            val lytCollectionPreview = lytTagsPreview?.findViewById(R.id.lytCollectionPreview) as? ViewGroup
+            val lytPreview = lytTagsPreview?.findViewById(R.id.lytPreview) as? ViewGroup
 
-            lytCollectionPreview?.let {
-                for(i in 0..lytCollectionPreview.childCount) {
-                    val tagView = lytCollectionPreview.getChildAt(i)
-                    if(tagView != null) { // don't know why null is ever returned
-                        tagPreviews.add(tagView)
+            lytPreview?.let {
+                for(i in 0..lytPreview.childCount) {
+                    val child = lytPreview.getChildAt(i)
+                    if(child != null && child.tag == TagsPreviewViewHelper.TagViewTag) { // don't know why null is ever returned
+                        tagPreviews.add(child)
                     }
                 }
             }
