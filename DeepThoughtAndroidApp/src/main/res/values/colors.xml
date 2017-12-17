@@ -49,7 +49,7 @@
     <color name="edit_entity_activity_background">#F0F0F0</color>
 
     <color name="entity_field_background_color">#FFFFFF</color>
-    <color name="entity_field_name_text_color">@color/gray</color>
+    <color name="entity_field_name_text_color">#9a9a9a</color>
     <color name="entity_field_value_text_color">#000000</color>
     <color name="entity_field_onboarding_text_color">@color/darker_gray</color>
     <color name="entity_field_divider_color">#E0E0E0</color>
