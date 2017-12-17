@@ -135,6 +135,40 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
     }
 
     @Test
+    fun setNewSource_ReApplySourceAtStart_SaveButtonNotVisible() {
+        persistSource(source) // otherwise it won't be shown in result list
+
+        assertThat(source.title, `is`(SourceTitleAtStart))
+        checkDisplayedSourceValue(Source(SourceTitleAtStart, "", PublishingDate).getPreviewWithSeriesAndPublishingDate(series)) // on start Source title with Series and publishing date preview is displayed
+
+        onView(withId(R.id.lytReferencePreview)).perform(click())
+        checkDisplayedSourceValue(SourceTitleAtStart) // after a click only Source title is displayed and can be edited
+
+        navigator.clickOnEditEntityReferenceFieldCreateNewEntityPopupMenu(R.id.lytReferencePreview)
+        checkDisplayedSourceValue("")
+
+        onView(withId(R.id.mnSaveEntry)).check(matches(isDisplayed()))
+        assertThat(testItem.source, `is`(source))
+
+
+        onView(withId(R.id.lytReferencePreview)).perform(click())
+        navigator.setValueOfEditEntityField(R.id.lytReferencePreview, SourceTitleAtStart)
+        checkDisplayedSourceValue(SourceTitleAtStart)
+        checkRecyclerViewSearchResultsIsVisible()
+        checkCountItemsInRecyclerViewSearchResults(1)
+
+        onView(RecyclerViewInViewMatcher.withRecyclerView(R.id.lytReferencePreview, R.id.rcySearchResults)
+                .atPosition(0))
+                .perform(click())
+
+
+//        onView(withId(R.id.mnSaveEntry)).check(matches(not(isDisplayed()))) // same Source as at start is now selected -> there are no changes
+        assertThat(testItem.source, `is`(source))
+        assertThat(source.title, `is`(SourceTitleAtStart))
+        assertThat(testItem.source?.title, `is`(SourceTitleAtStart))
+    }
+
+    @Test
     fun clearSource() {
         assertThat(source.title, `is`(SourceTitleAtStart))
         checkDisplayedSourceValue(Source(SourceTitleAtStart, "", PublishingDate).getPreviewWithSeriesAndPublishingDate(series)) // on start Source title with Series and publishing date preview is displayed
