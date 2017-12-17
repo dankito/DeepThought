@@ -70,13 +70,14 @@ class TagsPreviewViewHelper {
             }
         }
 
-        val enteredTagName = enteredText.substring(lastSearchTermStartIndex + 1)
+        val replacementIndex = lastSearchTermStartIndex + 1
+        val enteredTagName = enteredText.substring(replacementIndex)
         val enteredTagNameWithoutTagsSeparator = enteredTagName.trimEnd().replace(SearchEngineBase.TagsSearchTermSeparator, "")
         val autoCompletedTagName = tag.name + SearchEngineBase.TagsSearchTermSeparator
 
-        val autoCompletedText = enteredText.replaceRange(lastSearchTermStartIndex + 1, enteredText.length, autoCompletedTagName)
+        val autoCompletedText = enteredText.replaceRange(replacementIndex, enteredText.length, autoCompletedTagName)
 
-        return TagAutoCompleteResult(enteredText, autoCompletedText, enteredTagName, autoCompletedTagName, enteredTagNameWithoutTagsSeparator)
+        return TagAutoCompleteResult(replacementIndex, enteredText, autoCompletedText, enteredTagName, autoCompletedTagName, enteredTagNameWithoutTagsSeparator)
     }
 
 }

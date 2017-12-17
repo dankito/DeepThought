@@ -395,6 +395,77 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
     }
 
 
+    @Test
+    fun enterTagNameStartAtEndWithTagsSeparator_SelectFromResultList_RemoveAutoCompletedTag_OriginalEnteredTextGetsDisplayed() {
+        persistTag(Tag(UnPersistedTag1Name))
+
+        assertThat(testItem.tags.size, `is`(3))
+        checkDisplayedPreviewTagsMatch(*testItem.tags.toTypedArray())
+
+        onView(withId(R.id.lytTagsPreview)).perform(ViewActions.click())
+
+        navigator.enterText(PersistedTag1Name)
+        navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
+
+        navigator.enterText(UnPersistedTag1Name.substring(0, 3)) // only enter first three letters of tag name
+        navigator.enterText(SearchEngineBase.TagsSearchTermSeparator) // now additionally enter TagsSearchTermSeparator to confuse auto completion
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+
+        clickOnFirstDisplayedTagSearchResult()
+
+        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+        removeWhitespacesEnteredByKeyboardApp()
+        checkDisplayedTagsValue(PersistedTag1Name + SearchEngineBase.TagsSearchTermSeparator + UnPersistedTag1Name + SearchEngineBase.TagsSearchTermSeparator)
+
+
+        clickOnFirstDisplayedTagSearchResult() // now remove tag again
+
+        checkDisplayedPreviewTagsMatch(*testItem.tags.toTypedArray())
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+        removeWhitespacesEnteredByKeyboardApp()
+        checkDisplayedTagsValue(PersistedTag1Name + SearchEngineBase.TagsSearchTermSeparator)
+    }
+
+    @Test
+    fun enterTagNameStartAtEndWithTagsSeparator_PressAction_RemoveAutoCompletedTag_OriginalEnteredTextGetsDisplayed() {
+        persistTag(Tag(UnPersistedTag1Name))
+
+        assertThat(testItem.tags.size, `is`(3))
+        checkDisplayedPreviewTagsMatch(*testItem.tags.toTypedArray())
+
+        onView(withId(R.id.lytTagsPreview)).perform(ViewActions.click())
+
+        navigator.enterText(PersistedTag1Name)
+        navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
+
+        navigator.enterText(UnPersistedTag1Name.substring(0, 3)) // only enter first three letters of tag name
+        navigator.enterText(SearchEngineBase.TagsSearchTermSeparator) // now additionally enter TagsSearchTermSeparator to confuse auto completion
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+
+        pressAction()
+
+        checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+        removeWhitespacesEnteredByKeyboardApp()
+        checkDisplayedTagsValue(PersistedTag1Name + SearchEngineBase.TagsSearchTermSeparator + UnPersistedTag1Name + SearchEngineBase.TagsSearchTermSeparator)
+
+
+        removeTagWithName(UnPersistedTag1Name) // now remove tag again
+
+        checkDisplayedPreviewTagsMatch(*testItem.tags.toTypedArray())
+        checkCountItemsInRecyclerViewTagSearchResults(1)
+
+        removeWhitespacesEnteredByKeyboardApp()
+        checkDisplayedTagsValue(PersistedTag1Name + SearchEngineBase.TagsSearchTermSeparator)
+    }
+
+
     private fun assertPersistedTag1GotRemoved() {
         val newDisplayedTags = ArrayList(testItem.tags)
         newDisplayedTags.remove(persistedTag1)

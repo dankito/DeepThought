@@ -135,6 +135,26 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
     }
 
     private fun removeRemovedTagFromEnteredSearchTerm(removedTag: Tag) {
+        val autoCompleteResult = this.autoCompleteResult
+
+        if(autoCompleteResult == null || removeLastAutoCompletedTag(autoCompleteResult) == false) {
+            removeRemovedTagFromEditTextEntityFieldValue(removedTag)
+        }
+    }
+
+    private fun removeLastAutoCompletedTag(autoCompleteResult: TagAutoCompleteResult): Boolean {
+        try {
+            val stringToTest = getCurrentFieldValue().substring(autoCompleteResult.replacementIndex)
+            if(stringToTest == autoCompleteResult.autoCompletedTagName) {
+                setEditTextEntityFieldValueOnUiThread(autoCompleteResult.enteredText)
+                return true
+            }
+        } catch(ignored: Exception) { }
+
+        return false
+    }
+
+    private fun removeRemovedTagFromEditTextEntityFieldValue(removedTag: Tag) {
         presenter.getTagsSearchResultForTag(removedTag)?.let { searchResultForTag ->
             val enteredSearchTerm = edtxtEntityFieldValue.text.toString()
             val tagIndex = enteredSearchTerm.indexOf(removedTag.name, ignoreCase = true)
