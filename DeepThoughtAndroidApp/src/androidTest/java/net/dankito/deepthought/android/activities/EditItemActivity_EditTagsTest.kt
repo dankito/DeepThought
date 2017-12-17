@@ -138,19 +138,19 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
 
         navigator.enterText(UnPersistedTag3Name)
         checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), Tag(UnPersistedTag3Name), *testItem.tags.toTypedArray())
-        checkCountItemsInRecyclerViewTagSearchResults(1)
+        checkCountItemsInRecyclerViewTagSearchResults(0)
 
         navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
         checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), Tag(UnPersistedTag3Name), *testItem.tags.toTypedArray())
-        checkCountItemsInRecyclerViewTagSearchResults(1)
+        checkCountItemsInRecyclerViewTagSearchResults(0)
 
         navigator.enterText(PersistedTag3Name)
         checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), Tag(UnPersistedTag3Name), *testItem.tags.toTypedArray())
-        checkCountItemsInRecyclerViewTagSearchResults(2)
+        checkCountItemsInRecyclerViewTagSearchResults(1)
 
         navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
         checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), Tag(UnPersistedTag3Name), *testItem.tags.toTypedArray())
-        checkCountItemsInRecyclerViewTagSearchResults(2)
+        checkCountItemsInRecyclerViewTagSearchResults(1)
 
         assertThat(testItem.tags.size, `is`(3)) // Item is not saved yet, but displayed tags preview must get updated
 
@@ -177,17 +177,15 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
         navigator.enterText(UnPersistedTag1Name)
         navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
         checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
-        checkCountItemsInRecyclerViewTagSearchResults(1)
+        checkCountItemsInRecyclerViewTagSearchResults(0)
 
         navigator.enterText(UnPersistedTag2Name)
         navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
         checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag2Name), Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
-        checkCountItemsInRecyclerViewTagSearchResults(1)
+        checkCountItemsInRecyclerViewTagSearchResults(0)
 
 
-        onView(RecyclerViewInViewMatcher.withRecyclerView(R.id.lytTagsPreview, R.id.rcySearchResults)
-                .atPosition(0))
-                .perform(click())
+        clickOnFirstDisplayedTagSearchResult()
 
 
         assertPersistedTag1GotRemoved()
@@ -215,12 +213,10 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
         navigator.enterText(UnPersistedTag2Name)
         navigator.enterText(SearchEngineBase.TagsSearchTermSeparator)
         checkDisplayedPreviewTagsMatch(Tag(UnPersistedTag2Name), Tag(UnPersistedTag1Name), *testItem.tags.toTypedArray())
-        checkCountItemsInRecyclerViewTagSearchResults(1)
+        checkCountItemsInRecyclerViewTagSearchResults(0)
 
 
-        onView(RecyclerViewInViewMatcher.withRecyclerView(R.id.lytTagsPreview, R.id.rcySearchResults)
-                .atPosition(0))
-                .perform(click())
+        clickOnFirstDisplayedTagSearchResult()
 
 
         assertPersistedTag1GotRemoved()
@@ -249,9 +245,7 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
         checkCountItemsInRecyclerViewTagSearchResults(1)
 
 
-        onView(RecyclerViewInViewMatcher.withRecyclerView(R.id.lytTagsPreview, R.id.rcySearchResults)
-                .atPosition(0))
-                .perform(click())
+        clickOnFirstDisplayedTagSearchResult()
 
 
         assertPersistedTag1GotRemoved()
@@ -275,6 +269,12 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
         testItem.tags.forEach { tag ->
             assertThat(tag.isPersisted(), `is`(true))
         }
+    }
+
+    private fun clickOnFirstDisplayedTagSearchResult() {
+        onView(RecyclerViewInViewMatcher.withRecyclerView(R.id.lytTagsPreview, R.id.rcySearchResults)
+                .atPosition(0))
+                .perform(click())
     }
 
 
@@ -318,7 +318,11 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
     }
 
     private fun checkDisplayedTagsValue(tags: Collection<Tag>) {
-        checkDisplayedValueInEditEntityField(tags.sortedBy { it.name }.joinToString { it.name }, R.id.lytTagsPreview)
+        checkDisplayedTagsValue(tags.sortedBy { it.name }.joinToString { it.name })
+    }
+
+    private fun checkDisplayedTagsValue(tagsDisplayName: String) {
+        checkDisplayedValueInEditEntityField(tagsDisplayName, R.id.lytTagsPreview)
     }
 
     private fun checkDisplayedValueInEditEntityField(valueToMatch: String, editEntityFieldId: Int) {
