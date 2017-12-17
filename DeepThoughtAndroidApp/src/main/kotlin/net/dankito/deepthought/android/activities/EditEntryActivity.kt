@@ -1454,6 +1454,11 @@ class EditEntryActivity : BaseActivity() {
         if(changedFields.contains(ItemField.SourceTitle)) {
             sourceToEdit?.title = lytReferencePreview.getEditedValue() ?: ""
         }
+        if(sourceToEdit?.isPersisted() == false && lytReferencePreview.getEditedValue().isNullOrBlank()) {
+            sourceToEdit = null
+            readLaterArticle?.itemExtractionResult?.series = null
+            itemExtractionResult?.series = null
+        }
 
         if(changedFields.contains(ItemField.Tags)) {
             tagsOnEntry.clear()
