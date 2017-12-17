@@ -1,22 +1,16 @@
 package net.dankito.deepthought.android.activities
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.activity_edit_reference.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
 import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityResult
 import net.dankito.deepthought.android.adapter.ReferenceOnEntryRecyclerAdapter
-import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.PickDateDialog
-import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.views.ToolbarUtil
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.model.Series
@@ -32,7 +26,6 @@ import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.ReferenceChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
-import net.dankito.service.search.specific.ReferenceSearch
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogButton
@@ -50,8 +43,6 @@ class EditReferenceActivity : BaseActivity() {
         private const val UNPERSISTED_REFERENCE_BUNDLE_EXTRA_NAME = "UNPERSISTED_REFERENCE_ID"
         private const val REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME = "REFERENCE_SERIES_ID"
         private const val ORIGINALLY_SET_REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME = "ORIGINALLY_SET_REFERENCE_SERIES_ID"
-        private const val SELECTED_ANOTHER_REFERENCE_BUNDLE_EXTRA_NAME = "SELECTED_ANOTHER_REFERENCE"
-        private const val IS_FOR_ENTRY_SET_BUNDLE_EXTRA_NAME = "IS_FOR_ENTRY_SET"
 
         const val ResultId = "EDIT_REFERENCE_ACTIVITY_RESULT"
     }
@@ -101,8 +92,6 @@ class EditReferenceActivity : BaseActivity() {
 
     private var didReferenceChange = false
 
-    private var selectedAnotherReference = false
-
     private val changedFields = HashSet<SourceField>()
 
     private var mnSaveReference: MenuItem? = null
@@ -145,10 +134,6 @@ class EditReferenceActivity : BaseActivity() {
             outState.putString(REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME, currentlySetSeries?.id)
 
             outState.putString(ORIGINALLY_SET_REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME, originallySetSeries?.id)
-
-            outState.putBoolean(SELECTED_ANOTHER_REFERENCE_BUNDLE_EXTRA_NAME, selectedAnotherReference)
-
-            outState.putBoolean(IS_FOR_ENTRY_SET_BUNDLE_EXTRA_NAME, lytSetEntryReferenceControls.visibility == View.VISIBLE)
         }
     }
 
@@ -171,12 +156,7 @@ class EditReferenceActivity : BaseActivity() {
                 setAndShowSeriesOnUiThread(null)
             }
 
-            this.selectedAnotherReference = savedInstanceState.getBoolean(SELECTED_ANOTHER_REFERENCE_BUNDLE_EXTRA_NAME, false)
             updateDidReferenceChangeOnUiThread()
-
-            if(savedInstanceState.getBoolean(IS_FOR_ENTRY_SET_BUNDLE_EXTRA_NAME, false) == true) {
-                lytSetEntryReferenceControls.visibility = View.VISIBLE
-            }
         }
 
         super.onRestoreInstanceState(savedInstanceState) // important: Call super method after restoring reference so that all EditEntityFields with their modified values don't get overwritten by original reference's values
@@ -190,8 +170,6 @@ class EditReferenceActivity : BaseActivity() {
 
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        setupFindExistingReferenceSection()
 
 
         lytEditReferenceTitle.setFieldNameOnUiThread(R.string.activity_edit_source_title_label) { updateDidReferenceChangeOnUiThread(SourceField.Title, it) }
@@ -210,23 +188,6 @@ class EditReferenceActivity : BaseActivity() {
         }
 
         lytEditReferenceUrl.setFieldNameOnUiThread(R.string.activity_edit_source_url_label) { updateDidReferenceChangeOnUiThread(SourceField.Url, it) }
-    }
-
-    private fun setupFindExistingReferenceSection() {
-        btnCreateNewReference.setOnClickListener { askIfANewReferenceShouldBeCreated() }
-
-        rcyExistingReferencesSearchResults.addItemDecoration(HorizontalDividerItemDecoration(this))
-        rcyExistingReferencesSearchResults.adapter = existingReferencesSearchResultsAdapter
-        existingReferencesSearchResultsAdapter.itemClickListener = { item -> existingReferenceSelected(item) }
-
-        edtxtFindReferences.addTextChangedListener(edtxtFindReferencesTextWatcher)
-        edtxtFindReferences.setOnFocusChangeListener { _, hasFocus ->
-            if(hasFocus) {
-                showRecyclerViewExistingReferencesSearchResultsWithResults()
-            }
-        }
-
-        btnExpandCollapseExistingReferencesSearchResults.setOnClickListener { toggleShowRecyclerViewExistingReferencesSearchResults() }
     }
 
 
@@ -517,7 +478,7 @@ class EditReferenceActivity : BaseActivity() {
     }
 
     private fun updateDidReferenceChangeOnUiThread() {
-        this.didReferenceChange = changedFields.size > 0 || selectedAnotherReference || source?.isPersisted() == false
+        this.didReferenceChange = changedFields.size > 0 || source?.isPersisted() == false
 
         mnSaveReference?.isVisible = didReferenceChange
     }
@@ -551,82 +512,6 @@ class EditReferenceActivity : BaseActivity() {
         runOnUiThread {
             dialogService.showInfoMessage(getString(R.string.activity_edit_source_alert_message_source_has_been_edited))
         }
-    }
-
-
-    private fun searchExistingReferences(query: String) {
-        searchEngine.searchReferences(ReferenceSearch(query) {
-            runOnUiThread { retrievedExistingReferencesSearchResultsOnUiThread(it) }
-        })
-    }
-
-    private fun retrievedExistingReferencesSearchResultsOnUiThread(searchResults: List<Source>) {
-        existingReferencesSearchResultsAdapter.items = searchResults
-
-        showRecyclerViewExistingReferencesSearchResults()
-    }
-
-    private fun existingReferenceSelected(source: Source) {
-        edtxtFindReferences.hideKeyboard()
-
-        hideRecyclerViewExistingReferencesSearchResults()
-
-        selectedAnotherReference = source?.id != this.source?.id
-
-        // TODO: check if previous source has unsaved changes
-        showReference(source)
-
-        updateDidReferenceChangeOnUiThread()
-        mayRegisterEventBusListener()
-    }
-
-    private fun toggleShowRecyclerViewExistingReferencesSearchResults() {
-        if(rcyExistingReferencesSearchResults.visibility == View.VISIBLE) {
-            hideRecyclerViewExistingReferencesSearchResults()
-        }
-        else {
-            showRecyclerViewExistingReferencesSearchResultsWithResults()
-        }
-    }
-
-    private fun showRecyclerViewExistingReferencesSearchResultsWithResults() {
-        searchExistingReferences(edtxtFindReferences.text.toString())
-    }
-
-    private fun showRecyclerViewExistingReferencesSearchResults() {
-        rcyExistingReferencesSearchResults.visibility = View.VISIBLE
-        scrEditReference.visibility = View.GONE
-
-        (lytSetEntryReferenceControls.layoutParams as? RelativeLayout.LayoutParams)?.let { layoutParams ->
-            layoutParams.addRule(RelativeLayout.ABOVE, toolbar.id)
-        }
-
-        btnExpandCollapseExistingReferencesSearchResults.setImageResource(R.drawable.ic_arrow_up)
-    }
-
-    private fun hideRecyclerViewExistingReferencesSearchResults() {
-        rcyExistingReferencesSearchResults.visibility = View.GONE
-        scrEditReference.visibility = View.VISIBLE
-
-        (lytSetEntryReferenceControls.layoutParams as? RelativeLayout.LayoutParams)?.let { layoutParams ->
-            layoutParams.addRule(RelativeLayout.ABOVE, 0)
-        }
-
-        edtxtFindReferences.hideKeyboard()
-        edtxtFindReferences.clearFocus()
-
-        btnExpandCollapseExistingReferencesSearchResults.setImageResource(R.drawable.ic_arrow_down)
-    }
-
-    private val edtxtFindReferencesTextWatcher = object : TextWatcher {
-        override fun afterTextChanged(editable: Editable) {
-            searchExistingReferences(editable.toString())
-        }
-
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
-
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
-
     }
 
 
