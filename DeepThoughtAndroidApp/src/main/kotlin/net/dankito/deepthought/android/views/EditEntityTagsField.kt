@@ -147,6 +147,9 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
             val stringToTest = getCurrentFieldValue().substring(autoCompleteResult.replacementIndex)
             if(stringToTest == autoCompleteResult.autoCompletedTagName) {
                 setEditTextEntityFieldValueOnUiThread(autoCompleteResult.enteredText)
+
+                this.autoCompleteResult = null // reset autoCompleteResult so if another auto completion is applied autoCompleteResult gets newly set
+
                 return true
             }
         } catch(ignored: Exception) { }
