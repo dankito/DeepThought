@@ -95,11 +95,11 @@ class EditEntrySourceField : EditEntityEntityReferenceField, IReferencesListView
     }
 
     override fun enteredTextChanged(enteredText: String) {
-        super.enteredTextChanged(enteredText)
-
         if(source == null && enteredText.isNotBlank()) { // user entered a title, but source is null -> create a new Source
             sourceChanged(Source(enteredText))
         }
+
+        super.enteredTextChanged(enteredText)
     }
 
     override fun updateValueToEdit() {
