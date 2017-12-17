@@ -77,7 +77,7 @@ abstract class DeepThoughtAndroidTestBase {
         tagService.persist(tag)
     }
 
-    protected open fun persistSource(source: Source, series: Series? = null) {
+    protected open fun persistSource(source: Source, series: Series? = source.series) {
         sourcePersister.saveReference(source, series)
     }
 
