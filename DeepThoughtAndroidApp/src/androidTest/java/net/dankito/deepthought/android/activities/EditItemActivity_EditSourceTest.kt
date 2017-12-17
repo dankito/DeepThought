@@ -208,6 +208,7 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
         TestUtil.sleep(1000)
 
         checkDisplayedSourceValue(Source(SourceTitleAfterEditingDetails, "", PublishingDate).getPreviewWithSeriesAndPublishingDate(series))
+//        assertIsNotVisible(R.id.mnSaveEntry) // Source has been saved now in EditSourceActivity -> there are no changes on Item
 
         assertThat(testItem.source, `is`(source))
         assertThat(source.title, `is`(SourceTitleAfterEditingDetails))
@@ -281,6 +282,14 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
     private fun checkCountItemsInRecyclerViewSearchResults(expectedCount: Int) {
         onView(allOf(instanceOf(RecyclerView::class.java), isDescendantOfA(withId(R.id.lytReferencePreview)))) // find RecyclerView in EditEntityField
                 .check(RecyclerViewItemCountAssertion(expectedCount))
+    }
+
+    private fun assertIsVisible(viewId: Int) {
+        onView(withId(viewId)).check(matches(isDisplayed()))
+    }
+
+    private fun assertIsNotVisible(viewId: Int) {
+        onView(withId(viewId)).check(matches(not(isDisplayed())))
     }
 
 }
