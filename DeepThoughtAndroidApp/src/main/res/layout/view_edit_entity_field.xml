@@ -115,6 +115,7 @@
                 android:maxHeight="@dimen/view_edit_entity_field_icon_max_size"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
+                android:layout_marginTop="4dp"
                 android:layout_marginRight="@dimen/view_edit_entity_field_action_icon_margin_right"
                 android:layout_marginEnd="@dimen/view_edit_entity_field_action_icon_margin_right"
                 android:adjustViewBounds="true"
