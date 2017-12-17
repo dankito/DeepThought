@@ -5,6 +5,7 @@ import android.support.v7.widget.PopupMenu
 import android.util.AttributeSet
 import android.view.ViewGroup
 import net.dankito.deepthought.android.R
+import net.dankito.deepthought.android.extensions.setTintColor
 
 
 abstract class EditEntityEntityReferenceField : EditEntityField {
@@ -24,9 +25,10 @@ abstract class EditEntityEntityReferenceField : EditEntityField {
 
         this.disableActionOnKeyboard = true
 
-        showActionIconOnUiThread(android.R.drawable.ic_dialog_info) {
+        showActionIconOnUiThread(R.drawable.ic_more_vert_white_48dp, false) {
             showOptionsPopupMenu()
         }
+        btnEntityFieldAction.setTintColor(R.color.darker_gray)
     }
 
 
