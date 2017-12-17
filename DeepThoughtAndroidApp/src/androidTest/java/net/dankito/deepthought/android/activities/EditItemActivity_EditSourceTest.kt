@@ -172,7 +172,7 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
         onView(withId(R.id.mnSaveReference)).perform(click())
         TestUtil.sleep(1000)
 
-        checkDisplayedSourceValue(SourceTitleAfterEditingDetails)
+        checkDisplayedSourceValue(Source(SourceTitleAfterEditingDetails, "", PublishingDate).getPreviewWithSeriesAndPublishingDate(series))
 
         assertThat(testItem.source, `is`(source))
         assertThat(source.title, `is`(SourceTitleAfterEditingDetails))
