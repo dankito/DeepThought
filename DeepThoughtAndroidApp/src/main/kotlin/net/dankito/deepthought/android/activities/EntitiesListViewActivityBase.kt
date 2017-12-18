@@ -6,7 +6,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.fragments.EntitiesListViewFragment
 
 
-abstract class EntitiesListViewActivityBase<T : EntitiesListViewFragment<*>>(private val titleResourceId: Int, private val showToolbarAtBottom: Boolean = true) : BaseActivity() {
+abstract class EntitiesListViewActivityBase<T : EntitiesListViewFragment<*>>(private val titleResourceId: Int) : BaseActivity() {
 
     private lateinit var fragment: EntitiesListViewFragment<*>
 
@@ -21,12 +21,7 @@ abstract class EntitiesListViewActivityBase<T : EntitiesListViewFragment<*>>(pri
     }
 
     private fun setupUI() {
-        if(showToolbarAtBottom) {
-            setContentView(R.layout.dialog_entities_list_view)
-        }
-        else {
-            setContentView(R.layout.dialog_entities_list_view_toolbar_at_top)
-        }
+        setContentView(R.layout.dialog_entities_list_view)
 
         fragment = instantiateListViewFragment()
 
