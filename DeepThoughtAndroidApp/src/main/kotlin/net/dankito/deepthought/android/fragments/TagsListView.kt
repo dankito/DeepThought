@@ -26,7 +26,7 @@ import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
 
 
-class TagsListView : EntitiesListViewFragment<Tag>(R.menu.tag_contextual_action_menu, R.string.tab_tags_onboarding_text, hasToolbarMenu = false), ITagsListView {
+class TagsListView : EntitiesListViewFragment<Tag>(R.menu.tag_contextual_action_menu, R.string.tab_tags_onboarding_text), ITagsListView {
 
     @Inject
     protected lateinit var searchResultsUtil: TagsSearchResultsUtil
