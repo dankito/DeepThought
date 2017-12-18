@@ -91,6 +91,13 @@
         />
 
         <activity
+            android:name=".activities.TagsListViewActivity"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
+        />
+
+        <activity
             android:name=".activities.SourcesListViewActivity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar"

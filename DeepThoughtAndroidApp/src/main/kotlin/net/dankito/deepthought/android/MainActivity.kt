@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.view_floating_action_button_main.*
 import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.activities.ReadLaterArticlesListViewActivity
 import net.dankito.deepthought.android.activities.SourcesListViewActivity
+import net.dankito.deepthought.android.activities.TagsListViewActivity
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.TagsListViewDialog
 import net.dankito.deepthought.android.fragments.EntriesListView
@@ -196,7 +197,7 @@ class MainActivity : BaseActivity() {
 
     private val navigationListener = NavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
-            R.id.navTags -> TagsListViewDialog().show(supportFragmentManager)
+            R.id.navTags -> navigateToActivity(TagsListViewActivity::class.java)
 
             R.id.navSources -> navigateToActivity(SourcesListViewActivity::class.java)
 
