@@ -85,7 +85,7 @@ class TagsPreviewViewHelper {
         val replacementIndex = lastSearchTermStartIndex + 1
         val enteredTagName = enteredText.substring(replacementIndex)
         val enteredTagNameWithoutTagsSeparator = enteredTagName.trimEnd().replace(SearchEngineBase.TagsSearchTermSeparator, "")
-        val autoCompletedTagName = tag.name + SearchEngineBase.TagsSearchTermSeparator
+        val autoCompletedTagName = (if(lastSearchTermStartIndex <= 0) "" else " ") + tag.name + SearchEngineBase.TagsSearchTermSeparator + " "
 
         val autoCompletedText = enteredText.replaceRange(replacementIndex, enteredText.length, autoCompletedTagName)
 
