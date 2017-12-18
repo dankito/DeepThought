@@ -185,7 +185,7 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
         val tags = HashSet<Tag>()
 
         tags.addAll(adapter.tagsOnEntry)
-        tags.addAll(presenter.getTagsFromLastSearchResult(autoCompleteResult?.enteredTagNameWithoutTagsSeparator))
+        tags.addAll(presenter.getTagsFromLastSearchResult(autoCompleteResult?.enteredTagNameTrimmedWithoutTagsSeparator))
 
         return tags
     }
