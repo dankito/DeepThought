@@ -1,9 +1,11 @@
 package net.dankito.deepthought.android.views
 
 import android.content.Context
+import android.text.InputType
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import com.google.android.flexbox.FlexboxLayout
 import kotlinx.android.synthetic.main.view_edit_entity_field.view.*
 
@@ -27,6 +29,9 @@ abstract class EditEntityCollectionField : EditEntityField {
         this.disableActionOnKeyboard = true
 
         lytPreview = rootView.lytPreview
+
+        edtxtEntityFieldValue.inputType = InputType.TYPE_CLASS_TEXT
+        edtxtEntityFieldValue.imeOptions = EditorInfo.IME_FLAG_NO_EXTRACT_UI
 
         hideEditTextEntityFieldValue()
     }
