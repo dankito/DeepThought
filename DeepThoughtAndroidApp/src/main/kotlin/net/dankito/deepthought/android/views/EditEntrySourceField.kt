@@ -59,7 +59,7 @@ class EditEntrySourceField : EditEntityEntityReferenceField, IReferencesListView
 
         setFieldNameOnUiThread(R.string.activity_edit_item_source_label)
 
-        presenter = ReferencesListPresenter(this, router, searchEngine, clipboardService, deleteEntityService)
+        presenter = ReferencesListPresenter(this, searchEngine, router, clipboardService, deleteEntityService)
 
         existingSourcesSearchResultsAdapter = ReferenceOnEntryRecyclerAdapter(presenter)
         existingSourcesSearchResultsAdapter.itemClickListener = { item -> existingSourceSelected(item) }

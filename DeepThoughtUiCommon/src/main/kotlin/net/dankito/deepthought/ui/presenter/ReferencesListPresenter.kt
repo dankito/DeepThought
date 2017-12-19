@@ -8,21 +8,26 @@ import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.Search
+import net.dankito.service.search.specific.ReferenceSearch
 import net.dankito.utils.ui.IClipboardService
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class ReferencesListPresenter(private var view: IReferencesListView, router: IRouter, searchEngine: ISearchEngine,
+class ReferencesListPresenter(private var view: IReferencesListView, private val searchEngine: ISearchEngine, router: IRouter,
                               clipboardService: IClipboardService, deleteEntityService: DeleteEntityService)
-    : ReferencesPresenterBase(searchEngine, router, clipboardService, deleteEntityService), IMainViewSectionPresenter {
+    : ReferencesPresenterBase(router, clipboardService, deleteEntityService), IMainViewSectionPresenter {
 
 
     @Inject
     protected lateinit var eventBus: IEventBus
 
     private val eventBusListener = EventBusListener()
+
+
+    private var lastSearchTermProperty = Search.EmptySearchTerm
 
 
     init {
@@ -38,9 +43,18 @@ class ReferencesListPresenter(private var view: IReferencesListView, router: IRo
         searchReferences(lastSearchTermProperty)
     }
 
-    override fun retrievedSearchResults(result: List<Source>) {
-        super.retrievedSearchResults(result)
 
+    fun searchReferences(searchTerm: String, searchCompleted: ((List<Source>) -> Unit)? = null) {
+        lastSearchTermProperty = searchTerm
+
+        searchEngine.searchReferences(ReferenceSearch(searchTerm) { result ->
+            retrievedSearchResults(result)
+
+            searchCompleted?.invoke(result)
+        })
+    }
+
+    private fun retrievedSearchResults(result: List<Source>) {
         view.showEntities(result)
     }
 

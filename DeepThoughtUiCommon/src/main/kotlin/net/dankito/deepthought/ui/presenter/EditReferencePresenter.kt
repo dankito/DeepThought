@@ -1,19 +1,18 @@
 package net.dankito.deepthought.ui.presenter
 
-import net.dankito.deepthought.model.Source
-import net.dankito.deepthought.model.Series
-import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.data.ReferencePersister
+import net.dankito.deepthought.model.Series
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.data.DeleteEntityService
-import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.ui.IClipboardService
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-class EditReferencePresenter(searchEngine: ISearchEngine, router: IRouter, clipboardService: IClipboardService, deleteEntityService: DeleteEntityService,
-                             private val referencePersister: ReferencePersister) : ReferencesPresenterBase(searchEngine, router, clipboardService, deleteEntityService) {
+class EditReferencePresenter(router: IRouter, clipboardService: IClipboardService, deleteEntityService: DeleteEntityService,
+                             private val referencePersister: ReferencePersister) : ReferencesPresenterBase(router, clipboardService, deleteEntityService) {
 
     companion object {
         private val ShortDateFormat = DateFormat.getDateInstance(DateFormat.SHORT)

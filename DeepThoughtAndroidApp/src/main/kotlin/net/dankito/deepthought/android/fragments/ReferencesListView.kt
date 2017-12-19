@@ -44,7 +44,7 @@ class ReferencesListView: EntitiesListViewFragment<Source>(R.menu.reference_cont
     init {
         AppComponent.component.inject(this)
 
-        presenter = ReferencesListPresenter(this, router, searchEngine, clipboardService, deleteEntityService)
+        presenter = ReferencesListPresenter(this, searchEngine, router, clipboardService, deleteEntityService)
 
         adapter = ReferenceRecyclerAdapter(presenter)
     }

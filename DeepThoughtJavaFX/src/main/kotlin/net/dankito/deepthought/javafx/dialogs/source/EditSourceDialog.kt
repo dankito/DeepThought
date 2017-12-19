@@ -13,7 +13,6 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditReferencePresenter
 import net.dankito.service.data.DeleteEntityService
-import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.ui.IClipboardService
 import tornadofx.*
 import javax.inject.Inject
@@ -23,9 +22,6 @@ class EditSourceDialog : DialogFragment() {
 
     @Inject
     protected lateinit var referencePersister: ReferencePersister
-
-    @Inject
-    protected lateinit var searchEngine: ISearchEngine
 
     @Inject
     protected lateinit var router: IRouter
@@ -59,7 +55,7 @@ class EditSourceDialog : DialogFragment() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = EditReferencePresenter(searchEngine, router, clipboardService, deleteEntityService, referencePersister)
+        presenter = EditReferencePresenter(router, clipboardService, deleteEntityService, referencePersister)
     }
 
 

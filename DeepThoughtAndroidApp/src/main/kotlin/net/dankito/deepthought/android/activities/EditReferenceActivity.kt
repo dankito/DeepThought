@@ -25,7 +25,6 @@ import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.ReferenceChanged
 import net.dankito.service.eventbus.IEventBus
-import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogButton
@@ -57,9 +56,6 @@ class EditReferenceActivity : BaseActivity() {
 
     @Inject
     protected lateinit var referencePersister: ReferencePersister
-
-    @Inject
-    protected lateinit var searchEngine: ISearchEngine
 
     @Inject
     protected lateinit var router: IRouter
@@ -104,7 +100,7 @@ class EditReferenceActivity : BaseActivity() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = EditReferencePresenter(searchEngine, router, clipboardService, deleteEntityService, referencePersister)
+        presenter = EditReferencePresenter(router, clipboardService, deleteEntityService, referencePersister)
 
         existingReferencesSearchResultsAdapter = ReferenceOnEntryRecyclerAdapter(presenter)
     }
