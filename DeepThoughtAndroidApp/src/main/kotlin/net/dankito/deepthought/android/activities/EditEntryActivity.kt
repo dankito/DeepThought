@@ -1139,6 +1139,12 @@ class EditEntryActivity : BaseActivity() {
                 return
             }
         }
+        else if(lytReferencePreview.handlesBackButtonPress()) {
+            return
+        }
+        else if(lytTagsPreview.handlesBackButtonPress()) {
+            return
+        }
 
         askIfUnsavedChangesShouldBeSavedAndCloseDialog()
     }

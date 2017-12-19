@@ -296,4 +296,15 @@ open class EditEntityField : RelativeLayout {
     }
 
 
+    fun handlesBackButtonPress(): Boolean {
+        if(rcySearchResult.visibility == View.VISIBLE) {
+            hideSearchResultsView()
+
+            return true
+        }
+
+        return false
+    }
+
+
 }
