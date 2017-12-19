@@ -23,6 +23,9 @@ abstract class EditEntityCollectionField : EditEntityField {
     private var lastSearchTerm = ""
 
 
+    abstract fun searchEntities(searchTerm: String)
+
+
     override fun doCustomUiInitialization(rootView: ViewGroup) {
         super.doCustomUiInitialization(rootView)
 
@@ -81,7 +84,5 @@ abstract class EditEntityCollectionField : EditEntityField {
             searchEntities(enteredText)
         }
     }
-
-    abstract fun searchEntities(searchTerm: String)
 
 }
