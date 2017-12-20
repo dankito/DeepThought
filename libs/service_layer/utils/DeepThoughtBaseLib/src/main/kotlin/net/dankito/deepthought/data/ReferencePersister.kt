@@ -1,8 +1,8 @@
 package net.dankito.deepthought.data
 
 import net.dankito.deepthought.di.BaseComponent
-import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Series
+import net.dankito.deepthought.model.Source
 import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.SeriesService
 import net.dankito.utils.IThreadPool
@@ -31,11 +31,15 @@ class ReferencePersister(private val referenceService: ReferenceService, private
     }
 
     fun saveReference(source: Source, series: Series?, doChangesAffectDependentEntities: Boolean = true): Boolean {
+        if(series != null && series.isPersisted() == false) { // if series has been newly created but not persisted yet
+            seriesService.persist(series)
+        }
+
         if(source.series != null && source.series?.isPersisted() == false) { // series has been deleted in the meantime
             source.series?.let { series ->
                 source.series = null
 
-                seriesService.persist(series)
+                seriesService.persist(series) // TODO: but why saving it then again?
 
                 source.series = series
             }
@@ -52,15 +56,15 @@ class ReferencePersister(private val referenceService: ReferenceService, private
             source.series = series
         }
 
-        val isReferencePersisted = source.isPersisted()
-        if(isReferencePersisted == false) {
+        val wasSourcePersisted = source.isPersisted()
+        if(wasSourcePersisted == false) {
             referenceService.persist(source)
         }
         else {
             referenceService.update(source, doChangesAffectDependentEntities)
         }
 
-        if(series?.id != previousSeries?.id || isReferencePersisted == false) {
+        if(series?.id != previousSeries?.id || wasSourcePersisted == false) {
             series?.let { seriesService.update(series) } // source is now persisted so series needs an update to store source's id
         }
 
