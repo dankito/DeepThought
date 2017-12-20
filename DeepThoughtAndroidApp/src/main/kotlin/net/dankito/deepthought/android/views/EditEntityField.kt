@@ -298,7 +298,7 @@ open class EditEntityField : RelativeLayout {
 
     fun handlesBackButtonPress(): Boolean {
         if(rcySearchResult.visibility == View.VISIBLE) {
-            hideSearchResultsView()
+            stopEditing()
 
             return true
         }
