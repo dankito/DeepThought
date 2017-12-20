@@ -119,6 +119,8 @@ class EditEntrySourceField : EditEntityEntityReferenceField, IReferencesListView
 
     override fun createNewEntity() {
         sourceChanged(Source(""))
+
+        startEditing()
     }
 
     override fun removeEntity() {
