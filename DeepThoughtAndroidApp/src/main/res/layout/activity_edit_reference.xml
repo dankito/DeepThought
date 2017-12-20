@@ -43,7 +43,7 @@
                     android:layout_alignParentTop="true"
                 />
 
-                <net.dankito.deepthought.android.views.EditEntityField
+                <net.dankito.deepthought.android.views.EditSourceSeriesField
                     android:id="@+id/lytEditReferenceSeries"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

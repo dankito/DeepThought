@@ -20,6 +20,7 @@ import net.dankito.deepthought.android.service.SnackbarService
 import net.dankito.deepthought.android.service.network.NetworkConnectivityChangeBroadcastReceiver
 import net.dankito.deepthought.android.views.EditEntityTagsField
 import net.dankito.deepthought.android.views.EditEntrySourceField
+import net.dankito.deepthought.android.views.EditSourceSeriesField
 import net.dankito.deepthought.di.BaseModule
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.di.CommonDataModule
@@ -92,6 +93,8 @@ interface AppComponent : CommonComponent {
     fun inject(editEntityTagsField: EditEntityTagsField)
 
     fun inject(editEntrySourceField: EditEntrySourceField)
+
+    fun inject(editSourceSeriesField: EditSourceSeriesField)
 
     fun inject(editReferenceActivity: EditReferenceActivity)
 

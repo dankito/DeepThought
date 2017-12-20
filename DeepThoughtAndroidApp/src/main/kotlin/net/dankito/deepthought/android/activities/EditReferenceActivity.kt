@@ -142,14 +142,17 @@ class EditReferenceActivity : BaseActivity() {
 
             savedInstanceState.getString(ORIGINALLY_SET_REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME)?.let { originallySetSeriesId ->
                 this.originallySetSeries = seriesService.retrieve(originallySetSeriesId)
+                lytEditReferenceSeries.setOriginalSeriesToEdit(originallySetSeries, this) { setSeriesToEdit(it) }
             }
 
             val seriesId = savedInstanceState.getString(REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME)
             if(seriesId != null) {
-                setAndShowSeriesOnUiThread(seriesId)
+                seriesService.retrieve(seriesId)?.let { series ->
+                    lytEditReferenceSeries.seriesChanged(series)
+                }
             }
             else {
-                setAndShowSeriesOnUiThread(null)
+                lytEditReferenceSeries.seriesChanged(null)
             }
 
             updateDidReferenceChangeOnUiThread()
@@ -170,8 +173,7 @@ class EditReferenceActivity : BaseActivity() {
 
         lytEditReferenceTitle.setFieldNameOnUiThread(R.string.activity_edit_source_title_label) { updateDidReferenceChangeOnUiThread(SourceField.Title, it) }
 
-        lytEditReferenceSeries.setFieldNameOnUiThread(R.string.activity_edit_source_series_label, false)
-        lytEditReferenceSeries.fieldClickedListener = { editSeries() }
+        lytEditReferenceSeries.didValueChangeListener = { didSeriesTitleChange -> seriesTitleChanged(didSeriesTitleChange) }
 
         lytEditReferenceIssue.setFieldNameOnUiThread(R.string.activity_edit_source_issue_label) { updateDidReferenceChangeOnUiThread(SourceField.Issue, it) }
 
@@ -186,17 +188,22 @@ class EditReferenceActivity : BaseActivity() {
         lytEditReferenceUrl.setFieldNameOnUiThread(R.string.activity_edit_source_url_label) { updateDidReferenceChangeOnUiThread(SourceField.Url, it) }
     }
 
+    private fun seriesTitleChanged(didSeriesTitleChange: Boolean) {
+        updateDidReferenceChangeOnUiThread(SourceField.SeriesTitle, didSeriesTitleChange)
+    }
+
+    private fun setSeriesToEdit(series: Series?) {
+        this.currentlySetSeries = series
+
+        updateDidReferenceChangeOnUiThread(SourceField.Series, series?.id != originallySetSeries?.id)
+    }
+
 
     override fun onResume() {
         super.onResume()
 
         (getAndClearResult(EditSeriesActivity.ResultId) as? EditSeriesActivityResult)?.let { result ->
-            if(result.didSaveSeries) {
-                result.savedSeries?.let { savedSeriesOnUiThread(it) }
-            }
-            if(result.didDeleteSeries) {
-                setAndShowSeriesOnUiThread(null)
-            }
+            lytEditReferenceSeries.editingSeriesDone(result)
         }
 
         (supportFragmentManager.findFragmentByTag(PickDateDialog.TAG) as? PickDateDialog)?.let { dialog ->
@@ -220,6 +227,10 @@ class EditReferenceActivity : BaseActivity() {
 
 
     override fun onBackPressed() {
+        if(lytEditReferenceSeries.handlesBackButtonPress()) {
+            return
+        }
+
         askIfUnsavedChangesShouldBeSavedAndCloseDialog()
     }
 
@@ -247,20 +258,6 @@ class EditReferenceActivity : BaseActivity() {
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-
-    private fun editSeries() {
-        source?.let {
-            setWaitingForResult(EditSeriesActivity.ResultId)
-
-            presenter.editSeries(it, currentlySetSeries)
-        }
-    }
-
-    private fun savedSeriesOnUiThread(series: Series) {
-        // do not set series directly on source as if source is not saved yet adding it to series.sources causes an error
-        setAndShowSeriesOnUiThread(series)
     }
 
 
@@ -306,6 +303,10 @@ class EditReferenceActivity : BaseActivity() {
 
     private fun saveReferenceAsync(callback: (Boolean) -> Unit) {
         source?.let { reference ->
+            if(changedFields.contains(SourceField.SeriesTitle)) {
+                currentlySetSeries?.title = lytEditReferenceSeries.getEditedValue() ?: ""
+            }
+
             reference.title = lytEditReferenceTitle.getCurrentFieldValue()
             reference.issue = if(lytEditReferenceIssue.getCurrentFieldValue().isNullOrBlank()) null else lytEditReferenceIssue.getCurrentFieldValue()
             reference.url = if(lytEditReferenceUrl.getCurrentFieldValue().isNullOrBlank()) null else lytEditReferenceUrl.getCurrentFieldValue()
@@ -410,7 +411,7 @@ class EditReferenceActivity : BaseActivity() {
 
         lytEditReferenceTitle.setFieldValueOnUiThread(editedSourceTitle ?: source.title)
 
-        setAndShowSeriesOnUiThread(series ?: source.series)
+        lytEditReferenceSeries.setOriginalSeriesToEdit(series ?: source.series, this) { setSeriesToEdit(it) }
 
         lytEditReferenceIssue.setFieldValueOnUiThread(source.issue ?: "")
         showPublishingDate(source.publishingDate, source.publishingDateString)
@@ -419,29 +420,6 @@ class EditReferenceActivity : BaseActivity() {
 
         unregisterEventBusListener() // TODO: why? i came here from showParameters() and then we need to listen to changes to Source
         updateDidReferenceChangeOnUiThread()
-    }
-
-    private fun setAndShowSeriesOnUiThread(seriesId: String) {
-        seriesService.retrieve(seriesId)?.let { series ->
-            setAndShowSeriesOnUiThread(series)
-        }
-    }
-
-    private fun setAndShowSeriesOnUiThread(series: Series?) {
-        this.currentlySetSeries = series
-
-        if(series != null) {
-            lytEditReferenceSeries.setFieldValueOnUiThread(series.title)
-            lytEditReferenceSeries.showActionIconOnUiThread(android.R.drawable.ic_delete, false) {
-                setAndShowSeriesOnUiThread(null)
-            }
-        }
-        else {
-            lytEditReferenceSeries.setFieldValueOnUiThread("")
-            lytEditReferenceSeries.showActionIconOnUiThread(R.drawable.ic_search_white_48dp) { editSeries() }
-        }
-
-        updateDidReferenceChangeOnUiThread(SourceField.Series, series?.id != originallySetSeries?.id)
     }
 
     private fun showPublishingDate(publishingDate: Date?, publishingDateString: String? = null) {

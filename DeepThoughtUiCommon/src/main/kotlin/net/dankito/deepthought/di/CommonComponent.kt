@@ -22,6 +22,8 @@ interface CommonComponent : BaseComponent {
 
     fun inject(referencesListPresenter: ReferencesListPresenter)
 
+    fun inject(seriesListPresenter: SeriesListPresenter)
+
     fun inject(articleSummaryExtractorConfigManager: ArticleSummaryExtractorConfigManager)
 
     fun inject(articleSummaryPresenter: ArticleSummaryPresenter)
