@@ -20,8 +20,8 @@ class EditEntryActivityFloatingActionMenuButton(floatingActionMenu: FloatingActi
     }
 
 
-    fun setVisibilityOnUIThread(isInFullscreenMode: Boolean = false, hasUserEverEnteredSomeContent: Boolean) {
-        if(isInFullscreenMode) {
+    fun setVisibilityOnUIThread(forceHidingFloatingActionButton: Boolean = false, hasUserEverEnteredSomeContent: Boolean) {
+        if(forceHidingFloatingActionButton) {
             floatingActionMenu.floatingActionMenu.visibility = View.GONE
         }
         else if(hasUserEverEnteredSomeContent && isAnyFloatingActionMenuButtonVisible()) {

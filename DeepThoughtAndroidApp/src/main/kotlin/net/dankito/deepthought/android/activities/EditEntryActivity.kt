@@ -173,6 +173,8 @@ class EditEntryActivity : BaseActivity() {
 
     private var isLoadingUrl = false
 
+    private var isEditingTagsOnItem = false
+
 
     private val contextHelpUtil = ContextHelpUtil()
 
@@ -850,7 +852,7 @@ class EditEntryActivity : BaseActivity() {
             lytAbstractPreview.setFieldValueOnUiThread(abstractToEdit.getPlainTextForHtml())
         }
 
-        val showAbstractPreview = (this.forceShowAbstractPreview || abstractToEdit.isNullOrBlank() == false) && lytAbstractPreview.y >= 0 // y >= 0: after animating preview out to edit tags y is smaller than 0
+        val showAbstractPreview = (this.forceShowAbstractPreview || abstractToEdit.isNullOrBlank() == false) && isEditingTagsOnItem == false
 
         lytAbstractPreview.visibility = if(showAbstractPreview) View.VISIBLE else View.GONE
         if(fabEditEntryAbstract.visibility != View.INVISIBLE) { // visibility already set by FloatingActionMenu
@@ -864,7 +866,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setReferencePreviewOnUIThread() {
-        val showReferencePreview = (this.forceShowReferencePreview || sourceToEdit != null) && lytReferencePreview.y >= 0 // y >= 0: after animating preview out to edit tags y is smaller than 0
+        val showReferencePreview = (this.forceShowReferencePreview || sourceToEdit != null) && isEditingTagsOnItem == false
 
         lytReferencePreview.visibility = if(showReferencePreview) View.VISIBLE else View.GONE
         if(fabEditEntryReference.visibility != View.INVISIBLE) { // visibility already set by FloatingActionMenu
@@ -896,9 +898,14 @@ class EditEntryActivity : BaseActivity() {
                     playHideOtherItemFieldsPreviewExceptTagsAnimation()
                 }
             }
+
+            isEditingTagsOnItem = true
+            setFloatingActionButtonVisibilityOnUIThread()
         }
         else {
+            isEditingTagsOnItem = false
             restoreLayoutEntryFieldsPreview()
+            setFloatingActionButtonVisibilityOnUIThread()
         }
     }
 
@@ -1000,11 +1007,11 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setFloatingActionButtonVisibilityOnUIThread() {
+        val forceHidingFloatingActionButton = wbvwContent.isInFullscreenMode || isEditingContent() || isEditingTagsOnItem || lytContextHelpReaderView.visibility == View.VISIBLE
         // when user comes to EditEntryDialog, don't show floatingActionMenu till some content has been entered. She/he should focus on the content
         val hasUserEverEnteredSomeContent = dataManager.localSettings.didShowAddItemPropertiesHelp || contentToEdit.isNullOrBlank() == false
 
-        floatingActionMenu.setVisibilityOnUIThread(wbvwContent.isInFullscreenMode || isEditingContent() || lytContextHelpReaderView.visibility == View.VISIBLE,
-                hasUserEverEnteredSomeContent)
+        floatingActionMenu.setVisibilityOnUIThread(forceHidingFloatingActionButton, hasUserEverEnteredSomeContent)
     }
 
 
