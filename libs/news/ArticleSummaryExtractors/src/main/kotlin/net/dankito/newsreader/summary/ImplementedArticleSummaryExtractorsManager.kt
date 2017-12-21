@@ -18,6 +18,8 @@ class ImplementedArticleSummaryExtractorsManager(val webClient: IWebClient) : II
         extractors.put(HeiseDeveloperArticleSummaryExtractor::class.java, HeiseDeveloperArticleSummaryExtractor(webClient))
         extractors.put(GuardianArticleSummaryExtractor::class.java, GuardianArticleSummaryExtractor(webClient))
         extractors.put(PostillonArticleSummaryExtractor::class.java, PostillonArticleSummaryExtractor(webClient))
+        extractors.put(LeMondeDiplomatiqueEnglishEditionArticleSummaryExtractor::class.java, LeMondeDiplomatiqueEnglishEditionArticleSummaryExtractor(webClient))
+        extractors.put(LeMondeDiplomatiqueArticleSummaryExtractor::class.java, LeMondeDiplomatiqueArticleSummaryExtractor(webClient))
     }
 
 
