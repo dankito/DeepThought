@@ -152,7 +152,7 @@
     <string name="activity_edit_item_edit_source_menu_create_new_entity">New one …</string>
     <string name="activity_edit_item_edit_source_menu_remove_entity">Clear</string>
     <string name="activity_edit_item_tags_label">Tags</string>
-    <string name="activity_edit_item_edit_tags_hint">Separate tags with comma, Enter for auto complete</string>
+    <string name="activity_edit_item_edit_tags_hint">Separate tags with comma, auto complete with Enter</string>
     <string name="activity_edit_item_tags_onboarding_text">Add meaningful tags, so that you can find it later easily</string>
     <string name="activity_edit_item_source_onboarding_text">Save where you have found this information (link, book)</string>
     <string name="activity_edit_item_summary_onboarding_text">Title or summary for this information</string>
