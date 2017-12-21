@@ -37,7 +37,7 @@ abstract class ArticleExtractorTestBase {
             countDownLatch.countDown()
         }
 
-        countDownLatch.await(20, TimeUnit.MINUTES)
+        countDownLatch.await(20, TimeUnit.SECONDS)
 
         return extractionResult
     }
