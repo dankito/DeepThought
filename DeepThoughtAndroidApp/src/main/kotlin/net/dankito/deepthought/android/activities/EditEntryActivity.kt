@@ -361,6 +361,11 @@ class EditEntryActivity : BaseActivity() {
             updateEntryFieldChangedOnUIThread(ItemField.Tags, didTagsChange)
         }
         lytTagsPreview.fieldValueFocusChangedListener = { hasFocus -> tagsPreviewFocusChanged(hasFocus) }
+        lytTagsPreview.saveChangesListener = {
+            if(mnSaveEntry?.isEnabled == true) {
+                saveEntryAndCloseDialog()
+            }
+        }
 
         wbvwContent?.requestFocus() // avoid that lytAbstractPreview gets focus and keyboard therefore gets show on activity start
 

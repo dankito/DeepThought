@@ -15,10 +15,16 @@ import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.SearchEngineBase
 import net.dankito.utils.ui.IDialogService
+import java.util.*
 import javax.inject.Inject
 
 
 class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
+
+    companion object {
+        private val DoubleTapMaxDelayMillis = 500L
+    }
+
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -42,6 +48,8 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
     protected lateinit var dialogService: IDialogService
 
 
+    var saveChangesListener: (() -> Unit)? = null
+
 
     private val presenter: TagsOnEntryListPresenter
 
@@ -50,6 +58,8 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
     private var originalTagsOnEntry: MutableCollection<Tag> = ArrayList<Tag>()
 
     private var autoCompleteResult: TagAutoCompleteResult? = null
+
+    private var lastActionPressTime = Date()
 
     private var activity: BaseActivity? = null
 
@@ -104,11 +114,23 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
 
 
     override fun handleActionPressed(): Boolean {
-        presenter.getFirstTagOfLastSearchResult()?.let { firstTagSearchResult ->
-            addTag(firstTagSearchResult)
+        val previousActionPressTime = lastActionPressTime
+        lastActionPressTime = Date()
+
+        if(wasDoubleTap(lastActionPressTime, previousActionPressTime)) {
+            saveChangesListener?.invoke()
+        }
+        else {
+            presenter.getFirstTagOfLastSearchResult()?.let { firstTagSearchResult ->
+                addTag(firstTagSearchResult)
+            }
         }
 
         return true
+    }
+
+    private fun wasDoubleTap(currentActionPressTime: Date, previousActionPressTime: Date): Boolean {
+        return currentActionPressTime.time - previousActionPressTime.time <= DoubleTapMaxDelayMillis
     }
 
     private fun tagAddedOrRemoved(tagChange: TagsOnEntryRecyclerAdapter.TagChange, tag: Tag) {
