@@ -123,8 +123,6 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
     }
 
     private fun addTag(tag: Tag) {
-        adapter.tagsOnEntry.add(tag)
-
         if(this.autoCompleteResult == null) { // auto complete already applied, now an additional tag gets added but we cannot replace enteredTagName anymore
             val autoCompleteResult = tagsPreviewViewHelper.autoCompleteEnteredTextForTag(getCurrentFieldValue(), tag)
             this.autoCompleteResult = autoCompleteResult
@@ -145,7 +143,7 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
     private fun removeLastAutoCompletedTag(autoCompleteResult: TagAutoCompleteResult, removedTag: Tag): Boolean {
         try {
             val stringToTest = getCurrentFieldValue().substring(autoCompleteResult.replacementIndex)
-            if(stringToTest == autoCompleteResult.autoCompletedTagName && autoCompleteResult.autoCompletedTagName.contains(removedTag.name, true)) {
+            if(stringToTest == autoCompleteResult.autoCompletedTagName && autoCompleteResult.autoCompletedTagNameTrimmedWithoutTagsSeparator.contains(removedTag.name, true)) {
                 setEditTextEntityFieldValueOnUiThread(autoCompleteResult.enteredText)
 
                 this.autoCompleteResult = null // reset autoCompleteResult so if another auto completion is applied autoCompleteResult gets newly set
@@ -186,6 +184,10 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
 
         tags.addAll(adapter.tagsOnEntry)
         tags.addAll(presenter.getTagsFromLastSearchResult(autoCompleteResult?.enteredTagNameTrimmedWithoutTagsSeparator))
+
+        autoCompleteResult?.let {
+            tags.add(Tag(it.autoCompletedTagNameTrimmedWithoutTagsSeparator))
+        }
 
         return tags
     }
