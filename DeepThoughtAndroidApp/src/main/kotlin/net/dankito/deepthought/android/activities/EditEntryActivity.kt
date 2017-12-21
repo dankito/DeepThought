@@ -845,7 +845,7 @@ class EditEntryActivity : BaseActivity() {
             lytAbstractPreview.setFieldValueOnUiThread(abstractToEdit.getPlainTextForHtml())
         }
 
-        val showAbstractPreview = this.forceShowAbstractPreview || abstractToEdit.isNullOrBlank() == false
+        val showAbstractPreview = (this.forceShowAbstractPreview || abstractToEdit.isNullOrBlank() == false) && lytAbstractPreview.y >= 0 // y >= 0: after animating preview out to edit tags y is smaller than 0
 
         lytAbstractPreview.visibility = if(showAbstractPreview) View.VISIBLE else View.GONE
         if(fabEditEntryAbstract.visibility != View.INVISIBLE) { // visibility already set by FloatingActionMenu
@@ -859,7 +859,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun setReferencePreviewOnUIThread() {
-        val showReferencePreview = this.forceShowReferencePreview || sourceToEdit != null
+        val showReferencePreview = (this.forceShowReferencePreview || sourceToEdit != null) && lytReferencePreview.y >= 0 // y >= 0: after animating preview out to edit tags y is smaller than 0
 
         lytReferencePreview.visibility = if(showReferencePreview) View.VISIBLE else View.GONE
         if(fabEditEntryReference.visibility != View.INVISIBLE) { // visibility already set by FloatingActionMenu
