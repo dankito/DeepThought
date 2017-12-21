@@ -36,6 +36,7 @@ class ArticleExtractors(webClient: IWebClient) {
         implementedExtractors.put(GuardianArticleExtractor::class.java, GuardianArticleExtractor(webClient))
         implementedExtractors.put(PostillonArticleExtractor::class.java, PostillonArticleExtractor(webClient))
         implementedExtractors.put(TagesschauArticleExtractor::class.java, TagesschauArticleExtractor(webClient))
+        implementedExtractors.put(LeMondeDiplomatiqueArticleExtractor::class.java, LeMondeDiplomatiqueArticleExtractor(webClient))
 
         implementedExtractors.put(ChefkochArticleExtractor::class.java, ChefkochArticleExtractor(webClient))
         implementedExtractors.put(KochbarArticleExtractor::class.java, KochbarArticleExtractor(webClient))
