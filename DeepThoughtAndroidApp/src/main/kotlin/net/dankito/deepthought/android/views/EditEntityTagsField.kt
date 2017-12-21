@@ -137,15 +137,15 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
     private fun removeRemovedTagFromEnteredSearchTerm(removedTag: Tag) {
         val autoCompleteResult = this.autoCompleteResult
 
-        if(autoCompleteResult == null || removeLastAutoCompletedTag(autoCompleteResult) == false) {
+        if(autoCompleteResult == null || removeLastAutoCompletedTag(autoCompleteResult, removedTag) == false) {
             removeRemovedTagFromEditTextEntityFieldValue(removedTag)
         }
     }
 
-    private fun removeLastAutoCompletedTag(autoCompleteResult: TagAutoCompleteResult): Boolean {
+    private fun removeLastAutoCompletedTag(autoCompleteResult: TagAutoCompleteResult, removedTag: Tag): Boolean {
         try {
             val stringToTest = getCurrentFieldValue().substring(autoCompleteResult.replacementIndex)
-            if(stringToTest == autoCompleteResult.autoCompletedTagName) {
+            if(stringToTest == autoCompleteResult.autoCompletedTagName && autoCompleteResult.autoCompletedTagName.contains(removedTag.name, true)) {
                 setEditTextEntityFieldValueOnUiThread(autoCompleteResult.enteredText)
 
                 this.autoCompleteResult = null // reset autoCompleteResult so if another auto completion is applied autoCompleteResult gets newly set
