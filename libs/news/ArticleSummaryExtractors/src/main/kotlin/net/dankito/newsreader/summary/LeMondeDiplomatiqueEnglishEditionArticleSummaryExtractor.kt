@@ -7,7 +7,7 @@ class LeMondeDiplomatiqueEnglishEditionArticleSummaryExtractor(webClient: IWebCl
 
 
     override fun getName(): String {
-        return "Le Monde diplomatique - English edition"
+        return "Le Monde diplomatique English"
     }
 
     override fun getUrl(): String {
