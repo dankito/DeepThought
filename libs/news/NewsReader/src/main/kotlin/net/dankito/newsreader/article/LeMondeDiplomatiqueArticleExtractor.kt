@@ -47,10 +47,39 @@ class LeMondeDiplomatiqueArticleExtractor(webClient: IWebClient) : ArticleExtrac
                         }
                     }
 
+                    getScriptForPodcast(document, url)?.let {
+                        content = it + content
+                    }
+
                     extractionResult.setExtractedContent(Item(content), source)
                 }
             }
         }
+    }
+
+    private fun getScriptForPodcast(document: Document, url: String): String? {
+        var isPodcastArticle = false
+        var podcastScripts = ""
+
+        document.select("script").forEach { scriptElement ->
+            if (scriptElement.attr("src").contains("soundmanager")) {
+                podcastScripts += scriptElement.outerHtml()
+
+                isPodcastArticle = true
+            }
+            else if (scriptElement.html().contains("jQuery")) {
+                // to avoid 'Uncaught ReferenceError: photoswipe is not defined'
+                podcastScripts += "<script type=\"text/javascript\">photoswipe = { };</script>" +
+                        scriptElement.outerHtml()
+            }
+        }
+
+
+        if(isPodcastArticle) {
+            return podcastScripts
+        }
+
+        return null
     }
 
     private fun extractSource(cartouche: Element, document: Document, url: String): Source {
