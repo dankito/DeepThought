@@ -52,14 +52,16 @@ class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryList
 
     fun getFirstTagOfLastSearchResult(): Tag? {
         lastTagsSearchResults?.lastResult?.let { lastResult ->
-            if(lastResult.hasExactMatches()) {
-                return lastResult.exactMatches[0]
-            }
-            else if(lastResult.hasSingleMatch()) {
-                return lastResult.getSingleMatch()
-            }
-            else if(lastResult.allMatches.size > 0) {
-                return lastResult.allMatches[0]
+            if(lastResult.searchTerm.isNotBlank()) { // disables auto complete when no search term has been entered
+                if(lastResult.hasExactMatches()) {
+                    return lastResult.exactMatches[0]
+                }
+                else if(lastResult.hasSingleMatch()) {
+                    return lastResult.getSingleMatch()
+                }
+                else if(lastResult.allMatches.size > 0) {
+                    return lastResult.allMatches[0]
+                }
             }
         }
 
