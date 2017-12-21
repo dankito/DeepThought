@@ -207,11 +207,21 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
         tags.addAll(adapter.tagsOnEntry)
         tags.addAll(presenter.getTagsFromLastSearchResult(autoCompleteResult?.enteredTagNameTrimmedWithoutTagsSeparator))
 
-        autoCompleteResult?.let {
-            tags.add(Tag(it.autoCompletedTagNameTrimmedWithoutTagsSeparator))
-        }
+        addAutoCompletedTag(tags)
 
         return tags
+    }
+
+    private fun addAutoCompletedTag(tags: HashSet<Tag>) {
+        autoCompleteResult?.let { autoCompleteResult ->
+            tags.forEach { tag ->
+                if(tag.name == autoCompleteResult.autoCompletedTagNameTrimmedWithoutTagsSeparator) {
+                    return // don't add tag twice, e.g. in persisted version and an unpersisted version below
+                }
+            }
+
+            tags.add(Tag(autoCompleteResult.autoCompletedTagNameTrimmedWithoutTagsSeparator))
+        }
     }
 
     private fun setTagsOnEntryPreviewOnUIThread(tagsOnEntry: Collection<Tag>) {
