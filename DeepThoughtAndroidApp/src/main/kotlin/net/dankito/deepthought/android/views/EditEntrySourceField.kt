@@ -137,6 +137,7 @@ class EditEntrySourceField : EditEntityEntityReferenceField, IReferencesListView
 
     fun editingSourceDone(result: EditReferenceActivityResult) {
         if(result.didSaveReference) {
+            this.series = result.savedSource?.series // Series may got updated or has changed
             setFieldValueForCurrentSourceOnUiThread()
         }
         else if(result.didDeleteReference) {
