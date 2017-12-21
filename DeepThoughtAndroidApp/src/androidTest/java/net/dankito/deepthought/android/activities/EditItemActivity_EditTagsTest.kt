@@ -568,6 +568,8 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
     }
 
     private fun checkDisplayedTagsValue(tagsDisplayName: String) {
+        removeWhitespacesEnteredByKeyboardApp() // my keyboard app enters after each comma a white space
+
         checkDisplayedValueInEditEntityField(tagsDisplayName, R.id.lytTagsPreview)
     }
 
