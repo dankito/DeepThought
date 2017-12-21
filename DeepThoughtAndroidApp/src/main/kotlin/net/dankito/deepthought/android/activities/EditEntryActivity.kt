@@ -1124,6 +1124,10 @@ class EditEntryActivity : BaseActivity() {
                     .getMethod("onPause")
                     .invoke(wbvwContent)
 
+            Class.forName("android.webkit.WebView")
+                    .getMethod("destroy") // so that also pod casts are for sure stopped
+                    .invoke(wbvwContent)
+
         } catch(ignored: Exception) { }
     }
 
