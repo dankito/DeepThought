@@ -36,21 +36,28 @@
         <item
             android:id="@+id/navArticleSummaryExtractors"
             android:icon="@drawable/ic_menu_send"
-            android:title="@string/nav_menu_article_summary_extractors_title"/>
+            android:title="@string/nav_menu_article_summary_extractors_title"
+        />
 
         <item
             android:id="@+id/navDeviceManagement"
             android:icon="@drawable/ic_android"
-            android:title="@string/nav_menu_device_management_title"/>
+            android:title="@string/nav_menu_device_management_title"
+            android:visible="false"
+        />
 
         <item
             android:id="@+id/navSettings"
             android:icon="@drawable/ic_menu_manage"
-            android:title="@string/nav_menu_settings_title"/>
+            android:title="@string/nav_menu_settings_title"
+            android:visible="false"
+        />
 
         <item
             android:id="@+id/navAbout"
-            android:title="@string/nav_menu_about_title"/>
+            android:title="@string/nav_menu_about_title"
+            android:visible="false"
+        />
 
     </group>
 
