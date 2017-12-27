@@ -720,7 +720,7 @@ class EditEntryActivity : BaseActivity() {
         }
         else {
             mnSaveEntry?.isVisible = item == null // ItemExtractionResult and ReadLaterArticle always can be saved
-                    || changedFields.size > 0
+                    || item?.isPersisted() == false || changedFields.size > 0
         }
     }
 
