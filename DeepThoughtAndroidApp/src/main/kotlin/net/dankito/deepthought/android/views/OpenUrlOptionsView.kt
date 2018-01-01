@@ -123,11 +123,6 @@ class OpenUrlOptionsView {
             textView.height = height
             textView.width = calculateItemWidth(parent?.context!!)
 
-            textView.layoutParams?.let { layoutParams ->
-                layoutParams.height = height
-                layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-            }
-
             textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18f)
             textView.gravity = Gravity.CENTER_VERTICAL
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -147,7 +142,7 @@ class OpenUrlOptionsView {
             val density = context.resources.displayMetrics.density
 
             return count * calculateItemHeight(density) +
-                    (count + 1) * (3 * density).toInt() // ListView adds a space of 1dp between two items
+                    (count + 1) * (3 * density).toInt() // ListView adds a space of 1dp between two items plus a padding at top and end of ListView
         }
 
         private fun calculateItemHeight(density: Float) = (50 * density).toInt()
