@@ -92,7 +92,7 @@ class TagsPreviewViewHelper {
         val autoCompletedText = enteredText.replaceRange(replacementIndex, enteredText.length, autoCompletedTagName)
 
         return TagAutoCompleteResult(replacementIndex, enteredText, autoCompletedText, enteredTagName, autoCompletedTagName,
-                enteredTagNameTrimmedWithoutTagsSeparator, autoCompletedTagNameTrimmedWithoutTagsSeparator)
+                enteredTagNameTrimmedWithoutTagsSeparator, autoCompletedTagNameTrimmedWithoutTagsSeparator, tag)
     }
 
 }

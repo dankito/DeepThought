@@ -214,13 +214,7 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
 
     private fun addAutoCompletedTag(tags: HashSet<Tag>) {
         autoCompleteResult?.let { autoCompleteResult ->
-            tags.forEach { tag ->
-                if(tag.name == autoCompleteResult.autoCompletedTagNameTrimmedWithoutTagsSeparator) {
-                    return // don't add tag twice, e.g. in persisted version and an unpersisted version below
-                }
-            }
-
-            tags.add(Tag(autoCompleteResult.autoCompletedTagNameTrimmedWithoutTagsSeparator))
+            tags.add(autoCompleteResult.autoCompletedTag)
         }
     }
 
