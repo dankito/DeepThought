@@ -20,6 +20,13 @@ fun View.showKeyboardDelayed(delayMillis: Long = 50L) {
     }, delayMillis)
 }
 
+
+fun View.hideKeyboardDelayed(delayMillis: Long = 50L, flags: Int = 0) {
+    this.postDelayed({
+        this.hideKeyboard(flags)
+    }, delayMillis)
+}
+
 fun View.hideKeyboard(flags: Int = 0) {
     this.context?.let { context ->
         val keyboard = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

@@ -28,6 +28,7 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import net.dankito.deepthought.android.service.hideKeyboard
+import net.dankito.deepthought.android.service.hideKeyboardDelayed
 import net.dankito.deepthought.android.views.*
 import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.model.*
@@ -654,7 +655,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun leaveEditContentView() {
-        contentEditor.hideKeyboard()
+        contentEditor.hideKeyboardDelayed(250) // for Samsungs we need a delay (again an exception of Samsung devices, i really dislike them)
 
         animator.playShowAnimation(lytEntryFieldsPreview)
         lytEditContent.visibility = View.GONE
