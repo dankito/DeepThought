@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android.views
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.util.TypedValue
@@ -39,13 +40,17 @@ class OpenUrlOptionsView {
         displayedPopupWindow?.let { closeMenu(it) }
 
         val context = anyViewInHierarchyJustForAnchor.context
+        val adapter = OpenUrlOptionsListAdapter()
 
         val optionsListView = ListView(context)
         optionsListView.setBackgroundColor(Color.WHITE)
-        optionsListView.adapter = OpenUrlOptionsListAdapter()
+        optionsListView.adapter = adapter
 
         val popupWindow = PopupWindow(context)
         popupWindow.contentView = optionsListView
+        // for Samsung devices - once again a special handling for Samsung devices - height and width has to be set, otherwise PopupWindow won't be shown
+        popupWindow.height = adapter.calculateItemsHeight(anyViewInHierarchyJustForAnchor.context)
+        popupWindow.width = adapter.calculateItemWidth(anyViewInHierarchyJustForAnchor.context)
         popupWindow.showAtLocation(anyViewInHierarchyJustForAnchor, Gravity.CENTER, 0, 0)
         this.displayedPopupWindow = popupWindow
 
@@ -114,9 +119,9 @@ class OpenUrlOptionsView {
 
         private fun styleTextView(textView: TextView, parent: ViewGroup?) {
             val density = parent?.context?.resources?.displayMetrics?.density ?: 1f
-            val height = (50 * density).toInt()
+            val height = calculateItemHeight(density)
             textView.height = height
-            textView.width = parent?.width ?: 500
+            textView.width = calculateItemWidth(parent?.context!!)
 
             textView.layoutParams?.let { layoutParams ->
                 layoutParams.height = height
@@ -132,6 +137,20 @@ class OpenUrlOptionsView {
             val padding = (4 * density).toInt()
             textView.setPadding(padding, padding, padding, padding)
         }
+
+
+        fun calculateItemWidth(context: Context): Int {
+            return (context.resources.displayMetrics.widthPixels * 0.9).toInt()
+        }
+
+        fun calculateItemsHeight(context: Context): Int {
+            val density = context.resources.displayMetrics.density
+
+            return count * calculateItemHeight(density) +
+                    (count + 1) * (3 * density).toInt() // ListView adds a space of 1dp between two items
+        }
+
+        private fun calculateItemHeight(density: Float) = (50 * density).toInt()
 
     }
 
