@@ -40,25 +40,23 @@ class OpenUrlOptionsView {
         displayedPopupWindow?.let { closeMenu(it) }
 
         val context = anyViewInHierarchyJustForAnchor.context
-        val adapter = OpenUrlOptionsListAdapter()
+        val popupWindow = PopupWindow(context)
+        val adapter = OpenUrlOptionsListAdapter { position ->
+            closeMenu(popupWindow)
+
+            optionSelectedListener(optionItems[position])
+        }
 
         val optionsListView = ListView(context)
         optionsListView.setBackgroundColor(Color.WHITE)
         optionsListView.adapter = adapter
 
-        val popupWindow = PopupWindow(context)
         popupWindow.contentView = optionsListView
         // for Samsung devices - once again a special handling for Samsung devices - height and width has to be set, otherwise PopupWindow won't be shown
         popupWindow.height = adapter.calculateItemsHeight(anyViewInHierarchyJustForAnchor.context)
         popupWindow.width = adapter.calculateItemWidth(anyViewInHierarchyJustForAnchor.context)
         popupWindow.showAtLocation(anyViewInHierarchyJustForAnchor, Gravity.CENTER, 0, 0)
         this.displayedPopupWindow = popupWindow
-
-        optionsListView.setOnItemClickListener { _, _, position, _ ->
-            closeMenu(popupWindow)
-
-            optionSelectedListener(optionItems[position])
-        }
     }
 
     private fun closeMenu(popupWindow: PopupWindow) {
@@ -91,7 +89,7 @@ class OpenUrlOptionsView {
     }
 
 
-    inner class OpenUrlOptionsListAdapter: BaseAdapter() {
+    inner class OpenUrlOptionsListAdapter(private val itemClickedListener: (Int) -> Unit): BaseAdapter() {
 
         override fun getCount(): Int {
             return optionItems.size
@@ -114,6 +112,9 @@ class OpenUrlOptionsView {
 
             optionResourceId?.let { textView.setText(optionResourceId) }
 
+            // ListView.setOnItemClickListener() didn't work on Samsung devices as TextView caught click - even thought isClickable and isFocusable had been set to false!
+            textView.setOnClickListener { itemClickedListener(position) }
+
             return textView
         }
 
@@ -131,6 +132,10 @@ class OpenUrlOptionsView {
 
             val padding = (4 * density).toInt()
             textView.setPadding(padding, padding, padding, padding)
+
+            textView.isClickable = true
+            textView.isFocusable = true
+            textView.isFocusableInTouchMode = true
         }
 
 
