@@ -641,13 +641,15 @@ class EditEntryActivity : BaseActivity() {
     private fun isEditingContent() = lytEditContent.visibility == View.VISIBLE
 
     private fun appliedChangesToContent() {
-        contentToEdit = editHtmlView.getHtml()
+        contentEditor.retrieveCurrentHtmlAsync { html -> // update contentToEdit as paste or Samsung's Swipe keyboard doesn't raise changed event -> fetch value before saving
+            contentToEdit = html
 
-        runOnUiThread {
-            leaveEditContentView()
+            runOnUiThread {
+                leaveEditContentView()
 
-            updateEntryFieldChangedOnUIThread(ItemField.Content, originalContent != contentToEdit)
-            setContentPreviewOnUIThread()
+                updateEntryFieldChangedOnUIThread(ItemField.Content, originalContent != contentToEdit)
+                setContentPreviewOnUIThread()
+            }
         }
     }
 
