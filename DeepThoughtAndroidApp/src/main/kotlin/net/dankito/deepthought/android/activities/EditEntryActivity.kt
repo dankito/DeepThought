@@ -1718,15 +1718,9 @@ class EditEntryActivity : BaseActivity() {
     private fun userClickedOnUrl(url: String) {
         openUrlOptionsView.showMenuCenter(txtEntryContentLabel) { selectedOption ->
             when(selectedOption) {
-                OpenUrlOptionsView.OpenUrlOption.OpenInNewActivity -> executeUserClickedUrlAction { showUrlInNewActivity(url) }
-                OpenUrlOptionsView.OpenUrlOption.OpenWithOtherApp -> executeUserClickedUrlAction { openUrlWithOtherApp(url) }
+                OpenUrlOptionsView.OpenUrlOption.OpenInNewActivity -> showUrlInNewActivity(url)
+                OpenUrlOptionsView.OpenUrlOption.OpenWithOtherApp -> openUrlWithOtherApp(url)
             }
-        }
-    }
-
-    private fun executeUserClickedUrlAction(action: () -> Unit) {
-        wbvwContent.leaveFullscreenModeAndWaitTillLeft {
-            action()
         }
     }
 
