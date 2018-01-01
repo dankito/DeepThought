@@ -1384,6 +1384,8 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun saveEntryAsync(callback: (Boolean) -> Unit) {
+        abstractToEdit = lytAbstractPreview.getCurrentFieldValue() // update abstractToEdit as Samsung's Swipe keyboard doesn't raise text changed event (TextWatcher) -> fetch value before saving
+
         val content = contentToEdit ?: ""
         val abstract = abstractToEdit ?: ""
 
