@@ -92,7 +92,7 @@
                 android:layout_marginEnd="@dimen/view_edit_entity_field_value_margin_right"
                 android:maxLines="4"
                 style="@style/EditableEntityFieldValue"
-                android:imeOptions="flagNoExtractUi"
+                android:imeOptions="actionDone"
                 android:saveEnabled="false"
             />
             <!-- imeOptions="flagNoExtractUi" is needed as otherwise EditText would occupy whole screen when focused in landscape mode -->
