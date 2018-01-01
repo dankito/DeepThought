@@ -121,7 +121,7 @@ class OpenUrlOptionsView {
             val density = parent?.context?.resources?.displayMetrics?.density ?: 1f
             val height = calculateItemHeight(density)
             textView.height = height
-            textView.width = calculateItemWidth(parent?.context!!)
+            parent?.context?.let { textView.width = calculateItemWidth(it) }
 
             textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18f)
             textView.gravity = Gravity.CENTER_VERTICAL
