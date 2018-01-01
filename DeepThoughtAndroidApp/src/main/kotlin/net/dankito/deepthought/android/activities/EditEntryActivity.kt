@@ -170,6 +170,8 @@ class EditEntryActivity : BaseActivity() {
 
     private var isInReaderMode = false
 
+    private var wbvwContentScrollPositionBeforePause: Pair<Int, Int>? = null
+
     private var webSiteHtml: String? = null
 
     private var isLoadingUrl = false
@@ -585,6 +587,14 @@ class EditEntryActivity : BaseActivity() {
         }
 
         setContentPreviewOnUIThread()
+
+        wbvwContentScrollPositionBeforePause?.let { // restore wbvwContent's scroll position before fullscreen has been left in onPause()
+            wbvwContent.postDelayed({ // don't know why we have to do it delayed in order to work
+                wbvwContent.scrollX = it.first
+                wbvwContent.scrollY = it.second
+                wbvwContentScrollPositionBeforePause = null
+            }, 250)
+        }
 
         mayRegisterEventBusListener()
     }
@@ -1102,7 +1112,8 @@ class EditEntryActivity : BaseActivity() {
         unregisterEventBusListener()
 
         if(wbvwContent.isInFullscreenMode) {
-            wbvwContent.leaveFullscreenModeAndWaitTillLeft {  }
+            wbvwContentScrollPositionBeforePause = Pair(wbvwContent.scrollX, wbvwContent.scrollY) // store scroll position so that in can be restored in onResume()
+            wbvwContent.leaveFullscreenModeAndWaitTillLeft { }
         }
 
         contentEditor.hideKeyboard()
