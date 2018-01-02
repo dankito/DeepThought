@@ -2,6 +2,7 @@ package net.dankito.deepthought.android.views
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Point
 import android.os.Build
 import android.os.Bundle
 import android.util.AttributeSet
@@ -96,9 +97,7 @@ class FullscreenWebView : WebView {
 
     private var checkIfScrollingStoppedTimerTask: TimerTask? = null
 
-    private var scrollXToRestore: Int? = null
-
-    private var scrollYToRestore: Int? = null
+    private var scrollPositionToRestore: Point? = null
 
 
     constructor(context: Context) : super(context) { setupUI(context) }
@@ -302,8 +301,7 @@ class FullscreenWebView : WebView {
     }
 
     fun restoreInstanceState(savedInstanceState: Bundle) {
-        scrollXToRestore = savedInstanceState.getInt(SCROLL_X_BUNDLE_NAME)
-        scrollYToRestore = savedInstanceState.getInt(SCROLL_Y_BUNDLE_NAME)
+        scrollPositionToRestore = Point(savedInstanceState.getInt(SCROLL_X_BUNDLE_NAME), savedInstanceState.getInt(SCROLL_Y_BUNDLE_NAME))
     }
 
 
@@ -343,14 +341,11 @@ class FullscreenWebView : WebView {
 
     private fun mayRestoreScrollPosition() {
         postDelayed({ // older devices need a delay as otherwise scroll position gets applied before content is loaded (and therefore scroll view grew to its extend)
-            scrollXToRestore?.let {
-                scrollX = it
-                scrollXToRestore = null
-            }
+            scrollPositionToRestore?.let {
+                scrollX = it.x
+                scrollY = it.y
 
-            scrollYToRestore?.let {
-                scrollY = it
-                scrollYToRestore = null
+                scrollPositionToRestore = null
             }
         }, 250)
     }
