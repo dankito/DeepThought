@@ -5,6 +5,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.TargetApi
 import android.content.Intent
+import android.graphics.Point
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -170,7 +171,7 @@ class EditEntryActivity : BaseActivity() {
 
     private var isInReaderMode = false
 
-    private var wbvwContentScrollPositionBeforePause: Pair<Int, Int>? = null
+    private var wbvwContentScrollPositionBeforePause: Point? = null
 
     private var webSiteHtml: String? = null
 
@@ -590,8 +591,8 @@ class EditEntryActivity : BaseActivity() {
 
         wbvwContentScrollPositionBeforePause?.let { // restore wbvwContent's scroll position before fullscreen has been left in onPause()
             wbvwContent.postDelayed({ // don't know why we have to do it delayed in order to work
-                wbvwContent.scrollX = it.first
-                wbvwContent.scrollY = it.second
+                wbvwContent.scrollX = it.x
+                wbvwContent.scrollY = it.y
                 wbvwContentScrollPositionBeforePause = null
             }, 250)
         }
@@ -1112,7 +1113,7 @@ class EditEntryActivity : BaseActivity() {
         unregisterEventBusListener()
 
         if(wbvwContent.isInFullscreenMode) {
-            wbvwContentScrollPositionBeforePause = Pair(wbvwContent.scrollX, wbvwContent.scrollY) // store scroll position so that in can be restored in onResume()
+            wbvwContentScrollPositionBeforePause = Point(wbvwContent.scrollX, wbvwContent.scrollY) // store scroll position so that in can be restored in onResume()
             wbvwContent.leaveFullscreenModeAndWaitTillLeft { }
         }
 
