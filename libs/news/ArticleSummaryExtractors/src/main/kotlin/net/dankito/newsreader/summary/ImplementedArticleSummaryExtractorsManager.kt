@@ -20,6 +20,7 @@ class ImplementedArticleSummaryExtractorsManager(val webClient: IWebClient) : II
         extractors.put(PostillonArticleSummaryExtractor::class.java, PostillonArticleSummaryExtractor(webClient))
         extractors.put(LeMondeDiplomatiqueEnglishEditionArticleSummaryExtractor::class.java, LeMondeDiplomatiqueEnglishEditionArticleSummaryExtractor(webClient))
         extractors.put(LeMondeDiplomatiqueArticleSummaryExtractor::class.java, LeMondeDiplomatiqueArticleSummaryExtractor(webClient))
+        extractors.put(AbendzeitungMuenchenSectionMuenchenArticleSummaryExtractor::class.java, AbendzeitungMuenchenSectionMuenchenArticleSummaryExtractor(webClient))
     }
 
 
