@@ -163,7 +163,7 @@ dependencies {
     compile "com.github.clans:fab:$clansFloatingActionButtonVersion"
     compile "com.daimajia.swipelayout:library:$swipeLayoutVersion"
     compile "com.google.android:flexbox:$flexboxVersion"
-    compile 'net.dankito.richtexteditor:richtexteditor-android:1.0'
+    compile 'net.dankito.richtexteditor:richtexteditor-android:1.0.1'
 
     compile "org.slf4j:slf4j-android:$slf4jVersion"
 
