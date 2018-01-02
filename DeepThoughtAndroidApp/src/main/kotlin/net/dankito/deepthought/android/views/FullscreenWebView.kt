@@ -248,7 +248,7 @@ class FullscreenWebView : WebView {
     private fun enterFullscreenMode() {
         isInFullscreenMode = true
         updateLastOnScrollFullscreenModeTogglingTimestamp()
-        lytFullscreenWebViewOptionsBar?.visibility = View.VISIBLE
+        showOptionsBar()
 
         changeFullscreenModeListener?.invoke(FullscreenMode.Enter)
 
