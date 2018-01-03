@@ -33,12 +33,16 @@ class ToolbarUtil {
     fun setupActionItemsLayout(menuItem: MenuItem?, onClickListener: ((MenuItem) -> Unit)? = null) {
         menuItem?.let {
             (menuItem.actionView as? RelativeLayout)?.let { actionView -> // cast to RelativeLayout = check if it's contextual_action_mode_item_action_layout and not a SearchView etc.
-                setTitleAndIcon(actionView, menuItem)
-
-                actionView.setOnClickListener {
-                    onClickListener?.invoke(menuItem)
-                }
+                setupActionLayoutItem(actionView, menuItem, onClickListener)
             }
+        }
+    }
+
+    private fun setupActionLayoutItem(actionView: RelativeLayout, menuItem: MenuItem, onClickListener: ((MenuItem) -> Unit)?) {
+        setTitleAndIcon(actionView, menuItem)
+
+        actionView.setOnClickListener {
+            onClickListener?.invoke(menuItem)
         }
     }
 
