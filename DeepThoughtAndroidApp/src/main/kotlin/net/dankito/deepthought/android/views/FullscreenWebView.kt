@@ -11,7 +11,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import kotlinx.android.synthetic.main.activity_edit_entry.view.*
+import net.dankito.deepthought.android.R
+import net.dankito.deepthought.android.extensions.getColorFromResourceId
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
+import net.dankito.richtexteditor.android.command.ToolbarCommandStyle
+import net.dankito.richtexteditor.android.toolbar.SearchView
+import net.dankito.richtexteditor.android.toolbar.SearchViewStyle
 import java.util.*
 
 
@@ -93,6 +98,10 @@ class FullscreenWebView : WebView {
 
     private var lytFullscreenWebViewOptionsBar: ViewGroup? = null
 
+    private lateinit var searchView: SearchView
+
+    private var isSearchViewVisible = false
+
     private var checkIfScrollingStoppedTimer = Timer()
 
     private var checkIfScrollingStoppedTimerTask: TimerTask? = null
@@ -119,6 +128,25 @@ class FullscreenWebView : WebView {
         this.lytFullscreenWebViewOptionsBar = lytFullscreenWebViewOptionsBar
 
         lytFullscreenWebViewOptionsBar.btnLeaveFullscreen.setOnClickListener { leaveFullscreenMode() }
+
+        searchView = SearchView(context)
+        lytFullscreenWebViewOptionsBar.addView(searchView, 0)
+
+        val width = context.resources.getDimension(R.dimen.fullscreen_web_view_options_bar_button_width) / context.resources.displayMetrics.density
+        val backgroundColor = context.getColorFromResourceId(R.color.colorPrimary)
+        searchView.applyStyle(SearchViewStyle(ToolbarCommandStyle(widthDp = width.toInt()), backgroundColor, 16f))
+        searchView.webView = this
+
+        searchView.searchViewExpandedListener = { isExpanded ->
+            if(isExpanded) {
+                isSearchViewVisible = true
+            }
+            else {
+                isSearchViewVisible = false
+
+                this.systemUiVisibility = FULLSCREEN_MODE_SYSTEM_UI_FLAGS
+            }
+        }
     }
 
 
@@ -129,10 +157,17 @@ class FullscreenWebView : WebView {
 
         // as immersive fullscreen is only available for KitKat and above leave immersive fullscreen mode by swiping from screen top or bottom is also only available on these  devices
         if(flags != FULLSCREEN_MODE_SYSTEM_UI_FLAGS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            leaveFullscreenMode()
+            if(isSearchViewVisible == false) {
+                leaveFullscreenMode()
 
-            leftFullscreenCallback?.invoke()
-            leftFullscreenCallback = null
+                leftFullscreenCallback?.invoke()
+                leftFullscreenCallback = null
+            }
+            else {
+                searchView.postDelayed({
+                    this.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                }, 250)
+            }
         }
 
         super.onWindowSystemUiVisibilityChanged(flags)
@@ -266,6 +301,7 @@ class FullscreenWebView : WebView {
         isInFullscreenMode = false
         updateLastOnScrollFullscreenModeTogglingTimestamp()
         hideOptionsBarOnUiThread()
+        searchView.clearSearchResults()
 
         changeFullscreenModeListener?.invoke(FullscreenMode.Leave)
 
