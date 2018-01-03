@@ -60,6 +60,8 @@ class EditHtmlView : View {
 
         editorToolbar.addCommand(InsertBulletListCommand())
         editorToolbar.addCommand(InsertNumberedListCommand())
+
+        editorToolbar.addSearchView()
     }
 
 
