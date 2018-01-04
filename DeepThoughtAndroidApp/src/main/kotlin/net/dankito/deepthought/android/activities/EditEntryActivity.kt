@@ -1368,15 +1368,15 @@ class EditEntryActivity : BaseActivity() {
 
     private fun shareEntryContent() {
         item?.let { entry ->
-            presenter.shareEntry(entry, entry.source, entry.source?.series)
+            presenter.shareEntry(entry, entry.tags, entry.source, entry.source?.series)
         }
 
         readLaterArticle?.itemExtractionResult?.let { extractionResult ->
-            presenter.shareEntry(extractionResult.item, extractionResult.source, extractionResult.series)
+            presenter.shareEntry(extractionResult.item, extractionResult.tags, extractionResult.source, extractionResult.series)
         }
 
         itemExtractionResult?.let { extractionResult ->
-            presenter.shareEntry(extractionResult.item, extractionResult.source, extractionResult.series)
+            presenter.shareEntry(extractionResult.item, extractionResult.tags, extractionResult.source, extractionResult.series)
         }
     }
 

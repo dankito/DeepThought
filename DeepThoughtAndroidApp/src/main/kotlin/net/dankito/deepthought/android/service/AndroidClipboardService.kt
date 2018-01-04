@@ -8,6 +8,7 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.extensions.abstractPlainText
 import net.dankito.utils.UrlUtil
 import net.dankito.utils.ui.ClipboardServiceBase
@@ -66,19 +67,19 @@ class AndroidClipboardService : ClipboardServiceBase() {
         share(shareIntent)
     }
 
-    override fun copyEntryToClipboard(item: Item, source: Source?, series: Series?) {
+    override fun copyEntryToClipboard(item: Item, tags: Collection<Tag>, source: Source?, series: Series?) {
         val shareIntent = Intent()
 
         shareIntent.action = Intent.ACTION_SEND
         shareIntent.type = "text/plain"
 
-        addItemToShareIntent(shareIntent, item, source, series)
+        addItemToShareIntent(shareIntent, item, tags, source, series)
 
         share(shareIntent)
     }
 
-    private fun addItemToShareIntent(shareIntent: Intent, item: Item, source: Source?, series: Series?) {
-        val itemString = convertItemToStringForCopyingToClipboard(item, source, series)
+    private fun addItemToShareIntent(shareIntent: Intent, item: Item, tags: Collection<Tag>, source: Source?, series: Series?) {
+        val itemString = convertItemToStringForCopyingToClipboard(item, tags, source, series)
 
         shareIntent.putExtra(Intent.EXTRA_TEXT, itemString)
         if(Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {

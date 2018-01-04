@@ -42,8 +42,8 @@ class EditEntryPresenter(private val entryPersister: EntryPersister, private val
         source.url?.let { clipboardService.copyUrlToClipboard(it) }
     }
 
-    fun shareEntry(item: Item, source: Source?, series: Series?) {
-        clipboardService.copyEntryToClipboard(item, source, series)
+    fun shareEntry(item: Item, tags: Collection<Tag>, source: Source?, series: Series?) {
+        clipboardService.copyEntryToClipboard(item, tags, source, series)
     }
 
 
