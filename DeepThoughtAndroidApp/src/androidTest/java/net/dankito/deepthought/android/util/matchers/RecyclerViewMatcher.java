@@ -74,7 +74,10 @@ public class RecyclerViewMatcher {
             if (childView == null) {
                 RecyclerView recyclerView = findRecyclerView(view);
                 if (recyclerView != null && recyclerView.getId() == recyclerViewId) {
-                    childView = recyclerView.findViewHolderForAdapterPosition(position).itemView;
+                    RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
+                    if(viewHolder != null) {
+                        childView = viewHolder.itemView;
+                    }
                 }
                 else {
                     return false;
