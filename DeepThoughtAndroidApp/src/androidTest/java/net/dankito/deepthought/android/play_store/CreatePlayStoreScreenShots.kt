@@ -91,7 +91,7 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
     }
 
     private fun createRichTextEditorScreenshot() {
-        navigator.navigateFromMainActivityToEditItemActivityContentEditor()
+        navigator.navigateFromMainActivityToEditItemActivity()
         TestUtil.sleep(500)
 
         navigator.hideKeyboard()

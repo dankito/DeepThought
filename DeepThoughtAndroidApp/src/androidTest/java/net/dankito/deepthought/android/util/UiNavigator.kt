@@ -9,16 +9,19 @@ import android.support.test.espresso.ViewAction
 import android.support.test.espresso.action.ViewActions
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.action.ViewActions.replaceText
+import android.support.test.espresso.contrib.NavigationViewActions
 import android.support.test.espresso.matcher.RootMatchers
 import android.support.test.espresso.matcher.RootMatchers.isDialog
 import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.v7.widget.MenuPopupWindow
 import android.view.View
+import android.widget.ImageButton
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import net.dankito.deepthought.android.R
 import net.dankito.richtexteditor.android.command.Command
+import net.dankito.service.search.SearchEngineBase
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.Matcher
 import org.hamcrest.core.AllOf
@@ -28,7 +31,7 @@ open class UiNavigator {
 
 
     open fun createItemFromMainActivity(content: String, alsoSaveItem: Boolean = true) {
-        navigateFromMainActivityToEditItemActivityContentEditor()
+        navigateFromMainActivityToEditItemActivity()
 
         enterText(content)
         TestUtil.sleep(500)
@@ -59,13 +62,8 @@ open class UiNavigator {
         onView(withId(R.id.fabEditEntryTags)).perform(click())
         TestUtil.sleep(500)
 
-        tagNames.forEach { tagName ->
-            setEditTextText(R.id.edtxtEditEntrySearchTag, tagName)
-            onView(withId(R.id.btnEditEntryCreateOrToggleTags)).perform(click())
-            TestUtil.sleep(1000)
-        }
+        setValueOfEditEntityField(R.id.lytTagsPreview, tagNames.joinToString(SearchEngineBase.TagsSearchTermSeparator))
 
-        onView(withId(R.id.mnApplyTagsOnEntryChanges)).perform(click())
         TestUtil.sleep(500)
     }
 
@@ -88,6 +86,8 @@ open class UiNavigator {
         onView(withId(R.id.fabEditEntryReference)).perform(click())
         TestUtil.sleep(1000)
 
+        clickOnEditEntityReferenceFieldEditDetailsPopupMenu(R.id.lytReferencePreview)
+
         setValueOfEditEntityField(R.id.lytEditReferenceTitle, sourceTitle)
 
         seriesTitle?.let { createSeriesInEditSourceActivity(it) }
@@ -98,6 +98,8 @@ open class UiNavigator {
 
     private fun createSeriesInEditSourceActivity(seriesTitle: String) {
         onView(withId(R.id.lytEditReferenceSeries)).perform(click())
+
+        clickOnEditSourceSeriesFieldEditDetailsPopupMenu(R.id.lytEditReferenceSeries)
 
         setValueOfEditEntityField(R.id.lytEditSeriesTitle, seriesTitle)
 
@@ -128,17 +130,31 @@ open class UiNavigator {
     }
 
     open fun navigateToTabTags() {
-        onView(withId(net.dankito.deepthought.android.R.id.btnvTags)).perform(click())
-        TestUtil.sleep(1000)
+        clickOnNavigationDrawerMenuItem(R.id.navTags)
     }
 
     open fun navigateToTabSources() {
-        onView(withId(net.dankito.deepthought.android.R.id.btnvReferences)).perform(click())
-        TestUtil.sleep(1000)
+        clickOnNavigationDrawerMenuItem(R.id.navSources)
     }
 
     open fun navigateToTabReadLaterArticles() {
-        onView(withId(net.dankito.deepthought.android.R.id.btnvReadLaterArticles)).perform(click())
+        clickOnNavigationDrawerMenuItem(R.id.navReadLaterArticles)
+    }
+
+    open fun navigateToNewspaperArticlesView() {
+        clickOnNavigationDrawerMenuItem(R.id.navArticleSummaryExtractors)
+    }
+
+    private fun clickOnNavigationDrawerMenuItem(itemId: Int) {
+        pressHamburgerIcon()
+
+        onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(itemId))
+        TestUtil.sleep(1000)
+    }
+
+    private fun pressHamburgerIcon() {
+        onView(allOf(isDescendantOfA(withId(R.id.toolbar)), instanceOf(ImageButton::class.java))).perform(click())
+
         TestUtil.sleep(1000)
     }
 
@@ -146,13 +162,12 @@ open class UiNavigator {
     open fun navigateFromMainActivityToEditItemActivity() {
         TestUtil.sleep(1000)
         clickOnMainActivityFloatingActionButton()
-        onView(withId(R.id.fab_add_entry)).perform(click())
     }
 
     open fun navigateFromMainActivityToEditItemActivityContentEditor() {
         navigateFromMainActivityToEditItemActivity()
 
-        onView(ViewMatchers.withId(R.id.editor)).perform(click())
+        onView(withId(R.id.wbvwContent)).perform(click())
     }
 
     open fun clickOnMainActivityFloatingActionButton() {
@@ -177,9 +192,7 @@ open class UiNavigator {
 
 
     open fun createRssFeed(feedUrl: String, feedName: String) {
-        clickOnEditItemActivityFloatingActionButton()
-        onView(withId(R.id.fab_add_newspaper_article)).perform(click())
-        TestUtil.sleep(1000)
+        navigateToNewspaperArticlesView()
 
         setEditTextText(R.id.edtxtFeedOrWebsiteUrl, feedUrl)
         onView(withId(R.id.btnCheckFeedOrWebsiteUrl)).perform(click())
@@ -189,7 +202,7 @@ open class UiNavigator {
                 .inAdapterView(withId(R.id.lstFeedSearchResults))
                 .atPosition(0)
                 .perform(click())
-        TestUtil.sleep(3000)
+        TestUtil.sleep(6000)
 
         onView(withId(R.id.edtxtAskExtractorName)).inRoot(isDialog()).perform(replaceText(feedName))
         TestUtil.sleep(500)
@@ -220,7 +233,7 @@ open class UiNavigator {
     }
 
     open fun setEditTextText(editTextId: Int, text: String) {
-        // for Unicode support use replaceText() instead of typeText() (works for for EditTexts)
+        // for Unicode support use replaceText() instead of typeText() (works for EditTexts)
         onView(withId(editTextId)).perform(replaceText(text))
 
         TestUtil.sleep(500)
@@ -264,6 +277,24 @@ open class UiNavigator {
 
     fun clickOnEditEntityReferenceFieldEditDetailsPopupMenu(editEntityReferenceFieldId: Int) {
         showEditEntityReferenceFieldPopupMenu(editEntityReferenceFieldId)
+
+        clickOnEditEntityReferenceFieldPopupMenuItem(0)
+    }
+
+    fun clickOnEditSourceSeriesFieldRemoveEntityPopupMenu(editSourceSeriesFieldId: Int) {
+        showEditEntityReferenceFieldPopupMenu(editSourceSeriesFieldId)
+
+        clickOnEditEntityReferenceFieldPopupMenuItem(2)
+    }
+
+    fun clickOnEditSourceSeriesFieldCreateNewEntityPopupMenu(editSourceSeriesFieldId: Int) {
+        showEditEntityReferenceFieldPopupMenu(editSourceSeriesFieldId)
+
+        clickOnEditEntityReferenceFieldPopupMenuItem(1)
+    }
+
+    fun clickOnEditSourceSeriesFieldEditDetailsPopupMenu(editSourceSeriesFieldId: Int) {
+        showEditEntityReferenceFieldPopupMenu(editSourceSeriesFieldId)
 
         clickOnEditEntityReferenceFieldPopupMenuItem(0)
     }

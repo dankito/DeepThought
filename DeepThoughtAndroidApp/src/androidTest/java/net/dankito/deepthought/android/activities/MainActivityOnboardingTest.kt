@@ -6,6 +6,7 @@ import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.runner.AndroidJUnit4
+import android.widget.ImageButton
 import net.dankito.deepthought.android.DeepThoughtActivityTestRule
 import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
 import net.dankito.deepthought.android.MainActivity
@@ -14,8 +15,10 @@ import net.dankito.deepthought.android.fragments.EntriesListView
 import net.dankito.deepthought.android.fragments.ReadLaterArticlesListView
 import net.dankito.deepthought.android.fragments.ReferencesListView
 import net.dankito.deepthought.android.fragments.TagsListView
+import net.dankito.deepthought.android.util.Assert
 import net.dankito.deepthought.android.util.TestUtil
 import net.dankito.deepthought.android.util.screenshot.TakeScreenshotOnErrorTestRule
+import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.core.AllOf
 import org.junit.Rule
@@ -37,29 +40,29 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
     fun noItems_OnboardingShouldBeDisplayed() {
         assertOnboardingIsDisplayedInTab(EntriesListView::class.java)
 
-        assertIsVisibleInTab(R.id.arrowToFloatingActionButton, EntriesListView::class.java)
-        assertIsNotVisible(R.id.bottomViewNavigation)
+        Assert.viewIsVisible(R.id.arrowToFloatingActionButton)
+        assertDrawerTogglesIsNotVisible()
     }
 
     @Test
     fun addItem_ItemOnboardingThenGetsHidden() {
         assertOnboardingIsDisplayedInTab(EntriesListView::class.java)
 
-        assertIsVisibleInTab(R.id.arrowToFloatingActionButton, EntriesListView::class.java)
-        assertIsNotVisible(R.id.bottomViewNavigation)
+        Assert.viewIsVisible(R.id.arrowToFloatingActionButton)
+        assertDrawerTogglesIsNotVisible()
 
 
         navigator.createItemFromMainActivity("Test info")
         TestUtil.sleep(2000)
 
 
-        assertIsVisible(R.id.bottomViewNavigation)
+        assertDrawerTogglesIsVisible()
         assertOnboardingIsHiddenInTab(EntriesListView::class.java)
     }
 
     @Test
     fun addItem_AllOtherOnboardingsStillAreDisplayed() {
-        assertIsNotVisible(R.id.bottomViewNavigation)
+        assertDrawerTogglesIsNotVisible()
 
         navigator.createItemFromMainActivity("Test info")
         TestUtil.sleep(2000)
@@ -77,7 +80,7 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
 
     @Test
     fun addTag_TagOnboardingThenGetsHidden() {
-        assertIsNotVisible(R.id.bottomViewNavigation)
+        assertDrawerTogglesIsNotVisible()
 
 
         navigator.createTagFromMainActivity("Test tag")
@@ -98,7 +101,7 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
 
     @Test
     fun addSource_SourceOnboardingThenGetsHidden() {
-        assertIsNotVisible(R.id.bottomViewNavigation)
+        assertDrawerTogglesIsNotVisible()
 
 
         navigator.createSourceFromMainActivity("Test source")
@@ -152,6 +155,14 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
     private fun assertIsNotVisibleInTab(viewId: Int, tabClass: Any) {
         onView(AllOf.allOf(withId(viewId), isDescendantOfA(ViewMatchers.withTagValue(`is`(tabClass)))))
                 .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)))
+    }
+
+    private fun assertDrawerTogglesIsVisible() {
+        Assert.viewIsVisible(CoreMatchers.allOf(CoreMatchers.instanceOf(ImageButton::class.java), isDescendantOfA(withId(R.id.toolbar))))
+    }
+
+    private fun assertDrawerTogglesIsNotVisible() {
+        Assert.viewIsNotVisible(CoreMatchers.allOf(CoreMatchers.instanceOf(ImageButton::class.java), isDescendantOfA(withId(R.id.toolbar))))
     }
 
     private fun assertIsVisible(viewId: Int) {

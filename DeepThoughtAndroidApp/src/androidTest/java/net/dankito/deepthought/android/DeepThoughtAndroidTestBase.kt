@@ -70,7 +70,7 @@ abstract class DeepThoughtAndroidTestBase {
         itemPersister.saveEntryAsync(item, source, source?.series, tags = tags.toList()) { waitLatch.countDown() }
 
         try { waitLatch.await() } catch(ignored: Exception) { }
-        TestUtil.sleep(200L)
+        TestUtil.sleep(1000)
     }
 
     protected open fun persistTag(tag: Tag) {

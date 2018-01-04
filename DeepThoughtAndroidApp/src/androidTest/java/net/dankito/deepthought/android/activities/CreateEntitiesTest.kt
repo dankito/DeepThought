@@ -11,7 +11,6 @@ import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
 import net.dankito.deepthought.android.MainActivity
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.fragments.EntriesListView
-import net.dankito.deepthought.android.fragments.ReadLaterArticlesListView
 import net.dankito.deepthought.android.fragments.ReferencesListView
 import net.dankito.deepthought.android.fragments.TagsListView
 import net.dankito.deepthought.android.util.TestUtil
@@ -19,7 +18,8 @@ import net.dankito.deepthought.android.util.matchers.RecyclerViewInViewPagerMatc
 import net.dankito.deepthought.android.util.matchers.RecyclerViewItemCountAssertion
 import net.dankito.deepthought.android.util.matchers.RecyclerViewMatcher
 import net.dankito.deepthought.android.util.screenshot.TakeScreenshotOnErrorTestRule
-import org.hamcrest.CoreMatchers.*
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.containsString
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -56,7 +56,7 @@ class CreateEntitiesTest : DeepThoughtAndroidTestBase() {
         TestUtil.sleep(1000)
 
 
-        matchRecyclerViewInTabIsDisplayed(EntriesListView::class.java)
+        matchRecyclerViewEntitiesIsDisplayed()
 
         matchReferencePreviewAtPosition(0, TestSourceTitle)
 
@@ -70,7 +70,7 @@ class CreateEntitiesTest : DeepThoughtAndroidTestBase() {
 
         navigator.navigateToTabTags()
 
-        matchRecyclerViewInTabIsDisplayed(TagsListView::class.java as Any)
+        matchRecyclerViewEntitiesIsDisplayed()
 
         matchTagNameAtPosition(2, TestTag2Name)
         matchTagNameAtPosition(3, TestTag3Name)
@@ -79,7 +79,7 @@ class CreateEntitiesTest : DeepThoughtAndroidTestBase() {
 
         navigator.navigateToTabSources()
 
-        matchRecyclerViewInTabIsDisplayed(ReferencesListView::class.java as Any)
+        matchRecyclerViewEntitiesIsDisplayed()
 
         matchListItemAtPositionText(ReferencesListView::class.java, 0, R.id.txtvwEntityName, TestSourceTitle)
         matchListItemAtPositionText(ReferencesListView::class.java, 0, R.id.txtvwEntitySecondaryInformation, TestSeriesTitle)
@@ -88,7 +88,7 @@ class CreateEntitiesTest : DeepThoughtAndroidTestBase() {
 
     @Test
     fun createReadLaterArticleAndNewsPaperItem() {
-        matchRecyclerViewHasCountItems(EntriesListView::class.java, 0)
+        matchRecyclerViewHasCountItems(0)
 
 
         navigator.createRssFeed(TestFeedUrl, TestFeedName)
@@ -101,18 +101,17 @@ class CreateEntitiesTest : DeepThoughtAndroidTestBase() {
         navigator.pressBack()
         TestUtil.sleep(500)
 
-        matchRecyclerViewHasCountItems(EntriesListView::class.java, 1)
+        matchRecyclerViewHasCountItems(1)
 
 
         navigator.navigateToTabReadLaterArticles()
 
-        matchRecyclerViewHasCountItems(ReadLaterArticlesListView::class.java, 1)
+        matchRecyclerViewHasCountItems(1)
     }
 
 
-    private fun matchRecyclerViewInTabIsDisplayed(tabTag: Any) {
-        onView(allOf(withId(R.id.rcyEntities), isDescendantOfA(withTagValue(`is`(tabTag)))))
-                .check(matches(isDisplayed()))
+    private fun matchRecyclerViewEntitiesIsDisplayed() {
+        onView(allOf(withId(R.id.rcyEntities))).check(matches(isDisplayed()))
     }
 
     private fun matchEntryPreviewAtPositionContains(position: Int, entryPreview: String) {
@@ -132,8 +131,8 @@ class CreateEntitiesTest : DeepThoughtAndroidTestBase() {
                 .check(matches(withText(containsString(textViewText))))
     }
 
-    private fun matchRecyclerViewHasCountItems(tabTag: Any, expectedCount: Int) {
-        onView(allOf(withId(R.id.rcyEntities), isDescendantOfA(withTagValue(`is`(tabTag))))).check(RecyclerViewItemCountAssertion(expectedCount))
+    private fun matchRecyclerViewHasCountItems(expectedCount: Int) {
+        onView(allOf(withId(R.id.rcyEntities))).check(RecyclerViewItemCountAssertion(expectedCount))
     }
 
 
@@ -144,6 +143,8 @@ class CreateEntitiesTest : DeepThoughtAndroidTestBase() {
     private fun clickOnSwipeButtonAtPosition(recyclerViewId: Int, position: Int, buttonId: Int) {
         onView(RecyclerViewMatcher.withRecyclerView(recyclerViewId).atPosition(position))
                 .perform(swipeLeft())
+        TestUtil.sleep(1000)
+
         onView(RecyclerViewMatcher.withRecyclerView(recyclerViewId).atPositionOnView(position, buttonId))
                 .perform(click())
     }
