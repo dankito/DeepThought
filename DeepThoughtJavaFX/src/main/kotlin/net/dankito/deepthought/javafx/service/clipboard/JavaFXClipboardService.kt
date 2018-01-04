@@ -3,14 +3,14 @@ package net.dankito.deepthought.javafx.service.clipboard
 import javafx.scene.input.Clipboard
 import javafx.scene.input.ClipboardContent
 import net.dankito.deepthought.model.Item
-import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Series
-import net.dankito.utils.ui.IClipboardService
+import net.dankito.deepthought.model.Source
+import net.dankito.utils.ui.ClipboardServiceBase
 
 
 
 
-class JavaFXClipboardService : IClipboardService {
+class JavaFXClipboardService : ClipboardServiceBase() {
 
     override fun copyUrlToClipboard(url: String) {
         val content = ClipboardContent()
@@ -22,6 +22,11 @@ class JavaFXClipboardService : IClipboardService {
     }
 
     override fun copyEntryToClipboard(item: Item, source: Source?, series: Series?) {
+        val content = ClipboardContent()
+
+        content.putString(convertItemToStringForCopyingToClipboard(item, source, series))
+
+        Clipboard.getSystemClipboard().setContent(content)
     }
 
 }
