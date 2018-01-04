@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.activity_edit_entry.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.extensions.getColorFromResourceId
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
+import net.dankito.deepthought.android.service.showKeyboard
 import net.dankito.richtexteditor.android.command.ToolbarCommandStyle
 import net.dankito.richtexteditor.android.toolbar.SearchView
 import net.dankito.richtexteditor.android.toolbar.SearchViewStyle
@@ -151,7 +152,7 @@ class FullscreenWebView : WebView {
 
 
     override fun onWindowSystemUiVisibilityChanged(flags: Int) {
-        if(flags == 0) {
+        if(flags == 0 && isSearchViewVisible == false) {
             isInFullscreenMode = false // otherwise isInFullscreenMode stays true and full screen mode isn't entered anymore on resume
         }
 
@@ -165,6 +166,10 @@ class FullscreenWebView : WebView {
             }
             else {
                 searchView.postDelayed({
+                    if(flags == 0) { // user tapped e.g. on searchField at bottom of screen when keyboard is hidden -> go back to fullscreen
+                        searchView.searchField.showKeyboard()
+                    }
+
                     this.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 }, 250)
             }
