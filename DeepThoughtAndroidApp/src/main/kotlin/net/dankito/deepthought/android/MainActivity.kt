@@ -44,6 +44,8 @@ class MainActivity : BaseActivity() {
 
     private lateinit var floatingActionMenuButton: MainActivityFloatingActionMenuButton
 
+    protected lateinit var drawerToggle: ActionBarDrawerToggle
+
     private lateinit var entriesListView: EntriesListView
 
     private var eventBusListener: EventBusListener? = null
@@ -95,10 +97,10 @@ class MainActivity : BaseActivity() {
         setSupportActionBar(toolbar)
 
         val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
-        val toggle = ActionBarDrawerToggle(
+        drawerToggle = ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        drawer.addDrawerListener(toggle)
-        toggle.syncState()
+        drawer.addDrawerListener(drawerToggle)
+        drawerToggle.syncState()
 
         val navigationView = findViewById(R.id.nav_view) as NavigationView
         showAppVersion(navigationView)
@@ -128,6 +130,10 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initializedDataManager() {
+        runOnUiThread {
+            drawerToggle.isDrawerIndicatorEnabled = dataManager.localSettings.didUserCreateDataEntity // only show hamburger icon when user already has created at least one entity
+        }
+
         if(dataManager.localSettings.didUserCreateDataEntity == false) {
             val eventBusListener = EventBusListener()
             this.eventBusListener = eventBusListener
@@ -143,6 +149,10 @@ class MainActivity : BaseActivity() {
 
         dataManager.localSettings.didUserCreateDataEntity = true
         dataManager.localSettingsUpdated()
+
+        runOnUiThread {
+            drawerToggle.isDrawerIndicatorEnabled = true
+        }
     }
 
 
