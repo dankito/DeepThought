@@ -34,6 +34,9 @@ import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
+import net.dankito.deepthought.ui.presenter.ReferencesListPresenter
+import net.dankito.deepthought.ui.view.IReferencesListView
+import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.ReferenceSearch
@@ -87,6 +90,8 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     private val presenter: EditEntryPresenter
 
+    private val referenceListPresenter: ReferencesListPresenter
+
     private val sourceSearchResults: ObservableList<Source> = FXCollections.observableArrayList()
 
     private var lastSourceSearch: ReferenceSearch? = null
@@ -118,6 +123,9 @@ abstract class EditEntryViewBase : DialogFragment() {
     protected lateinit var clipboardService: IClipboardService
 
     @Inject
+    protected lateinit var deleteEntityService: DeleteEntityService
+
+    @Inject
     protected lateinit var router: IRouter
 
 
@@ -125,6 +133,14 @@ abstract class EditEntryViewBase : DialogFragment() {
         AppComponent.component.inject(this)
 
         presenter = EditEntryPresenter(entryPersister, readLaterArticleService, clipboardService, router)
+
+        referenceListPresenter = ReferencesListPresenter(object : IReferencesListView {
+
+            override fun showEntities(entities: List<Source>) {
+                retrievedSourceSearchResultsOnUiThread(entities)
+            }
+
+        }, searchEngine, router, clipboardService, deleteEntityService)
 
         htmlEditor = JavaFXHtmlEditor(null)
 
@@ -193,6 +209,22 @@ abstract class EditEntryViewBase : DialogFragment() {
             cellFragment(SourceListCellFragment::class)
 
             onDoubleClick { setSource(selectionModel.selectedItem) }
+
+            contextmenu {
+                item(messages["action.edit"]) {
+                    action {
+                        selectedItem?.let { referenceListPresenter.editReference(it) }
+                    }
+                }
+
+                separator()
+
+                item(messages["action.delete"]) {
+                    action {
+                        selectedItem?.let { referenceListPresenter.deleteReference(it) }
+                    }
+                }
+            }
         }
 
         hbox {
