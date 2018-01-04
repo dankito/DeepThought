@@ -1,16 +1,16 @@
 package net.dankito.deepthought.android.views
 
+import android.content.Context
 import android.support.v7.widget.ActionBarContextView
 import android.support.v7.widget.ActionMenuView
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.support.v7.widget.SearchView
+import android.view.*
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.contextual_action_mode_item_action_layout.view.*
+import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.extensions.setRightMargin
 import org.slf4j.LoggerFactory
 
@@ -32,8 +32,9 @@ class ToolbarUtil {
 
     fun setupActionItemsLayout(menuItem: MenuItem?, onClickListener: ((MenuItem) -> Unit)? = null) {
         menuItem?.let {
-            (menuItem.actionView as? RelativeLayout)?.let { actionView -> // cast to RelativeLayout = check if it's contextual_action_mode_item_action_layout and not a SearchView etc.
-                setupActionLayoutItem(actionView, menuItem, onClickListener)
+            when(menuItem.actionView) {
+                is SearchView -> setupSearchView(menuItem.actionView as SearchView, menuItem)
+                is RelativeLayout -> setupActionLayoutItem(menuItem.actionView as RelativeLayout, menuItem, onClickListener)
             }
         }
     }
@@ -55,6 +56,38 @@ class ToolbarUtil {
     private fun setTitleAndIcon(actionView: View, menuItem: MenuItem) {
         actionView.imgActionIcon.setImageDrawable(menuItem.icon)
         actionView.txtActionTitle.text = menuItem.title
+    }
+
+
+    private fun setupSearchView(searchView: SearchView, menuItem: MenuItem) {
+        (searchView.findViewById(android.support.v7.appcompat.R.id.search_button) as? ImageView)?.let { searchIcon ->
+            setupSearchView(searchView, menuItem, searchIcon)
+        }
+    }
+
+    private fun setupSearchView(searchView: SearchView, menuItem: MenuItem, searchIcon: ImageView) {
+        val searchIconIndex = (searchIcon.parent as ViewGroup).indexOfChild(searchIcon)
+        (searchIcon.parent as ViewGroup).removeView(searchIcon) // remove search icon and place it in an ActionLayout
+
+        val inflater = searchView.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val actionLayout = inflater.inflate(R.layout.contextual_action_mode_item_action_layout, null) as ViewGroup
+        searchView.addView(actionLayout, searchIconIndex)
+
+        actionLayout.layoutParams?.width = searchView.context.resources.getDimension(R.dimen.action_item_width).toInt()
+        searchView.layoutParams?.width = actionLayout.layoutParams?.width
+
+        val imgActionIcon = actionLayout.imgActionIcon
+        val index = actionLayout.indexOfChild(imgActionIcon)
+        actionLayout.addView(searchIcon, if(index >= 0) index else 0, imgActionIcon.layoutParams)
+        actionLayout.removeView(imgActionIcon)
+
+        searchIcon.layoutParams.width = imgActionIcon.layoutParams.width
+        searchIcon.scaleType = ImageView.ScaleType.FIT_CENTER
+
+        val txtActionTitle = actionLayout.txtActionTitle
+        txtActionTitle.text = menuItem.title
+
+        actionLayout.setOnClickListener { searchIcon.callOnClick() }
     }
 
 
