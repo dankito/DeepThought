@@ -111,7 +111,7 @@ class TagsListView : EntitiesListView(), ITagsListView {
             selectionModel.selectedItemProperty().addListener { _, _, newValue -> tagSelected(newValue) }
 
             contextmenu {
-                item(messages["context.menu.tag.edit"]) {
+                item(messages["action.edit"]) {
                     isDisable = true
                     action {
                         selectedItem?.let { presenter.editTag(it) }
@@ -120,7 +120,7 @@ class TagsListView : EntitiesListView(), ITagsListView {
 
                 separator()
 
-                item(messages["context.menu.tag.delete"]) {
+                item(messages["action.delete"]) {
                     action {
                         selectedItem?.let { presenter.deleteTagAsync(it) }
                     }

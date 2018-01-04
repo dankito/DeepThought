@@ -106,7 +106,7 @@ class TagsOnEntryDialog : DialogFragment(), ITagsOnEntryListView {
             onDoubleClick { toggleTagOnEntry(selectionModel.selectedItem) }
 
             contextmenu {
-                item(messages["context.menu.tag.edit"]) {
+                item(messages["action.edit"]) {
                     isDisable = true
                     action {
                         selectedItem?.let { presenter.editTag(it) }
