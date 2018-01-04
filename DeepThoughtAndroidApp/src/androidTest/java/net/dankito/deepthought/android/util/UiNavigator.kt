@@ -9,14 +9,17 @@ import android.support.test.espresso.ViewAction
 import android.support.test.espresso.action.ViewActions
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.action.ViewActions.replaceText
+import android.support.test.espresso.assertion.ViewAssertions.matches
+import android.support.test.espresso.contrib.DrawerActions
+import android.support.test.espresso.contrib.DrawerMatchers.isClosed
 import android.support.test.espresso.contrib.NavigationViewActions
 import android.support.test.espresso.matcher.RootMatchers
 import android.support.test.espresso.matcher.RootMatchers.isDialog
 import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.v7.widget.MenuPopupWindow
+import android.view.Gravity
 import android.view.View
-import android.widget.ImageButton
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import net.dankito.deepthought.android.R
@@ -153,7 +156,9 @@ open class UiNavigator {
     }
 
     private fun pressHamburgerIcon() {
-        onView(allOf(isDescendantOfA(withId(R.id.toolbar)), instanceOf(ImageButton::class.java))).perform(click())
+        onView(withId(R.id.drawer_layout))
+                .check(matches(isClosed(Gravity.LEFT))) // Left Drawer should be closed.
+                .perform(DrawerActions.open()) // Open Drawer
 
         TestUtil.sleep(1000)
     }
