@@ -9,15 +9,13 @@ import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.extensions.abstractPlainText
-import net.dankito.deepthought.model.extensions.contentPlainText
-import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
 import net.dankito.utils.UrlUtil
-import net.dankito.utils.ui.IClipboardService
+import net.dankito.utils.ui.ClipboardServiceBase
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 
-class AndroidClipboardService : IClipboardService {
+class AndroidClipboardService : ClipboardServiceBase() {
 
     companion object {
         private val log = LoggerFactory.getLogger(AndroidClipboardService::class.java)
@@ -80,13 +78,9 @@ class AndroidClipboardService : IClipboardService {
     }
 
     private fun addItemToShareIntent(shareIntent: Intent, item: Item, source: Source?, series: Series?) {
-        var content = item.contentPlainText
+        val itemString = convertItemToStringForCopyingToClipboard(item, source, series)
 
-        if(source != null) {
-            content = "$content\n\n(${source.getPreviewWithSeriesAndPublishingDate(series)}: ${source.url})"
-        }
-
-        shareIntent.putExtra(Intent.EXTRA_TEXT, content)
+        shareIntent.putExtra(Intent.EXTRA_TEXT, itemString)
         if(Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
             shareIntent.putExtra(Intent.EXTRA_HTML_TEXT, item.content)
         }
