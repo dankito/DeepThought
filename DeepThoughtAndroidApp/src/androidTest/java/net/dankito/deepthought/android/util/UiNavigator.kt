@@ -127,11 +127,6 @@ open class UiNavigator {
     }
 
 
-    open fun navigateToTabItems() {
-        onView(withId(net.dankito.deepthought.android.R.id.btnvEntries)).perform(click())
-        TestUtil.sleep(1000)
-    }
-
     open fun navigateToTabTags() {
         clickOnNavigationDrawerMenuItem(R.id.navTags)
     }

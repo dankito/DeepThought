@@ -173,7 +173,6 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
 
     private fun createSyncDataScreenshot() {
         TestUtil.sleep(1000)
-        navigator.navigateToTabItems()
 
         val device = Device("name", "id", OsType.DESKTOP, getString(R.string.sync_data_os_name), getString(R.string.sync_data_os_version))
         dataManager.entityManager.persistEntity(device)
