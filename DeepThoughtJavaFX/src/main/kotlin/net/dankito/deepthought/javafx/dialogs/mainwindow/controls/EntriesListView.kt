@@ -107,6 +107,12 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
                     }
                 }
 
+                item(messages["context.menu.item.copy.item.to.clipboard"]) {
+                    action {
+                        selectedItem?.let { presenter.copyItemToClipboard(it) }
+                    }
+                }
+
                 separator()
 
                 item(messages["context.menu.item.delete"]) {
