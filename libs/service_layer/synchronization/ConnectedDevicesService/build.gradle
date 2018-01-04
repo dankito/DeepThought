@@ -9,5 +9,4 @@ dependencies {
     compile project(':DevicesDiscoverer')
     compile project(':ClientCommunicator')
     compile project(':SyncManager')
-    compile project(':EntityManager')
 }
