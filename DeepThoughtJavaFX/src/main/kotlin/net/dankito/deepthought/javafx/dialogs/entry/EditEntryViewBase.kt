@@ -39,7 +39,6 @@ import net.dankito.deepthought.ui.view.IReferencesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.search.ISearchEngine
-import net.dankito.service.search.specific.ReferenceSearch
 import net.dankito.utils.extensions.toSortedString
 import net.dankito.utils.ui.IClipboardService
 import org.jsoup.Jsoup
@@ -94,8 +93,6 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     private val sourceSearchResults: ObservableList<Source> = FXCollections.observableArrayList()
 
-    private var lastSourceSearch: ReferenceSearch? = null
-
 
     private var item: Item? = null
 
@@ -137,7 +134,7 @@ abstract class EditEntryViewBase : DialogFragment() {
         referenceListPresenter = ReferencesListPresenter(object : IReferencesListView {
 
             override fun showEntities(entities: List<Source>) {
-                retrievedSourceSearchResultsOnUiThread(entities)
+                runLater { retrievedSourceSearchResultsOnUiThread(entities) }
             }
 
         }, searchEngine, router, clipboardService, deleteEntityService)
@@ -184,7 +181,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
                 promptText = messages["find.source.prompt.text"]
 
-                textProperty().addListener { _, _, newValue -> searchSources(newValue) }
+                textProperty().addListener { _, _, newValue -> referenceListPresenter.searchReferences(newValue) }
                 setOnKeyReleased { event ->
                     if(event.code == KeyCode.ENTER) {
                         createOrSelectSource()
@@ -305,16 +302,6 @@ abstract class EditEntryViewBase : DialogFragment() {
         hasUnsavedChanges.value = true
         val buttons = DialogButtonBar({ closeDialog() }, { saveEntryAsync(it) }, hasUnsavedChanges, messages["action.save"])
         add(buttons)
-    }
-
-    private fun searchSources(searchTerm: String) {
-        lastSourceSearch?.interrupt()
-
-        lastSourceSearch = ReferenceSearch(searchTerm) { result ->
-            FXUtils.runOnUiThread { retrievedSourceSearchResultsOnUiThread(result) }
-        }
-
-        lastSourceSearch?.let { searchEngine.searchReferences(it) }
     }
 
     private fun retrievedSourceSearchResultsOnUiThread(result: List<Source>) {
