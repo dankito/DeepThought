@@ -21,6 +21,7 @@
     <string name="nav_menu_settings_title">Einstellungen (to do)</string>
     <string name="nav_menu_about_title">Über … (to do)</string>
     <string name="nav_menu_version_label">Version\u0020</string>
+    <string name="nav_menu_import_pdf">PDF importieren</string>
 
     <!-- Floating Action Button ist der + Button auf der Startseite. Die Werte hier werden dann im Menü angezeigt, wenn ich auf diesen Button klicke -->
     <!-- In Platzhalter wie '%s' füge ich dann im Code etwas ein (z. B. hier: SZ) -->
@@ -64,6 +65,11 @@
     <string name="search_hint_sources">Quellentitel, Datum, Reihe, Ausgabe, …</string>
     <string name="search_hint_read_later_articles">Titel, Text, Datum, Reihe</string>
 
+
+    <string name="loading">Lade …</string>
+
+    <string name="open_file_permission_request_message">Um PDF Dateien importieren zu können benötigt DeepThought die Erlaubnis Dateien zu lesen.</string>
+    <string name="open_settings">Gehe zu Einstellungen</string>
 
     <!-- Wenn du im Hauptfenster bei den Schlagwörtern auf das Filtersymbol eines Schlagwortes tippst -->
 

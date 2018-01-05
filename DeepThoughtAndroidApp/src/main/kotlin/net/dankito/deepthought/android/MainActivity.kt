@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -12,11 +13,12 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.widget.TextView
 import kotlinx.android.synthetic.main.view_floating_action_button_main.*
-import net.dankito.deepthought.android.activities.BaseActivity
-import net.dankito.deepthought.android.activities.ReadLaterArticlesListViewActivity
-import net.dankito.deepthought.android.activities.SourcesListViewActivity
-import net.dankito.deepthought.android.activities.TagsListViewActivity
+import me.zhanghai.android.effortlesspermissions.EffortlessPermissions
+import me.zhanghai.android.effortlesspermissions.OpenAppDetailsDialogFragment
+import net.dankito.deepthought.android.activities.*
+import net.dankito.deepthought.android.activities.arguments.ViewPdfActivityParameters
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.android.dialogs.FileChooserDialog
 import net.dankito.deepthought.android.dialogs.TagsListViewDialog
 import net.dankito.deepthought.android.fragments.EntriesListView
 import net.dankito.deepthought.android.service.ExtractArticleHandler
@@ -32,12 +34,16 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.UrlUtil
 import net.engio.mbassy.listener.Handler
 import org.slf4j.LoggerFactory
+import pub.devrel.easypermissions.AfterPermissionGranted
 import javax.inject.Inject
 
 
 class MainActivity : BaseActivity() {
 
     companion object {
+        private const val REQUEST_CODE_OPEN_FILE_PERMISSION = 1
+        private val PERMISSIONS_OPEN_FILE = arrayOf<String>(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
         private val log = LoggerFactory.getLogger(MainActivity::class.java)
     }
 
@@ -49,6 +55,8 @@ class MainActivity : BaseActivity() {
     private lateinit var entriesListView: EntriesListView
 
     private var eventBusListener: EventBusListener? = null
+
+    private var fileChooserDialog: FileChooserDialog? = null
 
 
     @Inject
@@ -194,6 +202,15 @@ class MainActivity : BaseActivity() {
         return false
     }
 
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        // Dispatch to our library.
+        EffortlessPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+    }
+
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
         return true
@@ -216,6 +233,8 @@ class MainActivity : BaseActivity() {
             R.id.navArticleSummaryExtractors -> {
                 router.showArticleSummaryExtractorsView()
             }
+
+            R.id.navImportPdf -> importPdf()
         }
 
         val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
@@ -224,11 +243,52 @@ class MainActivity : BaseActivity() {
         true
     }
 
-    private fun navigateToActivity(activityClass: Class<out BaseActivity>) {
+    @AfterPermissionGranted(REQUEST_CODE_OPEN_FILE_PERMISSION)
+    private fun importPdf() {
+        if(EffortlessPermissions.hasPermissions(this, *PERMISSIONS_OPEN_FILE)) {
+            // We've got the permission.
+            importPdfWithPermission()
+        }
+        else if(EffortlessPermissions.somePermissionPermanentlyDenied(this, *PERMISSIONS_OPEN_FILE)) {
+            // Some permission is permanently denied so we cannot request them normally.
+            OpenAppDetailsDialogFragment.show(
+                    R.string.open_file_permission_request_message,
+                    R.string.open_settings, this)
+        }
+        else  {
+            // Request the permissions.
+            EffortlessPermissions.requestPermissions(this,
+                    R.string.open_file_permission_request_message,
+                    REQUEST_CODE_OPEN_FILE_PERMISSION, *PERMISSIONS_OPEN_FILE)
+        }
+
+    }
+
+    private fun importPdfWithPermission() {
+        if(fileChooserDialog == null) {
+            fileChooserDialog = FileChooserDialog(this)
+        }
+
+        fileChooserDialog?.selectFile { file ->
+            navigateToActivity(ViewPdfActivity::class.java, ViewPdfActivityParameters(file))
+        }
+    }
+
+    // TODO: move to Router
+    private fun navigateToActivity(activityClass: Class<out BaseActivity>, parameters: Any? = null) {
         val intent = Intent(this, activityClass)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
+        parameters?.let { addParametersToIntent(intent, parameters) }
+
         startActivity(intent)
+    }
+
+
+    private fun addParametersToIntent(intent: Intent, parameters: Any) {
+        val id = parameterHolder.setParameters(parameters)
+
+        intent.putExtra(BaseActivity.ParametersId, id)
     }
 
 

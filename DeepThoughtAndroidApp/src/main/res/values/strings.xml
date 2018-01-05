@@ -15,6 +15,7 @@
     <string name="nav_menu_device_management_title">Device management (to do)</string>
     <string name="nav_menu_settings_title">Settings (to do)</string>
     <string name="nav_menu_about_title">About (to do)</string>
+    <string name="nav_menu_import_pdf">Import PDF</string>
 
     <string name="nav_menu_version_label">Version\u0020</string>
 
@@ -50,6 +51,12 @@
     <string name="search_hint_tags">Tag names</string>
     <string name="search_hint_sources">Source title, date, series, issue, …</string>
     <string name="search_hint_read_later_articles">Title, summary, date, series</string>
+
+
+    <string name="loading">Loading …</string>
+
+    <string name="open_file_permission_request_message">For importing PDF files, DeepThought needs permission to read files.</string>
+    <string name="open_settings">Open settings</string>
 
     <string name="fragment_main_activity_tabs_filtered_entities_label">Filtered:</string>
 
