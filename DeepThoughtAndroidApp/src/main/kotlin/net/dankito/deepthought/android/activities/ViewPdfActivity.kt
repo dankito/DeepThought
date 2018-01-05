@@ -119,7 +119,12 @@ class ViewPdfActivity : BaseActivity() {
     }
 
     private fun loadPdf(pdfFile: File) {
-        importer.loadFileAsync(pdfFile) { result ->
+        var file = pdfFile
+        if(file.isAbsolute == false) {
+            file = File(getAppDataDir(), pdfFile.path)
+        }
+
+        importer.loadFileAsync(file) { result ->
             result.fileMetadata?.let {
                 runOnUiThread { loadedFileOnUiThread(pdfFile, it) }
             }

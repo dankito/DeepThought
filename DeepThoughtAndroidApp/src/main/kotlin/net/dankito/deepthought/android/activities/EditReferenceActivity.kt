@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -8,11 +9,13 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
 import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityResult
+import net.dankito.deepthought.android.activities.arguments.ViewPdfActivityParameters
 import net.dankito.deepthought.android.adapter.FilesAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.PickDateDialog
 import net.dankito.deepthought.android.views.ToolbarUtil
 import net.dankito.deepthought.data.ReferencePersister
+import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.fields.SourceField
@@ -30,6 +33,7 @@ import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogButton
 import net.dankito.utils.ui.model.ConfirmationDialogConfig
 import net.engio.mbassy.listener.Handler
+import java.io.File
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.HashSet
@@ -187,6 +191,20 @@ class EditReferenceActivity : BaseActivity() {
         lytEditReferenceUrl.setFieldNameOnUiThread(R.string.activity_edit_source_url_label) { updateDidReferenceChangeOnUiThread(SourceField.Url, it) }
 
         lstSourceAttachedFiles.adapter = attachedFilesAdapter
+        lstSourceAttachedFiles.setOnItemClickListener { _, _, position, _ -> showFile(attachedFilesAdapter.getItem(position)) }
+    }
+
+    // TODO: move to Router
+    private fun showFile(file: FileLink) {
+        val intent = Intent(this, ViewPdfActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        val parameters = ViewPdfActivityParameters(File(file.uriString), source)
+        val id = parameterHolder.setParameters(parameters)
+
+        intent.putExtra(BaseActivity.ParametersId, id)
+
+        startActivity(intent)
     }
 
     private fun seriesTitleChanged(didSeriesTitleChange: Boolean) {
