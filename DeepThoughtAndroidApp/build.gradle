@@ -13,6 +13,8 @@ apply from: '../keys.gradle'
 
 
 repositories {
+    maven { url "https://dl.bintray.com/firzenyogesh/maven" }
+
     maven { url 'https://www.testfairy.com/maven' }
     maven { url 'https://maven.fabric.io/public' }
 }
@@ -164,6 +166,12 @@ dependencies {
     compile "com.daimajia.swipelayout:library:$swipeLayoutVersion"
     compile "com.google.android:flexbox:$flexboxVersion"
     compile 'net.dankito.richtexteditor:richtexteditor-android:1.0.2'
+
+    compile "yogesh.firzen:FilesLister:1.0.1.g", {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+        exclude group: 'com.android.support', module: 'design'
+        exclude group: 'com.android.support', module: 'recyclerview-v7'
+    }
 
     compile "org.slf4j:slf4j-android:$slf4jVersion"
 
