@@ -160,7 +160,7 @@ class ViewPdfActivity : BaseActivity() {
     private fun createSource(metadata: FileMetadata, pdfFile: File): Source {
         val sourceTitle = (if (metadata.author.isNotBlank()) metadata.author + " - " else "") + metadata.title
         val source = Source(sourceTitle)
-        source.length = metadata.countPages.toString()
+        source.length = resources.getString(R.string.activity_view_pdf_source_length_in_pages, metadata.countPages)
 
         val relativePath = pdfFile.toRelativeString(File("/"))
         val file = FileLink(relativePath, pdfFile.name)
