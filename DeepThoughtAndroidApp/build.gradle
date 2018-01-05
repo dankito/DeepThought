@@ -168,6 +168,11 @@ dependencies {
     compile "com.google.android:flexbox:$flexboxVersion"
     compile 'net.dankito.richtexteditor:richtexteditor-android:1.0.2'
 
+    compile 'me.zhanghai.android.effortlesspermissions:library:1.0.2', {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+
     compile "yogesh.firzen:MukkiyaSevaigal:1.0.6"
     compile "org.apache.commons:commons-io:1.3.2"
     compile "yogesh.firzen:FilesLister:1.0.1.g", {
