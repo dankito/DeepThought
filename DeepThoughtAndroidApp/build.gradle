@@ -159,6 +159,7 @@ dependencies {
     compile project(':AndroidCouchbaseLiteEntityManager')
     compile project(':AndroidUdpDevicesDiscoverer')
     compile project(':AndroidFileStorageService')
+    compile project(':AndroidPdfImporter')
 
     compile "com.squareup.picasso:picasso:$picassoVersion"
 
