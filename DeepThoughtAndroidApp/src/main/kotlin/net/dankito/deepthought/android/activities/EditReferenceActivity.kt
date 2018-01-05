@@ -8,6 +8,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
 import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityResult
+import net.dankito.deepthought.android.adapter.FilesAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.PickDateDialog
 import net.dankito.deepthought.android.views.ToolbarUtil
@@ -82,6 +83,8 @@ class EditReferenceActivity : BaseActivity() {
 
     private var currentlySetPublishingDate: Date? = null
 
+
+    private val attachedFilesAdapter = FilesAdapter()
 
     private var didReferenceChange = false
 
@@ -182,6 +185,8 @@ class EditReferenceActivity : BaseActivity() {
         }
 
         lytEditReferenceUrl.setFieldNameOnUiThread(R.string.activity_edit_source_url_label) { updateDidReferenceChangeOnUiThread(SourceField.Url, it) }
+
+        lstSourceAttachedFiles.adapter = attachedFilesAdapter
     }
 
     private fun seriesTitleChanged(didSeriesTitleChange: Boolean) {
@@ -414,6 +419,8 @@ class EditReferenceActivity : BaseActivity() {
         showPublishingDate(source.publishingDate, source.publishingDateString)
 
         lytEditReferenceUrl.setFieldValueOnUiThread(source.url ?: "")
+
+        attachedFilesAdapter.setItems(source.attachedFiles)
 
         unregisterEventBusListener() // TODO: why? i came here from showParameters() and then we need to listen to changes to Source
         updateDidReferenceChangeOnUiThread()

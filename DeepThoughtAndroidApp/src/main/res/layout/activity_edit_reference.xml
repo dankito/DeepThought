@@ -78,6 +78,22 @@
                     android:layout_below="@+id/lytEditReferencePublishingDate"
                 />
 
+                <TextView
+                    android:id="@+id/txtSourceAttachedFilesLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/lytEditReferenceUrl"
+                    android:layout_marginBottom="6dp"
+                    android:text="Dateien (noch ganz haesslich):"
+                />
+
+                <ListView
+                    android:id="@+id/lstSourceAttachedFiles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtSourceAttachedFilesLabel"
+                />
+
             </RelativeLayout>
 
         </ScrollView>
