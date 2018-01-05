@@ -77,6 +77,12 @@ class CommonDataModule {
 
     @Provides
     @Singleton
+    fun provideFileService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier): FileService {
+        return FileService(dataManager, entityChangedNotifier)
+    }
+
+    @Provides
+    @Singleton
     fun provideArticleSummaryExtractorConfigService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : ArticleSummaryExtractorConfigService {
         return ArticleSummaryExtractorConfigService(dataManager, entityChangedNotifier)
     }
