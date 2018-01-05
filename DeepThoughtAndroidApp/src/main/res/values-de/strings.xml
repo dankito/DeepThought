@@ -210,6 +210,7 @@
     <string name="activity_edit_source_title_label">Titel der Quelle</string>
     <string name="activity_edit_source_series_label">Reihe</string>
     <string name="activity_edit_source_issue_label">Ausgabe</string>
+    <string name="activity_edit_source_length_label">Länge</string>
     <string name="activity_edit_source_publishing_date_label">Veröffentlichungsdatum</string>
     <string name="activity_edit_source_url_label">Webadresse</string>
     <string name="activity_edit_source_error_could_not_parse_publishing_date" formatted="false">Kann %s nicht in ein Datum umwandeln</string>
@@ -237,6 +238,8 @@
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
     <string name="activity_edit_series_alert_message_series_has_been_edited">Reihe wurde geändert, wahrscheinlich auf einem synchronisierten Gerät.\n\nWenn
         Sie die Reihe hier nun ebenfalls speichern, überschreiben Sie jene Änderungen.</string>
+
+    <string name="activity_view_pdf_source_length_in_pages">%d Seiten</string>
 
     <string name="snackbar_extract_item_from_url"><![CDATA[
         Zwischenablage enthält einen Link von <b><u>%1$s</u></b>. Möchten Sie hieraus einen Eintrag erstellen?

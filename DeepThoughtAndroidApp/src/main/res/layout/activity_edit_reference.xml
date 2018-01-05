@@ -58,10 +58,17 @@
                 />
 
                 <net.dankito.deepthought.android.views.EditEntityField
-                    android:id="@+id/lytEditReferencePublishingDate"
+                    android:id="@+id/lytEditReferenceLength"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/lytEditReferenceIssue"
+                />
+
+                <net.dankito.deepthought.android.views.EditEntityField
+                    android:id="@+id/lytEditReferencePublishingDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/lytEditReferenceLength"
                 />
 
                 <net.dankito.deepthought.android.views.EditEntityField

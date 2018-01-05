@@ -176,6 +176,7 @@ class EditReferenceActivity : BaseActivity() {
         lytEditReferenceSeries.didValueChangeListener = { didSeriesTitleChange -> seriesTitleChanged(didSeriesTitleChange) }
 
         lytEditReferenceIssue.setFieldNameOnUiThread(R.string.activity_edit_source_issue_label) { updateDidReferenceChangeOnUiThread(SourceField.Issue, it) }
+        lytEditReferenceLength.setFieldNameOnUiThread(R.string.activity_edit_source_length_label) { updateDidReferenceChangeOnUiThread(SourceField.Length, it) }
 
         lytEditReferencePublishingDate.setFieldNameOnUiThread(R.string.activity_edit_source_publishing_date_label) { updateDidReferenceChangeOnUiThread(SourceField.PublishingDate, it) }
         lytEditReferencePublishingDate.showActionIconOnUiThread(R.drawable.ic_date_range_white_48dp) { showDatePickerDialog() }
@@ -309,6 +310,7 @@ class EditReferenceActivity : BaseActivity() {
 
             reference.title = lytEditReferenceTitle.getCurrentFieldValue()
             reference.issue = if(lytEditReferenceIssue.getCurrentFieldValue().isNullOrBlank()) null else lytEditReferenceIssue.getCurrentFieldValue()
+            reference.length = if(lytEditReferenceLength.getCurrentFieldValue().isNullOrBlank()) null else lytEditReferenceLength.getCurrentFieldValue()
             reference.url = if(lytEditReferenceUrl.getCurrentFieldValue().isNullOrBlank()) null else lytEditReferenceUrl.getCurrentFieldValue()
 
             presenter.saveReferenceAsync(reference, currentlySetSeries, currentlySetPublishingDate, lytEditReferencePublishingDate.getCurrentFieldValue()) { successful ->
@@ -414,6 +416,7 @@ class EditReferenceActivity : BaseActivity() {
         lytEditReferenceSeries.setOriginalSeriesToEdit(series ?: source.series, this) { setSeriesToEdit(it) }
 
         lytEditReferenceIssue.setFieldValueOnUiThread(source.issue ?: "")
+        lytEditReferenceLength.setFieldValueOnUiThread(source.length ?: "")
         showPublishingDate(source.publishingDate, source.publishingDateString)
 
         lytEditReferenceUrl.setFieldValueOnUiThread(source.url ?: "")

@@ -172,6 +172,7 @@
     <string name="activity_edit_source_title_label">Source title</string>
     <string name="activity_edit_source_series_label">Series</string>
     <string name="activity_edit_source_issue_label">Issue</string>
+    <string name="activity_edit_source_length_label">Length</string>
     <string name="activity_edit_source_publishing_date_label">Publishing date</string>
     <string name="activity_edit_source_url_label">Web address</string>
     <string name="activity_edit_source_error_could_not_parse_publishing_date" formatted="false">Cannot parse %s to date</string>
