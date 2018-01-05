@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="net.dankito.deepthought.android.activities.ViewPdfActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/txtPageText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_above="@+id/lytPageControls"
+            android:textIsSelectable="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:text="@string/loading"
+        />
+
+        <LinearLayout
+            android:id="@+id/lytPageControls"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:focusable="true"
+        >
+
+            <ImageButton
+                android:id="@+id/btnNavigateToPreviousPage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginEnd="6dp"
+                android:src="@android:drawable/ic_media_previous"
+                android:enabled="false"
+            />
+
+            <EditText
+                android:id="@+id/edtxtCurrentPage"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:enabled="false"
+            />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textAlignment="gravity"
+                android:focusable="true"
+                android:text="/"
+            />
+
+            <TextView
+                android:id="@+id/txtCountPages"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textAlignment="gravity"
+                android:focusable="true"
+            />
+
+            <ImageButton
+                android:id="@+id/btnNavigateToNextPage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginStart="6dp"
+                android:src="@android:drawable/ic_media_next"
+                android:enabled="false"
+            />
+
+        </LinearLayout>
+
+
+        <ImageButton
+            android:id="@+id/btnCreateItemFromSelectedText"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:tint="@color/colorPrimary"
+            android:src="@drawable/ic_tab_items"
+            android:enabled="false"
+        />
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

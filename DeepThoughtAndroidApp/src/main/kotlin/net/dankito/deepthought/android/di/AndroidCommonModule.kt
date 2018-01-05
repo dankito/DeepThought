@@ -12,6 +12,7 @@ import net.dankito.data_access.network.discovery.AndroidUdpDevicesDiscoverer
 import net.dankito.data_access.network.discovery.IDevicesDiscoverer
 import net.dankito.deepthought.android.service.hashing.AndroidBase64Service
 import net.dankito.deepthought.android.service.settings.AndroidPlatformConfiguration
+import net.dankito.deepthought.service.importexport.pdf.PdfImporter
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.services.hashing.IBase64Service
@@ -46,6 +47,13 @@ open class AndroidCommonModule {
     @Singleton
     open fun provideFileStorageService(context: Context) : IFileStorageService {
         return AndroidFileStorageService(context)
+    }
+
+
+    @Provides
+    @Singleton
+    open fun providePdfImporter(applicationContext: Context, threadPool: IThreadPool) : PdfImporter {
+        return PdfImporter(applicationContext, threadPool)
     }
 
 

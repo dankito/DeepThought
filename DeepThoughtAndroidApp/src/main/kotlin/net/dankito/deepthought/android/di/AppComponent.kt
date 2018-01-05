@@ -100,4 +100,6 @@ interface AppComponent : CommonComponent {
 
     fun inject(editSeriesActivity: EditSeriesActivity)
 
+    fun inject(viewPdfActivity: ViewPdfActivity)
+
 }
