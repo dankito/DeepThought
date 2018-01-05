@@ -162,13 +162,24 @@ class ViewPdfActivity : BaseActivity() {
         val source = Source(sourceTitle)
         source.length = resources.getString(R.string.activity_view_pdf_source_length_in_pages, metadata.countPages)
 
-        val relativePath = pdfFile.toRelativeString(File("/"))
+        val relativePath = pdfFile.toRelativeString(getAppDataDir())
         val file = FileLink(relativePath, pdfFile.name)
         fileService.persist(file) // TODO: integrate in ReferencePersister
 
         source.addAttachedFile(file)
 
         return source
+    }
+
+    private fun getAppDataDir(): File {
+        try {
+            val packageInfo = packageManager.getPackageInfo(packageName, 0)
+            return File(packageInfo.applicationInfo.dataDir)
+        } catch (e: Exception) {
+            log.error("Could not get app's data dir", e)
+        }
+
+        return File("/")
     }
 
 
