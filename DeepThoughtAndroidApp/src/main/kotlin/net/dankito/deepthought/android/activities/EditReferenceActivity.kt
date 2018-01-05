@@ -8,7 +8,6 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
 import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityResult
-import net.dankito.deepthought.android.adapter.ReferenceOnEntryRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.PickDateDialog
 import net.dankito.deepthought.android.views.ToolbarUtil
@@ -84,8 +83,6 @@ class EditReferenceActivity : BaseActivity() {
     private var currentlySetPublishingDate: Date? = null
 
 
-    private val existingReferencesSearchResultsAdapter: ReferenceOnEntryRecyclerAdapter
-
     private var didReferenceChange = false
 
     private val changedFields = HashSet<SourceField>()
@@ -101,8 +98,6 @@ class EditReferenceActivity : BaseActivity() {
         AppComponent.component.inject(this)
 
         presenter = EditReferencePresenter(router, clipboardService, deleteEntityService, referencePersister)
-
-        existingReferencesSearchResultsAdapter = ReferenceOnEntryRecyclerAdapter(presenter)
     }
 
 
@@ -409,7 +404,6 @@ class EditReferenceActivity : BaseActivity() {
 
     private fun showReference(source: Source, series: Series? = null, editedSourceTitle: String? = null) {
         this.source = source
-        existingReferencesSearchResultsAdapter.selectedSource = source
 
         lytEditReferenceTitle.setFieldValueOnUiThread(editedSourceTitle ?: source.title)
 
