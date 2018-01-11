@@ -3,7 +3,7 @@ package net.dankito.deepthought.javafx.dialogs.source.controls
 import tornadofx.*
 
 
-class EditDataFieldValueView(fieldName: String, initialFieldValue: String = "") : EditFieldValueView(fieldName, initialFieldValue) {
+class EditDateFieldValueView(fieldName: String, initialFieldValue: String = "") : EditFieldValueView(fieldName, initialFieldValue) {
 
 
     init {

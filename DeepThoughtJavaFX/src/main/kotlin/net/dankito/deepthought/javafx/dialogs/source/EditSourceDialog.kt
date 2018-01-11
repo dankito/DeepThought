@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleBooleanProperty
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
-import net.dankito.deepthought.javafx.dialogs.source.controls.EditDataFieldValueView
+import net.dankito.deepthought.javafx.dialogs.source.controls.EditDateFieldValueView
 import net.dankito.deepthought.javafx.dialogs.source.controls.EditFieldValueView
 import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
 import net.dankito.deepthought.model.Series
@@ -37,7 +37,7 @@ class EditSourceDialog : DialogFragment() {
 
     private val issueField = EditFieldValueView(messages["edit.source.issue"])
 
-    private val publishingDateField = EditDataFieldValueView(messages["edit.source.publishing.date"])
+    private val publishingDateField = EditDateFieldValueView(messages["edit.source.publishing.date"])
 
     private val webAddressField = EditFieldValueView(messages["edit.source.web.address"])
 
