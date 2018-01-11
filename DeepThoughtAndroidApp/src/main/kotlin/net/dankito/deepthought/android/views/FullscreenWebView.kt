@@ -15,9 +15,9 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.extensions.getColorFromResourceId
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import net.dankito.deepthought.android.service.showKeyboard
-import net.dankito.richtexteditor.android.command.ToolbarCommandStyle
 import net.dankito.richtexteditor.android.toolbar.SearchView
 import net.dankito.richtexteditor.android.toolbar.SearchViewStyle
+import net.dankito.richtexteditor.command.ToolbarCommandStyle
 import java.util.*
 
 
