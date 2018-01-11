@@ -70,8 +70,6 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     private var txtfldSearchSource: TextField by singleAssign()
 
-    private var txtSourcePreview: Label by singleAssign()
-
     private var lstSourceSearchResult: ListView<Source> by singleAssign()
 
     private var txtTags: Label by singleAssign()
@@ -158,7 +156,7 @@ abstract class EditEntryViewBase : DialogFragment() {
                 useMaxWidth = true
             }
 
-            txtSourcePreview = label {
+            label {
                 isWrapText = false
 
                 textProperty().bind(sourcePreview)
