@@ -1,4 +1,4 @@
-package net.dankito.deepthought.javafx.dialogs.source.controls
+package net.dankito.deepthought.javafx.ui.controls
 
 import tornadofx.*
 

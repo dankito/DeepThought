@@ -5,9 +5,9 @@ import javafx.beans.property.SimpleBooleanProperty
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
-import net.dankito.deepthought.javafx.dialogs.source.controls.EditDateFieldValueView
-import net.dankito.deepthought.javafx.dialogs.source.controls.EditFieldValueView
 import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
+import net.dankito.deepthought.javafx.ui.controls.EditDateFieldValueView
+import net.dankito.deepthought.javafx.ui.controls.EditFieldValueView
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
