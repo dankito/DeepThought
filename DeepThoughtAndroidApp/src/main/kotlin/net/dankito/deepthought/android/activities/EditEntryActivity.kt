@@ -499,7 +499,7 @@ class EditEntryActivity : BaseActivity() {
     private fun webPageCompletelyLoadedOnUiThread(webView: WebView) {
         // if ItemExtractionResult's item content hasn't been extracted yet, wait till WebView is loaded and extract item content then
         if((itemExtractionResult != null || readLaterArticle != null) && isInReaderMode == false &&
-                webView.url != "about:blank" && webView.url.startsWith("data:text/html") == false) {
+                webView.url != null && webView.url != "about:blank" && webView.url.startsWith("data:text/html") == false) {
             webView.loadUrl("javascript:$GetHtmlCodeFromWebViewJavaScriptInterfaceName.finishedLoadingSite" +
                     "(document.URL, '<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');")
         }
