@@ -62,7 +62,6 @@ class EditSourceDialog : DialogFragment() {
     override val root = vbox {
         prefWidth = 850.0
 
-        titleField.value = source.title
         setupEntityField(titleField, source.title)
         add(titleField)
 
