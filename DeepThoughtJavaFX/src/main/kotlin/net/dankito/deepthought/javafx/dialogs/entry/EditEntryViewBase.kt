@@ -6,6 +6,7 @@ import javafx.collections.FXCollections
 import javafx.collections.ObservableSet
 import javafx.collections.SetChangeListener
 import javafx.concurrent.Worker
+import javafx.geometry.Pos
 import javafx.scene.Cursor
 import javafx.scene.control.Control
 import javafx.scene.control.Label
@@ -25,13 +26,13 @@ import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.extensions.abstractPlainText
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.utils.extensions.toSortedString
 import net.dankito.utils.ui.IClipboardService
-import org.jsoup.Jsoup
 import tornadofx.*
 import javax.inject.Inject
 
@@ -41,7 +42,7 @@ abstract class EditEntryViewBase : DialogFragment() {
     // param values for Item and ItemExtractionResult are evaluated after root has been initialized -> Item is null at root initialization stage.
     // so i had to find a way to mitigate that Item / ItemExtractionResult is not initialized yet
 
-    protected val abstractPlainText = SimpleStringProperty()
+    protected val editedSummary = SimpleStringProperty()
 
     protected val tagsPreview = SimpleStringProperty()
 
@@ -60,15 +61,13 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     private var tagsOnEntryDialog: TagsOnEntryDialog? = null
 
-    private var editAbstractDialog: EditHtmlDialog? = null
-
 
     private val presenter: EditEntryPresenter
 
 
     private var item: Item? = null
 
-    private var abstractToEdit = ""
+    private var originalSummary = ""
 
     private val tagsOnEntry: ObservableSet<Tag> = FXCollections.observableSet()
 
@@ -109,23 +108,30 @@ abstract class EditEntryViewBase : DialogFragment() {
         hbox {
             prefHeight = 20.0
             maxHeight = 100.0
+            alignment = Pos.TOP_LEFT
             prefWidthProperty().bind(this@vbox.widthProperty())
-
-            cursor = Cursor.HAND
-            setOnMouseClicked { abstractPreviewClicked(it) }
 
             label(messages["edit.item.summary.label"]) {
                 minWidth = Control.USE_PREF_SIZE // guarantee that label keeps its calculated size
-                useMaxWidth = true
             }
 
-            label {
+            textarea {
                 isWrapText = true
+                minHeight = 20.0
+                prefHeight = minHeight
+                maxHeight = 100.0
 
-                textProperty().bind(abstractPlainText)
+                textProperty().bindBidirectional(editedSummary)
+
+                hboxConstraints {
+                    hGrow = Priority.ALWAYS
+
+                    marginLeft = 4.0
+                }
             }
 
             vboxConstraints {
+                marginTop = 6.0
                 marginBottom = 6.0
             }
         }
@@ -180,6 +186,8 @@ abstract class EditEntryViewBase : DialogFragment() {
         hasUnsavedChanges.value = true
         val buttons = DialogButtonBar({ closeDialog() }, { saveEntryAsync(it) }, hasUnsavedChanges, messages["action.save"])
         add(buttons)
+
+        htmlEditor.focusEditor()
     }
 
 
@@ -216,28 +224,13 @@ abstract class EditEntryViewBase : DialogFragment() {
         }
     }
 
-    private fun abstractPreviewClicked(event: MouseEvent) {
-        if(event.button == MouseButton.PRIMARY) {
-            if(editAbstractDialog == null) {
-                editAbstractDialog = find(EditHtmlDialog::class)
-                editAbstractDialog?.show(abstractToEdit, messages["edit.item.summary.dialog.title"], currentStage, { this.editAbstractDialog = null } ) { // TODO: add icon
-                    abstractToEdit = it
-                    abstractPlainText.value = Jsoup.parseBodyFragment(abstractToEdit).text()
-                }
-            }
-            else {
-                editAbstractDialog?.currentStage?.requestFocus()
-            }
-        }
-    }
-
 
     protected fun showData(item: Item, tags: Collection<Tag>, source: Source?, series: Series?, contentToEdit: String? = null) {
         this.item = item
-        abstractToEdit = item.summary
+        originalSummary = item.abstractPlainText
         tagsOnEntry.addAll(tags) // make a copy
 
-        abstractPlainText.value = Jsoup.parseBodyFragment(abstractToEdit).text()
+        editedSummary.value = originalSummary
 
         showContent(item, source, contentToEdit)
 
@@ -281,7 +274,7 @@ abstract class EditEntryViewBase : DialogFragment() {
     private fun updateEntryAndSaveAsync(done: () -> Unit) {
         item?.let { entry ->
             entry.content = htmlEditor.getHtml()
-            entry.summary = abstractToEdit
+            entry.summary = editedSummary.value
 
             presenter.saveEntryAsync(entry, editSourceField.sourceToEdit, editSourceField.seriesToEdit, tagsOnEntry) {
                 done()
