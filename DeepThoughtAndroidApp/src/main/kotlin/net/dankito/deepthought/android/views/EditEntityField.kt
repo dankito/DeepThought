@@ -50,8 +50,6 @@ open class EditEntityField : RelativeLayout {
 
     var didValueChangeListener: ((didValueChange: Boolean) -> Unit)? = null
 
-    var fieldClickedListener: (() -> Unit)? = null
-
     var fieldValueFocusChangedListener: ((hasFocus: Boolean) -> Unit)? = null
 
     var actionIconClickedListener: (() -> Unit)? = null
@@ -134,7 +132,7 @@ open class EditEntityField : RelativeLayout {
     }
 
     protected open fun viewClicked() {
-        fieldClickedListener?.invoke() // remember: setOnClickListener() on an EditText only works if focusable has been set to  false -> call setFieldNameOnUiThread() with isEditable = false
+        // may be overwritten in sub classes
     }
 
     protected open fun doCustomUiInitialization(rootView: ViewGroup) {
