@@ -51,11 +51,18 @@ class OpenUrlOptionsView {
         optionsListView.setBackgroundColor(Color.WHITE)
         optionsListView.adapter = adapter
 
+        optionsListView.setOnItemClickListener { _, _, position, _ -> // for newer / non-Samsung Androids
+            closeMenu(popupWindow)
+
+            optionSelectedListener(optionItems[position])
+        }
+
         popupWindow.contentView = optionsListView
         // for Samsung devices - once again a special handling for Samsung devices - height and width has to be set, otherwise PopupWindow won't be shown
         popupWindow.height = adapter.calculateItemsHeight(anyViewInHierarchyJustForAnchor.context)
         popupWindow.width = adapter.calculateItemWidth(anyViewInHierarchyJustForAnchor.context)
         popupWindow.showAtLocation(anyViewInHierarchyJustForAnchor, Gravity.CENTER, 0, 0)
+
         this.displayedPopupWindow = popupWindow
     }
 
@@ -132,10 +139,6 @@ class OpenUrlOptionsView {
 
             val padding = (4 * density).toInt()
             textView.setPadding(padding, padding, padding, padding)
-
-            textView.isClickable = true
-            textView.isFocusable = true
-            textView.isFocusableInTouchMode = true
         }
 
 
