@@ -1,5 +1,6 @@
 package net.dankito.deepthought.javafx.dialogs.entry.controls
 
+import com.sun.javafx.scene.traversal.Direction
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
@@ -7,6 +8,7 @@ import javafx.collections.ObservableList
 import javafx.geometry.Pos
 import javafx.scene.Cursor
 import javafx.scene.control.Control
+import javafx.scene.control.ListView
 import javafx.scene.control.TextField
 import javafx.scene.input.KeyCode
 import javafx.scene.input.MouseButton
@@ -17,7 +19,7 @@ import net.dankito.deepthought.javafx.dialogs.source.EditSourceDialog
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
-import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
+import net.dankito.deepthought.model.extensions.getSeriesAndPublishingDatePreview
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ReferencesListPresenter
 import net.dankito.deepthought.ui.view.IReferencesListView
@@ -37,9 +39,11 @@ class EditItemSourceField : View() {
         private set
 
 
-    private val isSourceSet = SimpleBooleanProperty()
+    private val editedSourceTitle = SimpleStringProperty("")
 
-    private val sourcePreview = SimpleStringProperty()
+    private val isSeriesOrPublishingDateSet = SimpleBooleanProperty()
+
+    private val seriesAndPublishingDatePreview = SimpleStringProperty()
 
     private val showSourceSearchResult = SimpleBooleanProperty()
 
@@ -48,7 +52,9 @@ class EditItemSourceField : View() {
     private val referenceListPresenter: ReferencesListPresenter
 
 
-    private var txtfldSearchSource: TextField by singleAssign()
+    private var txtfldTitle: TextField by singleAssign()
+
+    private var lstvwSearchResults: ListView<Source> by singleAssign()
 
     private var editSourceDialog: EditSourceDialog? = null
 
@@ -92,27 +98,29 @@ class EditItemSourceField : View() {
             }
 
             label {
-                isWrapText = false
+                minWidth = Control.USE_PREF_SIZE
+                useMaxWidth = true
 
-                textProperty().bind(sourcePreview)
-                visibleProperty().bind(isSourceSet)
+                textProperty().bind(seriesAndPublishingDatePreview)
+                visibleProperty().bind(isSeriesOrPublishingDateSet)
                 FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
 
                 cursor = Cursor.HAND
-                setOnMouseClicked { sourceClicked(it) }
+                setOnMouseClicked { seriesAndPublishingDatePreviewClicked(it) }
 
-                hgrow = Priority.ALWAYS
+                hboxConstraints {
+                    marginRight = 4.0
+                }
             }
 
-            txtfldSearchSource = textfield {
-                visibleProperty().bind(isSourceSet.not())
-                FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
-
+            txtfldTitle = textfield(editedSourceTitle) {
                 hgrow = Priority.ALWAYS
 
                 promptText = messages["find.source.prompt.text"]
 
                 textProperty().addListener { _, _, newValue -> referenceListPresenter.searchReferences(newValue) }
+                focusedProperty().addListener { _, _, newValue -> textFieldTitleOrSearchResultsFocusedChanged(newValue, lstvwSearchResults.isFocused) }
+
                 setOnKeyReleased { event ->
                     if(event.code == KeyCode.ENTER) {
                         createOrSelectSource()
@@ -129,13 +137,14 @@ class EditItemSourceField : View() {
             }
         }
 
-        listview(sourceSearchResults) {
+        lstvwSearchResults = listview(sourceSearchResults) {
             vgrow = Priority.ALWAYS
             visibleProperty().bind(showSourceSearchResult)
             FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
 
             cellFragment(SourceListCellFragment::class)
 
+            focusedProperty().addListener { _, _, newValue -> textFieldTitleOrSearchResultsFocusedChanged(txtfldTitle.isFocused, newValue) }
             onDoubleClick { setSource(selectionModel.selectedItem) }
 
             contextmenu {
@@ -165,20 +174,26 @@ class EditItemSourceField : View() {
     }
 
     private fun showSourcePreview(source: Source?, series: Series?) {
-        this.isSourceSet.value = source != null
-        this.sourcePreview.value = source?.getPreviewWithSeriesAndPublishingDate(series) ?: ""
+        this.editedSourceTitle.value = source?.title ?: ""
+        txtfldTitle.positionCaret(txtfldTitle.text.length)
+
+        this.seriesAndPublishingDatePreview.value = source?.getSeriesAndPublishingDatePreview(series) ?: ""
+        this.isSeriesOrPublishingDateSet.value = this.seriesAndPublishingDatePreview.value.isNullOrBlank() == false
     }
 
     private fun retrievedSourceSearchResultsOnUiThread(result: List<Source>) {
         sourceSearchResults.setAll(result)
-        showSourceSearchResult.value = true
+
+        if(txtfldTitle.isFocused || lstvwSearchResults.isFocused) {
+            showSourceSearchResult.value = true
+        }
     }
 
     private fun createOrSelectSource() {
-        if(sourceSearchResults.size == 1) {
+        if(sourceSearchResults.size > 0) {
             setSource(sourceSearchResults[0])
         }
-        else if(sourceSearchResults.size == 0 && txtfldSearchSource.text.isNotBlank()) {
+        else if(sourceSearchResults.size == 0 && editedSourceTitle.value.isNotBlank()) {
             hideSourceSearchResult()
             // TODO: create Source
         }
@@ -186,16 +201,22 @@ class EditItemSourceField : View() {
 
     private fun setSource(source: Source?) {
         sourceToEdit = source
+        seriesToEdit = source?.series
 
-        hideSourceSearchResult()
         showSourcePreview(source, source?.series)
+        txtfldTitle.impl_traverse(Direction.NEXT)
+        runLater { hideSourceSearchResult() }
+    }
+
+    private fun textFieldTitleOrSearchResultsFocusedChanged(titleHasFocus: Boolean, searchResultsHaveFocus: Boolean) {
+        showSourceSearchResult.value = titleHasFocus || searchResultsHaveFocus
     }
 
     private fun hideSourceSearchResult() {
         showSourceSearchResult.value = false
     }
 
-    private fun sourceClicked(event: MouseEvent) {
+    private fun seriesAndPublishingDatePreviewClicked(event: MouseEvent) {
         if(event.button == MouseButton.PRIMARY) {
             if(editSourceDialog == null) {
                 editSourceDialog = find(EditSourceDialog::class, mapOf(EditSourceDialog::source to (sourceToEdit ?: Source(""))))
