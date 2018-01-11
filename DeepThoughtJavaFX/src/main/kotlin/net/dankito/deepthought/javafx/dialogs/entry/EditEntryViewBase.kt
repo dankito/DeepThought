@@ -50,8 +50,6 @@ abstract class EditEntryViewBase : DialogFragment() {
     protected val hasUnsavedChanges = SimpleBooleanProperty()
 
 
-    private var txtAbstract: Label by singleAssign()
-
     private val editSourceField = EditItemSourceField()
 
     private var txtTags: Label by singleAssign()
@@ -121,7 +119,7 @@ abstract class EditEntryViewBase : DialogFragment() {
                 useMaxWidth = true
             }
 
-            txtAbstract = label {
+            label {
                 isWrapText = true
 
                 textProperty().bind(abstractPlainText)
