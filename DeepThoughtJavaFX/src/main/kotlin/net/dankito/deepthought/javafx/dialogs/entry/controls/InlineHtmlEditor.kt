@@ -22,7 +22,7 @@ class InlineHtmlEditor : RichTextEditor() {
 
         javaScriptExecutor.addLoadedListener {
             setEditorFontSize(16) // TODO: make settable in settings and then save to LocalSettings
-            setPadding(10.0)
+            setPadding(8.0)
             setEditorFontFamily("serif")
         }
     }
