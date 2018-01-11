@@ -106,8 +106,6 @@ abstract class EditEntryViewBase : DialogFragment() {
         add(editSourceField.root)
 
         hbox {
-            prefHeight = 20.0
-            maxHeight = 100.0
             alignment = Pos.TOP_LEFT
             prefWidthProperty().bind(this@vbox.widthProperty())
 
@@ -117,8 +115,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
             textarea {
                 isWrapText = true
-                minHeight = 20.0
-                prefHeight = minHeight
+                prefHeight = 20.0
                 maxHeight = 100.0
 
                 textProperty().bindBidirectional(editedSummary)
