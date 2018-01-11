@@ -22,6 +22,7 @@ import javafx.stage.StageStyle
 import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
+import net.dankito.deepthought.javafx.dialogs.entry.controls.InlineHtmlEditor
 import net.dankito.deepthought.javafx.dialogs.entry.controls.SourceListCellFragment
 import net.dankito.deepthought.javafx.dialogs.source.EditSourceDialog
 import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
@@ -35,7 +36,6 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
 import net.dankito.deepthought.ui.presenter.ReferencesListPresenter
 import net.dankito.deepthought.ui.view.IReferencesListView
-import net.dankito.richtexteditor.java.fx.RichTextEditor
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.search.ISearchEngine
@@ -76,7 +76,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     private var txtTags: Label by singleAssign()
 
-    private val htmlEditor = RichTextEditor()
+    private val htmlEditor = InlineHtmlEditor()
 
     private var wbvwShowUrl: WebView by singleAssign()
 
@@ -273,17 +273,7 @@ abstract class EditEntryViewBase : DialogFragment() {
         }
 
         add(htmlEditor)
-        htmlEditor.vgrow = Priority.ALWAYS
-        htmlEditor.useMaxWidth = true
-        htmlEditor.prefWidthProperty().bind(this@vbox.widthProperty())
-        FXUtils.ensureNodeOnlyUsesSpaceIfVisible(htmlEditor)
         contentHtml.onChange { htmlEditor.setHtml(contentHtml.value) }
-
-        htmlEditor.javaScriptExecutor.addLoadedListener {
-            htmlEditor.setEditorFontSize(16) // TODO: make settable in settings and then save to LocalSettings
-            htmlEditor.setPadding(10.0)
-            htmlEditor.setEditorFontFamily("serif")
-        }
 
         wbvwShowUrl = webview {
             useMaxWidth = true
@@ -349,9 +339,7 @@ abstract class EditEntryViewBase : DialogFragment() {
     private fun cleanUp() {
         contentHtml.onChange { }
 
-        htmlEditor.prefWidthProperty().unbind()
-
-        root.children.remove(htmlEditor)
+        htmlEditor.cleanUp()
 
         System.gc()
     }
