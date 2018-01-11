@@ -3,16 +3,12 @@ package net.dankito.deepthought.javafx.dialogs.entry
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
-import javafx.collections.ObservableList
 import javafx.collections.ObservableSet
 import javafx.collections.SetChangeListener
 import javafx.concurrent.Worker
-import javafx.geometry.Pos
 import javafx.scene.Cursor
 import javafx.scene.control.Control
 import javafx.scene.control.Label
-import javafx.scene.control.TextField
-import javafx.scene.input.KeyCode
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Priority
@@ -21,23 +17,18 @@ import javafx.stage.StageStyle
 import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
+import net.dankito.deepthought.javafx.dialogs.entry.controls.EditItemSourceField
 import net.dankito.deepthought.javafx.dialogs.entry.controls.InlineHtmlEditor
-import net.dankito.deepthought.javafx.dialogs.entry.controls.SourceListCellFragment
-import net.dankito.deepthought.javafx.dialogs.source.EditSourceDialog
 import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Tag
-import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
-import net.dankito.deepthought.ui.presenter.ReferencesListPresenter
-import net.dankito.deepthought.ui.view.IReferencesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReadLaterArticleService
-import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.extensions.toSortedString
 import net.dankito.utils.ui.IClipboardService
 import org.jsoup.Jsoup
@@ -50,12 +41,6 @@ abstract class EditEntryViewBase : DialogFragment() {
     // param values for Item and ItemExtractionResult are evaluated after root has been initialized -> Item is null at root initialization stage.
     // so i had to find a way to mitigate that Item / ItemExtractionResult is not initialized yet
 
-    protected val isSourceSet = SimpleBooleanProperty()
-
-    protected val sourcePreview = SimpleStringProperty()
-
-    protected val showSourceSearchResult = SimpleBooleanProperty()
-
     protected val abstractPlainText = SimpleStringProperty()
 
     protected val tagsPreview = SimpleStringProperty()
@@ -67,7 +52,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     private var txtAbstract: Label by singleAssign()
 
-    private var txtfldSearchSource: TextField by singleAssign()
+    private val editSourceField = EditItemSourceField()
 
     private var txtTags: Label by singleAssign()
 
@@ -79,14 +64,8 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     private var editAbstractDialog: EditHtmlDialog? = null
 
-    private var editSourceDialog: EditSourceDialog? = null
-
 
     private val presenter: EditEntryPresenter
-
-    private val referenceListPresenter: ReferencesListPresenter
-
-    private val sourceSearchResults: ObservableList<Source> = FXCollections.observableArrayList()
 
 
     private var item: Item? = null
@@ -94,10 +73,6 @@ abstract class EditEntryViewBase : DialogFragment() {
     private var abstractToEdit = ""
 
     private val tagsOnEntry: ObservableSet<Tag> = FXCollections.observableSet()
-
-    private var sourceToEdit: Source? = null
-
-    private var seriesToEdit: Series? = null
 
     private var currentlyDisplayedUrl: String? = null
 
@@ -107,9 +82,6 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     @Inject
     protected lateinit var readLaterArticleService: ReadLaterArticleService
-
-    @Inject
-    protected lateinit var searchEngine: ISearchEngine
 
     @Inject
     protected lateinit var clipboardService: IClipboardService
@@ -126,14 +98,6 @@ abstract class EditEntryViewBase : DialogFragment() {
 
         presenter = EditEntryPresenter(entryPersister, readLaterArticleService, clipboardService, router)
 
-        referenceListPresenter = ReferencesListPresenter(object : IReferencesListView {
-
-            override fun showEntities(entities: List<Source>) {
-                runLater { retrievedSourceSearchResultsOnUiThread(entities) }
-            }
-
-        }, searchEngine, router, clipboardService, deleteEntityService)
-
         tagsOnEntry.addListener(SetChangeListener<Tag> { showTagsPreview(tagsOnEntry) } )
     }
 
@@ -142,80 +106,7 @@ abstract class EditEntryViewBase : DialogFragment() {
         prefWidth = 905.0
         prefHeight = 650.0
 
-        hbox {
-            prefHeight = 20.0
-            maxHeight = 70.0
-            alignment = Pos.CENTER_LEFT
-            prefWidthProperty().bind(this@vbox.widthProperty())
-
-            label(messages["edit.item.source.label"]) {
-                minWidth = Control.USE_PREF_SIZE
-                useMaxWidth = true
-            }
-
-            label {
-                isWrapText = false
-
-                textProperty().bind(sourcePreview)
-                visibleProperty().bind(isSourceSet)
-                FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
-
-                cursor = Cursor.HAND
-                setOnMouseClicked { sourceClicked(it) }
-
-                hgrow = Priority.ALWAYS
-            }
-
-            txtfldSearchSource = textfield {
-                visibleProperty().bind(isSourceSet.not())
-                FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
-
-                hgrow = Priority.ALWAYS
-
-                promptText = messages["find.source.prompt.text"]
-
-                textProperty().addListener { _, _, newValue -> referenceListPresenter.searchReferences(newValue) }
-                setOnKeyReleased { event ->
-                    if(event.code == KeyCode.ENTER) {
-                        createOrSelectSource()
-                    }
-                    else if(event.code == KeyCode.ESCAPE) {
-                        clear()
-                        hideSourceSearchResult()
-                    }
-                }
-            }
-
-            vboxConstraints {
-                marginBottom = 6.0
-            }
-        }
-
-        listview(sourceSearchResults) {
-            vgrow = Priority.ALWAYS
-            visibleProperty().bind(showSourceSearchResult)
-            FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
-
-            cellFragment(SourceListCellFragment::class)
-
-            onDoubleClick { setSource(selectionModel.selectedItem) }
-
-            contextmenu {
-                item(messages["action.edit"]) {
-                    action {
-                        selectedItem?.let { referenceListPresenter.editReference(it) }
-                    }
-                }
-
-                separator()
-
-                item(messages["action.delete"]) {
-                    action {
-                        selectedItem?.let { referenceListPresenter.deleteReference(it) }
-                    }
-                }
-            }
-        }
+        add(editSourceField.root)
 
         hbox {
             prefHeight = 20.0
@@ -293,32 +184,6 @@ abstract class EditEntryViewBase : DialogFragment() {
         add(buttons)
     }
 
-    private fun retrievedSourceSearchResultsOnUiThread(result: List<Source>) {
-        sourceSearchResults.setAll(result)
-        showSourceSearchResult.value = true
-    }
-
-    private fun createOrSelectSource() {
-        if(sourceSearchResults.size == 1) {
-            setSource(sourceSearchResults[0])
-        }
-        else if(sourceSearchResults.size == 0 && txtfldSearchSource.text.isNotBlank()) {
-            hideSourceSearchResult()
-            // TODO: create Source
-        }
-    }
-
-    private fun setSource(source: Source?) {
-        sourceToEdit = source
-
-        hideSourceSearchResult()
-        showSourcePreview(source, source?.series)
-    }
-
-    private fun hideSourceSearchResult() {
-        showSourceSearchResult.value = false
-    }
-
 
     protected open fun urlLoaded(url: String, html: String) {
 
@@ -368,32 +233,18 @@ abstract class EditEntryViewBase : DialogFragment() {
         }
     }
 
-    private fun sourceClicked(event: MouseEvent) {
-        if(event.button == MouseButton.PRIMARY) {
-            if(editSourceDialog == null) {
-                editSourceDialog = find(EditSourceDialog::class, mapOf(EditSourceDialog::source to (sourceToEdit ?: Source(""))))
-                editSourceDialog?.show(messages["edit.item.summary.dialog.title"], owner = currentStage ) // TODO: add icon
-            }
-            else {
-                editSourceDialog?.currentStage?.requestFocus()
-            }
-        }
-    }
-
 
     protected fun showData(item: Item, tags: Collection<Tag>, source: Source?, series: Series?, contentToEdit: String? = null) {
         this.item = item
         abstractToEdit = item.summary
         tagsOnEntry.addAll(tags) // make a copy
-        sourceToEdit = source
-        seriesToEdit = series
 
         abstractPlainText.value = Jsoup.parseBodyFragment(abstractToEdit).text()
 
         showContent(item, source, contentToEdit)
 
         showTagsPreview(tagsOnEntry)
-        showSourcePreview(source, series)
+        editSourceField.setSourceToEdit(source, series)
     }
 
     private fun showContent(item: Item, source: Source?, contentToEdit: String?) {
@@ -416,11 +267,6 @@ abstract class EditEntryViewBase : DialogFragment() {
         }
     }
 
-    private fun showSourcePreview(source: Source?, series: Series?) {
-        this.isSourceSet.value = source != null
-        this.sourcePreview.value = source?.getPreviewWithSeriesAndPublishingDate(series) ?: ""
-    }
-
     private fun showTagsPreview(tags: Collection<Tag>) {
         this.tagsPreview.value = tags.toSortedString()
     }
@@ -439,7 +285,7 @@ abstract class EditEntryViewBase : DialogFragment() {
             entry.content = htmlEditor.getHtml()
             entry.summary = abstractToEdit
 
-            presenter.saveEntryAsync(entry, sourceToEdit, seriesToEdit, tagsOnEntry) {
+            presenter.saveEntryAsync(entry, editSourceField.sourceToEdit, editSourceField.seriesToEdit, tagsOnEntry) {
                 done()
             }
         }
