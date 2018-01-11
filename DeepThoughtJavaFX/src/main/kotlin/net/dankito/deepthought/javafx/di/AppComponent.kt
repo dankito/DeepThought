@@ -21,7 +21,6 @@ import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.MainMenuBar
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.TagsListView
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.ReadLaterArticleListView
 import net.dankito.deepthought.javafx.dialogs.source.EditSourceDialog
-import net.dankito.deepthought.javafx.ui.controls.JavaFXHtmlEditor
 import javax.inject.Singleton
 
 
@@ -66,7 +65,5 @@ interface AppComponent : CommonComponent {
     fun inject(editSourceDialog: EditSourceDialog)
 
     fun inject(editReadLaterArticleView: EditReadLaterArticleView)
-
-    fun inject(htmlEditor: JavaFXHtmlEditor)
 
 }
