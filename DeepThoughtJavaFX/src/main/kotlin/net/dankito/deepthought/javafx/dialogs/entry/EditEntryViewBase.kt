@@ -25,7 +25,6 @@ import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.javafx.dialogs.entry.controls.SourceListCellFragment
 import net.dankito.deepthought.javafx.dialogs.source.EditSourceDialog
 import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
-import net.dankito.deepthought.javafx.ui.controls.JavaFXHtmlEditor
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Series
@@ -36,6 +35,7 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
 import net.dankito.deepthought.ui.presenter.ReferencesListPresenter
 import net.dankito.deepthought.ui.view.IReferencesListView
+import net.dankito.richtexteditor.java.fx.RichTextEditor
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.search.ISearchEngine
@@ -76,7 +76,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     private var txtTags: Label by singleAssign()
 
-    private val htmlEditor: JavaFXHtmlEditor
+    private val htmlEditor = RichTextEditor()
 
     private var wbvwShowUrl: WebView by singleAssign()
 
@@ -138,8 +138,6 @@ abstract class EditEntryViewBase : DialogFragment() {
             }
 
         }, searchEngine, router, clipboardService, deleteEntityService)
-
-        htmlEditor = JavaFXHtmlEditor(null)
 
         tagsOnEntry.addListener(SetChangeListener<Tag> { showTagsPreview(tagsOnEntry) } )
     }
@@ -281,6 +279,12 @@ abstract class EditEntryViewBase : DialogFragment() {
         FXUtils.ensureNodeOnlyUsesSpaceIfVisible(htmlEditor)
         contentHtml.onChange { htmlEditor.setHtml(contentHtml.value) }
 
+        htmlEditor.javaScriptExecutor.addLoadedListener {
+            htmlEditor.setEditorFontSize(16) // TODO: make settable in settings and then save to LocalSettings
+            htmlEditor.setPadding(10.0)
+            htmlEditor.setEditorFontFamily("serif")
+        }
+
         wbvwShowUrl = webview {
             useMaxWidth = true
             isVisible = false
@@ -346,7 +350,6 @@ abstract class EditEntryViewBase : DialogFragment() {
         contentHtml.onChange { }
 
         htmlEditor.prefWidthProperty().unbind()
-        htmlEditor.cleanUp()
 
         root.children.remove(htmlEditor)
 
@@ -449,14 +452,12 @@ abstract class EditEntryViewBase : DialogFragment() {
     }
 
     private fun updateEntryAndSaveAsync(done: () -> Unit) {
-        htmlEditor.getHtmlAsync {
-            item?.let { entry ->
-                entry.content = it
-                entry.summary = abstractToEdit
+        item?.let { entry ->
+            entry.content = htmlEditor.getHtml()
+            entry.summary = abstractToEdit
 
-                presenter.saveEntryAsync(entry, sourceToEdit, seriesToEdit, tagsOnEntry) {
-                    done()
-                }
+            presenter.saveEntryAsync(entry, sourceToEdit, seriesToEdit, tagsOnEntry) {
+                done()
             }
         }
     }
