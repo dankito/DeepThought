@@ -11,7 +11,6 @@ import javafx.geometry.Pos
 import javafx.scene.Cursor
 import javafx.scene.control.Control
 import javafx.scene.control.Label
-import javafx.scene.control.ListView
 import javafx.scene.control.TextField
 import javafx.scene.input.KeyCode
 import javafx.scene.input.MouseButton
@@ -69,8 +68,6 @@ abstract class EditEntryViewBase : DialogFragment() {
     private var txtAbstract: Label by singleAssign()
 
     private var txtfldSearchSource: TextField by singleAssign()
-
-    private var lstSourceSearchResult: ListView<Source> by singleAssign()
 
     private var txtTags: Label by singleAssign()
 
@@ -194,7 +191,7 @@ abstract class EditEntryViewBase : DialogFragment() {
             }
         }
 
-        lstSourceSearchResult = listview(sourceSearchResults) {
+        listview(sourceSearchResults) {
             vgrow = Priority.ALWAYS
             visibleProperty().bind(showSourceSearchResult)
             FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
