@@ -38,6 +38,12 @@ class EditItemSourceField : View() {
     var seriesToEdit: Series? = null
         private set
 
+    val didValueChange = SimpleBooleanProperty()
+
+    private var originalSource: Source? = null
+
+    private var originalSeries: Series? = null
+
 
     private val editedSourceTitle = SimpleStringProperty("")
 
@@ -145,7 +151,7 @@ class EditItemSourceField : View() {
             cellFragment(SourceListCellFragment::class)
 
             focusedProperty().addListener { _, _, newValue -> textFieldTitleOrSearchResultsFocusedChanged(txtfldTitle.isFocused, newValue) }
-            onDoubleClick { setSource(selectionModel.selectedItem) }
+            onDoubleClick { selectedSource(selectionModel.selectedItem) }
 
             contextmenu {
                 item(messages["action.edit"]) {
@@ -167,10 +173,26 @@ class EditItemSourceField : View() {
 
 
     fun setSourceToEdit(source: Source?, series: Series?) {
+        originalSource = source
+        originalSeries = series
+
+        setSource(source, series)
+    }
+
+    private fun selectedSource(source: Source?) {
+        setSource(source, source?.series)
+
+        txtfldTitle.impl_traverse(Direction.NEXT)
+        runLater { hideSourceSearchResult() }
+    }
+
+    private fun setSource(source: Source?, series: Series?) {
         sourceToEdit = source
         seriesToEdit = series
 
-        showSourcePreview(source, series)
+        showSourcePreview(source, seriesToEdit)
+
+        didValueChange.value = sourceToEdit != originalSource || seriesToEdit != originalSeries
     }
 
     private fun showSourcePreview(source: Source?, series: Series?) {
@@ -191,21 +213,12 @@ class EditItemSourceField : View() {
 
     private fun createOrSelectSource() {
         if(sourceSearchResults.size > 0) {
-            setSource(sourceSearchResults[0])
+            selectedSource(sourceSearchResults[0])
         }
         else if(sourceSearchResults.size == 0 && editedSourceTitle.value.isNotBlank()) {
             hideSourceSearchResult()
             // TODO: create Source
         }
-    }
-
-    private fun setSource(source: Source?) {
-        sourceToEdit = source
-        seriesToEdit = source?.series
-
-        showSourcePreview(source, source?.series)
-        txtfldTitle.impl_traverse(Direction.NEXT)
-        runLater { hideSourceSearchResult() }
     }
 
     private fun textFieldTitleOrSearchResultsFocusedChanged(titleHasFocus: Boolean, searchResultsHaveFocus: Boolean) {
