@@ -9,8 +9,6 @@ import kotlinx.android.synthetic.main.view_tag.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.extensions.setRightMargin
 import net.dankito.deepthought.model.Tag
-import net.dankito.deepthought.ui.tags.TagAutoCompleteResult
-import net.dankito.service.search.SearchEngineBase
 import net.dankito.utils.extensions.sorted
 
 
@@ -72,28 +70,6 @@ class TagsPreviewViewHelper {
         if(addSpaceToTheRight) {
             (tagView.layoutParams as? ViewGroup.MarginLayoutParams)?.setRightMargin(rightMargin)
         }
-    }
-
-
-    fun autoCompleteEnteredTextForTag(enteredText: String, tag: Tag): TagAutoCompleteResult {
-        var lastSearchTermStartIndex = enteredText.lastIndexOf(SearchEngineBase.TagsSearchTermSeparator)
-        if(lastSearchTermStartIndex > 0) {
-            if(enteredText.substring(lastSearchTermStartIndex + 1).isBlank()) { // if entered text ends with TagsSearchTermSeparator, take text before
-                lastSearchTermStartIndex = enteredText.lastIndexOf(SearchEngineBase.TagsSearchTermSeparator, lastSearchTermStartIndex - 1)
-            }
-        }
-
-        val replacementIndex = lastSearchTermStartIndex + 1
-        val enteredTagName = enteredText.substring(replacementIndex)
-        val enteredTagNameTrimmedWithoutTagsSeparator = enteredTagName.replace(SearchEngineBase.TagsSearchTermSeparator, "").trim()
-
-        val autoCompletedTagName = (if(lastSearchTermStartIndex <= 0) "" else " ") + tag.name + SearchEngineBase.TagsSearchTermSeparator + " "
-        val autoCompletedTagNameTrimmedWithoutTagsSeparator = autoCompletedTagName.replace(SearchEngineBase.TagsSearchTermSeparator, "").trim()
-
-        val autoCompletedText = enteredText.replaceRange(replacementIndex, enteredText.length, autoCompletedTagName)
-
-        return TagAutoCompleteResult(replacementIndex, enteredText, autoCompletedText, enteredTagName, autoCompletedTagName,
-                enteredTagNameTrimmedWithoutTagsSeparator, autoCompletedTagNameTrimmedWithoutTagsSeparator, tag)
     }
 
 }

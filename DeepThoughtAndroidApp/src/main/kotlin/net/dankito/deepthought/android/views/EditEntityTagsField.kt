@@ -153,7 +153,7 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
 
     private fun addTag(tag: Tag) {
         if(this.autoCompleteResult == null) { // auto complete already applied, now an additional tag gets added but we cannot replace enteredTagName anymore
-            val autoCompleteResult = tagsPreviewViewHelper.autoCompleteEnteredTextForTag(getCurrentFieldValue(), tag)
+            val autoCompleteResult = presenter.autoCompleteEnteredTextForTag(getCurrentFieldValue(), tag)
             this.autoCompleteResult = autoCompleteResult
             setEditTextEntityFieldValueOnUiThread(autoCompleteResult.autoCompletedText)
         }
