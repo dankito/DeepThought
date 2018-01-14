@@ -124,7 +124,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
                 textProperty().bindBidirectional(editedSummary)
 
-                requestFocus() // so that Source title text field isn't focused and source search results therefore shown
+                runLater { requestFocus() /* so that Source title text field isn't focused and source search results therefore shown */ }
 
                 hboxConstraints {
                     hGrow = Priority.ALWAYS
