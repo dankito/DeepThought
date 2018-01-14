@@ -16,6 +16,7 @@ import javafx.scene.input.KeyCode
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Priority
+import javafx.scene.paint.Color
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.res.icons.Icons
 import net.dankito.deepthought.javafx.service.events.EditingSourceDoneEvent
@@ -26,6 +27,7 @@ import net.dankito.deepthought.model.extensions.getSeriesAndPublishingDatePrevie
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ReferencesListPresenter
 import net.dankito.deepthought.ui.view.IReferencesListView
+import net.dankito.richtexteditor.java.fx.extensions.setImageTintColor
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
@@ -164,6 +166,8 @@ class EditItemSourceField : View() {
                 graphic = imageview(Icons.MoreVerticalIconPath) {
                     fitHeight = 26.0
                     isPreserveRatio = true
+
+                    setImageTintColor(Color.GRAY)
                 }
 
                 setOnMouseClicked { buttonClicked(this, it) }
