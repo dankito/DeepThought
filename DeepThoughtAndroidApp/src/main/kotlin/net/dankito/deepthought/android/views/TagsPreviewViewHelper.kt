@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.view_tag.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.extensions.setRightMargin
 import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.ui.tags.TagAutoCompleteResult
 import net.dankito.service.search.SearchEngineBase
 import net.dankito.utils.extensions.sorted
 

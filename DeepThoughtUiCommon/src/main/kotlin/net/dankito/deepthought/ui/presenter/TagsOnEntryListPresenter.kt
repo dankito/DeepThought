@@ -2,6 +2,7 @@ package net.dankito.deepthought.ui.presenter
 
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.ui.tags.TagAutoCompleteResult
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.tags.TagsSearcherButtonState
 import net.dankito.deepthought.ui.view.ITagsOnEntryListView
@@ -11,6 +12,8 @@ import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.TagsSearchResult
 import net.dankito.service.search.specific.TagsSearchResults
 import net.dankito.utils.ui.IDialogService
+import java.util.HashSet
+import kotlin.collections.ArrayList
 
 
 class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryListView, searchEngine: ISearchEngine, tagService: TagService, deleteEntityService: DeleteEntityService,
@@ -162,6 +165,23 @@ class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryList
         }
     }
 
+
+    fun getMergedTags(tagsOnEntry: Collection<Tag>, autoCompleteResult: TagAutoCompleteResult?): Collection<Tag> {
+        val tags = HashSet<Tag>()
+
+        tags.addAll(tagsOnEntry)
+        tags.addAll(getTagsFromLastSearchResult(autoCompleteResult?.enteredTagNameTrimmedWithoutTagsSeparator))
+
+        addAutoCompletedTag(tags, autoCompleteResult)
+
+        return tags
+    }
+
+    private fun addAutoCompletedTag(tags: HashSet<Tag>, autoCompleteResult: TagAutoCompleteResult?) {
+        autoCompleteResult?.let {
+            tags.add(autoCompleteResult.autoCompletedTag)
+        }
+    }
 
     fun didTagsOnEntryChange(originalTagsOnEntry: Collection<Tag>, tagsOnEntry: Collection<Tag>): Boolean {
         if(originalTagsOnEntry.size != tagsOnEntry.size) {

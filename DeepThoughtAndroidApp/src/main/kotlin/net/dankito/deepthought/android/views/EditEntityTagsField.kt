@@ -8,6 +8,7 @@ import net.dankito.deepthought.android.adapter.TagsOnEntryRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.presenter.TagsOnEntryListPresenter
+import net.dankito.deepthought.ui.tags.TagAutoCompleteResult
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.view.ITagsOnEntryListView
 import net.dankito.service.data.DeleteEntityService
@@ -202,24 +203,11 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
     }
 
     private fun getMergedTags(): Collection<Tag> {
-        val tags = HashSet<Tag>()
-
-        tags.addAll(adapter.tagsOnEntry)
-        tags.addAll(presenter.getTagsFromLastSearchResult(autoCompleteResult?.enteredTagNameTrimmedWithoutTagsSeparator))
-
-        addAutoCompletedTag(tags)
-
-        return tags
-    }
-
-    private fun addAutoCompletedTag(tags: HashSet<Tag>) {
-        autoCompleteResult?.let { autoCompleteResult ->
-            tags.add(autoCompleteResult.autoCompletedTag)
-        }
+        return presenter.getMergedTags(adapter.tagsOnEntry, autoCompleteResult)
     }
 
     private fun setTagsOnEntryPreviewOnUIThread(tagsOnEntry: Collection<Tag>) {
-        lytPreview?.let { tagsPreviewViewHelper.showTagsPreview(it, tagsOnEntry, showButtonRemoveTag = true) { removeTagFromCurrentTagsOnEntry(it) } }
+        lytPreview.let { tagsPreviewViewHelper.showTagsPreview(it, tagsOnEntry, showButtonRemoveTag = true) { removeTagFromCurrentTagsOnEntry(it) } }
 
         if(adapter.items.isEmpty() || edtxtEntityFieldValue.hasFocus() == false) {
             hideSearchResultsView()

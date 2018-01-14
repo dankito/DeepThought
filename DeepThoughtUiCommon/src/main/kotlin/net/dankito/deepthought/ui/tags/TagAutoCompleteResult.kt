@@ -1,4 +1,4 @@
-package net.dankito.deepthought.android.views
+package net.dankito.deepthought.ui.tags
 
 import net.dankito.deepthought.model.Tag
 
