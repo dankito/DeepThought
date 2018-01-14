@@ -118,7 +118,7 @@ class EditItemSourceField : View() {
 
                 promptText = messages["find.source.prompt.text"]
 
-                textProperty().addListener { _, _, newValue -> referenceListPresenter.searchReferences(newValue) }
+                textProperty().addListener { _, _, newValue -> enteredSourceTitleUpdated(newValue) }
                 focusedProperty().addListener { _, _, newValue ->
                     textFieldTitleOrSearchResultsFocusedChanged(newValue, lstvwSearchResults.isFocused)
 
@@ -186,6 +186,14 @@ class EditItemSourceField : View() {
                 }
             }
         }
+    }
+
+    private fun enteredSourceTitleUpdated(enteredSourceTitle: String) {
+        if(sourceToEdit == null && enteredSourceTitle.isNotBlank()) { // user entered a title, but source is null -> create a new Source
+            setSource(Source(enteredSourceTitle), null)
+        }
+
+        referenceListPresenter.searchReferences(enteredSourceTitle)
     }
 
     private fun buttonClicked(node: Button, event: MouseEvent) {
@@ -259,7 +267,6 @@ class EditItemSourceField : View() {
         }
         else if(sourceSearchResults.size == 0 && editedSourceTitle.value.isNotBlank()) {
             hideSourceSearchResult()
-            // TODO: create Source
         }
     }
 
