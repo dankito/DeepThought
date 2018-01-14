@@ -7,15 +7,15 @@ import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.geometry.Pos
 import javafx.scene.Cursor
-import javafx.scene.control.Control
-import javafx.scene.control.ListView
-import javafx.scene.control.TextField
+import javafx.scene.control.*
+import javafx.scene.image.ImageView
 import javafx.scene.input.KeyCode
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.source.EditSourceDialog
+import net.dankito.deepthought.javafx.res.icons.Icons
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
@@ -113,10 +113,6 @@ class EditItemSourceField : View() {
 
                 cursor = Cursor.HAND
                 setOnMouseClicked { seriesAndPublishingDatePreviewClicked(it) }
-
-                hboxConstraints {
-                    marginRight = 4.0
-                }
             }
 
             txtfldTitle = textfield(editedSourceTitle) {
@@ -136,6 +132,25 @@ class EditItemSourceField : View() {
                         hideSourceSearchResult()
                     }
                 }
+
+                hboxConstraints {
+                    marginLeft = 4.0
+                    marginRight = 4.0
+                }
+            }
+
+            button("", ImageView()) {
+                minHeight = 26.0
+                maxHeight = minHeight
+                minWidth = 26.0
+                maxWidth = minWidth
+
+                graphic = imageview(Icons.MoreVerticalIconPath) {
+                    fitHeight = 26.0
+                    isPreserveRatio = true
+                }
+
+                setOnMouseClicked { buttonClicked(this, it) }
             }
 
             vboxConstraints {
@@ -169,6 +184,31 @@ class EditItemSourceField : View() {
                 }
             }
         }
+    }
+
+    private fun buttonClicked(node: Button, event: MouseEvent) {
+       if(event.button == MouseButton.PRIMARY && event.clickCount == 1) {
+           showContextMenu(node, event)
+        }
+    }
+
+    private fun showContextMenu(node: Button, event: MouseEvent) {
+        val contextMenu = ContextMenu()
+
+        contextMenu.item(messages["edit.item.source.field.edit.details.menu.item"]) {
+            action { showEditSourceDialog() }
+        }
+
+        contextMenu.item(messages["edit.item.source.field.create.new.source.menu.item"]) {
+            action { setSource(Source(""), null) }
+        }
+
+        contextMenu.item(messages["edit.item.source.field.remove.source.menu.item"]) {
+            action { setSource(null, null) }
+        }
+
+        val screenBounds = node.localToScreen(node.boundsInLocal)
+        contextMenu.show(node, screenBounds.minX, screenBounds.maxY)
     }
 
 

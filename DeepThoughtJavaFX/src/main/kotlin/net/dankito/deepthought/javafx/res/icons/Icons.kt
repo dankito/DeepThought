@@ -15,6 +15,8 @@ class Icons {
 
         const val LoadNextItemsIconPath = "icons/arrow_right_in_circle_32x32.png"
 
+        const val MoreVerticalIconPath = "icons/ic_more_vert_black_36dp.png"
+
     }
 
 }
