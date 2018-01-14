@@ -1548,8 +1548,8 @@ class EditEntryActivity : BaseActivity() {
         }
 
         if(sourceToEdit != originalSource) {
-            readLaterArticle?.itemExtractionResult?.series = null
-            itemExtractionResult?.series = null
+            readLaterArticle?.itemExtractionResult?.series = sourceToEdit?.series
+            itemExtractionResult?.series = sourceToEdit?.series
         }
 
         if(changedFields.contains(ItemField.Tags)) {
