@@ -1,7 +1,7 @@
 package net.dankito.deepthought.javafx.res.icons
 
 
-class IconPaths {
+class Icons {
 
     companion object {
 

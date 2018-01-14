@@ -8,7 +8,7 @@ import javafx.scene.control.SeparatorMenuItem
 import javafx.scene.image.ImageView
 import javafx.scene.layout.HBox
 import net.dankito.deepthought.javafx.di.AppComponent
-import net.dankito.deepthought.javafx.res.icons.IconPaths
+import net.dankito.deepthought.javafx.res.icons.Icons
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
@@ -69,7 +69,7 @@ class ArticleExtractorsMenuButton : View() {
         btnArticleExtractors.prefWidth = 60.0
         btnArticleExtractors.isVisible = false
 
-        btnArticleExtractors.graphic = ImageView(IconPaths.NewspaperIconPath)
+        btnArticleExtractors.graphic = ImageView(Icons.NewspaperIconPath)
         btnArticleExtractors.style = "-fx-border-image-insets: 0; -fx-border-insets: 0; -fx-padding: 0;"
 
         btnArticleExtractors.items.clear() // remove automatically added 'Article 1' and 'Article 2'
