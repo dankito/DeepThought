@@ -12,7 +12,6 @@ import javafx.scene.control.ContextMenu
 import javafx.scene.control.Control
 import javafx.scene.control.ListView
 import javafx.scene.control.TextField
-import javafx.scene.image.ImageView
 import javafx.scene.input.KeyCode
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
@@ -156,7 +155,7 @@ class EditItemSourceField : View() {
                 }
             }
 
-            button("", ImageView()) {
+            button {
                 minHeight = 26.0
                 maxHeight = minHeight
                 minWidth = 26.0
