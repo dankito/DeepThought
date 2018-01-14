@@ -119,7 +119,11 @@ class EditItemSourceField : View() {
                 promptText = messages["find.source.prompt.text"]
 
                 textProperty().addListener { _, _, newValue -> referenceListPresenter.searchReferences(newValue) }
-                focusedProperty().addListener { _, _, newValue -> textFieldTitleOrSearchResultsFocusedChanged(newValue, lstvwSearchResults.isFocused) }
+                focusedProperty().addListener { _, _, newValue ->
+                    textFieldTitleOrSearchResultsFocusedChanged(newValue, lstvwSearchResults.isFocused)
+
+                    if(newValue) referenceListPresenter.searchReferences(text)
+                }
 
                 setOnKeyReleased { event ->
                     if(event.code == KeyCode.ENTER) {
