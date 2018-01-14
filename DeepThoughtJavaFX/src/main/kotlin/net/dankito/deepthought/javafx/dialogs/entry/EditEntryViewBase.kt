@@ -188,8 +188,6 @@ abstract class EditEntryViewBase : DialogFragment() {
         hasUnsavedChanges.value = true
         val buttons = DialogButtonBar({ closeDialog() }, { saveEntryAsync(it) }, hasUnsavedChanges, messages["action.save"])
         add(buttons)
-
-        htmlEditor.focusEditor()
     }
 
 
@@ -250,6 +248,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
                 htmlEditor.isVisible = false
                 wbvwShowUrl.isVisible = true
+                wbvwShowUrl.requestFocus() // so that Source title text field isn't focused and source search results therefore shown
             }
         }
         else {
@@ -257,6 +256,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
             htmlEditor.isVisible = true
             wbvwShowUrl.isVisible = false
+            htmlEditor.focusEditor() // so that Source title text field isn't focused and source search results therefore shown
         }
     }
 
