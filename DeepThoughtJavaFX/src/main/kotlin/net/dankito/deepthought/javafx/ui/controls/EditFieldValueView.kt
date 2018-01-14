@@ -48,7 +48,7 @@ open class EditFieldValueView(fieldName: String, initialFieldValue: String = "")
             prefWidth = 135.0
         }
 
-        txtfldFieldValue = textfield() {
+        txtfldFieldValue = textfield {
             prefHeight = 35.0
 
             textProperty().bindBidirectional(currentValue)
