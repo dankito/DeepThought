@@ -104,6 +104,9 @@ abstract class EditEntryViewBase : DialogFragment() {
         prefHeight = 650.0
 
         add(editSourceField.root)
+        editSourceField.didValueChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
+
+        editedSummary.addListener { _, _, _ -> updateHasUnsavedChanges() }
 
         hbox {
             alignment = Pos.TOP_LEFT
@@ -160,7 +163,9 @@ abstract class EditEntryViewBase : DialogFragment() {
         }
 
         add(htmlEditor)
+
         contentHtml.onChange { htmlEditor.setHtml(contentHtml.value) }
+        htmlEditor.javaScriptExecutor.addDidHtmlChangeListener { updateHasUnsavedChanges() }
 
         wbvwShowUrl = webview {
             useMaxWidth = true
@@ -257,6 +262,11 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     private fun showTagsPreview(tags: Collection<Tag>) {
         this.tagsPreview.value = tags.toSortedString()
+    }
+
+
+    private fun updateHasUnsavedChanges() {
+        hasUnsavedChanges.value = htmlEditor.didHtmlChange || editSourceField.didValueChange.value || editedSummary.value != originalSummary
     }
 
 
