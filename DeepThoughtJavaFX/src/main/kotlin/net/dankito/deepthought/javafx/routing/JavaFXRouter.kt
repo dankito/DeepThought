@@ -89,11 +89,16 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
     }
 
     override fun showEditEntryReferenceView(source: Source?, series: Series?, editedSourceTitle: String?) {
-        // TODO: set title when Source is not set
-        mainWindowController.find(EditSourceDialog::class, mapOf(EditSourceDialog::source to (source ?: Source("")))).show(getEditSourceDialogTitle(source?.title ?: ""))
+        val sourceToEdit = source ?: Source("")
+
+        mainWindowController.find(EditSourceDialog::class,
+                mapOf(EditSourceDialog::source to sourceToEdit, EditSourceDialog::series to series, EditSourceDialog::editedSourceTitle to editedSourceTitle)
+        ).show(getEditSourceDialogTitle(sourceToEdit.title, editedSourceTitle))
     }
 
-    private fun getEditSourceDialogTitle(sourceTitle: String) = String.format(FX.messages["edit.source.dialog.title"], sourceTitle)
+    private fun getEditSourceDialogTitle(sourceTitle: String, editedSourceTitle: String? = null): String {
+        return editedSourceTitle ?: String.format(FX.messages["edit.source.dialog.title"], sourceTitle)
+    }
 
 
     override fun showEditSeriesView(series: Series) {
