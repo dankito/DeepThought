@@ -9,6 +9,10 @@ import tornadofx.*
 
 class InlineHtmlEditor : RichTextEditor() {
 
+    val didHtmlChange: Boolean
+        get() = javaScriptExecutor.didHtmlChange
+
+
     init {
         setupUi()
     }
