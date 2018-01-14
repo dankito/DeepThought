@@ -39,7 +39,13 @@ class EditItemSourceField : View() {
 
     val didEntityChange = SimpleBooleanProperty()
 
-    private var originalSource: Source? = null
+    val didTitleChange = SimpleBooleanProperty()
+
+    val enteredTitle: String
+        get() = txtfldTitle.text
+
+    var originalSource: Source? = null
+        private set
 
     private var originalSeries: Series? = null
 
@@ -191,6 +197,8 @@ class EditItemSourceField : View() {
         if(sourceToEdit == null && enteredSourceTitle.isNotBlank()) { // user entered a title, but source is null -> create a new Source
             setSource(Source(enteredSourceTitle), null)
         }
+
+        didTitleChange.value = enteredSourceTitle != originalSource?.title
 
         referenceListPresenter.searchReferences(enteredSourceTitle)
     }
