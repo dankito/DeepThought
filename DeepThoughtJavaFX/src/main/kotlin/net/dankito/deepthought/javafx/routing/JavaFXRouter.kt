@@ -97,7 +97,7 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
     }
 
     private fun getEditSourceDialogTitle(sourceTitle: String, editedSourceTitle: String? = null): String {
-        return editedSourceTitle ?: String.format(FX.messages["edit.source.dialog.title"], sourceTitle)
+        return String.format(FX.messages["edit.source.dialog.title"], editedSourceTitle ?: sourceTitle)
     }
 
 
