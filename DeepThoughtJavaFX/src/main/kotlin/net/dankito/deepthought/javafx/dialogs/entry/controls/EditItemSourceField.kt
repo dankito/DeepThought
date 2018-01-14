@@ -62,8 +62,6 @@ class EditItemSourceField : View() {
 
     private var lstvwSearchResults: ListView<Source> by singleAssign()
 
-    private var editSourceDialog: EditSourceDialog? = null
-
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
@@ -271,14 +269,15 @@ class EditItemSourceField : View() {
 
     private fun seriesAndPublishingDatePreviewClicked(event: MouseEvent) {
         if(event.button == MouseButton.PRIMARY) {
-            if(editSourceDialog == null) {
-                editSourceDialog = find(EditSourceDialog::class, mapOf(EditSourceDialog::source to (sourceToEdit ?: Source(""))))
-                editSourceDialog?.show(messages["edit.item.summary.dialog.title"], owner = currentStage ) // TODO: add icon
-            }
-            else {
-                editSourceDialog?.currentStage?.requestFocus()
-            }
+            showEditSourceDialog()
         }
+    }
+
+    private fun showEditSourceDialog() {
+        val editSourceDialog = find(EditSourceDialog::class, mapOf(EditSourceDialog::source to (sourceToEdit ?: Source(""))))
+        editSourceDialog.show(messages["edit.item.summary.dialog.title"], owner = currentStage) // TODO: add icon
+
+        editSourceDialog.modalStage?.showingProperty()?.addListener { _, _, isShowing -> if(isShowing == false) showSourcePreview(sourceToEdit, sourceToEdit?.series) }
     }
 
 }
