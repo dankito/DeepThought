@@ -14,7 +14,6 @@ import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.di.AppComponent
-import net.dankito.deepthought.javafx.dialogs.source.EditSourceDialog
 import net.dankito.deepthought.javafx.res.icons.Icons
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.Series
@@ -285,10 +284,7 @@ class EditItemSourceField : View() {
     }
 
     private fun showEditSourceDialog() {
-        val editSourceDialog = find(EditSourceDialog::class, mapOf(EditSourceDialog::source to (sourceToEdit ?: Source(""))))
-        editSourceDialog.show(messages["edit.item.summary.dialog.title"], owner = currentStage) // TODO: add icon
-
-        editSourceDialog.modalStage?.showingProperty()?.addListener { _, _, isShowing -> if(isShowing == false) showSourcePreview(sourceToEdit, sourceToEdit?.series) }
+        router.showEditEntryReferenceView(sourceToEdit, seriesToEdit, txtfldTitle.text)
     }
 
 }
