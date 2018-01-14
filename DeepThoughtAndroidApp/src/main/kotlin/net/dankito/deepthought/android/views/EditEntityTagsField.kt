@@ -228,17 +228,7 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
             showSearchResultsView()
         }
 
-        updateDidValueChange(didTagsOnEntryChange(tagsOnEntry))
-    }
-
-    private fun didTagsOnEntryChange(tagsOnEntry: Collection<Tag>): Boolean {
-        if(originalTagsOnEntry.size != tagsOnEntry.size) {
-            return true
-        }
-
-        val copy = ArrayList(tagsOnEntry)
-        copy.removeAll(originalTagsOnEntry)
-        return copy.size > 0
+        updateDidValueChange(presenter.didTagsOnEntryChange(originalTagsOnEntry, tagsOnEntry))
     }
 
 

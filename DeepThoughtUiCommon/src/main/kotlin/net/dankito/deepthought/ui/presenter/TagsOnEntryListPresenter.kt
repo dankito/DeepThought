@@ -162,4 +162,15 @@ class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryList
         }
     }
 
+
+    fun didTagsOnEntryChange(originalTagsOnEntry: Collection<Tag>, tagsOnEntry: Collection<Tag>): Boolean {
+        if(originalTagsOnEntry.size != tagsOnEntry.size) {
+            return true
+        }
+
+        val copy = java.util.ArrayList(tagsOnEntry)
+        copy.removeAll(originalTagsOnEntry)
+        return copy.size > 0
+    }
+
 }
