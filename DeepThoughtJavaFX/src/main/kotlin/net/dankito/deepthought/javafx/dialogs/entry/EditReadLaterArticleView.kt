@@ -16,6 +16,12 @@ class EditReadLaterArticleView : EditEntryViewBase() {
     }
 
 
+    override fun resetSeries() {
+        super.resetSeries()
+
+        article.itemExtractionResult.series = null
+    }
+
     override fun entrySaved() {
         super.entrySaved()
 

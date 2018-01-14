@@ -124,6 +124,8 @@ abstract class EditEntryViewBase : DialogFragment() {
 
                 textProperty().bindBidirectional(editedSummary)
 
+                requestFocus() // so that Source title text field isn't focused and source search results therefore shown
+
                 hboxConstraints {
                     hGrow = Priority.ALWAYS
 
@@ -285,10 +287,35 @@ abstract class EditEntryViewBase : DialogFragment() {
             entry.content = htmlEditor.getHtml()
             entry.summary = editedSummary.value
 
-            presenter.saveEntryAsync(entry, editSourceField.sourceToEdit, editSourceField.seriesToEdit, tagsOnEntry) {
+            val source = updateSource()
+
+            presenter.saveEntryAsync(entry, source, editSourceField.seriesToEdit, tagsOnEntry) {
                 done()
             }
         }
+    }
+
+    private fun updateSource(): Source? {
+        var source = editSourceField.sourceToEdit
+
+        if(editSourceField.didTitleChange.value) {
+            source?.title = editSourceField.enteredTitle
+        }
+
+        if(source?.isPersisted() == false && editSourceField.enteredTitle.isNullOrBlank()) {
+            source = null
+            resetSeries()
+        }
+
+        if(source != editSourceField.originalSource) {
+            resetSeries()
+        }
+
+        return source
+    }
+
+    protected open fun resetSeries() {
+
     }
 
     protected open fun entrySaved() {

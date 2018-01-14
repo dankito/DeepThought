@@ -39,4 +39,11 @@ class EditEntryExtractionResultView : EditEntryViewBase() {
     }
 
 
+    override fun resetSeries() {
+        super.resetSeries()
+
+        extractionResult.series = null
+    }
+
+
 }
