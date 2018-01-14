@@ -47,7 +47,9 @@ class EditSourceDialog : DialogFragment() {
 
     val source: Source by param()
 
-    private var series: Series? = source.series
+    val series: Series? by param<Series?>(source.series)
+
+    val editedSourceTitle: String? by param<String?>(source.title)
 
     protected val hasUnsavedChanges = SimpleBooleanProperty()
 
@@ -62,7 +64,7 @@ class EditSourceDialog : DialogFragment() {
     override val root = vbox {
         prefWidth = 850.0
 
-        setupEntityField(titleField, source.title)
+        setupEntityField(titleField, editedSourceTitle ?: source.title)
         add(titleField)
 
         setupEntityField(issueField, source.issue ?: "")
