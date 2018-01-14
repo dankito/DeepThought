@@ -7,7 +7,11 @@ import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.geometry.Pos
 import javafx.scene.Cursor
-import javafx.scene.control.*
+import javafx.scene.Node
+import javafx.scene.control.ContextMenu
+import javafx.scene.control.Control
+import javafx.scene.control.ListView
+import javafx.scene.control.TextField
 import javafx.scene.image.ImageView
 import javafx.scene.input.KeyCode
 import javafx.scene.input.MouseButton
@@ -203,13 +207,13 @@ class EditItemSourceField : View() {
         referenceListPresenter.searchReferences(enteredSourceTitle)
     }
 
-    private fun buttonClicked(node: Button, event: MouseEvent) {
+    private fun buttonClicked(node: Node, event: MouseEvent) {
        if(event.button == MouseButton.PRIMARY && event.clickCount == 1) {
-           showContextMenu(node, event)
+           showContextMenu(node)
         }
     }
 
-    private fun showContextMenu(node: Button, event: MouseEvent) {
+    private fun showContextMenu(node: Node) {
         val contextMenu = ContextMenu()
 
         contextMenu.item(messages["edit.item.source.field.edit.details.menu.item"]) {
