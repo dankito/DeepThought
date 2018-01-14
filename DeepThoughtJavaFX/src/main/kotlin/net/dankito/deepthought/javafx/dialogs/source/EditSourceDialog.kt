@@ -20,6 +20,11 @@ import javax.inject.Inject
 
 class EditSourceDialog : DialogFragment() {
 
+    companion object {
+        private val SeriesNullObject = Series("")
+    }
+
+
     @Inject
     protected lateinit var referencePersister: ReferencePersister
 
@@ -47,7 +52,9 @@ class EditSourceDialog : DialogFragment() {
 
     val source: Source by param()
 
-    val series: Series? by param<Series?>(source.series)
+    val seriesParam: Series? by param(SeriesNullObject) // by param() doesn't seem to like when passing null - on calling get() an exception gets thrown
+
+    val series: Series? = if(seriesParam == SeriesNullObject) null else seriesParam
 
     val editedSourceTitle: String? by param<String?>(source.title)
 

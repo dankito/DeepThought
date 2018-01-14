@@ -92,7 +92,7 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
         val sourceToEdit = source ?: Source("")
 
         mainWindowController.find(EditSourceDialog::class,
-                mapOf(EditSourceDialog::source to sourceToEdit, EditSourceDialog::series to series, EditSourceDialog::editedSourceTitle to editedSourceTitle)
+                mapOf(EditSourceDialog::source to sourceToEdit, EditSourceDialog::seriesParam to series, EditSourceDialog::editedSourceTitle to editedSourceTitle)
         ).show(getEditSourceDialogTitle(sourceToEdit.title, editedSourceTitle))
     }
 
