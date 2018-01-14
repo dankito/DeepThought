@@ -123,7 +123,7 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
         }
         else {
             presenter.getFirstTagOfLastSearchResult()?.let { firstTagSearchResult ->
-                addTag(firstTagSearchResult)
+                addTagAndUpdatePreview(firstTagSearchResult)
             }
         }
 
@@ -145,14 +145,18 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
         setTagsOnEntryPreviewOnUIThread()
     }
 
+    private fun addTagAndUpdatePreview(tag: Tag) {
+        addTag(tag)
+
+        setTagsOnEntryPreviewOnUIThread()
+    }
+
     private fun addTag(tag: Tag) {
         if(this.autoCompleteResult == null) { // auto complete already applied, now an additional tag gets added but we cannot replace enteredTagName anymore
             val autoCompleteResult = tagsPreviewViewHelper.autoCompleteEnteredTextForTag(getCurrentFieldValue(), tag)
             this.autoCompleteResult = autoCompleteResult
             setEditTextEntityFieldValueOnUiThread(autoCompleteResult.autoCompletedText)
         }
-
-        setTagsOnEntryPreviewOnUIThread()
     }
 
     private fun removeRemovedTagFromEnteredSearchTerm(removedTag: Tag) {
