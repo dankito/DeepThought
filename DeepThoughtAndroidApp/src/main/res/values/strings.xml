@@ -149,7 +149,7 @@
     <string name="activity_edit_item_edit_summary_title">Title / Summary</string>
     <string name="activity_edit_item_source_label">Source</string>
     <string name="activity_edit_item_edit_source_menu_edit_details">Edit details</string>
-    <string name="activity_edit_item_edit_source_menu_create_new_entity">New one …</string>
+    <string name="activity_edit_item_edit_source_menu_create_new_entity">Create new one</string>
     <string name="activity_edit_item_edit_source_menu_remove_entity">Clear</string>
     <string name="activity_edit_item_tags_label">Tags</string>
     <string name="activity_edit_item_edit_tags_hint">Separate tags with comma, auto complete with Enter</string>
