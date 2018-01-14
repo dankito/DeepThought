@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleBooleanProperty
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
+import net.dankito.deepthought.javafx.service.events.EditingSourceDoneEvent
 import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
 import net.dankito.deepthought.javafx.ui.controls.EditDateFieldValueView
 import net.dankito.deepthought.javafx.ui.controls.EditFieldValueView
@@ -13,6 +14,7 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditReferencePresenter
 import net.dankito.service.data.DeleteEntityService
+import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.ui.IClipboardService
 import tornadofx.*
 import javax.inject.Inject
@@ -37,6 +39,9 @@ class EditSourceDialog : DialogFragment() {
     @Inject
     protected lateinit var deleteEntityService: DeleteEntityService
 
+    @Inject
+    protected lateinit var eventBus: IEventBus
+
 
     private val titleField = EditFieldValueView(messages["edit.source.title"])
 
@@ -59,6 +64,8 @@ class EditSourceDialog : DialogFragment() {
     val editedSourceTitle: String? by param<String?>(source.title)
 
     protected val hasUnsavedChanges = SimpleBooleanProperty()
+
+    private var didPostResult = false
 
 
     init {
@@ -105,6 +112,8 @@ class EditSourceDialog : DialogFragment() {
         source.url = if(webAddressField.value.isBlank()) null else webAddressField.value
 
         presenter.saveReferenceAsync(source, series, null, publishingDateField.value) {
+            postResult(EditingSourceDoneEvent(true, source))
+
             done()
         }
     }
@@ -114,7 +123,17 @@ class EditSourceDialog : DialogFragment() {
             cleanUp()
 
             close()
+
+            postResult(EditingSourceDoneEvent(false))
         }
+    }
+
+    private fun postResult(event: EditingSourceDoneEvent) {
+        if(didPostResult == false) {
+            eventBus.postAsync(event)
+        }
+
+        didPostResult = true
     }
 
 }

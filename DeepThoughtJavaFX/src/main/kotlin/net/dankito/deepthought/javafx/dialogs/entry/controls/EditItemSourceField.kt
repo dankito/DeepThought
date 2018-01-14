@@ -19,6 +19,7 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.res.icons.Icons
+import net.dankito.deepthought.javafx.service.events.EditingSourceDoneEvent
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
@@ -27,8 +28,10 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ReferencesListPresenter
 import net.dankito.deepthought.ui.view.IReferencesListView
 import net.dankito.service.data.DeleteEntityService
+import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.ui.IClipboardService
+import net.engio.mbassy.listener.Handler
 import tornadofx.*
 import javax.inject.Inject
 
@@ -83,6 +86,9 @@ class EditItemSourceField : View() {
 
     @Inject
     protected lateinit var router: IRouter
+
+    @Inject
+    protected lateinit var eventBus: IEventBus
 
 
     init {
@@ -296,7 +302,25 @@ class EditItemSourceField : View() {
     }
 
     private fun showEditSourceDialog() {
+        eventBus.register(EventBusListener())
+
         router.showEditEntryReferenceView(sourceToEdit, seriesToEdit, txtfldTitle.text)
+    }
+
+
+    inner class EventBusListener {
+
+        @Handler
+        fun editingSourceDone(event: EditingSourceDoneEvent) {
+            eventBus.unregister(this)
+
+            if(event.didSaveSource) {
+                runLater {
+                    setSource(event.savedSource, event.savedSource?.series)
+                }
+            }
+        }
+
     }
 
 }
