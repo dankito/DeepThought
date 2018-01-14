@@ -104,7 +104,7 @@ abstract class EditEntryViewBase : DialogFragment() {
         prefHeight = 650.0
 
         add(editSourceField.root)
-        editSourceField.didValueChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
+        editSourceField.didEntityChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
 
         editedSummary.addListener { _, _, _ -> updateHasUnsavedChanges() }
 
@@ -266,7 +266,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
 
     private fun updateHasUnsavedChanges() {
-        hasUnsavedChanges.value = htmlEditor.didHtmlChange || editSourceField.didValueChange.value || editedSummary.value != originalSummary
+        hasUnsavedChanges.value = htmlEditor.didHtmlChange || editSourceField.didEntityChange.value || editedSummary.value != originalSummary
     }
 
 

@@ -38,7 +38,7 @@ class EditItemSourceField : View() {
     var seriesToEdit: Series? = null
         private set
 
-    val didValueChange = SimpleBooleanProperty()
+    val didEntityChange = SimpleBooleanProperty()
 
     private var originalSource: Source? = null
 
@@ -242,7 +242,7 @@ class EditItemSourceField : View() {
 
         showSourcePreview(source, seriesToEdit)
 
-        didValueChange.value = sourceToEdit != originalSource || seriesToEdit != originalSeries
+        didEntityChange.value = sourceToEdit != originalSource || seriesToEdit != originalSeries
     }
 
     private fun showSourcePreview(source: Source?, series: Series?) {
