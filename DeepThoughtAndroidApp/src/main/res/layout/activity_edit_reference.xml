@@ -78,20 +78,11 @@
                     android:layout_below="@+id/lytEditReferencePublishingDate"
                 />
 
-                <TextView
-                    android:id="@+id/txtAttachedFilesLabel"
+                <net.dankito.deepthought.android.views.EditEntityFilesField
+                    android:id="@+id/lytEditAttachedFiles"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/lytEditReferenceUrl"
-                    android:layout_marginBottom="6dp"
-                    android:text="Dateien (noch ganz haesslich):"
-                />
-
-                <ListView
-                    android:id="@+id/lstAttachedFiles"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/txtAttachedFilesLabel"
                 />
 
             </RelativeLayout>

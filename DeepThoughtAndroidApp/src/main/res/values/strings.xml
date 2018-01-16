@@ -206,6 +206,9 @@
     <string name="activity_edit_series_alert_message_series_has_been_edited">Series has been edited (probably on a synchronized device).\n\nWhen
         you now save the series the other changes get overwritten.
     </string>
+
+    <string name="edit_entity_files_field_files_label">Files</string>
+    <string name="edit_entity_files_field_read_files_permission_rational">To add files the permission to read files is required.</string>
     
     <string name="activity_view_pdf_source_length_in_pages">%d pages</string>
 

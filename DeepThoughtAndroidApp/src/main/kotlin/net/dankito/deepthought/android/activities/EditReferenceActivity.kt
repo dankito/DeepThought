@@ -1,6 +1,5 @@
 package net.dankito.deepthought.android.activities
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -9,13 +8,12 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
 import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityResult
-import net.dankito.deepthought.android.activities.arguments.ViewPdfActivityParameters
-import net.dankito.deepthought.android.adapter.FilesAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.PickDateDialog
+import net.dankito.deepthought.android.service.permissions.IPermissionsManager
+import net.dankito.deepthought.android.service.permissions.PermissionsManager
 import net.dankito.deepthought.android.views.ToolbarUtil
 import net.dankito.deepthought.data.ReferencePersister
-import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.fields.SourceField
@@ -87,8 +85,6 @@ class EditReferenceActivity : BaseActivity() {
     private var currentlySetPublishingDate: Date? = null
 
 
-    private val attachedFilesAdapter = FilesAdapter()
-
     private var didReferenceChange = false
 
     private val changedFields = HashSet<SourceField>()
@@ -97,6 +93,8 @@ class EditReferenceActivity : BaseActivity() {
 
     private val toolbarUtil = ToolbarUtil()
 
+    private val permissionsManager: IPermissionsManager
+
     private var eventBusListener: EventBusListener? = null
 
 
@@ -104,6 +102,8 @@ class EditReferenceActivity : BaseActivity() {
         AppComponent.component.inject(this)
 
         presenter = EditReferencePresenter(router, clipboardService, deleteEntityService, referencePersister)
+
+        permissionsManager = PermissionsManager(this)
     }
 
 
@@ -189,21 +189,7 @@ class EditReferenceActivity : BaseActivity() {
 
         lytEditReferenceUrl.setFieldNameOnUiThread(R.string.activity_edit_source_url_label) { updateDidReferenceChangeOnUiThread(SourceField.Url, it) }
 
-        lstAttachedFiles.adapter = attachedFilesAdapter
-        lstAttachedFiles.setOnItemClickListener { _, _, position, _ -> showFile(attachedFilesAdapter.getItem(position)) }
-    }
-
-    // TODO: move to Router
-    private fun showFile(file: FileLink) {
-        val intent = Intent(this, ViewPdfActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
-        val parameters = ViewPdfActivityParameters(file, source)
-        val id = parameterHolder.setParameters(parameters)
-
-        intent.putExtra(BaseActivity.ParametersId, id)
-
-        startActivity(intent)
+        lytEditAttachedFiles.didValueChangeListener = { updateDidReferenceChangeOnUiThread(SourceField.Files, it) }
     }
 
     private fun seriesTitleChanged(didSeriesTitleChange: Boolean) {
@@ -216,6 +202,12 @@ class EditReferenceActivity : BaseActivity() {
         updateDidReferenceChangeOnUiThread(SourceField.Series, series?.id != originallySetSeries?.id)
     }
 
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
 
     override fun onResume() {
         super.onResume()
@@ -437,7 +429,7 @@ class EditReferenceActivity : BaseActivity() {
 
         lytEditReferenceUrl.setFieldValueOnUiThread(source.url ?: "")
 
-        attachedFilesAdapter.setItems(source.attachedFiles)
+        lytEditAttachedFiles.setFiles(source.attachedFiles, permissionsManager)
 
         unregisterEventBusListener() // TODO: why? i came here from showParameters() and then we need to listen to changes to Source
         updateDidReferenceChangeOnUiThread()

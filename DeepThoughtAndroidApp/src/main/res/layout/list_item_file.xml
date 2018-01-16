@@ -1,29 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:padding="6dp"
-                android:background="#FFFFFF"
+<net.dankito.deepthought.android.views.FixedSwipeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fileLinkSwipeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:background="@android:color/transparent"
 >
 
-    <TextView
-        android:id="@+id/txtFileName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_above="@+id/txtFilePath"
-        android:maxLines="1"
-        android:ellipsize="end"
-        style="@style/Header1Style"
-    />
+    <!-- Bottom View Start (the view that gets displayed when the user swipes from right to left. for explanation see https://github.com/daimajia/AndroidSwipeLayout/wiki/usage) -->
 
-    <TextView
-        android:id="@+id/txtFilePath"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:maxLines="2"
-        android:ellipsize="end"
-    />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+    >
 
-</RelativeLayout>
+    </LinearLayout>
+
+
+    <!-- Surface View Start (the view that's displayed by default) -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="6dp"
+    >
+
+        <TextView
+            android:id="@+id/txtFileName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_above="@+id/txtFilePath"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            style="@style/Header1Style"
+        />
+
+        <TextView
+            android:id="@+id/txtFilePath"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:maxLines="2"
+            android:ellipsize="end"
+        />
+
+    </RelativeLayout>
+
+</net.dankito.deepthought.android.views.FixedSwipeLayout>

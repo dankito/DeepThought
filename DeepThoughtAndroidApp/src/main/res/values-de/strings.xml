@@ -245,6 +245,9 @@
     <string name="activity_edit_series_alert_message_series_has_been_edited">Reihe wurde geändert, wahrscheinlich auf einem synchronisierten Gerät.\n\nWenn
         Sie die Reihe hier nun ebenfalls speichern, überschreiben Sie jene Änderungen.</string>
 
+    <string name="edit_entity_files_field_files_label">Dateien</string>
+    <string name="edit_entity_files_field_read_files_permission_rational">Um Dateien anhängen zu können wird die Berechtigung zum Lesen von Dateien lesen benötigt.</string>
+
     <string name="activity_view_pdf_source_length_in_pages">%d Seiten</string>
 
     <string name="snackbar_extract_item_from_url"><![CDATA[

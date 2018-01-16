@@ -260,6 +260,15 @@ open class EditEntityField : RelativeLayout {
         vwHorizontalLineWhenEditTextNotShown.visibility = View.VISIBLE
     }
 
+    protected fun showAsDoesNotAcceptInput() {
+        edtxtEntityFieldValue.visibility = View.GONE
+        vwHorizontalLineWhenEditTextNotShown.visibility = View.GONE
+
+        rcySearchResults.visibility = View.VISIBLE
+        (rcySearchResult.layoutParams as? MarginLayoutParams)?.topMargin = (-10 * context.resources.displayMetrics.density).toInt() // so that there's not such a big gap to first
+        // item
+    }
+
     protected fun showSearchResultsView() {
         rcySearchResult.visibility = View.VISIBLE
         vwSearchResultsDivider.visibility = View.VISIBLE
