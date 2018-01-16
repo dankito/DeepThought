@@ -49,6 +49,17 @@ abstract class ListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(li
         this.items = newList
     }
 
+    fun removeItem(item: T) {
+        removeItems(listOf(item))
+    }
+
+    fun removeItems(items: Collection<T>) {
+        val newList = ArrayList(this.items)
+        newList.removeAll(items)
+
+        this.items = newList
+    }
+
 
     protected open fun viewHolderCreated(viewHolder: THolder) {
         createdViewHolders.add(viewHolder)

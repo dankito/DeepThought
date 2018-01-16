@@ -34,7 +34,7 @@ class EditEntityFilesField : EditEntityField {
 
     private var fileChooserDialog: FileChooserDialog? = null
 
-    private val attachedFilesAdapter = FilesRecyclerAdapter()
+    private val attachedFilesAdapter = FilesRecyclerAdapter() { file -> removeFile(file) }
 
 
     init {
@@ -111,6 +111,12 @@ class EditEntityFilesField : EditEntityField {
     private fun addFile(file: File) {
         val localFile = fileManager.createLocalFile(file)
         attachedFilesAdapter.addItem(localFile)
+
+        updateDidValueChange(didCollectionChange(originalFiles, attachedFilesAdapter.items))
+    }
+
+    private fun removeFile(file: FileLink) {
+        attachedFilesAdapter.removeItem(file)
 
         updateDidValueChange(didCollectionChange(originalFiles, attachedFilesAdapter.items))
     }
