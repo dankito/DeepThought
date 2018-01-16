@@ -85,8 +85,8 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideFileManager(platformConfiguration: IPlatformConfiguration) : FileManager {
-        return FileManager(platformConfiguration)
+    fun provideFileManager(platformConfiguration: IPlatformConfiguration, hashService: HashService) : FileManager {
+        return FileManager(platformConfiguration, hashService)
     }
 
     @Provides

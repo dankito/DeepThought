@@ -141,8 +141,12 @@ class TableConfig {
 
         const val FileLinkUriColumnName = "uri"
         const val FileLinkNameColumnName = "name"
-        const val FileLinkIsFolderColumnName = "folder"
+        const val FileLinkIsLocalFileColumnName = "is_local_file"
+        const val FileLinkIsFolderColumnName = "is_folder"
         const val FileLinkFileTypeColumnName = "file_type"
+        const val FileLinkFileSizeColumnName = "file_size"
+        const val FileLinkFileLastModifiedColumnName = "file_last_modified"
+        const val FileLinkFileHashSHA512ColumnName = "hash_sha_512"
         const val FileLinkDescriptionColumnName = "description"
         const val FileLinkSourceUriColumnName = "source_uri"
 
