@@ -36,6 +36,7 @@ import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.JacksonJsonSerializer
+import net.dankito.utils.services.hashing.HashService
 import net.dankito.utils.services.hashing.IBase64Service
 import net.dankito.utils.services.network.NetworkConnectivityManagerBase
 import net.dankito.utils.services.network.NetworkHelper
@@ -87,6 +88,8 @@ class CommunicationManagerTest {
     private val localization: Localization = Localization()
 
     private val base64Service: IBase64Service = mock()
+
+    private val hashService = HashService()
 
     private val fileStorageService = JavaFileStorageService()
 
@@ -240,7 +243,7 @@ class CommunicationManagerTest {
             localRegistrationHandler = createDeviceRegistrationHandler(localRegisterAtRemote, localPermitRemoteToSynchronize, localCorrectChallengeResponse, localDataManager,
                     localInitialSyncManager, localDialogService, localization)
 
-            localClientCommunicator = TcpSocketClientCommunicator(localNetworkSettings, localRegistrationHandler, localEntityManager, serializer, base64Service, localThreadPool)
+            localClientCommunicator = TcpSocketClientCommunicator(localNetworkSettings, localRegistrationHandler, localEntityManager, serializer, base64Service, hashService, localThreadPool)
 
             localConnectedDevicesService = ConnectedDevicesService(localDevicesDiscoverer, localClientCommunicator, localSyncManager, localRegistrationHandler, localNetworkSettings, localEntityManager)
 
@@ -277,7 +280,7 @@ class CommunicationManagerTest {
 //            remoteRegistrationHandler = spy<IDeviceRegistrationHandler>(registrationHandlerInstance)
             remoteRegistrationHandler = registrationHandlerInstance
 
-            remoteClientCommunicator = TcpSocketClientCommunicator(remoteNetworkSettings, remoteRegistrationHandler, remoteEntityManager, serializer, base64Service, remoteThreadPool)
+            remoteClientCommunicator = TcpSocketClientCommunicator(remoteNetworkSettings, remoteRegistrationHandler, remoteEntityManager, serializer, base64Service, hashService, remoteThreadPool)
 
             remoteConnectedDevicesService = ConnectedDevicesService(remoteDevicesDiscoverer, remoteClientCommunicator, remoteSyncManager, remoteRegistrationHandler, remoteNetworkSettings, remoteEntityManager)
 

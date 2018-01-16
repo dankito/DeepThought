@@ -44,6 +44,7 @@ import net.dankito.utils.OsHelper
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.ISerializer
+import net.dankito.utils.services.hashing.HashService
 import net.dankito.utils.services.hashing.IBase64Service
 import net.dankito.utils.services.network.NetworkHelper
 import javax.inject.Singleton
@@ -155,8 +156,8 @@ open class CommonModule {
     @Provides
     @Singleton
     open fun provideClientCommunicator(networkSettings: INetworkSettings, registrationHandler: IDeviceRegistrationHandler, entityManager: IEntityManager,
-                                  serializer: ISerializer, base64Service: IBase64Service, threadPool: IThreadPool) : IClientCommunicator {
-        return TcpSocketClientCommunicator(networkSettings, registrationHandler, entityManager, serializer, base64Service, threadPool)
+                                  serializer: ISerializer, base64Service: IBase64Service, hashService: HashService, threadPool: IThreadPool) : IClientCommunicator {
+        return TcpSocketClientCommunicator(networkSettings, registrationHandler, entityManager, serializer, base64Service, hashService, threadPool)
     }
 
     @Provides

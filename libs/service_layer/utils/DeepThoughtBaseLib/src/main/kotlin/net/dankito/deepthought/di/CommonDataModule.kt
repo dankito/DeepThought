@@ -18,6 +18,7 @@ import net.dankito.utils.IThreadPool
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.serialization.JacksonJsonSerializer
+import net.dankito.utils.services.hashing.HashService
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.ui.IDialogService
 import javax.inject.Singleton
@@ -124,6 +125,12 @@ class CommonDataModule {
     @Singleton
     fun provideSeriesPersister(seriesService: SeriesService): SeriesPersister {
         return SeriesPersister(seriesService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHashService() : HashService {
+        return HashService()
     }
 
 
