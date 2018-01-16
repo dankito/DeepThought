@@ -33,7 +33,6 @@ import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogButton
 import net.dankito.utils.ui.model.ConfirmationDialogConfig
 import net.engio.mbassy.listener.Handler
-import java.io.File
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.HashSet
@@ -199,7 +198,7 @@ class EditReferenceActivity : BaseActivity() {
         val intent = Intent(this, ViewPdfActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-        val parameters = ViewPdfActivityParameters(File(file.uriString), source)
+        val parameters = ViewPdfActivityParameters(file, source)
         val id = parameterHolder.setParameters(parameters)
 
         intent.putExtra(BaseActivity.ParametersId, id)

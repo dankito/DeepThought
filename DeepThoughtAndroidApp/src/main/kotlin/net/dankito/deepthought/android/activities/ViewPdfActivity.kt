@@ -6,7 +6,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.ViewPdfActivityParameters
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.hideKeyboard
-import net.dankito.deepthought.data.ReferencePersister
+import net.dankito.deepthought.data.FileManager
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
@@ -32,13 +32,13 @@ class ViewPdfActivity : BaseActivity() {
     protected lateinit var importer: PdfImporter
 
     @Inject
-    protected lateinit var referencePersister: ReferencePersister
-
-    @Inject
     protected lateinit var fileService: FileService
 
     @Inject
     protected lateinit var router: IRouter
+
+    @Inject
+    protected lateinit var fileManager: FileManager
 
 
     private var currentPage = -1
@@ -118,24 +118,21 @@ class ViewPdfActivity : BaseActivity() {
         }
     }
 
-    private fun loadPdf(pdfFile: File) {
-        var file = pdfFile
-        if(file.isAbsolute == false) {
-            file = File(getAppDataDir(), pdfFile.path)
-        }
+    private fun loadPdf(pdfFile: FileLink) {
+        val localFile = fileManager.getLocalPathForFile(pdfFile)
 
-        importer.loadFileAsync(file) { result ->
+        importer.loadFileAsync(localFile) { result ->
             result.fileMetadata?.let {
                 runOnUiThread { loadedFileOnUiThread(pdfFile, it) }
             }
 
             result.error?.let {
-                runOnUiThread { couldNotLoadPdfOnUiThread(pdfFile, it) }
+                runOnUiThread { couldNotLoadPdfOnUiThread(localFile, it) }
             }
         }
     }
 
-    private fun loadedFileOnUiThread(pdfFile: File, metadata: FileMetadata) {
+    private fun loadedFileOnUiThread(pdfFile: FileLink, metadata: FileMetadata) {
         fileMetaData = metadata
 
         if(sourceForFile == null) {
@@ -148,8 +145,8 @@ class ViewPdfActivity : BaseActivity() {
         loadPageTextOnUiThread(1)
     }
 
-    private fun couldNotLoadPdfOnUiThread(pdfFile: File, it: Exception) {
-        txtPageText.text = "Could not load PDF file ${pdfFile.absolutePath}:\n\n$it"
+    private fun couldNotLoadPdfOnUiThread(localFile: File, exception: Exception) {
+        txtPageText.text = "Could not load PDF file ${localFile.absolutePath}:\n\n$exception"
 
         txtCountPages.text = ""
         setControlsEnabledState(false)
@@ -162,29 +159,18 @@ class ViewPdfActivity : BaseActivity() {
         btnCreateItemFromSelectedText.isEnabled = isButtonCreateItemFromSelectedTextEnabled
     }
 
-    private fun createSource(metadata: FileMetadata, pdfFile: File): Source {
+    private fun createSource(metadata: FileMetadata, pdfFile: FileLink): Source {
         val sourceTitle = (if (metadata.author.isNotBlank()) metadata.author + " - " else "") + metadata.title
         val source = Source(sourceTitle)
         source.length = resources.getString(R.string.activity_view_pdf_source_length_in_pages, metadata.countPages)
 
-        val relativePath = pdfFile.toRelativeString(getAppDataDir())
-        val file = FileLink(relativePath, pdfFile.name)
-        fileService.persist(file) // TODO: integrate in ReferencePersister
-
-        source.addAttachedFile(file)
-
-        return source
-    }
-
-    private fun getAppDataDir(): File {
-        try {
-            val packageInfo = packageManager.getPackageInfo(packageName, 0)
-            return File(packageInfo.applicationInfo.dataDir)
-        } catch (e: Exception) {
-            log.error("Could not get app's data dir", e)
+        if(pdfFile.isPersisted() == false) {
+            fileService.persist(pdfFile) // TODO: integrate in ReferencePersister
         }
 
-        return File("/")
+        source.addAttachedFile(pdfFile)
+
+        return source
     }
 
 

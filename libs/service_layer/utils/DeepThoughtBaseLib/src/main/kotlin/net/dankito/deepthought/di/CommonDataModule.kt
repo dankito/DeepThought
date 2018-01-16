@@ -5,6 +5,7 @@ import dagger.Provides
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.FileManager
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.service.data.DataManager
@@ -79,6 +80,12 @@ class CommonDataModule {
     @Singleton
     fun provideFileService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier): FileService {
         return FileService(dataManager, entityChangedNotifier)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFileManager(platformConfiguration: IPlatformConfiguration) : FileManager {
+        return FileManager(platformConfiguration)
     }
 
     @Provides
