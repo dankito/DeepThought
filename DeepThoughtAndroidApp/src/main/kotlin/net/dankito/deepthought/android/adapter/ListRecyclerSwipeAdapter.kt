@@ -38,6 +38,10 @@ abstract class ListRecyclerSwipeAdapter<T, THolder : RecyclerView.ViewHolder>(li
     fun getItem(position: Int) = items[position]
 
 
+    fun addItem(item: T) {
+        addItems(listOf(item))
+    }
+
     fun addItems(items: Collection<T>) {
         val newList = ArrayList(this.items)
         newList.addAll(items)
