@@ -20,6 +20,7 @@ import net.dankito.deepthought.android.extensions.setTextColorToColorResource
 import net.dankito.deepthought.android.extensions.setTintColor
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.service.showKeyboard
+import java.util.*
 
 
 open class EditEntityField : RelativeLayout {
@@ -293,6 +294,16 @@ open class EditEntityField : RelativeLayout {
         if(didValueChange != previousValue) {
             didValueChangeListener?.invoke(didValueChange)
         }
+    }
+
+    protected fun didCollectionChange(originalCollection: Collection<*>, editedCollection: Collection<*>): Boolean {
+        if(originalCollection.size != editedCollection.size) {
+            return true
+        }
+
+        val copy = ArrayList(editedCollection)
+        copy.removeAll(originalCollection)
+        return copy.size > 0
     }
 
 

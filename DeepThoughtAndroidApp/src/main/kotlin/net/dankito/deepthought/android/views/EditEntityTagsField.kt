@@ -232,13 +232,7 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
     }
 
     private fun didTagsOnEntryChange(tagsOnEntry: Collection<Tag>): Boolean {
-        if(originalTagsOnEntry.size != tagsOnEntry.size) {
-            return true
-        }
-
-        val copy = ArrayList(tagsOnEntry)
-        copy.removeAll(originalTagsOnEntry)
-        return copy.size > 0
+        return didCollectionChange(originalTagsOnEntry, tagsOnEntry)
     }
 
 
