@@ -2,23 +2,18 @@ package net.dankito.deepthought.javafx.dialogs.entry
 
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
-import javafx.collections.FXCollections
-import javafx.collections.ObservableSet
-import javafx.collections.SetChangeListener
 import javafx.concurrent.Worker
+import javafx.geometry.Insets
 import javafx.geometry.Pos
-import javafx.scene.Cursor
 import javafx.scene.control.Control
-import javafx.scene.control.Label
-import javafx.scene.input.MouseButton
-import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Priority
+import javafx.scene.layout.VBox
 import javafx.scene.web.WebView
-import javafx.stage.StageStyle
 import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.javafx.dialogs.entry.controls.EditItemSourceField
+import net.dankito.deepthought.javafx.dialogs.entry.controls.EditItemTagsField
 import net.dankito.deepthought.javafx.dialogs.entry.controls.InlineHtmlEditor
 import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
 import net.dankito.deepthought.javafx.util.FXUtils
@@ -31,7 +26,6 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReadLaterArticleService
-import net.dankito.utils.extensions.toSortedString
 import net.dankito.utils.ui.IClipboardService
 import tornadofx.*
 import javax.inject.Inject
@@ -44,8 +38,6 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     protected val editedSummary = SimpleStringProperty()
 
-    protected val tagsPreview = SimpleStringProperty()
-
     protected val contentHtml = SimpleStringProperty()
 
     protected val hasUnsavedChanges = SimpleBooleanProperty()
@@ -53,13 +45,11 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     private val editSourceField = EditItemSourceField()
 
-    private var txtTags: Label by singleAssign()
+    private var editTagsField: EditItemTagsField by singleAssign()
 
     private val htmlEditor = InlineHtmlEditor()
 
     private var wbvwShowUrl: WebView by singleAssign()
-
-    private var tagsOnEntryDialog: TagsOnEntryDialog? = null
 
 
     private val presenter: EditEntryPresenter
@@ -68,8 +58,6 @@ abstract class EditEntryViewBase : DialogFragment() {
     private var item: Item? = null
 
     private var originalSummary = ""
-
-    private val tagsOnEntry: ObservableSet<Tag> = FXCollections.observableSet()
 
     private var currentlyDisplayedUrl: String? = null
 
@@ -94,8 +82,6 @@ abstract class EditEntryViewBase : DialogFragment() {
         AppComponent.component.inject(this)
 
         presenter = EditEntryPresenter(entryPersister, readLaterArticleService, clipboardService, router)
-
-        tagsOnEntry.addListener(SetChangeListener<Tag> { showTagsPreview(tagsOnEntry) } )
     }
 
 
@@ -139,31 +125,10 @@ abstract class EditEntryViewBase : DialogFragment() {
             }
         }
 
-        hbox {
-            prefHeight = 20.0
-            maxHeight = 70.0
-            prefWidthProperty().bind(this@vbox.widthProperty())
+        editTagsField = EditItemTagsField()
+        add(editTagsField.root)
 
-            cursor = Cursor.HAND
-            setOnMouseClicked { tagsPreviewClicked(it) }
-
-            label(messages["edit.item.tags.label"]) {
-                minWidth = Control.USE_PREF_SIZE
-                useMaxWidth = true
-            }
-
-            txtTags = label {
-                isWrapText = false
-
-                textProperty().bind(tagsPreview)
-
-                hgrow = Priority.ALWAYS
-            }
-
-            vboxConstraints {
-                marginBottom = 6.0
-            }
-        }
+        VBox.setMargin(editTagsField.root, Insets(0.0, 0.0, 6.0, 0.0))
 
         add(htmlEditor)
 
@@ -214,31 +179,16 @@ abstract class EditEntryViewBase : DialogFragment() {
     }
 
 
-    private fun tagsPreviewClicked(event: MouseEvent) {
-        if(event.button == MouseButton.PRIMARY) {
-            if(tagsOnEntryDialog == null) {
-                tagsOnEntryDialog = find(TagsOnEntryDialog::class, mapOf(TagsOnEntryDialog::tagsOnEntry to tagsOnEntry))
-                tagsOnEntryDialog?.show(messages["tags.on.item.dialog.title"], stageStyle = StageStyle.UTILITY, owner = currentStage) // TODO: add icon
-            }
-            else {
-                tagsOnEntryDialog?.close()
-                tagsOnEntryDialog = null
-            }
-        }
-    }
-
-
-    protected fun showData(item: Item, tags: Collection<Tag>, source: Source?, series: Series?, contentToEdit: String? = null) {
+    protected fun showData(item: Item, tags: MutableCollection<Tag>, source: Source?, series: Series?, contentToEdit: String? = null) {
         this.item = item
         originalSummary = item.abstractPlainText
-        tagsOnEntry.addAll(tags) // make a copy
 
         editedSummary.value = originalSummary
 
         showContent(item, source, contentToEdit)
 
-        showTagsPreview(tagsOnEntry)
         editSourceField.setSourceToEdit(source, series)
+        editTagsField.setCollectionToEdit(tags)
     }
 
     private fun showContent(item: Item, source: Source?, contentToEdit: String?) {
@@ -263,10 +213,6 @@ abstract class EditEntryViewBase : DialogFragment() {
         }
     }
 
-    private fun showTagsPreview(tags: Collection<Tag>) {
-        this.tagsPreview.value = tags.toSortedString()
-    }
-
 
     private fun updateHasUnsavedChanges() {
         hasUnsavedChanges.value = htmlEditor.didHtmlChange || editSourceField.didEntityChange.value || editSourceField.didTitleChange.value
@@ -289,7 +235,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
             val source = updateSource()
 
-            presenter.saveEntryAsync(entry, source, editSourceField.seriesToEdit, tagsOnEntry) {
+            presenter.saveEntryAsync(entry, source, editSourceField.seriesToEdit, editTagsField.editedCollection) {
                 done()
             }
         }
