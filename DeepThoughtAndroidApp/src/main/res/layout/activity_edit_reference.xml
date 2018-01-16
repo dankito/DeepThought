@@ -79,7 +79,7 @@
                 />
 
                 <TextView
-                    android:id="@+id/txtSourceAttachedFilesLabel"
+                    android:id="@+id/txtAttachedFilesLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/lytEditReferenceUrl"
@@ -88,10 +88,10 @@
                 />
 
                 <ListView
-                    android:id="@+id/lstSourceAttachedFiles"
+                    android:id="@+id/lstAttachedFiles"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txtSourceAttachedFilesLabel"
+                    android:layout_below="@+id/txtAttachedFilesLabel"
                 />
 
             </RelativeLayout>

@@ -189,8 +189,8 @@ class EditReferenceActivity : BaseActivity() {
 
         lytEditReferenceUrl.setFieldNameOnUiThread(R.string.activity_edit_source_url_label) { updateDidReferenceChangeOnUiThread(SourceField.Url, it) }
 
-        lstSourceAttachedFiles.adapter = attachedFilesAdapter
-        lstSourceAttachedFiles.setOnItemClickListener { _, _, position, _ -> showFile(attachedFilesAdapter.getItem(position)) }
+        lstAttachedFiles.adapter = attachedFilesAdapter
+        lstAttachedFiles.setOnItemClickListener { _, _, position, _ -> showFile(attachedFilesAdapter.getItem(position)) }
     }
 
     // TODO: move to Router
