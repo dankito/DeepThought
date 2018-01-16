@@ -4,10 +4,16 @@ import android.content.Context
 import android.os.Build
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.utils.IPlatformConfiguration
+import org.slf4j.LoggerFactory
 import java.io.File
 
 
 class AndroidPlatformConfiguration(val context: Context) : IPlatformConfiguration {
+
+    companion object {
+        private val log = LoggerFactory.getLogger(AndroidPlatformConfiguration::class.java)
+    }
+
 
     override fun getUserName(): String {
         // here's a hint how it can be done but in my eyes it's not worth the effort: https://stackoverflow.com/questions/9323207/how-can-i-get-the-first-name-or-full-name-of-the-user-of-the-phone
@@ -39,6 +45,22 @@ class AndroidPlatformConfiguration(val context: Context) : IPlatformConfiguratio
         return Build.VERSION.RELEASE
     }
 
+
+    override fun getApplicationFolder(): File {
+        try {
+            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+
+            // app data dir
+//            return File(packageInfo.applicationInfo.dataDir)
+
+            // apk dir
+            return File(packageInfo.applicationInfo.sourceDir).parentFile // or publicSourceDir ?
+        } catch (e: Exception) {
+            log.error("Could not get app's data dir", e)
+        }
+
+        return File("/")
+    }
 
     override fun getDefaultDataFolder(): File {
         val dataFolderFile = context.getDir("data", Context.MODE_PRIVATE)

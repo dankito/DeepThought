@@ -19,6 +19,8 @@ interface IPlatformConfiguration {
     fun getOsVersionString(): String
 
 
+    fun getApplicationFolder(): File
+
     fun getDefaultDataFolder(): File
 
 }

@@ -50,6 +50,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         override fun getOsVersion() = 0
         override fun getOsVersionString() = "0.0"
 
+        override fun getApplicationFolder(): File { return File(".").parentFile.absoluteFile }
         override fun getDefaultDataFolder(): File { return File(File(File("data"), "test"), "lucene") }
     }
 

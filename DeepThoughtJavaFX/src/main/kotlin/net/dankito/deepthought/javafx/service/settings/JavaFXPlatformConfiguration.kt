@@ -32,6 +32,10 @@ class JavaFXPlatformConfiguration : IPlatformConfiguration {
     }
 
 
+    override fun getApplicationFolder(): File {
+        return File(System.getProperty("user.dir")).absoluteFile
+    }
+
     override fun getDefaultDataFolder(): File {
         return File("data")
     }
