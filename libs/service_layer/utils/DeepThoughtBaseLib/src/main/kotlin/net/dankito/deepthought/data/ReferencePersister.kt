@@ -1,15 +1,18 @@
 package net.dankito.deepthought.data
 
 import net.dankito.deepthought.di.BaseComponent
+import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
+import net.dankito.service.data.FileService
 import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.SeriesService
 import net.dankito.utils.IThreadPool
+import java.util.*
 import javax.inject.Inject
 
 
-class ReferencePersister(private val referenceService: ReferenceService, private val seriesService: SeriesService) {
+class ReferencePersister(private val referenceService: ReferenceService, private val seriesService: SeriesService, private val fileService: FileService) {
 
     @Inject
     protected lateinit var threadPool: IThreadPool
@@ -20,9 +23,9 @@ class ReferencePersister(private val referenceService: ReferenceService, private
     }
 
 
-    fun saveReferenceAsync(source: Source, series: Series?, callback: (Boolean) -> Unit) {
+    fun saveReferenceAsync(source: Source, series: Series?, editedFiles: Collection<FileLink>, callback: (Boolean) -> Unit) {
         threadPool.runAsync {
-            callback(saveReference(source, series))
+            callback(saveReference(source, series, editedFiles))
         }
     }
 
@@ -30,7 +33,7 @@ class ReferencePersister(private val referenceService: ReferenceService, private
         return saveReference(source, source.series)
     }
 
-    fun saveReference(source: Source, series: Series?, doChangesAffectDependentEntities: Boolean = true): Boolean {
+    fun saveReference(source: Source, series: Series?, editedFiles: Collection<FileLink> = source.attachedFiles, doChangesAffectDependentEntities: Boolean = true): Boolean {
         if(series != null && series.isPersisted() == false) { // if series has been newly created but not persisted yet
             seriesService.persist(series)
         }
@@ -56,6 +59,22 @@ class ReferencePersister(private val referenceService: ReferenceService, private
             source.series = series
         }
 
+
+        editedFiles.forEach { file ->
+            if(file.isPersisted() == false) {
+                fileService.persist(file)
+            }
+        }
+
+        val removedFiles = ArrayList(source.attachedFiles)
+        removedFiles.removeAll(editedFiles)
+
+        val addedFiles = ArrayList(editedFiles)
+        addedFiles.removeAll(source.attachedFiles)
+
+        source.setAllAttachedFiles(editedFiles.filter { it != null })
+
+
         val wasSourcePersisted = source.isPersisted()
         if(wasSourcePersisted == false) {
             referenceService.persist(source)
@@ -67,6 +86,11 @@ class ReferencePersister(private val referenceService: ReferenceService, private
         if(series?.id != previousSeries?.id || wasSourcePersisted == false) {
             series?.let { seriesService.update(series) } // source is now persisted so series needs an update to store source's id
         }
+
+
+        addedFiles.filterNotNull().forEach { fileService.update(it) }
+
+        removedFiles.filterNotNull().forEach { fileService.update(it) }
 
         return true
     }

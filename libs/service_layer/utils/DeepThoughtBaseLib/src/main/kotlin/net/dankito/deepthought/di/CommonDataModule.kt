@@ -117,8 +117,8 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideReferencePersister(referenceService: ReferenceService, seriesService: SeriesService): ReferencePersister {
-        return ReferencePersister(referenceService, seriesService)
+    fun provideReferencePersister(referenceService: ReferenceService, seriesService: SeriesService, fileService: FileService): ReferencePersister {
+        return ReferencePersister(referenceService, seriesService, fileService)
     }
 
     @Provides

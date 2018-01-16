@@ -81,6 +81,10 @@ class EditEntityFilesField : EditEntityField {
         attachedFilesAdapter.items = ArrayList(originalFiles) // make a copy to not edit original files
     }
 
+    fun getEditedFiles(): Collection<FileLink> {
+        return attachedFilesAdapter.items
+    }
+
 
     private fun selectFileToAdd() {
         if(permissionsManager.isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE)) {

@@ -2,8 +2,8 @@ package net.dankito.deepthought.data
 
 import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.model.Item
-import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Series
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.service.data.EntryService
@@ -72,9 +72,9 @@ class EntryPersister(private val entryService: EntryService, private val referen
 
 
         if(source?.id != previousReference?.id) { // only update source if it really changed
-            source?.let { referencePersister.saveReference(source, series, false) }
+            source?.let { referencePersister.saveReference(source, series, doChangesAffectDependentEntities = false) }
 
-            previousReference?.let { referencePersister.saveReference(it, it.series, false) }
+            previousReference?.let { referencePersister.saveReference(it, it.series, doChangesAffectDependentEntities = false) }
         }
 
 

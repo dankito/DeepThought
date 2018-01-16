@@ -1,6 +1,7 @@
 package net.dankito.deepthought.ui.presenter
 
 import net.dankito.deepthought.data.ReferencePersister
+import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
@@ -59,7 +60,7 @@ class EditReferencePresenter(router: IRouter, clipboardService: IClipboardServic
     }
 
 
-    fun saveReferenceAsync(source: Source, series: Series?, publishingDateInput: Date?, publishingDateStringInput: String?, callback: (Boolean) -> Unit) {
+    fun saveReferenceAsync(source: Source, series: Series?, publishingDateInput: Date?, publishingDateStringInput: String?, editedFiles: Collection<FileLink>, callback: (Boolean) -> Unit) {
         val publishingDateString = if(publishingDateStringInput.isNullOrBlank()) null else publishingDateStringInput
         val publishingDate = if(publishingDateInput != null) publishingDateInput
                              else if(publishingDateString != null) parsePublishingDate(publishingDateString)
@@ -67,7 +68,7 @@ class EditReferencePresenter(router: IRouter, clipboardService: IClipboardServic
 
         source.setPublishingDate(publishingDate, publishingDateString)
 
-        referencePersister.saveReferenceAsync(source, series, callback)
+        referencePersister.saveReferenceAsync(source, series, editedFiles, callback)
     }
 
 

@@ -322,7 +322,8 @@ class EditReferenceActivity : BaseActivity() {
             reference.length = if(lytEditReferenceLength.getCurrentFieldValue().isNullOrBlank()) null else lytEditReferenceLength.getCurrentFieldValue()
             reference.url = if(lytEditReferenceUrl.getCurrentFieldValue().isNullOrBlank()) null else lytEditReferenceUrl.getCurrentFieldValue()
 
-            presenter.saveReferenceAsync(reference, currentlySetSeries, currentlySetPublishingDate, lytEditReferencePublishingDate.getCurrentFieldValue()) { successful ->
+            presenter.saveReferenceAsync(reference, currentlySetSeries, currentlySetPublishingDate, lytEditReferencePublishingDate.getCurrentFieldValue(),
+                    lytEditAttachedFiles.getEditedFiles()) { successful ->
                 if(successful) {
                     setActivityResult(EditReferenceActivityResult(didSaveReference = true, savedSource = reference))
                 }
