@@ -20,10 +20,7 @@ data class FileLink(
         var name: String = "",
 
         @Column(name = TableConfig.FileLinkIsLocalFileColumnName)
-        var isLocalFile: Boolean = false,
-
-        @Column(name = TableConfig.FileLinkIsDirectoryColumnName)
-        var isDirectory: Boolean = false
+        var isLocalFile: Boolean = false
 
 ) : BaseEntity(), Serializable {
 

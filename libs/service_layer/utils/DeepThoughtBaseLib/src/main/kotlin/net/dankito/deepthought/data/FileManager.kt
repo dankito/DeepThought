@@ -12,7 +12,7 @@ class FileManager(private val platformConfiguration: IPlatformConfiguration, pri
 
     fun createLocalFile(localFile: File): FileLink {
         val relativePath = localFile.toRelativeString(platformConfiguration.getApplicationFolder())
-        val file = FileLink(relativePath, localFile.name, true, localFile.isDirectory)
+        val file = FileLink(relativePath, localFile.name, true)
 
         file.fileSize = localFile.length()
         file.fileLastModified = Date(localFile.lastModified())
