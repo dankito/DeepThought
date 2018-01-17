@@ -45,6 +45,10 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
     val queuedItemsCount: Int
         get() = producedItemsQueue.size
 
+    val isRunning: Boolean
+        get() = consumerThreads.size > 0
+
+
     /**
      * To restart processing after a call to {@link #stop()} or start processing when constructor flag autoStart has been set to false, call this method.
      */
