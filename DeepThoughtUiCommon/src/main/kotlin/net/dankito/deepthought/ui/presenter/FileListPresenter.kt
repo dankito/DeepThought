@@ -9,6 +9,7 @@ import java.io.File
 class FileListPresenter(private val fileManager: FileManager, private val applicationsService: IApplicationsService) {
 
     fun showFile(file: FileLink) {
+        // TODO: check if file can be opened in DeepThought directly, e.g PDFs
         applicationsService.openFileInOsDefaultApplication(file)
     }
 
