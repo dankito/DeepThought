@@ -10,6 +10,7 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
+import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.OsHelper
@@ -42,6 +43,8 @@ abstract class LuceneSearchEngineIntegrationTestBase {
 
     protected val fileService: FileService
 
+    protected val eventBus: IEventBus
+
 
     protected val platformConfiguration = object: IPlatformConfiguration {
         override fun getUserName() = "User"
@@ -70,7 +73,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         val dataManager = DataManager(entityManager, entityManagerConfiguration, DefaultDataInitializer(platformConfiguration, localization), platformConfiguration)
         initDataManager(dataManager)
 
-        val eventBus = MBassadorEventBus()
+        eventBus = MBassadorEventBus()
         val entityChangedNotifier = EntityChangedNotifier(eventBus)
 
         entryService = EntryService(dataManager, entityChangedNotifier)
@@ -78,7 +81,8 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         referenceService = ReferenceService(dataManager, entityChangedNotifier)
         seriesService = SeriesService(dataManager, entityChangedNotifier)
         readLaterArticleService = ReadLaterArticleService(dataManager, entityChangedNotifier, JacksonJsonSerializer(tagService, seriesService))
-        fileService = FileService(dataManager, entityChangedNotifier)
+        val localFileInfoService = LocalFileInfoService(dataManager, entityChangedNotifier)
+        fileService = FileService(localFileInfoService, dataManager, entityChangedNotifier)
 
         underTest = LuceneSearchEngine(dataManager, NoOpLanguageDetector(), OsHelper(platformConfiguration), ThreadPool(), eventBus,
                 entryService, tagService, referenceService, seriesService, readLaterArticleService, fileService)

@@ -13,7 +13,7 @@ import java.io.File
 class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
 
 
-    private val fileManager = FileManager(underTest, platformConfiguration, HashService())
+    private val fileManager = FileManager(underTest, platformConfiguration, HashService(), eventBus)
 
 
     @Test

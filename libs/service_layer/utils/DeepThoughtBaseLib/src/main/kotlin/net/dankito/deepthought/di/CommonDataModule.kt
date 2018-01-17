@@ -80,8 +80,14 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideFileService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier): FileService {
-        return FileService(dataManager, entityChangedNotifier)
+    fun provideLocalFileInfoService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier): LocalFileInfoService {
+        return LocalFileInfoService(dataManager, entityChangedNotifier)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFileService(localFileInfoService: LocalFileInfoService, dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier): FileService {
+        return FileService(localFileInfoService, dataManager, entityChangedNotifier)
     }
 
     @Provides
