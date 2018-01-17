@@ -6,9 +6,10 @@ import android.view.ViewGroup
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.FileLinkViewHolder
 import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.ui.presenter.FileListPresenter
 
 
-class FilesRecyclerAdapter(private val removeFileListener: (FileLink) -> Unit) : ListRecyclerSwipeAdapter<FileLink, FileLinkViewHolder>() {
+class FilesRecyclerAdapter(private val presenter: FileListPresenter, private val removeFileListener: (FileLink) -> Unit) : ListRecyclerSwipeAdapter<FileLink, FileLinkViewHolder>() {
 
     override fun getSwipeLayoutResourceId(position: Int) = R.id.fileLinkSwipeLayout
 
@@ -42,8 +43,15 @@ class FilesRecyclerAdapter(private val removeFileListener: (FileLink) -> Unit) :
     }
 
     override fun setupSwipeView(viewHolder: FileLinkViewHolder, item: FileLink) {
+        viewHolder.btnOpenContainingFolder.setOnClickListener {
+            presenter.openContainingDirectoryOfFile(item)
+
+            closeSwipeView(viewHolder)
+        }
+
         viewHolder.btnRemoveFile.setOnClickListener {
             removeFileListener(item)
+
             closeSwipeView(viewHolder)
         }
     }

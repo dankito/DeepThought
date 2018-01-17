@@ -13,6 +13,8 @@ import net.dankito.deepthought.android.extensions.setLeftMargin
 import net.dankito.deepthought.android.service.permissions.IPermissionsManager
 import net.dankito.deepthought.data.FileManager
 import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.ui.presenter.FileListPresenter
+import net.dankito.utils.ui.IApplicationsService
 import java.io.File
 import javax.inject.Inject
 
@@ -27,6 +29,9 @@ class EditEntityFilesField : EditEntityField {
     @Inject
     protected lateinit var fileManager: FileManager
 
+    @Inject
+    protected lateinit var applicationsService: IApplicationsService
+
 
     private var originalFiles: MutableCollection<FileLink> = ArrayList()
 
@@ -34,11 +39,16 @@ class EditEntityFilesField : EditEntityField {
 
     private var fileChooserDialog: FileChooserDialog? = null
 
-    private val attachedFilesAdapter = FilesRecyclerAdapter() { file -> removeFile(file) }
+    private val fileListPresenter: FileListPresenter
+
+    private val attachedFilesAdapter: FilesRecyclerAdapter
 
 
     init {
         AppComponent.component.inject(this)
+
+        fileListPresenter = FileListPresenter(fileManager, applicationsService)
+        attachedFilesAdapter = FilesRecyclerAdapter(fileListPresenter) { file -> removeFile(file) }
 
         rcySearchResult.adapter = attachedFilesAdapter
         attachedFilesAdapter.itemClickListener = { showFile(it) }
@@ -122,17 +132,8 @@ class EditEntityFilesField : EditEntityField {
     }
 
 
-    // TODO: move to Presenter / Router
     private fun showFile(file: FileLink) {
-//        val intent = Intent(this, ViewPdfActivity::class.java)
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//
-//        val parameters = ViewPdfActivityParameters(file, source)
-//        val id = parameterHolder.setParameters(parameters)
-//
-//        intent.putExtra(BaseActivity.ParametersId, id)
-//
-//        startActivity(intent)
+        fileListPresenter.showFile(file)
     }
 
 }

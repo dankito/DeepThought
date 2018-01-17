@@ -17,6 +17,13 @@
     >
 
         <net.dankito.deepthought.android.views.SwipeButton
+            android:id="@+id/btnOpenContainingFolder"
+            android:layout_width="@dimen/list_item_tag_button_width"
+            android:layout_height="match_parent"
+            app:icon="@drawable/ic_folder_white_48dp"
+        />
+
+        <net.dankito.deepthought.android.views.SwipeButton
             android:id="@+id/btnRemoveFile"
             android:layout_width="@dimen/list_item_tag_button_width"
             android:layout_height="match_parent"

@@ -13,6 +13,8 @@ class FileLinkViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     val txtFilePath: TextView = itemView.txtFilePath
 
+    val btnOpenContainingFolder: SwipeButton = itemView.btnOpenContainingFolder
+
     val btnRemoveFile: SwipeButton = itemView.btnRemoveFile
 
 }
