@@ -2,6 +2,7 @@ package net.dankito.deepthought.android.views
 
 import android.content.Context
 import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.text.Editable
@@ -264,6 +265,10 @@ open class EditEntityField : RelativeLayout {
 
         rcySearchResults.visibility = View.VISIBLE
         (rcySearchResult.layoutParams as? MarginLayoutParams)?.topMargin = (-10 * context.resources.displayMetrics.density).toInt() // so that there's not such a big gap to first item
+
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            (btnEntityFieldAction.parent as? ViewGroup)?.translationZ = 100f // so that button is shown above rcySearchResult which overlap a bit due to setting negative topMargin above
+        }
     }
 
     protected fun showSearchResultsView() {
