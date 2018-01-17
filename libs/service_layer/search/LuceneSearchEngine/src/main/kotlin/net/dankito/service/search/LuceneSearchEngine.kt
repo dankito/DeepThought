@@ -125,10 +125,13 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
         val currentSequenceNumber = dataManager.entityManager.getAllEntitiesUpdatedAfter<BaseEntity>(dataManager.localSettings.lastSearchIndexUpdateSequenceNumber, queue)
 
+        while(queue.isEmpty == false) { try { Thread.sleep(50) } catch(ignored: Exception) { } } // wait till queue is empty otherwise not all entity types would get added to updatedEntityTypes
+
         dataManager.localSettings.lastSearchIndexUpdateSequenceNumber = currentSequenceNumber
         dataManager.localSettingsUpdated()
 
-        while(queue.isEmpty == false) { try { Thread.sleep(50) } catch(ignored: Exception) { } } // wait till queue is empty otherwise not all entity types would get added to updatedEntityTypes
+        // TODO: why Local? as most probably it's been due to a remote change when an entity couldn't get indexed. I see that sending Synchronization is also dangerous,
+        // e.g. currently editing an entity which got updated in index -> an alert gets shown. Introduce an extra value for it? ProbablySynchronization? EnsuringEntityIsUpToDate?
         updatedEntityTypes.forEach { eventBus.postAsync(EntitiesOfTypeChanged(it, EntityChangeType.Updated, EntityChangeSource.Local)) }
 
         log.info("Done updating index")
