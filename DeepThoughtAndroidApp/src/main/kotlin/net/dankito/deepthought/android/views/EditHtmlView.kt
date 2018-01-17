@@ -7,8 +7,10 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_edit_entry.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.extensions.getColorFromResourceId
+import net.dankito.richtexteditor.Color
 import net.dankito.richtexteditor.android.RichTextEditor
 import net.dankito.richtexteditor.android.command.*
+import net.dankito.richtexteditor.command.ToolbarCommandStyle
 
 
 class EditHtmlView : View {
@@ -28,7 +30,7 @@ class EditHtmlView : View {
         editor = rootView.contentEditor
         editor.setEditorHeight(500) // don't know why but it's important to set a height (at least on some older Androids)
 
-        editor.addLoadedListener {
+        editor.javaScriptExecutor.addLoadedListener {
             (context as? Activity)?.runOnUiThread { editorHasLoaded() }
         }
 
@@ -44,7 +46,7 @@ class EditHtmlView : View {
         val editorToolbar = rootView.editorToolbar
         editorToolbar.editor = editor
 
-        editorToolbar.commandStyle.isActivatedColor = context.getColorFromResourceId(R.color.colorPrimaryDark)
+        editorToolbar.commandStyle.isActivatedColor = Color.fromArgb(context.getColorFromResourceId(R.color.colorPrimaryDark))
 
         editorToolbar.addCommand(BoldCommand())
         editorToolbar.addCommand(ItalicCommand())
@@ -76,7 +78,7 @@ class EditHtmlView : View {
     }
 
     fun setHtmlChangedCallback(callback: (Boolean) -> Unit) {
-        editor.addDidHtmlChangeListener(callback) // TODO: as we don't unset listener, won't there be a memory leak?
+        editor.javaScriptExecutor.addDidHtmlChangeListener(callback) // TODO: as we don't unset listener, won't there be a memory leak?
     }
 
 }

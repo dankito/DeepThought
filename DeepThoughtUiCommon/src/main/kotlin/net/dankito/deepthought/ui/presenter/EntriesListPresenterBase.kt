@@ -19,6 +19,10 @@ abstract class EntriesListPresenterBase(private val deleteEntityService: DeleteE
         }
     }
 
+    fun copyItemToClipboard(item: Item) {
+        clipboardService.copyEntryToClipboard(item, item.tags, item.source, item.source?.series)
+    }
+
     fun deleteEntry(item: Item) {
         deleteEntityService.deleteEntryAsync(item)
     }

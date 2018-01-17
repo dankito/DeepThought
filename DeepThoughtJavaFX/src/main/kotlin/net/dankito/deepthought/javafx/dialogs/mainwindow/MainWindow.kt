@@ -15,7 +15,22 @@ import tornadofx.*
 import tornadofx.FX.Companion.messages
 
 
-class MainWindow : View(messages["main.window.title"]) {
+class MainWindow : View(String.format(messages["main.window.title"], getAppVersion())) {
+
+    companion object {
+
+        private fun getAppVersion(): String {
+            val javaPackage = javaClass.getPackage()
+            if(javaPackage != null) {
+                return javaPackage.implementationVersion
+            }
+            else {
+                return "Develop"
+            }
+        }
+
+    }
+
 
     private var tbpnOverview: TabPane by singleAssign()
 

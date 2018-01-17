@@ -192,8 +192,8 @@
     <string name="activity_edit_item_edit_summary_title">Titel / Zusammenfassung</string>
     <string name="activity_edit_item_source_label">Quelle</string>
     <string name="activity_edit_item_edit_source_menu_edit_details">Details bearbeiten</string>
-    <string name="activity_edit_item_edit_source_menu_create_new_entity">Neue erstellen …</string>
-    <string name="activity_edit_item_edit_source_menu_remove_entity">Löschen</string>
+    <string name="activity_edit_item_edit_source_menu_create_new_entity">Neue erstellen</string>
+    <string name="activity_edit_item_edit_source_menu_remove_entity">Entfernen</string>
     <string name="activity_edit_item_tags_label">Schlagworte</string>
     <string name="activity_edit_item_edit_tags_hint">Trennen durch Komma, vervollständigen mit Enter</string>
     <string name="activity_edit_item_tags_onboarding_text">Geben Sie Ihrem Eintrag aussagekräftige Schlagworte, um ihn später leichter wiederzufinden.</string>

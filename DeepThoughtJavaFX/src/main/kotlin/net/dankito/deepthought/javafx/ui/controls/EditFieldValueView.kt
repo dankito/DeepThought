@@ -1,4 +1,4 @@
-package net.dankito.deepthought.javafx.dialogs.source.controls
+package net.dankito.deepthought.javafx.ui.controls
 
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
@@ -48,7 +48,7 @@ open class EditFieldValueView(fieldName: String, initialFieldValue: String = "")
             prefWidth = 135.0
         }
 
-        txtfldFieldValue = textfield() {
+        txtfldFieldValue = textfield {
             prefHeight = 35.0
 
             textProperty().bindBidirectional(currentValue)

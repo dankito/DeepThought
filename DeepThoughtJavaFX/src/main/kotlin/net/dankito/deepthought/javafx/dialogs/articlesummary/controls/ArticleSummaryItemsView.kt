@@ -46,7 +46,9 @@ class ArticleSummaryItemsView(private val presenter: ArticleSummaryPresenter) : 
             separator()
 
             item(messages["context.menu.article.summary.item.copy.url.to.clipboard"]) {
-                isDisable = true
+                action {
+                    selectedItem?.let { presenter.copyReferenceUrlToClipboard(it) }
+                }
             }
         }
 

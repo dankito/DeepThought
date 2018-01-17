@@ -51,6 +51,7 @@ dependencies {
     compile project(':DeepThoughtUiCommon')
     compile project(':JavaCouchbaseLiteEntityManager')
     compile project(':UdpDevicesDiscoverer')
+    compile project(':RichTextEditorJavaFX')
 
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 

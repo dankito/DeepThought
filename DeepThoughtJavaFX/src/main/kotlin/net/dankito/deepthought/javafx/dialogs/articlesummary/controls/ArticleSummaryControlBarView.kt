@@ -7,7 +7,7 @@ import javafx.geometry.Pos
 import javafx.scene.control.ContentDisplay
 import javafx.scene.image.ImageView
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
-import net.dankito.deepthought.javafx.res.icons.IconPaths
+import net.dankito.deepthought.javafx.res.icons.Icons
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
@@ -138,7 +138,7 @@ class ArticleSummaryControlBarView(private val presenter: ArticleSummaryPresente
                 maxWidth = IconButtonsWidth
 
                 contentDisplay = ContentDisplay.GRAPHIC_ONLY
-                graphic = ImageView(IconPaths.UpdateIconPath)
+                graphic = ImageView(Icons.UpdateIconPath)
 
                 action { presenter.extractArticlesSummary(articleSummaryExtractorConfig) { articleSummaryReceived(it) } }
 
@@ -158,7 +158,7 @@ class ArticleSummaryControlBarView(private val presenter: ArticleSummaryPresente
                 FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
 
                 contentDisplay = ContentDisplay.GRAPHIC_ONLY
-                graphic = ImageView(IconPaths.LoadNextItemsIconPath)
+                graphic = ImageView(Icons.LoadNextItemsIconPath)
 
                 action { presenter.loadMoreItems(articleSummaryExtractorConfig) { articleSummaryReceived(it) } }
 

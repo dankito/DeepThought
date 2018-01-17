@@ -166,7 +166,8 @@ dependencies {
     compile "com.github.clans:fab:$clansFloatingActionButtonVersion"
     compile "com.daimajia.swipelayout:library:$swipeLayoutVersion"
     compile "com.google.android:flexbox:$flexboxVersion"
-    compile 'net.dankito.richtexteditor:richtexteditor-android:1.0.2'
+//    compile 'net.dankito.richtexteditor:richtexteditor-android:1.0.2'
+    compile project(':RichTextEditorAndroid')
 
     compile 'me.zhanghai.android.effortlesspermissions:library:1.0.2', {
         exclude group: 'com.android.support', module: 'appcompat-v7'

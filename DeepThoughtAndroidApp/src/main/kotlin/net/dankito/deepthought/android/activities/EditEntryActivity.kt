@@ -499,7 +499,7 @@ class EditEntryActivity : BaseActivity() {
     private fun webPageCompletelyLoadedOnUiThread(webView: WebView) {
         // if ItemExtractionResult's item content hasn't been extracted yet, wait till WebView is loaded and extract item content then
         if((itemExtractionResult != null || readLaterArticle != null) && isInReaderMode == false &&
-                webView.url != "about:blank" && webView.url.startsWith("data:text/html") == false) {
+                webView.url != null && webView.url != "about:blank" && webView.url.startsWith("data:text/html") == false) {
             webView.loadUrl("javascript:$GetHtmlCodeFromWebViewJavaScriptInterfaceName.finishedLoadingSite" +
                     "(document.URL, '<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');")
         }
@@ -1368,15 +1368,15 @@ class EditEntryActivity : BaseActivity() {
 
     private fun shareEntryContent() {
         item?.let { entry ->
-            presenter.shareEntry(entry, entry.source, entry.source?.series)
+            presenter.shareEntry(entry, entry.tags, entry.source, entry.source?.series)
         }
 
         readLaterArticle?.itemExtractionResult?.let { extractionResult ->
-            presenter.shareEntry(extractionResult.item, extractionResult.source, extractionResult.series)
+            presenter.shareEntry(extractionResult.item, extractionResult.tags, extractionResult.source, extractionResult.series)
         }
 
         itemExtractionResult?.let { extractionResult ->
-            presenter.shareEntry(extractionResult.item, extractionResult.source, extractionResult.series)
+            presenter.shareEntry(extractionResult.item, extractionResult.tags, extractionResult.source, extractionResult.series)
         }
     }
 

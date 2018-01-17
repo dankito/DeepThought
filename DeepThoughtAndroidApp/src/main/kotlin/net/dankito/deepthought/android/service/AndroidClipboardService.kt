@@ -8,16 +8,15 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.extensions.abstractPlainText
-import net.dankito.deepthought.model.extensions.contentPlainText
-import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
 import net.dankito.utils.UrlUtil
-import net.dankito.utils.ui.IClipboardService
+import net.dankito.utils.ui.ClipboardServiceBase
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 
-class AndroidClipboardService : IClipboardService {
+class AndroidClipboardService : ClipboardServiceBase() {
 
     companion object {
         private val log = LoggerFactory.getLogger(AndroidClipboardService::class.java)
@@ -68,25 +67,21 @@ class AndroidClipboardService : IClipboardService {
         share(shareIntent)
     }
 
-    override fun copyEntryToClipboard(item: Item, source: Source?, series: Series?) {
+    override fun copyEntryToClipboard(item: Item, tags: Collection<Tag>, source: Source?, series: Series?) {
         val shareIntent = Intent()
 
         shareIntent.action = Intent.ACTION_SEND
         shareIntent.type = "text/plain"
 
-        addItemToShareIntent(shareIntent, item, source, series)
+        addItemToShareIntent(shareIntent, item, tags, source, series)
 
         share(shareIntent)
     }
 
-    private fun addItemToShareIntent(shareIntent: Intent, item: Item, source: Source?, series: Series?) {
-        var content = item.contentPlainText
+    private fun addItemToShareIntent(shareIntent: Intent, item: Item, tags: Collection<Tag>, source: Source?, series: Series?) {
+        val itemString = convertItemToStringForCopyingToClipboard(item, tags, source, series)
 
-        if(source != null) {
-            content = "$content\n\n(${source.getPreviewWithSeriesAndPublishingDate(series)}: ${source.url})"
-        }
-
-        shareIntent.putExtra(Intent.EXTRA_TEXT, content)
+        shareIntent.putExtra(Intent.EXTRA_TEXT, itemString)
         if(Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
             shareIntent.putExtra(Intent.EXTRA_HTML_TEXT, item.content)
         }

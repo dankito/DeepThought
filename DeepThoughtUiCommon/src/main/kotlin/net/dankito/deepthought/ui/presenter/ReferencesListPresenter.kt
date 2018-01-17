@@ -29,6 +29,8 @@ class ReferencesListPresenter(private var view: IReferencesListView, private val
 
     private var lastSearchTermProperty = Search.EmptySearchTerm
 
+    private var lastSourceSearch: ReferenceSearch? = null
+
 
     init {
         thread {
@@ -47,11 +49,15 @@ class ReferencesListPresenter(private var view: IReferencesListView, private val
     fun searchReferences(searchTerm: String, searchCompleted: ((List<Source>) -> Unit)? = null) {
         lastSearchTermProperty = searchTerm
 
-        searchEngine.searchReferences(ReferenceSearch(searchTerm) { result ->
+        lastSourceSearch?.interrupt()
+
+        lastSourceSearch = ReferenceSearch(searchTerm) { result ->
             retrievedSearchResults(result)
 
             searchCompleted?.invoke(result)
-        })
+        }
+
+        lastSourceSearch?.let { searchEngine.searchReferences(it) }
     }
 
     private fun retrievedSearchResults(result: List<Source>) {

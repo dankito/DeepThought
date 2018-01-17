@@ -1,7 +1,7 @@
 package net.dankito.deepthought.javafx.res.icons
 
 
-class IconPaths {
+class Icons {
 
     companion object {
 
@@ -14,6 +14,8 @@ class IconPaths {
         const val UpdateIconPath = "icons/update_icon_32x32.png"
 
         const val LoadNextItemsIconPath = "icons/arrow_right_in_circle_32x32.png"
+
+        const val MoreVerticalIconPath = "icons/ic_more_vert_black_36dp.png"
 
     }
 

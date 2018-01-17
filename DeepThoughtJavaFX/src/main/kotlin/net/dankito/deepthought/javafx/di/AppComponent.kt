@@ -13,6 +13,7 @@ import net.dankito.deepthought.javafx.dialogs.entry.EditEntryExtractionResultVie
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryViewBase
 import net.dankito.deepthought.javafx.dialogs.entry.EditReadLaterArticleView
 import net.dankito.deepthought.javafx.dialogs.entry.TagsOnEntryDialog
+import net.dankito.deepthought.javafx.dialogs.entry.controls.EditItemSourceField
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindow
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.ArticleExtractorsMenuButton
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.EntriesListView
@@ -20,7 +21,6 @@ import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.MainMenuBar
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.TagsListView
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.ReadLaterArticleListView
 import net.dankito.deepthought.javafx.dialogs.source.EditSourceDialog
-import net.dankito.deepthought.javafx.ui.controls.JavaFXHtmlEditor
 import javax.inject.Singleton
 
 
@@ -58,12 +58,12 @@ interface AppComponent : CommonComponent {
 
     fun inject(editEntryExtractionResultView: EditEntryExtractionResultView)
 
+    fun inject(editItemSourceField: EditItemSourceField)
+
     fun inject(tagsOnEntryDialog: TagsOnEntryDialog)
 
     fun inject(editSourceDialog: EditSourceDialog)
 
     fun inject(editReadLaterArticleView: EditReadLaterArticleView)
-
-    fun inject(htmlEditor: JavaFXHtmlEditor)
 
 }
