@@ -13,6 +13,7 @@ import net.dankito.deepthought.android.service.communication.AndroidDeviceRegist
 import net.dankito.deepthought.android.service.network.AndroidNetworkConnectivityManager
 import net.dankito.deepthought.android.service.settings.AndroidLocalSettingsStore
 import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.FileManager
 import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
@@ -27,6 +28,7 @@ import net.dankito.utils.localization.Localization
 import net.dankito.utils.services.network.INetworkConnectivityManager
 import net.dankito.utils.services.network.NetworkHelper
 import net.dankito.utils.settings.ILocalSettingsStore
+import net.dankito.utils.ui.IApplicationsService
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import javax.inject.Singleton
@@ -95,6 +97,12 @@ class ActivitiesModule(private val applicationContext: Context) {
     @Singleton
     fun provideClipboardService() : IClipboardService {
         return AndroidClipboardService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideApplicationsService(context: Context, fileManager: FileManager) : IApplicationsService {
+        return AndroidApplicationsService(context, fileManager)
     }
 
     @Provides

@@ -5,6 +5,7 @@ import dagger.Provides
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.FileManager
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.javafx.appstart.CommunicationManagerStarter
@@ -12,6 +13,7 @@ import net.dankito.deepthought.javafx.appstart.JavaFXAppInitializer
 import net.dankito.deepthought.javafx.dialogs.JavaFXDialogService
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
+import net.dankito.deepthought.javafx.service.JavaFXApplicationsService
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardService
 import net.dankito.deepthought.javafx.service.communication.JavaFXDeviceRegistrationHandler
 import net.dankito.deepthought.javafx.service.import_export.DataImporterExporterManager
@@ -35,6 +37,7 @@ import net.dankito.utils.localization.Localization
 import net.dankito.utils.services.network.INetworkConnectivityManager
 import net.dankito.utils.services.network.NetworkHelper
 import net.dankito.utils.settings.ILocalSettingsStore
+import net.dankito.utils.ui.IApplicationsService
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import javax.inject.Singleton
@@ -73,6 +76,12 @@ class JavaFXModule(private val flavorInstanceProvider: JavaFXInstanceProvider, p
     @Singleton
     fun provideClipboardService() : IClipboardService {
         return JavaFXClipboardService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideApplicationsService(fileManager: FileManager) : IApplicationsService {
+        return JavaFXApplicationsService(fileManager)
     }
 
     @Provides
