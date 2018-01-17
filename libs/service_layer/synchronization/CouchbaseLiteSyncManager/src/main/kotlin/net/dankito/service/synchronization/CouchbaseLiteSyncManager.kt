@@ -56,6 +56,7 @@ class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityMan
         val entitiesToFilter = ArrayList<String>()
         entitiesToFilter.add(DeepThought::class.java.name)
         entitiesToFilter.add(LocalSettings::class.java.name)
+        entitiesToFilter.add(LocalFileInfo::class.java.name)
 
         database.setFilter(EntitiesFilterName) { revision, params ->
             revision.getProperty(Dao.TYPE_COLUMN_NAME)?.let { entityType ->
