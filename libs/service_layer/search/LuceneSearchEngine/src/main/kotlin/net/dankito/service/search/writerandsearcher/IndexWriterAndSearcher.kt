@@ -277,6 +277,12 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
 
     abstract fun addEntityFieldsToDocument(entity: TEntity, doc: Document)
 
+    protected fun addBooleanFieldToDocument(fieldName: String, fieldValue: Boolean, doc: Document) {
+        val convertedFieldValue = if(fieldValue) FieldValue.BooleanFieldTrueValue else FieldValue.BooleanFieldFalseValue
+
+        doc.add(StringField(fieldName, convertedFieldValue, Field.Store.NO))
+    }
+
     private fun indexDocument(doc: Document) {
         try {
             getWriter()?.let { writer ->

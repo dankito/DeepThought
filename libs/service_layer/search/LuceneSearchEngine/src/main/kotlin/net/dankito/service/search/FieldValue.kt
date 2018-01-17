@@ -7,7 +7,8 @@ object FieldValue {
     val BooleanFieldTrueValue = "true"
 
     val NoTagsFieldValue = "notags"
-    val NoNotesFieldValue = "nonotes"
     val NoReferenceFieldValue = "noreference"
+    val NoFilesFieldValue = "nofiles"
+    val NoNotesFieldValue = "nonotes"
 
 }

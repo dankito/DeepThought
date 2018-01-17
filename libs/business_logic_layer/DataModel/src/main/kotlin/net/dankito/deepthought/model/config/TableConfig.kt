@@ -126,31 +126,6 @@ class TableConfig {
         const val TagDescriptionColumnName = "description"
 
 
-        /*          Note Table Config        */
-
-        const val NoteTableName = "notes"
-
-        const val NoteNoteColumnName = "notes"
-        const val NoteNoteTypeJoinColumnName = "note_type_id"
-        const val NoteItemJoinColumnName = "item_id"
-
-
-        /*          FileLink Table Config        */
-
-        const val FileLinkTableName = "file"
-
-        const val FileLinkUriColumnName = "uri"
-        const val FileLinkNameColumnName = "name"
-        const val FileLinkIsLocalFileColumnName = "is_local_file"
-        const val FileLinkIsDirectoryColumnName = "is_directory"
-        const val FileLinkFileTypeColumnName = "file_type"
-        const val FileLinkFileSizeColumnName = "file_size"
-        const val FileLinkFileLastModifiedColumnName = "file_last_modified"
-        const val FileLinkFileHashSHA512ColumnName = "hash_sha_512"
-        const val FileLinkDescriptionColumnName = "description"
-        const val FileLinkSourceUriColumnName = "source_uri"
-
-
         /*          Source Table Config        */
 
         const val SourceTableName = "source"
@@ -186,6 +161,43 @@ class TableConfig {
 
         const val SourceAttachedFileJoinTableSourceBaseIdColumnName = "source_id"
         const val SourceAttachedFileJoinTableFileLinkIdColumnName = "file_id"
+
+
+        /*          FileLink Table Config        */
+
+        const val FileLinkTableName = "file"
+
+        const val FileLinkUriColumnName = "uri"
+        const val FileLinkNameColumnName = "name"
+        const val FileLinkIsLocalFileColumnName = "is_local_file"
+        const val FileLinkFileTypeColumnName = "file_type"
+        const val FileLinkFileSizeColumnName = "file_size"
+        const val FileLinkFileLastModifiedColumnName = "file_last_modified"
+        const val FileLinkFileHashSHA512ColumnName = "hash_sha_512"
+        const val FileLinkDescriptionColumnName = "description"
+        const val FileLinkSourceUriColumnName = "source_uri"
+
+
+        /*          LocalFileInfo Table Config        */
+
+        const val LocalFileInfoTableName = "local_file_info"
+
+        const val LocalFileInfoFileLinkJoinColumnName = "file_link_id"
+        const val LocalFileInfoPathColumnName = "path"
+        const val LocalFileInfoIsDeviceThatHasOriginalColumnName = "is_device_that_has_original"
+        const val LocalFileInfoSyncStatusColumnName = "sync_status"
+        const val LocalFileInfoFileSizeColumnName = "file_size"
+        const val LocalFileInfoFileLastModifiedColumnName = "file_last_modified"
+        const val LocalFileInfoFileHashSHA512ColumnName = "hash_sha_512"
+
+
+        /*          Note Table Config        */
+
+        const val NoteTableName = "notes"
+
+        const val NoteNoteColumnName = "notes"
+        const val NoteNoteTypeJoinColumnName = "note_type_id"
+        const val NoteItemJoinColumnName = "item_id"
 
 
         /*          ExtensibleEnumeration Table Config        */

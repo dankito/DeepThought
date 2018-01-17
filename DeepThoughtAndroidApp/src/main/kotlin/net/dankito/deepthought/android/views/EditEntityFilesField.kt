@@ -88,6 +88,8 @@ class EditEntityFilesField : EditEntityField {
         this.originalFiles = originalFiles
         this.permissionsManager = permissionsManager
 
+        fileListPresenter.ensureLocalFileInfoIsSet(originalFiles)
+
         attachedFilesAdapter.items = ArrayList(originalFiles) // make a copy to not edit original files
     }
 

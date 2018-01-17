@@ -21,7 +21,6 @@ import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.settings.LocalSettingsStoreBase
 import net.dankito.utils.version.Versions
 import org.junit.After
-import org.junit.Before
 import java.io.File
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -41,8 +40,10 @@ abstract class LuceneSearchEngineIntegrationTestBase {
 
     protected lateinit var readLaterArticleService: ReadLaterArticleService
 
+    protected lateinit var fileService: FileService
 
-    private val platformConfiguration = object: IPlatformConfiguration {
+
+    protected val platformConfiguration = object: IPlatformConfiguration {
         override fun getUserName() = "User"
         override fun getDeviceName() = "Device"
         override fun getOsType() = OsType.DESKTOP
@@ -50,16 +51,14 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         override fun getOsVersion() = 0
         override fun getOsVersionString() = "0.0"
 
-        override fun getApplicationFolder(): File { return File(".").parentFile.absoluteFile }
+        override fun getApplicationFolder(): File { return File(".").absoluteFile.parentFile }
         override fun getDefaultDataFolder(): File { return File(File(File("data"), "test"), "lucene") }
     }
 
     private val fileStorageService = JavaFileStorageService()
 
 
-    @Before
-    @Throws(Exception::class)
-    fun setUp() {
+    init {
         val component = DaggerBaseComponent.builder().build()
         BaseComponent.component = component
 
@@ -79,9 +78,10 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         referenceService = ReferenceService(dataManager, entityChangedNotifier)
         seriesService = SeriesService(dataManager, entityChangedNotifier)
         readLaterArticleService = ReadLaterArticleService(dataManager, entityChangedNotifier, JacksonJsonSerializer(tagService, seriesService))
+        fileService = FileService(dataManager, entityChangedNotifier)
 
         underTest = LuceneSearchEngine(dataManager, NoOpLanguageDetector(), OsHelper(platformConfiguration), ThreadPool(), eventBus,
-                entryService, tagService, referenceService, seriesService, readLaterArticleService)
+                entryService, tagService, referenceService, seriesService, readLaterArticleService, fileService)
         initLuceneSearchEngine(underTest)
     }
 

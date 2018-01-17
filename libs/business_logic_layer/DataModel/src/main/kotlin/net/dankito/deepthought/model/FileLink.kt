@@ -62,13 +62,17 @@ data class FileLink(
         private set
 
 
+    @Transient
+    var localFileInfo: LocalFileInfo? = null
+
+
     init {
         // TODO
 //        this.fileType = FileType.getDefaultFileType()
     }
 
 
-    private constructor() : this("")
+    internal constructor() : this("")
 
 
     val isAttachedToItems: Boolean

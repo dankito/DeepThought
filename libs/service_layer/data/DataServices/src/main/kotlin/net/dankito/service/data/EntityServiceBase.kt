@@ -29,12 +29,18 @@ abstract class EntityServiceBase<T : BaseEntity>(val entityClass: Class<T>, val 
             onPrePersist(entity)
 
             entityManager.persistEntity(entity)
+
+            onPostPersist(entity)
         }
 
         callEntitiesUpdatedListenersForCreatedEntity(entity)
     }
 
     protected open fun onPrePersist(entity: T) {
+        // may be overwritten in sub class
+    }
+
+    protected open fun onPostPersist(entity: T) {
         // may be overwritten in sub class
     }
 

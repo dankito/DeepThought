@@ -73,13 +73,6 @@ object FieldName {
     val ReadLaterArticleReference = "read_later_article_source"
 
 
-    /*      Notes      */
-
-    val NoteId = "note_id"
-
-    val NoteNote = "note_note"
-
-
     /*      Files      */
 
     val FileId = "file_id"
@@ -88,21 +81,26 @@ object FieldName {
 
     val FileUri = "file_uri"
 
-    val FileSourceUri = "file_source_uri"
+    val FileIsLocalFile = "file_is_local_file"
 
     val FileFileType = "file_type"
 
-    val FileIsEmbeddableInHtml = "file_embeddable_in_html"
+    val FileFileSize = "file_size"
+
+    val FileFileLastModified = "file_last_modified"
 
     val FileDescription = "file_description"
 
-    val FileIsAttachedToEntries = "file_attached_to_item"
+    val FileSourceUri = "file_source_uri"
 
-    val FileIsEmbeddedInEntries = "file_embedded_in_item"
+    val FileLocalFileInfoId = "file_local_file_info_id"
 
-    val FileIsAttachedToReferenceBase = "file_attached_to_source"
 
-    val FileIsEmbeddedInReferenceBase = "file_embedded_in_source"
+    /*      Notes      */
+
+    val NoteId = "note_id"
+
+    val NoteNote = "note_note"
 
 
 }

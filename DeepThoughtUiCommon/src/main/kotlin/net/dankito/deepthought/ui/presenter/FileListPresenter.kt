@@ -22,4 +22,9 @@ class FileListPresenter(private val fileManager: FileManager, private val applic
         applicationsService.openDirectoryInOsFileBrowser(directory)
     }
 
+
+    fun ensureLocalFileInfoIsSet(files: Collection<FileLink>) {
+        fileManager.ensureLocalFileInfoIsSet(files)
+    }
+
 }

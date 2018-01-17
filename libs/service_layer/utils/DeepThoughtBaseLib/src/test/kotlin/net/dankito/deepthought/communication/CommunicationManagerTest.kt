@@ -111,7 +111,7 @@ class CommunicationManagerTest {
 
         override fun getOsVersionString(): String { return "6.0" }
 
-        override fun getApplicationFolder(): File { return File(".").parentFile.absoluteFile }
+        override fun getApplicationFolder(): File { return File(".").absoluteFile.parentFile }
 
         override fun getDefaultDataFolder(): File { return File(File(File("data"), "test"), "test1") }
     }
@@ -168,7 +168,7 @@ class CommunicationManagerTest {
 
         override fun getOsVersionString(): String { return "0.1" }
 
-        override fun getApplicationFolder(): File { return File(".").parentFile.absoluteFile }
+        override fun getApplicationFolder(): File { return File(".").absoluteFile.parentFile }
 
         override fun getDefaultDataFolder(): File { return File(File(File("data"), "test"), "test2") }
     }

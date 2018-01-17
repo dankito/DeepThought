@@ -13,6 +13,7 @@ import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
+import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.localization.Localization
@@ -85,8 +86,8 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideFileManager(platformConfiguration: IPlatformConfiguration, hashService: HashService) : FileManager {
-        return FileManager(platformConfiguration, hashService)
+    fun provideFileManager(searchEngine: ISearchEngine, platformConfiguration: IPlatformConfiguration, hashService: HashService) : FileManager {
+        return FileManager(searchEngine, platformConfiguration, hashService)
     }
 
     @Provides

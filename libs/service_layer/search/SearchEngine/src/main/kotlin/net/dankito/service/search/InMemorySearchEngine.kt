@@ -98,6 +98,10 @@ class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool
         }
     }
 
+    override fun getLocalFileInfo(file: FileLink): LocalFileInfo? {
+        return file.localFileInfo
+    }
+
 
     private fun <T : BaseEntity> searchForEntitiesOfType(type: Class<T>, search: SearchWithCollectionResult<T>, termsToSearchFor: List<String>, sortResults: ((List<T>) -> List<T>)? = null,
                                                          mapEntityToValues: (T) -> List<String>) {
