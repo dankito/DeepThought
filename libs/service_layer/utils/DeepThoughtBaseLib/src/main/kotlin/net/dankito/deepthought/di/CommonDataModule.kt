@@ -92,8 +92,8 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideFileManager(searchEngine: ISearchEngine, platformConfiguration: IPlatformConfiguration, hashService: HashService, eventBus: IEventBus) : FileManager {
-        return FileManager(searchEngine, platformConfiguration, hashService, eventBus)
+    fun provideFileManager(searchEngine: ISearchEngine, localFileInfoService: LocalFileInfoService, platformConfiguration: IPlatformConfiguration, hashService: HashService, eventBus: IEventBus) : FileManager {
+        return FileManager(searchEngine, localFileInfoService, platformConfiguration, hashService, eventBus)
     }
 
     @Provides

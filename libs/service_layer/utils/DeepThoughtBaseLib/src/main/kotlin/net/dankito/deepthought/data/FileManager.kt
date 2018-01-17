@@ -3,6 +3,7 @@ package net.dankito.deepthought.data
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.LocalFileInfo
 import net.dankito.deepthought.model.enums.FileSyncStatus
+import net.dankito.service.data.LocalFileInfoService
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
@@ -15,7 +16,8 @@ import java.io.File
 import java.util.*
 
 
-class FileManager(private val searchEngine: ISearchEngine, private val platformConfiguration: IPlatformConfiguration, private val hashService: HashService, eventBus: IEventBus) {
+class FileManager(private val searchEngine: ISearchEngine, private val localFileInfoService: LocalFileInfoService, private val platformConfiguration: IPlatformConfiguration,
+                  private val hashService: HashService, eventBus: IEventBus) {
 
 
     init {
@@ -67,7 +69,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val platformC
             else { // then it's for sure a remote file
                 val localFileInfo = LocalFileInfo(file)
 
-                // TODO: save localFileInfo
+                localFileInfoService.persist(localFileInfo)
 
                 file.localFileInfo = localFileInfo
             }
@@ -83,7 +85,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val platformC
 
     private fun deleteLocalFileInfo(file: FileLink) {
         file.localFileInfo?.let {
-            // TODO: delete
+            localFileInfoService.delete(it)
         }
     }
 
