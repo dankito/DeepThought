@@ -27,20 +27,20 @@ import java.util.concurrent.TimeUnit
 
 abstract class LuceneSearchEngineIntegrationTestBase {
 
-    protected lateinit var underTest: LuceneSearchEngine
+    protected val underTest: LuceneSearchEngine
 
 
-    protected lateinit var entryService: EntryService
+    protected val entryService: EntryService
 
-    protected lateinit var tagService: TagService
+    protected val tagService: TagService
 
-    protected lateinit var referenceService: ReferenceService
+    protected val referenceService: ReferenceService
 
-    protected lateinit var seriesService: SeriesService
+    protected val seriesService: SeriesService
 
-    protected lateinit var readLaterArticleService: ReadLaterArticleService
+    protected val readLaterArticleService: ReadLaterArticleService
 
-    protected lateinit var fileService: FileService
+    protected val fileService: FileService
 
 
     protected val platformConfiguration = object: IPlatformConfiguration {
