@@ -80,7 +80,7 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
     override fun stop() {
         log.info("Stopping UdpDevicesDiscoverer ...")
 
-        receivedPacketsQueue.stop()
+        receivedPacketsQueue.stopAndClearQueue()
 
         connectionsAliveWatcher?.stopWatching()
 
