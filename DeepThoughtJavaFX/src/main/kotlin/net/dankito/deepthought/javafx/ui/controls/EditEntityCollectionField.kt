@@ -2,10 +2,14 @@ package net.dankito.deepthought.javafx.ui.controls
 
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
+import javafx.beans.value.ObservableValue
 import javafx.collections.FXCollections
+import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
+import javafx.geometry.Bounds
 import javafx.geometry.Insets
 import javafx.geometry.Pos
+import javafx.scene.Node
 import javafx.scene.control.Control
 import javafx.scene.control.Label
 import javafx.scene.control.ListView
@@ -49,6 +53,8 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
     protected var txtfldEnteredSearchTerm: TextField by singleAssign()
 
     protected var collectionPreviewPane: Pane by singleAssign()
+
+    private var countCollectionPreviewPaneLines = 0
 
     private var lstvwSearchResults: ListView<T> by singleAssign()
 
@@ -170,6 +176,58 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
             vboxConstraints {
                 marginTop = 6.0
             }
+        }
+
+        doCustomInitialization()
+    }
+
+    protected fun doCustomInitialization() {
+        val boundsListener = { _: ObservableValue<out Bounds>, _: Bounds, _: Bounds -> checkIfFlowPaneShouldResize() }
+
+        collectionPreviewPane.children.addListener(ListChangeListener<Node> { change ->
+            while(change.next()) {
+                if(change.wasAdded()) {
+                    change.addedSubList.forEach { node -> node.boundsInParentProperty().addListener(boundsListener) }
+                }
+
+                if(change.wasRemoved()) {
+                    change.removed.forEach { node -> node.boundsInParentProperty().removeListener(boundsListener) }
+                }
+            }
+
+            checkIfFlowPaneShouldResize()
+        })
+    }
+
+    /**
+     * FlowPane doesn't update it's size automatically -> tell it to do so if necessary
+     */
+    private fun checkIfFlowPaneShouldResize() {
+        val previousCountLines = this.countCollectionPreviewPaneLines
+        this.countCollectionPreviewPaneLines = determineCountCollectionPreviewPaneLines()
+
+        if(countCollectionPreviewPaneLines != previousCountLines) {
+            updateFlowPaneHeight()
+        }
+    }
+
+    private fun determineCountCollectionPreviewPaneLines(): Int {
+        val childrenYValues = collectionPreviewPane.children.map { it.boundsInParent.minY }.toSet() // get all unique children minY values
+
+        return childrenYValues.filter { it >= 0 }.size // filter out negative values; these occur when FlowPane isn't fully initialized yet
+    }
+
+    private fun updateFlowPaneHeight() {
+        val newHeight = collectionPreviewPane.prefHeight(collectionPreviewPane.width)
+
+        if(newHeight > 0.0) {
+            runLater { // this method is called during layout process -> so wait some time before telling FlowPane's parent to change its size
+                collectionPreviewPane.minHeight = newHeight
+                collectionPreviewPane.maxHeight = newHeight
+            }
+        }
+        else { // FlowPane not initialized yet
+            countCollectionPreviewPaneLines = 0 // reset count lines therefore so that on next change updateFlowPaneHeight() gets called again
         }
     }
 

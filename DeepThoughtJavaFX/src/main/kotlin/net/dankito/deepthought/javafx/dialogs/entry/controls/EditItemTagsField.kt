@@ -91,8 +91,6 @@ class EditItemTagsField : EditEntityCollectionField<Tag>(), ITagsOnEntryListView
         sortedTags.forEach { tag ->
             addTagView(tag)
         }
-
-        mayUpdateHeight() // FlowPane doesn't update it's size automatically -> tell it to do so if necessary
     }
 
     private fun addTagView(tag: Tag) {
@@ -104,16 +102,6 @@ class EditItemTagsField : EditEntityCollectionField<Tag>(), ITagsOnEntryListView
         }
         else {
             collectionPreviewPane.add(TagView(tag.displayText, true) { removeTagFromCurrentTagsOnEntry(tag) })
-        }
-    }
-
-    private fun mayUpdateHeight() {
-        val previousCollectionPreviewPaneHeight = collectionPreviewPaneHeight
-        this.collectionPreviewPaneHeight = collectionPreviewPane.prefHeight(collectionPreviewPane.width)
-
-        if(collectionPreviewPaneHeight != previousCollectionPreviewPaneHeight) {
-            collectionPreviewPane.minHeight = collectionPreviewPaneHeight
-            collectionPreviewPane.maxHeight = collectionPreviewPaneHeight
         }
     }
 
