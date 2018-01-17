@@ -96,7 +96,7 @@ class EditSourceDialog : DialogFragment() {
         source.issue = if(issueField.value.isBlank()) null else issueField.value
         source.url = if(webAddressField.value.isBlank()) null else webAddressField.value
 
-        presenter.saveReferenceAsync(source, series, null, publishingDateField.value) {
+        presenter.saveReferenceAsync(source, series, null, publishingDateField.value, source.attachedFiles) {
             done()
         }
     }
