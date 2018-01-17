@@ -22,8 +22,6 @@
             android:paddingStart="@dimen/view_edit_entity_field_padding_left"
         >
 
-
-
             <com.google.android.flexbox.FlexboxLayout
                 android:id="@+id/lytPreview"
                 android:layout_width="wrap_content"
