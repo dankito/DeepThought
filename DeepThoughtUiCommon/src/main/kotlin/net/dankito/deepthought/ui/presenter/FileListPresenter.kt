@@ -24,7 +24,7 @@ class FileListPresenter(private val fileManager: FileManager, private val applic
 
 
     fun ensureLocalFileInfoIsSet(files: Collection<FileLink>) {
-        fileManager.ensureLocalFileInfoIsSet(files)
+        fileManager.ensureLocalFileInfoIsSetAndMayStartSynchronization(files)
     }
 
 }

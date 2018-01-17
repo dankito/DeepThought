@@ -30,30 +30,46 @@ class FileManager(private val searchEngine: ISearchEngine, private val platformC
     fun getLocalPathForFile(file: FileLink): File {
         file.localFileInfo?.path?.let { return File(it) } // LocalFileInfo already set
 
-        getLocalFileInfo(file)?.let { localFileInfo -> // Retrieve LocalFileInfo
+        getStoredLocalFileInfo(file)?.let { localFileInfo -> // Retrieve LocalFileInfo
             file.localFileInfo = localFileInfo
 
             localFileInfo.path?.let { return File(it) }
         }
 
+        // TODO: return that file doesn't exist locally yet
         return File(platformConfiguration.getApplicationFolder(), file.uriString)
     }
 
 
-    fun ensureLocalFileInfoIsSet(files: Collection<FileLink>) {
+    fun ensureLocalFileInfoIsSetAndMayStartSynchronization(files: Collection<FileLink>) {
         files.forEach { file ->
-            if(file.localFileInfo == null) {
-                setLocalFileInfo(file)
-            }
+            ensureLocalFileInfoIsSetAndMayStartSynchronization(file)
         }
     }
 
-    fun setLocalFileInfo(file: FileLink) {
-        file.localFileInfo = getLocalFileInfo(file)
+    fun ensureLocalFileInfoIsSetAndMayStartSynchronization(file: FileLink) {
+        if(file.localFileInfo == null) {
+            val storedLocalFileInfo = getStoredLocalFileInfo(file)
+
+            if(storedLocalFileInfo != null) {
+                file.localFileInfo = storedLocalFileInfo
+            }
+            else { // then it's for sure a remote file
+                file.localFileInfo = LocalFileInfo(file)
+                startFileSynchronization(file)
+            }
+        }
+        else if(file.localFileInfo?.syncStatus != FileSyncStatus.UpToDate) {
+            startFileSynchronization(file)
+        }
     }
 
-    private fun getLocalFileInfo(file: FileLink): LocalFileInfo? {
+    private fun getStoredLocalFileInfo(file: FileLink): LocalFileInfo? {
         return searchEngine.getLocalFileInfo(file)
+    }
+
+    private fun startFileSynchronization(file: FileLink) {
+        // TODO
     }
 
 }
