@@ -54,9 +54,12 @@ class FileLinkIndexWriterAndSearcher(fileService: FileService, eventBus: IEventB
             if(scoreDocs.size > 0) {
                 val searcher = queryResultPair.first
                 val doc = searcher.doc(scoreDocs[0].doc)
-                val id = doc.getField(FieldName.FileLocalFileInfoId).stringValue()
 
-                return entityService.entityManager.getEntityById(LocalFileInfo::class.java, id)
+                doc.getField(FieldName.FileLocalFileInfoId)?.let { field -> // field is null when LocalFileInfo hasn't been stored yet
+                    val id = field.stringValue()
+
+                    return entityService.entityManager.getEntityById(LocalFileInfo::class.java, id)
+                }
             }
         }
 
