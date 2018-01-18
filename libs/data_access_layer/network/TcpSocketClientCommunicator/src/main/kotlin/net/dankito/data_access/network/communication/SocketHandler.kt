@@ -17,12 +17,20 @@ open class SocketHandler {
 
 
     fun sendMessage(socket: Socket, message: ByteArray): SocketResult {
+        return sendMessage(socket, ByteArrayInputStream(message), CommunicationConfig.MESSAGE_END_CHAR)
+    }
+
+    fun sendMessage(socket: Socket, inputStream: InputStream, messageEndChar: Char? = null): SocketResult {
         try {
             val sink = Okio.buffer(Okio.sink(socket))
-            val source = Okio.buffer(Okio.source(BufferedInputStream(ByteArrayInputStream(message))))
+            val source = Okio.buffer(Okio.source(BufferedInputStream(inputStream)))
 
             sink.writeAll(source)
-            sink.writeUtf8(CommunicationConfig.MESSAGE_END_CHAR.toString()) // to signal receiver that message ends here
+
+            messageEndChar?.let {
+                sink.writeUtf8(it.toString()) // to signal receiver that message ends here
+            }
+
             sink.flush()
 
             source.close()
