@@ -19,9 +19,10 @@ import java.util.*
 class FileManager(private val searchEngine: ISearchEngine, private val localFileInfoService: LocalFileInfoService, private val platformConfiguration: IPlatformConfiguration,
                   private val hashService: HashService, eventBus: IEventBus) {
 
+    private val eventBusListener = EventBusListener()
 
     init {
-        eventBus.register(EventBusListener())
+        eventBus.register(eventBusListener)
     }
 
 
