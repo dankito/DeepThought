@@ -107,7 +107,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
 
         @Handler()
         fun fileChanged(fileChanged: FileChanged) {
-            if(fileChanged.changeType != EntityChangeType.PreDelete && fileChanged.changeType != EntityChangeType.Deleted) {
+            if(fileChanged.changeType == EntityChangeType.PreDelete || fileChanged.changeType == EntityChangeType.Deleted) {
                 deleteLocalFileInfo(fileChanged.entity)
             }
             else {
