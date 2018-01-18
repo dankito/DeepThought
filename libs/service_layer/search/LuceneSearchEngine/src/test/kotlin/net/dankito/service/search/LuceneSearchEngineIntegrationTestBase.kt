@@ -41,6 +41,8 @@ abstract class LuceneSearchEngineIntegrationTestBase {
 
     protected val readLaterArticleService: ReadLaterArticleService
 
+    protected val localFileInfoService: LocalFileInfoService
+
     protected val fileService: FileService
 
     protected val eventBus: IEventBus
@@ -81,7 +83,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         referenceService = ReferenceService(dataManager, entityChangedNotifier)
         seriesService = SeriesService(dataManager, entityChangedNotifier)
         readLaterArticleService = ReadLaterArticleService(dataManager, entityChangedNotifier, JacksonJsonSerializer(tagService, seriesService))
-        val localFileInfoService = LocalFileInfoService(dataManager, entityChangedNotifier)
+        localFileInfoService = LocalFileInfoService(dataManager, entityChangedNotifier)
         fileService = FileService(localFileInfoService, dataManager, entityChangedNotifier)
 
         underTest = LuceneSearchEngine(dataManager, NoOpLanguageDetector(), OsHelper(platformConfiguration), ThreadPool(), eventBus,

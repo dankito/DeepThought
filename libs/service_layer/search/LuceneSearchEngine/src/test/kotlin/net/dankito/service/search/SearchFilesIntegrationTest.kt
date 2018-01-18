@@ -1,6 +1,7 @@
 package net.dankito.service.search
 
-import net.dankito.deepthought.data.FileManager
+import com.nhaarman.mockito_kotlin.mock
+import net.dankito.deepthought.files.FileManager
 import net.dankito.utils.services.hashing.HashService
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
@@ -13,7 +14,7 @@ import java.io.File
 class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
 
 
-    private val fileManager = FileManager(underTest, platformConfiguration, HashService(), eventBus)
+    private val fileManager = FileManager(underTest, localFileInfoService, mock(), platformConfiguration, HashService(), eventBus)
 
 
     @Test

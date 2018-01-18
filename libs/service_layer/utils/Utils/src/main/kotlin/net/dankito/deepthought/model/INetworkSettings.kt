@@ -19,6 +19,8 @@ interface INetworkSettings {
 
     var synchronizationPort: Int
 
+    var fileSynchronizationPort: Int
+
     fun getDiscoveredDevice(uniqueDeviceId: String): DiscoveredDevice?
 
     fun addDiscoveredDevice(device: DiscoveredDevice)

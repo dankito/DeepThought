@@ -4,16 +4,21 @@ import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.IEntityManager
+import net.dankito.data_access.network.communication.SocketHandler
 import net.dankito.deepthought.data.EntryPersister
-import net.dankito.deepthought.data.FileManager
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.data.SeriesPersister
+import net.dankito.deepthought.files.FileManager
+import net.dankito.deepthought.files.synchronization.FileServer
+import net.dankito.deepthought.files.synchronization.FileSyncService
+import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
+import net.dankito.service.synchronization.IConnectedDevicesService
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.localization.Localization
@@ -92,8 +97,9 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideFileManager(searchEngine: ISearchEngine, localFileInfoService: LocalFileInfoService, platformConfiguration: IPlatformConfiguration, hashService: HashService, eventBus: IEventBus) : FileManager {
-        return FileManager(searchEngine, localFileInfoService, platformConfiguration, hashService, eventBus)
+    fun provideFileManager(searchEngine: ISearchEngine, localFileInfoService: LocalFileInfoService, fileSyncService: FileSyncService, platformConfiguration: IPlatformConfiguration,
+                           hashService: HashService, eventBus: IEventBus) : FileManager {
+        return FileManager(searchEngine, localFileInfoService, fileSyncService, platformConfiguration, hashService, eventBus)
     }
 
     @Provides
@@ -107,6 +113,20 @@ class CommonDataModule {
     fun provideDeleteEntityService(entryService: EntryService, tagService: TagService, referenceService: ReferenceService, seriesService: SeriesService,
                                    dialogService: IDialogService, threadPool: IThreadPool) : DeleteEntityService {
         return DeleteEntityService(entryService, tagService, referenceService, seriesService, dialogService, threadPool)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFileSyncService(connectedDevicesService: IConnectedDevicesService, fileServer: FileServer, socketHandler: SocketHandler, localFileInfoService: LocalFileInfoService,
+                               serializer: ISerializer, platformConfiguration: IPlatformConfiguration, hashService: HashService): FileSyncService {
+        return FileSyncService(connectedDevicesService, fileServer, socketHandler, localFileInfoService, serializer, platformConfiguration, hashService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFileServer(searchEngine: ISearchEngine, entityManager: IEntityManager, networkSettings: INetworkSettings,
+                          socketHandler: SocketHandler, serializer: ISerializer, threadPool: IThreadPool): FileServer {
+        return FileServer(searchEngine, entityManager, networkSettings, socketHandler, serializer, threadPool)
     }
 
 

@@ -79,7 +79,7 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
                                                              callback: (Response<RespondToSynchronizationPermittingChallengeResponseBody>) -> Unit) {
         challengeHandler.createChallengeResponse(nonce, challengeResponse)?.let { challengeResponse ->
             val request = Request<RespondToSynchronizationPermittingChallengeRequestBody>(CommunicatorConfig.RESPONSE_TO_SYNCHRONIZATION_PERMITTING_CHALLENGE_METHOD_NAME,
-                    RespondToSynchronizationPermittingChallengeRequestBody(nonce, challengeResponse, syncInfo, networkSettings.synchronizationPort))
+                    RespondToSynchronizationPermittingChallengeRequestBody(nonce, challengeResponse, syncInfo, networkSettings.synchronizationPort, networkSettings.fileSynchronizationPort))
 
             requestSender.sendRequestAndReceiveResponseAsync(getSocketAddressFromDevice(remoteDevice), request) { response: Response<RespondToSynchronizationPermittingChallengeResponseBody> ->
                 handleRespondToSynchronizationPermittingChallengeResponse(remoteDevice, response)
@@ -108,7 +108,7 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
         networkSettings.addDevicesAskedForPermittingSynchronization(remoteDevice)
 
         val request = Request(CommunicatorConfig.REQUEST_START_SYNCHRONIZATION_METHOD_NAME,
-                RequestStartSynchronizationRequestBody(DeviceInfo.fromDevice(networkSettings.localHostDevice), networkSettings.synchronizationPort))
+                RequestStartSynchronizationRequestBody(DeviceInfo.fromDevice(networkSettings.localHostDevice), networkSettings.synchronizationPort, networkSettings.fileSynchronizationPort))
 
         requestSender.sendRequestAndReceiveResponseAsync<RequestStartSynchronizationRequestBody, RequestStartSynchronizationResponseBody>(
                 getSocketAddressFromDevice(remoteDevice), request) { response ->

@@ -63,6 +63,7 @@ data class FileLink(
 
 
     @Transient
+    @kotlin.jvm.Transient
     var localFileInfo: LocalFileInfo? = null
 
 

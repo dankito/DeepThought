@@ -13,7 +13,7 @@ import net.dankito.deepthought.android.service.communication.AndroidDeviceRegist
 import net.dankito.deepthought.android.service.network.AndroidNetworkConnectivityManager
 import net.dankito.deepthought.android.service.settings.AndroidLocalSettingsStore
 import net.dankito.deepthought.data.EntryPersister
-import net.dankito.deepthought.data.FileManager
+import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager

@@ -11,7 +11,7 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.FileChooserDialog
 import net.dankito.deepthought.android.extensions.setLeftMargin
 import net.dankito.deepthought.android.service.permissions.IPermissionsManager
-import net.dankito.deepthought.data.FileManager
+import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.ui.presenter.FileListPresenter
 import net.dankito.utils.ui.IApplicationsService

@@ -8,7 +8,7 @@ import android.support.v4.content.FileProvider
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.data.FileManager
+import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.FileLink
 import net.dankito.utils.ui.IApplicationsService
 import java.io.File

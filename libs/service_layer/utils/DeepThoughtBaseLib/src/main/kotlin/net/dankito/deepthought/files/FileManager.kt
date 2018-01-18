@@ -1,5 +1,6 @@
-package net.dankito.deepthought.data
+package net.dankito.deepthought.files
 
+import net.dankito.deepthought.files.synchronization.FileSyncService
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.LocalFileInfo
 import net.dankito.deepthought.model.enums.FileSyncStatus
@@ -16,8 +17,9 @@ import java.io.File
 import java.util.*
 
 
-class FileManager(private val searchEngine: ISearchEngine, private val localFileInfoService: LocalFileInfoService, private val platformConfiguration: IPlatformConfiguration,
-                  private val hashService: HashService, eventBus: IEventBus) {
+class FileManager(private val searchEngine: ISearchEngine, private val localFileInfoService: LocalFileInfoService, private val fileSyncService: FileSyncService,
+                  private val platformConfiguration: IPlatformConfiguration, private val hashService: HashService, eventBus: IEventBus) {
+
 
     private val eventBusListener = EventBusListener()
 
@@ -100,7 +102,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
     }
 
     private fun startFileSynchronizationAsync(file: FileLink) {
-        // TODO
+        fileSyncService.addFileToSynchronize(file)
     }
 
 

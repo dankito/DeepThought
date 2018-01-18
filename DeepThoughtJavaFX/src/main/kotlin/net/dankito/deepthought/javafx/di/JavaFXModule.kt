@@ -5,7 +5,7 @@ import dagger.Provides
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.deepthought.data.EntryPersister
-import net.dankito.deepthought.data.FileManager
+import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.javafx.appstart.CommunicationManagerStarter

@@ -32,6 +32,7 @@ import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.LuceneSearchEngine
 import net.dankito.service.synchronization.ConnectedDevicesService
 import net.dankito.service.synchronization.CouchbaseLiteSyncManager
+import net.dankito.service.synchronization.IConnectedDevicesService
 import net.dankito.service.synchronization.ISyncManager
 import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
@@ -175,13 +176,13 @@ open class CommonModule {
     @Provides
     @Singleton
     open fun provideConnectedDevicesService(devicesDiscoverer: IDevicesDiscoverer, clientCommunicator: IClientCommunicator, syncManager: ISyncManager, registrationHandler: IDeviceRegistrationHandler,
-                                       networkSettings: INetworkSettings, entityManager: IEntityManager) : ConnectedDevicesService {
+                                       networkSettings: INetworkSettings, entityManager: IEntityManager) : IConnectedDevicesService {
         return ConnectedDevicesService(devicesDiscoverer, clientCommunicator, syncManager, registrationHandler, networkSettings, entityManager)
     }
 
     @Provides
     @Singleton
-    open fun provideCommunicationManager(connectedDevicesService: ConnectedDevicesService, syncManager: ISyncManager, clientCommunicator: IClientCommunicator, networkSettings: INetworkSettings)
+    open fun provideCommunicationManager(connectedDevicesService: IConnectedDevicesService, syncManager: ISyncManager, clientCommunicator: IClientCommunicator, networkSettings: INetworkSettings)
             : ICommunicationManager {
         return CommunicationManager(connectedDevicesService, syncManager, clientCommunicator, networkSettings)
     }

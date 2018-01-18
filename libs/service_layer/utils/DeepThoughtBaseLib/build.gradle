@@ -59,6 +59,7 @@ dependencies {
 
     testCompile project(':UdpDevicesDiscoverer')
     testCompile project(':TcpSocketClientCommunicator')
+    testCompile project(':LuceneSearchEngine')
     testCompile project(':JavaCouchbaseLiteEntityManager')
     testCompile project(':CouchbaseLiteSyncManager')
     testCompile project(':FileStorageService')
