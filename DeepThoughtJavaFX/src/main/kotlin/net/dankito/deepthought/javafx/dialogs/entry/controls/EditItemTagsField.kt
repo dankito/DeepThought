@@ -41,8 +41,6 @@ class EditItemTagsField : EditEntityCollectionField<Tag>(), ITagsOnEntryListView
 
     private val recycledTagViews = ArrayList<TagView>()
 
-    private var collectionPreviewPaneHeight = 0.0
-
 
     init {
         AppComponent.component.inject(this)
