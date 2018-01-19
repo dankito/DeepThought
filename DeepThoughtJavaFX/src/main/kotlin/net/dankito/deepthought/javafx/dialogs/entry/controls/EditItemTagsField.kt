@@ -198,6 +198,19 @@ class EditItemTagsField : EditEntityCollectionField<Tag>(), ITagsOnEntryListView
     }
 
 
+    fun applyChangesAndGetTags(): Collection<Tag> {
+        val tags = getMergedTags()
+
+        tags.forEach { tag ->
+            if(tag.isPersisted() == false) {
+                tagService.persist(tag)
+            }
+        }
+
+        return tags
+    }
+
+
     /*      ITagsOnEntryListView implementation         */
 
     override fun showEntities(entities: List<Tag>) {

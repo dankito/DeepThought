@@ -235,7 +235,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
             val source = updateSource()
 
-            presenter.saveEntryAsync(entry, source, editSourceField.seriesToEdit, editTagsField.editedCollection) {
+            presenter.saveEntryAsync(entry, source, editSourceField.seriesToEdit, editTagsField.applyChangesAndGetTags()) {
                 done()
             }
         }
