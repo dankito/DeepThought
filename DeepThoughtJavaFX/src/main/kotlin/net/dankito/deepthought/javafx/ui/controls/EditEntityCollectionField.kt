@@ -48,7 +48,7 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
     private val showSearchResults = SimpleBooleanProperty()
 
 
-    private var lblTags: Label by singleAssign()
+    private var collectionLabel: Label by singleAssign()
 
     protected var txtfldEnteredSearchTerm: TextField by singleAssign()
 
@@ -85,7 +85,7 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
             alignment = Pos.TOP_LEFT
             prefWidthProperty().bind(this@vbox.widthProperty())
 
-            lblTags = label(getLabelText()) {
+            collectionLabel = label(getLabelText()) {
                 minWidth = Control.USE_PREF_SIZE
                 useMaxWidth = true
 
@@ -144,7 +144,7 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
             }
 
             // so that text field has same indentation as TagViews; cannot add text field to hbox above as then binding height wouldn't work anymore
-            lblTags.widthProperty().addListener { _, _, newValue -> VBox.setMargin(this@textfield, Insets(6.0, 0.0, 0.0, newValue.toDouble() + LabelMarginRight)) }
+            collectionLabel.widthProperty().addListener { _, _, newValue -> VBox.setMargin(this@textfield, Insets(6.0, 0.0, 0.0, newValue.toDouble() + LabelMarginRight)) }
         }
 
         lstvwSearchResults = listview(searchResults) {
@@ -265,7 +265,7 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
         runLater { updateEditedCollectionPreviewOnUiThread() }
     }
 
-    private fun setTagsOnEntryPreviewOnUIThread() {
+    private fun setCollectionPreviewOnUIThread() {
         updateEditedCollectionPreviewOnUiThread()
 
         if(searchResults.isEmpty() || txtfldEnteredSearchTerm.isFocused == false) {
