@@ -126,6 +126,7 @@ abstract class EditEntryViewBase : DialogFragment() {
         }
 
         editTagsField = EditItemTagsField()
+        editTagsField.didCollectionChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
         add(editTagsField.root)
 
         VBox.setMargin(editTagsField.root, Insets(0.0, 0.0, 6.0, 0.0))
@@ -152,8 +153,6 @@ abstract class EditEntryViewBase : DialogFragment() {
             }
         }
 
-        // TODO: we're not setting hasUnsavedChanges when there are changes so set hasUnsavedChanges to true in order to enable save button
-        hasUnsavedChanges.value = true
         val buttons = DialogButtonBar({ closeDialog() }, { saveEntryAsync(it) }, hasUnsavedChanges, messages["action.save"])
         add(buttons)
     }
@@ -216,7 +215,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     private fun updateHasUnsavedChanges() {
         hasUnsavedChanges.value = htmlEditor.didHtmlChange || editSourceField.didEntityChange.value || editSourceField.didTitleChange.value
-                || editedSummary.value != originalSummary
+                || editedSummary.value != originalSummary || editTagsField.didCollectionChange.value
     }
 
 

@@ -282,7 +282,11 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
         this.didCollectionChange.value = didCollectionChange()
     }
 
-    private fun didCollectionChange(): Boolean {
+    protected open fun didCollectionChange(): Boolean {
+        return didCollectionChange(originalCollection, editedCollection)
+    }
+
+    protected fun didCollectionChange(originalCollection: Collection<T>, editedCollection: Collection<T>): Boolean {
         if(originalCollection.size != editedCollection.size) {
             return true
         }

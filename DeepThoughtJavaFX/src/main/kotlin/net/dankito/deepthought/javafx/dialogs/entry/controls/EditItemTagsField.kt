@@ -89,6 +89,16 @@ class EditItemTagsField : EditEntityCollectionField<Tag>(), ITagsOnEntryListView
         sortedTags.forEach { tag ->
             addTagView(tag)
         }
+
+        updateDidCollectionChange()
+    }
+
+    override fun didCollectionChange(): Boolean {
+        return didCollectionChange(getMergedTags())
+    }
+
+    private fun didCollectionChange(editedCollection: Collection<Tag> = getMergedTags()): Boolean {
+        return didCollectionChange(originalCollection, editedCollection)
     }
 
     private fun addTagView(tag: Tag) {
