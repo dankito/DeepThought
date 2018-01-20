@@ -149,6 +149,9 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
 
         lstvwSearchResults = listview(searchResults) {
             vgrow = Priority.ALWAYS
+            minHeight = 100.0
+            maxHeight = 200.0 // set maxHeight so that RichTextEditor doesn't get displayed over buttons bar
+
             visibleProperty().bind(showSearchResults)
             FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
 

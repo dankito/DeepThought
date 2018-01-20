@@ -131,10 +131,13 @@ abstract class EditEntryViewBase : DialogFragment() {
 
         VBox.setMargin(editTagsField.root, Insets(0.0, 0.0, 6.0, 0.0))
 
+
         add(htmlEditor)
 
+        htmlEditor.minHeight = 50.0
         contentHtml.onChange { htmlEditor.setHtml(contentHtml.value) }
         htmlEditor.javaScriptExecutor.addDidHtmlChangeListener { updateHasUnsavedChanges() }
+
 
         wbvwShowUrl = webview {
             useMaxWidth = true

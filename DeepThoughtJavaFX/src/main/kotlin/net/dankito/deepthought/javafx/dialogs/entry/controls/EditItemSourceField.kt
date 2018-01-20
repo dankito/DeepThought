@@ -180,6 +180,9 @@ class EditItemSourceField : View() {
 
         lstvwSearchResults = listview(sourceSearchResults) {
             vgrow = Priority.ALWAYS
+            minHeight = 100.0
+            maxHeight = 200.0 // set maxHeight so that RichTextEditor doesn't get displayed over buttons bar
+
             visibleProperty().bind(showSourceSearchResult)
             FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
 
