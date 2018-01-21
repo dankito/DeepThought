@@ -117,6 +117,12 @@ class CommonDataModule {
 
     @Provides
     @Singleton
+    fun provideSocketHandler(): SocketHandler {
+        return SocketHandler()
+    }
+
+    @Provides
+    @Singleton
     fun provideFileSyncService(connectedDevicesService: IConnectedDevicesService, fileServer: FileServer, socketHandler: SocketHandler, localFileInfoService: LocalFileInfoService,
                                serializer: ISerializer, platformConfiguration: IPlatformConfiguration, hashService: HashService): FileSyncService {
         return FileSyncService(connectedDevicesService, fileServer, socketHandler, localFileInfoService, serializer, platformConfiguration, hashService)
