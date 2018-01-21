@@ -307,16 +307,6 @@ open class EditEntityField : RelativeLayout {
         }
     }
 
-    protected fun didCollectionChange(originalCollection: Collection<*>, editedCollection: Collection<*>): Boolean {
-        if(originalCollection.size != editedCollection.size) {
-            return true
-        }
-
-        val copy = ArrayList(editedCollection)
-        copy.removeAll(originalCollection)
-        return copy.size > 0
-    }
-
 
     fun handlesBackButtonPress(): Boolean {
         if(rcySearchResult.visibility == View.VISIBLE) {

@@ -2,6 +2,7 @@ package net.dankito.utils.extensions
 
 import net.dankito.deepthought.model.Tag
 import java.text.Collator
+import java.util.*
 
 
 class CollectionsExtensions {
@@ -29,4 +30,15 @@ fun Iterable<Tag>.sorted(): List<Tag> {
 
 fun Iterable<Tag>.toSortedString(): String {
     return this.sorted().joinToString { it.name }
+}
+
+
+fun <T> Collection<T>.didCollectionChange(collectionToCompareTo: Collection<T>): Boolean {
+    if(this.size != collectionToCompareTo.size) {
+        return true
+    }
+
+    val copy = ArrayList(collectionToCompareTo)
+    copy.removeAll(this)
+    return copy.size > 0
 }

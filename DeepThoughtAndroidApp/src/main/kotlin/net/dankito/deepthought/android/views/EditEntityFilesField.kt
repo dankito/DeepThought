@@ -14,6 +14,7 @@ import net.dankito.deepthought.android.service.permissions.IPermissionsManager
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.ui.presenter.FileListPresenter
+import net.dankito.utils.extensions.didCollectionChange
 import net.dankito.utils.ui.IApplicationsService
 import java.io.File
 import javax.inject.Inject
@@ -105,7 +106,9 @@ class EditEntityFilesField : EditEntityField {
         else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             permissionsManager.requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
                     context.getString(R.string.edit_entity_files_field_read_files_permission_rational))  { _, isGranted ->
-                selectFileToAddWithPermissionGranted()
+                if(isGranted) {
+                    selectFileToAddWithPermissionGranted()
+                }
             }
         }
     }
@@ -124,13 +127,17 @@ class EditEntityFilesField : EditEntityField {
         val localFile = fileManager.createLocalFile(file)
         attachedFilesAdapter.addItem(localFile)
 
-        updateDidValueChange(didCollectionChange(originalFiles, attachedFilesAdapter.items))
+        updateDidValueChange()
     }
 
     private fun removeFile(file: FileLink) {
         attachedFilesAdapter.removeItem(file)
 
-        updateDidValueChange(didCollectionChange(originalFiles, attachedFilesAdapter.items))
+        updateDidValueChange()
+    }
+
+    private fun updateDidValueChange() {
+        updateDidValueChange(originalFiles.didCollectionChange(attachedFilesAdapter.items))
     }
 
 
