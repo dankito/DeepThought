@@ -2,6 +2,8 @@ package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 
 import javafx.geometry.Pos
 import javafx.scene.input.KeyCode
+import javafx.scene.input.KeyCodeCombination
+import javafx.scene.input.KeyCombination
 import javafx.scene.layout.Priority
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
@@ -48,6 +50,10 @@ class EntriesSearchBar(private val entriesListView: EntriesListView, private val
                     prefWidth = 50.0
                     font = Font.font(font.family, FontWeight.BOLD, 18.0)
                     textFill = Color.valueOf(Colors.AddButtonHexColor)
+
+                    runLater { // wait till added to Scene
+                        scene?.accelerators?.put(KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN), Runnable { presenter.createEntry() })
+                    }
 
                     hboxConstraints {
                         marginLeft = 6.0
