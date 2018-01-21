@@ -7,6 +7,7 @@ import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
 import net.dankito.deepthought.ui.presenter.EntriesListPresenter
+import net.dankito.utils.ui.Colors
 import tornadofx.*
 
 
@@ -46,7 +47,7 @@ class EntriesSearchBar(private val entriesListView: EntriesListView, private val
                     prefHeight = 30.0
                     prefWidth = 50.0
                     font = Font.font(font.family, FontWeight.BOLD, 18.0)
-                    textFill = Color.valueOf("#117219")
+                    textFill = Color.valueOf(Colors.AddButtonHexColor)
 
                     hboxConstraints {
                         marginLeft = 6.0
