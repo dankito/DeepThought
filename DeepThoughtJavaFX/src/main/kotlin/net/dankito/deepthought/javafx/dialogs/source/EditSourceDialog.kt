@@ -8,6 +8,7 @@ import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.javafx.service.events.EditingSourceDoneEvent
 import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
 import net.dankito.deepthought.javafx.ui.controls.EditDateFieldValueView
+import net.dankito.deepthought.javafx.ui.controls.EditEntityFilesField
 import net.dankito.deepthought.javafx.ui.controls.EditFieldValueView
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
@@ -51,6 +52,8 @@ class EditSourceDialog : DialogFragment() {
 
     private val webAddressField = EditFieldValueView(messages["edit.source.web.address"])
 
+    private val editFilesField = EditEntityFilesField()
+
 
     private val presenter: EditReferencePresenter
 
@@ -90,6 +93,10 @@ class EditSourceDialog : DialogFragment() {
         setupEntityField(webAddressField, source.url ?: "")
         add(webAddressField)
 
+        editFilesField.didValueChange.addListener { _, _, _ -> setHasUnsavedChanges() }
+        editFilesField.setFiles(source.attachedFiles)
+        add(editFilesField)
+
         val buttons = DialogButtonBar({ closeDialog() }, { saveSource(it) }, hasUnsavedChanges, messages["action.save"])
         add(buttons)
     }
@@ -102,7 +109,7 @@ class EditSourceDialog : DialogFragment() {
 
     private fun setHasUnsavedChanges() {
         hasUnsavedChanges.value = titleField.didValueChange.value or issueField.didValueChange.value or publishingDateField.didValueChange.value or
-                webAddressField.didValueChange.value
+                webAddressField.didValueChange.value || editFilesField.didValueChange.value
     }
 
 
@@ -111,7 +118,7 @@ class EditSourceDialog : DialogFragment() {
         source.issue = if(issueField.value.isBlank()) null else issueField.value
         source.url = if(webAddressField.value.isBlank()) null else webAddressField.value
 
-        presenter.saveReferenceAsync(source, series, null, publishingDateField.value, source.attachedFiles) {
+        presenter.saveReferenceAsync(source, series, null, publishingDateField.value, editFilesField.getEditedFiles()) {
             postResult(EditingSourceDoneEvent(true, source))
             done()
         }

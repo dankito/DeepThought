@@ -21,6 +21,7 @@ import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.MainMenuBar
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.TagsListView
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.ReadLaterArticleListView
 import net.dankito.deepthought.javafx.dialogs.source.EditSourceDialog
+import net.dankito.deepthought.javafx.ui.controls.EditEntityFilesField
 import javax.inject.Singleton
 
 
@@ -59,6 +60,8 @@ interface AppComponent : CommonComponent {
     fun inject(editEntryExtractionResultView: EditEntryExtractionResultView)
 
     fun inject(editItemSourceField: EditItemSourceField)
+
+    fun inject(editEntityFilesField: EditEntityFilesField)
 
     fun inject(tagsOnEntryDialog: TagsOnEntryDialog)
 
