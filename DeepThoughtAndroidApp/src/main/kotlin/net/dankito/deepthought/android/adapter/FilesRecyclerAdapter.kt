@@ -44,7 +44,7 @@ class FilesRecyclerAdapter(private val presenter: FileListPresenter, private val
         viewHolder.txtFileSize.text = presenter.formatFileSize(item.fileSize)
         viewHolder.txtFileSize.visibility = View.VISIBLE
 
-        viewHolder.txtFilePath.text = item.uriString // TODO: make absolute for local files
+        viewHolder.txtFilePath.text = presenter.getUriOrSynchronizationState(item)
         viewHolder.txtFilePath.visibility = View.VISIBLE
     }
 

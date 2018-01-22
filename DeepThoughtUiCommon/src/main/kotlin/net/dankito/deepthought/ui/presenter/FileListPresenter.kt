@@ -2,11 +2,13 @@ package net.dankito.deepthought.ui.presenter
 
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.model.enums.FileSyncStatus
+import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IApplicationsService
 import java.io.File
 
 
-class FileListPresenter(private val fileManager: FileManager, private val applicationsService: IApplicationsService) {
+class FileListPresenter(private val fileManager: FileManager, private val applicationsService: IApplicationsService, private val localization: Localization) {
 
     fun showFile(file: FileLink) {
         // TODO: check if file can be opened in DeepThought directly, e.g PDFs
@@ -40,6 +42,23 @@ class FileListPresenter(private val fileManager: FileManager, private val applic
         else {
             val f = length / 1024f
             return String.format("%.1f kB", f)
+        }
+    }
+
+    fun getUriOrSynchronizationState(file: FileLink): String {
+        if(file.isLocalFile == false) {
+            return file.uriString
+        }
+        else {
+            val localFileInfo = file.localFileInfo
+            val localPath = localFileInfo?.path
+
+            if(localFileInfo != null && localFileInfo.syncStatus == FileSyncStatus.UpToDate && localPath != null) {
+                return localPath
+            }
+            else {
+                return localization.getLocalizedString("file.sync.status.not.synchronized.yet")
+            }
         }
     }
 

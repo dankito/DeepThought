@@ -14,6 +14,7 @@ import net.dankito.deepthought.javafx.ui.controls.cell.FileListCellFragment
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.ui.presenter.FileListPresenter
 import net.dankito.utils.extensions.didCollectionChange
+import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.Colors
 import net.dankito.utils.ui.IApplicationsService
 import tornadofx.*
@@ -28,6 +29,9 @@ class EditEntityFilesField : View() {
 
     @Inject
     protected lateinit var applicationsService: IApplicationsService
+
+    @Inject
+    protected lateinit var localization: Localization
 
 
     val didValueChange = SimpleBooleanProperty()
@@ -44,7 +48,7 @@ class EditEntityFilesField : View() {
     init {
         AppComponent.component.inject(this)
 
-        fileListPresenter = FileListPresenter(fileManager, applicationsService)
+        fileListPresenter = FileListPresenter(fileManager, applicationsService, localization)
     }
 
 

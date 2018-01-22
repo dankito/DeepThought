@@ -15,6 +15,8 @@ class FileListCellFragment : ListCellFragment<FileLink>() {
 
     private val formattedFileSize = SimpleStringProperty("")
 
+    private val fileUriOrSynchronizationState = SimpleStringProperty("")
+
     private var presenter: FileListPresenter? = null
 
 
@@ -25,6 +27,7 @@ class FileListCellFragment : ListCellFragment<FileLink>() {
 
             this@FileListCellFragment.presenter = newValue?.listView?.userData as? FileListPresenter
             updateFileSize()
+            updateFileUri()
         }
 
         borderpane {
@@ -55,7 +58,7 @@ class FileListCellFragment : ListCellFragment<FileLink>() {
             }
         }
 
-        label(file.uri) {
+        label(fileUriOrSynchronizationState) {
             alignment = Pos.CENTER_LEFT
             isWrapText = true
             textOverrun = OverrunStyle.CENTER_ELLIPSIS
@@ -69,11 +72,16 @@ class FileListCellFragment : ListCellFragment<FileLink>() {
         }
 
         updateFileSize()
+        updateFileUri()
     }
 
 
     private fun updateFileSize() {
         formattedFileSize.value = presenter?.formatFileSize(file.fileSize.value.toLong()) ?: ""
+    }
+
+    private fun updateFileUri() {
+        fileUriOrSynchronizationState.value = presenter?.getUriOrSynchronizationState(file.item) ?: ""
     }
 
 }

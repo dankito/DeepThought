@@ -15,6 +15,7 @@ import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.ui.presenter.FileListPresenter
 import net.dankito.utils.extensions.didCollectionChange
+import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IApplicationsService
 import java.io.File
 import javax.inject.Inject
@@ -33,6 +34,9 @@ class EditEntityFilesField : EditEntityField {
     @Inject
     protected lateinit var applicationsService: IApplicationsService
 
+    @Inject
+    protected lateinit var localization: Localization
+
 
     private var originalFiles: MutableCollection<FileLink> = ArrayList()
 
@@ -48,7 +52,7 @@ class EditEntityFilesField : EditEntityField {
     init {
         AppComponent.component.inject(this)
 
-        fileListPresenter = FileListPresenter(fileManager, applicationsService)
+        fileListPresenter = FileListPresenter(fileManager, applicationsService, localization)
         attachedFilesAdapter = FilesRecyclerAdapter(fileListPresenter) { file -> removeFile(file) }
 
         rcySearchResult.adapter = attachedFilesAdapter
