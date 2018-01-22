@@ -23,7 +23,7 @@ import android.view.View
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import net.dankito.deepthought.android.R
-import net.dankito.richtexteditor.android.command.Command
+import net.dankito.richtexteditor.command.CommandName
 import net.dankito.service.search.SearchEngineBase
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.Matcher
@@ -247,7 +247,7 @@ open class UiNavigator {
     }
 
 
-    open fun clickOnEditorCommand(command: Command) {
+    open fun clickOnEditorCommand(command: CommandName) {
         onView(withTagValue(`is`(command))).perform(click())
     }
 
