@@ -8,10 +8,7 @@ import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.data.DataManager
-import net.dankito.service.data.DeleteEntityService
-import net.dankito.service.data.ReadLaterArticleService
-import net.dankito.service.data.SeriesService
-import net.dankito.service.data.TagService
+import net.dankito.service.data.*
 import net.dankito.service.search.ISearchEngine
 import org.junit.After
 import java.util.*
@@ -41,6 +38,9 @@ abstract class DeepThoughtAndroidTestBase {
 
     @Inject
     protected lateinit var readLaterArticleService: ReadLaterArticleService
+
+    @Inject
+    protected lateinit var fileService: FileService
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
@@ -87,6 +87,10 @@ abstract class DeepThoughtAndroidTestBase {
 
     protected open fun persistReadLaterArticle(article: ReadLaterArticle) {
         readLaterArticleService.persist(article)
+    }
+
+    protected open fun persistFile(file: FileLink) {
+        fileService.persist(file)
     }
 
 
