@@ -146,7 +146,7 @@ data class Item(
     }
 
     fun addAttachedFile(file: FileLink): Boolean {
-        if (attachedFiles.contains(file)) {
+        if(attachedFiles.add(file)) {
             file.addAsAttachmentToItem(this)
 
             return true
@@ -156,7 +156,7 @@ data class Item(
     }
 
     fun removeAttachedFile(file: FileLink): Boolean {
-        if (attachedFiles.remove(file)) {
+        if(attachedFiles.remove(file)) {
             file.removeAsAttachmentFromItem(this)
 
             return true
