@@ -949,7 +949,7 @@ class EditEntryActivity : BaseActivity() {
         if(hasFocus) {
             lytTagsPreview.visibility = View.VISIBLE
 
-            if(lytReferencePreview.visibility == View.VISIBLE || lytAbstractPreview.visibility == View.VISIBLE) {
+            if(lytReferencePreview.visibility == View.VISIBLE || lytAbstractPreview.visibility == View.VISIBLE || lytFilesPreview.visibility == View.VISIBLE) {
                 lytTagsPreview.executeActionAfterMeasuringHeight {
                     playHideOtherItemFieldsPreviewExceptTagsAnimation()
                 }
@@ -974,6 +974,11 @@ class EditEntryActivity : BaseActivity() {
         if(lytAbstractPreview.measuredHeight > 0) {
             lytAbstractPreview.y = lytAbstractPreview.top.toFloat()
             lytAbstractPreview.visibility = View.VISIBLE
+        }
+
+        if(lytFilesPreview.measuredHeight > 0) {
+            lytFilesPreview.y = lytFilesPreview.top.toFloat()
+            lytFilesPreview.visibility = View.VISIBLE
         }
     }
 
@@ -1002,6 +1007,7 @@ class EditEntryActivity : BaseActivity() {
     private fun forceLayoutUpdateAfterHideOtherItemFieldsPreviewExceptTagsAnimation() {
         lytReferencePreview.visibility = View.GONE
         lytAbstractPreview.visibility = View.GONE
+        lytFilesPreview.visibility = View.GONE
         lytTagsPreview.y = lytTagsPreview.top.toFloat()
 
         lytEntryFieldsPreview.invalidate()
@@ -1026,6 +1032,15 @@ class EditEntryActivity : BaseActivity() {
         if(lytAbstractPreview.visibility == View.VISIBLE) {
             val summaryPreviewYAnimator = ObjectAnimator
                     .ofFloat(lytAbstractPreview, View.Y, lytAbstractPreview.top.toFloat(), -1 * lytAbstractPreview.measuredHeight.toFloat())
+                    .setDuration(ShowHideEditTagsAnimationDurationMillis)
+            summaryPreviewYAnimator.interpolator = interpolator
+
+            animators.add(summaryPreviewYAnimator)
+        }
+
+        if(lytFilesPreview.visibility == View.VISIBLE) {
+            val summaryPreviewYAnimator = ObjectAnimator
+                    .ofFloat(lytFilesPreview, View.Y, lytFilesPreview.top.toFloat(), -1 * lytFilesPreview.measuredHeight.toFloat())
                     .setDuration(ShowHideEditTagsAnimationDurationMillis)
             summaryPreviewYAnimator.interpolator = interpolator
 
