@@ -8,7 +8,6 @@ import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.TagViewModel
 import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.model.Tag
-import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.TagsListPresenter
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
@@ -35,9 +34,6 @@ class TagsListView : EntitiesListView(), ITagsListView {
 
     private val tagViewModel = TagViewModel()
 
-
-    @Inject
-    protected lateinit var dataManager: DataManager
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
