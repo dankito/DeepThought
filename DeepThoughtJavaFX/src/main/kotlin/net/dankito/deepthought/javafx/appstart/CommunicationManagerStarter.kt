@@ -1,6 +1,7 @@
 package net.dankito.deepthought.javafx.appstart
 
 import net.dankito.deepthought.communication.ICommunicationManager
+import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.files.synchronization.FileServer
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.service.data.DataManager
@@ -25,6 +26,9 @@ class CommunicationManagerStarter(dataManager: DataManager) {
 
     @Inject
     protected lateinit var fileServer: FileServer
+
+    @Inject
+    protected lateinit var fileManager: FileManager // to create FileManager so that listening for changes to FileLinks and FileSyncService is started
 
     @Inject
     protected lateinit var communicationManager: ICommunicationManager
