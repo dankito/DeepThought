@@ -1,6 +1,7 @@
 package net.dankito.deepthought.javafx.appstart
 
 import net.dankito.deepthought.communication.ICommunicationManager
+import net.dankito.deepthought.files.synchronization.FileServer
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.service.data.DataManager
 import java.util.*
@@ -23,6 +24,9 @@ class CommunicationManagerStarter(dataManager: DataManager) {
 
 
     @Inject
+    protected lateinit var fileServer: FileServer
+
+    @Inject
     protected lateinit var communicationManager: ICommunicationManager
 
 
@@ -40,7 +44,9 @@ class CommunicationManagerStarter(dataManager: DataManager) {
     private fun startCommunicationManager() {
         AppComponent.component.inject(this) // and only now create CommunicationManager as now localDevice is loaded from Db
 
-        communicationManager.startAsync()
+        fileServer.startServerAsync { // start FileServer first so that fileSynchronizationPort get set before communicationManager sends it to synchronized devices
+            communicationManager.startAsync()
+        }
     }
 
 }
