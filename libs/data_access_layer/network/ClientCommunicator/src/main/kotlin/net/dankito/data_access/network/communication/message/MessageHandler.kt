@@ -146,6 +146,7 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
 
             if(permittedSynchronizedDevice != null) {
                 permittedSynchronizedDevice.synchronizationPort = body.synchronizationPort
+                permittedSynchronizedDevice.fileSynchronizationPort = body.fileSynchronizationPort
 
                 config.callRemoteRequestedToStartSynchronizationListeners(permittedSynchronizedDevice)
             }

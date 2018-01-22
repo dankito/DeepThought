@@ -99,6 +99,7 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
 
             if(result == RespondToSynchronizationPermittingChallengeResult.ALLOWED) {
                 remoteDevice.synchronizationPort = body.synchronizationPort
+                remoteDevice.fileSynchronizationPort = body.fileSynchronizationPort
             }
         }
     }

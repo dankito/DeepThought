@@ -198,6 +198,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
 
     private fun handleStartSynchronizationResultAllowed(body: RequestStartSynchronizationResponseBody, device: DiscoveredDevice, deviceInfoKey: String) {
         device.synchronizationPort = body.synchronizationPort
+        device.fileSynchronizationPort = body.fileSynchronizationPort
 
         startSynchronizingWithDevice(deviceInfoKey, device)
 
