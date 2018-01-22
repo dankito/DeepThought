@@ -41,6 +41,31 @@ class EntryPersister(private val entryService: EntryService, private val referen
     }
 
     private fun saveEntry(item: Item, source: Source? = null, series: Series? = null, tags: Collection<Tag> = ArrayList<Tag>(), files: Collection<FileLink>): Boolean {
+        val (addedTags, removedTags) = setTags(item, tags)
+
+        val previousSource = setSource(item, source, series)
+
+        val (addedFiles, removedFiles) = setFiles(item, files)
+
+
+        if(item.isPersisted() == false) {
+            entryService.persist(item)
+        }
+        else {
+            entryService.update(item)
+        }
+
+
+        updateSource(source, previousSource, series)
+
+        updateTagsAndFiles(addedTags, removedTags, addedFiles, removedFiles)
+
+
+        return true
+    }
+
+
+    private fun setTags(item: Item, tags: Collection<Tag>): Pair<ArrayList<Tag>, ArrayList<Tag>> {
         // by design at this stage there's no unpersisted tag -> set them directly on item so that their ids get saved on item with persist(item) / update(item)
         val removedTags = ArrayList(item.tags)
         removedTags.removeAll(tags)
@@ -50,18 +75,24 @@ class EntryPersister(private val entryService: EntryService, private val referen
 
         item.setAllTags(tags.filter { it != null })
 
+        return Pair(addedTags, removedTags)
+    }
 
+    private fun setSource(item: Item, source: Source?, series: Series?): Source? {
         source?.let {
             if(source.isPersisted() == false) {
                 referencePersister.saveReference(source, series)
             }
         }
 
-        val previousReference = item.source
+        val previousSource = item.source
 
         item.source = source
 
+        return previousSource
+    }
 
+    private fun setFiles(item: Item, files: Collection<FileLink>): Pair<ArrayList<FileLink>, ArrayList<FileLink>> {
         files.forEach { file ->
             if(file.isPersisted() == false) {
                 fileService.persist(file)
@@ -76,22 +107,19 @@ class EntryPersister(private val entryService: EntryService, private val referen
 
         item.setAllAttachedFiles(files.filter { it != null })
 
-
-        if(item.isPersisted() == false) {
-            entryService.persist(item)
-        }
-        else {
-            entryService.update(item)
-        }
+        return Pair(addedFiles, removedFiles)
+    }
 
 
-        if(source?.id != previousReference?.id) { // only update source if it really changed
+    private fun updateSource(source: Source?, previousSource: Source?, series: Series?) {
+        if(source?.id != previousSource?.id) { // only update source if it really changed
             source?.let { referencePersister.saveReference(source, series, doChangesAffectDependentEntities = false) }
 
-            previousReference?.let { referencePersister.saveReference(it, it.series, doChangesAffectDependentEntities = false) }
+            previousSource?.let { referencePersister.saveReference(it, it.series, doChangesAffectDependentEntities = false) }
         }
+    }
 
-
+    private fun updateTagsAndFiles(addedTags: ArrayList<Tag>, removedTags: ArrayList<Tag>, addedFiles: ArrayList<FileLink>, removedFiles: ArrayList<FileLink>) {
         addedTags.filterNotNull().forEach { tagService.update(it) }
 
         removedTags.filterNotNull().forEach { tagService.update(it) }
@@ -99,9 +127,6 @@ class EntryPersister(private val entryService: EntryService, private val referen
         addedFiles.filterNotNull().forEach { fileService.update(it) }
 
         removedFiles.filterNotNull().forEach { fileService.update(it) }
-
-
-        return true
     }
 
 }
