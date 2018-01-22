@@ -5,10 +5,14 @@ import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.runner.AndroidJUnit4
+import android.support.v7.widget.RecyclerView
+import android.view.ViewGroup
 import net.dankito.deepthought.android.DeepThoughtActivityTestRule
 import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditEntryActivityParameters
+import net.dankito.deepthought.android.adapter.ListRecyclerSwipeAdapter
+import net.dankito.deepthought.android.adapter.viewholder.FileLinkViewHolder
 import net.dankito.deepthought.android.di.TestComponent
 import net.dankito.deepthought.android.service.ActivityParameterHolder
 import net.dankito.deepthought.android.util.matchers.RecyclerViewItemCountAssertion
@@ -115,6 +119,27 @@ class EditItemActivity_EditFilesTest : DeepThoughtAndroidTestBase() {
 
     private fun checkDisplayedPreviewFilesMatch(vararg files: FileLink) {
         checkCountItemsInRecyclerViewFiles(files.size)
+
+        val displayedFiles = getDisplayedFiles()
+        assertThat(displayedFiles.size, `is`(files.size))
+
+        displayedFiles.removeAll(files) // check that displayedFiles contains exactly files
+        assertThat(displayedFiles.size, `is`(0))
+    }
+
+    private fun getDisplayedFiles(): MutableList<FileLink> {
+        val displayedFiles = ArrayList<FileLink>()
+
+        InstrumentationRegistry.getInstrumentation().runOnMainSync {
+            val lytFilesPreview = testRule.activity.findViewById(R.id.lytFilesPreview) as? ViewGroup
+            val rcySearchResults = lytFilesPreview?.findViewById(R.id.rcySearchResults) as? RecyclerView
+
+            (rcySearchResults?.adapter as? ListRecyclerSwipeAdapter<FileLink, FileLinkViewHolder>)?.let {
+                displayedFiles.addAll(it.items)
+            }
+        }
+
+        return displayedFiles
     }
 
     private fun checkCountItemsInRecyclerViewFiles(expectedCount: Int) {
