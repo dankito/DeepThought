@@ -46,10 +46,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_above="@+id/txtFilePath"
+            android:layout_toLeftOf="@+id/txtFileSize"
+            android:layout_toStartOf="@+id/txtFileSize"
             android:singleLine="true"
             android:ellipsize="middle"
             style="@style/Header1Style"
+        />
+
+        <TextView
+            android:id="@+id/txtFileSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/txtFilePath"
+            android:layout_marginLeft="6dp"
+            android:layout_marginStart="6dp"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            style="@style/Header2Style"
         />
 
         <TextView

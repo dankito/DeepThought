@@ -30,6 +30,9 @@ class FilesRecyclerAdapter(private val presenter: FileListPresenter, private val
         viewHolder.txtFileName.text = ""
         viewHolder.txtFileName.visibility = View.INVISIBLE
 
+        viewHolder.txtFileSize.text = ""
+        viewHolder.txtFileSize.visibility = View.INVISIBLE
+
         viewHolder.txtFilePath.text = ""
         viewHolder.txtFilePath.visibility = View.INVISIBLE
     }
@@ -37,6 +40,9 @@ class FilesRecyclerAdapter(private val presenter: FileListPresenter, private val
     override fun bindItemToView(viewHolder: FileLinkViewHolder, item: FileLink) {
         viewHolder.txtFileName.text = item.name
         viewHolder.txtFileName.visibility = View.VISIBLE
+
+        viewHolder.txtFileSize.text = presenter.formatFileSize(item.fileSize)
+        viewHolder.txtFileSize.visibility = View.VISIBLE
 
         viewHolder.txtFilePath.text = item.uriString // TODO: make absolute for local files
         viewHolder.txtFilePath.visibility = View.VISIBLE
