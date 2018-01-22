@@ -12,6 +12,8 @@ class EditReadLaterArticleView : EditEntryViewBase() {
     init {
         AppComponent.component.inject(this)
 
+        canAlwaysBeSaved = true
+
         showData(article.itemExtractionResult.item, article.itemExtractionResult.tags, article.itemExtractionResult.source, article.itemExtractionResult.series)
     }
 

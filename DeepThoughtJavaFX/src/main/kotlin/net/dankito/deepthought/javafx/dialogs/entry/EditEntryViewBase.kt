@@ -42,6 +42,8 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     protected val hasUnsavedChanges = SimpleBooleanProperty()
 
+    protected var canAlwaysBeSaved = false // ReadLaterArticles and ItemExtractionResults can always be saved, no matter if they contain changes or not
+
 
     private val editSourceField = EditItemSourceField()
 
@@ -217,7 +219,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
 
     private fun updateHasUnsavedChanges() {
-        hasUnsavedChanges.value = htmlEditor.didHtmlChange || editSourceField.didEntityChange.value || editSourceField.didTitleChange.value
+        hasUnsavedChanges.value = canAlwaysBeSaved || htmlEditor.didHtmlChange || editSourceField.didEntityChange.value || editSourceField.didTitleChange.value
                 || editedSummary.value != originalSummary || editTagsField.didCollectionChange.value
     }
 

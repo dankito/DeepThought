@@ -18,6 +18,8 @@ class EditEntryExtractionResultView : EditEntryViewBase() {
     init {
         AppComponent.component.inject(this)
 
+        canAlwaysBeSaved = true
+
         showExtractionResult()
     }
 
