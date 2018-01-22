@@ -31,13 +31,16 @@ class FileListPresenter(private val fileManager: FileManager, private val applic
 
 
     fun formatFileSize(length: Long): String {
-        if (length > 0.1 * 1024.0 * 1024.0 * 1024.0) {
+        if(length > 0.1 * 1024.0 * 1024.0 * 1024.0) {
             val f = length.toFloat() / 1024f / 1024f / 1024f
             return String.format("%.1f GB", f)
         }
-        else if (length > 0.1 * 1024.0 * 1024.0) {
+        else if(length > 0.1 * 1024.0 * 1024.0) {
             val f = length.toFloat() / 1024f / 1024f
             return String.format("%.1f MB", f)
+        }
+        else if(length < 0) {
+            return localization.getLocalizedString("file.size.not.determined.yet")
         }
         else {
             val f = length / 1024f
