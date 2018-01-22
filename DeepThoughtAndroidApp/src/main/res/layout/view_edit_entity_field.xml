@@ -51,6 +51,8 @@
                     android:layout_marginStart="@dimen/edit_text_padding_left"
                     style="@style/EntityFieldName"
                     app:layout_alignSelf="center"
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
                 />

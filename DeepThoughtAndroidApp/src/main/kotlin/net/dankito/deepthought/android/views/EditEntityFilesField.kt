@@ -73,9 +73,15 @@ class EditEntityFilesField : EditEntityField {
             selectFileToAdd()
         }
 
-        (txtEntityFieldName.layoutParams as? MarginLayoutParams)?.setLeftMargin(2) // so that is has some indent as list item's txtFileName
-
         (btnEntityFieldAction.layoutParams as? LayoutParams)?.topMargin = 0
+
+        (txtEntityFieldName.layoutParams as? MarginLayoutParams)?.let { layoutParams ->
+            layoutParams.setLeftMargin(2) // so that is has some indent as list item's txtFileName
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                layoutParams.height = btnEntityFieldAction.maxHeight
+            }
+        }
     }
 
     override fun viewClicked() {
