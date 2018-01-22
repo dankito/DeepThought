@@ -6,7 +6,7 @@ import kotlinx.android.synthetic.main.view_floating_action_button_entry_fields.v
 
 
 class EditEntryActivityFloatingActionMenuButton(floatingActionMenu: FloatingActionMenu, private val addTagsListener: () -> Unit, private val addReferenceListener: () -> Unit,
-                                                private val addTitleOrAbstractListener: () -> Unit) : FloatingActionMenuButton(floatingActionMenu) {
+                            private val addTitleOrAbstractListener: () -> Unit, private val addFilesListener: () -> Unit) : FloatingActionMenuButton(floatingActionMenu) {
 
 
     init {
@@ -14,9 +14,10 @@ class EditEntryActivityFloatingActionMenuButton(floatingActionMenu: FloatingActi
     }
 
     private fun setupUI() {
-        floatingActionMenu.fabEditEntryTags.setOnClickListener { executeAndCloseMenu { addTagsListener() } }
-        floatingActionMenu.fabEditEntryReference.setOnClickListener { executeAndCloseMenu { addReferenceListener() } }
-        floatingActionMenu.fabEditEntryAbstract.setOnClickListener { executeAndCloseMenu { addTitleOrAbstractListener() } }
+        floatingActionMenu.fabEditEntryTags.setOnClickListener { executeAndCloseMenu(addTagsListener) }
+        floatingActionMenu.fabEditEntryReference.setOnClickListener { executeAndCloseMenu(addReferenceListener) }
+        floatingActionMenu.fabEditEntryAbstract.setOnClickListener { executeAndCloseMenu(addTitleOrAbstractListener) }
+        floatingActionMenu.fabEditEntryFiles.setOnClickListener { executeAndCloseMenu(addFilesListener) }
     }
 
 
@@ -35,7 +36,8 @@ class EditEntryActivityFloatingActionMenuButton(floatingActionMenu: FloatingActi
     private fun isAnyFloatingActionMenuButtonVisible(): Boolean {
         return  floatingActionMenu.fabEditEntryTags.visibility != View.GONE ||
                 floatingActionMenu.fabEditEntryReference.visibility != View.GONE ||
-                floatingActionMenu.fabEditEntryAbstract.visibility != View.GONE
+                floatingActionMenu.fabEditEntryAbstract.visibility != View.GONE ||
+                floatingActionMenu.fabEditEntryFiles.visibility != View.GONE
     }
 
 }

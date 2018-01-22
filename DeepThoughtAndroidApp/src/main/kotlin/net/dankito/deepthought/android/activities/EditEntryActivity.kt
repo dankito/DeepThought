@@ -30,6 +30,8 @@ import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.service.hideKeyboardDelayed
+import net.dankito.deepthought.android.service.permissions.IPermissionsManager
+import net.dankito.deepthought.android.service.permissions.PermissionsManager
 import net.dankito.deepthought.android.views.*
 import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.model.*
@@ -79,6 +81,7 @@ class EditEntryActivity : BaseActivity() {
         private const val ABSTRACT_INTENT_EXTRA_NAME = "ABSTRACT"
         private const val REFERENCE_INTENT_EXTRA_NAME = "REFERENCE"
         private const val TAGS_ON_ENTRY_INTENT_EXTRA_NAME = "TAGS_ON_ENTRY"
+        private const val FILES_INTENT_EXTRA_NAME = "ATTACHED_FILES"
 
         const val ResultId = "EDIT_ENTRY_ACTIVITY_RESULT"
 
@@ -164,6 +167,8 @@ class EditEntryActivity : BaseActivity() {
 
     private var forceShowAbstractPreview = false
 
+    private var forceShowFilesPreview = false
+
 
     private val presenter: EditEntryPresenter
 
@@ -185,6 +190,8 @@ class EditEntryActivity : BaseActivity() {
     private val toolbarUtil = ToolbarUtil()
 
     private val openUrlOptionsView = OpenUrlOptionsView()
+
+    private val permissionsManager: IPermissionsManager
 
     private lateinit var editHtmlView: EditHtmlView
 
@@ -216,6 +223,8 @@ class EditEntryActivity : BaseActivity() {
         dataManager = entryService.dataManager
 
         presenter = EditEntryPresenter(entryPersister, readLaterArticleService, clipboardService, router)
+
+        permissionsManager = PermissionsManager(this)
     }
 
 
@@ -267,6 +276,8 @@ class EditEntryActivity : BaseActivity() {
         }
 
         savedInstanceState.getString(TAGS_ON_ENTRY_INTENT_EXTRA_NAME)?.let { tagsOnEntryIds -> restoreTagsOnEntryAsync(tagsOnEntryIds) }
+        // TODO:
+//        savedInstanceState.getString(FILES_INTENT_EXTRA_NAME)?.let { fileIds -> restoreFilesAsync(fileIds) }
 
         wbvwContent.restoreInstanceState(savedInstanceState)
 
@@ -302,6 +313,8 @@ class EditEntryActivity : BaseActivity() {
             outState.putBoolean(IS_IN_READER_MODE_INTENT_EXTRA_NAME, isInReaderMode)
 
             outState.putString(TAGS_ON_ENTRY_INTENT_EXTRA_NAME, serializer.serializeObject(tagsOnEntry))
+            // TODO: add PersistedFilesSerializer
+            outState.putString(FILES_INTENT_EXTRA_NAME, serializer.serializeObject(lytFilesPreview.getEditedFiles()))
 
             if(sourceToEdit == null || sourceToEdit?.id != null) { // save value only if source has been deleted or a persisted source is set (-> don't store ItemExtractionResult's or ReadLaterArticle's unpersisted source)
                 outState.putString(REFERENCE_INTENT_EXTRA_NAME, sourceToEdit?.id)
@@ -373,10 +386,15 @@ class EditEntryActivity : BaseActivity() {
             }
         }
 
+        lytFilesPreview.didValueChangeListener = { didFilesChange ->
+            entryPropertySet()
+            updateEntryFieldChangedOnUIThread(ItemField.Files, didFilesChange)
+        }
+
         wbvwContent?.requestFocus() // avoid that lytAbstractPreview gets focus and keyboard therefore gets show on activity start
 
         floatingActionMenu = EditEntryActivityFloatingActionMenuButton(findViewById(R.id.floatingActionMenu) as FloatingActionMenu, { addTagsToEntry() },
-                { addReferenceToEntry() }, { addAbstractToEntry() } )
+                { addReferenceToEntry() }, { addAbstractToEntry() }, { addFilesToEntry() } )
 
         setupEntryContentView()
 
@@ -411,6 +429,13 @@ class EditEntryActivity : BaseActivity() {
         setAbstractPreviewOnUIThread()
 
         lytAbstractPreview.startEditing()
+    }
+
+    private fun addFilesToEntry() {
+        forceShowFilesPreview = true
+        setFilesPreviewOnUIThread()
+
+        lytFilesPreview.selectFileToAdd()
     }
 
     private fun setupEntryContentView() {
@@ -580,6 +605,12 @@ class EditEntryActivity : BaseActivity() {
     }
 
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
     override fun onResume() {
         super.onResume()
 
@@ -697,11 +728,6 @@ class EditEntryActivity : BaseActivity() {
         }
     }
 
-    private fun editReference() {
-        lytReferencePreview.visibility = View.VISIBLE
-        lytReferencePreview.startEditing()
-    }
-
     private fun setSourceToEdit(source: Source?) {
         sourceToEdit = source
 
@@ -710,6 +736,11 @@ class EditEntryActivity : BaseActivity() {
         entryPropertySet() // TODO: still senseful?
 
         updateShowMenuItemShareEntry()
+    }
+
+    private fun editReference() {
+        lytReferencePreview.visibility = View.VISIBLE
+        lytReferencePreview.startEditing()
     }
 
     private fun editTagsOnEntry() {
@@ -747,7 +778,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun haveAllFieldsBeenCleared(): Boolean {
-        return contentToEdit.isNullOrBlank() && tagsOnEntry.isEmpty() && sourceToEdit == null && abstractToEdit.isNullOrBlank()
+        return contentToEdit.isNullOrBlank() && tagsOnEntry.isEmpty() && sourceToEdit == null && abstractToEdit.isNullOrBlank() && lytFilesPreview.getEditedFiles().size == 0
     }
 
     private fun entryPropertySet() {
@@ -852,7 +883,8 @@ class EditEntryActivity : BaseActivity() {
 
     private fun shouldShowOnboardingForEntryProperties(): Boolean {
         return entryService.dataManager.localSettings.didShowAddItemPropertiesHelp == false &&
-                lytTagsPreview.visibility == View.GONE && lytReferencePreview.visibility == View.GONE && lytAbstractPreview.visibility == View.GONE
+                lytTagsPreview.visibility == View.GONE && lytReferencePreview.visibility == View.GONE &&
+                lytAbstractPreview.visibility == View.GONE && lytFilesPreview.visibility == View.GONE
     }
 
 
@@ -889,6 +921,16 @@ class EditEntryActivity : BaseActivity() {
         setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread()
 
         updateShowMenuItemShareEntry()
+    }
+
+    private fun setFilesPreviewOnUIThread() {
+        val showFilesPreview = (this.forceShowFilesPreview || lytFilesPreview.getEditedFiles().size > 0) && isEditingTagsOnItem == false
+
+        lytFilesPreview.visibility = if(showFilesPreview) View.VISIBLE else View.GONE
+        if(fabEditEntryFiles.visibility != View.INVISIBLE) { // visibility already set by FloatingActionMenu
+            fabEditEntryFiles.visibility = if(showFilesPreview) View.GONE else View.VISIBLE
+        }
+        setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread()
     }
 
     private fun updateShowMenuItemShareEntry() {
@@ -1406,7 +1448,7 @@ class EditEntryActivity : BaseActivity() {
 
         item?.let { entry ->
             updateEntry(entry, content, abstract)
-            presenter.saveEntryAsync(entry, sourceToEdit, sourceToEdit?.series, tags = tagsOnEntry) { successful ->
+            presenter.saveEntryAsync(entry, sourceToEdit, sourceToEdit?.series, tagsOnEntry, lytFilesPreview.getEditedFiles()) { successful ->
                 if(successful) {
                     setActivityResult(EditEntryActivityResult(didSaveEntry = true, savedItem = entry))
                 }
@@ -1419,7 +1461,7 @@ class EditEntryActivity : BaseActivity() {
             // TODO: contentToEdit show now always contain the correct value depending on is or is not in reader mode, doesn't it?
 
             updateEntry(extractionResult.item, content, abstract)
-            presenter.saveEntryAsync(extractionResult.item, sourceToEdit, extractionResult.series, tagsOnEntry) { successful ->
+            presenter.saveEntryAsync(extractionResult.item, sourceToEdit, extractionResult.series, tagsOnEntry, lytFilesPreview.getEditedFiles()) { successful ->
                 if(successful) {
                     setActivityResult(EditEntryActivityResult(didSaveEntryExtractionResult = true, savedItem = extractionResult.item))
                 }
@@ -1431,7 +1473,7 @@ class EditEntryActivity : BaseActivity() {
             val extractionResult = readLaterArticle.itemExtractionResult
             updateEntry(extractionResult.item, content, abstract)
 
-            presenter.saveEntryAsync(extractionResult.item, sourceToEdit, extractionResult.series, tagsOnEntry) { successful ->
+            presenter.saveEntryAsync(extractionResult.item, sourceToEdit, extractionResult.series, tagsOnEntry, lytFilesPreview.getEditedFiles()) { successful ->
                 if(successful) {
                     readLaterArticleService.delete(readLaterArticle)
                     setActivityResult(EditEntryActivityResult(didSaveReadLaterArticle = true, savedItem = extractionResult.item))
@@ -1491,6 +1533,7 @@ class EditEntryActivity : BaseActivity() {
             updateEntry(extractionResult.item, content, abstract)
             extractionResult.source = sourceToEdit
             extractionResult.tags = tagsOnEntry
+            extractionResult.files = lytFilesPreview.getEditedFiles().toMutableList()
 
             presenter.saveEntryExtractionResultForLaterReading(extractionResult)
             setActivityResult(EditEntryActivityResult(didSaveEntryExtractionResult = true, savedItem = extractionResult.item))
@@ -1626,7 +1669,7 @@ class EditEntryActivity : BaseActivity() {
 
         mnDeleteExistingEntry?.isVisible = item.isPersisted()
 
-        editEntry(item, item.source, item.tags)
+        editEntry(item, item.source, item.tags, item.attachedFiles)
     }
 
     private fun editReadLaterArticle(readLaterArticleId: String) {
@@ -1637,25 +1680,26 @@ class EditEntryActivity : BaseActivity() {
 
     private fun editReadLaterArticle(readLaterArticle: ReadLaterArticle, updateContentPreview: Boolean = true) {
         this.readLaterArticle = readLaterArticle
+        val extractionResult = readLaterArticle.itemExtractionResult
 
         mnSaveEntry?.setIcon(R.drawable.ic_tab_items)
-        editEntry(readLaterArticle.itemExtractionResult.item, readLaterArticle.itemExtractionResult.source, readLaterArticle.itemExtractionResult.tags, updateContentPreview)
+        editEntry(extractionResult.item, extractionResult.source, extractionResult.tags, extractionResult.files, updateContentPreview)
     }
 
     private fun editEntryExtractionResult(extractionResult: ItemExtractionResult, updateContentPreview: Boolean = true) {
         this.itemExtractionResult = extractionResult
 
-        editEntry(itemExtractionResult?.item, itemExtractionResult?.source, itemExtractionResult?.tags, updateContentPreview)
+        editEntry(extractionResult.item, extractionResult.source, extractionResult.tags, extractionResult.files, updateContentPreview)
     }
 
-    private fun editEntry(item: Item?, source: Source?, tags: MutableCollection<Tag>?, updateContentPreview: Boolean = true) {
-        originalContent = item?.content
+    private fun editEntry(item: Item, source: Source?, tags: MutableCollection<Tag>, files: MutableCollection<FileLink>, updateContentPreview: Boolean = true) {
+        originalContent = item.content
         originalTags = tags
         originalSource = source
-        originalTitleAbstract = item?.summary
+        originalTitleAbstract = item.summary
 
-        contentToEdit = item?.content
-        abstractToEdit = item?.summary
+        contentToEdit = item.content
+        abstractToEdit = item.summary
         sourceToEdit = source
 
         if(abstractToEdit.isNullOrBlank() == false) { this.forceShowAbstractPreview = true } // forcing that once it has been shown it doesn't get hidden anymore
@@ -1663,15 +1707,16 @@ class EditEntryActivity : BaseActivity() {
         source?.let { this.forceShowReferencePreview = true } // forcing that once it has been shown it doesn't get hidden anymore
         lytReferencePreview.setOriginalSourceToEdit(sourceToEdit, getCurrentSeries(), this) { setSourceToEdit(it) }
 
-        tags?.forEach { tag ->
+        tags.forEach { tag ->
             if(tagsOnEntry.contains(tag) == false) { // to avoid have a tag twice we really have to check each single tag
                 tagsOnEntry.add(tag)
             }
         }
 
-        if(tags?.size ?: 0 > 0) {
-            forceShowTagsPreview = true
-        }
+        forceShowTagsPreview = tags.isNotEmpty()
+
+        lytFilesPreview.setFiles(files, permissionsManager)
+        forceShowFilesPreview = files.isNotEmpty()
 
         updateDisplayedValuesOnUIThread(source, updateContentPreview)
     }
@@ -1686,6 +1731,8 @@ class EditEntryActivity : BaseActivity() {
         setReferencePreviewOnUIThread()
 
         setAbstractPreviewOnUIThread()
+
+        setFilesPreviewOnUIThread()
     }
 
     private fun restoreReference(referenceId: String?) {

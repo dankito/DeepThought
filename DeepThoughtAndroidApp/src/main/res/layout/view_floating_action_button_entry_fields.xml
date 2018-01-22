@@ -18,6 +18,14 @@
 
 
     <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fabEditEntryFiles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/MenuButtonsStyle"
+        fab:fab_label="@string/activity_edit_item_files_label"
+    />
+
+    <com.github.clans.fab.FloatingActionButton
         android:id="@+id/fabEditEntryReference"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

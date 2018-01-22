@@ -99,7 +99,7 @@ class EditEntityFilesField : EditEntityField {
     }
 
 
-    private fun selectFileToAdd() {
+    fun selectFileToAdd() {
         if(permissionsManager.isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE)) {
             selectFileToAddWithPermissionGranted()
         }
