@@ -24,8 +24,8 @@ class EditEntryPresenter(private val entryPersister: EntryPersister, private val
     }
 
 
-    fun saveEntryAsync(item: Item, source: Source? = null, series: Series? = null, tags: Collection<Tag> = ArrayList(), callback: (Boolean) -> Unit) {
-        entryPersister.saveEntryAsync(item, source, series, tags, callback)
+    fun saveEntryAsync(item: Item, source: Source?, series: Series?, tags: Collection<Tag>, files: Collection<FileLink>, callback: (Boolean) -> Unit) {
+        entryPersister.saveEntryAsync(item, source, series, tags, files, callback)
     }
 
     fun saveEntryExtractionResultForLaterReading(extractionResult: ItemExtractionResult) {

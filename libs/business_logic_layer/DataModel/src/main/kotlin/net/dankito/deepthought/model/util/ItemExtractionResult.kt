@@ -1,12 +1,10 @@
 package net.dankito.deepthought.model.util
 
-import net.dankito.deepthought.model.Item
-import net.dankito.deepthought.model.Series
-import net.dankito.deepthought.model.Source
-import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.*
 
 
-data class ItemExtractionResult(var item: Item, var source: Source? = null, var series: Series? = null, var tags: MutableList<Tag> = ArrayList(),
+data class ItemExtractionResult(var item: Item, var source: Source? = null, var series: Series? = null,
+                                var tags: MutableList<Tag> = ArrayList(), var files: MutableList<FileLink> = ArrayList(),
                                 var seriesTitle: String? = null,
                                 var couldExtractContent: Boolean = false,
                                 var error: Exception? = null) {

@@ -9,7 +9,7 @@ class EditEntryView : EditEntryViewBase() {
 
 
     init {
-        showData(item, item.tags, item.source, item.source?.series)
+        showData(item, item.tags, item.source, item.source?.series, item.attachedFiles)
 
         hasUnsavedChanges.value = false
     }

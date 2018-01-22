@@ -3,10 +3,7 @@ package net.dankito.deepthought.service.import_export.bibtex
 import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.data.SeriesPersister
-import net.dankito.deepthought.model.Item
-import net.dankito.deepthought.model.Series
-import net.dankito.deepthought.model.Source
-import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.import_export.IDataImporter
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
@@ -89,6 +86,7 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
     private fun mapBibTeXEntryToEntry(bibTeXEntry: BibTeXEntry, latexParser: LaTeXParser, latexPrinter: LaTeXPrinter): Item {
         val entry = Item("")
         val tags = ArrayList<Tag>()
+        val files = ArrayList<FileLink>() // TODO
         val reference = Source()
         referencePersister.saveReference(reference)
 
@@ -97,7 +95,7 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
             mapEntryField(entry, tags, reference, key, value, latexParser, latexPrinter)
         }
 
-        entryPersister.saveEntryAsync(entry, reference, reference.series, tags) { }
+        entryPersister.saveEntryAsync(entry, reference, reference.series, tags, files) { }
 
         return entry
     }

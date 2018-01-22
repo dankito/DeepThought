@@ -26,7 +26,7 @@ class EditEntryExtractionResultView : EditEntryViewBase() {
 
     private fun showExtractionResult() {
         val content = if (extractionResult.couldExtractContent) extractionResult.item.content else ""
-        showData(extractionResult.item, extractionResult.tags, extractionResult.source, extractionResult.series, content)
+        showData(extractionResult.item, extractionResult.tags, extractionResult.source, extractionResult.series, extractionResult.files, content)
     }
 
 

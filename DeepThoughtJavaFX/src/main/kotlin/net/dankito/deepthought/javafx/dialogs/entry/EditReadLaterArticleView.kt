@@ -14,7 +14,9 @@ class EditReadLaterArticleView : EditEntryViewBase() {
 
         canAlwaysBeSaved = true
 
-        showData(article.itemExtractionResult.item, article.itemExtractionResult.tags, article.itemExtractionResult.source, article.itemExtractionResult.series)
+        val extractionResult = article.itemExtractionResult
+
+        showData(extractionResult.item, extractionResult.tags, extractionResult.source, extractionResult.series, extractionResult.files)
     }
 
 

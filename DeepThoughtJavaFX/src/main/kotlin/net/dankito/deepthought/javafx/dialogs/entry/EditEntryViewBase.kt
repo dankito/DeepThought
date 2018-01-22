@@ -16,11 +16,9 @@ import net.dankito.deepthought.javafx.dialogs.entry.controls.EditItemSourceField
 import net.dankito.deepthought.javafx.dialogs.entry.controls.EditItemTagsField
 import net.dankito.deepthought.javafx.dialogs.entry.controls.InlineHtmlEditor
 import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
+import net.dankito.deepthought.javafx.ui.controls.EditEntityFilesField
 import net.dankito.deepthought.javafx.util.FXUtils
-import net.dankito.deepthought.model.Item
-import net.dankito.deepthought.model.Series
-import net.dankito.deepthought.model.Source
-import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.abstractPlainText
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditEntryPresenter
@@ -48,6 +46,8 @@ abstract class EditEntryViewBase : DialogFragment() {
     private val editSourceField = EditItemSourceField()
 
     private var editTagsField: EditItemTagsField by singleAssign()
+
+    private var editFilesField: EditEntityFilesField by singleAssign()
 
     private val htmlEditor = InlineHtmlEditor()
 
@@ -131,6 +131,10 @@ abstract class EditEntryViewBase : DialogFragment() {
         editTagsField.didCollectionChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
         add(editTagsField.root)
 
+        editFilesField = EditEntityFilesField()
+        editFilesField.didValueChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
+        add(editFilesField.root)
+
         VBox.setMargin(editTagsField.root, Insets(0.0, 0.0, 6.0, 0.0))
 
 
@@ -183,7 +187,7 @@ abstract class EditEntryViewBase : DialogFragment() {
     }
 
 
-    protected fun showData(item: Item, tags: MutableCollection<Tag>, source: Source?, series: Series?, contentToEdit: String? = null) {
+    protected fun showData(item: Item, tags: MutableCollection<Tag>, source: Source?, series: Series?, files: MutableCollection<FileLink>, contentToEdit: String? = null) {
         this.item = item
         originalSummary = item.abstractPlainText
 
@@ -193,6 +197,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
         editSourceField.setSourceToEdit(source, series)
         editTagsField.setCollectionToEdit(tags)
+        editFilesField.setFiles(files)
     }
 
     private fun showContent(item: Item, source: Source?, contentToEdit: String?) {
@@ -220,7 +225,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     private fun updateHasUnsavedChanges() {
         hasUnsavedChanges.value = canAlwaysBeSaved || htmlEditor.didHtmlChange || editSourceField.didEntityChange.value || editSourceField.didTitleChange.value
-                || editedSummary.value != originalSummary || editTagsField.didCollectionChange.value
+                || editedSummary.value != originalSummary || editTagsField.didCollectionChange.value || editFilesField.didValueChange.value
     }
 
 
@@ -239,7 +244,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
             val source = updateSource()
 
-            presenter.saveEntryAsync(entry, source, editSourceField.seriesToEdit, editTagsField.applyChangesAndGetTags()) {
+            presenter.saveEntryAsync(entry, source, editSourceField.seriesToEdit, editTagsField.applyChangesAndGetTags(), editFilesField.getEditedFiles()) {
                 done()
             }
         }
