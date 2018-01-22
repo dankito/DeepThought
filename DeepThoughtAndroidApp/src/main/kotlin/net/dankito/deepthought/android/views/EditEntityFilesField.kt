@@ -129,13 +129,18 @@ class EditEntityFilesField : EditEntityField {
         }
 
         fileChooserDialog?.selectFile { file ->
-            addFile(file)
+            addLocalFile(file)
         }
     }
 
-    private fun addFile(file: File) {
+    private fun addLocalFile(file: File) {
         val localFile = fileManager.createLocalFile(file)
-        attachedFilesAdapter.addItem(localFile)
+
+        addFile(localFile)
+    }
+
+    private fun addFile(file: FileLink) {
+        attachedFilesAdapter.addItem(file)
 
         updateDidValueChange()
     }
