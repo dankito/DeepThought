@@ -1,9 +1,9 @@
 package net.dankito.deepthought.javafx.ui.controls
 
 import javafx.beans.property.SimpleBooleanProperty
+import javafx.beans.property.SimpleDoubleProperty
 import javafx.collections.FXCollections
 import javafx.geometry.Pos
-import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
@@ -35,6 +35,8 @@ class EditEntityFilesField : View() {
     private val files = FXCollections.observableArrayList<FileLink>()
 
     private var originalFiles: MutableCollection<FileLink> = ArrayList()
+
+    private val listViewHeight = SimpleDoubleProperty(90.0)
 
     private val fileListPresenter: FileListPresenter
 
@@ -70,9 +72,8 @@ class EditEntityFilesField : View() {
         }
 
         listview(files) {
-            minHeight = 20.0
-            prefHeight = Region.USE_COMPUTED_SIZE
-            maxHeight = Region.USE_PREF_SIZE
+            minHeightProperty().bind(listViewHeight)
+            maxHeightProperty().bind(listViewHeight)
 
             cellFragment(FileListCellFragment::class)
 
@@ -128,13 +129,19 @@ class EditEntityFilesField : View() {
         val localFile = fileManager.createLocalFile(file)
         files.add(localFile)
 
+        updateListViewHeight()
         updateDidValueChange()
     }
 
     private fun removeFile(file: FileLink) {
         files.remove(file)
 
+        updateListViewHeight()
         updateDidValueChange()
+    }
+
+    private fun updateListViewHeight() {
+        listViewHeight.value = files.size * 80.0 // cell height is 70.0 plus a padding of 80
     }
 
     private fun updateDidValueChange() {
