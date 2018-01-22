@@ -40,8 +40,6 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
 
 
     init {
-        fileServer.startServerAsync() // TODO: actually we should only start it when there are devices connected -> but be aware that we have to send fileSynchronizationPort in connect response!
-
         connectedDevicesService.addKnownSynchronizedDevicesListener(object : KnownSynchronizedDevicesListener {
             override fun knownSynchronizedDeviceConnected(connectedDevice: DiscoveredDevice) {
                 if(queue.isRunning == false) {
