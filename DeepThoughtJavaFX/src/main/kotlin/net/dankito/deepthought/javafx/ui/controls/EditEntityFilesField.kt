@@ -112,6 +112,8 @@ class EditEntityFilesField : View() {
         fileListPresenter.ensureLocalFileInfoIsSet(originalFiles)
 
         files.setAll(originalFiles) // make a copy to not edit original files
+
+        updateListViewHeight()
     }
 
     fun getEditedFiles(): Collection<FileLink> {
