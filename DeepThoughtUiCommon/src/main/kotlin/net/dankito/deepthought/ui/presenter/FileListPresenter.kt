@@ -27,4 +27,20 @@ class FileListPresenter(private val fileManager: FileManager, private val applic
         fileManager.ensureLocalFileInfoIsSetAndMayStartSynchronization(files)
     }
 
+
+    fun formatFileSize(length: Long): String {
+        if (length > 0.1 * 1024.0 * 1024.0 * 1024.0) {
+            val f = length.toFloat() / 1024f / 1024f / 1024f
+            return String.format("%.1f GB", f)
+        }
+        else if (length > 0.1 * 1024.0 * 1024.0) {
+            val f = length.toFloat() / 1024f / 1024f
+            return String.format("%.1f MB", f)
+        }
+        else {
+            val f = length / 1024f
+            return String.format("%.1f kB", f)
+        }
+    }
+
 }

@@ -21,7 +21,7 @@ class ArticleSummaryItemsView(private val presenter: ArticleSummaryPresenter) : 
     override val root = listview<ArticleSummaryItem> {
         items = this@ArticleSummaryItemsView.items
 
-        userData = checkedItems // bad code design
+        userData = checkedItems // bad code design, but found no other way to pass checkedItems on ArticleSummaryItemListCellFragment
 
         bindSelected(itemModel)
 

@@ -75,6 +75,8 @@ class EditEntityFilesField : View() {
             minHeightProperty().bind(listViewHeight)
             maxHeightProperty().bind(listViewHeight)
 
+            userData = fileListPresenter // bad code design, but found no other way to pass fileListPresenter on ArticleSummaryItemListCellFragment
+
             cellFragment(FileListCellFragment::class)
 
             onDoubleClick { showFile(selectionModel.selectedItem) }

@@ -1,9 +1,11 @@
 package net.dankito.deepthought.javafx.ui.controls.cell
 
+import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos
 import javafx.scene.control.OverrunStyle
 import net.dankito.deepthought.javafx.ui.controls.viewmodel.FileViewModel
 import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.ui.presenter.FileListPresenter
 import tornadofx.*
 
 
@@ -11,10 +13,18 @@ class FileListCellFragment : ListCellFragment<FileLink>() {
 
     val file = FileViewModel().bindTo(this)
 
+    private val formattedFileSize = SimpleStringProperty("")
+
+    private var presenter: FileListPresenter? = null
+
 
     override val root = vbox {
-        cellProperty.addListener { _, _, newValue -> // so that the graphic always has cell's width
+        cellProperty.addListener { _, _, newValue ->
+            // so that the graphic always has cell's width
             newValue?.let { prefWidthProperty().bind(it.widthProperty().subtract(16)) }
+
+            this@FileListCellFragment.presenter = newValue?.listView?.userData as? FileListPresenter
+            updateFileSize()
         }
 
         borderpane {
@@ -35,7 +45,7 @@ class FileListCellFragment : ListCellFragment<FileLink>() {
             }
 
             right {
-                label(file.fileSize) {
+                label(formattedFileSize) {
                     alignment = Pos.CENTER_LEFT
 
                     minHeight = 32.0
@@ -58,5 +68,12 @@ class FileListCellFragment : ListCellFragment<FileLink>() {
             }
         }
 
+        updateFileSize()
     }
+
+
+    private fun updateFileSize() {
+        formattedFileSize.value = presenter?.formatFileSize(file.fileSize.value.toLong()) ?: ""
+    }
+
 }
