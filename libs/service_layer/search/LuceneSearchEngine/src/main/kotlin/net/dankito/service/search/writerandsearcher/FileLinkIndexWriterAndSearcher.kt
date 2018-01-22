@@ -46,6 +46,10 @@ class FileLinkIndexWriterAndSearcher(fileService: FileService, eventBus: IEventB
 
 
     fun getLocalFileInfo(file: FileLink): LocalFileInfo? {
+        if(file.id == null) { // file not persisted and therefore indexed yet
+            return null
+        }
+
         val query = TermQuery(Term(getIdFieldName(), file.id))
 
         val queryResultPair = executeQuery(query, 1)
