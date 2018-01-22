@@ -41,30 +41,32 @@ class FileServer(private val searchEngine: ISearchEngine, private val entityMana
     private val currentConnections = CopyOnWriteArrayList<Socket>()
 
 
-    fun startServerAsync(desiredPort: Int = 60705, maxSimultaneousConnections: Int = 1) {
+    fun startServerAsync(desiredPort: Int = 60705, maxSimultaneousConnections: Int = 1, startingServerDone: ((startedSuccessfully: Boolean) -> Unit)? = null) {
         this.maxSimultaneousConnections = maxSimultaneousConnections
 
         thread {
-            createServerSocket(desiredPort)
+            createServerSocket(desiredPort, startingServerDone)
         }
     }
 
 
-    private fun createServerSocket(desiredPort: Int) {
+    private fun createServerSocket(desiredPort: Int, startingServerDone: ((startedSuccessfully: Boolean) -> Unit)? = null) {
         try {
             serverSocket = ServerSocket(desiredPort)
 
             networkSettings.fileSynchronizationPort = desiredPort
+            startingServerDone?.invoke(true)
 
             waitForArrivingRequests()
         } catch (e: Exception) {
             log.warn("Could not bind serverSocket to port " + desiredPort, e)
 
             if((e is BindException || e is IOException) && desiredPort < 65535) {
-                createServerSocket(desiredPort + 1)
+                createServerSocket(desiredPort + 1, startingServerDone)
             }
             else {
                 log.error("Could not start FileServer")
+                startingServerDone?.invoke(false)
             }
         }
     }
