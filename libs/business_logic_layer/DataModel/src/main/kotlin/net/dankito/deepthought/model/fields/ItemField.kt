@@ -7,6 +7,7 @@ enum class ItemField {
     Tags,
     Source,
     SourceTitle,
+    Indication,
     TitleOrSummary,
     Files
 

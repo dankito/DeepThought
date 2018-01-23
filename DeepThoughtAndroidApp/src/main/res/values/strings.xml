@@ -154,7 +154,6 @@
     <string name="activity_edit_item_title_summary_label">Title / Summary</string>
     <string name="activity_edit_item_summary_only_label">Summary</string>
     <string name="activity_edit_item_edit_summary_title">Title / Summary</string>
-    <string name="activity_edit_item_source_label">Source</string>
     <string name="activity_edit_item_files_label">Files</string>
     <string name="activity_edit_item_edit_source_menu_edit_details">Edit details</string>
     <string name="activity_edit_item_edit_source_menu_create_new_entity">Create new one</string>
@@ -207,6 +206,11 @@
     <string name="activity_edit_series_alert_message_series_has_been_edited">Series has been edited (probably on a synchronized device).\n\nWhen
         you now save the series the other changes get overwritten.
     </string>
+
+    <string name="edit_entity_source_field_source_label">Source</string>
+    <string name="edit_entity_source_field_add_indication_menu_item_title">Set indication</string>
+    <string name="edit_entity_source_field_indication_label">Indication</string>
+    <string name="edit_entity_source_field_indication_hint">p. 14, 2:14 min, …</string>
 
     <string name="edit_entity_files_field_files_label">Files</string>
     <string name="edit_entity_files_field_read_files_permission_rational">To add files the permission to read files is required.</string>

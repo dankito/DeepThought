@@ -2,6 +2,7 @@ package net.dankito.deepthought.android.views
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.ViewGroup
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.activities.EditReferenceActivity
@@ -57,7 +58,7 @@ class EditEntrySourceField : EditEntityEntityReferenceField, IReferencesListView
     init {
         AppComponent.component.inject(this)
 
-        setFieldNameOnUiThread(R.string.activity_edit_item_source_label)
+        setFieldNameOnUiThread(R.string.edit_entity_source_field_source_label)
 
         presenter = ReferencesListPresenter(this, searchEngine, router, clipboardService, deleteEntityService)
 
@@ -66,6 +67,14 @@ class EditEntrySourceField : EditEntityEntityReferenceField, IReferencesListView
 
         rcySearchResult.adapter = existingSourcesSearchResultsAdapter
         rcySearchResult.maxHeightInPixel = (context.resources.getDimension(R.dimen.list_item_reference_height) * 3.25).toInt() // show at max three list items and a little bit from the next item so that user knows there's more
+    }
+
+    override fun doCustomUiInitialization(rootView: ViewGroup) {
+        super.doCustomUiInitialization(rootView)
+
+        setupSecondaryInformation(R.string.edit_entity_source_field_indication_label, R.string.edit_entity_source_field_indication_hint)
+
+        addSecondaryInformationMenuItemTitleResId = R.string.edit_entity_source_field_add_indication_menu_item_title
     }
 
 

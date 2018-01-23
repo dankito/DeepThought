@@ -190,7 +190,6 @@
     <string name="activity_edit_item_title_summary_label">Titel / Zusammenfassung</string>
     <string name="activity_edit_item_summary_only_label">Zusammenfassung</string>
     <string name="activity_edit_item_edit_summary_title">Titel / Zusammenfassung</string>
-    <string name="activity_edit_item_source_label">Quelle</string>
     <string name="activity_edit_item_files_label">Dateien</string>
     <string name="activity_edit_item_edit_source_menu_edit_details">Details bearbeiten</string>
     <string name="activity_edit_item_edit_source_menu_create_new_entity">Neue erstellen</string>
@@ -245,6 +244,11 @@
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
     <string name="activity_edit_series_alert_message_series_has_been_edited">Reihe wurde geändert, wahrscheinlich auf einem synchronisierten Gerät.\n\nWenn
         Sie die Reihe hier nun ebenfalls speichern, überschreiben Sie jene Änderungen.</string>
+
+    <string name="edit_entity_source_field_source_label">Quelle</string>
+    <string name="edit_entity_source_field_add_indication_menu_item_title">Stelle setzen</string>
+    <string name="edit_entity_source_field_indication_label">Stelle</string>
+    <string name="edit_entity_source_field_indication_hint">S. 14, 2:14 min, …</string>
 
     <string name="edit_entity_files_field_files_label">Dateien</string>
     <string name="edit_entity_files_field_read_files_permission_rational">Um Dateien anhängen zu können wird die Berechtigung zum Lesen von Dateien lesen benötigt.</string>

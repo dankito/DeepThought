@@ -271,6 +271,8 @@ class EditEntryActivity : BaseActivity() {
             setAbstractPreviewOnUIThread()
         }
 
+        // TODO: how to restore indication?
+
         if(savedInstanceState.containsKey(REFERENCE_INTENT_EXTRA_NAME)) {
             restoreReference(savedInstanceState.getString(REFERENCE_INTENT_EXTRA_NAME))
         }
@@ -374,6 +376,7 @@ class EditEntryActivity : BaseActivity() {
         }
 
         lytReferencePreview.didValueChangeListener = { didSourceTitleChange -> sourceTitleChanged(didSourceTitleChange) }
+        lytReferencePreview.didSecondaryInformationValueChangeListener = { updateEntryFieldChangedOnUIThread(ItemField.Indication, it) }
 
         lytTagsPreview.didValueChangeListener = { didTagsChange ->
             entryPropertySet()
@@ -1599,6 +1602,10 @@ class EditEntryActivity : BaseActivity() {
         if(changedFields.contains(ItemField.SourceTitle)) {
             sourceToEdit?.title = lytReferencePreview.getEditedValue() ?: ""
         }
+        if(changedFields.contains(ItemField.Indication)) {
+            item.indication = lytReferencePreview.getEditedSecondaryInformation() ?: ""
+        }
+
         if(sourceToEdit?.isPersisted() == false && lytReferencePreview.getEditedValue().isNullOrBlank()) {
             sourceToEdit = null
             readLaterArticle?.itemExtractionResult?.series = null
@@ -1721,6 +1728,11 @@ class EditEntryActivity : BaseActivity() {
 
         source?.let { this.forceShowReferencePreview = true } // forcing that once it has been shown it doesn't get hidden anymore
         lytReferencePreview.setOriginalSourceToEdit(sourceToEdit, getCurrentSeries(), this) { setSourceToEdit(it) }
+
+        if(item.indication.isNotEmpty()) {
+            this.forceShowReferencePreview = true
+            lytReferencePreview.showSecondaryInformationValueOnUiThread(item.indication)
+        }
 
         tags.forEach { tag ->
             if(tagsOnEntry.contains(tag) == false) { // to avoid have a tag twice we really have to check each single tag
