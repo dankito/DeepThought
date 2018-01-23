@@ -21,7 +21,6 @@ import net.dankito.deepthought.android.extensions.setTextColorToColorResource
 import net.dankito.deepthought.android.extensions.setTintColor
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.service.showKeyboard
-import java.util.*
 
 
 open class EditEntityField : RelativeLayout {
@@ -261,7 +260,9 @@ open class EditEntityField : RelativeLayout {
 
     protected fun showAsDoesNotAcceptInput() {
         edtxtEntityFieldValue.visibility = View.GONE
-        vwHorizontalLineWhenEditTextNotShown.visibility = View.GONE
+        vwHorizontalLineWhenEditTextNotShown.visibility = View.VISIBLE
+
+        (vwHorizontalLineWhenEditTextNotShown.layoutParams as? MarginLayoutParams)?.topMargin = 0
 
         rcySearchResults.visibility = View.VISIBLE
         (rcySearchResult.layoutParams as? MarginLayoutParams)?.topMargin = (-10 * context.resources.displayMetrics.density).toInt() // so that there's not such a big gap to first item
