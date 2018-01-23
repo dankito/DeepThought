@@ -258,7 +258,7 @@ open class EditEntityField : RelativeLayout {
         vwHorizontalLineWhenEditTextNotShown.visibility = View.VISIBLE
     }
 
-    protected fun showAsDoesNotAcceptInput() {
+    protected fun showAsHasNoInputField() {
         edtxtEntityFieldValue.visibility = View.GONE
         vwHorizontalLineWhenEditTextNotShown.visibility = View.VISIBLE
 

@@ -78,7 +78,7 @@ class EditEntityFilesField : EditEntityField {
 
         rcySearchResult.disableMaxHeight()
 
-        showAsDoesNotAcceptInput()
+        showAsHasNoInputField()
 
         showAddFileIconInButtonEntityFieldAction(rootView)
     }
