@@ -58,6 +58,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
 
         override fun getApplicationFolder(): File { return File(".").absoluteFile.parentFile }
         override fun getDefaultDataFolder(): File { return File(File(File("data"), "test"), "lucene") }
+        override fun getDefaultFilesFolder(): File { return getDefaultDataFolder() }
     }
 
     private val fileStorageService = JavaFileStorageService()

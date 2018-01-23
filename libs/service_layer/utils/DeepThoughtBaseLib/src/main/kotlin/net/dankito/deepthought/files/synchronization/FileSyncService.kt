@@ -285,7 +285,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
     }
 
     private fun getDefaultSavePathForFile(file: FileLink): String {
-        return platformConfiguration.getDefaultDataFolder().absolutePath // TODO
+        return platformConfiguration.getDefaultFilesFolder().absolutePath
     }
 
     private fun sendMessage(clientSocket: Socket, message: Any) {

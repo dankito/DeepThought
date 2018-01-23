@@ -23,4 +23,6 @@ interface IPlatformConfiguration {
 
     fun getDefaultDataFolder(): File
 
+    fun getDefaultFilesFolder(): File
+
 }

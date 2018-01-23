@@ -114,6 +114,8 @@ class CommunicationManagerTest {
         override fun getApplicationFolder(): File { return File(".").absoluteFile.parentFile }
 
         override fun getDefaultDataFolder(): File { return File(File(File("data"), "test"), "test1") }
+
+        override fun getDefaultFilesFolder(): File { return getDefaultDataFolder() }
     }
 
     private val localThreadPool = ThreadPool()
@@ -171,6 +173,8 @@ class CommunicationManagerTest {
         override fun getApplicationFolder(): File { return File(".").absoluteFile.parentFile }
 
         override fun getDefaultDataFolder(): File { return File(File(File("data"), "test"), "test2") }
+
+        override fun getDefaultFilesFolder(): File { return getDefaultDataFolder() }
     }
 
     private val remoteThreadPool = ThreadPool()
