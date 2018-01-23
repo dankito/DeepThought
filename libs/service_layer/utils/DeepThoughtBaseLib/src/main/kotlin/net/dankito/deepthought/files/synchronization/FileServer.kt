@@ -114,6 +114,8 @@ class FileServer(private val searchEngine: ISearchEngine, private val entityMana
 
     private fun receivedRequest(clientSocket: Socket, requestString: String) {
         try {
+            log.info("Received file request: $requestString")
+
             val request = serializer.deserializeObject(requestString, PermitSynchronizeFileRequest::class.java)
             receivedRequest(clientSocket, request)
         } catch (e: Exception) {
@@ -148,6 +150,8 @@ class FileServer(private val searchEngine: ISearchEngine, private val entityMana
 
     private fun sendFileToClient(clientSocket: Socket, localFileInfo: LocalFileInfo) {
         localFileInfo.path?.let { filePath ->
+            log.info("Sending file $filePath to client ${clientSocket.inetAddress}")
+
             socketHandler.sendMessage(clientSocket, FileInputStream(filePath))
         }
 
