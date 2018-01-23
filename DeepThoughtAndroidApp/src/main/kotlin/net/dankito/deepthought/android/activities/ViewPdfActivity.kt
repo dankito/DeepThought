@@ -174,10 +174,6 @@ class ViewPdfActivity : BaseActivity() {
         val source = Source(sourceTitle)
         source.length = resources.getString(R.string.activity_view_pdf_source_length_in_pages, metadata.countPages)
 
-        if(pdfFile.isPersisted() == false) {
-            fileService.persist(pdfFile) // TODO: integrate in ReferencePersister
-        }
-
         source.addAttachedFile(pdfFile)
 
         return source
