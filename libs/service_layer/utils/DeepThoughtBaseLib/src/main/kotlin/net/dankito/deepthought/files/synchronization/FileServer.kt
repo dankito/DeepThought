@@ -2,6 +2,9 @@ package net.dankito.deepthought.files.synchronization
 
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.network.communication.SocketHandler
+import net.dankito.deepthought.files.synchronization.model.PermitSynchronizeFileRequest
+import net.dankito.deepthought.files.synchronization.model.PermitSynchronizeFileResponse
+import net.dankito.deepthought.files.synchronization.model.PermitSynchronizeFileResult
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.deepthought.model.LocalFileInfo
@@ -153,7 +156,7 @@ class FileServer(private val searchEngine: ISearchEngine, private val entityMana
 
 
     private fun sendResponse(clientSocket: Socket, result: PermitSynchronizeFileResult, fileId: String?,
-                                           error: Exception? = null) {
+                             error: Exception? = null) {
         val serializedResponse = serializer.serializeObject(PermitSynchronizeFileResponse(result, fileId, error))
         val responseBytes = serializedResponse.toByteArray(MESSAGE_CHARSET)
 
