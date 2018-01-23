@@ -5,7 +5,6 @@ import android.support.v7.widget.PopupMenu
 import android.util.AttributeSet
 import android.view.ViewGroup
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.extensions.setRightMargin
 import net.dankito.deepthought.android.extensions.setTintColor
 
 
@@ -35,12 +34,6 @@ abstract class EditEntityEntityReferenceField : EditEntityField {
         }
 
         btnEntityFieldAction.setTintColor(R.color.gray)
-
-        (btnEntityFieldAction.layoutParams as? LayoutParams)?.let { layoutParams ->
-            layoutParams.addRule(CENTER_VERTICAL, 0) // remove layout_centerVertical = true
-            layoutParams.addRule(ALIGN_PARENT_TOP)
-            layoutParams.setRightMargin((-4 * rootView.context.resources.displayMetrics.density).toInt())
-        }
     }
 
 
