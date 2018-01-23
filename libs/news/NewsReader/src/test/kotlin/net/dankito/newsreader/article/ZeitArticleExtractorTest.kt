@@ -30,6 +30,15 @@ class ZeitArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun importImageGalleryArticle() {
+        getAndTestArticle("http://www.zeit.de/zeit-magazin/leben/2017-12/aussteiger-reise-van-natur-weltreise-fs",
+                "Staatsanwaltschaft erhebt Anklage gegen Puigdemont",
+                "Dem Regierungschef Kataloniens werden unter anderem Rebellion und Auflehnung gegen die Staatsgewalt vorgeworfen. Puigdemont soll nach Brüssel gereist sein.",
+                null, 4000, false, "Spanien"
+        )
+    }
+
+    @Test
     fun importVideoArticle() {
         getAndTestArticle("http://www.zeit.de/video/2017-11/5636670005001/deutsche-kueche-spaghetti-lassen-sich-besser-mit-staebchen-essen",
                 "»Spaghetti lassen sich besser mit Stäbchen essen«",
