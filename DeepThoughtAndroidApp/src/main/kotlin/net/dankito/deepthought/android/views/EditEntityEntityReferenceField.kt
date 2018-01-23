@@ -19,6 +19,8 @@ abstract class EditEntityEntityReferenceField : EditEntityField {
 
     protected var valueToShowWhenNotEditing: String? = null
 
+    protected var showEditDetailsMenuItem = true
+
 
     override fun doCustomUiInitialization(rootView: ViewGroup) {
         super.doCustomUiInitialization(rootView)
@@ -94,6 +96,8 @@ abstract class EditEntityEntityReferenceField : EditEntityField {
         val popup = PopupMenu(context, btnEntityFieldAction)
 
         popup.menuInflater.inflate(R.menu.edit_entity_reference_field_menu, popup.menu)
+
+        popup.menu.findItem(R.id.mnEditDetails)?.isVisible = showEditDetailsMenuItem
 
         popup.setOnMenuItemClickListener { item ->
             when(item.itemId) {
