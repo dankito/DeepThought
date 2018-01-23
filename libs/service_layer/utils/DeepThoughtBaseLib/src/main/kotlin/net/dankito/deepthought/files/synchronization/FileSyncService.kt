@@ -216,7 +216,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
 
         localFileInfo.syncStatus = if(localFileInfo.fileSize == file.fileSize) FileSyncStatus.UpToDate else FileSyncStatus.NotSynchronizedYet
 
-        localFileInfoService.update(localFileInfo)
+        localFileInfoService.update(localFileInfo, true)
     }
 
     private fun getDefaultSavePathForFile(file: FileLink): String {

@@ -59,6 +59,9 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
         else if(entityClass == Source::class.java) {
             dispatchMessagesForReferenceDependentEntities(entity as Source, source)
         }
+        else if(entityClass == LocalFileInfo::class.java) {
+            dispatchMessagesForReferenceDependentEntities(entity as LocalFileInfo, source)
+        }
     }
 
     private fun dispatchMessagesForTagDependentEntities(tag: Tag, source: EntityChangeSource) {
@@ -77,6 +80,10 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
         reference.items.filterNotNull().forEach { entry ->
             notifyListenersOfEntityChange(entry, EntityChangeType.Updated, source)
         }
+    }
+
+    private fun dispatchMessagesForReferenceDependentEntities(localFileInfo: LocalFileInfo, source: EntityChangeSource) {
+        notifyListenersOfEntityChange(localFileInfo.file, EntityChangeType.Updated, source)
     }
 
     private fun createEntityChangedMessage(entityClass: Class<out BaseEntity>, entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource): EntityChanged<out BaseEntity>? {
