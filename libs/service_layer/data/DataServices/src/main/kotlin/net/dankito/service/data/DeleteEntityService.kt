@@ -34,7 +34,8 @@ class DeleteEntityService(private val entryService: EntryService, private val ta
             entryService.entityManager.updateEntity(note)
         }
 
-        ArrayList(item.attachedFiles).filterNotNull().filter { it.id != null }.forEach { file ->
+        val attachedFiles = ArrayList(item.attachedFiles).filterNotNull().filter { it.id != null }
+        attachedFiles.forEach { file ->
             item.removeAttachedFile(file)
             entryService.entityManager.updateEntity(file)
         }
@@ -42,16 +43,31 @@ class DeleteEntityService(private val entryService: EntryService, private val ta
         entryService.delete(item)
 
         mayAlsoDeleteReference(entryReference)
+        mayAlsoDeleteFiles(attachedFiles)
     }
 
     private fun mayAlsoDeleteReference(source: Source?) {
-        if (source?.hasItems() == false) { // this was the only Item on which Source has been set -> ask user if we should delete Source as well?
+        if(source?.hasItems() == false) { // this was the only Item on which Source has been set -> ask user if we should delete Source as well?
             val localizedMessage = dialogService.getLocalization().getLocalizedString("alert.message.item.was.only.item.on.source.delete.as.well", source.title)
             dialogService.showConfirmationDialog(localizedMessage) { selectedButton ->
                 if(selectedButton == ConfirmationDialogButton.Confirm) {
                     deleteReference(source)
                 }
             }
+        }
+    }
+
+    private fun mayAlsoDeleteFiles(attachedFiles: List<FileLink>) {
+        attachedFiles.forEach { file ->
+            mayDeleteFile(file)
+        }
+    }
+
+    fun mayDeleteFile(file: FileLink) {
+        // TODO: may ask user first if file should be deleted?
+
+        if(file.isAttachedToItems == false && file.isAttachedToSource == false) {
+            deleteFile(file)
         }
     }
 

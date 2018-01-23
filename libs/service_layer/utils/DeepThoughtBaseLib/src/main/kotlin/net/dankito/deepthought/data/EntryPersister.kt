@@ -3,6 +3,7 @@ package net.dankito.deepthought.data
 import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.ItemExtractionResult
+import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.EntryService
 import net.dankito.service.data.FileService
 import net.dankito.service.data.TagService
@@ -12,7 +13,7 @@ import javax.inject.Inject
 
 
 class EntryPersister(private val entryService: EntryService, private val referencePersister: ReferencePersister, private val tagService: TagService,
-                     private val fileService: FileService) {
+                     private val fileService: FileService, private val deleteEntityService: DeleteEntityService) {
 
     @Inject
     protected lateinit var threadPool: IThreadPool
@@ -126,7 +127,10 @@ class EntryPersister(private val entryService: EntryService, private val referen
 
         addedFiles.filterNotNull().forEach { fileService.update(it) }
 
-        removedFiles.filterNotNull().forEach { fileService.update(it) }
+        removedFiles.filterNotNull().forEach { file ->
+            fileService.update(file)
+            deleteEntityService.mayDeleteFile(file)
+        }
     }
 
 }
