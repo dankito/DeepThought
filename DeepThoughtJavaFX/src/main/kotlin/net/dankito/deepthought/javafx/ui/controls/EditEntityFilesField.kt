@@ -13,10 +13,13 @@ import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.ui.controls.cell.FileListCellFragment
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.ui.presenter.FileListPresenter
+import net.dankito.service.data.messages.FileChanged
+import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.extensions.didCollectionChange
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.Colors
 import net.dankito.utils.ui.IApplicationsService
+import net.engio.mbassy.listener.Handler
 import tornadofx.*
 import java.io.File
 import javax.inject.Inject
@@ -33,6 +36,9 @@ class EditEntityFilesField : View() {
     @Inject
     protected lateinit var localization: Localization
 
+    @Inject
+    protected lateinit var eventBus: IEventBus
+
 
     val didValueChange = SimpleBooleanProperty()
 
@@ -44,11 +50,15 @@ class EditEntityFilesField : View() {
 
     private val fileListPresenter: FileListPresenter
 
+    private val eventBusListener = EventBusListener()
+
 
     init {
         AppComponent.component.inject(this)
 
         fileListPresenter = FileListPresenter(fileManager, applicationsService, localization)
+
+        eventBus.register(eventBusListener)
     }
 
 
@@ -166,6 +176,22 @@ class EditEntityFilesField : View() {
         file?.let {
             fileListPresenter.showFile(file)
         }
+    }
+
+
+    inner class EventBusListener {
+
+        @Handler
+        fun fileChanged(change: FileChanged) {
+            if(files.contains(change.entity)) {
+                runLater {
+                    val backup = ArrayList(files)
+                    files.clear()
+                    files.setAll(backup)
+                }
+            }
+        }
+
     }
 
 }

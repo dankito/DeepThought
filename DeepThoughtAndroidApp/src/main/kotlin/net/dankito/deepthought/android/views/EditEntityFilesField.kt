@@ -1,6 +1,7 @@
 package net.dankito.deepthought.android.views
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
@@ -14,9 +15,12 @@ import net.dankito.deepthought.android.service.permissions.IPermissionsManager
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.ui.presenter.FileListPresenter
+import net.dankito.service.data.messages.FileChanged
+import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.extensions.didCollectionChange
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IApplicationsService
+import net.engio.mbassy.listener.Handler
 import java.io.File
 import javax.inject.Inject
 
@@ -37,6 +41,9 @@ class EditEntityFilesField : EditEntityField {
     @Inject
     protected lateinit var localization: Localization
 
+    @Inject
+    protected lateinit var eventBus: IEventBus
+
 
     private var originalFiles: MutableCollection<FileLink> = ArrayList()
 
@@ -48,6 +55,8 @@ class EditEntityFilesField : EditEntityField {
 
     private val attachedFilesAdapter: FilesRecyclerAdapter
 
+    private val eventBusListener = EventBusListener()
+
 
     init {
         AppComponent.component.inject(this)
@@ -57,6 +66,8 @@ class EditEntityFilesField : EditEntityField {
 
         rcySearchResult.adapter = attachedFilesAdapter
         attachedFilesAdapter.itemClickListener = { showFile(it) }
+
+        eventBus.register(eventBusListener)
     }
 
 
@@ -158,6 +169,20 @@ class EditEntityFilesField : EditEntityField {
 
     private fun showFile(file: FileLink) {
         fileListPresenter.showFile(file)
+    }
+
+
+    inner class EventBusListener {
+
+        @Handler
+        fun fileChanged(change: FileChanged) {
+            if(attachedFilesAdapter.items.contains(change.entity)) {
+                (context as? Activity)?.runOnUiThread {
+                    attachedFilesAdapter.notifyDataSetChanged()
+                }
+            }
+        }
+
     }
 
 }
