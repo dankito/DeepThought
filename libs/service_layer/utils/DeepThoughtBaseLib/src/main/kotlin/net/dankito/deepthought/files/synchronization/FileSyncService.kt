@@ -81,10 +81,10 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
     }
 
     private fun calculateDelay(state: FileSyncState): Long {
-        if(state.devicesHavingFileButNoFreeSlots.isNotEmpty()) { // wait only a short time and re-try again if other file(s) have finished
+        if(state.devicesWithGoodChances.isNotEmpty()) { // wait only a short time and re-try again if other file(s) have finished
             return 30 * 1000L
         }
-        else if(state.devicesNotHavingFile.isNotEmpty()) { // don't get other devices on their nerves, wait longer depending on count of retries
+        else if(state.devicesUnlikelyToGetFileFrom.isNotEmpty()) { // don't get other devices on their nerves, wait longer depending on count of retries
             var delay = state.countTries * 60 * 1000L // countTries times 1 minute
             if(delay > MaxDelayBeforeRetryingToSynchronizeFile) {
                 delay = MaxDelayBeforeRetryingToSynchronizeFile
@@ -132,8 +132,8 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
 
     private fun tryToSynchronizeFile(file: FileLink, status: FileSyncState, connectedDevices: ArrayList<DiscoveredDevice>): Boolean {
         status.countTries = status.countTries + 1
-        status.devicesHavingFileButNoFreeSlots.clear()
-        status.devicesNotHavingFile.clear()
+        status.devicesWithGoodChances.clear()
+        status.devicesUnlikelyToGetFileFrom.clear()
 
         var connectedDevice: DiscoveredDevice? = connectedDevices.removeAt(0)
 
@@ -159,13 +159,18 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
     }
 
     private fun setSynchronizationErrorOnStatus(result: SynchronizeFileResult, status: FileSyncState, connectedDevice: DiscoveredDevice) {
-        if(result == SynchronizeFileResult.NoSlotsAvailableTryLater) {
-            status.devicesHavingFileButNoFreeSlots.add(connectedDevice)
+        when(result) {
+            SynchronizeFileResult.NoSlotsAvailableTryLater,
+            SynchronizeFileResult.DidNotReceiveAllBytes
+                -> status.devicesWithGoodChances.add(connectedDevice)
+
+            SynchronizeFileResult.RemoteDoesNotHaveFile,
+            SynchronizeFileResult.RemoteFileSynchronizationPortNotSet,
+            SynchronizeFileResult.LocalFileInfoNotSet,
+            SynchronizeFileResult.Prohibited,
+            SynchronizeFileResult.ErrorOccurred
+                -> status.devicesUnlikelyToGetFileFrom.add(connectedDevice)
         }
-        else if(result == SynchronizeFileResult.RemoteDoesNotHaveFile) {
-            status.devicesNotHavingFile.add(connectedDevice)
-        }
-        // TODO: what about Prohibited?
     }
 
     private fun tryToSynchronizeFileWithDevice(file: FileLink, connectedDevice: DiscoveredDevice): SynchronizeFileResult {

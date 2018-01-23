@@ -6,6 +6,6 @@ import net.dankito.deepthought.model.FileLink
 
 data class FileSyncState(val file: FileLink,
                          var countTries: Int = 0,
-                         val devicesNotHavingFile: MutableList<DiscoveredDevice> = mutableListOf(),
-                         val devicesHavingFileButNoFreeSlots: MutableList<DiscoveredDevice> = mutableListOf()
+                         val devicesUnlikelyToGetFileFrom: MutableList<DiscoveredDevice> = mutableListOf(),
+                         val devicesWithGoodChances: MutableList<DiscoveredDevice> = mutableListOf()
 )
