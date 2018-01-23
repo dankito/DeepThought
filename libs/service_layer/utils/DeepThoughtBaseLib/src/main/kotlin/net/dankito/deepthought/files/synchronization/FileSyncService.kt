@@ -64,25 +64,30 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
     private fun tryToSynchronizeFile(file: FileLink) {
         log.info("Trying to synchronize file $file (${file.localFileInfo})")
 
-        if(currentFileSynchronizations.containsKey(file) || file.localFileInfo?.syncStatus == FileSyncStatus.UpToDate) { // already synchronized in the meantime
-            return // current ongoing synchronization for this file, don't sync twice
-        }
-
+        val state = FileSyncState(file)
         val connectedDevices = ArrayList(connectedDevicesService.knownSynchronizedDiscoveredDevices)
 
-        if(connectedDevices.size > 0) {
-            val state = FileSyncState(file)
-            currentFileSynchronizations.put(file, state)
-
-            if(tryToSynchronizeFile(file, state, connectedDevices) == false) {
-                addFileToSynchronize(file) // TODO: what to do with state, e.g. the information of devices not having this file?
+        synchronized(currentFileSynchronizations) {
+            if(currentFileSynchronizations.containsKey(file) || file.localFileInfo?.syncStatus == FileSyncStatus.UpToDate) { // already synchronized in the meantime
+                return // current ongoing synchronization for this file, don't sync twice
             }
 
-            currentFileSynchronizations.remove(file)
+            if(connectedDevices.isEmpty()) {
+                // TODO: sleep a while before re-adding file
+                addFileToSynchronize(file)
+                return
+            }
+
+            currentFileSynchronizations.put(file, state)
         }
-        else {
-            // TODO: sleep a while before re-adding file
-            addFileToSynchronize(file)
+
+
+        if(tryToSynchronizeFile(file, state, connectedDevices) == false) {
+            addFileToSynchronize(file) // TODO: what to do with state, e.g. the information of devices not having this file?
+        }
+
+        synchronized(currentFileSynchronizations) {
+            currentFileSynchronizations.remove(file)
         }
     }
 
