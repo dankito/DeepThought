@@ -206,13 +206,15 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
     private fun fileSuccessfullySynchronized(file: FileLink, localFileInfo: LocalFileInfo, destinationFile: File) {
         localFileInfo.path = destinationFile.absolutePath
 
-        localFileInfo.fileSize = destinationFile.length()
+        localFileInfo.fileSize = File(destinationFile.absolutePath).length() // we have to create a new File object to get file size
         localFileInfo.hashSHA512 = hashService.getFileHash(HashAlgorithm.SHA512, destinationFile)
 
         file.fileLastModified?.let { lastModified ->
             destinationFile.setLastModified(lastModified.time)
         }
         localFileInfo.fileLastModified = file.fileLastModified
+
+        localFileInfo.syncStatus = if(localFileInfo.fileSize == file.fileSize) FileSyncStatus.UpToDate else FileSyncStatus.NotSynchronizedYet
 
         localFileInfoService.update(localFileInfo)
     }
