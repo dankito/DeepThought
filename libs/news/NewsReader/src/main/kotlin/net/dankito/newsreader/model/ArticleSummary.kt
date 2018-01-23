@@ -7,6 +7,19 @@ import kotlin.collections.LinkedHashMap
 open class ArticleSummary(var articles: List<ArticleSummaryItem> = listOf(), var time : Date = Date(),
                                var canLoadMoreItems: Boolean = false, var nextItemsUrl: String? = null, var indexOfAddedItems: Int = -1) {
 
+    fun removeDuplicateArticles() {
+        val uniqueArticles = LinkedHashMap<String, ArticleSummaryItem>()
+
+        articles.forEach { article ->
+            if(uniqueArticles.containsKey(article.url) == false) { // TODO: check which article version has more information
+                uniqueArticles.put(article.url, article)
+            }
+        }
+
+        articles = uniqueArticles.values.toList()
+    }
+
+
     fun nextItemsLoaded(nextItemsSummary: ArticleSummary) {
         if(nextItemsSummary.articles.isNotEmpty()) {
             indexOfAddedItems = articles.size + 1

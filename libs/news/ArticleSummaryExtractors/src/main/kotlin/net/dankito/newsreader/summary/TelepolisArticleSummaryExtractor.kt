@@ -29,6 +29,8 @@ class TelepolisArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
 
         determineHasMore(summary, url, document)
 
+        summary.removeDuplicateArticles()
+
         return summary
     }
 
