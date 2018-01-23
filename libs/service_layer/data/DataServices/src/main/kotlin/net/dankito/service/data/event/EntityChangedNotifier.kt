@@ -59,8 +59,11 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
         else if(entityClass == Source::class.java) {
             dispatchMessagesForReferenceDependentEntities(entity as Source, source)
         }
+        else if(entityClass == FileLink::class.java) {
+            dispatchMessagesForFileLinkDependentEntities(entity as FileLink, source)
+        }
         else if(entityClass == LocalFileInfo::class.java) {
-            dispatchMessagesForReferenceDependentEntities(entity as LocalFileInfo, source)
+            dispatchMessagesForLocalFileInfoDependentEntities(entity as LocalFileInfo, source)
         }
     }
 
@@ -82,7 +85,17 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
         }
     }
 
-    private fun dispatchMessagesForReferenceDependentEntities(localFileInfo: LocalFileInfo, source: EntityChangeSource) {
+    private fun dispatchMessagesForFileLinkDependentEntities(file: FileLink, changeSource: EntityChangeSource) {
+        file.itemsAttachedTo.filterNotNull().forEach { item ->
+            notifyListenersOfEntityChange(item, EntityChangeType.Updated, changeSource)
+        }
+
+        file.sourcesAttachedTo.filterNotNull().forEach { source ->
+            notifyListenersOfEntityChange(source, EntityChangeType.Updated, changeSource)
+        }
+    }
+
+    private fun dispatchMessagesForLocalFileInfoDependentEntities(localFileInfo: LocalFileInfo, source: EntityChangeSource) {
         notifyListenersOfEntityChange(localFileInfo.file, EntityChangeType.Updated, source)
     }
 
