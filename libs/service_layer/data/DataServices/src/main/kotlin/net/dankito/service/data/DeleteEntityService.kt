@@ -42,11 +42,11 @@ class DeleteEntityService(private val entryService: EntryService, private val ta
 
         entryService.delete(item)
 
-        mayAlsoDeleteReference(entryReference)
-        mayAlsoDeleteFiles(attachedFiles)
+        mayDeleteSource(entryReference)
+        mayDeleteFiles(attachedFiles)
     }
 
-    private fun mayAlsoDeleteReference(source: Source?) {
+    fun mayDeleteSource(source: Source?) {
         if(source?.hasItems() == false) { // this was the only Item on which Source has been set -> ask user if we should delete Source as well?
             val localizedMessage = dialogService.getLocalization().getLocalizedString("alert.message.item.was.only.item.on.source.delete.as.well", source.title)
             dialogService.showConfirmationDialog(localizedMessage) { selectedButton ->
@@ -57,7 +57,7 @@ class DeleteEntityService(private val entryService: EntryService, private val ta
         }
     }
 
-    private fun mayAlsoDeleteFiles(attachedFiles: List<FileLink>) {
+    private fun mayDeleteFiles(attachedFiles: List<FileLink>) {
         attachedFiles.forEach { file ->
             mayDeleteFile(file)
         }

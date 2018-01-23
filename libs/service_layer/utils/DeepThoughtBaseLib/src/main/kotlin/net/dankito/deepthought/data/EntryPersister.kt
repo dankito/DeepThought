@@ -116,7 +116,10 @@ class EntryPersister(private val entryService: EntryService, private val referen
         if(source?.id != previousSource?.id) { // only update source if it really changed
             source?.let { referencePersister.saveReference(source, series, doChangesAffectDependentEntities = false) }
 
-            previousSource?.let { referencePersister.saveReference(it, it.series, doChangesAffectDependentEntities = false) }
+            previousSource?.let {
+                referencePersister.saveReference(previousSource, previousSource.series, doChangesAffectDependentEntities = false)
+                deleteEntityService.mayDeleteSource(previousSource)
+            }
         }
     }
 
