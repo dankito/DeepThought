@@ -19,7 +19,9 @@ import java.io.DataInputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.net.Socket
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.concurrent.schedule
 
 
 class FileSyncService(private val connectedDevicesService: IConnectedDevicesService, fileServer: FileServer, private val socketHandler: SocketHandler,
@@ -27,11 +29,17 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
                       private val hashService: HashService) {
 
     companion object {
+        private const val MaxDelayBeforeRetryingToSynchronizeFile = 60 * 60 * 1000L // 1 hour
+
         private val log = LoggerFactory.getLogger(FileSyncService::class.java)
     }
 
 
     private val currentFileSynchronizations = ConcurrentHashMap<FileLink, FileSyncState>()
+
+    private val syncStatesOfNotSuccessfullySynchronizedFiles = ConcurrentHashMap<FileLink, FileSyncState>()
+
+    private val timerForNotSuccessfullySynchronizedFiles = Timer()
 
 
     private val queue = AsyncProducerConsumerQueue<FileLink>(getCountConnectionsToUse(), autoStart = false) {
@@ -61,10 +69,38 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         queue.add(file)
     }
 
+    private fun addNotSuccessfullySynchronizedFile(file: FileLink, state: FileSyncState) {
+        syncStatesOfNotSuccessfullySynchronizedFiles.put(file, state)
+
+        val delay = calculateDelay(state) // countTries times 1 minute
+
+        timerForNotSuccessfullySynchronizedFiles.schedule(delay) {
+            queue.add(file)
+        }
+    }
+
+    private fun calculateDelay(state: FileSyncState): Long {
+        if(state.devicesHavingFileButNoFreeSlots.isNotEmpty()) { // wait only a short time and re-try again if other file(s) have finished
+            return 30 * 1000L
+        }
+        else if(state.devicesNotHavingFile.isNotEmpty()) { // don't get other devices on their nerves, wait longer depending on count of retries
+            var delay = state.countTries * 60 * 1000L // countTries times 1 minute
+            if(delay > MaxDelayBeforeRetryingToSynchronizeFile) {
+                delay = MaxDelayBeforeRetryingToSynchronizeFile
+            }
+
+            return delay
+        }
+        else { // no connected devices. Queue will stop soon, re-add with a delay we can be sure queue has stopped
+            return 60 * 1000L
+        }
+    }
+
+
     private fun tryToSynchronizeFile(file: FileLink) {
         log.info("Trying to synchronize file $file (${file.localFileInfo})")
 
-        val state = FileSyncState(file)
+        val state = syncStatesOfNotSuccessfullySynchronizedFiles[file] ?: FileSyncState(file)
         val connectedDevices = ArrayList(connectedDevicesService.knownSynchronizedDiscoveredDevices)
 
         synchronized(currentFileSynchronizations) {
@@ -73,8 +109,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
             }
 
             if(connectedDevices.isEmpty()) {
-                // TODO: sleep a while before re-adding file
-                addFileToSynchronize(file)
+                addNotSuccessfullySynchronizedFile(file, state)
                 return
             }
 
@@ -82,8 +117,11 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         }
 
 
-        if(tryToSynchronizeFile(file, state, connectedDevices) == false) {
-            addFileToSynchronize(file) // TODO: what to do with state, e.g. the information of devices not having this file?
+        if(tryToSynchronizeFile(file, state, connectedDevices)) {
+            syncStatesOfNotSuccessfullySynchronizedFiles.remove(file)
+        }
+        else {
+            addNotSuccessfullySynchronizedFile(file, state)
         }
 
         synchronized(currentFileSynchronizations) {
@@ -92,6 +130,10 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
     }
 
     private fun tryToSynchronizeFile(file: FileLink, status: FileSyncState, connectedDevices: ArrayList<DiscoveredDevice>): Boolean {
+        status.countTries = status.countTries + 1
+        status.devicesHavingFileButNoFreeSlots.clear()
+        status.devicesNotHavingFile.clear()
+
         var connectedDevice: DiscoveredDevice? = connectedDevices.removeAt(0)
 
         while(connectedDevice != null) {
