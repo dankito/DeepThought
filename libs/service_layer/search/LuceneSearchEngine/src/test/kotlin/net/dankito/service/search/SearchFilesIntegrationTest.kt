@@ -2,6 +2,7 @@ package net.dankito.service.search
 
 import com.nhaarman.mockito_kotlin.mock
 import net.dankito.deepthought.files.FileManager
+import net.dankito.utils.ThreadPool
 import net.dankito.utils.services.hashing.HashService
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
@@ -14,7 +15,7 @@ import java.io.File
 class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
 
 
-    private val fileManager = FileManager(underTest, localFileInfoService, mock(), platformConfiguration, HashService(), eventBus)
+    private val fileManager = FileManager(underTest, localFileInfoService, mock(), platformConfiguration, HashService(), eventBus, ThreadPool())
 
 
     @Test
@@ -31,7 +32,7 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
         assertThat(file.id, notNullValue())
         assertThat(file.localFileInfo?.id, notNullValue())
 
-        try { Thread.sleep(1000) } catch(ignored: Exception) { } // file gets indexed async -> wait some time
+        try { Thread.sleep(1000) } catch(ignored: Exception) { } // file gets indexed async and hash calculated async -> wait some time
 
 
         file.localFileInfo = null

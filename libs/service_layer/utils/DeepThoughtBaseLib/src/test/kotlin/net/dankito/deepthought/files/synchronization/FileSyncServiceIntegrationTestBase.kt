@@ -332,7 +332,7 @@ abstract class FileSyncServiceIntegrationTestBase {
                 localSocketHandler, localLocalFileInfoService, localSerializer, localPlatformConfiguration, hashService
         )
 
-        localFileManager = FileManager(localSearchEngine, localLocalFileInfoService, localFileSyncService, localPlatformConfiguration, hashService, localEventBus)
+        localFileManager = FileManager(localSearchEngine, localLocalFileInfoService, localFileSyncService, localPlatformConfiguration, hashService, localEventBus, localThreadPool)
     }
 
     private fun setupRemoteDevice() {
@@ -388,7 +388,7 @@ abstract class FileSyncServiceIntegrationTestBase {
                 remoteSocketHandler, remoteLocalFileInfoService, remoteSerializer, remotePlatformConfiguration, hashService
         )
 
-        remoteFileManager = FileManager(remoteSearchEngine, remoteLocalFileInfoService, remoteFileSyncService, remotePlatformConfiguration, hashService, remoteEventBus)
+        remoteFileManager = FileManager(remoteSearchEngine, remoteLocalFileInfoService, remoteFileSyncService, remotePlatformConfiguration, hashService, remoteEventBus, remoteThreadPool)
     }
 
     @After

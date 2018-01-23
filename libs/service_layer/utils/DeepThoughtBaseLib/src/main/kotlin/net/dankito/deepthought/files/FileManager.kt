@@ -10,16 +10,16 @@ import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.IPlatformConfiguration
+import net.dankito.utils.IThreadPool
 import net.dankito.utils.services.hashing.HashAlgorithm
 import net.dankito.utils.services.hashing.HashService
 import net.engio.mbassy.listener.Handler
 import java.io.File
 import java.util.*
-import kotlin.concurrent.thread
 
 
 class FileManager(private val searchEngine: ISearchEngine, private val localFileInfoService: LocalFileInfoService, private val fileSyncService: FileSyncService,
-                  private val platformConfiguration: IPlatformConfiguration, private val hashService: HashService, eventBus: IEventBus) {
+                  private val platformConfiguration: IPlatformConfiguration, private val hashService: HashService, eventBus: IEventBus, private val threadPool: IThreadPool) {
 
 
     private val eventBusListener = EventBusListener()
@@ -58,7 +58,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
     }
 
     private fun setFileHashAsync(file: FileLink, localFile: File) {
-        thread {
+        threadPool.runAsync {
             setFileHash(file, localFile)
         }
     }
