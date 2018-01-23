@@ -12,7 +12,6 @@ import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryExtractionResultView
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryViewBase
 import net.dankito.deepthought.javafx.dialogs.entry.EditReadLaterArticleView
-import net.dankito.deepthought.javafx.dialogs.entry.TagsOnEntryDialog
 import net.dankito.deepthought.javafx.dialogs.entry.controls.EditItemSourceField
 import net.dankito.deepthought.javafx.dialogs.entry.controls.EditItemTagsField
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindow
@@ -65,8 +64,6 @@ interface AppComponent : CommonComponent {
     fun inject(editItemSourceField: EditItemSourceField)
 
     fun inject(editItemTagsField: EditItemTagsField)
-
-    fun inject(tagsOnEntryDialog: TagsOnEntryDialog)
 
     fun inject(editSourceDialog: EditSourceDialog)
 
