@@ -14,8 +14,8 @@ import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.services.hashing.HashAlgorithm
 import net.dankito.utils.services.hashing.HashService
 import org.slf4j.LoggerFactory
-import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
+import java.io.DataInputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.net.Socket
@@ -172,13 +172,26 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
 
     private fun saveStreamToFile(destinationFile: File, clientSocket: Socket) {
         val outputStream = BufferedOutputStream(FileOutputStream(destinationFile))
-        val inputStream = BufferedInputStream(clientSocket.getInputStream())
+        val inputStream = DataInputStream(clientSocket.getInputStream())
 
-        inputStream.copyTo(outputStream, 8 * 1024)
+        val buffer = ByteArray(1 * 1024)
+
+        var receivedChunkSize: Int
+        var receivedMessageSize: Int = 0
+
+        do {
+            receivedChunkSize = inputStream.read(buffer)
+
+            if(receivedChunkSize > 0) {
+                receivedMessageSize += receivedChunkSize
+
+                outputStream.write(buffer, 0, receivedChunkSize)
+            }
+        } while(receivedChunkSize >= 0)
 
         outputStream.flush()
-        outputStream.close()
         inputStream.close() // inputStream will be closed by socketHandler
+        outputStream.close()
     }
 
     private fun fileSuccessfullySynchronized(file: FileLink, localFileInfo: LocalFileInfo, destinationFile: File) {
