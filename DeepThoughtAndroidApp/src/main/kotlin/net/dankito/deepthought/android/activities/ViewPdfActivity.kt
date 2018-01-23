@@ -114,8 +114,18 @@ class ViewPdfActivity : BaseActivity() {
         parameters?.let {
             this.sourceForFile = parameters.sourceForFile
 
-            loadPdf(parameters.pdfFile)
+            parameters.persistedPdfFile?.let {
+                loadPdf(it)
+            }
+
+            parameters.addNewPdfFile?.let {
+                loadPdf(it)
+            }
         }
+    }
+
+    private fun loadPdf(pdfFile: File) {
+        loadPdf(fileManager.createLocalFile(pdfFile))
     }
 
     private fun loadPdf(pdfFile: FileLink) {
@@ -146,7 +156,7 @@ class ViewPdfActivity : BaseActivity() {
     }
 
     private fun couldNotLoadPdfOnUiThread(localFile: File, exception: Exception) {
-        txtPageText.text = "Could not load PDF file ${localFile.absolutePath}:\n\n$exception"
+        txtPageText.text = "Could not load PDF file ${localFile.absolutePath}:\n\n$exception" // TODO: translate
 
         txtCountPages.text = ""
         setControlsEnabledState(false)
@@ -202,7 +212,7 @@ class ViewPdfActivity : BaseActivity() {
         }
 
         result.error?.let {
-            txtPageText.text = "Could not load text of page $page: $it"
+            txtPageText.text = "Could not load text of page $page: $it" // TODO: translate
         }
     }
 

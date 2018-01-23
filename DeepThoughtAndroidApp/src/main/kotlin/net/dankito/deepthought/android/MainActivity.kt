@@ -24,7 +24,6 @@ import net.dankito.deepthought.android.fragments.EntriesListView
 import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.IntentHandler
 import net.dankito.deepthought.android.views.MainActivityFloatingActionMenuButton
-import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.service.data.DataManager
@@ -77,9 +76,6 @@ class MainActivity : BaseActivity() {
 
     @Inject
     protected lateinit var extractArticleHandler: ExtractArticleHandler
-
-    @Inject
-    protected lateinit var fileManager: FileManager
 
 
     init {
@@ -274,7 +270,7 @@ class MainActivity : BaseActivity() {
         }
 
         fileChooserDialog?.selectFile { file ->
-            navigateToActivity(ViewPdfActivity::class.java, ViewPdfActivityParameters(fileManager.createLocalFile(file)))
+            navigateToActivity(ViewPdfActivity::class.java, ViewPdfActivityParameters(null, file))
         }
     }
 
