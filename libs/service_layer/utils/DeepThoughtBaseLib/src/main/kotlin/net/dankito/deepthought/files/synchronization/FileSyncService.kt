@@ -147,37 +147,44 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
                 val response = serializer.deserializeObject(it, PermitSynchronizeFileResponse::class.java)
 
                 if(response.result == PermitSynchronizeFileResult.SynchronizationPermitted) {
-                    receiveFile(clientSocket, file)
+                    if(receiveFile(clientSocket, file)) {
+                        return PermitSynchronizeFileResult.SynchronizationPermitted
+                    }
                 }
-
-                return response.result
             }
-        } else {
+        }
+        else {
             // TODO:
         }
 
         return PermitSynchronizeFileResult.ErrorOccurred
     }
 
-    private fun receiveFile(clientSocket: Socket, file: FileLink) {
+    private fun receiveFile(clientSocket: Socket, file: FileLink): Boolean {
         file.localFileInfo?.let { localFileInfo -> // should actually never come to this with localFileInfo == null
             val destinationFile = if(localFileInfo.path != null) File(localFileInfo.path) else File(getDefaultSavePathForFile(file), file.name)
             destinationFile.parentFile.mkdirs()
 
-            saveStreamToFile(destinationFile, clientSocket)
+            val countReceivedBytes = saveStreamToFile(destinationFile, clientSocket)
+            log.info("Received $countReceivedBytes and should have received ${file.fileSize} bytes for file ${file.name}")
 
-            fileSuccessfullySynchronized(file, localFileInfo, destinationFile)
+            if(countReceivedBytes == file.fileSize) {
+                fileSuccessfullySynchronized(file, localFileInfo, destinationFile)
+                return true
+            }
         }
+
+        return false
     }
 
-    private fun saveStreamToFile(destinationFile: File, clientSocket: Socket) {
+    private fun saveStreamToFile(destinationFile: File, clientSocket: Socket): Long {
         val outputStream = BufferedOutputStream(FileOutputStream(destinationFile))
         val inputStream = DataInputStream(clientSocket.getInputStream())
 
         val buffer = ByteArray(1 * 1024)
 
         var receivedChunkSize: Int
-        var receivedMessageSize: Int = 0
+        var receivedMessageSize = 0L
 
         do {
             receivedChunkSize = inputStream.read(buffer)
@@ -192,6 +199,8 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         outputStream.flush()
         inputStream.close() // inputStream will be closed by socketHandler
         outputStream.close()
+
+        return receivedMessageSize
     }
 
     private fun fileSuccessfullySynchronized(file: FileLink, localFileInfo: LocalFileInfo, destinationFile: File) {
