@@ -1,6 +1,7 @@
 package net.dankito.deepthought.files.synchronization
 
 import net.dankito.data_access.network.communication.SocketHandler
+import net.dankito.deepthought.files.synchronization.model.SynchronizeFileResult
 import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.LocalFileInfo
@@ -140,15 +141,11 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
             val result = tryToSynchronizeFileWithDevice(file, connectedDevice)
             log.info("Result of trying to synchronize file from ${connectedDevice.device}: $result")
 
-            if(result == PermitSynchronizeFileResult.SynchronizationPermitted) {
+            if(result == SynchronizeFileResult.Success) {
                 return true
             }
-            else if(result == PermitSynchronizeFileResult.NoSlotsAvailableTryLater) { // TODO: do we really need this information?
-                status.devicesHavingFileButNoFreeSlots.add(connectedDevice)
-            }
-            else if(result == PermitSynchronizeFileResult.DoNotHaveFile) {
-                status.devicesNotHavingFile.add(connectedDevice) // TODO: what about Prohibited?
-            }
+
+            setSynchronizationErrorOnStatus(result, status, connectedDevice)
 
             if(connectedDevices.size > 0) {
                 connectedDevice = connectedDevices.removeAt(0)
@@ -161,7 +158,17 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         return false
     }
 
-    private fun tryToSynchronizeFileWithDevice(file: FileLink, connectedDevice: DiscoveredDevice): PermitSynchronizeFileResult {
+    private fun setSynchronizationErrorOnStatus(result: SynchronizeFileResult, status: FileSyncState, connectedDevice: DiscoveredDevice) {
+        if(result == SynchronizeFileResult.NoSlotsAvailableTryLater) {
+            status.devicesHavingFileButNoFreeSlots.add(connectedDevice)
+        }
+        else if(result == SynchronizeFileResult.RemoteDoesNotHaveFile) {
+            status.devicesNotHavingFile.add(connectedDevice)
+        }
+        // TODO: what about Prohibited?
+    }
+
+    private fun tryToSynchronizeFileWithDevice(file: FileLink, connectedDevice: DiscoveredDevice): SynchronizeFileResult {
         if(connectedDevice.fileSynchronizationPort > 0) {
             try {
                 val fileId = file.id
@@ -173,19 +180,21 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
                         return sendRequestAndTryToSynchronizeFileWithDevice(clientSocket, fileId, file)
                     } catch(e: Exception) {
                         log.error("Could not send request and synchronize file with device ${connectedDevice.device} on ${connectedDevice.address}:${connectedDevice.fileSynchronizationPort}", e)
+                        return SynchronizeFileResult.ErrorOccurred
                     } finally {
                         socketHandler.closeSocket(clientSocket)
                     }
                 }
             } catch(e: Exception) {
                 log.error("Could not open connection to device ${connectedDevice.device} on ${connectedDevice.address}:${connectedDevice.fileSynchronizationPort}", e)
+                return SynchronizeFileResult.ErrorOccurred
             }
         }
 
-        return PermitSynchronizeFileResult.ErrorOccurred
+        return SynchronizeFileResult.RemoteFileSynchronizationPortNotSet
     }
 
-    private fun sendRequestAndTryToSynchronizeFileWithDevice(clientSocket: Socket, fileId: String, file: FileLink): PermitSynchronizeFileResult {
+    private fun sendRequestAndTryToSynchronizeFileWithDevice(clientSocket: Socket, fileId: String, file: FileLink): SynchronizeFileResult {
         sendMessage(clientSocket, PermitSynchronizeFileRequest(fileId))
 
         val result = socketHandler.receiveMessage(clientSocket)
@@ -194,9 +203,10 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
                 val response = serializer.deserializeObject(it, PermitSynchronizeFileResponse::class.java)
 
                 if(response.result == PermitSynchronizeFileResult.SynchronizationPermitted) {
-                    if(receiveFile(clientSocket, file)) {
-                        return PermitSynchronizeFileResult.SynchronizationPermitted
-                    }
+                    return receiveFile(clientSocket, file)
+                }
+                else {
+                    return mapPermitSynchronizeFileResultToSynchronizeFileResult(response.result)
                 }
             }
         }
@@ -204,10 +214,10 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
             // TODO:
         }
 
-        return PermitSynchronizeFileResult.ErrorOccurred
+        return SynchronizeFileResult.ErrorOccurred
     }
 
-    private fun receiveFile(clientSocket: Socket, file: FileLink): Boolean {
+    private fun receiveFile(clientSocket: Socket, file: FileLink): SynchronizeFileResult {
         file.localFileInfo?.let { localFileInfo -> // should actually never come to this with localFileInfo == null
             val destinationFile = if(localFileInfo.path != null) File(localFileInfo.path) else File(getDefaultSavePathForFile(file), file.name)
             destinationFile.parentFile.mkdirs()
@@ -217,11 +227,14 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
 
             if(countReceivedBytes == file.fileSize) {
                 fileSuccessfullySynchronized(file, localFileInfo, destinationFile)
-                return true
+                return SynchronizeFileResult.Success
+            }
+            else {
+                return SynchronizeFileResult.DidNotReceiveAllBytes
             }
         }
 
-        return false
+        return SynchronizeFileResult.LocalFileInfoNotSet // can this ever happen?
     }
 
     private fun saveStreamToFile(destinationFile: File, clientSocket: Socket): Long {
@@ -282,6 +295,15 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         val countProcessors = Runtime.getRuntime().availableProcessors()
 
         return Math.min(4, 2 * countProcessors) // on older Androids don't use too many simultaneous connections, and a max of 4 connections should be really sufficient
+    }
+
+    private fun mapPermitSynchronizeFileResultToSynchronizeFileResult(result: PermitSynchronizeFileResult): SynchronizeFileResult {
+        when(result) {
+            PermitSynchronizeFileResult.DoNotHaveFile -> return SynchronizeFileResult.RemoteDoesNotHaveFile
+            PermitSynchronizeFileResult.NoSlotsAvailableTryLater -> return SynchronizeFileResult.NoSlotsAvailableTryLater
+            PermitSynchronizeFileResult.Prohibited -> return SynchronizeFileResult.Prohibited
+            else -> return SynchronizeFileResult.ErrorOccurred
+        }
     }
 
 }
