@@ -1,9 +1,6 @@
 package net.dankito.service.data
 
-import net.dankito.deepthought.model.Item
-import net.dankito.deepthought.model.Series
-import net.dankito.deepthought.model.Source
-import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.*
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogButton
@@ -14,7 +11,7 @@ import net.dankito.utils.ui.model.ConfirmationDialogButton
  * This service first removes all sources and updates them and then deletes the entity with its EntityService.
  */
 class DeleteEntityService(private val entryService: EntryService, private val tagService: TagService, private val referenceService: ReferenceService, private val seriesService: SeriesService,
-                          private val dialogService: IDialogService, private val threadPool: IThreadPool) {
+                          private val fileService: FileService, private val dialogService: IDialogService, private val threadPool: IThreadPool) {
 
     fun deleteEntryAsync(item: Item) {
         threadPool.runAsync { deleteEntry(item) }
@@ -108,6 +105,25 @@ class DeleteEntityService(private val entryService: EntryService, private val ta
         }
 
         seriesService.delete(series)
+    }
+
+
+    fun deleteFileAsync(file: FileLink) {
+        threadPool.runAsync { deleteFile(file) }
+    }
+
+    fun deleteFile(file: FileLink) {
+        ArrayList(file.itemsAttachedTo).filterNotNull().filter { it.id != null }.forEach { item ->
+            item.removeAttachedFile(file)
+            entryService.update(item)
+        }
+
+        ArrayList(file.sourcesAttachedTo).filterNotNull().filter { it.id != null }.forEach { source ->
+            source.removeAttachedFile(file)
+            referenceService.update(source)
+        }
+
+        fileService.delete(file)
     }
 
 }

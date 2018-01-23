@@ -111,8 +111,8 @@ class CommonDataModule {
     @Provides
     @Singleton
     fun provideDeleteEntityService(entryService: EntryService, tagService: TagService, referenceService: ReferenceService, seriesService: SeriesService,
-                                   dialogService: IDialogService, threadPool: IThreadPool) : DeleteEntityService {
-        return DeleteEntityService(entryService, tagService, referenceService, seriesService, dialogService, threadPool)
+                                   fileService: FileService, dialogService: IDialogService, threadPool: IThreadPool) : DeleteEntityService {
+        return DeleteEntityService(entryService, tagService, referenceService, seriesService, fileService, dialogService, threadPool)
     }
 
     @Provides
