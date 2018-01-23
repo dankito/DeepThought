@@ -111,6 +111,8 @@ abstract class FileSyncServiceIntegrationTestBase {
     }
 
 
+    protected lateinit var localFileServer: FileServer
+
     protected lateinit var localFileSyncService: FileSyncService
 
     protected lateinit var localFileManager: FileManager
@@ -198,6 +200,8 @@ abstract class FileSyncServiceIntegrationTestBase {
         override fun getDefaultDataFolder(): File { return File(File(File("data"), "test"), "test2") }
     }
 
+
+    protected lateinit var remoteFileServer: FileServer
 
     protected lateinit var remoteFileSyncService: FileSyncService
 
@@ -322,8 +326,9 @@ abstract class FileSyncServiceIntegrationTestBase {
         initializationLatch.await(InitializationTimeoutInSeconds, TimeUnit.SECONDS)
 
 
-        localFileSyncService = FileSyncService(localConnectedDevicesService,
-                FileServer(localSearchEngine, localEntityManager, localNetworkSettings, localSocketHandler, localSerializer, localThreadPool),
+        localFileServer = FileServer(localSearchEngine, localEntityManager, localNetworkSettings, localSocketHandler, localSerializer, localThreadPool)
+
+        localFileSyncService = FileSyncService(localConnectedDevicesService, localFileServer,
                 localSocketHandler, localLocalFileInfoService, localSerializer, localPlatformConfiguration, hashService
         )
 
@@ -377,8 +382,9 @@ abstract class FileSyncServiceIntegrationTestBase {
         initializationLatch.await(InitializationTimeoutInSeconds, TimeUnit.SECONDS)
 
 
-        remoteFileSyncService = FileSyncService(remoteConnectedDevicesService,
-                FileServer(remoteSearchEngine, remoteEntityManager, remoteNetworkSettings, remoteSocketHandler, remoteSerializer, remoteThreadPool),
+        remoteFileServer = FileServer(remoteSearchEngine, remoteEntityManager, remoteNetworkSettings, remoteSocketHandler, remoteSerializer, remoteThreadPool)
+
+        remoteFileSyncService = FileSyncService(remoteConnectedDevicesService, remoteFileServer,
                 remoteSocketHandler, remoteLocalFileInfoService, remoteSerializer, remotePlatformConfiguration, hashService
         )
 
@@ -466,9 +472,19 @@ abstract class FileSyncServiceIntegrationTestBase {
     }
 
     protected fun startCommunicationManagers() {
-        localCommunicationManager.startAsync()
+        val waitLatch = CountDownLatch(2)
 
-        remoteCommunicationManager.startAsync()
+        localFileServer.startServerAsync {
+            localCommunicationManager.startAsync()
+            waitLatch.countDown()
+        }
+
+        remoteFileServer.startServerAsync {
+            remoteCommunicationManager.startAsync()
+            waitLatch.countDown()
+        }
+
+        try { waitLatch.await(30, TimeUnit.SECONDS) } catch(ignored: Exception) { }
     }
 
     protected fun connectDevices() {
