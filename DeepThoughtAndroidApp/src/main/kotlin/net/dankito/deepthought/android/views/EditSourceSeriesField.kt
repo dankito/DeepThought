@@ -59,6 +59,8 @@ class EditSourceSeriesField : EditEntityEntityReferenceField, ISeriesListView {
 
         rcySearchResult.adapter = existingSeriesSearchResultsAdapter
         rcySearchResult.maxHeightInPixel = (context.resources.getDimension(R.dimen.list_item_series_height) * 5.25).toInt() // show at max five list items and a little bit from the next item so that user knows there's more
+
+        showEditDetailsMenuItem = false
     }
 
 
@@ -104,6 +106,7 @@ class EditSourceSeriesField : EditEntityEntityReferenceField, ISeriesListView {
 
 
     override fun editDetails() {
+        // currently not used as mnEditDetails is hidden (showEditDetailsMenuItem set to false)
         activity?.setWaitingForResult(EditSeriesActivity.ResultId)
 
         router.showEditReferenceSeriesView(Source(""), series)
