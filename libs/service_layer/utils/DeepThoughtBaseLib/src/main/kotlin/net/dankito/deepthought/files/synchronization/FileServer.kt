@@ -10,6 +10,7 @@ import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.serialization.ISerializer
 import org.slf4j.LoggerFactory
+import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 import java.net.BindException
@@ -132,7 +133,7 @@ class FileServer(private val searchEngine: ISearchEngine, private val entityMana
 
         val localFileInfo = searchEngine.getLocalFileInfo(fileIdContainer)
 
-        if(localFileInfo == null || localFileInfo.path == null || localFileInfo.syncStatus != FileSyncStatus.UpToDate) {
+        if(localFileInfo == null || localFileInfo.path == null || localFileInfo.syncStatus != FileSyncStatus.UpToDate || File(localFileInfo.path).exists() == false) {
             sendResponseAndCloseSocket(clientSocket, PermitSynchronizeFileResult.DoNotHaveFile, fileId)
         }
         else {
