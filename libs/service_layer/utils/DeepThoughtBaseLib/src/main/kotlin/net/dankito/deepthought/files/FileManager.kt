@@ -15,6 +15,7 @@ import net.dankito.utils.services.hashing.HashService
 import net.engio.mbassy.listener.Handler
 import java.io.File
 import java.util.*
+import kotlin.concurrent.thread
 
 
 class FileManager(private val searchEngine: ISearchEngine, private val localFileInfoService: LocalFileInfoService, private val fileSyncService: FileSyncService,
@@ -34,10 +35,11 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
 
         file.fileSize = localFile.length()
         file.fileLastModified = Date(localFile.lastModified())
-        file.hashSHA512 = hashService.getFileHash(HashAlgorithm.SHA512, localFile)
 
         val localFileInfo = LocalFileInfo(file, localFile.absolutePath, true, FileSyncStatus.UpToDate, file.fileSize, file.fileLastModified, file.hashSHA512)
         file.localFileInfo = localFileInfo
+
+        setFileHashAsync(file, localFile) // for large files this takes some time, don't interrupt main routine for calculating hash that long
 
         return file
     }
@@ -53,6 +55,18 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
 
         // TODO: return that file doesn't exist locally yet
         return File(platformConfiguration.getApplicationFolder(), file.uriString)
+    }
+
+    private fun setFileHashAsync(file: FileLink, localFile: File) {
+        thread {
+            setFileHash(file, localFile)
+        }
+    }
+
+    private fun setFileHash(file: FileLink, localFile: File) {
+        file.hashSHA512 = hashService.getFileHash(HashAlgorithm.SHA512, localFile)
+
+        file.localFileInfo?.hashSHA512 = file.hashSHA512
     }
 
 
