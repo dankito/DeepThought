@@ -16,4 +16,11 @@
         android:title="@string/activity_edit_item_edit_source_menu_remove_entity"
     />
 
+    <!-- title gets set in source -->
+    <item
+        android:id="@+id/mnAddSecondaryInformation"
+        android:title=""
+        android:visible="false"
+    />
+
 </menu>

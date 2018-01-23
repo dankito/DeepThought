@@ -21,6 +21,8 @@ abstract class EditEntityEntityReferenceField : EditEntityField {
 
     protected var showEditDetailsMenuItem = true
 
+    protected var addSecondaryInformationMenuItemTitleResId: Int? = null
+
 
     override fun doCustomUiInitialization(rootView: ViewGroup) {
         super.doCustomUiInitialization(rootView)
@@ -99,16 +101,30 @@ abstract class EditEntityEntityReferenceField : EditEntityField {
 
         popup.menu.findItem(R.id.mnEditDetails)?.isVisible = showEditDetailsMenuItem
 
+        mayShowAddSecondaryInformationMenuItem(popup)
+
         popup.setOnMenuItemClickListener { item ->
             when(item.itemId) {
                 R.id.mnEditDetails -> editDetails()
                 R.id.mnCreateNewEntity -> createNewEntity()
                 R.id.mnRemoveEntity -> removeEntity()
+                R.id.mnAddSecondaryInformation -> showAndFocusSecondaryInformationOnUiThread()
             }
             true
         }
 
         popup.show()
+    }
+
+    private fun mayShowAddSecondaryInformationMenuItem(popup: PopupMenu) {
+        if (isSecondaryInformationVisible() == false) {
+            addSecondaryInformationMenuItemTitleResId?.let { titleResId ->
+                popup.menu.findItem(R.id.mnAddSecondaryInformation)?.let { addSecondaryInformationMenuItem ->
+                    addSecondaryInformationMenuItem.isVisible = true
+                    addSecondaryInformationMenuItem.setTitle(titleResId)
+                }
+            }
+        }
     }
 
     abstract fun editDetails()

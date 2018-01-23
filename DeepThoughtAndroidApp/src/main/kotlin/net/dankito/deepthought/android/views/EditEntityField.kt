@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android.views
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Typeface
 import android.os.Build
@@ -37,6 +38,8 @@ open class EditEntityField : RelativeLayout {
 
     protected lateinit var edtxtEntityFieldValue: EditText
 
+    protected lateinit var edtxtSecondaryInformationValue: EditText
+
     protected lateinit var btnEntityFieldAction: ImageButton
 
     protected lateinit var rcySearchResult: MaxHeightRecyclerView
@@ -49,7 +52,14 @@ open class EditEntityField : RelativeLayout {
     protected var disableActionOnKeyboard = false
 
 
+    var didSecondaryInformationValueChange = false
+
+    protected var originalSecondaryInformationValue = ""
+
+
     var didValueChangeListener: ((didValueChange: Boolean) -> Unit)? = null
+
+    var didSecondaryInformationValueChangeListener: ((didValueChange: Boolean) -> Unit)? = null
 
     var fieldValueFocusChangedListener: ((hasFocus: Boolean) -> Unit)? = null
 
@@ -101,6 +111,9 @@ open class EditEntityField : RelativeLayout {
         edtxtEntityFieldValue.addTextChangedListener(edtxtEntityFieldValueTextWatcher)
         edtxtEntityFieldValue.setOnEditorActionListener { _, actionId, keyEvent -> handleEditEntrySearchTagAction(actionId, keyEvent) }
         edtxtEntityFieldValue.setOnFocusChangeListener { _, hasFocus -> hasFocusChanged(hasFocus) }
+
+        edtxtSecondaryInformationValue = rootView.edtxtSecondaryInformationValue
+        edtxtSecondaryInformationValue.addTextChangedListener(edtxtSecondaryInformationValueTextWatcher)
 
         btnEntityFieldAction = rootView.btnEntityFieldAction
 
@@ -283,6 +296,54 @@ open class EditEntityField : RelativeLayout {
     }
 
 
+    protected fun isSecondaryInformationVisible(): Boolean {
+        return lytSecondaryInformation.visibility == View.VISIBLE
+    }
+
+    protected fun setupSecondaryInformation(labelResourceId: Int, hintResourceId: Int? = null) {
+        txtSecondaryInformationLabel.setText(labelResourceId)
+
+        hintResourceId?.let {
+            edtxtSecondaryInformationValue.setHint(hintResourceId)
+        }
+    }
+
+    protected fun showSecondaryInformationOnUiThread() {
+        lytSecondaryInformation.visibility = View.VISIBLE
+
+        (edtxtEntityFieldValue.layoutParams as? RelativeLayout.LayoutParams)?.let { layoutParams ->
+            layoutParams.addRule(RelativeLayout.BELOW, R.id.lytSecondaryInformation)
+        }
+    }
+
+    protected fun showAndFocusSecondaryInformationOnUiThread() {
+        showSecondaryInformationOnUiThread()
+
+        edtxtSecondaryInformationValue.showKeyboard()
+        (context as? Activity)?.runOnUiThread { // wait till edtxtSecondaryInformationValue is displayed
+            edtxtSecondaryInformationValue.showKeyboard()
+        }
+    }
+
+    fun showSecondaryInformationValueOnUiThread(secondaryInformationValue: String) {
+        showSecondaryInformationOnUiThread()
+
+        setEditTextSecondaryInformationValueOnUiThread(secondaryInformationValue)
+
+        originalSecondaryInformationValue = secondaryInformationValue
+        updateDidValueChange(false)
+    }
+
+    protected fun setEditTextSecondaryInformationValueOnUiThread(secondaryInformationValue: String) {
+        edtxtSecondaryInformationValue.removeTextChangedListener(edtxtSecondaryInformationValueTextWatcher)
+
+        edtxtSecondaryInformationValue.setText(secondaryInformationValue)
+        edtxtSecondaryInformationValue.setSelection(secondaryInformationValue.length)
+
+        edtxtSecondaryInformationValue.addTextChangedListener(edtxtSecondaryInformationValueTextWatcher)
+    }
+
+
     protected open val edtxtEntityFieldValueTextWatcher = object : TextWatcher {
         override fun afterTextChanged(editable: Editable) {
             enteredTextChanged(editable.toString())
@@ -309,6 +370,32 @@ open class EditEntityField : RelativeLayout {
     }
 
 
+    protected open val edtxtSecondaryInformationValueTextWatcher = object : TextWatcher {
+        override fun afterTextChanged(editable: Editable) {
+            enteredSecondaryInformationChanged(editable.toString())
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+
+    }
+
+    protected open fun enteredSecondaryInformationChanged(enteredText: String) {
+        updateDidSecondaryInformationValueChange(enteredText != originalSecondaryInformationValue)
+    }
+
+    protected open fun updateDidSecondaryInformationValueChange(didSecondaryInformationValueChange: Boolean) {
+        val previousValue = this.didSecondaryInformationValueChange
+
+        this.didSecondaryInformationValueChange = didSecondaryInformationValueChange
+
+        if(didSecondaryInformationValueChange != previousValue) {
+            didSecondaryInformationValueChangeListener?.invoke(didSecondaryInformationValueChange)
+        }
+    }
+
+
     fun handlesBackButtonPress(): Boolean {
         if(rcySearchResult.visibility == View.VISIBLE) {
             stopEditing()
@@ -318,6 +405,8 @@ open class EditEntityField : RelativeLayout {
 
         return false
     }
+
+    fun getEditedSecondaryInformation() = edtxtSecondaryInformationValue.text.toString()
 
 
 }

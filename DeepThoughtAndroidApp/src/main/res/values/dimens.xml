@@ -162,6 +162,9 @@
     <dimen name="view_edit_entity_field_value_margin_top">-10dp</dimen>
     <dimen name="view_edit_entity_field_value_margin_right">3dp</dimen>
     <dimen name="view_edit_entity_field_value_margin_right_including_edit_text_padding_left">8dp</dimen>
+    <dimen name="view_edit_entity_field_secondary_information_height">36dp</dimen>
+    <dimen name="view_edit_entity_field_secondary_information_label_margin_right">3dp</dimen>
+    <dimen name="view_edit_entity_field_secondary_information_value_width">120dp</dimen>
     <dimen name="view_edit_entity_field_horizontal_line_when_edit_text_not_shown_margin_top">4dp</dimen>
     <dimen name="view_edit_entity_field_horizontal_line_when_edit_text_not_shown_margin_bottom">8dp</dimen>
     <dimen name="view_edit_entity_field_icon_max_size">32dp</dimen>
