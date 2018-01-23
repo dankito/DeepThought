@@ -3,7 +3,6 @@ package net.dankito.service.data
 import net.dankito.deepthought.model.*
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IDialogService
-import net.dankito.utils.ui.model.ConfirmationDialogButton
 
 
 /**
@@ -48,12 +47,15 @@ class DeleteEntityService(private val entryService: EntryService, private val ta
 
     fun mayDeleteSource(source: Source?) {
         if(source?.hasItems() == false) { // this was the only Item on which Source has been set -> ask user if we should delete Source as well?
-            val localizedMessage = dialogService.getLocalization().getLocalizedString("alert.message.item.was.only.item.on.source.delete.as.well", source.title)
-            dialogService.showConfirmationDialog(localizedMessage) { selectedButton ->
-                if(selectedButton == ConfirmationDialogButton.Confirm) {
-                    deleteReference(source)
-                }
-            }
+            // TODO: may ask user again (i wait till first customer complains). For now just delete it as most users may find this dialog annoying
+//            val localizedMessage = dialogService.getLocalization().getLocalizedString("alert.message.item.was.only.item.on.source.delete.as.well", source.title)
+//            dialogService.showConfirmationDialog(localizedMessage) { selectedButton ->
+//                if(selectedButton == ConfirmationDialogButton.Confirm) {
+//                    deleteReference(source)
+//                }
+//            }
+
+            deleteReference(source)
         }
     }
 
