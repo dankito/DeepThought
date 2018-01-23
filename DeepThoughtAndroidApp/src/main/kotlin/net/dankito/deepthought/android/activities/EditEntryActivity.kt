@@ -1837,12 +1837,12 @@ class EditEntryActivity : BaseActivity() {
     inner class EventBusListener {
 
         @Handler
-        fun entryChanged(change: EntryChanged) {
-            if(change.entity.id == item?.id && change.isDependentChange == false) {
-                if(change.source == EntityChangeSource.Synchronization) {
+        fun entryChanged(change: EntryChanged) { // TODO: what about ReadLaterArticle?
+            if(change.entity.id == item?.id) {
+                if(change.source == EntityChangeSource.Synchronization && change.isDependentChange == false) {
                     warnEntryHasBeenEdited(change.entity)
                 }
-                else {
+                else { // TODO: or will changes then may get overwritten? As sometimes it's really senseful to update values, e.g. when a file synchronization state gets updated
                     updateDisplayedValues()
                 }
             }
