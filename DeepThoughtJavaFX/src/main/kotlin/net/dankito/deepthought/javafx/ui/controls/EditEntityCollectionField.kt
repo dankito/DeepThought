@@ -203,7 +203,7 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
     }
 
     /**
-     * FlowPane doesn't update it's size automatically -> tell it to do so if necessary
+     * FlowPane doesn't update its size automatically -> tell it to do so if necessary
      */
     private fun checkIfFlowPaneShouldResize() {
         val previousCountLines = this.countCollectionPreviewPaneLines
