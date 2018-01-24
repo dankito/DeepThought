@@ -1,8 +1,11 @@
 package net.dankito.service.search
 
+import com.nhaarman.mockito_kotlin.mock
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
+import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.di.DaggerBaseComponent
 import net.dankito.deepthought.model.enums.OsType
@@ -45,7 +48,15 @@ abstract class LuceneSearchEngineIntegrationTestBase {
 
     protected val fileService: FileService
 
+    protected val deleteEntityService: DeleteEntityService
+
+    protected val sourcePersister: ReferencePersister
+
+    protected val itemPersister: EntryPersister
+
     protected val eventBus: IEventBus
+
+    protected val threadPool = ThreadPool()
 
 
     protected val platformConfiguration = object: IPlatformConfiguration {
@@ -86,6 +97,10 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         readLaterArticleService = ReadLaterArticleService(dataManager, entityChangedNotifier, JacksonJsonSerializer(tagService, seriesService))
         localFileInfoService = LocalFileInfoService(dataManager, entityChangedNotifier)
         fileService = FileService(localFileInfoService, dataManager, entityChangedNotifier)
+
+        deleteEntityService = DeleteEntityService(entryService, tagService, referenceService, seriesService, fileService, mock(), threadPool)
+        sourcePersister = ReferencePersister(referenceService, seriesService, fileService, deleteEntityService)
+        itemPersister = EntryPersister(entryService, sourcePersister, tagService, fileService, deleteEntityService)
 
         underTest = LuceneSearchEngine(dataManager, NoOpLanguageDetector(), OsHelper(platformConfiguration), ThreadPool(), eventBus,
                 entryService, tagService, referenceService, seriesService, readLaterArticleService, fileService)
