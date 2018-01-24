@@ -5,7 +5,7 @@ import net.dankito.deepthought.model.Item
 import net.dankito.service.search.specific.EntriesSearch
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
-import org.junit.Assert
+import org.junit.Assert.assertThat
 import org.junit.Test
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -26,20 +26,20 @@ class SearchItemsIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
 
     @Test
     fun addFileToItem_ItemGetsFoundByFileName() {
-        persistItemWithAttachedFile()
+        val createdEntities = persistItemWithAttachedFile()
 
-        getAndTestResult(File1Name, true)
+        getAndTestResult(createdEntities.first, File1Name, true)
     }
 
     @Test
     fun addFileToItem_ItemGetsFoundByItemsMustHaveTheseFiles() {
         val createdEntities = persistItemWithAttachedFile()
 
-        getAndTestResult(entriesMustHaveTheseFiles = listOf(createdEntities.second))
+        getAndTestResult(createdEntities.first, entriesMustHaveTheseFiles = listOf(createdEntities.second))
     }
 
 
-    private fun getAndTestResult(searchTerm: String = Search.EmptySearchTerm, searchInFiles: Boolean = false, entriesMustHaveTheseFiles: Collection<FileLink> = listOf()) {
+    private fun getAndTestResult(testResult: Item, searchTerm: String = Search.EmptySearchTerm, searchInFiles: Boolean = false, entriesMustHaveTheseFiles: Collection<FileLink> = listOf()) {
         val resultHolder = AtomicReference<List<Item>?>(null)
         val waitForResultLatch = CountDownLatch(1)
 
@@ -50,21 +50,19 @@ class SearchItemsIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
             waitForResultLatch.countDown()
         })
 
-        try {
-            waitForResultLatch.await(4, TimeUnit.SECONDS)
-        } catch (ignored: Exception) {
-        }
+        try { waitForResultLatch.await(4, TimeUnit.SECONDS) } catch (ignored: Exception) { }
 
 
-        Assert.assertThat(resultHolder.get(), notNullValue())
-        Assert.assertThat(resultHolder.get()?.size, `is`(1))
+        assertThat(resultHolder.get(), notNullValue())
+        assertThat(resultHolder.get()?.size, `is`(1))
+        assertThat(resultHolder.get()?.get(0), `is`(testResult))
     }
 
     private fun persistItemWithAttachedFile(countDummyItems: Int = 3): Pair<Item, FileLink> {
         val file = FileLink(File1Uri, File1Name, File1IsLocalFile)
         fileService.persist(file)
 
-        val item = Item("")
+        val item = Item("Test")
         item.addAttachedFile(file)
         entryService.persist(item)
 
