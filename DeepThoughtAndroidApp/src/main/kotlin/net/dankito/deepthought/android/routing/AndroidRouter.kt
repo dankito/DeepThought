@@ -3,10 +3,7 @@ package net.dankito.deepthought.android.routing
 import android.content.Context
 import android.content.Intent
 import net.dankito.deepthought.android.activities.*
-import net.dankito.deepthought.android.activities.arguments.ArticleSummaryActivityParameters
-import net.dankito.deepthought.android.activities.arguments.EditEntryActivityParameters
-import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityParameters
-import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityParameters
+import net.dankito.deepthought.android.activities.arguments.*
 import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
 import net.dankito.deepthought.android.dialogs.ReferenceEntriesListDialog
@@ -18,6 +15,7 @@ import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.newsreader.model.ArticleSummary
+import java.io.File
 
 
 class AndroidRouter(private val context: Context, private val parameterHolder: ActivityParameterHolder, private val activityTracker: CurrentActivityTracker,
@@ -55,12 +53,7 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
     }
 
     override fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig, summary: ArticleSummary?) {
-        val articleSummaryActivityIntent = Intent(context, ArticleSummaryActivity::class.java)
-        articleSummaryActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
-        addParametersToIntent(articleSummaryActivityIntent, ArticleSummaryActivityParameters(extractor, summary))
-
-        context.startActivity(articleSummaryActivityIntent)
+        navigateToActivity(ArticleSummaryActivity::class.java, ArticleSummaryActivityParameters(extractor, summary))
     }
 
     override fun showReadLaterArticlesView() {
@@ -86,12 +79,7 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
 
     private fun showEditEntryView(parameters: EditEntryActivityParameters) {
         dataManager.addInitializationListener { // if you have a very large data set and are very, very quick, you can enter EditEntryActivity before DataManager is initialized -> localSettings is null
-            val editEntryIntent = Intent(context, EditEntryActivity::class.java)
-            editEntryIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
-            addParametersToIntent(editEntryIntent, parameters)
-
-            context.startActivity(editEntryIntent)
+            navigateToActivity(EditEntryActivity::class.java, parameters)
         }
     }
 
@@ -105,12 +93,7 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
     }
 
     private fun showEditReferenceView(parameters: EditReferenceActivityParameters) {
-        val editReferenceIntent = Intent(context, EditReferenceActivity::class.java)
-        editReferenceIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
-        addParametersToIntent(editReferenceIntent, parameters)
-
-        context.startActivity(editReferenceIntent)
+        navigateToActivity(EditReferenceActivity::class.java, parameters)
     }
 
 
@@ -123,12 +106,7 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
     }
 
     private fun showEditSeriesView(parameters: EditSeriesActivityParameters) {
-        val editSeriesIntent = Intent(context, EditSeriesActivity::class.java)
-        editSeriesIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
-        addParametersToIntent(editSeriesIntent, parameters)
-
-        context.startActivity(editSeriesIntent)
+        navigateToActivity(EditSeriesActivity::class.java, parameters)
     }
 
 
@@ -138,6 +116,15 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
         }
     }
 
+
+    private fun navigateToActivity(activityClass: Class<out BaseActivity>, parameters: Any? = null) {
+        val intent = Intent(context, activityClass)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        parameters?.let { addParametersToIntent(intent, parameters) }
+
+        context.startActivity(intent)
+    }
 
     private fun addParametersToIntent(intent: Intent, parameters: Any) {
         val id = parameterHolder.setParameters(parameters)
