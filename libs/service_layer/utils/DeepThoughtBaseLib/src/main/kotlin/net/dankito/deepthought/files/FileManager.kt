@@ -77,13 +77,21 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
     }
 
     fun forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(file: FileLink) {
+        if(file.isLocalFile) {
+            ensureLocalFileInfoIsSet(file)
+
+            checkIfFileSynchronizationShouldGetStarted(file)
+        }
+    }
+
+    private fun ensureLocalFileInfoIsSet(file: FileLink) {
         if(file.localFileInfo == null) {
             val storedLocalFileInfo = getStoredLocalFileInfo(file)
 
             if(storedLocalFileInfo != null) {
                 file.localFileInfo = storedLocalFileInfo
             }
-            else { // then it's for sure a remote file
+            else { // then it's for sure a file on a synchronized device
                 val localFileInfo = LocalFileInfo(file)
 
                 localFileInfoService.persist(localFileInfo)
@@ -91,8 +99,6 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
                 file.localFileInfo = localFileInfo
             }
         }
-
-        checkIfFileSynchronizationShouldGetStarted(file)
     }
 
     private fun getStoredLocalFileInfo(file: FileLink): LocalFileInfo? {
