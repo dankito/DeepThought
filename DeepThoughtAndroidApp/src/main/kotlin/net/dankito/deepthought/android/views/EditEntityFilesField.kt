@@ -14,6 +14,8 @@ import net.dankito.deepthought.android.extensions.setLeftMargin
 import net.dankito.deepthought.android.service.permissions.IPermissionsManager
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.FileListPresenter
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
@@ -42,10 +44,15 @@ class EditEntityFilesField : EditEntityField {
     protected lateinit var localization: Localization
 
     @Inject
+    protected lateinit var router: IRouter
+
+    @Inject
     protected lateinit var eventBus: IEventBus
 
 
     private var originalFiles: MutableCollection<FileLink> = ArrayList()
+
+    private var sourceForFile: Source? = null
 
     private lateinit var permissionsManager: IPermissionsManager
 
@@ -61,7 +68,7 @@ class EditEntityFilesField : EditEntityField {
     init {
         AppComponent.component.inject(this)
 
-        fileListPresenter = FileListPresenter(fileManager, applicationsService, localization)
+        fileListPresenter = FileListPresenter(fileManager, applicationsService, localization, router)
         attachedFilesAdapter = FilesRecyclerAdapter(fileListPresenter) { file -> removeFile(file) }
 
         rcySearchResult.adapter = attachedFilesAdapter
@@ -106,8 +113,9 @@ class EditEntityFilesField : EditEntityField {
     }
 
 
-    fun setFiles(originalFiles: MutableCollection<FileLink>, permissionsManager: IPermissionsManager) {
+    fun setFiles(originalFiles: MutableCollection<FileLink>, permissionsManager: IPermissionsManager, sourceForFile: Source? = null) {
         this.originalFiles = originalFiles
+        this.sourceForFile = sourceForFile
         this.permissionsManager = permissionsManager
 
         fileListPresenter.forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(originalFiles)
@@ -168,7 +176,7 @@ class EditEntityFilesField : EditEntityField {
 
 
     private fun showFile(file: FileLink) {
-        fileListPresenter.showFile(file)
+        fileListPresenter.showFile(file, sourceForFile)
     }
 
 

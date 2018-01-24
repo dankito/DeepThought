@@ -94,7 +94,7 @@ class EditSourceDialog : DialogFragment() {
         add(webAddressField)
 
         editFilesField.didValueChange.addListener { _, _, _ -> setHasUnsavedChanges() }
-        editFilesField.setFiles(source.attachedFiles)
+        editFilesField.setFiles(source.attachedFiles, source)
         add(editFilesField)
 
         val buttons = DialogButtonBar({ closeDialog() }, { saveSource(it) }, hasUnsavedChanges, messages["action.save"])

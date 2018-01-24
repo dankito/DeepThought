@@ -110,6 +110,19 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
     }
 
 
+    override fun showPdfView(file: File, sourceForFile: Source?) {
+        showImportFromPdfView(ViewPdfActivityParameters(null, file, sourceForFile))
+    }
+
+    override fun showPdfView(file: FileLink, sourceForFile: Source?) {
+        showImportFromPdfView(ViewPdfActivityParameters(file, null, sourceForFile))
+    }
+
+    private fun showImportFromPdfView(parameters: ViewPdfActivityParameters) {
+        navigateToActivity(ViewPdfActivity::class.java, parameters)
+    }
+
+
     override fun returnToPreviousView() {
         activityTracker.currentActivity?.let { activity ->
             activity.runOnUiThread { activity.onBackPressed() }

@@ -9,6 +9,7 @@ import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.specific.FilesSearch
 import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
@@ -145,9 +146,17 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
 
     private fun searchForNotSynchronizedFiles() {
         searchEngine.searchLocalFileInfo(LocalFileInfoSearch(doesNotHaveSyncStatus = FileSyncStatus.UpToDate) { notUpToDateLocalFileInfo ->
-            notUpToDateLocalFileInfo.forEach {
-                startFileSynchronizationAsync(it.file)
+            notUpToDateLocalFileInfo.forEach { localFileInfo ->
+                startFileSynchronizationAsync(localFileInfo.file)
             }
+
+            searchForLocalFilesWithoutLocalFileInfoSet()
+        })
+    }
+
+    private fun searchForLocalFilesWithoutLocalFileInfoSet() {
+        searchEngine.searchFiles(FilesSearch(fileType = FilesSearch.FileType.LocalFilesOnly, onlyFilesWithoutLocalFileInfo = true) { localFilesWithoutLocalFileInfo ->
+            forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(localFilesWithoutLocalFileInfo)
         })
     }
 

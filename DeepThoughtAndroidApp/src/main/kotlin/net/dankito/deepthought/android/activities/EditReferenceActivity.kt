@@ -430,7 +430,7 @@ class EditReferenceActivity : BaseActivity() {
 
         lytEditReferenceUrl.setFieldValueOnUiThread(source.url ?: "")
 
-        lytEditAttachedFiles.setFiles(source.attachedFiles, permissionsManager)
+        lytEditAttachedFiles.setFiles(source.attachedFiles, permissionsManager, source)
 
         unregisterEventBusListener() // TODO: why? i came here from showParameters() and then we need to listen to changes to Source
         updateDidReferenceChangeOnUiThread()

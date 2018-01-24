@@ -3,6 +3,7 @@ package net.dankito.deepthought.ui
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.newsreader.model.ArticleSummary
+import java.io.File
 
 
 interface IRouter {
@@ -38,6 +39,11 @@ interface IRouter {
     fun showEditSeriesView(series: Series)
 
     fun showEditReferenceSeriesView(forSource: Source, series: Series?)
+
+
+    fun showPdfView(file: File, sourceForFile: Source? = null)
+
+    fun showPdfView(file: FileLink, sourceForFile: Source? = null)
 
 
     fun returnToPreviousView()

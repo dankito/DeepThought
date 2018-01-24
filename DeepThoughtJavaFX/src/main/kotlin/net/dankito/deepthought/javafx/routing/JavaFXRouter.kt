@@ -1,5 +1,7 @@
 package net.dankito.deepthought.javafx.routing
 
+import javafx.scene.control.Alert
+import javafx.scene.control.ButtonType
 import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryExtractionResultView
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryView
@@ -15,6 +17,7 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.IEntriesListView
 import net.dankito.newsreader.model.ArticleSummary
 import tornadofx.*
+import java.io.File
 
 
 class JavaFXRouter(private val mainWindowController: MainWindowController) : IRouter {
@@ -107,6 +110,26 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
 
     override fun showEditReferenceSeriesView(forSource: Source, series: Series?) {
         // there should be no need for this on JavaFX
+    }
+
+
+    override fun showPdfView(file: File, sourceForFile: Source?) {
+        showImportFromPdfView()
+    }
+
+    override fun showPdfView(file: FileLink, sourceForFile: Source?) {
+        showImportFromPdfView()
+    }
+
+    private fun showImportFromPdfView() {
+        // TODO
+        val alert = Alert(Alert.AlertType.INFORMATION)
+
+        alert.contentText = "Importing data from PDF files coming soon"
+        alert.buttonTypes.setAll(ButtonType.OK)
+        alert.initOwner(mainWindowController.primaryStage)
+
+        alert.show()
     }
 
 

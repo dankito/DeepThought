@@ -15,8 +15,10 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.view_floating_action_button_main.*
 import me.zhanghai.android.effortlesspermissions.EffortlessPermissions
 import me.zhanghai.android.effortlesspermissions.OpenAppDetailsDialogFragment
-import net.dankito.deepthought.android.activities.*
-import net.dankito.deepthought.android.activities.arguments.ViewPdfActivityParameters
+import net.dankito.deepthought.android.activities.BaseActivity
+import net.dankito.deepthought.android.activities.ReadLaterArticlesListViewActivity
+import net.dankito.deepthought.android.activities.SourcesListViewActivity
+import net.dankito.deepthought.android.activities.TagsListViewActivity
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.FileChooserDialog
 import net.dankito.deepthought.android.dialogs.TagsListViewDialog
@@ -270,7 +272,7 @@ class MainActivity : BaseActivity() {
         }
 
         fileChooserDialog?.selectFile { file ->
-            navigateToActivity(ViewPdfActivity::class.java, ViewPdfActivityParameters(null, file))
+            router.showPdfView(file)
         }
     }
 
