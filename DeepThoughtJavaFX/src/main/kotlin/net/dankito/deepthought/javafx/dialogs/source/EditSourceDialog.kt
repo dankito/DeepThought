@@ -48,6 +48,8 @@ class EditSourceDialog : DialogFragment() {
 
     private val issueField = EditFieldValueView(messages["edit.source.issue"])
 
+    private val lengthField = EditFieldValueView(messages["edit.source.length"])
+
     private val publishingDateField = EditDateFieldValueView(messages["edit.source.publishing.date"])
 
     private val webAddressField = EditFieldValueView(messages["edit.source.web.address"])
@@ -87,6 +89,9 @@ class EditSourceDialog : DialogFragment() {
         setupEntityField(issueField, source.issue ?: "")
         add(issueField)
 
+        setupEntityField(lengthField, source.length ?: "")
+        add(lengthField)
+
         setupEntityField(publishingDateField, source.publishingDateString ?: "")
         add(publishingDateField)
 
@@ -108,14 +113,15 @@ class EditSourceDialog : DialogFragment() {
     }
 
     private fun setHasUnsavedChanges() {
-        hasUnsavedChanges.value = titleField.didValueChange.value or issueField.didValueChange.value or publishingDateField.didValueChange.value or
-                webAddressField.didValueChange.value || editFilesField.didValueChange.value
+        hasUnsavedChanges.value = titleField.didValueChange.value or issueField.didValueChange.value or lengthField.didValueChange.value or
+                publishingDateField.didValueChange.value or webAddressField.didValueChange.value or editFilesField.didValueChange.value
     }
 
 
     private fun saveSource(done: () -> Unit) {
         source.title = titleField.value
         source.issue = if(issueField.value.isBlank()) null else issueField.value
+        source.length = if(lengthField.value.isBlank()) null else lengthField.value
         source.url = if(webAddressField.value.isBlank()) null else webAddressField.value
 
         presenter.saveReferenceAsync(source, series, null, publishingDateField.value, editFilesField.getEditedFiles()) {
