@@ -7,6 +7,7 @@ import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.LocalSettings
 import net.dankito.deepthought.model.User
 import net.dankito.utils.IPlatformConfiguration
+import net.dankito.utils.services.Times
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.*
@@ -18,10 +19,6 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
                   private val defaultDataInitializer: DefaultDataInitializer, platformConfiguration: IPlatformConfiguration) {
 
     companion object {
-        private const val DefaultDelayBeforeOptimizingDatabaseSeconds = 5 * 60
-
-        private const val DefaultIntervalToRunOptimizationDays = 7
-
         private val log = LoggerFactory.getLogger(DataManager::class.java)
     }
 
@@ -93,7 +90,7 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
     }
 
     private fun mayOptimizeDatabase() {
-        Timer().schedule(DefaultDelayBeforeOptimizingDatabaseSeconds * 1000L) {
+        Timer().schedule(Times.DefaultDelayBeforeOptimizingDatabaseSeconds * 1000L) {
             optimizeDatabaseIfNeeded()
         }
     }
@@ -101,7 +98,7 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
     private fun optimizeDatabaseIfNeeded() {
         val startTime = Date()
         val timeSinceLastOptimizationMillis = startTime.time - localSettings.lastDatabaseOptimizationTime.time
-        if(timeSinceLastOptimizationMillis > DefaultIntervalToRunOptimizationDays * 24 * 60 * 60 * 1000) {
+        if(timeSinceLastOptimizationMillis > Times.DefaultIntervalToRunDatabaseOptimizationDays * 24 * 60 * 60 * 1000) {
             optimizeDatabase()
 
             localSettings.lastDatabaseOptimizationTime = startTime

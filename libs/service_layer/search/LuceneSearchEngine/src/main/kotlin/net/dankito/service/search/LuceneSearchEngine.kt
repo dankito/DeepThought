@@ -14,6 +14,7 @@ import net.dankito.utils.AsyncProducerConsumerQueue
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.OsHelper
 import net.dankito.utils.language.ILanguageDetector
+import net.dankito.utils.services.Times
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.FSDirectory
 import org.slf4j.LoggerFactory
@@ -30,10 +31,6 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
     : SearchEngineBase(threadPool) {
 
     companion object {
-        private const val DefaultDelayBeforeUpdatingIndexSeconds = 60
-
-        private const val DefaultIntervalToRunOptimizationDays = 7
-
         private val log = LoggerFactory.getLogger(LuceneSearchEngine::class.java)
     }
 
@@ -109,7 +106,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
     override fun searchEngineInitialized() {
         super.searchEngineInitialized()
 
-        Timer().schedule(DefaultDelayBeforeUpdatingIndexSeconds * 1000L) {
+        Timer().schedule(Times.DefaultDelayBeforeUpdatingIndexSeconds * 1000L) {
             updateIndex()
             optimizeIndicesIfNeeded()
         }
@@ -158,12 +155,12 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
     }
 
     /**
-     * Checks if time since last optimization run is greater than DefaultIntervalToRunOptimizationDays and if so calls optimizeIndices()
+     * Checks if time since last optimization run is greater than Times.DefaultIntervalToRunIndexOptimizationDays and if so calls optimizeIndices()
      */
     private fun optimizeIndicesIfNeeded() {
         val startTime = Date()
         val timeSinceLastOptimizationMillis = startTime.time - dataManager.localSettings.lastSearchIndexOptimizationTime.time
-        if(timeSinceLastOptimizationMillis > DefaultIntervalToRunOptimizationDays * 24 * 60 * 60 * 1000) {
+        if(timeSinceLastOptimizationMillis > Times.DefaultIntervalToRunIndexOptimizationDays * 24 * 60 * 60 * 1000) {
             optimizeIndices()
 
             dataManager.localSettings.lastSearchIndexOptimizationTime = startTime

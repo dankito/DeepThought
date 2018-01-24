@@ -4,6 +4,7 @@ import net.dankito.deepthought.communication.ICommunicationManager
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.files.synchronization.FileServer
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.utils.services.Times
 import java.util.*
 import javax.inject.Inject
 import kotlin.concurrent.schedule
@@ -17,11 +18,6 @@ import kotlin.concurrent.schedule
  * before we start communicator classes like @see DevicesDiscoverer, @see IClientCommunicator, @see ISyncManager, ...
  */
 abstract class CommunicationManagerStarterBase(dataManager: DataManager) {
-
-    companion object {
-        const val DefaultWaitTimeBeforeStartingCommunicationManagerMillis = 5000L
-    }
-
 
     @Inject
     protected lateinit var fileServer: FileServer
@@ -38,7 +34,7 @@ abstract class CommunicationManagerStarterBase(dataManager: DataManager) {
     }
 
     private fun dataManagerInitialized() {
-        Timer().schedule(DefaultWaitTimeBeforeStartingCommunicationManagerMillis) {
+        Timer().schedule(Times.DefaultWaitTimeBeforeStartingCommunicationManagerMillis) {
             startCommunicationManager()
         }
     }
