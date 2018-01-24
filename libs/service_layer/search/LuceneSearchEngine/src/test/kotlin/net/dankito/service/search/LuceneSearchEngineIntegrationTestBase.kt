@@ -113,7 +113,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
     }
 
 
-    protected fun waitTillFileGetsIndexed() {
+    protected fun waitTillEntityGetsIndexed() {
         try {
             Thread.sleep(1000)
         } catch (ignored: Exception) { }

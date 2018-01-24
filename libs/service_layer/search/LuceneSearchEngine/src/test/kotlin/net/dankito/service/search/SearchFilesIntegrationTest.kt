@@ -168,7 +168,7 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
         assertThat(file.id, notNullValue())
         assertThat(file.localFileInfo?.id, notNullValue())
 
-        waitTillFileGetsIndexed() // file gets indexed async and hash calculated async -> wait some time
+        waitTillEntityGetsIndexed() // file gets indexed async and hash calculated async -> wait some time
 
 
         file.localFileInfo = null
@@ -190,7 +190,7 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
         val file = fileManager.createLocalFile(tempFile)
         fileService.persist(file)
 
-        waitTillFileGetsIndexed() // file gets indexed async -> wait some time
+        waitTillEntityGetsIndexed() // file gets indexed async -> wait some time
 
         val localFileInfo = underTest.getLocalFileInfo(file)
 
@@ -223,7 +223,7 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
 
         persistDummyFiles(countDummyFiles, isDummyLocalFile) // to create some noise
 
-        waitTillFileGetsIndexed() // file gets indexed async -> wait some time
+        waitTillEntityGetsIndexed() // file gets indexed async -> wait some time
         return file
     }
 
