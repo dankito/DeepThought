@@ -305,7 +305,7 @@ abstract class FileSyncServiceIntegrationTestBase {
         localFileService = FileService(localLocalFileInfoService, localDataManager, localEntityChangedNotifier)
 
         localSearchEngine = LuceneSearchEngine(localDataManager, NoOpLanguageDetector(), OsHelper(localPlatformConfiguration), localThreadPool, localEventBus,
-                localEntryService, localTagService, localReferenceService, localSeriesService, localReadLaterArticleService, localFileService)
+                localEntryService, localTagService, localReferenceService, localSeriesService, localReadLaterArticleService, localFileService, localLocalFileInfoService)
 
         localDataManager.addInitializationListener {
             localDevice = localDataManager.localDevice
@@ -359,7 +359,7 @@ abstract class FileSyncServiceIntegrationTestBase {
         remoteFileService = FileService(remoteLocalFileInfoService, remoteDataManager, remoteEntityChangedNotifier)
 
         remoteSearchEngine = LuceneSearchEngine(remoteDataManager, NoOpLanguageDetector(), OsHelper(remotePlatformConfiguration), remoteThreadPool, remoteEventBus,
-                remoteEntryService, remoteTagService, remoteReferenceService, remoteSeriesService, remoteReadLaterArticleService, remoteFileService)
+                remoteEntryService, remoteTagService, remoteReferenceService, remoteSeriesService, remoteReadLaterArticleService, remoteFileService, remoteLocalFileInfoService)
 
         remoteDataManager.addInitializationListener {
             remoteDevice = remoteDataManager.localDevice
