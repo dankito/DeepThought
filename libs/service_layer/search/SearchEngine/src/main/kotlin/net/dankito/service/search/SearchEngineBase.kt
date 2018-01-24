@@ -9,6 +9,7 @@ import net.dankito.utils.IThreadPool
 abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearchEngine {
 
     companion object {
+        const val DefaultSearchTermSeparator = " "
         const val TagsSearchTermSeparator = ","
     }
 
@@ -19,7 +20,7 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
 
 
     override fun searchEntries(search: EntriesSearch) {
-        val termsToSearchFor = getSingleSearchTerms(search.searchTerm, " ")
+        val termsToSearchFor = getSingleSearchTerms(search.searchTerm, DefaultSearchTermSeparator)
 
         threadPool.runAsync { searchEntries(search, termsToSearchFor) }
     }
@@ -56,7 +57,7 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
 
 
     override fun searchReferences(search: ReferenceSearch) {
-        val termsToSearchFor = getSingleSearchTerms(search.searchTerm, " ")
+        val termsToSearchFor = getSingleSearchTerms(search.searchTerm, DefaultSearchTermSeparator)
 
         threadPool.runAsync { searchReferences(search, termsToSearchFor) }
     }
@@ -65,7 +66,7 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
 
 
     override fun searchSeries(search: SeriesSearch) {
-        val termsToSearchFor = getSingleSearchTerms(search.searchTerm, " ")
+        val termsToSearchFor = getSingleSearchTerms(search.searchTerm, DefaultSearchTermSeparator)
 
         threadPool.runAsync { searchSeries(search, termsToSearchFor) }
     }
@@ -74,7 +75,7 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
 
 
     override fun searchReadLaterArticles(search: ReadLaterArticleSearch) {
-        val termsToSearchFor = getSingleSearchTerms(search.searchTerm, " ")
+        val termsToSearchFor = getSingleSearchTerms(search.searchTerm, DefaultSearchTermSeparator)
 
         threadPool.runAsync { searchReadLaterArticles(search, termsToSearchFor) }
     }
