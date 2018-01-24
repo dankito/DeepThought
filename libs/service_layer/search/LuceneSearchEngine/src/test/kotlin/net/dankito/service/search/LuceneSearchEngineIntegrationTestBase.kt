@@ -113,6 +113,13 @@ abstract class LuceneSearchEngineIntegrationTestBase {
     }
 
 
+    protected fun waitTillFileGetsIndexed() {
+        try {
+            Thread.sleep(1000)
+        } catch (ignored: Exception) { }
+    }
+
+
     private fun createLocalSettingsStore(): ILocalSettingsStore {
         return object : ILocalSettingsStore {
             override fun getDataFolder(): String {

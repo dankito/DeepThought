@@ -242,11 +242,4 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
         return tempFile
     }
 
-
-    private fun waitTillFileGetsIndexed() {
-        try {
-            Thread.sleep(1000)
-        } catch (ignored: Exception) { }
-    }
-
 }
