@@ -26,6 +26,8 @@ interface ISearchEngine {
 
     fun getLocalFileInfo(file: FileLink): LocalFileInfo?
 
+    fun searchLocalFileInfo(search: LocalFileInfoSearch)
+
 
     fun close()
 

@@ -106,6 +106,26 @@ class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool
         return file.localFileInfo // TODO
     }
 
+    override fun searchLocalFileInfo(search: LocalFileInfoSearch) {
+        val allLocalFileInfo = entityManager.getAllEntitiesOfType(LocalFileInfo::class.java)
+
+        allLocalFileInfo.forEach { localFileInfo ->
+            search.hasSyncStatus?.let {
+                if(localFileInfo.syncStatus == it) {
+                    search.addResult(localFileInfo)
+                }
+            }
+
+            search.doesNotHaveSyncStatus?.let {
+                if(localFileInfo.syncStatus != it) {
+                    search.addResult(localFileInfo)
+                }
+            }
+        }
+
+        search.fireSearchCompleted()
+    }
+
 
     private fun <T : BaseEntity> searchForEntitiesOfType(type: Class<T>, search: SearchWithCollectionResult<T>, termsToSearchFor: List<String>, sortResults: ((List<T>) -> List<T>)? = null,
                                                          mapEntityToValues: (T) -> List<String>) {

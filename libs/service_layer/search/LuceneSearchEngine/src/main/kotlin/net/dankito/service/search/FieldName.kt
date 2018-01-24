@@ -104,6 +104,13 @@ object FieldName {
     val FileLocalFileInfoId = "file_local_file_info_id"
 
 
+    /*      LocalFileInfo      */
+
+    val LocalFileInfoId = "local_file_info_id"
+
+    val LocalFileInfoSyncStatus = "local_file_info_title_sync_status"
+
+
     /*      Notes      */
 
     val NoteId = "note_id"

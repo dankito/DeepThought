@@ -103,7 +103,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         itemPersister = EntryPersister(entryService, sourcePersister, tagService, fileService, deleteEntityService)
 
         underTest = LuceneSearchEngine(dataManager, NoOpLanguageDetector(), OsHelper(platformConfiguration), ThreadPool(), eventBus,
-                entryService, tagService, referenceService, seriesService, readLaterArticleService, fileService)
+                entryService, tagService, referenceService, seriesService, readLaterArticleService, fileService, localFileInfoService)
         initLuceneSearchEngine(underTest)
     }
 

@@ -96,9 +96,9 @@ open class CommonModule {
     @Singleton
     open fun provideSearchEngine(dataManager: DataManager, languageDetector: ILanguageDetector, threadPool: IThreadPool, osHelper: OsHelper, eventBus: IEventBus,
                             entryService: EntryService, tagService: TagService, referenceService: ReferenceService, seriesService: SeriesService,
-                                 readLaterArticleService: ReadLaterArticleService, fileService: FileService) : ISearchEngine {
+                                 readLaterArticleService: ReadLaterArticleService, fileService: FileService, localFileInfoService: LocalFileInfoService) : ISearchEngine {
         return LuceneSearchEngine(dataManager, languageDetector, osHelper, threadPool, eventBus, entryService, tagService, referenceService, seriesService,
-                readLaterArticleService, fileService)
+                readLaterArticleService, fileService, localFileInfoService)
     }
 
 

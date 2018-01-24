@@ -26,7 +26,7 @@ import kotlin.concurrent.thread
 
 class LuceneSearchEngine(private val dataManager: DataManager, private val languageDetector: ILanguageDetector, osHelper: OsHelper, threadPool: IThreadPool, private val eventBus: IEventBus,
                          entryService: EntryService, tagService: TagService, referenceService: ReferenceService, seriesService: SeriesService,
-                         readLaterArticleService: ReadLaterArticleService, fileService: FileService)
+                         readLaterArticleService: ReadLaterArticleService, fileService: FileService, localFileInfoService: LocalFileInfoService)
     : SearchEngineBase(threadPool) {
 
     companion object {
@@ -52,6 +52,8 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
     private val fileIndexWriterAndSearcher = FileLinkIndexWriterAndSearcher(fileService, eventBus, osHelper, threadPool)
 
+    private val localFileInfoIndexWriterAndSearcher = LocalFileInfoIndexWriterAndSearcher(localFileInfoService, eventBus, osHelper, threadPool)
+
     private val indexWritersAndSearchers: List<IndexWriterAndSearcher<*>>
 
     private lateinit var defaultIndexDirectory: Directory
@@ -59,7 +61,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
     init {
         indexWritersAndSearchers = listOf(entryIdsIndexWriterAndSearcher, entryIndexWriterAndSearcher, tagIndexWriterAndSearcher, referenceIndexWriterAndSearcher,
-                seriesIndexWriterAndSearcher, readLaterArticleIndexWriterAndSearcher, fileIndexWriterAndSearcher)
+                seriesIndexWriterAndSearcher, readLaterArticleIndexWriterAndSearcher, fileIndexWriterAndSearcher, localFileInfoIndexWriterAndSearcher)
 
         createDirectoryAndIndexSearcherAndWritersAsync()
     }
@@ -151,6 +153,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
             Source::class.java -> referenceIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Source>)
             ReadLaterArticleService::class.java -> readLaterArticleIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<ReadLaterArticle>)
             FileLink::class.java -> fileIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<FileLink>)
+            LocalFileInfo::class.java -> localFileInfoIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<LocalFileInfo>)
         }
     }
 
@@ -181,6 +184,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
         referenceIndexWriterAndSearcher.optimizeIndex()
         readLaterArticleIndexWriterAndSearcher.optimizeIndex()
         fileIndexWriterAndSearcher.optimizeIndex()
+        localFileInfoIndexWriterAndSearcher.optimizeIndex()
 
         log.info("Done optimizing indices")
     }
@@ -262,6 +266,10 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
     override fun getLocalFileInfo(file: FileLink): LocalFileInfo? {
         return fileIndexWriterAndSearcher.getLocalFileInfo(file)
+    }
+
+    override fun searchLocalFileInfo(search: LocalFileInfoSearch) {
+        localFileInfoIndexWriterAndSearcher.searchLocalFileInfo(search)
     }
 
 }
