@@ -48,6 +48,9 @@ class FileLinkIndexWriterAndSearcher(fileService: FileService, eventBus: IEventB
         doc.add(StringField(FieldName.FileSourceUri, entity.sourceUriString.toLowerCase(), Field.Store.NO))
 
         entity.localFileInfo?.let { doc.add(StringField(FieldName.FileLocalFileInfoId, it.id, Field.Store.YES)) }
+        if(entity.localFileInfo == null) {
+            doc.add(StringField(FieldName.FileNoLocalFileInfo, FieldValue.NoLocalFileInfoFieldValue, Field.Store.NO))
+        }
     }
 
 
@@ -55,6 +58,8 @@ class FileLinkIndexWriterAndSearcher(fileService: FileService, eventBus: IEventB
         val query = BooleanQuery()
 
         addQueryForSearchTerm(search, termsToSearchFor, query)
+
+        addQueryForOptions(search, query)
 
         if(search.isInterrupted) {
             return
@@ -74,8 +79,6 @@ class FileLinkIndexWriterAndSearcher(fileService: FileService, eventBus: IEventB
                 query.add(termQuery, BooleanClause.Occur.MUST)
             }
         }
-
-        addQueryForFileType(search, query)
     }
 
     private fun createQueryForSearchTerm(search: FilesSearch, term: String): BooleanQuery {
@@ -100,11 +103,20 @@ class FileLinkIndexWriterAndSearcher(fileService: FileService, eventBus: IEventB
         return termQuery
     }
 
-    private fun addQueryForFileType(search: FilesSearch, query: BooleanQuery) {
-        when (search.fileType) {
+    private fun addQueryForOptions(search: FilesSearch, query: BooleanQuery) {
+        when(search.fileType) {
             FilesSearch.FileType.LocalFilesOnly -> query.add(TermQuery(Term(FieldName.FileIsLocalFile, FieldValue.BooleanFieldTrueValue)), BooleanClause.Occur.MUST)
             FilesSearch.FileType.RemoteFilesOnly -> query.add(TermQuery(Term(FieldName.FileIsLocalFile, FieldValue.BooleanFieldFalseValue)), BooleanClause.Occur.MUST)
-            else -> return // nothing to add, no need to restrict query any further
+            else -> { } // nothing to add, no need to restrict query any further
+        }
+
+        search.onlyFilesWithoutLocalFileInfo?.let { onlyFilesWithoutLocalFileInfo ->
+            if(onlyFilesWithoutLocalFileInfo) {
+                query.add(TermQuery(Term(FieldName.FileNoLocalFileInfo, FieldValue.NoLocalFileInfoFieldValue)), BooleanClause.Occur.MUST)
+            }
+            else { // get only files with LocalFileInfo set
+                query.add(WildcardQuery(Term(FieldName.FileLocalFileInfoId, "*")), BooleanClause.Occur.MUST)
+            }
         }
     }
 

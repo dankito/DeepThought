@@ -103,6 +103,8 @@ object FieldName {
 
     val FileLocalFileInfoId = "file_local_file_info_id"
 
+    val FileNoLocalFileInfo = "file_no_local_file_info"
+
 
     /*      LocalFileInfo      */
 

@@ -11,4 +11,6 @@ object FieldValue {
     val NoFilesFieldValue = "nofiles"
     val NoNotesFieldValue = "nonotes"
 
+    val NoLocalFileInfoFieldValue = "nolocalfileinfo"
+
 }

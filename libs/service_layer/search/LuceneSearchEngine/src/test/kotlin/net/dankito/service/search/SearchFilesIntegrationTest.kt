@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.mock
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.FileLink
 import net.dankito.service.search.specific.FilesSearch
+import net.dankito.service.search.writerandsearcher.FileLinkIndexWriterAndSearcher
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.services.hashing.HashService
 import org.hamcrest.CoreMatchers.`is`
@@ -14,6 +15,8 @@ import org.junit.Test
 import java.io.File
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.jvm.isAccessible
 
 
 class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
@@ -142,6 +145,71 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
         underTest.searchFiles(FilesSearch("", fileType) { result ->
             assertThat(result.size, `is`(1 + countDummyFiles))
             assertThat(result.contains(file), `is`(true))
+
+            resultTested = true
+            waitForResultLatch.countDown()
+        })
+
+
+        try { waitForResultLatch.await(4, TimeUnit.SECONDS) } catch (ignored: Exception) { }
+
+        assertThat(resultTested, `is`(true))
+    }
+
+
+    @Test
+    fun findOnlyFilesWithLocalFileInfoSet() {
+        getAndTestFilesWithLocalFileInfo(true)
+    }
+
+    @Test
+    fun findOnlyFilesWithoutLocalFileInfoSet() {
+        getAndTestFilesWithLocalFileInfo(false, 10)
+    }
+
+    @Test
+    fun findOnlyLocalFilesWithoutLocalFileInfoSet() {
+        getAndTestFilesWithLocalFileInfo(false, 5, FilesSearch.FileType.LocalFilesOnly)
+    }
+
+    private fun getAndTestFilesWithLocalFileInfo(isLocalFileInfoSet: Boolean, countSearchResults: Int = 5, fileType: FilesSearch.FileType = FilesSearch.FileType.LocalOrRemoteFiles) {
+        val fileIndexWriterAndSearcherField = underTest.javaClass.kotlin.declaredMemberProperties.filter { it.name == "fileIndexWriterAndSearcher" }.firstOrNull()
+        fileIndexWriterAndSearcherField?.isAccessible = true
+        val fileIndexWriterAndSearcher = fileIndexWriterAndSearcherField?.get(underTest) as? FileLinkIndexWriterAndSearcher
+
+        for(i in 0 until 5) {
+            fileService.persist(fileManager.createLocalFile(File("/tmp", "With_$i")))
+
+            fileService.persist(FileLink("", "Remote_$i", false))
+
+            val fileWithoutLocalFileInfoSet = FileLink("", "Without_$i", true)
+            fileService.entityManager.persistEntity(fileWithoutLocalFileInfoSet)
+            // currently there's no other way to index FileLink without LocalFileInfo then indexing it directly (all other options add an LocalFileInfo)
+            fileIndexWriterAndSearcher?.indexEntity(fileWithoutLocalFileInfoSet)
+        }
+
+        waitTillEntityGetsIndexed()
+
+
+        testFilesWithLocalFileInfo(isLocalFileInfoSet, countSearchResults, fileType)
+    }
+
+    private fun testFilesWithLocalFileInfo(isLocalFileInfoSet: Boolean, countSearchResults: Int, fileType: FilesSearch.FileType) {
+        var resultTested = false
+        val waitForResultLatch = CountDownLatch(1)
+
+
+        underTest.searchFiles(FilesSearch("", fileType, onlyFilesWithoutLocalFileInfo = !isLocalFileInfoSet) { result ->
+            assertThat(result.size, `is`(countSearchResults))
+
+            result.forEach { file ->
+                if(isLocalFileInfoSet) {
+                    assertThat(file.localFileInfo, notNullValue())
+                }
+                else {
+                    assertThat(file.localFileInfo, nullValue())
+                }
+            }
 
             resultTested = true
             waitForResultLatch.countDown()

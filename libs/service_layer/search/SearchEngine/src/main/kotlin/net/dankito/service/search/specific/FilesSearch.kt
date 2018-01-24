@@ -10,6 +10,7 @@ class FilesSearch(searchTerm: String = Search.EmptySearchTerm,
                   val fileType: FileType = FileType.LocalOrRemoteFiles,
                   val searchUri: Boolean = true, val searchName: Boolean = true,
                   val searchDescription: Boolean = true, val searchSourceUri: Boolean = true,
+                  val onlyFilesWithoutLocalFileInfo: Boolean? = null,
                   completedListener: (List<FileLink>) -> Unit) : SearchWithCollectionResult<FileLink>(searchTerm, completedListener) {
 
 
