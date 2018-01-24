@@ -9,13 +9,16 @@ import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.services.Times
 import net.dankito.utils.services.hashing.HashAlgorithm
 import net.dankito.utils.services.hashing.HashService
 import net.engio.mbassy.listener.Handler
 import java.io.File
 import java.util.*
+import kotlin.concurrent.schedule
 
 
 class FileManager(private val searchEngine: ISearchEngine, private val localFileInfoService: LocalFileInfoService, private val fileSyncService: FileSyncService,
@@ -26,6 +29,10 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
 
     init {
         eventBus.register(eventBusListener)
+
+        Timer().schedule(Times.DefaultDelayBeforeSearchingForNotSynchronizedFilesSeconds * 1000L) {
+            searchForNotSynchronizedFiles()
+        }
     }
 
 
@@ -124,6 +131,15 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
 
     private fun startFileSynchronizationAsync(file: FileLink) {
         fileSyncService.addFileToSynchronize(file)
+    }
+
+
+    private fun searchForNotSynchronizedFiles() {
+        searchEngine.searchLocalFileInfo(LocalFileInfoSearch(doesNotHaveSyncStatus = FileSyncStatus.UpToDate) { notUpToDateLocalFileInfo ->
+            notUpToDateLocalFileInfo.forEach {
+                startFileSynchronizationAsync(it.file)
+            }
+        })
     }
 
 
