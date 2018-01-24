@@ -94,6 +94,7 @@ abstract class EditEntryViewBase : DialogFragment() {
         add(editSourceField.root)
         editSourceField.didEntityChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
         editSourceField.didTitleChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
+        editSourceField.didIndicationChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
 
         editedSummary.addListener { _, _, _ -> updateHasUnsavedChanges() }
 
@@ -195,7 +196,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
         showContent(item, source, contentToEdit)
 
-        editSourceField.setSourceToEdit(source, series)
+        editSourceField.setSourceToEdit(source, series, item.indication)
         editTagsField.setCollectionToEdit(tags)
         editFilesField.setFiles(files)
     }
@@ -224,7 +225,8 @@ abstract class EditEntryViewBase : DialogFragment() {
 
 
     private fun updateHasUnsavedChanges() {
-        hasUnsavedChanges.value = canAlwaysBeSaved || htmlEditor.didHtmlChange || editSourceField.didEntityChange.value || editSourceField.didTitleChange.value
+        hasUnsavedChanges.value = canAlwaysBeSaved || htmlEditor.didHtmlChange
+                || editSourceField.didEntityChange.value || editSourceField.didTitleChange.value || editSourceField.didIndicationChange.value
                 || editedSummary.value != originalSummary || editTagsField.didCollectionChange.value || editFilesField.didValueChange.value
     }
 
@@ -241,6 +243,7 @@ abstract class EditEntryViewBase : DialogFragment() {
         item?.let { entry ->
             entry.content = htmlEditor.getHtml()
             entry.summary = editedSummary.value
+            entry.indication = editSourceField.enteredIndication
 
             val source = updateSource()
 

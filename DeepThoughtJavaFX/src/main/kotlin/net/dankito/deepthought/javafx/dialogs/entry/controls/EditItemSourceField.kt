@@ -49,16 +49,25 @@ class EditItemSourceField : View() {
 
     val didTitleChange = SimpleBooleanProperty()
 
+    val didIndicationChange = SimpleBooleanProperty()
+
     val enteredTitle: String
-        get() = txtfldTitle.text
+        get() = editedSourceTitle.value
+
+    val enteredIndication: String
+        get() = editedIndication.value
 
     var originalSource: Source? = null
         private set
 
     private var originalSeries: Series? = null
 
+    private var originalIndication: String? = null
+
 
     private val editedSourceTitle = SimpleStringProperty("")
+
+    private val editedIndication = SimpleStringProperty("")
 
     private val isSeriesOrPublishingDateSet = SimpleBooleanProperty()
 
@@ -173,6 +182,26 @@ class EditItemSourceField : View() {
                 setOnMouseClicked { buttonClicked(this, it) }
             }
 
+
+            label(messages["edit.item.source.indication.label"]) {
+                minWidth = Control.USE_PREF_SIZE
+                useMaxWidth = true
+
+                hboxConstraints {
+                    marginLeft = 18.0
+                    marginRight = 4.0
+                }
+            }
+
+            textfield(editedIndication) {
+                promptText = messages["source.indication.prompt.text"]
+
+                prefWidth = 140.0
+
+                textProperty().addListener { _, _, newValue -> enteredIndicationUpdated(newValue) }
+            }
+
+
             vboxConstraints {
                 marginBottom = 6.0
             }
@@ -219,6 +248,10 @@ class EditItemSourceField : View() {
         referenceListPresenter.searchReferences(enteredSourceTitle)
     }
 
+    private fun enteredIndicationUpdated(enteredIndication: String) {
+        didTitleChange.value = enteredIndication != originalIndication
+    }
+
     private fun buttonClicked(node: Node, event: MouseEvent) {
        if(event.button == MouseButton.PRIMARY && event.clickCount == 1) {
            showContextMenu(node)
@@ -245,9 +278,12 @@ class EditItemSourceField : View() {
     }
 
 
-    fun setSourceToEdit(source: Source?, series: Series?) {
+    fun setSourceToEdit(source: Source?, series: Series?, indication: String) {
         originalSource = source
         originalSeries = series
+
+        originalIndication = indication
+        editedIndication.value = indication
 
         setSource(source, series)
     }
