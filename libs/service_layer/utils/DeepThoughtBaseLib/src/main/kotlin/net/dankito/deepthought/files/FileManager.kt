@@ -16,6 +16,7 @@ import net.dankito.utils.services.Times
 import net.dankito.utils.services.hashing.HashAlgorithm
 import net.dankito.utils.services.hashing.HashService
 import net.engio.mbassy.listener.Handler
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.*
 import kotlin.concurrent.schedule
@@ -23,6 +24,10 @@ import kotlin.concurrent.schedule
 
 class FileManager(private val searchEngine: ISearchEngine, private val localFileInfoService: LocalFileInfoService, private val fileSyncService: FileSyncService,
                   private val platformConfiguration: IPlatformConfiguration, private val hashService: HashService, eventBus: IEventBus, private val threadPool: IThreadPool) {
+
+    companion object {
+        private val log = LoggerFactory.getLogger(FileManager::class.java)
+    }
 
 
     private val eventBusListener = EventBusListener()
@@ -71,9 +76,13 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
     }
 
     private fun setFileHash(file: FileLink, localFile: File) {
-        file.hashSHA512 = hashService.getFileHash(HashAlgorithm.SHA512, localFile)
+        try {
+            file.hashSHA512 = hashService.getFileHash(HashAlgorithm.SHA512, localFile)
 
-        file.localFileInfo?.hashSHA512 = file.hashSHA512
+            file.localFileInfo?.hashSHA512 = file.hashSHA512
+        } catch(e: Exception) {
+            log.error("Could not create file hash for file $file", e)
+        }
     }
 
 
