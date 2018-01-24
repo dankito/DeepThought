@@ -114,7 +114,7 @@ class EditEntrySourceField : EditEntityEntityReferenceField, IReferencesListView
     override fun editDetails() {
         activity?.setWaitingForResult(EditReferenceActivity.ResultId)
 
-        router?.showEditEntryReferenceView(source, series, valueToEdit)
+        router.showEditEntryReferenceView(source, series, valueToEdit)
     }
 
     override fun createNewEntity() {
