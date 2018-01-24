@@ -72,6 +72,16 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
             doc.add(StringField(FieldName.EntryNoReference, FieldValue.NoReferenceFieldValue, Field.Store.NO))
         }
 
+        if(entity.hasAttachedFiles()) {
+            for(file in entity.attachedFiles.filterNotNull().filter { it.id != null }) {
+                doc.add(StringField(FieldName.EntryAttachedFilesIds, file.id, Field.Store.YES))
+                doc.add(StringField(FieldName.EntryAttachedFilesDetails, file.name.toLowerCase(), Field.Store.NO)) // TODO: which information should get stored for a File?
+            }
+        }
+        else {
+            doc.add(StringField(FieldName.EntryNoAttachedFiles, FieldValue.NoFilesFieldValue, Field.Store.NO))
+        }
+
         defaultAnalyzer.setNextEntryToBeAnalyzed(entity, contentPlainText, abstractPlainText)
     }
 
@@ -116,6 +126,15 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
 
             query.add(filterSeriesQuery, BooleanClause.Occur.MUST)
         }
+
+        if(search.entriesMustHaveTheseFiles.isNotEmpty()) {
+            val filterEntriesQuery = BooleanQuery()
+            for(file in search.entriesMustHaveTheseFiles.filterNotNull().filter { it.id != null }) {
+                filterEntriesQuery.add(TermQuery(Term(FieldName.EntryAttachedFilesIds, file.id)), BooleanClause.Occur.MUST)
+            }
+
+            query.add(filterEntriesQuery, BooleanClause.Occur.MUST)
+        }
     }
 
     private fun addQueryForSearchTerm(termsToFilterFor: List<String>, query: BooleanQuery, search: EntriesSearch) {
@@ -138,6 +157,9 @@ class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBu
                 }
                 if(search.filterTags) {
                     termQuery.add(PrefixQuery(Term(FieldName.EntryTagsNames, escapedTerm)), BooleanClause.Occur.SHOULD)
+                }
+                if(search.searchInFiles) {
+                    termQuery.add(PrefixQuery(Term(FieldName.EntryAttachedFilesDetails, escapedTerm)), BooleanClause.Occur.SHOULD)
                 }
 
                 query.add(termQuery, BooleanClause.Occur.MUST)
