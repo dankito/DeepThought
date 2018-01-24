@@ -16,6 +16,7 @@ import net.dankito.deepthought.service.importexport.pdf.GetPageResult
 import net.dankito.deepthought.service.importexport.pdf.PdfImporter
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.data.FileService
+import net.dankito.utils.localization.Localization
 import org.slf4j.LoggerFactory
 import java.io.File
 import javax.inject.Inject
@@ -39,6 +40,9 @@ class ViewPdfActivity : BaseActivity() {
 
     @Inject
     protected lateinit var fileManager: FileManager
+
+    @Inject
+    protected lateinit var localization: Localization
 
 
     private var currentPage = -1
@@ -101,7 +105,10 @@ class ViewPdfActivity : BaseActivity() {
         btnCreateItemFromSelectedText.setOnClickListener {
             val selectedText = txtPageText.text.substring(txtPageText.selectionStart, txtPageText.selectionEnd)
             val item = Item(selectedText)
-            item.indication = currentPage.toString() + (if(fileMetaData != null) { " / " + fileMetaData?.countPages } else "")
+            item.indication =
+                    if(fileMetaData != null) localization.getLocalizedString("file.page.indication.with.count.pages.known", currentPage, fileMetaData?.countPages ?: 0)
+                    else localization.getLocalizedString("file.page.indication", currentPage)
+
             router.showEditEntryView(ItemExtractionResult(item, sourceForFile, couldExtractContent = true))
         }
 
