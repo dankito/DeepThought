@@ -34,6 +34,10 @@ object FieldName {
     val EntryReferenceSeriesId = "source_series_id"
     val EntryNoReference = "no_source"
 
+    val EntryAttachedFilesIds = "item_attached_files_ids"
+    val EntryAttachedFilesDetails = "item_attached_files_details"
+    val EntryNoAttachedFiles = "item_no_attached_files"
+
     val EntryNotes = "notes"
     val EntryNoNotes = "no_notes"
 
@@ -56,6 +60,10 @@ object FieldName {
     val ReferenceIssue = "source_issue"
     val ReferencePublishingDate = "source_publishing_date"
     val ReferencePublishingDateString = "source_publishing_date_string"
+
+    val ReferenceAttachedFilesIds = "source_attached_files_ids"
+    val ReferenceAttachedFilesDetails = "source_attached_files_details"
+    val ReferenceNoAttachedFiles = "source_no_attached_files"
 
 
     /*      Series      */

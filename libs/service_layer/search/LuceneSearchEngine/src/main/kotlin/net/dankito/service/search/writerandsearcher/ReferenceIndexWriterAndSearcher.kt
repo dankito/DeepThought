@@ -6,6 +6,7 @@ import net.dankito.service.data.messages.ReferenceChanged
 import net.dankito.service.eventbus.EventBusPriorities
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.FieldName
+import net.dankito.service.search.FieldValue
 import net.dankito.service.search.SortOption
 import net.dankito.service.search.SortOrder
 import net.dankito.service.search.specific.ReferenceSearch
@@ -59,6 +60,16 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
         }
 
         indexPublishingDate(entity, doc)
+
+        if(entity.hasAttachedFiles()) {
+            for(file in entity.attachedFiles.filterNotNull().filter { it.id != null }) {
+                doc.add(StringField(FieldName.ReferenceAttachedFilesIds, file.id, Field.Store.YES))
+                doc.add(StringField(FieldName.ReferenceAttachedFilesDetails, file.name.toLowerCase(), Field.Store.NO)) // TODO: which information should get stored for a File?
+            }
+        }
+        else {
+            doc.add(StringField(FieldName.ReferenceNoAttachedFiles, FieldValue.NoFilesFieldValue, Field.Store.NO))
+        }
     }
 
     private fun indexPublishingDate(entity: Source, doc: Document) {
@@ -96,6 +107,15 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
 
             query.add(filterSeriesQuery, BooleanClause.Occur.MUST)
         }
+
+        if(search.mustHaveTheseFiles.isNotEmpty()) {
+            val filterEntriesQuery = BooleanQuery()
+            for(file in search.mustHaveTheseFiles.filterNotNull().filter { it.id != null }) {
+                filterEntriesQuery.add(TermQuery(Term(FieldName.ReferenceAttachedFilesIds, file.id)), BooleanClause.Occur.MUST)
+            }
+
+            query.add(filterEntriesQuery, BooleanClause.Occur.MUST)
+        }
     }
 
     private fun addQueryForSearchTerm(termsToFilterFor: List<String>, query: BooleanQuery, search: ReferenceSearch) {
@@ -114,6 +134,8 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
 
                 termQuery.add(WildcardQuery(Term(FieldName.ReferenceIssue, "*$escapedTerm*")), BooleanClause.Occur.SHOULD)
                 termQuery.add(WildcardQuery(Term(FieldName.ReferencePublishingDateString, "*$escapedTerm*")), BooleanClause.Occur.SHOULD)
+
+                termQuery.add(PrefixQuery(Term(FieldName.ReferenceAttachedFilesDetails, escapedTerm)), BooleanClause.Occur.SHOULD)
 
                 query.add(termQuery, BooleanClause.Occur.MUST)
             }
