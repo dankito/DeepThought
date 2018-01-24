@@ -62,6 +62,7 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
         val reference = extractReference(headerElement, articleElement, url, title)
 
         cleanContent(articleElement)
+        transformElements(articleElement)
         makeLinksAbsolute(articleElement, url)
         val content = articleElement.children().joinToString("") { it.outerHtml()}
 
@@ -72,6 +73,10 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
         articleElement.select("header, footer").remove()
 
         articleElement.select(".hinweis_anzeige").forEach { it.parent().remove() }
+    }
+
+    private fun transformElements(articleElement: Element) {
+        articleElement.select("div.frage, div.antwort").tagName("p") // convert question / answer divs to paragraphs
     }
 
     private fun extractReference(headerElement: Element, articleElement: Element, url: String, title: String): Source? {

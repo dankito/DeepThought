@@ -84,7 +84,7 @@ abstract class EditEntityEntityReferenceField : EditEntityField {
         valueToEdit = getCurrentFieldValue()
     }
 
-    protected open fun setDisplayedValue(hasFocus: Boolean = hasFocus()) {
+    protected open fun setDisplayedValue(hasFocus: Boolean = edtxtEntityFieldValue.hasFocus()) {
         if(hasFocus) {
             setEditTextEntityFieldValueOnUiThread(valueToEdit ?: "")
         }

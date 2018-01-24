@@ -19,6 +19,14 @@ class TelepolisArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun extractInterviewArticle() { // should check that div.frage and div.antwort are converted to p
+        getAndTestArticle("https://www.heise.de/tp/features/Der-Unterbrecher-3947609.html",
+                "Der Unterbrecher",
+                "Roland Benedikter über ein Jahr Donald Trump",
+                "https://heise.cloudimg.io/width/700/q75.png-lossy-75.webp-lossy-75.foil1/_www-heise-de_/tp/imgs/89/2/3/5/6/3/0/9/KALENDER-trump2-698fe82bf8384ac1.jpeg", 6200)
+    }
+
+    @Test
     fun extractMultiPageArticle() { // it seems that print version has no abstract anymore
         getAndTestArticle("https://www.heise.de/tp/features/G20-Die-Eskalation-begann-mit-der-Ernennung-von-Dudde-zum-Polizeichef-3804738.html",
                 "G20: Die Eskalation begann mit der Ernennung von Dudde zum Polizeichef",
