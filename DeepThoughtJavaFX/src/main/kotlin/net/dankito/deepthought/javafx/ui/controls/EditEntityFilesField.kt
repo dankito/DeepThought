@@ -123,7 +123,7 @@ class EditEntityFilesField : View() {
     fun setFiles(originalFiles: MutableCollection<FileLink>) {
         this.originalFiles = originalFiles
 
-        fileListPresenter.ensureLocalFileInfoIsSet(originalFiles)
+        fileListPresenter.forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(originalFiles)
 
         files.setAll(originalFiles) // make a copy to not edit original files
 

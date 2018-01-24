@@ -70,13 +70,13 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
     }
 
 
-    fun ensureLocalFileInfoIsSetAndMayStartSynchronization(files: Collection<FileLink>) {
+    fun forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(files: Collection<FileLink>) {
         files.forEach { file ->
-            ensureLocalFileInfoIsSetAndMayStartSynchronization(file)
+            forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(file)
         }
     }
 
-    fun ensureLocalFileInfoIsSetAndMayStartSynchronization(file: FileLink) {
+    fun forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(file: FileLink) {
         if(file.localFileInfo == null) {
             val storedLocalFileInfo = getStoredLocalFileInfo(file)
 
@@ -128,7 +128,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
                 deleteLocalFileInfo(fileChanged.entity)
             }
             else {
-                ensureLocalFileInfoIsSetAndMayStartSynchronization(fileChanged.entity)
+                forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(fileChanged.entity)
             }
         }
 
