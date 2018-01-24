@@ -15,7 +15,6 @@ import net.dankito.deepthought.service.importexport.pdf.FileMetadata
 import net.dankito.deepthought.service.importexport.pdf.GetPageResult
 import net.dankito.deepthought.service.importexport.pdf.PdfImporter
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.service.data.FileService
 import net.dankito.utils.localization.Localization
 import org.slf4j.LoggerFactory
 import java.io.File
@@ -33,13 +32,10 @@ class ViewPdfActivity : BaseActivity() {
     protected lateinit var importer: PdfImporter
 
     @Inject
-    protected lateinit var fileService: FileService
+    protected lateinit var fileManager: FileManager
 
     @Inject
     protected lateinit var router: IRouter
-
-    @Inject
-    protected lateinit var fileManager: FileManager
 
     @Inject
     protected lateinit var localization: Localization
