@@ -7,12 +7,17 @@ import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.EventBusPriorities
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.FieldName
+import net.dankito.service.search.FieldValue
+import net.dankito.service.search.SortOption
+import net.dankito.service.search.SortOrder
+import net.dankito.service.search.specific.FilesSearch
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.OsHelper
 import net.engio.mbassy.listener.Handler
 import org.apache.lucene.document.*
 import org.apache.lucene.index.Term
-import org.apache.lucene.search.TermQuery
+import org.apache.lucene.queryparser.classic.QueryParser
+import org.apache.lucene.search.*
 
 
 class FileLinkIndexWriterAndSearcher(fileService: FileService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool)
@@ -30,8 +35,9 @@ class FileLinkIndexWriterAndSearcher(fileService: FileService, eventBus: IEventB
 
     override fun addEntityFieldsToDocument(entity: FileLink, doc: Document) {
         // for an not analyzed String it's important to index it lower case as only then lower case search finds it
-        doc.add(StringField(FieldName.FileName, entity.name.toLowerCase(), Field.Store.NO))
         doc.add(StringField(FieldName.FileUri, entity.uriString.toLowerCase(), Field.Store.NO))
+        doc.add(StringField(FieldName.FileName, entity.name.toLowerCase(), Field.Store.NO))
+
         addBooleanFieldToDocument(FieldName.FileIsLocalFile, entity.isLocalFile, doc)
 
         // TODO: file type
@@ -42,6 +48,64 @@ class FileLinkIndexWriterAndSearcher(fileService: FileService, eventBus: IEventB
         doc.add(StringField(FieldName.FileSourceUri, entity.sourceUriString.toLowerCase(), Field.Store.NO))
 
         entity.localFileInfo?.let { doc.add(StringField(FieldName.FileLocalFileInfoId, it.id, Field.Store.YES)) }
+    }
+
+
+    fun searchFiles(search: FilesSearch, termsToSearchFor: List<String>) {
+        val query = BooleanQuery()
+
+        addQueryForSearchTerm(search, termsToSearchFor, query)
+
+        if(search.isInterrupted) {
+            return
+        }
+
+        executeQueryForSearchWithCollectionResult(search, query, FileLink::class.java, sortOptions = SortOption(FieldName.FileName, SortOrder.Ascending, SortField.Type.STRING))
+    }
+
+    private fun addQueryForSearchTerm(search: FilesSearch, termsToFilterFor: List<String>, query: BooleanQuery) {
+        if(termsToFilterFor.isEmpty()) {
+            query.add(WildcardQuery(Term(getIdFieldName(), "*")), BooleanClause.Occur.MUST)
+        }
+        else {
+            termsToFilterFor.forEach { term ->
+                val termQuery = createQueryForSearchTerm(search, term)
+
+                query.add(termQuery, BooleanClause.Occur.MUST)
+            }
+        }
+
+        addQueryForFileType(search, query)
+    }
+
+    private fun createQueryForSearchTerm(search: FilesSearch, term: String): BooleanQuery {
+        val escapedTerm = QueryParser.escape(term)
+        val escapedWildcardTerm = "*" + escapedTerm + "*"
+        val termQuery = BooleanQuery()
+
+        if(search.searchUri) {
+            termQuery.add(WildcardQuery(Term(FieldName.FileUri, escapedWildcardTerm)), BooleanClause.Occur.SHOULD)
+        }
+        if(search.searchName) {
+            termQuery.add(WildcardQuery(Term(FieldName.FileName, escapedWildcardTerm)), BooleanClause.Occur.SHOULD)
+        }
+
+        if(search.searchDescription) {
+            termQuery.add(WildcardQuery(Term(FieldName.FileDescription, escapedWildcardTerm)), BooleanClause.Occur.SHOULD)
+        }
+        if(search.searchSourceUri) {
+            termQuery.add(WildcardQuery(Term(FieldName.FileSourceUri, escapedWildcardTerm)), BooleanClause.Occur.SHOULD)
+        }
+
+        return termQuery
+    }
+
+    private fun addQueryForFileType(search: FilesSearch, query: BooleanQuery) {
+        when (search.fileType) {
+            FilesSearch.FileType.LocalFilesOnly -> query.add(TermQuery(Term(FieldName.FileIsLocalFile, FieldValue.BooleanFieldTrueValue)), BooleanClause.Occur.MUST)
+            FilesSearch.FileType.RemoteFilesOnly -> query.add(TermQuery(Term(FieldName.FileIsLocalFile, FieldValue.BooleanFieldFalseValue)), BooleanClause.Occur.MUST)
+            else -> return // nothing to add, no need to restrict query any further
+        }
     }
 
 

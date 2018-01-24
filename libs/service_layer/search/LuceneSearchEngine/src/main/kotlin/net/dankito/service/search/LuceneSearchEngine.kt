@@ -256,6 +256,10 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
         readLaterArticleIndexWriterAndSearcher.searchReadLaterArticles(search, termsToSearchFor)
     }
 
+    override fun searchFiles(search: FilesSearch, termsToSearchFor: List<String>) {
+        fileIndexWriterAndSearcher.searchFiles(search, termsToSearchFor)
+    }
+
     override fun getLocalFileInfo(file: FileLink): LocalFileInfo? {
         return fileIndexWriterAndSearcher.getLocalFileInfo(file)
     }

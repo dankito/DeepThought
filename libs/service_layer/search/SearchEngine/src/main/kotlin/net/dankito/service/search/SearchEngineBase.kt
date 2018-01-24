@@ -83,6 +83,15 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
     abstract fun searchReadLaterArticles(search: ReadLaterArticleSearch, termsToSearchFor: List<String>)
 
 
+    override fun searchFiles(search: FilesSearch) {
+        val termsToSearchFor = getSingleSearchTerms(search.searchTerm, DefaultSearchTermSeparator)
+
+        threadPool.runAsync { searchFiles(search, termsToSearchFor) }
+    }
+
+    abstract  fun searchFiles(search: FilesSearch, termsToSearchFor: List<String>)
+
+
     private fun getSingleSearchTerms(overallSearchTerm: String, separator: String, lowerCaseSearchTerm: Boolean = true): List<String> {
         val searchTerm = if(lowerCaseSearchTerm) overallSearchTerm.toLowerCase() else overallSearchTerm
         // make overallSearchTerm lower case, split it at all separators and trim resulting single search terms

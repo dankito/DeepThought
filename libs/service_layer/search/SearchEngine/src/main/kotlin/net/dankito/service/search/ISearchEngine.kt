@@ -22,7 +22,7 @@ interface ISearchEngine {
 
     fun searchReadLaterArticles(search: ReadLaterArticleSearch)
 
-//    fun searchFiles(search: FilesSearch)
+    fun searchFiles(search: FilesSearch)
 
     fun getLocalFileInfo(file: FileLink): LocalFileInfo?
 
