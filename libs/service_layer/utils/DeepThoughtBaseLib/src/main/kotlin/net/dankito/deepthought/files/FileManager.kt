@@ -115,6 +115,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
 
     private fun checkIfFileSynchronizationShouldGetStarted(file: FileLink) {
         file.localFileInfo?.let { localFileInfo ->
+            // TODO: when updating file has been implemented, also check if hash (and lastModified) still match
             if(localFileInfo.syncStatus != FileSyncStatus.UpToDate) {
                 startFileSynchronizationAsync(file)
             }
