@@ -87,24 +87,31 @@ class EditSourceDialog : DialogFragment() {
     override val root = vbox {
         prefWidth = 850.0
 
-        setupEntityField(titleField, editedSourceTitle ?: source.title, this)
+        scrollpane {
+            isFitToWidth = true
+            isFitToHeight = true
 
-        add(editSeriesField)
-        editSeriesField.didEntityChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
-        editSeriesField.didTitleChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
-        editSeriesField.setSeriesToEdit(series)
+            vbox {
+                setupEntityField(titleField, editedSourceTitle ?: source.title, this)
 
-        setupEntityField(issueField, source.issue ?: "", this)
+                add(editSeriesField)
+                editSeriesField.didEntityChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
+                editSeriesField.didTitleChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
+                editSeriesField.setSeriesToEdit(series)
 
-        setupEntityField(lengthField, source.length ?: "", this)
+                setupEntityField(issueField, source.issue ?: "", this)
 
-        setupEntityField(publishingDateField, source.publishingDateString ?: "", this)
+                setupEntityField(lengthField, source.length ?: "", this)
 
-        setupEntityField(webAddressField, source.url ?: "", this)
+                setupEntityField(publishingDateField, source.publishingDateString ?: "", this)
 
-        editFilesField.didValueChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
-        editFilesField.setFiles(source.attachedFiles, source)
-        add(editFilesField)
+                setupEntityField(webAddressField, source.url ?: "", this)
+
+                editFilesField.didValueChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
+                editFilesField.setFiles(source.attachedFiles, source)
+                add(editFilesField)
+            }
+        }
 
         val buttons = DialogButtonBar({ closeDialog() }, { saveSource(it) }, hasUnsavedChanges, messages["action.save"])
         add(buttons)
