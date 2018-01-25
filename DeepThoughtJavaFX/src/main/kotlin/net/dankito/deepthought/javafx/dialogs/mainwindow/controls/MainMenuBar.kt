@@ -3,8 +3,6 @@ package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 import javafx.beans.value.ChangeListener
 import javafx.scene.control.Menu
 import javafx.scene.control.MenuItem
-import javafx.scene.input.KeyCode
-import javafx.scene.input.KeyCodeCombination
 import javafx.scene.input.KeyCombination
 import javafx.scene.layout.Priority
 import javafx.stage.FileChooser
@@ -170,8 +168,7 @@ class MainMenuBar : View() {
         mnitmFileClipboard.items.clear()
 
         clipboardContent.url?.let { url ->
-            val extractContentFromUrlMenuItem = MenuItem(String.format(messages["clipboard.content.option.extract.item.from"], urlUtil.getHostName(url)))
-            extractContentFromUrlMenuItem.accelerator = KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN)
+            val extractContentFromUrlMenuItem = MenuItem(String.format(messages["clipboard.content.header.create.item.from"], urlUtil.getHostName(url)))
             extractContentFromUrlMenuItem.action { extractEntryFromUrl(url) }
             mnitmFileClipboard.items.add(extractContentFromUrlMenuItem)
         }

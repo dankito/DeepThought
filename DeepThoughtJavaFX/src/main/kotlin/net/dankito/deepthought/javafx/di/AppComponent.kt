@@ -15,10 +15,7 @@ import net.dankito.deepthought.javafx.dialogs.entry.EditReadLaterArticleView
 import net.dankito.deepthought.javafx.dialogs.entry.controls.EditItemSourceField
 import net.dankito.deepthought.javafx.dialogs.entry.controls.EditItemTagsField
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindow
-import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.ArticleExtractorsMenuButton
-import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.EntriesListView
-import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.MainMenuBar
-import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.TagsListView
+import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.*
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.ReadLaterArticleListView
 import net.dankito.deepthought.javafx.dialogs.source.EditSourceDialog
 import net.dankito.deepthought.javafx.dialogs.source.controls.EditSourceSeriesField
@@ -45,6 +42,8 @@ interface AppComponent : CommonComponent {
     fun inject(mainWindow: MainWindow)
 
     fun inject(mainMenuBar: MainMenuBar)
+
+    fun inject(clipboardContentPopup: ClipboardContentPopup)
 
     fun inject(articleExtractorsMenuButton: ArticleExtractorsMenuButton)
 

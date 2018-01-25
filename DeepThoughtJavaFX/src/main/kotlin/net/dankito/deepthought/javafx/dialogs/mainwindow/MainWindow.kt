@@ -5,12 +5,10 @@ import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import javafx.scene.image.Image
 import javafx.scene.layout.Priority
+import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
 import net.dankito.deepthought.javafx.di.AppComponent
-import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.EntriesListView
-import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.MainMenuBar
-import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.StatusBar
-import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.TagsListView
+import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.*
 import tornadofx.*
 import tornadofx.FX.Companion.messages
 
@@ -36,6 +34,8 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
 
     private var tabTags: Tab by singleAssign()
 
+    private var stckpnContent: StackPane by singleAssign()
+
     private var splpnContent: SplitPane by singleAssign()
 
     private var contentPane: VBox by singleAssign()
@@ -56,7 +56,6 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
     }
 
 
-
     override val root = borderpane {
         prefHeight = 620.0
         prefWidth = 1150.0
@@ -64,21 +63,25 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
         top = mainMenuBar.root
 
         center {
-            splpnContent = splitpane {
-                tbpnOverview = tabpane {
-                    prefWidth = 300.0
-                    tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
-
-                    tabTags = tab(messages["tags.tab.label"]) {
+            stckpnContent = stackpane {
+                splpnContent = splitpane {
+                    tbpnOverview = tabpane {
                         prefWidth = 300.0
+                        tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
 
-                        add(tagsListView.root)
+                        tabTags = tab(messages["tags.tab.label"]) {
+                            prefWidth = 300.0
+
+                            add(tagsListView.root)
+                        }
+                    }
+
+                    contentPane = vbox {
+
                     }
                 }
 
-                contentPane = vbox {
-
-                }
+                add(ClipboardContentPopup())
             }
 
             contentPane.add(entriesListView.root)
