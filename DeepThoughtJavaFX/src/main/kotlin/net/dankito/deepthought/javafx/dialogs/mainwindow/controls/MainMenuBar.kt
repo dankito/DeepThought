@@ -16,7 +16,6 @@ import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.EntriesSearch
-import net.dankito.utils.UrlUtil
 import net.dankito.utils.extensions.sortedByStrings
 import net.dankito.utils.ui.IDialogService
 import tornadofx.*
@@ -43,10 +42,8 @@ class MainMenuBar : View() {
     protected lateinit var router: IRouter
 
     @Inject
-    protected lateinit var urlUtil: UrlUtil
+    protected lateinit var clipboardWatcher: JavaFXClipboardWatcher
 
-
-    private lateinit var clipboardWatcher: JavaFXClipboardWatcher
 
     private lateinit var mnitmFileClipboard: Menu
 
@@ -57,6 +54,8 @@ class MainMenuBar : View() {
 
     init {
         AppComponent.component.inject(this)
+
+        clipboardWatcher.addClipboardContentChangedExternallyListener { clipboardContentChangedExternally(it) }
     }
 
     override val root = gridpane {
@@ -125,8 +124,6 @@ class MainMenuBar : View() {
 
             add(ArticleExtractorsMenuButton())
         }
-
-        clipboardWatcher = JavaFXClipboardWatcher(primaryStage, urlUtil) { clipboardContentChangedExternally(it) }
     }
 
     private fun addImporterAndExporter() {
