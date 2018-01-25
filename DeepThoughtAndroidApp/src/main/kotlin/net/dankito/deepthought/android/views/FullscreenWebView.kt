@@ -291,6 +291,7 @@ class FullscreenWebView : WebView {
         isInFullscreenMode = true
         updateLastOnScrollFullscreenModeTogglingTimestamp()
         showOptionsBar()
+        requestFocus() // e.g. currently focused view shows keyboard -> keyboard (or other elements) still would be displayed
 
         changeFullscreenModeListener?.invoke(FullscreenMode.Enter)
 
