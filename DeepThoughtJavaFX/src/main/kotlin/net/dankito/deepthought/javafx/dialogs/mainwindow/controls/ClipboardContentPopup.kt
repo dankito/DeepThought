@@ -122,8 +122,8 @@ class ClipboardContentPopup() : View() {
         }
     }
 
-    private fun addOption(optionText: String, accelerator: KeyCodeCombination? = null, optionSelected: () -> Unit) {
-        val displayedText = optionText + (if(accelerator == null) "" else " (${accelerator.displayText})")
+    private fun addOption(optionText: String, keyCombination: KeyCodeCombination? = null, optionSelected: () -> Unit) {
+        val displayedText = optionText + (if(keyCombination == null) "" else " (${keyCombination.displayText})")
 
         val optionLink = Button(displayedText)
         optionLink.isUnderline = true
@@ -136,7 +136,7 @@ class ClipboardContentPopup() : View() {
         VBox.setMargin(optionLink, Insets(0.0, 10.0, 6.0, 18.0))
 
         optionLink.setOnAction { optionLinkPressed(optionSelected) }
-        accelerator?.let { optionLink.scene?.accelerators?.put(it, Runnable { optionLinkPressed(optionSelected) }) }
+        keyCombination?.let { optionLink.scene?.accelerators?.put(it, Runnable { optionLinkPressed(optionSelected) }) }
 
         optionLink.setOnMouseEntered { optionLink.background = Background(BackgroundFill(Colors.ClipboardContentPopupOptionMouseOverColor, CornerRadii(8.0), Insets.EMPTY)) }
         optionLink.setOnMouseExited { optionLink.background = Background.EMPTY }
