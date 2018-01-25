@@ -263,7 +263,9 @@ class FullscreenWebView : WebView {
 
         checkIfScrollingStoppedTimerTask = object: TimerTask() {
             override fun run() {
-                showOptionsBar()
+                if(isInFullscreenMode) {
+                    showOptionsBar()
+                }
             }
         }
 
