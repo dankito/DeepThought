@@ -23,6 +23,7 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.utils.MimeTypeUtil
 import net.dankito.utils.UrlUtil
 import net.dankito.utils.ui.IDialogService
 import tornadofx.*
@@ -50,6 +51,9 @@ class ClipboardContentPopup() : View() {
 
     @Inject
     protected lateinit var urlUtil: UrlUtil
+
+    @Inject
+    protected lateinit var mimeTypeUtil: MimeTypeUtil
 
 
     private var optionsPane: VBox by singleAssign()
@@ -103,21 +107,24 @@ class ClipboardContentPopup() : View() {
 
 
     private fun clipboardContentChangedExternally(clipboardContent: JavaFXClipboardContent) {
-        isPopupVisible.value = clipboardContent.hasUrl()
+        isPopupVisible.value = false
         headerText.value = ""
         optionsPane.children.clear()
 
         clipboardContent.url?.let { url ->
-            headerText.value = String.format(messages["clipboard.content.header.create.item.from"], urlUtil.getHostName(url))
+            if(mimeTypeUtil.isHttpUrlAWebPage(url)) {
+                isPopupVisible.value = true
+                headerText.value = String.format(messages["clipboard.content.header.create.item.from"], urlUtil.getHostName(url))
 
-            addOption(FX.messages["clipboard.content.option.try.to.extract.important.web.page.parts"],
-                    KeyCodeCombination(KeyCode.V, KeyCombination.SHORTCUT_DOWN)) { extractItemFromUrl(url)}
+                addOption(FX.messages["clipboard.content.option.try.to.extract.important.web.page.parts"],
+                        KeyCodeCombination(KeyCode.V, KeyCombination.SHORTCUT_DOWN)) { extractItemFromUrl(url)}
 
 //            addOption(FX.messages["clipboard.content.option.extract.plain.text.only"],
 //                    KeyCodeCombination(KeyCode.V, KeyCombination.SHORTCUT_DOWN, KeyCombination.ALT_DOWN)) { } // TODO
 
-            addOption(FX.messages["clipboard.content.option.show.original.page"], KeyCodeCombination(KeyCode.V, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN)) {
-                router.showEditEntryView(ItemExtractionResult(Item(""), Source(url, url)))
+                addOption(FX.messages["clipboard.content.option.show.original.page"], KeyCodeCombination(KeyCode.V, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN)) {
+                    router.showEditEntryView(ItemExtractionResult(Item(""), Source(url, url)))
+                }
             }
         }
     }

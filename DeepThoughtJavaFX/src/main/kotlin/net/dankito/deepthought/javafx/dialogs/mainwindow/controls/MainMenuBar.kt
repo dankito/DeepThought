@@ -14,6 +14,7 @@ import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.EntriesSearch
+import net.dankito.utils.MimeTypeUtil
 import net.dankito.utils.UrlUtil
 import net.dankito.utils.extensions.sortedByStrings
 import net.dankito.utils.ui.IDialogService
@@ -44,6 +45,9 @@ class MainMenuBar : View() {
 
     @Inject
     protected lateinit var urlUtil: UrlUtil
+
+    @Inject
+    protected lateinit var mimeTypeUtil: MimeTypeUtil
 
 
     private lateinit var mnitmFileClipboard: Menu
@@ -163,14 +167,18 @@ class MainMenuBar : View() {
 
 
     private fun clipboardContentChangedExternally(clipboardContent: JavaFXClipboardContent) {
-        mnitmFileClipboard.isDisable = !clipboardContent.hasUrl()
+        mnitmFileClipboard.isDisable = true
 
         mnitmFileClipboard.items.clear()
 
         clipboardContent.url?.let { url ->
-            val extractContentFromUrlMenuItem = MenuItem(String.format(messages["clipboard.content.header.create.item.from"], urlUtil.getHostName(url)))
-            extractContentFromUrlMenuItem.action { extractEntryFromUrl(url) }
-            mnitmFileClipboard.items.add(extractContentFromUrlMenuItem)
+            if(mimeTypeUtil.isHttpUrlAWebPage(url)) {
+                mnitmFileClipboard.isDisable = false
+
+                val extractContentFromUrlMenuItem = MenuItem(String.format(messages["clipboard.content.header.create.item.from"], urlUtil.getHostName(url)))
+                extractContentFromUrlMenuItem.action { extractEntryFromUrl(url) }
+                mnitmFileClipboard.items.add(extractContentFromUrlMenuItem)
+            }
         }
     }
 
