@@ -47,7 +47,8 @@ open class EditEntityField(fieldName: String, initialFieldValue: String = "") : 
 
     override val root = hbox {
 
-        prefHeight = EntityFieldHeight
+        minHeight = EntityFieldHeight
+        maxHeight = minHeight
         alignment = Pos.CENTER_LEFT
 
         lblFieldName = label(fieldName) {
