@@ -123,7 +123,7 @@ class ClipboardContentPopup() : View() {
     }
 
     private fun addOption(optionText: String, accelerator: KeyCodeCombination? = null, optionSelected: () -> Unit) {
-        val displayedText = optionText + (if(accelerator == null) "" else " ($accelerator)")
+        val displayedText = optionText + (if(accelerator == null) "" else " (${accelerator.displayText})")
 
         val optionLink = Button(displayedText)
         optionLink.isUnderline = true
