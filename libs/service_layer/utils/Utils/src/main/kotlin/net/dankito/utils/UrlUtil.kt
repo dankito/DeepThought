@@ -26,4 +26,20 @@ class UrlUtil {
         return false
     }
 
+
+    fun getHostName(url: String): String? {
+        try {
+            val uri = URI.create(url)
+            var host = uri.host
+
+            if(host.startsWith("www.")) {
+                host = host.substring(4)
+            }
+
+            return host
+        } catch(e: Exception) { }
+
+        return "URL"
+    }
+
 }

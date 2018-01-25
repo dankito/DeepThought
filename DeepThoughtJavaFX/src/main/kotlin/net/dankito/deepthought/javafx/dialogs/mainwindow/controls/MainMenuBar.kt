@@ -16,11 +16,11 @@ import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.EntriesSearch
+import net.dankito.utils.UrlUtil
 import net.dankito.utils.extensions.sortedByStrings
 import net.dankito.utils.ui.IDialogService
 import tornadofx.*
 import java.io.File
-import java.net.URI
 import javax.inject.Inject
 
 
@@ -36,13 +36,16 @@ class MainMenuBar : View() {
     protected lateinit var searchEngine: ISearchEngine
 
     @Inject
+    protected lateinit var clipboardWatcher: JavaFXClipboardWatcher
+
+    @Inject
     protected lateinit var dialogService: IDialogService
 
     @Inject
     protected lateinit var router: IRouter
 
     @Inject
-    protected lateinit var clipboardWatcher: JavaFXClipboardWatcher
+    protected lateinit var urlUtil: UrlUtil
 
 
     private lateinit var mnitmFileClipboard: Menu
@@ -167,26 +170,11 @@ class MainMenuBar : View() {
         mnitmFileClipboard.items.clear()
 
         clipboardContent.url?.let { url ->
-            val extractContentFromUrlMenuItem = MenuItem(String.format(messages["main.window.menu.file.extract.item.from.url"], getHostName(url)))
+            val extractContentFromUrlMenuItem = MenuItem(String.format(messages["clipboard.content.option.extract.item.from"], urlUtil.getHostName(url)))
             extractContentFromUrlMenuItem.accelerator = KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN)
             extractContentFromUrlMenuItem.action { extractEntryFromUrl(url) }
             mnitmFileClipboard.items.add(extractContentFromUrlMenuItem)
         }
-    }
-
-    private fun getHostName(url: String): String? {
-        try {
-            val uri = URI.create(url)
-            var host = uri.host
-
-            if(host.startsWith("www.")) {
-                host = host.substring(4)
-            }
-
-            return host
-        } catch(e: Exception) { }
-
-        return "URL"
     }
 
     private fun extractEntryFromUrl(url: String) {
