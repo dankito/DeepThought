@@ -5,7 +5,6 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.TargetApi
 import android.content.Intent
-import android.graphics.Point
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -170,8 +169,6 @@ class EditEntryActivity : BaseActivity() {
     private var isInEditContentMode = false
 
     private var isInReaderMode = false
-
-    private var wbvwContentScrollPositionBeforePause: Point? = null
 
     private var webSiteHtml: String? = null
 
@@ -589,13 +586,7 @@ class EditEntryActivity : BaseActivity() {
 
         setContentPreviewOnUIThread()
 
-        wbvwContentScrollPositionBeforePause?.let { // restore wbvwContent's scroll position before fullscreen has been left in onPause()
-            wbvwContent.postDelayed({ // don't know why we have to do it delayed in order to work
-                wbvwContent.scrollX = it.x
-                wbvwContent.scrollY = it.y
-                wbvwContentScrollPositionBeforePause = null
-            }, 250)
-        }
+        wbvwContent.activityResumed()
 
         mayRegisterEventBusListener()
     }
@@ -803,6 +794,7 @@ class EditEntryActivity : BaseActivity() {
     private fun showContentInWebView(contentParam: String?, url: String?) {
         var content = contentParam
 
+        // TODO: remove and set font in css
         if(content?.startsWith("<html") == false && content?.startsWith("<body") == false && content?.startsWith("<!doctype") == false) {
             content = "<html><body style=\"font-family: serif, Georgia, Roboto, Helvetica, Arial; font-size:17;\">" + content + "</body></html>"
         }
@@ -1112,10 +1104,7 @@ class EditEntryActivity : BaseActivity() {
     override fun onPause() {
         unregisterEventBusListener()
 
-        if(wbvwContent.isInFullscreenMode) {
-            wbvwContentScrollPositionBeforePause = Point(wbvwContent.scrollX, wbvwContent.scrollY) // store scroll position so that in can be restored in onResume()
-            wbvwContent.leaveFullscreenModeAndWaitTillLeft { }
-        }
+        wbvwContent.activityPaused()
 
         contentEditor.hideKeyboard()
         lytAbstractPreview.stopEditing()
