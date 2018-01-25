@@ -73,7 +73,7 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
     private var lstvwSearchResults: ListView<T> by singleAssign()
 
 
-    abstract protected fun getCellFragmentClass(): KClass<out ListCellFragment<T>>
+    abstract protected fun getCellFragmentClass(): KClass<out ListCellFragment<T>>?
 
     abstract protected fun getEntityTitle(entity: T?): String?
 
@@ -204,7 +204,9 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
             visibleProperty().bind(showSearchResult)
             FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
 
-            cellFragment(getCellFragmentClass())
+            getCellFragmentClass()?.let {
+                cellFragment(it)
+            }
 
             focusedProperty().addListener { _, _, newValue -> textFieldTitleOrSearchResultsFocusedChanged(txtfldTitle.isFocused, newValue) }
             onDoubleClick { entitySelected(selectionModel.selectedItem) }

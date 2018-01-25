@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleBooleanProperty
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
+import net.dankito.deepthought.javafx.dialogs.source.controls.EditSourceSeriesField
 import net.dankito.deepthought.javafx.service.events.EditingSourceDoneEvent
 import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
 import net.dankito.deepthought.javafx.ui.controls.EditDateFieldValueView
@@ -46,6 +47,8 @@ class EditSourceDialog : DialogFragment() {
 
     private val titleField = EditFieldValueView(messages["edit.source.title"])
 
+    private val editSeriesField = EditSourceSeriesField()
+
     private val issueField = EditFieldValueView(messages["edit.source.issue"])
 
     private val lengthField = EditFieldValueView(messages["edit.source.length"])
@@ -86,6 +89,11 @@ class EditSourceDialog : DialogFragment() {
         setupEntityField(titleField, editedSourceTitle ?: source.title)
         add(titleField)
 
+        add(editSeriesField.root)
+        editSeriesField.didEntityChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
+        editSeriesField.didTitleChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
+        editSeriesField.setSeriesToEdit(series)
+
         setupEntityField(issueField, source.issue ?: "")
         add(issueField)
 
@@ -98,7 +106,7 @@ class EditSourceDialog : DialogFragment() {
         setupEntityField(webAddressField, source.url ?: "")
         add(webAddressField)
 
-        editFilesField.didValueChange.addListener { _, _, _ -> setHasUnsavedChanges() }
+        editFilesField.didValueChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
         editFilesField.setFiles(source.attachedFiles, source)
         add(editFilesField)
 
@@ -109,11 +117,13 @@ class EditSourceDialog : DialogFragment() {
     private fun setupEntityField(field: EditFieldValueView, value: String) {
         field.value = value
 
-        field.didValueChange.addListener { _, _, _ -> setHasUnsavedChanges() }
+        field.didValueChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
     }
 
-    private fun setHasUnsavedChanges() {
-        hasUnsavedChanges.value = titleField.didValueChange.value or issueField.didValueChange.value or lengthField.didValueChange.value or
+    private fun updateHasUnsavedChanges() {
+        hasUnsavedChanges.value = titleField.didValueChange.value or
+                editSeriesField.didEntityChange.value or editSeriesField.didTitleChange.value or
+                issueField.didValueChange.value or lengthField.didValueChange.value or
                 publishingDateField.didValueChange.value or webAddressField.didValueChange.value or editFilesField.didValueChange.value
     }
 
@@ -124,10 +134,26 @@ class EditSourceDialog : DialogFragment() {
         source.length = if(lengthField.value.isBlank()) null else lengthField.value
         source.url = if(webAddressField.value.isBlank()) null else webAddressField.value
 
+        val series = updateSeries()
+
         presenter.saveReferenceAsync(source, series, null, publishingDateField.value, editFilesField.getEditedFiles()) {
             postResult(EditingSourceDoneEvent(true, source))
             done()
         }
+    }
+
+    private fun updateSeries(): Series? {
+        var series = editSeriesField.seriesToEdit
+
+        if(editSeriesField.didTitleChange.value) {
+            series?.title = editSeriesField.enteredTitle
+        }
+
+        if(series?.isPersisted() == false && editSeriesField.enteredTitle.isNullOrBlank()) {
+            series = null
+        }
+
+        return series
     }
 
     private fun closeDialog() {
