@@ -28,11 +28,14 @@ class EditItemSourceField : EditEntityReferenceField<Source>(FX.messages["edit.i
 
     // create aliases to map to Source's terminology
 
-    val originalSource = originalEntity
+    val originalSource: Source?
+        get() = originalEntity
 
-    val sourceToEdit = entityToEdit
+    val sourceToEdit: Source?
+        get() = entityToEdit
 
-    val enteredIndication = enteredSecondaryInformation
+    val enteredIndication: String
+        get() = enteredSecondaryInformation
 
     val didIndicationChange = didSecondaryInformationChange
 
