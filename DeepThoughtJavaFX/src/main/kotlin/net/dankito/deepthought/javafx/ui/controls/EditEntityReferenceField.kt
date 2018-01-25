@@ -258,7 +258,7 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
         }
 
         contextMenu.item(messages["edit.entity.reference.field.create.new.entity.menu.item"]) {
-            action { setEntity(createNewEntity("")) }
+            action { menuItemCreateNewEntitySelected() }
         }
 
         contextMenu.item(messages["edit.entity.reference.field.remove.entity.menu.item"]) {
@@ -267,6 +267,12 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
 
         val screenBounds = node.localToScreen(node.boundsInLocal)
         contextMenu.show(node, screenBounds.minX, screenBounds.maxY)
+    }
+
+    private fun menuItemCreateNewEntitySelected() {
+        setEntity(createNewEntity(""))
+
+        txtfldTitle.requestFocus()
     }
 
 
