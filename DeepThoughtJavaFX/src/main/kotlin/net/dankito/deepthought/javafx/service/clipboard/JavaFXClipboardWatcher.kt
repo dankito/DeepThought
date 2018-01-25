@@ -8,7 +8,7 @@ import java.util.*
 
 class JavaFXClipboardWatcher(stage: Stage, private val urlUtil: UrlUtil) {
 
-    private var sourceOfLastShownPopup: Any? = null
+    private var sourceOfLastClipboardContent: Any? = null
 
     private var clipboardContentChangedExternallyListeners: MutableSet<(JavaFXClipboardContent) -> Unit> = HashSet()
 
@@ -26,12 +26,11 @@ class JavaFXClipboardWatcher(stage: Stage, private val urlUtil: UrlUtil) {
 
     private fun checkForChangedClipboardContent() {
         val clipboardContent = JavaFXClipboardContent(Clipboard.getSystemClipboard(), urlUtil)
-//        Application.getContentExtractorManager().getContentExtractorOptionsForClipboardContentAsync(clipboardContent, { contentExtractOptions ->
-//            if (contentExtractOptions.getSource().equals(sourceOfLastShownPopup) === false) {
-//                sourceOfLastShownPopup = contentExtractOptions.getSource()
-                callClipboardContentChangedExternallyListeners(clipboardContent)
-//            }
-//        })
+        if(clipboardContent.url != sourceOfLastClipboardContent) { // currently only urls are supported
+            sourceOfLastClipboardContent = clipboardContent.url
+
+            callClipboardContentChangedExternallyListeners(clipboardContent)
+        }
     }
 
     private fun callClipboardContentChangedExternallyListeners(clipboardContent: JavaFXClipboardContent) {
