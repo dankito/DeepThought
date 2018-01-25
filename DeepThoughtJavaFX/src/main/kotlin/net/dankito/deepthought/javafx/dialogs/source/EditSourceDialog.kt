@@ -2,6 +2,7 @@ package net.dankito.deepthought.javafx.dialogs.source
 
 import com.sun.prism.impl.Disposer.cleanUp
 import javafx.beans.property.SimpleBooleanProperty
+import javafx.scene.Parent
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
@@ -86,25 +87,20 @@ class EditSourceDialog : DialogFragment() {
     override val root = vbox {
         prefWidth = 850.0
 
-        setupEntityField(titleField, editedSourceTitle ?: source.title)
-        add(titleField)
+        setupEntityField(titleField, editedSourceTitle ?: source.title, this)
 
         add(editSeriesField.root)
         editSeriesField.didEntityChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
         editSeriesField.didTitleChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
         editSeriesField.setSeriesToEdit(series)
 
-        setupEntityField(issueField, source.issue ?: "")
-        add(issueField)
+        setupEntityField(issueField, source.issue ?: "", this)
 
-        setupEntityField(lengthField, source.length ?: "")
-        add(lengthField)
+        setupEntityField(lengthField, source.length ?: "", this)
 
-        setupEntityField(publishingDateField, source.publishingDateString ?: "")
-        add(publishingDateField)
+        setupEntityField(publishingDateField, source.publishingDateString ?: "", this)
 
-        setupEntityField(webAddressField, source.url ?: "")
-        add(webAddressField)
+        setupEntityField(webAddressField, source.url ?: "", this)
 
         editFilesField.didValueChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
         editFilesField.setFiles(source.attachedFiles, source)
@@ -114,10 +110,12 @@ class EditSourceDialog : DialogFragment() {
         add(buttons)
     }
 
-    private fun setupEntityField(entityField: EditEntityField, value: String) {
+    private fun setupEntityField(entityField: EditEntityField, value: String, pane: Parent) {
         entityField.value = value
 
         entityField.didValueChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
+
+        pane.add(entityField)
     }
 
     private fun updateHasUnsavedChanges() {
