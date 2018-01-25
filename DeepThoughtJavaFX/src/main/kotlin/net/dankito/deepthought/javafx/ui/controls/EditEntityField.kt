@@ -11,6 +11,13 @@ import tornadofx.*
 
 open class EditEntityField(fieldName: String, initialFieldValue: String = "") : View() {
 
+    companion object {
+        const val EntityFieldHeight = 40.0
+        const val EntityFieldLabelWidth = 135.0
+        const val EntityFieldTextFieldHeight = 35.0
+    }
+
+
     protected val currentValue = SimpleStringProperty(initialFieldValue)
 
     val didValueChange = SimpleBooleanProperty()
@@ -40,16 +47,16 @@ open class EditEntityField(fieldName: String, initialFieldValue: String = "") : 
 
     override val root = hbox {
 
-        prefHeight = 40.0
+        prefHeight = EntityFieldHeight
         alignment = Pos.CENTER_LEFT
 
         lblFieldName = label(fieldName) {
-            prefHeight = 40.0
-            prefWidth = 135.0
+            prefHeight = EntityFieldHeight
+            prefWidth = EntityFieldLabelWidth
         }
 
         txtfldFieldValue = textfield {
-            prefHeight = 35.0
+            prefHeight = EntityFieldTextFieldHeight
 
             textProperty().bindBidirectional(currentValue)
 

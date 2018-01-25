@@ -89,7 +89,7 @@ class EditSourceDialog : DialogFragment() {
 
         setupEntityField(titleField, editedSourceTitle ?: source.title, this)
 
-        add(editSeriesField.root)
+        add(editSeriesField)
         editSeriesField.didEntityChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
         editSeriesField.didTitleChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
         editSeriesField.setSeriesToEdit(series)

@@ -16,6 +16,7 @@ import javafx.scene.input.KeyCode
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Priority
+import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import net.dankito.deepthought.javafx.res.icons.Icons
 import net.dankito.deepthought.javafx.util.FXUtils
@@ -26,6 +27,10 @@ import kotlin.reflect.KClass
 
 abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText: String, secondaryInformationLabel: String? = null,
                                            secondaryInformationPromptText: String? = null) : View() {
+
+    companion object {
+        internal const val LabelRightMargin = 4.0
+    }
 
     var entityToEdit: T? = null
         protected set
@@ -95,14 +100,19 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
 
     override val root = vbox {
         hbox {
-            prefHeight = 20.0
+            prefHeight = getPrefFieldHeight()
             maxHeight = 70.0
             alignment = Pos.CENTER_LEFT
             prefWidthProperty().bind(this@vbox.widthProperty())
 
             label(entityLabel) {
                 minWidth = Control.USE_PREF_SIZE
+                prefWidth = getPrefLabelWidth()
                 useMaxWidth = true
+
+                hboxConstraints {
+                    marginRight = LabelRightMargin
+                }
             }
 
             label {
@@ -117,12 +127,13 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
                 setOnMouseClicked { entityAdditionalPreviewClicked(it) }
 
                 hboxConstraints {
-                    marginRight = 2.0
+                    marginRight = 6.0
                 }
             }
 
             txtfldTitle = textfield(editedTitle) {
                 hgrow = Priority.ALWAYS
+                prefHeight = getPrefTextFieldHeight()
 
                 promptText = entityPromptText
 
@@ -144,19 +155,18 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
                 }
 
                 hboxConstraints {
-                    marginLeft = 4.0
                     marginRight = 4.0
                 }
             }
 
             button {
-                minHeight = 26.0
+                minHeight = getPrefButtonSize()
                 maxHeight = minHeight
-                minWidth = 26.0
+                minWidth = getPrefButtonSize()
                 maxWidth = minWidth
 
                 graphic = imageview(Icons.MoreVerticalIconPath) {
-                    fitHeight = 26.0
+                    fitHeight = getPrefButtonSize()
                     isPreserveRatio = true
 
                     setImageTintColor(Color.GRAY)
@@ -188,11 +198,6 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
 
                     textProperty().addListener { _, _, newValue -> enteredSecondaryInformationUpdated(newValue) }
                 }
-            }
-
-
-            vboxConstraints {
-                marginBottom = 6.0
             }
         }
 
@@ -226,8 +231,20 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
                     }
                 }
             }
+
+            vboxConstraints {
+                marginTop = 6.0
+            }
         }
     }
+
+    protected open fun getPrefFieldHeight() = 20.0
+
+    protected open fun getPrefLabelWidth() = Region.USE_COMPUTED_SIZE
+
+    protected open fun getPrefTextFieldHeight() = Region.USE_COMPUTED_SIZE
+
+    protected open fun getPrefButtonSize() = 26.0
 
 
     private fun enteredTitleUpdated(enteredTitle: String) {

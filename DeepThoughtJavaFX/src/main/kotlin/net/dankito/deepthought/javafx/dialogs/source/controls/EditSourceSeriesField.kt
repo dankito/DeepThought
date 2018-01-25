@@ -1,6 +1,7 @@
 package net.dankito.deepthought.javafx.dialogs.source.controls
 
 import net.dankito.deepthought.javafx.di.AppComponent
+import net.dankito.deepthought.javafx.ui.controls.EditEntityField
 import net.dankito.deepthought.javafx.ui.controls.EditEntityReferenceField
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.ui.IRouter
@@ -49,6 +50,15 @@ class EditSourceSeriesField : EditEntityReferenceField<Series>(FX.messages["edit
 
         }, searchEngine, router, deleteEntityService)
     }
+
+
+    override fun getPrefFieldHeight() = EditEntityField.EntityFieldHeight
+
+    override fun getPrefLabelWidth() = EditEntityField.EntityFieldLabelWidth - LabelRightMargin
+
+    override fun getPrefTextFieldHeight() = EditEntityField.EntityFieldTextFieldHeight
+
+    override fun getPrefButtonSize() = getPrefTextFieldHeight() - 2.0
 
 
     override fun getCellFragmentClass() = null
