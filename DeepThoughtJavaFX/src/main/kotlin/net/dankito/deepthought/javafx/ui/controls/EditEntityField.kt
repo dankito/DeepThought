@@ -9,7 +9,7 @@ import javafx.scene.layout.Priority
 import tornadofx.*
 
 
-open class EditFieldValueView(fieldName: String, initialFieldValue: String = "") : View() {
+open class EditEntityField(fieldName: String, initialFieldValue: String = "") : View() {
 
     protected val currentValue = SimpleStringProperty(initialFieldValue)
 

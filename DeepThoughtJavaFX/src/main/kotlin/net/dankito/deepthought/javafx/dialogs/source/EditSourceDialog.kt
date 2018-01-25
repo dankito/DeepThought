@@ -8,9 +8,9 @@ import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.javafx.dialogs.source.controls.EditSourceSeriesField
 import net.dankito.deepthought.javafx.service.events.EditingSourceDoneEvent
 import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
-import net.dankito.deepthought.javafx.ui.controls.EditDateFieldValueView
+import net.dankito.deepthought.javafx.ui.controls.EditEntityDateField
+import net.dankito.deepthought.javafx.ui.controls.EditEntityField
 import net.dankito.deepthought.javafx.ui.controls.EditEntityFilesField
-import net.dankito.deepthought.javafx.ui.controls.EditFieldValueView
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
@@ -45,17 +45,17 @@ class EditSourceDialog : DialogFragment() {
     protected lateinit var eventBus: IEventBus
 
 
-    private val titleField = EditFieldValueView(messages["edit.source.title"])
+    private val titleField = EditEntityField(messages["edit.source.title"])
 
     private val editSeriesField = EditSourceSeriesField()
 
-    private val issueField = EditFieldValueView(messages["edit.source.issue"])
+    private val issueField = EditEntityField(messages["edit.source.issue"])
 
-    private val lengthField = EditFieldValueView(messages["edit.source.length"])
+    private val lengthField = EditEntityField(messages["edit.source.length"])
 
-    private val publishingDateField = EditDateFieldValueView(messages["edit.source.publishing.date"])
+    private val publishingDateField = EditEntityDateField(messages["edit.source.publishing.date"])
 
-    private val webAddressField = EditFieldValueView(messages["edit.source.web.address"])
+    private val webAddressField = EditEntityField(messages["edit.source.web.address"])
 
     private val editFilesField = EditEntityFilesField()
 
@@ -114,10 +114,10 @@ class EditSourceDialog : DialogFragment() {
         add(buttons)
     }
 
-    private fun setupEntityField(field: EditFieldValueView, value: String) {
-        field.value = value
+    private fun setupEntityField(entityField: EditEntityField, value: String) {
+        entityField.value = value
 
-        field.didValueChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
+        entityField.didValueChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
     }
 
     private fun updateHasUnsavedChanges() {

@@ -3,7 +3,7 @@ package net.dankito.deepthought.javafx.ui.controls
 import tornadofx.*
 
 
-class EditDateFieldValueView(fieldName: String, initialFieldValue: String = "") : EditFieldValueView(fieldName, initialFieldValue) {
+class EditEntityDateField(fieldName: String, initialFieldValue: String = "") : EditEntityField(fieldName, initialFieldValue) {
 
 
     init {
