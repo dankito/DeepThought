@@ -253,7 +253,7 @@ class FullscreenWebView : WebView {
     }
 
     private fun checkShouldEnterFullscreenMode(differenceY: Int) {
-        if(differenceY > scrollDownDifferenceYThreshold || differenceY < scrollUpDifferenceYThreshold) {
+        if((differenceY > scrollDownDifferenceYThreshold || differenceY < scrollUpDifferenceYThreshold) && isRestoringScrollPosition == false) {
             enterFullscreenMode()
         }
     }
