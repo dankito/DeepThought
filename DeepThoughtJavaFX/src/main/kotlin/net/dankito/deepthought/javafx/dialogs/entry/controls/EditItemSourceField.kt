@@ -26,6 +26,17 @@ class EditItemSourceField : EditEntityReferenceField<Source>(FX.messages["edit.i
     private var originalSeries: Series? = null
 
 
+    // create aliases to map to Source's terminology
+
+    val originalSource = originalEntity
+
+    val sourceToEdit = entityToEdit
+
+    val enteredIndication = enteredSecondaryInformation
+
+    val didIndicationChange = didSecondaryInformationChange
+
+
     private val referenceListPresenter: ReferencesListPresenter
 
 

@@ -94,7 +94,7 @@ abstract class EditEntryViewBase : DialogFragment() {
         add(editSourceField.root)
         editSourceField.didEntityChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
         editSourceField.didTitleChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
-        editSourceField.didSecondaryInformationChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
+        editSourceField.didIndicationChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
 
         editedSummary.addListener { _, _, _ -> updateHasUnsavedChanges() }
 
@@ -226,7 +226,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     private fun updateHasUnsavedChanges() {
         hasUnsavedChanges.value = canAlwaysBeSaved || htmlEditor.didHtmlChange
-                || editSourceField.didEntityChange.value || editSourceField.didTitleChange.value || editSourceField.didSecondaryInformationChange.value
+                || editSourceField.didEntityChange.value || editSourceField.didTitleChange.value || editSourceField.didIndicationChange.value
                 || editedSummary.value != originalSummary || editTagsField.didCollectionChange.value || editFilesField.didValueChange.value
     }
 
@@ -243,7 +243,7 @@ abstract class EditEntryViewBase : DialogFragment() {
         item?.let { entry ->
             entry.content = htmlEditor.getHtml()
             entry.summary = editedSummary.value
-            entry.indication = editSourceField.enteredSecondaryInformation
+            entry.indication = editSourceField.enteredIndication
 
             val source = updateSource()
 
@@ -254,7 +254,7 @@ abstract class EditEntryViewBase : DialogFragment() {
     }
 
     private fun updateSource(): Source? {
-        var source = editSourceField.entityToEdit
+        var source = editSourceField.sourceToEdit
 
         if(editSourceField.didTitleChange.value) {
             source?.title = editSourceField.enteredTitle
@@ -265,7 +265,7 @@ abstract class EditEntryViewBase : DialogFragment() {
             resetSeries()
         }
 
-        if(source != editSourceField.originalEntity) {
+        if(source != editSourceField.originalSource) {
             resetSeries()
         }
 
