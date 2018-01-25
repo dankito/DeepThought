@@ -89,6 +89,15 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun ensureInterviewAmMorgenMessagesGetRemoved() {
+        getAndTestArticle("http://www.sueddeutsche.de/wirtschaft/interview-am-morgen-man-redet-sich-mit-dem-wetter-heraus-1.3837657",
+                "\"Man redet sich mit dem Wetter heraus\"",
+                "Scharfschützen auf den Dächern, vermummte Polizisten in den Straßen: Abiturient und Juso-Vorstand Daniel Meier im \"Interview am Morgen\" über den Ausnahmezustand vor Trumps Besuch in Davos.",
+                "http://media-cdn.sueddeutsche.de/image/sz.1.3838573/640x360?v=1516783464000",
+                4500, subTitle = "Interview am Morgen")
+    }
+
+    @Test
     fun ensureSZPlusNotificationGetsShown() {
         getAndTestArticle("http://www.sueddeutsche.de/wissen/menschen-ueber-wie-man-alt-und-zufrieden-wird-1.3733043?reduced=true",
                 "Wie man alt und zufrieden wird",

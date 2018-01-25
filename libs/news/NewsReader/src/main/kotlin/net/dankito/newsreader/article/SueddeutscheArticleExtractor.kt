@@ -118,10 +118,12 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
     private fun cleanArticleBody(articleBody: Element) {
-        articleBody.select("#article-sidebar-wrapper, #sharingbaranchor, .ad, .authors, .teaserable-layout, .flexible-teaser").remove()
+        articleBody.select("#article-sidebar-wrapper, #sharingbaranchor, .ad, .authors, .teaserable-layout, .flexible-teaser, #iq-artikelanker").remove()
 
         // remove scripts with try{window.performance.mark('monitor_articleTeaser');}catch(e){};
         articleBody.select("script").filter { it.html().contains("window.performance.mark") }.forEach { it.remove() }
+
+        articleBody.select(".asset-infobox").filter { it.html().contains("Interview am Morgen") }.forEach { it.remove() }
 
         removeBaseBoxes(articleBody)
 
@@ -137,10 +139,26 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
             }
 
             baseBox.select("iframe").forEach { iframe ->
-                if(iframe.attr("data-src").contains("http://www.nl-services.com/subscribe/")) { // subscribe to newsletter
+                if(iframe.attr("data-src").startsWith("http://www.nl-services.com/subscribe/") || // subscribe to newsletter
+                        iframe.attr("data-src").startsWith("https://widget.whatsbroadcast.com/")) { // get notified via WhatsApp
+                    tryToRemoveWhatsAppPrivacyPolicyNotification(baseBox) // has to be done before removing baseBox element
+
                     baseBox.remove()
                 }
             }
+        }
+    }
+
+    private fun tryToRemoveWhatsAppPrivacyPolicyNotification(element: Element) {
+        var nextSibling = element.nextElementSibling()
+
+        while(nextSibling != null) {
+            if(nextSibling.text().contains("Genaue Informationen, welche Daten für den Messenger-Dienst genutzt und gespeichert werden, finden Sie in der " +
+                    "Datenschutzerklärung.")) {
+                nextSibling.remove()
+            }
+
+            nextSibling = nextSibling.nextElementSibling()
         }
     }
 
