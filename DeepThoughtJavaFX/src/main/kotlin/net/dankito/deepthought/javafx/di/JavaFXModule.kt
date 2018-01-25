@@ -2,12 +2,13 @@ package net.dankito.deepthought.javafx.di
 
 import dagger.Module
 import dagger.Provides
+import javafx.stage.Stage
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.deepthought.data.EntryPersister
-import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.data.SeriesPersister
+import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.javafx.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.javafx.appstart.JavaFXAppInitializer
 import net.dankito.deepthought.javafx.dialogs.JavaFXDialogService
@@ -15,6 +16,7 @@ import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
 import net.dankito.deepthought.javafx.service.JavaFXApplicationsService
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardService
+import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
 import net.dankito.deepthought.javafx.service.communication.JavaFXDeviceRegistrationHandler
 import net.dankito.deepthought.javafx.service.import_export.DataImporterExporterManager
 import net.dankito.deepthought.javafx.service.network.JavaFXNetworkConnectivityManager
@@ -33,6 +35,7 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.UrlUtil
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.services.network.INetworkConnectivityManager
 import net.dankito.utils.services.network.NetworkHelper
@@ -44,7 +47,7 @@ import javax.inject.Singleton
 
 
 @Module
-class JavaFXModule(private val flavorInstanceProvider: JavaFXInstanceProvider, private val mainWindowController: MainWindowController) {
+class JavaFXModule(private val primaryStage: Stage, private val flavorInstanceProvider: JavaFXInstanceProvider, private val mainWindowController: MainWindowController) {
 
     @Provides
     @Singleton
@@ -76,6 +79,12 @@ class JavaFXModule(private val flavorInstanceProvider: JavaFXInstanceProvider, p
     @Singleton
     fun provideClipboardService() : IClipboardService {
         return JavaFXClipboardService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideJavaFXClipboardWatcher(urlUtil: UrlUtil) : JavaFXClipboardWatcher {
+        return JavaFXClipboardWatcher(primaryStage, urlUtil)
     }
 
     @Provides

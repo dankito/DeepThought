@@ -6,7 +6,7 @@ import net.dankito.utils.UrlUtil
 import java.util.*
 
 
-class JavaFXClipboardWatcher(stage: Stage, private val urlUtil: UrlUtil, listener: (JavaFXClipboardContent) -> Unit) {
+class JavaFXClipboardWatcher(stage: Stage, private val urlUtil: UrlUtil) {
 
     private var sourceOfLastShownPopup: Any? = null
 
@@ -15,8 +15,6 @@ class JavaFXClipboardWatcher(stage: Stage, private val urlUtil: UrlUtil, listene
 
     init {
         stage.focusedProperty().addListener { _, _, newValue -> checkForChangedClipboardContent(newValue) }
-
-        addClipboardContentChangedExternallyListener(listener)
     }
 
 

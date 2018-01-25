@@ -30,7 +30,7 @@ open class DeepThoughtJavaFXApplication : App(MainWindow::class) {
     override fun start(stage: Stage) {
         setupMessagesResources() // has to be done before creating / injecting first instances as some of them already rely on Messages (e.g. CalculatedTags)
 
-        setupDI()
+        setupDI(stage)
 
         stage.setOnCloseRequest { Platform.exit() } // stop application as otherwise all other windows would stay open
 
@@ -43,9 +43,9 @@ open class DeepThoughtJavaFXApplication : App(MainWindow::class) {
         FX.messages = ResourceBundle.getBundle("Messages", UTF8ResourceBundleControl())
     }
 
-    private fun setupDI() {
+    private fun setupDI(primaryStage: Stage) {
         val component = DaggerAppComponent.builder()
-                .javaFXModule(JavaFXModule(createFlavorInstanceProvider(), mainWindowController))
+                .javaFXModule(JavaFXModule(primaryStage, createFlavorInstanceProvider(), mainWindowController))
                 .build()
 
         BaseComponent.component = component
