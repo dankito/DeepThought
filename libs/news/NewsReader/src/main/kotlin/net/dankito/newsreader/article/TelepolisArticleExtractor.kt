@@ -47,7 +47,11 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
     }
 
     private fun getReadAllOnOnePageUrl(article: Element, siteUrl: String): String? {
-        article.select(".pre-akwa-toc").first()?.let { // a multi page article
+        article.select(".pre-akwa-toc").first()?.let { tocElement -> // a multi page article
+            tocElement.select("li.pre-akwa-toc__item--onepage a.pre-akwa-toc__link").first()?.let { allOnOnePageAnchor ->
+                return makeLinkAbsolute(allOnOnePageAnchor.attr("href"), siteUrl)
+            }
+
             // but unfortunately there's no 'Read all on one page' url so we use the print site
             article.select(".beitragsfooter_printversion")?.let { printAnchorElement ->
                 return makeLinkAbsolute(printAnchorElement.attr("href"), siteUrl)
