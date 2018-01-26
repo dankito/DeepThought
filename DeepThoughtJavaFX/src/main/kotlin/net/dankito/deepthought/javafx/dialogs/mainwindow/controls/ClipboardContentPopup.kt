@@ -18,14 +18,7 @@ import net.dankito.deepthought.javafx.res.Colors
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardContent
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
 import net.dankito.deepthought.javafx.util.FXUtils
-import net.dankito.deepthought.model.Item
-import net.dankito.deepthought.model.Source
-import net.dankito.deepthought.model.util.ItemExtractionResult
-import net.dankito.deepthought.news.article.ArticleExtractorManager
-import net.dankito.deepthought.ui.IRouter
-import net.dankito.utils.MimeTypeUtil
-import net.dankito.utils.UrlUtil
-import net.dankito.utils.ui.IDialogService
+import net.dankito.deepthought.service.clipboard.OptionsForClipboardContentDetector
 import tornadofx.*
 import javax.inject.Inject
 
@@ -41,19 +34,7 @@ class ClipboardContentPopup() : View() {
     protected lateinit var clipboardWatcher: JavaFXClipboardWatcher
 
     @Inject
-    protected lateinit var articleExtractorManager: ArticleExtractorManager
-
-    @Inject
-    protected lateinit var dialogService: IDialogService
-
-    @Inject
-    protected lateinit var router: IRouter
-
-    @Inject
-    protected lateinit var urlUtil: UrlUtil
-
-    @Inject
-    protected lateinit var mimeTypeUtil: MimeTypeUtil
+    protected lateinit var optionsDetector: OptionsForClipboardContentDetector
 
 
     private var optionsPane: VBox by singleAssign()
@@ -111,20 +92,12 @@ class ClipboardContentPopup() : View() {
         headerText.value = ""
         optionsPane.children.clear()
 
-        clipboardContent.url?.let { url ->
-            if(mimeTypeUtil.isHttpUrlAWebPage(url)) {
-                isPopupVisible.value = true
-                headerText.value = String.format(messages["clipboard.content.header.create.item.from"], urlUtil.getHostName(url))
+        optionsDetector.getOptions(clipboardContent)?.let { options ->
+            isPopupVisible.value = true
+            headerText.value = options.headerTitle
 
-                addOption(FX.messages["clipboard.content.option.try.to.extract.important.web.page.parts"],
-                        KeyCodeCombination(KeyCode.V, KeyCombination.SHORTCUT_DOWN)) { extractItemFromUrl(url)}
-
-//            addOption(FX.messages["clipboard.content.option.extract.plain.text.only"],
-//                    KeyCodeCombination(KeyCode.V, KeyCombination.SHORTCUT_DOWN, KeyCombination.ALT_DOWN)) { } // TODO
-
-                addOption(FX.messages["clipboard.content.option.show.original.page"], KeyCodeCombination(KeyCode.V, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN)) {
-                    router.showEditEntryView(ItemExtractionResult(Item(""), Source(url, url)))
-                }
+            options.options.forEachIndexed { index, option ->
+                addOption(option.title, getKeyCombinationForOption(index), { option.action() })
             }
         }
     }
@@ -154,16 +127,14 @@ class ClipboardContentPopup() : View() {
         optionSelected()
     }
 
-
-    private fun extractItemFromUrl(url: String) {
-        articleExtractorManager.extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(url) {
-            it.result?.let { router.showEditEntryView(it) }
-            it.error?.let { showErrorMessage(it, url) }
+    private fun getKeyCombinationForOption(index: Int): KeyCodeCombination? {
+        return when(index) {
+            0 -> KeyCodeCombination(KeyCode.V, KeyCombination.SHORTCUT_DOWN)
+            1 -> KeyCodeCombination(KeyCode.V, KeyCombination.SHORTCUT_DOWN, KeyCombination.ALT_DOWN)
+            2 -> KeyCodeCombination(KeyCode.V, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN)
+            3 -> KeyCodeCombination(KeyCode.V, KeyCombination.SHORTCUT_DOWN, KeyCombination.ALT_DOWN, KeyCombination.SHIFT_DOWN)
+            else -> null
         }
-    }
-
-    private fun showErrorMessage(error: Exception, articleUrl: String) {
-        dialogService.showErrorMessage(dialogService.getLocalization().getLocalizedString("alert.message.could.not.extract.item.from.url", articleUrl), exception = error)
     }
 
 

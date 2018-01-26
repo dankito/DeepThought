@@ -15,8 +15,11 @@ import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
 import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.deepthought.model.NetworkSettings
+import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
+import net.dankito.deepthought.service.clipboard.OptionsForClipboardContentDetector
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.faviconextractor.FaviconComparator
 import net.dankito.faviconextractor.FaviconExtractor
@@ -47,6 +50,7 @@ import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.services.hashing.HashService
 import net.dankito.utils.services.hashing.IBase64Service
 import net.dankito.utils.services.network.NetworkHelper
+import net.dankito.utils.ui.IDialogService
 import javax.inject.Singleton
 
 
@@ -70,6 +74,12 @@ open class CommonModule {
     @Singleton
     open fun provideNetworkHelper() : NetworkHelper {
         return NetworkHelper()
+    }
+
+    @Provides
+    @Singleton
+    open fun provideOptionsForClipboardContentDetector(articleExtractorManager: ArticleExtractorManager, dialogService: IDialogService, router: IRouter) : OptionsForClipboardContentDetector {
+        return OptionsForClipboardContentDetector(articleExtractorManager, dialogService, router)
     }
 
 
