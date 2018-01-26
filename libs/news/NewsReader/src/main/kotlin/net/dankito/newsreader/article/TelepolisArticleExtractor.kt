@@ -102,6 +102,8 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
     private fun extractContentForPrintVersion(articleElement: Element, url: String): String {
         var content = ""
 
+        transformElements(articleElement)
+
         var contentElement = articleElement.select(".content").first()
 
         if(contentElement == null) { // it seems the print version has no .content element anymore
