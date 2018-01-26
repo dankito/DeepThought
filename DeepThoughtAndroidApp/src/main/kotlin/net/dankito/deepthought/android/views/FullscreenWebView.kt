@@ -109,6 +109,8 @@ class FullscreenWebView : WebView {
 
     private var scrollPositionToRestore: Point? = null
 
+    private var isRestoringScrollPosition = false
+
 
     constructor(context: Context) : super(context) { setupUI(context) }
 
@@ -251,7 +253,7 @@ class FullscreenWebView : WebView {
     }
 
     private fun checkShouldEnterFullscreenMode(differenceY: Int) {
-        if(differenceY > scrollDownDifferenceYThreshold || differenceY < scrollUpDifferenceYThreshold) {
+        if((differenceY > scrollDownDifferenceYThreshold || differenceY < scrollUpDifferenceYThreshold) && isRestoringScrollPosition == false) {
             enterFullscreenMode()
         }
     }
@@ -261,7 +263,9 @@ class FullscreenWebView : WebView {
 
         checkIfScrollingStoppedTimerTask = object: TimerTask() {
             override fun run() {
-                showOptionsBar()
+                if(isInFullscreenMode) {
+                    showOptionsBar()
+                }
             }
         }
 
@@ -273,7 +277,7 @@ class FullscreenWebView : WebView {
     }
 
     private fun showOptionsBar() {
-        (lytFullscreenWebViewOptionsBar?.context as? Activity)?.let { activity ->
+        (context as? Activity)?.let { activity ->
             activity.runOnUiThread {
                 showOptionsBarOnUiThread()
             }
@@ -289,6 +293,7 @@ class FullscreenWebView : WebView {
         isInFullscreenMode = true
         updateLastOnScrollFullscreenModeTogglingTimestamp()
         showOptionsBar()
+        requestFocus() // e.g. currently focused view shows keyboard -> keyboard (or other elements) still would be displayed
 
         changeFullscreenModeListener?.invoke(FullscreenMode.Enter)
 
@@ -343,6 +348,22 @@ class FullscreenWebView : WebView {
 
     fun restoreInstanceState(savedInstanceState: Bundle) {
         scrollPositionToRestore = Point(savedInstanceState.getInt(SCROLL_X_BUNDLE_NAME), savedInstanceState.getInt(SCROLL_Y_BUNDLE_NAME))
+
+        mayRestoreScrollPosition()
+    }
+
+    fun activityPaused() {
+        if(scrollX != 0 || scrollY != 0) {
+            scrollPositionToRestore = Point(scrollX, scrollY) // onRestoreState() sometimes simply doesn't get call, but scrollY gets nevertheless re-set to 0
+        }
+
+        if(isInFullscreenMode) {
+            leaveFullscreenModeAndWaitTillLeft { }
+        }
+    }
+
+    fun activityResumed() {
+        mayRestoreScrollPosition()
     }
 
 
@@ -381,14 +402,24 @@ class FullscreenWebView : WebView {
     }
 
     private fun mayRestoreScrollPosition() {
-        postDelayed({ // older devices need a delay as otherwise scroll position gets applied before content is loaded (and therefore scroll view grew to its extend)
-            scrollPositionToRestore?.let {
-                scrollX = it.x
-                scrollY = it.y
-
-                scrollPositionToRestore = null
+        scrollPositionToRestore?.let { scrollPositionToRestore -> // restore WebView's scroll position before fullscreen has been left in onPause()
+            if(computeVerticalScrollRange() > scrollPositionToRestore.y) {
+                scrollX = scrollPositionToRestore.x
+                scrollY = scrollPositionToRestore.y
             }
-        }, 250)
+
+            postDelayed({
+                isRestoringScrollPosition = true
+
+                if(computeVerticalScrollRange() > scrollPositionToRestore.y) { // don't know why we have to do it delayed in order to work
+                    scrollX = scrollPositionToRestore.x
+                    scrollY = scrollPositionToRestore.y
+                }
+
+                this.scrollPositionToRestore = null // TODO: really setting back to null without knowing if it got applied?
+                isRestoringScrollPosition = false
+            }, 500)
+        }
     }
 
 }
