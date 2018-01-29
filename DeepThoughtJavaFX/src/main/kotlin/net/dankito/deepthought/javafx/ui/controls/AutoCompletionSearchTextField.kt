@@ -2,6 +2,7 @@ package net.dankito.deepthought.javafx.ui.controls
 
 import javafx.beans.value.ObservableValue
 import javafx.event.EventTarget
+import javafx.scene.control.ContextMenu
 import javafx.scene.control.TextField
 import tornadofx.*
 
@@ -20,6 +21,10 @@ fun <T> EventTarget.autocompletionsearchtextfield(property: ObservableValue<Stri
 class AutoCompletionSearchTextField<T> : TextField() {
 
     var onAutoCompletion: ((T) -> Unit)? = null
+
+    var getContextMenuForItemListener: ((item: T) -> ContextMenu?)?
+        get() { return autoCompletionBinding.getContextMenuForItemListener }
+        set(value) { autoCompletionBinding.getContextMenuForItemListener = value }
 
     private var autoCompletionBinding = AutoCompletionBinding<T>(this)
 

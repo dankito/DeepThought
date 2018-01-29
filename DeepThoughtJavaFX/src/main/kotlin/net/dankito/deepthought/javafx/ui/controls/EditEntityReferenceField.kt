@@ -136,6 +136,7 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
                 }
 
                 onAutoCompletion = { entitySelected(it) }
+                getContextMenuForItemListener = { item -> createContextMenuForItem(item) }
 
                 hboxConstraints {
                     marginRight = 4.0
@@ -183,25 +184,24 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
                 }
             }
         }
+    }
 
-        // TODO
-        /*
-            contextmenu {
-                item(messages["action.edit"]) {
-                    action {
-                        selectedItem?.let { editEntity(it) }
-                    }
-                }
+    private fun createContextMenuForItem(item: T): ContextMenu {
+        val contextMenu = ContextMenu()
 
-                separator()
-
-                item(messages["action.delete"]) {
-                    action {
-                        selectedItem?.let { deleteEntity(it) }
-                    }
-                }
+        if(showEditEntityDetailsMenuItem) {
+            contextMenu.item(messages["action.edit"]) {
+                action { editEntity(item) }
             }
-         */
+
+            contextMenu.separator()
+        }
+
+        contextMenu.item(messages["action.delete"]) {
+            action { deleteEntity(item) }
+        }
+
+        return contextMenu
     }
 
     protected open fun getPrefFieldHeight() = 20.0

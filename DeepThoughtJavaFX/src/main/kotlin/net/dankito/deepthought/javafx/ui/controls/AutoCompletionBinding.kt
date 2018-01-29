@@ -2,20 +2,58 @@ package net.dankito.deepthought.javafx.ui.controls
 
 import impl.org.controlsfx.autocompletion.AutoCompletionTextFieldBinding
 import impl.org.controlsfx.autocompletion.SuggestionProvider
+import impl.org.controlsfx.skin.AutoCompletePopup
+import javafx.scene.control.ContextMenu
+import javafx.scene.control.ListCell
+import javafx.scene.control.ListView
 import javafx.scene.control.TextField
+import org.controlsfx.control.textfield.AutoCompletionBinding
+import org.slf4j.LoggerFactory
 
 
 class AutoCompletionBinding<T>(private val textField: TextField, private val suggestionProvider: SuggestionProvider<T> = SuggestionProvider.create(emptyList<T>()))
     : AutoCompletionTextFieldBinding<T>(textField, suggestionProvider) {
 
+    companion object {
+        private val log = LoggerFactory.getLogger(net.dankito.deepthought.javafx.ui.controls.AutoCompletionBinding::class.java)
+    }
+
+
+    var getContextMenuForItemListener: ((item: T) -> ContextMenu?)? = null
 
     private var currentQueryToSelectFromAutoCompletionList: String? = null
+
+    private var suggestionList: ListView<T>? = null
 
 
     init {
         suggestionProvider.isShowAllIfEmpty = true
 
         textField.focusedProperty().addListener { _, _, newValue -> textFieldFocusedChanged(newValue) }
+
+        initAutoCompletePopup()
+    }
+
+    private fun initAutoCompletePopup() {
+        try {
+            val autoCompletionPopupField = AutoCompletionBinding::class.java.getDeclaredField("autoCompletionPopup")
+            autoCompletionPopupField.isAccessible = true
+
+            (autoCompletionPopupField.get(this) as? AutoCompletePopup<T>)?.let { autoCompletionPopup ->
+                if(autoCompletionPopup.skin != null) {
+                    setSuggestionList(autoCompletionPopup.skin.node as? ListView<T>)
+                }
+                else {
+                    setSuggestionList(null)
+
+                    autoCompletionPopup.skinProperty().addListener { _, _, newValue ->
+                        setSuggestionList(newValue?.node as? ListView<T>)
+                    }
+                }
+            }
+        } catch(e: Exception) {
+            log.error("Could not initialized autoCompletionPopup", e)
+        }
     }
 
 
@@ -43,6 +81,20 @@ class AutoCompletionBinding<T>(private val textField: TextField, private val sug
         }
         else {
             hidePopup()
+        }
+    }
+
+
+    private fun setSuggestionList(suggestionList: ListView<T>?) {
+        this.suggestionList = suggestionList
+
+        suggestionList?.setOnContextMenuRequested { e ->
+            val listCell = (e.pickResult?.intersectedNode as? ListCell<T>) ?: e.pickResult?.intersectedNode?.parent as? ListCell<T>
+            listCell?.item?.let { clickedItem ->
+                getContextMenuForItemListener?.invoke(clickedItem)?.let { contextMenu ->
+                    contextMenu.show(listCell, e.screenX, e.screenY)
+                }
+            }
         }
     }
 
