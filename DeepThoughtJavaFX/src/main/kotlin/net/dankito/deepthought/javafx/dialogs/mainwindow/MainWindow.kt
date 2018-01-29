@@ -92,6 +92,8 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
         }
 
         bottom = statusBar.root
+
+        mainMenuBar.createNewItemMenuClicked = { entriesListView.createNewItem() }
     }
 
 

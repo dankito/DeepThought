@@ -3,6 +3,8 @@ package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 import javafx.beans.value.ChangeListener
 import javafx.scene.control.Menu
 import javafx.scene.control.MenuItem
+import javafx.scene.input.KeyCode
+import javafx.scene.input.KeyCodeCombination
 import javafx.scene.input.KeyCombination
 import javafx.scene.layout.Priority
 import javafx.stage.FileChooser
@@ -50,6 +52,9 @@ class MainMenuBar : View() {
     protected lateinit var mimeTypeUtil: MimeTypeUtil
 
 
+    var createNewItemMenuClicked: (() -> Unit)? = null
+
+
     private lateinit var mnitmFileClipboard: Menu
 
     private lateinit var mnitmFileImport: Menu
@@ -76,6 +81,12 @@ class MainMenuBar : View() {
 
                 menu(messages["main.window.menu.file"]) {
                     setOnShowing { fileMenuIsAboutToShow() }
+
+                    menu(messages["main.window.menu.file.new"]) {
+                        item(messages["main.window.menu.file.new.new.item"], KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN)) {
+                            action { createNewItemMenuClicked?.invoke() }
+                        }
+                    }
 
                     mnitmFileClipboard = menu(messages["main.window.menu.file.clipboard"])
 

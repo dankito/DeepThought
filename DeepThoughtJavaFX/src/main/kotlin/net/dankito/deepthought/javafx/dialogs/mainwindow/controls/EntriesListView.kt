@@ -133,6 +133,13 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
     }
 
 
+    fun createNewItem() {
+        searchBar.didUserCreateAnItemYet.value = true // to hide PopOver
+
+        presenter.createEntry()
+    }
+
+
     override fun searchEntities(query: String) {
         presenter.searchEntries(query)
     }
