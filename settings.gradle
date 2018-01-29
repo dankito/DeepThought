@@ -18,7 +18,6 @@ include ':FaviconExtractor'
 
 include ':NewsReader'
 include ':ArticleSummaryExtractors'
-include ':Crux'
 include ':Readability4JAdvanced'
 include ':RomeFeedReader'
 include ':FeedAddressExtractor'
@@ -79,7 +78,6 @@ project(':FaviconExtractor').projectDir = "$rootDir/libs/util/FaviconExtractor" 
 
 project(':NewsReader').projectDir = "$rootDir/libs/news/NewsReader" as File
 project(':ArticleSummaryExtractors').projectDir = "$rootDir/libs/news/ArticleSummaryExtractors" as File
-project(':Crux').projectDir = "$rootDir/libs/news/Crux" as File
 project(':Readability4JAdvanced').projectDir = "$rootDir/libs/news/Readability4JAdvanced" as File
 project(':RomeFeedReader').projectDir = "$rootDir/libs/news/RomeFeedReader" as File
 project(':FeedAddressExtractor').projectDir = "$rootDir/libs/news/FeedAddressExtractor" as File

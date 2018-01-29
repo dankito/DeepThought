@@ -9,7 +9,6 @@ dependencies {
     compile project(':Utils')
     compile project(':WebClient')
 
-    compile project(':Crux')
     compile "net.dankito.readability4j:readability4j:1.0"
 
     testCompile ("junit:junit:$junitVersion", {
