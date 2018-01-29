@@ -1,6 +1,8 @@
 package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.geometry.Pos
+import javafx.scene.control.Button
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyCodeCombination
 import javafx.scene.input.KeyCombination
@@ -14,6 +16,19 @@ import tornadofx.*
 
 
 class EntriesSearchBar(private val entriesListView: EntriesListView, private val presenter: EntriesListPresenter) : View() {
+
+    val didUserCreateAnItemYet = SimpleBooleanProperty(true)
+
+
+    private var btnCreateItem: Button by singleAssign()
+
+    private var createItemHintPopOver: CreateItemHintPopOver? = null
+
+
+    init {
+        didUserCreateAnItemYet.addListener { _, _, newValue -> didUserCreateAnItemYetChanged(newValue) }
+    }
+
 
     override val root = borderpane {
         prefHeight = 40.0
@@ -45,7 +60,7 @@ class EntriesSearchBar(private val entriesListView: EntriesListView, private val
 
         right {
             hbox {
-                button("+") {
+                btnCreateItem = button("+") {
                     prefHeight = 30.0
                     prefWidth = 50.0
                     font = Font.font(font.family, FontWeight.BOLD, 18.0)
@@ -60,10 +75,33 @@ class EntriesSearchBar(private val entriesListView: EntriesListView, private val
                         marginTopBottom(2.0)
                     }
 
-                    action { presenter.createEntry() }
+                    action {
+                        hideCreateItemPopOver()
+                        presenter.createEntry()
+                    }
                 }
             }
         }
+    }
+
+
+    private fun didUserCreateAnItemYetChanged(didUserCreateAnItemYet: Boolean) {
+        if(didUserCreateAnItemYet) {
+            hideCreateItemPopOver()
+        }
+        else {
+            showCreateItemPopOver()
+        }
+    }
+
+    private fun showCreateItemPopOver() {
+        this.createItemHintPopOver = CreateItemHintPopOver()
+        this.createItemHintPopOver?.show(btnCreateItem)
+    }
+
+    private fun hideCreateItemPopOver() {
+        createItemHintPopOver?.hide()
+        createItemHintPopOver = null
     }
 
 }

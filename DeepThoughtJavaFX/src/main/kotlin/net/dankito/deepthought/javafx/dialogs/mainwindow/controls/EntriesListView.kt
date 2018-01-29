@@ -145,6 +145,8 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
             entries.setAll(entities)
             tableEntries.refresh() // necessary when count items stays the same (e.g. when an item has been updated)
 
+            searchBar.didUserCreateAnItemYet.value = entities.isNotEmpty()
+
             statusBar?.showCountDisplayedEntriesOnUiThread(entities.size)
         }
     }
