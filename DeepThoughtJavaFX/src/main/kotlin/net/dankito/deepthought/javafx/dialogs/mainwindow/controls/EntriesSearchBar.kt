@@ -8,6 +8,7 @@ import javafx.scene.layout.Priority
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
+import net.dankito.deepthought.javafx.ui.controls.searchtextfield
 import net.dankito.deepthought.ui.presenter.EntriesListPresenter
 import net.dankito.utils.ui.Colors
 import tornadofx.*
@@ -38,7 +39,7 @@ class EntriesSearchBar(private val entriesListView: EntriesListView, private val
 
                 label(messages["search.textbox.label"])
 
-                textfield {
+                searchtextfield {
                     hboxConstraints {
                         hgrow = Priority.ALWAYS
                         marginLeftRight(6.0)

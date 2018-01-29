@@ -3,6 +3,7 @@ package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 import javafx.geometry.Pos
 import javafx.scene.input.KeyCode
 import javafx.scene.layout.Priority
+import net.dankito.deepthought.javafx.ui.controls.searchtextfield
 import tornadofx.*
 
 
@@ -15,7 +16,7 @@ class TagsSearchBar(private val tagsListView: TagsListView) : View() {
 
         label(messages["search.textbox.label"])
 
-        textfield {
+        searchtextfield {
             hboxConstraints {
                 hgrow = Priority.ALWAYS
                 marginLeftRight(6.0)
