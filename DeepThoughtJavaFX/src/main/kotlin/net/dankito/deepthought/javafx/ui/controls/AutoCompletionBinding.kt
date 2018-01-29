@@ -3,24 +3,17 @@ package net.dankito.deepthought.javafx.ui.controls
 import impl.org.controlsfx.autocompletion.AutoCompletionTextFieldBinding
 import impl.org.controlsfx.autocompletion.SuggestionProvider
 import javafx.scene.control.TextField
-import org.controlsfx.control.textfield.AutoCompletionBinding
 
 
-class AutoCompletionBinding<T>(private val textField: TextField) : AutoCompletionTextFieldBinding<T>(textField, SuggestionProvider.create(emptyList())) {
+class AutoCompletionBinding<T>(private val textField: TextField, private val suggestionProvider: SuggestionProvider<T> = SuggestionProvider.create(emptyList<T>()))
+    : AutoCompletionTextFieldBinding<T>(textField, suggestionProvider) {
 
-
-    private val suggestionProvider: SuggestionProvider<T> = SuggestionProvider.create(emptyList<T>())
-
-    private val suggestionProviderField = AutoCompletionBinding::class.java.getDeclaredField("suggestionProvider")
 
     private var currentQueryToSelectFromAutoCompletionList: String? = null
 
 
     init {
         suggestionProvider.isShowAllIfEmpty = true
-
-        suggestionProviderField.isAccessible = true
-        suggestionProviderField.set(this, suggestionProvider)
 
         textField.focusedProperty().addListener { _, _, newValue -> textFieldFocusedChanged(newValue) }
     }
