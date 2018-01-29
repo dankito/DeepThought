@@ -3,7 +3,6 @@ package net.dankito.deepthought.javafx.ui.controls
 import javafx.beans.value.ObservableValue
 import javafx.event.EventTarget
 import javafx.scene.Cursor
-import javafx.scene.control.TextField
 import javafx.scene.input.KeyCode
 import javafx.scene.input.MouseButton
 import javafx.scene.layout.Region
@@ -12,7 +11,7 @@ import org.controlsfx.control.textfield.CustomTextField
 import tornadofx.*
 
 
-fun EventTarget.searchtextfield(value: String? = null, op: TextField.() -> Unit = {}) = opcr(this, SearchTextField().apply { if (value != null) text = value }, op)
+fun EventTarget.searchtextfield(value: String? = null, op: SearchTextField.() -> Unit = {}) = opcr(this, SearchTextField().apply { if (value != null) text = value }, op)
 
 fun EventTarget.searchtextfield(property: ObservableValue<String>, op: SearchTextField.() -> Unit = {}) = searchtextfield().apply {
     bind(property)
