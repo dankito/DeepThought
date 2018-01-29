@@ -45,7 +45,7 @@ class InlineHtmlEditor : RichTextEditor() {
     fun cleanUp() {
         prefWidthProperty().unbind()
 
-        (parent as Pane).children.remove(this)
+        (parent as? Pane)?.children?.remove(this)
     }
 
 }
