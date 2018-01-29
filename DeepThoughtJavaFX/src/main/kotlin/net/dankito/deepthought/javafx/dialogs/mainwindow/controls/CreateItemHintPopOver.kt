@@ -8,7 +8,7 @@ import org.controlsfx.control.PopOver
 import tornadofx.*
 
 
-class CreateItemHintPopOver : PopOver() {
+class CreateItemHintPopOver(private val anchorNode: Node) : PopOver() {
 
     init {
         this.contentNode = createContentNode()
@@ -16,6 +16,8 @@ class CreateItemHintPopOver : PopOver() {
         this.arrowLocation = PopOver.ArrowLocation.TOP_CENTER
         this.isAutoHide = false
         this.isDetachable = false
+
+        FX.primaryStage.focusedProperty().addListener { _, _, newValue -> mainWindowIsFocusedChanged(newValue) }
     }
 
 
@@ -30,6 +32,20 @@ class CreateItemHintPopOver : PopOver() {
         node.padding = Insets(12.0)
 
         return node
+    }
+
+
+    fun showHint() {
+        show(anchorNode)
+    }
+
+    private fun mainWindowIsFocusedChanged(isFocused: Boolean?) {
+        if(isFocused == true) {
+            showHint()
+        }
+        else if(isFocused == false) {
+            hide()
+        }
     }
 
 }

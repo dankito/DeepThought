@@ -87,8 +87,8 @@ class EntriesSearchBar(private val entriesListView: EntriesListView, private val
     }
 
     private fun showCreateItemPopOver() {
-        this.createItemHintPopOver = CreateItemHintPopOver()
-        this.createItemHintPopOver?.show(btnCreateItem)
+        this.createItemHintPopOver = CreateItemHintPopOver(btnCreateItem)
+        this.createItemHintPopOver?.showHint()
     }
 
     private fun hideCreateItemPopOver() {
