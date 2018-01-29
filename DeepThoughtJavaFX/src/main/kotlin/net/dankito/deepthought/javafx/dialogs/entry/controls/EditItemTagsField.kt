@@ -54,10 +54,6 @@ class EditItemTagsField : EditEntityCollectionField<Tag>(), ITagsOnEntryListView
         return messages["edit.item.tags.field.tags.prompt.text"]
     }
 
-//    override fun getSearchResultListCellFragment(): KClass<ListCellFragment<Tag>> {
-//
-//    }
-
     override fun searchEntities(searchTerm: String) {
         this.autoCompleteResult = null
 

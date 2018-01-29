@@ -66,8 +66,6 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
         return ""
     }
 
-//    abstract protected fun getSearchResultListCellFragment(): KClass<ListCellFragment<T>>
-
     abstract protected fun searchEntities(searchTerm: String)
 
     protected open fun enterPressed() {
