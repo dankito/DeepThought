@@ -67,7 +67,7 @@ class EntriesSearchBar(private val entriesListView: EntriesListView, private val
                     textFill = Color.valueOf(Colors.AddButtonHexColor)
 
                     runLater { // wait till added to Scene
-                        scene?.accelerators?.put(KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN), Runnable { presenter.createEntry() })
+                        scene?.accelerators?.put(KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN), Runnable { createItem() })
                     }
 
                     hboxConstraints {
@@ -75,15 +75,18 @@ class EntriesSearchBar(private val entriesListView: EntriesListView, private val
                         marginTopBottom(2.0)
                     }
 
-                    action {
-                        hideCreateItemPopOver()
-                        presenter.createEntry()
-                    }
+                    action { createItem() }
                 }
             }
         }
     }
 
+
+    private fun createItem() {
+        hideCreateItemPopOver()
+
+        presenter.createEntry()
+    }
 
     private fun didUserCreateAnItemYetChanged(didUserCreateAnItemYet: Boolean) {
         if(didUserCreateAnItemYet) {
