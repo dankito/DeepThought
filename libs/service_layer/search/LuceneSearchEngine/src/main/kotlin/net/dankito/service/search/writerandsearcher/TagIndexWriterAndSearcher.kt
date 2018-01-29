@@ -78,10 +78,6 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osH
 
     private fun executeSearchForNonEmptySearchTerm(search: TagsSearch, tagNamesToSearchFor: List<String>) {
         for(tagNameToSearchFor in tagNamesToSearchFor) {
-            if(search.isInterrupted) {
-                return
-            }
-
             try {
                 val interrupted = executeSearchForSingleTagName(search, tagNameToSearchFor)
                 if(interrupted) {
