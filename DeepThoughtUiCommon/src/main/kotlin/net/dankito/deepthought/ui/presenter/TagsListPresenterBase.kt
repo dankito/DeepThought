@@ -29,7 +29,8 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
 
     private var lastTagsSearch: TagsSearch? = null
 
-    protected var lastTagsSearchResults: TagsSearchResults? = null
+    var lastTagsSearchResults: TagsSearchResults? = null
+        protected set
 
     private var lastFilteredTagsSearch: FilteredTagsSearch? = null
 

@@ -3,18 +3,13 @@ package net.dankito.deepthought.javafx.ui.controls
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.value.ObservableValue
-import javafx.collections.FXCollections
 import javafx.collections.ListChangeListener
-import javafx.collections.ObservableList
 import javafx.geometry.Bounds
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Node
 import javafx.scene.control.Control
 import javafx.scene.control.Label
-import javafx.scene.control.ListView
-import javafx.scene.control.TextField
-import javafx.scene.input.KeyCode
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
@@ -43,20 +38,14 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
 
     protected val enteredSearchTerm = SimpleStringProperty("")
 
-    protected val searchResults: ObservableList<T> = FXCollections.observableArrayList()
-
-    private val showSearchResults = SimpleBooleanProperty()
-
 
     private var collectionLabel: Label by singleAssign()
 
-    protected var txtfldEnteredSearchTerm: TextField by singleAssign()
+    protected var txtfldEnteredSearchTerm: AutoCompletionSearchTextField<T> by singleAssign()
 
     protected var collectionPreviewPane: Pane by singleAssign()
 
     private var countCollectionPreviewPaneLines = 0
-
-    private var lstvwSearchResults: ListView<T> by singleAssign()
 
 
 
@@ -68,7 +57,7 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
 
     abstract protected fun searchEntities(searchTerm: String)
 
-    protected open fun enterPressed() {
+    protected open fun entitySelected(entity: T?) {
 
     }
 
@@ -118,7 +107,7 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
             }
         }
 
-        txtfldEnteredSearchTerm = textfield(enteredSearchTerm) {
+        txtfldEnteredSearchTerm = autocompletionsearchtextfield<T>(enteredSearchTerm) {
             minHeight = 26.0
             hgrow = Priority.ALWAYS
 
@@ -126,57 +115,17 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
 
             textProperty().addListener { _, _, newValue -> searchEntities(newValue) }
             focusedProperty().addListener { _, _, newValue ->
-                searchFieldOrSearchResultsFocusedChanged(newValue, lstvwSearchResults.isFocused)
-
                 if(newValue) searchEntities(text)
             }
 
-            setOnKeyReleased { event ->
-                if(event.code == KeyCode.ENTER) {
-                    enterPressed()
-                }
-            }
+            onAutoCompletion = { entitySelected(it) }
 
             vboxConstraints {
                 marginTop = 6.0
             }
 
             // so that text field has same indentation as TagViews; cannot add text field to hbox above as then binding height wouldn't work anymore
-            collectionLabel.widthProperty().addListener { _, _, newValue -> VBox.setMargin(this@textfield, Insets(6.0, 0.0, 0.0, newValue.toDouble() + LabelMarginRight)) }
-        }
-
-        lstvwSearchResults = listview(searchResults) {
-            vgrow = Priority.ALWAYS
-            minHeight = 100.0
-            maxHeight = 200.0 // set maxHeight so that RichTextEditor doesn't get displayed over buttons bar
-
-            visibleProperty().bind(showSearchResults)
-            FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
-
-//            cellFragment(getSearchResultListCellFragment())
-
-            focusedProperty().addListener { _, _, newValue -> searchFieldOrSearchResultsFocusedChanged(txtfldEnteredSearchTerm.isFocused, newValue) }
-            onDoubleClick { toggleItemOnUiThread(selectionModel.selectedItem) }
-
-//            contextmenu {
-//                item(messages["action.edit"]) {
-//                    action {
-//                        selectedItem?.let { referenceListPresenter.editReference(it) }
-//                    }
-//                }
-//
-//                separator()
-//
-//                item(messages["action.delete"]) {
-//                    action {
-//                        selectedItem?.let { referenceListPresenter.deleteReference(it) }
-//                    }
-//                }
-//            }
-
-            vboxConstraints {
-                marginTop = 6.0
-            }
+            collectionLabel.widthProperty().addListener { _, _, newValue -> VBox.setMargin(this, Insets(6.0, 0.0, 0.0, newValue.toDouble() + LabelMarginRight)) }
         }
 
         doCustomInitialization()
@@ -269,13 +218,6 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
     private fun setCollectionPreviewOnUIThread() {
         updateEditedCollectionPreviewOnUiThread()
 
-        if(searchResults.isEmpty() || txtfldEnteredSearchTerm.isFocused == false) {
-            hideSearchResultsView()
-        }
-        else {
-            showSearchResultsView()
-        }
-
         updateDidCollectionChange()
     }
 
@@ -302,23 +244,11 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
     }
 
     protected fun retrievedSearchResultsOnUiThread(result: Collection<T>) {
-        searchResults.setAll(result)
-
-        if(txtfldEnteredSearchTerm.isFocused || lstvwSearchResults.isFocused) {
-            showSearchResultsView()
-        }
+        txtfldEnteredSearchTerm.setAutoCompleteList(result, getQueryToSelectFromAutoCompletionList())
     }
 
-    private fun searchFieldOrSearchResultsFocusedChanged(titleHasFocus: Boolean, searchResultsHaveFocus: Boolean) {
-        showSearchResults.value = titleHasFocus || searchResultsHaveFocus
-    }
-
-    protected fun showSearchResultsView() {
-        showSearchResults.value = true
-    }
-
-    protected fun hideSearchResultsView() {
-        showSearchResults.value = false
+    protected open fun getQueryToSelectFromAutoCompletionList(): String {
+        return txtfldEnteredSearchTerm.text
     }
 
 }

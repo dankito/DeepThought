@@ -60,11 +60,11 @@ class EditItemTagsField : EditEntityCollectionField<Tag>(), ITagsOnEntryListView
         presenter.searchTags(searchTerm)
     }
 
-    override fun enterPressed() {
-        super.enterPressed()
+    override fun entitySelected(entity: Tag?) {
+        super.entitySelected(entity)
 
-        presenter.getFirstTagOfLastSearchResult()?.let { firstTagSearchResult ->
-            addTagAndUpdatePreview(firstTagSearchResult)
+        entity?.let {
+            addTagAndUpdatePreview(entity)
         }
     }
 
@@ -199,6 +199,16 @@ class EditItemTagsField : EditEntityCollectionField<Tag>(), ITagsOnEntryListView
         enteredSearchTerm.value = searchTerm // TODO
 
         txtfldEnteredSearchTerm.positionCaret(txtfldEnteredSearchTerm.text.length)
+    }
+
+    override fun getQueryToSelectFromAutoCompletionList(): String {
+        presenter.lastTagsSearchResults?.let { lastTagsSearchResults ->
+            lastTagsSearchResults.lastResult?.let { lastResult ->
+                return lastResult.searchTerm
+            }
+        }
+
+        return super.getQueryToSelectFromAutoCompletionList()
     }
 
 

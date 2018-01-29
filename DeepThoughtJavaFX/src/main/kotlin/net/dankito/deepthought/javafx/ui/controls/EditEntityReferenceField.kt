@@ -10,9 +10,6 @@ import javafx.scene.Cursor
 import javafx.scene.Node
 import javafx.scene.control.ContextMenu
 import javafx.scene.control.Control
-import javafx.scene.control.ListView
-import javafx.scene.control.TextField
-import javafx.scene.input.KeyCode
 import javafx.scene.input.MouseButton
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Priority
@@ -68,14 +65,10 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
 
     protected val entityAdditionalPreview = SimpleStringProperty()
 
-    private val showSearchResult = SimpleBooleanProperty()
-
     private val searchResults: ObservableList<T> = FXCollections.observableArrayList()
 
 
-    private var txtfldTitle: TextField by singleAssign()
-
-    private var lstvwSearchResults: ListView<T> by singleAssign()
+    private var txtfldTitle: AutoCompletionSearchTextField<T> by singleAssign()
 
 
     abstract protected fun getCellFragmentClass(): KClass<out ListCellFragment<T>>?
@@ -131,7 +124,7 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
                 }
             }
 
-            txtfldTitle = textfield(editedTitle) {
+            txtfldTitle = autocompletionsearchtextfield<T>(editedTitle) {
                 hgrow = Priority.ALWAYS
                 prefHeight = getPrefTextFieldHeight()
 
@@ -139,20 +132,10 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
 
                 textProperty().addListener { _, _, newValue -> enteredTitleUpdated(newValue) }
                 focusedProperty().addListener { _, _, newValue ->
-                    textFieldTitleOrSearchResultsFocusedChanged(newValue, lstvwSearchResults.isFocused)
-
                     if(newValue) searchEntities(text)
                 }
 
-                setOnKeyReleased { event ->
-                    if(event.code == KeyCode.ENTER) {
-                        createOrSelectSource()
-                    }
-                    else if(event.code == KeyCode.ESCAPE) {
-                        clear() // TODO: really clear text field?
-                        hideSearchResults()
-                    }
-                }
+                onAutoCompletion = { entitySelected(it) }
 
                 hboxConstraints {
                     marginRight = 4.0
@@ -201,21 +184,8 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
             }
         }
 
-        lstvwSearchResults = listview(searchResults) {
-            vgrow = Priority.ALWAYS
-            minHeight = 100.0
-            maxHeight = 200.0 // set maxHeight so that RichTextEditor doesn't get displayed over buttons bar
-
-            visibleProperty().bind(showSearchResult)
-            FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
-
-            getCellFragmentClass()?.let {
-                cellFragment(it)
-            }
-
-            focusedProperty().addListener { _, _, newValue -> textFieldTitleOrSearchResultsFocusedChanged(txtfldTitle.isFocused, newValue) }
-            onDoubleClick { entitySelected(selectionModel.selectedItem) }
-
+        // TODO
+        /*
             contextmenu {
                 item(messages["action.edit"]) {
                     action {
@@ -231,11 +201,7 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
                     }
                 }
             }
-
-            vboxConstraints {
-                marginTop = 6.0
-            }
-        }
+         */
     }
 
     protected open fun getPrefFieldHeight() = 20.0
@@ -310,7 +276,6 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
         setEntity(entity)
 
         txtfldTitle.impl_traverse(Direction.NEXT)
-        runLater { hideSearchResults() }
     }
 
     protected open fun setEntity(entity: T?) {
@@ -338,26 +303,8 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
     protected fun retrievedSearchResultsOnUiThread(result: List<T>) {
         searchResults.setAll(result)
 
-        if(txtfldTitle.isFocused || lstvwSearchResults.isFocused) {
-            showSearchResult.value = true
-        }
-    }
+        txtfldTitle.setAutoCompleteList(result)
 
-    private fun createOrSelectSource() {
-        if(searchResults.size > 0) {
-            entitySelected(searchResults[0])
-        }
-        else if(searchResults.size == 0 && editedTitle.value.isNotBlank()) {
-            hideSearchResults()
-        }
-    }
-
-    private fun textFieldTitleOrSearchResultsFocusedChanged(titleHasFocus: Boolean, searchResultsHaveFocus: Boolean) {
-        showSearchResult.value = titleHasFocus || searchResultsHaveFocus
-    }
-
-    private fun hideSearchResults() {
-        showSearchResult.value = false
     }
 
     private fun entityAdditionalPreviewClicked(event: MouseEvent) {
