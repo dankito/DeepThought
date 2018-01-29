@@ -84,9 +84,9 @@ class EntriesListView : EntitiesListView(), IEntriesListView {
 
         tableEntries = tableview<Item>(entries) {
             column(messages["item.column.header.index"], Item::itemIndex).prefWidth(46.0)
-            column(messages["item.column.header.source"], Item::referencePreview).weigthedWidth(4.0)
-            column(messages["item.column.header.preview"], Item::preview).weigthedWidth(4.0)
-            column(messages["item.column.header.tags"], Item::tagsPreview).weigthedWidth(2.0)
+            column(messages["item.column.header.source"], Item::referencePreview).weightedWidth(4.0)
+            column(messages["item.column.header.preview"], Item::preview).weightedWidth(4.0)
+            column(messages["item.column.header.tags"], Item::tagsPreview).weightedWidth(2.0)
     //        column(messages["item.column.header.created"], stringBinding(Item::createdOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
     //        column(messages["item.column.header.modified"], stringBinding(Item::modifiedOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
 
