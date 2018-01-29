@@ -149,7 +149,7 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
                         createOrSelectSource()
                     }
                     else if(event.code == KeyCode.ESCAPE) {
-                        clear()
+                        clear() // TODO: really clear text field?
                         hideSearchResults()
                     }
                 }

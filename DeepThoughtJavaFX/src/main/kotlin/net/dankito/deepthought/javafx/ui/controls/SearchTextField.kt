@@ -6,6 +6,7 @@ import javafx.beans.value.ObservableValue
 import javafx.event.EventTarget
 import javafx.scene.Cursor
 import javafx.scene.control.TextField
+import javafx.scene.input.KeyCode
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import javafx.util.Duration
@@ -29,7 +30,9 @@ class SearchTextField : CustomTextField() {
 
 
     init {
-        setupClearButtonField()
+        setupClearButtonField() // initialization of TextFields.createClearableTextField()
+
+        doCustomInitialization()
     }
 
 
@@ -69,6 +72,15 @@ class SearchTextField : CustomTextField() {
         fader.fromValue = if (visible) 0.0 else 1.0
         fader.toValue = if (visible) 1.0 else 0.0
         fader.play()
+    }
+
+
+    private fun doCustomInitialization() {
+        setOnKeyReleased { event ->
+            if(event.code == KeyCode.ESCAPE) {
+                clear()
+            }
+        }
     }
 
 }

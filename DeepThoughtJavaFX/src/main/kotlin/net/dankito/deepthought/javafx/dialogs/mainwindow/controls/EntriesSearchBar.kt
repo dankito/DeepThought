@@ -3,7 +3,6 @@ package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.geometry.Pos
 import javafx.scene.control.Button
-import javafx.scene.input.KeyCode
 import javafx.scene.layout.Priority
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
@@ -48,11 +47,6 @@ class EntriesSearchBar(private val entriesListView: EntriesListView, private val
                     promptText = messages["find.items.prompt.text"]
 
                     textProperty().addListener { _, _, newValue -> entriesListView.searchEntities(newValue) }
-                    setOnKeyReleased { event ->
-                        if(event.code == KeyCode.ESCAPE) {
-                            clear()
-                        }
-                    }
                 }
             }
         }
