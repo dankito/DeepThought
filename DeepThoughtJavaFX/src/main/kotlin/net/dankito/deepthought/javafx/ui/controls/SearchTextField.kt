@@ -5,6 +5,7 @@ import javafx.event.EventTarget
 import javafx.scene.Cursor
 import javafx.scene.control.TextField
 import javafx.scene.input.KeyCode
+import javafx.scene.input.MouseButton
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
 import org.controlsfx.control.textfield.CustomTextField
@@ -34,10 +35,16 @@ class SearchTextField : CustomTextField() {
 
         val clearButton = Region()
         clearButton.styleClass.addAll("graphic") //$NON-NLS-1$
+
         val clearButtonPane = StackPane(clearButton)
         clearButtonPane.styleClass.addAll("clear-button") //$NON-NLS-1$
         clearButtonPane.cursor = Cursor.DEFAULT
-        clearButtonPane.setOnMouseReleased { clear() }
+
+        clearButtonPane.setOnMouseReleased { event ->
+            if(event.button == MouseButton.PRIMARY && event.clickCount == 1) {
+                clear()
+            }
+        }
 
         rightProperty().set(clearButtonPane)
     }
