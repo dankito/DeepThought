@@ -88,7 +88,9 @@ class MainMenuBar : View() {
                         }
                     }
 
-                    mnitmFileClipboard = menu(messages["main.window.menu.file.clipboard"])
+                    mnitmFileClipboard = menu(messages["main.window.menu.file.clipboard"]) {
+                        isDisable = true
+                    }
 
                     separator()
 
