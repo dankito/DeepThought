@@ -1,7 +1,5 @@
 package net.dankito.deepthought.javafx.ui.controls
 
-import javafx.animation.FadeTransition
-import javafx.beans.InvalidationListener
 import javafx.beans.value.ObservableValue
 import javafx.event.EventTarget
 import javafx.scene.Cursor
@@ -9,7 +7,6 @@ import javafx.scene.control.TextField
 import javafx.scene.input.KeyCode
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
-import javafx.util.Duration
 import org.controlsfx.control.textfield.CustomTextField
 import tornadofx.*
 
@@ -23,11 +20,6 @@ fun EventTarget.searchtextfield(property: ObservableValue<String>, op: SearchTex
 
 
 class SearchTextField : CustomTextField() {
-
-    companion object {
-        private val FADE_DURATION = Duration.millis(350.0)
-    }
-
 
     init {
         setupClearButtonField() // initialization of TextFields.createClearableTextField()
@@ -44,34 +36,10 @@ class SearchTextField : CustomTextField() {
         clearButton.styleClass.addAll("graphic") //$NON-NLS-1$
         val clearButtonPane = StackPane(clearButton)
         clearButtonPane.styleClass.addAll("clear-button") //$NON-NLS-1$
-        clearButtonPane.opacity = 0.0
         clearButtonPane.cursor = Cursor.DEFAULT
         clearButtonPane.setOnMouseReleased { clear() }
-        clearButtonPane.managedProperty().bind(editableProperty())
-        clearButtonPane.visibleProperty().bind(editableProperty())
 
         rightProperty().set(clearButtonPane)
-
-        val fader = FadeTransition(FADE_DURATION, clearButtonPane)
-        fader.cycleCount = 1
-
-        textProperty().addListener(InvalidationListener {
-            val isTextEmpty = text.isNullOrEmpty()
-            val isButtonVisible = fader.node.opacity > 0
-
-            if(isTextEmpty && isButtonVisible) {
-                setButtonVisible(fader, false)
-            }
-            else if(!isTextEmpty && !isButtonVisible) {
-                setButtonVisible(fader, true)
-            }
-        })
-    }
-
-    private fun setButtonVisible(fader: FadeTransition, visible: Boolean) {
-        fader.fromValue = if (visible) 0.0 else 1.0
-        fader.toValue = if (visible) 1.0 else 0.0
-        fader.play()
     }
 
 
