@@ -95,6 +95,23 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osH
     }
 
     private fun executeSearchForSingleTagName(search: TagsSearch, tagNameToSearchFor: String): Boolean {
+        if(tagNameToSearchFor.isBlank()) {
+            val query = WildcardQuery(Term(FieldName.TagName, "*"))
+
+            if(search.isInterrupted) {
+                return true
+            }
+
+            search.addResult(TagsSearchResult(tagNameToSearchFor, executeSearchTagsQuery(query)))
+
+            return false
+        }
+        else {
+            return executeSearchForNonBlankSingleTagName(search, tagNameToSearchFor)
+        }
+    }
+
+    private fun executeSearchForNonBlankSingleTagName(search: TagsSearch, tagNameToSearchFor: String): Boolean {
         val searchTerm = QueryParser.escape(tagNameToSearchFor.toLowerCase())
         if(search.isInterrupted) {
             return true

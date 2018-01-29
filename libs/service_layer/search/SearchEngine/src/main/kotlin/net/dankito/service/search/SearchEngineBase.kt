@@ -95,7 +95,7 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
     private fun getSingleSearchTerms(overallSearchTerm: String, separator: String, lowerCaseSearchTerm: Boolean = true): List<String> {
         val searchTerm = if(lowerCaseSearchTerm) overallSearchTerm.toLowerCase() else overallSearchTerm
         // make overallSearchTerm lower case, split it at all separators and trim resulting single search terms
-        return searchTerm.split(separator).map { it.trim() }.filter { it.isNullOrBlank() == false }.dropLastWhile { it.isEmpty() }
+        return searchTerm.split(separator).map { it.trim() }
     }
 
 
