@@ -1,23 +1,31 @@
 package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 
+import javafx.beans.value.ChangeListener
 import javafx.geometry.Insets
 import javafx.scene.Node
 import javafx.scene.control.Label
+import javafx.scene.input.MouseButton
 import javafx.scene.text.TextAlignment
 import org.controlsfx.control.PopOver
 import tornadofx.*
 
 
-class CreateItemHintPopOver(private val anchorNode: Node) : PopOver() {
+class CreateItemHintPopOver(private val anchorNode: Node, private val hintHiddenListener: () -> Unit) : PopOver() {
+
+    private val mainWindowIsFocusedListener = ChangeListener { _, _, newValue: Boolean ->
+        mainWindowIsFocusedChanged(newValue)
+    }
+
 
     init {
         this.contentNode = createContentNode()
+        contentNode.setOnMouseClicked { e -> if(e.button == MouseButton.PRIMARY) hideHint() }
 
         this.arrowLocation = PopOver.ArrowLocation.TOP_CENTER
         this.isAutoHide = false
         this.isDetachable = false
 
-        FX.primaryStage.focusedProperty().addListener { _, _, newValue -> mainWindowIsFocusedChanged(newValue) }
+        FX.primaryStage.focusedProperty().addListener(mainWindowIsFocusedListener)
     }
 
 
@@ -39,12 +47,20 @@ class CreateItemHintPopOver(private val anchorNode: Node) : PopOver() {
         show(anchorNode)
     }
 
+    fun hideHint() {
+        hide()
+
+        FX.primaryStage.focusedProperty().removeListener(mainWindowIsFocusedListener)
+
+        hintHiddenListener()
+    }
+
     private fun mainWindowIsFocusedChanged(isFocused: Boolean?) {
         if(isFocused == true) {
             showHint()
         }
         else if(isFocused == false) {
-            hide()
+            hide() // don't call hideHint() as we don't want to clean PopOver but just hide it till MainWindow gets re-focused
         }
     }
 
