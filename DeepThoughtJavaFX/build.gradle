@@ -51,7 +51,15 @@ dependencies {
     compile project(':DeepThoughtUiCommon')
     compile project(':JavaCouchbaseLiteEntityManager')
     compile project(':UdpDevicesDiscoverer')
-    compile project(':RichTextEditorJavaFX')
+    compile project(':RichTextEditorJavaFX'), {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
+        exclude group: 'com.fasterxml.jackson.module', module: 'jackson-module-kotlin'
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+        exclude group: 'ch.qos.logback', module: 'logback-core'
+        exclude group: 'ch.qos.logback', module: 'logback-classic'
+        exclude group: 'no.tornado', module: 'tornadofx'
+        exclude group: 'no.tornado', module: 'tornadofx-controls'
+    }
 
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
