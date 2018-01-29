@@ -100,7 +100,7 @@ class MainMenuBar : View() {
 
                     separator()
 
-                    item(messages["main.window.menu.file.quit"], KeyCombination.keyCombination("Ctrl+Q")) {
+                    item(messages["main.window.menu.file.quit"], KeyCodeCombination(KeyCode.Q, KeyCombination.SHORTCUT_DOWN)) {
                         action { primaryStage.close() }
                     }
                 }
