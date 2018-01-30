@@ -166,7 +166,13 @@ class TagsListView : EntitiesListView(), ITagsListView {
     /*          ITagsListView implementation            */
 
     override fun showEntities(entities: List<Tag>) {
-        runLater { this.tags.setAll(entities) }
+        runLater {
+            this.tags.setAll(entities)
+
+            if(tableTags.selectedItem == null && entities.isNotEmpty()) { // on start up no tag is selected -> select first from list
+                tableTags.selectionModel.select(0)
+            }
+        }
     }
 
     override fun updateDisplayedTags() {
