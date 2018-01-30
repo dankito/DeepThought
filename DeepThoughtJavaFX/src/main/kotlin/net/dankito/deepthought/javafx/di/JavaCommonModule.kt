@@ -11,6 +11,7 @@ import net.dankito.data_access.network.discovery.IDevicesDiscoverer
 import net.dankito.data_access.network.discovery.UdpDevicesDiscoverer
 import net.dankito.deepthought.javafx.service.hashing.Java8Base64Service
 import net.dankito.deepthought.javafx.service.settings.JavaFXPlatformConfiguration
+import net.dankito.deepthought.service.importexport.pdf.PdfImporter
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.services.hashing.IBase64Service
@@ -45,6 +46,13 @@ class JavaCommonModule {
     @Singleton
     fun provideFileStorageService() : IFileStorageService {
         return JavaFileStorageService()
+    }
+
+
+    @Provides
+    @Singleton
+    fun providePdfImporter(threadPool: IThreadPool) : PdfImporter {
+        return PdfImporter(threadPool)
     }
 
 

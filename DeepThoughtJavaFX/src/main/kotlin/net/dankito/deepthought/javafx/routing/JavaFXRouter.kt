@@ -1,12 +1,11 @@
 package net.dankito.deepthought.javafx.routing
 
-import javafx.scene.control.Alert
-import javafx.scene.control.ButtonType
 import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryExtractionResultView
 import net.dankito.deepthought.javafx.dialogs.entry.EditEntryView
 import net.dankito.deepthought.javafx.dialogs.entry.EditReadLaterArticleView
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
+import net.dankito.deepthought.javafx.dialogs.pdf.ViewPdfDialog
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.ReadLaterArticleListView
 import net.dankito.deepthought.javafx.dialogs.source.EditSourceDialog
 import net.dankito.deepthought.javafx.ui.controls.IEntriesListViewJavaFX
@@ -114,22 +113,23 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
 
 
     override fun showPdfView(addNewPdfFile: File, sourceForFile: Source?) {
-        showImportFromPdfView()
+        showImportFromPdfView(addNewPdfFile, null, sourceForFile)
     }
 
     override fun showPdfView(persistedPdfFile: FileLink, sourceForFile: Source?) {
-        showImportFromPdfView()
+        showImportFromPdfView(null, persistedPdfFile, sourceForFile)
     }
 
-    private fun showImportFromPdfView() {
-        // TODO
-        val alert = Alert(Alert.AlertType.INFORMATION)
+    private fun showImportFromPdfView(addNewPdfFile: File?, persistedPdfFile: FileLink?, sourceForFile: Source?) {
 
-        alert.contentText = "Importing data from PDF files coming soon"
-        alert.buttonTypes.setAll(ButtonType.OK)
-        alert.initOwner(mainWindowController.primaryStage)
+        mainWindowController.find(ViewPdfDialog::class,
+                mapOf(ViewPdfDialog::addNewPdfFileParam to addNewPdfFile, ViewPdfDialog::persistedPdfFileParam to persistedPdfFile,
+                        ViewPdfDialog::sourceForFileParam to sourceForFile)
+        ).show(getViewPdfDialogTitle(addNewPdfFile, persistedPdfFile))
+    }
 
-        alert.show()
+    private fun getViewPdfDialogTitle(addNewPdfFile: File?, persistedPdfFile: FileLink?): String {
+        return String.format(FX.messages["view.pdf.dialog.title"], addNewPdfFile?.name ?: persistedPdfFile?.name)
     }
 
 

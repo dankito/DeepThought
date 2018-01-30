@@ -16,6 +16,7 @@ import net.dankito.deepthought.javafx.dialogs.entry.controls.EditItemSourceField
 import net.dankito.deepthought.javafx.dialogs.entry.controls.EditItemTagsField
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindow
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.*
+import net.dankito.deepthought.javafx.dialogs.pdf.ViewPdfDialog
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.ReadLaterArticleListView
 import net.dankito.deepthought.javafx.dialogs.source.EditSourceDialog
 import net.dankito.deepthought.javafx.dialogs.source.controls.EditSourceSeriesField
@@ -72,5 +73,7 @@ interface AppComponent : CommonComponent {
     fun inject(editSourceDialog: EditSourceDialog)
 
     fun inject(editSourceSeriesField: EditSourceSeriesField)
+
+    fun inject(viewPdfDialog: ViewPdfDialog)
 
 }

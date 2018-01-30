@@ -86,6 +86,10 @@ class MainMenuBar : View() {
                         item(messages["main.window.menu.file.new.new.item"], KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN)) {
                             action { createNewItemMenuClicked?.invoke() }
                         }
+
+                        item(messages["main.window.menu.file.new.new.item.from.pdf"], KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN, KeyCombination.SHIFT_DOWN)) {
+                            action { createItemFromPdfFile() }
+                        }
                     }
 
                     mnitmFileClipboard = menu(messages["main.window.menu.file.clipboard"]) {
@@ -144,6 +148,15 @@ class MainMenuBar : View() {
         }
     }
 
+
+    private fun createItemFromPdfFile() {
+        selectFileToOpen("main.window.menu.file.new.new.item.from.pdf.select.file",
+                FileChooser.ExtensionFilter("PDF (*.pdf)", "*.pdf", "*.PDF"))?.let { pdfFile ->
+            router.showPdfView(pdfFile)
+        }
+    }
+
+
     private fun addImporterAndExporter() {
         importerExporterManager.importer.sortedByStrings { it.name }.forEach { importer ->
             mnitmFileImport.item(importer.name) {
@@ -163,9 +176,7 @@ class MainMenuBar : View() {
     }
 
     private fun getFileToImport(): File? {
-        val chooser = FileChooser()
-        chooser.title = messages["main.window.menu.file.select.file.to.import"]
-        return chooser.showOpenDialog(root.scene.window)
+        return selectFileToOpen("main.window.menu.file.select.file.to.import")
     }
 
     private fun getFileToExportTo(): File? {
@@ -204,6 +215,19 @@ class MainMenuBar : View() {
 
     private fun showErrorMessage(error: Exception, articleUrl: String) {
         dialogService.showErrorMessage(dialogService.getLocalization().getLocalizedString("alert.message.could.not.extract.item.from.url", articleUrl), exception = error)
+    }
+
+
+    private fun selectFileToOpen(titleResourceKey: String? = null, vararg extensionFilter: FileChooser.ExtensionFilter): File? {
+        val chooser = FileChooser()
+
+        titleResourceKey?.let {
+            chooser.title = messages[it]
+        }
+
+        chooser.extensionFilters.addAll(extensionFilter)
+
+        return chooser.showOpenDialog(root.scene.window)
     }
 
 }

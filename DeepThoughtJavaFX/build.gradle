@@ -70,6 +70,8 @@ dependencies {
     compile "no.tornado:tornadofx-controls:$tornadoFXControlsVersion"
     compile "org.controlsfx:controlsfx:$controlsFXVersion"
 
+    compile project(':JavaPdfImporter')
+
     compile "ch.qos.logback:logback-core:$logbackVersion"
     compile "ch.qos.logback:logback-classic:$logbackVersion"
 
