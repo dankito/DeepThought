@@ -10,7 +10,7 @@ import tornadofx.*
 
 class SourceViewModel : ItemViewModel<Source>() {
 
-    val sourcePreview = bind { SimpleStringProperty(item?.preview) }
+    val sourcePreview = bind { SimpleStringProperty(item?.preview + (if(item == null) "" else " (" + item?.items?.size + ")")) }
 
     val seriesAndPublishingDatePreview = bind { SimpleStringProperty(item?.seriesAndPublishingDatePreview) }
 
