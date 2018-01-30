@@ -33,7 +33,7 @@ android {
 }
 
 dependencies {
-    compile project(':DeepThoughtBaseLib')
+    compile project(':PdfImporterBase')
 
     compile "com.tom_roush:pdfbox-android:$pdfBoxAndroidVersion"
 

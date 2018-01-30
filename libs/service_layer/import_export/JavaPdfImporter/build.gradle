@@ -5,7 +5,7 @@ targetCompatibility = "1.8"
 
 
 dependencies {
-    compile project(':DeepThoughtBaseLib')
+    compile project(':PdfImporterBase')
 
     compile "org.apache.pdfbox:pdfbox:$pdfBoxVersion"
 }
