@@ -18,7 +18,7 @@ import tornadofx.*
 import javax.inject.Inject
 
 
-class EditItemSourceField : EditEntityReferenceField<Source>(FX.messages["edit.item.source.label"], FX.messages["find.source.prompt.text"],
+class EditItemSourceField : EditEntityReferenceField<Source>(FX.messages["edit.item.source.label"], FX.messages["find.sources.prompt.text"],
         FX.messages["edit.item.source.indication.label"], FX.messages["source.indication.prompt.text"]) {
 
     var seriesToEdit: Series? = null

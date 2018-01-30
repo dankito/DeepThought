@@ -51,6 +51,8 @@ interface AppComponent : CommonComponent {
 
     fun inject(tagsListView: TagsListView)
 
+    fun inject(sourcesListView: SourcesListView)
+
     fun inject(articleSummaryView: ArticleSummaryView)
 
     fun inject(readLaterArticleListView: ReadLaterArticleListView)

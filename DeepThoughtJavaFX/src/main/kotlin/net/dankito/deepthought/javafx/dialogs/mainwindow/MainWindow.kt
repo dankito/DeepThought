@@ -1,7 +1,6 @@
 package net.dankito.deepthought.javafx.dialogs.mainwindow
 
 import javafx.scene.control.SplitPane
-import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import javafx.scene.image.Image
 import javafx.scene.layout.Priority
@@ -30,10 +29,6 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
     }
 
 
-    private var tbpnOverview: TabPane by singleAssign()
-
-    private var tabTags: Tab by singleAssign()
-
     private var stckpnContent: StackPane by singleAssign()
 
     private var splpnContent: SplitPane by singleAssign()
@@ -43,6 +38,8 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
     val mainMenuBar: MainMenuBar by inject()
 
     val tagsListView: TagsListView by inject()
+
+    val sourcesListView: SourcesListView by inject()
 
     val entriesListView: EntriesListView by inject()
 
@@ -65,14 +62,20 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
         center {
             stckpnContent = stackpane {
                 splpnContent = splitpane {
-                    tbpnOverview = tabpane {
+                    tabpane {
                         prefWidth = 300.0
                         tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
 
-                        tabTags = tab(messages["tags.tab.label"]) {
+                        tab(messages["tab.tags.label"]) {
                             prefWidth = 300.0
 
                             add(tagsListView.root)
+                        }
+
+                        tab(messages["tab.sources.label"]) {
+                            prefWidth = 300.0
+
+                            add(sourcesListView.root)
                         }
                     }
 
