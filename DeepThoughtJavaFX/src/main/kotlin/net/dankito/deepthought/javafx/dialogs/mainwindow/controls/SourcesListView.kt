@@ -94,7 +94,7 @@ class SourcesListView : EntitiesListView(), IReferencesListView {
 
 
     private fun sourceSelected(selectedSourceIndex: Int) {
-        if(selectedSourceIndex < sources.size) {
+        if(selectedSourceIndex >= 0 && selectedSourceIndex < sources.size) {
             sourceSelected(sources[selectedSourceIndex])
         }
     }

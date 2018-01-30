@@ -128,7 +128,7 @@ class TagsListView : EntitiesListView(), ITagsListView {
 
 
     private fun tagSelected(selectedTagIndex: Int) {
-        if(selectedTagIndex < tags.size) {
+        if(selectedTagIndex >= 0 && selectedTagIndex < tags.size) {
             tagSelected(tags[selectedTagIndex])
         }
     }
