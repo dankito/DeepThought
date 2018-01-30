@@ -35,7 +35,7 @@ android {
 dependencies {
     compile project(':DeepThoughtBaseLib')
 
-    compile "com.tom_roush:pdfbox-android:1.8.9.1"
+    compile "com.tom_roush:pdfbox-android:$pdfBoxAndroidVersion"
 
     compile "com.android.support:appcompat-v7:$androidAppCompatVersion"
 
