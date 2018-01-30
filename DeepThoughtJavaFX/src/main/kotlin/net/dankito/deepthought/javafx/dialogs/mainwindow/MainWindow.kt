@@ -33,8 +33,6 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
 
     private var splpnContent: SplitPane by singleAssign()
 
-    private var contentPane: VBox by singleAssign()
-
     val mainMenuBar: MainMenuBar by inject()
 
     val tagsListView: TagsListView by inject()
@@ -79,17 +77,15 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
                         }
                     }
 
-                    contentPane = vbox {
-
+                    vbox {
+                        entriesListView.statusBar = statusBar
+                        add(entriesListView.root)
+                        VBox.setVgrow(entriesListView.root, Priority.ALWAYS)
                     }
                 }
 
                 add(ClipboardContentPopup())
             }
-
-            contentPane.add(entriesListView.root)
-            VBox.setVgrow(entriesListView.root, Priority.ALWAYS)
-            entriesListView.statusBar = statusBar
 
             splpnContent.setDividerPosition(0, 0.2)
         }
