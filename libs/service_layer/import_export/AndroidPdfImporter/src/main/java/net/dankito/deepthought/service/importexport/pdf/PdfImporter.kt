@@ -25,13 +25,13 @@ class PdfImporter(applicationContext: Context, private val threadPool: IThreadPo
     }
 
 
-    fun loadFileAsync(file: File, loadingDone: (LoadPageResult) -> Unit) {
+    fun loadFileAsync(file: File, loadingDone: (LoadPdfFileResult) -> Unit) {
         threadPool.runAsync {
             loadingDone(loadFile(file))
         }
     }
 
-    fun loadFile(file: File): LoadPageResult {
+    fun loadFile(file: File): LoadPdfFileResult {
         close()
 
         try {
@@ -41,11 +41,11 @@ class PdfImporter(applicationContext: Context, private val threadPool: IThreadPo
             pdfStripper = FormattedPDFTextStripper()
 
             val info = document.documentInformation
-            return LoadPageResult(true, FileMetadata(document.numberOfPages, info.title, info.author))
+            return LoadPdfFileResult(true, FileMetadata(document.numberOfPages, info.title, info.author))
         } catch (e: Exception) {
             log.error("Could not load pdf file $file", e)
 
-            return LoadPageResult(false, error = e)
+            return LoadPdfFileResult(false, error = e)
         }
     }
 
