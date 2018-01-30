@@ -218,8 +218,6 @@
     <string name="files_presenter_error_message_no_app_installed_for_this_file_type" formatted="false">You don\'t have an app installed that can handle this file type (%s).</string>
     <string name="files_presenter_error_message_no_file_explorer_app_installed">You don\'t have any file explorer app installed.</string>
     <string name="files_presenter_error_message_could_not_open_directory" formatted="false">Could not open directory: %s.</string>
-    
-    <string name="activity_view_pdf_source_length_in_pages">%d pages</string>
 
     <string name="snackbar_extract_item_from_url"><![CDATA[
         Detected a link in clipboard from <b><u>%1$s</u></b>. Would you like to create an item from it?

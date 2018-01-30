@@ -258,8 +258,6 @@
     <string name="files_presenter_error_message_no_file_explorer_app_installed">Sie haben keine Dateiexplorer App installiert.</string>
     <string name="files_presenter_error_message_could_not_open_directory" formatted="false">Kann Verzeichnis nicht anzeigen: %s.</string>
 
-    <string name="activity_view_pdf_source_length_in_pages">%d Seiten</string>
-
     <string name="snackbar_extract_item_from_url"><![CDATA[
         Zwischenablage enthält einen Link von <b><u>%1$s</u></b>. Möchten Sie hieraus einen Eintrag erstellen?
     ]]>

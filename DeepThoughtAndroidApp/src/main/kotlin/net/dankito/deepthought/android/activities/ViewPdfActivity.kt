@@ -153,7 +153,7 @@ class ViewPdfActivity : BaseActivity() {
     }
 
     private fun couldNotLoadPdfOnUiThread(localFile: File, exception: Exception) {
-        txtPageText.text = "Could not load PDF file ${localFile.absolutePath}:\n\n$exception" // TODO: translate
+        txtPageText.text = localization.getLocalizedString("file.page.could.not.load.file", localFile.absolutePath, exception)
 
         txtCountPages.text = ""
         setControlsEnabledState(false)
@@ -169,7 +169,7 @@ class ViewPdfActivity : BaseActivity() {
     private fun createSource(metadata: FileMetadata, pdfFile: FileLink): Source {
         val sourceTitle = (if (metadata.author.isNotBlank()) metadata.author + " - " else "") + metadata.title
         val source = Source(sourceTitle)
-        source.length = resources.getString(R.string.activity_view_pdf_source_length_in_pages, metadata.countPages)
+        source.length = localization.getLocalizedString("file.count.pages", metadata.countPages)
 
         source.addAttachedFile(pdfFile)
 
@@ -205,7 +205,7 @@ class ViewPdfActivity : BaseActivity() {
         }
 
         result.error?.let {
-            txtPageText.text = "Could not load text of page $page: $it" // TODO: translate
+            txtPageText.text = localization.getLocalizedString("file.page.could.not.load.page", page, it)
         }
     }
 
