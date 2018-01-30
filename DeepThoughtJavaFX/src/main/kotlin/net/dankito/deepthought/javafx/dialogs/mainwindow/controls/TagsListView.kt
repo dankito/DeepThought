@@ -111,7 +111,6 @@ class TagsListView : EntitiesListView(), ITagsListView {
 
             contextmenu {
                 item(messages["action.edit"]) {
-                    isDisable = true
                     action {
                         selectedItem?.let { presenter.editTag(it) }
                     }
