@@ -181,7 +181,7 @@ class ViewPdfActivity : BaseActivity() {
         try {
             fileMetaData?.let { metaData ->
                 val page = edtxtCurrentPage.text.toString().toInt()
-                if (page >= 0 && page < metaData.countPages) {
+                if(page > 0 && page <= metaData.countPages) {
                     loadPageTextOnUiThread(page)
                 }
             }
