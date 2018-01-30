@@ -191,15 +191,15 @@ class ViewPdfActivity : BaseActivity() {
     }
 
     private fun loadPageTextOnUiThread(page: Int) {
-        currentPage = page
-        edtxtCurrentPage.setText(page.toString())
-
         importer.getPageTextAsync(page) { result ->
             runOnUiThread { pageTextLoadedOnUiThread(page, result) }
         }
     }
 
     private fun pageTextLoadedOnUiThread(page: Int, result: GetPageResult) {
+        currentPage = page
+        edtxtCurrentPage.setText(page.toString())
+
         result.page?.let {
             txtPageText.text = it
         }
