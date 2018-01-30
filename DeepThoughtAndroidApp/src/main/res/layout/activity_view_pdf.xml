@@ -73,7 +73,7 @@
                 android:textColor="@color/view_pdf_select_page_text_color"
                 android:focusable="true"
                 android:textSize="@dimen/activity_view_pdf_page_select_page_text_size"
-                android:text="/"
+                android:text="@string/activity_view_pdf_current_page_and_count_pages_separator"
             />
 
             <TextView

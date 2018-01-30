@@ -219,6 +219,8 @@
     <string name="files_presenter_error_message_no_file_explorer_app_installed">You don\'t have any file explorer app installed.</string>
     <string name="files_presenter_error_message_could_not_open_directory" formatted="false">Could not open directory: %s.</string>
 
+    <string name="activity_view_pdf_current_page_and_count_pages_separator">/</string>
+
     <string name="snackbar_extract_item_from_url"><![CDATA[
         Detected a link in clipboard from <b><u>%1$s</u></b>. Would you like to create an item from it?
     ]]>
