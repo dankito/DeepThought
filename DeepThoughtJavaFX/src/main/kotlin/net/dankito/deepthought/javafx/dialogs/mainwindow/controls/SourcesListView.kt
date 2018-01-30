@@ -32,6 +32,8 @@ class SourcesListView : EntitiesListView(), IReferencesListView {
 
     private val sourceViewModel = SourceViewModel()
 
+    private var lastSelectedSource: Source? = null
+
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
@@ -110,8 +112,19 @@ class SourcesListView : EntitiesListView(), IReferencesListView {
     }
 
     private fun sourceSelected(selectedSource: Source?) {
+        lastSelectedSource = selectedSource
+
+        showItemsForLastSelectedEntity()
+    }
+
+    fun showItemsForLastSelectedEntity() {
+        val selectedSource = lastSelectedSource
+
         if(selectedSource != null) {
             presenter.showEntriesForReference(selectedSource)
+        }
+        else if(sources.isNotEmpty()) {
+            listViewSources.selectionModel.select(0) // this will select first source in list and then show its items
         }
     }
 

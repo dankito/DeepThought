@@ -34,6 +34,8 @@ class TagsListView : EntitiesListView(), ITagsListView {
 
     private val tagViewModel = TagViewModel()
 
+    private var lastSelectedTag: Tag? = null
+
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
@@ -135,10 +137,23 @@ class TagsListView : EntitiesListView(), ITagsListView {
 
     private fun tagSelected(selectedTag: Tag?) {
         if(selectedTag != null) {
-            presenter.showEntriesForTag(selectedTag)
+            lastSelectedTag = selectedTag
         }
         else {
 //            presenter.clearSelectedTag() // TODO
+        }
+
+        showItemsForLastSelectedEntity()
+    }
+
+    fun showItemsForLastSelectedEntity() {
+        val selectedTag = lastSelectedTag
+
+        if(selectedTag != null) {
+            presenter.showEntriesForTag(selectedTag)
+        }
+        else if(tags.isNotEmpty()) {
+            tableTags.selectionModel.select(0) // this will select first tag in list and then show its items
         }
     }
 

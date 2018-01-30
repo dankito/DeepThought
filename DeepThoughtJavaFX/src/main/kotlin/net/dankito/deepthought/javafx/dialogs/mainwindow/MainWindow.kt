@@ -68,12 +68,16 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
                             prefWidth = 300.0
 
                             add(tagsListView.root)
+
+                            selectedProperty().addListener { _, _, newValue -> if(newValue) tagsListView.showItemsForLastSelectedEntity() }
                         }
 
                         tab(messages["tab.sources.label"]) {
                             prefWidth = 300.0
 
                             add(sourcesListView.root)
+
+                            selectedProperty().addListener { _, _, newValue -> if(newValue) sourcesListView.showItemsForLastSelectedEntity() }
                         }
                     }
 
