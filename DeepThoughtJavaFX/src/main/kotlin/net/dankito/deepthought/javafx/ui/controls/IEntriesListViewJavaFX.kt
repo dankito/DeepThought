@@ -1,5 +1,6 @@
 package net.dankito.deepthought.javafx.ui.controls
 
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.view.IEntriesListView
 
@@ -7,5 +8,7 @@ import net.dankito.deepthought.ui.view.IEntriesListView
 interface IEntriesListViewJavaFX : IEntriesListView {
 
     fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>)
+
+    fun showItemsForSource(source: Source)
 
 }

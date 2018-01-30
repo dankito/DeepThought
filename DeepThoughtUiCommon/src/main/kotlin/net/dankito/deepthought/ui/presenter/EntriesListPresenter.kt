@@ -1,10 +1,7 @@
 package net.dankito.deepthought.ui.presenter
 
 import net.dankito.deepthought.di.CommonComponent
-import net.dankito.deepthought.model.CalculatedTag
-import net.dankito.deepthought.model.EntriesWithoutTagsCalculatedTag
-import net.dankito.deepthought.model.Item
-import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.*
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.IEntriesListView
 import net.dankito.service.data.DeleteEntityService
@@ -26,6 +23,8 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
     private var tagsFilter: List<Tag> = listOf()
 
     private var selectedTag: Tag? = null
+
+    private var selectedSource: Source? = null
 
     private var lastSearchTermProperty = Search.EmptySearchTerm
 
@@ -56,10 +55,21 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
     }
 
     fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {
+        selectedSource = null
+
         selectedTag = tag
         this.tagsFilter = tagsFilter
 
         searchEntries() // apply lastSearchTerm on unfilteredEntries
+    }
+
+    fun showItemsForSource(source: Source) {
+        selectedTag = null
+        tagsFilter = emptyList()
+
+        this.selectedSource = source
+
+        searchEntries()
     }
 
 
@@ -95,7 +105,7 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
         }
 
         return EntriesSearch(searchTerm, searchInContent, searchInAbstract, searchInTags, searchInReference, searchInFiles, filterOnlyEntriesWithoutTags,
-                entriesMustHaveTheseTags, completedListener = searchCompleted)
+                entriesMustHaveTheseTags, entriesMustHaveThisSource = selectedSource, completedListener = searchCompleted)
     }
 
     override fun getLastSearchTerm(): String {

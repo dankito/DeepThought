@@ -34,7 +34,7 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
     }
 
     override fun showEntriesForReference(source: Source) {
-        // TODO
+        entriesListView.showItemsForSource(source)
     }
 
 

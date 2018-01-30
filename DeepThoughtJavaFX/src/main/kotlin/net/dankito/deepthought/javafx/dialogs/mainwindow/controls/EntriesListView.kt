@@ -8,6 +8,7 @@ import net.dankito.deepthought.javafx.routing.JavaFXRouter
 import net.dankito.deepthought.javafx.ui.controls.IEntriesListViewJavaFX
 import net.dankito.deepthought.javafx.util.LazyLoadingObservableList
 import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.extensions.referencePreview
 import net.dankito.deepthought.model.extensions.tagsPreview
@@ -160,6 +161,10 @@ class EntriesListView : EntitiesListView(), IEntriesListViewJavaFX {
 
     override fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {
         presenter.showEntriesForTag(tag, tagsFilter)
+    }
+
+    override fun showItemsForSource(source: Source) {
+        presenter.showItemsForSource(source)
     }
 
 }
