@@ -8,8 +8,8 @@ include ':DeepThoughtJavaFXExtended'
 
 include ':RichTextEditor'
 include ':RichTextEditorCommon'
-include ':RichTextEditorAndroid'
 include ':RichTextEditorJavaFX'
+include ':RichTextEditorAndroid'
 
 include ':DeepThoughtUiCommon'
 include ':DeepThoughtBaseLib'
@@ -41,6 +41,7 @@ include ':Utils'
 include ':NorconexLanguageDetector'
 
 include ':BibTeXImporterExporter'
+include ':PdfImporterBase'
 include ':JavaPdfImporter'
 include ':AndroidPdfImporter'
 
@@ -100,6 +101,7 @@ project(':NorconexLanguageDetector').projectDir = "$rootDir/libs/service_layer/u
 project(':DeepThoughtBaseLib').projectDir = "$rootDir/libs/service_layer/utils/DeepThoughtBaseLib" as File
 
 project(':BibTeXImporterExporter').projectDir = "$rootDir/libs/service_layer/import_export/BibTeXImporterExporter" as File
+project(':PdfImporterBase').projectDir = "$rootDir/libs/service_layer/import_export/PdfImporterBase" as File
 project(':JavaPdfImporter').projectDir = "$rootDir/libs/service_layer/import_export/JavaPdfImporter" as File
 project(':AndroidPdfImporter').projectDir = "$rootDir/libs/service_layer/import_export/AndroidPdfImporter" as File
 
