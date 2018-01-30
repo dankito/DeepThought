@@ -104,7 +104,8 @@ class TagsListView : EntitiesListView(), ITagsListView {
 
             vgrow = Priority.ALWAYS
 
-            selectionModel.selectedItemProperty().addListener { _, _, newValue -> tagSelected(newValue) }
+            // don't know why but selectionModel.selectedItemProperty() doesn't work reliably. Another tag gets selected but selectedItemProperty() doesn't fire this change
+            selectionModel.selectedIndexProperty().addListener { _, _, newValue -> tagSelected(newValue.toInt()) }
 
             contextmenu {
                 item(messages["action.edit"]) {
@@ -126,6 +127,12 @@ class TagsListView : EntitiesListView(), ITagsListView {
     }
 
 
+    private fun tagSelected(selectedTagIndex: Int) {
+        if(selectedTagIndex < tags.size) {
+            tagSelected(tags[selectedTagIndex])
+        }
+    }
+
     private fun tagSelected(selectedTag: Tag?) {
         if(selectedTag != null) {
             presenter.showEntriesForTag(selectedTag)
@@ -134,6 +141,7 @@ class TagsListView : EntitiesListView(), ITagsListView {
 //            presenter.clearSelectedTag() // TODO
         }
     }
+
 
     override fun searchEntities(query: String) {
         presenter.searchTags(query)

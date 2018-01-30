@@ -70,7 +70,8 @@ class SourcesListView : EntitiesListView(), IReferencesListView {
 
             vgrow = Priority.ALWAYS
 
-            selectionModel.selectedItemProperty().addListener { _, _, newValue -> sourceSelected(newValue) }
+            // don't know why but selectionModel.selectedItemProperty() doesn't work reliably. Another source gets selected but selectedItemProperty() doesn't fire this change
+            selectionModel.selectedIndexProperty().addListener { _, _, newValue -> sourceSelected(newValue.toInt()) }
 
             contextmenu {
                 item(messages["action.edit"]) {
@@ -92,11 +93,18 @@ class SourcesListView : EntitiesListView(), IReferencesListView {
     }
 
 
+    private fun sourceSelected(selectedSourceIndex: Int) {
+        if(selectedSourceIndex < sources.size) {
+            sourceSelected(sources[selectedSourceIndex])
+        }
+    }
+
     private fun sourceSelected(selectedSource: Source?) {
         if(selectedSource != null) {
             presenter.showEntriesForReference(selectedSource)
         }
     }
+
 
     override fun searchEntities(query: String) {
         presenter.searchReferences(query)
