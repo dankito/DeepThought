@@ -17,7 +17,6 @@ import net.dankito.utils.ui.IClipboardService
 import net.engio.mbassy.listener.Handler
 import tornadofx.*
 import javax.inject.Inject
-import kotlin.reflect.KClass
 
 
 class EditItemSourceField : EditEntityReferenceField<Source>(FX.messages["edit.item.source.label"], FX.messages["find.sources.prompt.text"],
@@ -78,7 +77,7 @@ class EditItemSourceField : EditEntityReferenceField<Source>(FX.messages["edit.i
     }
 
 
-    override fun getListCellFragment() = SourceListCellFragment::class as KClass<ListCellFragment<Source>> // why is this cast needed, compiler?
+    override fun getListCellFragment() = SourceListCellFragment::class
 
     override fun editEntity(entity: Source) {
         referenceListPresenter.editReference(entity)
