@@ -8,6 +8,7 @@ import javafx.geometry.Bounds
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Node
+import javafx.scene.control.ContextMenu
 import javafx.scene.control.Control
 import javafx.scene.control.Label
 import javafx.scene.layout.Pane
@@ -34,6 +35,8 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
     val didCollectionChange = SimpleBooleanProperty()
 
     protected lateinit var originalCollection: Collection<T>
+
+    var showEditEntityDetailsMenuItem = true
 
 
     protected val enteredSearchTerm = SimpleStringProperty("")
@@ -62,6 +65,10 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
     }
 
     abstract protected fun updateEditedCollectionPreviewOnUiThread()
+
+    abstract protected fun editEntity(entity: T)
+
+    abstract protected fun deleteEntity(entity: T)
 
 
     override val root = vbox {
@@ -119,6 +126,7 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
             }
 
             onAutoCompletion = { entitySelected(it) }
+            getContextMenuForItemListener = { item -> createContextMenuForItem(item) }
 
             vboxConstraints {
                 marginTop = 6.0
@@ -129,6 +137,24 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
         }
 
         doCustomInitialization()
+    }
+
+    private fun createContextMenuForItem(item: T): ContextMenu {
+        val contextMenu = ContextMenu()
+
+        if(showEditEntityDetailsMenuItem) {
+            contextMenu.item(messages["action.edit"]) {
+                action { editEntity(item) }
+            }
+
+            contextMenu.separator()
+        }
+
+        contextMenu.item(messages["action.delete"]) {
+            action { deleteEntity(item) }
+        }
+
+        return contextMenu
     }
 
     protected fun doCustomInitialization() {

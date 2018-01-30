@@ -225,6 +225,15 @@ class EditItemTagsField : EditEntityCollectionField<Tag>(), ITagsOnEntryListView
     }
 
 
+    override fun editEntity(entity: Tag) {
+        presenter.editTag(entity)
+    }
+
+    override fun deleteEntity(entity: Tag) {
+        presenter.deleteTagAsync(entity)
+    }
+
+
     /*      ITagsOnEntryListView implementation         */
 
     override fun showEntities(entities: List<Tag>) {
