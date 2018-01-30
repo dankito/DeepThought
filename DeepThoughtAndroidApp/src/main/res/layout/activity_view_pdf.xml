@@ -55,6 +55,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textAlignment="gravity"
+                android:textColor="@color/view_pdf_select_page_text_color"
                 android:textSize="@dimen/activity_view_pdf_page_select_page_text_size"
                 android:enabled="false"
             />
@@ -69,6 +70,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textAlignment="gravity"
+                android:textColor="@color/view_pdf_select_page_text_color"
                 android:focusable="true"
                 android:textSize="@dimen/activity_view_pdf_page_select_page_text_size"
                 android:text="/"
@@ -81,6 +83,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textAlignment="gravity"
+                android:textColor="@color/view_pdf_select_page_text_color"
                 android:focusable="true"
                 android:textSize="@dimen/activity_view_pdf_page_select_page_text_size"
             />
