@@ -59,15 +59,31 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
         selectedTag = tag
         this.tagsFilter = tagsFilter
 
-        searchEntries(lastSearchTermProperty) // apply lastSearchTerm on unfilteredEntries
+        searchEntries() // apply lastSearchTerm on unfilteredEntries
     }
 
+
+    private fun searchEntries() {
+        searchEntries(getLastSearchTerm())
+    }
 
     fun searchEntries(searchTerm: String, searchInContent: Boolean = true, searchInAbstract: Boolean = true, searchInReference: Boolean = true, searchInTags: Boolean = true,
                       searchInFiles: Boolean = true, searchCompleted: ((List<Item>) -> Unit)? = null) {
         lastEntriesSearch?.interrupt()
         lastSearchTermProperty = searchTerm
 
+        val entriesSearch = createEntriesSearch(searchTerm, searchInContent, searchInAbstract, searchInTags, searchInReference, searchInFiles) { result ->
+            entriesListView.showEntities(result)
+
+            searchCompleted?.invoke(result)
+        }
+
+        this.lastEntriesSearch = entriesSearch
+        searchEngine.searchEntries(entriesSearch)
+    }
+
+    private fun createEntriesSearch(searchTerm: String, searchInContent: Boolean, searchInAbstract: Boolean, searchInTags: Boolean, searchInReference: Boolean,
+                                    searchInFiles: Boolean, searchCompleted: (List<Item>) -> Unit): EntriesSearch {
         var filterOnlyEntriesWithoutTags = false
         val entriesMustHaveTheseTags = ArrayList(tagsFilter)
 
@@ -78,14 +94,8 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
             filterOnlyEntriesWithoutTags = it is EntriesWithoutTagsCalculatedTag
         }
 
-        lastEntriesSearch = EntriesSearch(searchTerm, searchInContent, searchInAbstract, searchInTags, searchInReference, searchInFiles, filterOnlyEntriesWithoutTags,
-                entriesMustHaveTheseTags) { result ->
-            entriesListView.showEntities(result)
-
-            searchCompleted?.invoke(result)
-        }
-
-        searchEngine.searchEntries(lastEntriesSearch!!)
+        return EntriesSearch(searchTerm, searchInContent, searchInAbstract, searchInTags, searchInReference, searchInFiles, filterOnlyEntriesWithoutTags,
+                entriesMustHaveTheseTags, completedListener = searchCompleted)
     }
 
     override fun getLastSearchTerm(): String {
