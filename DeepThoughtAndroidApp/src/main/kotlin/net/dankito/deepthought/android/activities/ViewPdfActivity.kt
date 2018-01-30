@@ -99,13 +99,7 @@ class ViewPdfActivity : BaseActivity() {
         }
 
         btnCreateItemFromSelectedText.setOnClickListener {
-            val selectedText = txtPageText.text.substring(txtPageText.selectionStart, txtPageText.selectionEnd)
-            val item = Item(selectedText)
-            item.indication =
-                    if(fileMetaData != null) localization.getLocalizedString("file.page.indication.with.count.pages.known", currentPage, fileMetaData?.countPages ?: 0)
-                    else localization.getLocalizedString("file.page.indication", currentPage)
-
-            router.showEditEntryView(ItemExtractionResult(item, sourceForFile, couldExtractContent = true))
+            createItemFromSelectedText()
         }
 
         edtxtCurrentPage.clearFocus()
@@ -213,6 +207,18 @@ class ViewPdfActivity : BaseActivity() {
         result.error?.let {
             txtPageText.text = "Could not load text of page $page: $it" // TODO: translate
         }
+    }
+
+
+    private fun createItemFromSelectedText() {
+        val selectedText = txtPageText.text.substring(txtPageText.selectionStart, txtPageText.selectionEnd)
+        val item = Item(selectedText)
+
+        item.indication =
+                if (fileMetaData != null) localization.getLocalizedString("file.page.indication.with.count.pages.known", currentPage, fileMetaData?.countPages ?: 0)
+                else localization.getLocalizedString("file.page.indication", currentPage)
+
+        router.showEditEntryView(ItemExtractionResult(item, sourceForFile, couldExtractContent = true))
     }
 
 }
