@@ -4,9 +4,9 @@ import impl.org.controlsfx.autocompletion.AutoCompletionTextFieldBinding
 import impl.org.controlsfx.autocompletion.SuggestionProvider
 import impl.org.controlsfx.skin.AutoCompletePopup
 import javafx.scene.control.ContextMenu
-import javafx.scene.control.ListCell
 import javafx.scene.control.ListView
 import javafx.scene.control.TextField
+import net.dankito.deepthought.javafx.service.extensions.findClickedListCell
 import org.controlsfx.control.textfield.AutoCompletionBinding
 import org.slf4j.LoggerFactory
 import tornadofx.*
@@ -99,7 +99,7 @@ class AutoCompletionBinding<T>(private val textField: TextField, private val sug
         }
 
         suggestionList?.setOnContextMenuRequested { e ->
-            val listCell = (e.pickResult?.intersectedNode as? ListCell<T>) ?: e.pickResult?.intersectedNode?.parent as? ListCell<T>
+            val listCell = e.pickResult?.findClickedListCell<T>()
             listCell?.item?.let { clickedItem ->
                 getContextMenuForItemListener?.invoke(clickedItem)?.let { contextMenu ->
                     contextMenu.show(listCell, e.screenX, e.screenY)
