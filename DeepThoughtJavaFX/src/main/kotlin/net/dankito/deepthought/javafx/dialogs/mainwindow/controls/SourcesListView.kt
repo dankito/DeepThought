@@ -2,10 +2,12 @@ package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
+import javafx.scene.control.ContextMenu
 import javafx.scene.control.ListView
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.SourceViewModel
+import net.dankito.deepthought.javafx.service.extensions.findClickedListCell
 import net.dankito.deepthought.javafx.ui.controls.cell.SourceListCellFragment
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
@@ -78,30 +80,45 @@ class SourcesListView : EntitiesListView(), IReferencesListView {
             // don't know why but selectionModel.selectedItemProperty() doesn't work reliably. Another source gets selected but selectedItemProperty() doesn't fire this change
             selectionModel.selectedIndexProperty().addListener { _, _, newValue -> sourceSelected(newValue.toInt()) }
 
-            lazyContextmenu {
-                item(messages["action.edit"]) {
-                    action {
-                        selectedItem?.let { presenter.editReference(it) }
-                    }
-                }
+            var currentMenu: ContextMenu? = null
+            setOnContextMenuRequested { event ->
+                currentMenu?.hide()
 
-                if(selectedItem?.url.isNullOrBlank() == false) {
-                    item(messages["context.menu.item.copy.url.to.clipboard"]) {
-                        action {
-                            selectedItem?.let { presenter.copyReferenceUrlToClipboard(it) }
-                        }
-                    }
-                }
-
-                separator()
-
-                item(messages["action.delete"]) {
-                    action {
-                        selectedItem?.let { presenter.deleteReference(it) }
-                    }
+                val listCell = event.pickResult?.findClickedListCell<Source>()
+                listCell?.item?.let { clickedItem ->
+                    currentMenu = createContextMenuForItem(clickedItem)
+                    currentMenu?.show(this, event.screenX, event.screenY)
                 }
             }
         }
+    }
+
+    private fun createContextMenuForItem(clickedItem: Source): ContextMenu {
+        val contextMenu = ContextMenu()
+
+        contextMenu.item(messages["action.edit"]) {
+            action {
+                presenter.editReference(clickedItem)
+            }
+        }
+
+        if(clickedItem.url.isNullOrBlank() == false) {
+            contextMenu.item(messages["context.menu.item.copy.url.to.clipboard"]) {
+                action {
+                    presenter.copyReferenceUrlToClipboard(clickedItem)
+                }
+            }
+        }
+
+        separator()
+
+        contextMenu.item(messages["action.delete"]) {
+            action {
+                presenter.deleteReference(clickedItem)
+            }
+        }
+
+        return contextMenu
     }
 
 
