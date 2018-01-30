@@ -18,9 +18,7 @@ class ArticleSummaryItemsView(private val presenter: ArticleSummaryPresenter) : 
     private val items = FXCollections.observableArrayList<ArticleSummaryItem>()
 
 
-    override val root = listview<ArticleSummaryItem> {
-        items = this@ArticleSummaryItemsView.items
-
+    override val root = listview<ArticleSummaryItem>(items) {
         userData = checkedItems // bad code design, but found no other way to pass checkedItems on ArticleSummaryItemListCellFragment
 
         bindSelected(itemModel)
