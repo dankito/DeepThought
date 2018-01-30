@@ -113,11 +113,11 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
     }
 
 
-    override fun showPdfView(file: File, sourceForFile: Source?) {
+    override fun showPdfView(addNewPdfFile: File, sourceForFile: Source?) {
         showImportFromPdfView()
     }
 
-    override fun showPdfView(file: FileLink, sourceForFile: Source?) {
+    override fun showPdfView(persistedPdfFile: FileLink, sourceForFile: Source?) {
         showImportFromPdfView()
     }
 

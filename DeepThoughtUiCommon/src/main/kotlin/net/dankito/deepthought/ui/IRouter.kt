@@ -41,9 +41,9 @@ interface IRouter {
     fun showEditReferenceSeriesView(forSource: Source, series: Series?)
 
 
-    fun showPdfView(file: File, sourceForFile: Source? = null)
+    fun showPdfView(addNewPdfFile: File, sourceForFile: Source? = null)
 
-    fun showPdfView(file: FileLink, sourceForFile: Source? = null)
+    fun showPdfView(persistedPdfFile: FileLink, sourceForFile: Source? = null)
 
 
     fun returnToPreviousView()
