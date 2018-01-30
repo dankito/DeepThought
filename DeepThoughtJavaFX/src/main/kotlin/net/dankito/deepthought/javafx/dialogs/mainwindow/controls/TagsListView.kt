@@ -9,6 +9,7 @@ import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.TagViewModel
 import net.dankito.deepthought.javafx.service.extensions.findClickedTableRow
 import net.dankito.deepthought.model.AllCalculatedTags
+import net.dankito.deepthought.model.CalculatedTag
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.TagsListPresenter
@@ -124,12 +125,16 @@ class TagsListView : EntitiesListView(), ITagsListView {
         }
     }
 
-    private fun createContextMenuForItem(clickedItem: Tag): ContextMenu {
+    private fun createContextMenuForItem(clickedTag: Tag): ContextMenu? {
+        if(clickedTag is CalculatedTag) {
+            return null
+        }
+
         val contextMenu = ContextMenu()
 
         contextMenu.item(messages["action.edit"]) {
             action {
-                presenter.editTag(clickedItem)
+                presenter.editTag(clickedTag)
             }
         }
 
@@ -137,7 +142,7 @@ class TagsListView : EntitiesListView(), ITagsListView {
 
         contextMenu.item(messages["action.delete"]) {
             action {
-                presenter.deleteTagAsync(clickedItem)
+                presenter.deleteTagAsync(clickedTag)
             }
         }
 
