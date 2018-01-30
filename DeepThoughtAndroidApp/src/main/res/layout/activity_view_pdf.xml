@@ -36,10 +36,10 @@
 
             <ImageButton
                 android:id="@+id/btnNavigateToPreviousPage"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginRight="6dp"
-                android:layout_marginEnd="6dp"
+                android:layout_width="@dimen/activity_view_pdf_buttons_size"
+                android:layout_height="@dimen/activity_view_pdf_buttons_size"
+                android:layout_marginRight="@dimen/activity_view_pdf_button_previous_next_margin_left_right"
+                android:layout_marginEnd="@dimen/activity_view_pdf_button_previous_next_margin_left_right"
                 android:padding="@dimen/activity_view_pdf_button_previous_next_padding"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_navigate_before_black_48dp"
@@ -48,7 +48,7 @@
 
             <EditText
                 android:id="@+id/edtxtCurrentPage"
-                android:layout_width="60dp"
+                android:layout_width="@dimen/activity_view_pdf_page_current_page_width"
                 android:layout_height="match_parent"
                 android:enabled="false"
             />
@@ -56,10 +56,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="4dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginEnd="4dp"
+                android:layout_marginLeft="@dimen/activity_view_pdf_page_separator_margin_left_right"
+                android:layout_marginStart="@dimen/activity_view_pdf_page_separator_margin_left_right"
+                android:layout_marginRight="@dimen/activity_view_pdf_page_separator_margin_left_right"
+                android:layout_marginEnd="@dimen/activity_view_pdf_page_separator_margin_left_right"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textAlignment="gravity"
@@ -79,10 +79,10 @@
 
             <ImageButton
                 android:id="@+id/btnNavigateToNextPage"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="6dp"
-                android:layout_marginStart="6dp"
+                android:layout_width="@dimen/activity_view_pdf_buttons_size"
+                android:layout_height="@dimen/activity_view_pdf_buttons_size"
+                android:layout_marginLeft="@dimen/activity_view_pdf_button_previous_next_margin_left_right"
+                android:layout_marginStart="@dimen/activity_view_pdf_button_previous_next_margin_left_right"
                 android:padding="@dimen/activity_view_pdf_button_previous_next_padding"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_navigate_next_black_48dp"
@@ -94,8 +94,8 @@
 
         <ImageButton
             android:id="@+id/btnCreateItemFromSelectedText"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/activity_view_pdf_buttons_size"
+            android:layout_height="@dimen/activity_view_pdf_buttons_size"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
