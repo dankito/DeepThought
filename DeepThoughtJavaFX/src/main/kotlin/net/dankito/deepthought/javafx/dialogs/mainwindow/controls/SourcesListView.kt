@@ -76,11 +76,18 @@ class SourcesListView : EntitiesListView(), IReferencesListView {
             // don't know why but selectionModel.selectedItemProperty() doesn't work reliably. Another source gets selected but selectedItemProperty() doesn't fire this change
             selectionModel.selectedIndexProperty().addListener { _, _, newValue -> sourceSelected(newValue.toInt()) }
 
-            contextmenu {
+            lazyContextmenu {
                 item(messages["action.edit"]) {
-                    isDisable = true
                     action {
                         selectedItem?.let { presenter.editReference(it) }
+                    }
+                }
+
+                if(selectedItem?.url.isNullOrBlank() == false) {
+                    item(messages["context.menu.item.copy.url.to.clipboard"]) {
+                        action {
+                            selectedItem?.let { presenter.copyReferenceUrlToClipboard(it) }
+                        }
                     }
                 }
 
