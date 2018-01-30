@@ -38,6 +38,8 @@ class AutoCompletionSearchTextField<T> : TextField() {
 
     init {
         autoCompletionBinding.setOnAutoCompleted { e -> onAutoCompletion?.invoke(e.completion) }
+
+        autoCompletionBinding.prefWidthProperty().bind(widthProperty())
     }
 
 
