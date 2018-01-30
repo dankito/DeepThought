@@ -50,6 +50,8 @@
                 android:id="@+id/edtxtCurrentPage"
                 android:layout_width="@dimen/activity_view_pdf_page_current_page_width"
                 android:layout_height="match_parent"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="-2dp"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textAlignment="gravity"
