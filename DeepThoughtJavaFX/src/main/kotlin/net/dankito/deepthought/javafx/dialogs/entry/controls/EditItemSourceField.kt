@@ -3,6 +3,7 @@ package net.dankito.deepthought.javafx.dialogs.entry.controls
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.service.events.EditingSourceDoneEvent
 import net.dankito.deepthought.javafx.ui.controls.EditEntityReferenceField
+import net.dankito.deepthought.javafx.ui.controls.cell.SourceListCellFragment
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.extensions.getSeriesAndPublishingDatePreview
@@ -16,6 +17,7 @@ import net.dankito.utils.ui.IClipboardService
 import net.engio.mbassy.listener.Handler
 import tornadofx.*
 import javax.inject.Inject
+import kotlin.reflect.KClass
 
 
 class EditItemSourceField : EditEntityReferenceField<Source>(FX.messages["edit.item.source.label"], FX.messages["find.sources.prompt.text"],
@@ -76,7 +78,7 @@ class EditItemSourceField : EditEntityReferenceField<Source>(FX.messages["edit.i
     }
 
 
-    override fun getCellFragmentClass() = SourceListCellFragment::class
+    override fun getListCellFragment() = SourceListCellFragment::class as KClass<ListCellFragment<Source>> // why is this cast needed, compiler?
 
     override fun editEntity(entity: Source) {
         referenceListPresenter.editReference(entity)

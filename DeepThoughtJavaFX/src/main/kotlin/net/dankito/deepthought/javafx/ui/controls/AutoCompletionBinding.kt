@@ -9,6 +9,8 @@ import javafx.scene.control.ListView
 import javafx.scene.control.TextField
 import org.controlsfx.control.textfield.AutoCompletionBinding
 import org.slf4j.LoggerFactory
+import tornadofx.*
+import kotlin.reflect.KClass
 
 
 class AutoCompletionBinding<T>(private val textField: TextField, private val suggestionProvider: SuggestionProvider<T> = SuggestionProvider.create(emptyList<T>()))
@@ -20,6 +22,8 @@ class AutoCompletionBinding<T>(private val textField: TextField, private val sug
 
 
     var getContextMenuForItemListener: ((item: T) -> ContextMenu?)? = null
+
+    var listCellFragment: KClass<ListCellFragment<T>>? = null
 
     private var currentQueryToSelectFromAutoCompletionList: String? = null
 
@@ -87,6 +91,12 @@ class AutoCompletionBinding<T>(private val textField: TextField, private val sug
 
     private fun setSuggestionList(suggestionList: ListView<T>?) {
         this.suggestionList = suggestionList
+
+        suggestionList?.let {
+            listCellFragment?.let {
+                suggestionList.cellFragment(fragment = it)
+            }
+        }
 
         suggestionList?.setOnContextMenuRequested { e ->
             val listCell = (e.pickResult?.intersectedNode as? ListCell<T>) ?: e.pickResult?.intersectedNode?.parent as? ListCell<T>

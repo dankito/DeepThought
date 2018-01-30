@@ -6,6 +6,7 @@ import javafx.scene.control.ListView
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.SourceViewModel
+import net.dankito.deepthought.javafx.ui.controls.cell.SourceListCellFragment
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ReferencesListPresenter
@@ -66,9 +67,11 @@ class SourcesListView : EntitiesListView(), IReferencesListView {
         add(searchBar.root)
 
         listViewSources = listview<Source>(sources) {
-            bindSelected(sourceViewModel)
-
             vgrow = Priority.ALWAYS
+
+            cellFragment(SourceListCellFragment::class)
+
+            bindSelected(sourceViewModel)
 
             // don't know why but selectionModel.selectedItemProperty() doesn't work reliably. Another source gets selected but selectedItemProperty() doesn't fire this change
             selectionModel.selectedIndexProperty().addListener { _, _, newValue -> sourceSelected(newValue.toInt()) }

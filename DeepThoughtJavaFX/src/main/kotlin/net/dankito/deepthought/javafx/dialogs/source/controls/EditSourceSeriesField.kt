@@ -61,8 +61,6 @@ class EditSourceSeriesField : EditEntityReferenceField<Series>(FX.messages["edit
     override fun getPrefButtonSize() = getPrefTextFieldHeight() - 2.0
 
 
-    override fun getCellFragmentClass() = null
-
     override fun editEntity(entity: Series) {
         seriesListPresenter.editSeries(entity)
     }

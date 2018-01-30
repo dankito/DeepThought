@@ -71,7 +71,8 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
     private var txtfldTitle: AutoCompletionSearchTextField<T> by singleAssign()
 
 
-    abstract protected fun getCellFragmentClass(): KClass<out ListCellFragment<T>>?
+
+    protected open fun getListCellFragment(): KClass<ListCellFragment<T>>? = null
 
     abstract protected fun getEntityTitle(entity: T?): String?
 
@@ -137,6 +138,7 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
 
                 onAutoCompletion = { entitySelected(it) }
                 getContextMenuForItemListener = { item -> createContextMenuForItem(item) }
+                listCellFragment = getListCellFragment()
 
                 hboxConstraints {
                     marginRight = 4.0

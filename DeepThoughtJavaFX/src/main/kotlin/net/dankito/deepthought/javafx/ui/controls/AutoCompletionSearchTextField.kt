@@ -5,6 +5,7 @@ import javafx.event.EventTarget
 import javafx.scene.control.ContextMenu
 import javafx.scene.control.TextField
 import tornadofx.*
+import kotlin.reflect.KClass
 
 
 fun <T> EventTarget.autocompletionsearchtextfield(value: String? = null, op: AutoCompletionSearchTextField<T>.() -> Unit = {}) =
@@ -25,6 +26,12 @@ class AutoCompletionSearchTextField<T> : TextField() {
     var getContextMenuForItemListener: ((item: T) -> ContextMenu?)?
         get() { return autoCompletionBinding.getContextMenuForItemListener }
         set(value) { autoCompletionBinding.getContextMenuForItemListener = value }
+
+
+    var listCellFragment: KClass<ListCellFragment<T>>?
+        get() { return autoCompletionBinding.listCellFragment }
+        set(value) { autoCompletionBinding.listCellFragment = value }
+
 
     private var autoCompletionBinding = AutoCompletionBinding<T>(this)
 
