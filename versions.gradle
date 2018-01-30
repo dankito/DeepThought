@@ -78,6 +78,8 @@ ext {
 
     controlsFXVersion = '8.40.14'
 
+    pdfBoxVersion = '2.0.8'
+
 
     logbackVersion = '1.2.3'
 
