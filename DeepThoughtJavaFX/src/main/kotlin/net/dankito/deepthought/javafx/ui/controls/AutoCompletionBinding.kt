@@ -23,7 +23,7 @@ class AutoCompletionBinding<T>(private val textField: TextField, private val sug
 
     var getContextMenuForItemListener: ((item: T) -> ContextMenu?)? = null
 
-    var listCellFragment: KClass<ListCellFragment<T>>? = null
+    var listCellFragment: KClass<out ListCellFragment<T>>? = null
 
     private var currentQueryToSelectFromAutoCompletionList: String? = null
 

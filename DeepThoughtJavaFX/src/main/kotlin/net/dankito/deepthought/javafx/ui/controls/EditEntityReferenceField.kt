@@ -72,7 +72,7 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
 
 
 
-    protected open fun getListCellFragment(): KClass<ListCellFragment<T>>? = null
+    protected open fun getListCellFragment(): KClass<out ListCellFragment<T>>? = null
 
     abstract protected fun getEntityTitle(entity: T?): String?
 

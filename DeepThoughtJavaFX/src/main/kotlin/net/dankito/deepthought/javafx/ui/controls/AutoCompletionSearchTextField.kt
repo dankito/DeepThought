@@ -28,7 +28,7 @@ class AutoCompletionSearchTextField<T> : TextField() {
         set(value) { autoCompletionBinding.getContextMenuForItemListener = value }
 
 
-    var listCellFragment: KClass<ListCellFragment<T>>?
+    var listCellFragment: KClass<out ListCellFragment<T>>?
         get() { return autoCompletionBinding.listCellFragment }
         set(value) { autoCompletionBinding.listCellFragment = value }
 
