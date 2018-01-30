@@ -11,7 +11,6 @@ import net.dankito.deepthought.android.adapter.EntryRecyclerAdapter
 import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Item
-import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EntriesListPresenter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
@@ -129,11 +128,6 @@ class EntriesListView : EntitiesListViewFragment<Item>(R.menu.entry_contextual_a
         else {
             entriesToShowOnAttaches = entities
         }
-    }
-
-    // TODO: this is only used for JavaFX, remove it
-    override fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {
-        presenter.showEntriesForTag(tag, tagsFilter)
     }
 
 }

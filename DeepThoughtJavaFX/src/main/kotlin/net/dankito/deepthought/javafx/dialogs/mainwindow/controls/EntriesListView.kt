@@ -5,6 +5,7 @@ import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.EntryViewModel
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
+import net.dankito.deepthought.javafx.ui.controls.IEntriesListViewJavaFX
 import net.dankito.deepthought.javafx.util.LazyLoadingObservableList
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Tag
@@ -12,7 +13,6 @@ import net.dankito.deepthought.model.extensions.referencePreview
 import net.dankito.deepthought.model.extensions.tagsPreview
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EntriesListPresenter
-import net.dankito.deepthought.ui.view.IEntriesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
@@ -24,7 +24,7 @@ import java.text.DateFormat
 import javax.inject.Inject
 
 
-class EntriesListView : EntitiesListView(), IEntriesListView {
+class EntriesListView : EntitiesListView(), IEntriesListViewJavaFX {
 
     companion object {
         private val dateTimeFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG)

@@ -9,12 +9,12 @@ import net.dankito.deepthought.javafx.dialogs.entry.EditReadLaterArticleView
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.ReadLaterArticleListView
 import net.dankito.deepthought.javafx.dialogs.source.EditSourceDialog
+import net.dankito.deepthought.javafx.ui.controls.IEntriesListViewJavaFX
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.view.IEntriesListView
 import net.dankito.newsreader.model.ArticleSummary
 import tornadofx.*
 import java.io.File
@@ -22,7 +22,7 @@ import java.io.File
 
 class JavaFXRouter(private val mainWindowController: MainWindowController) : IRouter {
 
-    lateinit var entriesListView: IEntriesListView
+    lateinit var entriesListView: IEntriesListViewJavaFX
 
 
     override fun showArticleSummaryExtractorsView() {
