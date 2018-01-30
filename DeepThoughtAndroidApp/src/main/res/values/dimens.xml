@@ -186,6 +186,7 @@
     <dimen name="activity_view_pdf_button_previous_next_margin_left_right">6dp</dimen>
     <dimen name="activity_view_pdf_button_previous_next_padding">4dp</dimen>
     <dimen name="activity_view_pdf_page_current_page_width">50dp</dimen>
+    <dimen name="activity_view_pdf_page_select_page_text_size">18sp</dimen>
     <dimen name="activity_view_pdf_page_separator_margin_left_right">4dp</dimen>
 
     <!-- EditText has a padding of 4dp, so to left align a control with it add this value as paddingLeft / marginLeft -->
