@@ -2,10 +2,12 @@ package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
+import javafx.scene.control.ContextMenu
 import javafx.scene.control.TableView
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.TagViewModel
+import net.dankito.deepthought.javafx.service.extensions.findClickedTableRow
 import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.IRouter
@@ -109,22 +111,37 @@ class TagsListView : EntitiesListView(), ITagsListView {
             // don't know why but selectionModel.selectedItemProperty() doesn't work reliably. Another tag gets selected but selectedItemProperty() doesn't fire this change
             selectionModel.selectedIndexProperty().addListener { _, _, newValue -> tagSelected(newValue.toInt()) }
 
-            contextmenu {
-                item(messages["action.edit"]) {
-                    action {
-                        selectedItem?.let { presenter.editTag(it) }
-                    }
-                }
+            var currentMenu: ContextMenu? = null
+            setOnContextMenuRequested { event ->
+                currentMenu?.hide()
 
-                separator()
-
-                item(messages["action.delete"]) {
-                    action {
-                        selectedItem?.let { presenter.deleteTagAsync(it) }
-                    }
+                val tableRow = event.pickResult?.findClickedTableRow<Tag>()
+                tableRow?.item?.let { clickedItem ->
+                    currentMenu = createContextMenuForItem(clickedItem)
+                    currentMenu?.show(this, event.screenX, event.screenY)
                 }
             }
         }
+    }
+
+    private fun createContextMenuForItem(clickedItem: Tag): ContextMenu {
+        val contextMenu = ContextMenu()
+
+        contextMenu.item(messages["action.edit"]) {
+            action {
+                presenter.editTag(clickedItem)
+            }
+        }
+
+        separator()
+
+        contextMenu.item(messages["action.delete"]) {
+            action {
+                presenter.deleteTagAsync(clickedItem)
+            }
+        }
+
+        return contextMenu
     }
 
 
