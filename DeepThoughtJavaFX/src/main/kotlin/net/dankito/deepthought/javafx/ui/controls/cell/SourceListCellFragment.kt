@@ -3,6 +3,7 @@ package net.dankito.deepthought.javafx.ui.controls.cell
 import javafx.geometry.Pos
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.SourceViewModel
+import net.dankito.deepthought.javafx.res.Fonts
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.Source
 import tornadofx.*
@@ -26,6 +27,8 @@ class SourceListCellFragment : ListCellFragment<Source>() {
         label(source.sourcePreview) {
             vgrow = Priority.ALWAYS
 
+            font = Fonts.Header1FontNonBold
+            textFill = Fonts.Header1TextColor
             isWrapText = true
         }
 
@@ -33,6 +36,9 @@ class SourceListCellFragment : ListCellFragment<Source>() {
             maxHeight = 20.0
             visibleProperty().bind(source.hasSeriesAndPublishingDatePreview)
             FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
+
+            font = Fonts.Header2Font
+            textFill = Fonts.Header2TextColor
 
             vboxConstraints {
                 marginTop = 6.0
