@@ -147,7 +147,7 @@ class ViewPdfActivity : BaseActivity() {
         }
 
         txtCountPages.text = metadata.countPages.toString()
-        setControlsEnabledState(true, txtPageText.hasSelection())
+        setControlsEnabledState(true)
 
         loadPageTextOnUiThread(1)
     }
@@ -159,10 +159,10 @@ class ViewPdfActivity : BaseActivity() {
         setControlsEnabledState(false)
     }
 
-    private fun setControlsEnabledState(areEnabled: Boolean, isButtonCreateItemFromSelectedTextEnabled: Boolean = areEnabled) {
+    private fun setControlsEnabledState(areEnabled: Boolean, isButtonCreateItemFromSelectedTextEnabled: Boolean = areEnabled && txtPageText.hasSelection()) {
         edtxtCurrentPage.isEnabled = areEnabled
-        btnNavigateToPreviousPage.isEnabled = areEnabled
-        btnNavigateToNextPage.isEnabled = areEnabled
+        btnNavigateToPreviousPage.isEnabled = areEnabled && currentPage > 1
+        btnNavigateToNextPage.isEnabled = areEnabled && currentPage > 0 && currentPage < (fileMetaData?.countPages ?: 0)
         btnCreateItemFromSelectedText.isEnabled = isButtonCreateItemFromSelectedTextEnabled
     }
 
@@ -207,6 +207,8 @@ class ViewPdfActivity : BaseActivity() {
         result.error?.let {
             txtPageText.text = localization.getLocalizedString("file.page.could.not.load.page", page, it)
         }
+
+        setControlsEnabledState(true)
     }
 
 
