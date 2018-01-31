@@ -21,6 +21,7 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.service.importexport.pdf.FileMetadata
 import net.dankito.deepthought.service.importexport.pdf.GetPageResult
+import net.dankito.deepthought.service.importexport.pdf.IPdfDocument
 import net.dankito.deepthought.service.importexport.pdf.PdfImporter
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.utils.localization.Localization
@@ -88,6 +89,8 @@ class ViewPdfDialog : DialogFragment() {
     private val canNavigateToNextPage = SimpleBooleanProperty(false)
 
     private var currentPage = -1
+
+    private var pdfDocument: IPdfDocument? = null
 
     private var fileMetaData: FileMetadata? = null
 
@@ -207,7 +210,12 @@ class ViewPdfDialog : DialogFragment() {
     private fun loadPdf(pdfFile: FileLink) {
         val localFile = fileManager.getLocalPathForFile(pdfFile)
 
+        this.pdfDocument = null
+        this.fileMetaData = null
+
         importer.loadFileAsync(localFile) { result ->
+            this.pdfDocument = result.document
+
             result.fileMetadata?.let {
                 runLater { loadedFileOnUiThread(pdfFile, it) }
             }
@@ -270,8 +278,10 @@ class ViewPdfDialog : DialogFragment() {
     }
 
     private fun loadPageTextOnUiThread(page: Int) {
-        importer.getPageTextAsync(page) { result ->
-            runLater { pageTextLoadedOnUiThread(page, result) }
+        pdfDocument?.let { pdfDocument ->
+            importer.getPageTextAsync(pdfDocument, page) { result ->
+                runLater { pageTextLoadedOnUiThread(page, result) }
+            }
         }
     }
 

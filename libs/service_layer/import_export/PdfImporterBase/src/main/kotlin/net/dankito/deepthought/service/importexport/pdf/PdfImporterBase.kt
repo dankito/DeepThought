@@ -12,8 +12,6 @@ abstract class PdfImporterBase(private val threadPool: IThreadPool) {
     }
 
 
-    protected var currentDocument: IPdfDocument? = null
-
     private var pdfStripper: IPdfTextStripper = createPdfTextStripper()
 
 
@@ -29,13 +27,10 @@ abstract class PdfImporterBase(private val threadPool: IThreadPool) {
     }
 
     fun loadFile(file: File): LoadPdfFileResult {
-        close()
-
         try {
             val document = loadDocument(file)
-            currentDocument = document
 
-            return LoadPdfFileResult(true, FileMetadata(document.numberOfPages, document.title, document.author))
+            return LoadPdfFileResult(true, document, FileMetadata(document.numberOfPages, document.title, document.author))
         } catch (e: Exception) {
             log.error("Could not load pdf file $file", e)
 
@@ -44,29 +39,20 @@ abstract class PdfImporterBase(private val threadPool: IThreadPool) {
     }
 
 
-    fun getPageTextAsync(page: Int, done: (GetPageResult) -> Unit) {
+    fun getPageTextAsync(document: IPdfDocument, page: Int, done: (GetPageResult) -> Unit) {
         threadPool.runAsync {
-            done(getPageText(page))
+            done(getPageText(document, page))
         }
     }
 
-    fun getPageText(page: Int): GetPageResult {
-        currentDocument?.let { currentDocument ->
-            try {
-                return GetPageResult(true, pdfStripper.getText(currentDocument, page, page))
-            } catch(e: Exception) {
-                log.error("Could not get text for page $page", e)
+    fun getPageText(document: IPdfDocument, page: Int): GetPageResult {
+        try {
+            return GetPageResult(true, pdfStripper.getText(document, page, page))
+        } catch(e: Exception) {
+            log.error("Could not get text for page $page", e)
 
-                return GetPageResult(false, error = e)
-            }
+            return GetPageResult(false, error = e)
         }
-
-        return GetPageResult(false)
     }
 
-
-    fun close() {
-        currentDocument?.close()
-        currentDocument == null
-    }
 }
