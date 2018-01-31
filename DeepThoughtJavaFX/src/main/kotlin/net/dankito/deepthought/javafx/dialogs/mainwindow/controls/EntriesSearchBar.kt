@@ -1,6 +1,5 @@
 package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 
-import javafx.beans.property.SimpleBooleanProperty
 import javafx.geometry.Pos
 import javafx.scene.control.Button
 import javafx.scene.layout.Priority
@@ -8,24 +7,21 @@ import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
 import net.dankito.deepthought.javafx.ui.controls.searchtextfield
+import net.dankito.deepthought.model.LocalSettings
+import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.presenter.EntriesListPresenter
 import net.dankito.utils.ui.Colors
 import tornadofx.*
 
 
-class EntriesSearchBar(private val entriesListView: EntriesListView, private val presenter: EntriesListPresenter) : View() {
-
-    val didUserCreateAnItemYet = SimpleBooleanProperty(true)
+class EntriesSearchBar(private val entriesListView: EntriesListView, private val presenter: EntriesListPresenter, private val dataManager: DataManager) : View() {
 
 
     private var btnCreateItem: Button by singleAssign()
 
     private var createItemHintPopOver: CreateItemHintPopOver? = null
 
-
-    init {
-        didUserCreateAnItemYet.addListener { _, _, newValue -> didUserCreateAnItemYetChanged(newValue) }
-    }
+    private var localSettingsChangedListener: ((LocalSettings) -> Unit)? = null
 
 
     override val root = borderpane {
@@ -68,6 +64,8 @@ class EntriesSearchBar(private val entriesListView: EntriesListView, private val
                 }
             }
         }
+
+        checkDidUserCreateDataEntity()
     }
 
 
@@ -77,7 +75,40 @@ class EntriesSearchBar(private val entriesListView: EntriesListView, private val
         presenter.createEntry()
     }
 
-    private fun didUserCreateAnItemYetChanged(didUserCreateAnItemYet: Boolean) {
+
+    private fun checkDidUserCreateDataEntity() {
+        dataManager.addInitializationListener {
+            runLater {
+                checkDidUserCreateDataEntityAfterInitializingDataManagerOnUiThread()
+            }
+        }
+    }
+
+    private fun checkDidUserCreateDataEntityAfterInitializingDataManagerOnUiThread() {
+        didUserCreateDataEntityChangedOnUiThread(dataManager.localSettings.didUserCreateDataEntity)
+
+        if(dataManager.localSettings.didUserCreateDataEntity == false) {
+            listenToDidUserCreateDataEntityChanges()
+        }
+    }
+
+    private fun listenToDidUserCreateDataEntityChanges() {
+        val listener: (LocalSettings) -> Unit = { localSettings ->
+            if(localSettings.didUserCreateDataEntity) {
+                localSettingsChangedListener?.let { dataManager.removeLocalSettingsChangedListener(it) }
+                localSettingsChangedListener = null
+
+                runLater {
+                    didUserCreateDataEntityChangedOnUiThread(true)
+                }
+            }
+        }
+
+        dataManager.addLocalSettingsChangedListener(listener)
+        this.localSettingsChangedListener = listener
+    }
+
+    private fun didUserCreateDataEntityChangedOnUiThread(didUserCreateAnItemYet: Boolean) {
         if(didUserCreateAnItemYet) {
             hideCreateItemPopOver()
         }

@@ -12,6 +12,7 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.extensions.referencePreview
 import net.dankito.deepthought.model.extensions.tagsPreview
+import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EntriesListPresenter
 import net.dankito.service.data.DeleteEntityService
@@ -60,12 +61,15 @@ class EntriesListView : EntitiesListView(), IEntriesListViewJavaFX {
     @Inject
     protected lateinit var clipboardService: IClipboardService
 
+    @Inject
+    protected lateinit var dataManager: DataManager
+
 
     init {
         AppComponent.component.inject(this)
 
         presenter = EntriesListPresenter(this, router, searchEngine, deleteEntityService, clipboardService)
-        searchBar = EntriesSearchBar(this, presenter)
+        searchBar = EntriesSearchBar(this, presenter, dataManager)
 
         (router as? JavaFXRouter)?.entriesListView = this // TODO: this is bad code design
 
@@ -135,8 +139,6 @@ class EntriesListView : EntitiesListView(), IEntriesListViewJavaFX {
 
 
     fun createNewItem() {
-        searchBar.didUserCreateAnItemYet.value = true // to hide PopOver
-
         presenter.createEntry()
     }
 
@@ -152,8 +154,6 @@ class EntriesListView : EntitiesListView(), IEntriesListViewJavaFX {
         runLater {
             entries.setAll(entities)
             tableEntries.refresh() // necessary when count items stays the same (e.g. when an item has been updated)
-
-            searchBar.didUserCreateAnItemYet.value = entities.isNotEmpty()
 
             statusBar?.showCountDisplayedEntriesOnUiThread(entities.size)
         }
