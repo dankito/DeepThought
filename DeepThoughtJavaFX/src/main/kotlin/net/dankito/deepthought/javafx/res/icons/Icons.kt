@@ -17,7 +17,7 @@ class Icons {
 
         const val NewspaperIconPath = "icons/ic_newspaper_accent_24dp.png"
 
-        const val UpdateIconPath = "icons/update_icon_32x32.png"
+        const val UpdateIconPath = "icons/ic_cached_black_24dp.png"
 
         const val LoadNextItemsIconPath = "icons/arrow_right_in_circle_32x32.png"
 
