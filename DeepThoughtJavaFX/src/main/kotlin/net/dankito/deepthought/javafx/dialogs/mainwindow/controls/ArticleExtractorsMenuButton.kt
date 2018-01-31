@@ -27,8 +27,6 @@ class ArticleExtractorsMenuButton : View() {
 
     companion object {
         private const val ICON_SIZE = 38.0
-
-        private const val ReadLaterArticlesItemTag = "ReadLaterArticlesItem"
     }
 
 
@@ -45,7 +43,9 @@ class ArticleExtractorsMenuButton : View() {
     protected lateinit var eventBus: IEventBus
 
 
-    private val btnArticleExtractors: MenuButton
+    private val btnArticleExtractors = MenuButton()
+
+    private val showReadLaterArticlesItem = MenuItem(messages["article.extractors.item.show.read.later.articles"])
 
     private val eventBusListener = EventBusListener()
 
@@ -53,7 +53,6 @@ class ArticleExtractorsMenuButton : View() {
     init {
         AppComponent.component.inject(this)
 
-        btnArticleExtractors = MenuButton()
         setupArticleExtractorsMenuButton()
 
         setupData()
@@ -67,15 +66,23 @@ class ArticleExtractorsMenuButton : View() {
         btnArticleExtractors.minHeight = 29.0
         btnArticleExtractors.maxHeight = 29.0
         btnArticleExtractors.prefWidth = 60.0
-        btnArticleExtractors.isVisible = false
 
         btnArticleExtractors.graphic = ImageView(Icons.NewspaperIconPath)
         btnArticleExtractors.style = "-fx-border-image-insets: 0; -fx-border-insets: 0; -fx-padding: 0;"
 
         btnArticleExtractors.items.clear() // remove automatically added 'Article 1' and 'Article 2'
 
-        FXUtils.ensureNodeOnlyUsesSpaceIfVisible(btnArticleExtractors)
+        setupDefaultItems()
     }
+
+    private fun setupDefaultItems() {
+        showReadLaterArticlesItem.action { showReadLaterArticlesView() }
+
+        addMenuButtonArticleExtractorsMenuItem(showReadLaterArticlesItem, 0)
+
+        addMenuButtonArticleExtractorsMenuItem(SeparatorMenuItem(), 1)
+    }
+
 
     private fun setupData() {
         extractorsConfigManager.addInitializationListener {
@@ -85,46 +92,19 @@ class ArticleExtractorsMenuButton : View() {
         }
 
         searchEngine.addInitializationListener {
-            addOrRemoveReadLaterArticlesItem()
+            updateShowReadLaterArticlesItemEnabledState()
         }
 
         eventBus.register(eventBusListener)
     }
 
 
-    private fun addOrRemoveReadLaterArticlesItem() {
+    private fun updateShowReadLaterArticlesItemEnabledState() {
         searchEngine.searchReadLaterArticles(ReadLaterArticleSearch {
             runLater {
-                if (it.isNotEmpty()) {
-                    addShowReadLaterArticlesMenuItem()
-                }
-                else {
-                    removeShowReadLaterArticlesMenuItem()
-                }
+                showReadLaterArticlesItem.isDisable = it.isEmpty()
             }
         })
-    }
-
-    private fun addShowReadLaterArticlesMenuItem() {
-        if(btnArticleExtractors.items.size > 0 && btnArticleExtractors.items.get(0).tag == ReadLaterArticlesItemTag) { // ReadLaterArticles item already added
-            return
-        }
-
-        val showReadLaterArticlesItem = MenuItem(messages["article.extractors.item.show.read.later.articles"])
-        showReadLaterArticlesItem.tag = ReadLaterArticlesItemTag
-        showReadLaterArticlesItem.action { showReadLaterArticlesView() }
-
-        addMenuButtonArticleExtractorsMenuItem(showReadLaterArticlesItem, 0)
-
-        addMenuButtonArticleExtractorsMenuItem(SeparatorMenuItem(), 1)
-
-        btnArticleExtractors.isVisible = true
-    }
-
-    private fun removeShowReadLaterArticlesMenuItem() {
-        if(btnArticleExtractors.items.size > 0 && btnArticleExtractors.items.get(0).tag == ReadLaterArticlesItemTag) { // ReadLaterArticles item already added
-            btnArticleExtractors.items.remove(0, 2)
-        }
     }
 
 
@@ -204,7 +184,7 @@ class ArticleExtractorsMenuButton : View() {
 
         @Handler
         fun readLaterArticleChanged(changed: ReadLaterArticleChanged) {
-            addOrRemoveReadLaterArticlesItem()
+            updateShowReadLaterArticlesItemEnabledState()
         }
 
     }
