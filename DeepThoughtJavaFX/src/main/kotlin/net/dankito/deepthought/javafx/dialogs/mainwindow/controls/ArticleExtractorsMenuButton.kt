@@ -26,7 +26,7 @@ import javax.inject.Inject
 class ArticleExtractorsMenuButton : View() {
 
     companion object {
-        private const val ICON_SIZE = 38.0
+        private const val ICON_SIZE = 32.0
     }
 
 
