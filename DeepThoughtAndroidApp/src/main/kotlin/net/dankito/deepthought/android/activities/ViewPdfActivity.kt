@@ -131,9 +131,6 @@ class ViewPdfActivity : BaseActivity() {
     private fun loadPdf(pdfFile: FileLink) {
         val localFile = fileManager.getLocalPathForFile(pdfFile)
 
-        this.pdfDocument = null
-        this.fileMetaData = null
-
         importer.loadFileAsync(localFile) { result ->
             this.pdfDocument = result.document
 
