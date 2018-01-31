@@ -55,8 +55,6 @@ class MainActivity : BaseActivity() {
 
     private var fileChooserDialog: FileChooserDialog? = null
 
-    private var localSettingsChangedListener: ((LocalSettings) -> Unit)? = null
-
 
     @Inject
     protected lateinit var router: IRouter
@@ -147,17 +145,17 @@ class MainActivity : BaseActivity() {
     }
 
     private fun listenToDidUserCreateDataEntityChanges() {
-        val listener: (LocalSettings) -> Unit = { localSettings ->
+        var listener: ((LocalSettings) -> Unit)? = null
+
+        listener = { localSettings ->
             if(localSettings.didUserCreateDataEntity) {
-                localSettingsChangedListener?.let { dataManager.removeLocalSettingsChangedListener(it) }
-                localSettingsChangedListener = null
+                listener?.let { dataManager.removeLocalSettingsChangedListener(it) }
 
                 userCreatedDataEntity()
             }
         }
 
         dataManager.addLocalSettingsChangedListener(listener)
-        this.localSettingsChangedListener = listener
     }
 
     private fun userCreatedDataEntity() {

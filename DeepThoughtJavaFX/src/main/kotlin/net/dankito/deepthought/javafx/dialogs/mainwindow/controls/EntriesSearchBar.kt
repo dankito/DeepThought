@@ -21,8 +21,6 @@ class EntriesSearchBar(private val entriesListView: EntriesListView, private val
 
     private var createItemHintPopOver: CreateItemHintPopOver? = null
 
-    private var localSettingsChangedListener: ((LocalSettings) -> Unit)? = null
-
 
     override val root = borderpane {
         prefHeight = 40.0
@@ -93,10 +91,11 @@ class EntriesSearchBar(private val entriesListView: EntriesListView, private val
     }
 
     private fun listenToDidUserCreateDataEntityChanges() {
-        val listener: (LocalSettings) -> Unit = { localSettings ->
+        var listener: ((LocalSettings) -> Unit)? = null
+
+        listener = { localSettings ->
             if(localSettings.didUserCreateDataEntity) {
-                localSettingsChangedListener?.let { dataManager.removeLocalSettingsChangedListener(it) }
-                localSettingsChangedListener = null
+                listener?.let { dataManager.removeLocalSettingsChangedListener(it) }
 
                 runLater {
                     didUserCreateDataEntityChangedOnUiThread(true)
@@ -105,7 +104,6 @@ class EntriesSearchBar(private val entriesListView: EntriesListView, private val
         }
 
         dataManager.addLocalSettingsChangedListener(listener)
-        this.localSettingsChangedListener = listener
     }
 
     private fun didUserCreateDataEntityChangedOnUiThread(didUserCreateAnItemYet: Boolean) {
