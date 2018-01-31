@@ -1,10 +1,12 @@
 package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 
+import javafx.scene.control.ContextMenu
 import javafx.scene.control.TableView
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.EntryViewModel
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
+import net.dankito.deepthought.javafx.service.extensions.findClickedTableRow
 import net.dankito.deepthought.javafx.ui.controls.IEntriesListViewJavaFX
 import net.dankito.deepthought.javafx.util.LazyLoadingObservableList
 import net.dankito.deepthought.model.Item
@@ -105,28 +107,43 @@ class EntriesListView : EntitiesListView(), IEntriesListViewJavaFX {
                 selectionModel.selectedItem?.let { router.showEditEntryView(it) }
             }
 
-            contextmenu {
-                item(messages["context.menu.item.copy.url.to.clipboard"]) {
-                    action {
-                        selectedItem?.let { presenter.copyReferenceUrlToClipboard(it) }
-                    }
-                }
+            var currentMenu: ContextMenu? = null
+            setOnContextMenuRequested { event ->
+                currentMenu?.hide()
 
-                item(messages["context.menu.item.copy.item.to.clipboard"]) {
-                    action {
-                        selectedItem?.let { presenter.copyItemToClipboard(it) }
-                    }
-                }
-
-                separator()
-
-                item(messages["context.menu.item.delete"]) {
-                    action {
-                        selectedItem?.let { askIfShouldDeleteEntry(it) }
-                    }
+                val tableRow = event.pickResult?.findClickedTableRow<Item>()
+                tableRow?.item?.let { clickedItem ->
+                    currentMenu = createContextMenuForItem(clickedItem)
+                    currentMenu?.show(this, event.screenX, event.screenY)
                 }
             }
+
+            contextmenu {
+
+            }
         }
+    }
+
+    private fun createContextMenuForItem(item: Item): ContextMenu {
+        val contextMenu = ContextMenu()
+
+        if(item.source?.url.isNullOrBlank() == false) {
+            contextMenu.item(messages["context.menu.item.copy.url.to.clipboard"]) {
+                action { presenter.copyReferenceUrlToClipboard(item) }
+            }
+        }
+
+        contextMenu.item(messages["context.menu.item.copy.item.to.clipboard"]) {
+            action { presenter.copyItemToClipboard(item) }
+        }
+
+        contextMenu.separator()
+
+        contextMenu.item(messages["context.menu.item.delete"]) {
+            action { askIfShouldDeleteEntry(item) }
+        }
+
+        return contextMenu
     }
 
     private fun askIfShouldDeleteEntry(item: Item) {
