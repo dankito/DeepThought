@@ -19,7 +19,7 @@ class Icons {
 
         const val UpdateIconPath = "icons/ic_cached_black_24dp.png"
 
-        const val LoadNextItemsIconPath = "icons/arrow_right_in_circle_32x32.png"
+        const val LoadNextItemsIconPath = "icons/ic_forward_black_24dp.png"
 
         const val MoreVerticalIconPath = "icons/ic_more_vert_black_36dp.png"
 
