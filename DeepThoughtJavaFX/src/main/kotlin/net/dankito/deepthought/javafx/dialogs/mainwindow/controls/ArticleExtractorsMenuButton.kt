@@ -47,6 +47,8 @@ class ArticleExtractorsMenuButton : View() {
 
     private val showReadLaterArticlesItem = MenuItem(messages["article.extractors.item.show.read.later.articles"])
 
+    private val defaultItemsSeparator = SeparatorMenuItem()
+
     private val eventBusListener = EventBusListener()
 
 
@@ -80,14 +82,16 @@ class ArticleExtractorsMenuButton : View() {
         setMenuItemIcon(addArticleSummaryItem, Icons.AddWithCircleIconPath)
         addArticleSummaryItem.action { router.showAddArticleSummaryExtractorView() }
 
+        addMenuButtonArticleExtractorsMenuItem(addArticleSummaryItem)
+
+
         setMenuItemIcon(showReadLaterArticlesItem, Icons.ReadLaterArticlesIconPath)
         showReadLaterArticlesItem.action { showReadLaterArticlesView() }
 
-        addMenuButtonArticleExtractorsMenuItem(addArticleSummaryItem, 0)
+        addMenuButtonArticleExtractorsMenuItem(showReadLaterArticlesItem)
 
-        addMenuButtonArticleExtractorsMenuItem(showReadLaterArticlesItem, 1)
-
-        addMenuButtonArticleExtractorsMenuItem(SeparatorMenuItem(), 2)
+        defaultItemsSeparator.isVisible = false
+        addMenuButtonArticleExtractorsMenuItem(defaultItemsSeparator)
     }
 
 
@@ -123,7 +127,8 @@ class ArticleExtractorsMenuButton : View() {
         setMenuItemIcon(extractorItem, articleSummaryExtractorConfig.iconUrl)
 
         addMenuButtonArticleExtractorsMenuItem(extractorItem)
-        btnArticleExtractors.isVisible = true
+
+        defaultItemsSeparator.isVisible = true
     }
 
     private fun setMenuItemIcon(item: MenuItem, iconUrl: String?) {
@@ -191,7 +196,7 @@ class ArticleExtractorsMenuButton : View() {
 
         @Handler
         fun articleSummaryExtractorChanged(changed: ArticleSummaryExtractorConfigChanged) {
-            FXUtils.runOnUiThread { articleSummaryExtractorUpdated(changed.entity) }
+            FXUtils.runOnUiThread { articleSummaryExtractorUpdated(changed.entity) } // TODO: but extractors can also get added or be deleted
         }
 
         @Handler
