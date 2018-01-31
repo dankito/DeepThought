@@ -76,12 +76,18 @@ class ArticleExtractorsMenuButton : View() {
     }
 
     private fun setupDefaultItems() {
+        val addArticleSummaryItem = MenuItem(messages["article.extractors.add.article.summary.extractor"])
+        setMenuItemIcon(addArticleSummaryItem, Icons.AddWithCircleIconPath)
+        addArticleSummaryItem.action { }
+
         setMenuItemIcon(showReadLaterArticlesItem, Icons.ReadLaterArticlesIconPath)
         showReadLaterArticlesItem.action { showReadLaterArticlesView() }
 
-        addMenuButtonArticleExtractorsMenuItem(showReadLaterArticlesItem, 0)
+        addMenuButtonArticleExtractorsMenuItem(addArticleSummaryItem, 0)
 
-        addMenuButtonArticleExtractorsMenuItem(SeparatorMenuItem(), 1)
+        addMenuButtonArticleExtractorsMenuItem(showReadLaterArticlesItem, 1)
+
+        addMenuButtonArticleExtractorsMenuItem(SeparatorMenuItem(), 2)
     }
 
 

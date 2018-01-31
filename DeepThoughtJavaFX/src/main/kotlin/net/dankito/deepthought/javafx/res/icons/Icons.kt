@@ -17,6 +17,8 @@ class Icons {
 
         const val FilterDeleteIconPath = "icons/filter_delete_20x20.png"
 
+        const val AddWithCircleIconPath = "icons/ic_add_black_with_padding_36.png"
+
         const val NewspaperIconPath = "icons/ic_newspaper_accent_24dp.png"
 
         const val UpdateIconPath = "icons/ic_cached_black_24dp.png"
