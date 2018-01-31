@@ -113,13 +113,12 @@ class ArticleExtractorsMenuButton : View() {
         extractorItem.tag = articleSummaryExtractorConfig
         extractorItem.setOnAction { showArticlesSummaryView(articleSummaryExtractorConfig) }
 
-        val graphicPane = hbox {
-            minWidth = ICON_SIZE
-            maxWidth = ICON_SIZE
-            minHeight = ICON_SIZE
-            maxHeight = ICON_SIZE
-            alignment = Pos.CENTER
-        }
+        val graphicPane = HBox()
+        graphicPane.minWidth = ICON_SIZE
+        graphicPane.maxWidth = ICON_SIZE
+        graphicPane.minHeight = ICON_SIZE
+        graphicPane.maxHeight = ICON_SIZE
+        graphicPane.alignment = Pos.CENTER
         extractorItem.graphic = graphicPane
 
         articleSummaryExtractorConfig.iconUrl?.let { iconUrl ->
