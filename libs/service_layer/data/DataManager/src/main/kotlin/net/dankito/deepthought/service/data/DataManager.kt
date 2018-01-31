@@ -36,6 +36,8 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
 
     private val initializationListeners = mutableSetOf<() -> Unit>()
 
+    private val localSettingsChangedListeners = mutableSetOf<(LocalSettings) -> Unit>()
+
 
     init {
         thread(priority = Thread.MAX_PRIORITY) {
@@ -113,6 +115,8 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
 
     fun localSettingsUpdated() {
         entityManager.updateEntity(localSettings)
+
+        callLocalSettingsChangedListeners(localSettings)
     }
 
 
@@ -138,4 +142,20 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
     private fun callInitializationListener(listener: () -> Unit) {
         listener()
     }
+
+
+    fun addLocalSettingsChangedListener(listener: (LocalSettings) -> Unit) {
+        localSettingsChangedListeners.add(listener)
+    }
+
+    fun removeLocalSettingsChangedListener(listener: (LocalSettings) -> Unit) {
+        localSettingsChangedListeners.remove(listener)
+    }
+
+    private fun callLocalSettingsChangedListeners(settings: LocalSettings) {
+        localSettingsChangedListeners.forEach { listener ->
+            listener(settings)
+        }
+    }
+
 }
