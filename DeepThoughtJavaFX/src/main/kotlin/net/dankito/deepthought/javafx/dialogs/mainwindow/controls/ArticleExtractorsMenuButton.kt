@@ -78,7 +78,7 @@ class ArticleExtractorsMenuButton : View() {
     private fun setupDefaultItems() {
         val addArticleSummaryItem = MenuItem(messages["article.extractors.add.article.summary.extractor"])
         setMenuItemIcon(addArticleSummaryItem, Icons.AddWithCircleIconPath)
-        addArticleSummaryItem.action { }
+        addArticleSummaryItem.action { router.showAddArticleSummaryExtractorView() }
 
         setMenuItemIcon(showReadLaterArticlesItem, Icons.ReadLaterArticlesIconPath)
         showReadLaterArticlesItem.action { showReadLaterArticlesView() }
