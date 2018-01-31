@@ -113,23 +113,27 @@ class ArticleExtractorsMenuButton : View() {
         extractorItem.tag = articleSummaryExtractorConfig
         extractorItem.setOnAction { showArticlesSummaryView(articleSummaryExtractorConfig) }
 
+        setMenuItemIcon(extractorItem, articleSummaryExtractorConfig.iconUrl)
+
+        addMenuButtonArticleExtractorsMenuItem(extractorItem)
+        btnArticleExtractors.isVisible = true
+    }
+
+    private fun setMenuItemIcon(item: MenuItem, iconUrl: String?) {
         val graphicPane = HBox()
         graphicPane.minWidth = ICON_SIZE
         graphicPane.maxWidth = ICON_SIZE
         graphicPane.minHeight = ICON_SIZE
         graphicPane.maxHeight = ICON_SIZE
         graphicPane.alignment = Pos.CENTER
-        extractorItem.graphic = graphicPane
+        item.graphic = graphicPane
 
-        articleSummaryExtractorConfig.iconUrl?.let { iconUrl ->
-            createOnlineArticleContentExtractorIcon(graphicPane, iconUrl)
+        iconUrl?.let {
+            setMenuItemIcon(graphicPane, iconUrl)
         }
-
-        addMenuButtonArticleExtractorsMenuItem(extractorItem)
-        btnArticleExtractors.isVisible = true
     }
 
-    private fun createOnlineArticleContentExtractorIcon(graphicPane: HBox, iconUrl: String) {
+    private fun setMenuItemIcon(graphicPane: HBox, iconUrl: String) {
         val iconView = ImageView(iconUrl)
         iconView.isPreserveRatio = true
         iconView.fitHeight = ICON_SIZE
@@ -156,7 +160,9 @@ class ArticleExtractorsMenuButton : View() {
                 menuItem.text = articleSummaryExtractorConfig.name
 
                 articleSummaryExtractorConfig.iconUrl?.let { iconUrl ->
-                    createOnlineArticleContentExtractorIcon(menuItem.graphic as HBox, iconUrl)
+                    (menuItem.graphic as? HBox)?.let {
+                        setMenuItemIcon(it, iconUrl)
+                    }
                 }
 
                 return@forEach
