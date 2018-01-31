@@ -203,6 +203,13 @@ class ViewPdfDialog : DialogFragment() {
     }
 
 
+    override fun onUndock() {
+        pdfDocument?.close()
+
+        super.onUndock()
+    }
+
+
     private fun loadPdf(pdfFile: File) {
         loadPdf(fileManager.createLocalFile(pdfFile))
     }

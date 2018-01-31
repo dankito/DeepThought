@@ -110,6 +110,13 @@ class ViewPdfActivity : BaseActivity() {
     }
 
 
+    override fun onDestroy() {
+        pdfDocument?.close() // TODO: restore PDF file
+
+        super.onDestroy()
+    }
+
+
     private fun showParameters(parameters: ViewPdfActivityParameters?) {
         parameters?.let {
             this.sourceForFile = parameters.sourceForFile
