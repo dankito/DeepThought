@@ -7,6 +7,8 @@ class Icons {
 
         const val ItemsIconPath = "icons/icon_items_primary_24.png"
 
+        const val ReadLaterArticlesIconPath = "icons/icon_read_later_articles_black_with_padding_36.png"
+
         const val NavigatePreviousIconPath = "icons/ic_navigate_before_black_36dp.png"
 
         const val NavigateNextIconPath = "icons/ic_navigate_next_black_36dp.png"

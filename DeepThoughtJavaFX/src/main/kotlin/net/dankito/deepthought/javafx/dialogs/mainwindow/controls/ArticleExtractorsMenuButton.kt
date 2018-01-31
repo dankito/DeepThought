@@ -76,6 +76,7 @@ class ArticleExtractorsMenuButton : View() {
     }
 
     private fun setupDefaultItems() {
+        setMenuItemIcon(showReadLaterArticlesItem, Icons.ReadLaterArticlesIconPath)
         showReadLaterArticlesItem.action { showReadLaterArticlesView() }
 
         addMenuButtonArticleExtractorsMenuItem(showReadLaterArticlesItem, 0)
