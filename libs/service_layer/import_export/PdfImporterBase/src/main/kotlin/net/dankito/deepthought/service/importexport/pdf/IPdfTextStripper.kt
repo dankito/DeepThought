@@ -11,12 +11,12 @@ interface IPdfTextStripper {
         const val ParagraphEnd = "\n"
     }
 
-    fun getText(document: IPdfDocument, startPage: Int, endPage: Int): String?
-
 
     var maxLineLength: Int
 
     var lastLine: String
+
+    fun getText(document: IPdfDocument, startPage: Int, endPage: Int): String?
 
 
     fun beforeWriteString(text: String) {
