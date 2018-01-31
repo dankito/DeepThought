@@ -1,6 +1,6 @@
 package net.dankito.service.data
 
-import net.dankito.deepthought.model.BaseEntity
+import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.data.messages.EntityChangeSource
@@ -34,6 +34,8 @@ abstract class EntityServiceBase<T : BaseEntity>(val entityClass: Class<T>, val 
         }
 
         callEntitiesUpdatedListenersForCreatedEntity(entity)
+
+        setUserCreatedDataEntityToTrue(entity)
     }
 
     protected open fun onPrePersist(entity: T) {
@@ -46,6 +48,21 @@ abstract class EntityServiceBase<T : BaseEntity>(val entityClass: Class<T>, val 
 
     protected open fun callEntitiesUpdatedListenersForCreatedEntity(entity: T) {
         callEntitiesUpdatedListeners(entity, EntityChangeType.Created)
+    }
+
+    private fun setUserCreatedDataEntityToTrue(entity: T) {
+        if(dataManager.localSettings.didUserCreateDataEntity == false) {
+            when(entity.javaClass) {
+                Item::class.java,
+                Tag::class.java,
+                Source::class.java,
+                Series::class.java,
+                ReadLaterArticle::class.java -> {
+                    dataManager.localSettings.didUserCreateDataEntity = true
+                    dataManager.localSettingsUpdated()
+                }
+            }
+        }
     }
 
 

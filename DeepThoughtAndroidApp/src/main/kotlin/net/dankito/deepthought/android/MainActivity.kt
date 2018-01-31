@@ -26,15 +26,12 @@ import net.dankito.deepthought.android.fragments.EntriesListView
 import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.IntentHandler
 import net.dankito.deepthought.android.views.MainActivityFloatingActionMenuButton
-import net.dankito.deepthought.model.*
+import net.dankito.deepthought.model.LocalSettings
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.service.data.messages.EntitiesOfTypeChanged
-import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.UrlUtil
-import net.engio.mbassy.listener.Handler
 import org.slf4j.LoggerFactory
 import pub.devrel.easypermissions.AfterPermissionGranted
 import javax.inject.Inject
@@ -56,9 +53,9 @@ class MainActivity : BaseActivity() {
 
     private lateinit var entriesListView: EntriesListView
 
-    private var eventBusListener: EventBusListener? = null
-
     private var fileChooserDialog: FileChooserDialog? = null
+
+    private var localSettingsChangedListener: ((LocalSettings) -> Unit)? = null
 
 
     @Inject
@@ -145,21 +142,25 @@ class MainActivity : BaseActivity() {
         }
 
         if(dataManager.localSettings.didUserCreateDataEntity == false) {
-            val eventBusListener = EventBusListener()
-            this.eventBusListener = eventBusListener
-            eventBus.register(eventBusListener)
+            listenToDidUserCreateDataEntityChanges()
         }
     }
 
-    private fun userCreatedDataEntity() {
-        eventBusListener?.let {
-            eventBus.unregister(it)
-            this.eventBusListener = null
+    private fun listenToDidUserCreateDataEntityChanges() {
+        val listener: (LocalSettings) -> Unit = { localSettings ->
+            if(localSettings.didUserCreateDataEntity) {
+                localSettingsChangedListener?.let { dataManager.removeLocalSettingsChangedListener(it) }
+                localSettingsChangedListener = null
+
+                userCreatedDataEntity()
+            }
         }
 
-        dataManager.localSettings.didUserCreateDataEntity = true
-        dataManager.localSettingsUpdated()
+        dataManager.addLocalSettingsChangedListener(listener)
+        this.localSettingsChangedListener = listener
+    }
 
+    private fun userCreatedDataEntity() {
         runOnUiThread {
             drawerToggle.isDrawerIndicatorEnabled = true
         }
@@ -300,25 +301,6 @@ class MainActivity : BaseActivity() {
         }
 
         IntentHandler(extractArticleHandler, router, urlUtil).handle(intent)
-    }
-
-
-
-    inner class EventBusListener {
-
-        @Handler
-        fun entryChanged(change: EntitiesOfTypeChanged) {
-            if(change.changeType == EntityChangeType.Created) {
-                when(change.entityType) {
-                    Item::class.java,
-                    Tag::class.java,
-                    Source::class.java,
-                    Series::class.java,
-                    ReadLaterArticle::class.java ->
-                        userCreatedDataEntity()
-                }
-            }
-        }
     }
 
 }
