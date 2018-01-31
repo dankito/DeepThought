@@ -14,7 +14,12 @@ abstract class PdfImporterBase(private val threadPool: IThreadPool) {
 
     protected var currentDocument: IPdfDocument? = null
 
-    protected var pdfStripper: IPdfTextStripper? = null
+    private var pdfStripper: IPdfTextStripper = createPdfTextStripper()
+
+
+    abstract fun createPdfTextStripper(): IPdfTextStripper
+
+    abstract fun loadDocument(file: File): IPdfDocument
 
 
     fun loadFileAsync(file: File, loadingDone: (LoadPdfFileResult) -> Unit) {
@@ -30,8 +35,6 @@ abstract class PdfImporterBase(private val threadPool: IThreadPool) {
             val document = loadDocument(file)
             currentDocument = document
 
-            pdfStripper = createPdfTextStripper()
-
             return LoadPdfFileResult(true, FileMetadata(document.numberOfPages, document.title, document.author))
         } catch (e: Exception) {
             log.error("Could not load pdf file $file", e)
@@ -39,10 +42,6 @@ abstract class PdfImporterBase(private val threadPool: IThreadPool) {
             return LoadPdfFileResult(false, error = e)
         }
     }
-
-    abstract fun createPdfTextStripper(): IPdfTextStripper
-
-    abstract fun loadDocument(file: File): IPdfDocument
 
 
     fun getPageTextAsync(page: Int, done: (GetPageResult) -> Unit) {
@@ -52,15 +51,13 @@ abstract class PdfImporterBase(private val threadPool: IThreadPool) {
     }
 
     fun getPageText(page: Int): GetPageResult {
-        pdfStripper?.let { pdfStripper ->
-            currentDocument?.let { currentDocument ->
-                try {
-                    return GetPageResult(true, pdfStripper.getText(currentDocument, page, page))
-                } catch(e: Exception) {
-                    log.error("Could not get text for page $page", e)
+        currentDocument?.let { currentDocument ->
+            try {
+                return GetPageResult(true, pdfStripper.getText(currentDocument, page, page))
+            } catch(e: Exception) {
+                log.error("Could not get text for page $page", e)
 
-                    return GetPageResult(false, error = e)
-                }
+                return GetPageResult(false, error = e)
             }
         }
 
@@ -71,7 +68,5 @@ abstract class PdfImporterBase(private val threadPool: IThreadPool) {
     fun close() {
         currentDocument?.close()
         currentDocument == null
-
-        pdfStripper = null
     }
 }
