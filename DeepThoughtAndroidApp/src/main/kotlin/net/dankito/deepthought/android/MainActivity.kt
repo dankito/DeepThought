@@ -2,6 +2,7 @@ package net.dankito.deepthought.android
 
 import android.Manifest
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -13,8 +14,6 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.widget.TextView
 import kotlinx.android.synthetic.main.view_floating_action_button_main.*
-import me.zhanghai.android.effortlesspermissions.EffortlessPermissions
-import me.zhanghai.android.effortlesspermissions.OpenAppDetailsDialogFragment
 import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.activities.ReadLaterArticlesListViewActivity
 import net.dankito.deepthought.android.activities.SourcesListViewActivity
@@ -25,6 +24,8 @@ import net.dankito.deepthought.android.dialogs.TagsListViewDialog
 import net.dankito.deepthought.android.fragments.EntriesListView
 import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.IntentHandler
+import net.dankito.deepthought.android.service.permissions.IPermissionsManager
+import net.dankito.deepthought.android.service.permissions.PermissionsManager
 import net.dankito.deepthought.android.views.MainActivityFloatingActionMenuButton
 import net.dankito.deepthought.model.LocalSettings
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
@@ -33,16 +34,12 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.UrlUtil
 import org.slf4j.LoggerFactory
-import pub.devrel.easypermissions.AfterPermissionGranted
 import javax.inject.Inject
 
 
 class MainActivity : BaseActivity() {
 
     companion object {
-        private const val REQUEST_CODE_OPEN_FILE_PERMISSION = 1
-        private val PERMISSIONS_OPEN_FILE = arrayOf<String>(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
         private val log = LoggerFactory.getLogger(MainActivity::class.java)
     }
 
@@ -52,6 +49,8 @@ class MainActivity : BaseActivity() {
     protected lateinit var drawerToggle: ActionBarDrawerToggle
 
     private lateinit var entriesListView: EntriesListView
+
+    private val permissionsManager: IPermissionsManager
 
     private var fileChooserDialog: FileChooserDialog? = null
 
@@ -77,6 +76,8 @@ class MainActivity : BaseActivity() {
 
     init {
         AppComponent.component.inject(this)
+
+        permissionsManager = PermissionsManager(this)
     }
 
 
@@ -207,8 +208,7 @@ class MainActivity : BaseActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        // Dispatch to our library.
-        EffortlessPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+        permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
 
@@ -244,28 +244,21 @@ class MainActivity : BaseActivity() {
         true
     }
 
-    @AfterPermissionGranted(REQUEST_CODE_OPEN_FILE_PERMISSION)
     private fun importPdf() {
-        if(EffortlessPermissions.hasPermissions(this, *PERMISSIONS_OPEN_FILE)) {
-            // We've got the permission.
-            importPdfWithPermission()
+        if(permissionsManager.isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            importPdfWithPermissionGranted()
         }
-        else if(EffortlessPermissions.somePermissionPermanentlyDenied(this, *PERMISSIONS_OPEN_FILE)) {
-            // Some permission is permanently denied so we cannot request them normally.
-            OpenAppDetailsDialogFragment.show(
-                    R.string.open_file_permission_request_message,
-                    R.string.open_settings, this)
+        else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            permissionsManager.requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
+                    getString(R.string.open_file_permission_request_message))  { _, isGranted ->
+                if(isGranted) {
+                    importPdfWithPermissionGranted()
+                }
+            }
         }
-        else  {
-            // Request the permissions.
-            EffortlessPermissions.requestPermissions(this,
-                    R.string.open_file_permission_request_message,
-                    REQUEST_CODE_OPEN_FILE_PERMISSION, *PERMISSIONS_OPEN_FILE)
-        }
-
     }
 
-    private fun importPdfWithPermission() {
+    private fun importPdfWithPermissionGranted() {
         if(fileChooserDialog == null) {
             fileChooserDialog = FileChooserDialog(this)
         }
