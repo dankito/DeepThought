@@ -83,7 +83,8 @@ class EditEntityFilesField : EditEntityField {
 
         setFieldNameOnUiThread(R.string.edit_entity_files_field_files_label)
 
-        rcySearchResult.disableMaxHeight()
+        rcySearchResult.maxHeightInPixel =  (context.resources.getDimension(R.dimen.list_item_file_height) * 2.25).toInt() // show at max two list items and a little bit from
+        // the next item so that user knows there's more
 
         showAsHasNoInputField()
 
