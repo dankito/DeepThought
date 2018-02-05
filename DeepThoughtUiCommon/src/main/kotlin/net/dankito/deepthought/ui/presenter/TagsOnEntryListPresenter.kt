@@ -5,7 +5,7 @@ import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.tags.TagAutoCompleteResult
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.tags.TagsSearcherButtonState
-import net.dankito.deepthought.ui.view.ITagsOnEntryListView
+import net.dankito.deepthought.ui.view.ITagsOnItemListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
@@ -17,9 +17,9 @@ import java.util.HashSet
 import kotlin.collections.ArrayList
 
 
-class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryListView, searchEngine: ISearchEngine, tagService: TagService, deleteEntityService: DeleteEntityService,
+class TagsOnEntryListPresenter(private val tagsOnItemListView: ITagsOnItemListView, searchEngine: ISearchEngine, tagService: TagService, deleteEntityService: DeleteEntityService,
                                searchResultsUtil: TagsSearchResultsUtil, dialogService: IDialogService)
-    : TagsListPresenterBase(tagsOnEntryListView, searchEngine, tagService, deleteEntityService, searchResultsUtil, dialogService) {
+    : TagsListPresenterBase(tagsOnItemListView, searchEngine, tagService, deleteEntityService, searchResultsUtil, dialogService) {
 
 
     init {
@@ -161,7 +161,7 @@ class TagsOnEntryListPresenter(private val tagsOnEntryListView: ITagsOnEntryList
     }
 
     private fun handleEnteredNotExistingTags(notExistingEnteredTags: ArrayList<String>) {
-        tagsOnEntryListView.shouldCreateNotExistingTags(notExistingEnteredTags) { tagsOnEntry ->
+        tagsOnItemListView.shouldCreateNotExistingTags(notExistingEnteredTags) { tagsOnEntry ->
             createNewTags(notExistingEnteredTags, tagsOnEntry)
         }
     }

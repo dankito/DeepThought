@@ -6,7 +6,7 @@ import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.presenter.TagsOnEntryListPresenter
 import net.dankito.deepthought.ui.tags.TagAutoCompleteResult
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
-import net.dankito.deepthought.ui.view.ITagsOnEntryListView
+import net.dankito.deepthought.ui.view.ITagsOnItemListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
@@ -17,7 +17,7 @@ import tornadofx.*
 import javax.inject.Inject
 
 
-class EditItemTagsField : EditEntityCollectionField<Tag>(), ITagsOnEntryListView {
+class EditItemTagsField : EditEntityCollectionField<Tag>(), ITagsOnItemListView {
 
     @Inject
     protected lateinit var tagService: TagService
@@ -234,7 +234,7 @@ class EditItemTagsField : EditEntityCollectionField<Tag>(), ITagsOnEntryListView
     }
 
 
-    /*      ITagsOnEntryListView implementation         */
+    /*      ITagsOnItemListView implementation         */
 
     override fun showEntities(entities: List<Tag>) {
         updateEditedCollectionPreview()
