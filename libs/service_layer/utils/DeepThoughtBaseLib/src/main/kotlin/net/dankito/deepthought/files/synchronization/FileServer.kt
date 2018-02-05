@@ -154,6 +154,7 @@ class FileServer(private val searchEngine: ISearchEngine, private val entityMana
             log.info("Sending file $filePath of size ${localFileInfo.fileSize} to client ${clientSocket.inetAddress}")
 
             val result = socketHandler.sendMessage(clientSocket, FileInputStream(filePath))
+            log.info("Result of sending file $filePath = $result, ${result.countBytesSend} bytes sent")
         }
 
         closeClientSocket(clientSocket)

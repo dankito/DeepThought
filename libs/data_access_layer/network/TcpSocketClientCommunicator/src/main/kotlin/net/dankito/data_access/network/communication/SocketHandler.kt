@@ -21,11 +21,13 @@ open class SocketHandler {
     }
 
     fun sendMessage(socket: Socket, inputStream: InputStream, messageEndChar: Char? = null): SocketResult {
+        var countBytesSend = -1L
+
         try {
             val sink = Okio.buffer(Okio.sink(socket))
             val source = Okio.buffer(Okio.source(BufferedInputStream(inputStream)))
 
-            sink.writeAll(source)
+            countBytesSend = sink.writeAll(source)
 
             messageEndChar?.let {
                 sink.writeUtf8(it.toString()) // to signal receiver that message ends here
@@ -35,9 +37,9 @@ open class SocketHandler {
 
             source.close()
 
-            return SocketResult(true)
+            return SocketResult(true, countBytesSend = countBytesSend)
         } catch(e: Exception) {
-            return SocketResult(false, e)
+            return SocketResult(false, e, countBytesSend = countBytesSend)
         }
     }
 
