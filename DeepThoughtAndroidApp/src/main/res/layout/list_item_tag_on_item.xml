@@ -2,9 +2,9 @@
 <net.dankito.deepthought.android.views.FixedSwipeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/tagOnEntrySwipeLayout"
+    android:id="@+id/tagOnItemSwipeLayout"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/list_item_tag_on_entry_height"
+    android:layout_height="@dimen/list_item_tag_on_item_height"
     android:clickable="true"
     android:focusable="true"
 >
@@ -20,14 +20,14 @@
 
         <net.dankito.deepthought.android.views.SwipeButton
             android:id="@+id/btnEditTag"
-            android:layout_width="@dimen/list_item_tag_on_entry_button_width"
+            android:layout_width="@dimen/list_item_tag_on_item_button_width"
             android:layout_height="match_parent"
             app:icon="@drawable/ic_mode_edit_white_48dp"
         />
 
         <net.dankito.deepthought.android.views.SwipeButton
             android:id="@+id/btnDeleteTag"
-            android:layout_width="@dimen/list_item_tag_on_entry_button_width"
+            android:layout_width="@dimen/list_item_tag_on_item_button_width"
             android:layout_height="match_parent"
             app:icon="@drawable/ic_delete_white_48dp"
         />
@@ -37,7 +37,7 @@
 
     <!-- Surface View Start (the view that's displayed by default) -->
     <net.dankito.deepthought.android.views.IsAddedToEntityView
-        android:id="@+id/vwIsTagOnEntry"
+        android:id="@+id/vwIsTagOnItem"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
     />

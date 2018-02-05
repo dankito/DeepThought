@@ -5,15 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import com.daimajia.swipe.SwipeLayout
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.adapter.viewholder.TagsOnEntryViewHolder
+import net.dankito.deepthought.android.adapter.viewholder.TagsOnItemViewHolder
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.presenter.TagsOnItemListPresenter
 import net.dankito.deepthought.ui.tags.TagSearchResultState
 import java.util.*
 
 
-class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnItemListPresenter, val listener: (TagChange, Tag, MutableCollection<Tag>) -> Unit)
-    : ListRecyclerSwipeAdapter<Tag, TagsOnEntryViewHolder>() {
+class TagsOnItemRecyclerAdapter(private val presenter: TagsOnItemListPresenter, val listener: (TagChange, Tag, MutableCollection<Tag>) -> Unit)
+    : ListRecyclerSwipeAdapter<Tag, TagsOnItemViewHolder>() {
 
     enum class TagChange {
         Added,
@@ -21,20 +21,20 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnItemListPresenter,
     }
 
 
-    var tagsOnEntry: MutableSet<Tag> = mutableSetOf()
+    var tagsOnItem: MutableSet<Tag> = mutableSetOf()
 
     var deleteTagListener: ((Tag) -> Unit)? = null
 
 
-    override fun getSwipeLayoutResourceId(position: Int) = R.id.tagOnEntrySwipeLayout
+    override fun getSwipeLayoutResourceId(position: Int) = R.id.tagOnItemSwipeLayout
 
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TagsOnEntryViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TagsOnItemViewHolder {
         val context = parent?.context
-        val itemView = LayoutInflater.from(context).inflate(R.layout.list_item_tag_on_entry, parent, false)
+        val itemView = LayoutInflater.from(context).inflate(R.layout.list_item_tag_on_item, parent, false)
 
-        val viewHolder = TagsOnEntryViewHolder(itemView)
-        viewHolder.vwIsTagOnEntry.setEntityNameTextSizeToHeader1TextSize()
+        val viewHolder = TagsOnItemViewHolder(itemView)
+        viewHolder.vwIsTagOnItem.setEntityNameTextSizeToHeader1TextSize()
 
         (itemView as? SwipeLayout)?.addRevealListener(itemView.id) { _, _, _, _ -> viewHolder.lastItemSwipeTime = Date() }
 
@@ -43,24 +43,24 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnItemListPresenter,
     }
 
 
-    override fun bindViewForNullValue(viewHolder: TagsOnEntryViewHolder) {
+    override fun bindViewForNullValue(viewHolder: TagsOnItemViewHolder) {
         super.bindViewForNullValue(viewHolder)
 
-        viewHolder.vwIsTagOnEntry.showState("", false)
+        viewHolder.vwIsTagOnItem.showState("", false)
         setBackgroundForDefaultState(viewHolder.itemView)
     }
 
-    override fun bindItemToView(viewHolder: TagsOnEntryViewHolder, item: Tag) {
-        val isAddedToEntry = tagsOnEntry.contains(item)
+    override fun bindItemToView(viewHolder: TagsOnItemViewHolder, item: Tag) {
+        val isAddedToItem = tagsOnItem.contains(item)
 
-        viewHolder.vwIsTagOnEntry.showState(item.displayText, isAddedToEntry)
+        viewHolder.vwIsTagOnItem.showState(item.displayText, isAddedToItem)
 
         setBackgroundColor(viewHolder.itemView, item)
 
         viewHolder.itemView.setOnClickListener { itemClicked(viewHolder, item) }
     }
 
-    override fun setupSwipeView(viewHolder: TagsOnEntryViewHolder, item: Tag) {
+    override fun setupSwipeView(viewHolder: TagsOnItemViewHolder, item: Tag) {
         viewHolder.btnEditTag.setOnClickListener {
             presenter.editTag(item)
             closeSwipeView(viewHolder)
@@ -73,25 +73,25 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnItemListPresenter,
     }
 
 
-    private fun itemClicked(viewHolder: TagsOnEntryViewHolder, tag: Tag) {
+    private fun itemClicked(viewHolder: TagsOnItemViewHolder, tag: Tag) {
         val lastSwipeTime = viewHolder.lastItemSwipeTime
 
-        // a swipe on an item also triggers onClickListener -> filter out swipes before calling toggleTagOnEntryOnUIThread() as otherwise swipe layout would get closed
+        // a swipe on an item also triggers onClickListener -> filter out swipes before calling toggleTagOnItemOnUIThread() as otherwise swipe layout would get closed
         // immediately again -> wouldn't be possible to activate list item actions anymore
         if(lastSwipeTime == null || Date().time - lastSwipeTime.time > 200) {
-            toggleTagOnEntryOnUIThread(tag)
+            toggleTagOnItemOnUIThread(tag)
         }
     }
 
-    private fun toggleTagOnEntryOnUIThread(tag: Tag) {
+    private fun toggleTagOnItemOnUIThread(tag: Tag) {
         val tagChange: TagChange
 
-        if(tagsOnEntry.contains(tag)) {
-            tagsOnEntry.remove(tag)
+        if(tagsOnItem.contains(tag)) {
+            tagsOnItem.remove(tag)
             tagChange = TagChange.Removed
         }
         else {
-            tagsOnEntry.add(tag)
+            tagsOnItem.add(tag)
             tagChange = TagChange.Added
         }
 
@@ -101,7 +101,7 @@ class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnItemListPresenter,
     }
 
     private fun callListener(tagChange: TagChange, tag: Tag) {
-        listener(tagChange, tag, tagsOnEntry)
+        listener(tagChange, tag, tagsOnItem)
     }
 
 

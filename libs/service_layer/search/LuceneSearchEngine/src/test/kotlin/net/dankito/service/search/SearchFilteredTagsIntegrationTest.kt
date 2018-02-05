@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicReference
 class SearchFilteredTagsIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
 
     @Test
-    fun filter1TagWithNoOtherTagsOnEntries_Only1TagIsReturned() {
+    fun filter1TagWithNoOtherTagsOnItems_Only1TagIsReturned() {
         val testData = SearchFilteredTagsTestData(1, 0, 5)
         createTestData(testData)
 
@@ -29,7 +29,7 @@ class SearchFilteredTagsIntegrationTest : LuceneSearchEngineIntegrationTestBase(
     }
 
     @Test
-    fun filter1TagWith5OtherTagsOnEntries_6TagsAreReturned() {
+    fun filter1TagWith5OtherTagsOnItems_6TagsAreReturned() {
         val testData = SearchFilteredTagsTestData(1, 5, 5)
         createTestData(testData)
 
@@ -43,7 +43,7 @@ class SearchFilteredTagsIntegrationTest : LuceneSearchEngineIntegrationTestBase(
 
 
     @Test
-    fun filter5TagsWithNoOtherTagsOnEntries_5TagsAreReturned() {
+    fun filter5TagsWithNoOtherTagsOnItems_5TagsAreReturned() {
         val testData = SearchFilteredTagsTestData(5, 0, 15)
         createTestData(testData)
 
@@ -56,7 +56,7 @@ class SearchFilteredTagsIntegrationTest : LuceneSearchEngineIntegrationTestBase(
     }
 
     @Test
-    fun filter5TagsWith17OtherTagsOnEntries_22TagsAreReturned() {
+    fun filter5TagsWith17OtherTagsOnItems_22TagsAreReturned() {
         val testData = SearchFilteredTagsTestData(5, 17, 29)
         createTestData(testData)
 
@@ -84,21 +84,21 @@ class SearchFilteredTagsIntegrationTest : LuceneSearchEngineIntegrationTestBase(
         val result = resultHolder.get()
         assertThat(result, notNullValue())
 
-        assertThat(result.tagsOnEntriesContainingFilteredTags.size, `is`(testData.countTagsToFilter + testData.countTagsOnEntriesWithTagsToFilter))
-        assertThat(result.entriesHavingFilteredTags.size, `is`(testData.countEntriesOnTagsToFilter))
+        assertThat(result.tagsOnItemsContainingFilteredTags.size, `is`(testData.countTagsToFilter + testData.countTagsOnItemsWithTagsToFilter))
+        assertThat(result.itemsHavingFilteredTags.size, `is`(testData.countItemsOnTagsToFilter))
     }
 
 
     private fun createTestData(testData: SearchFilteredTagsTestData) {
         testData.tagsToFilter = createTagsToFilter(testData.countTagsToFilter)
 
-        testData.tagsOnEntriesWithTagsToFilter = createTagsOnEntriesWithTagsToFilter(testData.countTagsOnEntriesWithTagsToFilter)
+        testData.tagsOnItemsWithTagsToFilter = createTagsOnItemsWithTagsToFilter(testData.countTagsOnItemsWithTagsToFilter)
 
-        testData.entriesOnTagsToFilter = createEntriesOnTagsToFilter(testData.countEntriesOnTagsToFilter, testData.tagsToFilter, testData.tagsOnEntriesWithTagsToFilter)
+        testData.itemsOnTagsToFilter = createItemsOnTagsToFilter(testData.countItemsOnTagsToFilter, testData.tagsToFilter, testData.tagsOnItemsWithTagsToFilter)
 
         testData.noiseTags = createNoiseTags(testData.countNoiseTags)
 
-        testData.noiseItems = createNoiseEntries(testData.countNoiseEntries, testData.noiseTags, testData.tagsOnEntriesWithTagsToFilter)
+        testData.noiseItems = createNoiseItems(testData.countNoiseItems, testData.noiseTags, testData.tagsOnItemsWithTagsToFilter)
     }
 
     private fun createTagsToFilter(countTagsToFilter: Int): MutableList<Tag> {
@@ -113,49 +113,49 @@ class SearchFilteredTagsIntegrationTest : LuceneSearchEngineIntegrationTestBase(
         return tagsToFilter
     }
 
-    private fun createTagsOnEntriesWithTagsToFilter(countTagsOnEntriesWithTagsToFilter: Int): MutableList<Tag> {
-        val tagsOnEntriesWithTagsToFilter = mutableListOf<Tag>()
+    private fun createTagsOnItemsWithTagsToFilter(countTagsOnItemsWithTagsToFilter: Int): MutableList<Tag> {
+        val tagsOnItemsWithTagsToFilter = mutableListOf<Tag>()
 
-        for(i in 1..countTagsOnEntriesWithTagsToFilter) {
-            val tagOnEntriesWithTagsToFilter = Tag("On_Entry_With_Tag_To_Filter_" + i)
-            tagService.persist(tagOnEntriesWithTagsToFilter)
-            tagsOnEntriesWithTagsToFilter.add(tagOnEntriesWithTagsToFilter)
+        for(i in 1..countTagsOnItemsWithTagsToFilter) {
+            val tagOnItemsWithTagsToFilter = Tag("On_Item_With_Tag_To_Filter_" + i)
+            tagService.persist(tagOnItemsWithTagsToFilter)
+            tagsOnItemsWithTagsToFilter.add(tagOnItemsWithTagsToFilter)
         }
 
-        return tagsOnEntriesWithTagsToFilter
+        return tagsOnItemsWithTagsToFilter
     }
 
-    private fun createEntriesOnTagsToFilter(countEntriesOnTagsToFilter: Int, tagsToFilter: List<Tag>, tagsOnEntriesWithTagsToFilter: List<Tag>): List<Item> {
-        val entriesOnTagsToFilter = mutableListOf<Item>()
-        val tagsOnEntriesWithTagsToFilterNoSetOnEntriesYet = ArrayList(tagsOnEntriesWithTagsToFilter)
+    private fun createItemsOnTagsToFilter(countItemsOnTagsToFilter: Int, tagsToFilter: List<Tag>, tagsOnItemsWithTagsToFilter: List<Tag>): List<Item> {
+        val itemsOnTagsToFilter = mutableListOf<Item>()
+        val tagsOnItemsWithTagsToFilterNoSetOnItemsYet = ArrayList(tagsOnItemsWithTagsToFilter)
         val tagsRandom = Random(System.nanoTime())
 
-        for(i in 1..countEntriesOnTagsToFilter) {
-            val entryOnTagToFilter = Item("Filter_" + i)
+        for(i in 1..countItemsOnTagsToFilter) {
+            val itemOnTagToFilter = Item("Filter_" + i)
 
-            entryOnTagToFilter.setAllTags(tagsToFilter)
+            itemOnTagToFilter.setAllTags(tagsToFilter)
 
-            if(tagsOnEntriesWithTagsToFilter.isNotEmpty()) {
-                val tagsOnEntriesWithTagsToFilterIndex = tagsRandom.nextInt(tagsOnEntriesWithTagsToFilter.size)
-                val tag = tagsOnEntriesWithTagsToFilter.get(tagsOnEntriesWithTagsToFilterIndex)
-                entryOnTagToFilter.addTag(tag)
-                tagsOnEntriesWithTagsToFilterNoSetOnEntriesYet.remove(tag)
+            if(tagsOnItemsWithTagsToFilter.isNotEmpty()) {
+                val tagsOnItemsWithTagsToFilterIndex = tagsRandom.nextInt(tagsOnItemsWithTagsToFilter.size)
+                val tag = tagsOnItemsWithTagsToFilter.get(tagsOnItemsWithTagsToFilterIndex)
+                itemOnTagToFilter.addTag(tag)
+                tagsOnItemsWithTagsToFilterNoSetOnItemsYet.remove(tag)
             }
 
-            itemService.persist(entryOnTagToFilter)
-            entriesOnTagsToFilter.add(entryOnTagToFilter)
+            itemService.persist(itemOnTagToFilter)
+            itemsOnTagsToFilter.add(itemOnTagToFilter)
         }
 
-        if(tagsOnEntriesWithTagsToFilterNoSetOnEntriesYet.isNotEmpty() && entriesOnTagsToFilter.isNotEmpty()) { // if not all tags from tagsOnEntriesWithTagsToFilter have been set on items, do it now
-            val entry = entriesOnTagsToFilter[0]
-            tagsOnEntriesWithTagsToFilterNoSetOnEntriesYet.forEach { entry.addTag(it) }
-            itemService.update(entry)
+        if(tagsOnItemsWithTagsToFilterNoSetOnItemsYet.isNotEmpty() && itemsOnTagsToFilter.isNotEmpty()) { // if not all tags from tagsOnItemsWithTagsToFilter have been set on items, do it now
+            val item = itemsOnTagsToFilter[0]
+            tagsOnItemsWithTagsToFilterNoSetOnItemsYet.forEach { item.addTag(it) }
+            itemService.update(item)
         }
 
         tagsToFilter.forEach { tagService.update(it) }
-        tagsOnEntriesWithTagsToFilter.forEach { tagService.update(it) }
+        tagsOnItemsWithTagsToFilter.forEach { tagService.update(it) }
 
-        return entriesOnTagsToFilter
+        return itemsOnTagsToFilter
     }
 
     private fun createNoiseTags(countNoiseTags: Int): MutableList<Tag> {
@@ -170,33 +170,33 @@ class SearchFilteredTagsIntegrationTest : LuceneSearchEngineIntegrationTestBase(
         return noiseTags
     }
 
-    private fun createNoiseEntries(countNoiseEntries: Int, noiseTags: List<Tag>, tagsOnEntriesWithTagsToFilter: List<Tag>): List<Item> {
-        val noiseEntries = mutableListOf<Item>()
+    private fun createNoiseItems(countNoiseItems: Int, noiseTags: List<Tag>, tagsOnItemsWithTagsToFilter: List<Tag>): List<Item> {
+        val noiseItems = mutableListOf<Item>()
         val tagsRandom = Random(System.nanoTime())
 
-        for(i in 1..countNoiseEntries) {
-            val noiseEntry = Item("Noise_" + i)
+        for(i in 1..countNoiseItems) {
+            val noiseItem = Item("Noise_" + i)
 
             if(noiseTags.isNotEmpty()) {
                 val countNoiseTags = tagsRandom.nextInt(noiseTags.size)
-                while (noiseEntry.countTags < countNoiseTags) {
-                    noiseEntry.addTag(noiseTags.get(tagsRandom.nextInt(noiseTags.size)))
+                while (noiseItem.countTags < countNoiseTags) {
+                    noiseItem.addTag(noiseTags.get(tagsRandom.nextInt(noiseTags.size)))
                 }
             }
 
-            if(tagsOnEntriesWithTagsToFilter.isNotEmpty()) {
-                val tagsOnEntriesWithTagsToFilterIndex = tagsRandom.nextInt(tagsOnEntriesWithTagsToFilter.size)
-                noiseEntry.addTag(tagsOnEntriesWithTagsToFilter.get(tagsOnEntriesWithTagsToFilterIndex))
+            if(tagsOnItemsWithTagsToFilter.isNotEmpty()) {
+                val tagsOnItemsWithTagsToFilterIndex = tagsRandom.nextInt(tagsOnItemsWithTagsToFilter.size)
+                noiseItem.addTag(tagsOnItemsWithTagsToFilter.get(tagsOnItemsWithTagsToFilterIndex))
             }
 
-            itemService.persist(noiseEntry)
-            noiseEntries.add(noiseEntry)
+            itemService.persist(noiseItem)
+            noiseItems.add(noiseItem)
         }
 
         noiseTags.forEach { tagService.update(it) }
-        tagsOnEntriesWithTagsToFilter.forEach { tagService.update(it) }
+        tagsOnItemsWithTagsToFilter.forEach { tagService.update(it) }
 
-        return noiseEntries
+        return noiseItems
     }
 
 }

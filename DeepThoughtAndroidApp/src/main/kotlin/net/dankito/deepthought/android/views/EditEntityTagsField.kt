@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.BaseActivity
-import net.dankito.deepthought.android.adapter.TagsOnEntryRecyclerAdapter
+import net.dankito.deepthought.android.adapter.TagsOnItemRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.presenter.TagsOnItemListPresenter
@@ -54,7 +54,7 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
 
     private val presenter: TagsOnItemListPresenter
 
-    private val adapter: TagsOnEntryRecyclerAdapter
+    private val adapter: TagsOnItemRecyclerAdapter
 
     private var originalTagsOnEntry: MutableCollection<Tag> = ArrayList<Tag>()
 
@@ -78,11 +78,11 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
 
         edtxtEntityFieldValue.setHint(R.string.activity_edit_item_edit_tags_hint)
 
-        adapter = TagsOnEntryRecyclerAdapter(presenter) { tagChange, tag, _ -> activity?.runOnUiThread { tagAddedOrRemoved(tagChange, tag) } }
+        adapter = TagsOnItemRecyclerAdapter(presenter) { tagChange, tag, _ -> activity?.runOnUiThread { tagAddedOrRemoved(tagChange, tag) } }
         adapter.deleteTagListener = { tag -> deleteTag(tag) }
 
         rcySearchResult.adapter = adapter
-        rcySearchResult.maxHeightInPixel = (context.resources.getDimension(R.dimen.list_item_tag_on_entry_height) * 5.25).toInt() // show at max five list items and a little bit from
+        rcySearchResult.maxHeightInPixel = (context.resources.getDimension(R.dimen.list_item_tag_on_item_height) * 5.25).toInt() // show at max five list items and a little bit from
         // the next item so that user knows there's more
 
         this.disableActionOnKeyboard = false
@@ -93,7 +93,7 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
         this.originalTagsOnEntry = originalTagsOnEntry
         this.activity = activity
 
-        adapter.tagsOnEntry = LinkedHashSet(originalTagsOnEntry) // make a copy so that original collection doesn't get manipulated
+        adapter.tagsOnItem = LinkedHashSet(originalTagsOnEntry) // make a copy so that original collection doesn't get manipulated
         setTagsOnEntryPreviewOnUIThread(originalTagsOnEntry)
     }
 
@@ -134,11 +134,11 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
         return currentActionPressTime.time - previousActionPressTime.time <= DoubleTapMaxDelayMillis
     }
 
-    private fun tagAddedOrRemoved(tagChange: TagsOnEntryRecyclerAdapter.TagChange, tag: Tag) {
-        if(tagChange == TagsOnEntryRecyclerAdapter.TagChange.Added) {
+    private fun tagAddedOrRemoved(tagChange: TagsOnItemRecyclerAdapter.TagChange, tag: Tag) {
+        if(tagChange == TagsOnItemRecyclerAdapter.TagChange.Added) {
             addTag(tag)
         }
-        else if(tagChange == TagsOnEntryRecyclerAdapter.TagChange.Removed) {
+        else if(tagChange == TagsOnItemRecyclerAdapter.TagChange.Removed) {
             removeRemovedTagFromEnteredSearchTerm(tag)
         }
 
@@ -207,7 +207,7 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
     }
 
     private fun getMergedTags(): Collection<Tag> {
-        return presenter.getMergedTags(adapter.tagsOnEntry, autoCompleteResult)
+        return presenter.getMergedTags(adapter.tagsOnItem, autoCompleteResult)
     }
 
     private fun setTagsOnEntryPreviewOnUIThread(tagsOnEntry: Collection<Tag>) {
@@ -220,7 +220,7 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
             showSearchResultsView()
         }
 
-        updateDidValueChange(presenter.didTagsOnEntryChange(originalTagsOnEntry, tagsOnEntry))
+        updateDidValueChange(presenter.didTagsOnItemChange(originalTagsOnEntry, tagsOnEntry))
     }
 
 
@@ -239,8 +239,8 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
     }
 
     private fun removeTagFromCurrentTagsOnEntry(tag: Tag) {
-        if(adapter.tagsOnEntry.contains(tag)) {
-            adapter.tagsOnEntry.remove(tag)
+        if(adapter.tagsOnItem.contains(tag)) {
+            adapter.tagsOnItem.remove(tag)
         }
 
         activity?.runOnUiThread {

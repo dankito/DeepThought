@@ -85,16 +85,16 @@ class TagsOnItemListPresenter(private val tagsOnItemListView: ITagsOnItemListVie
         return null
     }
 
-    fun getButtonStateForSearchResult(tagsOnEntry: Collection<Tag>): TagsSearcherButtonState {
-        return searchResultsUtil.getButtonStateForSearchResult(lastTagsSearchResults, tagsOnEntry)
+    fun getButtonStateForSearchResult(tagsOnItem: Collection<Tag>): TagsSearcherButtonState {
+        return searchResultsUtil.getButtonStateForSearchResult(lastTagsSearchResults, tagsOnItem)
     }
 
-    fun createNewTags(tagsOnEntry: MutableCollection<Tag>) {
+    fun createNewTags(tagsOnItem: MutableCollection<Tag>) {
         lastTagsSearchResults?.let { searchResults ->
             searchResults.results.forEach { result ->
                 val term = result.searchTerm
                 if(term.isNullOrBlank() == false) { // should actually never be the case
-                    tagsOnEntry.add(createNewTag(term))
+                    tagsOnItem.add(createNewTag(term))
                 }
             }
 
@@ -102,9 +102,9 @@ class TagsOnItemListPresenter(private val tagsOnItemListView: ITagsOnItemListVie
         }
     }
 
-    private fun createNewTags(tagNames: Collection<String>, tagsOnEntry: MutableCollection<Tag>) {
+    private fun createNewTags(tagNames: Collection<String>, tagsOnItem: MutableCollection<Tag>) {
         tagNames.forEach {
-            tagsOnEntry.add(createNewTag(it))
+            tagsOnItem.add(createNewTag(it))
         }
 
         searchTags()
@@ -118,12 +118,12 @@ class TagsOnItemListPresenter(private val tagsOnItemListView: ITagsOnItemListVie
         return newTag
     }
 
-    fun toggleTagsOnEntry(tagsOnEntry: MutableCollection<Tag>, state: TagsSearcherButtonState) {
+    fun toggleTagsOnItem(tagsOnItem: MutableCollection<Tag>, state: TagsSearcherButtonState) {
         lastTagsSearchResults?.let { searchResults ->
             val notExistingEnteredTags = ArrayList<String>()
 
             searchResults.results.forEach { result ->
-                toggleTagOnEntry(tagsOnEntry, result, result == searchResults.lastResult, state, notExistingEnteredTags)
+                toggleTagOnItem(tagsOnItem, result, result == searchResults.lastResult, state, notExistingEnteredTags)
             }
 
             if(notExistingEnteredTags.isNotEmpty()) {
@@ -132,45 +132,45 @@ class TagsOnItemListPresenter(private val tagsOnItemListView: ITagsOnItemListVie
         }
     }
 
-    private fun toggleTagOnEntry(tagsOnEntry: MutableCollection<Tag>, result: TagsSearchResult, isLastSearchResult: Boolean, state: TagsSearcherButtonState, notExistingEnteredTags: ArrayList<String>) {
+    private fun toggleTagOnItem(tagsOnItem: MutableCollection<Tag>, result: TagsSearchResult, isLastSearchResult: Boolean, state: TagsSearcherButtonState, notExistingEnteredTags: ArrayList<String>) {
         if(result.hasExactMatches()) {
-            result.exactMatches.forEach { toggleTagAffiliation(it, tagsOnEntry, state) }
+            result.exactMatches.forEach { toggleTagAffiliation(it, tagsOnItem, state) }
         }
         else if(isLastSearchResult == false && result.hasSingleMatch()) {
-            result.getSingleMatch()?.let { toggleTagAffiliation(it, tagsOnEntry, state) }
+            result.getSingleMatch()?.let { toggleTagAffiliation(it, tagsOnItem, state) }
         }
         else if(result.hasMatches == false || (isLastSearchResult == false && result.hasSingleMatch() == false)) {
             notExistingEnteredTags.add(result.searchTerm)
         }
         else if(isLastSearchResult) {
-            result.allMatches.filterNotNull().forEach { toggleTagAffiliation(it, tagsOnEntry, state) }
+            result.allMatches.filterNotNull().forEach { toggleTagAffiliation(it, tagsOnItem, state) }
         }
     }
 
-    private fun toggleTagAffiliation(tag: Tag, tagsOnEntry: MutableCollection<Tag>, state: TagsSearcherButtonState) {
-        if(tagsOnEntry.contains(tag)) {
+    private fun toggleTagAffiliation(tag: Tag, tagsOnItem: MutableCollection<Tag>, state: TagsSearcherButtonState) {
+        if(tagsOnItem.contains(tag)) {
             if(state == TagsSearcherButtonState.REMOVE_TAGS || state == TagsSearcherButtonState.TOGGLE_TAGS) {
-                tagsOnEntry.remove(tag)
+                tagsOnItem.remove(tag)
             }
         }
         else {
             if(state == TagsSearcherButtonState.ADD_TAGS || state == TagsSearcherButtonState.TOGGLE_TAGS) {
-                tagsOnEntry.add(tag)
+                tagsOnItem.add(tag)
             }
         }
     }
 
     private fun handleEnteredNotExistingTags(notExistingEnteredTags: ArrayList<String>) {
-        tagsOnItemListView.shouldCreateNotExistingTags(notExistingEnteredTags) { tagsOnEntry ->
-            createNewTags(notExistingEnteredTags, tagsOnEntry)
+        tagsOnItemListView.shouldCreateNotExistingTags(notExistingEnteredTags) { tagsOnItem ->
+            createNewTags(notExistingEnteredTags, tagsOnItem)
         }
     }
 
 
-    fun getMergedTags(tagsOnEntry: Collection<Tag>, autoCompleteResult: TagAutoCompleteResult?): Collection<Tag> {
+    fun getMergedTags(tagsOnItem: Collection<Tag>, autoCompleteResult: TagAutoCompleteResult?): Collection<Tag> {
         val tags = HashSet<Tag>()
 
-        tags.addAll(tagsOnEntry)
+        tags.addAll(tagsOnItem)
         tags.addAll(getTagsFromLastSearchResult(autoCompleteResult?.enteredTagNameTrimmedWithoutTagsSeparator))
 
         addAutoCompletedTag(tags, autoCompleteResult)
@@ -184,13 +184,13 @@ class TagsOnItemListPresenter(private val tagsOnItemListView: ITagsOnItemListVie
         }
     }
 
-    fun didTagsOnEntryChange(originalTagsOnEntry: Collection<Tag>, tagsOnEntry: Collection<Tag>): Boolean {
-        if(originalTagsOnEntry.size != tagsOnEntry.size) {
+    fun didTagsOnItemChange(originalTagsOnItem: Collection<Tag>, tagsOnItem: Collection<Tag>): Boolean {
+        if(originalTagsOnItem.size != tagsOnItem.size) {
             return true
         }
 
-        val copy = java.util.ArrayList(tagsOnEntry)
-        copy.removeAll(originalTagsOnEntry)
+        val copy = java.util.ArrayList(tagsOnItem)
+        copy.removeAll(originalTagsOnItem)
         return copy.size > 0
     }
 

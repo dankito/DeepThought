@@ -87,7 +87,7 @@ class TagsListPresenter(tagsListView: ITagsListView, private val allCalculatedTa
         }
 
         lastFilteredTagsSearchResults?.let { searchResult ->
-            toggleFilterTags(searchResult.tagsOnEntriesContainingFilteredTags)
+            toggleFilterTags(searchResult.tagsOnItemsContainingFilteredTags)
         }
     }
 
@@ -105,7 +105,7 @@ class TagsListPresenter(tagsListView: ITagsListView, private val allCalculatedTa
     fun getCountEntriesForFilteredTag(tag: Tag): Int {
         lastFilteredTagsSearchResults?.let {
             // TODO: this is bad code, uses knowledge of  implementation details
-            (it.entriesHavingFilteredTags as? FilteredTagsLazyLoadingLuceneSearchResultsList)?.entityIds?.let { allFilteredEntryIds ->
+            (it.itemsHavingFilteredTags as? FilteredTagsLazyLoadingLuceneSearchResultsList)?.entityIds?.let { allFilteredEntryIds ->
                 (tag.items as? LazyLoadingEntitiesCollection)?.let { // TODO: here as well
                     val filteredEntriesOnTag = ArrayList(it.targetEntitiesIds)
                     filteredEntriesOnTag.retainAll(allFilteredEntryIds)

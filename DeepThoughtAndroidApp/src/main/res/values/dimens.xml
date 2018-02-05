@@ -142,8 +142,8 @@
     <dimen name="fullscreen_web_view_options_bar_button_height">40dp</dimen>
     <dimen name="fullscreen_web_view_options_bar_button_width">40dp</dimen>
 
-    <dimen name="list_item_tag_on_entry_height">40dp</dimen>
-    <dimen name="list_item_tag_on_entry_button_width">40dp</dimen>
+    <dimen name="list_item_tag_on_item_height">40dp</dimen>
+    <dimen name="list_item_tag_on_item_button_width">40dp</dimen>
 
     <dimen name="activity_edit_reference_padding_left_right">8dp</dimen>
     <dimen name="activity_edit_reference_find_existing_margin_left">6dp</dimen>

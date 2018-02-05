@@ -108,7 +108,7 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
             this.lastTagsSearchResults = null
             this.lastFilteredTagsSearchResults = result
 
-            tagsListView.showEntities(result.tagsOnEntriesContainingFilteredTags)
+            tagsListView.showEntities(result.tagsOnItemsContainingFilteredTags)
         }
 
         searchEngine.searchFilteredTags(lastFilteredTagsSearch!!)
