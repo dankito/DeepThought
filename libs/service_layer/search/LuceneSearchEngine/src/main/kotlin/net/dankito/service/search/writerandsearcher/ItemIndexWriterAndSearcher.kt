@@ -69,7 +69,7 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
             reference.series?.let { doc.add(StringField(FieldName.ItemSourceSeriesId, it.id, Field.Store.YES)) }
         }
         else {
-            doc.add(StringField(FieldName.ItemNoSource, FieldValue.NoReferenceFieldValue, Field.Store.NO))
+            doc.add(StringField(FieldName.ItemNoSource, FieldValue.NoSourceFieldValue, Field.Store.NO))
         }
 
         if(entity.hasAttachedFiles()) {

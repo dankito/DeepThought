@@ -7,7 +7,7 @@ object FieldValue {
     val BooleanFieldTrueValue = "true"
 
     val NoTagsFieldValue = "notags"
-    val NoReferenceFieldValue = "noreference"
+    val NoSourceFieldValue = "noreference" // leave its outdated field value as otherwise previously created items won't get found
     val NoFilesFieldValue = "nofiles"
     val NoNotesFieldValue = "nonotes"
 
