@@ -146,8 +146,10 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
 
     private fun searchForNotSynchronizedFiles() {
         searchEngine.searchLocalFileInfo(LocalFileInfoSearch(doesNotHaveSyncStatus = FileSyncStatus.UpToDate) { notUpToDateLocalFileInfo ->
-            notUpToDateLocalFileInfo.forEach { localFileInfo ->
-                startFileSynchronizationAsync(localFileInfo.file)
+            notUpToDateLocalFileInfo.filterNotNull().forEach { localFileInfo ->
+                localFileInfo.file?.let { file ->
+                    startFileSynchronizationAsync(file)
+                }
             }
 
             searchForLocalFilesWithoutLocalFileInfoSet()
@@ -156,7 +158,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
 
     private fun searchForLocalFilesWithoutLocalFileInfoSet() {
         searchEngine.searchFiles(FilesSearch(fileType = FilesSearch.FileType.LocalFilesOnly, onlyFilesWithoutLocalFileInfo = true) { localFilesWithoutLocalFileInfo ->
-            forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(localFilesWithoutLocalFileInfo)
+            forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(localFilesWithoutLocalFileInfo.filterNotNull())
         })
     }
 
