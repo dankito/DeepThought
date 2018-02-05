@@ -27,7 +27,7 @@ class ItemIdsIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBu
     : IndexWriterAndSearcher<Item>(itemService, eventBus, osHelper, threadPool) {
 
     companion object {
-        private val MaxEntriesSearchResults = 1000000 // e.g. for AllEntriesCalculatedTag all items must be returned
+        private val MaxItemsSearchResults = 1000000 // e.g. for AllItemsCalculatedTag all items must be returned
     }
 
 
@@ -50,7 +50,7 @@ class ItemIdsIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBu
     fun searchItemIds(search: ItemsSearch, termsToFilterFor: List<String>) {
         val query = WildcardQuery(Term(getIdFieldName(), "*"))
 
-        executeQueryForSearchWithCollectionResult(search, query, Item::class.java, MaxEntriesSearchResults, SortOption(FieldName.ItemCreated, SortOrder.Descending, SortField.Type.LONG))
+        executeQueryForSearchWithCollectionResult(search, query, Item::class.java, MaxItemsSearchResults, SortOption(FieldName.ItemCreated, SortOrder.Descending, SortField.Type.LONG))
     }
 
 

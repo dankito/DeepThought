@@ -27,7 +27,7 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
     : IndexWriterAndSearcher<Item>(itemService, eventBus, osHelper, threadPool) {
 
     companion object {
-        private val MaxEntriesSearchResults = 1000000 // e.g. for AllEntriesCalculatedTag all items must be returned
+        private val MaxItemsSearchResults = 1000000 // e.g. for AllItemsCalculatedTag all items must be returned
     }
 
 
@@ -96,7 +96,7 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
 
         addQueryForSearchTerm(termsToFilterFor, query, search)
 
-        executeQueryForSearchWithCollectionResult(search, query, Item::class.java, MaxEntriesSearchResults, SortOption(FieldName.ItemCreated, SortOrder.Descending, SortField.Type.LONG))
+        executeQueryForSearchWithCollectionResult(search, query, Item::class.java, MaxItemsSearchResults, SortOption(FieldName.ItemCreated, SortOrder.Descending, SortField.Type.LONG))
     }
 
     private fun addQueryForOptions(search: ItemsSearch, query: BooleanQuery) {
@@ -105,12 +105,12 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
         }
 
         if(search.itemsMustHaveTheseTags.isNotEmpty()) {
-            val filterEntriesQuery = BooleanQuery()
+            val searchItemsQuery = BooleanQuery()
             for(tag in search.itemsMustHaveTheseTags.filterNotNull().filter { it.id != null }) {
-                filterEntriesQuery.add(TermQuery(Term(FieldName.ItemTagsIds, tag.id)), BooleanClause.Occur.MUST)
+                searchItemsQuery.add(TermQuery(Term(FieldName.ItemTagsIds, tag.id)), BooleanClause.Occur.MUST)
             }
 
-            query.add(filterEntriesQuery, BooleanClause.Occur.MUST)
+            query.add(searchItemsQuery, BooleanClause.Occur.MUST)
         }
 
         search.itemsMustHaveThisSource?.id?.let { referenceId ->
@@ -128,12 +128,12 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
         }
 
         if(search.itemsMustHaveTheseFiles.isNotEmpty()) {
-            val filterEntriesQuery = BooleanQuery()
+            val searchItemsQuery = BooleanQuery()
             for(file in search.itemsMustHaveTheseFiles.filterNotNull().filter { it.id != null }) {
-                filterEntriesQuery.add(TermQuery(Term(FieldName.ItemAttachedFilesIds, file.id)), BooleanClause.Occur.MUST)
+                searchItemsQuery.add(TermQuery(Term(FieldName.ItemAttachedFilesIds, file.id)), BooleanClause.Occur.MUST)
             }
 
-            query.add(filterEntriesQuery, BooleanClause.Occur.MUST)
+            query.add(searchItemsQuery, BooleanClause.Occur.MUST)
         }
     }
 
