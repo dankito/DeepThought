@@ -172,7 +172,12 @@ class EditEntityFilesField : View() {
     }
 
     private fun updateListViewHeight() {
-        listViewHeight.value = files.size * 80.0 // cell height is 70.0 plus a padding of 80
+        var height = files.size * 80.0 // cell height is 70.0 plus a padding of 80
+        if(height > 200.0) {
+            height = 200.0
+        }
+
+        listViewHeight.value = height
     }
 
     private fun updateDidValueChange() {
