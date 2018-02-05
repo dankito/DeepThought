@@ -101,7 +101,7 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
 
     private fun createEntityChangedMessage(entityClass: Class<out BaseEntity>, entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource): EntityChanged<out BaseEntity>? {
         when(entityClass) {
-            Item::class.java -> return EntryChanged(entity as Item, changeType, source)
+            Item::class.java -> return ItemChanged(entity as Item, changeType, source)
             Tag::class.java -> return TagChanged(entity as Tag, changeType, source)
             Source::class.java -> return ReferenceChanged(entity as Source, changeType, source)
             Series::class.java -> return SeriesChanged(entity as Series, changeType, source)

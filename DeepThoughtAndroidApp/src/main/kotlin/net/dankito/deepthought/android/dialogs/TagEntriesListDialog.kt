@@ -8,7 +8,7 @@ import net.dankito.deepthought.model.CalculatedTag
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Tag
 import net.dankito.service.data.TagService
-import net.dankito.service.data.messages.EntryChanged
+import net.dankito.service.data.messages.ItemChanged
 import net.dankito.service.data.messages.TagChanged
 import net.dankito.service.search.specific.EntriesSearch
 import net.engio.mbassy.listener.Handler
@@ -149,13 +149,13 @@ class TagEntriesListDialog : EntriesListDialogBase() {
         @Handler
         fun tagChanged(tagChanged: TagChanged) {
             if(tagChanged.entity.id == tag?.id) {
-                retrieveAndShowEntries()
+                retrieveAndShowItems()
             }
         }
 
         @Handler
-        fun entriesChanged(entryChanged: EntryChanged) {
-            retrieveAndShowEntries()
+        fun itemChanged(itemChanged: ItemChanged) {
+            retrieveAndShowItems()
         }
 
     }

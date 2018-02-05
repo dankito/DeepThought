@@ -64,10 +64,10 @@ abstract class EntriesListDialogBase : FullscreenDialogFragment() {
     override fun onResume() {
         super.onResume()
 
-        retrieveAndShowEntries()
+        retrieveAndShowItems()
     }
 
-    protected fun retrieveAndShowEntries() {
+    protected fun retrieveAndShowItems() {
         retrieveEntries { entries ->
             activity?.runOnUiThread {
                 showEntriesOnUiThread(entries)

@@ -2,7 +2,7 @@ package net.dankito.service.search.writerandsearcher
 
 import net.dankito.deepthought.model.Item
 import net.dankito.service.data.EntryService
-import net.dankito.service.data.messages.EntryChanged
+import net.dankito.service.data.messages.ItemChanged
 import net.dankito.service.eventbus.EventBusPriorities
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.FieldName
@@ -58,8 +58,8 @@ class EntryIdsIndexWriterAndSearcher(entryService: EntryService, eventBus: IEven
         return object {
 
             @Handler(priority = EventBusPriorities.Indexer)
-            fun entityChanged(entryChanged: EntryChanged) {
-                handleEntityChange(entryChanged)
+            fun entityChanged(itemChanged: ItemChanged) {
+                handleEntityChange(itemChanged)
             }
 
         }

@@ -3,7 +3,7 @@ package net.dankito.deepthought.model
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntityChangeType
-import net.dankito.service.data.messages.EntryChanged
+import net.dankito.service.data.messages.ItemChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.engio.mbassy.listener.Handler
@@ -21,13 +21,13 @@ abstract class CalculatedTag(name: String, protected val searchEngine: ISearchEn
 
 
     init {
-        searchEngine.addInitializationListener { retrieveAndUpdateEntriesAsync(true) }
+        searchEngine.addInitializationListener { retrieveAndUpdateItemsAsync(true) }
 
         eventBus.register(eventBusListener)
     }
 
 
-    private fun retrieveAndUpdateEntriesAsync(informUIOfUpdate: Boolean) {
+    private fun retrieveAndUpdateItemsAsync(informUIOfUpdate: Boolean) {
         retrieveEntriesAsync {
             this.items = it
 
@@ -43,8 +43,8 @@ abstract class CalculatedTag(name: String, protected val searchEngine: ISearchEn
     inner class EventBusListener {
 
         @Handler()
-        fun entriesChanged(entryChanged: EntryChanged) {
-            retrieveAndUpdateEntriesAsync(true)
+        fun itemChanged(itemChanged: ItemChanged) {
+            retrieveAndUpdateItemsAsync(true)
         }
 
     }

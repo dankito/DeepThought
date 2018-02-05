@@ -44,7 +44,7 @@ import net.dankito.deepthought.ui.presenter.EditEntryPresenter
 import net.dankito.richtexteditor.android.animation.ShowHideViewAnimator
 import net.dankito.service.data.*
 import net.dankito.service.data.messages.EntityChangeSource
-import net.dankito.service.data.messages.EntryChanged
+import net.dankito.service.data.messages.ItemChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IClipboardService
@@ -1823,7 +1823,7 @@ class EditEntryActivity : BaseActivity() {
         }
     }
 
-    private fun warnEntryHasBeenEdited(item: Item) {
+    private fun warnItemHasBeenEdited(item: Item) {
         unregisterEventBusListener() // message now gets shown, don't display it a second time
 
         runOnUiThread {
@@ -1838,10 +1838,10 @@ class EditEntryActivity : BaseActivity() {
     inner class EventBusListener {
 
         @Handler
-        fun entryChanged(change: EntryChanged) { // TODO: what about ReadLaterArticle?
+        fun itemChanged(change: ItemChanged) { // TODO: what about ReadLaterArticle?
             if(change.entity.id == item?.id) {
                 if(change.source == EntityChangeSource.Synchronization && change.isDependentChange == false) {
-                    warnEntryHasBeenEdited(change.entity)
+                    warnItemHasBeenEdited(change.entity)
                 }
                 else { // TODO: or will changes then may get overwritten? As sometimes it's really senseful to update values, e.g. when a file synchronization state gets updated
                     updateDisplayedValues()
