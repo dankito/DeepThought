@@ -39,6 +39,8 @@ open class SocketHandler {
 
             return SocketResult(true, countBytesSend = countBytesSend)
         } catch(e: Exception) {
+            log.error("Could not send message to ${socket.inetAddress}", e)
+
             return SocketResult(false, e, countBytesSend = countBytesSend)
         }
     }
@@ -79,12 +81,12 @@ open class SocketHandler {
             }
         } while(receivedChunkSize > -1)
 
-        if (receivedChunkSize > 0 && receivedChunkSize < CommunicationConfig.MAX_MESSAGE_SIZE) {
+        if(receivedChunkSize > 0 && receivedChunkSize < CommunicationConfig.MAX_MESSAGE_SIZE) {
             val receivedMessage = String(receivedMessageBytes.toByteArray(), CommunicationConfig.MESSAGE_CHARSET)
             return SocketResult(true, receivedMessage = receivedMessage)
         }
         else {
-            if (receivedChunkSize <= 0) {
+            if(receivedChunkSize <= 0) {
                 return SocketResult(false, Exception("Could not receive any bytes"))
             }
             else {
@@ -94,7 +96,7 @@ open class SocketHandler {
     }
 
     fun closeSocket(socket: Socket?) {
-        if (socket != null) {
+        if(socket != null) {
             try {
                 socket.close()
             } catch (e: Exception) {
