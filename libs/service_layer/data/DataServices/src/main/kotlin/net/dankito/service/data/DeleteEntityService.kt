@@ -11,7 +11,7 @@ import net.dankito.utils.ui.IDialogService
  * When simply calling <entityServiceBase>.delete() entity's sources aren't updated and still keep a source to deleted entity.
  * This service first removes all sources and updates them and then deletes the entity with its EntityService.
  */
-class DeleteEntityService(private val entryService: EntryService, private val tagService: TagService, private val referenceService: ReferenceService, private val seriesService: SeriesService,
+class DeleteEntityService(private val itemService: ItemService, private val tagService: TagService, private val referenceService: ReferenceService, private val seriesService: SeriesService,
                           private val fileService: FileService, private val localFileInfoService: LocalFileInfoService, private val searchEngine: ISearchEngine,
                           private val dialogService: IDialogService, private val threadPool: IThreadPool) {
 
@@ -33,16 +33,16 @@ class DeleteEntityService(private val entryService: EntryService, private val ta
 
         ArrayList(item.notes).filterNotNull().filter { it.id != null }.forEach { note ->
             item.removeNote(note)
-            entryService.entityManager.updateEntity(note)
+            itemService.entityManager.updateEntity(note)
         }
 
         val attachedFiles = ArrayList(item.attachedFiles).filterNotNull().filter { it.id != null }
         attachedFiles.forEach { file ->
             item.removeAttachedFile(file)
-            entryService.entityManager.updateEntity(file)
+            itemService.entityManager.updateEntity(file)
         }
 
-        entryService.delete(item)
+        itemService.delete(item)
 
         mayDeleteSource(entryReference)
         mayDeleteFiles(attachedFiles)
@@ -84,7 +84,7 @@ class DeleteEntityService(private val entryService: EntryService, private val ta
     fun deleteTag(tag: Tag) {
         ArrayList(tag.items).filterNotNull().filter { it.id != null }.forEach { entry ->
             entry.removeTag(tag)
-            entryService.update(entry)
+            itemService.update(entry)
         }
 
         tagService.delete(tag)
@@ -103,7 +103,7 @@ class DeleteEntityService(private val entryService: EntryService, private val ta
 
         ArrayList(source.items).filterNotNull().filter { it.id != null }.forEach { entry ->
             entry.source = null
-            entryService.update(entry)
+            itemService.update(entry)
         }
 
         ArrayList(source.attachedFiles).filterNotNull().filter { it.id != null }.forEach { file ->
@@ -136,7 +136,7 @@ class DeleteEntityService(private val entryService: EntryService, private val ta
     fun deleteFile(file: FileLink) {
         ArrayList(file.itemsAttachedTo).filterNotNull().filter { it.id != null }.forEach { item ->
             item.removeAttachedFile(file)
-            entryService.update(item)
+            itemService.update(item)
         }
 
         ArrayList(file.sourcesAttachedTo).filterNotNull().filter { it.id != null }.forEach { source ->

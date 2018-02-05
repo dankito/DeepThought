@@ -26,7 +26,7 @@ import kotlin.concurrent.thread
 
 
 class LuceneSearchEngine(private val dataManager: DataManager, private val languageDetector: ILanguageDetector, osHelper: OsHelper, threadPool: IThreadPool, private val eventBus: IEventBus,
-                         entryService: EntryService, tagService: TagService, referenceService: ReferenceService, seriesService: SeriesService,
+                         itemService: ItemService, tagService: TagService, referenceService: ReferenceService, seriesService: SeriesService,
                          readLaterArticleService: ReadLaterArticleService, fileService: FileService, localFileInfoService: LocalFileInfoService)
     : SearchEngineBase(threadPool) {
 
@@ -35,9 +35,9 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
     }
 
 
-    private val entryIdsIndexWriterAndSearcher = EntryIdsIndexWriterAndSearcher(entryService, eventBus, osHelper, threadPool)
+    private val entryIdsIndexWriterAndSearcher = EntryIdsIndexWriterAndSearcher(itemService, eventBus, osHelper, threadPool)
 
-    private val entryIndexWriterAndSearcher = EntryIndexWriterAndSearcher(entryService, eventBus, osHelper, threadPool)
+    private val entryIndexWriterAndSearcher = EntryIndexWriterAndSearcher(itemService, eventBus, osHelper, threadPool)
 
     private val tagIndexWriterAndSearcher = TagIndexWriterAndSearcher(tagService, eventBus, osHelper, threadPool, entryIndexWriterAndSearcher)
 

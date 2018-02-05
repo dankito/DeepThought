@@ -1,7 +1,7 @@
 package net.dankito.service.search.writerandsearcher
 
 import net.dankito.deepthought.model.Item
-import net.dankito.service.data.EntryService
+import net.dankito.service.data.ItemService
 import net.dankito.service.data.messages.ItemChanged
 import net.dankito.service.eventbus.EventBusPriorities
 import net.dankito.service.eventbus.IEventBus
@@ -23,8 +23,8 @@ import org.apache.lucene.search.WildcardQuery
 /**
  * An Index that only contains item ids so that searching for all items (e.g. on app start) is a little bit faster than searching in big EntryIndexWriterAndSearcher
  */
-class EntryIdsIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool)
-    : IndexWriterAndSearcher<Item>(entryService, eventBus, osHelper, threadPool) {
+class EntryIdsIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool)
+    : IndexWriterAndSearcher<Item>(itemService, eventBus, osHelper, threadPool) {
 
     companion object {
         private val MaxEntriesSearchResults = 1000000 // e.g. for AllEntriesCalculatedTag all items must be returned

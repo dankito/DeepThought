@@ -95,7 +95,7 @@ class EditEntryActivity : BaseActivity() {
 
 
     @Inject
-    protected lateinit var entryService: EntryService
+    protected lateinit var itemService: ItemService
 
     @Inject
     protected lateinit var readLaterArticleService: ReadLaterArticleService
@@ -217,7 +217,7 @@ class EditEntryActivity : BaseActivity() {
     init {
         AppComponent.component.inject(this)
 
-        dataManager = entryService.dataManager
+        dataManager = itemService.dataManager
 
         presenter = EditEntryPresenter(entryPersister, readLaterArticleService, clipboardService, router)
 
@@ -581,12 +581,12 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun mayShowReaderViewHelp() {
-        val localSettings = entryService.dataManager.localSettings
+        val localSettings = itemService.dataManager.localSettings
         if(localSettings.didShowReaderViewHelp == false) {
             contextHelpUtil.showContextHelp(lytContextHelpReaderView, R.string.context_help_reader_view) {
                 setFloatingActionButtonVisibilityOnUIThread()
                 localSettings.didShowReaderViewHelp = true
-                entryService.dataManager.localSettingsUpdated()
+                itemService.dataManager.localSettingsUpdated()
             }
 
             setFloatingActionButtonVisibilityOnUIThread()
@@ -776,11 +776,11 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun entryPropertySet() {
-        val localSettings = entryService.dataManager.localSettings
+        val localSettings = itemService.dataManager.localSettings
 
         if(localSettings.didShowAddItemPropertiesHelp == false && contentToEdit.isNullOrBlank() == false) {
             localSettings.didShowAddItemPropertiesHelp = true
-            entryService.dataManager.localSettingsUpdated()
+            itemService.dataManager.localSettingsUpdated()
         }
     }
 
@@ -877,7 +877,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun shouldShowOnboardingForEntryProperties(): Boolean {
-        return entryService.dataManager.localSettings.didShowAddItemPropertiesHelp == false &&
+        return itemService.dataManager.localSettings.didShowAddItemPropertiesHelp == false &&
                 lytTagsPreview.visibility == View.GONE && lytReferencePreview.visibility == View.GONE &&
                 lytAbstractPreview.visibility == View.GONE && lytFilesPreview.visibility == View.GONE
     }
@@ -1108,7 +1108,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun mayShowEntryInformationFullscreenGesturesHelpOnUIThread(userConfirmedHelpOnUIThread: () -> Unit) {
-        val localSettings = entryService.dataManager.localSettings
+        val localSettings = itemService.dataManager.localSettings
 
         if(localSettings.didShowItemInformationFullscreenGesturesHelp == false) {
             dialogService.showConfirmationDialog(getString(R.string.context_help_item_content_fullscreen_gestures), config = ConfirmationDialogConfig(false)) {
@@ -1120,7 +1120,7 @@ class EditEntryActivity : BaseActivity() {
             }
 
             localSettings.didShowItemInformationFullscreenGesturesHelp = true
-            entryService.dataManager.localSettingsUpdated()
+            itemService.dataManager.localSettingsUpdated()
         }
         else {
             wbvwContent.leaveFullscreenModeAndWaitTillLeft {// leave fullscreen otherwise a lot of unwanted behaviour occurs
@@ -1150,13 +1150,13 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun mayShowEntryInformationFullscreenHelpOnUIThread() {
-        val localSettings = entryService.dataManager.localSettings
+        val localSettings = itemService.dataManager.localSettings
 
         if(localSettings.didShowItemInformationFullscreenHelp == false) {
             contextHelpUtil.showContextHelp(lytContextHelpFullscreenMode, R.string.context_help_item_content_fullscreen)
 
             localSettings.didShowItemInformationFullscreenHelp = true
-            entryService.dataManager.localSettingsUpdated()
+            itemService.dataManager.localSettingsUpdated()
         }
     }
 
@@ -1351,7 +1351,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun checkIsShowingReaderViewHelp() {
-        val dataManager = entryService.dataManager
+        val dataManager = itemService.dataManager
 
         if (dataManager.localSettings.didShowReaderViewHelp == false) {
             dataManager.localSettings.didShowReaderViewHelp = true
@@ -1499,11 +1499,11 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun mayShowSavedReadLaterArticleHelp(callback: () -> Unit) {
-        val localSettings = entryService.dataManager.localSettings
+        val localSettings = itemService.dataManager.localSettings
 
         if(readLaterArticle != null && localSettings.didShowSavedReadLaterArticleIsNowInItemsHelp == false) {
             localSettings.didShowSavedReadLaterArticleIsNowInItemsHelp = true
-            entryService.dataManager.localSettingsUpdated()
+            itemService.dataManager.localSettingsUpdated()
 
             val helpText = getText(R.string.context_help_saved_read_later_article_is_now_in_items).toString()
             dialogService.showConfirmationDialog(contextHelpUtil.stringUtil.getSpannedFromHtml(helpText), config = ConfirmationDialogConfig(false)) {
@@ -1670,7 +1670,7 @@ class EditEntryActivity : BaseActivity() {
     }
 
     private fun editEntry(entryId: String) {
-        entryService.retrieve(entryId)?.let { entry ->
+        itemService.retrieve(entryId)?.let { entry ->
             editEntry(entry)
         }
     }

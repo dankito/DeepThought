@@ -4,14 +4,14 @@ import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.service.data.DeleteEntityService
-import net.dankito.service.data.EntryService
+import net.dankito.service.data.ItemService
 import net.dankito.service.data.TagService
 import net.dankito.utils.IThreadPool
 import java.util.*
 import javax.inject.Inject
 
 
-class EntryPersister(private val entryService: EntryService, private val referencePersister: ReferencePersister, private val tagService: TagService,
+class EntryPersister(private val itemService: ItemService, private val referencePersister: ReferencePersister, private val tagService: TagService,
                      private val filePersister: FilePersister, private val deleteEntityService: DeleteEntityService) {
 
     @Inject
@@ -49,10 +49,10 @@ class EntryPersister(private val entryService: EntryService, private val referen
 
 
         if(item.isPersisted() == false) {
-            entryService.persist(item)
+            itemService.persist(item)
         }
         else {
-            entryService.update(item)
+            itemService.update(item)
         }
 
 

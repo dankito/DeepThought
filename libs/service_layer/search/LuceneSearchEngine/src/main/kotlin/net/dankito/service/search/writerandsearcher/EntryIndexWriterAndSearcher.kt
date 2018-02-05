@@ -4,7 +4,7 @@ import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.extensions.abstractPlainText
 import net.dankito.deepthought.model.extensions.contentPlainText
 import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
-import net.dankito.service.data.EntryService
+import net.dankito.service.data.ItemService
 import net.dankito.service.data.messages.ItemChanged
 import net.dankito.service.eventbus.EventBusPriorities
 import net.dankito.service.eventbus.IEventBus
@@ -23,8 +23,8 @@ import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.*
 
 
-class EntryIndexWriterAndSearcher(entryService: EntryService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool)
-    : IndexWriterAndSearcher<Item>(entryService, eventBus, osHelper, threadPool) {
+class EntryIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool)
+    : IndexWriterAndSearcher<Item>(itemService, eventBus, osHelper, threadPool) {
 
     companion object {
         private val MaxEntriesSearchResults = 1000000 // e.g. for AllEntriesCalculatedTag all items must be returned

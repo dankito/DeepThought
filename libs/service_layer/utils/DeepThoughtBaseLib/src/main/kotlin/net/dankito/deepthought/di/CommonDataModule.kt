@@ -57,8 +57,8 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideEntryService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : EntryService {
-        return EntryService(dataManager, entityChangedNotifier)
+    fun provideEntryService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : ItemService {
+        return ItemService(dataManager, entityChangedNotifier)
     }
 
     @Provides
@@ -112,9 +112,9 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideDeleteEntityService(entryService: EntryService, tagService: TagService, referenceService: ReferenceService, seriesService: SeriesService,
+    fun provideDeleteEntityService(itemService: ItemService, tagService: TagService, referenceService: ReferenceService, seriesService: SeriesService,
                                    fileService: FileService, localFileInfoService: LocalFileInfoService, searchEngine: ISearchEngine, dialogService: IDialogService, threadPool: IThreadPool) : DeleteEntityService {
-        return DeleteEntityService(entryService, tagService, referenceService, seriesService, fileService, localFileInfoService, searchEngine, dialogService, threadPool)
+        return DeleteEntityService(itemService, tagService, referenceService, seriesService, fileService, localFileInfoService, searchEngine, dialogService, threadPool)
     }
 
     @Provides
@@ -146,9 +146,9 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideEntryPersister(entryService: EntryService, referencePersister: ReferencePersister, tagService: TagService, filePersister: FilePersister,
+    fun provideEntryPersister(itemService: ItemService, referencePersister: ReferencePersister, tagService: TagService, filePersister: FilePersister,
                               deleteEntityService: DeleteEntityService): EntryPersister {
-        return EntryPersister(entryService, referencePersister, tagService, filePersister, deleteEntityService)
+        return EntryPersister(itemService, referencePersister, tagService, filePersister, deleteEntityService)
     }
 
     @Provides

@@ -37,7 +37,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
     protected val underTest: LuceneSearchEngine
 
 
-    protected val entryService: EntryService
+    protected val itemService: ItemService
 
     protected val tagService: TagService
 
@@ -97,7 +97,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         eventBus = MBassadorEventBus()
         val entityChangedNotifier = EntityChangedNotifier(eventBus)
 
-        entryService = EntryService(dataManager, entityChangedNotifier)
+        itemService = ItemService(dataManager, entityChangedNotifier)
         tagService = TagService(dataManager, entityChangedNotifier)
         referenceService = ReferenceService(dataManager, entityChangedNotifier)
         seriesService = SeriesService(dataManager, entityChangedNotifier)
@@ -106,14 +106,14 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         fileService = FileService(dataManager, entityChangedNotifier)
 
         underTest = LuceneSearchEngine(dataManager, NoOpLanguageDetector(), OsHelper(platformConfiguration), ThreadPool(), eventBus,
-                entryService, tagService, referenceService, seriesService, readLaterArticleService, fileService, localFileInfoService)
+                itemService, tagService, referenceService, seriesService, readLaterArticleService, fileService, localFileInfoService)
         initLuceneSearchEngine(underTest)
 
-        deleteEntityService = DeleteEntityService(entryService, tagService, referenceService, seriesService, fileService, localFileInfoService, underTest, mock(), threadPool)
+        deleteEntityService = DeleteEntityService(itemService, tagService, referenceService, seriesService, fileService, localFileInfoService, underTest, mock(), threadPool)
         fileManager = FileManager(underTest, localFileInfoService, mock(), platformConfiguration, HashService(), eventBus, threadPool)
         filePersister = FilePersister(fileService, localFileInfoService, fileManager, threadPool)
         sourcePersister = ReferencePersister(referenceService, seriesService, filePersister, deleteEntityService)
-        itemPersister = EntryPersister(entryService, sourcePersister, tagService, filePersister, deleteEntityService)
+        itemPersister = EntryPersister(itemService, sourcePersister, tagService, filePersister, deleteEntityService)
     }
 
     private fun initDataManager(dataManager: DataManager) {

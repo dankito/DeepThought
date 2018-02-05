@@ -142,14 +142,14 @@ class SearchFilteredTagsIntegrationTest : LuceneSearchEngineIntegrationTestBase(
                 tagsOnEntriesWithTagsToFilterNoSetOnEntriesYet.remove(tag)
             }
 
-            entryService.persist(entryOnTagToFilter)
+            itemService.persist(entryOnTagToFilter)
             entriesOnTagsToFilter.add(entryOnTagToFilter)
         }
 
         if(tagsOnEntriesWithTagsToFilterNoSetOnEntriesYet.isNotEmpty() && entriesOnTagsToFilter.isNotEmpty()) { // if not all tags from tagsOnEntriesWithTagsToFilter have been set on items, do it now
             val entry = entriesOnTagsToFilter[0]
             tagsOnEntriesWithTagsToFilterNoSetOnEntriesYet.forEach { entry.addTag(it) }
-            entryService.update(entry)
+            itemService.update(entry)
         }
 
         tagsToFilter.forEach { tagService.update(it) }
@@ -189,7 +189,7 @@ class SearchFilteredTagsIntegrationTest : LuceneSearchEngineIntegrationTestBase(
                 noiseEntry.addTag(tagsOnEntriesWithTagsToFilter.get(tagsOnEntriesWithTagsToFilterIndex))
             }
 
-            entryService.persist(noiseEntry)
+            itemService.persist(noiseEntry)
             noiseEntries.add(noiseEntry)
         }
 

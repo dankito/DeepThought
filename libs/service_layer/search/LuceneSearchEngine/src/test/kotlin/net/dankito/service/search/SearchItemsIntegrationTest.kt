@@ -64,11 +64,11 @@ class SearchItemsIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
 
         val item = Item("Test")
         item.addAttachedFile(file)
-        entryService.persist(item)
+        itemService.persist(item)
 
 
         for(i in 0 until 3) {
-            entryService.persist(Item("$i"))
+            itemService.persist(Item("$i"))
         }
 
 

@@ -148,7 +148,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     protected lateinit var localDataManager: DataManager
 
-    protected lateinit var localEntryService: EntryService
+    protected lateinit var localItemService: ItemService
 
     protected lateinit var localTagService: TagService
 
@@ -240,7 +240,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     protected lateinit var remoteDataManager: DataManager
 
-    protected lateinit var remoteEntryService: EntryService
+    protected lateinit var remoteItemService: ItemService
 
     protected lateinit var remoteTagService: TagService
 
@@ -291,7 +291,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         localDataManager = DataManager(localEntityManager, localEntityManagerConfiguration, DefaultDataInitializer(localPlatformConfiguration, localization), localPlatformConfiguration)
 
-        localEntryService = EntryService(localDataManager, localEntityChangedNotifier)
+        localItemService = ItemService(localDataManager, localEntityChangedNotifier)
 
         localTagService = TagService(localDataManager, localEntityChangedNotifier)
 
@@ -306,7 +306,7 @@ abstract class FileSyncServiceIntegrationTestBase {
         localFileService = FileService(localDataManager, localEntityChangedNotifier)
 
         localSearchEngine = LuceneSearchEngine(localDataManager, NoOpLanguageDetector(), OsHelper(localPlatformConfiguration), localThreadPool, localEventBus,
-                localEntryService, localTagService, localReferenceService, localSeriesService, localReadLaterArticleService, localFileService, localLocalFileInfoService)
+                localItemService, localTagService, localReferenceService, localSeriesService, localReadLaterArticleService, localFileService, localLocalFileInfoService)
 
         localDataManager.addInitializationListener {
             localDevice = localDataManager.localDevice
@@ -345,7 +345,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         remoteDataManager = DataManager(remoteEntityManager, remoteEntityManagerConfiguration, DefaultDataInitializer(remotePlatformConfiguration, localization), remotePlatformConfiguration)
 
-        remoteEntryService = EntryService(remoteDataManager, remoteEntityChangedNotifier)
+        remoteItemService = ItemService(remoteDataManager, remoteEntityChangedNotifier)
 
         remoteTagService = TagService(remoteDataManager, remoteEntityChangedNotifier)
 
@@ -360,7 +360,7 @@ abstract class FileSyncServiceIntegrationTestBase {
         remoteFileService = FileService(remoteDataManager, remoteEntityChangedNotifier)
 
         remoteSearchEngine = LuceneSearchEngine(remoteDataManager, NoOpLanguageDetector(), OsHelper(remotePlatformConfiguration), remoteThreadPool, remoteEventBus,
-                remoteEntryService, remoteTagService, remoteReferenceService, remoteSeriesService, remoteReadLaterArticleService, remoteFileService, remoteLocalFileInfoService)
+                remoteItemService, remoteTagService, remoteReferenceService, remoteSeriesService, remoteReadLaterArticleService, remoteFileService, remoteLocalFileInfoService)
 
         remoteDataManager.addInitializationListener {
             remoteDevice = remoteDataManager.localDevice
