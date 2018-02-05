@@ -32,7 +32,7 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
         var tagNamesToFilterFor: List<String> = ArrayList<String>()
 
         if (search.searchTerm.isNullOrBlank() == false) {
-            tagNamesToFilterFor = getSingleSearchTerms(search.searchTerm, TagsSearchTermSeparator, false)
+            tagNamesToFilterFor = getSingleSearchTerms(search.searchTerm, TagsSearchTermSeparator, false, false)
         }
 
         search.results.tagNamesToSearchFor = tagNamesToFilterFor
@@ -47,7 +47,7 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
         var tagNamesToFilterFor: List<String> = ArrayList<String>()
 
         if (search.searchTerm.isNullOrBlank() == false) {
-            tagNamesToFilterFor = getSingleSearchTerms(search.searchTerm, TagsSearchTermSeparator)
+            tagNamesToFilterFor = getSingleSearchTerms(search.searchTerm, TagsSearchTermSeparator, removeEmptySearchTerms = false)
         }
 
         threadPool.runAsync { searchFilteredTags(search, tagNamesToFilterFor) }
@@ -92,10 +92,17 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
     abstract  fun searchFiles(search: FilesSearch, termsToSearchFor: List<String>)
 
 
-    private fun getSingleSearchTerms(overallSearchTerm: String, separator: String, lowerCaseSearchTerm: Boolean = true): List<String> {
+    private fun getSingleSearchTerms(overallSearchTerm: String, separator: String, lowerCaseSearchTerm: Boolean = true, removeEmptySearchTerms: Boolean = true): List<String> {
         val searchTerm = if(lowerCaseSearchTerm) overallSearchTerm.toLowerCase() else overallSearchTerm
         // make overallSearchTerm lower case, split it at all separators and trim resulting single search terms
-        return searchTerm.split(separator).map { it.trim() }
+        val singleSearchTerms = searchTerm.split(separator).map { it.trim() }
+
+        if(removeEmptySearchTerms) {
+            return singleSearchTerms.filter { it.isNullOrBlank() == false }.dropLastWhile { it.isEmpty() }
+        }
+        else {
+            return singleSearchTerms
+        }
     }
 
 
