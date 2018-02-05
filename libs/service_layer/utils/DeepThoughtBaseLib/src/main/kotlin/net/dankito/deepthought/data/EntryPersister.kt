@@ -5,7 +5,6 @@ import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.EntryService
-import net.dankito.service.data.FileService
 import net.dankito.service.data.TagService
 import net.dankito.utils.IThreadPool
 import java.util.*
@@ -13,7 +12,7 @@ import javax.inject.Inject
 
 
 class EntryPersister(private val entryService: EntryService, private val referencePersister: ReferencePersister, private val tagService: TagService,
-                     private val fileService: FileService, private val deleteEntityService: DeleteEntityService) {
+                     private val filePersister: FilePersister, private val deleteEntityService: DeleteEntityService) {
 
     @Inject
     protected lateinit var threadPool: IThreadPool
@@ -96,7 +95,7 @@ class EntryPersister(private val entryService: EntryService, private val referen
     private fun setFiles(item: Item, files: Collection<FileLink>): Pair<ArrayList<FileLink>, ArrayList<FileLink>> {
         files.forEach { file ->
             if(file.isPersisted() == false) {
-                fileService.persist(file)
+                filePersister.saveFile(file)
             }
         }
 
@@ -128,10 +127,10 @@ class EntryPersister(private val entryService: EntryService, private val referen
 
         removedTags.filterNotNull().forEach { tagService.update(it) }
 
-        addedFiles.filterNotNull().forEach { fileService.update(it) }
+        addedFiles.filterNotNull().forEach { filePersister.saveFile(it) }
 
         removedFiles.filterNotNull().forEach { file ->
-            fileService.update(file)
+            filePersister.saveFile(file)
             deleteEntityService.mayDeleteFile(file)
         }
     }
