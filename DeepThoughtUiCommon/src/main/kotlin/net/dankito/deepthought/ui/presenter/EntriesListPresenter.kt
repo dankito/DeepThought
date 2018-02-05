@@ -101,7 +101,7 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
             if(it is CalculatedTag == false) {
                 itemsMustHaveTheseTags.add(it)
             }
-            searchOnlyItemsWithoutTags = it is EntriesWithoutTagsCalculatedTag
+            searchOnlyItemsWithoutTags = it is ItemsWithoutTagsCalculatedTag
         }
 
         return ItemsSearch(searchTerm, searchInContent, searchInSummary, searchInTags, searchInSource, searchInFiles, searchOnlyItemsWithoutTags,

@@ -28,7 +28,7 @@ abstract class CalculatedTag(name: String, protected val searchEngine: ISearchEn
 
 
     private fun retrieveAndUpdateItemsAsync(informUIOfUpdate: Boolean) {
-        retrieveEntriesAsync {
+        retrieveItemsAsync {
             this.items = it
 
             if(informUIOfUpdate) {
@@ -37,7 +37,7 @@ abstract class CalculatedTag(name: String, protected val searchEngine: ISearchEn
         }
     }
 
-    protected abstract fun retrieveEntriesAsync(done: (List<Item>) -> Unit)
+    protected abstract fun retrieveItemsAsync(done: (List<Item>) -> Unit)
 
 
     inner class EventBusListener {

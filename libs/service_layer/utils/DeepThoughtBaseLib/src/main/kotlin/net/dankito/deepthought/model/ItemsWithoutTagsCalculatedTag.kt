@@ -7,10 +7,10 @@ import net.dankito.service.search.specific.ItemsSearch
 import net.dankito.utils.localization.Localization
 
 
-class EntriesWithoutTagsCalculatedTag(searchEngine: ISearchEngine, eventBus: IEventBus, entityChangedNotifier: EntityChangedNotifier, localization: Localization)
+class ItemsWithoutTagsCalculatedTag(searchEngine: ISearchEngine, eventBus: IEventBus, entityChangedNotifier: EntityChangedNotifier, localization: Localization)
     : CalculatedTag(localization.getLocalizedString("calculated.tag.items.with.no.tags"), searchEngine, eventBus, entityChangedNotifier) {
 
-    override fun retrieveEntriesAsync(done: (List<Item>) -> Unit) {
+    override fun retrieveItemsAsync(done: (List<Item>) -> Unit) {
         searchEngine.searchItems(ItemsSearch(searchOnlyItemsWithoutTags = true) {
             done(it)
         })

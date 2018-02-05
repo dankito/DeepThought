@@ -25,8 +25,8 @@ class AllCalculatedTags(private val searchEngine: ISearchEngine, private val eve
     }
 
     private fun initCalculatedTags() {
-        calculatedTags.add(AllEntriesCalculatedTag(searchEngine, eventBus, entityChangedNotifier, localization))
-        calculatedTags.add(EntriesWithoutTagsCalculatedTag(searchEngine, eventBus, entityChangedNotifier, localization))
+        calculatedTags.add(AllItemsCalculatedTag(searchEngine, eventBus, entityChangedNotifier, localization))
+        calculatedTags.add(ItemsWithoutTagsCalculatedTag(searchEngine, eventBus, entityChangedNotifier, localization))
 
         hasInitializedCalculatedTags = true
     }
