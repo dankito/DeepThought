@@ -77,6 +77,13 @@
     <dimen name="list_item_series_button_width">48dp</dimen>
     <dimen name="list_item_series_margin_left">12dp</dimen>
 
+    <dimen name="list_item_file_height">70dp</dimen>
+    <dimen name="list_item_file_button_padding">2dp</dimen>
+    <dimen name="list_item_file_button_width">70dp</dimen>
+    <dimen name="list_item_file_padding">6dp</dimen>
+    <dimen name="list_item_file_file_size_padding_left">6dp</dimen>
+    <dimen name="list_item_file_file_path_padding_top">-4dp</dimen>
+
     <dimen name="list_item_article_summary_extractor_height">60dp</dimen>
     <dimen name="list_item_article_summary_extractor_button_width">60dp</dimen>
     <dimen name="list_item_article_summary_extractor_margin">4dp</dimen>

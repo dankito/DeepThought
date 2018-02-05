@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fileLinkSwipeLayout"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="@dimen/list_item_file_height"
     android:background="@android:color/transparent"
 >
 
@@ -14,19 +14,19 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:padding="2dp"
+        android:padding="@dimen/list_item_file_button_padding"
     >
 
         <net.dankito.deepthought.android.views.SwipeButton
             android:id="@+id/btnOpenContainingFolder"
-            android:layout_width="@dimen/list_item_tag_button_width"
+            android:layout_width="@dimen/list_item_file_button_width"
             android:layout_height="match_parent"
             app:icon="@drawable/ic_folder_white_48dp"
         />
 
         <net.dankito.deepthought.android.views.SwipeButton
             android:id="@+id/btnRemoveFile"
-            android:layout_width="@dimen/list_item_tag_button_width"
+            android:layout_width="@dimen/list_item_file_button_width"
             android:layout_height="match_parent"
             app:icon="@drawable/ic_delete_white_48dp"
         />
@@ -38,7 +38,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="6dp"
+        android:padding="@dimen/list_item_file_padding"
     >
 
         <TextView
@@ -64,8 +64,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/txtFilePath"
-            android:layout_marginLeft="6dp"
-            android:layout_marginStart="6dp"
+            android:layout_marginLeft="@dimen/list_item_file_file_size_padding_left"
+            android:layout_marginStart="@dimen/list_item_file_file_size_padding_left"
             android:singleLine="true"
             android:ellipsize="middle"
             style="@style/Header2Style"
@@ -76,7 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginTop="-4dp"
+            android:layout_marginTop="@dimen/list_item_file_file_path_padding_top"
             android:maxLines="2"
             android:ellipsize="end"
         />
