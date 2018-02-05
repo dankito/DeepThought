@@ -246,7 +246,9 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
     }
 
     private fun saveStreamToFile(destinationFile: File, clientSocket: Socket, fileSize: Long): Long {
-        val outputStream = BufferedOutputStream(FileOutputStream(destinationFile))
+        val tempFile = File.createTempFile("DeepThought_SynchronizedFile", destinationFile.extension) // don't write directly to destinationFile as when synchronization fails a
+        // corrupt file remains, may having overwritten a fully synchronized version of that file
+        val outputStream = BufferedOutputStream(FileOutputStream(tempFile))
         val inputStream = clientSocket.getInputStream()
 
         val buffer = ByteArray(1 * 1024)
@@ -267,6 +269,11 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         outputStream.flush()
         inputStream.close() // inputStream will be closed by socketHandler
         outputStream.close()
+
+        if(receivedMessageSize == fileSize) {
+            tempFile.copyTo(destinationFile, true)
+        }
+        tempFile.delete()
 
         return receivedMessageSize
     }
