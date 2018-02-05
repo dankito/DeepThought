@@ -8,7 +8,7 @@ import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.dialogs.pdf.ViewPdfDialog
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.ReadLaterArticleListView
 import net.dankito.deepthought.javafx.dialogs.source.EditSourceDialog
-import net.dankito.deepthought.javafx.ui.controls.IEntriesListViewJavaFX
+import net.dankito.deepthought.javafx.ui.controls.IItemsListViewJavaFX
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
@@ -21,7 +21,7 @@ import java.io.File
 
 class JavaFXRouter(private val mainWindowController: MainWindowController) : IRouter {
 
-    lateinit var entriesListView: IEntriesListViewJavaFX
+    lateinit var itemsListView: IItemsListViewJavaFX
 
 
     override fun showArticleSummaryExtractorsView() {
@@ -29,11 +29,11 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
     }
 
     override fun showItemsForTag(tag: Tag, tagsFilter: List<Tag>) {
-        entriesListView.showEntriesForTag(tag, tagsFilter)
+        itemsListView.showEntriesForTag(tag, tagsFilter)
     }
 
     override fun showItemsForSource(source: Source) {
-        entriesListView.showItemsForSource(source)
+        itemsListView.showItemsForSource(source)
     }
 
 

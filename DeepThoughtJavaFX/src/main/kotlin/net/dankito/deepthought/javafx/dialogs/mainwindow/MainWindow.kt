@@ -39,7 +39,7 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
 
     val sourcesListView: SourcesListView by inject()
 
-    val entriesListView: EntriesListView by inject()
+    val itemsListView: ItemsListView by inject()
 
     val statusBar: StatusBar by inject()
 
@@ -78,9 +78,9 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
                     }
 
                     vbox {
-                        entriesListView.statusBar = statusBar
-                        add(entriesListView.root)
-                        VBox.setVgrow(entriesListView.root, Priority.ALWAYS)
+                        itemsListView.statusBar = statusBar
+                        add(itemsListView.root)
+                        VBox.setVgrow(itemsListView.root, Priority.ALWAYS)
                     }
                 }
 
@@ -92,7 +92,7 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
 
         bottom = statusBar.root
 
-        mainMenuBar.createNewItemMenuClicked = { entriesListView.createNewItem() }
+        mainMenuBar.createNewItemMenuClicked = { itemsListView.createNewItem() }
     }
 
 

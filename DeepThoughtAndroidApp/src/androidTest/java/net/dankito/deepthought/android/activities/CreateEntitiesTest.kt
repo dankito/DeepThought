@@ -10,7 +10,7 @@ import net.dankito.deepthought.android.DeepThoughtActivityTestRule
 import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
 import net.dankito.deepthought.android.MainActivity
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.fragments.EntriesListView
+import net.dankito.deepthought.android.fragments.ItemsListView
 import net.dankito.deepthought.android.fragments.ReferencesListView
 import net.dankito.deepthought.android.fragments.TagsListView
 import net.dankito.deepthought.android.util.TestUtil
@@ -115,11 +115,11 @@ class CreateEntitiesTest : DeepThoughtAndroidTestBase() {
     }
 
     private fun matchEntryPreviewAtPositionContains(position: Int, entryPreview: String) {
-        matchListItemAtPositionText(EntriesListView::class.java, position, R.id.txtEntryPreview, entryPreview)
+        matchListItemAtPositionText(ItemsListView::class.java, position, R.id.txtEntryPreview, entryPreview)
     }
 
     private fun matchReferencePreviewAtPosition(position: Int, referencePreview: String) {
-        matchListItemAtPositionText(EntriesListView::class.java, position, R.id.txtReferencePreview, referencePreview)
+        matchListItemAtPositionText(ItemsListView::class.java, position, R.id.txtReferencePreview, referencePreview)
     }
 
     private fun matchTagNameAtPosition(position: Int, tagName: String) {

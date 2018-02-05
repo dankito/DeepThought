@@ -14,7 +14,7 @@ import net.dankito.utils.ui.Colors
 import tornadofx.*
 
 
-class EntriesSearchBar(private val entriesListView: EntriesListView, private val presenter: ItemsListPresenter, private val dataManager: DataManager) : View() {
+class EntriesSearchBar(private val entriesListView: ItemsListView, private val presenter: ItemsListPresenter, private val dataManager: DataManager) : View() {
 
 
     private var btnCreateItem: Button by singleAssign()

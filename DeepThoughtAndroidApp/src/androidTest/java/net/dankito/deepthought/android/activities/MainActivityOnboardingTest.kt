@@ -11,7 +11,7 @@ import net.dankito.deepthought.android.DeepThoughtActivityTestRule
 import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
 import net.dankito.deepthought.android.MainActivity
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.fragments.EntriesListView
+import net.dankito.deepthought.android.fragments.ItemsListView
 import net.dankito.deepthought.android.fragments.ReadLaterArticlesListView
 import net.dankito.deepthought.android.fragments.ReferencesListView
 import net.dankito.deepthought.android.fragments.TagsListView
@@ -38,7 +38,7 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
 
     @Test
     fun noItems_OnboardingShouldBeDisplayed() {
-        assertOnboardingIsDisplayedInTab(EntriesListView::class.java)
+        assertOnboardingIsDisplayedInTab(ItemsListView::class.java)
 
         Assert.viewIsVisible(R.id.arrowToFloatingActionButton)
         assertDrawerTogglesIsNotVisible()
@@ -46,7 +46,7 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
 
     @Test
     fun addItem_ItemOnboardingThenGetsHidden() {
-        assertOnboardingIsDisplayedInTab(EntriesListView::class.java)
+        assertOnboardingIsDisplayedInTab(ItemsListView::class.java)
 
         Assert.viewIsVisible(R.id.arrowToFloatingActionButton)
         assertDrawerTogglesIsNotVisible()
@@ -57,7 +57,7 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
 
 
         assertDrawerTogglesIsVisible()
-        assertOnboardingIsHiddenInTab(EntriesListView::class.java)
+        assertOnboardingIsHiddenInTab(ItemsListView::class.java)
     }
 
     @Test
@@ -87,7 +87,7 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
         TestUtil.sleep(2000)
 
 
-        assertOnboardingIsDisplayedInTab(EntriesListView::class.java)
+        assertOnboardingIsDisplayedInTab(ItemsListView::class.java)
 
         navigator.navigateToTabTags()
         assertOnboardingIsHiddenInTab(TagsListView::class.java)
@@ -108,7 +108,7 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
         TestUtil.sleep(2000)
 
 
-        assertOnboardingIsDisplayedInTab(EntriesListView::class.java)
+        assertOnboardingIsDisplayedInTab(ItemsListView::class.java)
 
         navigator.navigateToTabTags()
         assertOnboardingIsDisplayedInTab(TagsListView::class.java, true)

@@ -14,13 +14,13 @@ import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ItemsListPresenter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
-import net.dankito.deepthought.ui.view.IEntriesListView
+import net.dankito.deepthought.ui.view.IItemsListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class EntriesListView : EntitiesListViewFragment<Item>(R.menu.entry_contextual_action_menu, R.string.tab_items_onboarding_text), IEntriesListView {
+class ItemsListView : EntitiesListViewFragment<Item>(R.menu.entry_contextual_action_menu, R.string.tab_items_onboarding_text), IItemsListView {
 
     @Inject
     protected lateinit var deleteEntityService: DeleteEntityService
@@ -113,7 +113,7 @@ class EntriesListView : EntitiesListViewFragment<Item>(R.menu.entry_contextual_a
     }
 
 
-    /*          IEntriesListView implementation            */
+    /*          IItemsListView implementation            */
 
     override fun showEntities(entities: List<Item>) {
         val activity = this.activity

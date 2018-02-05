@@ -7,7 +7,7 @@ import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.EntryViewModel
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
 import net.dankito.deepthought.javafx.service.extensions.findClickedTableRow
-import net.dankito.deepthought.javafx.ui.controls.IEntriesListViewJavaFX
+import net.dankito.deepthought.javafx.ui.controls.IItemsListViewJavaFX
 import net.dankito.deepthought.javafx.util.LazyLoadingObservableList
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
@@ -28,7 +28,7 @@ import java.text.DateFormat
 import javax.inject.Inject
 
 
-class EntriesListView : EntitiesListView(), IEntriesListViewJavaFX {
+class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
 
     companion object {
         private val dateTimeFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG)
@@ -165,7 +165,7 @@ class EntriesListView : EntitiesListView(), IEntriesListViewJavaFX {
     }
 
 
-    /*          IEntriesListView implementation            */
+    /*          IItemsListView implementation            */
 
     override fun showEntities(entities: List<Item>) {
         runLater {

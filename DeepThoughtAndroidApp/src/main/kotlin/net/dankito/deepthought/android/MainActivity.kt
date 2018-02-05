@@ -21,7 +21,7 @@ import net.dankito.deepthought.android.activities.TagsListViewActivity
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.FileChooserDialog
 import net.dankito.deepthought.android.dialogs.TagsListViewDialog
-import net.dankito.deepthought.android.fragments.EntriesListView
+import net.dankito.deepthought.android.fragments.ItemsListView
 import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.IntentHandler
 import net.dankito.deepthought.android.service.permissions.IPermissionsManager
@@ -48,7 +48,7 @@ class MainActivity : BaseActivity() {
 
     protected lateinit var drawerToggle: ActionBarDrawerToggle
 
-    private lateinit var entriesListView: EntriesListView
+    private lateinit var itemsListView: ItemsListView
 
     private val permissionsManager: IPermissionsManager
 
@@ -112,7 +112,7 @@ class MainActivity : BaseActivity() {
         showAppVersion(navigationView)
         navigationView.setNavigationItemSelectedListener(navigationListener)
 
-        entriesListView = supportFragmentManager.findFragmentByTag("EntriesListView") as EntriesListView
+        itemsListView = supportFragmentManager.findFragmentByTag("ItemsListView") as ItemsListView
 
         floatingActionMenuButton = MainActivityFloatingActionMenuButton(floatingActionMenu, summaryExtractorManager, router, eventBus)
     }
@@ -190,7 +190,7 @@ class MainActivity : BaseActivity() {
         if(floatingActionMenuButton.handlesBackButtonPress()) {
 
         }
-        else if(dialogHandlesBackButton() == false && entriesListView.onBackPressed() == false) {
+        else if(dialogHandlesBackButton() == false && itemsListView.onBackPressed() == false) {
             super.onBackPressed() // when not handling by fragment call default back button press handling
         }
     }
