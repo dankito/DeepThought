@@ -8,14 +8,6 @@ import net.dankito.service.data.event.EntityChangedNotifier
 class FileService(private val localFileInfoService: LocalFileInfoService, dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier)
     : EntityServiceBase<FileLink>(FileLink::class.java, dataManager, entityChangedNotifier) {
 
-    override fun onPostPersist(entity: FileLink) {
-        super.onPostPersist(entity)
-
-        entity.localFileInfo?.let { localFileInfo ->
-            localFileInfoService.persist(localFileInfo)
-        }
-    }
-
 
     override fun delete(entity: FileLink) {
         entity.localFileInfo?.let { localFileInfo ->
