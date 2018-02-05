@@ -130,13 +130,25 @@ class FileServer(private val searchEngine: ISearchEngine, private val entityMana
     private fun receivedRequest(clientSocket: Socket, request: PermitSynchronizeFileRequest) {
         val fileId = request.fileId
 
-        if(currentConnections.size >= maxSimultaneousConnections) {
-            sendResponseAndCloseSocket(clientSocket, PermitSynchronizeFileResult.NoSlotsAvailableTryLater, fileId)
-            return
+        synchronized(currentConnections) {
+            if(currentConnections.size >= maxSimultaneousConnections) {
+                sendResponseAndCloseSocket(clientSocket, PermitSynchronizeFileResult.NoSlotsAvailableTryLater, fileId)
+                return
+            }
+
+            currentConnections.add(clientSocket)
         }
 
+        receivedRequestForFreeSlot(clientSocket, fileId)
+
+        synchronized(currentConnections) {
+            currentConnections.remove(clientSocket)
+        }
+    }
+
+    private fun receivedRequestForFreeSlot(clientSocket: Socket, fileId: String) {
         searchEngine.searchLocalFileInfo(LocalFileInfoSearch(fileId) { result ->
-            val localFileInfo = if(result.isEmpty()) null else result[0]
+            val localFileInfo = if (result.isEmpty()) null else result[0]
             val localFilePath = localFileInfo?.path
 
             if(localFileInfo == null || localFilePath == null || localFileInfo.syncStatus != FileSyncStatus.UpToDate || File(localFileInfo.path).exists() == false) {
