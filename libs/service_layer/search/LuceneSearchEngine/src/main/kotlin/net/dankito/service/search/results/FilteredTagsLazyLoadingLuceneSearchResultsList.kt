@@ -13,7 +13,7 @@ import java.util.*
 
 
 class FilteredTagsLazyLoadingLuceneSearchResultsList(entityManager: IEntityManager, searcher: IndexSearcher, hits: Array<ScoreDoc>, osHelper: OsHelper, threadPool: IThreadPool)
-    : LazyLoadingLuceneSearchResultsList<Item>(entityManager, searcher, Item::class.java, FieldName.EntryId, hits, osHelper, threadPool) {
+    : LazyLoadingLuceneSearchResultsList<Item>(entityManager, searcher, Item::class.java, FieldName.ItemId, hits, osHelper, threadPool) {
 
     companion object {
         private val log = LoggerFactory.getLogger(FilteredTagsLazyLoadingLuceneSearchResultsList::class.java)
@@ -61,7 +61,7 @@ class FilteredTagsLazyLoadingLuceneSearchResultsList(entityManager: IEntityManag
     override fun getEntityIdFromHit(hitDoc: Document): String {
         val entityId = super.getEntityIdFromHit(hitDoc)
 
-        val entryTagIds = hitDoc.getFields(FieldName.EntryTagsIds).map { it.stringValue() }
+        val entryTagIds = hitDoc.getFields(FieldName.ItemTagsIds).map { it.stringValue() }
 
         if(tagIdsOnResultEntries == null) {
             tagIdsOnResultEntriesCollectedBeforeCallToInit = entryTagIds
@@ -70,7 +70,7 @@ class FilteredTagsLazyLoadingLuceneSearchResultsList(entityManager: IEntityManag
             tagIdsOnResultEntries.addAll(entryTagIds)
         }
 
-        hitDoc.getFields(FieldName.EntryTagsIds).forEach {
+        hitDoc.getFields(FieldName.ItemTagsIds).forEach {
         }
 
         return entityId

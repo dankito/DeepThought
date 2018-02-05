@@ -28,7 +28,7 @@ import org.apache.lucene.search.*
 import org.slf4j.LoggerFactory
 
 
-class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool, private val entryIndexWriterAndSearcher: EntryIndexWriterAndSearcher)
+class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool, private val itemIndexWriterAndSearcher: ItemIndexWriterAndSearcher)
     : IndexWriterAndSearcher<Tag>(tagService, eventBus, osHelper, threadPool) {
 
     companion object {
@@ -171,7 +171,7 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osH
         val query = BooleanQuery()
 
         search.tagsToFilterFor.forEach { tag ->
-            query.add(BooleanClause(TermQuery(Term(FieldName.EntryTagsIds, tag.id)), BooleanClause.Occur.MUST))
+            query.add(BooleanClause(TermQuery(Term(FieldName.ItemTagsIds, tag.id)), BooleanClause.Occur.MUST))
         }
 
         if(search.isInterrupted) {
@@ -179,7 +179,7 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osH
         }
 
         try {
-            entryIndexWriterAndSearcher.executeQuery(query, FILTERED_TAGS_DEFAULT_COUNT_MAX_SEARCH_RESULTS, SortOption(FieldName.EntryCreated, SortOrder.Descending, SortField.Type.LONG))?.let { (searcher, hits) ->
+            itemIndexWriterAndSearcher.executeQuery(query, FILTERED_TAGS_DEFAULT_COUNT_MAX_SEARCH_RESULTS, SortOption(FieldName.ItemCreated, SortOrder.Descending, SortField.Type.LONG))?.let { (searcher, hits) ->
                 val entries = FilteredTagsLazyLoadingLuceneSearchResultsList(entityService.entityManager, searcher, hits, osHelper, threadPool)
                 entriesHavingFilteredTags = entries
 

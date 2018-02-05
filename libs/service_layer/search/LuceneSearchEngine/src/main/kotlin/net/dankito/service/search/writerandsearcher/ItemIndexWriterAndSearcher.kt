@@ -23,7 +23,7 @@ import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.*
 
 
-class EntryIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool)
+class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool)
     : IndexWriterAndSearcher<Item>(itemService, eventBus, osHelper, threadPool) {
 
     companion object {
@@ -36,7 +36,7 @@ class EntryIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus,
     }
 
     override fun getIdFieldName(): String {
-        return FieldName.EntryId
+        return FieldName.ItemId
     }
 
 
@@ -44,45 +44,45 @@ class EntryIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus,
         val contentPlainText = entity.contentPlainText
         val abstractPlainText = entity.abstractPlainText
 
-        doc.add(Field(FieldName.EntryAbstract, abstractPlainText, TextField.TYPE_NOT_STORED))
-        doc.add(Field(FieldName.EntryContent, contentPlainText, TextField.TYPE_NOT_STORED))
+        doc.add(Field(FieldName.ItemSummary, abstractPlainText, TextField.TYPE_NOT_STORED))
+        doc.add(Field(FieldName.ItemContent, contentPlainText, TextField.TYPE_NOT_STORED))
 
-        doc.add(LongField(FieldName.EntryIndex, entity.itemIndex, Field.Store.YES))
+        doc.add(LongField(FieldName.ItemIndex, entity.itemIndex, Field.Store.YES))
 
-        doc.add(LongField(FieldName.EntryCreated, entity.createdOn.time, Field.Store.YES))
+        doc.add(LongField(FieldName.ItemCreated, entity.createdOn.time, Field.Store.YES))
 
         if(entity.hasTags()) {
             for(tag in entity.tags.filterNotNull().filter { it.id != null }) {
-                doc.add(StringField(FieldName.EntryTagsIds, tag.id, Field.Store.YES))
-                doc.add(Field(FieldName.EntryTagsNames, tag.name, TextField.TYPE_NOT_STORED))
+                doc.add(StringField(FieldName.ItemTagsIds, tag.id, Field.Store.YES))
+                doc.add(Field(FieldName.ItemTagsNames, tag.name, TextField.TYPE_NOT_STORED))
             }
         }
         else {
-            doc.add(StringField(FieldName.EntryNoTags, FieldValue.NoTagsFieldValue, Field.Store.NO))
+            doc.add(StringField(FieldName.ItemNoTags, FieldValue.NoTagsFieldValue, Field.Store.NO))
         }
 
         val reference = entity.source
         if(reference != null) {
-            doc.add(Field(FieldName.EntryReference, reference.previewWithSeriesAndPublishingDate, TextField.TYPE_NOT_STORED))
-            doc.add(StringField(FieldName.EntryReferenceId, reference.id, Field.Store.YES))
+            doc.add(Field(FieldName.ItemSource, reference.previewWithSeriesAndPublishingDate, TextField.TYPE_NOT_STORED))
+            doc.add(StringField(FieldName.ItemSourceId, reference.id, Field.Store.YES))
 
-            reference.series?.let { doc.add(StringField(FieldName.EntryReferenceSeriesId, it.id, Field.Store.YES)) }
+            reference.series?.let { doc.add(StringField(FieldName.ItemSourceSeriesId, it.id, Field.Store.YES)) }
         }
         else {
-            doc.add(StringField(FieldName.EntryNoReference, FieldValue.NoReferenceFieldValue, Field.Store.NO))
+            doc.add(StringField(FieldName.ItemNoSource, FieldValue.NoReferenceFieldValue, Field.Store.NO))
         }
 
         if(entity.hasAttachedFiles()) {
             for(file in entity.attachedFiles.filterNotNull().filter { it.id != null }) {
-                doc.add(StringField(FieldName.EntryAttachedFilesIds, file.id, Field.Store.YES))
-                doc.add(StringField(FieldName.EntryAttachedFilesDetails, file.name.toLowerCase(), Field.Store.NO)) // TODO: which information should get stored for a File?
+                doc.add(StringField(FieldName.ItemAttachedFilesIds, file.id, Field.Store.YES))
+                doc.add(StringField(FieldName.ItemAttachedFilesDetails, file.name.toLowerCase(), Field.Store.NO)) // TODO: which information should get stored for a File?
             }
         }
         else {
-            doc.add(StringField(FieldName.EntryNoAttachedFiles, FieldValue.NoFilesFieldValue, Field.Store.NO))
+            doc.add(StringField(FieldName.ItemNoAttachedFiles, FieldValue.NoFilesFieldValue, Field.Store.NO))
         }
 
-        defaultAnalyzer.setNextEntryToBeAnalyzed(entity, contentPlainText, abstractPlainText)
+        defaultAnalyzer.setNextItemToBeAnalyzed(entity, contentPlainText, abstractPlainText)
     }
 
 
@@ -96,18 +96,18 @@ class EntryIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus,
 
         addQueryForSearchTerm(termsToFilterFor, query, search)
 
-        executeQueryForSearchWithCollectionResult(search, query, Item::class.java, MaxEntriesSearchResults, SortOption(FieldName.EntryCreated, SortOrder.Descending, SortField.Type.LONG))
+        executeQueryForSearchWithCollectionResult(search, query, Item::class.java, MaxEntriesSearchResults, SortOption(FieldName.ItemCreated, SortOrder.Descending, SortField.Type.LONG))
     }
 
     private fun addQueryForOptions(search: EntriesSearch, query: BooleanQuery) {
         if(search.filterOnlyEntriesWithoutTags) {
-            query.add(TermQuery(Term(FieldName.EntryNoTags, NoTagsFieldValue)), BooleanClause.Occur.MUST)
+            query.add(TermQuery(Term(FieldName.ItemNoTags, NoTagsFieldValue)), BooleanClause.Occur.MUST)
         }
 
         if(search.entriesMustHaveTheseTags.isNotEmpty()) {
             val filterEntriesQuery = BooleanQuery()
             for(tag in search.entriesMustHaveTheseTags.filterNotNull().filter { it.id != null }) {
-                filterEntriesQuery.add(TermQuery(Term(FieldName.EntryTagsIds, tag.id)), BooleanClause.Occur.MUST)
+                filterEntriesQuery.add(TermQuery(Term(FieldName.ItemTagsIds, tag.id)), BooleanClause.Occur.MUST)
             }
 
             query.add(filterEntriesQuery, BooleanClause.Occur.MUST)
@@ -115,14 +115,14 @@ class EntryIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus,
 
         search.entriesMustHaveThisSource?.id?.let { referenceId ->
             val filterReferenceQuery = BooleanQuery()
-            filterReferenceQuery.add(TermQuery(Term(FieldName.EntryReferenceId, referenceId)), BooleanClause.Occur.MUST)
+            filterReferenceQuery.add(TermQuery(Term(FieldName.ItemSourceId, referenceId)), BooleanClause.Occur.MUST)
 
             query.add(filterReferenceQuery, BooleanClause.Occur.MUST)
         }
 
         search.entriesMustHaveThisSeries?.id?.let { seriesId ->
             val filterSeriesQuery = BooleanQuery()
-            filterSeriesQuery.add(TermQuery(Term(FieldName.EntryReferenceSeriesId, seriesId)), BooleanClause.Occur.MUST)
+            filterSeriesQuery.add(TermQuery(Term(FieldName.ItemSourceSeriesId, seriesId)), BooleanClause.Occur.MUST)
 
             query.add(filterSeriesQuery, BooleanClause.Occur.MUST)
         }
@@ -130,7 +130,7 @@ class EntryIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus,
         if(search.entriesMustHaveTheseFiles.isNotEmpty()) {
             val filterEntriesQuery = BooleanQuery()
             for(file in search.entriesMustHaveTheseFiles.filterNotNull().filter { it.id != null }) {
-                filterEntriesQuery.add(TermQuery(Term(FieldName.EntryAttachedFilesIds, file.id)), BooleanClause.Occur.MUST)
+                filterEntriesQuery.add(TermQuery(Term(FieldName.ItemAttachedFilesIds, file.id)), BooleanClause.Occur.MUST)
             }
 
             query.add(filterEntriesQuery, BooleanClause.Occur.MUST)
@@ -139,7 +139,7 @@ class EntryIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus,
 
     private fun addQueryForSearchTerm(termsToFilterFor: List<String>, query: BooleanQuery, search: EntriesSearch) {
         if(termsToFilterFor.isEmpty()) {
-            query.add(WildcardQuery(Term(FieldName.EntryId, "*")), BooleanClause.Occur.MUST)
+            query.add(WildcardQuery(Term(FieldName.ItemId, "*")), BooleanClause.Occur.MUST)
         }
         else {
             for(term in termsToFilterFor) {
@@ -147,19 +147,19 @@ class EntryIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus,
                 val termQuery = BooleanQuery()
 
                 if(search.filterContent) {
-                    termQuery.add(PrefixQuery(Term(FieldName.EntryContent, escapedTerm)), BooleanClause.Occur.SHOULD)
+                    termQuery.add(PrefixQuery(Term(FieldName.ItemContent, escapedTerm)), BooleanClause.Occur.SHOULD)
                 }
                 if(search.filterAbstract) {
-                    termQuery.add(PrefixQuery(Term(FieldName.EntryAbstract, escapedTerm)), BooleanClause.Occur.SHOULD)
+                    termQuery.add(PrefixQuery(Term(FieldName.ItemSummary, escapedTerm)), BooleanClause.Occur.SHOULD)
                 }
                 if(search.filterReference) {
-                    termQuery.add(PrefixQuery(Term(FieldName.EntryReference, escapedTerm)), BooleanClause.Occur.SHOULD)
+                    termQuery.add(PrefixQuery(Term(FieldName.ItemSource, escapedTerm)), BooleanClause.Occur.SHOULD)
                 }
                 if(search.filterTags) {
-                    termQuery.add(PrefixQuery(Term(FieldName.EntryTagsNames, escapedTerm)), BooleanClause.Occur.SHOULD)
+                    termQuery.add(PrefixQuery(Term(FieldName.ItemTagsNames, escapedTerm)), BooleanClause.Occur.SHOULD)
                 }
                 if(search.searchInFiles) {
-                    termQuery.add(PrefixQuery(Term(FieldName.EntryAttachedFilesDetails, escapedTerm)), BooleanClause.Occur.SHOULD)
+                    termQuery.add(PrefixQuery(Term(FieldName.ItemAttachedFilesDetails, escapedTerm)), BooleanClause.Occur.SHOULD)
                 }
 
                 query.add(termQuery, BooleanClause.Occur.MUST)

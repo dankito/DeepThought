@@ -10,36 +10,34 @@ object FieldName {
 
     /*      Entries      */
 
-    val EntryIdsId = "item_ids_id"
-
-    val EntryIdsCreated = "created"
+    val ItemIdsId = "item_ids_id"
 
 
-    val EntryId = "item_id"
+    val ItemId = "item_id"
 
-    val EntryAbstract = "summary"
+    val ItemSummary = "summary"
 
-    val EntryContent = "content"
+    val ItemContent = "content"
 
-    val EntryIndex = "item_index"
+    val ItemIndex = "item_index"
 
-    val EntryCreated = "created"
+    val ItemCreated = "created"
 
-    val EntryTagsIds = "tags_ids"
-    val EntryTagsNames = "tags_names"
-    val EntryNoTags = "no_tags"
+    val ItemTagsIds = "tags_ids"
+    val ItemTagsNames = "tags_names"
+    val ItemNoTags = "no_tags"
 
-    val EntryReference = "source"
-    val EntryReferenceId = "source_id"
-    val EntryReferenceSeriesId = "source_series_id"
-    val EntryNoReference = "no_source"
+    val ItemSource = "source"
+    val ItemSourceId = "source_id"
+    val ItemSourceSeriesId = "source_series_id"
+    val ItemNoSource = "no_source"
 
-    val EntryAttachedFilesIds = "item_attached_files_ids"
-    val EntryAttachedFilesDetails = "item_attached_files_details"
-    val EntryNoAttachedFiles = "item_no_attached_files"
+    val ItemAttachedFilesIds = "item_attached_files_ids"
+    val ItemAttachedFilesDetails = "item_attached_files_details"
+    val ItemNoAttachedFiles = "item_no_attached_files"
 
-    val EntryNotes = "notes"
-    val EntryNoNotes = "no_notes"
+    val ItemNotes = "notes"
+    val ItemNoNotes = "no_notes"
 
 
     /*      Tags      */

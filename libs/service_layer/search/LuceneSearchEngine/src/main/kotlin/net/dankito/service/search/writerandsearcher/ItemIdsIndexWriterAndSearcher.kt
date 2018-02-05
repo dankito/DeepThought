@@ -21,9 +21,9 @@ import org.apache.lucene.search.WildcardQuery
 
 
 /**
- * An Index that only contains item ids so that searching for all items (e.g. on app start) is a little bit faster than searching in big EntryIndexWriterAndSearcher
+ * An Index that only contains item ids so that searching for all items (e.g. on app start) is a little bit faster than searching in big ItemIndexWriterAndSearcher
  */
-class EntryIdsIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool)
+class ItemIdsIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool)
     : IndexWriterAndSearcher<Item>(itemService, eventBus, osHelper, threadPool) {
 
     companion object {
@@ -36,21 +36,21 @@ class EntryIdsIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventB
     }
 
     override fun getIdFieldName(): String {
-        return FieldName.EntryIdsId
+        return FieldName.ItemIdsId
     }
 
 
     override fun addEntityFieldsToDocument(entity: Item, doc: Document) {
         // nothing to do here, item's id is already added in parent to doc
 
-        doc.add(LongField(FieldName.EntryIdsCreated, entity.createdOn.time, Field.Store.YES))
+        doc.add(LongField(FieldName.ItemCreated, entity.createdOn.time, Field.Store.YES))
     }
 
 
-    fun searchEntryIds(search: EntriesSearch, termsToFilterFor: List<String>) {
+    fun searchItemIds(search: EntriesSearch, termsToFilterFor: List<String>) {
         val query = WildcardQuery(Term(getIdFieldName(), "*"))
 
-        executeQueryForSearchWithCollectionResult(search, query, Item::class.java, MaxEntriesSearchResults, SortOption(FieldName.EntryCreated, SortOrder.Descending, SortField.Type.LONG))
+        executeQueryForSearchWithCollectionResult(search, query, Item::class.java, MaxEntriesSearchResults, SortOption(FieldName.ItemCreated, SortOrder.Descending, SortField.Type.LONG))
     }
 
 

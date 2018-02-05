@@ -35,9 +35,9 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
     }
 
 
-    private val entryIdsIndexWriterAndSearcher = EntryIdsIndexWriterAndSearcher(itemService, eventBus, osHelper, threadPool)
+    private val entryIdsIndexWriterAndSearcher = ItemIdsIndexWriterAndSearcher(itemService, eventBus, osHelper, threadPool)
 
-    private val entryIndexWriterAndSearcher = EntryIndexWriterAndSearcher(itemService, eventBus, osHelper, threadPool)
+    private val entryIndexWriterAndSearcher = ItemIndexWriterAndSearcher(itemService, eventBus, osHelper, threadPool)
 
     private val tagIndexWriterAndSearcher = TagIndexWriterAndSearcher(tagService, eventBus, osHelper, threadPool, entryIndexWriterAndSearcher)
 
@@ -230,7 +230,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
     override fun searchEntries(search: EntriesSearch, termsToSearchFor: List<String>) {
         if(search.isSearchingForEntryIds()) {
-            entryIdsIndexWriterAndSearcher.searchEntryIds(search, termsToSearchFor)
+            entryIdsIndexWriterAndSearcher.searchItemIds(search, termsToSearchFor)
         }
         else {
             entryIndexWriterAndSearcher.searchEntries(search, termsToSearchFor)
