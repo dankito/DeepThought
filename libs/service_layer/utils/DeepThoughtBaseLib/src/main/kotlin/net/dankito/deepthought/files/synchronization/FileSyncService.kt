@@ -6,6 +6,7 @@ import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.LocalFileInfo
 import net.dankito.deepthought.model.enums.FileSyncStatus
+import net.dankito.deepthought.service.permissions.IPermissionsService
 import net.dankito.service.data.LocalFileInfoService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.LocalFileInfoSearch
@@ -23,13 +24,14 @@ import java.io.FileOutputStream
 import java.net.Socket
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.schedule
 
 
 class FileSyncService(private val connectedDevicesService: IConnectedDevicesService, private val searchEngine: ISearchEngine, private val socketHandler: SocketHandler,
-                      private val localFileInfoService: LocalFileInfoService, private val serializer: ISerializer, private val platformConfiguration: IPlatformConfiguration,
-                      private val hashService: HashService) {
+                      private val localFileInfoService: LocalFileInfoService, private val serializer: ISerializer, private val permissionsService: IPermissionsService,
+                      private val platformConfiguration: IPlatformConfiguration, private val hashService: HashService) {
 
     companion object {
         private const val MaxDelayBeforeRetryingToSynchronizeFile = 60 * 60 * 1000L // 1 hour
@@ -43,6 +45,10 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
     private val syncStatesOfNotSuccessfullySynchronizedFiles = ConcurrentHashMap<FileLink, FileSyncState>()
 
     private val timerForNotSuccessfullySynchronizedFiles = Timer()
+
+    private val isRequestingPermissionToWriteFiles = AtomicBoolean(false)
+
+    private val synchronizedFilesWaitingForWriteFilePermissionResult = mutableListOf<FileLink>()
 
 
     private val queue = AsyncProducerConsumerQueue<FileLink>(getCountConnectionsToUse(), autoStart = false) {
@@ -101,6 +107,45 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
 
 
     private fun tryToSynchronizeFile(file: FileLink) {
+        if(permissionsService.hasPermissionToWriteFiles()) {
+            tryToSynchronizeFileWithPermissionToWriteFile(file)
+        }
+        else {
+            synchronized(isRequestingPermissionToWriteFiles) {
+                if(isRequestingPermissionToWriteFiles.get() == false) {
+                    isRequestingPermissionToWriteFiles.set(true)
+
+                    permissionsService.requestPermissionToWriteSynchronizedFiles { isGranted ->
+                        retrievedRequestWriteFilePermissionResult(isGranted, file)
+                    }
+                }
+                else {
+                    synchronizedFilesWaitingForWriteFilePermissionResult.add(file)
+                }
+            }
+        }
+    }
+
+    private fun retrievedRequestWriteFilePermissionResult(isGranted: Boolean, file: FileLink) {
+        if(isGranted) {
+            tryToSynchronizeFileWithPermissionToWriteFile(file)
+
+            synchronizedFilesWaitingForWriteFilePermissionResult.forEach {
+                tryToSynchronizeFileWithPermissionToWriteFile(it)
+            }
+        }
+        else {
+            addNotSuccessfullySynchronizedFile(file, syncStatesOfNotSuccessfullySynchronizedFiles[file] ?: FileSyncState(file))
+
+            synchronizedFilesWaitingForWriteFilePermissionResult.forEach {
+                addNotSuccessfullySynchronizedFile(it, syncStatesOfNotSuccessfullySynchronizedFiles[it] ?: FileSyncState(it))
+            }
+        }
+
+        synchronizedFilesWaitingForWriteFilePermissionResult.clear()
+    }
+
+    private fun tryToSynchronizeFileWithPermissionToWriteFile(file: FileLink) {
         val localFileInfo = getStoredLocalFileInfo(file)
         log.info("Trying to synchronize file $file ($localFileInfo)")
 

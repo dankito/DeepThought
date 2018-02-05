@@ -11,12 +11,14 @@ import net.dankito.deepthought.android.routing.AndroidRouter
 import net.dankito.deepthought.android.service.*
 import net.dankito.deepthought.android.service.communication.AndroidDeviceRegistrationHandler
 import net.dankito.deepthought.android.service.network.AndroidNetworkConnectivityManager
+import net.dankito.deepthought.android.service.permissions.AndroidPermissionsService
 import net.dankito.deepthought.android.service.settings.AndroidLocalSettingsStore
 import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.deepthought.service.permissions.IPermissionsService
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.service.data.ReadLaterArticleService
@@ -97,6 +99,12 @@ class ActivitiesModule(private val applicationContext: Context) {
     @Singleton
     fun provideClipboardService() : IClipboardService {
         return AndroidClipboardService()
+    }
+
+    @Provides
+    @Singleton
+    fun providePermissionsService(context: Context, currentActivityTracker: CurrentActivityTracker) : IPermissionsService {
+        return AndroidPermissionsService(context, currentActivityTracker)
     }
 
     @Provides

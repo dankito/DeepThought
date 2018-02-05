@@ -251,7 +251,7 @@
     <string name="edit_entity_source_field_indication_hint">S. 14, 2:14 min, …</string>
 
     <string name="edit_entity_files_field_files_label">Dateien</string>
-    <string name="edit_entity_files_field_read_files_permission_rational">Um Dateien anhängen zu können wird die Berechtigung zum Lesen von Dateien lesen benötigt.</string>
+    <string name="edit_entity_files_field_read_files_permission_rational">Um Dateien anhängen zu können wird die Berechtigung zum Lesen von Dateien benötigt.</string>
 
     <string name="files_presenter_error_message_no_app_installed_for_this_file_type" formatted="false">Sie haben keine App installiert, die
         diesen Dateitypen (%s) anzeigen kann.</string>
@@ -259,6 +259,9 @@
     <string name="files_presenter_error_message_could_not_open_directory" formatted="false">Kann Verzeichnis nicht anzeigen: %s.</string>
 
     <string name="activity_view_pdf_current_page_and_count_pages_separator">/</string>
+
+    <string name="request_write_synchronized_file_permission_rational">Um synchronisierte Dateien lokal auf diesem Gerät speichern zu können wird die Berechtigung zum Schreiben
+        von Dateien benötigt.</string>
 
     <string name="snackbar_extract_item_from_url"><![CDATA[
         Zwischenablage enthält einen Link von <b><u>%1$s</u></b>. Möchten Sie hieraus einen Eintrag erstellen?

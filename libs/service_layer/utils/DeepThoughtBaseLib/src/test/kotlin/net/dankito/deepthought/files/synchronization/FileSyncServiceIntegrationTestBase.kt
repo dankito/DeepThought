@@ -22,6 +22,7 @@ import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
+import net.dankito.deepthought.service.permissions.JavaPermissionsService
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
@@ -333,7 +334,7 @@ abstract class FileSyncServiceIntegrationTestBase {
         localFileServer = FileServer(localSearchEngine, localEntityManager, localNetworkSettings, localSocketHandler, localSerializer, localThreadPool)
 
         localFileSyncService = FileSyncService(localConnectedDevicesService, localSearchEngine,
-                localSocketHandler, localLocalFileInfoService, localSerializer, localPlatformConfiguration, hashService
+                localSocketHandler, localLocalFileInfoService, localSerializer, JavaPermissionsService(), localPlatformConfiguration, hashService
         )
 
         localFileManager = FileManager(localSearchEngine, localLocalFileInfoService, localFileSyncService, localPlatformConfiguration, hashService, localEventBus, localThreadPool)
@@ -389,7 +390,7 @@ abstract class FileSyncServiceIntegrationTestBase {
         remoteFileServer = FileServer(remoteSearchEngine, remoteEntityManager, remoteNetworkSettings, remoteSocketHandler, remoteSerializer, remoteThreadPool)
 
         remoteFileSyncService = FileSyncService(remoteConnectedDevicesService, remoteSearchEngine,
-                remoteSocketHandler, remoteLocalFileInfoService, remoteSerializer, remotePlatformConfiguration, hashService
+                remoteSocketHandler, remoteLocalFileInfoService, remoteSerializer, JavaPermissionsService(), remotePlatformConfiguration, hashService
         )
 
         remoteFileManager = FileManager(remoteSearchEngine, remoteLocalFileInfoService, remoteFileSyncService, remotePlatformConfiguration, hashService, remoteEventBus, remoteThreadPool)

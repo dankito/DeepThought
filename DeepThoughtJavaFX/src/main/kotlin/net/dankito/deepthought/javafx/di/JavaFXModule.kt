@@ -24,6 +24,8 @@ import net.dankito.deepthought.javafx.service.settings.JavaFXLocalSettingsStore
 import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.deepthought.service.permissions.IPermissionsService
+import net.dankito.deepthought.service.permissions.JavaPermissionsService
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractorsManager
@@ -85,6 +87,12 @@ class JavaFXModule(private val primaryStage: Stage, private val flavorInstancePr
     @Singleton
     fun provideJavaFXClipboardWatcher(urlUtil: UrlUtil) : JavaFXClipboardWatcher {
         return JavaFXClipboardWatcher(primaryStage, urlUtil)
+    }
+
+    @Provides
+    @Singleton
+    fun providePermissionsService() : IPermissionsService {
+        return JavaPermissionsService()
     }
 
     @Provides

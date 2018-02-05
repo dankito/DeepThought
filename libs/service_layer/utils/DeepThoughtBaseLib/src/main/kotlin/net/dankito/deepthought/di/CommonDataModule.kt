@@ -15,6 +15,7 @@ import net.dankito.deepthought.files.synchronization.FileSyncService
 import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
+import net.dankito.deepthought.service.permissions.IPermissionsService
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
@@ -125,8 +126,8 @@ class CommonDataModule {
     @Provides
     @Singleton
     fun provideFileSyncService(connectedDevicesService: IConnectedDevicesService, searchEngine: ISearchEngine, socketHandler: SocketHandler, localFileInfoService: LocalFileInfoService,
-                               serializer: ISerializer, platformConfiguration: IPlatformConfiguration, hashService: HashService): FileSyncService {
-        return FileSyncService(connectedDevicesService, searchEngine, socketHandler, localFileInfoService, serializer, platformConfiguration, hashService)
+                               serializer: ISerializer, permissionsService: IPermissionsService, platformConfiguration: IPlatformConfiguration, hashService: HashService): FileSyncService {
+        return FileSyncService(connectedDevicesService, searchEngine, socketHandler, localFileInfoService, serializer, permissionsService, platformConfiguration, hashService)
     }
 
     @Provides
