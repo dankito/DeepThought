@@ -219,7 +219,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
             }
         }
         else {
-            // TODO:
+            log.error("Could not synchronize file $file", result.error)
         }
 
         return SynchronizeFileResult.ErrorOccurred
