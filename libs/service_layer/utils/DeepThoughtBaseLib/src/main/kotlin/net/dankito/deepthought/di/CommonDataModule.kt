@@ -6,6 +6,7 @@ import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.network.communication.SocketHandler
 import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.FilePersister
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.files.FileManager
@@ -160,6 +161,12 @@ class CommonDataModule {
     @Singleton
     fun provideSeriesPersister(seriesService: SeriesService): SeriesPersister {
         return SeriesPersister(seriesService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFilePersister(fileService: FileService, localFileInfoService: LocalFileInfoService, threadPool: IThreadPool): FilePersister {
+        return FilePersister(fileService, localFileInfoService, threadPool)
     }
 
     @Provides
