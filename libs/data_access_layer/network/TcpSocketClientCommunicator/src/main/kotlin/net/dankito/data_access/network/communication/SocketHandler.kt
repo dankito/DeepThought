@@ -81,12 +81,12 @@ open class SocketHandler {
             }
         } while(receivedChunkSize > -1)
 
-        if(receivedChunkSize > 0 && receivedChunkSize < CommunicationConfig.MAX_MESSAGE_SIZE) {
+        if(receivedMessageSize > 0 && receivedMessageSize < CommunicationConfig.MAX_MESSAGE_SIZE) {
             val receivedMessage = String(receivedMessageBytes.toByteArray(), CommunicationConfig.MESSAGE_CHARSET)
             return SocketResult(true, receivedMessage = receivedMessage)
         }
         else {
-            if(receivedChunkSize <= 0) {
+            if(receivedMessageSize <= 0) {
                 return SocketResult(false, Exception("Could not receive any bytes"))
             }
             else {
