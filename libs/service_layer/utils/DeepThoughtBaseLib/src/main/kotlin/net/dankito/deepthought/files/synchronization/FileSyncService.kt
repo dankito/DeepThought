@@ -18,7 +18,6 @@ import net.dankito.utils.services.hashing.HashAlgorithm
 import net.dankito.utils.services.hashing.HashService
 import org.slf4j.LoggerFactory
 import java.io.BufferedOutputStream
-import java.io.DataInputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.net.Socket
@@ -248,7 +247,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
 
     private fun saveStreamToFile(destinationFile: File, clientSocket: Socket, fileSize: Long): Long {
         val outputStream = BufferedOutputStream(FileOutputStream(destinationFile))
-        val inputStream = DataInputStream(clientSocket.getInputStream())
+        val inputStream = clientSocket.getInputStream()
 
         val buffer = ByteArray(8 * 1024)
 
@@ -256,7 +255,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         var receivedMessageSize = 0L
 
         do {
-            receivedChunkSize = inputStream.read(buffer)
+            receivedChunkSize = inputStream.read(buffer, 0, buffer.size)
 
             if(receivedChunkSize > 0) {
                 receivedMessageSize += receivedChunkSize
