@@ -35,11 +35,11 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
     }
 
 
-    private val entryIdsIndexWriterAndSearcher = ItemIdsIndexWriterAndSearcher(itemService, eventBus, osHelper, threadPool)
+    private val itemIdsIndexWriterAndSearcher = ItemIdsIndexWriterAndSearcher(itemService, eventBus, osHelper, threadPool)
 
-    private val entryIndexWriterAndSearcher = ItemIndexWriterAndSearcher(itemService, eventBus, osHelper, threadPool)
+    private val itemIndexWriterAndSearcher = ItemIndexWriterAndSearcher(itemService, eventBus, osHelper, threadPool)
 
-    private val tagIndexWriterAndSearcher = TagIndexWriterAndSearcher(tagService, eventBus, osHelper, threadPool, entryIndexWriterAndSearcher)
+    private val tagIndexWriterAndSearcher = TagIndexWriterAndSearcher(tagService, eventBus, osHelper, threadPool, itemIndexWriterAndSearcher)
 
     private val referenceIndexWriterAndSearcher = ReferenceIndexWriterAndSearcher(referenceService, eventBus, osHelper, threadPool)
 
@@ -57,7 +57,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
 
     init {
-        indexWritersAndSearchers = listOf(entryIdsIndexWriterAndSearcher, entryIndexWriterAndSearcher, tagIndexWriterAndSearcher, referenceIndexWriterAndSearcher,
+        indexWritersAndSearchers = listOf(itemIdsIndexWriterAndSearcher, itemIndexWriterAndSearcher, tagIndexWriterAndSearcher, referenceIndexWriterAndSearcher,
                 seriesIndexWriterAndSearcher, readLaterArticleIndexWriterAndSearcher, fileIndexWriterAndSearcher, localFileInfoIndexWriterAndSearcher)
 
         createDirectoryAndIndexSearcherAndWritersAsync()
@@ -142,8 +142,8 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
     private fun updateEntityInIndex(changedEntity: ChangedEntity<BaseEntity>) {
         when(changedEntity.entityClass) {
             Item::class.java -> {
-                entryIdsIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Item>)
-                entryIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Item>)
+                itemIdsIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Item>)
+                itemIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Item>)
             }
             Tag::class.java -> tagIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Tag>)
             Series::class.java -> seriesIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Series>)
@@ -174,8 +174,8 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
     private fun optimizeIndices() {
         log.info("Starting to optimize indices ...")
 
-        entryIdsIndexWriterAndSearcher.optimizeIndex()
-        entryIndexWriterAndSearcher.optimizeIndex()
+        itemIdsIndexWriterAndSearcher.optimizeIndex()
+        itemIndexWriterAndSearcher.optimizeIndex()
         tagIndexWriterAndSearcher.optimizeIndex()
         seriesIndexWriterAndSearcher.optimizeIndex()
         referenceIndexWriterAndSearcher.optimizeIndex()
@@ -230,10 +230,10 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
     override fun searchEntries(search: EntriesSearch, termsToSearchFor: List<String>) {
         if(search.isSearchingForEntryIds()) {
-            entryIdsIndexWriterAndSearcher.searchItemIds(search, termsToSearchFor)
+            itemIdsIndexWriterAndSearcher.searchItemIds(search, termsToSearchFor)
         }
         else {
-            entryIndexWriterAndSearcher.searchEntries(search, termsToSearchFor)
+            itemIndexWriterAndSearcher.searchEntries(search, termsToSearchFor)
         }
     }
 
