@@ -208,7 +208,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
                 val response = serializer.deserializeObject(it, PermitSynchronizeFileResponse::class.java)
 
                 if(response.result == PermitSynchronizeFileResult.SynchronizationPermitted) {
-                    return receiveFile(clientSocket, file)
+                    return receiveFile(clientSocket, file, response.fileSize ?: file.fileSize)
                 }
                 else {
                     return mapPermitSynchronizeFileResultToSynchronizeFileResult(response.result)
@@ -222,15 +222,15 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         return SynchronizeFileResult.ErrorOccurred
     }
 
-    private fun receiveFile(clientSocket: Socket, file: FileLink): SynchronizeFileResult {
+    private fun receiveFile(clientSocket: Socket, file: FileLink, fileSize: Long): SynchronizeFileResult {
         file.localFileInfo?.let { localFileInfo -> // should actually never come to this with localFileInfo == null
             val destinationFile = if(localFileInfo.path != null) File(localFileInfo.path) else File(getDefaultSavePathForFile(file), file.name)
             destinationFile.parentFile.mkdirs()
 
-            val countReceivedBytes = saveStreamToFile(destinationFile, clientSocket)
-            log.info("Received $countReceivedBytes and should have received ${file.fileSize} bytes for file ${file.name}")
+            val countReceivedBytes = saveStreamToFile(destinationFile, clientSocket, fileSize)
+            log.info("Received $countReceivedBytes and should have received $fileSize bytes for file ${file.name}")
 
-            if(countReceivedBytes == file.fileSize) {
+            if(countReceivedBytes == fileSize) {
                 fileSuccessfullySynchronized(file, localFileInfo, destinationFile)
                 return SynchronizeFileResult.Success
             }
@@ -242,7 +242,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         return SynchronizeFileResult.LocalFileInfoNotSet // can this ever happen?
     }
 
-    private fun saveStreamToFile(destinationFile: File, clientSocket: Socket): Long {
+    private fun saveStreamToFile(destinationFile: File, clientSocket: Socket, fileSize: Long): Long {
         val outputStream = BufferedOutputStream(FileOutputStream(destinationFile))
         val inputStream = DataInputStream(clientSocket.getInputStream())
 

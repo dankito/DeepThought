@@ -137,12 +137,13 @@ class FileServer(private val searchEngine: ISearchEngine, private val entityMana
         fileIdContainer.id = fileId
 
         val localFileInfo = searchEngine.getLocalFileInfo(fileIdContainer)
+        val localFilePath = localFileInfo?.path
 
-        if(localFileInfo == null || localFileInfo.path == null || localFileInfo.syncStatus != FileSyncStatus.UpToDate || File(localFileInfo.path).exists() == false) {
+        if(localFileInfo == null || localFilePath == null || localFileInfo.syncStatus != FileSyncStatus.UpToDate || File(localFileInfo.path).exists() == false) {
             sendResponseAndCloseSocket(clientSocket, PermitSynchronizeFileResult.DoNotHaveFile, fileId)
         }
         else {
-            sendResponse(clientSocket, PermitSynchronizeFileResult.SynchronizationPermitted, fileId)
+            sendResponse(clientSocket, PermitSynchronizeFileResult.SynchronizationPermitted, fileId, File(localFilePath).length())
 
             sendFileToClient(clientSocket, localFileInfo)
         }
@@ -150,18 +151,18 @@ class FileServer(private val searchEngine: ISearchEngine, private val entityMana
 
     private fun sendFileToClient(clientSocket: Socket, localFileInfo: LocalFileInfo) {
         localFileInfo.path?.let { filePath ->
-            log.info("Sending file $filePath to client ${clientSocket.inetAddress}")
+            log.info("Sending file $filePath of size ${localFileInfo.fileSize} to client ${clientSocket.inetAddress}")
 
-            socketHandler.sendMessage(clientSocket, FileInputStream(filePath))
+            val result = socketHandler.sendMessage(clientSocket, FileInputStream(filePath))
         }
 
         closeClientSocket(clientSocket)
     }
 
 
-    private fun sendResponse(clientSocket: Socket, result: PermitSynchronizeFileResult, fileId: String?,
+    private fun sendResponse(clientSocket: Socket, result: PermitSynchronizeFileResult, fileId: String?, fileSize: Long?,
                              error: Exception? = null) {
-        val serializedResponse = serializer.serializeObject(PermitSynchronizeFileResponse(result, fileId, error))
+        val serializedResponse = serializer.serializeObject(PermitSynchronizeFileResponse(result, fileId, fileSize, error))
         val responseBytes = serializedResponse.toByteArray(MESSAGE_CHARSET)
 
         socketHandler.sendMessage(clientSocket, responseBytes)
@@ -169,7 +170,7 @@ class FileServer(private val searchEngine: ISearchEngine, private val entityMana
 
     private fun sendResponseAndCloseSocket(clientSocket: Socket, result: PermitSynchronizeFileResult, fileId: String?,
                                            error: Exception? = null) {
-        sendResponse(clientSocket, result, fileId, error)
+        sendResponse(clientSocket, result, fileId, null, error)
 
         closeClientSocket(clientSocket)
     }
