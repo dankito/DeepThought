@@ -11,7 +11,7 @@ class AllEntriesCalculatedTag(searchEngine: ISearchEngine, eventBus: IEventBus, 
     : CalculatedTag(localization.getLocalizedString("calculated.tag.all.items"), searchEngine, eventBus, entityChangedNotifier) {
 
     override fun retrieveEntriesAsync(done: (List<Item>) -> Unit) {
-        searchEngine.searchEntries(ItemsSearch {
+        searchEngine.searchItems(ItemsSearch {
             done(it)
         })
     }

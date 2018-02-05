@@ -167,7 +167,7 @@ class MainMenuBar : View() {
         importerExporterManager.exporter.sortedByStrings { it.name }.forEach { exporter ->
             mnitmFileExport.item(exporter.name) {
                 action { getFileToExportTo()?.let { file ->
-                    searchEngine.searchEntries(ItemsSearch {
+                    searchEngine.searchItems(ItemsSearch {
                         exporter.exportAsync(file, it)
                     })
                 } }

@@ -86,7 +86,7 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
     }
 
 
-    fun searchEntries(search: ItemsSearch, termsToFilterFor: List<String>) {
+    fun searchItems(search: ItemsSearch, termsToFilterFor: List<String>) {
         val query = BooleanQuery()
 
         addQueryForOptions(search, query)

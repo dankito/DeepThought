@@ -43,7 +43,7 @@ class SearchItemsIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
         val resultHolder = AtomicReference<List<Item>?>(null)
         val waitForResultLatch = CountDownLatch(1)
 
-        underTest.searchEntries(ItemsSearch(searchTerm, false, false, false, false, searchInFiles,
+        underTest.searchItems(ItemsSearch(searchTerm, false, false, false, false, searchInFiles,
                 itemsMustHaveTheseFiles = entriesMustHaveTheseFiles) { result ->
             resultHolder.set(result)
 

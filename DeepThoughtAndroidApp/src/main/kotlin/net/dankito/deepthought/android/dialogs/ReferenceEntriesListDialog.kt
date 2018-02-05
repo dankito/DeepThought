@@ -78,7 +78,7 @@ class ReferenceEntriesListDialog: EntriesListDialogBase() {
 
 
     override fun retrieveEntries(callback: (List<Item>) -> Unit) {
-        searchEngine.searchEntries(ItemsSearch(itemsMustHaveThisSource = source) {
+        searchEngine.searchItems(ItemsSearch(itemsMustHaveThisSource = source) {
             callback(it)
         })
     }

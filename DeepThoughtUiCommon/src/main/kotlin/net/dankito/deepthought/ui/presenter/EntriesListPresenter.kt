@@ -89,7 +89,7 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
         }
 
         this.lastItemsSearch = entriesSearch
-        searchEngine.searchEntries(entriesSearch)
+        searchEngine.searchItems(entriesSearch)
     }
 
     private fun createEntriesSearch(searchTerm: String, searchInContent: Boolean, searchInSummary: Boolean, searchInTags: Boolean, searchInSource: Boolean,

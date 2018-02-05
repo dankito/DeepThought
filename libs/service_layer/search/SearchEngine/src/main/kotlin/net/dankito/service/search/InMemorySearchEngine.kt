@@ -18,7 +18,7 @@ class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool
     override fun close() {
     }
 
-    override fun searchEntries(search: ItemsSearch, termsToSearchFor: List<String>) {
+    override fun searchItems(search: ItemsSearch, termsToSearchFor: List<String>) {
         if(search.searchOnlyItemsWithoutTags) {
             getItemsWithoutTags(search)
         }

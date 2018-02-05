@@ -85,7 +85,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
             dataManager.addInitializationListener {
                 if(indexDirExists == false) {
                     // TODO: inform user that index is going to be rebuilt and that this takes some time
-                    rebuildIndex() // do not rebuild index asynchronously as Application depends on some functions of SearchEngine (like Entries without Tags)
+                    rebuildIndex() // do not rebuild index asynchronously as Application depends on some functions of SearchEngine (like Items without Tags)
                 }
 
                 searchEngineInitialized()
@@ -228,12 +228,12 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
     /*      ISearchEngine implementation        */
 
-    override fun searchEntries(search: ItemsSearch, termsToSearchFor: List<String>) {
+    override fun searchItems(search: ItemsSearch, termsToSearchFor: List<String>) {
         if(search.isSearchingForItemIds()) {
             itemIdsIndexWriterAndSearcher.searchItemIds(search, termsToSearchFor)
         }
         else {
-            itemIndexWriterAndSearcher.searchEntries(search, termsToSearchFor)
+            itemIndexWriterAndSearcher.searchItems(search, termsToSearchFor)
         }
     }
 

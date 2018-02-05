@@ -11,7 +11,7 @@ class EntriesWithoutTagsCalculatedTag(searchEngine: ISearchEngine, eventBus: IEv
     : CalculatedTag(localization.getLocalizedString("calculated.tag.items.with.no.tags"), searchEngine, eventBus, entityChangedNotifier) {
 
     override fun retrieveEntriesAsync(done: (List<Item>) -> Unit) {
-        searchEngine.searchEntries(ItemsSearch(searchOnlyItemsWithoutTags = true) {
+        searchEngine.searchItems(ItemsSearch(searchOnlyItemsWithoutTags = true) {
             done(it)
         })
     }

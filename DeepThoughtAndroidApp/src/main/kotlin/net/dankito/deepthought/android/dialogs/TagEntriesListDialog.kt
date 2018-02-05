@@ -129,7 +129,7 @@ class TagEntriesListDialog : EntriesListDialogBase() {
             callback(tag.items)
         }
         else {
-            searchEngine.searchEntries(ItemsSearch(itemsMustHaveTheseTags = mutableListOf(tag, *tagsFilter.toTypedArray())) {
+            searchEngine.searchItems(ItemsSearch(itemsMustHaveTheseTags = mutableListOf(tag, *tagsFilter.toTypedArray())) {
                 callback(it)
             })
         }
