@@ -18,8 +18,8 @@ class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool
     override fun close() {
     }
 
-    override fun searchEntries(search: EntriesSearch, termsToSearchFor: List<String>) {
-        if(search.filterOnlyEntriesWithoutTags) {
+    override fun searchEntries(search: ItemsSearch, termsToSearchFor: List<String>) {
+        if(search.searchOnlyItemsWithoutTags) {
             getItemsWithoutTags(search)
         }
         else {
@@ -33,7 +33,7 @@ class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool
         }
     }
 
-    private fun getItemsWithoutTags(search: EntriesSearch) {
+    private fun getItemsWithoutTags(search: ItemsSearch) {
         val items = entityManager.getAllEntitiesOfType(Item::class.java)
 
         items.forEach { item ->

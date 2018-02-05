@@ -8,7 +8,7 @@ interface ISearchEngine {
     fun addInitializationListener(listener: () -> Unit)
 
 
-    fun searchEntries(search: EntriesSearch)
+    fun searchEntries(search: ItemsSearch)
 
     fun searchTags(search: TagsSearch)
 

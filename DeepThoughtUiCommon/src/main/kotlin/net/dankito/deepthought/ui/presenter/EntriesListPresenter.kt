@@ -9,7 +9,7 @@ import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
-import net.dankito.service.search.specific.EntriesSearch
+import net.dankito.service.search.specific.ItemsSearch
 import net.dankito.utils.ui.IClipboardService
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
@@ -28,7 +28,7 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
 
     private var lastSearchTermProperty = Search.EmptySearchTerm
 
-    private var lastEntriesSearch: EntriesSearch? = null
+    private var lastItemsSearch: ItemsSearch? = null
 
 
     @Inject
@@ -79,7 +79,7 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
 
     fun searchEntries(searchTerm: String, searchInContent: Boolean = true, searchInAbstract: Boolean = true, searchInReference: Boolean = true, searchInTags: Boolean = true,
                       searchInFiles: Boolean = true, searchCompleted: ((List<Item>) -> Unit)? = null) {
-        lastEntriesSearch?.interrupt()
+        lastItemsSearch?.interrupt()
         lastSearchTermProperty = searchTerm
 
         val entriesSearch = createEntriesSearch(searchTerm, searchInContent, searchInAbstract, searchInTags, searchInReference, searchInFiles) { result ->
@@ -88,24 +88,24 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
             searchCompleted?.invoke(result)
         }
 
-        this.lastEntriesSearch = entriesSearch
+        this.lastItemsSearch = entriesSearch
         searchEngine.searchEntries(entriesSearch)
     }
 
-    private fun createEntriesSearch(searchTerm: String, searchInContent: Boolean, searchInAbstract: Boolean, searchInTags: Boolean, searchInReference: Boolean,
-                                    searchInFiles: Boolean, searchCompleted: (List<Item>) -> Unit): EntriesSearch {
-        var filterOnlyEntriesWithoutTags = false
-        val entriesMustHaveTheseTags = ArrayList(tagsFilter)
+    private fun createEntriesSearch(searchTerm: String, searchInContent: Boolean, searchInSummary: Boolean, searchInTags: Boolean, searchInSource: Boolean,
+                                    searchInFiles: Boolean, searchCompleted: (List<Item>) -> Unit): ItemsSearch {
+        var searchOnlyItemsWithoutTags = false
+        val itemsMustHaveTheseTags = ArrayList(tagsFilter)
 
         selectedTag?.let {
             if(it is CalculatedTag == false) {
-                entriesMustHaveTheseTags.add(it)
+                itemsMustHaveTheseTags.add(it)
             }
-            filterOnlyEntriesWithoutTags = it is EntriesWithoutTagsCalculatedTag
+            searchOnlyItemsWithoutTags = it is EntriesWithoutTagsCalculatedTag
         }
 
-        return EntriesSearch(searchTerm, searchInContent, searchInAbstract, searchInTags, searchInReference, searchInFiles, filterOnlyEntriesWithoutTags,
-                entriesMustHaveTheseTags, entriesMustHaveThisSource = selectedSource, completedListener = searchCompleted)
+        return ItemsSearch(searchTerm, searchInContent, searchInSummary, searchInTags, searchInSource, searchInFiles, searchOnlyItemsWithoutTags,
+                itemsMustHaveTheseTags, itemsMustHaveThisSource = selectedSource, completedListener = searchCompleted)
     }
 
     override fun getLastSearchTerm(): String {

@@ -13,7 +13,7 @@ import net.dankito.service.search.FieldValue
 import net.dankito.service.search.FieldValue.NoTagsFieldValue
 import net.dankito.service.search.SortOption
 import net.dankito.service.search.SortOrder
-import net.dankito.service.search.specific.EntriesSearch
+import net.dankito.service.search.specific.ItemsSearch
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.OsHelper
 import net.engio.mbassy.listener.Handler
@@ -86,7 +86,7 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
     }
 
 
-    fun searchEntries(search: EntriesSearch, termsToFilterFor: List<String>) {
+    fun searchEntries(search: ItemsSearch, termsToFilterFor: List<String>) {
         val query = BooleanQuery()
 
         addQueryForOptions(search, query)
@@ -99,37 +99,37 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
         executeQueryForSearchWithCollectionResult(search, query, Item::class.java, MaxEntriesSearchResults, SortOption(FieldName.ItemCreated, SortOrder.Descending, SortField.Type.LONG))
     }
 
-    private fun addQueryForOptions(search: EntriesSearch, query: BooleanQuery) {
-        if(search.filterOnlyEntriesWithoutTags) {
+    private fun addQueryForOptions(search: ItemsSearch, query: BooleanQuery) {
+        if(search.searchOnlyItemsWithoutTags) {
             query.add(TermQuery(Term(FieldName.ItemNoTags, NoTagsFieldValue)), BooleanClause.Occur.MUST)
         }
 
-        if(search.entriesMustHaveTheseTags.isNotEmpty()) {
+        if(search.itemsMustHaveTheseTags.isNotEmpty()) {
             val filterEntriesQuery = BooleanQuery()
-            for(tag in search.entriesMustHaveTheseTags.filterNotNull().filter { it.id != null }) {
+            for(tag in search.itemsMustHaveTheseTags.filterNotNull().filter { it.id != null }) {
                 filterEntriesQuery.add(TermQuery(Term(FieldName.ItemTagsIds, tag.id)), BooleanClause.Occur.MUST)
             }
 
             query.add(filterEntriesQuery, BooleanClause.Occur.MUST)
         }
 
-        search.entriesMustHaveThisSource?.id?.let { referenceId ->
+        search.itemsMustHaveThisSource?.id?.let { referenceId ->
             val filterReferenceQuery = BooleanQuery()
             filterReferenceQuery.add(TermQuery(Term(FieldName.ItemSourceId, referenceId)), BooleanClause.Occur.MUST)
 
             query.add(filterReferenceQuery, BooleanClause.Occur.MUST)
         }
 
-        search.entriesMustHaveThisSeries?.id?.let { seriesId ->
+        search.itemsMustHaveThisSeries?.id?.let { seriesId ->
             val filterSeriesQuery = BooleanQuery()
             filterSeriesQuery.add(TermQuery(Term(FieldName.ItemSourceSeriesId, seriesId)), BooleanClause.Occur.MUST)
 
             query.add(filterSeriesQuery, BooleanClause.Occur.MUST)
         }
 
-        if(search.entriesMustHaveTheseFiles.isNotEmpty()) {
+        if(search.itemsMustHaveTheseFiles.isNotEmpty()) {
             val filterEntriesQuery = BooleanQuery()
-            for(file in search.entriesMustHaveTheseFiles.filterNotNull().filter { it.id != null }) {
+            for(file in search.itemsMustHaveTheseFiles.filterNotNull().filter { it.id != null }) {
                 filterEntriesQuery.add(TermQuery(Term(FieldName.ItemAttachedFilesIds, file.id)), BooleanClause.Occur.MUST)
             }
 
@@ -137,7 +137,7 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
         }
     }
 
-    private fun addQueryForSearchTerm(termsToFilterFor: List<String>, query: BooleanQuery, search: EntriesSearch) {
+    private fun addQueryForSearchTerm(termsToFilterFor: List<String>, query: BooleanQuery, search: ItemsSearch) {
         if(termsToFilterFor.isEmpty()) {
             query.add(WildcardQuery(Term(FieldName.ItemId, "*")), BooleanClause.Occur.MUST)
         }
@@ -146,16 +146,16 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
                 val escapedTerm = QueryParser.escape(term)
                 val termQuery = BooleanQuery()
 
-                if(search.filterContent) {
+                if(search.searchInContent) {
                     termQuery.add(PrefixQuery(Term(FieldName.ItemContent, escapedTerm)), BooleanClause.Occur.SHOULD)
                 }
-                if(search.filterAbstract) {
+                if(search.searchInSummary) {
                     termQuery.add(PrefixQuery(Term(FieldName.ItemSummary, escapedTerm)), BooleanClause.Occur.SHOULD)
                 }
-                if(search.filterReference) {
+                if(search.searchInSource) {
                     termQuery.add(PrefixQuery(Term(FieldName.ItemSource, escapedTerm)), BooleanClause.Occur.SHOULD)
                 }
-                if(search.filterTags) {
+                if(search.searchInTags) {
                     termQuery.add(PrefixQuery(Term(FieldName.ItemTagsNames, escapedTerm)), BooleanClause.Occur.SHOULD)
                 }
                 if(search.searchInFiles) {

@@ -228,8 +228,8 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
     /*      ISearchEngine implementation        */
 
-    override fun searchEntries(search: EntriesSearch, termsToSearchFor: List<String>) {
-        if(search.isSearchingForEntryIds()) {
+    override fun searchEntries(search: ItemsSearch, termsToSearchFor: List<String>) {
+        if(search.isSearchingForItemIds()) {
             itemIdsIndexWriterAndSearcher.searchItemIds(search, termsToSearchFor)
         }
         else {

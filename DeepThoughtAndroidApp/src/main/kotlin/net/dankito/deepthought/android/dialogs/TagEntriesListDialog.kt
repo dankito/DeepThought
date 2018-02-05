@@ -10,7 +10,7 @@ import net.dankito.deepthought.model.Tag
 import net.dankito.service.data.TagService
 import net.dankito.service.data.messages.ItemChanged
 import net.dankito.service.data.messages.TagChanged
-import net.dankito.service.search.specific.EntriesSearch
+import net.dankito.service.search.specific.ItemsSearch
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 
@@ -129,7 +129,7 @@ class TagEntriesListDialog : EntriesListDialogBase() {
             callback(tag.items)
         }
         else {
-            searchEngine.searchEntries(EntriesSearch(entriesMustHaveTheseTags = mutableListOf(tag, *tagsFilter.toTypedArray())) {
+            searchEngine.searchEntries(ItemsSearch(itemsMustHaveTheseTags = mutableListOf(tag, *tagsFilter.toTypedArray())) {
                 callback(it)
             })
         }

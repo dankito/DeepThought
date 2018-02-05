@@ -15,7 +15,7 @@ import net.dankito.deepthought.javafx.service.import_export.DataImporterExporter
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.search.ISearchEngine
-import net.dankito.service.search.specific.EntriesSearch
+import net.dankito.service.search.specific.ItemsSearch
 import net.dankito.utils.MimeTypeUtil
 import net.dankito.utils.UrlUtil
 import net.dankito.utils.extensions.sortedByStrings
@@ -167,7 +167,7 @@ class MainMenuBar : View() {
         importerExporterManager.exporter.sortedByStrings { it.name }.forEach { exporter ->
             mnitmFileExport.item(exporter.name) {
                 action { getFileToExportTo()?.let { file ->
-                    searchEngine.searchEntries(EntriesSearch {
+                    searchEngine.searchEntries(ItemsSearch {
                         exporter.exportAsync(file, it)
                     })
                 } }

@@ -8,7 +8,7 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.FieldName
 import net.dankito.service.search.SortOption
 import net.dankito.service.search.SortOrder
-import net.dankito.service.search.specific.EntriesSearch
+import net.dankito.service.search.specific.ItemsSearch
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.OsHelper
 import net.engio.mbassy.listener.Handler
@@ -47,7 +47,7 @@ class ItemIdsIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBu
     }
 
 
-    fun searchItemIds(search: EntriesSearch, termsToFilterFor: List<String>) {
+    fun searchItemIds(search: ItemsSearch, termsToFilterFor: List<String>) {
         val query = WildcardQuery(Term(getIdFieldName(), "*"))
 
         executeQueryForSearchWithCollectionResult(search, query, Item::class.java, MaxEntriesSearchResults, SortOption(FieldName.ItemCreated, SortOrder.Descending, SortField.Type.LONG))

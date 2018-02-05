@@ -3,7 +3,7 @@ package net.dankito.deepthought.model
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
-import net.dankito.service.search.specific.EntriesSearch
+import net.dankito.service.search.specific.ItemsSearch
 import net.dankito.utils.localization.Localization
 
 
@@ -11,7 +11,7 @@ class EntriesWithoutTagsCalculatedTag(searchEngine: ISearchEngine, eventBus: IEv
     : CalculatedTag(localization.getLocalizedString("calculated.tag.items.with.no.tags"), searchEngine, eventBus, entityChangedNotifier) {
 
     override fun retrieveEntriesAsync(done: (List<Item>) -> Unit) {
-        searchEngine.searchEntries(EntriesSearch(filterOnlyEntriesWithoutTags = true) {
+        searchEngine.searchEntries(ItemsSearch(searchOnlyItemsWithoutTags = true) {
             done(it)
         })
     }

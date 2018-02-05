@@ -8,7 +8,7 @@ import net.dankito.deepthought.model.Source
 import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.messages.ItemChanged
 import net.dankito.service.data.messages.ReferenceChanged
-import net.dankito.service.search.specific.EntriesSearch
+import net.dankito.service.search.specific.ItemsSearch
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 
@@ -78,7 +78,7 @@ class ReferenceEntriesListDialog: EntriesListDialogBase() {
 
 
     override fun retrieveEntries(callback: (List<Item>) -> Unit) {
-        searchEngine.searchEntries(EntriesSearch(entriesMustHaveThisSource = source) {
+        searchEngine.searchEntries(ItemsSearch(itemsMustHaveThisSource = source) {
             callback(it)
         })
     }

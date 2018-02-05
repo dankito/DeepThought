@@ -19,13 +19,13 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
     private val initializationListeners = mutableSetOf<() -> Unit>()
 
 
-    override fun searchEntries(search: EntriesSearch) {
+    override fun searchEntries(search: ItemsSearch) {
         val termsToSearchFor = getSingleSearchTerms(search.searchTerm, DefaultSearchTermSeparator)
 
         threadPool.runAsync { searchEntries(search, termsToSearchFor) }
     }
 
-    abstract fun searchEntries(search: EntriesSearch, termsToSearchFor: List<String>)
+    abstract fun searchEntries(search: ItemsSearch, termsToSearchFor: List<String>)
 
 
     override fun searchTags(search: TagsSearch) {
