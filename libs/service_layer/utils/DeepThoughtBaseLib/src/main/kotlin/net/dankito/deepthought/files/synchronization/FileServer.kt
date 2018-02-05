@@ -13,9 +13,7 @@ import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.serialization.ISerializer
 import org.slf4j.LoggerFactory
-import java.io.File
-import java.io.FileInputStream
-import java.io.IOException
+import java.io.*
 import java.net.BindException
 import java.net.ServerSocket
 import java.net.Socket
@@ -101,11 +99,12 @@ class FileServer(private val searchEngine: ISearchEngine, private val entityMana
     private fun receivedRequest(clientSocket: Socket) {
         val socketResult = socketHandler.receiveMessage(clientSocket)
 
-        if (socketResult.isSuccessful) {
+        if(socketResult.isSuccessful) {
             socketResult.receivedMessage?.let { receivedMessage ->
                 receivedRequest(clientSocket, receivedMessage)
             }
-        } else {
+        }
+        else {
             // TODO: what to do in error case?
 
             closeClientSocket(clientSocket)
@@ -141,22 +140,51 @@ class FileServer(private val searchEngine: ISearchEngine, private val entityMana
                 sendResponseAndCloseSocket(clientSocket, PermitSynchronizeFileResult.DoNotHaveFile, fileId)
             }
             else {
-                sendResponse(clientSocket, PermitSynchronizeFileResult.SynchronizationPermitted, fileId, File(localFilePath).length())
+                val fileSize = File(localFilePath).length()
+                sendResponse(clientSocket, PermitSynchronizeFileResult.SynchronizationPermitted, fileId, fileSize)
 
-                sendFileToClientAndCloseSocket(clientSocket, localFileInfo)
+                sendFileToClientAndCloseSocket(clientSocket, localFileInfo, fileSize)
             }
         })
     }
 
-    private fun sendFileToClientAndCloseSocket(clientSocket: Socket, localFileInfo: LocalFileInfo) {
+    private fun sendFileToClientAndCloseSocket(clientSocket: Socket, localFileInfo: LocalFileInfo, fileSize: Long) {
         localFileInfo.path?.let { filePath ->
             log.info("Sending file $filePath of size ${localFileInfo.fileSize} to client ${clientSocket.inetAddress}")
 
-            val result = socketHandler.sendMessage(clientSocket, FileInputStream(filePath))
-            log.info("Result of sending file $filePath = $result, ${result.countBytesSend} bytes sent")
+            sendFileToClient(clientSocket, filePath, fileSize)
         }
 
         closeClientSocket(clientSocket)
+    }
+
+    private fun sendFileToClient(clientSocket: Socket, filePath: String, fileSize: Long) {
+        try {
+            val inputStream = BufferedInputStream(FileInputStream(filePath))
+            val outputStream = DataOutputStream(clientSocket.getOutputStream())
+
+            val buffer = ByteArray(16 * 1024)
+
+            var sentChunkSize: Int
+            var sentMessageSize = 0L
+
+            do {
+                sentChunkSize = inputStream.read(buffer, 0, buffer.size)
+                sentMessageSize += sentChunkSize
+
+                if(sentChunkSize > 0) {
+                    outputStream.write(buffer, 0, sentChunkSize)
+                }
+            } while (sentChunkSize > -1)
+
+            outputStream.flush()
+            outputStream.close()
+            inputStream.close()
+
+            log.info("Result of sending file $filePath = $sentMessageSize bytes sent")
+        } catch (e: Exception) {
+            log.error("Could not send file $filePath to client ${clientSocket.inetAddress}", e)
+        }
     }
 
 
