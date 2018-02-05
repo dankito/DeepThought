@@ -20,14 +20,17 @@ class FileListCellFragment : ListCellFragment<FileLink>() {
     private var presenter: FileListPresenter? = null
 
 
+    init {
+        file.itemProperty.addListener { _, _, _ -> updateItem() }
+    }
+
     override val root = vbox {
         cellProperty.addListener { _, _, newValue ->
             // so that the graphic always has cell's width
             newValue?.let { prefWidthProperty().bind(it.widthProperty().subtract(16)) }
 
             this@FileListCellFragment.presenter = newValue?.listView?.userData as? FileListPresenter
-            updateFileSize()
-            updateFileUri()
+            updateItem()
         }
 
         borderpane {
@@ -71,10 +74,14 @@ class FileListCellFragment : ListCellFragment<FileLink>() {
             }
         }
 
+        updateItem()
+    }
+
+
+    private fun updateItem() {
         updateFileSize()
         updateFileUri()
     }
-
 
     private fun updateFileSize() {
         formattedFileSize.value = presenter?.formatFileSize(file.fileSize.value.toLong()) ?: ""
