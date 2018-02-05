@@ -40,6 +40,7 @@ class FileSyncServiceIntegrationTest : FileSyncServiceIntegrationTestBase() {
 
         val file = createFile()
         val fileId = file.id!!
+        val localFileInfo = localFileManager.getStoredLocalFileInfo(file)
 
         assertThat(remoteEntityManager.getEntityById(FileLink::class.java, fileId), nullValue())
 
@@ -48,13 +49,15 @@ class FileSyncServiceIntegrationTest : FileSyncServiceIntegrationTestBase() {
 
         val synchronizedFile = remoteEntityManager.getEntityById(FileLink::class.java, fileId)
         assertThat(synchronizedFile, notNullValue())
-        assertThat(synchronizedFile?.localFileInfo, notNullValue())
-        assertThat(synchronizedFile?.localFileInfo?.path, notNullValue())
 
-        assertThat(File(synchronizedFile?.localFileInfo?.path!!).exists(), `is`(true))
-        assertThat(synchronizedFile.localFileInfo?.fileSize, `is`(file.localFileInfo?.fileSize))
-        assertThat(synchronizedFile.localFileInfo?.fileLastModified, `is`(file.localFileInfo?.fileLastModified))
-        assertThat(synchronizedFile.localFileInfo?.hashSHA512, `is`(file.localFileInfo?.hashSHA512))
+        val synchronizedLocalFileInfo = remoteFileManager.getStoredLocalFileInfo(synchronizedFile!!)
+        assertThat(synchronizedLocalFileInfo, notNullValue())
+        assertThat(synchronizedLocalFileInfo?.path, notNullValue())
+
+        assertThat(File(synchronizedLocalFileInfo?.path!!).exists(), `is`(true))
+        assertThat(synchronizedLocalFileInfo.fileSize, `is`(localFileInfo?.fileSize))
+        assertThat(synchronizedLocalFileInfo.fileLastModified, `is`(localFileInfo?.fileLastModified))
+        assertThat(synchronizedLocalFileInfo.hashSHA512, `is`(localFileInfo?.hashSHA512))
     }
 
 

@@ -9,7 +9,6 @@ import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
-import net.dankito.service.search.specific.FilesSearch
 import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
@@ -20,6 +19,8 @@ import net.engio.mbassy.listener.Handler
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.schedule
 
 
@@ -31,7 +32,10 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
     }
 
 
+    private val localFileInfoCache = ConcurrentHashMap<FileLink, LocalFileInfo>()
+
     private val eventBusListener = EventBusListener()
+
 
     init {
         eventBus.register(eventBusListener)
@@ -50,19 +54,15 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
         file.fileLastModified = Date(localFile.lastModified())
 
         val localFileInfo = LocalFileInfo(file, localFile.absolutePath, true, FileSyncStatus.UpToDate, file.fileSize, file.fileLastModified, file.hashSHA512)
-        file.localFileInfo = localFileInfo
+        localFileInfoCache.put(file, localFileInfo)
 
-        setFileHashAsync(file, localFile) // for large files this takes some time, don't interrupt main routine for calculating hash that long
+        setFileHashAsync(file, localFileInfo, localFile) // for large files this takes some time, don't interrupt main routine for calculating hash that long
 
         return file
     }
 
     fun getLocalPathForFile(file: FileLink): File {
-        file.localFileInfo?.path?.let { return File(it) } // LocalFileInfo already set
-
-        getStoredLocalFileInfo(file)?.let { localFileInfo -> // Retrieve LocalFileInfo
-            file.localFileInfo = localFileInfo
-
+        getStoredLocalFileInfo(file)?.let { localFileInfo ->
             localFileInfo.path?.let { return File(it) }
         }
 
@@ -70,17 +70,17 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
         return File(platformConfiguration.getApplicationFolder(), file.uriString)
     }
 
-    private fun setFileHashAsync(file: FileLink, localFile: File) {
+    private fun setFileHashAsync(file: FileLink, localFileInfo: LocalFileInfo, localFile: File) {
         threadPool.runAsync {
-            setFileHash(file, localFile)
+            setFileHash(file, localFileInfo, localFile)
         }
     }
 
-    private fun setFileHash(file: FileLink, localFile: File) {
+    private fun setFileHash(file: FileLink, localFileInfo: LocalFileInfo, localFile: File) {
         try {
             file.hashSHA512 = hashService.getFileHash(HashAlgorithm.SHA512, localFile)
 
-            file.localFileInfo?.hashSHA512 = file.hashSHA512
+            localFileInfo.hashSHA512 = file.hashSHA512
         } catch(e: Exception) {
             log.error("Could not create file hash for file $file", e)
         }
@@ -102,36 +102,45 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
     }
 
     private fun ensureLocalFileInfoIsSet(file: FileLink) {
-        if(file.localFileInfo == null) {
-            val storedLocalFileInfo = getStoredLocalFileInfo(file)
+        val storedLocalFileInfo = getStoredLocalFileInfo(file)
 
-            if(storedLocalFileInfo != null) {
-                file.localFileInfo = storedLocalFileInfo
-            }
-            else { // then it's for sure a file on a synchronized device
-                val localFileInfo = LocalFileInfo(file)
+        if(storedLocalFileInfo == null) {
+            val localFileInfo = LocalFileInfo(file)
+            localFileInfoCache.put(file, localFileInfo)
 
-                localFileInfoService.persist(localFileInfo)
-
-                file.localFileInfo = localFileInfo
-            }
+            localFileInfoService.persist(localFileInfo)
         }
     }
 
-    private fun getStoredLocalFileInfo(file: FileLink): LocalFileInfo? {
-        return searchEngine.getLocalFileInfo(file)
+    fun getStoredLocalFileInfo(file: FileLink): LocalFileInfo? {
+        localFileInfoCache.get(file)?.let { return it }
+
+        val localFileInfo = AtomicReference<LocalFileInfo?>(null)
+
+        searchEngine.searchLocalFileInfo(LocalFileInfoSearch(file.id) { result ->
+            if(result.isNotEmpty()) {
+                localFileInfoCache.put(file, result[0])
+                localFileInfo.set(result[0])
+            }
+        })
+
+        return localFileInfo.get()
     }
 
 
-    private fun deleteLocalFileInfo(file: FileLink) {
-        file.localFileInfo?.let {
-            localFileInfoService.delete(it)
+    private fun fileHasBeenDeleted(file: FileLink) {
+        getStoredLocalFileInfo(file)?.let { localFileInfo ->
+            if(localFileInfo.isPersisted()) {
+                localFileInfoService.delete(localFileInfo)
+            }
         }
+
+        localFileInfoCache.remove(file)
     }
 
 
     private fun checkIfFileSynchronizationShouldGetStarted(file: FileLink) {
-        file.localFileInfo?.let { localFileInfo ->
+        getStoredLocalFileInfo(file)?.let { localFileInfo ->
             // TODO: when updating file has been implemented, also check if hash (and lastModified) still match
             if(localFileInfo.syncStatus != FileSyncStatus.UpToDate) {
                 startFileSynchronizationAsync(file)
@@ -157,9 +166,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
     }
 
     private fun searchForLocalFilesWithoutLocalFileInfoSet() {
-        searchEngine.searchFiles(FilesSearch(fileType = FilesSearch.FileType.LocalFilesOnly, onlyFilesWithoutLocalFileInfo = true) { localFilesWithoutLocalFileInfo ->
-            forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(localFilesWithoutLocalFileInfo.filterNotNull())
-        })
+        // TODO
     }
 
 
@@ -168,7 +175,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
         @Handler()
         fun fileChanged(fileChanged: FileChanged) {
             if(fileChanged.changeType == EntityChangeType.PreDelete || fileChanged.changeType == EntityChangeType.Deleted || fileChanged.entity.deleted) {
-                deleteLocalFileInfo(fileChanged.entity)
+                fileHasBeenDeleted(fileChanged.entity)
             }
             else {
                 forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(fileChanged.entity)

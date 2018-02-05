@@ -62,11 +62,6 @@ data class FileLink(
         private set
 
 
-    @Transient
-    @kotlin.jvm.Transient
-    var localFileInfo: LocalFileInfo? = null
-
-
     init {
         // TODO
 //        this.fileType = FileType.getDefaultFileType()

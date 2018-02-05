@@ -10,8 +10,6 @@ class FileViewModel : ItemViewModel<FileLink>() {
 
     val name = bind { SimpleStringProperty(item?.name) }
 
-    val uri = bind { SimpleStringProperty(item?.localFileInfo?.path) }
-
     val fileSize = bind { SimpleLongProperty(item?.fileSize ?: 0) }
 
 }

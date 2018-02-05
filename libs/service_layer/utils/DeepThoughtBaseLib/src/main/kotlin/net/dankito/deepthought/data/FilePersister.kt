@@ -1,12 +1,13 @@
 package net.dankito.deepthought.data
 
+import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.FileLink
 import net.dankito.service.data.FileService
 import net.dankito.service.data.LocalFileInfoService
 import net.dankito.utils.IThreadPool
 
 
-class FilePersister(private val fileService: FileService, private val localFileInfoService: LocalFileInfoService, private val threadPool: IThreadPool) {
+class FilePersister(private val fileService: FileService, private val localFileInfoService: LocalFileInfoService, private val fileManager: FileManager, private val threadPool: IThreadPool) {
 
 
     fun saveFileAsync(file: FileLink, callback: (Boolean) -> Unit) {
@@ -16,13 +17,6 @@ class FilePersister(private val fileService: FileService, private val localFileI
     }
 
     fun saveFile(file: FileLink, doChangesAffectDependentEntities: Boolean = true): Boolean {
-        val localFileInfo = file.localFileInfo
-
-        if(localFileInfo != null && localFileInfo.isPersisted() == false) { // if localFileInfo has been newly created but not persisted yet
-            localFileInfoService.persist(localFileInfo)
-        }
-
-
         val wasFilePersisted = file.isPersisted()
         if(wasFilePersisted == false) {
             fileService.persist(file)
@@ -32,10 +26,11 @@ class FilePersister(private val fileService: FileService, private val localFileI
         }
 
 
-        if(localFileInfo != null && wasFilePersisted == false) { // file's id is now set, so update localFileInfo to store file's id with it
-            localFileInfoService.update(localFileInfo)
-        }
+        val localFileInfo = fileManager.getStoredLocalFileInfo(file)
 
+        if(localFileInfo != null && localFileInfo.isPersisted() == false) { // if localFileInfo has been newly created but not persisted yet
+            localFileInfoService.persist(localFileInfo)
+        }
 
         return true
     }

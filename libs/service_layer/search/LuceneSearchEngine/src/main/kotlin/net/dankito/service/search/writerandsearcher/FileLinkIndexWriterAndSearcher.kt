@@ -1,7 +1,6 @@
 package net.dankito.service.search.writerandsearcher
 
 import net.dankito.deepthought.model.FileLink
-import net.dankito.deepthought.model.LocalFileInfo
 import net.dankito.service.data.FileService
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.EventBusPriorities
@@ -46,11 +45,6 @@ class FileLinkIndexWriterAndSearcher(fileService: FileService, eventBus: IEventB
 
         doc.add(Field(FieldName.FileDescription, entity.description, TextField.TYPE_NOT_STORED))
         doc.add(StringField(FieldName.FileSourceUri, entity.sourceUriString.toLowerCase(), Field.Store.NO))
-
-        entity.localFileInfo?.let { doc.add(StringField(FieldName.FileLocalFileInfoId, it.id, Field.Store.YES)) }
-        if(entity.localFileInfo == null) {
-            doc.add(StringField(FieldName.FileNoLocalFileInfo, FieldValue.NoLocalFileInfoFieldValue, Field.Store.NO))
-        }
     }
 
 
@@ -109,41 +103,6 @@ class FileLinkIndexWriterAndSearcher(fileService: FileService, eventBus: IEventB
             FilesSearch.FileType.RemoteFilesOnly -> query.add(TermQuery(Term(FieldName.FileIsLocalFile, FieldValue.BooleanFieldFalseValue)), BooleanClause.Occur.MUST)
             else -> { } // nothing to add, no need to restrict query any further
         }
-
-        search.onlyFilesWithoutLocalFileInfo?.let { onlyFilesWithoutLocalFileInfo ->
-            if(onlyFilesWithoutLocalFileInfo) {
-                query.add(TermQuery(Term(FieldName.FileNoLocalFileInfo, FieldValue.NoLocalFileInfoFieldValue)), BooleanClause.Occur.MUST)
-            }
-            else { // get only files with LocalFileInfo set
-                query.add(WildcardQuery(Term(FieldName.FileLocalFileInfoId, "*")), BooleanClause.Occur.MUST)
-            }
-        }
-    }
-
-
-    fun getLocalFileInfo(file: FileLink): LocalFileInfo? {
-        if(file.id == null) { // file not persisted and therefore indexed yet
-            return null
-        }
-
-        val query = TermQuery(Term(getIdFieldName(), file.id))
-
-        val queryResultPair = executeQuery(query, 1)
-
-        queryResultPair?.second?.let { scoreDocs ->
-            if(scoreDocs.size > 0) {
-                val searcher = queryResultPair.first
-                val doc = searcher.doc(scoreDocs[0].doc)
-
-                doc.getField(FieldName.FileLocalFileInfoId)?.let { field -> // field is null when LocalFileInfo hasn't been stored yet
-                    val id = field.stringValue()
-
-                    return entityService.entityManager.getEntityById(LocalFileInfo::class.java, id)
-                }
-            }
-        }
-
-        return null
     }
 
 

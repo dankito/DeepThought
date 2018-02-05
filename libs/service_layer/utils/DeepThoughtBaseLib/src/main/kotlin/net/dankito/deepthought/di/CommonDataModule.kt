@@ -92,8 +92,8 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideFileService(localFileInfoService: LocalFileInfoService, dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier): FileService {
-        return FileService(localFileInfoService, dataManager, entityChangedNotifier)
+    fun provideFileService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier): FileService {
+        return FileService(dataManager, entityChangedNotifier)
     }
 
     @Provides
@@ -112,8 +112,8 @@ class CommonDataModule {
     @Provides
     @Singleton
     fun provideDeleteEntityService(entryService: EntryService, tagService: TagService, referenceService: ReferenceService, seriesService: SeriesService,
-                                   fileService: FileService, dialogService: IDialogService, threadPool: IThreadPool) : DeleteEntityService {
-        return DeleteEntityService(entryService, tagService, referenceService, seriesService, fileService, dialogService, threadPool)
+                                   fileService: FileService, localFileInfoService: LocalFileInfoService, searchEngine: ISearchEngine, dialogService: IDialogService, threadPool: IThreadPool) : DeleteEntityService {
+        return DeleteEntityService(entryService, tagService, referenceService, seriesService, fileService, localFileInfoService, searchEngine, dialogService, threadPool)
     }
 
     @Provides
@@ -124,9 +124,9 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideFileSyncService(connectedDevicesService: IConnectedDevicesService, fileServer: FileServer, socketHandler: SocketHandler, localFileInfoService: LocalFileInfoService,
+    fun provideFileSyncService(connectedDevicesService: IConnectedDevicesService, searchEngine: ISearchEngine, socketHandler: SocketHandler, localFileInfoService: LocalFileInfoService,
                                serializer: ISerializer, platformConfiguration: IPlatformConfiguration, hashService: HashService): FileSyncService {
-        return FileSyncService(connectedDevicesService, fileServer, socketHandler, localFileInfoService, serializer, platformConfiguration, hashService)
+        return FileSyncService(connectedDevicesService, searchEngine, socketHandler, localFileInfoService, serializer, platformConfiguration, hashService)
     }
 
     @Provides
@@ -165,8 +165,8 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideFilePersister(fileService: FileService, localFileInfoService: LocalFileInfoService, threadPool: IThreadPool): FilePersister {
-        return FilePersister(fileService, localFileInfoService, threadPool)
+    fun provideFilePersister(fileService: FileService, localFileInfoService: LocalFileInfoService, fileManager: FileManager, threadPool: IThreadPool): FilePersister {
+        return FilePersister(fileService, localFileInfoService, fileManager, threadPool)
     }
 
     @Provides

@@ -5,9 +5,11 @@ import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.FilePersister
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.di.DaggerBaseComponent
+import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
@@ -21,6 +23,7 @@ import net.dankito.utils.ThreadPool
 import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.JacksonJsonSerializer
+import net.dankito.utils.services.hashing.HashService
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.settings.LocalSettingsStoreBase
 import net.dankito.utils.version.Versions
@@ -48,7 +51,11 @@ abstract class LuceneSearchEngineIntegrationTestBase {
 
     protected val fileService: FileService
 
+    protected val fileManager: FileManager
+
     protected val deleteEntityService: DeleteEntityService
+
+    protected val filePersister: FilePersister
 
     protected val sourcePersister: ReferencePersister
 
@@ -96,15 +103,17 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         seriesService = SeriesService(dataManager, entityChangedNotifier)
         readLaterArticleService = ReadLaterArticleService(dataManager, entityChangedNotifier, JacksonJsonSerializer(tagService, seriesService))
         localFileInfoService = LocalFileInfoService(dataManager, entityChangedNotifier)
-        fileService = FileService(localFileInfoService, dataManager, entityChangedNotifier)
-
-        deleteEntityService = DeleteEntityService(entryService, tagService, referenceService, seriesService, fileService, mock(), threadPool)
-        sourcePersister = ReferencePersister(referenceService, seriesService, fileService, deleteEntityService)
-        itemPersister = EntryPersister(entryService, sourcePersister, tagService, fileService, deleteEntityService)
+        fileService = FileService(dataManager, entityChangedNotifier)
 
         underTest = LuceneSearchEngine(dataManager, NoOpLanguageDetector(), OsHelper(platformConfiguration), ThreadPool(), eventBus,
                 entryService, tagService, referenceService, seriesService, readLaterArticleService, fileService, localFileInfoService)
         initLuceneSearchEngine(underTest)
+
+        deleteEntityService = DeleteEntityService(entryService, tagService, referenceService, seriesService, fileService, localFileInfoService, underTest, mock(), threadPool)
+        fileManager = FileManager(underTest, localFileInfoService, mock(), platformConfiguration, HashService(), eventBus, threadPool)
+        filePersister = FilePersister(fileService, localFileInfoService, fileManager, threadPool)
+        sourcePersister = ReferencePersister(referenceService, seriesService, filePersister, deleteEntityService)
+        itemPersister = EntryPersister(entryService, sourcePersister, tagService, filePersister, deleteEntityService)
     }
 
     private fun initDataManager(dataManager: DataManager) {

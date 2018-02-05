@@ -49,7 +49,7 @@ class SearchLocalFileInfoIntegrationTest : LuceneSearchEngineIntegrationTestBase
         val resultHolder = AtomicReference<List<LocalFileInfo>?>(null)
         val waitForResultLatch = CountDownLatch(1)
 
-        underTest.searchLocalFileInfo(LocalFileInfoSearch(hasSyncStatus, doesNotHaveSyncStatus) { result ->
+        underTest.searchLocalFileInfo(LocalFileInfoSearch(null, hasSyncStatus, doesNotHaveSyncStatus) { result ->
             resultHolder.set(result)
 
             waitForResultLatch.countDown()
@@ -84,7 +84,10 @@ class SearchLocalFileInfoIntegrationTest : LuceneSearchEngineIntegrationTestBase
 
     private fun createCountLocalFileInfoWithSyncStatus(countLocalFileInfo: Int, syncStatus: FileSyncStatus) {
         for(i in 0 until countLocalFileInfo) {
-            val localFileInfo = LocalFileInfo(FileLink(""), syncStatus = syncStatus)
+            val file = FileLink("")
+            fileService.persist(file)
+
+            val localFileInfo = LocalFileInfo(file, syncStatus = syncStatus)
             localFileInfoService.persist(localFileInfo)
         }
 

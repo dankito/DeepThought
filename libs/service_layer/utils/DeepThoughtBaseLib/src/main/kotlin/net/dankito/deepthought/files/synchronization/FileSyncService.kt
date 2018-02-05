@@ -7,6 +7,8 @@ import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.LocalFileInfo
 import net.dankito.deepthought.model.enums.FileSyncStatus
 import net.dankito.service.data.LocalFileInfoService
+import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.service.synchronization.IConnectedDevicesService
 import net.dankito.service.synchronization.KnownSynchronizedDevicesListener
 import net.dankito.utils.AsyncProducerConsumerQueue
@@ -22,10 +24,11 @@ import java.io.FileOutputStream
 import java.net.Socket
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.schedule
 
 
-class FileSyncService(private val connectedDevicesService: IConnectedDevicesService, fileServer: FileServer, private val socketHandler: SocketHandler,
+class FileSyncService(private val connectedDevicesService: IConnectedDevicesService, private val searchEngine: ISearchEngine, private val socketHandler: SocketHandler,
                       private val localFileInfoService: LocalFileInfoService, private val serializer: ISerializer, private val platformConfiguration: IPlatformConfiguration,
                       private val hashService: HashService) {
 
@@ -99,13 +102,14 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
 
 
     private fun tryToSynchronizeFile(file: FileLink) {
-        log.info("Trying to synchronize file $file (${file.localFileInfo})")
+        val localFileInfo = getStoredLocalFileInfo(file)
+        log.info("Trying to synchronize file $file ($localFileInfo)")
 
         val state = syncStatesOfNotSuccessfullySynchronizedFiles[file] ?: FileSyncState(file)
         val connectedDevices = ArrayList(connectedDevicesService.knownSynchronizedDiscoveredDevices)
 
         synchronized(currentFileSynchronizations) {
-            if(currentFileSynchronizations.containsKey(file) || file.localFileInfo?.syncStatus == FileSyncStatus.UpToDate) { // already synchronized in the meantime
+            if(currentFileSynchronizations.containsKey(file) || localFileInfo?.syncStatus == FileSyncStatus.UpToDate) { // already synchronized in the meantime
                 return // current ongoing synchronization for this file, don't sync twice
             }
 
@@ -139,7 +143,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
 
         while(connectedDevice != null) {
             val result = tryToSynchronizeFileWithDevice(file, connectedDevice)
-            log.info("Result of trying to synchronize file from ${connectedDevice.device}: $result")
+            log.info("Result of trying to synchronize file $file: $result")
 
             if(result == SynchronizeFileResult.Success) {
                 return true
@@ -223,7 +227,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
     }
 
     private fun receiveFile(clientSocket: Socket, file: FileLink, fileSize: Long): SynchronizeFileResult {
-        file.localFileInfo?.let { localFileInfo -> // should actually never come to this with localFileInfo == null
+        getStoredLocalFileInfo(file)?.let { localFileInfo -> // should actually never come to this with localFileInfo == null
             val destinationFile = if(localFileInfo.path != null) File(localFileInfo.path) else File(getDefaultSavePathForFile(file), file.name)
             destinationFile.parentFile.mkdirs()
 
@@ -293,6 +297,19 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         val responseBytes = serializedResponse.toByteArray(FileServer.MESSAGE_CHARSET)
 
         socketHandler.sendMessage(clientSocket, responseBytes)
+    }
+
+
+    private fun getStoredLocalFileInfo(file: FileLink): LocalFileInfo? { // duplicate of FileManager.getStoredLocalFileInfo() but cannot inject FileManager here to avoid dependency cycle
+        val localFileInfo = AtomicReference<LocalFileInfo?>(null)
+
+        searchEngine.searchLocalFileInfo(LocalFileInfoSearch(file.id) { result ->
+            if(result.isNotEmpty()) {
+                localFileInfo.set(result[0])
+            }
+        })
+
+        return localFileInfo.get()
     }
 
 

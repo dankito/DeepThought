@@ -2,6 +2,7 @@ package net.dankito.deepthought.ui.presenter
 
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.model.LocalFileInfo
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.enums.FileSyncStatus
 import net.dankito.deepthought.ui.IRouter
@@ -61,7 +62,7 @@ class FileListPresenter(private val fileManager: FileManager, private val applic
             return file.uriString
         }
         else {
-            val localFileInfo = file.localFileInfo
+            val localFileInfo = getLocalFileInfo(file)
             val localPath = localFileInfo?.path
 
             if(localFileInfo != null && localFileInfo.syncStatus == FileSyncStatus.UpToDate && localPath != null) {
@@ -73,9 +74,13 @@ class FileListPresenter(private val fileManager: FileManager, private val applic
         }
     }
 
+    fun getLocalFileInfo(file: FileLink): LocalFileInfo? {
+        return fileManager.getStoredLocalFileInfo(file)
+    }
+
 
     private fun isPdfFile(file: FileLink): Boolean {
-        file.localFileInfo?.path?.let { localFilePath ->
+        getLocalFileInfo(file)?.path?.let { localFilePath ->
             return "pdf".equals(File(localFilePath).extension, true) // TODO: find better way
         }
 

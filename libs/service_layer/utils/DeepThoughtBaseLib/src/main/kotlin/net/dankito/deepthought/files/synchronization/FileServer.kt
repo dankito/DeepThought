@@ -5,11 +5,11 @@ import net.dankito.data_access.network.communication.SocketHandler
 import net.dankito.deepthought.files.synchronization.model.PermitSynchronizeFileRequest
 import net.dankito.deepthought.files.synchronization.model.PermitSynchronizeFileResponse
 import net.dankito.deepthought.files.synchronization.model.PermitSynchronizeFileResult
-import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.deepthought.model.LocalFileInfo
 import net.dankito.deepthought.model.enums.FileSyncStatus
 import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.serialization.ISerializer
 import org.slf4j.LoggerFactory
@@ -133,23 +133,22 @@ class FileServer(private val searchEngine: ISearchEngine, private val entityMana
             return
         }
 
-        val fileIdContainer = FileLink("/")
-        fileIdContainer.id = fileId
+        searchEngine.searchLocalFileInfo(LocalFileInfoSearch(fileId) { result ->
+            val localFileInfo = if(result.isEmpty()) null else result[0]
+            val localFilePath = localFileInfo?.path
 
-        val localFileInfo = searchEngine.getLocalFileInfo(fileIdContainer)
-        val localFilePath = localFileInfo?.path
+            if(localFileInfo == null || localFilePath == null || localFileInfo.syncStatus != FileSyncStatus.UpToDate || File(localFileInfo.path).exists() == false) {
+                sendResponseAndCloseSocket(clientSocket, PermitSynchronizeFileResult.DoNotHaveFile, fileId)
+            }
+            else {
+                sendResponse(clientSocket, PermitSynchronizeFileResult.SynchronizationPermitted, fileId, File(localFilePath).length())
 
-        if(localFileInfo == null || localFilePath == null || localFileInfo.syncStatus != FileSyncStatus.UpToDate || File(localFileInfo.path).exists() == false) {
-            sendResponseAndCloseSocket(clientSocket, PermitSynchronizeFileResult.DoNotHaveFile, fileId)
-        }
-        else {
-            sendResponse(clientSocket, PermitSynchronizeFileResult.SynchronizationPermitted, fileId, File(localFilePath).length())
-
-            sendFileToClient(clientSocket, localFileInfo)
-        }
+                sendFileToClientAndCloseSocket(clientSocket, localFileInfo)
+            }
+        })
     }
 
-    private fun sendFileToClient(clientSocket: Socket, localFileInfo: LocalFileInfo) {
+    private fun sendFileToClientAndCloseSocket(clientSocket: Socket, localFileInfo: LocalFileInfo) {
         localFileInfo.path?.let { filePath ->
             log.info("Sending file $filePath of size ${localFileInfo.fileSize} to client ${clientSocket.inetAddress}")
 

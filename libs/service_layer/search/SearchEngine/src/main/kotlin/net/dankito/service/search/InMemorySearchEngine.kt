@@ -102,10 +102,6 @@ class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool
         }
     }
 
-    override fun getLocalFileInfo(file: FileLink): LocalFileInfo? {
-        return file.localFileInfo // TODO
-    }
-
     override fun searchLocalFileInfo(search: LocalFileInfoSearch) {
         val allLocalFileInfo = entityManager.getAllEntitiesOfType(LocalFileInfo::class.java)
 

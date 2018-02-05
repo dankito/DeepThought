@@ -302,7 +302,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         localLocalFileInfoService = LocalFileInfoService(localDataManager, localEntityChangedNotifier)
 
-        localFileService = FileService(localLocalFileInfoService, localDataManager, localEntityChangedNotifier)
+        localFileService = FileService(localDataManager, localEntityChangedNotifier)
 
         localSearchEngine = LuceneSearchEngine(localDataManager, NoOpLanguageDetector(), OsHelper(localPlatformConfiguration), localThreadPool, localEventBus,
                 localEntryService, localTagService, localReferenceService, localSeriesService, localReadLaterArticleService, localFileService, localLocalFileInfoService)
@@ -332,7 +332,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         localFileServer = FileServer(localSearchEngine, localEntityManager, localNetworkSettings, localSocketHandler, localSerializer, localThreadPool)
 
-        localFileSyncService = FileSyncService(localConnectedDevicesService, localFileServer,
+        localFileSyncService = FileSyncService(localConnectedDevicesService, localSearchEngine,
                 localSocketHandler, localLocalFileInfoService, localSerializer, localPlatformConfiguration, hashService
         )
 
@@ -356,7 +356,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         remoteLocalFileInfoService = LocalFileInfoService(remoteDataManager, remoteEntityChangedNotifier)
 
-        remoteFileService = FileService(remoteLocalFileInfoService, remoteDataManager, remoteEntityChangedNotifier)
+        remoteFileService = FileService(remoteDataManager, remoteEntityChangedNotifier)
 
         remoteSearchEngine = LuceneSearchEngine(remoteDataManager, NoOpLanguageDetector(), OsHelper(remotePlatformConfiguration), remoteThreadPool, remoteEventBus,
                 remoteEntryService, remoteTagService, remoteReferenceService, remoteSeriesService, remoteReadLaterArticleService, remoteFileService, remoteLocalFileInfoService)
@@ -388,7 +388,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         remoteFileServer = FileServer(remoteSearchEngine, remoteEntityManager, remoteNetworkSettings, remoteSocketHandler, remoteSerializer, remoteThreadPool)
 
-        remoteFileSyncService = FileSyncService(remoteConnectedDevicesService, remoteFileServer,
+        remoteFileSyncService = FileSyncService(remoteConnectedDevicesService, remoteSearchEngine,
                 remoteSocketHandler, remoteLocalFileInfoService, remoteSerializer, remotePlatformConfiguration, hashService
         )
 

@@ -1,12 +1,9 @@
 package net.dankito.service.search
 
-import com.nhaarman.mockito_kotlin.mock
-import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.FileLink
 import net.dankito.service.search.specific.FilesSearch
+import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.service.search.writerandsearcher.FileLinkIndexWriterAndSearcher
-import net.dankito.utils.ThreadPool
-import net.dankito.utils.services.hashing.HashService
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.Matchers.nullValue
@@ -31,9 +28,6 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
         private const val File1SourceUri = "https://www.example.com/textfile.txt"
         private const val File1SourceUriUniquePart = "exampLe"
     }
-
-
-    private val fileManager = FileManager(underTest, localFileInfoService, mock(), platformConfiguration, HashService(), eventBus, ThreadPool())
 
 
     @Test
@@ -128,7 +122,7 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
         })
 
 
-        try { waitForResultLatch.await(4, TimeUnit.SECONDS) } catch (ignored: Exception) { }
+        try { waitForResultLatch.await(4, TimeUnit.MINUTES) } catch (ignored: Exception) { }
 
         assertThat(resultTested, `is`(true))
     }
@@ -158,21 +152,16 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
 
 
     @Test
-    fun findOnlyFilesWithLocalFileInfoSet() {
-        getAndTestFilesWithLocalFileInfo(true)
+    fun findAllFiles() {
+        getAndTestFilesWithLocalFileInfo(10)
     }
 
     @Test
-    fun findOnlyFilesWithoutLocalFileInfoSet() {
-        getAndTestFilesWithLocalFileInfo(false, 10)
+    fun findOnlyLocalFiles() {
+        getAndTestFilesWithLocalFileInfo(5, FilesSearch.FileType.LocalFilesOnly)
     }
 
-    @Test
-    fun findOnlyLocalFilesWithoutLocalFileInfoSet() {
-        getAndTestFilesWithLocalFileInfo(false, 5, FilesSearch.FileType.LocalFilesOnly)
-    }
-
-    private fun getAndTestFilesWithLocalFileInfo(isLocalFileInfoSet: Boolean, countSearchResults: Int = 5, fileType: FilesSearch.FileType = FilesSearch.FileType.LocalOrRemoteFiles) {
+    private fun getAndTestFilesWithLocalFileInfo(countSearchResults: Int = 5, fileType: FilesSearch.FileType = FilesSearch.FileType.LocalOrRemoteFiles) {
         val fileIndexWriterAndSearcherField = underTest.javaClass.kotlin.declaredMemberProperties.filter { it.name == "fileIndexWriterAndSearcher" }.firstOrNull()
         fileIndexWriterAndSearcherField?.isAccessible = true
         val fileIndexWriterAndSearcher = fileIndexWriterAndSearcherField?.get(underTest) as? FileLinkIndexWriterAndSearcher
@@ -181,35 +170,21 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
             fileService.persist(fileManager.createLocalFile(File("/tmp", "With_$i")))
 
             fileService.persist(FileLink("", "Remote_$i", false))
-
-            val fileWithoutLocalFileInfoSet = FileLink("", "Without_$i", true)
-            fileService.entityManager.persistEntity(fileWithoutLocalFileInfoSet)
-            // currently there's no other way to index FileLink without LocalFileInfo then indexing it directly (all other options add an LocalFileInfo)
-            fileIndexWriterAndSearcher?.indexEntity(fileWithoutLocalFileInfoSet)
         }
 
         waitTillEntityGetsIndexed()
 
 
-        testFilesWithLocalFileInfo(isLocalFileInfoSet, countSearchResults, fileType)
+        testFilesWithLocalFileInfo(countSearchResults, fileType)
     }
 
-    private fun testFilesWithLocalFileInfo(isLocalFileInfoSet: Boolean, countSearchResults: Int, fileType: FilesSearch.FileType) {
+    private fun testFilesWithLocalFileInfo(countSearchResults: Int, fileType: FilesSearch.FileType) {
         var resultTested = false
         val waitForResultLatch = CountDownLatch(1)
 
 
-        underTest.searchFiles(FilesSearch("", fileType, onlyFilesWithoutLocalFileInfo = !isLocalFileInfoSet) { result ->
+        underTest.searchFiles(FilesSearch("", fileType) { result ->
             assertThat(result.size, `is`(countSearchResults))
-
-            result.forEach { file ->
-                if(isLocalFileInfoSet) {
-                    assertThat(file.localFileInfo, notNullValue())
-                }
-                else {
-                    assertThat(file.localFileInfo, nullValue())
-                }
-            }
 
             resultTested = true
             waitForResultLatch.countDown()
@@ -225,65 +200,75 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
     @Test
     fun persistFile_LocalFileInfoGetsFound() {
         val tempFile = createTempFile()
-        val file = fileManager.createLocalFile(tempFile)
 
-        assertThat(file.localFileInfo, notNullValue())
+        val file = fileManager.createLocalFile(tempFile)
         assertThat(file.id, nullValue())
 
+        val localFileInfo = fileManager.getStoredLocalFileInfo(file)
+        assertThat(localFileInfo, notNullValue())
+        assertThat(localFileInfo?.id, nullValue())
 
-        fileService.persist(file)
+
+        filePersister.saveFile(file)
 
         assertThat(file.id, notNullValue())
-        assertThat(file.localFileInfo?.id, notNullValue())
+        assertThat(localFileInfo?.id, notNullValue())
 
         waitTillEntityGetsIndexed() // file gets indexed async and hash calculated async -> wait some time
 
 
-        file.localFileInfo = null
+        underTest.searchLocalFileInfo(LocalFileInfoSearch(file.id) { result ->
+            assertThat(result.isNotEmpty(), `is`(true))
 
-        val localFileInfo = underTest.getLocalFileInfo(file)
+            val retrievedLocalFileInfo = result[0]
 
-        assertThat(localFileInfo, notNullValue())
-        assertThat(localFileInfo?.file, notNullValue())
+            assertThat(retrievedLocalFileInfo, notNullValue())
+            assertThat(retrievedLocalFileInfo.file, notNullValue())
 
-        assertThat(localFileInfo?.path, `is`(tempFile.absolutePath))
-        assertThat(file.fileSize, `is`(localFileInfo?.fileSize))
-        assertThat(file.fileLastModified, `is`(localFileInfo?.fileLastModified))
-        assertThat(file.hashSHA512, `is`(localFileInfo?.hashSHA512))
+            assertThat(retrievedLocalFileInfo.path, `is`(tempFile.absolutePath))
+            assertThat(file.fileSize, `is`(retrievedLocalFileInfo.fileSize))
+            assertThat(file.fileLastModified, `is`(retrievedLocalFileInfo.fileLastModified))
+            assertThat(file.hashSHA512, `is`(retrievedLocalFileInfo.hashSHA512))
+        })
     }
 
     @Test
     fun deletePersistedFile_LocalFileInfoGetsAlsoDeleted() {
         val tempFile = createTempFile()
         val file = fileManager.createLocalFile(tempFile)
-        fileService.persist(file)
+        filePersister.saveFile(file)
 
         waitTillEntityGetsIndexed() // file gets indexed async -> wait some time
 
-        val localFileInfo = underTest.getLocalFileInfo(file)
+        underTest.searchLocalFileInfo(LocalFileInfoSearch(file.id) { result ->
+            assertThat(result.isNotEmpty(), `is`(true))
 
-        assertThat(localFileInfo, notNullValue())
-        assertThat(file.id, notNullValue())
-        assertThat(file.localFileInfo?.id, notNullValue())
+            val retrievedLocalFileInfo = result[0]
 
-        val fileCopy = fileManager.createLocalFile(tempFile)
-        fileCopy.id = file.id
+            assertThat(retrievedLocalFileInfo, notNullValue())
+            assertThat(file.id, notNullValue())
+            assertThat(retrievedLocalFileInfo.id, notNullValue())
+
+            val fileCopy = fileManager.createLocalFile(tempFile)
+            fileCopy.id = file.id
 
 
-        fileService.delete(file)
+            deleteEntityService.deleteFile(file)
 
 
-        assertThat(file.deleted, `is`(true))
-        assertThat(localFileInfo?.deleted, `is`(true))
+            assertThat(file.deleted, `is`(true))
+            assertThat(retrievedLocalFileInfo.deleted, `is`(true))
 
-        val isLocalFileInfoStillInIndex = underTest.getLocalFileInfo(fileCopy)
 
-        assertThat(isLocalFileInfoStillInIndex, nullValue())
+            underTest.searchLocalFileInfo(LocalFileInfoSearch(fileCopy.id) { isLocalFileInfoStillInIndex ->
+                assertThat(isLocalFileInfoStillInIndex.isEmpty(), `is`(true))
+            })
+        })
     }
 
 
-    private fun persistTestFiles(isTestFileLocalFile: Boolean = true, countDummyFiles: Int = 3, isDummyLocalFile: Boolean = true): FileLink {
-        val file = FileLink(File1Uri, File1Name, isTestFileLocalFile)
+    private fun persistTestFiles(isLocalFile: Boolean = true, countDummyFiles: Int = 3, isDummyLocalFile: Boolean = true): FileLink {
+        val file = FileLink(File1Uri, File1Name, isLocalFile)
         file.description = File1Description
         file.sourceUriString = File1SourceUri
 

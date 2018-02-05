@@ -1,6 +1,8 @@
 package net.dankito.service.data
 
 import net.dankito.deepthought.model.*
+import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IDialogService
 
@@ -10,7 +12,8 @@ import net.dankito.utils.ui.IDialogService
  * This service first removes all sources and updates them and then deletes the entity with its EntityService.
  */
 class DeleteEntityService(private val entryService: EntryService, private val tagService: TagService, private val referenceService: ReferenceService, private val seriesService: SeriesService,
-                          private val fileService: FileService, private val dialogService: IDialogService, private val threadPool: IThreadPool) {
+                          private val fileService: FileService, private val localFileInfoService: LocalFileInfoService, private val searchEngine: ISearchEngine,
+                          private val dialogService: IDialogService, private val threadPool: IThreadPool) {
 
     fun deleteEntryAsync(item: Item) {
         threadPool.runAsync { deleteEntry(item) }
@@ -141,7 +144,20 @@ class DeleteEntityService(private val entryService: EntryService, private val ta
             referenceService.update(source)
         }
 
+
+        searchEngine.searchLocalFileInfo(LocalFileInfoSearch(file.id) { result ->
+            if(result.isNotEmpty()) {
+                deleteLocalFileInfo(result[0])
+            }
+        })
+
+
         fileService.delete(file)
+    }
+
+
+    fun deleteLocalFileInfo(localFileInfo: LocalFileInfo) {
+        localFileInfoService.delete(localFileInfo)
     }
 
 }

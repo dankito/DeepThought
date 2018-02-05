@@ -101,14 +101,12 @@ object FieldName {
 
     val FileSourceUri = "file_source_uri"
 
-    val FileLocalFileInfoId = "file_local_file_info_id"
-
-    val FileNoLocalFileInfo = "file_no_local_file_info"
-
 
     /*      LocalFileInfo      */
 
     val LocalFileInfoId = "local_file_info_id"
+
+    val LocalFileInfoFile = "local_file_info_file_id"
 
     val LocalFileInfoSyncStatus = "local_file_info_title_sync_status"
 

@@ -34,12 +34,17 @@ class LocalFileInfoIndexWriterAndSearcher(localFileInfoService: LocalFileInfoSer
 
 
     override fun addEntityFieldsToDocument(entity: LocalFileInfo, doc: Document) {
+        doc.add(StringField(FieldName.LocalFileInfoFile, entity.file.id, Field.Store.YES))
         doc.add(StringField(FieldName.LocalFileInfoSyncStatus, entity.syncStatus.toString(), Field.Store.NO))
     }
 
 
     fun searchLocalFileInfo(search: LocalFileInfoSearch) {
         val query = BooleanQuery()
+
+        search.fileId?.let { fileId ->
+            query.add(TermQuery(Term(FieldName.LocalFileInfoFile, fileId)), BooleanClause.Occur.MUST)
+        }
 
         search.hasSyncStatus?.let { hasSyncStatus ->
             query.add(TermQuery(Term(FieldName.LocalFileInfoSyncStatus, hasSyncStatus.toString())), BooleanClause.Occur.MUST)
