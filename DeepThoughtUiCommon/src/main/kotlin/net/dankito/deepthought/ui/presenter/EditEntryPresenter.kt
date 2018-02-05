@@ -1,6 +1,6 @@
 package net.dankito.deepthought.ui.presenter
 
-import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.preview
@@ -12,7 +12,7 @@ import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class EditEntryPresenter(private val entryPersister: EntryPersister, private val readLaterArticleService: ReadLaterArticleService, private val clipboardService: IClipboardService,
+class EditEntryPresenter(private val itemPersister: ItemPersister, private val readLaterArticleService: ReadLaterArticleService, private val clipboardService: IClipboardService,
                          private val router: IRouter) {
 
     @Inject
@@ -25,7 +25,7 @@ class EditEntryPresenter(private val entryPersister: EntryPersister, private val
 
 
     fun saveEntryAsync(item: Item, source: Source?, series: Series?, tags: Collection<Tag>, files: Collection<FileLink>, callback: (Boolean) -> Unit) {
-        entryPersister.saveEntryAsync(item, source, series, tags, files, callback)
+        itemPersister.saveEntryAsync(item, source, series, tags, files, callback)
     }
 
     fun saveEntryExtractionResultForLaterReading(extractionResult: ItemExtractionResult) {

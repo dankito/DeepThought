@@ -13,7 +13,7 @@ import net.dankito.deepthought.android.service.communication.AndroidDeviceRegist
 import net.dankito.deepthought.android.service.network.AndroidNetworkConnectivityManager
 import net.dankito.deepthought.android.service.permissions.AndroidPermissionsService
 import net.dankito.deepthought.android.service.settings.AndroidLocalSettingsStore
-import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.news.article.ArticleExtractorManager
@@ -134,9 +134,9 @@ class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
-    fun provideArticleSummaryPresenter(entryPersister: EntryPersister, readLaterArticleService: ReadLaterArticleService, articleExtractorManager: ArticleExtractorManager,
+    fun provideArticleSummaryPresenter(itemPersister: ItemPersister, readLaterArticleService: ReadLaterArticleService, articleExtractorManager: ArticleExtractorManager,
                                        router: IRouter, clipboardService: IClipboardService, dialogService: IDialogService) : ArticleSummaryPresenter {
-        return ArticleSummaryPresenter(entryPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService)
+        return ArticleSummaryPresenter(itemPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService)
     }
 
 

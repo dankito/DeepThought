@@ -4,7 +4,7 @@ import android.support.test.InstrumentationRegistry
 import net.dankito.deepthought.android.di.TestComponent
 import net.dankito.deepthought.android.util.TestUtil
 import net.dankito.deepthought.android.util.UiNavigator
-import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.data.DataManager
@@ -25,7 +25,7 @@ abstract class DeepThoughtAndroidTestBase {
     protected lateinit var deleteEntityService: DeleteEntityService
 
     @Inject
-    protected lateinit var itemPersister: EntryPersister
+    protected lateinit var itemPersister: ItemPersister
 
     @Inject
     protected lateinit var tagService: TagService

@@ -1,6 +1,6 @@
 package net.dankito.deepthought.javafx.service.import_export
 
-import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.service.import_export.IDataExporter
@@ -13,7 +13,7 @@ import net.dankito.utils.IThreadPool
 import java.util.*
 
 
-class DataImporterExporterManager(private val searchEngine: ISearchEngine, private val entryPersister: EntryPersister, private val tagService: TagService,
+class DataImporterExporterManager(private val searchEngine: ISearchEngine, private val itemPersister: ItemPersister, private val tagService: TagService,
                                   private val referencePersister: ReferencePersister, private val seriesPersister: SeriesPersister, private val threadPool: IThreadPool) {
 
     val importer: List<IDataImporter> = ArrayList<IDataImporter>()
@@ -30,7 +30,7 @@ class DataImporterExporterManager(private val searchEngine: ISearchEngine, priva
 
     private fun createImporterAndExporter() {
         (importer as? MutableCollection<IDataImporter>)?.let { importer ->
-            importer.add(BibTeXImporter(searchEngine, entryPersister, tagService, referencePersister, seriesPersister, threadPool))
+            importer.add(BibTeXImporter(searchEngine, itemPersister, tagService, referencePersister, seriesPersister, threadPool))
         }
 
         (exporter as? MutableCollection<IDataExporter>)?.let { exporter ->

@@ -1,6 +1,6 @@
 package net.dankito.deepthought.ui.presenter
 
-import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.ui.IRouter
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 
 class ReadLaterArticleListPresenter(private val view: IReadLaterArticleView, private val searchEngine: ISearchEngine, private val readLaterArticleService: ReadLaterArticleService,
-                                    private val entryPersister: EntryPersister, private val clipboardService: IClipboardService, private val router: IRouter) : IMainViewSectionPresenter {
+                                    private val itemPersister: ItemPersister, private val clipboardService: IClipboardService, private val router: IRouter) : IMainViewSectionPresenter {
 
 
     @Inject
@@ -77,7 +77,7 @@ class ReadLaterArticleListPresenter(private val view: IReadLaterArticleView, pri
     }
 
     fun saveAndDeleteReadLaterArticle(article: ReadLaterArticle) {
-        entryPersister.saveEntryAsync(article.itemExtractionResult) { successful ->
+        itemPersister.saveEntryAsync(article.itemExtractionResult) { successful ->
             if(successful) {
                 deleteReadLaterArticle(article)
             }

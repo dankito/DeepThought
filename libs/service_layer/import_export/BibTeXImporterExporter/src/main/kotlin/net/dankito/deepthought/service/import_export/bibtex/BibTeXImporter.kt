@@ -1,6 +1,6 @@
 package net.dankito.deepthought.service.import_export.bibtex
 
-import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.model.*
@@ -27,7 +27,7 @@ import kotlin.collections.ArrayList
 // The importer should map the file to Items, Tags etc. and nothing else
 // -> Create an ImportProcessor with methods like ensureTagExists().
 // Another advantage is, all other imports could re-use exactly that functionality.
-class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryPersister: EntryPersister, private val tagService: TagService,
+class BibTeXImporter(private val searchEngine: ISearchEngine, private val itemPersister: ItemPersister, private val tagService: TagService,
                      private val referencePersister: ReferencePersister, private val seriesPersister: SeriesPersister, private val threadPool: IThreadPool) : IDataImporter {
 
     companion object {
@@ -95,7 +95,7 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val entryP
             mapEntryField(entry, tags, reference, key, value, latexParser, latexPrinter)
         }
 
-        entryPersister.saveEntryAsync(entry, reference, reference.series, tags, files) { }
+        itemPersister.saveEntryAsync(entry, reference, reference.series, tags, files) { }
 
         return entry
     }

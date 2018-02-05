@@ -1,7 +1,7 @@
 package net.dankito.deepthought.ui.presenter
 
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
-import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.extensions.extractor
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
@@ -20,7 +20,7 @@ import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 
 
-open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister, protected val readLaterArticleService: ReadLaterArticleService, protected val articleExtractorManager: ArticleExtractorManager,
+open class ArticleSummaryPresenter(protected val itemPersister: ItemPersister, protected val readLaterArticleService: ReadLaterArticleService, protected val articleExtractorManager: ArticleExtractorManager,
                                    protected val router: IRouter, private val clipboardService: IClipboardService, protected val dialogService: IDialogService) {
 
 
@@ -112,7 +112,7 @@ open class ArticleSummaryPresenter(protected val entryPersister: EntryPersister,
     }
 
     private fun saveArticle(item: ArticleSummaryItem, extractionResult: ItemExtractionResult) {
-        entryPersister.saveEntryAsync(extractionResult) { successful ->
+        itemPersister.saveEntryAsync(extractionResult) { successful ->
             if(successful) {
                 dialogService.showLittleInfoMessage(localization.getLocalizedString("article.summary.extractor.article.saved", item.title))
             }

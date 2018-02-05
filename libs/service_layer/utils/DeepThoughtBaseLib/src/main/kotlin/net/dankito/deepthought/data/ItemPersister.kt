@@ -11,8 +11,8 @@ import java.util.*
 import javax.inject.Inject
 
 
-class EntryPersister(private val itemService: ItemService, private val referencePersister: ReferencePersister, private val tagService: TagService,
-                     private val filePersister: FilePersister, private val deleteEntityService: DeleteEntityService) {
+class ItemPersister(private val itemService: ItemService, private val referencePersister: ReferencePersister, private val tagService: TagService,
+                    private val filePersister: FilePersister, private val deleteEntityService: DeleteEntityService) {
 
     @Inject
     protected lateinit var threadPool: IThreadPool

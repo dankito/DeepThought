@@ -9,7 +9,7 @@ import javafx.scene.control.Control
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
 import javafx.scene.web.WebView
-import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.javafx.dialogs.entry.controls.EditItemSourceField
@@ -65,7 +65,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
 
     @Inject
-    protected lateinit var entryPersister: EntryPersister
+    protected lateinit var itemPersister: ItemPersister
 
     @Inject
     protected lateinit var readLaterArticleService: ReadLaterArticleService
@@ -83,7 +83,7 @@ abstract class EditEntryViewBase : DialogFragment() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = EditEntryPresenter(entryPersister, readLaterArticleService, clipboardService, router)
+        presenter = EditEntryPresenter(itemPersister, readLaterArticleService, clipboardService, router)
     }
 
 

@@ -4,7 +4,7 @@ import com.nhaarman.mockito_kotlin.mock
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
-import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.FilePersister
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.di.BaseComponent
@@ -59,7 +59,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
 
     protected val sourcePersister: ReferencePersister
 
-    protected val itemPersister: EntryPersister
+    protected val itemPersister: ItemPersister
 
     protected val eventBus: IEventBus
 
@@ -113,7 +113,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         fileManager = FileManager(underTest, localFileInfoService, mock(), platformConfiguration, HashService(), eventBus, threadPool)
         filePersister = FilePersister(fileService, localFileInfoService, fileManager, threadPool)
         sourcePersister = ReferencePersister(referenceService, seriesService, filePersister, deleteEntityService)
-        itemPersister = EntryPersister(itemService, sourcePersister, tagService, filePersister, deleteEntityService)
+        itemPersister = ItemPersister(itemService, sourcePersister, tagService, filePersister, deleteEntityService)
     }
 
     private fun initDataManager(dataManager: DataManager) {

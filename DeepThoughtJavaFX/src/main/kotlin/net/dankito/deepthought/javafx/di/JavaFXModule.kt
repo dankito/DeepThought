@@ -5,7 +5,7 @@ import dagger.Provides
 import javafx.stage.Stage
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.files.FileManager
@@ -123,9 +123,9 @@ class JavaFXModule(private val primaryStage: Stage, private val flavorInstancePr
 
     @Provides
     @Singleton
-    fun provideArticleSummaryPresenter(entryPersister: EntryPersister, readLaterArticleService: ReadLaterArticleService, articleExtractorManager: ArticleExtractorManager,
+    fun provideArticleSummaryPresenter(itemPersister: ItemPersister, readLaterArticleService: ReadLaterArticleService, articleExtractorManager: ArticleExtractorManager,
                                        router: IRouter, clipboardService: IClipboardService, dialogService: IDialogService) : ArticleSummaryPresenter {
-        return ArticleSummaryPresenter(entryPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService)
+        return ArticleSummaryPresenter(itemPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService)
     }
 
     @Provides
@@ -150,10 +150,10 @@ class JavaFXModule(private val primaryStage: Stage, private val flavorInstancePr
     // TODO: move to CommonModule again as soon as importing/exporting is implemented in Android
     @Provides
     @Singleton
-    fun provideDataImporterExporterManager(searchEngine: ISearchEngine, entryPersister: EntryPersister, tagService: TagService,
+    fun provideDataImporterExporterManager(searchEngine: ISearchEngine, itemPersister: ItemPersister, tagService: TagService,
                                            referencePersister: ReferencePersister, seriesPersister: SeriesPersister, threadPool: IThreadPool)
             : DataImporterExporterManager {
-        return DataImporterExporterManager(searchEngine, entryPersister, tagService, referencePersister, seriesPersister, threadPool)
+        return DataImporterExporterManager(searchEngine, itemPersister, tagService, referencePersister, seriesPersister, threadPool)
     }
 
 }

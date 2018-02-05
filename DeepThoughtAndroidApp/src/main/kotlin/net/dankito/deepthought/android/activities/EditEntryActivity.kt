@@ -32,7 +32,7 @@ import net.dankito.deepthought.android.service.hideKeyboardDelayed
 import net.dankito.deepthought.android.service.permissions.IPermissionsManager
 import net.dankito.deepthought.android.service.permissions.PermissionsManager
 import net.dankito.deepthought.android.views.*
-import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.getPlainTextForHtml
 import net.dankito.deepthought.model.fields.ItemField
@@ -107,7 +107,7 @@ class EditEntryActivity : BaseActivity() {
     protected lateinit var referenceService: ReferenceService
 
     @Inject
-    protected lateinit var entryPersister: EntryPersister
+    protected lateinit var itemPersister: ItemPersister
 
     @Inject
     protected lateinit var deleteEntityService: DeleteEntityService
@@ -219,7 +219,7 @@ class EditEntryActivity : BaseActivity() {
 
         dataManager = itemService.dataManager
 
-        presenter = EditEntryPresenter(entryPersister, readLaterArticleService, clipboardService, router)
+        presenter = EditEntryPresenter(itemPersister, readLaterArticleService, clipboardService, router)
 
         permissionsManager = PermissionsManager(this)
     }
