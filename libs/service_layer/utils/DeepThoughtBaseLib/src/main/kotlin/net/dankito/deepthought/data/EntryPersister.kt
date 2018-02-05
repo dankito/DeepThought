@@ -93,7 +93,7 @@ class EntryPersister(private val entryService: EntryService, private val referen
     }
 
     private fun setFiles(item: Item, files: Collection<FileLink>): Pair<ArrayList<FileLink>, ArrayList<FileLink>> {
-        files.forEach { file ->
+        ArrayList(files).forEach { file ->
             if(file.isPersisted() == false) {
                 filePersister.saveFile(file)
             }
