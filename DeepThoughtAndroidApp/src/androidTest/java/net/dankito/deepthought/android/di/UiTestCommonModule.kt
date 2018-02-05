@@ -22,7 +22,7 @@ class UiTestCommonModule : CommonModule() {
 
     override fun provideSearchEngine(dataManager: DataManager, languageDetector: ILanguageDetector, threadPool: IThreadPool, osHelper: OsHelper, eventBus: IEventBus,
                                      itemService: ItemService, tagService: TagService, referenceService: ReferenceService, seriesService: SeriesService,
-                                     readLaterArticleService: ReadLaterArticleService, fileService: FileService): ISearchEngine {
+                                     readLaterArticleService: ReadLaterArticleService, fileService: FileService, localFileInfoService: LocalFileInfoService): ISearchEngine {
         return InMemorySearchEngine(dataManager.entityManager, threadPool)
     }
 
