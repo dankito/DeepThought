@@ -7,12 +7,12 @@ import com.daimajia.swipe.SwipeLayout
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.TagsOnEntryViewHolder
 import net.dankito.deepthought.model.Tag
-import net.dankito.deepthought.ui.presenter.TagsOnEntryListPresenter
+import net.dankito.deepthought.ui.presenter.TagsOnItemListPresenter
 import net.dankito.deepthought.ui.tags.TagSearchResultState
 import java.util.*
 
 
-class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnEntryListPresenter, val listener: (TagChange, Tag, MutableCollection<Tag>) -> Unit)
+class TagsOnEntryRecyclerAdapter(private val presenter: TagsOnItemListPresenter, val listener: (TagChange, Tag, MutableCollection<Tag>) -> Unit)
     : ListRecyclerSwipeAdapter<Tag, TagsOnEntryViewHolder>() {
 
     enum class TagChange {

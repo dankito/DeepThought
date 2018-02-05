@@ -35,7 +35,7 @@ interface CommonComponent : BaseComponent {
 
     fun inject(editItemPresenter: EditItemPresenter)
 
-    fun inject(tagsOnEntryListPresenter: TagsOnEntryListPresenter)
+    fun inject(tagsOnItemListPresenter: TagsOnItemListPresenter)
 
     fun inject(articleExtractorManager: ArticleExtractorManager)
 

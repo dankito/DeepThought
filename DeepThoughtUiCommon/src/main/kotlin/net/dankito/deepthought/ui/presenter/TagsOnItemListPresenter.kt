@@ -17,8 +17,8 @@ import java.util.HashSet
 import kotlin.collections.ArrayList
 
 
-class TagsOnEntryListPresenter(private val tagsOnItemListView: ITagsOnItemListView, searchEngine: ISearchEngine, tagService: TagService, deleteEntityService: DeleteEntityService,
-                               searchResultsUtil: TagsSearchResultsUtil, dialogService: IDialogService)
+class TagsOnItemListPresenter(private val tagsOnItemListView: ITagsOnItemListView, searchEngine: ISearchEngine, tagService: TagService, deleteEntityService: DeleteEntityService,
+                              searchResultsUtil: TagsSearchResultsUtil, dialogService: IDialogService)
     : TagsListPresenterBase(tagsOnItemListView, searchEngine, tagService, deleteEntityService, searchResultsUtil, dialogService) {
 
 

@@ -3,7 +3,7 @@ package net.dankito.deepthought.javafx.dialogs.entry.controls
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.ui.controls.EditEntityCollectionField
 import net.dankito.deepthought.model.Tag
-import net.dankito.deepthought.ui.presenter.TagsOnEntryListPresenter
+import net.dankito.deepthought.ui.presenter.TagsOnItemListPresenter
 import net.dankito.deepthought.ui.tags.TagAutoCompleteResult
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.view.ITagsOnItemListView
@@ -35,7 +35,7 @@ class EditItemTagsField : EditEntityCollectionField<Tag>(), ITagsOnItemListView 
     protected lateinit var dialogService: IDialogService
 
 
-    private val presenter: TagsOnEntryListPresenter
+    private val presenter: TagsOnItemListPresenter
 
     private var autoCompleteResult: TagAutoCompleteResult? = null
 
@@ -45,7 +45,7 @@ class EditItemTagsField : EditEntityCollectionField<Tag>(), ITagsOnItemListView 
     init {
         AppComponent.component.inject(this)
 
-        presenter = TagsOnEntryListPresenter(this, searchEngine, tagService, deleteEntityService, searchResultsUtil, dialogService)
+        presenter = TagsOnItemListPresenter(this, searchEngine, tagService, deleteEntityService, searchResultsUtil, dialogService)
     }
 
     override fun getLabelText(): String = messages["edit.item.tags.label"]

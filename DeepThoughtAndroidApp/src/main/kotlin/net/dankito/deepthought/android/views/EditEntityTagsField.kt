@@ -7,7 +7,7 @@ import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.adapter.TagsOnEntryRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Tag
-import net.dankito.deepthought.ui.presenter.TagsOnEntryListPresenter
+import net.dankito.deepthought.ui.presenter.TagsOnItemListPresenter
 import net.dankito.deepthought.ui.tags.TagAutoCompleteResult
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.deepthought.ui.view.ITagsOnItemListView
@@ -52,7 +52,7 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
     var saveChangesListener: (() -> Unit)? = null
 
 
-    private val presenter: TagsOnEntryListPresenter
+    private val presenter: TagsOnItemListPresenter
 
     private val adapter: TagsOnEntryRecyclerAdapter
 
@@ -74,7 +74,7 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
 
         setFieldNameOnUiThread(R.string.activity_edit_item_tags_label)
 
-        presenter = TagsOnEntryListPresenter(this, searchEngine, tagService, deleteEntityService, searchResultsUtil, dialogService)
+        presenter = TagsOnItemListPresenter(this, searchEngine, tagService, deleteEntityService, searchResultsUtil, dialogService)
 
         edtxtEntityFieldValue.setHint(R.string.activity_edit_item_edit_tags_hint)
 
