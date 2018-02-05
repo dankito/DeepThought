@@ -234,7 +234,7 @@ class ViewPdfActivity : BaseActivity() {
                 if (fileMetaData != null) localization.getLocalizedString("file.page.indication.with.count.pages.known", currentPage, fileMetaData?.countPages ?: 0)
                 else localization.getLocalizedString("file.page.indication", currentPage)
 
-        router.showEditEntryView(ItemExtractionResult(item, sourceForFile, couldExtractContent = true))
+        router.showEditItemView(ItemExtractionResult(item, sourceForFile, couldExtractContent = true))
     }
 
 }

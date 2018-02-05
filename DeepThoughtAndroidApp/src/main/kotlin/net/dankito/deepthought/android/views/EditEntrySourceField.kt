@@ -123,7 +123,7 @@ class EditEntrySourceField : EditEntityEntityReferenceField, IReferencesListView
     override fun editDetails() {
         activity?.setWaitingForResult(EditReferenceActivity.ResultId)
 
-        router.showEditEntryReferenceView(source, series, valueToEdit)
+        router.showEditItemSourceView(source, series, valueToEdit)
     }
 
     override fun createNewEntity() {

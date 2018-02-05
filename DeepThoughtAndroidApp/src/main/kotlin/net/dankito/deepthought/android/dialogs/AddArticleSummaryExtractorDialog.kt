@@ -149,7 +149,7 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
         // here it makes no sense to just create an ExtractionResult with url in it, we have to figure out if an article can be extracted from that url
         articleExtractorManager.extractArticleUserDidSeeBeforeAndAddDefaultDataAsync(feedOrWebsiteUrl) {
             if(it.result?.couldExtractContent == true) {
-                it.result?.let { router.showEditEntryView(it) }
+                it.result?.let { router.showEditItemView(it) }
                 dismiss()
             }
             else {

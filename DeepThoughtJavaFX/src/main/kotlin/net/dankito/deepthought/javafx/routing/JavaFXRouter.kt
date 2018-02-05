@@ -28,11 +28,11 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
         // nothing to do on JavaFX
     }
 
-    override fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {
+    override fun showItemsForTag(tag: Tag, tagsFilter: List<Tag>) {
         entriesListView.showEntriesForTag(tag, tagsFilter)
     }
 
-    override fun showEntriesForReference(source: Source) {
+    override fun showItemsForSource(source: Source) {
         entriesListView.showItemsForSource(source)
     }
 
@@ -56,11 +56,11 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
     }
 
 
-    override fun showCreateEntryView() {
+    override fun showCreateItemView() {
         showEditEntryView(Item(""), FX.messages["create.item.window.title"])
     }
 
-    override fun showEditEntryView(item: Item) {
+    override fun showEditItemView(item: Item) {
         // TODO: set title when Source is not set
         showEditEntryView(item, item.source.previewWithSeriesAndPublishingDate)
     }
@@ -71,14 +71,14 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
         }
     }
 
-    override fun showEditEntryView(article: ReadLaterArticle) {
+    override fun showEditItemView(article: ReadLaterArticle) {
         runLater {
             // TODO: set title when Source is not set
             mainWindowController.find(EditReadLaterArticleView::class, mapOf(EditReadLaterArticleView::article to article)).show(article.itemExtractionResult.source?.preview)
         }
     }
 
-    override fun showEditEntryView(extractionResult: ItemExtractionResult) {
+    override fun showEditItemView(extractionResult: ItemExtractionResult) {
         runLater {
             // TODO: set title when Source is not set
             mainWindowController.find(EditEntryExtractionResultView::class, mapOf(EditEntryExtractionResultView::extractionResult to extractionResult)).show(extractionResult.source?.preview)
@@ -90,7 +90,7 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
         mainWindowController.find(EditSourceDialog::class, mapOf(EditSourceDialog::source to source)).show(getEditSourceDialogTitle(source.title))
     }
 
-    override fun showEditEntryReferenceView(source: Source?, series: Series?, editedSourceTitle: String?) {
+    override fun showEditItemSourceView(source: Source?, series: Series?, editedSourceTitle: String?) {
         val sourceToEdit = source ?: Source("")
 
         mainWindowController.find(EditSourceDialog::class,

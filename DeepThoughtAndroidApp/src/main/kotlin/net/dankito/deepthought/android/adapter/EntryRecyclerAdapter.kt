@@ -11,10 +11,10 @@ import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.extensions.abstractPlainText
 import net.dankito.deepthought.model.extensions.getEntryPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.extensions.preview
-import net.dankito.deepthought.ui.presenter.EntriesListPresenterBase
+import net.dankito.deepthought.ui.presenter.ItemsListPresenterBase
 
 
-class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): MultiSelectListRecyclerSwipeAdapter<Item, EntryViewHolder>() {
+class EntryRecyclerAdapter(private val presenter: ItemsListPresenterBase): MultiSelectListRecyclerSwipeAdapter<Item, EntryViewHolder>() {
 
     private val tagsPreviewViewHelper = TagsPreviewViewHelper()
 
@@ -62,12 +62,12 @@ class EntryRecyclerAdapter(private val presenter: EntriesListPresenterBase): Mul
     override fun setupSwipeView(viewHolder: EntryViewHolder, item: Item) {
         viewHolder.btnShareEntry.visibility = if (item.source?.url.isNullOrBlank() == false) View.VISIBLE else View.GONE
         viewHolder.btnShareEntry.setOnClickListener {
-            presenter.copyReferenceUrlToClipboard(item)
+            presenter.copySourceUrlToClipboard(item)
             closeSwipeView(viewHolder)
         }
 
         viewHolder.btnDeleteEntry.setOnClickListener {
-            presenter.deleteEntry(item)
+            presenter.deleteItem(item)
             closeSwipeView(viewHolder)
         }
     }

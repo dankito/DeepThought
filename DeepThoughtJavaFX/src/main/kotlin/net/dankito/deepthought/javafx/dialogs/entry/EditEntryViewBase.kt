@@ -21,7 +21,7 @@ import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.abstractPlainText
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.presenter.EditEntryPresenter
+import net.dankito.deepthought.ui.presenter.EditItemPresenter
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.utils.ui.IClipboardService
@@ -54,7 +54,7 @@ abstract class EditEntryViewBase : DialogFragment() {
     private var wbvwShowUrl: WebView by singleAssign()
 
 
-    private val presenter: EditEntryPresenter
+    private val presenter: EditItemPresenter
 
 
     private var item: Item? = null
@@ -83,7 +83,7 @@ abstract class EditEntryViewBase : DialogFragment() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = EditEntryPresenter(itemPersister, readLaterArticleService, clipboardService, router)
+        presenter = EditItemPresenter(itemPersister, readLaterArticleService, clipboardService, router)
     }
 
 
@@ -247,7 +247,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
             val source = updateSource()
 
-            presenter.saveEntryAsync(entry, source, editSourceField.seriesToEdit, editTagsField.applyChangesAndGetTags(), editFilesField.getEditedFiles()) {
+            presenter.saveItemAsync(entry, source, editSourceField.seriesToEdit, editTagsField.applyChangesAndGetTags(), editFilesField.getEditedFiles()) {
                 done()
             }
         }

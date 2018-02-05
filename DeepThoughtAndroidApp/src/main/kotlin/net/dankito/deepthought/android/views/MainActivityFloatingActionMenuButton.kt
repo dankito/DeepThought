@@ -32,7 +32,7 @@ class MainActivityFloatingActionMenuButton(floatingActionMenu: FloatingActionMen
 
 
     private fun setup() {
-        floatingActionMenu.fab_add_entry.setOnClickListener { executeAndCloseMenu { router.showCreateEntryView() } }
+        floatingActionMenu.fab_add_entry.setOnClickListener { executeAndCloseMenu { router.showCreateItemView() } }
         floatingActionMenu.fab_add_newspaper_article.setOnClickListener { executeAndCloseMenu { router.showArticleSummaryExtractorsView() } }
 
         setFavoriteArticleSummaryExtractors()
@@ -45,7 +45,7 @@ class MainActivityFloatingActionMenuButton(floatingActionMenu: FloatingActionMen
      * Is used when there are no favorite ArticleSummaryExtractors. The a click on floating action directly goes to EditEntryActivity to create an item.
      */
     private fun disableFloatingActionMenu() {
-        floatingActionMenu.setOnMenuButtonClickListener { router.showCreateEntryView() }
+        floatingActionMenu.setOnMenuButtonClickListener { router.showCreateItemView() }
     }
 
     /**

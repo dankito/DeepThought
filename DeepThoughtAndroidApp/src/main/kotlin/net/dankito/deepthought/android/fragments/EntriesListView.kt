@@ -12,7 +12,7 @@ import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapt
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.presenter.EntriesListPresenter
+import net.dankito.deepthought.ui.presenter.ItemsListPresenter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.deepthought.ui.view.IEntriesListView
 import net.dankito.service.data.DeleteEntityService
@@ -32,7 +32,7 @@ class EntriesListView : EntitiesListViewFragment<Item>(R.menu.entry_contextual_a
     protected lateinit var clipboardService: IClipboardService
 
 
-    private val presenter: EntriesListPresenter
+    private val presenter: ItemsListPresenter
 
     private val entryAdapter: EntryRecyclerAdapter
 
@@ -42,7 +42,7 @@ class EntriesListView : EntitiesListViewFragment<Item>(R.menu.entry_contextual_a
     init {
         AppComponent.component.inject(this)
 
-        presenter = EntriesListPresenter(this, router, searchEngine, deleteEntityService, clipboardService)
+        presenter = ItemsListPresenter(this, router, searchEngine, deleteEntityService, clipboardService)
         entryAdapter = EntryRecyclerAdapter(presenter)
     }
 
@@ -56,18 +56,18 @@ class EntriesListView : EntitiesListViewFragment<Item>(R.menu.entry_contextual_a
     }
 
     override fun listItemClicked(selectedItem: Item) {
-        presenter.showEntry(selectedItem)
+        presenter.showItem(selectedItem)
     }
 
     override fun actionItemSelected(mode: ActionMode, actionItem: MenuItem, selectedItems: Set<Item>): Boolean {
         when(actionItem.itemId) {
             R.id.mnEditEntry -> {
-                selectedItems.forEach { presenter.showEntry(it) }
+                selectedItems.forEach { presenter.showItem(it) }
                 mode.finish()
                 return true
             }
             R.id.mnDeleteEntry -> {
-                selectedItems.forEach { presenter.deleteEntry(it) }
+                selectedItems.forEach { presenter.deleteItem(it) }
                 mode.finish()
                 return true
             }
@@ -79,7 +79,7 @@ class EntriesListView : EntitiesListViewFragment<Item>(R.menu.entry_contextual_a
     override fun getQueryHint(activity: Activity) = activity.getString(R.string.search_hint_items)
 
     override fun searchEntities(query: String) {
-        presenter.searchEntries(query)
+        presenter.searchItems(query)
     }
 
 

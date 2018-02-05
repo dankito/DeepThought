@@ -89,7 +89,7 @@ open class ArticleSummaryPresenter(protected val itemPersister: ItemPersister, p
     }
 
     protected open fun showArticle(extractionResult: ItemExtractionResult) {
-        router.showEditEntryView(extractionResult)
+        router.showEditItemView(extractionResult)
     }
 
 
@@ -112,7 +112,7 @@ open class ArticleSummaryPresenter(protected val itemPersister: ItemPersister, p
     }
 
     private fun saveArticle(item: ArticleSummaryItem, extractionResult: ItemExtractionResult) {
-        itemPersister.saveEntryAsync(extractionResult) { successful ->
+        itemPersister.saveItemAsync(extractionResult) { successful ->
             if(successful) {
                 dialogService.showLittleInfoMessage(localization.getLocalizedString("article.summary.extractor.article.saved", item.title))
             }

@@ -67,7 +67,7 @@ class AndroidClipboardService : ClipboardServiceBase() {
         share(shareIntent)
     }
 
-    override fun copyEntryToClipboard(item: Item, tags: Collection<Tag>, source: Source?, series: Series?) {
+    override fun copyItemToClipboard(item: Item, tags: Collection<Tag>, source: Source?, series: Series?) {
         val shareIntent = Intent()
 
         shareIntent.action = Intent.ACTION_SEND

@@ -16,7 +16,7 @@ import net.dankito.deepthought.model.extensions.referencePreview
 import net.dankito.deepthought.model.extensions.tagsPreview
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.presenter.EntriesListPresenter
+import net.dankito.deepthought.ui.presenter.ItemsListPresenter
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
@@ -45,7 +45,7 @@ class EntriesListView : EntitiesListView(), IEntriesListViewJavaFX {
 
     var statusBar: StatusBar? = null
 
-    private val presenter: EntriesListPresenter
+    private val presenter: ItemsListPresenter
 
 
     @Inject
@@ -70,7 +70,7 @@ class EntriesListView : EntitiesListView(), IEntriesListViewJavaFX {
     init {
         AppComponent.component.inject(this)
 
-        presenter = EntriesListPresenter(this, router, searchEngine, deleteEntityService, clipboardService)
+        presenter = ItemsListPresenter(this, router, searchEngine, deleteEntityService, clipboardService)
         searchBar = EntriesSearchBar(this, presenter, dataManager)
 
         (router as? JavaFXRouter)?.entriesListView = this // TODO: this is bad code design
@@ -104,7 +104,7 @@ class EntriesListView : EntitiesListView(), IEntriesListViewJavaFX {
             vgrow = Priority.ALWAYS
 
             onDoubleClick {
-                selectionModel.selectedItem?.let { router.showEditEntryView(it) }
+                selectionModel.selectedItem?.let { router.showEditItemView(it) }
             }
 
             var currentMenu: ContextMenu? = null
@@ -129,7 +129,7 @@ class EntriesListView : EntitiesListView(), IEntriesListViewJavaFX {
 
         if(item.source?.url.isNullOrBlank() == false) {
             contextMenu.item(messages["context.menu.item.copy.url.to.clipboard"]) {
-                action { presenter.copyReferenceUrlToClipboard(item) }
+                action { presenter.copySourceUrlToClipboard(item) }
             }
         }
 
@@ -149,19 +149,19 @@ class EntriesListView : EntitiesListView(), IEntriesListViewJavaFX {
     private fun askIfShouldDeleteEntry(item: Item) {
         dialogService.showConfirmationDialog(dialogService.getLocalization().getLocalizedString("alert.message.really.delete.item")) { selectedButton ->
             if(selectedButton == ConfirmationDialogButton.Confirm) {
-                presenter.deleteEntry(item)
+                presenter.deleteItem(item)
             }
         }
     }
 
 
     fun createNewItem() {
-        presenter.createEntry()
+        presenter.createItem()
     }
 
 
     override fun searchEntities(query: String) {
-        presenter.searchEntries(query)
+        presenter.searchItems(query)
     }
 
 
@@ -177,7 +177,7 @@ class EntriesListView : EntitiesListView(), IEntriesListViewJavaFX {
     }
 
     override fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {
-        presenter.showEntriesForTag(tag, tagsFilter)
+        presenter.showItemsForTag(tag, tagsFilter)
     }
 
     override fun showItemsForSource(source: Source) {

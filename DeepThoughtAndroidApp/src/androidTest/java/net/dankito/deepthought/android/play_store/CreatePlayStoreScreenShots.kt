@@ -166,7 +166,7 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
 
         takeScreenShot(TagsListScreenshotName)
 
-        createdItems.forEach { deleteEntityService.deleteEntry(it) }
+        createdItems.forEach { deleteEntityService.deleteItem(it) }
         TestUtil.sleep(1000)
     }
 

@@ -10,7 +10,7 @@ import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemD
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.presenter.EntityEntriesListPresenter
+import net.dankito.deepthought.ui.presenter.EntityItemsListPresenter
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 abstract class EntriesListDialogBase : FullscreenDialogFragment() {
 
-    protected val presenter: EntityEntriesListPresenter
+    protected val presenter: EntityItemsListPresenter
 
     protected val adapter: EntryRecyclerAdapter
 
@@ -44,7 +44,7 @@ abstract class EntriesListDialogBase : FullscreenDialogFragment() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = EntityEntriesListPresenter(deleteEntityService, clipboardService, router)
+        presenter = EntityItemsListPresenter(deleteEntityService, clipboardService, router)
 
         adapter = EntryRecyclerAdapter(presenter)
     }
@@ -57,7 +57,7 @@ abstract class EntriesListDialogBase : FullscreenDialogFragment() {
         rootView.rcyEntries.addItemDecoration(HorizontalDividerItemDecoration(context))
         rootView.rcyEntries.adapter = adapter
 
-        adapter.itemClickListener = { entry -> router.showEditEntryView(entry) }
+        adapter.itemClickListener = { entry -> router.showEditItemView(entry) }
     }
 
 

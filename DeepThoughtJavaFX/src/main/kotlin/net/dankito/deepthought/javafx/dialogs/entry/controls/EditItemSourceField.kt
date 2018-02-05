@@ -128,7 +128,7 @@ class EditItemSourceField : EditEntityReferenceField<Source>(FX.messages["edit.i
     override fun showEditEntityDialog() {
         eventBus.register(EventBusListener())
 
-        router.showEditEntryReferenceView(entityToEdit, seriesToEdit, enteredTitle)
+        router.showEditItemSourceView(entityToEdit, seriesToEdit, enteredTitle)
     }
 
 

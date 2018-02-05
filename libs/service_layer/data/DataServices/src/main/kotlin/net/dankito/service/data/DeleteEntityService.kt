@@ -15,12 +15,12 @@ class DeleteEntityService(private val itemService: ItemService, private val tagS
                           private val fileService: FileService, private val localFileInfoService: LocalFileInfoService, private val searchEngine: ISearchEngine,
                           private val dialogService: IDialogService, private val threadPool: IThreadPool) {
 
-    fun deleteEntryAsync(item: Item) {
-        threadPool.runAsync { deleteEntry(item) }
+    fun deleteItemAsync(item: Item) {
+        threadPool.runAsync { deleteItem(item) }
     }
 
-    fun deleteEntry(item: Item) {
-        val entryReference = item.source
+    fun deleteItem(item: Item) {
+        val itemSource = item.source
         item.source?.let { reference ->
             item.source = null
             referenceService.update(reference)
@@ -44,7 +44,7 @@ class DeleteEntityService(private val itemService: ItemService, private val tagS
 
         itemService.delete(item)
 
-        mayDeleteSource(entryReference)
+        mayDeleteSource(itemSource)
         mayDeleteFiles(attachedFiles)
     }
 
@@ -82,9 +82,9 @@ class DeleteEntityService(private val itemService: ItemService, private val tagS
     }
 
     fun deleteTag(tag: Tag) {
-        ArrayList(tag.items).filterNotNull().filter { it.id != null }.forEach { entry ->
-            entry.removeTag(tag)
-            itemService.update(entry)
+        ArrayList(tag.items).filterNotNull().filter { it.id != null }.forEach { item ->
+            item.removeTag(tag)
+            itemService.update(item)
         }
 
         tagService.delete(tag)
@@ -101,9 +101,9 @@ class DeleteEntityService(private val itemService: ItemService, private val tagS
             seriesService.update(series)
         }
 
-        ArrayList(source.items).filterNotNull().filter { it.id != null }.forEach { entry ->
-            entry.source = null
-            itemService.update(entry)
+        ArrayList(source.items).filterNotNull().filter { it.id != null }.forEach { item ->
+            item.source = null
+            itemService.update(item)
         }
 
         ArrayList(source.attachedFiles).filterNotNull().filter { it.id != null }.forEach { file ->

@@ -51,7 +51,7 @@ class OptionsForClipboardContentDetector(private val articleExtractorManager: Ar
 //                            // TODO
 //                        },
                         ClipboardContentOption(localization.getLocalizedString("clipboard.content.option.show.original.page")) {
-                            router.showEditEntryView(ItemExtractionResult(Item(""), Source(webPageUrl, webPageUrl)))
+                            router.showEditItemView(ItemExtractionResult(Item(""), Source(webPageUrl, webPageUrl)))
                         }
                 )
         )
@@ -60,7 +60,7 @@ class OptionsForClipboardContentDetector(private val articleExtractorManager: Ar
 
     private fun extractItemFromUrl(url: String) {
         articleExtractorManager.extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(url) {
-            it.result?.let { router.showEditEntryView(it) }
+            it.result?.let { router.showEditItemView(it) }
             it.error?.let { showErrorMessage(it, url) }
         }
     }

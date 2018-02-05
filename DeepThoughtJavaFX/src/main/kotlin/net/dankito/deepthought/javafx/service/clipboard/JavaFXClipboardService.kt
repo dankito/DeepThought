@@ -22,7 +22,7 @@ class JavaFXClipboardService : ClipboardServiceBase() {
         Clipboard.getSystemClipboard().setContent(content)
     }
 
-    override fun copyEntryToClipboard(item: Item, tags: Collection<Tag>, source: Source?, series: Series?) {
+    override fun copyItemToClipboard(item: Item, tags: Collection<Tag>, source: Source?, series: Series?) {
         val content = ClipboardContent()
 
         content.putString(convertItemToStringForCopyingToClipboard(item, tags, source, series))

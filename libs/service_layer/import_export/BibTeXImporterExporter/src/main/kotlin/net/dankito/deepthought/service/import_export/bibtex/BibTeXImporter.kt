@@ -95,7 +95,7 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val itemPe
             mapEntryField(entry, tags, reference, key, value, latexParser, latexPrinter)
         }
 
-        itemPersister.saveEntryAsync(entry, reference, reference.series, tags, files) { }
+        itemPersister.saveItemAsync(entry, reference, reference.series, tags, files) { }
 
         return entry
     }

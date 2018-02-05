@@ -23,24 +23,24 @@ class ItemPersister(private val itemService: ItemService, private val referenceP
     }
 
 
-    fun saveEntryAsync(result: ItemExtractionResult, callback: (Boolean) -> Unit) {
+    fun saveItemAsync(result: ItemExtractionResult, callback: (Boolean) -> Unit) {
         threadPool.runAsync {
-            callback(saveEntry(result))
+            callback(saveItem(result))
         }
     }
 
-    private fun saveEntry(result: ItemExtractionResult): Boolean {
-        return saveEntry(result.item, result.source, result.series, result.tags, result.files)
+    private fun saveItem(result: ItemExtractionResult): Boolean {
+        return saveItem(result.item, result.source, result.series, result.tags, result.files)
     }
 
 
-    fun saveEntryAsync(item: Item, source: Source?, series: Series?, tags: Collection<Tag>, files: Collection<FileLink> = listOf(), callback: (Boolean) -> Unit) {
+    fun saveItemAsync(item: Item, source: Source?, series: Series?, tags: Collection<Tag>, files: Collection<FileLink> = listOf(), callback: (Boolean) -> Unit) {
         threadPool.runAsync {
-            callback(saveEntry(item, source, series, tags, files))
+            callback(saveItem(item, source, series, tags, files))
         }
     }
 
-    private fun saveEntry(item: Item, source: Source? = null, series: Series? = null, tags: Collection<Tag> = ArrayList<Tag>(), files: Collection<FileLink>): Boolean {
+    private fun saveItem(item: Item, source: Source? = null, series: Series? = null, tags: Collection<Tag> = ArrayList<Tag>(), files: Collection<FileLink>): Boolean {
         val (addedTags, removedTags) = setTags(item, tags)
 
         val previousSource = setSource(item, source, series)

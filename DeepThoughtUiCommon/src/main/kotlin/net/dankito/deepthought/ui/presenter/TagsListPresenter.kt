@@ -124,7 +124,7 @@ class TagsListPresenter(tagsListView: ITagsListView, private val allCalculatedTa
 
 
     fun showEntriesForTag(tag: Tag) {
-        router.showEntriesForTag(tag, tagsFilter)
+        router.showItemsForTag(tag, tagsFilter)
     }
 
 }

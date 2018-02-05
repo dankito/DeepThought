@@ -16,9 +16,9 @@ import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class EntriesListPresenter(private val entriesListView: IEntriesListView, private val router: IRouter, private val searchEngine: ISearchEngine,
-                           deleteEntityService: DeleteEntityService, clipboardService: IClipboardService)
-    : EntriesListPresenterBase(deleteEntityService, clipboardService, router), IMainViewSectionPresenter {
+class ItemsListPresenter(private val itemsListView: IEntriesListView, private val router: IRouter, private val searchEngine: ISearchEngine,
+                         deleteEntityService: DeleteEntityService, clipboardService: IClipboardService)
+    : ItemsListPresenterBase(deleteEntityService, clipboardService, router), IMainViewSectionPresenter {
 
     private var tagsFilter: List<Tag> = listOf()
 
@@ -50,17 +50,17 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
     }
 
 
-    fun createEntry() {
-        router.showCreateEntryView()
+    fun createItem() {
+        router.showCreateItemView()
     }
 
-    fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {
+    fun showItemsForTag(tag: Tag, tagsFilter: List<Tag>) {
         selectedSource = null
 
         selectedTag = tag
         this.tagsFilter = tagsFilter
 
-        searchEntries() // apply lastSearchTerm on unfilteredEntries
+        searchItems() // apply lastSearchTerm on unfiltered items
     }
 
     fun showItemsForSource(source: Source) {
@@ -69,31 +69,31 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
 
         this.selectedSource = source
 
-        searchEntries()
+        searchItems()
     }
 
 
-    private fun searchEntries() {
-        searchEntries(getLastSearchTerm())
+    private fun searchItems() {
+        searchItems(getLastSearchTerm())
     }
 
-    fun searchEntries(searchTerm: String, searchInContent: Boolean = true, searchInAbstract: Boolean = true, searchInReference: Boolean = true, searchInTags: Boolean = true,
-                      searchInFiles: Boolean = true, searchCompleted: ((List<Item>) -> Unit)? = null) {
+    fun searchItems(searchTerm: String, searchInContent: Boolean = true, searchInSummary: Boolean = true, searchInSource: Boolean = true, searchInTags: Boolean = true,
+                    searchInFiles: Boolean = true, searchCompleted: ((List<Item>) -> Unit)? = null) {
         lastItemsSearch?.interrupt()
         lastSearchTermProperty = searchTerm
 
-        val entriesSearch = createEntriesSearch(searchTerm, searchInContent, searchInAbstract, searchInTags, searchInReference, searchInFiles) { result ->
-            entriesListView.showEntities(result)
+        val itemsSearch = createItemsSearch(searchTerm, searchInContent, searchInSummary, searchInTags, searchInSource, searchInFiles) { result ->
+            itemsListView.showEntities(result)
 
             searchCompleted?.invoke(result)
         }
 
-        this.lastItemsSearch = entriesSearch
-        searchEngine.searchItems(entriesSearch)
+        this.lastItemsSearch = itemsSearch
+        searchEngine.searchItems(itemsSearch)
     }
 
-    private fun createEntriesSearch(searchTerm: String, searchInContent: Boolean, searchInSummary: Boolean, searchInTags: Boolean, searchInSource: Boolean,
-                                    searchInFiles: Boolean, searchCompleted: (List<Item>) -> Unit): ItemsSearch {
+    private fun createItemsSearch(searchTerm: String, searchInContent: Boolean, searchInSummary: Boolean, searchInTags: Boolean, searchInSource: Boolean,
+                                  searchInFiles: Boolean, searchCompleted: (List<Item>) -> Unit): ItemsSearch {
         var searchOnlyItemsWithoutTags = false
         val itemsMustHaveTheseTags = ArrayList(tagsFilter)
 
@@ -118,7 +118,7 @@ class EntriesListPresenter(private val entriesListView: IEntriesListView, privat
         @Handler()
         fun entityChanged(entityChanged: EntitiesOfTypeChanged) {
             if(entityChanged.entityType == Item::class.java) {
-                searchEntries(lastSearchTermProperty)
+                searchItems(lastSearchTermProperty)
             }
         }
 

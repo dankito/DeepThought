@@ -8,9 +8,9 @@ import java.io.File
 
 interface IRouter {
 
-    fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>)
+    fun showItemsForTag(tag: Tag, tagsFilter: List<Tag>)
 
-    fun showEntriesForReference(source: Source)
+    fun showItemsForSource(source: Source)
 
 
     fun showArticleSummaryExtractorsView()
@@ -22,18 +22,18 @@ interface IRouter {
     fun showReadLaterArticlesView()
 
 
-    fun showCreateEntryView()
+    fun showCreateItemView()
 
-    fun showEditEntryView(item: Item)
+    fun showEditItemView(item: Item)
 
-    fun showEditEntryView(article: ReadLaterArticle)
+    fun showEditItemView(article: ReadLaterArticle)
 
-    fun showEditEntryView(extractionResult: ItemExtractionResult)
+    fun showEditItemView(extractionResult: ItemExtractionResult)
 
 
     fun showEditReferenceView(source: Source)
 
-    fun showEditEntryReferenceView(source: Source?, series: Series?, editedSourceTitle: String? = null)
+    fun showEditItemSourceView(source: Source?, series: Series?, editedSourceTitle: String? = null)
 
 
     fun showEditSeriesView(series: Series)

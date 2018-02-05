@@ -40,7 +40,7 @@ import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.presenter.EditEntryPresenter
+import net.dankito.deepthought.ui.presenter.EditItemPresenter
 import net.dankito.richtexteditor.android.animation.ShowHideViewAnimator
 import net.dankito.service.data.*
 import net.dankito.service.data.messages.EntityChangeSource
@@ -169,7 +169,7 @@ class EditEntryActivity : BaseActivity() {
     private var forceShowFilesPreview = false
 
 
-    private val presenter: EditEntryPresenter
+    private val presenter: EditItemPresenter
 
     private var isInEditContentMode = false
 
@@ -219,7 +219,7 @@ class EditEntryActivity : BaseActivity() {
 
         dataManager = itemService.dataManager
 
-        presenter = EditEntryPresenter(itemPersister, readLaterArticleService, clipboardService, router)
+        presenter = EditItemPresenter(itemPersister, readLaterArticleService, clipboardService, router)
 
         permissionsManager = PermissionsManager(this)
     }
@@ -1417,15 +1417,15 @@ class EditEntryActivity : BaseActivity() {
 
     private fun shareEntryContent() {
         item?.let { entry ->
-            presenter.shareEntry(entry, entry.tags, entry.source, entry.source?.series)
+            presenter.shareItem(entry, entry.tags, entry.source, entry.source?.series)
         }
 
         readLaterArticle?.itemExtractionResult?.let { extractionResult ->
-            presenter.shareEntry(extractionResult.item, extractionResult.tags, extractionResult.source, extractionResult.series)
+            presenter.shareItem(extractionResult.item, extractionResult.tags, extractionResult.source, extractionResult.series)
         }
 
         itemExtractionResult?.let { extractionResult ->
-            presenter.shareEntry(extractionResult.item, extractionResult.tags, extractionResult.source, extractionResult.series)
+            presenter.shareItem(extractionResult.item, extractionResult.tags, extractionResult.source, extractionResult.series)
         }
     }
 
@@ -1455,7 +1455,7 @@ class EditEntryActivity : BaseActivity() {
 
         item?.let { entry ->
             updateEntry(entry, content, abstract)
-            presenter.saveEntryAsync(entry, sourceToEdit, sourceToEdit?.series, tagsOnEntry, lytFilesPreview.getEditedFiles()) { successful ->
+            presenter.saveItemAsync(entry, sourceToEdit, sourceToEdit?.series, tagsOnEntry, lytFilesPreview.getEditedFiles()) { successful ->
                 if(successful) {
                     setActivityResult(EditEntryActivityResult(didSaveEntry = true, savedItem = entry))
                 }
@@ -1468,7 +1468,7 @@ class EditEntryActivity : BaseActivity() {
             // TODO: contentToEdit show now always contain the correct value depending on is or is not in reader mode, doesn't it?
 
             updateEntry(extractionResult.item, content, abstract)
-            presenter.saveEntryAsync(extractionResult.item, sourceToEdit, extractionResult.series, tagsOnEntry, lytFilesPreview.getEditedFiles()) { successful ->
+            presenter.saveItemAsync(extractionResult.item, sourceToEdit, extractionResult.series, tagsOnEntry, lytFilesPreview.getEditedFiles()) { successful ->
                 if(successful) {
                     setActivityResult(EditEntryActivityResult(didSaveEntryExtractionResult = true, savedItem = extractionResult.item))
                 }
@@ -1480,7 +1480,7 @@ class EditEntryActivity : BaseActivity() {
             val extractionResult = readLaterArticle.itemExtractionResult
             updateEntry(extractionResult.item, content, abstract)
 
-            presenter.saveEntryAsync(extractionResult.item, sourceToEdit, extractionResult.series, tagsOnEntry, lytFilesPreview.getEditedFiles()) { successful ->
+            presenter.saveItemAsync(extractionResult.item, sourceToEdit, extractionResult.series, tagsOnEntry, lytFilesPreview.getEditedFiles()) { successful ->
                 if(successful) {
                     readLaterArticleService.delete(readLaterArticle)
                     setActivityResult(EditEntryActivityResult(didSaveReadLaterArticle = true, savedItem = extractionResult.item))
@@ -1542,7 +1542,7 @@ class EditEntryActivity : BaseActivity() {
             extractionResult.tags = tagsOnEntry
             extractionResult.files = lytFilesPreview.getEditedFiles().toMutableList()
 
-            presenter.saveEntryExtractionResultForLaterReading(extractionResult)
+            presenter.saveItemExtractionResultForLaterReading(extractionResult)
             setActivityResult(EditEntryActivityResult(didSaveEntryExtractionResult = true, savedItem = extractionResult.item))
             callback(true)
         }
@@ -1560,7 +1560,7 @@ class EditEntryActivity : BaseActivity() {
                     mnDeleteExistingEntry?.isEnabled = false
                     unregisterEventBusListener()
 
-                    deleteEntityService.deleteEntry(entry)
+                    deleteEntityService.deleteItem(entry)
                     closeDialog()
                 }
             }

@@ -22,14 +22,14 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
                     private val dataManager: DataManager) : IRouter {
 
 
-    override fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {
+    override fun showItemsForTag(tag: Tag, tagsFilter: List<Tag>) {
         activityTracker.currentActivity?.let { currentActivity ->
             val dialog = TagEntriesListDialog()
             dialog.showDialog(currentActivity.supportFragmentManager, tag, tagsFilter)
         }
     }
 
-    override fun showEntriesForReference(source: Source) {
+    override fun showItemsForSource(source: Source) {
         activityTracker.currentActivity?.let { currentActivity ->
             val dialog = ReferenceEntriesListDialog()
             dialog.showDialog(currentActivity.supportFragmentManager, source)
@@ -61,19 +61,19 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
     }
 
 
-    override fun showCreateEntryView() {
+    override fun showCreateItemView() {
         showEditEntryView(EditEntryActivityParameters(createEntry = true))
     }
 
-    override fun showEditEntryView(item: Item) {
+    override fun showEditItemView(item: Item) {
         showEditEntryView(EditEntryActivityParameters(item))
     }
 
-    override fun showEditEntryView(article: ReadLaterArticle) {
+    override fun showEditItemView(article: ReadLaterArticle) {
         showEditEntryView(EditEntryActivityParameters(readLaterArticle = article))
     }
 
-    override fun showEditEntryView(extractionResult: ItemExtractionResult) {
+    override fun showEditItemView(extractionResult: ItemExtractionResult) {
         showEditEntryView(EditEntryActivityParameters(itemExtractionResult = extractionResult))
     }
 
@@ -88,7 +88,7 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
         showEditReferenceView(EditReferenceActivityParameters(source))
     }
 
-    override fun showEditEntryReferenceView(source: Source?, series: Series?, editedSourceTitle: String?) {
+    override fun showEditItemSourceView(source: Source?, series: Series?, editedSourceTitle: String?) {
         showEditReferenceView(EditReferenceActivityParameters(source, series, editedSourceTitle))
     }
 

@@ -17,7 +17,7 @@ interface CommonComponent : BaseComponent {
     }
 
 
-    fun inject(entriesListPresenter: EntriesListPresenter)
+    fun inject(entriesListPresenter: ItemsListPresenter)
 
     fun inject(tagsListPresenter: TagsListPresenter)
 
@@ -33,7 +33,7 @@ interface CommonComponent : BaseComponent {
 
     fun inject(readLaterArticleListPresenter: ReadLaterArticleListPresenter)
 
-    fun inject(editEntryPresenter: EditEntryPresenter)
+    fun inject(editItemPresenter: EditItemPresenter)
 
     fun inject(tagsOnEntryListPresenter: TagsOnEntryListPresenter)
 

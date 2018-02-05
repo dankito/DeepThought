@@ -73,11 +73,11 @@ class ReadLaterArticleListPresenter(private val view: IReadLaterArticleView, pri
     }
 
     fun showArticle(article: ReadLaterArticle) {
-        router.showEditEntryView(article)
+        router.showEditItemView(article)
     }
 
     fun saveAndDeleteReadLaterArticle(article: ReadLaterArticle) {
-        itemPersister.saveEntryAsync(article.itemExtractionResult) { successful ->
+        itemPersister.saveItemAsync(article.itemExtractionResult) { successful ->
             if(successful) {
                 deleteReadLaterArticle(article)
             }

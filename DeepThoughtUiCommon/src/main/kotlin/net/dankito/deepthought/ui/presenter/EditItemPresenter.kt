@@ -12,8 +12,8 @@ import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class EditEntryPresenter(private val itemPersister: ItemPersister, private val readLaterArticleService: ReadLaterArticleService, private val clipboardService: IClipboardService,
-                         private val router: IRouter) {
+class EditItemPresenter(private val itemPersister: ItemPersister, private val readLaterArticleService: ReadLaterArticleService, private val clipboardService: IClipboardService,
+                        private val router: IRouter) {
 
     @Inject
     protected lateinit var threadPool: IThreadPool
@@ -24,11 +24,11 @@ class EditEntryPresenter(private val itemPersister: ItemPersister, private val r
     }
 
 
-    fun saveEntryAsync(item: Item, source: Source?, series: Series?, tags: Collection<Tag>, files: Collection<FileLink>, callback: (Boolean) -> Unit) {
-        itemPersister.saveEntryAsync(item, source, series, tags, files, callback)
+    fun saveItemAsync(item: Item, source: Source?, series: Series?, tags: Collection<Tag>, files: Collection<FileLink>, callback: (Boolean) -> Unit) {
+        itemPersister.saveItemAsync(item, source, series, tags, files, callback)
     }
 
-    fun saveEntryExtractionResultForLaterReading(extractionResult: ItemExtractionResult) {
+    fun saveItemExtractionResultForLaterReading(extractionResult: ItemExtractionResult) {
         readLaterArticleService.persist(ReadLaterArticle(extractionResult, "",
                 extractionResult.source.preview, extractionResult.source?.url, extractionResult.source?.previewImageUrl)) // articlePreview gets set in ReadLaterArticleService
     }
@@ -42,8 +42,8 @@ class EditEntryPresenter(private val itemPersister: ItemPersister, private val r
         source.url?.let { clipboardService.copyUrlToClipboard(it) }
     }
 
-    fun shareEntry(item: Item, tags: Collection<Tag>, source: Source?, series: Series?) {
-        clipboardService.copyEntryToClipboard(item, tags, source, series)
+    fun shareItem(item: Item, tags: Collection<Tag>, source: Source?, series: Series?) {
+        clipboardService.copyItemToClipboard(item, tags, source, series)
     }
 
 

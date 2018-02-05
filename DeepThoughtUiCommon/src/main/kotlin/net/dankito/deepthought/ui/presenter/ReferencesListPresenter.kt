@@ -71,7 +71,7 @@ class ReferencesListPresenter(private var view: IReferencesListView, private val
 
 
     fun showEntriesForReference(source: Source) {
-        router.showEntriesForReference(source)
+        router.showItemsForSource(source)
     }
 
 

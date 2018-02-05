@@ -9,12 +9,12 @@ import javafx.scene.text.FontWeight
 import net.dankito.deepthought.javafx.ui.controls.searchtextfield
 import net.dankito.deepthought.model.LocalSettings
 import net.dankito.deepthought.service.data.DataManager
-import net.dankito.deepthought.ui.presenter.EntriesListPresenter
+import net.dankito.deepthought.ui.presenter.ItemsListPresenter
 import net.dankito.utils.ui.Colors
 import tornadofx.*
 
 
-class EntriesSearchBar(private val entriesListView: EntriesListView, private val presenter: EntriesListPresenter, private val dataManager: DataManager) : View() {
+class EntriesSearchBar(private val entriesListView: EntriesListView, private val presenter: ItemsListPresenter, private val dataManager: DataManager) : View() {
 
 
     private var btnCreateItem: Button by singleAssign()
@@ -70,7 +70,7 @@ class EntriesSearchBar(private val entriesListView: EntriesListView, private val
     private fun createItem() {
         hideCreateItemPopOver()
 
-        presenter.createEntry()
+        presenter.createItem()
     }
 
 
