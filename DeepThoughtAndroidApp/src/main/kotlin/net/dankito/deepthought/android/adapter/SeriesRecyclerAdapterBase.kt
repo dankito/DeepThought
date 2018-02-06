@@ -37,13 +37,13 @@ abstract class SeriesRecyclerAdapterBase(private val presenter: SeriesPresenterB
     override fun bindViewForNullValue(viewHolder: SeriesViewHolder) {
         super.bindViewForNullValue(viewHolder)
 
-        viewHolder.vwIsSeriesSetOnReference.showState("", false)
+        viewHolder.vwIsSeriesSetOnSource.showState("", false)
 
         viewHolder.imgChevronRight.visibility = View.GONE
     }
 
     override fun bindItemToView(viewHolder: SeriesViewHolder, item: Series) {
-        viewHolder.vwIsSeriesSetOnReference.showState(item.displayText, shouldShowImageIsSeriesSetOnSource && isSetOnSource(item))
+        viewHolder.vwIsSeriesSetOnSource.showState(item.displayText, shouldShowImageIsSeriesSetOnSource && isSetOnSource(item))
 
         viewHolder.imgChevronRight.visibility = if(shouldShowChevronRight) View.VISIBLE else View.GONE
     }
