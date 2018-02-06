@@ -12,15 +12,15 @@ import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapt
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.presenter.ItemsListPresenter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
+import net.dankito.deepthought.ui.presenter.ItemsListPresenter
 import net.dankito.deepthought.ui.view.IItemsListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class ItemsListView : EntitiesListViewFragment<Item>(R.menu.entry_contextual_action_menu, R.string.tab_items_onboarding_text), IItemsListView {
+class ItemsListView : EntitiesListViewFragment<Item>(R.menu.item_contextual_action_menu, R.string.tab_items_onboarding_text), IItemsListView {
 
     @Inject
     protected lateinit var deleteEntityService: DeleteEntityService
@@ -36,7 +36,7 @@ class ItemsListView : EntitiesListViewFragment<Item>(R.menu.entry_contextual_act
 
     private val itemAdapter: ItemRecyclerAdapter
 
-    private var entriesToShowOnAttaches: List<Item>? = null
+    private var itemsToShowOnAttach: List<Item>? = null
 
 
     init {
@@ -61,12 +61,12 @@ class ItemsListView : EntitiesListViewFragment<Item>(R.menu.entry_contextual_act
 
     override fun actionItemSelected(mode: ActionMode, actionItem: MenuItem, selectedItems: Set<Item>): Boolean {
         when(actionItem.itemId) {
-            R.id.mnEditEntry -> {
+            R.id.mnEditItem -> {
                 selectedItems.forEach { presenter.showItem(it) }
                 mode.finish()
                 return true
             }
-            R.id.mnDeleteEntry -> {
+            R.id.mnDeleteItem -> {
                 selectedItems.forEach { presenter.deleteItem(it) }
                 mode.finish()
                 return true
@@ -86,9 +86,9 @@ class ItemsListView : EntitiesListViewFragment<Item>(R.menu.entry_contextual_act
     override fun onAttach(context: Context?) {
         super.onAttach(context)
 
-        entriesToShowOnAttaches?.let {
+        itemsToShowOnAttach?.let {
             showEntities(it)
-            entriesToShowOnAttaches = null
+            itemsToShowOnAttach = null
         }
     }
 
@@ -126,7 +126,7 @@ class ItemsListView : EntitiesListViewFragment<Item>(R.menu.entry_contextual_act
             }
         }
         else {
-            entriesToShowOnAttaches = entities
+            itemsToShowOnAttach = entities
         }
     }
 
