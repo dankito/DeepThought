@@ -14,7 +14,7 @@ import net.dankito.utils.ui.Colors
 import tornadofx.*
 
 
-class EntriesSearchBar(private val entriesListView: ItemsListView, private val presenter: ItemsListPresenter, private val dataManager: DataManager) : View() {
+class ItemsSearchBar(private val itemsListView: ItemsListView, private val presenter: ItemsListPresenter, private val dataManager: DataManager) : View() {
 
 
     private var btnCreateItem: Button by singleAssign()
@@ -40,7 +40,7 @@ class EntriesSearchBar(private val entriesListView: ItemsListView, private val p
 
                     promptText = messages["find.items.prompt.text"]
 
-                    textProperty().addListener { _, _, newValue -> entriesListView.searchEntities(newValue) }
+                    textProperty().addListener { _, _, newValue -> itemsListView.searchEntities(newValue) }
                 }
             }
         }

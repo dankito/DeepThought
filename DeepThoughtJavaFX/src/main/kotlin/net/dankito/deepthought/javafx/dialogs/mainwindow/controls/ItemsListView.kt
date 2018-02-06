@@ -39,7 +39,7 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
 
     private val entries = LazyLoadingObservableList<Item>()
 
-    private val searchBar: EntriesSearchBar
+    private val searchBar: ItemsSearchBar
 
     private var tableEntries: TableView<Item> by singleAssign()
 
@@ -71,7 +71,7 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
         AppComponent.component.inject(this)
 
         presenter = ItemsListPresenter(this, router, searchEngine, deleteEntityService, clipboardService)
-        searchBar = EntriesSearchBar(this, presenter, dataManager)
+        searchBar = ItemsSearchBar(this, presenter, dataManager)
 
         (router as? JavaFXRouter)?.entriesListView = this // TODO: this is bad code design
 
