@@ -68,8 +68,8 @@ class ReadLaterArticleListPresenter(private val view: IReadLaterArticleView, pri
     }
 
 
-    fun deserializeEntryExtractionResult(article: ReadLaterArticle) {
-        readLaterArticleService.deserializeEntryExtractionResult(article)
+    fun deserializeItemExtractionResult(article: ReadLaterArticle) {
+        readLaterArticleService.deserializeItemExtractionResult(article)
     }
 
     fun showArticle(article: ReadLaterArticle) {
@@ -90,7 +90,7 @@ class ReadLaterArticleListPresenter(private val view: IReadLaterArticleView, pri
         }
     }
 
-    fun copyReferenceUrlToClipboard(article: ReadLaterArticle) {
+    fun copySourceUrlToClipboard(article: ReadLaterArticle) {
         article.sourceUrl?.let { url ->
             clipboardService.copyUrlToClipboard(url)
         }

@@ -31,7 +31,7 @@ class ReadLaterArticleService(dataManager: DataManager, entityChangedNotifier: E
     override fun getAll(): List<ReadLaterArticle> {
         val readLaterArticles = super.getAll()
 
-        readLaterArticles.forEach { article -> deserializeEntryExtractionResult(article) }
+        readLaterArticles.forEach { article -> deserializeItemExtractionResult(article) }
 
         return readLaterArticles
     }
@@ -39,13 +39,13 @@ class ReadLaterArticleService(dataManager: DataManager, entityChangedNotifier: E
     override fun retrieve(id: String): ReadLaterArticle? {
         val article = super.retrieve(id)
 
-        article?.let { deserializeEntryExtractionResult(it) }
+        article?.let { deserializeItemExtractionResult(it) }
 
         return article
     }
 
 
-    fun deserializeEntryExtractionResult(readLaterArticle: ReadLaterArticle) {
+    fun deserializeItemExtractionResult(readLaterArticle: ReadLaterArticle) {
         if(readLaterArticle.itemExtractionResult.item.content.isBlank()) { // itemExtractionResult not deserialized yet
             try {
                 readLaterArticle.itemExtractionResult = serializer.deserializeObject(readLaterArticle.serializedItemExtractionResult, ItemExtractionResult::class.java)
