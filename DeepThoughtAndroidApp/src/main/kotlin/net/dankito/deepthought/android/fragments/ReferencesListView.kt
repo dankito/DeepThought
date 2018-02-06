@@ -60,7 +60,7 @@ class ReferencesListView: EntitiesListViewFragment<Source>(R.menu.reference_cont
 
     override fun listItemClicked(selectedItem: Source) {
         hideSearchViewKeyboard()
-        presenter.showEntriesForReference(selectedItem)
+        presenter.showItemsForSource(selectedItem)
     }
 
     override fun actionItemSelected(mode: ActionMode, actionItem: MenuItem, selectedItems: Set<Source>): Boolean {

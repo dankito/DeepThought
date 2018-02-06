@@ -154,7 +154,7 @@ class TagsListView : EntitiesListViewFragment<Tag>(R.menu.tag_contextual_action_
     private fun tagSelected(selectedTag: Tag?) {
         if(selectedTag != null) {
             hideSearchViewKeyboard()
-            presenter.showEntriesForTag(selectedTag)
+            presenter.showItemsForTag(selectedTag)
         }
         else {
 //            presenter.clearSelectedTag() // TODO

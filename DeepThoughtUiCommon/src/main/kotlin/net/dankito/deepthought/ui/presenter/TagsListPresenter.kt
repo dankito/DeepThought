@@ -102,14 +102,14 @@ class TagsListPresenter(tagsListView: ITagsListView, private val allCalculatedTa
         tagFilterListener?.invoke(tagsFilter)
     }
 
-    fun getCountEntriesForFilteredTag(tag: Tag): Int {
+    fun getCountItemsForFilteredTag(tag: Tag): Int {
         lastFilteredTagsSearchResults?.let {
             // TODO: this is bad code, uses knowledge of  implementation details
-            (it.itemsHavingFilteredTags as? FilteredTagsLazyLoadingLuceneSearchResultsList)?.entityIds?.let { allFilteredEntryIds ->
+            (it.itemsHavingFilteredTags as? FilteredTagsLazyLoadingLuceneSearchResultsList)?.entityIds?.let { allFilteredItemIds ->
                 (tag.items as? LazyLoadingEntitiesCollection)?.let { // TODO: here as well
-                    val filteredEntriesOnTag = ArrayList(it.targetEntitiesIds)
-                    filteredEntriesOnTag.retainAll(allFilteredEntryIds)
-                    return filteredEntriesOnTag.size
+                    val filteredItemsOnTag = ArrayList(it.targetEntitiesIds)
+                    filteredItemsOnTag.retainAll(allFilteredItemIds)
+                    return filteredItemsOnTag.size
                 }
             }
         }
@@ -123,7 +123,7 @@ class TagsListPresenter(tagsListView: ITagsListView, private val allCalculatedTa
     }
 
 
-    fun showEntriesForTag(tag: Tag) {
+    fun showItemsForTag(tag: Tag) {
         router.showItemsForTag(tag, tagsFilter)
     }
 
