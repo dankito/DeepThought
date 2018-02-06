@@ -1,4 +1,4 @@
-package net.dankito.deepthought.javafx.dialogs.entry.controls
+package net.dankito.deepthought.javafx.dialogs.item.controls
 
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Insets

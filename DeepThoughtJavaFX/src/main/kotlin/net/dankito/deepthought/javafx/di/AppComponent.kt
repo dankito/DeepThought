@@ -9,11 +9,11 @@ import net.dankito.deepthought.javafx.DeepThoughtJavaFXApplication
 import net.dankito.deepthought.javafx.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.javafx.appstart.JavaFXAppInitializer
 import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
-import net.dankito.deepthought.javafx.dialogs.entry.EditItemExtractionResultView
-import net.dankito.deepthought.javafx.dialogs.entry.EditItemViewBase
-import net.dankito.deepthought.javafx.dialogs.entry.EditReadLaterArticleView
-import net.dankito.deepthought.javafx.dialogs.entry.controls.EditItemSourceField
-import net.dankito.deepthought.javafx.dialogs.entry.controls.EditItemTagsField
+import net.dankito.deepthought.javafx.dialogs.item.EditItemExtractionResultView
+import net.dankito.deepthought.javafx.dialogs.item.EditItemViewBase
+import net.dankito.deepthought.javafx.dialogs.item.EditReadLaterArticleView
+import net.dankito.deepthought.javafx.dialogs.item.controls.EditItemSourceField
+import net.dankito.deepthought.javafx.dialogs.item.controls.EditItemTagsField
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindow
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.*
 import net.dankito.deepthought.javafx.dialogs.pdf.ViewPdfDialog

@@ -1,4 +1,4 @@
-package net.dankito.deepthought.javafx.dialogs.entry.controls
+package net.dankito.deepthought.javafx.dialogs.item.controls
 
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.service.events.EditingSourceDoneEvent

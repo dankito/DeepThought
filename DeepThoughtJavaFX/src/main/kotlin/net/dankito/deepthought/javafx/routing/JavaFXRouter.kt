@@ -1,9 +1,9 @@
 package net.dankito.deepthought.javafx.routing
 
 import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
-import net.dankito.deepthought.javafx.dialogs.entry.EditItemExtractionResultView
-import net.dankito.deepthought.javafx.dialogs.entry.EditItemView
-import net.dankito.deepthought.javafx.dialogs.entry.EditReadLaterArticleView
+import net.dankito.deepthought.javafx.dialogs.item.EditItemExtractionResultView
+import net.dankito.deepthought.javafx.dialogs.item.EditItemView
+import net.dankito.deepthought.javafx.dialogs.item.EditReadLaterArticleView
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.dialogs.pdf.ViewPdfDialog
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.ReadLaterArticleListView

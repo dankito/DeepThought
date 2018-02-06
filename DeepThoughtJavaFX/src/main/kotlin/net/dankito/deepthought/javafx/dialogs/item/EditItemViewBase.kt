@@ -1,4 +1,4 @@
-package net.dankito.deepthought.javafx.dialogs.entry
+package net.dankito.deepthought.javafx.dialogs.item
 
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
@@ -12,9 +12,9 @@ import javafx.scene.web.WebView
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
-import net.dankito.deepthought.javafx.dialogs.entry.controls.EditItemSourceField
-import net.dankito.deepthought.javafx.dialogs.entry.controls.EditItemTagsField
-import net.dankito.deepthought.javafx.dialogs.entry.controls.InlineHtmlEditor
+import net.dankito.deepthought.javafx.dialogs.item.controls.EditItemSourceField
+import net.dankito.deepthought.javafx.dialogs.item.controls.EditItemTagsField
+import net.dankito.deepthought.javafx.dialogs.item.controls.InlineHtmlEditor
 import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
 import net.dankito.deepthought.javafx.ui.controls.EditEntityFilesField
 import net.dankito.deepthought.javafx.util.FXUtils

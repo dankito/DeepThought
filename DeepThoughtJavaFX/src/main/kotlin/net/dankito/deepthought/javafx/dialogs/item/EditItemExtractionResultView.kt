@@ -1,4 +1,4 @@
-package net.dankito.deepthought.javafx.dialogs.entry
+package net.dankito.deepthought.javafx.dialogs.item
 
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.model.util.ItemExtractionResult
