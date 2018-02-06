@@ -11,7 +11,7 @@ import java.util.*
 import javax.inject.Inject
 
 
-class ItemPersister(private val itemService: ItemService, private val referencePersister: ReferencePersister, private val tagService: TagService,
+class ItemPersister(private val itemService: ItemService, private val sourcePersister: SourcePersister, private val tagService: TagService,
                     private val filePersister: FilePersister, private val deleteEntityService: DeleteEntityService) {
 
     @Inject
@@ -81,7 +81,7 @@ class ItemPersister(private val itemService: ItemService, private val referenceP
     private fun setSource(item: Item, source: Source?, series: Series?): Source? {
         source?.let {
             if(source.isPersisted() == false) {
-                referencePersister.saveReference(source, series)
+                sourcePersister.saveSource(source, series)
             }
         }
 
@@ -113,10 +113,10 @@ class ItemPersister(private val itemService: ItemService, private val referenceP
 
     private fun updateSource(source: Source?, previousSource: Source?, series: Series?) {
         if(source?.id != previousSource?.id) { // only update source if it really changed
-            source?.let { referencePersister.saveReference(source, series, doChangesAffectDependentEntities = false) }
+            source?.let { sourcePersister.saveSource(source, series, doChangesAffectDependentEntities = false) }
 
             previousSource?.let {
-                referencePersister.saveReference(previousSource, previousSource.series, doChangesAffectDependentEntities = false)
+                sourcePersister.saveSource(previousSource, previousSource.series, doChangesAffectDependentEntities = false)
                 deleteEntityService.mayDeleteSource(previousSource)
             }
         }

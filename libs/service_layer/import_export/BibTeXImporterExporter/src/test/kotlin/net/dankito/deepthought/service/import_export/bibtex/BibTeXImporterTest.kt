@@ -4,7 +4,7 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import net.dankito.deepthought.data.ItemPersister
-import net.dankito.deepthought.data.ReferencePersister
+import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Series
@@ -31,13 +31,13 @@ class BibTeXImporterTest {
 
     private val tagServiceMock: TagService = mock()
 
-    private val referencePersisterMock: ReferencePersister = mock()
+    private val sourcePersisterMock: SourcePersister = mock()
 
     private val seriesPersisterMock: SeriesPersister = mock()
 
     private val threadPool: IThreadPool = mock()
 
-    private val importer = BibTeXImporter(searchEngineMock, itemPersisterMock, tagServiceMock, referencePersisterMock, seriesPersisterMock, threadPool)
+    private val importer = BibTeXImporter(searchEngineMock, itemPersisterMock, tagServiceMock, sourcePersisterMock, seriesPersisterMock, threadPool)
 
 
     @Before

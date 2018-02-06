@@ -1,7 +1,7 @@
 package net.dankito.deepthought.service.import_export.bibtex
 
 import net.dankito.deepthought.data.ItemPersister
-import net.dankito.deepthought.data.ReferencePersister
+import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.import_export.IDataImporter
@@ -28,7 +28,7 @@ import kotlin.collections.ArrayList
 // -> Create an ImportProcessor with methods like ensureTagExists().
 // Another advantage is, all other imports could re-use exactly that functionality.
 class BibTeXImporter(private val searchEngine: ISearchEngine, private val itemPersister: ItemPersister, private val tagService: TagService,
-                     private val sourcePersister: ReferencePersister, private val seriesPersister: SeriesPersister, private val threadPool: IThreadPool) : IDataImporter {
+                     private val sourcePersister: SourcePersister, private val seriesPersister: SeriesPersister, private val threadPool: IThreadPool) : IDataImporter {
 
     companion object {
         val DateFormat = SimpleDateFormat("yyyy-MM-dd")
@@ -88,7 +88,7 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val itemPe
         val tags = ArrayList<Tag>()
         val files = ArrayList<FileLink>() // TODO
         val source = Source()
-        sourcePersister.saveReference(source)
+        sourcePersister.saveSource(source)
 
         try { item.itemIndex = bibTeXEntry.key.value.toLong() } catch(ignored: Exception) { } // only works for BibTeX exported by DeepThought
         bibTeXEntry.fields.forEach { key, value ->

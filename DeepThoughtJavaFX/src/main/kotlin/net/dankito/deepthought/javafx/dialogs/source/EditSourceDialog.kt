@@ -3,7 +3,7 @@ package net.dankito.deepthought.javafx.dialogs.source
 import com.sun.prism.impl.Disposer.cleanUp
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.scene.Parent
-import net.dankito.deepthought.data.ReferencePersister
+import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.javafx.dialogs.source.controls.EditSourceSeriesField
@@ -31,7 +31,7 @@ class EditSourceDialog : DialogFragment() {
 
 
     @Inject
-    protected lateinit var referencePersister: ReferencePersister
+    protected lateinit var sourcePersister: SourcePersister
 
     @Inject
     protected lateinit var router: IRouter
@@ -80,7 +80,7 @@ class EditSourceDialog : DialogFragment() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = EditReferencePresenter(router, clipboardService, deleteEntityService, referencePersister)
+        presenter = EditReferencePresenter(router, clipboardService, deleteEntityService, sourcePersister)
     }
 
 

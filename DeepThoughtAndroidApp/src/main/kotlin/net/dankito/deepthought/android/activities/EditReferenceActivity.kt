@@ -13,7 +13,7 @@ import net.dankito.deepthought.android.dialogs.PickDateDialog
 import net.dankito.deepthought.android.service.permissions.IPermissionsManager
 import net.dankito.deepthought.android.service.permissions.PermissionsManager
 import net.dankito.deepthought.android.views.ToolbarUtil
-import net.dankito.deepthought.data.ReferencePersister
+import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.fields.SourceField
@@ -56,7 +56,7 @@ class EditReferenceActivity : BaseActivity() {
     protected lateinit var seriesService: SeriesService
 
     @Inject
-    protected lateinit var referencePersister: ReferencePersister
+    protected lateinit var sourcePersister: SourcePersister
 
     @Inject
     protected lateinit var router: IRouter
@@ -101,7 +101,7 @@ class EditReferenceActivity : BaseActivity() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = EditReferencePresenter(router, clipboardService, deleteEntityService, referencePersister)
+        presenter = EditReferencePresenter(router, clipboardService, deleteEntityService, sourcePersister)
 
         permissionsManager = PermissionsManager(this)
     }

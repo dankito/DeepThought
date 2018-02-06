@@ -7,7 +7,7 @@ import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.network.communication.SocketHandler
 import net.dankito.deepthought.data.FilePersister
 import net.dankito.deepthought.data.ItemPersister
-import net.dankito.deepthought.data.ReferencePersister
+import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.files.synchronization.FileServer
@@ -146,16 +146,16 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideItemPersister(itemService: ItemService, referencePersister: ReferencePersister, tagService: TagService, filePersister: FilePersister,
-                              deleteEntityService: DeleteEntityService): ItemPersister {
-        return ItemPersister(itemService, referencePersister, tagService, filePersister, deleteEntityService)
+    fun provideItemPersister(itemService: ItemService, sourcePersister: SourcePersister, tagService: TagService, filePersister: FilePersister,
+                             deleteEntityService: DeleteEntityService): ItemPersister {
+        return ItemPersister(itemService, sourcePersister, tagService, filePersister, deleteEntityService)
     }
 
     @Provides
     @Singleton
     fun provideReferencePersister(sourceService: SourceService, seriesService: SeriesService, filePersister: FilePersister, deleteEntityService: DeleteEntityService)
-            : ReferencePersister {
-        return ReferencePersister(sourceService, seriesService, filePersister, deleteEntityService)
+            : SourcePersister {
+        return SourcePersister(sourceService, seriesService, filePersister, deleteEntityService)
     }
 
     @Provides

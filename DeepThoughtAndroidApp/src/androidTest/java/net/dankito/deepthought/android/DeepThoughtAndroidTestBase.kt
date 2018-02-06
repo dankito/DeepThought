@@ -5,7 +5,7 @@ import net.dankito.deepthought.android.di.TestComponent
 import net.dankito.deepthought.android.util.TestUtil
 import net.dankito.deepthought.android.util.UiNavigator
 import net.dankito.deepthought.data.ItemPersister
-import net.dankito.deepthought.data.ReferencePersister
+import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.*
@@ -31,7 +31,7 @@ abstract class DeepThoughtAndroidTestBase {
     protected lateinit var tagService: TagService
 
     @Inject
-    protected lateinit var sourcePersister: ReferencePersister
+    protected lateinit var sourcePersister: SourcePersister
 
     @Inject
     protected lateinit var seriesService: SeriesService
@@ -78,7 +78,7 @@ abstract class DeepThoughtAndroidTestBase {
     }
 
     protected open fun persistSource(source: Source, series: Series? = source.series) {
-        sourcePersister.saveReference(source, series)
+        sourcePersister.saveSource(source, series)
     }
 
     protected open fun persistSeries(series: Series) {

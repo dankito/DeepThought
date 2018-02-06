@@ -5,15 +5,15 @@ import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.service.data.DeleteEntityService
-import net.dankito.service.data.SourceService
 import net.dankito.service.data.SeriesService
+import net.dankito.service.data.SourceService
 import net.dankito.utils.IThreadPool
 import java.util.*
 import javax.inject.Inject
 
 
-class ReferencePersister(private val sourceService: SourceService, private val seriesService: SeriesService, private val filePersister: FilePersister,
-                         private val deleteEntityService: DeleteEntityService) {
+class SourcePersister(private val sourceService: SourceService, private val seriesService: SeriesService, private val filePersister: FilePersister,
+                      private val deleteEntityService: DeleteEntityService) {
 
     @Inject
     protected lateinit var threadPool: IThreadPool
@@ -24,17 +24,17 @@ class ReferencePersister(private val sourceService: SourceService, private val s
     }
 
 
-    fun saveReferenceAsync(source: Source, series: Series?, editedFiles: Collection<FileLink>, callback: (Boolean) -> Unit) {
+    fun saveSourceAsync(source: Source, series: Series?, editedFiles: Collection<FileLink>, callback: (Boolean) -> Unit) {
         threadPool.runAsync {
-            callback(saveReference(source, series, editedFiles))
+            callback(saveSource(source, series, editedFiles))
         }
     }
 
-    fun saveReference(source: Source): Boolean {
-        return saveReference(source, source.series)
+    fun saveSource(source: Source): Boolean {
+        return saveSource(source, source.series)
     }
 
-    fun saveReference(source: Source, series: Series?, editedFiles: Collection<FileLink> = source.attachedFiles, doChangesAffectDependentEntities: Boolean = true): Boolean {
+    fun saveSource(source: Source, series: Series?, editedFiles: Collection<FileLink> = source.attachedFiles, doChangesAffectDependentEntities: Boolean = true): Boolean {
         if(series != null && series.isPersisted() == false) { // if series has been newly created but not persisted yet
             seriesService.persist(series)
         }

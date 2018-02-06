@@ -1,6 +1,6 @@
 package net.dankito.deepthought.ui.presenter
 
-import net.dankito.deepthought.data.ReferencePersister
+import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
@@ -13,7 +13,7 @@ import java.util.*
 
 
 class EditReferencePresenter(router: IRouter, clipboardService: IClipboardService, deleteEntityService: DeleteEntityService,
-                             private val referencePersister: ReferencePersister) : ReferencesPresenterBase(router, clipboardService, deleteEntityService) {
+                             private val sourcePersister: SourcePersister) : ReferencesPresenterBase(router, clipboardService, deleteEntityService) {
 
     companion object {
         private val ShortDateFormat = DateFormat.getDateInstance(DateFormat.SHORT)
@@ -68,7 +68,7 @@ class EditReferencePresenter(router: IRouter, clipboardService: IClipboardServic
 
         source.setPublishingDate(publishingDate, publishingDateString)
 
-        referencePersister.saveReferenceAsync(source, series, editedFiles, callback)
+        sourcePersister.saveSourceAsync(source, series, editedFiles, callback)
     }
 
 

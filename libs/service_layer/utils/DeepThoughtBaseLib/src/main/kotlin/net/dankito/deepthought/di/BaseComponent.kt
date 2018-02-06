@@ -2,7 +2,7 @@ package net.dankito.deepthought.di
 
 import dagger.Component
 import net.dankito.deepthought.data.ItemPersister
-import net.dankito.deepthought.data.ReferencePersister
+import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.data.SeriesPersister
 import javax.inject.Singleton
 
@@ -18,7 +18,7 @@ interface BaseComponent {
 
     fun inject(itemPersister: ItemPersister)
 
-    fun inject(referencePersister: ReferencePersister)
+    fun inject(sourcePersister: SourcePersister)
 
     fun inject(seriesPersister: SeriesPersister)
 
