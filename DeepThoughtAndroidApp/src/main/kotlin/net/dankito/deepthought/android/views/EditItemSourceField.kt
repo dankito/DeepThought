@@ -169,7 +169,7 @@ class EditItemSourceField : EditEntityEntityReferenceField, ISourcesListView {
     }
 
 
-    /*      IReferenceListView implementation       */
+    /*      ISourceListView implementation       */
 
     override fun showEntities(entities: List<Source>) {
         activity?.runOnUiThread {

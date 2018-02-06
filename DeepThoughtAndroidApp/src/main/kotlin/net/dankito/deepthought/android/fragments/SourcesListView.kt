@@ -20,7 +20,7 @@ import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class SourcesListView : EntitiesListViewFragment<Source>(R.menu.reference_contextual_action_menu, R.string.tab_source_onboarding_text),
+class SourcesListView : EntitiesListViewFragment<Source>(R.menu.source_contextual_action_menu, R.string.tab_source_onboarding_text),
         ISourcesListView {
 
     @Inject
@@ -65,12 +65,12 @@ class SourcesListView : EntitiesListViewFragment<Source>(R.menu.reference_contex
 
     override fun actionItemSelected(mode: ActionMode, actionItem: MenuItem, selectedItems: Set<Source>): Boolean {
         when(actionItem.itemId) {
-            R.id.mnEditReference -> {
+            R.id.mnEditSource -> {
                 selectedItems.forEach { presenter.editSource(it) }
                 mode.finish()
                 return true
             }
-            R.id.mnDeleteReference -> {
+            R.id.mnDeleteSource -> {
                 selectedItems.forEach { presenter.deleteSource(it) }
                 mode.finish()
                 return true

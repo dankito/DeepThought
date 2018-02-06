@@ -9,7 +9,7 @@ class ReadLaterArticleViewModel : ItemViewModel<ReadLaterArticle>() {
 
     val previewImageUrl = bind { SimpleStringProperty(item?.previewImageUrl) }
 
-    val reference = bind { SimpleStringProperty(item?.sourcePreview ?: "") }
+    val source = bind { SimpleStringProperty(item?.sourcePreview ?: "") }
 
     val summary = bind { SimpleStringProperty(item?.itemPreview ?: "") }
 

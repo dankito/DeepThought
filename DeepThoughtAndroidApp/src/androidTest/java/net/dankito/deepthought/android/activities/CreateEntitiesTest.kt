@@ -58,7 +58,7 @@ class CreateEntitiesTest : DeepThoughtAndroidTestBase() {
 
         matchRecyclerViewEntitiesIsDisplayed()
 
-        matchReferencePreviewAtPosition(0, TestSourceTitle)
+        matchSourcePreviewAtPosition(0, TestSourceTitle)
 
         matchItemPreviewAtPositionContains(0, TestContent)
         matchItemPreviewAtPositionContains(0, TestSummary)
@@ -118,8 +118,8 @@ class CreateEntitiesTest : DeepThoughtAndroidTestBase() {
         matchListItemAtPositionText(ItemsListView::class.java, position, R.id.txtItemPreview, itemPreview)
     }
 
-    private fun matchReferencePreviewAtPosition(position: Int, referencePreview: String) {
-        matchListItemAtPositionText(ItemsListView::class.java, position, R.id.txtSourcePreview, referencePreview)
+    private fun matchSourcePreviewAtPosition(position: Int, sourcePreview: String) {
+        matchListItemAtPositionText(ItemsListView::class.java, position, R.id.txtSourcePreview, sourcePreview)
     }
 
     private fun matchTagNameAtPosition(position: Int, tagName: String) {
