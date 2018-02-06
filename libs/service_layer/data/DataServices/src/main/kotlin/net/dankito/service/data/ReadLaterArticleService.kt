@@ -1,8 +1,8 @@
 package net.dankito.service.data
 
 import net.dankito.deepthought.model.ReadLaterArticle
-import net.dankito.deepthought.model.extensions.getEntryPreview
-import net.dankito.deepthought.model.extensions.getEntryPreviewWithSeriesAndPublishingDate
+import net.dankito.deepthought.model.extensions.getItemPreview
+import net.dankito.deepthought.model.extensions.getItemPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.event.EntityChangedNotifier
@@ -22,8 +22,8 @@ class ReadLaterArticleService(dataManager: DataManager, entityChangedNotifier: E
         super.onPrePersist(entity)
 
         val extractionResult = entity.itemExtractionResult
-        extractionResult.item.preview = extractionResult.item.getEntryPreview(true)
-        entity.itemPreview = extractionResult.item.getEntryPreviewWithSeriesAndPublishingDate(extractionResult.source, extractionResult.series)
+        extractionResult.item.preview = extractionResult.item.getItemPreview(true)
+        entity.itemPreview = extractionResult.item.getItemPreviewWithSeriesAndPublishingDate(extractionResult.source, extractionResult.series)
 
         entity.serializedItemExtractionResult = serializer.serializeObject(entity.itemExtractionResult)
     }

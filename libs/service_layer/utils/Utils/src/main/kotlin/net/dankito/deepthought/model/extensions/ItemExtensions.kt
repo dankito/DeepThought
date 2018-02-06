@@ -6,7 +6,7 @@ import net.dankito.deepthought.model.Source
 import net.dankito.utils.extensions.toSortedString
 
 
-const val SeriesAndPublishingDateAndEntryPreviewSeparator = " | "
+const val SeriesAndPublishingDateAndItemPreviewSeparator = " | "
 
 const val MaxPreviewLength = 400
 
@@ -23,15 +23,15 @@ val Item.contentPlainText: String
     }
 
 
-val Item.entryPreview: String
+val Item.itemPreview: String
     get()  {
         val includeItemSummary = this.sourcePreview.isNullOrBlank() == false
 
-        return getEntryPreview(includeItemSummary)
+        return getItemPreview(includeItemSummary)
     }
 
 
-fun Item.getEntryPreview(includeItemSummary: Boolean): String {
+fun Item.getItemPreview(includeItemSummary: Boolean): String {
     var preview = if(includeItemSummary) this.summaryPlainText else ""
 
     if(preview.length < MaxPreviewLength) {
@@ -50,7 +50,7 @@ fun Item.getEntryPreview(includeItemSummary: Boolean): String {
 }
 
 
-fun Item.getEntryPreviewWithSeriesAndPublishingDate(source: Source?, series: Series? = null): String {
+fun Item.getItemPreviewWithSeriesAndPublishingDate(source: Source?, series: Series? = null): String {
     var preview = this.preview
 
     val seriesAndPublishingDate = source.getSeriesAndPublishingDatePreview(series)
@@ -59,7 +59,7 @@ fun Item.getEntryPreviewWithSeriesAndPublishingDate(source: Source?, series: Ser
             preview = seriesAndPublishingDate
         }
         else {
-            preview = seriesAndPublishingDate + SeriesAndPublishingDateAndEntryPreviewSeparator + preview
+            preview = seriesAndPublishingDate + SeriesAndPublishingDateAndItemPreviewSeparator + preview
         }
     }
 

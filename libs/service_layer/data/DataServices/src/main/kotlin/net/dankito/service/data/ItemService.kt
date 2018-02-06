@@ -1,7 +1,7 @@
 package net.dankito.service.data
 
 import net.dankito.deepthought.model.Item
-import net.dankito.deepthought.model.extensions.entryPreview
+import net.dankito.deepthought.model.extensions.itemPreview
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.event.EntityChangedNotifier
 
@@ -28,7 +28,7 @@ class ItemService(dataManager: DataManager, entityChangedNotifier: EntityChanged
     }
 
     private fun updatePreview(entity: Item) {
-        entity.preview = entity.entryPreview
+        entity.preview = entity.itemPreview
     }
 
 }

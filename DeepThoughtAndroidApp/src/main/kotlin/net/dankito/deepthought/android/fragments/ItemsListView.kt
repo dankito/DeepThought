@@ -7,7 +7,7 @@ import android.view.ActionMode
 import android.view.MenuItem
 import android.view.View
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.adapter.EntryRecyclerAdapter
+import net.dankito.deepthought.android.adapter.ItemRecyclerAdapter
 import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Item
@@ -34,7 +34,7 @@ class ItemsListView : EntitiesListViewFragment<Item>(R.menu.entry_contextual_act
 
     private val presenter: ItemsListPresenter
 
-    private val entryAdapter: EntryRecyclerAdapter
+    private val itemAdapter: ItemRecyclerAdapter
 
     private var entriesToShowOnAttaches: List<Item>? = null
 
@@ -43,7 +43,7 @@ class ItemsListView : EntitiesListViewFragment<Item>(R.menu.entry_contextual_act
         AppComponent.component.inject(this)
 
         presenter = ItemsListPresenter(this, router, searchEngine, deleteEntityService, clipboardService)
-        entryAdapter = EntryRecyclerAdapter(presenter)
+        itemAdapter = ItemRecyclerAdapter(presenter)
     }
 
 
@@ -52,7 +52,7 @@ class ItemsListView : EntitiesListViewFragment<Item>(R.menu.entry_contextual_act
     }
 
     override fun getListAdapter(): MultiSelectListRecyclerSwipeAdapter<Item, out RecyclerView.ViewHolder> {
-        return entryAdapter
+        return itemAdapter
     }
 
     override fun listItemClicked(selectedItem: Item) {
@@ -107,7 +107,7 @@ class ItemsListView : EntitiesListViewFragment<Item>(R.menu.entry_contextual_act
     override fun hideOnboardingView() {
         super.hideOnboardingView()
 
-        if(entryAdapter.isInMultiSelectMode() == false) {
+        if(itemAdapter.isInMultiSelectMode() == false) {
             arrowToFloatingActionButton.visibility = View.GONE
         }
     }
@@ -120,7 +120,7 @@ class ItemsListView : EntitiesListViewFragment<Item>(R.menu.entry_contextual_act
 
         if(activity != null) {
             activity.runOnUiThread {
-                entryAdapter.items = entities
+                itemAdapter.items = entities
 
                 retrievedEntitiesOnUiThread(entities)
             }

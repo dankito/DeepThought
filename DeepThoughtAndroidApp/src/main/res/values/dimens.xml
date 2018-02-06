@@ -42,18 +42,18 @@
     <dimen name="view_context_help_button_width">48dp</dimen>
     <dimen name="view_context_help_confirm_button_height">36dp</dimen>
 
-    <dimen name="list_item_entry_height">110dp</dimen>
-    <dimen name="list_item_entry_button_width">84dp</dimen>
-    <dimen name="list_item_entry_padding_top_bottom">4dp</dimen>
-    <dimen name="list_item_entry_padding_left_right">8dp</dimen>
-    <dimen name="list_item_entry_reference_preview_min_height">18dp</dimen>
-    <dimen name="list_item_entry_reference_preview_text_size">11sp</dimen>
-    <dimen name="list_item_entry_reference_preview_margin_bottom">2dp</dimen>
-    <dimen name="list_item_entry_preview_height">50dp</dimen>
-    <dimen name="list_item_entry_preview_text_size">11sp</dimen>
-    <dimen name="list_item_entry_tags_height">20dp</dimen>
-    <dimen name="list_item_entry_tags_text_size">11sp</dimen>
-    <dimen name="list_item_entry_tags_margin_top">4dp</dimen>
+    <dimen name="list_item_item_height">110dp</dimen>
+    <dimen name="list_item_item_button_width">84dp</dimen>
+    <dimen name="list_item_item_padding_top_bottom">4dp</dimen>
+    <dimen name="list_item_item_padding_left_right">8dp</dimen>
+    <dimen name="list_item_item_source_preview_min_height">18dp</dimen>
+    <dimen name="list_item_item_reference_preview_text_size">11sp</dimen>
+    <dimen name="list_item_item_source_preview_margin_bottom">2dp</dimen>
+    <dimen name="list_item_item_preview_height">50dp</dimen>
+    <dimen name="list_item_item_preview_text_size">11sp</dimen>
+    <dimen name="list_item_item_tags_height">20dp</dimen>
+    <dimen name="list_item_item_tags_text_size">11sp</dimen>
+    <dimen name="list_item_item_tags_margin_top">4dp</dimen>
 
     <dimen name="view_tag_corner_radius">18dp</dimen>
     <dimen name="view_tag_text_padding_left_right">8dp</dimen>

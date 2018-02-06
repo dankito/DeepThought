@@ -5,7 +5,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.dialog_items_list.*
 import kotlinx.android.synthetic.main.dialog_items_list.view.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.adapter.EntryRecyclerAdapter
+import net.dankito.deepthought.android.adapter.ItemRecyclerAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Item
@@ -22,7 +22,7 @@ abstract class ItemsListDialogBase : FullscreenDialogFragment() {
 
     protected val presenter: EntityItemsListPresenter
 
-    protected val adapter: EntryRecyclerAdapter
+    protected val adapter: ItemRecyclerAdapter
 
 
     @Inject
@@ -46,7 +46,7 @@ abstract class ItemsListDialogBase : FullscreenDialogFragment() {
 
         presenter = EntityItemsListPresenter(deleteEntityService, clipboardService, router)
 
-        adapter = EntryRecyclerAdapter(presenter)
+        adapter = ItemRecyclerAdapter(presenter)
     }
 
 
