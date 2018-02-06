@@ -45,7 +45,7 @@ class ArticleSummaryItemsView(private val presenter: ArticleSummaryPresenter) : 
 
             item(messages["context.menu.article.summary.item.copy.url.to.clipboard"]) {
                 action {
-                    selectedItem?.let { presenter.copyReferenceUrlToClipboard(it) }
+                    selectedItem?.let { presenter.copySourceUrlToClipboard(it) }
                 }
             }
         }

@@ -172,7 +172,7 @@ open class ArticleSummaryPresenter(protected val itemPersister: ItemPersister, p
     }
 
 
-    fun copyReferenceUrlToClipboard(item: ArticleSummaryItem) {
+    fun copySourceUrlToClipboard(item: ArticleSummaryItem) {
         clipboardService.copyUrlToClipboard(item.url)
     }
 
