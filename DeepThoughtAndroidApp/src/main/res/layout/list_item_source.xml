@@ -2,9 +2,9 @@
 <net.dankito.deepthought.android.views.FixedSwipeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/referenceSwipeLayout"
+    android:id="@+id/sourceSwipeLayout"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/list_item_reference_height"
+    android:layout_height="@dimen/list_item_source_height"
     android:background="@drawable/list_item_background"
 >
 
@@ -17,22 +17,22 @@
     >
 
         <net.dankito.deepthought.android.views.SwipeButton
-            android:id="@+id/btnEditReference"
-            android:layout_width="@dimen/list_item_reference_button_width"
+            android:id="@+id/btnEditSource"
+            android:layout_width="@dimen/list_item_source_button_width"
             android:layout_height="match_parent"
             app:icon="@drawable/ic_mode_edit_white_48dp"
         />
 
         <net.dankito.deepthought.android.views.SwipeButton
-            android:id="@+id/btnShareReference"
-            android:layout_width="@dimen/list_item_reference_button_width"
+            android:id="@+id/btnShareSource"
+            android:layout_width="@dimen/list_item_source_button_width"
             android:layout_height="match_parent"
             app:icon="@drawable/ic_share_white_48dp"
         />
 
         <net.dankito.deepthought.android.views.SwipeButton
-            android:id="@+id/btnDeleteReference"
-            android:layout_width="@dimen/list_item_reference_button_width"
+            android:id="@+id/btnDeleteSource"
+            android:layout_width="@dimen/list_item_source_button_width"
             android:layout_height="match_parent"
             app:icon="@drawable/ic_delete_white_48dp"
         />
@@ -48,7 +48,7 @@
     >
 
         <net.dankito.deepthought.android.views.IsAddedToEntityView
-            android:id="@+id/vwIsReferenceSetOnEntity"
+            android:id="@+id/vwIsSourceSetOnEntity"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"

@@ -66,7 +66,7 @@ class EditItemSourceField : EditEntityEntityReferenceField, ISourcesListView {
         existingSourcesSearchResultsAdapter.itemClickListener = { item -> existingSourceSelected(item) }
 
         rcySearchResult.adapter = existingSourcesSearchResultsAdapter
-        rcySearchResult.maxHeightInPixel = (context.resources.getDimension(R.dimen.list_item_reference_height) * 3.25).toInt() // show at max three list items and a little bit from the next item so that user knows there's more
+        rcySearchResult.maxHeightInPixel = (context.resources.getDimension(R.dimen.list_item_source_height) * 3.25).toInt() // show at max three list items and a little bit from the next item so that user knows there's more
     }
 
     override fun doCustomUiInitialization(rootView: ViewGroup) {

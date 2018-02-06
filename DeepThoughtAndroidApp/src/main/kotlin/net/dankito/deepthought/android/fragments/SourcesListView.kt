@@ -6,7 +6,7 @@ import android.view.ActionMode
 import android.view.MenuItem
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
-import net.dankito.deepthought.android.adapter.ReferenceRecyclerAdapter
+import net.dankito.deepthought.android.adapter.SourceRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.SourceItemsListDialog
 import net.dankito.deepthought.model.Source
@@ -38,7 +38,7 @@ class SourcesListView : EntitiesListViewFragment<Source>(R.menu.reference_contex
 
     private val presenter: SourcesListPresenter
 
-    private val adapter: ReferenceRecyclerAdapter
+    private val adapter: SourceRecyclerAdapter
 
 
     init {
@@ -46,7 +46,7 @@ class SourcesListView : EntitiesListViewFragment<Source>(R.menu.reference_contex
 
         presenter = SourcesListPresenter(this, searchEngine, router, clipboardService, deleteEntityService)
 
-        adapter = ReferenceRecyclerAdapter(presenter)
+        adapter = SourceRecyclerAdapter(presenter)
     }
 
 

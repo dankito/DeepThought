@@ -4,7 +4,7 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.presenter.SourcePresenterBase
 
 
-class SourceOnItemRecyclerAdapter(presenter: SourcePresenterBase): ReferenceRecyclerAdapterBase(presenter) {
+class SourceOnItemRecyclerAdapter(presenter: SourcePresenterBase): SourceRecyclerAdapterBase(presenter) {
 
     var selectedSource: Source? = null
         set(value) {
