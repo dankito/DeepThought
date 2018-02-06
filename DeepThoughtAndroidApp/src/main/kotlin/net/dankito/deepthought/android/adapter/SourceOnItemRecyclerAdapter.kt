@@ -4,7 +4,7 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.presenter.ReferencesPresenterBase
 
 
-class ReferenceOnEntryRecyclerAdapter(presenter: ReferencesPresenterBase): ReferenceRecyclerAdapterBase(presenter) {
+class SourceOnItemRecyclerAdapter(presenter: ReferencesPresenterBase): ReferenceRecyclerAdapterBase(presenter) {
 
     var selectedSource: Source? = null
         set(value) {
@@ -13,13 +13,13 @@ class ReferenceOnEntryRecyclerAdapter(presenter: ReferencesPresenterBase): Refer
         }
 
 
-    override val shouldShowImageIsReferenceAddedToEntry: Boolean
+    override val shouldShowImageIsSourceAddedToItem: Boolean
         get() = true
 
     override val shouldShowChevronRight: Boolean
         get() = false
 
-    override val shouldShowButtonEditReference: Boolean
+    override val shouldShowButtonEditSource: Boolean
         get() = false
 
 

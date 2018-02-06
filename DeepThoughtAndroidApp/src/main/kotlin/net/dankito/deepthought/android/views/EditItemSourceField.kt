@@ -7,7 +7,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.activities.EditReferenceActivity
 import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
-import net.dankito.deepthought.android.adapter.ReferenceOnEntryRecyclerAdapter
+import net.dankito.deepthought.android.adapter.SourceOnItemRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
@@ -52,7 +52,7 @@ class EditItemSourceField : EditEntityEntityReferenceField, IReferencesListView 
 
     private val presenter: ReferencesListPresenter
 
-    private val existingSourcesSearchResultsAdapter: ReferenceOnEntryRecyclerAdapter
+    private val existingSourcesSearchResultsAdapter: SourceOnItemRecyclerAdapter
 
 
     init {
@@ -62,7 +62,7 @@ class EditItemSourceField : EditEntityEntityReferenceField, IReferencesListView 
 
         presenter = ReferencesListPresenter(this, searchEngine, router, clipboardService, deleteEntityService)
 
-        existingSourcesSearchResultsAdapter = ReferenceOnEntryRecyclerAdapter(presenter)
+        existingSourcesSearchResultsAdapter = SourceOnItemRecyclerAdapter(presenter)
         existingSourcesSearchResultsAdapter.itemClickListener = { item -> existingSourceSelected(item) }
 
         rcySearchResult.adapter = existingSourcesSearchResultsAdapter

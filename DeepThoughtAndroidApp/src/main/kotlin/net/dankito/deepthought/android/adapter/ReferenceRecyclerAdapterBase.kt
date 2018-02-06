@@ -14,11 +14,11 @@ import net.dankito.deepthought.ui.presenter.ReferencesPresenterBase
 
 abstract class ReferenceRecyclerAdapterBase(private val presenter: ReferencesPresenterBase): MultiSelectListRecyclerSwipeAdapter<Source, ReferenceViewHolder>() {
 
-    abstract val shouldShowImageIsReferenceAddedToEntry: Boolean
+    abstract val shouldShowImageIsSourceAddedToItem: Boolean
 
     abstract val shouldShowChevronRight: Boolean
 
-    abstract val shouldShowButtonEditReference: Boolean
+    abstract val shouldShowButtonEditSource: Boolean
 
     protected open fun isAddedToEntity(source: Source): Boolean {
         return false
@@ -31,7 +31,7 @@ abstract class ReferenceRecyclerAdapterBase(private val presenter: ReferencesPre
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ReferenceViewHolder {
         val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_reference, parent, false)
 
-        itemView.vwIsReferenceSetOnEntity.isShowAddedViewEnabled = shouldShowImageIsReferenceAddedToEntry
+        itemView.vwIsReferenceSetOnEntity.isShowAddedViewEnabled = shouldShowImageIsSourceAddedToItem
         itemView.vwIsReferenceSetOnEntity.setEntityNameTextSizeToHeader1TextSize()
 
         val viewHolder = ReferenceViewHolder(itemView)
@@ -52,7 +52,7 @@ abstract class ReferenceRecyclerAdapterBase(private val presenter: ReferencesPre
         var seriesPreview: String? = item.seriesAndPublishingDatePreview
         if(seriesPreview.isNullOrBlank()) seriesPreview = null
 
-        val isAddedToEntity = shouldShowImageIsReferenceAddedToEntry && isAddedToEntity(item)
+        val isAddedToEntity = shouldShowImageIsSourceAddedToItem && isAddedToEntity(item)
 
         viewHolder.vwIsReferenceSetOnEntity.showState(item.preview, isAddedToEntity, seriesPreview)
 
@@ -60,7 +60,7 @@ abstract class ReferenceRecyclerAdapterBase(private val presenter: ReferencesPre
     }
 
     override fun setupSwipeView(viewHolder: ReferenceViewHolder, item: Source) {
-        viewHolder.btnEditReference.visibility = if(shouldShowButtonEditReference) View.VISIBLE else View.GONE
+        viewHolder.btnEditReference.visibility = if(shouldShowButtonEditSource) View.VISIBLE else View.GONE
         viewHolder.btnShareReference.visibility = if(item.url.isNullOrBlank()) View.GONE else View.VISIBLE
 
         viewHolder.btnEditReference.setOnClickListener {
