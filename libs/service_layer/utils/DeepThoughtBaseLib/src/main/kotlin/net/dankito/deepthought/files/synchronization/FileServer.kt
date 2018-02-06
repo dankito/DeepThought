@@ -157,8 +157,14 @@ class FileServer(private val searchEngine: ISearchEngine, private val entityMana
             else {
                 val fileSize = File(localFilePath).length()
                 sendResponse(clientSocket, PermitSynchronizeFileResult.SynchronizationPermitted, fileId, fileSize)
+                val waitForClientReady = socketHandler.receiveMessage(clientSocket) // wait till client is ready to receive file, otherwise we may would send bytes but the client is not in receiving state yet
 
-                sendFileToClientAndCloseSocket(clientSocket, localFileInfo, fileSize)
+                if(waitForClientReady.isSuccessful) {
+                    sendFileToClientAndCloseSocket(clientSocket, localFileInfo, fileSize)
+                }
+                else { // client didn't respond
+                    closeClientSocket(clientSocket)
+                }
             }
         })
     }
@@ -168,6 +174,8 @@ class FileServer(private val searchEngine: ISearchEngine, private val entityMana
             log.info("Sending file $filePath of size ${localFileInfo.fileSize} to client ${clientSocket.inetAddress}")
 
             sendFileToClient(clientSocket, filePath, fileSize)
+
+            val waitTillClientReceivedFile = socketHandler.receiveMessage(clientSocket) // actually shouldn't be needed, just to ensure not to close socket before client received complete file
         }
 
         closeClientSocket(clientSocket)

@@ -256,6 +256,8 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
                 val response = serializer.deserializeObject(it, PermitSynchronizeFileResponse::class.java)
 
                 if(response.result == PermitSynchronizeFileResult.SynchronizationPermitted) {
+                    socketHandler.sendMessage(clientSocket, "BEGIN".toByteArray())
+
                     return receiveFile(clientSocket, file, response.fileSize ?: file.fileSize)
                 }
                 else {
@@ -277,6 +279,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
 
             val countReceivedBytes = saveStreamToFile(destinationFile, clientSocket, fileSize)
             log.info("Received $countReceivedBytes and should have received $fileSize bytes for file ${file.name}")
+            socketHandler.sendMessage(clientSocket, "END".toByteArray())
 
             if(countReceivedBytes == fileSize) {
                 fileSuccessfullySynchronized(file, localFileInfo, destinationFile)
@@ -312,7 +315,6 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         } while(receivedChunkSize >= 0)
 
         outputStream.flush()
-        inputStream.close() // inputStream will be closed by socketHandler
         outputStream.close()
 
         if(receivedMessageSize == fileSize) {
