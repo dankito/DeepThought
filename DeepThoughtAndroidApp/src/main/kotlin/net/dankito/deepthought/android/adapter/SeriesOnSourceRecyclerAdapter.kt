@@ -4,12 +4,12 @@ import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.ui.presenter.SeriesPresenterBase
 
 
-class SeriesOnReferenceRecyclerAdapter(presenter: SeriesPresenterBase): SeriesRecyclerAdapterBase(presenter) {
+class SeriesOnSourceRecyclerAdapter(presenter: SeriesPresenterBase): SeriesRecyclerAdapterBase(presenter) {
 
     var selectedSeries: Series? = null
 
 
-    override val shouldShowImageIsSeriesSetOnReference: Boolean
+    override val shouldShowImageIsSeriesSetOnSource: Boolean
         get() = true
 
     override val shouldShowChevronRight: Boolean
@@ -19,7 +19,7 @@ class SeriesOnReferenceRecyclerAdapter(presenter: SeriesPresenterBase): SeriesRe
         get() = false
 
 
-    override fun isSetOnReference(series: Series): Boolean {
+    override fun isSetOnSource(series: Series): Boolean {
         return selectedSeries?.id == series.id
     }
 

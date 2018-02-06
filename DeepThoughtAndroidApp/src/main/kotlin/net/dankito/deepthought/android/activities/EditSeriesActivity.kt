@@ -7,7 +7,7 @@ import kotlinx.android.synthetic.main.activity_edit_series.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityResult
-import net.dankito.deepthought.android.adapter.SeriesOnReferenceRecyclerAdapter
+import net.dankito.deepthought.android.adapter.SeriesOnSourceRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.views.ToolbarUtil
 import net.dankito.deepthought.data.SeriesPersister
@@ -68,7 +68,7 @@ class EditSeriesActivity : BaseActivity() {
 
     private val presenter: EditSeriesPresenter
 
-    private val existingSeriesSearchResultsAdapter: SeriesOnReferenceRecyclerAdapter
+    private val existingSeriesSearchResultsAdapter: SeriesOnSourceRecyclerAdapter
 
     private var didSeriesChange = false
 
@@ -86,7 +86,7 @@ class EditSeriesActivity : BaseActivity() {
 
         presenter = EditSeriesPresenter(router, deleteEntityService, seriesPersister, threadPool)
 
-        existingSeriesSearchResultsAdapter = SeriesOnReferenceRecyclerAdapter(presenter)
+        existingSeriesSearchResultsAdapter = SeriesOnSourceRecyclerAdapter(presenter)
     }
 
 
