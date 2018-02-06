@@ -100,16 +100,16 @@ class EditItemTagsField : EditEntityCollectionField<Tag>(), ITagsOnItemListView 
     private fun addTagView(tag: Tag) {
         if(recycledTagViews.size > 0) {
             val tagView = recycledTagViews.removeAt(0)
-            tagView.update(tag.displayText) { removeTagFromCurrentTagsOnEntry(tag) }
+            tagView.update(tag.displayText) { removeTagFromCurrentTagsOnItem(tag) }
 
             collectionPreviewPane.add(tagView)
         }
         else {
-            collectionPreviewPane.add(TagView(tag.displayText, true) { removeTagFromCurrentTagsOnEntry(tag) })
+            collectionPreviewPane.add(TagView(tag.displayText, true) { removeTagFromCurrentTagsOnItem(tag) })
         }
     }
 
-    private fun removeTagFromCurrentTagsOnEntry(tag: Tag) {
+    private fun removeTagFromCurrentTagsOnItem(tag: Tag) {
         if(editedCollection.contains(tag)) {
             editedCollection.remove(tag)
         }
@@ -190,7 +190,7 @@ class EditItemTagsField : EditEntityCollectionField<Tag>(), ITagsOnItemListView 
                 }
 
 //                searchEntities(enteredSearchTerm.value) // should already be called when setting enteredSearchTerm
-                // TODO: may avoid that setTagsOnEntryPreviewOnUIThread() gets called in tagAddedOrRemoved()
+                // TODO: may avoid that setTagsOnItemPreviewOnUIThread() gets called in tagAddedOrRemoved()
             }
         }
     }
@@ -246,7 +246,7 @@ class EditItemTagsField : EditEntityCollectionField<Tag>(), ITagsOnItemListView 
         // TODO: tell ListView to update its items
     }
 
-    override fun shouldCreateNotExistingTags(notExistingTags: List<String>, tagsShouldGetCreatedCallback: (tagsOnEntry: MutableCollection<Tag>) -> Unit) {
+    override fun shouldCreateNotExistingTags(notExistingTags: List<String>, tagsShouldGetCreatedCallback: (tagsOnItem: MutableCollection<Tag>) -> Unit) {
         // we don't need to handle this anymore
     }
 

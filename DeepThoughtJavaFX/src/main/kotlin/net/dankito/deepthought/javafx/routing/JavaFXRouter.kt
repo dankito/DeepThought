@@ -57,15 +57,15 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
 
 
     override fun showCreateItemView() {
-        showEditEntryView(Item(""), FX.messages["create.item.window.title"])
+        showEditItemView(Item(""), FX.messages["create.item.window.title"])
     }
 
     override fun showEditItemView(item: Item) {
         // TODO: set title when Source is not set
-        showEditEntryView(item, item.source.previewWithSeriesAndPublishingDate)
+        showEditItemView(item, item.source.previewWithSeriesAndPublishingDate)
     }
 
-    private fun showEditEntryView(item: Item, title: String?) {
+    private fun showEditItemView(item: Item, title: String?) {
         runLater {
             mainWindowController.find(EditItemView::class, mapOf(EditItemView::item to item)).show(title)
         }

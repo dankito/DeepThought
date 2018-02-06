@@ -138,7 +138,7 @@ class SourcesListView : EntitiesListView(), IReferencesListView {
         val selectedSource = lastSelectedSource
 
         if(selectedSource != null) {
-            presenter.showEntriesForReference(selectedSource)
+            presenter.showItemsForSource(selectedSource)
         }
         else if(sources.isNotEmpty()) {
             listViewSources.selectionModel.select(0) // this will select first source in list and then show its items

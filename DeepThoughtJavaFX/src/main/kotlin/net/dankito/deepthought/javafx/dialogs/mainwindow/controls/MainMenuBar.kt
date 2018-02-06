@@ -200,13 +200,13 @@ class MainMenuBar : View() {
                 mnitmFileClipboard.isDisable = false
 
                 val extractContentFromUrlMenuItem = MenuItem(String.format(messages["clipboard.content.header.create.item.from"], urlUtil.getHostName(url)))
-                extractContentFromUrlMenuItem.action { extractEntryFromUrl(url) }
+                extractContentFromUrlMenuItem.action { extractItemFromUrl(url) }
                 mnitmFileClipboard.items.add(extractContentFromUrlMenuItem)
             }
         }
     }
 
-    private fun extractEntryFromUrl(url: String) {
+    private fun extractItemFromUrl(url: String) {
         articleExtractorManager.extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(url) {
             it.result?.let { router.showEditItemView(it) }
             it.error?.let { showErrorMessage(it, url) }

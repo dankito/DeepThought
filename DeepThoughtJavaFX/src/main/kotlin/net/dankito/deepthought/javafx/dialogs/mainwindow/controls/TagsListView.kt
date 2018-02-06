@@ -171,7 +171,7 @@ class TagsListView : EntitiesListView(), ITagsListView {
         val selectedTag = lastSelectedTag
 
         if(selectedTag != null) {
-            presenter.showEntriesForTag(selectedTag)
+            presenter.showItemsForTag(selectedTag)
         }
         else if(tags.isNotEmpty()) {
             tableTags.selectionModel.select(0) // this will select first tag in list and then show its items

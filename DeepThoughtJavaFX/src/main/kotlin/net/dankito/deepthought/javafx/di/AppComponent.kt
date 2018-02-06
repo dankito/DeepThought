@@ -48,7 +48,7 @@ interface AppComponent : CommonComponent {
 
     fun inject(articleExtractorsMenuButton: ArticleExtractorsMenuButton)
 
-    fun inject(entriesListView: ItemsListView)
+    fun inject(itemsListView: ItemsListView)
 
     fun inject(tagsListView: TagsListView)
 
@@ -60,7 +60,7 @@ interface AppComponent : CommonComponent {
 
     fun inject(editItemViewBase: EditItemViewBase)
 
-    fun inject(editEntryExtractionResultView: EditItemExtractionResultView)
+    fun inject(editItemExtractionResultView: EditItemExtractionResultView)
 
     fun inject(editReadLaterArticleView: EditReadLaterArticleView)
 
