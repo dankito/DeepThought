@@ -506,7 +506,7 @@ class EditReferenceActivity : BaseActivity() {
     inner class EventBusListener {
 
         @Handler
-        fun entryChanged(change: ReferenceChanged) {
+        fun sourceChanged(change: ReferenceChanged) {
             if(change.entity.id == source?.id && change.isDependentChange == false) {
                 if(change.source == EntityChangeSource.Local && (change.changeType == EntityChangeType.PreDelete || change.changeType == EntityChangeType.Deleted)) {
                     setActivityResult(EditReferenceActivityResult(didDeleteReference = true))

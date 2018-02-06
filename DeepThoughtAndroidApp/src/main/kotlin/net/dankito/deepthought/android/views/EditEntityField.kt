@@ -109,7 +109,7 @@ open class EditEntityField : RelativeLayout {
 
         edtxtEntityFieldValue = rootView.edtxtEntityFieldValue
         edtxtEntityFieldValue.addTextChangedListener(edtxtEntityFieldValueTextWatcher)
-        edtxtEntityFieldValue.setOnEditorActionListener { _, actionId, keyEvent -> handleEditEntrySearchTagAction(actionId, keyEvent) }
+        edtxtEntityFieldValue.setOnEditorActionListener { _, actionId, keyEvent -> handleEditItemSearchTagAction(actionId, keyEvent) }
         edtxtEntityFieldValue.setOnFocusChangeListener { _, hasFocus -> hasFocusChanged(hasFocus) }
 
         edtxtSecondaryInformationValue = rootView.edtxtSecondaryInformationValue
@@ -125,7 +125,7 @@ open class EditEntityField : RelativeLayout {
         doCustomUiInitialization(rootView)
     }
 
-    private fun handleEditEntrySearchTagAction(actionId: Int, keyEvent: KeyEvent?): Boolean {
+    private fun handleEditItemSearchTagAction(actionId: Int, keyEvent: KeyEvent?): Boolean {
         if(actionId == EditorInfo.IME_ACTION_DONE || (actionId == EditorInfo.IME_NULL && keyEvent?.action == KeyEvent.ACTION_DOWN)) {
             if(disableActionOnKeyboard == false) {
                 return handleActionPressed()

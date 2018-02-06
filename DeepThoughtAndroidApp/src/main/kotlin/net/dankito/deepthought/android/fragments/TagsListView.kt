@@ -163,7 +163,7 @@ class TagsListView : EntitiesListViewFragment<Tag>(R.menu.tag_contextual_action_
 
 
     override fun onBackPressed(): Boolean {
-        if(isTagEntriesListDialogVisible()) { // let TagItemsListDialog handle back button press
+        if(isTagItemsListDialogVisible()) { // let TagItemsListDialog handle back button press
             return false
         }
 
@@ -176,7 +176,7 @@ class TagsListView : EntitiesListViewFragment<Tag>(R.menu.tag_contextual_action_
         return super.onBackPressed()
     }
 
-    private fun isTagEntriesListDialogVisible(): Boolean {
+    private fun isTagItemsListDialogVisible(): Boolean {
         return fragmentManager.findFragmentByTag(TagItemsListDialog.TAG) != null
     }
 

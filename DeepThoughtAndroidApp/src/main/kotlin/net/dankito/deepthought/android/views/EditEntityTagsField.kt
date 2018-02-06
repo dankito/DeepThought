@@ -56,7 +56,7 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
 
     private val adapter: TagsOnItemRecyclerAdapter
 
-    private var originalTagsOnEntry: MutableCollection<Tag> = ArrayList<Tag>()
+    private var originalTagsOnItem: MutableCollection<Tag> = ArrayList<Tag>()
 
     private var autoCompleteResult: TagAutoCompleteResult? = null
 
@@ -89,12 +89,12 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
     }
 
 
-    fun setTagsToEdit(originalTagsOnEntry: MutableCollection<Tag>, activity: BaseActivity) {
-        this.originalTagsOnEntry = originalTagsOnEntry
+    fun setTagsToEdit(originalTagsOnItem: MutableCollection<Tag>, activity: BaseActivity) {
+        this.originalTagsOnItem = originalTagsOnItem
         this.activity = activity
 
-        adapter.tagsOnItem = LinkedHashSet(originalTagsOnEntry) // make a copy so that original collection doesn't get manipulated
-        setTagsOnEntryPreviewOnUIThread(originalTagsOnEntry)
+        adapter.tagsOnItem = LinkedHashSet(originalTagsOnItem) // make a copy so that original collection doesn't get manipulated
+        setTagsOnItemPreviewOnUIThread(originalTagsOnItem)
     }
 
 
@@ -142,13 +142,13 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
             removeRemovedTagFromEnteredSearchTerm(tag)
         }
 
-        setTagsOnEntryPreviewOnUIThread()
+        setTagsOnItemPreviewOnUIThread()
     }
 
     private fun addTagAndUpdatePreview(tag: Tag) {
         addTag(tag)
 
-        setTagsOnEntryPreviewOnUIThread()
+        setTagsOnItemPreviewOnUIThread()
     }
 
     private fun addTag(tag: Tag) {
@@ -197,21 +197,21 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
                 }
 
                 searchEntities(edtxtEntityFieldValue.text.toString())
-                // TODO: may avoid that setTagsOnEntryPreviewOnUIThread() gets called in tagAddedOrRemoved()
+                // TODO: may avoid that setTagsOnItemPreviewOnUIThread() gets called in tagAddedOrRemoved()
             }
         }
     }
 
-    private fun setTagsOnEntryPreviewOnUIThread() {
-        setTagsOnEntryPreviewOnUIThread(getMergedTags())
+    private fun setTagsOnItemPreviewOnUIThread() {
+        setTagsOnItemPreviewOnUIThread(getMergedTags())
     }
 
     private fun getMergedTags(): Collection<Tag> {
         return presenter.getMergedTags(adapter.tagsOnItem, autoCompleteResult)
     }
 
-    private fun setTagsOnEntryPreviewOnUIThread(tagsOnEntry: Collection<Tag>) {
-        lytPreview.let { tagsPreviewViewHelper.showTagsPreview(it, tagsOnEntry, showButtonRemoveTag = true) { removeTagFromCurrentTagsOnEntry(it) } }
+    private fun setTagsOnItemPreviewOnUIThread(tagsOnItem: Collection<Tag>) {
+        lytPreview.let { tagsPreviewViewHelper.showTagsPreview(it, tagsOnItem, showButtonRemoveTag = true) { removeTagFromCurrentTagsOnItem(it) } }
 
         if(adapter.items.isEmpty() || edtxtEntityFieldValue.hasFocus() == false) {
             hideSearchResultsView()
@@ -220,25 +220,25 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
             showSearchResultsView()
         }
 
-        updateDidValueChange(presenter.didTagsOnItemChange(originalTagsOnEntry, tagsOnEntry))
+        updateDidValueChange(presenter.didTagsOnItemChange(originalTagsOnItem, tagsOnItem))
     }
 
 
     private fun deleteTag(tag: Tag) {
-        removeTagFromEntry(tag)
+        removeTagFromItem(tag)
 
         presenter.deleteTagAsync(tag)
     }
 
-    private fun removeTagFromEntry(tag: Tag) {
-        if(originalTagsOnEntry.remove(tag)) {
+    private fun removeTagFromItem(tag: Tag) {
+        if(originalTagsOnItem.remove(tag)) {
             updateDidValueChange(true) // so that we can notify EditItemActivity that it's tags changed
         }
 
-        removeTagFromCurrentTagsOnEntry(tag)
+        removeTagFromCurrentTagsOnItem(tag)
     }
 
-    private fun removeTagFromCurrentTagsOnEntry(tag: Tag) {
+    private fun removeTagFromCurrentTagsOnItem(tag: Tag) {
         if(adapter.tagsOnItem.contains(tag)) {
             adapter.tagsOnItem.remove(tag)
         }
@@ -247,7 +247,7 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
             removeRemovedTagFromEnteredSearchTerm(tag)
 
             adapter.notifyDataSetChanged()
-            setTagsOnEntryPreviewOnUIThread()
+            setTagsOnItemPreviewOnUIThread()
         }
     }
 
@@ -270,18 +270,18 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
     override fun showEntities(entities: List<Tag>) {
         activity?.runOnUiThread {
             adapter.items = entities
-            setTagsOnEntryPreviewOnUIThread()
+            setTagsOnItemPreviewOnUIThread()
         }
     }
 
     override fun updateDisplayedTags() {
         activity?.runOnUiThread {
             adapter.notifyDataSetChanged()
-            setTagsOnEntryPreviewOnUIThread()
+            setTagsOnItemPreviewOnUIThread()
         }
     }
 
-    override fun shouldCreateNotExistingTags(notExistingTags: List<String>, tagsShouldGetCreatedCallback: (tagsOnEntry: MutableCollection<Tag>) -> Unit) {
+    override fun shouldCreateNotExistingTags(notExistingTags: List<String>, tagsShouldGetCreatedCallback: (tagsOnItem: MutableCollection<Tag>) -> Unit) {
         // we don't need to handle this anymore
     }
 

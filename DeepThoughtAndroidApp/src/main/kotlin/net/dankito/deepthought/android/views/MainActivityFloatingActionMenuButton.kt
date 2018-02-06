@@ -32,7 +32,7 @@ class MainActivityFloatingActionMenuButton(floatingActionMenu: FloatingActionMen
 
 
     private fun setup() {
-        floatingActionMenu.fab_add_entry.setOnClickListener { executeAndCloseMenu { router.showCreateItemView() } }
+        floatingActionMenu.fab_add_item.setOnClickListener { executeAndCloseMenu { router.showCreateItemView() } }
         floatingActionMenu.fab_add_newspaper_article.setOnClickListener { executeAndCloseMenu { router.showArticleSummaryExtractorsView() } }
 
         setFavoriteArticleSummaryExtractors()

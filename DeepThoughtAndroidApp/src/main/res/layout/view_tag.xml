@@ -16,7 +16,7 @@
 
 
     <Button
-        android:id="@+id/btnRemoveTagFromEntry"
+        android:id="@+id/btnRemoveTagFromItem"
         android:layout_width="@dimen/view_tag_button_width"
         android:layout_height="@dimen/view_tag_button_height"
         android:paddingRight="@dimen/view_tag_button_padding_right"

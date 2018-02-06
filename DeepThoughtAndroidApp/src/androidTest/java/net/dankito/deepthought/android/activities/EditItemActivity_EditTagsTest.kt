@@ -504,7 +504,7 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
             (tagView.findViewById(R.id.txtTagName) as? TextView)?.text?.let { tagName ->
                 if(tagName.toString() == tagNameToRemove) {
                     InstrumentationRegistry.getInstrumentation().runOnMainSync {
-                        (tagView.findViewById(R.id.btnRemoveTagFromEntry) as? Button)?.performClick()
+                        (tagView.findViewById(R.id.btnRemoveTagFromItem) as? Button)?.performClick()
                     }
                     return@forEach
                 }

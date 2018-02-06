@@ -60,9 +60,9 @@ class CreateEntitiesTest : DeepThoughtAndroidTestBase() {
 
         matchReferencePreviewAtPosition(0, TestSourceTitle)
 
-        matchEntryPreviewAtPositionContains(0, TestContent)
-        matchEntryPreviewAtPositionContains(0, TestSummary)
-        matchEntryPreviewAtPositionContains(0, TestSeriesTitle)
+        matchItemPreviewAtPositionContains(0, TestContent)
+        matchItemPreviewAtPositionContains(0, TestSummary)
+        matchItemPreviewAtPositionContains(0, TestSeriesTitle)
 
         // TODO: how to match tags?
 //        onView(withRecyclerView(R.id.rcyEntities).atPositionOnView(0, R.id.lytItemTags)).check(matches(withText(containsString(TestTag1Name))))
@@ -114,8 +114,8 @@ class CreateEntitiesTest : DeepThoughtAndroidTestBase() {
         onView(allOf(withId(R.id.rcyEntities))).check(matches(isDisplayed()))
     }
 
-    private fun matchEntryPreviewAtPositionContains(position: Int, entryPreview: String) {
-        matchListItemAtPositionText(ItemsListView::class.java, position, R.id.txtItemPreview, entryPreview)
+    private fun matchItemPreviewAtPositionContains(position: Int, itemPreview: String) {
+        matchListItemAtPositionText(ItemsListView::class.java, position, R.id.txtItemPreview, itemPreview)
     }
 
     private fun matchReferencePreviewAtPosition(position: Int, referencePreview: String) {

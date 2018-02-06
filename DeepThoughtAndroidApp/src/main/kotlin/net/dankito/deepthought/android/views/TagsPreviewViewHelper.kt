@@ -60,8 +60,8 @@ class TagsPreviewViewHelper {
 
         tagView.txtTagName.text = tag.name
 
-        tagView.btnRemoveTagFromEntry.visibility = if (showButtonRemoveTag) View.VISIBLE else View.GONE
-        tagView.btnRemoveTagFromEntry.setOnClickListener { tagRemovedListener?.invoke(tag) }
+        tagView.btnRemoveTagFromItem.visibility = if (showButtonRemoveTag) View.VISIBLE else View.GONE
+        tagView.btnRemoveTagFromItem.setOnClickListener { tagRemovedListener?.invoke(tag) }
 
         layout.addView(tagView)
 

@@ -39,7 +39,7 @@
                 app:alignContent="flex_start"
                 app:justifyContent="flex_start"
                 app:showDivider="middle"
-                app:dividerDrawable="@drawable/flexbox_tags_on_entry_divider"
+                app:dividerDrawable="@drawable/flexbox_tags_on_item_divider"
             >
 
                 <!-- EditText has a padding of 4dp, so set TextView's padding left also to 4dp so that they are left aligned -->

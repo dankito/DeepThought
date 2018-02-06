@@ -63,7 +63,7 @@ interface AppComponent : CommonComponent {
 
     fun inject(extractArticleHandler: ExtractArticleHandler)
 
-    fun inject(entriesListView: ItemsListView)
+    fun inject(itemsListView: ItemsListView)
 
     fun inject(tagsListView: TagsListView)
 
@@ -73,9 +73,9 @@ interface AppComponent : CommonComponent {
 
     fun inject(itemsListDialogBase: ItemsListDialogBase)
 
-    fun inject(tagEntriesListDialog: TagItemsListDialog)
+    fun inject(tagItemsListDialog: TagItemsListDialog)
 
-    fun inject(referenceEntriesListDialog: ReferenceItemsListDialog)
+    fun inject(referenceItemsListDialog: ReferenceItemsListDialog)
 
     fun inject(addArticleSummaryExtractorDialog: AddArticleSummaryExtractorDialog)
 

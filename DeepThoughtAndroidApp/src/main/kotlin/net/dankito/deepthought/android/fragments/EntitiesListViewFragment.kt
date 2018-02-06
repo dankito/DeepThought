@@ -422,7 +422,7 @@ abstract class EntitiesListViewFragment<T : BaseEntity>(private val contextualAc
             val searchInput = searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text) as? EditText
             searchInput?.imeOptions = getSearchViewImeOptions()
 
-            searchView.setOnQueryTextListener(entriesQueryTextListener) // move setOnQueryTextListener() behind searchView.setQuery() (in presenter?.getLastSearchTerm()?.let {})
+            searchView.setOnQueryTextListener(entitiesQueryTextListener) // move setOnQueryTextListener() behind searchView.setQuery() (in presenter?.getLastSearchTerm()?.let {})
             // as otherwise when lastSearchTerm != null onQuerySubmit gets called (and therefore e.g. tag filter applied)
 
             adjustSearchViewLayout(searchView)
@@ -468,7 +468,7 @@ abstract class EntitiesListViewFragment<T : BaseEntity>(private val contextualAc
     }
 
 
-    private val entriesQueryTextListener: SearchView.OnQueryTextListener = object : SearchView.OnQueryTextListener {
+    private val entitiesQueryTextListener: SearchView.OnQueryTextListener = object : SearchView.OnQueryTextListener {
         override fun onQueryTextChange(query: String): Boolean {
             searchEntities(query)
             return true

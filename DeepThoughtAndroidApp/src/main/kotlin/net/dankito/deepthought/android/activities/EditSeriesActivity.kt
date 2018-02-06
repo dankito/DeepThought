@@ -336,7 +336,7 @@ class EditSeriesActivity : BaseActivity() {
     inner class EventBusListener {
 
         @Handler
-        fun entryChanged(change: SeriesChanged) {
+        fun seriesChanged(change: SeriesChanged) {
             if(change.entity.id == series?.id) {
                 if(change.source == EntityChangeSource.Local && (change.changeType == EntityChangeType.PreDelete || change.changeType == EntityChangeType.Deleted)) {
                     setActivityResult(EditSeriesActivityResult(didDeleteSeries = true))

@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/mnApplyTagsOnEntryChanges"
+        android:id="@+id/mnApplyTagsOnItemChanges"
         app:showAsAction="always"
         android:orderInCategory="100"
         android:icon="@drawable/ic_check_white_48dp"

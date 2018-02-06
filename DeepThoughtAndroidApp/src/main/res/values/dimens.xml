@@ -26,10 +26,10 @@
     <dimen name="swipe_button_max_icon_height">55dp</dimen>
     <dimen name="swipe_button_corner_radius">6dp</dimen>
 
-    <dimen name="fragment_tab_entries_filtered_entities_margin_top">12dp</dimen>
-    <dimen name="fragment_tab_entries_filtered_entities_margin_bottom">20dp</dimen>
-    <dimen name="fragment_tab_entries_onboarding_text_size">16sp</dimen>
-    <dimen name="fragment_tab_entries_onboarding_left_right_margin">20dp</dimen>
+    <dimen name="fragment_tab_items_filtered_entities_margin_top">12dp</dimen>
+    <dimen name="fragment_tab_items_filtered_entities_margin_bottom">20dp</dimen>
+    <dimen name="fragment_tab_items_onboarding_text_size">16sp</dimen>
+    <dimen name="fragment_tab_items_onboarding_left_right_margin">20dp</dimen>
 
     <dimen name="chevron_right_width">40dp</dimen>
     <dimen name="chevron_right_text_size">20sp</dimen>

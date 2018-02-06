@@ -88,14 +88,14 @@ class ReferencesListView: EntitiesListViewFragment<Source>(R.menu.reference_cont
 
 
     override fun onBackPressed(): Boolean {
-        if(isReferenceEntriesListDialogVisible()) { // let ReferenceItemsListDialog handle back button press
+        if(isSourceItemsListDialogVisible()) { // let ReferenceItemsListDialog handle back button press
             return false
         }
 
         return super.onBackPressed()
     }
 
-    private fun isReferenceEntriesListDialogVisible(): Boolean {
+    private fun isSourceItemsListDialogVisible(): Boolean {
         return fragmentManager.findFragmentByTag(ReferenceItemsListDialog.TAG) != null
     }
 
