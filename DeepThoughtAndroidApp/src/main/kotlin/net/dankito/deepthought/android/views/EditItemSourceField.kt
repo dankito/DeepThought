@@ -5,8 +5,8 @@ import android.util.AttributeSet
 import android.view.ViewGroup
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.BaseActivity
-import net.dankito.deepthought.android.activities.EditReferenceActivity
-import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
+import net.dankito.deepthought.android.activities.EditSourceActivity
+import net.dankito.deepthought.android.activities.arguments.EditSourceActivityResult
 import net.dankito.deepthought.android.adapter.SourceOnItemRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Series
@@ -121,7 +121,7 @@ class EditItemSourceField : EditEntityEntityReferenceField, ISourcesListView {
 
 
     override fun editDetails() {
-        activity?.setWaitingForResult(EditReferenceActivity.ResultId)
+        activity?.setWaitingForResult(EditSourceActivity.ResultId)
 
         router.showEditItemSourceView(source, series, valueToEdit)
     }
@@ -144,11 +144,11 @@ class EditItemSourceField : EditEntityEntityReferenceField, ISourcesListView {
         hideSearchResultsView()
     }
 
-    fun editingSourceDone(result: EditReferenceActivityResult) {
-        if(result.didSaveReference) {
+    fun editingSourceDone(result: EditSourceActivityResult) {
+        if(result.didSaveSource) {
             sourceChanged(result.savedSource)
         }
-        else if(result.didDeleteReference) {
+        else if(result.didDeleteSource) {
             removeEntity()
         }
     }

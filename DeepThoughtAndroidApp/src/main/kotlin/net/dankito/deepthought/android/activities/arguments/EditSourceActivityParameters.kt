@@ -4,4 +4,4 @@ import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 
 
-data class EditReferenceActivityParameters(val source: Source?, val series: Series? = null, val editedSourceTitle: String? = null)
+data class EditSourceActivityParameters(val source: Source?, val series: Series? = null, val editedSourceTitle: String? = null)

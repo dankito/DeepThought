@@ -199,12 +199,12 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
 
         navigator.clickOnEditEntityReferenceFieldEditDetailsPopupMenu(R.id.lytSourcePreview)
 
-        checkDisplayedValueInEditEntityField(SourceTitleAfterEditing, R.id.lytEditReferenceTitle)
+        checkDisplayedValueInEditEntityField(SourceTitleAfterEditing, R.id.lytEditSourceTitle)
 
-        navigator.setValueOfEditEntityField(R.id.lytEditReferenceTitle, SourceTitleAfterEditingDetails)
-        checkDisplayedValueInEditEntityField(SourceTitleAfterEditingDetails, R.id.lytEditReferenceTitle)
+        navigator.setValueOfEditEntityField(R.id.lytEditSourceTitle, SourceTitleAfterEditingDetails)
+        checkDisplayedValueInEditEntityField(SourceTitleAfterEditingDetails, R.id.lytEditSourceTitle)
 
-        onView(withId(R.id.mnSaveReference)).perform(click())
+        onView(withId(R.id.mnSaveSource)).perform(click())
         TestUtil.sleep(1000)
 
         checkDisplayedSourceValue(Source(SourceTitleAfterEditingDetails, "", PublishingDate).getPreviewWithSeriesAndPublishingDate(series))

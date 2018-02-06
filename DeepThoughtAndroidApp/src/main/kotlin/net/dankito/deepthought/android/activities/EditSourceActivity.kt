@@ -3,11 +3,11 @@ package net.dankito.deepthought.android.activities
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.activity_edit_reference.*
+import kotlinx.android.synthetic.main.activity_edit_source.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityParameters
-import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
 import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityResult
+import net.dankito.deepthought.android.activities.arguments.EditSourceActivityParameters
+import net.dankito.deepthought.android.activities.arguments.EditSourceActivityResult
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.PickDateDialog
 import net.dankito.deepthought.android.service.permissions.IPermissionsManager
@@ -20,8 +20,8 @@ import net.dankito.deepthought.model.fields.SourceField
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditSourcePresenter
 import net.dankito.service.data.DeleteEntityService
-import net.dankito.service.data.SourceService
 import net.dankito.service.data.SeriesService
+import net.dankito.service.data.SourceService
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.SourceChanged
@@ -36,15 +36,15 @@ import javax.inject.Inject
 import kotlin.collections.HashSet
 
 
-class EditReferenceActivity : BaseActivity() {
+class EditSourceActivity : BaseActivity() {
 
     companion object {
-        private const val REFERENCE_ID_BUNDLE_EXTRA_NAME = "REFERENCE_ID"
-        private const val UNPERSISTED_REFERENCE_BUNDLE_EXTRA_NAME = "UNPERSISTED_REFERENCE_ID"
-        private const val REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME = "REFERENCE_SERIES_ID"
-        private const val ORIGINALLY_SET_REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME = "ORIGINALLY_SET_REFERENCE_SERIES_ID"
+        private const val SOURCE_ID_BUNDLE_EXTRA_NAME = "SOURCE_ID"
+        private const val UNPERSISTED_SOURCE_BUNDLE_EXTRA_NAME = "UNPERSISTED_SOURCE_ID"
+        private const val SOURCE_SERIES_ID_BUNDLE_EXTRA_NAME = "SOURCE_SERIES_ID"
+        private const val ORIGINALLY_SET_SOURCE_SERIES_ID_BUNDLE_EXTRA_NAME = "ORIGINALLY_SET_SOURCE_SERIES_ID"
 
-        const val ResultId = "EDIT_REFERENCE_ACTIVITY_RESULT"
+        const val ResultId = "EDIT_SOURCE_ACTIVITY_RESULT"
     }
 
 
@@ -85,11 +85,11 @@ class EditReferenceActivity : BaseActivity() {
     private var currentlySetPublishingDate: Date? = null
 
 
-    private var didReferenceChange = false
+    private var didSourceChange = false
 
     private val changedFields = HashSet<SourceField>()
 
-    private var mnSaveReference: MenuItem? = null
+    private var mnSaveSource: MenuItem? = null
 
     private val toolbarUtil = ToolbarUtil()
 
@@ -112,58 +112,58 @@ class EditReferenceActivity : BaseActivity() {
 
         setupUI()
 
-        showParameters(getParameters() as? EditReferenceActivityParameters)
+        showParameters(getParameters() as? EditSourceActivityParameters)
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
 
         outState?.let {
-            source?.let { reference ->
-                if(reference.id != null) {
-                    outState.putString(REFERENCE_ID_BUNDLE_EXTRA_NAME, reference.id)
+            source?.let { source ->
+                if(source.id != null) {
+                    outState.putString(SOURCE_ID_BUNDLE_EXTRA_NAME, source.id)
                 }
                 else {
-                    outState.putString(UNPERSISTED_REFERENCE_BUNDLE_EXTRA_NAME, serializer.serializeObject(reference))
+                    outState.putString(UNPERSISTED_SOURCE_BUNDLE_EXTRA_NAME, serializer.serializeObject(source))
                 }
             }
 
-            outState.putString(REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME, currentlySetSeries?.id)
+            outState.putString(SOURCE_SERIES_ID_BUNDLE_EXTRA_NAME, currentlySetSeries?.id)
 
-            outState.putString(ORIGINALLY_SET_REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME, originallySetSeries?.id)
+            outState.putString(ORIGINALLY_SET_SOURCE_SERIES_ID_BUNDLE_EXTRA_NAME, originallySetSeries?.id)
         }
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         savedInstanceState?.let {
-            savedInstanceState.getString(REFERENCE_ID_BUNDLE_EXTRA_NAME)?.let { referenceId -> showReference(referenceId) }
+            savedInstanceState.getString(SOURCE_ID_BUNDLE_EXTRA_NAME)?.let { sourceId -> showSource(sourceId) }
 
             // TODO: also restore selected Series
-            savedInstanceState.getString(UNPERSISTED_REFERENCE_BUNDLE_EXTRA_NAME)?.let { showReference(serializer.deserializeObject(it, Source::class.java)) }
+            savedInstanceState.getString(UNPERSISTED_SOURCE_BUNDLE_EXTRA_NAME)?.let { showSource(serializer.deserializeObject(it, Source::class.java)) }
 
-            savedInstanceState.getString(ORIGINALLY_SET_REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME)?.let { originallySetSeriesId ->
+            savedInstanceState.getString(ORIGINALLY_SET_SOURCE_SERIES_ID_BUNDLE_EXTRA_NAME)?.let { originallySetSeriesId ->
                 this.originallySetSeries = seriesService.retrieve(originallySetSeriesId)
-                lytEditReferenceSeries.setOriginalSeriesToEdit(originallySetSeries, this) { setSeriesToEdit(it) }
+                lytEditSourceSeries.setOriginalSeriesToEdit(originallySetSeries, this) { setSeriesToEdit(it) }
             }
 
-            val seriesId = savedInstanceState.getString(REFERENCE_SERIES_ID_BUNDLE_EXTRA_NAME)
+            val seriesId = savedInstanceState.getString(SOURCE_SERIES_ID_BUNDLE_EXTRA_NAME)
             if(seriesId != null) {
                 seriesService.retrieve(seriesId)?.let { series ->
-                    lytEditReferenceSeries.seriesChanged(series)
+                    lytEditSourceSeries.seriesChanged(series)
                 }
             }
             else {
-                lytEditReferenceSeries.seriesChanged(null)
+                lytEditSourceSeries.seriesChanged(null)
             }
 
-            updateDidReferenceChangeOnUiThread()
+            updateDidSourceChangeOnUiThread()
         }
 
-        super.onRestoreInstanceState(savedInstanceState) // important: Call super method after restoring reference so that all EditEntityFields with their modified values don't get overwritten by original reference's values
+        super.onRestoreInstanceState(savedInstanceState) // important: Call super method after restoring source so that all EditEntityFields with their modified values don't get overwritten by original source's values
     }
 
     private fun setupUI() {
-        setContentView(R.layout.activity_edit_reference)
+        setContentView(R.layout.activity_edit_source)
 
         setSupportActionBar(toolbar)
         toolbarUtil.adjustToolbarLayoutDelayed(toolbar)
@@ -172,34 +172,34 @@ class EditReferenceActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
-        lytEditReferenceTitle.setFieldNameOnUiThread(R.string.activity_edit_source_title_label) { updateDidReferenceChangeOnUiThread(SourceField.Title, it) }
+        lytEditSourceTitle.setFieldNameOnUiThread(R.string.activity_edit_source_title_label) { updateDidSourceChangeOnUiThread(SourceField.Title, it) }
 
-        lytEditReferenceSeries.didValueChangeListener = { didSeriesTitleChange -> seriesTitleChanged(didSeriesTitleChange) }
+        lytEditSourceSeries.didValueChangeListener = { didSeriesTitleChange -> seriesTitleChanged(didSeriesTitleChange) }
 
-        lytEditReferenceIssue.setFieldNameOnUiThread(R.string.activity_edit_source_issue_label) { updateDidReferenceChangeOnUiThread(SourceField.Issue, it) }
-        lytEditReferenceLength.setFieldNameOnUiThread(R.string.activity_edit_source_length_label) { updateDidReferenceChangeOnUiThread(SourceField.Length, it) }
+        lytEditSourceIssue.setFieldNameOnUiThread(R.string.activity_edit_source_issue_label) { updateDidSourceChangeOnUiThread(SourceField.Issue, it) }
+        lytEditSourceLength.setFieldNameOnUiThread(R.string.activity_edit_source_length_label) { updateDidSourceChangeOnUiThread(SourceField.Length, it) }
 
-        lytEditReferencePublishingDate.setFieldNameOnUiThread(R.string.activity_edit_source_publishing_date_label) { updateDidReferenceChangeOnUiThread(SourceField.PublishingDate, it) }
-        lytEditReferencePublishingDate.showActionIconOnUiThread(R.drawable.ic_date_range_white_48dp) { showDatePickerDialog() }
-        lytEditReferencePublishingDate.fieldValueFocusChangedListener = { hasFocus ->
+        lytEditSourcePublishingDate.setFieldNameOnUiThread(R.string.activity_edit_source_publishing_date_label) { updateDidSourceChangeOnUiThread(SourceField.PublishingDate, it) }
+        lytEditSourcePublishingDate.showActionIconOnUiThread(R.drawable.ic_date_range_white_48dp) { showDatePickerDialog() }
+        lytEditSourcePublishingDate.fieldValueFocusChangedListener = { hasFocus ->
             if(hasFocus == false) {
-                edtxtPublishingDateLostFocus(lytEditReferencePublishingDate.getCurrentFieldValue())
+                edtxtPublishingDateLostFocus(lytEditSourcePublishingDate.getCurrentFieldValue())
             }
         }
 
-        lytEditReferenceUrl.setFieldNameOnUiThread(R.string.activity_edit_source_url_label) { updateDidReferenceChangeOnUiThread(SourceField.Url, it) }
+        lytEditSourceUrl.setFieldNameOnUiThread(R.string.activity_edit_source_url_label) { updateDidSourceChangeOnUiThread(SourceField.Url, it) }
 
-        lytEditAttachedFiles.didValueChangeListener = { updateDidReferenceChangeOnUiThread(SourceField.Files, it) }
+        lytEditAttachedFiles.didValueChangeListener = { updateDidSourceChangeOnUiThread(SourceField.Files, it) }
     }
 
     private fun seriesTitleChanged(didSeriesTitleChange: Boolean) {
-        updateDidReferenceChangeOnUiThread(SourceField.SeriesTitle, didSeriesTitleChange)
+        updateDidSourceChangeOnUiThread(SourceField.SeriesTitle, didSeriesTitleChange)
     }
 
     private fun setSeriesToEdit(series: Series?) {
         this.currentlySetSeries = series
 
-        updateDidReferenceChangeOnUiThread(SourceField.Series, series?.id != originallySetSeries?.id)
+        updateDidSourceChangeOnUiThread(SourceField.Series, series?.id != originallySetSeries?.id)
     }
 
 
@@ -213,7 +213,7 @@ class EditReferenceActivity : BaseActivity() {
         super.onResume()
 
         (getAndClearResult(EditSeriesActivity.ResultId) as? EditSeriesActivityResult)?.let { result ->
-            lytEditReferenceSeries.editingSeriesDone(result)
+            lytEditSourceSeries.editingSeriesDone(result)
         }
 
         (supportFragmentManager.findFragmentByTag(PickDateDialog.TAG) as? PickDateDialog)?.let { dialog ->
@@ -237,7 +237,7 @@ class EditReferenceActivity : BaseActivity() {
 
 
     override fun onBackPressed() {
-        if(lytEditReferenceSeries.handlesBackButtonPress()) {
+        if(lytEditSourceSeries.handlesBackButtonPress()) {
             return
         }
 
@@ -245,10 +245,10 @@ class EditReferenceActivity : BaseActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.activity_edit_reference_menu, menu)
+        menuInflater.inflate(R.menu.activity_edit_source_menu, menu)
 
-        mnSaveReference = menu.findItem(R.id.mnSaveReference)
-        mnSaveReference?.isVisible = didReferenceChange
+        mnSaveSource = menu.findItem(R.id.mnSaveSource)
+        mnSaveSource?.isVisible = didSourceChange
 
         toolbarUtil.setupActionItemsLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
 
@@ -261,8 +261,8 @@ class EditReferenceActivity : BaseActivity() {
                 askIfUnsavedChangesShouldBeSavedAndCloseDialog()
                 return true
             }
-            R.id.mnSaveReference -> {
-                saveReferenceAndCloseDialog()
+            R.id.mnSaveSource -> {
+                saveSourceAndCloseDialog()
                 return true
             }
         }
@@ -272,7 +272,7 @@ class EditReferenceActivity : BaseActivity() {
 
 
     private fun askIfUnsavedChangesShouldBeSavedAndCloseDialog() {
-        if(didReferenceChange) {
+        if(didSourceChange) {
             askIfUnsavedChangesShouldBeSaved()
         }
         else {
@@ -285,7 +285,7 @@ class EditReferenceActivity : BaseActivity() {
         dialogService.showConfirmationDialog(getString(R.string.activity_edit_source_alert_message_source_contains_unsaved_changes), config = config) { selectedButton ->
             runOnUiThread {
                 if(selectedButton == ConfirmationDialogButton.Confirm) {
-                    saveReferenceAndCloseDialog()
+                    saveSourceAndCloseDialog()
                 }
                 else if(selectedButton == ConfirmationDialogButton.ThirdButton) {
                     closeDialog()
@@ -294,14 +294,14 @@ class EditReferenceActivity : BaseActivity() {
         }
     }
 
-    private fun saveReferenceAndCloseDialog() {
+    private fun saveSourceAndCloseDialog() {
         unregisterEventBusListener()
 
-        if(lytEditReferencePublishingDate.hasFocus()) { // OnFocusChangeListener doesn't get called when save action gets pressed
-            edtxtPublishingDateLostFocus(lytEditReferencePublishingDate.getCurrentFieldValue())
+        if(lytEditSourcePublishingDate.hasFocus()) { // OnFocusChangeListener doesn't get called when save action gets pressed
+            edtxtPublishingDateLostFocus(lytEditSourcePublishingDate.getCurrentFieldValue())
         }
 
-        saveReferenceAsync { successful ->
+        saveSourceAsync { successful ->
             if(successful) {
                 runOnUiThread { closeDialog() }
             }
@@ -311,28 +311,28 @@ class EditReferenceActivity : BaseActivity() {
         }
     }
 
-    private fun saveReferenceAsync(callback: (Boolean) -> Unit) {
-        source?.let { reference ->
+    private fun saveSourceAsync(callback: (Boolean) -> Unit) {
+        source?.let { source ->
             if(changedFields.contains(SourceField.SeriesTitle)) {
-                currentlySetSeries?.title = lytEditReferenceSeries.getEditedValue() ?: ""
+                currentlySetSeries?.title = lytEditSourceSeries.getEditedValue() ?: ""
             }
 
-            reference.title = lytEditReferenceTitle.getCurrentFieldValue()
-            reference.issue = if(lytEditReferenceIssue.getCurrentFieldValue().isNullOrBlank()) null else lytEditReferenceIssue.getCurrentFieldValue()
-            reference.length = if(lytEditReferenceLength.getCurrentFieldValue().isNullOrBlank()) null else lytEditReferenceLength.getCurrentFieldValue()
-            reference.url = if(lytEditReferenceUrl.getCurrentFieldValue().isNullOrBlank()) null else lytEditReferenceUrl.getCurrentFieldValue()
+            source.title = lytEditSourceTitle.getCurrentFieldValue()
+            source.issue = if(lytEditSourceIssue.getCurrentFieldValue().isNullOrBlank()) null else lytEditSourceIssue.getCurrentFieldValue()
+            source.length = if(lytEditSourceLength.getCurrentFieldValue().isNullOrBlank()) null else lytEditSourceLength.getCurrentFieldValue()
+            source.url = if(lytEditSourceUrl.getCurrentFieldValue().isNullOrBlank()) null else lytEditSourceUrl.getCurrentFieldValue()
 
-            presenter.saveSourceAsync(reference, currentlySetSeries, currentlySetPublishingDate, lytEditReferencePublishingDate.getCurrentFieldValue(),
+            presenter.saveSourceAsync(source, currentlySetSeries, currentlySetPublishingDate, lytEditSourcePublishingDate.getCurrentFieldValue(),
                     lytEditAttachedFiles.getEditedFiles()) { successful ->
                 if(successful) {
-                    setActivityResult(EditReferenceActivityResult(didSaveReference = true, savedSource = reference))
+                    setActivityResult(EditSourceActivityResult(didSaveSource = true, savedSource = source))
                 }
                 callback(successful)
             }
         }
     }
 
-    private fun setActivityResult(result: EditReferenceActivityResult) {
+    private fun setActivityResult(result: EditSourceActivityResult) {
         parameterHolder.setActivityResult(ResultId, result)
     }
 
@@ -346,11 +346,11 @@ class EditReferenceActivity : BaseActivity() {
 
         this.currentlySetPublishingDate = presenter.parsePublishingDate(enteredText)
 
-        updateDidReferenceChangeOnUiThread(SourceField.PublishingDate, currentlySetPublishingDate != previousValue)
+        updateDidSourceChangeOnUiThread(SourceField.PublishingDate, currentlySetPublishingDate != previousValue)
 
         // TODO: show hint or error when publishingDateString couldn't be parsed?
 //        if(currentlySetPublishingDate == null) {
-//            edtxtPublishingDate.error = getString(R.string.activity_edit_reference_error_could_not_parse_publishing_date, enteredText)
+//            edtxtPublishingDate.error = getString(R.string.activity_edit_source_error_could_not_parse_publishing_date, enteredText)
 //        }
     }
 
@@ -364,76 +364,76 @@ class EditReferenceActivity : BaseActivity() {
 
     private fun selectedPublishingDate(selectedDate: Date) {
         showPublishingDate(selectedDate)
-        updateDidReferenceChangeOnUiThread(SourceField.PublishingDate, true)
+        updateDidSourceChangeOnUiThread(SourceField.PublishingDate, true)
     }
 
 
-    private fun showParameters(parameters: EditReferenceActivityParameters?) {
+    private fun showParameters(parameters: EditSourceActivityParameters?) {
         parameters?.let {
             if(parameters.source != null) {
                 this.originallySetSeries = parameters.series ?: parameters.source.series
 
-                showReference(parameters.source, parameters.series, parameters.editedSourceTitle)
+                showSource(parameters.source, parameters.series, parameters.editedSourceTitle)
             }
             else {
-                createReference()
+                createSource()
             }
         }
     }
 
-    private fun askIfANewReferenceShouldBeCreated() {
+    private fun askIfANewSourceShouldBeCreated() {
         dialogService.showConfirmationDialog(getString(R.string.activity_edit_source_alert_message_create_new_source)) { selectedButton ->
             if(selectedButton == ConfirmationDialogButton.Confirm) {
-                if(didReferenceChange) {
-                    askIfCurrentReferenceChangesShouldGetSaved()
+                if(didSourceChange) {
+                    askIfCurrentSourceChangesShouldGetSaved()
                 }
                 else {
-                    createReference()
+                    createSource()
                 }
             }
         }
     }
 
-    private fun askIfCurrentReferenceChangesShouldGetSaved() {
+    private fun askIfCurrentSourceChangesShouldGetSaved() {
         dialogService.showConfirmationDialog(getString(R.string.activity_edit_source_alert_message_create_new_source_current_one_has_unsaved_changes)) { selectedButton ->
             if(selectedButton == ConfirmationDialogButton.Confirm) {
-                saveReferenceAsync { // TODO: show error message in case of failure
-                    runOnUiThread { createReference() }
+                saveSourceAsync { // TODO: show error message in case of failure
+                    runOnUiThread { createSource() }
                 }
             }
             else {
-                createReference()
+                createSource()
             }
         }
     }
 
-    private fun createReference() {
-        showReference(Source())
+    private fun createSource() {
+        showSource(Source())
     }
 
-    private fun showReference(referenceId: String) {
-        sourceService.retrieve(referenceId)?.let { reference ->
-            showReference(reference)
+    private fun showSource(sourceId: String) {
+        sourceService.retrieve(sourceId)?.let { source ->
+            showSource(source)
         }
     }
 
-    private fun showReference(source: Source, series: Series? = null, editedSourceTitle: String? = null) {
+    private fun showSource(source: Source, series: Series? = null, editedSourceTitle: String? = null) {
         this.source = source
 
-        lytEditReferenceTitle.setFieldValueOnUiThread(editedSourceTitle ?: source.title)
+        lytEditSourceTitle.setFieldValueOnUiThread(editedSourceTitle ?: source.title)
 
-        lytEditReferenceSeries.setOriginalSeriesToEdit(series ?: source.series, this) { setSeriesToEdit(it) }
+        lytEditSourceSeries.setOriginalSeriesToEdit(series ?: source.series, this) { setSeriesToEdit(it) }
 
-        lytEditReferenceIssue.setFieldValueOnUiThread(source.issue ?: "")
-        lytEditReferenceLength.setFieldValueOnUiThread(source.length ?: "")
+        lytEditSourceIssue.setFieldValueOnUiThread(source.issue ?: "")
+        lytEditSourceLength.setFieldValueOnUiThread(source.length ?: "")
         showPublishingDate(source.publishingDate, source.publishingDateString)
 
-        lytEditReferenceUrl.setFieldValueOnUiThread(source.url ?: "")
+        lytEditSourceUrl.setFieldValueOnUiThread(source.url ?: "")
 
         lytEditAttachedFiles.setFiles(source.attachedFiles, permissionsManager, source)
 
         unregisterEventBusListener() // TODO: why? i came here from showParameters() and then we need to listen to changes to Source
-        updateDidReferenceChangeOnUiThread()
+        updateDidSourceChangeOnUiThread()
     }
 
     private fun showPublishingDate(publishingDate: Date?, publishingDateString: String? = null) {
@@ -450,11 +450,11 @@ class EditReferenceActivity : BaseActivity() {
             ""
         }
 
-        lytEditReferencePublishingDate.setFieldValueOnUiThread(publishingDateStringToShow)
+        lytEditSourcePublishingDate.setFieldValueOnUiThread(publishingDateStringToShow)
     }
 
 
-    private fun updateDidReferenceChangeOnUiThread(field: SourceField, didFieldValueChange: Boolean) {
+    private fun updateDidSourceChangeOnUiThread(field: SourceField, didFieldValueChange: Boolean) {
         if(didFieldValueChange) {
             changedFields.add(field)
         }
@@ -462,13 +462,13 @@ class EditReferenceActivity : BaseActivity() {
             changedFields.remove(field)
         }
 
-        updateDidReferenceChangeOnUiThread()
+        updateDidSourceChangeOnUiThread()
     }
 
-    private fun updateDidReferenceChangeOnUiThread() {
-        this.didReferenceChange = changedFields.size > 0 || source?.isPersisted() == false
+    private fun updateDidSourceChangeOnUiThread() {
+        this.didSourceChange = changedFields.size > 0 || source?.isPersisted() == false
 
-        mnSaveReference?.isVisible = didReferenceChange
+        mnSaveSource?.isVisible = didSourceChange
     }
 
 
@@ -494,7 +494,7 @@ class EditReferenceActivity : BaseActivity() {
         }
     }
 
-    private fun warnReferenceHasBeenEdited(source: Source) {
+    private fun warnSourceHasBeenEdited(source: Source) {
         unregisterEventBusListener() // message now gets shown, don't display it a second time
 
         runOnUiThread {
@@ -509,11 +509,11 @@ class EditReferenceActivity : BaseActivity() {
         fun sourceChanged(change: SourceChanged) {
             if(change.entity.id == source?.id && change.isDependentChange == false) {
                 if(change.source == EntityChangeSource.Local && (change.changeType == EntityChangeType.PreDelete || change.changeType == EntityChangeType.Deleted)) {
-                    setActivityResult(EditReferenceActivityResult(didDeleteReference = true))
+                    setActivityResult(EditSourceActivityResult(didDeleteSource = true))
                     runOnUiThread { closeDialog() }
                 }
                 else if(change.source == EntityChangeSource.Synchronization) {
-                    warnReferenceHasBeenEdited(change.entity)
+                    warnSourceHasBeenEdited(change.entity)
                 }
             }
         }

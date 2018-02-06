@@ -91,18 +91,18 @@ open class UiNavigator {
 
         clickOnEditEntityReferenceFieldEditDetailsPopupMenu(R.id.lytSourcePreview)
 
-        setValueOfEditEntityField(R.id.lytEditReferenceTitle, sourceTitle)
+        setValueOfEditEntityField(R.id.lytEditSourceTitle, sourceTitle)
 
         seriesTitle?.let { createSeriesInEditSourceActivity(it) }
 
-        onView(withId(R.id.mnSaveReference)).perform(click())
+        onView(withId(R.id.mnSaveSource)).perform(click())
         TestUtil.sleep(500)
     }
 
     private fun createSeriesInEditSourceActivity(seriesTitle: String) {
-        onView(withId(R.id.lytEditReferenceSeries)).perform(click())
+        onView(withId(R.id.lytEditSourceSeries)).perform(click())
 
-        clickOnEditSourceSeriesFieldEditDetailsPopupMenu(R.id.lytEditReferenceSeries)
+        clickOnEditSourceSeriesFieldEditDetailsPopupMenu(R.id.lytEditSourceSeries)
 
         setValueOfEditEntityField(R.id.lytEditSeriesTitle, seriesTitle)
 

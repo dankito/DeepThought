@@ -47,7 +47,7 @@
     <dimen name="list_item_item_padding_top_bottom">4dp</dimen>
     <dimen name="list_item_item_padding_left_right">8dp</dimen>
     <dimen name="list_item_item_source_preview_min_height">18dp</dimen>
-    <dimen name="list_item_item_reference_preview_text_size">11sp</dimen>
+    <dimen name="list_item_item_source_preview_text_size">11sp</dimen>
     <dimen name="list_item_item_source_preview_margin_bottom">2dp</dimen>
     <dimen name="list_item_item_preview_height">50dp</dimen>
     <dimen name="list_item_item_preview_text_size">11sp</dimen>
@@ -145,13 +145,13 @@
     <dimen name="list_item_tag_on_item_height">40dp</dimen>
     <dimen name="list_item_tag_on_item_button_width">40dp</dimen>
 
-    <dimen name="activity_edit_reference_padding_left_right">8dp</dimen>
-    <dimen name="activity_edit_reference_find_existing_margin_left">6dp</dimen>
-    <dimen name="activity_edit_reference_find_existing_controls_margin_bottom">12dp</dimen>
-    <dimen name="activity_edit_reference_create_buttons_min_width">120dp</dimen>
-    <dimen name="activity_edit_reference_create_buttons_text_size">13sp</dimen>
-    <dimen name="activity_edit_reference_section_top_margin">16dp</dimen>
-    <dimen name="activity_edit_reference_icons_padding">4dp</dimen>
+    <dimen name="activity_edit_source_padding_left_right">8dp</dimen>
+    <dimen name="activity_edit_source_find_existing_margin_left">6dp</dimen>
+    <dimen name="activity_edit_source_find_existing_controls_margin_bottom">12dp</dimen>
+    <dimen name="activity_edit_source_create_buttons_min_width">120dp</dimen>
+    <dimen name="activity_edit_source_create_buttons_text_size">13sp</dimen>
+    <dimen name="activity_edit_source_section_top_margin">16dp</dimen>
+    <dimen name="activity_edit_source_icons_padding">4dp</dimen>
 
     <dimen name="activity_edit_series_padding">8dp</dimen>
     <dimen name="activity_edit_series_find_existing_margin_left">6dp</dimen>

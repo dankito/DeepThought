@@ -85,15 +85,15 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
 
 
     override fun showEditSourceView(source: Source) {
-        showEditSourceView(EditReferenceActivityParameters(source))
+        showEditSourceView(EditSourceActivityParameters(source))
     }
 
     override fun showEditItemSourceView(source: Source?, series: Series?, editedSourceTitle: String?) {
-        showEditSourceView(EditReferenceActivityParameters(source, series, editedSourceTitle))
+        showEditSourceView(EditSourceActivityParameters(source, series, editedSourceTitle))
     }
 
-    private fun showEditSourceView(parameters: EditReferenceActivityParameters) {
-        navigateToActivity(EditReferenceActivity::class.java, parameters)
+    private fun showEditSourceView(parameters: EditSourceActivityParameters) {
+        navigateToActivity(EditSourceActivity::class.java, parameters)
     }
 
 

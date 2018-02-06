@@ -99,7 +99,7 @@ interface AppComponent : CommonComponent {
 
     fun inject(editEntityFilesField: EditEntityFilesField)
 
-    fun inject(editReferenceActivity: EditReferenceActivity)
+    fun inject(editSourceActivity: EditSourceActivity)
 
     fun inject(editSeriesActivity: EditSeriesActivity)
 

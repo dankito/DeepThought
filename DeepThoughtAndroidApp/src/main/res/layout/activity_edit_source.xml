@@ -19,16 +19,16 @@
     >
 
         <ScrollView
-            android:id="@+id/scrEditReference"
+            android:id="@+id/scrEditSource"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_above="@id/toolbar"
-            android:paddingTop="@dimen/activity_edit_reference_padding_left_right"
-            android:paddingLeft="@dimen/activity_edit_reference_padding_left_right"
-            android:paddingStart="@dimen/activity_edit_reference_padding_left_right"
-            android:paddingRight="@dimen/activity_edit_reference_padding_left_right"
-            android:paddingEnd="@dimen/activity_edit_reference_padding_left_right"
+            android:paddingTop="@dimen/activity_edit_source_padding_left_right"
+            android:paddingLeft="@dimen/activity_edit_source_padding_left_right"
+            android:paddingStart="@dimen/activity_edit_source_padding_left_right"
+            android:paddingRight="@dimen/activity_edit_source_padding_left_right"
+            android:paddingEnd="@dimen/activity_edit_source_padding_left_right"
         >
 
             <RelativeLayout
@@ -37,52 +37,52 @@
             >
 
                 <net.dankito.deepthought.android.views.EditEntityField
-                    android:id="@+id/lytEditReferenceTitle"
+                    android:id="@+id/lytEditSourceTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                 />
 
                 <net.dankito.deepthought.android.views.EditSourceSeriesField
-                    android:id="@+id/lytEditReferenceSeries"
+                    android:id="@+id/lytEditSourceSeries"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/lytEditReferenceTitle"
+                    android:layout_below="@+id/lytEditSourceTitle"
                 />
 
                 <net.dankito.deepthought.android.views.EditEntityField
-                    android:id="@+id/lytEditReferenceIssue"
+                    android:id="@+id/lytEditSourceIssue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/lytEditReferenceSeries"
+                    android:layout_below="@+id/lytEditSourceSeries"
                 />
 
                 <net.dankito.deepthought.android.views.EditEntityField
-                    android:id="@+id/lytEditReferenceLength"
+                    android:id="@+id/lytEditSourceLength"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/lytEditReferenceIssue"
+                    android:layout_below="@+id/lytEditSourceIssue"
                 />
 
                 <net.dankito.deepthought.android.views.EditEntityField
-                    android:id="@+id/lytEditReferencePublishingDate"
+                    android:id="@+id/lytEditSourcePublishingDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/lytEditReferenceLength"
+                    android:layout_below="@+id/lytEditSourceLength"
                 />
 
                 <net.dankito.deepthought.android.views.EditEntityField
-                    android:id="@+id/lytEditReferenceUrl"
+                    android:id="@+id/lytEditSourceUrl"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/lytEditReferencePublishingDate"
+                    android:layout_below="@+id/lytEditSourcePublishingDate"
                 />
 
                 <net.dankito.deepthought.android.views.EditEntityFilesField
                     android:id="@+id/lytEditAttachedFiles"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/lytEditReferenceUrl"
+                    android:layout_below="@+id/lytEditSourceUrl"
                 />
 
             </RelativeLayout>

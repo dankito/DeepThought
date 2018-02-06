@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.view_floating_action_button_item_fields.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditItemActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditItemActivityResult
-import net.dankito.deepthought.android.activities.arguments.EditReferenceActivityResult
+import net.dankito.deepthought.android.activities.arguments.EditSourceActivityResult
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
@@ -614,7 +614,7 @@ class EditItemActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
 
-        (getAndClearResult(EditReferenceActivity.ResultId) as? EditReferenceActivityResult)?.let { result ->
+        (getAndClearResult(EditSourceActivity.ResultId) as? EditSourceActivityResult)?.let { result ->
             lytSourcePreview.editingSourceDone(result)
         }
 
@@ -1175,7 +1175,7 @@ class EditItemActivity : BaseActivity() {
     override fun onDestroy() {
         pauseWebView()
 
-        parameterHolder.clearActivityResults(EditReferenceActivity.ResultId)
+        parameterHolder.clearActivityResults(EditSourceActivity.ResultId)
 
         super.onDestroy()
     }
