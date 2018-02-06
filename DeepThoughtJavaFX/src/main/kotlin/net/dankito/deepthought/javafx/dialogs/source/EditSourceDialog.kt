@@ -15,7 +15,7 @@ import net.dankito.deepthought.javafx.ui.controls.EditEntityFilesField
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.presenter.EditReferencePresenter
+import net.dankito.deepthought.ui.presenter.EditSourcePresenter
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.ui.IClipboardService
@@ -61,7 +61,7 @@ class EditSourceDialog : DialogFragment() {
     private val editFilesField = EditEntityFilesField()
 
 
-    private val presenter: EditReferencePresenter
+    private val presenter: EditSourcePresenter
 
 
     val source: Source by param()
@@ -80,7 +80,7 @@ class EditSourceDialog : DialogFragment() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = EditReferencePresenter(router, clipboardService, deleteEntityService, sourcePersister)
+        presenter = EditSourcePresenter(router, clipboardService, deleteEntityService, sourcePersister)
     }
 
 
@@ -141,7 +141,7 @@ class EditSourceDialog : DialogFragment() {
 
         val series = updateSeries()
 
-        presenter.saveReferenceAsync(source, series, null, publishingDateField.value, editFilesField.getEditedFiles()) {
+        presenter.saveSourceAsync(source, series, null, publishingDateField.value, editFilesField.getEditedFiles()) {
             postResult(EditingSourceDoneEvent(true, source))
             done()
         }

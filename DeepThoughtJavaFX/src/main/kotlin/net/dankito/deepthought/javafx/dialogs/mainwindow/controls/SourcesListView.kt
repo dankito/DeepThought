@@ -11,7 +11,7 @@ import net.dankito.deepthought.javafx.service.extensions.findClickedListCell
 import net.dankito.deepthought.javafx.ui.controls.cell.SourceListCellFragment
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.presenter.ReferencesListPresenter
+import net.dankito.deepthought.ui.presenter.SourcesListPresenter
 import net.dankito.deepthought.ui.view.IReferencesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.search.ISearchEngine
@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 class SourcesListView : EntitiesListView(), IReferencesListView {
 
-    private val presenter: ReferencesListPresenter
+    private val presenter: SourcesListPresenter
 
     private val searchBar: SourcesSearchBar
 
@@ -53,7 +53,7 @@ class SourcesListView : EntitiesListView(), IReferencesListView {
     init {
         AppComponent.component.inject(this)
 
-        presenter = ReferencesListPresenter(this, searchEngine, router, clipboardService, deleteEntityService)
+        presenter = SourcesListPresenter(this, searchEngine, router, clipboardService, deleteEntityService)
         searchBar = SourcesSearchBar(this)
 
         searchEngine.addInitializationListener {
@@ -98,14 +98,14 @@ class SourcesListView : EntitiesListView(), IReferencesListView {
 
         contextMenu.item(messages["action.edit"]) {
             action {
-                presenter.editReference(clickedItem)
+                presenter.editSource(clickedItem)
             }
         }
 
         if(clickedItem.url.isNullOrBlank() == false) {
             contextMenu.item(messages["context.menu.item.copy.url.to.clipboard"]) {
                 action {
-                    presenter.copyReferenceUrlToClipboard(clickedItem)
+                    presenter.copySourceUrlToClipboard(clickedItem)
                 }
             }
         }
@@ -114,7 +114,7 @@ class SourcesListView : EntitiesListView(), IReferencesListView {
 
         contextMenu.item(messages["action.delete"]) {
             action {
-                presenter.deleteReference(clickedItem)
+                presenter.deleteSource(clickedItem)
             }
         }
 
@@ -147,7 +147,7 @@ class SourcesListView : EntitiesListView(), IReferencesListView {
 
 
     override fun searchEntities(query: String) {
-        presenter.searchReferences(query)
+        presenter.searchSources(query)
     }
 
 

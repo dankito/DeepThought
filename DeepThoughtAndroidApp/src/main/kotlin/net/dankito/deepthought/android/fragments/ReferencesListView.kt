@@ -12,7 +12,7 @@ import net.dankito.deepthought.android.dialogs.ReferenceItemsListDialog
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
-import net.dankito.deepthought.ui.presenter.ReferencesListPresenter
+import net.dankito.deepthought.ui.presenter.SourcesListPresenter
 import net.dankito.deepthought.ui.view.IReferencesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.SourceService
@@ -36,7 +36,7 @@ class ReferencesListView: EntitiesListViewFragment<Source>(R.menu.reference_cont
     protected lateinit var deleteEntityService: DeleteEntityService
 
 
-    private val presenter: ReferencesListPresenter
+    private val presenter: SourcesListPresenter
 
     private val adapter: ReferenceRecyclerAdapter
 
@@ -44,7 +44,7 @@ class ReferencesListView: EntitiesListViewFragment<Source>(R.menu.reference_cont
     init {
         AppComponent.component.inject(this)
 
-        presenter = ReferencesListPresenter(this, searchEngine, router, clipboardService, deleteEntityService)
+        presenter = SourcesListPresenter(this, searchEngine, router, clipboardService, deleteEntityService)
 
         adapter = ReferenceRecyclerAdapter(presenter)
     }
@@ -66,12 +66,12 @@ class ReferencesListView: EntitiesListViewFragment<Source>(R.menu.reference_cont
     override fun actionItemSelected(mode: ActionMode, actionItem: MenuItem, selectedItems: Set<Source>): Boolean {
         when(actionItem.itemId) {
             R.id.mnEditReference -> {
-                selectedItems.forEach { presenter.editReference(it) }
+                selectedItems.forEach { presenter.editSource(it) }
                 mode.finish()
                 return true
             }
             R.id.mnDeleteReference -> {
-                selectedItems.forEach { presenter.deleteReference(it) }
+                selectedItems.forEach { presenter.deleteSource(it) }
                 mode.finish()
                 return true
             }
@@ -83,7 +83,7 @@ class ReferencesListView: EntitiesListViewFragment<Source>(R.menu.reference_cont
     override fun getQueryHint(activity: Activity) = activity.getString(R.string.search_hint_sources)
 
     override fun searchEntities(query: String) {
-        presenter.searchReferences(query)
+        presenter.searchSources(query)
     }
 
 

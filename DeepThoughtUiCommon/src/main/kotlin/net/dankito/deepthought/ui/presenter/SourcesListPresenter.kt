@@ -16,9 +16,9 @@ import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class ReferencesListPresenter(private var view: IReferencesListView, private val searchEngine: ISearchEngine, router: IRouter,
-                              clipboardService: IClipboardService, deleteEntityService: DeleteEntityService)
-    : ReferencesPresenterBase(router, clipboardService, deleteEntityService), IMainViewSectionPresenter {
+class SourcesListPresenter(private var view: IReferencesListView, private val searchEngine: ISearchEngine, router: IRouter,
+                           clipboardService: IClipboardService, deleteEntityService: DeleteEntityService)
+    : SourcePresenterBase(router, clipboardService, deleteEntityService), IMainViewSectionPresenter {
 
 
     @Inject
@@ -41,12 +41,12 @@ class ReferencesListPresenter(private var view: IReferencesListView, private val
     }
 
 
-    private fun retrieveAndShowReferences() {
-        searchReferences(lastSearchTermProperty)
+    private fun retrieveAndShowSourcess() {
+        searchSources(lastSearchTermProperty)
     }
 
 
-    fun searchReferences(searchTerm: String, searchCompleted: ((List<Source>) -> Unit)? = null) {
+    fun searchSources(searchTerm: String, searchCompleted: ((List<Source>) -> Unit)? = null) {
         lastSearchTermProperty = searchTerm
 
         lastSourceSearch?.interrupt()
@@ -85,7 +85,7 @@ class ReferencesListPresenter(private var view: IReferencesListView, private val
         @Handler()
         fun entityChanged(entityChanged: EntitiesOfTypeChanged) {
             if(entityChanged.entityType == Source::class.java) {
-                retrieveAndShowReferences()
+                retrieveAndShowSourcess()
             }
         }
 

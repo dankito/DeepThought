@@ -1,10 +1,10 @@
 package net.dankito.deepthought.android.adapter
 
 import net.dankito.deepthought.model.Source
-import net.dankito.deepthought.ui.presenter.ReferencesPresenterBase
+import net.dankito.deepthought.ui.presenter.SourcePresenterBase
 
 
-class SourceOnItemRecyclerAdapter(presenter: ReferencesPresenterBase): ReferenceRecyclerAdapterBase(presenter) {
+class SourceOnItemRecyclerAdapter(presenter: SourcePresenterBase): ReferenceRecyclerAdapterBase(presenter) {
 
     var selectedSource: Source? = null
         set(value) {

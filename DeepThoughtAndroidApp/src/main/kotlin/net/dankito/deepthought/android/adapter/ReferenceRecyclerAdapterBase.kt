@@ -9,10 +9,10 @@ import net.dankito.deepthought.android.adapter.viewholder.ReferenceViewHolder
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.extensions.seriesAndPublishingDatePreview
-import net.dankito.deepthought.ui.presenter.ReferencesPresenterBase
+import net.dankito.deepthought.ui.presenter.SourcePresenterBase
 
 
-abstract class ReferenceRecyclerAdapterBase(private val presenter: ReferencesPresenterBase): MultiSelectListRecyclerSwipeAdapter<Source, ReferenceViewHolder>() {
+abstract class ReferenceRecyclerAdapterBase(private val presenter: SourcePresenterBase): MultiSelectListRecyclerSwipeAdapter<Source, ReferenceViewHolder>() {
 
     abstract val shouldShowImageIsSourceAddedToItem: Boolean
 
@@ -64,17 +64,17 @@ abstract class ReferenceRecyclerAdapterBase(private val presenter: ReferencesPre
         viewHolder.btnShareReference.visibility = if(item.url.isNullOrBlank()) View.GONE else View.VISIBLE
 
         viewHolder.btnEditReference.setOnClickListener {
-            presenter.editReference(item)
+            presenter.editSource(item)
             closeSwipeView(viewHolder)
         }
 
         viewHolder.btnShareReference.setOnClickListener {
-            presenter.copyReferenceUrlToClipboard(item)
+            presenter.copySourceUrlToClipboard(item)
             closeSwipeView(viewHolder)
         }
 
         viewHolder.btnDeleteReference.setOnClickListener {
-            presenter.deleteReference(item)
+            presenter.deleteSource(item)
             closeSwipeView(viewHolder)
         }
     }

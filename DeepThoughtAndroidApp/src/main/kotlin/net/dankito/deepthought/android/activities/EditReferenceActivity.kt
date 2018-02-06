@@ -18,7 +18,7 @@ import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.fields.SourceField
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.presenter.EditReferencePresenter
+import net.dankito.deepthought.ui.presenter.EditSourcePresenter
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.SourceService
 import net.dankito.service.data.SeriesService
@@ -74,7 +74,7 @@ class EditReferenceActivity : BaseActivity() {
     protected lateinit var eventBus: IEventBus
 
 
-    private val presenter: EditReferencePresenter
+    private val presenter: EditSourcePresenter
 
     private var source: Source? = null
 
@@ -101,7 +101,7 @@ class EditReferenceActivity : BaseActivity() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = EditReferencePresenter(router, clipboardService, deleteEntityService, sourcePersister)
+        presenter = EditSourcePresenter(router, clipboardService, deleteEntityService, sourcePersister)
 
         permissionsManager = PermissionsManager(this)
     }
@@ -322,7 +322,7 @@ class EditReferenceActivity : BaseActivity() {
             reference.length = if(lytEditReferenceLength.getCurrentFieldValue().isNullOrBlank()) null else lytEditReferenceLength.getCurrentFieldValue()
             reference.url = if(lytEditReferenceUrl.getCurrentFieldValue().isNullOrBlank()) null else lytEditReferenceUrl.getCurrentFieldValue()
 
-            presenter.saveReferenceAsync(reference, currentlySetSeries, currentlySetPublishingDate, lytEditReferencePublishingDate.getCurrentFieldValue(),
+            presenter.saveSourceAsync(reference, currentlySetSeries, currentlySetPublishingDate, lytEditReferencePublishingDate.getCurrentFieldValue(),
                     lytEditAttachedFiles.getEditedFiles()) { successful ->
                 if(successful) {
                     setActivityResult(EditReferenceActivityResult(didSaveReference = true, savedSource = reference))

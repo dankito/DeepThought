@@ -8,7 +8,7 @@ import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.extensions.getSeriesAndPublishingDatePreview
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.presenter.ReferencesListPresenter
+import net.dankito.deepthought.ui.presenter.SourcesListPresenter
 import net.dankito.deepthought.ui.view.IReferencesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.eventbus.IEventBus
@@ -41,7 +41,7 @@ class EditItemSourceField : EditEntityReferenceField<Source>(FX.messages["edit.i
     val didIndicationChange = didSecondaryInformationChange
 
 
-    private val referenceListPresenter: ReferencesListPresenter
+    private val presenter: SourcesListPresenter
 
 
     @Inject
@@ -63,7 +63,7 @@ class EditItemSourceField : EditEntityReferenceField<Source>(FX.messages["edit.i
     init {
         AppComponent.component.inject(this)
 
-        referenceListPresenter = ReferencesListPresenter(object : IReferencesListView {
+        presenter = SourcesListPresenter(object : IReferencesListView {
 
             override fun showEntities(entities: List<Source>) {
                 retrievedSearchResults(entities)
@@ -80,15 +80,15 @@ class EditItemSourceField : EditEntityReferenceField<Source>(FX.messages["edit.i
     override fun getListCellFragment() = SourceListCellFragment::class
 
     override fun editEntity(entity: Source) {
-        referenceListPresenter.editReference(entity)
+        presenter.editSource(entity)
     }
 
     override fun deleteEntity(entity: Source) {
-        referenceListPresenter.deleteReference(entity)
+        presenter.deleteSource(entity)
     }
 
     override fun searchEntities(searchTerm: String) {
-        referenceListPresenter.searchReferences(searchTerm) { result ->
+        presenter.searchSources(searchTerm) { result ->
             retrievedSearchResults(result)
         }
     }

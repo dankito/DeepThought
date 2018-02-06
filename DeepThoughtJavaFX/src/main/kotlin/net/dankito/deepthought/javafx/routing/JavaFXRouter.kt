@@ -86,7 +86,7 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
     }
 
 
-    override fun showEditReferenceView(source: Source) {
+    override fun showEditSourceView(source: Source) {
         mainWindowController.find(EditSourceDialog::class, mapOf(EditSourceDialog::source to source)).show(getEditSourceDialogTitle(source.title))
     }
 
@@ -107,7 +107,7 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
         // TODO
     }
 
-    override fun showEditReferenceSeriesView(forSource: Source, series: Series?) {
+    override fun showEditSourceSeriesView(forSource: Source, series: Series?) {
         // there should be no need for this on JavaFX
     }
 

@@ -13,7 +13,7 @@ import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.presenter.ReferencesListPresenter
+import net.dankito.deepthought.ui.presenter.SourcesListPresenter
 import net.dankito.deepthought.ui.view.IReferencesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.search.ISearchEngine
@@ -50,7 +50,7 @@ class EditItemSourceField : EditEntityEntityReferenceField, IReferencesListView 
     private var sourceChangedListener: ((Source?) -> Unit)? = null
 
 
-    private val presenter: ReferencesListPresenter
+    private val presenter: SourcesListPresenter
 
     private val existingSourcesSearchResultsAdapter: SourceOnItemRecyclerAdapter
 
@@ -60,7 +60,7 @@ class EditItemSourceField : EditEntityEntityReferenceField, IReferencesListView 
 
         setFieldNameOnUiThread(R.string.edit_entity_source_field_source_label)
 
-        presenter = ReferencesListPresenter(this, searchEngine, router, clipboardService, deleteEntityService)
+        presenter = SourcesListPresenter(this, searchEngine, router, clipboardService, deleteEntityService)
 
         existingSourcesSearchResultsAdapter = SourceOnItemRecyclerAdapter(presenter)
         existingSourcesSearchResultsAdapter.itemClickListener = { item -> existingSourceSelected(item) }
@@ -99,7 +99,7 @@ class EditItemSourceField : EditEntityEntityReferenceField, IReferencesListView 
         super.hasFocusChanged(hasFocus)
 
         if(hasFocus) {
-            presenter.searchReferences(presenter.getLastSearchTerm())
+            presenter.searchSources(presenter.getLastSearchTerm())
         }
     }
 
@@ -115,7 +115,7 @@ class EditItemSourceField : EditEntityEntityReferenceField, IReferencesListView 
         super.updateValueToEdit()
 
         if(edtxtEntityFieldValue.hasFocus()) {
-            presenter.searchReferences(getCurrentFieldValue())
+            presenter.searchSources(getCurrentFieldValue())
         }
     }
 

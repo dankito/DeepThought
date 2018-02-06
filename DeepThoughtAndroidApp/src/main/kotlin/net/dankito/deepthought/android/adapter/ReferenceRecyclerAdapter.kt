@@ -1,9 +1,9 @@
 package net.dankito.deepthought.android.adapter
 
-import net.dankito.deepthought.ui.presenter.ReferencesPresenterBase
+import net.dankito.deepthought.ui.presenter.SourcePresenterBase
 
 
-class ReferenceRecyclerAdapter(presenter: ReferencesPresenterBase): ReferenceRecyclerAdapterBase(presenter) {
+class ReferenceRecyclerAdapter(presenter: SourcePresenterBase): ReferenceRecyclerAdapterBase(presenter) {
 
     override val shouldShowImageIsSourceAddedToItem: Boolean
         get() = false

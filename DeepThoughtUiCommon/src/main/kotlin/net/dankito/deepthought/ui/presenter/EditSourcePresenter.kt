@@ -12,8 +12,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class EditReferencePresenter(router: IRouter, clipboardService: IClipboardService, deleteEntityService: DeleteEntityService,
-                             private val sourcePersister: SourcePersister) : ReferencesPresenterBase(router, clipboardService, deleteEntityService) {
+class EditSourcePresenter(router: IRouter, clipboardService: IClipboardService, deleteEntityService: DeleteEntityService,
+                          private val sourcePersister: SourcePersister) : SourcePresenterBase(router, clipboardService, deleteEntityService) {
 
     companion object {
         private val ShortDateFormat = DateFormat.getDateInstance(DateFormat.SHORT)
@@ -60,7 +60,7 @@ class EditReferencePresenter(router: IRouter, clipboardService: IClipboardServic
     }
 
 
-    fun saveReferenceAsync(source: Source, series: Series?, publishingDateInput: Date?, publishingDateStringInput: String?, editedFiles: Collection<FileLink>, callback: (Boolean) -> Unit) {
+    fun saveSourceAsync(source: Source, series: Series?, publishingDateInput: Date?, publishingDateStringInput: String?, editedFiles: Collection<FileLink>, callback: (Boolean) -> Unit) {
         val publishingDateString = if(publishingDateStringInput.isNullOrBlank()) null else publishingDateStringInput
         val publishingDate = if(publishingDateInput != null) publishingDateInput
                              else if(publishingDateString != null) parsePublishingDate(publishingDateString)
@@ -73,7 +73,7 @@ class EditReferencePresenter(router: IRouter, clipboardService: IClipboardServic
 
 
     fun editSeries(source: Source, series: Series?) {
-        router.showEditReferenceSeriesView(source, series)
+        router.showEditSourceSeriesView(source, series)
     }
 
 }

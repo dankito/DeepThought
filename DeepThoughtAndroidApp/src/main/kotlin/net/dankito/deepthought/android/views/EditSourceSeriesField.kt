@@ -109,7 +109,7 @@ class EditSourceSeriesField : EditEntityEntityReferenceField, ISeriesListView {
         // currently not used as mnEditDetails is hidden (showEditDetailsMenuItem set to false)
         activity?.setWaitingForResult(EditSeriesActivity.ResultId)
 
-        router.showEditReferenceSeriesView(Source(""), series)
+        router.showEditSourceSeriesView(Source(""), series)
     }
 
     override fun createNewEntity() {

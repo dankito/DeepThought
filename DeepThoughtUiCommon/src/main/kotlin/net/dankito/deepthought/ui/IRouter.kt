@@ -31,14 +31,14 @@ interface IRouter {
     fun showEditItemView(extractionResult: ItemExtractionResult)
 
 
-    fun showEditReferenceView(source: Source)
+    fun showEditSourceView(source: Source)
 
     fun showEditItemSourceView(source: Source?, series: Series?, editedSourceTitle: String? = null)
 
 
     fun showEditSeriesView(series: Series)
 
-    fun showEditReferenceSeriesView(forSource: Source, series: Series?)
+    fun showEditSourceSeriesView(forSource: Source, series: Series?)
 
 
     fun showPdfView(addNewPdfFile: File, sourceForFile: Source? = null)
