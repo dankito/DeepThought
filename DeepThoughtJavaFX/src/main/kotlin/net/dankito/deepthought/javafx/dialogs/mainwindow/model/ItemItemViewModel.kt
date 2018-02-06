@@ -2,12 +2,12 @@ package net.dankito.deepthought.javafx.dialogs.mainwindow.model
 
 import javafx.beans.property.SimpleLongProperty
 import javafx.beans.property.SimpleStringProperty
-import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import tornadofx.*
 
 
-class ItemViewModel : ItemViewModel<Item>() {
+class ItemItemViewModel : ItemViewModel<Item>() {
 
     val index = bind { SimpleLongProperty(item?.itemIndex ?: 0) }
 

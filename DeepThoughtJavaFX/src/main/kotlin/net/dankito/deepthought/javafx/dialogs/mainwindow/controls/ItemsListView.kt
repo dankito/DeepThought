@@ -4,7 +4,7 @@ import javafx.scene.control.ContextMenu
 import javafx.scene.control.TableView
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.di.AppComponent
-import net.dankito.deepthought.javafx.dialogs.mainwindow.model.ItemViewModel
+import net.dankito.deepthought.javafx.dialogs.mainwindow.model.ItemItemViewModel
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
 import net.dankito.deepthought.javafx.service.extensions.findClickedTableRow
 import net.dankito.deepthought.javafx.ui.controls.IItemsListViewJavaFX
@@ -35,7 +35,7 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
     }
 
 
-    private val itemModel = ItemViewModel()
+    private val itemModel = ItemItemViewModel()
 
     private val items = LazyLoadingObservableList<Item>()
 
