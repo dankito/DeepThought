@@ -7,7 +7,7 @@ import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.messages.ItemChanged
-import net.dankito.service.data.messages.ReferenceChanged
+import net.dankito.service.data.messages.SourceChanged
 import net.dankito.service.search.specific.ItemsSearch
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
@@ -91,8 +91,8 @@ class ReferenceItemsListDialog : ItemsListDialogBase() {
     inner class EventBusListener {
 
         @Handler
-        fun tagChanged(referenceChanged: ReferenceChanged) {
-            if(referenceChanged.entity.id == source?.id) {
+        fun sourceChanged(sourceChanged: SourceChanged) {
+            if(sourceChanged.entity.id == source?.id) {
                 retrieveAndShowItems()
             }
         }

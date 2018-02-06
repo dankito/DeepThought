@@ -2,7 +2,7 @@ package net.dankito.service.search.writerandsearcher
 
 import net.dankito.deepthought.model.Source
 import net.dankito.service.data.ReferenceService
-import net.dankito.service.data.messages.ReferenceChanged
+import net.dankito.service.data.messages.SourceChanged
 import net.dankito.service.eventbus.EventBusPriorities
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.FieldName
@@ -147,8 +147,8 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
         return object {
 
             @Handler(priority = EventBusPriorities.Indexer)
-            fun entityChanged(referenceChanged: ReferenceChanged) {
-                handleEntityChange(referenceChanged)
+            fun entityChanged(sourceChanged: SourceChanged) {
+                handleEntityChange(sourceChanged)
             }
 
         }

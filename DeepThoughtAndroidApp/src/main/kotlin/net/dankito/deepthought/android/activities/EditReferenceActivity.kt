@@ -24,7 +24,7 @@ import net.dankito.service.data.ReferenceService
 import net.dankito.service.data.SeriesService
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntityChangeType
-import net.dankito.service.data.messages.ReferenceChanged
+import net.dankito.service.data.messages.SourceChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
@@ -506,7 +506,7 @@ class EditReferenceActivity : BaseActivity() {
     inner class EventBusListener {
 
         @Handler
-        fun sourceChanged(change: ReferenceChanged) {
+        fun sourceChanged(change: SourceChanged) {
             if(change.entity.id == source?.id && change.isDependentChange == false) {
                 if(change.source == EntityChangeSource.Local && (change.changeType == EntityChangeType.PreDelete || change.changeType == EntityChangeType.Deleted)) {
                     setActivityResult(EditReferenceActivityResult(didDeleteReference = true))

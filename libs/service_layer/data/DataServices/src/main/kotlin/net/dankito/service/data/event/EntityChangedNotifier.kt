@@ -103,7 +103,7 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
         when(entityClass) {
             Item::class.java -> return ItemChanged(entity as Item, changeType, source)
             Tag::class.java -> return TagChanged(entity as Tag, changeType, source)
-            Source::class.java -> return ReferenceChanged(entity as Source, changeType, source)
+            Source::class.java -> return SourceChanged(entity as Source, changeType, source)
             Series::class.java -> return SeriesChanged(entity as Series, changeType, source)
             ReadLaterArticle::class.java -> return ReadLaterArticleChanged(entity as ReadLaterArticle, changeType, source)
             FileLink::class.java -> return FileChanged(entity as FileLink, changeType, source)
