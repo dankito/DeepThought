@@ -9,7 +9,7 @@ import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
-import net.dankito.service.search.specific.ReferenceSearch
+import net.dankito.service.search.specific.SourceSearch
 import net.dankito.utils.ui.IClipboardService
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
@@ -29,7 +29,7 @@ class ReferencesListPresenter(private var view: IReferencesListView, private val
 
     private var lastSearchTermProperty = Search.EmptySearchTerm
 
-    private var lastSourceSearch: ReferenceSearch? = null
+    private var lastSourceSearch: SourceSearch? = null
 
 
     init {
@@ -51,13 +51,13 @@ class ReferencesListPresenter(private var view: IReferencesListView, private val
 
         lastSourceSearch?.interrupt()
 
-        lastSourceSearch = ReferenceSearch(searchTerm) { result ->
+        lastSourceSearch = SourceSearch(searchTerm) { result ->
             retrievedSearchResults(result)
 
             searchCompleted?.invoke(result)
         }
 
-        lastSourceSearch?.let { searchEngine.searchReferences(it) }
+        lastSourceSearch?.let { searchEngine.searchSources(it) }
     }
 
     private fun retrievedSearchResults(result: List<Source>) {

@@ -8,9 +8,9 @@ import net.dankito.service.search.Search
 import net.dankito.service.search.SearchWithCollectionResult
 
 
-class ReferenceSearch(searchTerm: String = Search.EmptySearchTerm,
-                      val mustHaveThisSeries: Series? = null, val mustHaveTheseFiles: Collection<FileLink> = mutableListOf(),
-                      completedListener: (List<Source>) -> Unit)
+class SourceSearch(searchTerm: String = Search.EmptySearchTerm,
+                   val mustHaveThisSeries: Series? = null, val mustHaveTheseFiles: Collection<FileLink> = mutableListOf(),
+                   completedListener: (List<Source>) -> Unit)
     : SearchWithCollectionResult<Source>(searchTerm, completedListener) {
 
 }

@@ -47,21 +47,21 @@ object FieldName {
     val TagName = "tag_name"
 
 
-    /*      References      */
+    /*      Sources      */
 
-    val ReferenceId = "source_id"
+    val SourceId = "source_id"
 
-    val ReferenceTitle = "source_title"
-    val ReferenceSubTitle = "source_subtitle"
-    val ReferenceSeries = "source_series"
-    val ReferenceSeriesId = "source_series_id"
-    val ReferenceIssue = "source_issue"
-    val ReferencePublishingDate = "source_publishing_date"
-    val ReferencePublishingDateString = "source_publishing_date_string"
+    val SourceTitle = "source_title"
+    val SourceSubTitle = "source_subtitle"
+    val SourceSeries = "source_series"
+    val SourceSeriesId = "source_series_id"
+    val SourceIssue = "source_issue"
+    val SourcePublishingDate = "source_publishing_date"
+    val SourcePublishingDateString = "source_publishing_date_string"
 
-    val ReferenceAttachedFilesIds = "source_attached_files_ids"
-    val ReferenceAttachedFilesDetails = "source_attached_files_details"
-    val ReferenceNoAttachedFiles = "source_no_attached_files"
+    val SourceAttachedFilesIds = "source_attached_files_ids"
+    val SourceAttachedFilesDetails = "source_attached_files_details"
+    val SourceNoAttachedFiles = "source_no_attached_files"
 
 
     /*      Series      */

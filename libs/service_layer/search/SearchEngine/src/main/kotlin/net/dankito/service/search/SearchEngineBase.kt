@@ -56,13 +56,13 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
     abstract fun searchFilteredTags(search: FilteredTagsSearch, termsToSearchFor: List<String>)
 
 
-    override fun searchReferences(search: ReferenceSearch) {
+    override fun searchSources(search: SourceSearch) {
         val termsToSearchFor = getSingleSearchTerms(search.searchTerm, DefaultSearchTermSeparator)
 
-        threadPool.runAsync { searchReferences(search, termsToSearchFor) }
+        threadPool.runAsync { searchSources(search, termsToSearchFor) }
     }
 
-    abstract fun searchReferences(search: ReferenceSearch, termsToSearchFor: List<String>)
+    abstract fun searchSources(search: SourceSearch, termsToSearchFor: List<String>)
 
 
     override fun searchSeries(search: SeriesSearch) {

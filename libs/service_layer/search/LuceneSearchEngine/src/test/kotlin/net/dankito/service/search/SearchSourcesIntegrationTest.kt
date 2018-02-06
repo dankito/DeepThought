@@ -2,7 +2,7 @@ package net.dankito.service.search
 
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Source
-import net.dankito.service.search.specific.ReferenceSearch
+import net.dankito.service.search.specific.SourceSearch
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.Assert
@@ -43,7 +43,7 @@ class SearchSourcesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
         val resultHolder = AtomicReference<List<Source>?>(null)
         val waitForResultLatch = CountDownLatch(1)
 
-        underTest.searchReferences(ReferenceSearch(searchTerm, mustHaveTheseFiles = mustHaveTheseFiles) { result ->
+        underTest.searchSources(SourceSearch(searchTerm, mustHaveTheseFiles = mustHaveTheseFiles) { result ->
             resultHolder.set(result)
 
             waitForResultLatch.countDown()

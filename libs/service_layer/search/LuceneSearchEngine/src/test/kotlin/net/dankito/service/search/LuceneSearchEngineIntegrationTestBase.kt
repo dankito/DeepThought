@@ -6,7 +6,7 @@ import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.FilePersister
-import net.dankito.deepthought.data.ReferencePersister
+import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.di.DaggerBaseComponent
 import net.dankito.deepthought.files.FileManager
@@ -57,7 +57,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
 
     protected val filePersister: FilePersister
 
-    protected val sourcePersister: ReferencePersister
+    protected val sourcePersister: SourcePersister
 
     protected val itemPersister: ItemPersister
 
@@ -112,7 +112,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         deleteEntityService = DeleteEntityService(itemService, tagService, sourceService, seriesService, fileService, localFileInfoService, underTest, mock(), threadPool)
         fileManager = FileManager(underTest, localFileInfoService, mock(), platformConfiguration, HashService(), eventBus, threadPool)
         filePersister = FilePersister(fileService, localFileInfoService, fileManager, threadPool)
-        sourcePersister = ReferencePersister(sourceService, seriesService, filePersister, deleteEntityService)
+        sourcePersister = SourcePersister(sourceService, seriesService, filePersister, deleteEntityService)
         itemPersister = ItemPersister(itemService, sourcePersister, tagService, filePersister, deleteEntityService)
     }
 

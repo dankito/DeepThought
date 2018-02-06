@@ -2,8 +2,8 @@ package net.dankito.service.search
 
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.deepthought.model.*
-import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.deepthought.model.extensions.contentPlainText
+import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.service.search.specific.*
 import net.dankito.utils.IThreadPool
 
@@ -76,7 +76,7 @@ class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool
         // TODO
     }
 
-    override fun searchReferences(search: ReferenceSearch, termsToSearchFor: List<String>) {
+    override fun searchSources(search: SourceSearch, termsToSearchFor: List<String>) {
         searchForEntitiesOfType(Source::class.java, search, termsToSearchFor, { it.sortedBy { it.title }.sortedByDescending { it.publishingDate }.sortedBy { it.series?.title }}) { source ->
             listOf(source.title.toLowerCase(), source.subTitle.toLowerCase(), source.series?.title?.toLowerCase() ?: "",
                     source.publishingDateString ?: "", source.issue?.toLowerCase() ?: "")

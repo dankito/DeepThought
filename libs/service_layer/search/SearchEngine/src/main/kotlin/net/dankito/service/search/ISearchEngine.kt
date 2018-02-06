@@ -14,7 +14,7 @@ interface ISearchEngine {
 
     fun searchFilteredTags(search: FilteredTagsSearch)
 
-    fun searchReferences(search: ReferenceSearch)
+    fun searchSources(search: SourceSearch)
 
     fun searchSeries(search: SeriesSearch)
 
