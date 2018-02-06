@@ -12,7 +12,7 @@ class StatusBar : View() {
 
     private var statusLabel: Label by singleAssign()
 
-    private var statusLabelCountEntries: Label by singleAssign()
+    private var statusLabelCountItems: Label by singleAssign()
 
 
     override val root = gridpane {
@@ -33,7 +33,7 @@ class StatusBar : View() {
                 }
             }
 
-            statusLabelCountEntries = label {
+            statusLabelCountItems = label {
                 textAlignment = TextAlignment.RIGHT
 
                 gridpaneConstraints {
@@ -57,8 +57,8 @@ class StatusBar : View() {
         statusLabel.text = status
     }
 
-    fun showCountDisplayedItemsOnUiThread(countEntries: Int) {
-        statusLabelCountEntries.text = String.format(messages["main.window.status.bar.count.displayed.items"], countEntries)
+    fun showCountDisplayedItemsOnUiThread(countItems: Int) {
+        statusLabelCountItems.text = String.format(messages["main.window.status.bar.count.displayed.items"], countItems)
     }
 
 }
