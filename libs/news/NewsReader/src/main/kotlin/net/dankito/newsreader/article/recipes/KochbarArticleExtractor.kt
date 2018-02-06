@@ -13,7 +13,7 @@ class KochbarArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
         return "Kochbar"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return url.startsWith("https://www.kochbar.de/rezept/") && url.length > "https://www.kochbar.de/rezept/".length
     }
 

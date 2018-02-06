@@ -68,8 +68,8 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
     }
 
     private fun dispatchMessagesForTagDependentEntities(tag: Tag, source: EntityChangeSource) {
-        tag.items.filterNotNull().forEach { entry ->
-            notifyListenersOfEntityChange(entry, EntityChangeType.Updated, source)
+        tag.items.filterNotNull().forEach { item ->
+            notifyListenersOfEntityChange(item, EntityChangeType.Updated, source)
         }
     }
 
@@ -80,8 +80,8 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
     }
 
     private fun dispatchMessagesForReferenceDependentEntities(reference: Source, source: EntityChangeSource) {
-        reference.items.filterNotNull().forEach { entry ->
-            notifyListenersOfEntityChange(entry, EntityChangeType.Updated, source)
+        reference.items.filterNotNull().forEach { item ->
+            notifyListenersOfEntityChange(item, EntityChangeType.Updated, source)
         }
     }
 

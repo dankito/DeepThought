@@ -13,20 +13,20 @@ class HeiseDeveloperArticleExtractor(webClient: IWebClient) : HeiseNewsAndDevelo
         return "Heise Developer"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return isHttpOrHttpsUrlFromHost(url, "www.heise.de/developer/meldung/") || isHttpOrHttpsUrlFromHost(url, "m.heise.de/developer/meldung/")
     }
 
 
     override fun parseArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleElement: Element, url: String, title: String) {
         articleElement.select(".article-content").first()?.let { contentElement ->
-            val entry = Item(extractContent(articleElement, url))
+            val item = Item(extractContent(articleElement, url))
 
             val publishingDate = extractPublishingDate(headerElement)
-            val reference = Source(title, url, publishingDate)
-            reference.previewImageUrl = makeLinkAbsolute(contentElement.select(".aufmacherbild img").first()?.attr("src") ?: "", url)
+            val source = Source(title, url, publishingDate)
+            source.previewImageUrl = makeLinkAbsolute(contentElement.select(".aufmacherbild img").first()?.attr("src") ?: "", url)
 
-            extractionResult.setExtractedContent(entry, reference)
+            extractionResult.setExtractedContent(item, source)
         }
     }
 

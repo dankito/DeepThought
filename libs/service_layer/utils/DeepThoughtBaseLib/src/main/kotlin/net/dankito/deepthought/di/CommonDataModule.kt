@@ -5,8 +5,8 @@ import dagger.Provides
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.network.communication.SocketHandler
-import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.FilePersister
+import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.ReferencePersister
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.files.FileManager
@@ -57,7 +57,7 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideEntryService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : ItemService {
+    fun provideItemService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : ItemService {
         return ItemService(dataManager, entityChangedNotifier)
     }
 
@@ -146,7 +146,7 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideEntryPersister(itemService: ItemService, referencePersister: ReferencePersister, tagService: TagService, filePersister: FilePersister,
+    fun provideItemPersister(itemService: ItemService, referencePersister: ReferencePersister, tagService: TagService, filePersister: FilePersister,
                               deleteEntityService: DeleteEntityService): ItemPersister {
         return ItemPersister(itemService, referencePersister, tagService, filePersister, deleteEntityService)
     }

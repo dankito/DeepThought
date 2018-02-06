@@ -21,22 +21,22 @@ class TagesschauArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
         return "Tagesschau"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return isHttpOrHttpsUrlFromHost(url, "www.tagesschau.de/")
     }
 
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("#content .storywrapper").first()?.let { contentElement ->
-            extractEntry(contentElement)?.let { entry ->
+            extractItem(contentElement)?.let { item ->
                 val reference = extractReference(url, contentElement)
 
-                extractionResult.setExtractedContent(entry, reference)
+                extractionResult.setExtractedContent(item, reference)
             }
         }
     }
 
-    private fun extractEntry(contentElement: Element): Item? {
+    private fun extractItem(contentElement: Element): Item? {
         contentElement.select(".sectionZ .modParagraph").first()?.let { articleContentElement ->
             cleanArticleContentElement(articleContentElement)
 

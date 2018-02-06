@@ -102,19 +102,19 @@ class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventB
 
     private fun addQueryForOptions(search: ReferenceSearch, query: BooleanQuery) {
         search.mustHaveThisSeries?.let { series ->
-            val filterSeriesQuery = BooleanQuery()
-            filterSeriesQuery.add(TermQuery(Term(FieldName.ReferenceSeriesId, series.id)), BooleanClause.Occur.MUST)
+            val searchSeriesQuery = BooleanQuery()
+            searchSeriesQuery.add(TermQuery(Term(FieldName.ReferenceSeriesId, series.id)), BooleanClause.Occur.MUST)
 
-            query.add(filterSeriesQuery, BooleanClause.Occur.MUST)
+            query.add(searchSeriesQuery, BooleanClause.Occur.MUST)
         }
 
         if(search.mustHaveTheseFiles.isNotEmpty()) {
-            val filterEntriesQuery = BooleanQuery()
+            val searchItemsQuery = BooleanQuery()
             for(file in search.mustHaveTheseFiles.filterNotNull().filter { it.id != null }) {
-                filterEntriesQuery.add(TermQuery(Term(FieldName.ReferenceAttachedFilesIds, file.id)), BooleanClause.Occur.MUST)
+                searchItemsQuery.add(TermQuery(Term(FieldName.ReferenceAttachedFilesIds, file.id)), BooleanClause.Occur.MUST)
             }
 
-            query.add(filterEntriesQuery, BooleanClause.Occur.MUST)
+            query.add(searchItemsQuery, BooleanClause.Occur.MUST)
         }
     }
 

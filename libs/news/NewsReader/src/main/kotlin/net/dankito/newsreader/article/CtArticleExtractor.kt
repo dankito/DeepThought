@@ -32,7 +32,7 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
         return "c't"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return isHttpOrHttpsUrlFromHost(url, "www.heise.de/ct/") || isHttpOrHttpsUrlFromHost(url, "m.heise.de/ct/")
     }
 
@@ -53,14 +53,14 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
 
 
     private fun parseDesktopSite(url: String, sectionElement: Element, extractionResult: ItemExtractionResult) {
-        val articleEntry = createEntry(url, sectionElement)
+        val articleItem = createItem(url, sectionElement)
 
-        val reference = createReference(url, sectionElement)
+        val source = createSource(url, sectionElement)
 
-        extractionResult.setExtractedContent(articleEntry, reference)
+        extractionResult.setExtractedContent(articleItem, source)
     }
 
-    private fun createEntry(url: String, sectionElement: Element): Item {
+    private fun createItem(url: String, sectionElement: Element): Item {
         var content = ""
 
         makeLinksAbsolute(sectionElement, url)
@@ -114,7 +114,7 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
     }
 
 
-    private fun createReference(articleUrl: String, sectionElement: Element): Source {
+    private fun createSource(articleUrl: String, sectionElement: Element): Source {
         val headerElement = sectionElement.select("header").first()
 
         val title = headerElement.select("h1").text()
@@ -131,30 +131,30 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
 
 
     private fun parseMobileSite(url: String, article: Element, extractionResult: ItemExtractionResult) {
-        val reference = extractMobileArticleReference(article, url)
+        val source = extractMobileArticleSource(article, url)
 
         article.select("h1, time, span.author, a.comments, .comment, .btn-toolbar .whatsbroadcast-toolbar, #whatsbroadcast, " +
                 ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta, .widget-werbung").remove()
         val content = article.html()
 
-        extractionResult.setExtractedContent(Item(content), reference)
+        extractionResult.setExtractedContent(Item(content), source)
     }
 
-    private fun extractMobileArticleReference(article: Element, url: String): Source {
+    private fun extractMobileArticleSource(article: Element, url: String): Source {
         val title = article.select("h1").first()?.text()?.trim() ?: ""
 
-        val reference = Source(title, url)
+        val source = Source(title, url)
 
         article.select("figure.aufmacherbild img").first()?.let {
-            reference.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
+            source.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
         }
         article.select("time").first()?.let {
             try {
-                reference.publishingDate = ctMobileDateFormat.parse(it.attr("datetime"))
+                source.publishingDate = ctMobileDateFormat.parse(it.attr("datetime"))
             } catch(e: Exception) { log.warn("Could not parse C't mobile site date string ${it.attr("datetime")}", e) }
         }
 
-        return reference
+        return source
     }
 
 

@@ -15,7 +15,7 @@ class TechStageArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
         return "TechStage"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return isHttpOrHttpsUrlFromHost(url, "www.techstage.de/")
     }
 

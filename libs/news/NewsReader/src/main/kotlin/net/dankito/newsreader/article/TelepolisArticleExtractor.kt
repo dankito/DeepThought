@@ -15,7 +15,7 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
         return "Telepolis"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return isHttpOrHttpsUrlFromHost(url, "www.heise.de/tp/features/") ||  isHttpOrHttpsUrlFromHost(url, "m.heise.de/tp/features/")
     }
 

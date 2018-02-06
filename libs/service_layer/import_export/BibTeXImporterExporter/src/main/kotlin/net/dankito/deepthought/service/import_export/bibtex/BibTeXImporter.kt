@@ -28,7 +28,7 @@ import kotlin.collections.ArrayList
 // -> Create an ImportProcessor with methods like ensureTagExists().
 // Another advantage is, all other imports could re-use exactly that functionality.
 class BibTeXImporter(private val searchEngine: ISearchEngine, private val itemPersister: ItemPersister, private val tagService: TagService,
-                     private val referencePersister: ReferencePersister, private val seriesPersister: SeriesPersister, private val threadPool: IThreadPool) : IDataImporter {
+                     private val sourcePersister: ReferencePersister, private val seriesPersister: SeriesPersister, private val threadPool: IThreadPool) : IDataImporter {
 
     companion object {
         val DateFormat = SimpleDateFormat("yyyy-MM-dd")
@@ -72,32 +72,32 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val itemPe
 
         val database = bibTeXParser.parseFully(filterReader)
 
-        return mapDatabaseToEntries(database)
+        return mapDatabaseToItems(database)
     }
 
-    private fun mapDatabaseToEntries(database: BibTeXDatabase): Collection<Item> {
+    private fun mapDatabaseToItems(database: BibTeXDatabase): Collection<Item> {
         log.info("Parsed BibTeX file with ${database.entries.size} entries, going to map them to items ...")
         val latexParser = LaTeXParser()
         val latexPrinter = LaTeXPrinter()
 
-        return database.entries.map { mapEntry -> mapBibTeXEntryToEntry(mapEntry.value, latexParser, latexPrinter) }.filterNotNull()
+        return database.entries.map { mapEntry -> mapBibTeXEntryToItem(mapEntry.value, latexParser, latexPrinter) }.filterNotNull()
     }
 
-    private fun mapBibTeXEntryToEntry(bibTeXEntry: BibTeXEntry, latexParser: LaTeXParser, latexPrinter: LaTeXPrinter): Item {
-        val entry = Item("")
+    private fun mapBibTeXEntryToItem(bibTeXEntry: BibTeXEntry, latexParser: LaTeXParser, latexPrinter: LaTeXPrinter): Item {
+        val item = Item("")
         val tags = ArrayList<Tag>()
         val files = ArrayList<FileLink>() // TODO
-        val reference = Source()
-        referencePersister.saveReference(reference)
+        val source = Source()
+        sourcePersister.saveReference(source)
 
-        try { entry.itemIndex = bibTeXEntry.key.value.toLong() } catch(ignored: Exception) { } // only works for BibTeX exported by DeepThought
+        try { item.itemIndex = bibTeXEntry.key.value.toLong() } catch(ignored: Exception) { } // only works for BibTeX exported by DeepThought
         bibTeXEntry.fields.forEach { key, value ->
-            mapEntryField(entry, tags, reference, key, value, latexParser, latexPrinter)
+            mapEntryField(item, tags, source, key, value, latexParser, latexPrinter)
         }
 
-        itemPersister.saveItemAsync(entry, reference, reference.series, tags, files) { }
+        itemPersister.saveItemAsync(item, source, source.series, tags, files) { }
 
-        return entry
+        return item
     }
 
     private fun mapEntryField(item: Item, tags: MutableList<Tag>, source: Source, bibTeXKey: Key, bibTeXValue: Value, latexParser: LaTeXParser, latexPrinter: LaTeXPrinter) {
@@ -133,14 +133,14 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val itemPe
 
             "title" -> source.title = fieldValue
             "url" -> source.url = fieldValue
-            "year" -> setReferencePublishingDate(source, fieldValue)
-            "urldate" -> setReferenceLastAccessDate(source, fieldValue)
+            "year" -> setSourcePublishingDate(source, fieldValue)
+            "urldate" -> setSourceLastAccessDate(source, fieldValue)
             "number" -> source.issue = fieldValue
             "isbn" -> source.isbnOrIssn = fieldValue
             "issn" -> source.isbnOrIssn = fieldValue
 
-            "series" -> setEntrySeries(source, fieldValue)
-            "journal" -> setEntrySeries(source, fieldValue)
+            "series" -> setItemSeries(source, fieldValue)
+            "journal" -> setItemSeries(source, fieldValue)
 
             // TODO
             "file" -> { }
@@ -179,7 +179,7 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val itemPe
     }
 
 
-    private fun setEntrySeries(source: Source, seriesTitle: String) {
+    private fun setItemSeries(source: Source, seriesTitle: String) {
         val countDownLatch = CountDownLatch(1)
 
         searchEngine.searchSeries(SeriesSearch(seriesTitle) { result ->
@@ -205,13 +205,13 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val itemPe
     }
 
 
-    private fun setReferencePublishingDate(source: Source, publishingDateString: String) {
+    private fun setSourcePublishingDate(source: Source, publishingDateString: String) {
         val publishingDate = tryToParseDateString(publishingDateString)
 
         source.setPublishingDate(publishingDate, publishingDateString)
     }
 
-    private fun setReferenceLastAccessDate(source: Source, lastAccessDateString: String) {
+    private fun setSourceLastAccessDate(source: Source, lastAccessDateString: String) {
         source.lastAccessDate = tryToParseDateString(lastAccessDateString)
     }
 

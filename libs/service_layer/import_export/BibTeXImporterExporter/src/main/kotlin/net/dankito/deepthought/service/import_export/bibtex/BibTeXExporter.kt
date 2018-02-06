@@ -2,8 +2,8 @@ package net.dankito.deepthought.service.import_export.bibtex
 
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
-import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.deepthought.model.extensions.contentPlainText
+import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.deepthought.service.import_export.IDataExporter
 import net.dankito.utils.IThreadPool
 import org.jbibtex.*
@@ -57,11 +57,11 @@ class BibTeXExporter(private val threadPool: IThreadPool) : IDataExporter {
     private fun mapEntry(item: Item, database: BibTeXDatabase) {
         val bibTeXEntry = BibTeXEntry(Key("misc"), Key(item.itemIndex.toString())) // TODO: itemIndex is not necessarily unique
 
-        var entryContent = item.contentPlainText
+        var itemContent = item.contentPlainText
         if(item.summary.isNullOrBlank() == false) {
-            entryContent += item.summaryPlainText + if(entryContent.isNullOrBlank()) "" else " - " + item.contentPlainText
+            itemContent += item.summaryPlainText + if(itemContent.isNullOrBlank()) "" else " - " + item.contentPlainText
         }
-        addField(bibTeXEntry, "abstract", entryContent)
+        addField(bibTeXEntry, "abstract", itemContent)
 
         if(item.indication.isNullOrBlank() == false) {
             addField(bibTeXEntry, "pages", item.indication)

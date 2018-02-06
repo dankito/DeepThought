@@ -165,8 +165,8 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osH
 
 
     fun searchFilteredTags(search: FilteredTagsSearch, termsToSearchFor: List<String>) {
-        var entriesHavingFilteredTags: List<Item> = listOf()
-        var tagsOnEntriesContainingFilteredTags: List<Tag> = listOf()
+        var itemsHavingFilteredTags: List<Item> = listOf()
+        var tagsOnItemsContainingFilteredTags: List<Tag> = listOf()
         val tagsToFilterForIds = search.tagsToFilterFor.map { it.id }
         val query = BooleanQuery()
 
@@ -180,14 +180,14 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osH
 
         try {
             itemIndexWriterAndSearcher.executeQuery(query, FILTERED_TAGS_DEFAULT_COUNT_MAX_SEARCH_RESULTS, SortOption(FieldName.ItemCreated, SortOrder.Descending, SortField.Type.LONG))?.let { (searcher, hits) ->
-                val entries = FilteredTagsLazyLoadingLuceneSearchResultsList(entityService.entityManager, searcher, hits, osHelper, threadPool)
-                entriesHavingFilteredTags = entries
+                val items = FilteredTagsLazyLoadingLuceneSearchResultsList(entityService.entityManager, searcher, hits, osHelper, threadPool)
+                itemsHavingFilteredTags = items
 
-                val tagIdsOnEntriesContainingFilteredTags: Collection<String> = entries.tagIdsOnResultEntries.filter { tagsToFilterForIds.contains(it) == false }
+                val tagIdsOnItemsContainingFilteredTags: Collection<String> = items.tagIdsOnResultItems.filter { tagsToFilterForIds.contains(it) == false }
 
-                val sortedTagIdsOnEntriesContainingFilteredTags = searchInGivenTags(tagIdsOnEntriesContainingFilteredTags, termsToSearchFor)
+                val sortedTagIdsOnItemsContainingFilteredTags = searchInGivenTags(tagIdsOnItemsContainingFilteredTags, termsToSearchFor)
 
-                tagsOnEntriesContainingFilteredTags = LazyLoadingList<Tag>(entityService.entityManager, Tag::class.java, sortedTagIdsOnEntriesContainingFilteredTags.toMutableList())
+                tagsOnItemsContainingFilteredTags = LazyLoadingList<Tag>(entityService.entityManager, Tag::class.java, sortedTagIdsOnItemsContainingFilteredTags.toMutableList())
             }
         } catch (ex: Exception) {
             log.error("Could not execute Query " + query.toString(), ex)
@@ -197,7 +197,7 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osH
             return
         }
 
-        search.results = FilteredTagsSearchResult(entriesHavingFilteredTags, tagsOnEntriesContainingFilteredTags)
+        search.results = FilteredTagsSearchResult(itemsHavingFilteredTags, tagsOnItemsContainingFilteredTags)
         search.fireSearchCompleted()
     }
 

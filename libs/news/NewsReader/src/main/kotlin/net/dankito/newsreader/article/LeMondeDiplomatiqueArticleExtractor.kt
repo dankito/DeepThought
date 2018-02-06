@@ -24,7 +24,7 @@ class LeMondeDiplomatiqueArticleExtractor(webClient: IWebClient) : ArticleExtrac
         return "Le Monde diplomatique"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return isHttpOrHttpsUrlFromHost(url, "www.monde-diplomatique.fr/") ||  isHttpOrHttpsUrlFromHost(url, "mondediplo.com/")
     }
 

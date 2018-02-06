@@ -27,14 +27,14 @@ class TelepolisArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
-    fun extractMultiPageArticle() { // it seems that print version has no abstract anymore
+    fun extractMultiPageArticle() { // it seems that print version has no summary anymore
         getAndTestArticle("https://www.heise.de/tp/features/G20-Die-Eskalation-begann-mit-der-Ernennung-von-Dudde-zum-Polizeichef-3804738.html",
                 "G20: Die Eskalation begann mit der Ernennung von Dudde zum Polizeichef",
                 null,"https://www.heise.de/tp/imgs/89/2/2/6/0/6/1/3/Hamburgg20Polizei-f57f6ef5b9a089df.jpeg", 10000)
     }
 
     @Test
-    fun extractVeryLargeMultiPageArticle() { // it seems that print version has no abstract anymore
+    fun extractVeryLargeMultiPageArticle() { // it seems that print version has no summary anymore
         getAndTestArticle("https://www.heise.de/tp/features/Googeln-Sie-mal-von-vorgestern-Mr-Damore-3804769.html",
                 "Googeln Sie mal \"von vorgestern\", Mr. Damore",
                 null,"https://www.heise.de/tp/imgs/89/2/2/6/0/6/4/0/_Johann_Wilhelm_von_der_Pfalz_und_Anna_Maria_Luisa_de__Medici__1708_-cc6af64ad3f9af0e.jpeg", 43000)

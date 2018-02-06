@@ -35,16 +35,16 @@ class SearchItemsIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
     fun addFileToItem_ItemGetsFoundByItemsMustHaveTheseFiles() {
         val createdEntities = persistItemWithAttachedFile()
 
-        getAndTestResult(createdEntities.first, entriesMustHaveTheseFiles = listOf(createdEntities.second))
+        getAndTestResult(createdEntities.first, itemsMustHaveTheseFiles = listOf(createdEntities.second))
     }
 
 
-    private fun getAndTestResult(testResult: Item, searchTerm: String = Search.EmptySearchTerm, searchInFiles: Boolean = false, entriesMustHaveTheseFiles: Collection<FileLink> = listOf()) {
+    private fun getAndTestResult(testResult: Item, searchTerm: String = Search.EmptySearchTerm, searchInFiles: Boolean = false, itemsMustHaveTheseFiles: Collection<FileLink> = listOf()) {
         val resultHolder = AtomicReference<List<Item>?>(null)
         val waitForResultLatch = CountDownLatch(1)
 
         underTest.searchItems(ItemsSearch(searchTerm, false, false, false, false, searchInFiles,
-                itemsMustHaveTheseFiles = entriesMustHaveTheseFiles) { result ->
+                itemsMustHaveTheseFiles = itemsMustHaveTheseFiles) { result ->
             resultHolder.set(result)
 
             waitForResultLatch.countDown()

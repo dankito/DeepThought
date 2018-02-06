@@ -76,7 +76,7 @@ object FieldName {
     val ReadLaterArticleId = "read_later_article_id"
 
     val ReadLaterArticleItem = "read_later_article_item"
-    val ReadLaterArticleReference = "read_later_article_source"
+    val ReadLaterArticleSource = "read_later_article_source"
 
 
     /*      Files      */

@@ -23,7 +23,7 @@ class PostillonArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
         return "Postillon"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return isHttpOrHttpsUrlFromHost(url, "www.der-postillon.com/")
     }
 
@@ -32,13 +32,13 @@ class PostillonArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
         document.body().select(".post").first()?.let { postElement ->
             postElement.select(".post-title")?.let { titleElement ->
                 postElement.select(".post-body").first()?.let { bodyElement ->
-                    val entry = Item(extractContent(bodyElement))
+                    val item = Item(extractContent(bodyElement))
 
-                    val reference = Source(titleElement.text(), url, extractPublishingDate(postElement))
+                    val source = Source(titleElement.text(), url, extractPublishingDate(postElement))
 
-                    bodyElement.select(".separator a img").first()?.let { reference.previewImageUrl = it.attr("src") }
+                    bodyElement.select(".separator a img").first()?.let { source.previewImageUrl = it.attr("src") }
 
-                    extractionResult.setExtractedContent(entry, reference)
+                    extractionResult.setExtractedContent(item, source)
                 }
             }
         }

@@ -24,7 +24,7 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
         return "Spiegel"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return isHttpOrHttpsUrlFromHost(url, "www.spiegel.de/")
     }
 

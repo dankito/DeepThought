@@ -23,17 +23,17 @@ class DerFreitagArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
         return "Der Freitag"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return isHttpOrHttpsUrlFromHost(url, "www.freitag.de/")
     }
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("article").first()?.let { articleElement ->
-            val articleEntry = Item(extractContent(articleElement, url))
+            val articleItem = Item(extractContent(articleElement, url))
 
             val reference = createReference(url, articleElement)
             
-            extractionResult.setExtractedContent(articleEntry, reference)
+            extractionResult.setExtractedContent(articleItem, reference)
         }
     }
 

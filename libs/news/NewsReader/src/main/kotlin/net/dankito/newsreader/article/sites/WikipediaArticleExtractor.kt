@@ -15,7 +15,7 @@ class WikipediaArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
         return "Wikipedia"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return url.contains(".wikipedia.org/wiki/")
     }
 

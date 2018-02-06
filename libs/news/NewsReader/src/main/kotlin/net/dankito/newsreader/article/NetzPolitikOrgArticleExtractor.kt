@@ -24,7 +24,7 @@ class NetzPolitikOrgArticleExtractor(webClient: IWebClient) : ArticleExtractorBa
         return "netzpolitik.org"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return isHttpOrHttpsUrlFromHost(url, "netzpolitik.org/")
     }
 
@@ -32,11 +32,11 @@ class NetzPolitikOrgArticleExtractor(webClient: IWebClient) : ArticleExtractorBa
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("article").first()?.let { articleElement ->
             val title = articleElement.select(".entry-title").first()?.text() ?: ""
-            val reference = Source(title, url, parsePublishingDate(articleElement), articleElement.select("figure img").first()?.attr("src"))
+            val source = Source(title, url, parsePublishingDate(articleElement), articleElement.select("figure img").first()?.attr("src"))
 
-            val entry = Item(extractContent(articleElement))
+            val item = Item(extractContent(articleElement))
 
-            extractionResult.setExtractedContent(entry, reference)
+            extractionResult.setExtractedContent(item, source)
         }
     }
 
@@ -46,9 +46,9 @@ class NetzPolitikOrgArticleExtractor(webClient: IWebClient) : ArticleExtractorBa
             contentElement.select(".vgwort").remove()
 
             val previewImageHtml = articleElement.select("figure").first()?.outerHtml() ?: ""
-            val abstract = articleElement.select(".entry-excerpt").first()?.html() ?: ""
+            val summary = articleElement.select(".entry-excerpt").first()?.html() ?: ""
 
-            return previewImageHtml + abstract + contentElement.outerHtml()
+            return previewImageHtml + summary + contentElement.outerHtml()
         }
 
         log.error("Could not find element with class 'entry-content'")

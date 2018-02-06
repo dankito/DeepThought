@@ -20,7 +20,7 @@ class TazArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClien
         return "taz"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return isHttpOrHttpsUrlFromHost(url, "taz.de/")
     }
 

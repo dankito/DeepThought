@@ -25,7 +25,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         return "SZ"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return isHttpOrHttpsUrlFromHost(url, "www.sueddeutsche.de/")
     }
 
@@ -64,26 +64,26 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
 
     private fun extractArticle(extractionResult: ItemExtractionResult, siteContent: Element, siteUrl: String) {
-        val reference = extractReference(siteContent, siteUrl)
+        val source = extractSource(siteContent, siteUrl)
 
         siteContent.select("#article-body").first()?.let { articleBody ->
             var content = loadLazyLoadingElementsAndGetContent(siteContent, articleBody)
 
-            extractTopEnrichment(siteContent, reference, siteUrl)?.let { topEnrichment ->
+            extractTopEnrichment(siteContent, source, siteUrl)?.let { topEnrichment ->
                 content = "<div>" + topEnrichment.outerHtml() + "</div>" + content
             }
 
-            val entry = Item(content)
+            val item = Item(content)
 
-            extractionResult.setExtractedContent(entry, reference)
+            extractionResult.setExtractedContent(item, source)
         }
     }
 
-    private fun extractTopEnrichment(siteContent: Element, reference: Source?, siteUrl: String): Element? {
+    private fun extractTopEnrichment(siteContent: Element, source: Source?, siteUrl: String): Element? {
         siteContent.select(".topenrichment").first()?.let { topEnrichment ->
             topEnrichment.select("figure img").first()?.let { previewImage ->
                 val previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(previewImage, "src", siteUrl)
-                reference?.previewImageUrl = previewImageUrl
+                source?.previewImageUrl = previewImageUrl
                 previewImage.attr("src", previewImageUrl)
 
                 return previewImage
@@ -207,15 +207,15 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
 
     private fun extractGalleryArticle(extractionResult: ItemExtractionResult, galleryArticleElement: Element, siteUrl: String) {
-        val reference = extractReference(galleryArticleElement, siteUrl)
+        val source = extractSource(galleryArticleElement, siteUrl)
 
         galleryArticleElement.select("#article-body").first()?.let { articleBody ->
             val content = StringBuilder()
             readHtmlOfAllImagesInGallery(content, articleBody, siteUrl)
 
-            articleBody.select(".offscreen").first()?.let { reference?.publishingDate = parseSueddeutscheDateString(it.text()) }
+            articleBody.select(".offscreen").first()?.let { source?.publishingDate = parseSueddeutscheDateString(it.text()) }
 
-            extractionResult.setExtractedContent(Item(content.toString()), reference)
+            extractionResult.setExtractedContent(Item(content.toString()), source)
         }
     }
 
@@ -258,7 +258,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
 
-    private fun extractReference(articleElement: Element, url: String): Source? {
+    private fun extractSource(articleElement: Element, url: String): Source? {
         articleElement.select(".header").first()?.let { headerElement ->
             headerElement.select("h2, h1").first()?.let { heading -> // don't know why, but sometimes (on mobile sites?) they're using h1
                 var subTitle = ""

@@ -9,7 +9,7 @@ interface IArticleExtractor {
 
     fun getName() : String?
 
-    fun canExtractEntryFromUrl(url: String): Boolean
+    fun canExtractItemFromUrl(url: String): Boolean
 
 
     fun extractArticleAsync(item : ArticleSummaryItem, callback: (AsyncResult<ItemExtractionResult>) -> Unit)
