@@ -71,11 +71,11 @@ interface AppComponent : CommonComponent {
 
     fun inject(readLaterArticlesListView: ReadLaterArticlesListView)
 
-    fun inject(entriesListDialogBase: EntriesListDialogBase)
+    fun inject(itemsListDialogBase: ItemsListDialogBase)
 
-    fun inject(tagEntriesListDialog: TagEntriesListDialog)
+    fun inject(tagEntriesListDialog: TagItemsListDialog)
 
-    fun inject(referenceEntriesListDialog: ReferenceEntriesListDialog)
+    fun inject(referenceEntriesListDialog: ReferenceItemsListDialog)
 
     fun inject(addArticleSummaryExtractorDialog: AddArticleSummaryExtractorDialog)
 

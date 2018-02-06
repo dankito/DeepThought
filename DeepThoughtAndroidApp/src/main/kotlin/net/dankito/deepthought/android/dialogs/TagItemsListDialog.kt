@@ -15,7 +15,7 @@ import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 
 
-class TagEntriesListDialog : EntriesListDialogBase() {
+class TagItemsListDialog : ItemsListDialogBase() {
 
     companion object {
         val TAG: String = javaClass.name
@@ -114,9 +114,9 @@ class TagEntriesListDialog : EntriesListDialogBase() {
     }
 
 
-    override fun retrieveEntries(callback: (List<Item>) -> Unit) {
+    override fun retrieveItems(callback: (List<Item>) -> Unit) {
         tag?.let {
-            retrieveEntries(it, callback)
+            retrieveItems(it, callback)
         }
 
         if(tag == null) {
@@ -124,7 +124,7 @@ class TagEntriesListDialog : EntriesListDialogBase() {
         }
     }
 
-    private fun retrieveEntries(tag: Tag, callback: (List<Item>) -> Unit) {
+    private fun retrieveItems(tag: Tag, callback: (List<Item>) -> Unit) {
         if(tag is CalculatedTag) {
             callback(tag.items)
         }

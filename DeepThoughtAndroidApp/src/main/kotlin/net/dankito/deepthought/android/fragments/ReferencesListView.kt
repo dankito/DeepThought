@@ -8,7 +8,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.ReferenceRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.dialogs.ReferenceEntriesListDialog
+import net.dankito.deepthought.android.dialogs.ReferenceItemsListDialog
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
@@ -88,7 +88,7 @@ class ReferencesListView: EntitiesListViewFragment<Source>(R.menu.reference_cont
 
 
     override fun onBackPressed(): Boolean {
-        if(isReferenceEntriesListDialogVisible()) { // let ReferenceEntriesListDialog handle back button press
+        if(isReferenceEntriesListDialogVisible()) { // let ReferenceItemsListDialog handle back button press
             return false
         }
 
@@ -96,7 +96,7 @@ class ReferencesListView: EntitiesListViewFragment<Source>(R.menu.reference_cont
     }
 
     private fun isReferenceEntriesListDialogVisible(): Boolean {
-        return fragmentManager.findFragmentByTag(ReferenceEntriesListDialog.TAG) != null
+        return fragmentManager.findFragmentByTag(ReferenceItemsListDialog.TAG) != null
     }
 
 

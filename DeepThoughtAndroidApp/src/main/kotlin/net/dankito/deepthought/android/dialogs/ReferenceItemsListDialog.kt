@@ -13,7 +13,7 @@ import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 
 
-class ReferenceEntriesListDialog: EntriesListDialogBase() {
+class ReferenceItemsListDialog : ItemsListDialogBase() {
 
     companion object {
         val TAG: String = javaClass.name
@@ -77,7 +77,7 @@ class ReferenceEntriesListDialog: EntriesListDialogBase() {
     }
 
 
-    override fun retrieveEntries(callback: (List<Item>) -> Unit) {
+    override fun retrieveItems(callback: (List<Item>) -> Unit) {
         searchEngine.searchItems(ItemsSearch(itemsMustHaveThisSource = source) {
             callback(it)
         })

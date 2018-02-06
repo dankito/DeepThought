@@ -2,8 +2,8 @@ package net.dankito.deepthought.android.dialogs
 
 import android.support.v4.app.FragmentManager
 import android.view.View
-import kotlinx.android.synthetic.main.dialog_entries_list.*
-import kotlinx.android.synthetic.main.dialog_entries_list.view.*
+import kotlinx.android.synthetic.main.dialog_items_list.*
+import kotlinx.android.synthetic.main.dialog_items_list.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.EntryRecyclerAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
@@ -18,7 +18,7 @@ import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-abstract class EntriesListDialogBase : FullscreenDialogFragment() {
+abstract class ItemsListDialogBase : FullscreenDialogFragment() {
 
     protected val presenter: EntityItemsListPresenter
 
@@ -50,14 +50,14 @@ abstract class EntriesListDialogBase : FullscreenDialogFragment() {
     }
 
 
-    override fun getLayoutId() = R.layout.dialog_entries_list
+    override fun getLayoutId() = R.layout.dialog_items_list
 
     override fun setupUI(rootView: View) {
         val context = rootView.context
-        rootView.rcyEntries.addItemDecoration(HorizontalDividerItemDecoration(context))
-        rootView.rcyEntries.adapter = adapter
+        rootView.rcyItems.addItemDecoration(HorizontalDividerItemDecoration(context))
+        rootView.rcyItems.adapter = adapter
 
-        adapter.itemClickListener = { entry -> router.showEditItemView(entry) }
+        adapter.itemClickListener = { item -> router.showEditItemView(item) }
     }
 
 
@@ -68,15 +68,15 @@ abstract class EntriesListDialogBase : FullscreenDialogFragment() {
     }
 
     protected fun retrieveAndShowItems() {
-        retrieveEntries { entries ->
+        retrieveItems { items ->
             activity?.runOnUiThread {
-                showEntriesOnUiThread(entries)
-                showDialogTitleOnUiThread(entries)
+                showItemsOnUiThread(items)
+                showDialogTitleOnUiThread(items)
             }
         }
     }
 
-    private fun showEntriesOnUiThread(items: List<Item>) {
+    private fun showItemsOnUiThread(items: List<Item>) {
         adapter.items = items
     }
 
@@ -90,7 +90,7 @@ abstract class EntriesListDialogBase : FullscreenDialogFragment() {
         return ""
     }
 
-    protected abstract fun retrieveEntries(callback: (List<Item>) -> Unit)
+    protected abstract fun retrieveItems(callback: (List<Item>) -> Unit)
 
 
     fun showDialog(fragmentManager: FragmentManager) {
