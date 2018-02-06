@@ -8,7 +8,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.EntryViewHolder
 import net.dankito.deepthought.android.views.TagsPreviewViewHelper
 import net.dankito.deepthought.model.Item
-import net.dankito.deepthought.model.extensions.abstractPlainText
+import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.deepthought.model.extensions.getEntryPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.ui.presenter.ItemsListPresenterBase
@@ -45,7 +45,7 @@ class EntryRecyclerAdapter(private val presenter: ItemsListPresenterBase): Multi
     override fun bindItemToView(viewHolder: EntryViewHolder, item: Item) {
         var referencePreview = item.source.preview
         if(referencePreview.isNullOrBlank() && item.summary.isNullOrBlank() == false) {
-            referencePreview = item.abstractPlainText
+            referencePreview = item.summaryPlainText
         }
 
         viewHolder.txtReferencePreview.visibility = if (referencePreview.isNullOrBlank()) View.GONE else View.VISIBLE

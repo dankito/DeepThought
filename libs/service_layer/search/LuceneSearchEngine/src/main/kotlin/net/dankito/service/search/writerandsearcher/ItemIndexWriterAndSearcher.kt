@@ -1,9 +1,9 @@
 package net.dankito.service.search.writerandsearcher
 
 import net.dankito.deepthought.model.Item
-import net.dankito.deepthought.model.extensions.abstractPlainText
 import net.dankito.deepthought.model.extensions.contentPlainText
 import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
+import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.service.data.ItemService
 import net.dankito.service.data.messages.ItemChanged
 import net.dankito.service.eventbus.EventBusPriorities
@@ -42,9 +42,9 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
 
     override fun addEntityFieldsToDocument(entity: Item, doc: Document) {
         val contentPlainText = entity.contentPlainText
-        val abstractPlainText = entity.abstractPlainText
+        val summaryPlainText = entity.summaryPlainText
 
-        doc.add(Field(FieldName.ItemSummary, abstractPlainText, TextField.TYPE_NOT_STORED))
+        doc.add(Field(FieldName.ItemSummary, summaryPlainText, TextField.TYPE_NOT_STORED))
         doc.add(Field(FieldName.ItemContent, contentPlainText, TextField.TYPE_NOT_STORED))
 
         doc.add(LongField(FieldName.ItemIndex, entity.itemIndex, Field.Store.YES))
@@ -61,12 +61,12 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
             doc.add(StringField(FieldName.ItemNoTags, FieldValue.NoTagsFieldValue, Field.Store.NO))
         }
 
-        val reference = entity.source
-        if(reference != null) {
-            doc.add(Field(FieldName.ItemSource, reference.previewWithSeriesAndPublishingDate, TextField.TYPE_NOT_STORED))
-            doc.add(StringField(FieldName.ItemSourceId, reference.id, Field.Store.YES))
+        val source = entity.source
+        if(source != null) {
+            doc.add(Field(FieldName.ItemSource, source.previewWithSeriesAndPublishingDate, TextField.TYPE_NOT_STORED))
+            doc.add(StringField(FieldName.ItemSourceId, source.id, Field.Store.YES))
 
-            reference.series?.let { doc.add(StringField(FieldName.ItemSourceSeriesId, it.id, Field.Store.YES)) }
+            source.series?.let { doc.add(StringField(FieldName.ItemSourceSeriesId, it.id, Field.Store.YES)) }
         }
         else {
             doc.add(StringField(FieldName.ItemNoSource, FieldValue.NoSourceFieldValue, Field.Store.NO))
@@ -82,7 +82,7 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
             doc.add(StringField(FieldName.ItemNoAttachedFiles, FieldValue.NoFilesFieldValue, Field.Store.NO))
         }
 
-        defaultAnalyzer.setNextItemToBeAnalyzed(entity, contentPlainText, abstractPlainText)
+        defaultAnalyzer.setNextItemToBeAnalyzed(entity, contentPlainText, summaryPlainText)
     }
 
 
@@ -113,11 +113,11 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
             query.add(searchItemsQuery, BooleanClause.Occur.MUST)
         }
 
-        search.itemsMustHaveThisSource?.id?.let { referenceId ->
-            val filterReferenceQuery = BooleanQuery()
-            filterReferenceQuery.add(TermQuery(Term(FieldName.ItemSourceId, referenceId)), BooleanClause.Occur.MUST)
+        search.itemsMustHaveThisSource?.id?.let { sourceId ->
+            val searchSourceQuery = BooleanQuery()
+            searchSourceQuery.add(TermQuery(Term(FieldName.ItemSourceId, sourceId)), BooleanClause.Occur.MUST)
 
-            query.add(filterReferenceQuery, BooleanClause.Occur.MUST)
+            query.add(searchSourceQuery, BooleanClause.Occur.MUST)
         }
 
         search.itemsMustHaveThisSeries?.id?.let { seriesId ->

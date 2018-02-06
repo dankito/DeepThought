@@ -12,7 +12,7 @@ import net.dankito.deepthought.javafx.util.LazyLoadingObservableList
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Tag
-import net.dankito.deepthought.model.extensions.referencePreview
+import net.dankito.deepthought.model.extensions.sourcePreview
 import net.dankito.deepthought.model.extensions.tagsPreview
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
@@ -91,7 +91,7 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
 
         tableItems = tableview<Item>(items) {
             column(messages["item.column.header.index"], Item::itemIndex).prefWidth(46.0)
-            column(messages["item.column.header.source"], Item::referencePreview).weightedWidth(4.0)
+            column(messages["item.column.header.source"], Item::sourcePreview).weightedWidth(4.0)
             column(messages["item.column.header.preview"], Item::preview).weightedWidth(4.0)
             column(messages["item.column.header.tags"], Item::tagsPreview).weightedWidth(2.0)
     //        column(messages["item.column.header.created"], stringBinding(Item::createdOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)

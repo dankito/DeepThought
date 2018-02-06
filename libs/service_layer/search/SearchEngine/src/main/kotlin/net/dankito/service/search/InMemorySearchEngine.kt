@@ -2,7 +2,7 @@ package net.dankito.service.search
 
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.deepthought.model.*
-import net.dankito.deepthought.model.extensions.abstractPlainText
+import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.deepthought.model.extensions.contentPlainText
 import net.dankito.service.search.specific.*
 import net.dankito.utils.IThreadPool
@@ -24,7 +24,7 @@ class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool
         }
         else {
             searchForEntitiesOfType(Item::class.java, search, termsToSearchFor, { it.sortedByDescending { it.createdOn } }) { item ->
-                val entityValues = listOf(item.contentPlainText.toLowerCase(), item.abstractPlainText.toLowerCase(), item.source?.title?.toLowerCase() ?: "",
+                val entityValues = listOf(item.contentPlainText.toLowerCase(), item.summaryPlainText.toLowerCase(), item.source?.title?.toLowerCase() ?: "",
                         item.source?.publishingDateString ?: "", item.source?.series?.title?.toLowerCase() ?: "").toMutableList()
                 entityValues.addAll(item.tags.map { it.name.toLowerCase() })
 

@@ -19,7 +19,7 @@ import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
 import net.dankito.deepthought.javafx.ui.controls.EditEntityFilesField
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.*
-import net.dankito.deepthought.model.extensions.abstractPlainText
+import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditItemPresenter
 import net.dankito.service.data.DeleteEntityService
@@ -190,7 +190,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     protected fun showData(item: Item, tags: MutableCollection<Tag>, source: Source?, series: Series?, files: MutableCollection<FileLink>, contentToEdit: String? = null) {
         this.item = item
-        originalSummary = item.abstractPlainText
+        originalSummary = item.summaryPlainText
 
         editedSummary.value = originalSummary
 

@@ -11,7 +11,7 @@ const val SeriesAndPublishingDateAndEntryPreviewSeparator = " | "
 const val MaxPreviewLength = 400
 
 
-val Item.abstractPlainText: String
+val Item.summaryPlainText: String
     get() {
         return this.summary.getPlainTextForHtml()
     }
@@ -25,14 +25,14 @@ val Item.contentPlainText: String
 
 val Item.entryPreview: String
     get()  {
-        val includeItemSummary = this.referencePreview.isNullOrBlank() == false
+        val includeItemSummary = this.sourcePreview.isNullOrBlank() == false
 
         return getEntryPreview(includeItemSummary)
     }
 
 
 fun Item.getEntryPreview(includeItemSummary: Boolean): String {
-    var preview = if(includeItemSummary) this.abstractPlainText else ""
+    var preview = if(includeItemSummary) this.summaryPlainText else ""
 
     if(preview.length < MaxPreviewLength) {
         if(preview.isNotEmpty()) {
@@ -67,13 +67,13 @@ fun Item.getEntryPreviewWithSeriesAndPublishingDate(source: Source?, series: Ser
 }
 
 
-val Item.referencePreview: String
+val Item.sourcePreview: String
     get() {
-        this.source?.let { reference ->
-            var preview = reference.title
+        this.source?.let { source ->
+            var preview = source.title
 
-            if(reference.subTitle.isNullOrBlank() == false) {
-                preview = reference.subTitle + ": " + preview
+            if(source.subTitle.isNullOrBlank() == false) {
+                preview = source.subTitle + ": " + preview
             }
 
             return preview

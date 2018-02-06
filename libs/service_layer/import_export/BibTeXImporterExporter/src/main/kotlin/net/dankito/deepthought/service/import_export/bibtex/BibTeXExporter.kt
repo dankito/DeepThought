@@ -2,7 +2,7 @@ package net.dankito.deepthought.service.import_export.bibtex
 
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
-import net.dankito.deepthought.model.extensions.abstractPlainText
+import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.deepthought.model.extensions.contentPlainText
 import net.dankito.deepthought.service.import_export.IDataExporter
 import net.dankito.utils.IThreadPool
@@ -59,7 +59,7 @@ class BibTeXExporter(private val threadPool: IThreadPool) : IDataExporter {
 
         var entryContent = item.contentPlainText
         if(item.summary.isNullOrBlank() == false) {
-            entryContent += item.abstractPlainText + if(entryContent.isNullOrBlank()) "" else " - " + item.contentPlainText
+            entryContent += item.summaryPlainText + if(entryContent.isNullOrBlank()) "" else " - " + item.contentPlainText
         }
         addField(bibTeXEntry, "abstract", entryContent)
 
