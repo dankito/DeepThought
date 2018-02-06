@@ -40,7 +40,7 @@ class ReadLaterArticleIndexWriterAndSearcher(readLaterArticleService: ReadLaterA
 
         val textToIndex = entry.summaryPlainText + " " + entry.contentPlainText
         if(textToIndex.isNotBlank()) { // Lucene crashes when trying to index empty strings
-            doc.add(Field(FieldName.ReadLaterArticleEntry, textToIndex, TextField.TYPE_NOT_STORED))
+            doc.add(Field(FieldName.ReadLaterArticleItem, textToIndex, TextField.TYPE_NOT_STORED))
         }
 
         entity.itemExtractionResult.source?.let { reference ->
@@ -70,7 +70,7 @@ class ReadLaterArticleIndexWriterAndSearcher(readLaterArticleService: ReadLaterA
                 val escapedTerm = QueryParser.escape(term)
                 val termQuery = BooleanQuery()
 
-                termQuery.add(PrefixQuery(Term(FieldName.ReadLaterArticleEntry, escapedTerm)), BooleanClause.Occur.SHOULD)
+                termQuery.add(PrefixQuery(Term(FieldName.ReadLaterArticleItem, escapedTerm)), BooleanClause.Occur.SHOULD)
 
                 termQuery.add(PrefixQuery(Term(FieldName.ReadLaterArticleReference, escapedTerm)), BooleanClause.Occur.SHOULD)
 

@@ -8,7 +8,7 @@ object FieldName {
     val ModifiedOn = "modified_on"
 
 
-    /*      Entries      */
+    /*      Items      */
 
     val ItemIdsId = "item_ids_id"
 
@@ -75,7 +75,7 @@ object FieldName {
 
     val ReadLaterArticleId = "read_later_article_id"
 
-    val ReadLaterArticleEntry = "read_later_article_item"
+    val ReadLaterArticleItem = "read_later_article_item"
     val ReadLaterArticleReference = "read_later_article_source"
 
 
