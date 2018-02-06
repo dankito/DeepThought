@@ -13,12 +13,12 @@ import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 
 
-class ReferenceItemsListDialog : ItemsListDialogBase() {
+class SourceItemsListDialog : ItemsListDialogBase() {
 
     companion object {
         val TAG: String = javaClass.name
 
-        private const val REFERENCE_ID_EXTRA_NAME = "REFERENCE_ID"
+        private const val SOURCE_ID_EXTRA_NAME = "SOURCE_ID"
     }
 
 
@@ -62,15 +62,15 @@ class ReferenceItemsListDialog : ItemsListDialogBase() {
         super.onSaveInstanceState(outState)
 
         outState?.let {
-            outState.putString(REFERENCE_ID_EXTRA_NAME, source?.id)
+            outState.putString(SOURCE_ID_EXTRA_NAME, source?.id)
         }
     }
 
     override fun restoreState(savedInstanceState: Bundle) {
         super.restoreState(savedInstanceState)
 
-        savedInstanceState.getString(REFERENCE_ID_EXTRA_NAME)?.let { referenceId ->
-            sourceService.retrieve(referenceId)?.let {
+        savedInstanceState.getString(SOURCE_ID_EXTRA_NAME)?.let { sourceId ->
+            sourceService.retrieve(sourceId)?.let {
                 this.source = it
             }
         }

@@ -75,7 +75,7 @@ interface AppComponent : CommonComponent {
 
     fun inject(tagItemsListDialog: TagItemsListDialog)
 
-    fun inject(referenceItemsListDialog: ReferenceItemsListDialog)
+    fun inject(sourceItemsListDialog: SourceItemsListDialog)
 
     fun inject(addArticleSummaryExtractorDialog: AddArticleSummaryExtractorDialog)
 
