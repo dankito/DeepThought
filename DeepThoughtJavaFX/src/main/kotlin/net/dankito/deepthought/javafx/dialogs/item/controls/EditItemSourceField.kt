@@ -9,7 +9,7 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.extensions.getSeriesAndPublishingDatePreview
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.SourcesListPresenter
-import net.dankito.deepthought.ui.view.IReferencesListView
+import net.dankito.deepthought.ui.view.ISourcesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
@@ -63,7 +63,7 @@ class EditItemSourceField : EditEntityReferenceField<Source>(FX.messages["edit.i
     init {
         AppComponent.component.inject(this)
 
-        presenter = SourcesListPresenter(object : IReferencesListView {
+        presenter = SourcesListPresenter(object : ISourcesListView {
 
             override fun showEntities(entities: List<Source>) {
                 retrievedSearchResults(entities)

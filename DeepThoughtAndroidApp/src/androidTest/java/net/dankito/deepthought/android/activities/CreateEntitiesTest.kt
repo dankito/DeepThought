@@ -11,7 +11,7 @@ import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
 import net.dankito.deepthought.android.MainActivity
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.fragments.ItemsListView
-import net.dankito.deepthought.android.fragments.ReferencesListView
+import net.dankito.deepthought.android.fragments.SourcesListView
 import net.dankito.deepthought.android.fragments.TagsListView
 import net.dankito.deepthought.android.util.TestUtil
 import net.dankito.deepthought.android.util.matchers.RecyclerViewInViewPagerMatcher.Companion.withRecyclerView
@@ -81,8 +81,8 @@ class CreateEntitiesTest : DeepThoughtAndroidTestBase() {
 
         matchRecyclerViewEntitiesIsDisplayed()
 
-        matchListItemAtPositionText(ReferencesListView::class.java, 0, R.id.txtvwEntityName, TestSourceTitle)
-        matchListItemAtPositionText(ReferencesListView::class.java, 0, R.id.txtvwEntitySecondaryInformation, TestSeriesTitle)
+        matchListItemAtPositionText(SourcesListView::class.java, 0, R.id.txtvwEntityName, TestSourceTitle)
+        matchListItemAtPositionText(SourcesListView::class.java, 0, R.id.txtvwEntitySecondaryInformation, TestSeriesTitle)
     }
 
 

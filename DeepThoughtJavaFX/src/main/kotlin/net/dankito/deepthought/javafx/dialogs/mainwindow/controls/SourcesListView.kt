@@ -12,7 +12,7 @@ import net.dankito.deepthought.javafx.ui.controls.cell.SourceListCellFragment
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.SourcesListPresenter
-import net.dankito.deepthought.ui.view.IReferencesListView
+import net.dankito.deepthought.ui.view.ISourcesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
@@ -21,7 +21,7 @@ import tornadofx.*
 import javax.inject.Inject
 
 
-class SourcesListView : EntitiesListView(), IReferencesListView {
+class SourcesListView : EntitiesListView(), ISourcesListView {
 
     private val presenter: SourcesListPresenter
 

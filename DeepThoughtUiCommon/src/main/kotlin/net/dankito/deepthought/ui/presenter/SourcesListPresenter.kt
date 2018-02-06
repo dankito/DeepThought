@@ -3,7 +3,7 @@ package net.dankito.deepthought.ui.presenter
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.view.IReferencesListView
+import net.dankito.deepthought.ui.view.ISourcesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.eventbus.IEventBus
@@ -16,7 +16,7 @@ import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class SourcesListPresenter(private var view: IReferencesListView, private val searchEngine: ISearchEngine, router: IRouter,
+class SourcesListPresenter(private var view: ISourcesListView, private val searchEngine: ISearchEngine, router: IRouter,
                            clipboardService: IClipboardService, deleteEntityService: DeleteEntityService)
     : SourcePresenterBase(router, clipboardService, deleteEntityService), IMainViewSectionPresenter {
 

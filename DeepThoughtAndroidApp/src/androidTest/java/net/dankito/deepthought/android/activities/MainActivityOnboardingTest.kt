@@ -13,7 +13,7 @@ import net.dankito.deepthought.android.MainActivity
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.fragments.ItemsListView
 import net.dankito.deepthought.android.fragments.ReadLaterArticlesListView
-import net.dankito.deepthought.android.fragments.ReferencesListView
+import net.dankito.deepthought.android.fragments.SourcesListView
 import net.dankito.deepthought.android.fragments.TagsListView
 import net.dankito.deepthought.android.util.Assert
 import net.dankito.deepthought.android.util.TestUtil
@@ -72,7 +72,7 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
         assertOnboardingIsDisplayedInTab(TagsListView::class.java, true)
 
         navigator.navigateToTabSources()
-        assertOnboardingIsDisplayedInTab(ReferencesListView::class.java)
+        assertOnboardingIsDisplayedInTab(SourcesListView::class.java)
 
         navigator.navigateToTabReadLaterArticles()
         assertOnboardingIsDisplayedInTab(ReadLaterArticlesListView::class.java)
@@ -93,7 +93,7 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
         assertOnboardingIsHiddenInTab(TagsListView::class.java)
 
         navigator.navigateToTabSources()
-        assertOnboardingIsDisplayedInTab(ReferencesListView::class.java)
+        assertOnboardingIsDisplayedInTab(SourcesListView::class.java)
 
         navigator.navigateToTabReadLaterArticles()
         assertOnboardingIsDisplayedInTab(ReadLaterArticlesListView::class.java)
@@ -114,7 +114,7 @@ class MainActivityOnboardingTest: DeepThoughtAndroidTestBase() {
         assertOnboardingIsDisplayedInTab(TagsListView::class.java, true)
 
         navigator.navigateToTabSources()
-        assertOnboardingIsHiddenInTab(ReferencesListView::class.java)
+        assertOnboardingIsHiddenInTab(SourcesListView::class.java)
 
         navigator.navigateToTabReadLaterArticles()
         assertOnboardingIsDisplayedInTab(ReadLaterArticlesListView::class.java)

@@ -14,14 +14,14 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.SourcesListPresenter
-import net.dankito.deepthought.ui.view.IReferencesListView
+import net.dankito.deepthought.ui.view.ISourcesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class EditItemSourceField : EditEntityEntityReferenceField, IReferencesListView {
+class EditItemSourceField : EditEntityEntityReferenceField, ISourcesListView {
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)

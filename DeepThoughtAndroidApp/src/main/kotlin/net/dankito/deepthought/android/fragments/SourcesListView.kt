@@ -13,15 +13,15 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.deepthought.ui.presenter.SourcesListPresenter
-import net.dankito.deepthought.ui.view.IReferencesListView
+import net.dankito.deepthought.ui.view.ISourcesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.SourceService
 import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class ReferencesListView: EntitiesListViewFragment<Source>(R.menu.reference_contextual_action_menu, R.string.tab_source_onboarding_text),
-        IReferencesListView {
+class SourcesListView : EntitiesListViewFragment<Source>(R.menu.reference_contextual_action_menu, R.string.tab_source_onboarding_text),
+        ISourcesListView {
 
     @Inject
     protected lateinit var sourceService: SourceService
@@ -100,7 +100,7 @@ class ReferencesListView: EntitiesListViewFragment<Source>(R.menu.reference_cont
     }
 
 
-    /*      IReferencesListView implementation      */
+    /*      ISourcesListView implementation      */
 
     override fun showEntities(entities: List<Source>) {
         activity?.runOnUiThread {

@@ -12,7 +12,7 @@ import net.dankito.deepthought.android.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.android.dialogs.*
 import net.dankito.deepthought.android.fragments.ItemsListView
 import net.dankito.deepthought.android.fragments.ReadLaterArticlesListView
-import net.dankito.deepthought.android.fragments.ReferencesListView
+import net.dankito.deepthought.android.fragments.SourcesListView
 import net.dankito.deepthought.android.fragments.TagsListView
 import net.dankito.deepthought.android.service.AndroidClipboardService
 import net.dankito.deepthought.android.service.ExtractArticleHandler
@@ -67,7 +67,7 @@ interface AppComponent : CommonComponent {
 
     fun inject(tagsListView: TagsListView)
 
-    fun inject(referencesListView: ReferencesListView)
+    fun inject(sourcesListView: SourcesListView)
 
     fun inject(readLaterArticlesListView: ReadLaterArticlesListView)
 
