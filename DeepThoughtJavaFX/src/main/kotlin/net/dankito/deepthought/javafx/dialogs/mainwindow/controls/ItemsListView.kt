@@ -73,7 +73,7 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
         presenter = ItemsListPresenter(this, router, searchEngine, deleteEntityService, clipboardService)
         searchBar = ItemsSearchBar(this, presenter, dataManager)
 
-        (router as? JavaFXRouter)?.entriesListView = this // TODO: this is bad code design
+        (router as? JavaFXRouter)?.itemsListView = this // TODO: this is bad code design
 
         searchEngine.addInitializationListener {
             searchEntities(Search.EmptySearchTerm)
