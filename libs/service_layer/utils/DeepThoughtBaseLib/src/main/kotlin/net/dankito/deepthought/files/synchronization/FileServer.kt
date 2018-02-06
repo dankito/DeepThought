@@ -13,10 +13,7 @@ import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.serialization.ISerializer
 import org.slf4j.LoggerFactory
-import java.io.BufferedInputStream
-import java.io.File
-import java.io.FileInputStream
-import java.io.IOException
+import java.io.*
 import java.net.BindException
 import java.net.ServerSocket
 import java.net.Socket
@@ -184,7 +181,7 @@ class FileServer(private val searchEngine: ISearchEngine, private val entityMana
     private fun sendFileToClient(clientSocket: Socket, filePath: String, fileSize: Long) {
         try {
             val inputStream = BufferedInputStream(FileInputStream(filePath))
-            val outputStream = clientSocket.getOutputStream()
+            val outputStream = DataOutputStream(BufferedOutputStream(clientSocket.getOutputStream()))
 
             val buffer = ByteArray(16 * 1024)
 

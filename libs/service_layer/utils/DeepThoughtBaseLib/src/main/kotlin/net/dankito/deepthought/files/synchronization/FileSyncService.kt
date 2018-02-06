@@ -18,9 +18,7 @@ import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.services.hashing.HashAlgorithm
 import net.dankito.utils.services.hashing.HashService
 import org.slf4j.LoggerFactory
-import java.io.BufferedOutputStream
-import java.io.File
-import java.io.FileOutputStream
+import java.io.*
 import java.net.Socket
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
@@ -297,7 +295,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         val tempFile = File.createTempFile("DeepThought_SynchronizedFile", destinationFile.extension) // don't write directly to destinationFile as when synchronization fails a
         // corrupt file remains, may having overwritten a fully synchronized version of that file
         val outputStream = BufferedOutputStream(FileOutputStream(tempFile))
-        val inputStream = clientSocket.getInputStream()
+        val inputStream = DataInputStream(BufferedInputStream(clientSocket.getInputStream()))
 
         val buffer = ByteArray(1 * 1024)
 
