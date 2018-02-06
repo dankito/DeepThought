@@ -65,14 +65,14 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
     }
 
     private fun parseMobileArticle(extractionResult: ItemExtractionResult, article: Element, url: String) {
-        val reference = extractMobileArticleReference(article, url)
+        val source = extractMobileArticleSource(article, url)
 
         cleanContentElement(article)
         article.select("h1").remove()
 
         val content = article.html()
 
-        extractionResult.setExtractedContent(Item(content), reference)
+        extractionResult.setExtractedContent(Item(content), source)
     }
 
     protected fun cleanContentElement(contentElement: Element) {
@@ -83,22 +83,22 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         removeEmptyParagraphs(contentElement, Arrays.asList("video"))
     }
 
-    private fun extractMobileArticleReference(article: Element, url: String): Source {
+    private fun extractMobileArticleSource(article: Element, url: String): Source {
         val title = article.select("h1").first()?.text()?.trim() ?: ""
 
-        val reference = Source(title, url)
+        val source = Source(title, url)
 
         article.select("figure.aufmacherbild img").first()?.let {
-            reference.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
+            source.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
         }
         article.select("time").first()?.let {
-            reference.publishingDate = parseIsoDateTimeString(it.attr("datetime"))
-            if(reference.publishingDate == null) {
-                reference.publishingDate = tryToParseMultiPageMobileArticleDate(it.attr("datetime"))
+            source.publishingDate = parseIsoDateTimeString(it.attr("datetime"))
+            if(source.publishingDate == null) {
+                source.publishingDate = tryToParseMultiPageMobileArticleDate(it.attr("datetime"))
             }
         }
 
-        return reference
+        return source
     }
 
     private fun tryToParseMultiPageMobileArticleDate(date: String?): Date? {

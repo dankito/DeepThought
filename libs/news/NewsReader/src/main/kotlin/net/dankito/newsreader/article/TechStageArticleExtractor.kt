@@ -23,11 +23,11 @@ class TechStageArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("#content > article").first()?.let { articleElement ->
             articleElement.select("#article_content").first()?.let { contentElement ->
-                val reference = extractReference(articleElement, contentElement, url)
+                val source = extractSource(articleElement, contentElement, url)
 
                 cleanContent(contentElement)
 
-                extractionResult.setExtractedContent(Item(contentElement.outerHtml()), reference)
+                extractionResult.setExtractedContent(Item(contentElement.outerHtml()), source)
             }
         }
     }
@@ -47,7 +47,7 @@ class TechStageArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
     }
 
 
-    private fun extractReference(articleElement: Element, contentElement: Element, url: String): Source {
+    private fun extractSource(articleElement: Element, contentElement: Element, url: String): Source {
         val title = articleElement.select("h1").first()?.text()?.trim() ?: ""
 
         var previewImageUrl: String? = null
@@ -60,9 +60,9 @@ class TechStageArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
             publishingDate = parseIsoDateTimeString(timeElement.attr("datetime"))
         }
 
-        val reference = Source(title, url, publishingDate, previewImageUrl)
+        val source = Source(title, url, publishingDate, previewImageUrl)
 
-        return reference
+        return source
     }
 
 }

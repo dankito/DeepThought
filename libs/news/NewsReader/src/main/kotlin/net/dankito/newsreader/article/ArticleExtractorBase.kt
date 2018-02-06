@@ -43,9 +43,9 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
     private fun setInfoFromArticleSummaryItemOnExtractionResult(item: ArticleSummaryItem, extractionResult: ItemExtractionResult) {
         // do not set summary anymore, neither here nor in parseMetaData()
 
-        extractionResult.source?.let { reference ->
-            if (reference.previewImageUrl == null) {
-                reference.previewImageUrl = item.previewImageUrl
+        extractionResult.source?.let { source ->
+            if (source.previewImageUrl == null) {
+                source.previewImageUrl = item.previewImageUrl
             }
         }
     }

@@ -658,13 +658,13 @@ class CommunicationManagerTest {
         val newTag = Tag("New Tag")
         localEntityManager.persistEntity(newTag)
 
-        val newReference = Source("New Source")
-        localEntityManager.persistEntity(newReference)
+        val newSource = Source("New Source")
+        localEntityManager.persistEntity(newSource)
 
-        val newEntry = Item("New Item")
-        newEntry.source = newReference
-        newEntry.addTag(newTag)
-        localEntityManager.persistEntity(newEntry)
+        val newItem = Item("New Item")
+        newItem.source = newSource
+        newItem.addTag(newTag)
+        localEntityManager.persistEntity(newItem)
 
         // and reconnect
         val collectedChanges = mutableListOf<EntitiesOfTypeChanged>()
@@ -688,11 +688,11 @@ class CommunicationManagerTest {
         assertThat(collectedChanges.filter { it.entityType == Tag::class.java }.firstOrNull(), notNullValue())
         assertThat(collectedChanges.filter { it.entityType == Tag::class.java }.firstOrNull()?.changeType, `is`(EntityChangeType.Created))
 
-        assertThat(remoteEntityManager.getEntityById(Item::class.java, newEntry.id!!), notNullValue())
-        assertThat(remoteEntityManager.getEntityById(Item::class.java, newEntry.id!!)?.modifiedOn, `is`(newEntry.modifiedOn))
+        assertThat(remoteEntityManager.getEntityById(Item::class.java, newItem.id!!), notNullValue())
+        assertThat(remoteEntityManager.getEntityById(Item::class.java, newItem.id!!)?.modifiedOn, `is`(newItem.modifiedOn))
 
-        assertThat(remoteEntityManager.getEntityById(Source::class.java, newReference.id!!), notNullValue())
-        assertThat(remoteEntityManager.getEntityById(Source::class.java, newReference.id!!)?.modifiedOn, `is`(newReference.modifiedOn))
+        assertThat(remoteEntityManager.getEntityById(Source::class.java, newSource.id!!), notNullValue())
+        assertThat(remoteEntityManager.getEntityById(Source::class.java, newSource.id!!)?.modifiedOn, `is`(newSource.modifiedOn))
 
         assertThat(remoteEntityManager.getEntityById(Tag::class.java, newTag.id!!), notNullValue())
         assertThat(remoteEntityManager.getEntityById(Tag::class.java, newTag.id!!)?.modifiedOn, `is`(newTag.modifiedOn))
@@ -708,14 +708,14 @@ class CommunicationManagerTest {
         val newTag = Tag("New Tag")
         localEntityManager.persistEntity(newTag)
 
-        val newReference = Source("New Source")
-        localEntityManager.persistEntity(newReference)
+        val newSource = Source("New Source")
+        localEntityManager.persistEntity(newSource)
 
-        val newEntry = Item("New Item")
-        newEntry.source = newReference
-        newEntry.addTag(newTag)
-        localEntityManager.persistEntity(newEntry)
-        val entryId = newEntry.id!!
+        val newItem = Item("New Item")
+        newItem.source = newSource
+        newItem.addTag(newTag)
+        localEntityManager.persistEntity(newItem)
+        val itemId = newItem.id!!
 
         val countDownLatch = CountDownLatch(1)
 
@@ -731,7 +731,7 @@ class CommunicationManagerTest {
         remoteCommunicationManager.stop()
 
         // delete entity
-        localEntityManager.deleteEntity(newEntry)
+        localEntityManager.deleteEntity(newItem)
 
         // and reconnect
         val collectedChanges = mutableListOf<EntitiesOfTypeChanged>()
@@ -748,7 +748,7 @@ class CommunicationManagerTest {
         assertThat(collectedChanges.filter { it.entityType == Item::class.java }.firstOrNull(), notNullValue())
         assertThat(collectedChanges.filter { it.entityType == Item::class.java }.firstOrNull()?.changeType, `is`(EntityChangeType.Deleted))
 
-        assertThat(remoteEntityManager.database.getDocument(entryId).isDeleted, `is`(true))
+        assertThat(remoteEntityManager.database.getDocument(itemId).isDeleted, `is`(true))
     }
 
 
@@ -761,14 +761,14 @@ class CommunicationManagerTest {
         val newTag = Tag("New Tag")
         localEntityManager.persistEntity(newTag)
 
-        val newReference = Source("New Source")
-        localEntityManager.persistEntity(newReference)
+        val newSource = Source("New Source")
+        localEntityManager.persistEntity(newSource)
 
-        val newEntry = Item("New Item")
-        newEntry.source = newReference
-        newEntry.addTag(newTag)
-        localEntityManager.persistEntity(newEntry)
-        val entryId = newEntry.id!!
+        val newItem = Item("New Item")
+        newItem.source = newSource
+        newItem.addTag(newTag)
+        localEntityManager.persistEntity(newItem)
+        val itemId = newItem.id!!
 
         val countDownLatch = CountDownLatch(1)
 
@@ -785,7 +785,7 @@ class CommunicationManagerTest {
         try { Thread.sleep(3000) } catch(ignored: Exception) { }
 
         // delete entity
-        localEntityManager.deleteEntity(newEntry)
+        localEntityManager.deleteEntity(newItem)
 
         // and reconnect
         val collectedChanges = mutableListOf<EntitiesOfTypeChanged>()
@@ -803,7 +803,7 @@ class CommunicationManagerTest {
         assertThat(collectedChanges.filter { it.entityType == Item::class.java }.firstOrNull(), notNullValue())
         assertThat(collectedChanges.filter { it.entityType == Item::class.java }.firstOrNull()?.changeType, `is`(EntityChangeType.Deleted))
 
-        assertThat(remoteEntityManager.database.getDocument(entryId).isDeleted, `is`(true))
+        assertThat(remoteEntityManager.database.getDocument(itemId).isDeleted, `is`(true))
     }
 
 

@@ -57,7 +57,7 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
             dispatchMessagesForSeriesDependentEntities(entity as Series, source)
         }
         else if(entityClass == Source::class.java) {
-            dispatchMessagesForReferenceDependentEntities(entity as Source, source)
+            dispatchMessagesForSourceDependentEntities(entity as Source, source)
         }
         else if(entityClass == FileLink::class.java) {
             dispatchMessagesForFileLinkDependentEntities(entity as FileLink, source)
@@ -73,15 +73,15 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
         }
     }
 
-    private fun dispatchMessagesForSeriesDependentEntities(series: Series, source: EntityChangeSource) {
-        series.sources.filterNotNull().forEach { reference ->
-            notifyListenersOfEntityChange(reference, EntityChangeType.Updated, source)
+    private fun dispatchMessagesForSeriesDependentEntities(series: Series, changeSource: EntityChangeSource) {
+        series.sources.filterNotNull().forEach { source ->
+            notifyListenersOfEntityChange(source, EntityChangeType.Updated, changeSource)
         }
     }
 
-    private fun dispatchMessagesForReferenceDependentEntities(reference: Source, source: EntityChangeSource) {
-        reference.items.filterNotNull().forEach { item ->
-            notifyListenersOfEntityChange(item, EntityChangeType.Updated, source)
+    private fun dispatchMessagesForSourceDependentEntities(source: Source, changeSource: EntityChangeSource) {
+        source.items.filterNotNull().forEach { item ->
+            notifyListenersOfEntityChange(item, EntityChangeType.Updated, changeSource)
         }
     }
 

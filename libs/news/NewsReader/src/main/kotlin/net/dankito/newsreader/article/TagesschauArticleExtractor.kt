@@ -29,9 +29,9 @@ class TagesschauArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("#content .storywrapper").first()?.let { contentElement ->
             extractItem(contentElement)?.let { item ->
-                val reference = extractReference(url, contentElement)
+                val source = extractSource(url, contentElement)
 
-                extractionResult.setExtractedContent(item, reference)
+                extractionResult.setExtractedContent(item, source)
             }
         }
     }
@@ -66,20 +66,20 @@ class TagesschauArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
         }
     }
 
-    private fun extractReference(url: String, contentElement: Element): Source? {
+    private fun extractSource(url: String, contentElement: Element): Source? {
         contentElement.select(".sectionA .box").first()?.let { headerElement ->
             val title = headerElement.select(".headline").first()?.text()?.trim() ?: ""
             val subTitle = headerElement.select(".dachzeile").first()?.text()?.trim() ?: ""
 
             val publishingDate = extractPublishingDate(headerElement)
 
-            val reference = Source(title, url, publishingDate, subTitle = subTitle)
+            val source = Source(title, url, publishingDate, subTitle = subTitle)
 
             headerElement.select(".media img").first()?.let { previewImageElement ->
-                reference.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), url)
+                source.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), url)
             }
 
-            return reference
+            return source
         }
 
         return null
