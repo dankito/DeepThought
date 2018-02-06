@@ -29,7 +29,7 @@ import tornadofx.*
 import javax.inject.Inject
 
 
-abstract class EditEntryViewBase : DialogFragment() {
+abstract class EditItemViewBase : DialogFragment() {
 
     // param values for Item and ItemExtractionResult are evaluated after root has been initialized -> Item is null at root initialization stage.
     // so i had to find a way to mitigate that Item / ItemExtractionResult is not initialized yet
@@ -163,7 +163,7 @@ abstract class EditEntryViewBase : DialogFragment() {
             }
         }
 
-        val buttons = DialogButtonBar({ closeDialog() }, { saveEntryAsync(it) }, hasUnsavedChanges, messages["action.save"])
+        val buttons = DialogButtonBar({ closeDialog() }, { saveItemAsync(it) }, hasUnsavedChanges, messages["action.save"])
         add(buttons)
     }
 
@@ -231,23 +231,23 @@ abstract class EditEntryViewBase : DialogFragment() {
     }
 
 
-    private fun saveEntryAsync(done: () -> Unit) {
-        updateEntryAndSaveAsync {
-            entrySaved()
+    private fun saveItemAsync(done: () -> Unit) {
+        updateItemAndSaveAsync {
+            itemSaved()
 
             done()
         }
     }
 
-    private fun updateEntryAndSaveAsync(done: () -> Unit) {
-        item?.let { entry ->
-            entry.content = htmlEditor.getHtml()
-            entry.summary = editedSummary.value
-            entry.indication = editSourceField.enteredIndication
+    private fun updateItemAndSaveAsync(done: () -> Unit) {
+        item?.let { item ->
+            item.content = htmlEditor.getHtml()
+            item.summary = editedSummary.value
+            item.indication = editSourceField.enteredIndication
 
             val source = updateSource()
 
-            presenter.saveItemAsync(entry, source, editSourceField.seriesToEdit, editTagsField.applyChangesAndGetTags(), editFilesField.getEditedFiles()) {
+            presenter.saveItemAsync(item, source, editSourceField.seriesToEdit, editTagsField.applyChangesAndGetTags(), editFilesField.getEditedFiles()) {
                 done()
             }
         }
@@ -276,7 +276,7 @@ abstract class EditEntryViewBase : DialogFragment() {
 
     }
 
-    protected open fun entrySaved() {
+    protected open fun itemSaved() {
 
     }
 

@@ -3,7 +3,7 @@ package net.dankito.deepthought.javafx.dialogs.entry
 import net.dankito.deepthought.model.Item
 
 
-class EditEntryView : EditEntryViewBase() {
+class EditItemView : EditItemViewBase() {
 
     val item: Item by param()
 

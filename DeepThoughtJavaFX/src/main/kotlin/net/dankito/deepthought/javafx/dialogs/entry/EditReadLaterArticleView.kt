@@ -4,7 +4,7 @@ import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.model.ReadLaterArticle
 
 
-class EditReadLaterArticleView : EditEntryViewBase() {
+class EditReadLaterArticleView : EditItemViewBase() {
 
     val article: ReadLaterArticle by param()
 
@@ -26,8 +26,8 @@ class EditReadLaterArticleView : EditEntryViewBase() {
         article.itemExtractionResult.series = null
     }
 
-    override fun entrySaved() {
-        super.entrySaved()
+    override fun itemSaved() {
+        super.itemSaved()
 
         readLaterArticleService.delete(article)
     }

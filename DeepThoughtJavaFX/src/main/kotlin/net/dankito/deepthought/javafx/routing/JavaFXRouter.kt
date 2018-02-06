@@ -1,8 +1,8 @@
 package net.dankito.deepthought.javafx.routing
 
 import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
-import net.dankito.deepthought.javafx.dialogs.entry.EditEntryExtractionResultView
-import net.dankito.deepthought.javafx.dialogs.entry.EditEntryView
+import net.dankito.deepthought.javafx.dialogs.entry.EditItemExtractionResultView
+import net.dankito.deepthought.javafx.dialogs.entry.EditItemView
 import net.dankito.deepthought.javafx.dialogs.entry.EditReadLaterArticleView
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.dialogs.pdf.ViewPdfDialog
@@ -67,7 +67,7 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
 
     private fun showEditEntryView(item: Item, title: String?) {
         runLater {
-            mainWindowController.find(EditEntryView::class, mapOf(EditEntryView::item to item)).show(title)
+            mainWindowController.find(EditItemView::class, mapOf(EditItemView::item to item)).show(title)
         }
     }
 
@@ -81,7 +81,7 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
     override fun showEditItemView(extractionResult: ItemExtractionResult) {
         runLater {
             // TODO: set title when Source is not set
-            mainWindowController.find(EditEntryExtractionResultView::class, mapOf(EditEntryExtractionResultView::extractionResult to extractionResult)).show(extractionResult.source?.preview)
+            mainWindowController.find(EditItemExtractionResultView::class, mapOf(EditItemExtractionResultView::extractionResult to extractionResult)).show(extractionResult.source?.preview)
         }
     }
 

@@ -6,7 +6,7 @@ import net.dankito.deepthought.news.article.ArticleExtractorManager
 import javax.inject.Inject
 
 
-class EditEntryExtractionResultView : EditEntryViewBase() {
+class EditItemExtractionResultView : EditItemViewBase() {
 
     @Inject
     protected lateinit var articleExtractorManager: ArticleExtractorManager
