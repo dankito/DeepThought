@@ -21,7 +21,7 @@ import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
-class EditEntrySourceField : EditEntityEntityReferenceField, IReferencesListView {
+class EditItemSourceField : EditEntityEntityReferenceField, IReferencesListView {
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)

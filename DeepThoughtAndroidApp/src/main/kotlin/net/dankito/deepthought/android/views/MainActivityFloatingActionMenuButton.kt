@@ -42,7 +42,7 @@ class MainActivityFloatingActionMenuButton(floatingActionMenu: FloatingActionMen
 
     /**
      * Disables the floating action menu.
-     * Is used when there are no favorite ArticleSummaryExtractors. The a click on floating action directly goes to EditEntryActivity to create an item.
+     * Is used when there are no favorite ArticleSummaryExtractors. The a click on floating action directly goes to EditItemActivity to create an item.
      */
     private fun disableFloatingActionMenu() {
         floatingActionMenu.setOnMenuButtonClickListener { router.showCreateItemView() }

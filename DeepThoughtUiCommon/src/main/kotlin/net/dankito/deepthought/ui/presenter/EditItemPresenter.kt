@@ -38,7 +38,7 @@ class EditItemPresenter(private val itemPersister: ItemPersister, private val re
     }
 
 
-    fun shareReferenceUrl(source: Source) {
+    fun shareSourceUrl(source: Source) {
         source.url?.let { clipboardService.copyUrlToClipboard(it) }
     }
 

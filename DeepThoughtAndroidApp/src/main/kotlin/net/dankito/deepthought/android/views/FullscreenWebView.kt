@@ -10,7 +10,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
-import kotlinx.android.synthetic.main.activity_edit_entry.view.*
+import kotlinx.android.synthetic.main.activity_edit_item.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.extensions.getColorFromResourceId
 import net.dankito.deepthought.android.service.OnSwipeTouchListener

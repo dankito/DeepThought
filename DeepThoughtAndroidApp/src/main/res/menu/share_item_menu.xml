@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/mnShareEntryReferenceUrl"
+        android:id="@+id/mnShareItemSourceUrl"
         android:title="@string/menu_share_source_url"
     />
 
     <item
-        android:id="@+id/mnShareEntryContent"
+        android:id="@+id/mnShareItemContent"
         android:title="@string/menu_share_item_content"
     />
 

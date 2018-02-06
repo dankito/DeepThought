@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import net.dankito.deepthought.android.DeepThoughtActivityTestRule
 import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.activities.arguments.EditEntryActivityParameters
+import net.dankito.deepthought.android.activities.arguments.EditItemActivityParameters
 import net.dankito.deepthought.android.adapter.ListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.viewholder.FileLinkViewHolder
 import net.dankito.deepthought.android.di.TestComponent
@@ -59,7 +59,7 @@ class EditItemActivity_EditFilesTest : DeepThoughtAndroidTestBase() {
     var takeScreenshotOnError = TakeScreenshotOnErrorTestRule()
 
     @get:Rule
-    val testRule = DeepThoughtActivityTestRule<EditEntryActivity>(EditEntryActivity::class.java)
+    val testRule = DeepThoughtActivityTestRule<EditItemActivity>(EditItemActivity::class.java)
 
 
     init {
@@ -69,7 +69,7 @@ class EditItemActivity_EditFilesTest : DeepThoughtAndroidTestBase() {
 
         testItem.addAttachedFile(persistedFile1)
 
-        testRule.setActivityParameter(parameterHolder, EditEntryActivityParameters(testItem))
+        testRule.setActivityParameter(parameterHolder, EditItemActivityParameters(testItem))
     }
 
 
@@ -95,7 +95,7 @@ class EditItemActivity_EditFilesTest : DeepThoughtAndroidTestBase() {
 
         assertThat(testItem.attachedFiles.size, `is`(1)) // Item is not saved yet, but displayed tags preview must get updated
 
-        onView(withId(R.id.mnSaveEntry)).perform(click())
+        onView(withId(R.id.mnSaveItem)).perform(click())
         assertThat(testItem.attachedFiles.size, `is`(3))
         testItem.attachedFiles.forEach { file ->
             assertThat(file.isPersisted(), `is`(true))

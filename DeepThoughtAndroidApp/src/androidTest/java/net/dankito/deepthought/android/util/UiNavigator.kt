@@ -62,7 +62,7 @@ open class UiNavigator {
 
     private fun createTagsInEditItemActivity(vararg tagNames: String) {
         clickOnEditItemActivityFloatingActionButton()
-        onView(withId(R.id.fabEditEntryTags)).perform(click())
+        onView(withId(R.id.fabEditItemTags)).perform(click())
         TestUtil.sleep(500)
 
         setValueOfEditEntityField(R.id.lytTagsPreview, tagNames.joinToString(SearchEngineBase.TagsSearchTermSeparator))
@@ -86,10 +86,10 @@ open class UiNavigator {
 
     private fun createSourceInEditItemActivity(sourceTitle: String, seriesTitle: String? = null) {
         clickOnEditItemActivityFloatingActionButton()
-        onView(withId(R.id.fabEditEntryReference)).perform(click())
+        onView(withId(R.id.fabEditItemSource)).perform(click())
         TestUtil.sleep(1000)
 
-        clickOnEditEntityReferenceFieldEditDetailsPopupMenu(R.id.lytReferencePreview)
+        clickOnEditEntityReferenceFieldEditDetailsPopupMenu(R.id.lytSourcePreview)
 
         setValueOfEditEntityField(R.id.lytEditReferenceTitle, sourceTitle)
 
@@ -115,9 +115,9 @@ open class UiNavigator {
         createItemFromMainActivity(itemContent, false)
 
         clickOnEditItemActivityFloatingActionButton()
-        onView(withId(R.id.fabEditEntryAbstract)).perform(click())
+        onView(withId(R.id.fabEditItemSummary)).perform(click())
         TestUtil.sleep(1000)
-        setValueOfEditEntityField(R.id.lytAbstractPreview, itemSummary)
+        setValueOfEditEntityField(R.id.lytSummaryPreview, itemSummary)
 
         createSourceInEditItemActivity(sourceTitle, seriesTitle)
 
@@ -252,7 +252,7 @@ open class UiNavigator {
     }
 
     private fun saveItemInEditItemActivity() {
-        onView(withId(R.id.mnSaveEntry)).perform(click())
+        onView(withId(R.id.mnSaveItem)).perform(click())
     }
 
 

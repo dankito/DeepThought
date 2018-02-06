@@ -18,7 +18,7 @@
 
 
     <com.github.clans.fab.FloatingActionButton
-        android:id="@+id/fabEditEntryFiles"
+        android:id="@+id/fabEditItemFiles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/MenuButtonsStyle"
@@ -26,7 +26,7 @@
     />
 
     <com.github.clans.fab.FloatingActionButton
-        android:id="@+id/fabEditEntryReference"
+        android:id="@+id/fabEditItemSource"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/MenuButtonsStyle"
@@ -34,7 +34,7 @@
     />
 
     <com.github.clans.fab.FloatingActionButton
-        android:id="@+id/fabEditEntryAbstract"
+        android:id="@+id/fabEditItemSummary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/MenuButtonsStyle"
@@ -42,7 +42,7 @@
     />
 
     <com.github.clans.fab.FloatingActionButton
-        android:id="@+id/fabEditEntryTags"
+        android:id="@+id/fabEditItemTags"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/MenuButtonsStyle"

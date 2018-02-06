@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import kotlinx.android.synthetic.main.activity_edit_entry.view.*
+import kotlinx.android.synthetic.main.activity_edit_item.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.extensions.getColorFromResourceId
 import net.dankito.richtexteditor.Color

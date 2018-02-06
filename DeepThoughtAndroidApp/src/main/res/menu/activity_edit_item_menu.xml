@@ -22,7 +22,7 @@
     />
 
     <item
-        android:id="@+id/mnSaveEntryExtractionResultForLaterReading"
+        android:id="@+id/mnSaveItemExtractionResultForLaterReading"
         app:showAsAction="always"
         android:orderInCategory="300"
         android:title="@string/action_read_article_later"
@@ -32,7 +32,7 @@
     />
 
     <item
-        android:id="@+id/mnSaveEntry"
+        android:id="@+id/mnSaveItem"
         app:showAsAction="always"
         android:orderInCategory="500"
         android:title="@string/action_save"
@@ -42,7 +42,7 @@
     />
 
     <item
-        android:id="@+id/mnShareEntry"
+        android:id="@+id/mnShareItem"
         app:showAsAction="never"
         android:orderInCategory="1000"
         android:title="@string/action_share"
@@ -51,7 +51,7 @@
     />
 
     <item
-        android:id="@+id/mnDeleteExistingEntry"
+        android:id="@+id/mnDeleteExistingItem"
         app:showAsAction="never"
         android:orderInCategory="2000"
         android:title="@string/action_delete"

@@ -62,24 +62,24 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
 
 
     override fun showCreateItemView() {
-        showEditEntryView(EditEntryActivityParameters(createEntry = true))
+        showEditEntryView(EditItemActivityParameters(createItem = true))
     }
 
     override fun showEditItemView(item: Item) {
-        showEditEntryView(EditEntryActivityParameters(item))
+        showEditEntryView(EditItemActivityParameters(item))
     }
 
     override fun showEditItemView(article: ReadLaterArticle) {
-        showEditEntryView(EditEntryActivityParameters(readLaterArticle = article))
+        showEditEntryView(EditItemActivityParameters(readLaterArticle = article))
     }
 
     override fun showEditItemView(extractionResult: ItemExtractionResult) {
-        showEditEntryView(EditEntryActivityParameters(itemExtractionResult = extractionResult))
+        showEditEntryView(EditItemActivityParameters(itemExtractionResult = extractionResult))
     }
 
-    private fun showEditEntryView(parameters: EditEntryActivityParameters) {
-        dataManager.addInitializationListener { // if you have a very large data set and are very, very quick, you can enter EditEntryActivity before DataManager is initialized -> localSettings is null
-            navigateToActivity(EditEntryActivity::class.java, parameters)
+    private fun showEditEntryView(parameters: EditItemActivityParameters) {
+        dataManager.addInitializationListener { // if you have a very large data set and are very, very quick, you can enter EditItemActivity before DataManager is initialized -> localSettings is null
+            navigateToActivity(EditItemActivity::class.java, parameters)
         }
     }
 

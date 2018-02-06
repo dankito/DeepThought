@@ -128,16 +128,16 @@
     <dimen name="divider_height">1dp</dimen>
     <dimen name="divider_margin_left_right">20dp</dimen>
 
-    <dimen name="activity_edit_entry_fields_margin_top">8dp</dimen>
-    <dimen name="activity_edit_entry_field_margin_left">12dp</dimen>
-    <dimen name="activity_edit_entry_field_margin_right">12dp</dimen>
-    <dimen name="activity_edit_entry_content_label_margin_top">-4dp</dimen>
-    <dimen name="activity_edit_entry_content_label_margin_bottom">4dp</dimen>
-    <dimen name="activity_edit_entry_progress_is_loading_web_page_width">18dp</dimen>
-    <dimen name="activity_edit_entry_html_editor_toolbar_height">36dp</dimen>
-    <dimen name="activity_edit_entry_html_editor_toolbar_button_width">36dp</dimen>
-    <dimen name="activity_edit_entry_html_editor_toolbar_button_margin_right">4dp</dimen>
-    <dimen name="activity_edit_entry_onboarding_left_right_margin">20dp</dimen>
+    <dimen name="activity_edit_item_fields_margin_top">8dp</dimen>
+    <dimen name="activity_edit_item_field_margin_left">12dp</dimen>
+    <dimen name="activity_edit_item_field_margin_right">12dp</dimen>
+    <dimen name="activity_edit_item_content_label_margin_top">-4dp</dimen>
+    <dimen name="activity_edit_item_content_label_margin_bottom">4dp</dimen>
+    <dimen name="activity_edit_item_progress_is_loading_web_page_width">18dp</dimen>
+    <dimen name="activity_edit_item_html_editor_toolbar_height">36dp</dimen>
+    <dimen name="activity_edit_item_html_editor_toolbar_button_width">36dp</dimen>
+    <dimen name="activity_edit_item_html_editor_toolbar_button_margin_right">4dp</dimen>
+    <dimen name="activity_edit_item_onboarding_left_right_margin">20dp</dimen>
 
     <dimen name="fullscreen_web_view_options_bar_button_height">40dp</dimen>
     <dimen name="fullscreen_web_view_options_bar_button_width">40dp</dimen>

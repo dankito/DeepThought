@@ -9,7 +9,7 @@ import android.support.test.runner.AndroidJUnit4
 import net.dankito.deepthought.android.DeepThoughtActivityTestRule
 import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.activities.arguments.EditEntryActivityParameters
+import net.dankito.deepthought.android.activities.arguments.EditItemActivityParameters
 import net.dankito.deepthought.android.di.TestComponent
 import net.dankito.deepthought.android.service.ActivityParameterHolder
 import net.dankito.deepthought.android.util.TestUtil
@@ -42,44 +42,44 @@ class EditItemActivity_EditItemWithNoSourceTest : DeepThoughtAndroidTestBase() {
     var takeScreenshotOnError = TakeScreenshotOnErrorTestRule()
 
     @get:Rule
-    val testRule = DeepThoughtActivityTestRule<EditEntryActivity>(EditEntryActivity::class.java)
+    val testRule = DeepThoughtActivityTestRule<EditItemActivity>(EditItemActivity::class.java)
 
 
     init {
         TestComponent.component.inject(this)
 
-        testRule.setActivityParameter(parameterHolder, EditEntryActivityParameters(testItem))
+        testRule.setActivityParameter(parameterHolder, EditItemActivityParameters(testItem))
     }
 
 
     @Test
     fun editSourceTitleInActivity_SaveWithoutLosingFocusBefore_TitleGetsSaved() {
-        assertIsNotVisible(R.id.lytReferencePreview)
+        assertIsNotVisible(R.id.lytSourcePreview)
 
         navigator.clickOnEditItemActivityFloatingActionButton()
-        onView(withId(R.id.fabEditEntryReference)).perform(click())
+        onView(withId(R.id.fabEditItemSource)).perform(click())
 
-        assertIsVisible(R.id.lytReferencePreview) // after a click only Source title is displayed and can be edited
+        assertIsVisible(R.id.lytSourcePreview) // after a click only Source title is displayed and can be edited
         checkDisplayedSourceValue("")
 
-        navigator.setValueOfEditEntityField(R.id.lytReferencePreview, SourceTitleAfterEditing)
+        navigator.setValueOfEditEntityField(R.id.lytSourcePreview, SourceTitleAfterEditing)
         checkDisplayedSourceValue(SourceTitleAfterEditing)
 
-        onView(withId(R.id.mnSaveEntry)).perform(click())
+        onView(withId(R.id.mnSaveItem)).perform(click())
         Assert.assertThat(testItem.source?.title, `is`(SourceTitleAfterEditing))
     }
 
     @Test
     fun editSourceTitleInActivity_SaveAfterLosingFocusBefore_TitleGetsSaved() {
-        assertIsNotVisible(R.id.lytReferencePreview)
+        assertIsNotVisible(R.id.lytSourcePreview)
 
         navigator.clickOnEditItemActivityFloatingActionButton()
-        onView(withId(R.id.fabEditEntryReference)).perform(click())
+        onView(withId(R.id.fabEditItemSource)).perform(click())
 
-        assertIsVisible(R.id.lytReferencePreview) // after a click only Source title is displayed and can be edited
+        assertIsVisible(R.id.lytSourcePreview) // after a click only Source title is displayed and can be edited
         checkDisplayedSourceValue("")
 
-        navigator.setValueOfEditEntityField(R.id.lytReferencePreview, SourceTitleAfterEditing)
+        navigator.setValueOfEditEntityField(R.id.lytSourcePreview, SourceTitleAfterEditing)
         checkDisplayedSourceValue(SourceTitleAfterEditing)
 
         // now lose focus
@@ -88,7 +88,7 @@ class EditItemActivity_EditItemWithNoSourceTest : DeepThoughtAndroidTestBase() {
         onView(withId(R.id.mnApplyHtmlChanges)).perform(click())
         checkDisplayedSourceValue(SourceTitleAfterEditing)
 
-        onView(withId(R.id.mnSaveEntry)).perform(click())
+        onView(withId(R.id.mnSaveItem)).perform(click())
         Assert.assertThat(testItem.source?.title, `is`(SourceTitleAfterEditing))
     }
 
@@ -102,7 +102,7 @@ class EditItemActivity_EditItemWithNoSourceTest : DeepThoughtAndroidTestBase() {
     }
 
     private fun checkDisplayedSourceValue(valueToMatch: String) {
-        onView(allOf(withId(R.id.edtxtEntityFieldValue), isDescendantOfA(withId(R.id.lytReferencePreview)))) // find edtxtEntityFieldValue in EditEntityField
+        onView(allOf(withId(R.id.edtxtEntityFieldValue), isDescendantOfA(withId(R.id.lytSourcePreview)))) // find edtxtEntityFieldValue in EditEntityField
                 .check(matches(withText(`is`(valueToMatch))))
     }
 

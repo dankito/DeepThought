@@ -20,7 +20,7 @@ import net.dankito.deepthought.android.service.SnackbarService
 import net.dankito.deepthought.android.service.network.NetworkConnectivityChangeBroadcastReceiver
 import net.dankito.deepthought.android.views.EditEntityFilesField
 import net.dankito.deepthought.android.views.EditEntityTagsField
-import net.dankito.deepthought.android.views.EditEntrySourceField
+import net.dankito.deepthought.android.views.EditItemSourceField
 import net.dankito.deepthought.android.views.EditSourceSeriesField
 import net.dankito.deepthought.di.BaseModule
 import net.dankito.deepthought.di.CommonComponent
@@ -89,11 +89,11 @@ interface AppComponent : CommonComponent {
 
     fun inject(articleSummaryActivity: ArticleSummaryActivity)
 
-    fun inject(editEntryActivity: EditEntryActivity)
+    fun inject(editItemActivity: EditItemActivity)
 
     fun inject(editEntityTagsField: EditEntityTagsField)
 
-    fun inject(editEntrySourceField: EditEntrySourceField)
+    fun inject(editItemSourceField: EditItemSourceField)
 
     fun inject(editSourceSeriesField: EditSourceSeriesField)
 

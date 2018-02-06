@@ -15,36 +15,36 @@
     >
 
         <RelativeLayout
-            android:id="@+id/lytEntryFieldsPreview"
+            android:id="@+id/lytItemFieldsPreview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="@dimen/activity_edit_entry_fields_margin_top"
-            android:layout_marginLeft="@dimen/activity_edit_entry_field_margin_left"
-            android:layout_marginStart="@dimen/activity_edit_entry_field_margin_left"
-            android:layout_marginRight="@dimen/activity_edit_entry_field_margin_right"
-            android:layout_marginEnd="@dimen/activity_edit_entry_field_margin_right"
+            android:layout_marginTop="@dimen/activity_edit_item_fields_margin_top"
+            android:layout_marginLeft="@dimen/activity_edit_item_field_margin_left"
+            android:layout_marginStart="@dimen/activity_edit_item_field_margin_left"
+            android:layout_marginRight="@dimen/activity_edit_item_field_margin_right"
+            android:layout_marginEnd="@dimen/activity_edit_item_field_margin_right"
         >
 
-            <net.dankito.deepthought.android.views.EditEntrySourceField
-                android:id="@+id/lytReferencePreview"
+            <net.dankito.deepthought.android.views.EditItemSourceField
+                android:id="@+id/lytSourcePreview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
             />
 
             <net.dankito.deepthought.android.views.EditEntityField
-                android:id="@+id/lytAbstractPreview"
+                android:id="@+id/lytSummaryPreview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/lytReferencePreview"
+                android:layout_below="@+id/lytSourcePreview"
             />
 
             <net.dankito.deepthought.android.views.EditEntityTagsField
                 android:id="@+id/lytTagsPreview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/lytAbstractPreview"
+                android:layout_below="@+id/lytSummaryPreview"
             />
 
             <net.dankito.deepthought.android.views.EditEntityFilesField
@@ -61,22 +61,22 @@
             android:id="@+id/lytViewContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/lytEntryFieldsPreview"
+            android:layout_below="@+id/lytItemFieldsPreview"
             android:layout_above="@+id/appBarLayout"
             android:focusable="true"
             android:focusableInTouchMode="true"
         >
 
             <TextView
-                android:id="@+id/txtEntryContentLabel"
+                android:id="@+id/txtItemContentLabel"
                 android:layout_width="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="@dimen/activity_edit_entry_content_label_margin_top"
-                android:layout_marginLeft="@dimen/activity_edit_entry_field_margin_left"
-                android:layout_marginStart="@dimen/activity_edit_entry_field_margin_left"
-                android:layout_marginRight="@dimen/activity_edit_entry_field_margin_right"
-                android:layout_marginEnd="@dimen/activity_edit_entry_field_margin_right"
-                android:layout_marginBottom="@dimen/activity_edit_entry_content_label_margin_bottom"
+                android:layout_marginTop="@dimen/activity_edit_item_content_label_margin_top"
+                android:layout_marginLeft="@dimen/activity_edit_item_field_margin_left"
+                android:layout_marginStart="@dimen/activity_edit_item_field_margin_left"
+                android:layout_marginRight="@dimen/activity_edit_item_field_margin_right"
+                android:layout_marginEnd="@dimen/activity_edit_item_field_margin_right"
+                android:layout_marginBottom="@dimen/activity_edit_item_content_label_margin_bottom"
                 style="@style/EntityFieldName"
                 android:layout_centerHorizontal="true"
                 android:textAlignment="center"
@@ -86,12 +86,12 @@
 
             <ProgressBar
                 android:id="@+id/prgIsLoadingWebPage"
-                android:layout_width="@dimen/activity_edit_entry_progress_is_loading_web_page_width"
+                android:layout_width="@dimen/activity_edit_item_progress_is_loading_web_page_width"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/txtEntryContentLabel"
-                android:layout_toEndOf="@+id/txtEntryContentLabel"
-                android:layout_alignTop="@+id/txtEntryContentLabel"
-                android:layout_alignBottom="@+id/txtEntryContentLabel"
+                android:layout_toRightOf="@+id/txtItemContentLabel"
+                android:layout_toEndOf="@+id/txtItemContentLabel"
+                android:layout_alignTop="@+id/txtItemContentLabel"
+                android:layout_alignBottom="@+id/txtItemContentLabel"
                 android:visibility="gone"
             />
 
@@ -100,7 +100,7 @@
                 android:id="@+id/lytContextHelpFullscreenMode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/txtEntryContentLabel"
+                android:layout_below="@+id/txtItemContentLabel"
             />
 
             <LinearLayout
@@ -163,10 +163,10 @@
                         android:id="@+id/txtOnboardingText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/activity_edit_entry_onboarding_left_right_margin"
-                        android:layout_marginStart="@dimen/activity_edit_entry_onboarding_left_right_margin"
-                        android:layout_marginRight="@dimen/activity_edit_entry_onboarding_left_right_margin"
-                        android:layout_marginEnd="@dimen/activity_edit_entry_onboarding_left_right_margin"
+                        android:layout_marginLeft="@dimen/activity_edit_item_onboarding_left_right_margin"
+                        android:layout_marginStart="@dimen/activity_edit_item_onboarding_left_right_margin"
+                        android:layout_marginRight="@dimen/activity_edit_item_onboarding_left_right_margin"
+                        android:layout_marginEnd="@dimen/activity_edit_item_onboarding_left_right_margin"
                         android:layout_centerVertical="true"
                         android:layout_centerHorizontal="true"
                         android:textAlignment="center"
@@ -231,7 +231,7 @@
             <net.dankito.richtexteditor.android.toolbar.EditorToolbar
                 android:id="@+id/editorToolbar"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/activity_edit_entry_html_editor_toolbar_height"
+                android:layout_height="@dimen/activity_edit_item_html_editor_toolbar_height"
                 android:background="@color/colorAccent"
             />
 
@@ -255,7 +255,7 @@
     </RelativeLayout>
 
     <include
-        layout="@layout/view_floating_action_button_entry_fields"
+        layout="@layout/view_floating_action_button_item_fields"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

@@ -16,7 +16,7 @@ import android.widget.TextView
 import net.dankito.deepthought.android.DeepThoughtActivityTestRule
 import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.activities.arguments.EditEntryActivityParameters
+import net.dankito.deepthought.android.activities.arguments.EditItemActivityParameters
 import net.dankito.deepthought.android.di.TestComponent
 import net.dankito.deepthought.android.service.ActivityParameterHolder
 import net.dankito.deepthought.android.util.matchers.RecyclerViewInViewMatcher
@@ -64,7 +64,7 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
     var takeScreenshotOnError = TakeScreenshotOnErrorTestRule()
 
     @get:Rule
-    val testRule = DeepThoughtActivityTestRule<EditEntryActivity>(EditEntryActivity::class.java)
+    val testRule = DeepThoughtActivityTestRule<EditItemActivity>(EditItemActivity::class.java)
 
 
     init {
@@ -78,7 +78,7 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
         testItem.addTag(persistedTag2)
         testItem.addTag(persistedTag3)
 
-        testRule.setActivityParameter(parameterHolder, EditEntryActivityParameters(testItem))
+        testRule.setActivityParameter(parameterHolder, EditItemActivityParameters(testItem))
     }
 
 
@@ -109,7 +109,7 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
 
         assertThat(testItem.tags.size, `is`(3)) // Item is not saved yet, but displayed tags preview must get updated
 
-        onView(withId(R.id.mnSaveEntry)).perform(click())
+        onView(withId(R.id.mnSaveItem)).perform(click())
         assertThat(testItem.tags.size, `is`(6))
         testItem.tags.forEach { tag ->
             assertThat(tag.isPersisted(), `is`(true))
@@ -158,7 +158,7 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
 
         assertThat(testItem.tags.size, `is`(3)) // Item is not saved yet, but displayed tags preview must get updated
 
-        onView(withId(R.id.mnSaveEntry)).perform(click())
+        onView(withId(R.id.mnSaveItem)).perform(click())
         assertThat(testItem.tags.size, `is`(5))
         testItem.tags.forEach { tag ->
             assertThat(tag.isPersisted(), `is`(true))
@@ -480,7 +480,7 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
                 .check(matches(withText(`is`("$UnPersistedTag1Name${SearchEngineBase.TagsSearchTermSeparator}" +
                         "$UnPersistedTag2Name${SearchEngineBase.TagsSearchTermSeparator}"))))
 
-        onView(withId(R.id.mnSaveEntry)).perform(click())
+        onView(withId(R.id.mnSaveItem)).perform(click())
         assertThat(testItem.tags.size, `is`(newDisplayedTags.size))
         testItem.tags.forEach { tag ->
             assertThat(tag.isPersisted(), `is`(true))
