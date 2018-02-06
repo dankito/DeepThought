@@ -5,14 +5,14 @@ import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.service.data.DeleteEntityService
-import net.dankito.service.data.ReferenceService
+import net.dankito.service.data.SourceService
 import net.dankito.service.data.SeriesService
 import net.dankito.utils.IThreadPool
 import java.util.*
 import javax.inject.Inject
 
 
-class ReferencePersister(private val referenceService: ReferenceService, private val seriesService: SeriesService, private val filePersister: FilePersister,
+class ReferencePersister(private val sourceService: SourceService, private val seriesService: SeriesService, private val filePersister: FilePersister,
                          private val deleteEntityService: DeleteEntityService) {
 
     @Inject
@@ -78,10 +78,10 @@ class ReferencePersister(private val referenceService: ReferenceService, private
 
         val wasSourcePersisted = source.isPersisted()
         if(wasSourcePersisted == false) {
-            referenceService.persist(source)
+            sourceService.persist(source)
         }
         else {
-            referenceService.update(source, doChangesAffectDependentEntities)
+            sourceService.update(source, doChangesAffectDependentEntities)
         }
 
         if(series?.id != previousSeries?.id || wasSourcePersisted == false) {

@@ -20,7 +20,7 @@ import net.dankito.deepthought.model.fields.SourceField
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditReferencePresenter
 import net.dankito.service.data.DeleteEntityService
-import net.dankito.service.data.ReferenceService
+import net.dankito.service.data.SourceService
 import net.dankito.service.data.SeriesService
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntityChangeType
@@ -50,7 +50,7 @@ class EditReferenceActivity : BaseActivity() {
 
 
     @Inject
-    protected lateinit var referenceService: ReferenceService
+    protected lateinit var sourceService: SourceService
 
     @Inject
     protected lateinit var seriesService: SeriesService
@@ -412,7 +412,7 @@ class EditReferenceActivity : BaseActivity() {
     }
 
     private fun showReference(referenceId: String) {
-        referenceService.retrieve(referenceId)?.let { reference ->
+        sourceService.retrieve(referenceId)?.let { reference ->
             showReference(reference)
         }
     }

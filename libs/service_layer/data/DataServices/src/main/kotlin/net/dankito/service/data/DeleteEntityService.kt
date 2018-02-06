@@ -11,7 +11,7 @@ import net.dankito.utils.ui.IDialogService
  * When simply calling <entityServiceBase>.delete() entity's sources aren't updated and still keep a source to deleted entity.
  * This service first removes all sources and updates them and then deletes the entity with its EntityService.
  */
-class DeleteEntityService(private val itemService: ItemService, private val tagService: TagService, private val referenceService: ReferenceService, private val seriesService: SeriesService,
+class DeleteEntityService(private val itemService: ItemService, private val tagService: TagService, private val sourceService: SourceService, private val seriesService: SeriesService,
                           private val fileService: FileService, private val localFileInfoService: LocalFileInfoService, private val searchEngine: ISearchEngine,
                           private val dialogService: IDialogService, private val threadPool: IThreadPool) {
 
@@ -23,7 +23,7 @@ class DeleteEntityService(private val itemService: ItemService, private val tagS
         val itemSource = item.source
         item.source?.let { reference ->
             item.source = null
-            referenceService.update(reference)
+            sourceService.update(reference)
         }
 
         ArrayList(item.tags).filterNotNull().filter { it.id != null }.forEach { tag ->
@@ -108,10 +108,10 @@ class DeleteEntityService(private val itemService: ItemService, private val tagS
 
         ArrayList(source.attachedFiles).filterNotNull().filter { it.id != null }.forEach { file ->
             source.removeAttachedFile(file)
-            referenceService.entityManager.updateEntity(file)
+            sourceService.entityManager.updateEntity(file)
         }
 
-        referenceService.delete(source)
+        sourceService.delete(source)
     }
 
 
@@ -122,7 +122,7 @@ class DeleteEntityService(private val itemService: ItemService, private val tagS
     fun deleteSeries(series: Series) {
         ArrayList(series.sources).filterNotNull().filter { it.id != null }.forEach { reference ->
             reference.series = null
-            referenceService.update(reference)
+            sourceService.update(reference)
         }
 
         seriesService.delete(series)
@@ -141,7 +141,7 @@ class DeleteEntityService(private val itemService: ItemService, private val tagS
 
         ArrayList(file.sourcesAttachedTo).filterNotNull().filter { it.id != null }.forEach { source ->
             source.removeAttachedFile(file)
-            referenceService.update(source)
+            sourceService.update(source)
         }
 
 

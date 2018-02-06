@@ -5,4 +5,4 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.event.EntityChangedNotifier
 
 
-class ReferenceService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : EntityServiceBase<Source>(Source::class.java, dataManager, entityChangedNotifier)
+class SourceService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : EntityServiceBase<Source>(Source::class.java, dataManager, entityChangedNotifier)

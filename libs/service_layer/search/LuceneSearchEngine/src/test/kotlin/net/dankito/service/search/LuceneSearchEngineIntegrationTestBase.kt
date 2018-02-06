@@ -41,7 +41,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
 
     protected val tagService: TagService
 
-    protected val referenceService: ReferenceService
+    protected val sourceService: SourceService
 
     protected val seriesService: SeriesService
 
@@ -99,20 +99,20 @@ abstract class LuceneSearchEngineIntegrationTestBase {
 
         itemService = ItemService(dataManager, entityChangedNotifier)
         tagService = TagService(dataManager, entityChangedNotifier)
-        referenceService = ReferenceService(dataManager, entityChangedNotifier)
+        sourceService = SourceService(dataManager, entityChangedNotifier)
         seriesService = SeriesService(dataManager, entityChangedNotifier)
         readLaterArticleService = ReadLaterArticleService(dataManager, entityChangedNotifier, JacksonJsonSerializer(tagService, seriesService))
         localFileInfoService = LocalFileInfoService(dataManager, entityChangedNotifier)
         fileService = FileService(dataManager, entityChangedNotifier)
 
         underTest = LuceneSearchEngine(dataManager, NoOpLanguageDetector(), OsHelper(platformConfiguration), ThreadPool(), eventBus,
-                itemService, tagService, referenceService, seriesService, readLaterArticleService, fileService, localFileInfoService)
+                itemService, tagService, sourceService, seriesService, readLaterArticleService, fileService, localFileInfoService)
         initLuceneSearchEngine(underTest)
 
-        deleteEntityService = DeleteEntityService(itemService, tagService, referenceService, seriesService, fileService, localFileInfoService, underTest, mock(), threadPool)
+        deleteEntityService = DeleteEntityService(itemService, tagService, sourceService, seriesService, fileService, localFileInfoService, underTest, mock(), threadPool)
         fileManager = FileManager(underTest, localFileInfoService, mock(), platformConfiguration, HashService(), eventBus, threadPool)
         filePersister = FilePersister(fileService, localFileInfoService, fileManager, threadPool)
-        sourcePersister = ReferencePersister(referenceService, seriesService, filePersister, deleteEntityService)
+        sourcePersister = ReferencePersister(sourceService, seriesService, filePersister, deleteEntityService)
         itemPersister = ItemPersister(itemService, sourcePersister, tagService, filePersister, deleteEntityService)
     }
 

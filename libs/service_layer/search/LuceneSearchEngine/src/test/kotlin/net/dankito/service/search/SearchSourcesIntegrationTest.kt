@@ -63,11 +63,11 @@ class SearchSourcesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
 
         val source = Source("Test")
         source.addAttachedFile(file)
-        referenceService.persist(source)
+        sourceService.persist(source)
 
 
         for(i in 0 until 3) {
-            referenceService.persist(Source("$i"))
+            sourceService.persist(Source("$i"))
         }
 
 

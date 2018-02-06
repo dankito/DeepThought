@@ -15,7 +15,7 @@ import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditSeriesPresenter
 import net.dankito.service.data.DeleteEntityService
-import net.dankito.service.data.ReferenceService
+import net.dankito.service.data.SourceService
 import net.dankito.service.data.SeriesService
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntityChangeType
@@ -43,7 +43,7 @@ class EditSeriesActivity : BaseActivity() {
     protected lateinit var seriesService: SeriesService
 
     @Inject
-    protected lateinit var referenceService: ReferenceService
+    protected lateinit var sourceService: SourceService
 
     @Inject
     protected lateinit var seriesPersister: SeriesPersister

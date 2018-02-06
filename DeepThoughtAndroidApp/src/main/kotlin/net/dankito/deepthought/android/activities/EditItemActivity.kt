@@ -104,7 +104,7 @@ class EditItemActivity : BaseActivity() {
     protected lateinit var tagService: TagService
 
     @Inject
-    protected lateinit var sourceService: ReferenceService
+    protected lateinit var sourceService: SourceService
 
     @Inject
     protected lateinit var itemPersister: ItemPersister

@@ -1,7 +1,7 @@
 package net.dankito.service.search.writerandsearcher
 
 import net.dankito.deepthought.model.Source
-import net.dankito.service.data.ReferenceService
+import net.dankito.service.data.SourceService
 import net.dankito.service.data.messages.SourceChanged
 import net.dankito.service.eventbus.EventBusPriorities
 import net.dankito.service.eventbus.IEventBus
@@ -20,8 +20,8 @@ import org.apache.lucene.search.*
 import java.text.SimpleDateFormat
 
 
-class ReferenceIndexWriterAndSearcher(referenceService: ReferenceService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool)
-    : IndexWriterAndSearcher<Source>(referenceService, eventBus, osHelper, threadPool) {
+class ReferenceIndexWriterAndSearcher(sourceService: SourceService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool)
+    : IndexWriterAndSearcher<Source>(sourceService, eventBus, osHelper, threadPool) {
 
     companion object {
         private val PublishingDateIndexFormat = SimpleDateFormat("dd MM yyyy")

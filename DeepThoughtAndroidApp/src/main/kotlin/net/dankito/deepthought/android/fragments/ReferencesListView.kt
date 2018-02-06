@@ -15,7 +15,7 @@ import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.deepthought.ui.presenter.ReferencesListPresenter
 import net.dankito.deepthought.ui.view.IReferencesListView
 import net.dankito.service.data.DeleteEntityService
-import net.dankito.service.data.ReferenceService
+import net.dankito.service.data.SourceService
 import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
@@ -24,7 +24,7 @@ class ReferencesListView: EntitiesListViewFragment<Source>(R.menu.reference_cont
         IReferencesListView {
 
     @Inject
-    protected lateinit var referenceService: ReferenceService
+    protected lateinit var sourceService: SourceService
 
     @Inject
     protected lateinit var router: IRouter

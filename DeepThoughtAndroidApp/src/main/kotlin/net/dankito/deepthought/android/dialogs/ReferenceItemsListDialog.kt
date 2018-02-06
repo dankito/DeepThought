@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
-import net.dankito.service.data.ReferenceService
+import net.dankito.service.data.SourceService
 import net.dankito.service.data.messages.ItemChanged
 import net.dankito.service.data.messages.SourceChanged
 import net.dankito.service.search.specific.ItemsSearch
@@ -23,7 +23,7 @@ class ReferenceItemsListDialog : ItemsListDialogBase() {
 
 
     @Inject
-    protected lateinit var referenceService: ReferenceService
+    protected lateinit var sourceService: SourceService
 
 
     private var source: Source? = null // made it nullable instead of lateinit so that at least application doesn't crash if it cannot be set on restore
@@ -70,7 +70,7 @@ class ReferenceItemsListDialog : ItemsListDialogBase() {
         super.restoreState(savedInstanceState)
 
         savedInstanceState.getString(REFERENCE_ID_EXTRA_NAME)?.let { referenceId ->
-            referenceService.retrieve(referenceId)?.let {
+            sourceService.retrieve(referenceId)?.let {
                 this.source = it
             }
         }
