@@ -4,7 +4,7 @@ import javafx.scene.control.ContextMenu
 import javafx.scene.control.TableView
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.di.AppComponent
-import net.dankito.deepthought.javafx.dialogs.mainwindow.model.EntryViewModel
+import net.dankito.deepthought.javafx.dialogs.mainwindow.model.ItemViewModel
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
 import net.dankito.deepthought.javafx.service.extensions.findClickedTableRow
 import net.dankito.deepthought.javafx.ui.controls.IItemsListViewJavaFX
@@ -35,13 +35,13 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
     }
 
 
-    private val entryModel = EntryViewModel()
+    private val itemModel = ItemViewModel()
 
-    private val entries = LazyLoadingObservableList<Item>()
+    private val items = LazyLoadingObservableList<Item>()
 
     private val searchBar: ItemsSearchBar
 
-    private var tableEntries: TableView<Item> by singleAssign()
+    private var tableItems: TableView<Item> by singleAssign()
 
     var statusBar: StatusBar? = null
 
@@ -89,7 +89,7 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
     override val root = vbox {
         add(searchBar.root)
 
-        tableEntries = tableview<Item>(entries) {
+        tableItems = tableview<Item>(items) {
             column(messages["item.column.header.index"], Item::itemIndex).prefWidth(46.0)
             column(messages["item.column.header.source"], Item::referencePreview).weightedWidth(4.0)
             column(messages["item.column.header.preview"], Item::preview).weightedWidth(4.0)
@@ -99,7 +99,7 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
 
             columnResizePolicy = SmartResize.POLICY
 
-            bindSelected(entryModel)
+            bindSelected(itemModel)
 
             vgrow = Priority.ALWAYS
 
@@ -140,13 +140,13 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
         contextMenu.separator()
 
         contextMenu.item(messages["context.menu.item.delete"]) {
-            action { askIfShouldDeleteEntry(item) }
+            action { askIfShouldDeleteItem(item) }
         }
 
         return contextMenu
     }
 
-    private fun askIfShouldDeleteEntry(item: Item) {
+    private fun askIfShouldDeleteItem(item: Item) {
         dialogService.showConfirmationDialog(dialogService.getLocalization().getLocalizedString("alert.message.really.delete.item")) { selectedButton ->
             if(selectedButton == ConfirmationDialogButton.Confirm) {
                 presenter.deleteItem(item)
@@ -169,14 +169,14 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
 
     override fun showEntities(entities: List<Item>) {
         runLater {
-            entries.setAll(entities)
-            tableEntries.refresh() // necessary when count items stays the same (e.g. when an item has been updated)
+            items.setAll(entities)
+            tableItems.refresh() // necessary when count items stays the same (e.g. when an item has been updated)
 
-            statusBar?.showCountDisplayedEntriesOnUiThread(entities.size)
+            statusBar?.showCountDisplayedItemsOnUiThread(entities.size)
         }
     }
 
-    override fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>) {
+    override fun showItemsForTag(tag: Tag, tagsFilter: List<Tag>) {
         presenter.showItemsForTag(tag, tagsFilter)
     }
 

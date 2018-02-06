@@ -7,7 +7,7 @@ import net.dankito.deepthought.ui.view.IItemsListView
 
 interface IItemsListViewJavaFX : IItemsListView {
 
-    fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>)
+    fun showItemsForTag(tag: Tag, tagsFilter: List<Tag>)
 
     fun showItemsForSource(source: Source)
 

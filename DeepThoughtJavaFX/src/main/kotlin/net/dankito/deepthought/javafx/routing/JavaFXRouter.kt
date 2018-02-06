@@ -29,7 +29,7 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
     }
 
     override fun showItemsForTag(tag: Tag, tagsFilter: List<Tag>) {
-        itemsListView.showEntriesForTag(tag, tagsFilter)
+        itemsListView.showItemsForTag(tag, tagsFilter)
     }
 
     override fun showItemsForSource(source: Source) {

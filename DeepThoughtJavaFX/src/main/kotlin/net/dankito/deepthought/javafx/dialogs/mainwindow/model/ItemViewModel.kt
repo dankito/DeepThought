@@ -7,11 +7,11 @@ import net.dankito.deepthought.model.Item
 import tornadofx.*
 
 
-class EntryViewModel : ItemViewModel<Item>() {
+class ItemViewModel : ItemViewModel<Item>() {
 
     val index = bind { SimpleLongProperty(item?.itemIndex ?: 0) }
 
-    val reference = bind { SimpleStringProperty(item?.source.previewWithSeriesAndPublishingDate ?: "") }
+    val source = bind { SimpleStringProperty(item?.source.previewWithSeriesAndPublishingDate ?: "") }
 
     val preview = bind { SimpleStringProperty(item?.preview ?: "") }
 
