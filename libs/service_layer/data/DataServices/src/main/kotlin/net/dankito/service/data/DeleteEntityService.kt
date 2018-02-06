@@ -21,9 +21,9 @@ class DeleteEntityService(private val itemService: ItemService, private val tagS
 
     fun deleteItem(item: Item) {
         val itemSource = item.source
-        item.source?.let { reference ->
+        item.source?.let { source ->
             item.source = null
-            sourceService.update(reference)
+            sourceService.update(source)
         }
 
         ArrayList(item.tags).filterNotNull().filter { it.id != null }.forEach { tag ->
@@ -54,11 +54,11 @@ class DeleteEntityService(private val itemService: ItemService, private val tagS
 //            val localizedMessage = dialogService.getLocalization().getLocalizedString("alert.message.item.was.only.item.on.source.delete.as.well", source.title)
 //            dialogService.showConfirmationDialog(localizedMessage) { selectedButton ->
 //                if(selectedButton == ConfirmationDialogButton.Confirm) {
-//                    deleteReference(source)
+//                    deleteSource(source)
 //                }
 //            }
 
-            deleteReference(source)
+            deleteSource(source)
         }
     }
 
@@ -91,11 +91,11 @@ class DeleteEntityService(private val itemService: ItemService, private val tagS
     }
 
 
-    fun deleteReferenceAsync(source: Source) {
-        threadPool.runAsync { deleteReference(source) }
+    fun deleteSourceAsync(source: Source) {
+        threadPool.runAsync { deleteSource(source) }
     }
 
-    fun deleteReference(source: Source) {
+    fun deleteSource(source: Source) {
         source.series?.let { series ->
             source.series = null
             seriesService.update(series)
@@ -120,9 +120,9 @@ class DeleteEntityService(private val itemService: ItemService, private val tagS
     }
 
     fun deleteSeries(series: Series) {
-        ArrayList(series.sources).filterNotNull().filter { it.id != null }.forEach { reference ->
-            reference.series = null
-            sourceService.update(reference)
+        ArrayList(series.sources).filterNotNull().filter { it.id != null }.forEach { source ->
+            source.series = null
+            sourceService.update(source)
         }
 
         seriesService.delete(series)

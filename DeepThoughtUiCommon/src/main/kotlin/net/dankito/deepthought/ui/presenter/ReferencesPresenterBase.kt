@@ -19,7 +19,7 @@ abstract class ReferencesPresenterBase(protected var router: IRouter, private va
     }
 
     fun deleteReference(source: Source) {
-        deleteEntityService.deleteReference(source)
+        deleteEntityService.deleteSource(source)
     }
 
 }
