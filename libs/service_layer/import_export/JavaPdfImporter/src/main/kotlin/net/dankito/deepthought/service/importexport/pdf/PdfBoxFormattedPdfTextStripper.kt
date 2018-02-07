@@ -3,7 +3,7 @@ package net.dankito.deepthought.service.importexport.pdf
 import net.dankito.deepthought.service.importexport.pdf.IPdfTextStripper.Companion.ParagraphEnd
 import net.dankito.deepthought.service.importexport.pdf.IPdfTextStripper.Companion.ParagraphStart
 import net.dankito.deepthought.service.importexport.pdf.IPdfTextStripper.Companion.WordSeparator
-import org.apache.pdfbox.util.PDFTextStripper
+import org.apache.pdfbox.text.PDFTextStripper
 
 
 class PdfBoxFormattedPdfTextStripper : PDFTextStripper(), IPdfTextStripper {
