@@ -49,7 +49,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
     private val synchronizedFilesWaitingForWriteFilePermissionResult = mutableListOf<FileLink>()
 
 
-    private val queue = AsyncProducerConsumerQueue<FileLink>(getCountConnectionsToUse(), autoStart = false) {
+    private val queue = AsyncProducerConsumerQueue<FileLink>(FileSyncConfig.MaxSimultaneousConnections, autoStart = false) {
         tryToSynchronizeFile(it)
     }
 
@@ -367,12 +367,6 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         return localFileInfo.get()
     }
 
-
-    private fun getCountConnectionsToUse(): Int {
-        val countProcessors = Runtime.getRuntime().availableProcessors()
-
-        return Math.min(4, 2 * countProcessors) // on older Androids don't use too many simultaneous connections, and a max of 4 connections should be really sufficient
-    }
 
     private fun mapPermitSynchronizeFileResultToSynchronizeFileResult(result: PermitSynchronizeFileResult): SynchronizeFileResult {
         when(result) {
