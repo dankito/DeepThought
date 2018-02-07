@@ -297,7 +297,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         val outputStream = BufferedOutputStream(FileOutputStream(tempFile))
         val inputStream = DataInputStream(BufferedInputStream(clientSocket.getInputStream()))
 
-        val buffer = ByteArray(1 * 1024)
+        val buffer = ByteArray(8 * 1024)
 
         var receivedChunkSize: Int
         var receivedMessageSize = 0L
