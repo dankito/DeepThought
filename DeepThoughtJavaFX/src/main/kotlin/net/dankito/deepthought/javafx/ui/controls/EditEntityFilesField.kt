@@ -146,8 +146,10 @@ class EditEntityFilesField : View() {
     private fun selectFileToAdd() {
         val fileChooserDialog = FileChooser()
 
-        fileChooserDialog.showOpenDialog(currentStage)?.let { file ->
-            addLocalFile(file.absoluteFile)
+        fileChooserDialog.showOpenMultipleDialog(currentStage)?.let { files ->
+            files.forEach { file ->
+                addLocalFile(file.absoluteFile)
+            }
         }
     }
 
