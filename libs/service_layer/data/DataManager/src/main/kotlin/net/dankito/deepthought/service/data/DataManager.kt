@@ -153,7 +153,9 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
     }
 
     private fun callLocalSettingsChangedListeners(settings: LocalSettings) {
-        localSettingsChangedListeners.forEach { listener ->
+        val copy = ArrayList(localSettingsChangedListeners) // make a copy before calling forEach() as ArrayList(localSettingsChangedListeners).forEach() still results in
+        // ConcurrentModificationException when a listener removes it listener again during forEach()
+        copy.forEach { listener -> // to avoid ConcurrentModificationException
             listener(settings)
         }
     }
