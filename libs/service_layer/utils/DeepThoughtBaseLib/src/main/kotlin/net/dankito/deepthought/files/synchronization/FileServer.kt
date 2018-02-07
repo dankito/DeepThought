@@ -38,12 +38,12 @@ class FileServer(private val searchEngine: ISearchEngine, private val entityMana
 
     private var serverSocket: ServerSocket? = null
 
-    private var maxSimultaneousConnections = 1
+    private var maxSimultaneousConnections = FileSyncConfig.MaxSimultaneousConnections
 
     private val currentConnections = CopyOnWriteArrayList<Socket>()
 
 
-    fun startServerAsync(desiredPort: Int = 60705, maxSimultaneousConnections: Int = 1, startingServerDone: ((startedSuccessfully: Boolean) -> Unit)? = null) {
+    fun startServerAsync(desiredPort: Int = 60705, maxSimultaneousConnections: Int = FileSyncConfig.MaxSimultaneousConnections, startingServerDone: ((startedSuccessfully: Boolean) -> Unit)? = null) {
         this.maxSimultaneousConnections = maxSimultaneousConnections
 
         thread {
