@@ -171,8 +171,6 @@ class FileServer(private val searchEngine: ISearchEngine, private val entityMana
             log.info("Sending file $filePath of size ${localFileInfo.fileSize} to client ${clientSocket.inetAddress}")
 
             sendFileToClient(clientSocket, filePath, fileSize)
-
-            val waitTillClientReceivedFile = socketHandler.receiveMessage(clientSocket) // actually shouldn't be needed, just to ensure not to close socket before client received complete file
         }
 
         closeClientSocket(clientSocket)

@@ -283,8 +283,6 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
             log.info("Received in ${duration / 1000}:${String.format("%03d", duration % 1000)} ${countReceivedBytes / fileSize.toFloat() * 100} % " +
                     "($countReceivedBytes / $fileSize) for file ${file.name}")
 
-            socketHandler.sendMessage(clientSocket, "END".toByteArray())
-
             if(countReceivedBytes == fileSize) {
                 fileSuccessfullySynchronized(file, localFileInfo, destinationFile)
                 return SynchronizeFileResult.Success
