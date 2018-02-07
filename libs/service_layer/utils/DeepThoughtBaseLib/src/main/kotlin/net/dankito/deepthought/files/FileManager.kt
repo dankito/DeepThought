@@ -155,7 +155,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
 
     private fun searchForNotSynchronizedFiles() {
         searchEngine.searchLocalFileInfo(LocalFileInfoSearch(doesNotHaveSyncStatus = FileSyncStatus.UpToDate) { notUpToDateLocalFileInfo ->
-            notUpToDateLocalFileInfo.filterNotNull().forEach { localFileInfo ->
+            notUpToDateLocalFileInfo.filterNotNull().sortedBy { it.file?.fileSize ?: Long.MAX_VALUE }.forEach { localFileInfo -> // sort files by their size so that smaller files get synchronized first
                 localFileInfo.file?.let { file ->
                     startFileSynchronizationAsync(file)
                 }
