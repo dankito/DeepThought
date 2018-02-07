@@ -62,6 +62,12 @@ data class FileLink(
         private set
 
 
+    @kotlin.jvm.Transient
+    @javax.persistence.Transient
+    private val uuid = UUID.randomUUID().toString() // just needed for same internal states, as for instance equality only uriString, name and isLocalFile are taken into
+    // consideration - so two instances having the same values in these are considered equal. And as FileLinks may remain unpersisted for some time, we also cannot take id field
+
+
     init {
         // TODO
 //        this.fileType = FileType.getDefaultFileType()
@@ -92,6 +98,20 @@ data class FileLink(
 
     internal fun removeAsAttachmentFromSource(source: Source): Boolean {
         return sourcesAttachedTo.remove(source)
+    }
+
+
+    override fun equals(other: Any?): Boolean {
+        if(this === other) return true
+        if(other !is FileLink) return false
+
+        return uuid == other.uuid
+    }
+
+    override fun hashCode(): Int {
+        var result = (uuid ?: "").hashCode()
+
+        return result
     }
 
 }
