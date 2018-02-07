@@ -84,6 +84,8 @@ class ArticleExtractorsMenuButton : View() {
 
         addMenuButtonArticleExtractorsMenuItem(addArticleSummaryItem)
 
+        addArticleSummaryItem.isDisable = true
+
 
         setMenuItemIcon(showReadLaterArticlesItem, Icons.ReadLaterArticlesIconPath)
         showReadLaterArticlesItem.action { showReadLaterArticlesView() }
