@@ -11,7 +11,6 @@ import net.dankito.utils.services.Times
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.*
-import java.util.concurrent.ConcurrentSkipListSet
 import kotlin.concurrent.schedule
 import kotlin.concurrent.thread
 
@@ -37,7 +36,7 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
 
     private val initializationListeners = mutableSetOf<() -> Unit>()
 
-    private val localSettingsChangedListeners = ConcurrentSkipListSet<(LocalSettings) -> Unit>()
+    private val localSettingsChangedListeners = mutableSetOf<(LocalSettings) -> Unit>()
 
 
     init {
