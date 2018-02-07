@@ -254,7 +254,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
                 val response = serializer.deserializeObject(it, PermitSynchronizeFileResponse::class.java)
 
                 if(response.result == PermitSynchronizeFileResult.SynchronizationPermitted) {
-                    socketHandler.sendMessage(clientSocket, "BEGIN".toByteArray())
+                    socketHandler.sendMessage(clientSocket, FileSyncConfig.BeginToStreamFileMessage)
 
                     return receiveFile(clientSocket, file, response.fileSize ?: file.fileSize)
                 }
