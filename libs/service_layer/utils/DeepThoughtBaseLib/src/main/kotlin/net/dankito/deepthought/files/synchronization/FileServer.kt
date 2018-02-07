@@ -183,7 +183,7 @@ class FileServer(private val searchEngine: ISearchEngine, private val entityMana
             val inputStream = BufferedInputStream(FileInputStream(filePath))
             val outputStream = DataOutputStream(BufferedOutputStream(clientSocket.getOutputStream()))
 
-            val buffer = ByteArray(8 * 1024)
+            val buffer = ByteArray(FileSyncConfig.BufferSize)
 
             var sentChunkSize: Int
             var sentMessageSize = 0L
