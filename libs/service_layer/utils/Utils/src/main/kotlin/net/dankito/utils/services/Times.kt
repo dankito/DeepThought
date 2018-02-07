@@ -10,7 +10,7 @@ class Times {
 
         const val DefaultIntervalToRunIndexOptimizationDays = 7
 
-        const val DefaultDelayBeforeSearchingForNotSynchronizedFilesSeconds = 3 * 60
+        const val DefaultDelayBeforeSearchingForNotSynchronizedFilesSeconds = 30
 
         const val DefaultDelayBeforeOptimizingDatabaseSeconds = 5 * 60
 
