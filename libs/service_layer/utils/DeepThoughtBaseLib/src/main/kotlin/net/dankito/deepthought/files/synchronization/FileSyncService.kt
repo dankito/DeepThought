@@ -275,8 +275,14 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
             val destinationFile = if(localFileInfo.path != null) File(localFileInfo.path) else File(getDefaultSavePathForFile(file), file.name)
             destinationFile.parentFile.mkdirs()
 
+            val startTime = Date().time
+
             val countReceivedBytes = saveStreamToFile(destinationFile, clientSocket, fileSize)
-            log.info("Received $countReceivedBytes and should have received $fileSize bytes for file ${file.name}")
+
+            val duration = Date().time - startTime
+            log.info("Received in ${duration / 1000}:${String.format("%03d", duration % 1000)} ${countReceivedBytes / fileSize.toFloat() * 100} % " +
+                    "($countReceivedBytes / $fileSize) for file ${file.name}")
+
             socketHandler.sendMessage(clientSocket, "END".toByteArray())
 
             if(countReceivedBytes == fileSize) {
