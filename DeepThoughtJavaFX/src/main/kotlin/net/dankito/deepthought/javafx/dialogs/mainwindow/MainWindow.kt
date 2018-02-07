@@ -3,11 +3,11 @@ package net.dankito.deepthought.javafx.dialogs.mainwindow
 import javafx.scene.control.SplitPane
 import javafx.scene.control.TabPane
 import javafx.scene.image.Image
-import javafx.scene.layout.Priority
+import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.StackPane
-import javafx.scene.layout.VBox
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.*
+import net.dankito.deepthought.javafx.service.extensions.setAnchorPaneOverallAnchor
 import tornadofx.*
 import tornadofx.FX.Companion.messages
 
@@ -77,14 +77,14 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
                         }
                     }
 
-                    vbox {
+                    anchorpane {
                         itemsListView.statusBar = statusBar
-                        add(itemsListView.root)
-                        VBox.setVgrow(itemsListView.root, Priority.ALWAYS)
+                        add(itemsListView)
+                        itemsListView.setAnchorPaneOverallAnchor(0.0)
+
+                        addClipboardContentPopup(this)
                     }
                 }
-
-                add(ClipboardContentPopup())
             }
 
             splpnContent.setDividerPosition(0, 0.2)
@@ -93,6 +93,14 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
         bottom = statusBar.root
 
         mainMenuBar.createNewItemMenuClicked = { itemsListView.createNewItem() }
+    }
+
+    private fun addClipboardContentPopup(pane: AnchorPane) {
+        val clipboardContentPopup = ClipboardContentPopup()
+        pane.add(clipboardContentPopup)
+
+        AnchorPane.setRightAnchor(clipboardContentPopup.root, 8.0)
+        AnchorPane.setBottomAnchor(clipboardContentPopup.root, 8.0)
     }
 
 

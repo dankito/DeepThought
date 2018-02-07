@@ -47,43 +47,35 @@ class ClipboardContentPopup() : View() {
     }
 
 
-    override val root = anchorpane {
-        useMaxSize = true
+    override val root = vbox {
         visibleProperty().bind(isPopupVisible)
         FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
 
-        vbox {
-            background = Background(BackgroundFill(Colors.ClipboardContentPopupBackgroundColor, CornerRadii(8.0), Insets.EMPTY))
+        background = Background(BackgroundFill(Colors.ClipboardContentPopupBackgroundColor, CornerRadii(8.0), Insets.EMPTY))
 
-            anchorpaneConstraints {
-                rightAnchor = 8.0
-                bottomAnchor = 8.0
-            }
+        anchorpane {
+            label(headerText) {
+                minWidth = 150.0
 
-            anchorpane {
-                label(headerText) {
-                    minWidth = 150.0
-
-                    anchorpaneConstraints {
-                        topAnchor = 8.0
-                        leftAnchor = 10.0
-                        bottomAnchor = 4.0
-                    }
-                }
-
-                button("x") {
-                    action { hidePopupOnUiThread() }
-
-                    anchorpaneConstraints {
-                        topAnchor = 0.0
-                        rightAnchor = 0.0
-                        bottomAnchor = 4.0
-                    }
+                anchorpaneConstraints {
+                    topAnchor = 8.0
+                    leftAnchor = 10.0
+                    bottomAnchor = 4.0
                 }
             }
 
-            optionsPane = vbox { }
+            button("x") {
+                action { hidePopupOnUiThread() }
+
+                anchorpaneConstraints {
+                    topAnchor = 0.0
+                    rightAnchor = 0.0
+                    bottomAnchor = 4.0
+                }
+            }
         }
+
+        optionsPane = vbox { }
     }
 
 
