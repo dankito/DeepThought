@@ -29,8 +29,6 @@ import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.service.hideKeyboardDelayed
-import net.dankito.deepthought.android.service.permissions.IPermissionsManager
-import net.dankito.deepthought.android.service.permissions.PermissionsManager
 import net.dankito.deepthought.android.views.*
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.model.*
@@ -41,6 +39,8 @@ import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditItemPresenter
+import net.dankito.filechooserdialog.service.IPermissionsService
+import net.dankito.filechooserdialog.service.PermissionsService
 import net.dankito.richtexteditor.android.animation.ShowHideViewAnimator
 import net.dankito.service.data.*
 import net.dankito.service.data.messages.EntityChangeSource
@@ -188,7 +188,7 @@ class EditItemActivity : BaseActivity() {
 
     private val openUrlOptionsView = OpenUrlOptionsView()
 
-    private val permissionsManager: IPermissionsManager
+    private val permissionsManager: IPermissionsService
 
     private lateinit var editHtmlView: EditHtmlView
 
@@ -221,7 +221,7 @@ class EditItemActivity : BaseActivity() {
 
         presenter = EditItemPresenter(itemPersister, readLaterArticleService, clipboardService, router)
 
-        permissionsManager = PermissionsManager(this)
+        permissionsManager = PermissionsService(this)
     }
 
 

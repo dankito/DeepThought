@@ -10,8 +10,6 @@ import net.dankito.deepthought.android.activities.arguments.EditSourceActivityPa
 import net.dankito.deepthought.android.activities.arguments.EditSourceActivityResult
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.PickDateDialog
-import net.dankito.deepthought.android.service.permissions.IPermissionsManager
-import net.dankito.deepthought.android.service.permissions.PermissionsManager
 import net.dankito.deepthought.android.views.ToolbarUtil
 import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.model.Series
@@ -19,6 +17,8 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.fields.SourceField
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditSourcePresenter
+import net.dankito.filechooserdialog.service.IPermissionsService
+import net.dankito.filechooserdialog.service.PermissionsService
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.SeriesService
 import net.dankito.service.data.SourceService
@@ -93,7 +93,7 @@ class EditSourceActivity : BaseActivity() {
 
     private val toolbarUtil = ToolbarUtil()
 
-    private val permissionsManager: IPermissionsManager
+    private val permissionsManager: IPermissionsService
 
     private var eventBusListener: EventBusListener? = null
 
@@ -103,7 +103,7 @@ class EditSourceActivity : BaseActivity() {
 
         presenter = EditSourcePresenter(router, clipboardService, deleteEntityService, sourcePersister)
 
-        permissionsManager = PermissionsManager(this)
+        permissionsManager = PermissionsService(this)
     }
 
 

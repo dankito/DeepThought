@@ -6,6 +6,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.service.permissions.IPermissionsService
+import net.dankito.filechooserdialog.service.PermissionsService
 
 
 class AndroidPermissionsService(private val applicationContext: Context, private val activityTracker: CurrentActivityTracker) : IPermissionsService {
@@ -16,7 +17,7 @@ class AndroidPermissionsService(private val applicationContext: Context, private
 
 
     override fun hasPermissionToWriteFiles(): Boolean {
-        return PermissionsManager.isPermissionGranted(applicationContext, WriteSynchronizedFilePermission)
+        return PermissionsService.isPermissionGranted(applicationContext, WriteSynchronizedFilePermission)
     }
 
     override fun requestPermissionToWriteSynchronizedFiles(requestPermissionResult: (Boolean) -> Unit) {
@@ -33,10 +34,10 @@ class AndroidPermissionsService(private val applicationContext: Context, private
     }
 
     private fun requestPermissionToWriteSynchronizedFiles(currentActivity: BaseActivity, requestPermissionResult: (Boolean) -> Unit) {
-        val permissionsManager = PermissionsManager(currentActivity)
+        val permissionsManager = PermissionsService(currentActivity)
         val rational = currentActivity.getString(R.string.request_write_synchronized_file_permission_rational)
 
-        permissionsManager.requestPermission(WriteSynchronizedFilePermission, rational) { _, isGranted ->
+        permissionsManager.checkPermission(WriteSynchronizedFilePermission, rational) { _, isGranted ->
             requestPermissionResult(isGranted)
         }
     }

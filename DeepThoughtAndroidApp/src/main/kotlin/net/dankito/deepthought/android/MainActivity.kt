@@ -23,8 +23,6 @@ import net.dankito.deepthought.android.dialogs.TagsListViewDialog
 import net.dankito.deepthought.android.fragments.ItemsListView
 import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.IntentHandler
-import net.dankito.deepthought.android.service.permissions.IPermissionsManager
-import net.dankito.deepthought.android.service.permissions.PermissionsManager
 import net.dankito.deepthought.android.views.MainActivityFloatingActionMenuButton
 import net.dankito.deepthought.model.LocalSettings
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
@@ -32,6 +30,8 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.filechooserdialog.FileChooserDialog
 import net.dankito.filechooserdialog.model.FileChooserDialogConfig
+import net.dankito.filechooserdialog.service.IPermissionsService
+import net.dankito.filechooserdialog.service.PermissionsService
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.UrlUtil
 import org.slf4j.LoggerFactory
@@ -51,7 +51,7 @@ class MainActivity : BaseActivity() {
 
     private lateinit var itemsListView: ItemsListView
 
-    private val permissionsManager: IPermissionsManager
+    private val permissionsManager: IPermissionsService
 
 
     @Inject
@@ -76,7 +76,7 @@ class MainActivity : BaseActivity() {
     init {
         AppComponent.component.inject(this)
 
-        permissionsManager = PermissionsManager(this)
+        permissionsManager = PermissionsService(this)
     }
 
 
@@ -248,7 +248,7 @@ class MainActivity : BaseActivity() {
             importPdfWithPermissionGranted()
         }
         else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            permissionsManager.requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
+            permissionsManager.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
                     getString(R.string.open_file_permission_request_message))  { _, isGranted ->
                 if(isGranted) {
                     importPdfWithPermissionGranted()

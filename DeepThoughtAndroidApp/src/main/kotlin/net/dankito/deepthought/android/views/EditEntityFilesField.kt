@@ -11,13 +11,13 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.FilesRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.extensions.setLeftMargin
-import net.dankito.deepthought.android.service.permissions.IPermissionsManager
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.FileListPresenter
 import net.dankito.filechooserdialog.FileChooserDialog
+import net.dankito.filechooserdialog.service.IPermissionsService
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.extensions.didCollectionChange
@@ -55,7 +55,7 @@ class EditEntityFilesField : EditEntityField {
 
     private var sourceForFile: Source? = null
 
-    private lateinit var permissionsManager: IPermissionsManager
+    private lateinit var permissionsService: IPermissionsService
 
     private val fileListPresenter: FileListPresenter
 
@@ -113,10 +113,10 @@ class EditEntityFilesField : EditEntityField {
     }
 
 
-    fun setFiles(originalFiles: MutableCollection<FileLink>, permissionsManager: IPermissionsManager, sourceForFile: Source? = null) {
+    fun setFiles(originalFiles: MutableCollection<FileLink>, permissionsManager: IPermissionsService, sourceForFile: Source? = null) {
         this.originalFiles = originalFiles
         this.sourceForFile = sourceForFile
-        this.permissionsManager = permissionsManager
+        this.permissionsService = permissionsManager
 
         fileListPresenter.forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(originalFiles)
 
@@ -129,11 +129,11 @@ class EditEntityFilesField : EditEntityField {
 
 
     fun selectFilesToAdd() {
-        if(permissionsManager.isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        if(permissionsService.isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE)) {
             selectFilesToAddWithPermissionGranted()
         }
         else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            permissionsManager.requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
+            permissionsService.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
                     context.getString(R.string.edit_entity_files_field_read_files_permission_rational))  { _, isGranted ->
                 if(isGranted) {
                     selectFilesToAddWithPermissionGranted()
@@ -143,7 +143,7 @@ class EditEntityFilesField : EditEntityField {
     }
 
     private fun selectFilesToAddWithPermissionGranted() {
-        FileChooserDialog().showOpenMultipleFilesDialog(context as FragmentActivity, permissionsManager) { _, selectedFiles ->
+        FileChooserDialog().showOpenMultipleFilesDialog(context as FragmentActivity, permissionsService) { _, selectedFiles ->
             selectedFiles?.forEach { file ->
                 addLocalFile(file)
             }
