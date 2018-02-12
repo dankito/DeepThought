@@ -1,10 +1,10 @@
 package net.dankito.deepthought.javafx.service.settings
 
 import net.dankito.deepthought.model.enums.OsType
-import net.dankito.utils.IPlatformConfiguration
+import net.dankito.utils.PlatformConfigurationBase
 import java.io.File
 
-class JavaFXPlatformConfiguration : IPlatformConfiguration {
+class JavaFXPlatformConfiguration : PlatformConfigurationBase() {
 
     override fun getUserName(): String {
         return System.getProperty("user.name")
@@ -37,11 +37,11 @@ class JavaFXPlatformConfiguration : IPlatformConfiguration {
     }
 
     override fun getDefaultDataFolder(): File {
-        return File(getApplicationFolder(), "data")
+        return ensureFolderExists(File(getApplicationFolder(), "data"))
     }
 
     override fun getDefaultFilesFolder(): File {
-        return File(getApplicationFolder(), "files")
+        return ensureFolderExists(File(getApplicationFolder(), "files"))
     }
 
 }

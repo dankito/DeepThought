@@ -4,12 +4,12 @@ import android.content.Context
 import android.os.Build
 import android.os.Environment
 import net.dankito.deepthought.model.enums.OsType
-import net.dankito.utils.IPlatformConfiguration
+import net.dankito.utils.PlatformConfigurationBase
 import org.slf4j.LoggerFactory
 import java.io.File
 
 
-class AndroidPlatformConfiguration(val context: Context) : IPlatformConfiguration {
+class AndroidPlatformConfiguration(val context: Context) : PlatformConfigurationBase() {
 
     companion object {
         private val log = LoggerFactory.getLogger(AndroidPlatformConfiguration::class.java)
@@ -64,18 +64,12 @@ class AndroidPlatformConfiguration(val context: Context) : IPlatformConfiguratio
     }
 
     override fun getDefaultDataFolder(): File {
-        val dataFolderFile = context.getDir("data", Context.MODE_PRIVATE)
-
-        if(dataFolderFile.exists() == false) {
-            dataFolderFile.mkdirs()
-        }
-
-        return dataFolderFile
+        return ensureFolderExists(context.getDir("data", Context.MODE_PRIVATE))
     }
 
     override fun getDefaultFilesFolder(): File {
         // saving files to internal data dir is no alternative as then viewer applications cannot access files
-        return File(Environment.getExternalStorageDirectory(), "DeepThought") // TODO: what to do if user didn't give permission yet to access external storage?
+        return ensureFolderExists(File(Environment.getExternalStorageDirectory(), "DeepThought"))
     }
 
 }
