@@ -11,9 +11,9 @@ import kotlin.concurrent.thread
 class JavaFXApplicationsService(private val fileManager: FileManager) : IApplicationsService {
 
     override fun openFileInOsDefaultApplication(file: FileLink) {
-        val absoluteFile = fileManager.getLocalPathForFile(file)
-
-        openFile(absoluteFile)
+        fileManager.getLocalPathForFile(file)?.let { absoluteFile ->
+            openFile(absoluteFile)
+        }
     }
 
     override fun openDirectoryInOsFileBrowser(file: File) {

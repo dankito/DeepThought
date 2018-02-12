@@ -61,13 +61,12 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
         return file
     }
 
-    fun getLocalPathForFile(file: FileLink): File {
+    fun getLocalPathForFile(file: FileLink): File? {
         getStoredLocalFileInfo(file)?.let { localFileInfo ->
             localFileInfo.path?.let { return File(it) }
         }
 
-        // TODO: return that file doesn't exist locally yet
-        return File(platformConfiguration.getApplicationFolder(), file.uriString)
+        return null
     }
 
     private fun setFileHashAsync(file: FileLink, localFileInfo: LocalFileInfo, localFile: File) {

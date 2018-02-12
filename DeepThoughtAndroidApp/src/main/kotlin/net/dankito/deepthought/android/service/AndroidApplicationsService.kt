@@ -2,7 +2,6 @@ package net.dankito.deepthought.android.service
 
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.ACTION_VIEW
 import android.net.Uri
 import android.support.v4.content.FileProvider
 import android.webkit.MimeTypeMap
@@ -19,22 +18,22 @@ import java.io.File
 class AndroidApplicationsService(private val context: Context, private val fileManager: FileManager) : IApplicationsService {
 
     override fun openFileInOsDefaultApplication(file: FileLink) {
-        val absoluteFile = fileManager.getLocalPathForFile(file)
+        fileManager.getLocalPathForFile(file)?.let { absoluteFile ->
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
 
-        val intent = Intent(ACTION_VIEW)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
+            try {
+                val mimeTypeMap = MimeTypeMap.getSingleton()
+                val mimeType = mimeTypeMap.getMimeTypeFromExtension(absoluteFile.extension)
 
-        try {
-            val mimeTypeMap = MimeTypeMap.getSingleton()
-            val mimeType = mimeTypeMap.getMimeTypeFromExtension(absoluteFile.extension)
+                // use a FileProvide to give access to file also for devices with Android 7 and above, see https://stackoverflow.com/a/38858040
+                val uri = FileProvider.getUriForFile(context, context.applicationContext.packageName + ".net.dankito.deepthought.android.provider", absoluteFile)
+                intent.setDataAndType(uri, mimeType)
 
-            // use a FileProvide to give access to file also for devices with Android 7 and above, see https://stackoverflow.com/a/38858040
-            val uri = FileProvider.getUriForFile(context, context.applicationContext.packageName + ".net.dankito.deepthought.android.provider", absoluteFile)
-            intent.setDataAndType(uri, mimeType)
-
-            context.startActivity(intent)
-        } catch (e: Exception) {
-            showErrorMessage(R.string.files_presenter_error_message_no_app_installed_for_this_file_type, absoluteFile?.extension)
+                context.startActivity(intent)
+            } catch (e: Exception) {
+                showErrorMessage(R.string.files_presenter_error_message_no_app_installed_for_this_file_type, absoluteFile?.extension)
+            }
         }
     }
 

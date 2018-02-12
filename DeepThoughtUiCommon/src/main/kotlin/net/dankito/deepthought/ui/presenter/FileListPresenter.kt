@@ -25,8 +25,9 @@ class FileListPresenter(private val fileManager: FileManager, private val applic
     }
 
     fun openContainingDirectoryOfFile(file: FileLink) {
-        val absolutePath = fileManager.getLocalPathForFile(file)
-        openDirectory(absolutePath.parentFile)
+        fileManager.getLocalPathForFile(file)?.let { absolutePath ->
+            openDirectory(absolutePath.parentFile)
+        }
     }
 
     fun openDirectory(directory: File) {

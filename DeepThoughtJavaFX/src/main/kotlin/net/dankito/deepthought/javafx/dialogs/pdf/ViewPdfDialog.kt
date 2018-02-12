@@ -215,17 +215,17 @@ class ViewPdfDialog : DialogFragment() {
     }
 
     private fun loadPdf(pdfFile: FileLink) {
-        val localFile = fileManager.getLocalPathForFile(pdfFile)
+        fileManager.getLocalPathForFile(pdfFile)?.let { localFile ->
+            importer.loadFileAsync(localFile) { result ->
+                this.pdfDocument = result.document
 
-        importer.loadFileAsync(localFile) { result ->
-            this.pdfDocument = result.document
+                result.fileMetadata?.let {
+                    runLater { loadedFileOnUiThread(pdfFile, it) }
+                }
 
-            result.fileMetadata?.let {
-                runLater { loadedFileOnUiThread(pdfFile, it) }
-            }
-
-            result.error?.let {
-                runLater { couldNotLoadPdfOnUiThread(localFile, it) }
+                result.error?.let {
+                    runLater { couldNotLoadPdfOnUiThread(localFile, it) }
+                }
             }
         }
     }
