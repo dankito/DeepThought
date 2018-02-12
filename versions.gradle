@@ -79,7 +79,7 @@ ext {
 
     multiDexVersion = '1.0.1'
 
-    testFairyVersion = '1.+'
+    testFairyVersion = '1.6'
 
 
     // JavaFX
