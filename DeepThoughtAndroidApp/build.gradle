@@ -196,7 +196,7 @@ dependencies {
     compile "com.android.support:design:$androidDesignVersion"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
-    betaCompile 'testfairy:testfairy-android-sdk:1.+@aar'
+    betaCompile "testfairy:testfairy-android-sdk:$testFairyVersion@aar"
 //    betaCompile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
 //        transitive = true
 //    }
