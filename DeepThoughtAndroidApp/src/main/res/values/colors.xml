@@ -65,4 +65,10 @@
     <color name="tag_state_exact_or_single_match_of_last_result">#800277BD</color>
     <color name="tag_state_default">@android:color/transparent</color>
 
+
+    <!-- Overwrite FileChooserDialog colors -->
+
+    <color name="file_chooser_dialog_list_item_default_background">@color/list_item_default_background</color>
+    <color name="file_chooser_dialog_list_item_selected_background">@color/list_item_selected_background</color>
+
 </resources>
