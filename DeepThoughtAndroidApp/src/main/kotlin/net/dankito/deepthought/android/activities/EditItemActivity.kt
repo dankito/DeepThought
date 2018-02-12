@@ -29,6 +29,8 @@ import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.service.hideKeyboardDelayed
+import net.dankito.deepthought.android.service.permissions.IPermissionsManager
+import net.dankito.deepthought.android.service.permissions.PermissionsManager
 import net.dankito.deepthought.android.views.*
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.model.*
