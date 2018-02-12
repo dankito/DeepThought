@@ -10,9 +10,6 @@ import javax.persistence.*
 @Entity(name = TableConfig.FileLinkTableName)
 data class FileLink(
 
-        /**
-         * Absolute uri for remote file, relative path for local files
-         */
         @Column(name = TableConfig.FileLinkUriColumnName)
         var uriString: String,
 
