@@ -17,6 +17,7 @@ import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.FileListPresenter
+import net.dankito.filechooserdialog.FileChooserDialog
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.extensions.didCollectionChange
@@ -142,7 +143,7 @@ class EditEntityFilesField : EditEntityField {
     }
 
     private fun selectFileToAddWithPermissionGranted() {
-        net.dankito.filechooserdialog.FileChooserDialog().showOpenMultipleFilesDialog(context as FragmentActivity, permissionsManager) { _, selectedFiles ->
+        FileChooserDialog().showOpenMultipleFilesDialog(context as FragmentActivity, permissionsManager) { _, selectedFiles ->
             selectedFiles?.forEach { file ->
                 addLocalFile(file)
             }
