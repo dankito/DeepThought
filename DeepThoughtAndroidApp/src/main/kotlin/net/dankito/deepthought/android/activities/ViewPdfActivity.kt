@@ -11,10 +11,7 @@ import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
-import net.dankito.deepthought.service.importexport.pdf.FileMetadata
-import net.dankito.deepthought.service.importexport.pdf.GetPageResult
-import net.dankito.deepthought.service.importexport.pdf.IPdfDocument
-import net.dankito.deepthought.service.importexport.pdf.PdfImporter
+import net.dankito.deepthought.service.importexport.pdf.*
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.utils.localization.Localization
 import org.slf4j.LoggerFactory
@@ -138,16 +135,20 @@ class ViewPdfActivity : BaseActivity() {
     private fun loadPdf(pdfFile: FileLink) {
         fileManager.getLocalPathForFile(pdfFile)?.let { localFile ->
             importer.loadFileAsync(localFile) { result ->
-                this.pdfDocument = result.document
-
-                result.fileMetadata?.let {
-                    runOnUiThread { loadedFileOnUiThread(pdfFile, it) }
-                }
-
-                result.error?.let {
-                    runOnUiThread { couldNotLoadPdfOnUiThread(localFile, it) }
-                }
+                pdfFileLoaded(pdfFile, localFile, result)
             }
+        }
+    }
+
+    private fun pdfFileLoaded(pdfFile: FileLink, localFile: File, result: LoadPdfFileResult) {
+        this.pdfDocument = result.document
+
+        result.fileMetadata?.let {
+            runOnUiThread { loadedFileOnUiThread(pdfFile, it) }
+        }
+
+        result.error?.let {
+            runOnUiThread { couldNotLoadPdfOnUiThread(localFile, it) }
         }
     }
 
