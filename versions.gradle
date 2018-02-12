@@ -77,6 +77,8 @@ ext {
 
     pdfBoxAndroidVersion = '1.8.9.1'
 
+    multiDexVersion = '1.0.1'
+
 
     // JavaFX
 

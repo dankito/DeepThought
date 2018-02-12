@@ -189,7 +189,7 @@ dependencies {
 
     compile "org.slf4j:slf4j-android:$slf4jVersion"
 
-    compile 'com.android.support:multidex:1.0.1'
+    compile "com.android.support:multidex:$multiDexVersion"
 
     compile "com.android.support:appcompat-v7:$androidAppCompatVersion"
     compile "com.android.support:cardview-v7:$androidAppCompatVersion"
