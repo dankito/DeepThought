@@ -92,7 +92,7 @@ class EditEntityFilesField : EditEntityField {
 
     private fun showAddFileIconInButtonEntityFieldAction(rootView: ViewGroup) {
         showActionIconOnUiThread(android.R.drawable.ic_input_add, true) {
-            selectFileToAdd()
+            selectFilesToAdd()
         }
 
         (btnEntityFieldAction.layoutParams as? LayoutParams)?.topMargin = 0
@@ -109,7 +109,7 @@ class EditEntityFilesField : EditEntityField {
     override fun viewClicked() {
         super.viewClicked()
 
-        selectFileToAdd()
+        selectFilesToAdd()
     }
 
 
@@ -128,21 +128,21 @@ class EditEntityFilesField : EditEntityField {
     }
 
 
-    fun selectFileToAdd() {
+    fun selectFilesToAdd() {
         if(permissionsManager.isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            selectFileToAddWithPermissionGranted()
+            selectFilesToAddWithPermissionGranted()
         }
         else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             permissionsManager.requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
                     context.getString(R.string.edit_entity_files_field_read_files_permission_rational))  { _, isGranted ->
                 if(isGranted) {
-                    selectFileToAddWithPermissionGranted()
+                    selectFilesToAddWithPermissionGranted()
                 }
             }
         }
     }
 
-    private fun selectFileToAddWithPermissionGranted() {
+    private fun selectFilesToAddWithPermissionGranted() {
         FileChooserDialog().showOpenMultipleFilesDialog(context as FragmentActivity, permissionsManager) { _, selectedFiles ->
             selectedFiles?.forEach { file ->
                 addLocalFile(file)

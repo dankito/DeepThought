@@ -433,7 +433,7 @@ class EditItemActivity : BaseActivity() {
         forceShowFilesPreview = true
         setFilesPreviewOnUIThread()
 
-        lytFilesPreview.selectFileToAdd()
+        lytFilesPreview.selectFilesToAdd()
     }
 
     private fun setupItemContentView() {
