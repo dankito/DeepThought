@@ -1,8 +1,6 @@
 package net.dankito.deepthought.android
 
-import android.Manifest
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -244,21 +242,9 @@ class MainActivity : BaseActivity() {
     }
 
     private fun importPdf() {
-        if(permissionsManager.isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            importPdfWithPermissionGranted()
-        }
-        else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            permissionsManager.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
-                    getString(R.string.open_file_permission_request_message))  { _, isGranted ->
-                if(isGranted) {
-                    importPdfWithPermissionGranted()
-                }
-            }
-        }
-    }
+        val config = FileChooserDialogConfig(listOf("pdf"), permissionToReadExternalStorageRationaleResourceId = R.string.open_file_permission_request_message)
 
-    private fun importPdfWithPermissionGranted() {
-        FileChooserDialog().showOpenSingleFileDialog(this, permissionsManager, FileChooserDialogConfig(listOf("pdf"))) { _, selectedFile ->
+        FileChooserDialog().showOpenSingleFileDialog(this, permissionsManager, config) { _, selectedFile ->
             selectedFile?.let {
                 router.showPdfView(it)
             }

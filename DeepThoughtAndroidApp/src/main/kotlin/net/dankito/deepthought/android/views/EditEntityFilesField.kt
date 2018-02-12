@@ -1,6 +1,5 @@
 package net.dankito.deepthought.android.views
 
-import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.os.Build
@@ -17,6 +16,7 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.FileListPresenter
 import net.dankito.filechooserdialog.FileChooserDialog
+import net.dankito.filechooserdialog.model.FileChooserDialogConfig
 import net.dankito.filechooserdialog.service.IPermissionsService
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
@@ -129,21 +129,9 @@ class EditEntityFilesField : EditEntityField {
 
 
     fun selectFilesToAdd() {
-        if(permissionsService.isPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            selectFilesToAddWithPermissionGranted()
-        }
-        else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            permissionsService.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
-                    context.getString(R.string.edit_entity_files_field_read_files_permission_rational))  { _, isGranted ->
-                if(isGranted) {
-                    selectFilesToAddWithPermissionGranted()
-                }
-            }
-        }
-    }
+        val config = FileChooserDialogConfig(permissionToReadExternalStorageRationaleResourceId = R.string.edit_entity_files_field_read_files_permission_rational)
 
-    private fun selectFilesToAddWithPermissionGranted() {
-        FileChooserDialog().showOpenMultipleFilesDialog(context as FragmentActivity, permissionsService) { _, selectedFiles ->
+        FileChooserDialog().showOpenMultipleFilesDialog(context as FragmentActivity, permissionsService, config) { _, selectedFiles ->
             selectedFiles?.forEach { file ->
                 addLocalFile(file)
             }
