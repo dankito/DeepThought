@@ -37,7 +37,7 @@ class JavaFXPlatformConfiguration : PlatformConfigurationBase() {
     }
 
     override fun getDefaultDataFolder(): File {
-        return ensureFolderExists(File(getApplicationFolder(), "data"))
+        return ensureFolderExists(File(getApplicationFolder(), DataFolderName))
     }
 
     override fun getDefaultFilesFolder(): File {

@@ -64,7 +64,7 @@ class AndroidPlatformConfiguration(val context: Context) : PlatformConfiguration
     }
 
     override fun getDefaultDataFolder(): File {
-        return ensureFolderExists(context.getDir("data", Context.MODE_PRIVATE))
+        return ensureFolderExists(context.getDir(DataFolderName, Context.MODE_PRIVATE))
     }
 
     override fun getDefaultFilesFolder(): File {
