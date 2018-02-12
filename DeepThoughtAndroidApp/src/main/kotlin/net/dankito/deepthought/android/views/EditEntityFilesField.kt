@@ -4,12 +4,12 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.os.Build
+import android.support.v4.app.FragmentActivity
 import android.util.AttributeSet
 import android.view.ViewGroup
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.FilesRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.dialogs.FileChooserDialog
 import net.dankito.deepthought.android.extensions.setLeftMargin
 import net.dankito.deepthought.android.service.permissions.IPermissionsManager
 import net.dankito.deepthought.files.FileManager
@@ -55,8 +55,6 @@ class EditEntityFilesField : EditEntityField {
     private var sourceForFile: Source? = null
 
     private lateinit var permissionsManager: IPermissionsManager
-
-    private var fileChooserDialog: FileChooserDialog? = null
 
     private val fileListPresenter: FileListPresenter
 
@@ -144,12 +142,10 @@ class EditEntityFilesField : EditEntityField {
     }
 
     private fun selectFileToAddWithPermissionGranted() {
-        if(fileChooserDialog == null) {
-            fileChooserDialog = FileChooserDialog(context)
-        }
-
-        fileChooserDialog?.selectFile { file ->
-            addLocalFile(file)
+        net.dankito.filechooserdialog.FileChooserDialog().showOpenMultipleFilesDialog(context as FragmentActivity, permissionsManager) { _, selectedFiles ->
+            selectedFiles?.forEach { file ->
+                addLocalFile(file)
+            }
         }
     }
 

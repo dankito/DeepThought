@@ -19,7 +19,6 @@ import net.dankito.deepthought.android.activities.ReadLaterArticlesListViewActiv
 import net.dankito.deepthought.android.activities.SourcesListViewActivity
 import net.dankito.deepthought.android.activities.TagsListViewActivity
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.dialogs.FileChooserDialog
 import net.dankito.deepthought.android.dialogs.TagsListViewDialog
 import net.dankito.deepthought.android.fragments.ItemsListView
 import net.dankito.deepthought.android.service.ExtractArticleHandler
@@ -31,6 +30,8 @@ import net.dankito.deepthought.model.LocalSettings
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.filechooserdialog.FileChooserDialog
+import net.dankito.filechooserdialog.model.FileChooserDialogConfig
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.UrlUtil
 import org.slf4j.LoggerFactory
@@ -51,8 +52,6 @@ class MainActivity : BaseActivity() {
     private lateinit var itemsListView: ItemsListView
 
     private val permissionsManager: IPermissionsManager
-
-    private var fileChooserDialog: FileChooserDialog? = null
 
 
     @Inject
@@ -259,12 +258,10 @@ class MainActivity : BaseActivity() {
     }
 
     private fun importPdfWithPermissionGranted() {
-        if(fileChooserDialog == null) {
-            fileChooserDialog = FileChooserDialog(this)
-        }
-
-        fileChooserDialog?.selectFile { file ->
-            router.showPdfView(file)
+        FileChooserDialog().showOpenSingleFileDialog(this, permissionsManager, FileChooserDialogConfig(listOf("pdf"))) { _, selectedFile ->
+            selectedFile?.let {
+                router.showPdfView(it)
+            }
         }
     }
 
