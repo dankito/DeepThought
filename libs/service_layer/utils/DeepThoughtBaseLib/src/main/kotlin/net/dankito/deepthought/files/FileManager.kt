@@ -24,7 +24,7 @@ import kotlin.concurrent.schedule
 
 
 class FileManager(private val searchEngine: ISearchEngine, private val localFileInfoService: LocalFileInfoService, private val fileSyncService: FileSyncService,
-                  private val hashService: HashService, eventBus: IEventBus, private val threadPool: IThreadPool) {
+                  private val mimeTypeService: MimeTypeService, private val hashService: HashService, eventBus: IEventBus, private val threadPool: IThreadPool) {
 
     companion object {
         private val log = LoggerFactory.getLogger(FileManager::class.java)
@@ -50,6 +50,9 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
 
         file.fileSize = localFile.length()
         file.fileLastModified = Date(localFile.lastModified())
+
+        file.mimeType = mimeTypeService.getBestMimeType(localFile)
+        file.fileType = mimeTypeService.getFileTypeForMimeType(file)
 
         val localFileInfo = LocalFileInfo(file, localFile.absolutePath, true, FileSyncStatus.UpToDate, file.fileSize, file.fileLastModified, file.hashSHA512)
         localFileInfoCache.put(file, localFileInfo)

@@ -31,6 +31,9 @@ data class FileLink(
     }
 
 
+    @Column(name = TableConfig.FileLinkMimeTypeColumnName)
+    var mimeType: String? = null
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = TableConfig.FileLinkFileTypeColumnName)
     var fileType: FileType? = null
