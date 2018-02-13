@@ -4,15 +4,19 @@ import com.nhaarman.mockito_kotlin.mock
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
-import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.FilePersister
+import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.di.DaggerBaseComponent
 import net.dankito.deepthought.files.FileManager
+import net.dankito.deepthought.files.MimeTypeService
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
+import net.dankito.mime.MimeTypeCategorizer
+import net.dankito.mime.MimeTypeDetector
+import net.dankito.mime.MimeTypePicker
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
@@ -50,6 +54,14 @@ abstract class LuceneSearchEngineIntegrationTestBase {
     protected val localFileInfoService: LocalFileInfoService
 
     protected val fileService: FileService
+
+    private val mimeTypeDetector = MimeTypeDetector()
+
+    private val mimeTypePicker = MimeTypePicker()
+
+    private val mimeTypeCategorizer = MimeTypeCategorizer()
+
+    private val mimeTypeService: MimeTypeService
 
     protected val fileManager: FileManager
 
@@ -104,13 +116,14 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         readLaterArticleService = ReadLaterArticleService(dataManager, entityChangedNotifier, JacksonJsonSerializer(tagService, seriesService))
         localFileInfoService = LocalFileInfoService(dataManager, entityChangedNotifier)
         fileService = FileService(dataManager, entityChangedNotifier)
+        mimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypePicker, mimeTypeCategorizer, dataManager)
 
         underTest = LuceneSearchEngine(dataManager, NoOpLanguageDetector(), OsHelper(platformConfiguration), ThreadPool(), eventBus,
                 itemService, tagService, sourceService, seriesService, readLaterArticleService, fileService, localFileInfoService)
         initLuceneSearchEngine(underTest)
 
         deleteEntityService = DeleteEntityService(itemService, tagService, sourceService, seriesService, fileService, localFileInfoService, underTest, mock(), threadPool)
-        fileManager = FileManager(underTest, localFileInfoService, mock(), platformConfiguration, HashService(), eventBus, threadPool)
+        fileManager = FileManager(underTest, localFileInfoService, mock(), mimeTypeService, HashService(), eventBus, threadPool)
         filePersister = FilePersister(fileService, localFileInfoService, fileManager, threadPool)
         sourcePersister = SourcePersister(sourceService, seriesService, filePersister, deleteEntityService)
         itemPersister = ItemPersister(itemService, sourcePersister, tagService, filePersister, deleteEntityService)

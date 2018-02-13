@@ -18,11 +18,15 @@ import net.dankito.data_access.network.discovery.UdpDevicesDiscoverer
 import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
 import net.dankito.deepthought.files.FileManager
+import net.dankito.deepthought.files.MimeTypeService
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.deepthought.service.permissions.JavaPermissionsService
+import net.dankito.mime.MimeTypeCategorizer
+import net.dankito.mime.MimeTypeDetector
+import net.dankito.mime.MimeTypePicker
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
@@ -89,6 +93,12 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     protected val hashService = HashService()
 
+    protected val mimeTypeDetector = MimeTypeDetector()
+
+    protected val mimeTypePicker = MimeTypePicker()
+
+    protected val mimeTypeCategorizer = MimeTypeCategorizer()
+
     protected val fileStorageService = JavaFileStorageService()
 
 
@@ -113,6 +123,8 @@ abstract class FileSyncServiceIntegrationTestBase {
         override fun getDefaultFilesFolder(): File { return getDefaultDataFolder() }
     }
 
+
+    protected lateinit var localMimeTypeService: MimeTypeService
 
     protected lateinit var localFileServer: FileServer
 
@@ -205,6 +217,8 @@ abstract class FileSyncServiceIntegrationTestBase {
         override fun getDefaultFilesFolder(): File { return getDefaultDataFolder() }
     }
 
+
+    protected lateinit var remoteMimeTypeService: MimeTypeService
 
     protected lateinit var remoteFileServer: FileServer
 
@@ -331,13 +345,15 @@ abstract class FileSyncServiceIntegrationTestBase {
         initializationLatch.await(InitializationTimeoutInSeconds, TimeUnit.SECONDS)
 
 
+        localMimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypePicker, mimeTypeCategorizer, localDataManager)
+
         localFileServer = FileServer(localSearchEngine, localEntityManager, localNetworkSettings, localSocketHandler, localSerializer, localThreadPool)
 
         localFileSyncService = FileSyncService(localConnectedDevicesService, localSearchEngine,
                 localSocketHandler, localLocalFileInfoService, localSerializer, JavaPermissionsService(), localPlatformConfiguration, hashService
         )
 
-        localFileManager = FileManager(localSearchEngine, localLocalFileInfoService, localFileSyncService, localPlatformConfiguration, hashService, localEventBus, localThreadPool)
+        localFileManager = FileManager(localSearchEngine, localLocalFileInfoService, localFileSyncService, localMimeTypeService, hashService, localEventBus, localThreadPool)
     }
 
     private fun setupRemoteDevice() {
@@ -387,13 +403,15 @@ abstract class FileSyncServiceIntegrationTestBase {
         initializationLatch.await(InitializationTimeoutInSeconds, TimeUnit.SECONDS)
 
 
+        remoteMimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypePicker, mimeTypeCategorizer, remoteDataManager)
+
         remoteFileServer = FileServer(remoteSearchEngine, remoteEntityManager, remoteNetworkSettings, remoteSocketHandler, remoteSerializer, remoteThreadPool)
 
         remoteFileSyncService = FileSyncService(remoteConnectedDevicesService, remoteSearchEngine,
                 remoteSocketHandler, remoteLocalFileInfoService, remoteSerializer, JavaPermissionsService(), remotePlatformConfiguration, hashService
         )
 
-        remoteFileManager = FileManager(remoteSearchEngine, remoteLocalFileInfoService, remoteFileSyncService, remotePlatformConfiguration, hashService, remoteEventBus, remoteThreadPool)
+        remoteFileManager = FileManager(remoteSearchEngine, remoteLocalFileInfoService, remoteFileSyncService, remoteMimeTypeService, hashService, remoteEventBus, remoteThreadPool)
     }
 
     @After
