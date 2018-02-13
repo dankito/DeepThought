@@ -2,6 +2,7 @@ package net.dankito.deepthought.android.routing
 
 import android.content.Context
 import android.content.Intent
+import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.*
 import net.dankito.deepthought.android.activities.arguments.*
 import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
@@ -14,6 +15,8 @@ import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.filechooserdialog.FileChooserDialog
+import net.dankito.filechooserdialog.model.FileChooserDialogConfig
 import net.dankito.newsreader.model.ArticleSummary
 import java.io.File
 
@@ -80,6 +83,20 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
     private fun showEditItemView(parameters: EditItemActivityParameters) {
         dataManager.addInitializationListener { // if you have a very large data set and are very, very quick, you can enter EditItemActivity before DataManager is initialized -> localSettings is null
             navigateToActivity(EditItemActivity::class.java, parameters)
+        }
+    }
+
+
+    override fun createItemFromPdf() {
+        activityTracker.currentActivity?.let { activity ->
+            val permissionsService = activity.registerPermissionsService()
+            val config = FileChooserDialogConfig(listOf("pdf"), permissionToReadExternalStorageRationaleResourceId = R.string.open_file_permission_request_message)
+
+            FileChooserDialog().showOpenSingleFileDialog(activity, permissionsService, config) { _, selectedFile ->
+                selectedFile?.let {
+                    showPdfView(it)
+                }
+            }
         }
     }
 

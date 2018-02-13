@@ -1,5 +1,6 @@
 package net.dankito.deepthought.javafx.routing
 
+import javafx.stage.FileChooser
 import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
 import net.dankito.deepthought.javafx.dialogs.item.EditItemExtractionResultView
 import net.dankito.deepthought.javafx.dialogs.item.EditItemView
@@ -83,6 +84,26 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
             // TODO: set title when Source is not set
             mainWindowController.find(EditItemExtractionResultView::class, mapOf(EditItemExtractionResultView::extractionResult to extractionResult)).show(extractionResult.source?.preview)
         }
+    }
+
+
+    override fun createItemFromPdf() {
+        selectFileToOpen("new.item.from.pdf",
+                FileChooser.ExtensionFilter("PDF (*.pdf)", "*.pdf", "*.PDF"))?.let { pdfFile ->
+            showPdfView(pdfFile)
+        }
+    }
+
+    private fun selectFileToOpen(titleResourceKey: String? = null, vararg extensionFilter: FileChooser.ExtensionFilter): File? {
+        val chooser = FileChooser()
+
+        titleResourceKey?.let {
+            chooser.title = FX.messages[it]
+        }
+
+        chooser.extensionFilters.addAll(extensionFilter)
+
+        return chooser.showOpenDialog(FX.primaryStage) // TODO: get current window
     }
 
 

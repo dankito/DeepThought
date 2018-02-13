@@ -31,6 +31,9 @@ interface IRouter {
     fun showEditItemView(extractionResult: ItemExtractionResult)
 
 
+    fun createItemFromPdf()
+
+
     fun showEditSourceView(source: Source)
 
     fun showEditItemSourceView(source: Source?, series: Series?, editedSourceTitle: String? = null)

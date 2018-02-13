@@ -150,10 +150,7 @@ class MainMenuBar : View() {
 
 
     private fun createItemFromPdfFile() {
-        selectFileToOpen("main.window.menu.file.new.new.item.from.pdf.select.file",
-                FileChooser.ExtensionFilter("PDF (*.pdf)", "*.pdf", "*.PDF"))?.let { pdfFile ->
-            router.showPdfView(pdfFile)
-        }
+        router.createItemFromPdf()
     }
 
 
