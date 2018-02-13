@@ -7,8 +7,8 @@ import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.network.communication.SocketHandler
 import net.dankito.deepthought.data.FilePersister
 import net.dankito.deepthought.data.ItemPersister
-import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.data.SeriesPersister
+import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.files.synchronization.FileServer
 import net.dankito.deepthought.files.synchronization.FileSyncService
@@ -99,9 +99,9 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideFileManager(searchEngine: ISearchEngine, localFileInfoService: LocalFileInfoService, fileSyncService: FileSyncService, platformConfiguration: IPlatformConfiguration,
+    fun provideFileManager(searchEngine: ISearchEngine, localFileInfoService: LocalFileInfoService, fileSyncService: FileSyncService,
                            hashService: HashService, eventBus: IEventBus, threadPool: IThreadPool) : FileManager {
-        return FileManager(searchEngine, localFileInfoService, fileSyncService, platformConfiguration, hashService, eventBus, threadPool)
+        return FileManager(searchEngine, localFileInfoService, fileSyncService, hashService, eventBus, threadPool)
     }
 
     @Provides

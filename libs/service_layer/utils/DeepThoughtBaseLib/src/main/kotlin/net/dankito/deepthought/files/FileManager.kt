@@ -10,7 +10,6 @@ import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.LocalFileInfoSearch
-import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.services.Times
 import net.dankito.utils.services.hashing.HashAlgorithm
@@ -25,7 +24,7 @@ import kotlin.concurrent.schedule
 
 
 class FileManager(private val searchEngine: ISearchEngine, private val localFileInfoService: LocalFileInfoService, private val fileSyncService: FileSyncService,
-                  private val platformConfiguration: IPlatformConfiguration, private val hashService: HashService, eventBus: IEventBus, private val threadPool: IThreadPool) {
+                  private val hashService: HashService, eventBus: IEventBus, private val threadPool: IThreadPool) {
 
     companion object {
         private val log = LoggerFactory.getLogger(FileManager::class.java)
