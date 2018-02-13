@@ -7,6 +7,8 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.ActivityParameterHolder
 import net.dankito.deepthought.android.service.ActivityStateHolder
 import net.dankito.deepthought.android.service.CurrentActivityTracker
+import net.dankito.filechooserdialog.service.IPermissionsService
+import net.dankito.filechooserdialog.service.PermissionsService
 import net.dankito.utils.serialization.ISerializer
 import org.slf4j.LoggerFactory
 import java.io.File
@@ -41,6 +43,8 @@ open class BaseActivity : AppCompatActivity() {
 
 
     private var waitingForResultWithId: String? = null
+
+    private val registeredPermissionsServices = mutableListOf<IPermissionsService>()
 
 
     init {
@@ -91,6 +95,8 @@ open class BaseActivity : AppCompatActivity() {
         getParametersId()?.let { parametersId ->
             parameterHolder.clearParameters(parametersId)
         }
+
+        registeredPermissionsServices.clear()
 
         super.onDestroy()
         log.info("Destroyed Activity $this")
@@ -188,6 +194,29 @@ open class BaseActivity : AppCompatActivity() {
         } catch(e: Exception) { log.error("Could not restore object of type $objectClass from $id", e) }
 
         return null
+    }
+
+
+    /*          Permissions handling            */
+
+    fun registerPermissionsService(): IPermissionsService {
+        val permissionsService = PermissionsService(this)
+
+        registeredPermissionsServices.add(permissionsService)
+
+        return permissionsService
+    }
+
+    fun unregisterPermissionsService(permissionsService: IPermissionsService) {
+        registeredPermissionsServices.remove(permissionsService)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        registeredPermissionsServices.forEach { permissionsService ->
+            permissionsService.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
 }
