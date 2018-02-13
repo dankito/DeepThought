@@ -10,12 +10,16 @@ import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.files.FileManager
+import net.dankito.deepthought.files.MimeTypeService
 import net.dankito.deepthought.files.synchronization.FileServer
 import net.dankito.deepthought.files.synchronization.FileSyncService
 import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.deepthought.service.permissions.IPermissionsService
+import net.dankito.mime.MimeTypeCategorizer
+import net.dankito.mime.MimeTypeDetector
+import net.dankito.mime.MimeTypePicker
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
@@ -102,6 +106,13 @@ class CommonDataModule {
     fun provideFileManager(searchEngine: ISearchEngine, localFileInfoService: LocalFileInfoService, fileSyncService: FileSyncService,
                            hashService: HashService, eventBus: IEventBus, threadPool: IThreadPool) : FileManager {
         return FileManager(searchEngine, localFileInfoService, fileSyncService, hashService, eventBus, threadPool)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMimeTypeService(mimeTypeDetector: MimeTypeDetector, mimeTypePicker: MimeTypePicker, mimeTypeCategorizer: MimeTypeCategorizer,
+                               dataManager: DataManager) : MimeTypeService {
+        return MimeTypeService(mimeTypeDetector, mimeTypePicker, mimeTypeCategorizer, dataManager)
     }
 
     @Provides

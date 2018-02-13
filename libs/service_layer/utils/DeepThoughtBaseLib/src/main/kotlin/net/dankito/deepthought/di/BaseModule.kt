@@ -3,6 +3,9 @@ package net.dankito.deepthought.di
 import dagger.Module
 import dagger.Provides
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.mime.MimeTypeCategorizer
+import net.dankito.mime.MimeTypeDetector
+import net.dankito.mime.MimeTypePicker
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.utils.IThreadPool
@@ -40,6 +43,24 @@ class BaseModule {
     @Singleton
     fun provideMimeTypeUtil() : MimeTypeUtil {
         return MimeTypeUtil()
+    }
+
+    @Provides
+    @Singleton
+    fun provideMimeTypeDetector() : MimeTypeDetector {
+        return MimeTypeDetector()
+    }
+
+    @Provides
+    @Singleton
+    fun provideMimeTypePicker() : MimeTypePicker {
+        return MimeTypePicker()
+    }
+
+    @Provides
+    @Singleton
+    fun provideMimeTypeCategorizer() : MimeTypeCategorizer {
+        return MimeTypeCategorizer()
     }
 
     @Provides
