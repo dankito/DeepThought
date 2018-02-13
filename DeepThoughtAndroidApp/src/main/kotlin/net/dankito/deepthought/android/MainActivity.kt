@@ -26,8 +26,6 @@ import net.dankito.deepthought.model.LocalSettings
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.filechooserdialog.FileChooserDialog
-import net.dankito.filechooserdialog.model.FileChooserDialogConfig
 import net.dankito.filechooserdialog.service.IPermissionsService
 import net.dankito.filechooserdialog.service.PermissionsService
 import net.dankito.service.eventbus.IEventBus
@@ -231,24 +229,12 @@ class MainActivity : BaseActivity() {
             R.id.navArticleSummaryExtractors -> {
                 router.showArticleSummaryExtractorsView()
             }
-
-            R.id.navImportPdf -> importPdf()
         }
 
         val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
         drawer.closeDrawer(GravityCompat.START)
 
         true
-    }
-
-    private fun importPdf() {
-        val config = FileChooserDialogConfig(listOf("pdf"), permissionToReadExternalStorageRationaleResourceId = R.string.open_file_permission_request_message)
-
-        FileChooserDialog().showOpenSingleFileDialog(this, permissionsManager, config) { _, selectedFile ->
-            selectedFile?.let {
-                router.showPdfView(it)
-            }
-        }
     }
 
     // TODO: move to Router

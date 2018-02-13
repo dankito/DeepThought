@@ -18,7 +18,7 @@
 
 
     <com.github.clans.fab.FloatingActionButton
-        android:id="@+id/fab_add_newspaper_article"
+        android:id="@+id/fabAddNewspaperArticle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/MenuButtonsStyle"
@@ -26,11 +26,19 @@
     />
 
     <com.github.clans.fab.FloatingActionButton
-        android:id="@+id/fab_add_item"
+        android:id="@+id/fabCreateItemFromPdf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/MenuButtonsStyle"
-        fab:fab_label="@string/floating_action_menu_add_item"
+        fab:fab_label="@string/floating_action_menu_create_item_from_pdf"
+    />
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fabCreateItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/MenuButtonsStyle"
+        fab:fab_label="@string/floating_action_menu_create_item"
     />
 
 </com.github.clans.fab.FloatingActionMenu>

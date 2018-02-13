@@ -26,7 +26,8 @@
     <!-- Floating Action Button ist der + Button auf der Startseite. Die Werte hier werden dann im Menü angezeigt, wenn ich auf diesen Button klicke -->
     <!-- In Platzhalter wie '%s' füge ich dann im Code etwas ein (z. B. hier: SZ) -->
 
-    <string name="floating_action_menu_add_item">Eintrag</string>
+    <string name="floating_action_menu_create_item">Eintrag</string>
+    <string name="floating_action_menu_create_item_from_pdf">Eintrag aus PDF Datei</string>
     <string name="floating_action_menu_add_newspaper_article">Zeitungsartikel</string>
     <string name="floating_action_button_add_article_of_newspaper">%s Artikel</string>
 

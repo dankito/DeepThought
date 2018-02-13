@@ -19,7 +19,8 @@
 
     <string name="nav_menu_version_label">Version\u0020</string>
 
-    <string name="floating_action_menu_add_item">Item</string>
+    <string name="floating_action_menu_create_item">Item</string>
+    <string name="floating_action_menu_create_item_from_pdf">Item from PDF</string>
     <string name="floating_action_menu_add_newspaper_article">Newspaper Article</string>
     <string name="floating_action_button_add_article_of_newspaper">%s Article</string>
 

@@ -32,8 +32,9 @@ class MainActivityFloatingActionMenuButton(floatingActionMenu: FloatingActionMen
 
 
     private fun setup() {
-        floatingActionMenu.fab_add_item.setOnClickListener { executeAndCloseMenu { router.showCreateItemView() } }
-        floatingActionMenu.fab_add_newspaper_article.setOnClickListener { executeAndCloseMenu { router.showArticleSummaryExtractorsView() } }
+        floatingActionMenu.fabCreateItem.setOnClickListener { executeAndCloseMenu { router.showCreateItemView() } }
+        floatingActionMenu.fabCreateItemFromPdf.setOnClickListener { executeAndCloseMenu { router.createItemFromPdf() } }
+        floatingActionMenu.fabAddNewspaperArticle.setOnClickListener { executeAndCloseMenu { router.showArticleSummaryExtractorsView() } }
 
         setFavoriteArticleSummaryExtractors()
 
