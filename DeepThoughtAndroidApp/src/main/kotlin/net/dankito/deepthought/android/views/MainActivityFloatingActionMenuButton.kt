@@ -41,22 +41,6 @@ class MainActivityFloatingActionMenuButton(floatingActionMenu: FloatingActionMen
         setupEventBusListener()
     }
 
-    /**
-     * Disables the floating action menu.
-     * Is used when there are no favorite ArticleSummaryExtractors. The a click on floating action directly goes to EditItemActivity to create an item.
-     */
-    private fun disableFloatingActionMenu() {
-        floatingActionMenu.setOnMenuButtonClickListener { router.showCreateItemView() }
-    }
-
-    /**
-     * Enables the floating action menu.
-     * Is used when there is at least one favorite ArticleSummaryExtractors.
-     */
-    private fun enableFloatingActionMenu() {
-        floatingActionMenu.setOnMenuButtonClickListener { floatingActionMenu.toggle(floatingActionMenu.isAnimated) } // just copies the default behaviour
-    }
-
     private fun setupEventBusListener() {
         eventBus.register(eventBusListener)
 
@@ -83,12 +67,7 @@ class MainActivityFloatingActionMenuButton(floatingActionMenu: FloatingActionMen
     private fun setFavoriteArticleSummaryExtractorsOnUIThread(activity: Activity, favoriteArticleSummaryExtractors: List<ArticleSummaryExtractorConfig>) {
         clearFavoriteArticleSummaryExtractorsButtons()
 
-        if(favoriteArticleSummaryExtractors.size == 0) {
-            disableFloatingActionMenu()
-        }
-        else {
-            enableFloatingActionMenu()
-
+        if(favoriteArticleSummaryExtractors.isNotEmpty()) {
             val layoutInflater = activity.layoutInflater
 
             favoriteArticleSummaryExtractors.forEach { extractorConfig ->
