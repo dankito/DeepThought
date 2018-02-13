@@ -48,7 +48,6 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
 
     fun createLocalFile(localFile: File): FileLink {
         val file = FileLink(localFile.absolutePath, localFile.name, true)
-        file.sourceUriString = file.uriString
 
         file.fileSize = localFile.length()
         file.fileLastModified = Date(localFile.lastModified())
