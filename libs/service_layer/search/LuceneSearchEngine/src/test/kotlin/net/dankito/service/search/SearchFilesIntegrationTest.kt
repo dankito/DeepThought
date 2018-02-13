@@ -1,6 +1,7 @@
 package net.dankito.service.search
 
 import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.model.enums.FileTypeDefaultFolderName
 import net.dankito.service.search.specific.FilesSearch
 import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.service.search.writerandsearcher.FileLinkIndexWriterAndSearcher
@@ -32,46 +33,24 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
 
     @Test
     fun persistFile_FileGetFoundByUri() {
-        testField(File1UriUniquePart, searchUri = true)
+        persistTestFilesAndTestField(File1UriUniquePart, searchUri = true)
     }
 
     @Test
     fun persistFile_FileGetFoundByName() {
-        testField(File1Name, searchName = true)
+        persistTestFilesAndTestField(File1Name, searchName = true)
     }
 
     @Test
     fun persistFile_FileGetFoundByDescription() {
-        testField(File1DescriptionUniquePart, searchDescription = true)
+        persistTestFilesAndTestField(File1DescriptionUniquePart, searchDescription = true)
     }
 
     @Test
     fun persistFile_FileGetFoundBySourceUri() {
-        testField(File1SourceUriUniquePart, searchSourceUri = true)
+        persistTestFilesAndTestField(File1SourceUriUniquePart, searchSourceUri = true)
     }
 
-    private fun testField(fieldValueToSearchFor: String, searchUri: Boolean = false, searchName: Boolean = false,
-                          searchDescription: Boolean = false, searchSourceUri: Boolean = false) {
-        var resultTested = false
-        val waitForResultLatch = CountDownLatch(1)
-
-        val file = persistTestFiles(File1IsLocalFile)
-
-
-        underTest.searchFiles(FilesSearch(fieldValueToSearchFor, searchUri = searchUri, searchName = searchName, searchDescription = searchDescription,
-                searchSourceUri = searchSourceUri) { result ->
-            assertThat(result.size, `is`(1))
-            assertThat(result[0], `is`(file))
-
-            resultTested = true
-            waitForResultLatch.countDown()
-        })
-
-
-        try { waitForResultLatch.await(4, TimeUnit.SECONDS) } catch(ignored: Exception) { }
-
-        assertThat(resultTested, `is`(true))
-    }
 
 
     @Test
@@ -264,6 +243,94 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
                 assertThat(isLocalFileInfoStillInIndex.isEmpty(), `is`(true))
             })
         })
+    }
+
+
+    @Test
+    fun persistPdfFile_FileGetFoundByMimeType() {
+        persistFileAndTestField(File("/tmp/book.pdf"), "pdf", searchMimeType = true)
+    }
+
+    @Test
+    fun persistPngFile_FileGetFoundByMimeType() {
+        persistFileAndTestField(File("/tmp/mock_up.png"), "png", searchMimeType = true)
+    }
+
+    @Test
+    fun persistMp3File_FileGetFoundByMimeType() {
+        persistFileAndTestField(File("/tmp/great_song.mp3"), "mpeg3", searchMimeType = true)
+    }
+
+    @Test
+    fun persistMpegFile_FileGetFoundByMimeType() {
+        persistFileAndTestField(File("/tmp/amazing_movie.mpeg"), "mpeg", searchMimeType = true)
+    }
+
+
+    @Test
+    fun persistPdfFile_FileGetFoundByFileType() {
+        persistFileAndTestField(File("/tmp/book.pdf"), FileTypeDefaultFolderName.Documents.folderName, searchFileType = true)
+    }
+
+    @Test
+    fun persistPngFile_FileGetFoundByFileType() {
+        persistFileAndTestField(File("/tmp/mock_up.png"), FileTypeDefaultFolderName.Images.folderName, searchFileType = true)
+    }
+
+    @Test
+    fun persistMp3File_FileGetFoundByFileType() {
+        persistFileAndTestField(File("/tmp/great_song.mp3"), FileTypeDefaultFolderName.Audio.folderName, searchFileType = true)
+    }
+
+    @Test
+    fun persistMpegFile_FileGetFoundByFileType() {
+        persistFileAndTestField(File("/tmp/amazing_movie.mpeg"), FileTypeDefaultFolderName.Video.folderName, searchFileType = true)
+    }
+
+    @Test
+    fun persistExeFile_FileGetFoundByFileType() {
+        persistFileAndTestField(File("/tmp/DeepThought.exe"), FileTypeDefaultFolderName.OtherFilesFolderName.folderName, searchFileType = true)
+    }
+
+
+
+    private fun persistFileAndTestField(localFile: File, fieldValueToSearchFor: String, searchUri: Boolean = false, searchName: Boolean = false,
+                                 searchMimeType: Boolean = false, searchFileType: Boolean = false, searchDescription: Boolean = false, searchSourceUri: Boolean = false) {
+        val file = fileManager.createLocalFile(localFile)
+        filePersister.saveFile(file)
+
+        testField(file, fieldValueToSearchFor, searchUri, searchName, searchMimeType, searchFileType, searchDescription, searchSourceUri)
+    }
+
+    private fun persistTestFilesAndTestField(fieldValueToSearchFor: String, searchUri: Boolean = false, searchName: Boolean = false,
+                                     searchMimeType: Boolean = false, searchFileType: Boolean = false, searchDescription: Boolean = false, searchSourceUri: Boolean = false) {
+        val file = persistTestFiles(File1IsLocalFile)
+
+        testField(file, fieldValueToSearchFor, searchUri, searchName, searchMimeType, searchFileType, searchDescription, searchSourceUri)
+    }
+
+    private fun testField(file: FileLink, fieldValueToSearchFor: String, searchUri: Boolean, searchName: Boolean,
+                          searchMimeType: Boolean = false, searchFileType: Boolean = false, searchDescription: Boolean, searchSourceUri: Boolean) {
+        var resultTested = false
+        val waitForResultLatch = CountDownLatch(1)
+
+
+        underTest.searchFiles(FilesSearch(fieldValueToSearchFor, searchUri = searchUri, searchName = searchName, searchDescription = searchDescription,
+                searchSourceUri = searchSourceUri) { result ->
+            assertThat(result.size, `is`(1))
+            assertThat(result[0], `is`(file))
+
+            resultTested = true
+            waitForResultLatch.countDown()
+        })
+
+
+        try {
+            waitForResultLatch.await(4, TimeUnit.SECONDS)
+        } catch (ignored: Exception) {
+        }
+
+        assertThat(resultTested, `is`(true))
     }
 
 

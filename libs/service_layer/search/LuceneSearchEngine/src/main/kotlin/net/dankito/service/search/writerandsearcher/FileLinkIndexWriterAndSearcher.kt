@@ -39,7 +39,13 @@ class FileLinkIndexWriterAndSearcher(fileService: FileService, eventBus: IEventB
 
         addBooleanFieldToDocument(FieldName.FileIsLocalFile, entity.isLocalFile, doc)
 
-        // TODO: file type
+        entity.mimeType?.let { mimeType ->
+            doc.add(StringField(FieldName.FileMimeType, mimeType, Field.Store.NO))
+        }
+        entity.fileType?.let { fileType ->
+            doc.add(StringField(FieldName.FileFileType, fileType.folderName, Field.Store.NO))
+        }
+
         doc.add(LongField(FieldName.FileFileSize, entity.fileSize, Field.Store.YES))
         entity.fileLastModified?.let { doc.add(LongField(FieldName.FileFileLastModified, it.time, Field.Store.YES)) }
 
@@ -85,6 +91,13 @@ class FileLinkIndexWriterAndSearcher(fileService: FileService, eventBus: IEventB
         }
         if(search.searchName) {
             termQuery.add(WildcardQuery(Term(FieldName.FileName, escapedWildcardTerm)), BooleanClause.Occur.SHOULD)
+        }
+
+        if(search.searchMimeType) {
+            termQuery.add(WildcardQuery(Term(FieldName.FileMimeType, escapedWildcardTerm)), BooleanClause.Occur.SHOULD)
+        }
+        if(search.searchFileType) {
+            termQuery.add(WildcardQuery(Term(FieldName.FileFileType, escapedWildcardTerm)), BooleanClause.Occur.SHOULD)
         }
 
         if(search.searchDescription) {

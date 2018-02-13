@@ -89,6 +89,8 @@ object FieldName {
 
     val FileIsLocalFile = "file_is_local_file"
 
+    val FileMimeType = "file_mime_type"
+
     val FileFileType = "file_type"
 
     val FileFileSize = "file_size"
