@@ -87,7 +87,7 @@ class EditEntityFilesField : View() {
                     font = Font.font(font.family, FontWeight.BOLD, 16.0)
                     textFill = Color.valueOf(Colors.AddButtonHexColor)
 
-                    action { selectFileToAdd() }
+                    action { selectFilesToAdd() }
                 }
             }
         }
@@ -143,7 +143,7 @@ class EditEntityFilesField : View() {
     }
 
 
-    private fun selectFileToAdd() {
+    private fun selectFilesToAdd() {
         val fileChooserDialog = FileChooser()
 
         fileChooserDialog.showOpenMultipleDialog(currentStage)?.let { files ->
