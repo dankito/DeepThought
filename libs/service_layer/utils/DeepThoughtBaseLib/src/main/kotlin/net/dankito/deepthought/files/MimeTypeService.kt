@@ -31,7 +31,7 @@ class MimeTypeService(private val mimeTypeDetector: MimeTypeDetector, private va
             mimeTypeCategorizer.isImageFile(mimeType) -> getFileTypeByKey("image")
             mimeTypeCategorizer.isAudioFile(mimeType) -> getFileTypeByKey("audio")
             mimeTypeCategorizer.isVideoFile(mimeType) -> getFileTypeByKey("video")
-            else -> getFileTypeByKey("other")
+            else -> getFileTypeByKey("other.files")
         }
     }
 
