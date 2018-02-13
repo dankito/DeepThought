@@ -67,7 +67,7 @@ class FileListPresenter(private val fileManager: FileManager, private val applic
             val localPath = localFileInfo?.path
 
             if(localFileInfo != null && localFileInfo.syncStatus == FileSyncStatus.UpToDate && localPath != null) {
-                return localPath
+                return File(localPath).absolutePath
             }
             else {
                 return localization.getLocalizedString("file.sync.status.not.synchronized.yet")

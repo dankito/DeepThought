@@ -328,7 +328,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
     }
 
     private fun fileSuccessfullySynchronized(file: FileLink, localFileInfo: LocalFileInfo, destinationFile: File) {
-        localFileInfo.path = destinationFile.absolutePath
+        localFileInfo.path = destinationFile.path // use path not absolute path, see comment in getDefaultSavePathForFile()
 
         localFileInfo.fileSize = File(destinationFile.absolutePath).length() // we have to create a new File object to get file size
         localFileInfo.hashSHA512 = hashService.getFileHash(HashAlgorithm.SHA512, destinationFile)
@@ -344,7 +344,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
     }
 
     private fun getDefaultSavePathForFile(file: FileLink): String {
-        return platformConfiguration.getDefaultFilesFolder().absolutePath
+        return platformConfiguration.getDefaultFilesFolder().path // use path not absolute path as for Java synchronized files get stored relative to DeepThought.jar -> if DeepThought.jar and files folder get moved, file still gets found
     }
 
     private fun sendMessage(clientSocket: Socket, message: Any) {
