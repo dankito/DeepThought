@@ -23,7 +23,7 @@ class MimeTypeService(private val mimeTypeDetector: MimeTypeDetector, private va
 
     fun getFileTypeForMimeType(mimeType: String?): FileType? {
         if(mimeType == null) {
-            return null
+            return getOtherFilesFileType()
         }
 
         return when {
@@ -31,8 +31,12 @@ class MimeTypeService(private val mimeTypeDetector: MimeTypeDetector, private va
             mimeTypeCategorizer.isImageFile(mimeType) -> getFileTypeByKey("image")
             mimeTypeCategorizer.isAudioFile(mimeType) -> getFileTypeByKey("audio")
             mimeTypeCategorizer.isVideoFile(mimeType) -> getFileTypeByKey("video")
-            else -> getFileTypeByKey("other.files")
+            else -> getOtherFilesFileType()
         }
+    }
+
+    private fun getOtherFilesFileType(): FileType? {
+        return getFileTypeByKey("other.files")
     }
 
     private fun getFileTypeByKey(key: String): FileType? {

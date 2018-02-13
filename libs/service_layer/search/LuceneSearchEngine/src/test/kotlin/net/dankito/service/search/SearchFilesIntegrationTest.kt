@@ -292,6 +292,11 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
         persistFileAndTestField(File("/tmp/DeepThought.exe"), FileTypeDefaultFolderName.OtherFilesFolderName.folderName, searchFileType = true)
     }
 
+    @Test
+    fun persistApkFile_FileGetFoundByFileType() { // a file type with unknown Mime type
+        persistFileAndTestField(File("/tmp/DeepThought.apk"), FileTypeDefaultFolderName.OtherFilesFolderName.folderName, searchFileType = true)
+    }
+
 
 
     private fun persistFileAndTestField(localFile: File, fieldValueToSearchFor: String, searchUri: Boolean = false, searchName: Boolean = false,
