@@ -41,13 +41,27 @@
         android:padding="@dimen/list_item_file_padding"
     >
 
+        <ImageView
+            android:id="@+id/imgPreviewImage"
+            android:layout_width="@dimen/list_item_file_preview_image_width"
+            android:layout_height="@dimen/list_item_file_preview_image_height"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/list_item_file_preview_image_margin_left"
+            android:layout_marginStart="@dimen/list_item_file_preview_image_margin_left"
+            android:layout_marginRight="@dimen/list_item_file_preview_image_margin_right"
+            android:layout_marginEnd="@dimen/list_item_file_preview_image_margin_right"
+            android:scaleType="fitCenter"
+        />
+
         <TextView
             android:id="@+id/txtFileName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:layout_toRightOf="@+id/imgPreviewImage"
+            android:layout_toEndOf="@+id/imgPreviewImage"
             android:layout_above="@+id/txtFilePath"
             android:layout_toLeftOf="@+id/txtFileSize"
             android:layout_toStartOf="@+id/txtFileSize"
@@ -75,6 +89,8 @@
             android:id="@+id/txtFilePath"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/imgPreviewImage"
+            android:layout_toEndOf="@+id/imgPreviewImage"
             android:layout_alignParentBottom="true"
             android:layout_marginTop="@dimen/list_item_file_file_path_padding_top"
             android:maxLines="2"

@@ -18,6 +18,7 @@ import net.dankito.deepthought.ui.presenter.FileListPresenter
 import net.dankito.filechooserdialog.FileChooserDialog
 import net.dankito.filechooserdialog.model.FileChooserDialogConfig
 import net.dankito.filechooserdialog.service.IPermissionsService
+import net.dankito.filechooserdialog.service.PreviewImageService
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.extensions.didCollectionChange
@@ -50,6 +51,9 @@ class EditEntityFilesField : EditEntityField {
     @Inject
     protected lateinit var eventBus: IEventBus
 
+    @Inject
+    protected lateinit var previewImageService: PreviewImageService
+
 
     private var originalFiles: MutableCollection<FileLink> = ArrayList()
 
@@ -68,7 +72,7 @@ class EditEntityFilesField : EditEntityField {
         AppComponent.component.inject(this)
 
         fileListPresenter = FileListPresenter(fileManager, applicationsService, localization, router)
-        attachedFilesAdapter = FilesRecyclerAdapter(fileListPresenter) { file -> removeFile(file) }
+        attachedFilesAdapter = FilesRecyclerAdapter(fileListPresenter, previewImageService) { file -> removeFile(file) }
 
         rcySearchResult.adapter = attachedFilesAdapter
         attachedFilesAdapter.itemClickListener = { showFile(it) }

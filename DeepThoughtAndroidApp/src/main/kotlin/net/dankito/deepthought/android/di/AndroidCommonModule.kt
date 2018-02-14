@@ -13,6 +13,10 @@ import net.dankito.data_access.network.discovery.IDevicesDiscoverer
 import net.dankito.deepthought.android.service.hashing.AndroidBase64Service
 import net.dankito.deepthought.android.service.settings.AndroidPlatformConfiguration
 import net.dankito.deepthought.service.importexport.pdf.PdfImporter
+import net.dankito.filechooserdialog.service.PreviewImageService
+import net.dankito.filechooserdialog.service.ThumbnailService
+import net.dankito.mime.MimeTypeCategorizer
+import net.dankito.mime.MimeTypeDetector
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.services.hashing.IBase64Service
@@ -47,6 +51,19 @@ open class AndroidCommonModule {
     @Singleton
     open fun provideFileStorageService(context: Context) : IFileStorageService {
         return AndroidFileStorageService(context)
+    }
+
+
+    @Provides
+    @Singleton
+    open fun provideThumbnailService(context: Context, mimeTypeDetector: MimeTypeDetector, mimeTypeCategorizer: MimeTypeCategorizer) : ThumbnailService {
+        return ThumbnailService(context, mimeTypeDetector, mimeTypeCategorizer)
+    }
+
+    @Provides
+    @Singleton
+    open fun providePreviewImageService(thumbnailService: ThumbnailService, mimeTypeDetector: MimeTypeDetector, mimeTypeCategorizer: MimeTypeCategorizer) : PreviewImageService {
+        return PreviewImageService(thumbnailService, mimeTypeDetector, mimeTypeCategorizer)
     }
 
 
