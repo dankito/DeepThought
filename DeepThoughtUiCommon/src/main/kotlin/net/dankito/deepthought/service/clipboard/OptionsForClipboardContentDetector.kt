@@ -1,26 +1,24 @@
 package net.dankito.deepthought.service.clipboard
 
 import net.dankito.deepthought.di.CommonComponent
+import net.dankito.deepthought.files.MimeTypeService
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.utils.MimeTypeUtil
 import net.dankito.utils.UrlUtil
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IDialogService
 import javax.inject.Inject
 
 
-class OptionsForClipboardContentDetector(private val articleExtractorManager: ArticleExtractorManager, private val dialogService: IDialogService, private val router: IRouter) {
+class OptionsForClipboardContentDetector(private val articleExtractorManager: ArticleExtractorManager, private val dialogService: IDialogService,
+                                         private val mimeTypeService: MimeTypeService, private val router: IRouter) {
 
 
     @Inject
     protected lateinit var urlUtil: UrlUtil
-
-    @Inject
-    protected lateinit var mimeTypeUtil: MimeTypeUtil
 
     @Inject
     protected lateinit var localization: Localization
@@ -33,7 +31,7 @@ class OptionsForClipboardContentDetector(private val articleExtractorManager: Ar
 
     fun getOptions(clipboardContent: ClipboardContent): OptionsForClipboardContent? {
         clipboardContent.url?.let { url ->
-            if(mimeTypeUtil.isHttpUrlAWebPage(url)) {
+            if(mimeTypeService.isHttpUrlAWebPage(url)) {
                 return createOptionsForWebPage(url)
             }
         }

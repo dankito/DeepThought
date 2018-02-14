@@ -8,11 +8,18 @@ import net.dankito.mime.MimeTypeDetector
 import java.io.File
 
 
-class MimeTypeService(private val mimeTypeDetector: MimeTypeDetector, private val mimeTypeCategorizer: MimeTypeCategorizer,
+class MimeTypeService(private val detector: MimeTypeDetector, private val categorizer: MimeTypeCategorizer,
                       private val dataManager: DataManager) {
 
     fun getBestMimeType(file: File): String? {
-        return mimeTypeDetector.getBestPickForFile(file)
+        return detector.getBestPickForFile(file)
+    }
+
+
+    fun isHttpUrlAWebPage(httpUrl: String): Boolean {
+        val mimeType = detector.getBestPickForFilename(httpUrl)
+
+        return mimeType == null || categorizer.isHtmlFile(mimeType) // if it's null then it's a least not a known mime type, e.g. not a Pdf, image etc., but foreseeable a web page without file extension
     }
 
 
@@ -26,10 +33,10 @@ class MimeTypeService(private val mimeTypeDetector: MimeTypeDetector, private va
         }
 
         return when {
-            mimeTypeCategorizer.isDocument(mimeType) -> getFileTypeByKey("document")
-            mimeTypeCategorizer.isImageFile(mimeType) -> getFileTypeByKey("image")
-            mimeTypeCategorizer.isAudioFile(mimeType) -> getFileTypeByKey("audio")
-            mimeTypeCategorizer.isVideoFile(mimeType) -> getFileTypeByKey("video")
+            categorizer.isDocument(mimeType) -> getFileTypeByKey("document")
+            categorizer.isImageFile(mimeType) -> getFileTypeByKey("image")
+            categorizer.isAudioFile(mimeType) -> getFileTypeByKey("audio")
+            categorizer.isVideoFile(mimeType) -> getFileTypeByKey("video")
             else -> getOtherFilesFileType()
         }
     }

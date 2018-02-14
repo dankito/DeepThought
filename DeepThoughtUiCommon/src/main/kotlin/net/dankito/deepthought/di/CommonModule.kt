@@ -13,6 +13,7 @@ import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.OkHttpWebClient
 import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
+import net.dankito.deepthought.files.MimeTypeService
 import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.deepthought.model.NetworkSettings
 import net.dankito.deepthought.news.article.ArticleExtractorManager
@@ -24,6 +25,8 @@ import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.faviconextractor.FaviconComparator
 import net.dankito.faviconextractor.FaviconExtractor
 import net.dankito.feedaddressextractor.FeedAddressExtractor
+import net.dankito.mime.MimeTypeCategorizer
+import net.dankito.mime.MimeTypeDetector
 import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.newsreader.feed.IFeedReader
 import net.dankito.newsreader.feed.RomeFeedReader
@@ -78,8 +81,9 @@ open class CommonModule {
 
     @Provides
     @Singleton
-    open fun provideOptionsForClipboardContentDetector(articleExtractorManager: ArticleExtractorManager, dialogService: IDialogService, router: IRouter) : OptionsForClipboardContentDetector {
-        return OptionsForClipboardContentDetector(articleExtractorManager, dialogService, router)
+    open fun provideOptionsForClipboardContentDetector(articleExtractorManager: ArticleExtractorManager, dialogService: IDialogService,
+                                                       mimeTypeService: MimeTypeService, router: IRouter) : OptionsForClipboardContentDetector {
+        return OptionsForClipboardContentDetector(articleExtractorManager, dialogService, mimeTypeService, router)
     }
 
 
@@ -87,6 +91,12 @@ open class CommonModule {
     @Singleton
     open fun provideOsHelper(platformConfiguration: IPlatformConfiguration) : OsHelper {
         return OsHelper(platformConfiguration)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMimeTypeService(mimeTypeDetector: MimeTypeDetector, mimeTypeCategorizer: MimeTypeCategorizer, dataManager: DataManager) : MimeTypeService {
+        return MimeTypeService(mimeTypeDetector, mimeTypeCategorizer, dataManager)
     }
 
     @Provides

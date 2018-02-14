@@ -17,8 +17,6 @@ import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.deepthought.service.permissions.IPermissionsService
-import net.dankito.mime.MimeTypeCategorizer
-import net.dankito.mime.MimeTypeDetector
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
@@ -105,13 +103,6 @@ class CommonDataModule {
     fun provideFileManager(searchEngine: ISearchEngine, localFileInfoService: LocalFileInfoService, fileSyncService: FileSyncService,
                            mimeTypeService: MimeTypeService, hashService: HashService, eventBus: IEventBus, threadPool: IThreadPool) : FileManager {
         return FileManager(searchEngine, localFileInfoService, fileSyncService, mimeTypeService, hashService, eventBus, threadPool)
-    }
-
-    @Provides
-    @Singleton
-    fun provideMimeTypeService(mimeTypeDetector: MimeTypeDetector, mimeTypeCategorizer: MimeTypeCategorizer,
-                               dataManager: DataManager) : MimeTypeService {
-        return MimeTypeService(mimeTypeDetector, mimeTypeCategorizer, dataManager)
     }
 
     @Provides

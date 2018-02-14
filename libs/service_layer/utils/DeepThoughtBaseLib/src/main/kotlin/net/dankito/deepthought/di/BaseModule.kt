@@ -9,7 +9,6 @@ import net.dankito.mime.MimeTypePicker
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.utils.IThreadPool
-import net.dankito.utils.MimeTypeUtil
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.UrlUtil
 import net.dankito.utils.language.ILanguageDetector
@@ -37,12 +36,6 @@ class BaseModule {
     @Singleton
     fun provideUrlUtil() : UrlUtil {
         return UrlUtil()
-    }
-
-    @Provides
-    @Singleton
-    fun provideMimeTypeUtil() : MimeTypeUtil {
-        return MimeTypeUtil()
     }
 
     @Provides

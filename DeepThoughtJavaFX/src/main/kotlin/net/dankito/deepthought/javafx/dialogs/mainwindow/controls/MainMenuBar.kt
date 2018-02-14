@@ -8,6 +8,7 @@ import javafx.scene.input.KeyCodeCombination
 import javafx.scene.input.KeyCombination
 import javafx.scene.layout.Priority
 import javafx.stage.FileChooser
+import net.dankito.deepthought.files.MimeTypeService
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardContent
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
@@ -16,7 +17,6 @@ import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.ItemsSearch
-import net.dankito.utils.MimeTypeUtil
 import net.dankito.utils.UrlUtil
 import net.dankito.utils.extensions.sortedByStrings
 import net.dankito.utils.ui.IDialogService
@@ -49,7 +49,7 @@ class MainMenuBar : View() {
     protected lateinit var urlUtil: UrlUtil
 
     @Inject
-    protected lateinit var mimeTypeUtil: MimeTypeUtil
+    protected lateinit var mimeTypeService: MimeTypeService
 
 
     var createNewItemMenuClicked: (() -> Unit)? = null
@@ -193,7 +193,7 @@ class MainMenuBar : View() {
         mnitmFileClipboard.items.clear()
 
         clipboardContent.url?.let { url ->
-            if(mimeTypeUtil.isHttpUrlAWebPage(url)) {
+            if(mimeTypeService.isHttpUrlAWebPage(url)) {
                 mnitmFileClipboard.isDisable = false
 
                 val extractContentFromUrlMenuItem = MenuItem(String.format(messages["clipboard.content.header.create.item.from"], urlUtil.getHostName(url)))
