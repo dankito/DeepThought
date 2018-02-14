@@ -344,7 +344,13 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
     }
 
     private fun getDefaultSavePathForFile(file: FileLink): String {
-        return platformConfiguration.getDefaultFilesFolder().path // use path not absolute path as for Java synchronized files get stored relative to DeepThought.jar -> if DeepThought.jar and files folder get moved, file still gets found
+        var fileFolder = platformConfiguration.getDefaultFilesFolder()
+
+        file.fileType?.let {
+            fileFolder = File(fileFolder, it.folderName)
+        }
+
+        return fileFolder.path // use path not absolute path as for Java synchronized files get stored relative to DeepThought.jar -> if DeepThought.jar and files folder get moved, file still gets found
     }
 
     private fun sendMessage(clientSocket: Socket, message: Any) {
