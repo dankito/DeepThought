@@ -19,7 +19,6 @@ import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.deepthought.service.permissions.IPermissionsService
 import net.dankito.mime.MimeTypeCategorizer
 import net.dankito.mime.MimeTypeDetector
-import net.dankito.mime.MimeTypePicker
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
@@ -110,9 +109,9 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideMimeTypeService(mimeTypeDetector: MimeTypeDetector, mimeTypePicker: MimeTypePicker, mimeTypeCategorizer: MimeTypeCategorizer,
+    fun provideMimeTypeService(mimeTypeDetector: MimeTypeDetector, mimeTypeCategorizer: MimeTypeCategorizer,
                                dataManager: DataManager) : MimeTypeService {
-        return MimeTypeService(mimeTypeDetector, mimeTypePicker, mimeTypeCategorizer, dataManager)
+        return MimeTypeService(mimeTypeDetector, mimeTypeCategorizer, dataManager)
     }
 
     @Provides

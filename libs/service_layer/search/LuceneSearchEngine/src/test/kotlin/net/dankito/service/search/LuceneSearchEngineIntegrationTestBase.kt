@@ -16,7 +16,6 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.mime.MimeTypeCategorizer
 import net.dankito.mime.MimeTypeDetector
-import net.dankito.mime.MimeTypePicker
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
@@ -56,8 +55,6 @@ abstract class LuceneSearchEngineIntegrationTestBase {
     protected val fileService: FileService
 
     private val mimeTypeDetector = MimeTypeDetector()
-
-    private val mimeTypePicker = MimeTypePicker()
 
     private val mimeTypeCategorizer = MimeTypeCategorizer()
 
@@ -116,7 +113,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         readLaterArticleService = ReadLaterArticleService(dataManager, entityChangedNotifier, JacksonJsonSerializer(tagService, seriesService))
         localFileInfoService = LocalFileInfoService(dataManager, entityChangedNotifier)
         fileService = FileService(dataManager, entityChangedNotifier)
-        mimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypePicker, mimeTypeCategorizer, dataManager)
+        mimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypeCategorizer, dataManager)
 
         underTest = LuceneSearchEngine(dataManager, NoOpLanguageDetector(), OsHelper(platformConfiguration), ThreadPool(), eventBus,
                 itemService, tagService, sourceService, seriesService, readLaterArticleService, fileService, localFileInfoService)

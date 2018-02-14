@@ -47,14 +47,14 @@ class BaseModule {
 
     @Provides
     @Singleton
-    fun provideMimeTypeDetector() : MimeTypeDetector {
-        return MimeTypeDetector()
+    fun provideMimeTypePicker() : MimeTypePicker {
+        return MimeTypePicker()
     }
 
     @Provides
     @Singleton
-    fun provideMimeTypePicker() : MimeTypePicker {
-        return MimeTypePicker()
+    fun provideMimeTypeDetector(mimeTypePicker: MimeTypePicker) : MimeTypeDetector {
+        return MimeTypeDetector(mimeTypePicker)
     }
 
     @Provides

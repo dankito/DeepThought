@@ -26,7 +26,6 @@ import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.deepthought.service.permissions.JavaPermissionsService
 import net.dankito.mime.MimeTypeCategorizer
 import net.dankito.mime.MimeTypeDetector
-import net.dankito.mime.MimeTypePicker
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
@@ -94,8 +93,6 @@ abstract class FileSyncServiceIntegrationTestBase {
     protected val hashService = HashService()
 
     protected val mimeTypeDetector = MimeTypeDetector()
-
-    protected val mimeTypePicker = MimeTypePicker()
 
     protected val mimeTypeCategorizer = MimeTypeCategorizer()
 
@@ -345,7 +342,7 @@ abstract class FileSyncServiceIntegrationTestBase {
         initializationLatch.await(InitializationTimeoutInSeconds, TimeUnit.SECONDS)
 
 
-        localMimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypePicker, mimeTypeCategorizer, localDataManager)
+        localMimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypeCategorizer, localDataManager)
 
         localFileServer = FileServer(localSearchEngine, localEntityManager, localNetworkSettings, localSocketHandler, localSerializer, localThreadPool)
 

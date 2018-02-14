@@ -5,15 +5,14 @@ import net.dankito.deepthought.model.enums.FileType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.mime.MimeTypeCategorizer
 import net.dankito.mime.MimeTypeDetector
-import net.dankito.mime.MimeTypePicker
 import java.io.File
 
 
-class MimeTypeService(private val mimeTypeDetector: MimeTypeDetector, private val mimeTypePicker: MimeTypePicker, private val mimeTypeCategorizer: MimeTypeCategorizer,
+class MimeTypeService(private val mimeTypeDetector: MimeTypeDetector, private val mimeTypeCategorizer: MimeTypeCategorizer,
                       private val dataManager: DataManager) {
 
     fun getBestMimeType(file: File): String? {
-        return mimeTypePicker.getBestPick(mimeTypeDetector, file)
+        return mimeTypeDetector.getBestPickForFile(file)
     }
 
 
