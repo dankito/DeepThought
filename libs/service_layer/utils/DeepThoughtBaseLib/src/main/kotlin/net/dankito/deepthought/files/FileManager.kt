@@ -45,19 +45,27 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
     }
 
 
-    fun createLocalFile(localFile: File): FileLink {
+    fun createLocalFile(localFile: File, mimeType: String? = null): FileLink {
         val file = FileLink(localFile.absolutePath, localFile.name, true)
 
         file.fileSize = localFile.length()
         file.fileLastModified = Date(localFile.lastModified())
 
-        file.mimeType = mimeTypeService.getBestMimeType(localFile)
-        file.fileType = mimeTypeService.getFileTypeForMimeType(file)
+        file.mimeType = mimeType ?: mimeTypeService.getBestMimeType(localFile)
+        file.fileType = mimeTypeService.getFileType(file)
 
         val localFileInfo = LocalFileInfo(file, localFile.absolutePath, true, FileSyncStatus.UpToDate, file.fileSize, file.fileLastModified, file.hashSHA512)
         localFileInfoCache.put(file, localFileInfo)
 
         setFileHashAsync(file, localFileInfo, localFile) // for large files this takes some time, don't interrupt main routine for calculating hash that long
+
+        return file
+    }
+
+    fun createDownloadedLocalFile(url: String, localFile: File, mimeType: String? = null): FileLink {
+        val file = createLocalFile(localFile, mimeType)
+
+        file.sourceUriString = url
 
         return file
     }

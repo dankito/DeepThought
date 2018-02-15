@@ -14,6 +14,8 @@ import net.dankito.utils.UrlUtil
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.utils.language.SupportedLanguages
+import net.dankito.utils.services.network.download.IFileDownloader
+import net.dankito.utils.services.network.download.WGetFileDownloader
 import javax.inject.Singleton
 
 
@@ -30,6 +32,12 @@ class BaseModule {
     @Singleton
     fun provideThreadPool() : IThreadPool {
         return ThreadPool()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFileDownloader(threadPool: IThreadPool) : IFileDownloader {
+        return WGetFileDownloader(threadPool)
     }
 
     @Provides

@@ -34,6 +34,8 @@ ext {
 
     okHttpVersion = '3.9.1'
 
+    wgetVersion = '1.4.3'
+
     jsoupVersion = '1.11.2'
 
     jacksonVersion = '2.9.4'

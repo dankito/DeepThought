@@ -13,6 +13,7 @@ import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.OkHttpWebClient
 import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
+import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.files.MimeTypeService
 import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.deepthought.model.NetworkSettings
@@ -81,9 +82,9 @@ open class CommonModule {
 
     @Provides
     @Singleton
-    open fun provideOptionsForClipboardContentDetector(articleExtractorManager: ArticleExtractorManager, dialogService: IDialogService,
-                                                       mimeTypeService: MimeTypeService, router: IRouter) : OptionsForClipboardContentDetector {
-        return OptionsForClipboardContentDetector(articleExtractorManager, dialogService, mimeTypeService, router)
+    open fun provideOptionsForClipboardContentDetector(articleExtractorManager: ArticleExtractorManager, fileManager: FileManager, dialogService: IDialogService,
+                                                       mimeTypeService: MimeTypeService, platformConfiguration: IPlatformConfiguration, router: IRouter) : OptionsForClipboardContentDetector {
+        return OptionsForClipboardContentDetector(articleExtractorManager, fileManager, dialogService, mimeTypeService, platformConfiguration, router)
     }
 
 

@@ -237,6 +237,9 @@ class ViewPdfDialog : DialogFragment() {
         if(sourceForFile == null) {
             sourceForFile = createSource(metadata, pdfFile)
         }
+        else if(sourceForFile?.isPersisted() == false) { // when coming to this from downloading file
+            sourceForFile?.let { setSourceProperties(it, metadata) }
+        }
 
         textCountPages.value = metadata.countPages.toString()
         setControlsEnabledState(true)
@@ -259,13 +262,17 @@ class ViewPdfDialog : DialogFragment() {
     }
 
     private fun createSource(metadata: FileMetadata, pdfFile: FileLink): Source {
-        val sourceTitle = (if (metadata.author.isNotBlank()) metadata.author + " - " else "") + metadata.title
-        val source = Source(sourceTitle)
-        source.length = localization.getLocalizedString("file.count.pages", metadata.countPages)
+        val source = Source("")
+        setSourceProperties(source, metadata)
 
         source.addAttachedFile(pdfFile)
 
         return source
+    }
+
+    private fun setSourceProperties(source: Source, metadata: FileMetadata) {
+        source.title = (if (metadata.author.isNotBlank()) metadata.author + " - " else "") + metadata.title
+        source.length = localization.getLocalizedString("file.count.pages", metadata.countPages)
     }
 
 
