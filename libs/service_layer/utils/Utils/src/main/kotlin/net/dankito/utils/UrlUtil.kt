@@ -61,4 +61,16 @@ class UrlUtil {
         return host
     }
 
+
+    fun getFileName(url: String): String {
+        try {
+            val uri = URI(url)
+            val path = uri.path
+
+            return path.substringAfterLast('/')
+        } catch(e: Exception) { }
+
+        return url.substringAfterLast('/').substringBefore('?')
+    }
+
 }
