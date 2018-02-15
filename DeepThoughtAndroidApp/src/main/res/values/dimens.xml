@@ -214,4 +214,13 @@
     <dimen name="snackbar_clipboard_content_options_buttons_margin_bottom">8dp</dimen>
     <dimen name="snackbar_clipboard_content_options_action_button_padding_left_right">8dp</dimen>
 
+    <dimen name="snackbar_ask_sync_data_with_device_height">96dp</dimen>
+    <dimen name="snackbar_ask_sync_data_with_device_margin_right">60dp</dimen>
+    <dimen name="snackbar_ask_sync_data_with_device_icon_width">60dp</dimen>
+    <dimen name="snackbar_ask_sync_data_with_device_icon_height">96dp</dimen>
+    <dimen name="snackbar_ask_sync_data_with_device_text_margin_left">20dp</dimen>
+    <dimen name="snackbar_ask_sync_data_with_device_text_margin_right">60dp</dimen>
+    <dimen name="snackbar_ask_sync_data_with_device_text_view_height">24dp</dimen>
+    <dimen name="snackbar_ask_sync_data_with_device_ask_never_again_margin_left">-8dp</dimen>
+
 </resources>
