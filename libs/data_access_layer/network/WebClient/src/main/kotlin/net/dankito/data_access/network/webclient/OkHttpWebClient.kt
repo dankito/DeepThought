@@ -7,6 +7,7 @@ import java.io.InputStream
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 class OkHttpWebClient : IWebClient {
@@ -123,6 +124,41 @@ class OkHttpWebClient : IWebClient {
         }
     }
 
+
+    override fun head(parameters: RequestParameters): WebClientResponse {
+        try {
+            val request = createHeadRequest(parameters)
+
+            val response = executeRequest(parameters, request)
+
+            return getResponse(parameters, response)
+        } catch (e: Exception) {
+            return getRequestFailed(parameters, e)
+        }
+    }
+
+    override fun headAsync(parameters: RequestParameters, callback: (response: WebClientResponse) -> Unit) {
+        try {
+            val request = createHeadRequest(parameters)
+
+            executeRequestAsync(parameters, request, callback)
+        } catch (e: Exception) {
+            asyncGetRequestFailed(parameters, e, callback)
+        }
+
+    }
+
+    private fun createHeadRequest(parameters: RequestParameters): Request {
+        val requestBuilder = Request.Builder()
+
+        applyParameters(requestBuilder, parameters)
+
+        requestBuilder.head()
+
+        return requestBuilder.build()
+    }
+
+
     private fun applyParameters(requestBuilder: Request.Builder, parameters: RequestParameters) {
         requestBuilder.url(parameters.url)
 
@@ -187,7 +223,7 @@ class OkHttpWebClient : IWebClient {
         }
         else {
             log.error("Could not request url " + parameters.url, e)
-            return WebClientResponse(false, e)
+            return WebClientResponse(false, null, e)
         }
     }
 
@@ -197,7 +233,7 @@ class OkHttpWebClient : IWebClient {
             getAsync(parameters, callback)
         }
         else {
-            callback(WebClientResponse(false, e))
+            callback(WebClientResponse(false, null, e))
         }
     }
 
@@ -207,7 +243,7 @@ class OkHttpWebClient : IWebClient {
             return post(parameters)
         }
         else {
-            return WebClientResponse(false, e)
+            return WebClientResponse(false, null, e)
         }
     }
 
@@ -217,7 +253,7 @@ class OkHttpWebClient : IWebClient {
             postAsync(parameters, callback)
         }
         else {
-            callback(WebClientResponse(false, e))
+            callback(WebClientResponse(false, null, e))
         }
     }
 
@@ -228,7 +264,7 @@ class OkHttpWebClient : IWebClient {
         }
         else {
             log.error("Failure on Request to " + request.url(), e)
-            callback(WebClientResponse(false, e))
+            callback(WebClientResponse(false, null, e))
         }
     }
 
@@ -248,18 +284,30 @@ class OkHttpWebClient : IWebClient {
 
     @Throws(IOException::class)
     private fun getResponse(parameters: RequestParameters, response: Response): WebClientResponse {
+        val headers = copyHeaders(response)
+
         if(parameters.responseType == ResponseType.String) {
-            return WebClientResponse(true, body = response.body()?.string())
+            return WebClientResponse(true, headers, body = response.body()?.string())
         }
         else if(parameters.responseType == ResponseType.Stream) {
-            return WebClientResponse(true, responseStream = response.body()?.byteStream())
+            return WebClientResponse(true, headers, responseStream = response.body()?.byteStream())
         }
         else {
-            return streamBinaryResponse(parameters, response)
+            return streamBinaryResponse(parameters, response, headers)
         }
     }
 
-    private fun streamBinaryResponse(parameters: RequestParameters, response: Response): WebClientResponse {
+    private fun copyHeaders(response: Response): Map<String, String>? {
+        val headers = HashMap<String, String>()
+
+        response.headers().names().forEach { name ->
+            headers.put(name, response.header(name) ?: "")
+        }
+
+        return headers
+    }
+
+    private fun streamBinaryResponse(parameters: RequestParameters, response: Response, headers: Map<String, String>?): WebClientResponse {
         var inputStream: InputStream? = null
         try {
             inputStream = response.body()?.byteStream()
@@ -280,14 +328,14 @@ class OkHttpWebClient : IWebClient {
                 publishProgress(parameters, buffer, downloaded, contentLength, read)
 
                 if(isCancelled(parameters)) {
-                    return WebClientResponse(false)
+                    return WebClientResponse(false, headers)
                 }
             }
 
-            return WebClientResponse(true)
+            return WebClientResponse(true, headers)
         } catch (e: IOException) {
             log.error("Could not download binary Response for Url " + parameters.url, e)
-            return WebClientResponse(false, e)
+            return WebClientResponse(false, headers, e)
         } finally {
             inputStream?.let { try { it.close() } catch (ignored: Exception) { } }
         }
