@@ -1,8 +1,9 @@
 package net.dankito.deepthought.javafx.service.clipboard
 
-import javafx.scene.image.Image
 import javafx.scene.input.Clipboard
+import net.dankito.deepthought.javafx.ui.JavaFXImage
 import net.dankito.deepthought.service.clipboard.ClipboardContent
+import net.dankito.deepthought.ui.Image
 import net.dankito.utils.UrlUtil
 import java.io.File
 
@@ -54,7 +55,7 @@ class JavaFXClipboardContent(private val clipboard: Clipboard, private val urlUt
         return clipboard.hasImage()
     }
 
-    override val image: Image? = clipboard.image
+    override val image: Image? = JavaFXImage(clipboard.image)
 
 
     override fun hasFiles(): Boolean {
