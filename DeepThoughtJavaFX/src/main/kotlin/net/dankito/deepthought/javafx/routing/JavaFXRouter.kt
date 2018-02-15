@@ -108,15 +108,19 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
 
 
     override fun showEditSourceView(source: Source) {
-        mainWindowController.find(EditSourceDialog::class, mapOf(EditSourceDialog::source to source)).show(getEditSourceDialogTitle(source.title))
+        runLater {
+            mainWindowController.find(EditSourceDialog::class, mapOf(EditSourceDialog::source to source)).show(getEditSourceDialogTitle(source.title))
+        }
     }
 
     override fun showEditItemSourceView(source: Source?, series: Series?, editedSourceTitle: String?) {
-        val sourceToEdit = source ?: Source("")
+        runLater {
+            val sourceToEdit = source ?: Source("")
 
-        mainWindowController.find(EditSourceDialog::class,
-                mapOf(EditSourceDialog::source to sourceToEdit, EditSourceDialog::seriesParam to series, EditSourceDialog::editedSourceTitle to editedSourceTitle)
-        ).show(getEditSourceDialogTitle(sourceToEdit.title, editedSourceTitle))
+            mainWindowController.find(EditSourceDialog::class,
+                    mapOf(EditSourceDialog::source to sourceToEdit, EditSourceDialog::seriesParam to series, EditSourceDialog::editedSourceTitle to editedSourceTitle)
+            ).show(getEditSourceDialogTitle(sourceToEdit.title, editedSourceTitle))
+        }
     }
 
     private fun getEditSourceDialogTitle(sourceTitle: String, editedSourceTitle: String? = null): String {
@@ -142,11 +146,12 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
     }
 
     private fun showImportFromPdfView(addNewPdfFile: File?, persistedPdfFile: FileLink?, sourceForFile: Source?) {
-
-        mainWindowController.find(ViewPdfDialog::class,
-                mapOf(ViewPdfDialog::addNewPdfFileParam to addNewPdfFile, ViewPdfDialog::persistedPdfFileParam to persistedPdfFile,
-                        ViewPdfDialog::sourceForFileParam to sourceForFile)
-        ).show(getViewPdfDialogTitle(addNewPdfFile, persistedPdfFile))
+        runLater {
+            mainWindowController.find(ViewPdfDialog::class,
+                    mapOf(ViewPdfDialog::addNewPdfFileParam to addNewPdfFile, ViewPdfDialog::persistedPdfFileParam to persistedPdfFile,
+                            ViewPdfDialog::sourceForFileParam to sourceForFile)
+            ).show(getViewPdfDialogTitle(addNewPdfFile, persistedPdfFile))
+        }
     }
 
     private fun getViewPdfDialogTitle(addNewPdfFile: File?, persistedPdfFile: FileLink?): String {
