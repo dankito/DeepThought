@@ -28,18 +28,37 @@ class UrlUtil {
 
 
     fun getHostName(url: String): String? {
+        var host = url.substringAfter("://").substringBefore('/') // as fallback if parsing URI doesn't work
+
         try {
             val uri = URI.create(url)
-            var host = uri.host
-
-            if(host.startsWith("www.")) {
-                host = host.substring(4)
-            }
-
-            return host
+            host = uri.host
         } catch(e: Exception) { }
 
-        return "URL"
+
+        host = tryToRemoveDomainUrlAndWWW(host)
+
+        return host
+    }
+
+    private fun tryToRemoveDomainUrlAndWWW(host: String): String {
+        try {
+            val lastIndexOfDot = host.lastIndexOf('.')
+
+            if(lastIndexOfDot > 0) {
+                var nextIndexOfDot = host.lastIndexOf('.', lastIndexOfDot - 1)
+
+                if(nextIndexOfDot >= lastIndexOfDot - 4) { // e.g. domains like .co.uk, ...
+                    nextIndexOfDot = host.lastIndexOf('.', nextIndexOfDot - 1)
+                }
+
+                if(nextIndexOfDot > -1) {
+                    return host.substring(nextIndexOfDot + 1)
+                }
+            }
+        } catch(e: Exception) { }
+
+        return host
     }
 
 }
