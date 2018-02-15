@@ -272,7 +272,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
 
     private fun receiveFile(clientSocket: Socket, file: FileLink, fileSize: Long): SynchronizeFileResult {
         getStoredLocalFileInfo(file)?.let { localFileInfo -> // should actually never come to this with localFileInfo == null
-            val destinationFile = if(localFileInfo.path != null) File(localFileInfo.path) else File(getDefaultSavePathForFile(file), file.name)
+            val destinationFile = if(localFileInfo.path != null) File(localFileInfo.path) else platformConfiguration.getDefaultSavePathForFile(file.name, file.fileType)
             destinationFile.parentFile.mkdirs()
 
             val startTime = Date().time
@@ -341,16 +341,6 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         localFileInfo.syncStatus = if(localFileInfo.fileSize == file.fileSize) FileSyncStatus.UpToDate else FileSyncStatus.NotSynchronizedYet
 
         localFileInfoService.update(localFileInfo, true)
-    }
-
-    private fun getDefaultSavePathForFile(file: FileLink): String {
-        var fileFolder = platformConfiguration.getDefaultFilesFolder()
-
-        file.fileType?.let {
-            fileFolder = File(fileFolder, it.folderName)
-        }
-
-        return fileFolder.path // use path not absolute path as for Java synchronized files get stored relative to DeepThought.jar -> if DeepThought.jar and files folder get moved, file still gets found
     }
 
     private fun sendMessage(clientSocket: Socket, message: Any) {
