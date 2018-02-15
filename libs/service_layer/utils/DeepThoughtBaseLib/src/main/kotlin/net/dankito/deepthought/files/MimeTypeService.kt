@@ -6,12 +6,21 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.mime.MimeTypeCategorizer
 import net.dankito.mime.MimeTypeDetector
 import java.io.File
+import java.net.URI
 
 
 class MimeTypeService(val detector: MimeTypeDetector, val categorizer: MimeTypeCategorizer, private val dataManager: DataManager) {
 
+    fun getBestMimeType(uri: URI): String? {
+        return detector.getBestPickForUri(uri)
+    }
+
     fun getBestMimeType(file: File): String? {
         return detector.getBestPickForFile(file)
+    }
+
+    fun getBestMimeType(filename: String): String? {
+        return detector.getBestPickForFilename(filename)
     }
 
 
@@ -22,7 +31,19 @@ class MimeTypeService(val detector: MimeTypeDetector, val categorizer: MimeTypeC
     }
 
 
-    fun getFileTypeForMimeType(file: FileLink): FileType? {
+    fun getFileType(uri: URI): FileType? {
+        return getFileTypeForMimeType(getBestMimeType(uri))
+    }
+
+    fun getFileType(file: File): FileType? {
+        return getFileTypeForMimeType(getBestMimeType(file))
+    }
+
+    fun getFileType(filename: String): FileType? {
+        return getFileTypeForMimeType(getBestMimeType(filename))
+    }
+
+    fun getFileType(file: FileLink): FileType? {
         return getFileTypeForMimeType(file.mimeType)
     }
 
