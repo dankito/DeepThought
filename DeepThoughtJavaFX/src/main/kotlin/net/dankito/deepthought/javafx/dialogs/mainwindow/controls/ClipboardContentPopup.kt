@@ -61,6 +61,7 @@ class ClipboardContentPopup() : View() {
                 anchorpaneConstraints {
                     topAnchor = 8.0
                     leftAnchor = 10.0
+                    rightAnchor = 30.0 // to not overlap with close button
                     bottomAnchor = 4.0
                 }
             }
