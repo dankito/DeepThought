@@ -203,4 +203,15 @@
     <!-- EditText has a padding of 4dp, so to left align a control with it add this value as paddingLeft / marginLeft -->
     <dimen name="edit_text_padding_left">4dp</dimen>
 
+    <dimen name="snackbar_clipboard_content_options_icon_width">40dp</dimen>
+    <dimen name="snackbar_clipboard_content_options_header_padding_top">8dp</dimen>
+    <dimen name="snackbar_clipboard_content_options_header_padding_bottom">4dp</dimen>
+    <dimen name="snackbar_clipboard_content_options_options_margin_left">6dp</dimen>
+    <dimen name="snackbar_clipboard_content_options_options_margin_right">40dp</dimen>
+    <dimen name="snackbar_clipboard_content_options_options_margin_bottom">4dp</dimen>
+    <dimen name="snackbar_clipboard_content_options_buttons_margin_left">16dp</dimen>
+    <dimen name="snackbar_clipboard_content_options_buttons_margin_top">2dp</dimen>
+    <dimen name="snackbar_clipboard_content_options_buttons_margin_bottom">8dp</dimen>
+    <dimen name="snackbar_clipboard_content_options_action_button_padding_left_right">8dp</dimen>
+
 </resources>

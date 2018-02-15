@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+>
+
+    <ImageView
+        android:id="@+id/imgHelpIcon"
+        android:layout_width="@dimen/snackbar_clipboard_content_options_icon_width"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:tint="@color/colorPrimary"
+        android:src="@drawable/ic_help_outline_white_48dp"
+    />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toRightOf="@+id/imgHelpIcon"
+        android:layout_toEndOf="@+id/imgHelpIcon"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginLeft="@dimen/snackbar_clipboard_content_options_options_margin_left"
+        android:layout_marginStart="@dimen/snackbar_clipboard_content_options_options_margin_left"
+        android:layout_marginRight="@dimen/snackbar_clipboard_content_options_options_margin_right"
+        android:layout_marginEnd="@dimen/snackbar_clipboard_content_options_options_margin_right"
+        android:layout_marginBottom="@dimen/snackbar_clipboard_content_options_options_margin_bottom"
+    >
+
+        <TextView
+            android:id="@+id/txtvwClipboardContentHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/snackbar_clipboard_content_options_header_padding_top"
+            android:paddingBottom="@dimen/snackbar_clipboard_content_options_header_padding_bottom"
+            android:textColor="@color/colorPrimary"
+        />
+
+        <LinearLayout
+            android:id="@+id/lytClipboardContentOptions"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
