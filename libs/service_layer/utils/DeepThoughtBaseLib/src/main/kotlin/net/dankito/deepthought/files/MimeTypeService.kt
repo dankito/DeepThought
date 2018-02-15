@@ -8,8 +8,7 @@ import net.dankito.mime.MimeTypeDetector
 import java.io.File
 
 
-class MimeTypeService(private val detector: MimeTypeDetector, private val categorizer: MimeTypeCategorizer,
-                      private val dataManager: DataManager) {
+class MimeTypeService(val detector: MimeTypeDetector, val categorizer: MimeTypeCategorizer, private val dataManager: DataManager) {
 
     fun getBestMimeType(file: File): String? {
         return detector.getBestPickForFile(file)

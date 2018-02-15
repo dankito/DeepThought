@@ -1,5 +1,7 @@
 package net.dankito.deepthought.service.clipboard
 
+import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.data_access.network.webclient.RequestParameters
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.files.MimeTypeService
 import net.dankito.deepthought.model.Item
@@ -18,6 +20,9 @@ class OptionsForClipboardContentDetector(private val articleExtractorManager: Ar
 
 
     @Inject
+    protected lateinit var webClient: IWebClient
+
+    @Inject
     protected lateinit var urlUtil: UrlUtil
 
     @Inject
@@ -29,29 +34,44 @@ class OptionsForClipboardContentDetector(private val articleExtractorManager: Ar
     }
 
 
-    fun getOptions(clipboardContent: ClipboardContent): OptionsForClipboardContent? {
+    fun getOptionsAsync(clipboardContent: ClipboardContent, callback: (OptionsForClipboardContent) -> Unit) {
         clipboardContent.url?.let { url ->
-            if(mimeTypeService.isHttpUrlAWebPage(url)) {
-                return createOptionsForWebPage(url)
+            getOptionsForUrl(url, callback)
+        }
+    }
+
+    private fun getOptionsForUrl(url: String, callback: (OptionsForClipboardContent) -> Unit) {
+        webClient.headAsync(RequestParameters(url)) { response ->
+            if(response.isSuccessful) {
+                val contentType = response.getHeaderValue("Content-Type")
+
+                if(contentType != null) {
+                    val contentTypeWithoutEncoding = contentType.substringBefore(';').trim()
+
+                    if(mimeTypeService.categorizer.isHtmlFile(contentTypeWithoutEncoding)) {
+                        callback(createOptionsForWebPage(url))
+                    }
+                }
+                else if(mimeTypeService.isHttpUrlAWebPage(url)) {
+                    callback(createOptionsForWebPage(url))
+                }
             }
         }
-
-        return null
     }
 
     private fun createOptionsForWebPage(webPageUrl: String): OptionsForClipboardContent {
         return OptionsForClipboardContent(localization.getLocalizedString("clipboard.content.header.create.item.from", urlUtil.getHostName(webPageUrl) ?: ""),
-                listOf(
-                        ClipboardContentOption(localization.getLocalizedString("clipboard.content.option.try.to.extract.important.web.page.parts")) {
-                            extractItemFromUrl(webPageUrl)
-                        },
+            listOf(
+                ClipboardContentOption(localization.getLocalizedString("clipboard.content.option.try.to.extract.important.web.page.parts")) {
+                    extractItemFromUrl(webPageUrl)
+                },
 //                        ClipboardContentOption(localization.getLocalizedString("clipboard.content.option.extract.plain.text.only")) {
 //                            // TODO
 //                        },
-                        ClipboardContentOption(localization.getLocalizedString("clipboard.content.option.show.original.page")) {
-                            router.showEditItemView(ItemExtractionResult(Item(""), Source(webPageUrl, webPageUrl)))
-                        }
-                )
+                ClipboardContentOption(localization.getLocalizedString("clipboard.content.option.show.original.page")) {
+                    router.showEditItemView(ItemExtractionResult(Item(""), Source(webPageUrl, webPageUrl)))
+                }
+            )
         )
     }
 

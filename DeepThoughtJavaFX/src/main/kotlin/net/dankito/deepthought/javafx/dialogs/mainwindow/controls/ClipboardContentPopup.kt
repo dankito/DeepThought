@@ -18,6 +18,7 @@ import net.dankito.deepthought.javafx.res.Colors
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardContent
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
 import net.dankito.deepthought.javafx.util.FXUtils
+import net.dankito.deepthought.service.clipboard.OptionsForClipboardContent
 import net.dankito.deepthought.service.clipboard.OptionsForClipboardContentDetector
 import tornadofx.*
 import javax.inject.Inject
@@ -84,13 +85,19 @@ class ClipboardContentPopup() : View() {
         headerText.value = ""
         optionsPane.children.clear()
 
-        optionsDetector.getOptions(clipboardContent)?.let { options ->
-            isPopupVisible.value = true
-            headerText.value = options.headerTitle
-
-            options.options.forEachIndexed { index, option ->
-                addOption(option.title, getKeyCombinationForOption(index), { option.action() })
+        optionsDetector.getOptionsAsync(clipboardContent) { options ->
+            runLater {
+                retrievedOptionsOnUiThread(options)
             }
+        }
+    }
+
+    private fun retrievedOptionsOnUiThread(options: OptionsForClipboardContent) {
+        isPopupVisible.value = true
+        headerText.value = options.headerTitle
+
+        options.options.forEachIndexed { index, option ->
+            addOption(option.title, getKeyCombinationForOption(index), { option.action() })
         }
     }
 
