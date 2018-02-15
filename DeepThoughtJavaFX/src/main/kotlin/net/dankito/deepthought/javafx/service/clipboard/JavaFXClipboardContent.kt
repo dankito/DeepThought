@@ -55,7 +55,14 @@ class JavaFXClipboardContent(private val clipboard: Clipboard, private val urlUt
         return clipboard.hasImage()
     }
 
-    override val image: Image? = JavaFXImage(clipboard.image)
+    override val image: Image?
+        get() {
+            clipboard.image?.let {
+                return JavaFXImage(clipboard.image)
+            }
+
+            return null
+        }
 
 
     override fun hasFiles(): Boolean {
