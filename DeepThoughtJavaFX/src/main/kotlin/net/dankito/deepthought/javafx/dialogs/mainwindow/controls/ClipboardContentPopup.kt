@@ -3,8 +3,8 @@ package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Insets
+import javafx.geometry.Pos
 import javafx.scene.Cursor
-import javafx.scene.control.Button
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyCodeCombination
 import javafx.scene.input.KeyCombination
@@ -18,15 +18,18 @@ import net.dankito.deepthought.javafx.res.Colors
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardContent
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
 import net.dankito.deepthought.javafx.util.FXUtils
+import net.dankito.deepthought.service.clipboard.ClipboardContentOption
 import net.dankito.deepthought.service.clipboard.OptionsForClipboardContent
 import net.dankito.deepthought.service.clipboard.OptionsForClipboardContentDetector
 import tornadofx.*
 import javax.inject.Inject
 
 
-class ClipboardContentPopup() : View() {
+class ClipboardContentPopup : View() {
 
     private val isPopupVisible = SimpleBooleanProperty(false)
+
+    private val isPopupEnabled = SimpleBooleanProperty(true)
 
     private val headerText = SimpleStringProperty("")
 
@@ -50,6 +53,7 @@ class ClipboardContentPopup() : View() {
 
     override val root = vbox {
         visibleProperty().bind(isPopupVisible)
+        disableProperty().bind(isPopupEnabled.not())
         FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
 
         background = Background(BackgroundFill(Colors.ClipboardContentPopupBackgroundColor, CornerRadii(8.0), Insets.EMPTY))
@@ -95,36 +99,69 @@ class ClipboardContentPopup() : View() {
 
     private fun retrievedOptionsOnUiThread(options: OptionsForClipboardContent) {
         isPopupVisible.value = true
+        isPopupEnabled.value = true
         headerText.value = options.headerTitle
 
         options.options.forEachIndexed { index, option ->
-            addOption(option.title, getKeyCombinationForOption(index), { option.action() })
+            addOption(option, getKeyCombinationForOption(index), { option.callAction() })
         }
     }
 
-    private fun addOption(optionText: String, keyCombination: KeyCodeCombination? = null, optionSelected: () -> Unit) {
-        val displayedText = optionText + (if(keyCombination == null) "" else " (${keyCombination.displayText})")
+    private fun addOption(option: ClipboardContentOption, keyCombination: KeyCodeCombination? = null, optionSelected: () -> Unit) {
+        val displayedText = option.title + (if(keyCombination == null) "" else " (${keyCombination.displayText})")
 
-        val optionLink = Button(displayedText)
-        optionLink.isUnderline = true
-        optionLink.textFill = Color.BLACK
-        optionLink.background = Background.EMPTY
-        optionLink.cursor = Cursor.HAND
-        optionLink.prefHeight = 24.0
+        val isActionExecuting = SimpleBooleanProperty(false)
+        val actionProgress = SimpleStringProperty("0 %")
 
-        optionsPane.add(optionLink)
-        VBox.setMargin(optionLink, Insets(0.0, 10.0, 6.0, 18.0))
+        val optionLayout = hbox {
+            cursor = Cursor.HAND
+            prefHeight = 24.0
 
-        optionLink.setOnAction { optionLinkPressed(optionSelected) }
-        keyCombination?.let { optionLink.scene?.accelerators?.put(it, Runnable { optionLinkPressed(optionSelected) }) }
+            progressindicator {
+                prefWidth = 20.0
+                alignment = Pos.CENTER_LEFT
+                visibleProperty().bind(isActionExecuting)
 
-        optionLink.setOnMouseEntered { optionLink.background = Background(BackgroundFill(Colors.ClipboardContentPopupOptionMouseOverColor, CornerRadii(8.0), Insets.EMPTY)) }
-        optionLink.setOnMouseExited { optionLink.background = Background.EMPTY }
-    }
+                hboxConstraints {
+                    marginLeft = 4.0
+                    marginRight = 4.0
+                }
+            }
 
-    private fun optionLinkPressed(optionSelected: () -> Unit) {
-        hidePopupOnUiThread()
-        optionSelected()
+            label(actionProgress) {
+                prefWidth = 50.0
+                alignment = Pos.CENTER_RIGHT
+                visibleProperty().bind(isActionExecuting)
+            }
+
+            button(displayedText) {
+                isUnderline = true
+                textFill = Color.BLACK
+                background = Background.EMPTY
+
+                action { optionSelected()  }
+                keyCombination?.let { scene?.accelerators?.put(it, Runnable { optionSelected() }) }
+
+                setOnMouseEntered { background = Background(BackgroundFill(Colors.ClipboardContentPopupOptionMouseOverColor, CornerRadii(8.0), Insets.EMPTY)) }
+                setOnMouseExited { background = Background.EMPTY }
+            }
+
+            vboxConstraints {
+                marginBottom = 6.0
+            }
+        }
+
+        optionsPane.add(optionLayout)
+
+
+        option.addIsExecutingListener { progress ->
+            runLater {
+                isActionExecuting.value = progress >= 0.0 && progress < 100.0
+                isPopupEnabled.value = ! isActionExecuting.value
+                isPopupVisible.value = isActionExecuting.value
+                actionProgress.value = String.format("%.1f", progress) + " %"
+            }
+        }
     }
 
     private fun getKeyCombinationForOption(index: Int): KeyCodeCombination? {

@@ -90,41 +90,59 @@ class SnackbarService {
         }
 
 
-        val snackView = activity.layoutInflater.inflate(R.layout.snackbar_clipboard_content, null)
+        val snackView = activity.layoutInflater.inflate(R.layout.snackbar_clipboard_content, null) as ViewGroup
 
         snackView.txtvwClipboardContentHeader.text = options.headerTitle
 
         val optionsLayout = snackView.lytClipboardContentOptions
         options.options.forEach { option ->
-            addClipboardContentOptionButton(activity, option, snackbar, optionsLayout, textColor)
+            addClipboardContentOptionButton(activity, option, snackbar, optionsLayout, textColor, snackView)
         }
 
         layout.addView(snackView, 0)
     }
 
-    private fun addClipboardContentOptionButton(activity: Activity, option: ClipboardContentOption, snackbar: Snackbar, optionsLayout: ViewGroup, textColor: Int) {
+    private fun addClipboardContentOptionButton(activity: Activity, option: ClipboardContentOption, snackbar: Snackbar, optionsLayout: ViewGroup, textColor: Int, snackView: ViewGroup) {
+        val lytActionProgress = snackView.lytActionProgress
+        val actionProgress = lytActionProgress.txtActionProgress
+        val imgHelpIcon = snackView.imgHelpIcon
+
+
         val optionButton = Button(activity, null, android.support.v7.appcompat.R.style.Widget_AppCompat_ButtonBar)
 
         optionButton.text = option.title
         optionButton.setTextColor(textColor)
 
-        optionButton.setPadding(activity.getDimension(R.dimen.snackbar_clipboard_content_options_buttons_margin_left),
-                activity.getDimension(R.dimen.snackbar_clipboard_content_options_buttons_margin_top), 0,
-                activity.getDimension(R.dimen.snackbar_clipboard_content_options_buttons_margin_bottom))
+        optionButton.setPadding(activity.getDimension(R.dimen.snackbar_clipboard_content_options_button_margin_left),
+                activity.getDimension(R.dimen.snackbar_clipboard_content_options_button_margin_top), 0,
+                activity.getDimension(R.dimen.snackbar_clipboard_content_options_button_margin_bottom))
         optionButton.gravity = Gravity.CENTER_VERTICAL
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             optionButton.textAlignment = View.TEXT_ALIGNMENT_GRAVITY
         }
 
         optionButton.setOnClickListener {
-            snackbar.dismiss()
-            option.action()
+            option.callAction()
         }
 
         optionsLayout.addView(optionButton)
 
-        (optionButton.layoutParams as? ViewGroup.MarginLayoutParams)?.let { layoutParams ->
-            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+
+        option.addIsExecutingListener { progress ->
+            activity.runOnUiThread {
+                val isExecuting = progress < 100.0
+                lytActionProgress.visibility = if(isExecuting) View.VISIBLE else View.INVISIBLE
+                imgHelpIcon.visibility = if(isExecuting) View.INVISIBLE else View.VISIBLE
+                actionProgress.text = String.format("%.1f", progress) + " %"
+
+                snackView.isEnabled = ! isExecuting
+
+                if(progress >= 100.0 || progress < 0.0) {
+                    activity.runOnUiThread {
+                        snackbar.dismiss()
+                    }
+                }
+            }
         }
     }
 

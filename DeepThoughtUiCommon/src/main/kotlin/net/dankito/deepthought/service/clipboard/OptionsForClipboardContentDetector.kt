@@ -113,16 +113,16 @@ class OptionsForClipboardContentDetector(private val articleExtractorManager: Ar
 
         if(mimeTypeService.categorizer.isPdfFile(mimeType)) {
             options.add(ClipboardContentOption(localization.getLocalizedString("clipboard.content.option.download.and.show.file")) {
-                downloadFileAndShowFile(url, mimeType)
+                downloadFileAndShowFile(it, url, mimeType)
             })
         }
 
         options.add(ClipboardContentOption(localization.getLocalizedString("clipboard.content.option.download.file.and.attach.to.item")) {
-            downloadFileAndAttachToItem(url, mimeType)
+            downloadFileAndAttachToItem(it, url, mimeType)
         })
 
         options.add(ClipboardContentOption(localization.getLocalizedString("clipboard.content.option.download.file.and.attach.to.source")) {
-            downloadFileAndAttachToSource(url, mimeType)
+            downloadFileAndAttachToSource(it, url, mimeType)
         })
 
         return options
@@ -132,12 +132,12 @@ class OptionsForClipboardContentDetector(private val articleExtractorManager: Ar
     private fun extractItemFromUrl(url: String) {
         articleExtractorManager.extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(url) {
             it.result?.let { router.showEditItemView(it) }
-            it.error?.let { showErrorMessage(it, url) }
+            it.error?.let { showCouldNotExtractItemFromUrlErrorMessage(it, url) }
         }
     }
 
-    private fun downloadFileAndAttachToItem(url: String, mimeType: String) {
-        downloadFile(url, mimeType) { downloadedFile ->
+    private fun downloadFileAndAttachToItem(option: ClipboardContentOption, url: String, mimeType: String) {
+        downloadFile(option, url, mimeType) { downloadedFile ->
             val item = Item("")
 
             item.addAttachedFile(downloadedFile)
@@ -147,16 +147,16 @@ class OptionsForClipboardContentDetector(private val articleExtractorManager: Ar
         }
     }
 
-    private fun downloadFileAndAttachToSource(url: String, mimeType: String) {
-        downloadFile(url, mimeType) { downloadedFile ->
+    private fun downloadFileAndAttachToSource(option: ClipboardContentOption, url: String, mimeType: String) {
+        downloadFile(option, url, mimeType) { downloadedFile ->
             val source = createSourceForDownloadedFile(downloadedFile, url)
 
             router.showEditSourceView(source)
         }
     }
 
-    private fun downloadFileAndShowFile(url: String, mimeType: String) {
-        downloadFile(url, mimeType) { downloadedFile ->
+    private fun downloadFileAndShowFile(option: ClipboardContentOption, url: String, mimeType: String) {
+        downloadFile(option, url, mimeType) { downloadedFile ->
             if(mimeTypeService.categorizer.isPdfFile(mimeType)) {
                 router.showPdfView(downloadedFile, createSourceForDownloadedFile(downloadedFile, url))
             }
@@ -174,10 +174,12 @@ class OptionsForClipboardContentDetector(private val articleExtractorManager: Ar
         return source
     }
 
-    private fun downloadFile(url: String, mimeType: String, callback: (downloadedFile: FileLink) -> Unit) {
+    private fun downloadFile(option: ClipboardContentOption, url: String, mimeType: String, callback: (downloadedFile: FileLink) -> Unit) {
         val destination = getDestinationFileForUrl(url)
 
         fileDownloader.downloadAsync(url, destination) { downloadState ->
+            option.updateIsExecutingState(downloadState.progress)
+
             if(downloadState.finished && downloadState.successful) {
                 val downloadedFile = fileManager.createDownloadedLocalFile(url, destination, mimeType)
                 callback(downloadedFile)
@@ -191,7 +193,7 @@ class OptionsForClipboardContentDetector(private val articleExtractorManager: Ar
         return platformConfiguration.getDefaultSavePathForFile(filename, mimeTypeService.getFileType(filename))
     }
 
-    private fun showErrorMessage(error: Exception, articleUrl: String) {
+    private fun showCouldNotExtractItemFromUrlErrorMessage(error: Exception, articleUrl: String) {
         dialogService.showErrorMessage(localization.getLocalizedString("alert.message.could.not.extract.item.from.url", articleUrl), exception = error)
     }
 
