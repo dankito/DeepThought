@@ -112,7 +112,7 @@ class WGetFileDownloader(private val threadPool: IThreadPool) : IFileDownloader 
                 log.info(String.format("%.2f %s (%s / %s)", progress, parts,
                         formatSpeed(speedInfo.currentSpeed.toLong()), formatSpeed(speedInfo.averageSpeed.toLong())))
 
-                callback(DownloadState(false, false, progress))
+                callback(DownloadState(false, false, progress * 100))
             }
         }
 
