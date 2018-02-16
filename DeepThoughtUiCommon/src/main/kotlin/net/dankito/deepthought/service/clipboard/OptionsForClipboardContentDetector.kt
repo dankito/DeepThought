@@ -184,6 +184,10 @@ class OptionsForClipboardContentDetector(private val articleExtractorManager: Ar
                 val downloadedFile = fileManager.createDownloadedLocalFile(url, destination, mimeType)
                 callback(downloadedFile)
             }
+
+            downloadState.error?.let { error ->
+                showCouldNotDownloadFileErrorMessage(error, url)
+            }
         }
     }
 
@@ -195,6 +199,10 @@ class OptionsForClipboardContentDetector(private val articleExtractorManager: Ar
 
     private fun showCouldNotExtractItemFromUrlErrorMessage(error: Exception, articleUrl: String) {
         dialogService.showErrorMessage(localization.getLocalizedString("alert.message.could.not.extract.item.from.url", articleUrl), exception = error)
+    }
+
+    private fun showCouldNotDownloadFileErrorMessage(error: Exception, url: String) {
+        dialogService.showErrorMessage(localization.getLocalizedString("alert.message.could.not.download.file.from.url", url), exception = error)
     }
 
 }
