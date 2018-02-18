@@ -88,17 +88,21 @@ class OptionsForClipboardContentDetector(private val articleExtractorManager: Ar
 
     private fun getOptionsForWebPage(webPageUrl: String): OptionsForClipboardContent {
         return OptionsForClipboardContent(localization.getLocalizedString("clipboard.content.header.create.item.from", urlUtil.getHostName(webPageUrl) ?: ""),
-                listOf(
-                        ClipboardContentOption(localization.getLocalizedString("clipboard.content.option.try.to.extract.important.web.page.parts")) {
-                            extractItemFromUrl(webPageUrl)
-                        },
+                createOptionsForWebPage(webPageUrl)
+        )
+    }
+
+    private fun createOptionsForWebPage(webPageUrl: String): List<ClipboardContentOption> {
+        return listOf(
+            ClipboardContentOption(localization.getLocalizedString("clipboard.content.option.try.to.extract.important.web.page.parts")) {
+                extractItemFromUrl(webPageUrl)
+            },
 //                        ClipboardContentOption(localization.getLocalizedString("clipboard.content.option.extract.plain.text.only")) {
 //                            // TODO
 //                        },
-                        ClipboardContentOption(localization.getLocalizedString("clipboard.content.option.show.original.page")) {
-                            router.showEditItemView(ItemExtractionResult(Item(""), Source(webPageUrl, webPageUrl)))
-                        }
-                )
+            ClipboardContentOption(localization.getLocalizedString("clipboard.content.option.show.original.page")) {
+                router.showEditItemView(ItemExtractionResult(Item(""), Source(webPageUrl, webPageUrl)))
+            }
         )
     }
 
