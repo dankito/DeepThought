@@ -197,7 +197,7 @@ class MainMenuBar : View() {
             chooser.title = messages[it]
         }
 
-        chooser.extensionFilters.addAll(extensionFilter)
+        chooser.extensionFilters.addAll(*extensionFilter)
 
         return chooser.showOpenDialog(root.scene.window)
     }
