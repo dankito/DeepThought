@@ -20,6 +20,7 @@ import net.dankito.deepthought.javafx.dialogs.pdf.ViewPdfDialog
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.ReadLaterArticleListView
 import net.dankito.deepthought.javafx.dialogs.source.EditSourceDialog
 import net.dankito.deepthought.javafx.dialogs.source.controls.EditSourceSeriesField
+import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
 import net.dankito.deepthought.javafx.ui.controls.EditEntityFilesField
 import javax.inject.Singleton
 
@@ -43,6 +44,8 @@ interface AppComponent : CommonComponent {
     fun inject(mainWindow: MainWindow)
 
     fun inject(mainMenuBar: MainMenuBar)
+
+    fun inject(javaFXClipboardWatcher: JavaFXClipboardWatcher)
 
     fun inject(clipboardContentPopup: ClipboardContentPopup)
 

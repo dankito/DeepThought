@@ -14,12 +14,10 @@ import javafx.scene.paint.Color
 import javafx.scene.text.TextAlignment
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.res.Colors
-import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardContent
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.service.clipboard.ClipboardContentOption
 import net.dankito.deepthought.service.clipboard.OptionsForClipboardContent
-import net.dankito.deepthought.service.clipboard.OptionsForClipboardContentDetector
 import tornadofx.*
 import javax.inject.Inject
 
@@ -39,9 +37,6 @@ class ClipboardContentPopup : View() {
     @Inject
     protected lateinit var clipboardWatcher: JavaFXClipboardWatcher
 
-    @Inject
-    protected lateinit var optionsDetector: OptionsForClipboardContentDetector
-
 
     private var optionsPane: VBox by singleAssign()
 
@@ -49,7 +44,7 @@ class ClipboardContentPopup : View() {
     init {
         AppComponent.component.inject(this)
 
-        clipboardWatcher.addClipboardContentChangedExternallyListener { clipboardContentChangedExternally(it) }
+        clipboardWatcher.addClipboardOptionsChangedListener { clipboardContentOptionsChanged(it) }
     }
 
 
@@ -119,22 +114,11 @@ class ClipboardContentPopup : View() {
     }
 
 
-    private fun clipboardContentChangedExternally(clipboardContent: JavaFXClipboardContent) {
-        isPopupVisible.value = false
-        headerText.value = ""
-        optionsPane.children.clear()
-
-        optionsDetector.getOptionsAsync(clipboardContent) { options ->
-            runLater {
-                retrievedOptionsOnUiThread(options)
-            }
-        }
-    }
-
-    private fun retrievedOptionsOnUiThread(options: OptionsForClipboardContent) {
+    private fun clipboardContentOptionsChanged(options: OptionsForClipboardContent) {
         isPopupVisible.value = true
         isPopupEnabled.value = true
         headerText.value = options.headerTitle
+        optionsPane.children.clear()
 
         options.options.forEachIndexed { index, option ->
             addOption(option, getKeyCombinationForOption(index), { option.callAction() })

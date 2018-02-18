@@ -8,27 +8,21 @@ import javafx.scene.input.KeyCodeCombination
 import javafx.scene.input.KeyCombination
 import javafx.scene.layout.Priority
 import javafx.stage.FileChooser
-import net.dankito.deepthought.files.MimeTypeService
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardContent
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
 import net.dankito.deepthought.javafx.service.import_export.DataImporterExporterManager
-import net.dankito.deepthought.news.article.ArticleExtractorManager
+import net.dankito.deepthought.service.clipboard.OptionsForClipboardContent
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.ItemsSearch
-import net.dankito.utils.UrlUtil
 import net.dankito.utils.extensions.sortedByStrings
-import net.dankito.utils.ui.IDialogService
 import tornadofx.*
 import java.io.File
 import javax.inject.Inject
 
 
 class MainMenuBar : View() {
-
-    @Inject
-    protected lateinit var articleExtractorManager: ArticleExtractorManager
 
     @Inject
     protected lateinit var importerExporterManager: DataImporterExporterManager
@@ -40,16 +34,7 @@ class MainMenuBar : View() {
     protected lateinit var clipboardWatcher: JavaFXClipboardWatcher
 
     @Inject
-    protected lateinit var dialogService: IDialogService
-
-    @Inject
     protected lateinit var router: IRouter
-
-    @Inject
-    protected lateinit var urlUtil: UrlUtil
-
-    @Inject
-    protected lateinit var mimeTypeService: MimeTypeService
 
 
     var createNewItemMenuClicked: (() -> Unit)? = null
@@ -66,6 +51,7 @@ class MainMenuBar : View() {
         AppComponent.component.inject(this)
 
         clipboardWatcher.addClipboardContentChangedExternallyListener { clipboardContentChangedExternally(it) }
+        clipboardWatcher.addClipboardOptionsChangedListener { clipboardContentOptionsChanged(it) }
     }
 
     override val root = gridpane {
@@ -191,27 +177,16 @@ class MainMenuBar : View() {
         mnitmFileClipboard.isDisable = true
 
         mnitmFileClipboard.items.clear()
-
-        clipboardContent.url?.let { url ->
-            if(mimeTypeService.isHttpUrlAWebPage(url)) {
-                mnitmFileClipboard.isDisable = false
-
-                val extractContentFromUrlMenuItem = MenuItem(String.format(messages["clipboard.content.header.create.item.from"], urlUtil.getHostName(url)))
-                extractContentFromUrlMenuItem.action { extractItemFromUrl(url) }
-                mnitmFileClipboard.items.add(extractContentFromUrlMenuItem)
-            }
-        }
     }
 
-    private fun extractItemFromUrl(url: String) {
-        articleExtractorManager.extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(url) {
-            it.result?.let { router.showEditItemView(it) }
-            it.error?.let { showErrorMessage(it, url) }
-        }
-    }
+    private fun clipboardContentOptionsChanged(options: OptionsForClipboardContent) {
+        mnitmFileClipboard.isDisable = false
 
-    private fun showErrorMessage(error: Exception, articleUrl: String) {
-        dialogService.showErrorMessage(dialogService.getLocalization().getLocalizedString("alert.message.could.not.extract.item.from.url", articleUrl), exception = error)
+        options.options.forEach { option ->
+            val optionMenuItem = MenuItem(option.title)
+            optionMenuItem.action { option.callAction() }
+            mnitmFileClipboard.items.add(optionMenuItem)
+        }
     }
 
 
