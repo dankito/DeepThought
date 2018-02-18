@@ -23,7 +23,7 @@ import java.io.File
 import javax.inject.Inject
 
 
-class MainMenuBar(dataManager: DataManager) : View() {
+class MainMenuBar(private val dataManager: DataManager) : View() {
 
     @Inject
     protected lateinit var importerExporterManager: DataImporterExporterManager
@@ -91,7 +91,7 @@ class MainMenuBar(dataManager: DataManager) : View() {
 
                     mnitmFileExport = menu(messages["main.window.menu.file.export"])
 
-                    addImporterAndExporter()
+                    addImporterAndExporterAfterDataManagerInitialization()
 
                     separator()
 
@@ -142,6 +142,14 @@ class MainMenuBar(dataManager: DataManager) : View() {
         router.createItemFromPdf()
     }
 
+
+    private fun addImporterAndExporterAfterDataManagerInitialization() {
+        dataManager.addInitializationListener {
+            runLater {
+                addImporterAndExporter()
+            }
+        }
+    }
 
     private fun addImporterAndExporter() {
         importerExporterManager.importer.sortedByStrings { it.name }.forEach { importer ->
