@@ -8,8 +8,10 @@ import javafx.scene.layout.StackPane
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.*
 import net.dankito.deepthought.javafx.service.extensions.setAnchorPaneOverallAnchor
+import net.dankito.deepthought.service.data.DataManager
 import tornadofx.*
 import tornadofx.FX.Companion.messages
+import javax.inject.Inject
 
 
 class MainWindow : View(String.format(messages["main.window.title"], getAppVersion())) {
@@ -29,11 +31,15 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
     }
 
 
+    @Inject
+    protected lateinit var dataManager: DataManager
+
+
     private var stckpnContent: StackPane by singleAssign()
 
     private var splpnContent: SplitPane by singleAssign()
 
-    val mainMenuBar: MainMenuBar by inject()
+    private var mainMenuBar: MainMenuBar by singleAssign()
 
     val tagsListView: TagsListView by inject()
 
@@ -55,6 +61,7 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
         prefHeight = 620.0
         prefWidth = 1150.0
 
+        mainMenuBar = MainMenuBar(dataManager)
         top = mainMenuBar.root
 
         center {
@@ -82,7 +89,7 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
                         add(itemsListView)
                         itemsListView.setAnchorPaneOverallAnchor(0.0)
 
-                        addClipboardContentPopup(this)
+                        addCMessagePopupPane(this)
                     }
                 }
             }
@@ -95,12 +102,12 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
         mainMenuBar.createNewItemMenuClicked = { itemsListView.createNewItem() }
     }
 
-    private fun addClipboardContentPopup(pane: AnchorPane) {
-        val clipboardContentPopup = ClipboardContentPopup()
-        pane.add(clipboardContentPopup)
+    private fun addCMessagePopupPane(pane: AnchorPane) {
+        val messagePopupPane = MessagePopupPane(dataManager)
+        pane.add(messagePopupPane)
 
-        AnchorPane.setRightAnchor(clipboardContentPopup.root, 8.0)
-        AnchorPane.setBottomAnchor(clipboardContentPopup.root, 8.0)
+        AnchorPane.setRightAnchor(messagePopupPane.root, 8.0)
+        AnchorPane.setBottomAnchor(messagePopupPane.root, 8.0)
     }
 
 

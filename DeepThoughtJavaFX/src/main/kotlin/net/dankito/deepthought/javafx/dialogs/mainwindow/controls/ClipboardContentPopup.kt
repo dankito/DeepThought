@@ -12,14 +12,11 @@ import javafx.scene.input.KeyCombination
 import javafx.scene.layout.*
 import javafx.scene.paint.Color
 import javafx.scene.text.TextAlignment
-import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.res.Colors
-import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.service.clipboard.ClipboardContentOption
 import net.dankito.deepthought.service.clipboard.OptionsForClipboardContent
 import tornadofx.*
-import javax.inject.Inject
 
 
 class ClipboardContentPopup : View() {
@@ -34,18 +31,7 @@ class ClipboardContentPopup : View() {
     private val actionProgress = SimpleStringProperty("")
 
 
-    @Inject
-    protected lateinit var clipboardWatcher: JavaFXClipboardWatcher
-
-
     private var optionsPane: VBox by singleAssign()
-
-
-    init {
-        AppComponent.component.inject(this)
-
-        clipboardWatcher.addClipboardOptionsChangedListener { clipboardContentOptionsChanged(it) }
-    }
 
 
     override val root = vbox {
@@ -114,7 +100,7 @@ class ClipboardContentPopup : View() {
     }
 
 
-    private fun clipboardContentOptionsChanged(options: OptionsForClipboardContent) {
+    fun setClipboardContentOptions(options: OptionsForClipboardContent) {
         isPopupVisible.value = true
         isPopupEnabled.value = true
         headerText.value = options.headerTitle

@@ -13,6 +13,7 @@ import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardContent
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
 import net.dankito.deepthought.javafx.service.import_export.DataImporterExporterManager
 import net.dankito.deepthought.service.clipboard.OptionsForClipboardContent
+import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.ItemsSearch
@@ -22,7 +23,7 @@ import java.io.File
 import javax.inject.Inject
 
 
-class MainMenuBar : View() {
+class MainMenuBar(dataManager: DataManager) : View() {
 
     @Inject
     protected lateinit var importerExporterManager: DataImporterExporterManager
@@ -48,10 +49,12 @@ class MainMenuBar : View() {
 
 
     init {
-        AppComponent.component.inject(this)
+        dataManager.addInitializationListener {
+            AppComponent.component.inject(this)
 
-        clipboardWatcher.addClipboardContentChangedExternallyListener { clipboardContentChangedExternally(it) }
-        clipboardWatcher.addClipboardOptionsChangedListener { clipboardContentOptionsChanged(it) }
+            clipboardWatcher.addClipboardContentChangedExternallyListener { clipboardContentChangedExternally(it) }
+            clipboardWatcher.addClipboardOptionsChangedListener { clipboardContentOptionsChanged(it) }
+        }
     }
 
     override val root = gridpane {

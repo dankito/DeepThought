@@ -47,7 +47,7 @@ interface AppComponent : CommonComponent {
 
     fun inject(javaFXClipboardWatcher: JavaFXClipboardWatcher)
 
-    fun inject(clipboardContentPopup: ClipboardContentPopup)
+    fun inject(messagePopupPane: MessagePopupPane)
 
     fun inject(articleExtractorsMenuButton: ArticleExtractorsMenuButton)
 
