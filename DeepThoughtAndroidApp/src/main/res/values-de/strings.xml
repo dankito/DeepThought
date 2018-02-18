@@ -264,11 +264,6 @@
     <string name="request_write_synchronized_file_permission_rational">Um synchronisierte Dateien lokal auf diesem Gerät speichern zu können wird die Berechtigung zum Schreiben
         von Dateien benötigt.</string>
 
-    <string name="snackbar_extract_item_from_url"><![CDATA[
-        Zwischenablage enthält einen Link von <b><u>%1$s</u></b>. Möchten Sie hieraus einen Eintrag erstellen?
-    ]]>
-    </string>
-
     <string name="snackbar_clipboard_content_options_close">x</string>
 
     <string name="synchronize_data_with_this_device">Daten synchronisieren mit</string>
