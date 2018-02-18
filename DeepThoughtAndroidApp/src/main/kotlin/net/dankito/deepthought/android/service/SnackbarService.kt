@@ -7,8 +7,6 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.snackbar_ask_sync_data_with_device.view.*
 import kotlinx.android.synthetic.main.snackbar_clipboard_content.view.*
@@ -125,6 +123,11 @@ class SnackbarService {
         }
 
         optionButton.setOnClickListener {
+            lytActionProgress.visibility = View.VISIBLE
+            imgHelpIcon.visibility = View.INVISIBLE
+            snackView.setViewsEnabledState(false)
+            actionProgress.text = ""
+
             option.callAction()
         }
 
@@ -132,29 +135,21 @@ class SnackbarService {
 
 
         option.addIsExecutingListener { progress ->
-            actionIsExecuting(progress, activity, snackbar, snackView, lytActionProgress, imgHelpIcon, actionProgress)
+            actionIsExecuting(option, activity, snackbar, actionProgress)
         }
     }
 
-    private fun actionIsExecuting(progress: Float, activity: Activity, snackbar: Snackbar, snackView: ViewGroup, lytActionProgress: LinearLayout, imgHelpIcon: ImageView, actionProgress: TextView) {
+    private fun actionIsExecuting(option: ClipboardContentOption, activity: Activity, snackbar: Snackbar, actionProgress: TextView) {
         activity.runOnUiThread {
-            actionIsExecutingOnUiThread(progress, activity, snackbar, snackView, lytActionProgress, imgHelpIcon, actionProgress)
+            actionIsExecutingOnUiThread(option, activity, snackbar, actionProgress)
         }
     }
 
-    private fun actionIsExecutingOnUiThread(progress: Float, activity: Activity, snackbar: Snackbar, snackView: ViewGroup, lytActionProgress: LinearLayout, imgHelpIcon: ImageView, actionProgress: TextView) {
-        val isExecuting = progress == ClipboardContentOption.IndeterminateProgress || progress < ClipboardContentOption.ActionDoneProgress
+    private fun actionIsExecutingOnUiThread(option: ClipboardContentOption, activity: Activity, snackbar: Snackbar, actionProgress: TextView) {
+        actionProgress.text = option.progressString
 
-        lytActionProgress.visibility = if (isExecuting) View.VISIBLE else View.INVISIBLE
-        imgHelpIcon.visibility = if (isExecuting) View.INVISIBLE else View.VISIBLE
 
-        actionProgress.text =
-                if(progress >= 0.0 && progress <= ClipboardContentOption.ActionDoneProgress) String.format("%.1f", progress) + " %"
-                else ""
-
-        snackView.setViewsEnabledState(! isExecuting)
-
-        if(progress != ClipboardContentOption.IndeterminateProgress && (progress >= ClipboardContentOption.ActionDoneProgress || progress < 0.0)) { // < 0.0 == error
+        if(option.isDone) {
             activity.runOnUiThread {
                 snackbar.dismiss()
             }

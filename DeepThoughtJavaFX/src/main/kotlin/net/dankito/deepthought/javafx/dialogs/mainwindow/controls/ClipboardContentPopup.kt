@@ -163,10 +163,10 @@ class ClipboardContentPopup : View() {
 
         option.addIsExecutingListener { progress ->
             runLater {
-                isActionExecuting.value = (progress >= 0.0 && progress < ClipboardContentOption.ActionDoneProgress) || progress == ClipboardContentOption.IndeterminateProgress
+                isActionExecuting.value = option.isExecuting
                 isPopupEnabled.value = ! isActionExecuting.value
                 isPopupVisible.value = isActionExecuting.value
-                actionProgress.value = String.format("%.1f", progress) + " %"
+                actionProgress.value = option.progressString
             }
         }
     }
