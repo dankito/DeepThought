@@ -223,7 +223,7 @@ class OkHttpWebClient : IWebClient {
         }
         else {
             log.error("Could not request url " + parameters.url, e)
-            return WebClientResponse(false, null, e)
+            return WebClientResponse(false, error = e)
         }
     }
 
@@ -233,7 +233,7 @@ class OkHttpWebClient : IWebClient {
             getAsync(parameters, callback)
         }
         else {
-            callback(WebClientResponse(false, null, e))
+            callback(WebClientResponse(false, error = e))
         }
     }
 
@@ -243,7 +243,7 @@ class OkHttpWebClient : IWebClient {
             return post(parameters)
         }
         else {
-            return WebClientResponse(false, null, e)
+            return WebClientResponse(false, error = e)
         }
     }
 
@@ -253,7 +253,7 @@ class OkHttpWebClient : IWebClient {
             postAsync(parameters, callback)
         }
         else {
-            callback(WebClientResponse(false, null, e))
+            callback(WebClientResponse(false, error = e))
         }
     }
 
@@ -264,7 +264,7 @@ class OkHttpWebClient : IWebClient {
         }
         else {
             log.error("Failure on Request to " + request.url(), e)
-            callback(WebClientResponse(false, null, e))
+            callback(WebClientResponse(false, error = e))
         }
     }
 
@@ -287,10 +287,10 @@ class OkHttpWebClient : IWebClient {
         val headers = copyHeaders(response)
 
         if(parameters.responseType == ResponseType.String) {
-            return WebClientResponse(true, headers, body = response.body()?.string())
+            return WebClientResponse(true, response.code(), headers, body = response.body()?.string())
         }
         else if(parameters.responseType == ResponseType.Stream) {
-            return WebClientResponse(true, headers, responseStream = response.body()?.byteStream())
+            return WebClientResponse(true, response.code(), headers, responseStream = response.body()?.byteStream())
         }
         else {
             return streamBinaryResponse(parameters, response, headers)
@@ -328,14 +328,14 @@ class OkHttpWebClient : IWebClient {
                 publishProgress(parameters, buffer, downloaded, contentLength, read)
 
                 if(isCancelled(parameters)) {
-                    return WebClientResponse(false, headers)
+                    return WebClientResponse(false, response.code(), headers)
                 }
             }
 
-            return WebClientResponse(true, headers)
+            return WebClientResponse(true, response.code(), headers)
         } catch (e: IOException) {
             log.error("Could not download binary Response for Url " + parameters.url, e)
-            return WebClientResponse(false, headers, e)
+            return WebClientResponse(false, response.code(), headers, e)
         } finally {
             inputStream?.let { try { it.close() } catch (ignored: Exception) { } }
         }
