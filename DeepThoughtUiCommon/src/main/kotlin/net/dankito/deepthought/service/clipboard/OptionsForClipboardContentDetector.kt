@@ -50,7 +50,7 @@ class OptionsForClipboardContentDetector(private val articleExtractorManager: Ar
 
     private fun getOptionsForUrl(url: String, callback: (OptionsForClipboardContent) -> Unit) {
         webClient.headAsync(RequestParameters(url)) { response ->
-            if(response.isSuccessful) {
+            if(response.isSuccessful && response.isSuccessResponse) {
                 val contentType = response.getHeaderValue("Content-Type")
 
                 if(contentType != null) {
