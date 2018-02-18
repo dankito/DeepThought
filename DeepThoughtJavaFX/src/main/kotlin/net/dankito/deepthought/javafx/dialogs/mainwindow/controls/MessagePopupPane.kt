@@ -33,7 +33,7 @@ class MessagePopupPane(dataManager: DataManager) : View() {
 
 
     private fun addClipboardContentPopup(options: OptionsForClipboardContent) {
-        val clipboardContentPopup = ClipboardContentPopup()
+        val clipboardContentPopup = ClipboardContentPopup(clipboardWatcher)
         addPopup(clipboardContentPopup)
 
         clipboardContentPopup.setClipboardContentOptions(options) // add ClipboardContentPopup to root first so that its scene is set and KeyCombinations can take effect

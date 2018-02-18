@@ -13,13 +13,14 @@ import javafx.scene.layout.*
 import javafx.scene.paint.Color
 import javafx.scene.text.TextAlignment
 import net.dankito.deepthought.javafx.res.Colors
+import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.service.clipboard.ClipboardContentOption
 import net.dankito.deepthought.service.clipboard.OptionsForClipboardContent
 import tornadofx.*
 
 
-class ClipboardContentPopup : View() {
+class ClipboardContentPopup(clipboardWatcher: JavaFXClipboardWatcher) : View() {
 
     private val isPopupVisible = SimpleBooleanProperty(false)
 
@@ -32,6 +33,17 @@ class ClipboardContentPopup : View() {
 
 
     private var optionsPane: VBox by singleAssign()
+
+
+    init {
+        clipboardWatcher.addClipboardContentChangedExternallyListener {
+            runLater {
+                if(isPopupEnabled.value) { // clipboard content changed -> if popup is still active (= no action has been selected), hide it
+                    isPopupVisible.value = false
+                }
+            }
+        }
+    }
 
 
     override val root = vbox {
