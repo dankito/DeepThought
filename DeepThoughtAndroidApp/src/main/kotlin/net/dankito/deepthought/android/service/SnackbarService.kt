@@ -143,14 +143,18 @@ class SnackbarService {
     }
 
     private fun actionIsExecutingOnUiThread(progress: Float, activity: Activity, snackbar: Snackbar, snackView: ViewGroup, lytActionProgress: LinearLayout, imgHelpIcon: ImageView, actionProgress: TextView) {
-        val isExecuting = progress < 100.0
+        val isExecuting = progress == ClipboardContentOption.IndeterminateProgress || progress < ClipboardContentOption.ActionDoneProgress
+
         lytActionProgress.visibility = if (isExecuting) View.VISIBLE else View.INVISIBLE
         imgHelpIcon.visibility = if (isExecuting) View.INVISIBLE else View.VISIBLE
-        actionProgress.text = String.format("%.1f", progress) + " %"
+
+        actionProgress.text =
+                if(progress >= 0.0 && progress <= ClipboardContentOption.ActionDoneProgress) String.format("%.1f", progress) + " %"
+                else ""
 
         snackView.setViewsEnabledState(! isExecuting)
 
-        if(progress >= 100.0 || progress < 0.0) {
+        if(progress != ClipboardContentOption.IndeterminateProgress && (progress >= ClipboardContentOption.ActionDoneProgress || progress < 0.0)) { // < 0.0 == error
             activity.runOnUiThread {
                 snackbar.dismiss()
             }

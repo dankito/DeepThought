@@ -94,7 +94,7 @@ class OptionsForClipboardContentDetector(private val articleExtractorManager: Ar
     private fun createOptionsForWebPage(webPageUrl: String): List<ClipboardContentOption> {
         return listOf(
             ClipboardContentOption(localization.getLocalizedString("clipboard.content.option.create.item.from.web.page")) {
-                extractItemFromUrl(webPageUrl)
+                extractItemFromUrl(it, webPageUrl)
             }
         )
     }
@@ -126,8 +126,12 @@ class OptionsForClipboardContentDetector(private val articleExtractorManager: Ar
     }
 
 
-    private fun extractItemFromUrl(url: String) {
+    private fun extractItemFromUrl(option: ClipboardContentOption, url: String) {
+        option.setIndeterminateProgressState()
+
         articleExtractorManager.extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(url) {
+            option.setActionDone()
+
             it.result?.let { router.showEditItemView(it) }
             it.error?.let { showCouldNotExtractItemFromUrlErrorMessage(it, url) }
         }
