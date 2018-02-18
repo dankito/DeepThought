@@ -16,6 +16,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.extensions.getColorFromResourceId
 import net.dankito.deepthought.android.extensions.getDimension
+import net.dankito.deepthought.android.extensions.setViewsEnabledState
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.service.clipboard.ClipboardContentOption
@@ -147,7 +148,7 @@ class SnackbarService {
         imgHelpIcon.visibility = if (isExecuting) View.INVISIBLE else View.VISIBLE
         actionProgress.text = String.format("%.1f", progress) + " %"
 
-        snackView.isEnabled = ! isExecuting
+        snackView.setViewsEnabledState(! isExecuting)
 
         if(progress >= 100.0 || progress < 0.0) {
             activity.runOnUiThread {
