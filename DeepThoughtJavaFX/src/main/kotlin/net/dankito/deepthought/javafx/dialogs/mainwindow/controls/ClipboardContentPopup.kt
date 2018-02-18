@@ -5,14 +5,13 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.Cursor
+import javafx.scene.control.Button
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyCodeCombination
 import javafx.scene.input.KeyCombination
-import javafx.scene.layout.Background
-import javafx.scene.layout.BackgroundFill
-import javafx.scene.layout.CornerRadii
-import javafx.scene.layout.VBox
+import javafx.scene.layout.*
 import javafx.scene.paint.Color
+import javafx.scene.text.TextAlignment
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.res.Colors
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardContent
@@ -32,6 +31,9 @@ class ClipboardContentPopup : View() {
     private val isPopupEnabled = SimpleBooleanProperty(true)
 
     private val headerText = SimpleStringProperty("")
+
+    private val isActionExecuting = SimpleBooleanProperty(false)
+    private val actionProgress = SimpleStringProperty("")
 
 
     @Inject
@@ -81,7 +83,39 @@ class ClipboardContentPopup : View() {
             }
         }
 
-        optionsPane = vbox { }
+        hbox {
+            vbox {
+                hboxConstraints {
+                    alignment = Pos.CENTER
+                    marginLeft = 4.0
+                    marginRight = 4.0
+                }
+
+                progressindicator {
+                    maxWidth = 30.0
+                    maxHeight = maxWidth
+                    alignment = Pos.CENTER
+                    visibleProperty().bind(isActionExecuting)
+
+                    vboxConstraints {
+                        marginBottom = 4.0
+                    }
+                }
+
+                label(actionProgress) {
+                    prefWidth = 50.0
+                    alignment = Pos.CENTER
+                    textAlignment = TextAlignment.CENTER
+                    visibleProperty().bind(isActionExecuting)
+                }
+
+            }
+
+            optionsPane = vbox {
+                hgrow = Priority.ALWAYS
+                alignment = Pos.CENTER_LEFT
+            }
+        }
     }
 
 
@@ -110,48 +144,21 @@ class ClipboardContentPopup : View() {
     private fun addOption(option: ClipboardContentOption, keyCombination: KeyCodeCombination? = null, optionSelected: () -> Unit) {
         val displayedText = option.title + (if(keyCombination == null) "" else " (${keyCombination.displayText})")
 
-        val isActionExecuting = SimpleBooleanProperty(false)
-        val actionProgress = SimpleStringProperty("0 %")
+        val optionLink = Button(displayedText)
+        optionLink.isUnderline = true
+        optionLink.textFill = Color.BLACK
+        optionLink.background = Background.EMPTY
+        optionLink.cursor = Cursor.HAND
+        optionLink.prefHeight = 24.0
 
-        val optionLayout = hbox {
-            cursor = Cursor.HAND
-            prefHeight = 24.0
+        optionsPane.add(optionLink)
+        VBox.setMargin(optionLink, Insets(0.0, 10.0, 6.0, 0.0))
 
-            progressindicator {
-                prefWidth = 20.0
-                alignment = Pos.CENTER_LEFT
-                visibleProperty().bind(isActionExecuting)
+        optionLink.setOnAction { optionSelected() }
+        keyCombination?.let { optionLink.scene?.accelerators?.put(it, Runnable { optionSelected() }) }
 
-                hboxConstraints {
-                    marginLeft = 4.0
-                    marginRight = 4.0
-                }
-            }
-
-            label(actionProgress) {
-                prefWidth = 50.0
-                alignment = Pos.CENTER_RIGHT
-                visibleProperty().bind(isActionExecuting)
-            }
-
-            button(displayedText) {
-                isUnderline = true
-                textFill = Color.BLACK
-                background = Background.EMPTY
-
-                action { optionSelected()  }
-                keyCombination?.let { scene?.accelerators?.put(it, Runnable { optionSelected() }) }
-
-                setOnMouseEntered { background = Background(BackgroundFill(Colors.ClipboardContentPopupOptionMouseOverColor, CornerRadii(8.0), Insets.EMPTY)) }
-                setOnMouseExited { background = Background.EMPTY }
-            }
-
-            vboxConstraints {
-                marginBottom = 6.0
-            }
-        }
-
-        optionsPane.add(optionLayout)
+        optionLink.setOnMouseEntered { optionLink.background = Background(BackgroundFill(Colors.ClipboardContentPopupOptionMouseOverColor, CornerRadii(8.0), Insets.EMPTY)) }
+        optionLink.setOnMouseExited { optionLink.background = Background.EMPTY }
 
 
         option.addIsExecutingListener { progress ->
