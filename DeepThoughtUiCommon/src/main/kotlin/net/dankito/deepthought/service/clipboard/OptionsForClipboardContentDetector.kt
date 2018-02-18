@@ -8,7 +8,6 @@ import net.dankito.deepthought.files.MimeTypeService
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
-import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.utils.IPlatformConfiguration
@@ -94,14 +93,8 @@ class OptionsForClipboardContentDetector(private val articleExtractorManager: Ar
 
     private fun createOptionsForWebPage(webPageUrl: String): List<ClipboardContentOption> {
         return listOf(
-            ClipboardContentOption(localization.getLocalizedString("clipboard.content.option.try.to.extract.important.web.page.parts")) {
+            ClipboardContentOption(localization.getLocalizedString("clipboard.content.option.create.item.from.web.page")) {
                 extractItemFromUrl(webPageUrl)
-            },
-//                        ClipboardContentOption(localization.getLocalizedString("clipboard.content.option.extract.plain.text.only")) {
-//                            // TODO
-//                        },
-            ClipboardContentOption(localization.getLocalizedString("clipboard.content.option.show.original.page")) {
-                router.showEditItemView(ItemExtractionResult(Item(""), Source(webPageUrl, webPageUrl)))
             }
         )
     }
