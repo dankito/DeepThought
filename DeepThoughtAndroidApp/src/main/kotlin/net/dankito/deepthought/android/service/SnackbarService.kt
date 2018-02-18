@@ -7,6 +7,8 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.snackbar_ask_sync_data_with_device.view.*
 import kotlinx.android.synthetic.main.snackbar_clipboard_content.view.*
@@ -129,18 +131,22 @@ class SnackbarService {
 
 
         option.addIsExecutingListener { progress ->
-            activity.runOnUiThread {
-                val isExecuting = progress < 100.0
-                lytActionProgress.visibility = if(isExecuting) View.VISIBLE else View.INVISIBLE
-                imgHelpIcon.visibility = if(isExecuting) View.INVISIBLE else View.VISIBLE
-                actionProgress.text = String.format("%.1f", progress) + " %"
+            actionIsExecuting(progress, activity, snackbar, snackView, lytActionProgress, imgHelpIcon, actionProgress)
+        }
+    }
 
-                snackView.isEnabled = ! isExecuting
+    private fun actionIsExecuting(progress: Float, activity: Activity, snackbar: Snackbar, snackView: ViewGroup, lytActionProgress: LinearLayout, imgHelpIcon: ImageView, actionProgress: TextView) {
+        activity.runOnUiThread {
+            val isExecuting = progress < 100.0
+            lytActionProgress.visibility = if (isExecuting) View.VISIBLE else View.INVISIBLE
+            imgHelpIcon.visibility = if (isExecuting) View.INVISIBLE else View.VISIBLE
+            actionProgress.text = String.format("%.1f", progress) + " %"
 
-                if(progress >= 100.0 || progress < 0.0) {
-                    activity.runOnUiThread {
-                        snackbar.dismiss()
-                    }
+            snackView.isEnabled = !isExecuting
+
+            if (progress >= 100.0 || progress < 0.0) {
+                activity.runOnUiThread {
+                    snackbar.dismiss()
                 }
             }
         }
