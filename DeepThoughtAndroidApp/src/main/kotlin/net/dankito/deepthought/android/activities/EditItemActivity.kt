@@ -834,7 +834,7 @@ class EditItemActivity : BaseActivity() {
         }
 
         clearWebViewItem() // clear WebView
-        if(url != null && Build.VERSION.SDK_INT > 16) {
+        if(url != null) {
             wbvwContent.loadDataWithBaseURL(url, content, "text/html; charset=UTF-8", "utf-8", null)
         }
         else {
