@@ -22,12 +22,12 @@ open class BaseEntity : Serializable {
 
     @Column(name = TableConfig.BaseEntityCreatedOnColumnName, updatable = false)/*, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"*/
     @Temporal(TemporalType.TIMESTAMP)
-    var createdOn: Date
+    var createdOn: Date = Date()
         private set
 
     @Column(name = TableConfig.BaseEntityModifiedOnColumnName)/*, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"*/
     @Temporal(TemporalType.TIMESTAMP)
-    var modifiedOn: Date
+    var modifiedOn: Date = createdOn
         private set
 
     @Version
@@ -38,12 +38,6 @@ open class BaseEntity : Serializable {
     @Column(name = TableConfig.BaseEntityDeletedColumnName, columnDefinition = "SMALLINT DEFAULT 0", nullable = false)
     var deleted = false
         private set
-
-
-    init {
-        modifiedOn = Date()
-        createdOn = modifiedOn // to ensure they are not null
-    }
 
 
     open fun setDeleted() {
