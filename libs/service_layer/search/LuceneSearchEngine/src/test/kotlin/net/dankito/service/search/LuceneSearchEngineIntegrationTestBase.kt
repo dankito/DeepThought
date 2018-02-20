@@ -20,8 +20,8 @@ import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
-import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.OsHelper
+import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.utils.localization.Localization
@@ -75,7 +75,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
     protected val threadPool = ThreadPool()
 
 
-    protected val platformConfiguration = object: IPlatformConfiguration {
+    protected val platformConfiguration = object: PlatformConfigurationBase() {
         override fun getUserName() = "User"
         override fun getDeviceName() = "Device"
         override fun getOsType() = OsType.DESKTOP
@@ -85,7 +85,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
 
         override fun getApplicationFolder(): File { return File(".").absoluteFile.parentFile }
         override fun getDefaultDataFolder(): File { return File(File(File("data"), "test"), "lucene") }
-        override fun getDefaultFilesFolder(): File { return getDefaultDataFolder() }
+        override fun getDefaultFilesFolder(): File { return File(getDefaultDataFolder(), FilesFolderName) }
     }
 
     private val fileStorageService = JavaFileStorageService()

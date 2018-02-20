@@ -18,7 +18,6 @@ import net.dankito.data_access.network.discovery.UdpDevicesDiscoverer
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.enums.ExtensibleEnumeration
-import net.dankito.deepthought.model.enums.FileType
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
@@ -33,7 +32,7 @@ import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.service.synchronization.*
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
-import net.dankito.utils.IPlatformConfiguration
+import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.JacksonJsonSerializer
@@ -99,7 +98,7 @@ class CommunicationManagerTest {
 
     private lateinit var localDevice: Device
 
-    private val localPlatformConfiguration = object: IPlatformConfiguration {
+    private val localPlatformConfiguration = object: PlatformConfigurationBase() {
         override fun getUserName(): String { return "Rieka" }
 
         override fun getDeviceName(): String? { return LocalDeviceName }
@@ -116,9 +115,7 @@ class CommunicationManagerTest {
 
         override fun getDefaultDataFolder(): File { return File(File(File("data"), "test"), "test1") }
 
-        override fun getDefaultFilesFolder(): File { return getDefaultDataFolder() }
-
-        override fun getDefaultSavePathForFile(filename: String, fileType: FileType?): File { return getDefaultFilesFolder() }
+        override fun getDefaultFilesFolder(): File { return File(getDefaultDataFolder(), FilesFolderName) }
     }
 
     private val localThreadPool = ThreadPool()
@@ -160,7 +157,7 @@ class CommunicationManagerTest {
 
     private lateinit var remoteDevice: Device
 
-    private val remotePlatformConfiguration = object: IPlatformConfiguration {
+    private val remotePlatformConfiguration = object: PlatformConfigurationBase() {
         override fun getUserName(): String { return "dankito" }
 
         override fun getDeviceName(): String? { return RemoteDeviceName }
@@ -177,9 +174,7 @@ class CommunicationManagerTest {
 
         override fun getDefaultDataFolder(): File { return File(File(File("data"), "test"), "test2") }
 
-        override fun getDefaultFilesFolder(): File { return getDefaultDataFolder() }
-
-        override fun getDefaultSavePathForFile(filename: String, fileType: FileType?): File { return getDefaultFilesFolder() }
+        override fun getDefaultFilesFolder(): File { return File(getDefaultDataFolder(), FilesFolderName) }
     }
 
     private val remoteThreadPool = ThreadPool()

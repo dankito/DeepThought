@@ -21,7 +21,6 @@ import net.dankito.deepthought.data.FilePersister
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.files.MimeTypeService
 import net.dankito.deepthought.model.*
-import net.dankito.deepthought.model.enums.FileType
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
@@ -41,8 +40,8 @@ import net.dankito.service.synchronization.*
 import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
-import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.OsHelper
+import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.utils.localization.Localization
@@ -102,7 +101,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
 
 
-    protected val localPlatformConfiguration = object: IPlatformConfiguration {
+    protected val localPlatformConfiguration = object: PlatformConfigurationBase() {
         override fun getUserName(): String { return "Rieka" }
 
         override fun getDeviceName(): String? { return LocalDeviceName }
@@ -119,9 +118,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         override fun getDefaultDataFolder(): File { return File(File(File("data"), "test"), "test1") }
 
-        override fun getDefaultFilesFolder(): File { return getDefaultDataFolder() }
-
-        override fun getDefaultSavePathForFile(filename: String, fileType: FileType?): File { return getDefaultFilesFolder() }
+        override fun getDefaultFilesFolder(): File { return File(getDefaultDataFolder(), FilesFolderName) }
     }
 
 
@@ -200,7 +197,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     // and the same for the remote device
 
-    protected val remotePlatformConfiguration = object: IPlatformConfiguration {
+    protected val remotePlatformConfiguration = object: PlatformConfigurationBase() {
         override fun getUserName(): String { return "dankito" }
 
         override fun getDeviceName(): String? { return RemoteDeviceName }
@@ -217,9 +214,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         override fun getDefaultDataFolder(): File { return File(File(File("data"), "test"), "test2") }
 
-        override fun getDefaultFilesFolder(): File { return getDefaultDataFolder() }
-
-        override fun getDefaultSavePathForFile(filename: String, fileType: FileType?): File { return getDefaultFilesFolder() }
+        override fun getDefaultFilesFolder(): File { return File(getDefaultDataFolder(), FilesFolderName) }
     }
 
 
