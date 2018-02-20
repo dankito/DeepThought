@@ -154,7 +154,7 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
         log.info("Permitted device to synchronize: $device")
 
         try {
-            val localUser = dataManager.deepThought.localUser
+            val localUser = dataManager.localUser
 
             val useCallerDatabaseIds = ! initialSyncManager.shouldUseLocalDatabaseIds(dataManager.deepThought, remoteSyncInfo)
             val useCallerUserName = ! initialSyncManager.shouldUseLocalUserName(localUser, remoteSyncInfo.user)
