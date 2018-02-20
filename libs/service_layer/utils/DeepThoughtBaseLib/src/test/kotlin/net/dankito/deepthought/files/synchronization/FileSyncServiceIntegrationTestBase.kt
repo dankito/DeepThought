@@ -17,6 +17,7 @@ import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.data_access.network.discovery.UdpDevicesDiscoverer
 import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
+import net.dankito.deepthought.data.FilePersister
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.files.MimeTypeService
 import net.dankito.deepthought.model.*
@@ -174,6 +175,8 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     protected lateinit var localFileService: FileService
 
+    protected lateinit var localFilePersister: FilePersister
+
     protected lateinit var localSearchEngine: ISearchEngine
 
 
@@ -270,6 +273,8 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     protected lateinit var remoteFileService: FileService
 
+    protected lateinit var remoteFilePersister: FilePersister
+
     protected lateinit var remoteSearchEngine: ISearchEngine
 
 
@@ -356,6 +361,8 @@ abstract class FileSyncServiceIntegrationTestBase {
         )
 
         localFileManager = FileManager(localSearchEngine, localLocalFileInfoService, localFileSyncService, localMimeTypeService, hashService, localEventBus, localThreadPool)
+
+        localFilePersister = FilePersister(localFileService, localLocalFileInfoService, localFileManager, localThreadPool)
     }
 
     private fun setupRemoteDevice() {
@@ -414,6 +421,8 @@ abstract class FileSyncServiceIntegrationTestBase {
         )
 
         remoteFileManager = FileManager(remoteSearchEngine, remoteLocalFileInfoService, remoteFileSyncService, remoteMimeTypeService, hashService, remoteEventBus, remoteThreadPool)
+
+        remoteFilePersister = FilePersister(remoteFileService, remoteLocalFileInfoService, remoteFileManager, remoteThreadPool)
     }
 
     @After
@@ -479,7 +488,7 @@ abstract class FileSyncServiceIntegrationTestBase {
         writer.close()
 
         val file = localFileManager.createLocalFile(tempFile)
-        localFileService.persist(file)
+        localFilePersister.saveFile(file)
 
         return file
     }
