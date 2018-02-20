@@ -13,11 +13,22 @@ import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.InputType
 import net.dankito.utils.ui.model.ConfirmationDialogButton
 import net.dankito.utils.ui.model.ConfirmationDialogConfig
+import org.slf4j.LoggerFactory
+import java.awt.Desktop
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.net.URI
+import java.net.URLEncoder
+import kotlin.concurrent.thread
 
 
-class JavaFXDialogService(private val localizationProperty: Localization) : IDialogService {
+class JavaFXDialogService(private val localizationProperty: Localization, private val showSendBugReportButton: Boolean = false,
+                          private val emailAddressForBugReports: String? = null, private val subjectForBugReports: String? = null) : IDialogService {
+
+    companion object {
+        private val log = LoggerFactory.getLogger(JavaFXDialogService::class.java)
+    }
+
 
     override fun getLocalization(): Localization {
         return localizationProperty
@@ -85,7 +96,11 @@ class JavaFXDialogService(private val localizationProperty: Localization) : IDia
             createExpandableException(alert, exception)
         }
 
-        alert.showAndWait()
+        val clickedButton = alert.showAndWait().get()
+
+        if(clickedButton?.buttonData == ButtonBar.ButtonData.OTHER && exception != null) {
+            sendBugReport(exception, errorMessage)
+        }
     }
 
     private fun createExpandableException(alert: Alert, exception: Exception) {
@@ -94,7 +109,7 @@ class JavaFXDialogService(private val localizationProperty: Localization) : IDia
         exception.printStackTrace(pw)
         val exceptionText = sw.toString()
 
-        val label = Label("The exception stacktrace was:")
+        val label = Label(localizationProperty.getLocalizedString("dialog.service.error.stacktrace.label"))
 
         val textArea = TextArea(exceptionText)
         textArea.isEditable = false
@@ -110,8 +125,48 @@ class JavaFXDialogService(private val localizationProperty: Localization) : IDia
         expContent.add(label, 0, 0)
         expContent.add(textArea, 0, 1)
 
+        if(showSendBugReportButton) {
+            val sendBugReportButton = ButtonType(localizationProperty.getLocalizedString("alert.message.send.bug.report"), ButtonBar.ButtonData.OTHER)
+            alert.buttonTypes.add(sendBugReportButton)
+        }
+
         // Set expandable Exception into the dialog pane.
         alert.dialogPane.expandableContent = expContent
+    }
+
+    private fun sendBugReport(exception: Exception, errorMessage: CharSequence) {
+        if(emailAddressForBugReports != null) {
+            thread { // get off UI thread
+                try {
+                    val mailUri = createMailUriForBugReport(errorMessage, exception)
+
+                    Desktop.getDesktop().mail(URI.create(mailUri))
+                } catch(e: Exception) { log.error("Could not send bug report", e) }
+            }
+        }
+    }
+
+    private fun createMailUriForBugReport(errorMessage: CharSequence, exception: Exception): String {
+        var bugReport = errorMessage.toString() + "\r\n\r\n"
+
+        val sw = StringWriter()
+        val pw = PrintWriter(sw)
+        exception.printStackTrace(pw)
+        val stackTrace = sw.toString()
+        pw.close()
+
+        bugReport += "Stack trace:\r\n\r\n$stackTrace"
+
+        var mailUri = "mailto:$emailAddressForBugReports?"
+
+        subjectForBugReports?.let {
+            mailUri += "subject=${URLEncoder.encode(it, "utf-8").replace("+", "%20")}&" // use %20, not URLEncoder's + as Thunderbird understands only %20
+        }
+
+        val encodedBugReport = URLEncoder.encode(bugReport, "utf-8").replace("+", "%20")
+        mailUri += "body=$encodedBugReport"
+
+        return mailUri
     }
 
 
