@@ -91,8 +91,9 @@ class JavaFXDialogService(private val localizationProperty: Localization, privat
 
     private fun showErrorMessageOnUiThread(errorMessage: CharSequence, alertTitle: CharSequence?, exception: Exception?, owner: Stage?) {
         val alert = createDialog(Alert.AlertType.ERROR, errorMessage, alertTitle, owner, ButtonType.OK)
+        alert.isResizable = true
 
-        if (exception != null) {
+        if(exception != null) {
             createExpandableException(alert, exception)
         }
 
