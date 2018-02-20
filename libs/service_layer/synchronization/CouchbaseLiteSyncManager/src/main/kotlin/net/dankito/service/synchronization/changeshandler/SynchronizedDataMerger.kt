@@ -44,8 +44,8 @@ class SynchronizedDataMerger(private val entityManager: CouchbaseLiteEntityManag
             log.error("Could not handle Change", e)
         }
 
-        if (isEntityDeleted(cachedEntity, change)) {
-            if (cachedEntity == null) {
+        if(isEntityDeleted(cachedEntity, change)) {
+            if(cachedEntity == null) {
                 cachedEntity = entityManager.getEntityById(entityType, change.documentId)
             }
         }
@@ -55,15 +55,13 @@ class SynchronizedDataMerger(private val entityManager: CouchbaseLiteEntityManag
 
 
     private fun isEntityDeleted(cachedEntity: BaseEntity?, change: DocumentChange): Boolean {
-        if (cachedEntity != null) {
+        if(cachedEntity != null) {
             return cachedEntity.deleted
         }
         else {
             try {
                 return change.addedRevision.getPropertyForKey(TableConfig.BaseEntityDeletedColumnName) as Boolean
-            } catch (ignored: Exception) {
-            }
-
+            } catch (ignored: Exception) { }
         }
 
         return false
@@ -75,8 +73,8 @@ class SynchronizedDataMerger(private val entityManager: CouchbaseLiteEntityManag
         val entityConfig = dao.entityConfig
         val detectedChanges = getChanges(cachedEntity, dao, entityConfig, currentRevision)
 
-        if (detectedChanges.isNotEmpty()) {
-            for (propertyName in detectedChanges.keys) {
+        if(detectedChanges.isNotEmpty()) {
+            for(propertyName in detectedChanges.keys) {
                 try {
                     updateProperty(cachedEntity, propertyName, dao, entityConfig, currentRevision, detectedChanges)
                 } catch (e: Exception) {
@@ -92,10 +90,11 @@ class SynchronizedDataMerger(private val entityManager: CouchbaseLiteEntityManag
         entityConfig.columns.filter { it.columnName == propertyName }.firstOrNull()?.let { property ->
             val previousValue = dao.extractValueFromObject(cachedEntity, property)
 
-            if (property.isToManyColumn() == false) {
+            if(property.isToManyColumn() == false) {
                 val updatedValue = dao.deserializePersistedValue(cachedEntity, property, currentRevision.getProperty(propertyName))
                 dao.setValueOnObject(cachedEntity, property, updatedValue)
-            } else {
+            }
+            else {
                 updateCollectionProperty(cachedEntity, property, propertyName, currentRevision, detectedChanges, previousValue)
             }
         }
@@ -106,7 +105,7 @@ class SynchronizedDataMerger(private val entityManager: CouchbaseLiteEntityManag
                                            previousValue: Any) {
         val previousTargetEntityIdsString = detectedChanges[propertyName] as String
         var currentTargetEntityIdsString = currentRevision.getProperty(propertyName) as String
-        if (currentRevision.properties.containsKey(propertyName) == false) { // currentRevision has no information about this property
+        if(currentRevision.properties.containsKey(propertyName) == false) { // currentRevision has no information about this property
             currentTargetEntityIdsString = "[]" // TODO: what to do here? Assuming "[]" is for sure false. Removing all items?
         }
 
@@ -116,7 +115,7 @@ class SynchronizedDataMerger(private val entityManager: CouchbaseLiteEntityManag
 
                 log.info("Collection Property " + property + " of Revision " + currentRevision.id + " has now Ids of " + currentTargetEntityIdsString + ". Previous ones: " + previousTargetEntityIdsString)
 
-                if (previousValue is EntitiesCollection) { // TODO: what to do if it's not an EntitiesCollection yet?
+                if(previousValue is EntitiesCollection) { // TODO: what to do if it's not an EntitiesCollection yet?
                     previousValue.refresh(currentTargetEntityIds)
                 }
                 else {
@@ -130,7 +129,7 @@ class SynchronizedDataMerger(private val entityManager: CouchbaseLiteEntityManag
         val detectedChanges = HashMap<String, Any>()
 
         for(columnConfig in entityConfig.getColumnsIncludingInheritedOnes()) {
-            if (columnConfig.isId || columnConfig.isVersion /*|| columnConfig is DiscriminatorColumnConfig*/ ||
+            if(columnConfig.isId || columnConfig.isVersion /*|| columnConfig is DiscriminatorColumnConfig*/ ||
                     TableConfig.BaseEntityModifiedOnColumnName == columnConfig.columnName) {
                 continue
             }
@@ -138,10 +137,10 @@ class SynchronizedDataMerger(private val entityManager: CouchbaseLiteEntityManag
             try {
                 val cachedEntityValue = dao.getPersistablePropertyValue(cachedEntity, columnConfig)
 
-                if (hasPropertyValueChanged(cachedEntity, columnConfig, cachedEntityValue, dao, currentRevision)) {
+                if(hasPropertyValueChanged(cachedEntity, columnConfig, cachedEntityValue, dao, currentRevision)) {
                     detectedChanges.put(columnConfig.columnName, cachedEntityValue)
                 }
-            } catch (e: Exception) {
+            } catch(e: Exception) {
                 log.error("Could not check Property $columnConfig for changes", e)
             }
 
@@ -154,24 +153,24 @@ class SynchronizedDataMerger(private val entityManager: CouchbaseLiteEntityManag
     protected fun hasPropertyValueChanged(cachedEntity: BaseEntity, columnConfig: ColumnConfig, cachedEntityValue: Any?, dao: Dao, currentRevision: SavedRevision): Boolean {
         var currentRevisionValue: Any? = currentRevision.properties[columnConfig.columnName]
 
-        if (columnConfig.isLob) {
+        if(columnConfig.isLob) {
             currentRevisionValue = dao.getLobFromAttachment(columnConfig, currentRevision.document)
-            if (currentRevisionValue !== cachedEntityValue) {
+            if(currentRevisionValue !== cachedEntityValue) {
                 dao.setValueOnObject(cachedEntity, columnConfig, currentRevisionValue) // TODO: this produces a side effect, but i would have to change structure too hard to implement this little feature
 
-                if (cachedEntityValue != null && cachedEntityValue is ByteArray && dao.shouldCompactDatabase(cachedEntityValue.size.toLong())) {
+                if(cachedEntityValue != null && cachedEntityValue is ByteArray && dao.shouldCompactDatabase(cachedEntityValue.size.toLong())) {
                     dao.compactDatabase()
                 }
             }
         }
         else if(columnConfig.isToManyColumn() == false) {
-            if (cachedEntityValue == null && currentRevisionValue != null || cachedEntityValue != null && currentRevisionValue == null ||
+            if(cachedEntityValue == null && currentRevisionValue != null || cachedEntityValue != null && currentRevisionValue == null ||
                     cachedEntityValue != null && cachedEntityValue == currentRevisionValue == false) {
                 return true
             }
         }
         else {
-            if (hasCollectionPropertyChanged(dao, currentRevisionValue, cachedEntityValue)) {
+            if(hasCollectionPropertyChanged(dao, currentRevisionValue, cachedEntityValue)) {
                 return true
             }
         }
@@ -181,19 +180,19 @@ class SynchronizedDataMerger(private val entityManager: CouchbaseLiteEntityManag
 
     @Throws(SQLException::class)
     protected fun hasCollectionPropertyChanged(dao: Dao, currentRevisionValue: Any?, cachedEntityValue: Any?): Boolean {
-        if (currentRevisionValue == null || cachedEntityValue == null) {
+        if(currentRevisionValue == null || cachedEntityValue == null) {
             return currentRevisionValue !== cachedEntityValue // if only one of them is null, than there's a change
         }
 
         val currentRevisionTargetEntityIds = dao.parseJoinedEntityIdsFromJsonString(currentRevisionValue as String?)
         val cachedEntityTargetEntityIds = dao.parseJoinedEntityIdsFromJsonString(cachedEntityValue as String?)
 
-        if (currentRevisionTargetEntityIds.size != cachedEntityTargetEntityIds.size) {
+        if(currentRevisionTargetEntityIds.size != cachedEntityTargetEntityIds.size) {
             return true
         }
 
-        for (targetEntityId in currentRevisionTargetEntityIds) {
-            if (cachedEntityTargetEntityIds.contains(targetEntityId) == false) {
+        for(targetEntityId in currentRevisionTargetEntityIds) {
+            if(cachedEntityTargetEntityIds.contains(targetEntityId) == false) {
                 return true
             }
         }
