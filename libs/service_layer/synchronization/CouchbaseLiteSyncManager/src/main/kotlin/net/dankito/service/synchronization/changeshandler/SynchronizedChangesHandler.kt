@@ -212,7 +212,7 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
         try { log.info("Calling notifyListenersOfEntityChange() for $synchronizedEntity of type $changeType") } // toString() may throws an exception for deleted entities
         catch(ignored: Exception) { log.info("Calling notifyListenersOfEntityChange() for ${synchronizedEntity.id} of type $changeType") }
 
-        changeNotifier.notifyListenersOfEntityChangeAsync(synchronizedEntity, changeType, EntityChangeSource.Synchronization)
+        changeNotifier.notifyListenersOfEntityChangeAsync(synchronizedEntity, changeType, EntityChangeSource.Synchronization, true)
     }
 
 }
