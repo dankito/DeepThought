@@ -29,6 +29,8 @@ class AutoCompletionBinding<T>(private val textField: TextField, private val sug
 
     private var suggestionList: ListView<T>? = null
 
+    private var autoCompletionPopup: AutoCompletePopup<T>? = null
+
 
     init {
         suggestionProvider.isShowAllIfEmpty = true
@@ -43,7 +45,9 @@ class AutoCompletionBinding<T>(private val textField: TextField, private val sug
             val autoCompletionPopupField = AutoCompletionBinding::class.java.getDeclaredField("autoCompletionPopup")
             autoCompletionPopupField.isAccessible = true
 
-            (autoCompletionPopupField.get(this) as? AutoCompletePopup<T>)?.let { autoCompletionPopup ->
+            this.autoCompletionPopup = (autoCompletionPopupField.get(this) as? AutoCompletePopup<T>)
+
+            autoCompletionPopup?.let { autoCompletionPopup ->
                 if(autoCompletionPopup.skin != null) {
                     setSuggestionList(autoCompletionPopup.skin.node as? ListView<T>)
                 }
@@ -107,6 +111,15 @@ class AutoCompletionBinding<T>(private val textField: TextField, private val sug
                     contextMenu.show(listCell, e.screenX, e.screenY)
                 }
             }
+        }
+    }
+
+
+    fun updatePopupPosition() {
+        if(autoCompletionPopup?.isShowing == true) {
+            hidePopup()
+
+            showPopup()
         }
     }
 

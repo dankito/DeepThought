@@ -184,6 +184,7 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
 
         if(countCollectionPreviewPaneLines != previousCountLines) {
             updateFlowPaneHeight()
+            txtfldEnteredSearchTerm.updateSuggestionsListPosition()
         }
     }
 
