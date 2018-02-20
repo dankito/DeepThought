@@ -74,15 +74,5 @@ open class BaseEntity : Serializable {
         deleted = true
     }
 
-    @PostLoad
-    protected open fun postLoad() {
-        // may notify lazyLoadedEntityMapped
-    }
-
-    @PostPersist
-    protected open fun postPersist() {
-        // may notify lazyLoadedEntityMapped
-    }
-
 
 }
