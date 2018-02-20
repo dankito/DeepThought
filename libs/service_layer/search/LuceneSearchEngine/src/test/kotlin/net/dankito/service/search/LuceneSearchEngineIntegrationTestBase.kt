@@ -121,7 +121,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
 
         deleteEntityService = DeleteEntityService(itemService, tagService, sourceService, seriesService, fileService, localFileInfoService, underTest, mock(), threadPool)
         fileManager = FileManager(underTest, localFileInfoService, mock(), mimeTypeService, HashService(), eventBus, threadPool)
-        filePersister = FilePersister(fileService, localFileInfoService, fileManager, threadPool)
+        filePersister = FilePersister(fileService, fileManager, threadPool)
         sourcePersister = SourcePersister(sourceService, seriesService, filePersister, deleteEntityService)
         itemPersister = ItemPersister(itemService, sourcePersister, tagService, filePersister, deleteEntityService)
     }

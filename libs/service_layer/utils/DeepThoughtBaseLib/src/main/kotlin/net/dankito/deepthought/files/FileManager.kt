@@ -45,6 +45,18 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
     }
 
 
+    fun saveLocalFileInfoForLocalFile(file: FileLink) {
+        var localFileInfo = getStoredLocalFileInfo(file)
+
+        if(localFileInfo == null) { // should actually never be the case
+            localFileInfo = createLocalFileInfoForLocalFile(file, File(file.uriString))
+        }
+
+        if(localFileInfo.isPersisted() == false) {
+            localFileInfoService.persist(localFileInfo)
+        }
+    }
+
     fun createLocalFile(localFile: File, mimeType: String? = null): FileLink {
         val file = FileLink(localFile.absolutePath, localFile.name, true)
 
@@ -54,12 +66,18 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
         file.mimeType = mimeType ?: mimeTypeService.getBestMimeType(localFile)
         file.fileType = mimeTypeService.getFileType(file)
 
+        createLocalFileInfoForLocalFile(file, localFile)
+
+        return file
+    }
+
+    private fun createLocalFileInfoForLocalFile(file: FileLink, localFile: File): LocalFileInfo {
         val localFileInfo = LocalFileInfo(file, localFile.absolutePath, true, FileSyncStatus.UpToDate, file.fileSize, file.fileLastModified, file.hashSHA512)
         localFileInfoCache.put(file, localFileInfo)
 
         setFileHashAsync(file, localFileInfo, localFile) // for large files this takes some time, don't interrupt main routine for calculating hash that long
 
-        return file
+        return localFileInfo
     }
 
     fun createDownloadedLocalFile(url: String, localFile: File, mimeType: String? = null): FileLink {

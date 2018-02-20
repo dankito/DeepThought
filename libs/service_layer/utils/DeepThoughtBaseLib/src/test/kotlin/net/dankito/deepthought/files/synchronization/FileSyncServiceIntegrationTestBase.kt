@@ -359,7 +359,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         localFileManager = FileManager(localSearchEngine, localLocalFileInfoService, localFileSyncService, localMimeTypeService, hashService, localEventBus, localThreadPool)
 
-        localFilePersister = FilePersister(localFileService, localLocalFileInfoService, localFileManager, localThreadPool)
+        localFilePersister = FilePersister(localFileService, localFileManager, localThreadPool)
     }
 
     private fun setupRemoteDevice() {
@@ -419,7 +419,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         remoteFileManager = FileManager(remoteSearchEngine, remoteLocalFileInfoService, remoteFileSyncService, remoteMimeTypeService, hashService, remoteEventBus, remoteThreadPool)
 
-        remoteFilePersister = FilePersister(remoteFileService, remoteLocalFileInfoService, remoteFileManager, remoteThreadPool)
+        remoteFilePersister = FilePersister(remoteFileService, remoteFileManager, remoteThreadPool)
     }
 
     @After

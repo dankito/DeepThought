@@ -167,8 +167,8 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideFilePersister(fileService: FileService, localFileInfoService: LocalFileInfoService, fileManager: FileManager, threadPool: IThreadPool): FilePersister {
-        return FilePersister(fileService, localFileInfoService, fileManager, threadPool)
+    fun provideFilePersister(fileService: FileService, fileManager: FileManager, threadPool: IThreadPool): FilePersister {
+        return FilePersister(fileService, fileManager, threadPool)
     }
 
     @Provides
