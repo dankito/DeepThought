@@ -237,6 +237,10 @@ class FullscreenWebView : WebView {
     override fun onScrollChanged(scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int) {
         super.onScrollChanged(scrollX, scrollY, oldScrollX, oldScrollY)
 
+        if(searchView.isScrollingToSearchResult) { // filter out non-user scrolls
+            return
+        }
+
         if(hasFullscreenModeToggledShortlyBefore()) {
             return // when toggling reader mode there's a huge jump in scroll difference due to displaying additional / hiding controls -> filter out these events shortly after  entering/leaving reader mode
         }
