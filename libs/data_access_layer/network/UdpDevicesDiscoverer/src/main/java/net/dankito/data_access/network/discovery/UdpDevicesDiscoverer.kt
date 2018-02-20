@@ -14,6 +14,8 @@ import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.concurrent.schedule
 
 
+// TODO: be aware that this approach can disturb busy local networks. From Wikipedia UPnP article:
+// UPnP is generally regarded as unsuitable for deployment in business settings for reasons of economy, complexity, and consistency: the multicast foundation makes it chatty, consuming too many network resources on networks with a large population of devices
 open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetworkConnectivityManager, protected var threadPool: IThreadPool) : IDevicesDiscoverer {
 
     companion object {
