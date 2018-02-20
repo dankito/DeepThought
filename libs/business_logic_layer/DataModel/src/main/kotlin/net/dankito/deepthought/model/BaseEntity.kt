@@ -40,11 +40,6 @@ open class BaseEntity : Serializable {
         private set
 
 
-    open fun setDeleted() {
-        deleted = true
-    }
-
-
     @Transient
     fun isPersisted(): Boolean {
         return id != null
