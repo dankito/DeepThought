@@ -258,7 +258,7 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
 
     @Test
     fun persistMp3File_FileGetFoundByMimeType() {
-        persistFileAndTestField(File("/tmp/great_song.mp3"), "mpeg3", searchMimeType = true)
+        persistFileAndTestField(File("/tmp/great_song.mp3"), "audio/mpeg", searchMimeType = true)
     }
 
     @Test
