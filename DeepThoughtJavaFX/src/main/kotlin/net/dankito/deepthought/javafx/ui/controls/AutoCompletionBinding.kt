@@ -54,6 +54,8 @@ class AutoCompletionBinding<T>(private val textField: TextField, private val sug
                         setSuggestionList(newValue?.node as? ListView<T>)
                     }
                 }
+
+                autoCompletionPopup.consumeAutoHidingEvents = false
             }
         } catch(e: Exception) {
             log.error("Could not initialized autoCompletionPopup", e)
