@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lytRoot"
     android:layout_width="match_parent"
     android:layout_height="@dimen/snackbar_ask_sync_data_with_device_height"
     android:layout_marginRight="@dimen/snackbar_ask_sync_data_with_device_margin_right"

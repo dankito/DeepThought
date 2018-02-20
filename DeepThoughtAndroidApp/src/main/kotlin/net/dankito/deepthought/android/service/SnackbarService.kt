@@ -218,6 +218,8 @@ class SnackbarService {
         }
 
         layout.addView(snackView, 0)
+
+        snackView.lytRoot.layoutParams?.height = snackView.context.getDimension(R.dimen.snackbar_ask_sync_data_with_device_height) // don't know where this bug comes from that height got reset to MATCH_PARENT
     }
 
     private fun getOsLogoId(device: Device): Int {
