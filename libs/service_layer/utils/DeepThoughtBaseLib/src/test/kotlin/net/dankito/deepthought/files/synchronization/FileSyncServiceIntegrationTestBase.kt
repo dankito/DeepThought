@@ -20,6 +20,7 @@ import net.dankito.deepthought.communication.ICommunicationManager
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.files.MimeTypeService
 import net.dankito.deepthought.model.*
+import net.dankito.deepthought.model.enums.FileType
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
@@ -118,6 +119,8 @@ abstract class FileSyncServiceIntegrationTestBase {
         override fun getDefaultDataFolder(): File { return File(File(File("data"), "test"), "test1") }
 
         override fun getDefaultFilesFolder(): File { return getDefaultDataFolder() }
+
+        override fun getDefaultSavePathForFile(filename: String, fileType: FileType?): File { return getDefaultFilesFolder() }
     }
 
 
@@ -212,6 +215,8 @@ abstract class FileSyncServiceIntegrationTestBase {
         override fun getDefaultDataFolder(): File { return File(File(File("data"), "test"), "test2") }
 
         override fun getDefaultFilesFolder(): File { return getDefaultDataFolder() }
+
+        override fun getDefaultSavePathForFile(filename: String, fileType: FileType?): File { return getDefaultFilesFolder() }
     }
 
 
@@ -400,7 +405,7 @@ abstract class FileSyncServiceIntegrationTestBase {
         initializationLatch.await(InitializationTimeoutInSeconds, TimeUnit.SECONDS)
 
 
-        remoteMimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypePicker, mimeTypeCategorizer, remoteDataManager)
+        remoteMimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypeCategorizer, remoteDataManager)
 
         remoteFileServer = FileServer(remoteSearchEngine, remoteEntityManager, remoteNetworkSettings, remoteSocketHandler, remoteSerializer, remoteThreadPool)
 

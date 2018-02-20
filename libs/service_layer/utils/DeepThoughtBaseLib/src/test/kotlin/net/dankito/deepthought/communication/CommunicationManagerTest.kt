@@ -18,6 +18,7 @@ import net.dankito.data_access.network.discovery.UdpDevicesDiscoverer
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.enums.ExtensibleEnumeration
+import net.dankito.deepthought.model.enums.FileType
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
@@ -116,6 +117,8 @@ class CommunicationManagerTest {
         override fun getDefaultDataFolder(): File { return File(File(File("data"), "test"), "test1") }
 
         override fun getDefaultFilesFolder(): File { return getDefaultDataFolder() }
+
+        override fun getDefaultSavePathForFile(filename: String, fileType: FileType?): File { return getDefaultFilesFolder() }
     }
 
     private val localThreadPool = ThreadPool()
@@ -175,6 +178,8 @@ class CommunicationManagerTest {
         override fun getDefaultDataFolder(): File { return File(File(File("data"), "test"), "test2") }
 
         override fun getDefaultFilesFolder(): File { return getDefaultDataFolder() }
+
+        override fun getDefaultSavePathForFile(filename: String, fileType: FileType?): File { return getDefaultFilesFolder() }
     }
 
     private val remoteThreadPool = ThreadPool()
