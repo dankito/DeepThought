@@ -26,23 +26,7 @@ class SynchronizedDataMerger(private val entityManager: CouchbaseLiteEntityManag
 
 
     fun updateCachedSynchronizedEntity(change: DocumentChange, entityType: Class<out BaseEntity>): BaseEntity? {
-        var cachedEntity: BaseEntity? = null
-
-        try {
-            cachedEntity = entityManager.objectCache.get(entityType, change.documentId) as? BaseEntity
-            cachedEntity?.let { entity -> // cachedEntity == null: Entity not retrieved / cached yet -> will be read from DB on next access anyway, therefore no need to  update it
-                log.info("Updating cached synchronized Entity of Revision " + change.revisionId + ": " + cachedEntity)
-
-                val storedDocument = database.getExistingDocument(change.documentId)
-                entityManager.getDaoForClass(entityType)?.let { dao ->
-                    val currentRevision = storedDocument.currentRevision
-
-                    updateCachedEntity(entity, dao, currentRevision)
-                }
-            }
-        } catch (e: Exception) {
-            log.error("Could not handle Change", e)
-        }
+        var cachedEntity = updateCachedEntity(change.documentId, entityType, true)
 
         if(isEntityDeleted(cachedEntity, change)) {
             if(cachedEntity == null) {
@@ -68,52 +52,91 @@ class SynchronizedDataMerger(private val entityManager: CouchbaseLiteEntityManag
     }
 
 
+
+    private fun updateCachedEntity(id: String, entityType: Class<out BaseEntity>, recursivelyUpdateProperties: Boolean): BaseEntity? {
+        try {
+            val cachedEntity = entityManager.objectCache.get(entityType, id) as? BaseEntity
+
+            cachedEntity?.let { entity -> // cachedEntity == null: Entity not retrieved / cached yet -> will be read from DB on next access anyway, therefore no need to  update it
+                log.info("Updating cached Entity of Id $id: $cachedEntity")
+
+                val storedDocument = database.getExistingDocument(id)
+                entityManager.getDaoForClass(entityType)?.let { dao ->
+                    val currentRevision = storedDocument.currentRevision
+
+                    updateCachedEntity(entity, dao, currentRevision, recursivelyUpdateProperties)
+                }
+            }
+
+            return cachedEntity
+        } catch (e: java.lang.Exception) {
+            log.error("Could not handle Change", e)
+        }
+
+        return null
+    }
+
     @Throws(SQLException::class)
-    private fun updateCachedEntity(cachedEntity: BaseEntity, dao: Dao, currentRevision: SavedRevision) {
+    private fun updateCachedEntity(cachedEntity: BaseEntity, dao: Dao, currentRevision: SavedRevision, recursivelyUpdateProperties: Boolean) {
         val entityConfig = dao.entityConfig
         val detectedChanges = getChanges(cachedEntity, dao, entityConfig, currentRevision)
 
         if(detectedChanges.isNotEmpty()) {
             for(propertyName in detectedChanges.keys) {
                 try {
-                    updateProperty(cachedEntity, propertyName, dao, entityConfig, currentRevision, detectedChanges)
+                    updateProperty(cachedEntity, propertyName, dao, entityConfig, currentRevision, detectedChanges, recursivelyUpdateProperties)
                 } catch (e: Exception) {
                     log.error("Could not update Property $propertyName on synchronized Object $cachedEntity", e)
                 }
-
             }
         }
     }
 
     @Throws(SQLException::class)
-    private fun updateProperty(cachedEntity: BaseEntity, propertyName: String, dao: Dao, entityConfig: EntityConfig, currentRevision: SavedRevision, detectedChanges: Map<String, Any>) {
+    private fun updateProperty(cachedEntity: BaseEntity, propertyName: String, dao: Dao, entityConfig: EntityConfig, currentRevision: SavedRevision,
+                               detectedChanges: Map<String, Any>, recursivelyUpdateProperties: Boolean) {
         entityConfig.columns.filter { it.columnName == propertyName }.firstOrNull()?.let { property ->
             val previousValue = dao.extractValueFromObject(cachedEntity, property)
 
             if(property.isToManyColumn() == false) {
-                val updatedValue = dao.deserializePersistedValue(cachedEntity, property, currentRevision.getProperty(propertyName))
-                dao.setValueOnObject(cachedEntity, property, updatedValue)
+                val persistedValue = currentRevision.getProperty(propertyName)
+
+                if(property.isRelationshipColumn() && recursivelyUpdateProperties) {
+                    updateCachedEntity(persistedValue as String, property.type as Class<out BaseEntity>, false)?.let { updatedValue ->
+                        dao.setValueOnObject(cachedEntity, property, updatedValue)
+                    }
+                }
+                else {
+                    val updatedValue = dao.deserializePersistedValue(cachedEntity, property, persistedValue)
+                    dao.setValueOnObject(cachedEntity, property, updatedValue)
+                }
             }
             else {
-                updateCollectionProperty(cachedEntity, property, propertyName, currentRevision, detectedChanges, previousValue)
+                updateCollectionProperty(cachedEntity, property, propertyName, currentRevision, detectedChanges, previousValue, recursivelyUpdateProperties)
             }
         }
     }
 
     @Throws(SQLException::class)
-    private fun updateCollectionProperty(cachedEntity: BaseEntity, property: ColumnConfig, propertyName: String, currentRevision: SavedRevision, detectedChanges: Map<String, Any>,
-                                           previousValue: Any) {
+    private fun updateCollectionProperty(cachedEntity: BaseEntity, property: ColumnConfig, propertyName: String, currentRevision: SavedRevision,
+                                         detectedChanges: Map<String, Any>, previousValue: Any, recursivelyUpdateProperties: Boolean) {
         val previousTargetEntityIdsString = detectedChanges[propertyName] as String
         var currentTargetEntityIdsString = currentRevision.getProperty(propertyName) as String
         if(currentRevision.properties.containsKey(propertyName) == false) { // currentRevision has no information about this property
             currentTargetEntityIdsString = "[]" // TODO: what to do here? Assuming "[]" is for sure false. Removing all items?
         }
 
-        property.targetEntity?.entityClass?.let { targetEntityClass ->
+        (property.targetEntity?.entityClass as? Class<out BaseEntity>)?.let { targetEntityClass ->
             entityManager.getDaoForClass(targetEntityClass)?.let { targetDao ->
                 val currentTargetEntityIds = targetDao.parseJoinedEntityIdsFromJsonString(currentTargetEntityIdsString)
 
                 log.info("Collection Property " + property + " of Revision " + currentRevision.id + " has now Ids of " + currentTargetEntityIdsString + ". Previous ones: " + previousTargetEntityIdsString)
+
+                if(recursivelyUpdateProperties) {
+                    currentTargetEntityIds.forEach { id ->
+                        updateCachedEntity(id as String, targetEntityClass, false)
+                    }
+                }
 
                 if(previousValue is EntitiesCollection) { // TODO: what to do if it's not an EntitiesCollection yet?
                     previousValue.refresh(currentTargetEntityIds)
