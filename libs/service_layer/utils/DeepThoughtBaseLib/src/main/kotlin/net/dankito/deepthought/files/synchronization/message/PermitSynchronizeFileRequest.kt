@@ -1,4 +1,4 @@
-package net.dankito.deepthought.files.synchronization.model
+package net.dankito.deepthought.files.synchronization.message
 
 
 data class PermitSynchronizeFileRequest(val fileId: String) {

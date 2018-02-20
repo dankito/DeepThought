@@ -1,7 +1,11 @@
 package net.dankito.deepthought.files.synchronization
 
 import net.dankito.data_access.network.communication.SocketHandler
-import net.dankito.deepthought.files.synchronization.model.*
+import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFileRequest
+import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFileResponse
+import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFileResult
+import net.dankito.deepthought.files.synchronization.model.FileSyncState
+import net.dankito.deepthought.files.synchronization.model.SynchronizeFileResult
 import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.LocalFileInfo

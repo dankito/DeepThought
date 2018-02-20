@@ -2,9 +2,9 @@ package net.dankito.deepthought.files.synchronization
 
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.network.communication.SocketHandler
-import net.dankito.deepthought.files.synchronization.model.PermitSynchronizeFileRequest
-import net.dankito.deepthought.files.synchronization.model.PermitSynchronizeFileResponse
-import net.dankito.deepthought.files.synchronization.model.PermitSynchronizeFileResult
+import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFileRequest
+import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFileResponse
+import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFileResult
 import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.deepthought.model.LocalFileInfo
 import net.dankito.deepthought.model.enums.FileSyncStatus
