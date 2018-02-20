@@ -67,6 +67,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
     override fun start() {
         val localDeviceInfoKey = getDeviceInfoKey(networkSettings)
 
+        // TODO: move devicesDiscoverer starting / stopping to CommunicationManager, only add listener here
         devicesDiscoverer.startAsync(DevicesDiscovererConfig(localDeviceInfoKey, ConnectedDevicesServiceConfig.DEVICES_DISCOVERER_PORT,
                 ConnectedDevicesServiceConfig.CHECK_FOR_DEVICES_INTERVAL_MILLIS, networkSettings.deviceDiscoveryMessagePrefix, discovererListener))
     }
