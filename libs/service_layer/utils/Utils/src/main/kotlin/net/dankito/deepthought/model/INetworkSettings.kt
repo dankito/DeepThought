@@ -31,6 +31,7 @@ interface INetworkSettings {
 
     fun removeConnectedDevicePermittedToSynchronize(device: DiscoveredDevice)
 
+    // TODO: only add if user really has been asked, e.g. has been added to queue but different device is shown, then disconnects -> gets removed from queue, then reconnects -> thinks notification already has been displayed
     fun addDevicesAskedForPermittingSynchronization(device: DiscoveredDevice)
 
     fun removeDevicesAskedForPermittingSynchronization(device: DiscoveredDevice)
