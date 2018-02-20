@@ -298,7 +298,9 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     init {
         fileStorageService.deleteFolderRecursively(localPlatformConfiguration.getDefaultDataFolder())
+        fileStorageService.deleteFolderRecursively(localPlatformConfiguration.getDefaultFilesFolder())
         fileStorageService.deleteFolderRecursively(remotePlatformConfiguration.getDefaultDataFolder())
+        fileStorageService.deleteFolderRecursively(remotePlatformConfiguration.getDefaultFilesFolder())
 
         whenever(base64Service.encode(any<ByteArray>())).thenReturn("fake_base64_encoded_string")
 
@@ -435,7 +437,9 @@ abstract class FileSyncServiceIntegrationTestBase {
         remoteEntityManager.close()
 
         fileStorageService.deleteFolderRecursively(localPlatformConfiguration.getDefaultDataFolder())
+        fileStorageService.deleteFolderRecursively(localPlatformConfiguration.getDefaultFilesFolder())
         fileStorageService.deleteFolderRecursively(remotePlatformConfiguration.getDefaultDataFolder())
+        fileStorageService.deleteFolderRecursively(remotePlatformConfiguration.getDefaultFilesFolder())
     }
 
 
