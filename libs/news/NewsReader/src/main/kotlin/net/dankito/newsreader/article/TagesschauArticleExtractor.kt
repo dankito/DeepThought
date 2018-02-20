@@ -28,7 +28,7 @@ class TagesschauArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("#content .storywrapper").first()?.let { contentElement ->
-            extractItem(contentElement)?.let { item ->
+            extractItem(contentElement, url)?.let { item ->
                 val source = extractSource(url, contentElement)
 
                 extractionResult.setExtractedContent(item, source)
@@ -36,9 +36,10 @@ class TagesschauArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
         }
     }
 
-    private fun extractItem(contentElement: Element): Item? {
+    private fun extractItem(contentElement: Element, articleUrl: String): Item? {
         contentElement.select(".sectionZ .modParagraph").first()?.let { articleContentElement ->
             cleanArticleContentElement(articleContentElement)
+            makeLinksAbsolute(articleContentElement, articleUrl)
 
             val content = articleContentElement.outerHtml()
 
