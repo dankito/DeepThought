@@ -103,6 +103,8 @@ class FullscreenWebView : WebView {
 
     private var isSearchViewVisible = false
 
+    private var wasSearchFocusedFocusedBeforeScrolling = false
+
     private var checkIfScrollingStoppedTimer = Timer()
 
     private var checkIfScrollingStoppedTimerTask: TimerTask? = null
@@ -248,6 +250,7 @@ class FullscreenWebView : WebView {
         val tolerance = computeVerticalScrollExtent() / 10
         this.hasReachedEnd = scrollY >= computeVerticalScrollRange() - computeVerticalScrollExtent() - tolerance
 
+        wasSearchFocusedFocusedBeforeScrolling = wasSearchFocusedFocusedBeforeScrolling || searchView.searchField.isFocused // wasSearchFocusedFocusedBeforeScrolling || : otherwise in scroll events short after hiding options bar wasSearchFocusedFocusedBeforeScrolling would get set from true to false
         hideOptionsBarOnUiThread()
         startCheckIfScrollingStopped()
     }
@@ -286,6 +289,12 @@ class FullscreenWebView : WebView {
 
     private fun showOptionsBarOnUiThread() {
         lytFullscreenWebViewOptionsBar?.visibility = View.VISIBLE
+
+        if(wasSearchFocusedFocusedBeforeScrolling) {
+            searchView.requestFocus()
+
+            wasSearchFocusedFocusedBeforeScrolling = false // reset value to not focus accidentally again
+        }
     }
 
 
