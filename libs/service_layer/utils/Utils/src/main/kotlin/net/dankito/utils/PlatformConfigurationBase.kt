@@ -8,6 +8,8 @@ abstract class PlatformConfigurationBase : IPlatformConfiguration {
 
     companion object {
         const val DataFolderName = "data"
+
+        const val FilesFolderName = "files"
     }
 
 

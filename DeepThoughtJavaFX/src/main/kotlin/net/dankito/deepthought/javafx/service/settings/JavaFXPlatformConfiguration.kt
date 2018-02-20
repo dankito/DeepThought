@@ -41,7 +41,7 @@ class JavaFXPlatformConfiguration : PlatformConfigurationBase() {
     }
 
     override fun getDefaultFilesFolder(): File {
-        val filesDir = File(getApplicationFolder(), "files")
+        val filesDir = File(getApplicationFolder(), FilesFolderName)
         ensureFolderExists(filesDir)
 
         return filesDir.relativeTo(getApplicationFolder()) // use relative not absolute path as for Java synchronized files get stored relative to DeepThought.jar -> if DeepThought.jar and files folder get moved, file still gets found
