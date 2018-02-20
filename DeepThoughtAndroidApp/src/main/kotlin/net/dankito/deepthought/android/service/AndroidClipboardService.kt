@@ -8,6 +8,7 @@ import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.utils.ui.ClipboardServiceBase
 import org.slf4j.LoggerFactory
@@ -64,6 +65,10 @@ class AndroidClipboardService : ClipboardServiceBase() {
         }
 
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, item.summaryPlainText)
+
+        source?.let {
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, it.getPreviewWithSeriesAndPublishingDate(series))
+        }
     }
 
     private fun share(shareIntent: Intent) {
