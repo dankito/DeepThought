@@ -69,7 +69,7 @@ class AndroidPlatformConfiguration(val context: Context) : PlatformConfiguration
 
     override fun getDefaultFilesFolder(): File {
         // saving files to internal data dir is no alternative as then viewer applications cannot access files
-        return ensureFolderExists(File(Environment.getExternalStorageDirectory(), "DeepThought"))
+        return ensureFolderExists(File(Environment.getExternalStorageDirectory(), "DeepThought")) // TODO: also add a 'files' subfolder?
     }
 
 }
