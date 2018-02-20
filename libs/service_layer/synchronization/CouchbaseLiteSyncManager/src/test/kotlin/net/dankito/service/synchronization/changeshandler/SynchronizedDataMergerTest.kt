@@ -4,26 +4,38 @@ import com.couchbase.lite.DocumentChange
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
+import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.version.Versions
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
+import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Test
+import java.io.File
 
 
 class SynchronizedDataMergerTest {
 
-    private val entityManager: IEntityManager
+    companion object {
+        private val TestFolder = "data/test/datamerger"
+    }
+
 
     private val underTest: SynchronizedDataMerger
 
+    private val entityManager: IEntityManager
+
+    private val entityManagerConfiguration = EntityManagerConfiguration(TestFolder, "data_merger_test")
+
+    private val fileStorageService = JavaFileStorageService()
+
 
     init {
-        val entityManagerConfiguration = EntityManagerConfiguration("test/datamerger", "data_merger_test")
-
+        fileStorageService.deleteFolderRecursively(File(entityManagerConfiguration.dataFolder))
+        
         entityManager = JavaCouchbaseLiteEntityManager(entityManagerConfiguration, object : ILocalSettingsStore {
 
             override fun getDataFolder(): String {
@@ -43,6 +55,14 @@ class SynchronizedDataMergerTest {
         entityManager.open(entityManagerConfiguration)
 
         underTest = SynchronizedDataMerger(entityManager)
+    }
+
+    @After
+    @Throws(Exception::class)
+    fun tearDown() {
+        entityManager.close()
+
+        fileStorageService.deleteFolderRecursively(File(entityManagerConfiguration.dataFolder))
     }
 
 
