@@ -142,7 +142,7 @@ abstract class EditItemViewBase : DialogFragment() {
         add(htmlEditor)
 
         htmlEditor.minHeight = 50.0
-        contentHtml.onChange { htmlEditor.setHtml(contentHtml.value) }
+        contentHtml.onChange { htmlEditor.setHtml(contentHtml.value, editSourceField.sourceToEdit?.url) }
         htmlEditor.javaScriptExecutor.addDidHtmlChangeListener { updateHasUnsavedChanges() }
 
 
@@ -194,11 +194,11 @@ abstract class EditItemViewBase : DialogFragment() {
 
         editedSummary.value = originalSummary
 
-        showContent(item, source, contentToEdit)
-
         editSourceField.setSourceToEdit(source, series, item.indication)
         editTagsField.setCollectionToEdit(tags)
         editFilesField.setFiles(files)
+
+        showContent(item, source, contentToEdit) // set after editSourceField.setSourceToEdit() so that sourceToEdit is set when contentHtml.onChange { } is called
     }
 
     private fun showContent(item: Item, source: Source?, contentToEdit: String?) {
