@@ -125,7 +125,7 @@ class AutoCompletionBinding<T>(private val textField: TextField, private val sug
 
 
     override fun showPopup() {
-        if(textField.isFocused) {
+        if(textField.isFocused) { // one way showPopup() gets called is in Platform.runLater() - without checking then if TextField still got the focus -> fix that bug by checking TextField's focus
             super.showPopup()
         }
     }
