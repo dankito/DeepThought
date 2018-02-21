@@ -79,12 +79,17 @@ class EditItemTagsField : EditEntityCollectionField<Tag>(), ITagsOnItemListView 
                 recycledTagViews.add(tagView)
             }
         }
+
+        isUpdatingCollectionPreview = true
         collectionPreviewPane.clear()
 
         val sortedTags = getMergedTags().sorted()
         sortedTags.forEach { tag ->
             addTagView(tag)
         }
+
+        isUpdatingCollectionPreview = false
+        checkIfFlowPaneShouldResize()
 
         updateDidCollectionChange()
     }

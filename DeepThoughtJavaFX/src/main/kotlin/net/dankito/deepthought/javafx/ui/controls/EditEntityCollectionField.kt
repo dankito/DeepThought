@@ -50,6 +50,8 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
 
     private var countCollectionPreviewPaneLines = 0
 
+    protected var isUpdatingCollectionPreview = false
+
 
 
     abstract protected fun getLabelText(): String
@@ -171,14 +173,16 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
                 }
             }
 
-            checkIfFlowPaneShouldResize()
+            if(isUpdatingCollectionPreview == false) {
+                checkIfFlowPaneShouldResize()
+            }
         })
     }
 
     /**
      * FlowPane doesn't update its size automatically -> tell it to do so if necessary
      */
-    private fun checkIfFlowPaneShouldResize() {
+    protected fun checkIfFlowPaneShouldResize() {
         val previousCountLines = this.countCollectionPreviewPaneLines
         this.countCollectionPreviewPaneLines = determineCountCollectionPreviewPaneLines()
 
