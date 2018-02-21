@@ -93,6 +93,8 @@ jar {
                     'Implementation-Version': appVersionName
     }
 
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE // to remove duplicate platform_style.css
+
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }
 
