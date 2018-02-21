@@ -829,8 +829,18 @@ class EditItemActivity : BaseActivity() {
         var content = contentParam
 
         // TODO: remove and set font in css
-        if(content?.startsWith("<html") == false && content?.startsWith("<body") == false && content?.startsWith("<!doctype") == false) {
-            content = "<html><body style=\"font-family: serif, Georgia, Roboto, Helvetica, Arial; font-size:17;\">" + content + "</body></html>"
+        if(content?.startsWith("<html") == false && content.startsWith("<body") == false && content.startsWith("<!doctype") == false) {
+            // this is the same style as in Android app's platform_style.css
+            content = "<html><head><style type=\"text/css\">\n" +
+                        "body {\n" +
+                        "    font-family: serif;\n" +
+                        "    font-size: 18px;" +
+                        "}\n" +
+                        "h1, h2, h3, h4, h5, h6 {\n" +
+                        "    font-family: Roboto, sans-serif;\n" +
+                        "    color: #7f7f7f;\n" +
+                        "}\n" +
+                        "</style></head><body>$content</body></html>"
         }
 
         clearWebViewItem() // clear WebView
