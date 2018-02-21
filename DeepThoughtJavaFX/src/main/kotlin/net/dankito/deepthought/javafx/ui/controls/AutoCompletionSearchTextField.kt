@@ -40,6 +40,16 @@ class AutoCompletionSearchTextField<T> : TextField() {
         autoCompletionBinding.setOnAutoCompleted { e -> onAutoCompletion?.invoke(e.completion) }
 
         autoCompletionBinding.prefWidthProperty().bind(widthProperty())
+
+        var previousY = 0.0
+
+        boundsInParentProperty().addListener { _, _, newValue ->
+            if(newValue.minY != previousY) {
+                previousY = newValue.minY
+
+                updateSuggestionsListPosition()
+            }
+        }
     }
 
 
