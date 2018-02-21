@@ -57,7 +57,7 @@ class AutoCompletionSearchTextField<T> : TextField() {
         autoCompletionBinding.setAutoCompleteList(autoCompletionList, queryToSelectFromAutoCompletionList)
     }
 
-    fun updateSuggestionsListPosition() {
+    private fun updateSuggestionsListPosition() {
         autoCompletionBinding.updatePopupPosition()
     }
 
