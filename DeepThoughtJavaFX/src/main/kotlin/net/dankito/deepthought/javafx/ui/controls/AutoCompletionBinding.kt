@@ -123,4 +123,11 @@ class AutoCompletionBinding<T>(private val textField: TextField, private val sug
         }
     }
 
+
+    override fun showPopup() {
+        if(textField.isFocused) {
+            super.showPopup()
+        }
+    }
+
 }
