@@ -57,7 +57,9 @@ class ArticleExtractorsMenuButton : View() {
 
         setupArticleExtractorsMenuButton()
 
-        setupData()
+        runLater { // wait till UI is initialized before querying database and search index
+            setupData()
+        }
     }
 
     override val root = btnArticleExtractors
