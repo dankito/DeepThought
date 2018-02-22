@@ -248,11 +248,15 @@ class EditSourceActivity : BaseActivity() {
         menuInflater.inflate(R.menu.activity_edit_source_menu, menu)
 
         mnSaveSource = menu.findItem(R.id.mnSaveSource)
-        mnSaveSource?.isVisible = didSourceChange
+        setMenuItemSaveSourceVisibility()
 
         toolbarUtil.setupActionItemsLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
 
         return true
+    }
+
+    private fun setMenuItemSaveSourceVisibility() {
+        mnSaveSource?.isVisible = didSourceChange || source?.isPersisted() == false
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -440,9 +444,9 @@ class EditSourceActivity : BaseActivity() {
     }
 
     private fun updateDidSourceChangeOnUiThread() {
-        this.didSourceChange = changedFields.size > 0 || source?.isPersisted() == false
+        this.didSourceChange = changedFields.size > 0
 
-        mnSaveSource?.isVisible = didSourceChange
+        setMenuItemSaveSourceVisibility()
     }
 
 
