@@ -381,32 +381,6 @@ class EditSourceActivity : BaseActivity() {
         }
     }
 
-    private fun askIfANewSourceShouldBeCreated() {
-        dialogService.showConfirmationDialog(getString(R.string.activity_edit_source_alert_message_create_new_source)) { selectedButton ->
-            if(selectedButton == ConfirmationDialogButton.Confirm) {
-                if(didSourceChange) {
-                    askIfCurrentSourceChangesShouldGetSaved()
-                }
-                else {
-                    createSource()
-                }
-            }
-        }
-    }
-
-    private fun askIfCurrentSourceChangesShouldGetSaved() {
-        dialogService.showConfirmationDialog(getString(R.string.activity_edit_source_alert_message_create_new_source_current_one_has_unsaved_changes)) { selectedButton ->
-            if(selectedButton == ConfirmationDialogButton.Confirm) {
-                saveSourceAsync { // TODO: show error message in case of failure
-                    runOnUiThread { createSource() }
-                }
-            }
-            else {
-                createSource()
-            }
-        }
-    }
-
     private fun createSource() {
         showSource(Source())
     }

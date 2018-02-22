@@ -221,10 +221,6 @@
     <string name="activity_edit_source_publishing_date_label">Veröffentlichungsdatum</string>
     <string name="activity_edit_source_url_label">Webadresse</string>
     <string name="activity_edit_source_error_could_not_parse_publishing_date" formatted="false">Kann %s nicht in ein Datum umwandeln</string>
-    <string name="activity_edit_source_alert_message_create_new_source">Möchten Sie wirklich eine neue Quelle erstellen?\n\nDie aktuelle wird dann verworfen
-        und eine neue Quelle wird angelegt.</string>
-    <string name="activity_edit_source_alert_message_create_new_source_current_one_has_unsaved_changes">Die aktuelle Quelle enthält nicht gespeicherte
-        Änderungen.\n\nSollen diese Änderungen zuvor gespeichert werden?</string>
     <string name="activity_edit_source_alert_message_source_contains_unsaved_changes">Quelle enthält nicht gespeicherte Änderungen.\n\nSollen diese Änderungen gespeichert
         werden?</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
