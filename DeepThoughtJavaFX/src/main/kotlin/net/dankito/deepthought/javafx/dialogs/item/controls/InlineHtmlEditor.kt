@@ -3,7 +3,9 @@ package net.dankito.deepthought.javafx.dialogs.item.controls
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.util.FXUtils
+import net.dankito.richtexteditor.command.CommandName
 import net.dankito.richtexteditor.java.fx.RichTextEditor
+import net.dankito.richtexteditor.java.fx.command.SwitchTextBackgroundColorOnOffCommand
 import net.dankito.richtexteditor.java.fx.toolbar.GroupedCommandsEditorToolbar
 import tornadofx.*
 
@@ -37,6 +39,11 @@ class InlineHtmlEditor : RichTextEditor() {
     private fun addToolbar() {
         val toolbar = GroupedCommandsEditorToolbar()
         this.children.add(0, toolbar.root)
+
+        // manually add command to mark text
+        toolbar.getCommand(CommandName.UNDERLINE)?.let { underlineCommand ->
+            toolbar.addAfterCommand(SwitchTextBackgroundColorOnOffCommand(), underlineCommand)
+        }
 
         toolbar.editor = this
     }
