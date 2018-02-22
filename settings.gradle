@@ -6,11 +6,6 @@ include ':DeepThoughtAndroidApp'
 include ':DeepThoughtJavaFX'
 include ':DeepThoughtJavaFXExtended'
 
-include ':RichTextEditor'
-include ':RichTextEditorCommon'
-include ':RichTextEditorJavaFX'
-include ':RichTextEditorAndroid'
-
 include ':DeepThoughtUiCommon'
 include ':DeepThoughtBaseLib'
 
@@ -129,8 +124,3 @@ project(':couchbase-lite-jpa').projectDir = "$rootDir/libs/data_access_layer/dat
 project(':jpa-apt').projectDir = "$rootDir/libs/data_access_layer/database/jpa-apt" as File
 project(':JPAAnnotationReaderAPI').projectDir = "$rootDir/libs/data_access_layer/database/jpa-apt/JPAAnnotationReaderAPI" as File
 project(':JPAAnnotationProcessor').projectDir = "$rootDir/libs/data_access_layer/database/jpa-apt/JPAAnnotationProcessor" as File
-
-project(':RichTextEditor').projectDir = "$rootDir/libs/ui_layer/RichTextEditor" as File
-project(':RichTextEditorCommon').projectDir = "$rootDir/libs/ui_layer/RichTextEditor/RichTextEditorCommon" as File
-project(':RichTextEditorAndroid').projectDir = "$rootDir/libs/ui_layer/RichTextEditor/RichTextEditorAndroid" as File
-project(':RichTextEditorJavaFX').projectDir = "$rootDir/libs/ui_layer/RichTextEditor/RichTextEditorJavaFX" as File

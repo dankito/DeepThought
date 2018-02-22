@@ -172,12 +172,6 @@ dependencies {
         exclude group: 'org.slf4j', module: 'slf4j-api'
         exclude group: 'org.slf4j', module: 'slf4j-android'
     }
-//    compile project(':RichTextEditorAndroid'), {
-//        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
-//        exclude group: 'com.fasterxml.jackson.module', module: 'jackson-module-kotlin'
-//        exclude group: 'org.slf4j', module: 'slf4j-api'
-//        exclude group: 'org.slf4j', module: 'slf4j-android'
-//    }
 
     compile "net.dankito.filechooserdialog:filechooserdialog-android:$fileChooserVersion", {
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jre7'
