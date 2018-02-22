@@ -848,7 +848,7 @@ class EditItemActivity : BaseActivity() {
             wbvwContent.loadDataWithBaseURL(url, content, "text/html; charset=UTF-8", "utf-8", null)
         }
         else {
-            wbvwContent.loadData(content, "text/html; charset=UTF-8", null)
+            wbvwContent.loadData(content, "text/html; charset=UTF-8", "utf-8")
         }
     }
 
