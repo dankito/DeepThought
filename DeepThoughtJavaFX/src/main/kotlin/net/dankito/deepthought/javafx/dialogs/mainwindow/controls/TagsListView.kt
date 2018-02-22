@@ -157,14 +157,16 @@ class TagsListView : EntitiesListView(), ITagsListView {
     }
 
     private fun tagSelected(selectedTag: Tag?) {
-        if(selectedTag != null) {
-            lastSelectedTag = selectedTag
-        }
-        else {
+        if(selectedTag != lastSelectedTag) { // to avoid that Lucene is unnecessarily queried for the same Tag again
+            if(selectedTag != null) {
+                lastSelectedTag = selectedTag
+            }
+            else {
 //            presenter.clearSelectedTag() // TODO
-        }
+            }
 
-        showItemsForLastSelectedEntity()
+            showItemsForLastSelectedEntity()
+        }
     }
 
     fun showItemsForLastSelectedEntity() {
