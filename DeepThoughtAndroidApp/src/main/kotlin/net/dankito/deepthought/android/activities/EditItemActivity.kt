@@ -844,7 +844,7 @@ class EditItemActivity : BaseActivity() {
         }
 
         clearWebViewItem() // clear WebView
-        if(url != null) {
+        if(url != null && Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) { // loading html with loadDataWithBaseURL() didn't work for me on 4.1 (API 16), just displayed HTML code
             wbvwContent.loadDataWithBaseURL(url, content, "text/html; charset=UTF-8", "utf-8", null)
         }
         else {
