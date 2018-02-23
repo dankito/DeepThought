@@ -1,0 +1,8 @@
+- Send items and files to user DeepThought users from within app
+- Adding comments to Item content
+- Adding To Dos with alarms
+- Show system navigation bar with back button, ... at bottom of screen when viewing Item content in fullscreen mode
+- Show PDF text directly in app
+- Show image text (OCR) directly in app
+- Search for files
+- Add search to Android FileChooserDialog
