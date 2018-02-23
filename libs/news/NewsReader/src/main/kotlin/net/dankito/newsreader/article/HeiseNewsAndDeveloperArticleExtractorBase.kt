@@ -120,7 +120,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
     }
 
     protected open fun shouldFilterElement(element: Element): Boolean {
-        return element.hasClass("widget-werbung") || containsOnlyComment(element)
+        return element.select(".widget-werbung, .akwa-ad-container, .akwa-ad-container--native, .hinweis_anzeige").isNotEmpty() || containsOnlyComment(element)
     }
 
     protected open fun containsOnlyComment(element: Element) : Boolean {
