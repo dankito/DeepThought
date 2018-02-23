@@ -174,7 +174,7 @@ class TableConfig {
         const val FileLinkFileTypeColumnName = "file_type"
         const val FileLinkFileSizeColumnName = "file_size"
         const val FileLinkFileLastModifiedColumnName = "file_last_modified"
-        const val FileLinkFileHashSHA512ColumnName = "hash_sha_512"
+        const val FileLinkFileHashSHA256ColumnName = "hash_sha_256"
         const val FileLinkDescriptionColumnName = "description"
         const val FileLinkSourceUriColumnName = "source_uri"
 
@@ -189,7 +189,7 @@ class TableConfig {
         const val LocalFileInfoSyncStatusColumnName = "sync_status"
         const val LocalFileInfoFileSizeColumnName = "file_size"
         const val LocalFileInfoFileLastModifiedColumnName = "file_last_modified"
-        const val LocalFileInfoFileHashSHA512ColumnName = "hash_sha_512"
+        const val LocalFileInfoFileHashSHA256ColumnName = "hash_sha_256"
 
 
         /*          Note Table Config        */

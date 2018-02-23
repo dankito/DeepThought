@@ -207,7 +207,7 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
             assertThat(retrievedLocalFileInfo.path, `is`(tempFile.absolutePath))
             assertThat(file.fileSize, `is`(retrievedLocalFileInfo.fileSize))
             assertThat(file.fileLastModified, `is`(retrievedLocalFileInfo.fileLastModified))
-            assertThat(file.hashSHA512, `is`(retrievedLocalFileInfo.hashSHA512))
+            assertThat(file.hashSHA256, `is`(retrievedLocalFileInfo.hashSHA256))
         })
     }
 

@@ -56,7 +56,7 @@ class FileSyncServiceIntegrationTest : FileSyncServiceIntegrationTestBase() {
         assertThat(File(synchronizedLocalFileInfo?.path!!).exists(), `is`(true))
         assertThat(synchronizedLocalFileInfo.fileSize, `is`(localFileInfo?.fileSize))
         assertThat(synchronizedLocalFileInfo.fileLastModified, `is`(localFileInfo?.fileLastModified))
-        assertThat(synchronizedLocalFileInfo.hashSHA512, `is`(localFileInfo?.hashSHA512))
+        assertThat(synchronizedLocalFileInfo.hashSHA256, `is`(localFileInfo?.hashSHA256))
     }
 
 

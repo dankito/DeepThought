@@ -31,8 +31,8 @@ data class LocalFileInfo(
         @Column(name = TableConfig.LocalFileInfoFileLastModifiedColumnName)
         var fileLastModified: Date? = null,
 
-        @Column(name = TableConfig.LocalFileInfoFileHashSHA512ColumnName)
-        var hashSHA512: String = ""
+        @Column(name = TableConfig.LocalFileInfoFileHashSHA256ColumnName)
+        var hashSHA256: String = ""
 
 
 ) : BaseEntity(), Serializable {

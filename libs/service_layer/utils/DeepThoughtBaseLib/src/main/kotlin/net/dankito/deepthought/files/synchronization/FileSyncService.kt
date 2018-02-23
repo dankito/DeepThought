@@ -335,7 +335,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         localFileInfo.path = destinationFile.path // use path not absolute path, see comment in getDefaultSavePathForFile()
 
         localFileInfo.fileSize = File(destinationFile.absolutePath).length() // we have to create a new File object to get file size
-        localFileInfo.hashSHA512 = hashService.getFileHash(HashAlgorithm.SHA512, destinationFile)
+        localFileInfo.hashSHA256 = hashService.getFileHash(HashAlgorithm.SHA256, destinationFile)
 
         file.fileLastModified?.let { lastModified ->
             destinationFile.setLastModified(lastModified.time)

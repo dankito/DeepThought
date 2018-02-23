@@ -44,8 +44,8 @@ data class FileLink(
     @Column(name = TableConfig.FileLinkFileLastModifiedColumnName)
     var fileLastModified: Date? = null
 
-    @Column(name = TableConfig.FileLinkFileHashSHA512ColumnName)
-    var hashSHA512 = ""
+    @Column(name = TableConfig.FileLinkFileHashSHA256ColumnName)
+    var hashSHA256 = ""
 
     @Column(name = TableConfig.FileLinkDescriptionColumnName)
     var description = ""

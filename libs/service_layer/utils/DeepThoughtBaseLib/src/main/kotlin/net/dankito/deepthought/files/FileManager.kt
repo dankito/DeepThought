@@ -72,7 +72,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
     }
 
     private fun createLocalFileInfoForLocalFile(file: FileLink, localFile: File): LocalFileInfo {
-        val localFileInfo = LocalFileInfo(file, localFile.absolutePath, true, FileSyncStatus.UpToDate, file.fileSize, file.fileLastModified, file.hashSHA512)
+        val localFileInfo = LocalFileInfo(file, localFile.absolutePath, true, FileSyncStatus.UpToDate, file.fileSize, file.fileLastModified, file.hashSHA256)
         localFileInfoCache.put(file, localFileInfo)
 
         setFileHashAsync(file, localFileInfo, localFile) // for large files this takes some time, don't interrupt main routine for calculating hash that long
@@ -104,9 +104,9 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
 
     private fun setFileHash(file: FileLink, localFileInfo: LocalFileInfo, localFile: File) {
         try {
-            file.hashSHA512 = hashService.getFileHash(HashAlgorithm.SHA512, localFile)
+            file.hashSHA256 = hashService.getFileHash(HashAlgorithm.SHA256, localFile)
 
-            localFileInfo.hashSHA512 = file.hashSHA512
+            localFileInfo.hashSHA256 = file.hashSHA256
         } catch(e: Exception) {
             log.error("Could not create file hash for file $file", e)
         }
