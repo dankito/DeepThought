@@ -112,6 +112,17 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
     }
 
 
+    protected open fun extractContent(articleElement: Element, url: String): String {
+        return articleElement.select(".meldung_wrapper").first()?.children()?.filter { element ->
+            shouldFilterElement(element) == false
+        }?.joinToString(separator = "") { getContentElementHtml(it, url) }
+        ?: ""
+    }
+
+    protected open fun shouldFilterElement(element: Element): Boolean {
+        return element.hasClass("widget-werbung") || containsOnlyComment(element)
+    }
+
     protected open fun containsOnlyComment(element: Element) : Boolean {
         return element.childNodeSize() == 3 && element.childNode(1) is Comment && element.childNode(0) is TextNode && element.childNode(2) is TextNode
     }

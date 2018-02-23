@@ -30,14 +30,4 @@ class HeiseDeveloperArticleExtractor(webClient: IWebClient) : HeiseNewsAndDevelo
         }
     }
 
-    private fun extractContent(articleElement: Element, url: String): String {
-        return articleElement.select(".article-content").first()?.children()!!.filter { element ->
-            shouldFilterElement(element) == false
-        }?.joinToString(separator = "") { getContentElementHtml(it, url) }
-    }
-
-    private fun shouldFilterElement(element: Element): Boolean {
-        return element.hasClass("widget-werbung")
-    }
-
 }

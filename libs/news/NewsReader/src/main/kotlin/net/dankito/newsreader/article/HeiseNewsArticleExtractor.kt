@@ -61,14 +61,4 @@ class HeiseNewsArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
 
         extractionResult.setExtractedContent(item, source)
     }
-
-    private fun extractContent(articleElement: Element, url: String): String {
-        return articleElement.select(".meldung_wrapper").first()?.children()!!.filter { element ->
-            shouldFilterElement(element) == false
-        }?.joinToString(separator = "") { getContentElementHtml(it, url) }
-    }
-
-    private fun shouldFilterElement(element: Element): Boolean {
-        return element.hasClass("widget-werbung") || containsOnlyComment(element)
-    }
 }
