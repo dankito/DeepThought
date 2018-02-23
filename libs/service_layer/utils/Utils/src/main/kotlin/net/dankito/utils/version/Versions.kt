@@ -24,7 +24,8 @@ class Versions {
 
         - 1 -> 2:
           Added entity LocalFileInfo
-          FileLink: Added isLocalFile, fileSize, fileLastModified, hashSHA512 and transient localFileInfo. Removed isFolder.
+          FileLink: Added properties isLocalFile, mimeType, fileType, fileSize, fileLastModified, and hashSHA256. Removed isFolder.
+          Removed entities FileType, NoteType, ExtensibleEnumeration
 
 
         Communication protocol:
