@@ -19,6 +19,7 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ItemsListPresenter
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.Search
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogButton
@@ -73,6 +74,12 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
         searchBar = ItemsSearchBar(this, presenter, dataManager)
 
         (router as? JavaFXRouter)?.itemsListView = this // TODO: this is bad code design
+
+        runLater { // wait till UI is initialized before search index
+            searchEngine.addInitializationListener {
+                searchEntities(Search.EmptySearchTerm)
+            }
+        }
     }
 
     override fun onUndock() {
