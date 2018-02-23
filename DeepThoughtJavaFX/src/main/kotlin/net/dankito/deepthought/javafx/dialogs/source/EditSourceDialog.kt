@@ -68,7 +68,7 @@ class EditSourceDialog : DialogFragment() {
 
     val seriesParam: Series? by param(SeriesNullObject) // by param() doesn't seem to like when passing null - on calling get() an exception gets thrown
 
-    val series: Series? = if(seriesParam == SeriesNullObject) source.series else seriesParam
+    val series: Series? = if(seriesParam != SeriesNullObject) seriesParam else  source.series
 
     val editedSourceTitle: String? by param<String?>(source.title)
 
