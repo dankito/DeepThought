@@ -656,10 +656,10 @@ class CommunicationManagerTest {
         assertThat(collectedChanges.size, greaterThanOrEqualTo(3))
 
         assertThat(collectedChanges.filter { it.entityType == Item::class.java }.firstOrNull(), notNullValue())
-        assertThat(collectedChanges.filter { it.entityType == Item::class.java }.firstOrNull()?.changeType, `is`(EntityChangeType.Created))
+        assertThat(collectedChanges.filter { it.entityType == Item::class.java }.firstOrNull()?.changeType, `is`(EntityChangeType.Updated))
 
         assertThat(collectedChanges.filter { it.entityType == Source::class.java }.firstOrNull(), notNullValue())
-        assertThat(collectedChanges.filter { it.entityType == Source::class.java }.firstOrNull()?.changeType, `is`(EntityChangeType.Created))
+        assertThat(collectedChanges.filter { it.entityType == Source::class.java }.firstOrNull()?.changeType, `is`(EntityChangeType.Updated))
 
         assertThat(collectedChanges.filter { it.entityType == Tag::class.java }.firstOrNull(), notNullValue())
         assertThat(collectedChanges.filter { it.entityType == Tag::class.java }.firstOrNull()?.changeType, `is`(EntityChangeType.Created))
