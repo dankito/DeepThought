@@ -6,12 +6,10 @@ import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.User
-import net.dankito.deepthought.model.enums.ExtensibleEnumeration
 import net.dankito.service.synchronization.initialsync.model.DeepThoughtSyncInfo
 import net.dankito.service.synchronization.initialsync.model.SyncInfo
 import net.dankito.service.synchronization.initialsync.model.UserSyncInfo
 import net.dankito.utils.localization.Localization
-import java.util.*
 
 
 class InitialSyncManager(private var entityManager: IEntityManager, private var localization: Localization) {
@@ -70,45 +68,10 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
 
         entityManager.persistEntity(localUser)
 
-
-        updateExtensibleEnumerations(localDeepThought, remoteSyncInfo.deepThought, entityManager)
-
         updateArticleSummaryExtractorConfigs(remoteSyncInfo)
 
 
         entityManager.updateEntity(localDeepThought)
-    }
-
-
-    private fun updateExtensibleEnumerations(localDeepThought: DeepThought, remoteDeepThought: DeepThoughtSyncInfo, entityManager: IEntityManager) {
-        updateExtensibleEnumeration(localDeepThought.noteTypes, remoteDeepThought.noteTypeIds, entityManager)
-    }
-
-    private fun <T: ExtensibleEnumeration> updateExtensibleEnumeration(localExtensibleEnumerationEntities: MutableCollection<T>,
-                                            remoteExtensibleEnumerationIds: Map<String, String>, entityManager: IEntityManager) {
-        val backup = ArrayList<T>(localExtensibleEnumerationEntities)
-        localExtensibleEnumerationEntities.clear() // to update EntityCollection's Ids
-
-        for((key, entityId) in remoteExtensibleEnumerationIds) {
-            for(enumerationEntity in backup) {
-                if(key == enumerationEntity.nameResourceKey) {
-                    updateExtensibleEnumeration(enumerationEntity, entityId, entityManager)
-                    break
-                }
-            }
-        }
-
-        for (item in backup) {
-            localExtensibleEnumerationEntities.add(item)
-        }
-    }
-
-    private fun updateExtensibleEnumeration(enumerationEntity: ExtensibleEnumeration, id: String, entityManager: IEntityManager) {
-        entityManager.deleteEntity(enumerationEntity)
-
-        enumerationEntity.id = id
-
-        entityManager.persistEntity(enumerationEntity)
     }
 
 

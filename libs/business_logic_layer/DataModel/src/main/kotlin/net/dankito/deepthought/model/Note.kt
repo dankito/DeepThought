@@ -1,7 +1,6 @@
 package net.dankito.deepthought.model
 
 import net.dankito.deepthought.model.config.TableConfig
-import net.dankito.deepthought.model.enums.NoteType
 import javax.persistence.*
 
 
@@ -15,28 +14,10 @@ data class Note(
 
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = TableConfig.NoteNoteTypeJoinColumnName)
-    var type: NoteType? = null
-        set(type) {
-            if (field !== type) {
-                field?.removeNote(this)
-
-                field = type
-
-                type?.addNote(this)
-            }
-        }
-
-    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = TableConfig.NoteItemJoinColumnName)
     var item: Item? = null
         internal set
 
-
-    init {
-        // TODO
-//        this.type = NoteType.getDefaultNoteType()
-    }
 
     constructor() : this("")
 

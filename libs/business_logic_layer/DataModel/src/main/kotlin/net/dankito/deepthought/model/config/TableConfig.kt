@@ -197,7 +197,6 @@ class TableConfig {
         const val NoteTableName = "notes"
 
         const val NoteNoteColumnName = "notes"
-        const val NoteNoteTypeJoinColumnName = "note_type_id"
         const val NoteItemJoinColumnName = "item_id"
 
 
@@ -208,11 +207,6 @@ class TableConfig {
         const val ExtensibleEnumerationDescriptionColumnName = "description"
         const val ExtensibleEnumerationSortOrderColumnName = "sort_order"
         const val ExtensibleEnumerationIsSystemValueColumnName = "is_system_value"
-
-
-        /*          NoteType Table Config        */
-
-        const val NoteTypeTableName = "note_type"
 
 
         /*          ArticleSummaryExtractorConfig Table Config        */

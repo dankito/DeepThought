@@ -1,9 +1,7 @@
 package net.dankito.deepthought.model
 
 import net.dankito.deepthought.model.config.TableConfig
-import net.dankito.deepthought.model.enums.NoteType
 import java.io.Serializable
-import java.util.*
 import javax.persistence.*
 
 
@@ -30,30 +28,12 @@ data class DeepThought(
     }
 
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
-    @OrderBy(value = "sortOrder")
-    var noteTypes: MutableSet<NoteType> = TreeSet<NoteType>()
-
-
     @Column(name = TableConfig.DeepThoughtNextItemIndexColumnName)
     var nextItemIndex = 0L
         private set
 
 
     private constructor() : this(User(), Device(), LocalSettings())
-
-
-    fun addNoteType(noteType: NoteType): Boolean {
-        return noteTypes.add(noteType)
-    }
-
-    fun removeNoteType(noteType: NoteType): Boolean {
-        if (noteType.isSystemValue) {
-            return false
-        }
-
-        return noteTypes.remove(noteType)
-    }
 
 
     fun increaseNextItemIndex(): Long {

@@ -17,7 +17,6 @@ import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.data_access.network.discovery.UdpDevicesDiscoverer
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.deepthought.model.*
-import net.dankito.deepthought.model.enums.ExtensibleEnumeration
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
@@ -440,8 +439,6 @@ class CommunicationManagerTest {
 
         assertThat(localUser.id, `is`(remoteUser.id))
         assertThat(localDeepThought.id, `is`(not(remoteDeepThought.id)))
-
-        testExtensibleEnumeration(localDeepThought.noteTypes, remoteDeepThought.noteTypes)
     }
 
 
@@ -473,25 +470,6 @@ class CommunicationManagerTest {
 
         assertThat(localUser.id, `is`(remoteUser.id))
         assertThat(localDeepThought.id, `is`(not(remoteDeepThought.id)))
-
-        testExtensibleEnumeration(localDeepThought.noteTypes, remoteDeepThought.noteTypes)
-    }
-
-    private fun testExtensibleEnumeration(localEnumerations: Collection<ExtensibleEnumeration>, remoteEnumerations: Collection<ExtensibleEnumeration>) {
-        assertThat(localEnumerations.size, `is`(remoteEnumerations.size))
-
-        for(localEnum in localEnumerations) {
-            var foundRemoteEnum: ExtensibleEnumeration? = null
-
-            for(remoteEnum in remoteEnumerations) {
-                if(localEnum.id == remoteEnum.id) {
-                    foundRemoteEnum = remoteEnum
-                    break
-                }
-            }
-
-            assertThat("No matching enumeration found for $localEnum", foundRemoteEnum, notNullValue())
-        }
     }
 
 
