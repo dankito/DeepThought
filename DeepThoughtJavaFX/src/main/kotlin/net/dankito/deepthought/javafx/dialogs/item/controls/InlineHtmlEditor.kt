@@ -2,8 +2,10 @@ package net.dankito.deepthought.javafx.dialogs.item.controls
 
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority
+import net.dankito.deepthought.javafx.res.icons.Icons
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.richtexteditor.command.CommandName
+import net.dankito.richtexteditor.java.fx.JavaFXIcon
 import net.dankito.richtexteditor.java.fx.RichTextEditor
 import net.dankito.richtexteditor.java.fx.command.SwitchTextBackgroundColorOnOffCommand
 import net.dankito.richtexteditor.java.fx.toolbar.GroupedCommandsEditorToolbar
@@ -42,7 +44,7 @@ class InlineHtmlEditor : RichTextEditor() {
 
         // manually add command to mark text
         toolbar.getCommand(CommandName.UNDERLINE)?.let { underlineCommand ->
-            toolbar.addAfterCommand(SwitchTextBackgroundColorOnOffCommand(), underlineCommand)
+            toolbar.addAfterCommand(SwitchTextBackgroundColorOnOffCommand(icon = JavaFXIcon(Icons.MarkTextIconPath)), underlineCommand)
         }
 
         toolbar.editor = this

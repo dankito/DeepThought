@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.activity_edit_item.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.extensions.getColorFromResourceId
 import net.dankito.richtexteditor.Color
+import net.dankito.richtexteditor.android.AndroidIcon
 import net.dankito.richtexteditor.android.RichTextEditor
 import net.dankito.richtexteditor.android.command.*
 import net.dankito.richtexteditor.command.ToolbarCommandStyle
@@ -51,7 +52,7 @@ class EditHtmlView : View {
         editorToolbar.addCommand(BoldCommand())
         editorToolbar.addCommand(ItalicCommand())
         editorToolbar.addCommand(UnderlineCommand())
-        val switchBackgroundColorCommand = SwitchTextBackgroundColorOnOffCommand()
+        val switchBackgroundColorCommand = SwitchTextBackgroundColorOnOffCommand(icon = AndroidIcon(R.drawable.ic_marker_white_48dp))
         switchBackgroundColorCommand.style.marginRightDp = ToolbarCommandStyle.GroupDefaultMarginRightDp
         editorToolbar.addCommand(switchBackgroundColorCommand)
 

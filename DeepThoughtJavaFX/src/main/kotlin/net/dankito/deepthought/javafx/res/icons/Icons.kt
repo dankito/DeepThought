@@ -27,6 +27,8 @@ class Icons {
 
         const val MoreVerticalIconPath = "icons/ic_more_vert_black_36dp.png"
 
+        const val MarkTextIconPath = "icons/ic_marker_black_36dp.png"
+
     }
 
 }
