@@ -12,7 +12,7 @@ import net.dankito.deepthought.javafx.di.JavaFXInstanceProvider
 import net.dankito.deepthought.javafx.di.JavaFXModule
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindow
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
-import net.dankito.utils.localization.UTF8ResourceBundleControl
+import net.dankito.utils.localization.Localization
 import tornadofx.*
 import java.util.*
 import javax.inject.Inject
@@ -22,6 +22,9 @@ open class DeepThoughtJavaFXApplication : App(MainWindow::class) {
 
     @Inject
     protected lateinit var appInitializer: JavaFXAppInitializer
+
+    @Inject
+    protected lateinit var localization: Localization
 
 
     private val mainWindowController: MainWindowController by inject()
@@ -42,7 +45,8 @@ open class DeepThoughtJavaFXApplication : App(MainWindow::class) {
 
     private fun setupMessagesResources() {
         ResourceBundle.clearCache() // at this point default ResourceBundles are already created and cached. In order that ResourceBundle created below takes effect cache has to be clearedbefore
-        FX.messages = ResourceBundle.getBundle("Messages", UTF8ResourceBundleControl())
+
+        FX.messages = localization.messagesResourceBundle
     }
 
     private fun setupDI(primaryStage: Stage) {
