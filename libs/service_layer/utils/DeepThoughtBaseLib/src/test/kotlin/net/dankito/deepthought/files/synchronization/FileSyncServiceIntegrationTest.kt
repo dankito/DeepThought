@@ -4,7 +4,8 @@ import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.LocalFileInfo
 import net.dankito.service.data.messages.EntityChangeType
 import org.hamcrest.CoreMatchers
-import org.hamcrest.CoreMatchers.*
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.number.OrderingComparison
 import org.junit.Assert
 import org.junit.Assert.assertThat
@@ -41,8 +42,6 @@ class FileSyncServiceIntegrationTest : FileSyncServiceIntegrationTestBase() {
         val file = createFile()
         val fileId = file.id!!
         val localFileInfo = localFileManager.getStoredLocalFileInfo(file)
-
-        assertThat(remoteEntityManager.getEntityById(FileLink::class.java, fileId), nullValue())
 
         waitLatch.await(SynchronizeEntityTimeoutInSeconds, TimeUnit.SECONDS)
 

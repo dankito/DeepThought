@@ -1,7 +1,7 @@
 package net.dankito.service.search
 
 import net.dankito.deepthought.model.FileLink
-import net.dankito.deepthought.model.enums.FileTypeDefaultFolderName
+import net.dankito.deepthought.model.enums.FileType
 import net.dankito.service.search.specific.FilesSearch
 import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.service.search.writerandsearcher.FileLinkIndexWriterAndSearcher
@@ -269,32 +269,32 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
 
     @Test
     fun persistPdfFile_FileGetFoundByFileType() {
-        persistFileAndTestField(File("/tmp/book.pdf"), FileTypeDefaultFolderName.Documents.folderName, searchFileType = true)
+        persistFileAndTestField(File("/tmp/book.pdf"), FileType.Document.toString(), searchFileType = true)
     }
 
     @Test
     fun persistPngFile_FileGetFoundByFileType() {
-        persistFileAndTestField(File("/tmp/mock_up.png"), FileTypeDefaultFolderName.Images.folderName, searchFileType = true)
+        persistFileAndTestField(File("/tmp/mock_up.png"), FileType.Image.toString(), searchFileType = true)
     }
 
     @Test
     fun persistMp3File_FileGetFoundByFileType() {
-        persistFileAndTestField(File("/tmp/great_song.mp3"), FileTypeDefaultFolderName.Audio.folderName, searchFileType = true)
+        persistFileAndTestField(File("/tmp/great_song.mp3"), FileType.Audio.toString(), searchFileType = true)
     }
 
     @Test
     fun persistMpegFile_FileGetFoundByFileType() {
-        persistFileAndTestField(File("/tmp/amazing_movie.mpeg"), FileTypeDefaultFolderName.Video.folderName, searchFileType = true)
+        persistFileAndTestField(File("/tmp/amazing_movie.mpeg"), FileType.Video.toString(), searchFileType = true)
     }
 
     @Test
     fun persistExeFile_FileGetFoundByFileType() {
-        persistFileAndTestField(File("/tmp/DeepThought.exe"), FileTypeDefaultFolderName.OtherFilesFolderName.folderName, searchFileType = true)
+        persistFileAndTestField(File("/tmp/DeepThought.exe"), FileType.Other.toString(), searchFileType = true)
     }
 
     @Test
     fun persistApkFile_FileGetFoundByFileType() { // a file type with unknown Mime type
-        persistFileAndTestField(File("/tmp/DeepThought.apk"), FileTypeDefaultFolderName.OtherFilesFolderName.folderName, searchFileType = true)
+        persistFileAndTestField(File("/tmp/DeepThought.apk"), FileType.Other.toString(), searchFileType = true)
     }
 
 
@@ -320,8 +320,8 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
         val waitForResultLatch = CountDownLatch(1)
 
 
-        underTest.searchFiles(FilesSearch(fieldValueToSearchFor, searchUri = searchUri, searchName = searchName, searchDescription = searchDescription,
-                searchSourceUri = searchSourceUri) { result ->
+        underTest.searchFiles(FilesSearch(fieldValueToSearchFor, FilesSearch.FileType.LocalOrRemoteFiles, searchUri, searchName, searchMimeType, searchFileType,
+                searchDescription, searchSourceUri) { result ->
             assertThat(result.size, `is`(1))
             assertThat(result[0], `is`(file))
 

@@ -26,6 +26,6 @@ interface IPlatformConfiguration {
 
     fun getDefaultFilesFolder(): File
 
-    fun getDefaultSavePathForFile(filename: String, fileType: FileType?): File
+    fun getDefaultSavePathForFile(filename: String, fileType: FileType): File
 
 }

@@ -441,7 +441,6 @@ class CommunicationManagerTest {
         assertThat(localUser.id, `is`(remoteUser.id))
         assertThat(localDeepThought.id, `is`(not(remoteDeepThought.id)))
 
-        testExtensibleEnumeration(localDeepThought.fileTypes, remoteDeepThought.fileTypes)
         testExtensibleEnumeration(localDeepThought.noteTypes, remoteDeepThought.noteTypes)
     }
 
@@ -475,7 +474,6 @@ class CommunicationManagerTest {
         assertThat(localUser.id, `is`(remoteUser.id))
         assertThat(localDeepThought.id, `is`(not(remoteDeepThought.id)))
 
-        testExtensibleEnumeration(localDeepThought.fileTypes, remoteDeepThought.fileTypes)
         testExtensibleEnumeration(localDeepThought.noteTypes, remoteDeepThought.noteTypes)
     }
 

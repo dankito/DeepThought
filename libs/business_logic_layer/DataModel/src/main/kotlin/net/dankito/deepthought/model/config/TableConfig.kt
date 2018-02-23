@@ -215,13 +215,6 @@ class TableConfig {
         const val NoteTypeTableName = "note_type"
 
 
-        /*          FileType Table Config        */
-
-        const val FileTypeTableName = "file_type"
-
-        const val FileTypeFolderNameColumnName = "folder"
-
-
         /*          ArticleSummaryExtractorConfig Table Config        */
 
         const val ArticleSummaryExtractorConfigTableName = "article_summary_extractor_config"

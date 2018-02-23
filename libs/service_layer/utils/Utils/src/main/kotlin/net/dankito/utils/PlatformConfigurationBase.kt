@@ -13,15 +13,10 @@ abstract class PlatformConfigurationBase : IPlatformConfiguration {
     }
 
 
-    override fun getDefaultSavePathForFile(filename: String, fileType: FileType?): File {
-        var fileFolder = getDefaultFilesFolder()
+    override fun getDefaultSavePathForFile(filename: String, fileType: FileType): File {
+        val fileFolder = File(getDefaultFilesFolder(), fileType.toString().toLowerCase())
 
-        fileType?.let {
-            fileFolder = File(fileFolder, fileType.folderName)
-        }
-
-        val destinationFile = File(fileFolder, filename)
-        return destinationFile // use path not absolute path as for Java synchronized files get stored relative to DeepThought.jar -> if DeepThought.jar and files folder get moved, file still gets found
+        return File(fileFolder, filename) // use path not absolute path as for Java synchronized files get stored relative to DeepThought.jar -> if DeepThought.jar and files folder get moved, file still gets found
     }
 
     protected fun ensureFolderExists(folder: File): File {

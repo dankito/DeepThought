@@ -31,50 +31,34 @@ class MimeTypeService(val detector: MimeTypeDetector, val categorizer: MimeTypeC
     }
 
 
-    fun getFileType(uri: URI): FileType? {
+    fun getFileType(uri: URI): FileType {
         return getFileTypeForMimeType(getBestMimeType(uri))
     }
 
-    fun getFileType(file: File): FileType? {
+    fun getFileType(file: File): FileType {
         return getFileTypeForMimeType(getBestMimeType(file))
     }
 
-    fun getFileType(filename: String): FileType? {
+    fun getFileType(filename: String): FileType {
         return getFileTypeForMimeType(getBestMimeType(filename))
     }
 
-    fun getFileType(file: FileLink): FileType? {
+    fun getFileType(file: FileLink): FileType {
         return getFileTypeForMimeType(file.mimeType)
     }
 
-    fun getFileTypeForMimeType(mimeType: String?): FileType? {
+    fun getFileTypeForMimeType(mimeType: String?): FileType {
         if(mimeType == null) {
-            return getOtherFilesFileType()
+            return FileType.Other
         }
 
         return when {
-            categorizer.isDocument(mimeType) -> getFileTypeByKey("document")
-            categorizer.isImageFile(mimeType) -> getFileTypeByKey("image")
-            categorizer.isAudioFile(mimeType) -> getFileTypeByKey("audio")
-            categorizer.isVideoFile(mimeType) -> getFileTypeByKey("video")
-            else -> getOtherFilesFileType()
+            categorizer.isDocument(mimeType) -> FileType.Document
+            categorizer.isImageFile(mimeType) -> FileType.Image
+            categorizer.isAudioFile(mimeType) -> FileType.Audio
+            categorizer.isVideoFile(mimeType) -> FileType.Video
+            else -> FileType.Other
         }
-    }
-
-    private fun getOtherFilesFileType(): FileType? {
-        return getFileTypeByKey("other.files")
-    }
-
-    private fun getFileTypeByKey(key: String): FileType? {
-        val fullKey = "file.type." + key
-
-        dataManager.deepThought.fileTypes.forEach { fileType ->
-            if(fileType.nameResourceKey == fullKey) {
-                return fileType
-            }
-        }
-
-        return null
     }
 
 }

@@ -34,9 +34,9 @@ data class FileLink(
     @Column(name = TableConfig.FileLinkMimeTypeColumnName)
     var mimeType: String? = null
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = TableConfig.FileLinkFileTypeColumnName)
-    var fileType: FileType? = null
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = TableConfig.FileLinkFileTypeColumnName)
+    var fileType: FileType = FileType.Other
 
     @Column(name = TableConfig.FileLinkFileSizeColumnName)
     var fileSize: Long = SizeNotDeterminedYet
@@ -66,12 +66,6 @@ data class FileLink(
     @javax.persistence.Transient
     private val uuid = UUID.randomUUID().toString() // just needed for same internal states, as for instance equality only uriString, name and isLocalFile are taken into
     // consideration - so two instances having the same values in these are considered equal. And as FileLinks may remain unpersisted for some time, we also cannot take id field
-
-
-    init {
-        // TODO
-//        this.fileType = FileType.getDefaultFileType()
-    }
 
 
     internal constructor() : this("")

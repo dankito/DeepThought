@@ -1,7 +1,6 @@
 package net.dankito.deepthought.model
 
 import net.dankito.deepthought.model.config.TableConfig
-import net.dankito.deepthought.model.enums.FileType
 import net.dankito.deepthought.model.enums.NoteType
 import java.io.Serializable
 import java.util.*
@@ -34,12 +33,6 @@ data class DeepThought(
     @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     @OrderBy(value = "sortOrder")
     var noteTypes: MutableSet<NoteType> = TreeSet<NoteType>()
-        private set
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
-    @OrderBy(value = "sortOrder")
-    var fileTypes: MutableSet<FileType> = TreeSet<FileType>()
-        private set
 
 
     @Column(name = TableConfig.DeepThoughtNextItemIndexColumnName)
@@ -60,18 +53,6 @@ data class DeepThought(
         }
 
         return noteTypes.remove(noteType)
-    }
-
-    fun addFileType(fileType: FileType): Boolean {
-        return fileTypes.add(fileType)
-    }
-
-    fun removeFileType(fileType: FileType): Boolean {
-        if (fileType.isSystemValue) {
-            return false
-        }
-
-        return fileTypes.remove(fileType)
     }
 
 

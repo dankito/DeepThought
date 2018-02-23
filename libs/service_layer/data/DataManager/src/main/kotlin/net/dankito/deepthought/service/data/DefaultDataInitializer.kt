@@ -4,8 +4,6 @@ import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.LocalSettings
 import net.dankito.deepthought.model.User
-import net.dankito.deepthought.model.enums.FileType
-import net.dankito.deepthought.model.enums.FileTypeDefaultFolderName
 import net.dankito.deepthought.model.enums.NoteType
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.localization.Localization
@@ -69,7 +67,6 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
 
     protected open fun createEnumerationsDefaultValues(deepThought: DeepThought) {
         createDefaultNoteTypes(deepThought)
-        createDefaultFileTypes(deepThought)
     }
 
     protected open fun createDefaultNoteTypes(deepThought: DeepThought) {
@@ -78,14 +75,6 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
         deepThought.addNoteType(NoteType("note.type.info", true, 3))
         deepThought.addNoteType(NoteType("note.type.to.do", true, 4))
         deepThought.addNoteType(NoteType("note.type.thought", true, 5))
-    }
-
-    protected open fun createDefaultFileTypes(deepThought: DeepThought) {
-        deepThought.addFileType(FileType("file.type.document", FileTypeDefaultFolderName.Documents.folderName, true, 1))
-        deepThought.addFileType(FileType("file.type.image", FileTypeDefaultFolderName.Images.folderName, true, 2))
-        deepThought.addFileType(FileType("file.type.audio", FileTypeDefaultFolderName.Audio.folderName, true, 3))
-        deepThought.addFileType(FileType("file.type.video", FileTypeDefaultFolderName.Video.folderName, true, 4))
-        deepThought.addFileType(FileType("file.type.other.files", FileTypeDefaultFolderName.OtherFilesFolderName.folderName, true, Integer.MAX_VALUE))
     }
 
 

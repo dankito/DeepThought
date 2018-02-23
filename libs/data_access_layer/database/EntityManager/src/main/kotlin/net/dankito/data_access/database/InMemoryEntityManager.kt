@@ -77,7 +77,6 @@ class InMemoryEntityManager : IEntityManager {
         result = result and persistEntity(entity.localDevice)
         result = result and persistEntity(entity.localSettings)
 
-        entity.fileTypes.forEach { result = result and persistEntity(it) }
         entity.noteTypes.forEach { result = result and persistEntity(it) }
 
         return result

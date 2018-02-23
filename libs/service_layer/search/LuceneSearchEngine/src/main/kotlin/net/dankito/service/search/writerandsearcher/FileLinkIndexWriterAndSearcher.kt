@@ -42,9 +42,7 @@ class FileLinkIndexWriterAndSearcher(fileService: FileService, eventBus: IEventB
         entity.mimeType?.let { mimeType ->
             doc.add(StringField(FieldName.FileMimeType, mimeType, Field.Store.NO))
         }
-        entity.fileType?.let { fileType ->
-            doc.add(StringField(FieldName.FileFileType, fileType.folderName, Field.Store.NO))
-        }
+        doc.add(StringField(FieldName.FileFileType, entity.fileType.toString().toLowerCase(), Field.Store.NO))
 
         doc.add(LongField(FieldName.FileFileSize, entity.fileSize, Field.Store.YES))
         entity.fileLastModified?.let { doc.add(LongField(FieldName.FileFileLastModified, it.time, Field.Store.YES)) }
