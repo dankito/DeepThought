@@ -1,5 +1,6 @@
 package net.dankito.deepthought.files
 
+import net.dankito.deepthought.files.synchronization.FileSyncConfig
 import net.dankito.deepthought.files.synchronization.FileSyncService
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.LocalFileInfo
@@ -12,7 +13,6 @@ import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.services.Times
-import net.dankito.utils.services.hashing.HashAlgorithm
 import net.dankito.utils.services.hashing.HashService
 import net.engio.mbassy.listener.Handler
 import org.slf4j.LoggerFactory
@@ -104,7 +104,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
 
     private fun setFileHash(file: FileLink, localFileInfo: LocalFileInfo, localFile: File) {
         try {
-            file.hashSHA256 = hashService.getFileHash(HashAlgorithm.SHA256, localFile)
+            file.hashSHA256 = hashService.getFileHash(FileSyncConfig.FileHashAlgorithm, localFile)
 
             localFileInfo.hashSHA256 = file.hashSHA256
         } catch(e: Exception) {

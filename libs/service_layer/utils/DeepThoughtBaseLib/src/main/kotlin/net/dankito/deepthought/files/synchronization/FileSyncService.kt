@@ -19,7 +19,6 @@ import net.dankito.service.synchronization.KnownSynchronizedDevicesListener
 import net.dankito.utils.AsyncProducerConsumerQueue
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.serialization.ISerializer
-import net.dankito.utils.services.hashing.HashAlgorithm
 import net.dankito.utils.services.hashing.HashService
 import org.slf4j.LoggerFactory
 import java.io.*
@@ -335,7 +334,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         localFileInfo.path = destinationFile.path // use path not absolute path, see comment in getDefaultSavePathForFile()
 
         localFileInfo.fileSize = File(destinationFile.absolutePath).length() // we have to create a new File object to get file size
-        localFileInfo.hashSHA256 = hashService.getFileHash(HashAlgorithm.SHA256, destinationFile)
+        localFileInfo.hashSHA256 = hashService.getFileHash(FileSyncConfig.FileHashAlgorithm, destinationFile)
 
         file.fileLastModified?.let { lastModified ->
             destinationFile.setLastModified(lastModified.time)
