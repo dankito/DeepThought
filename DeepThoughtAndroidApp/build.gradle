@@ -190,6 +190,9 @@ dependencies {
     compile "com.android.support:design:$androidDesignVersion"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
+    debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+
     betaCompile "testfairy:testfairy-android-sdk:$testFairyVersion@aar"
 //    betaCompile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
 //        transitive = true
