@@ -68,8 +68,10 @@ class TagsListView : EntitiesListView(), ITagsListView {
         presenter = TagsListPresenter(this, allCalculatedTags, searchEngine, searchResultsUtil, tagService, deleteEntityService, dialogService, router)
         searchBar = TagsSearchBar(this)
 
-        searchEngine.addInitializationListener {
-            searchEntities(Search.EmptySearchTerm)
+        runLater { // wait till UI is initialized before search index
+            searchEngine.addInitializationListener {
+                searchEntities(Search.EmptySearchTerm)
+            }
         }
     }
 
