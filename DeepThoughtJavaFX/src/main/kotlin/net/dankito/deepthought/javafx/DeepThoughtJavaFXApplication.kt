@@ -28,9 +28,9 @@ open class DeepThoughtJavaFXApplication : App(MainWindow::class) {
 
 
     override fun start(stage: Stage) {
-        setupMessagesResources() // has to be done before creating / injecting first instances as some of them already rely on Messages (e.g. CalculatedTags)
-
         setupDI(stage)
+
+        setupMessagesResources() // has to be done before creating / injecting first instances as some of them already rely on Messages (e.g. CalculatedTags)
 
         stage.setOnCloseRequest { Platform.exit() } // stop application as otherwise all other windows would stay open
 
