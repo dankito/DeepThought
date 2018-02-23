@@ -21,7 +21,7 @@ class Localization {
             messagesResourceBundle = ResourceBundle.getBundle(MessagesResourceBundleName, field, UTF8ResourceBundleControl())
         }
 
-    var messagesResourceBundle: ResourceBundle? = null
+    var messagesResourceBundle: ResourceBundle
         private set
 
 
@@ -30,8 +30,26 @@ class Localization {
             messagesResourceBundle = ResourceBundle.getBundle(MessagesResourceBundleName, languageLocale, UTF8ResourceBundleControl())
         } catch (e: Exception) {
             log.error("Could not load $MessagesResourceBundleName. No Strings will now be translated, only their resource keys will be displayed.", e)
+
+            messagesResourceBundle = createEmptyResourceBundle()
         }
 
+    }
+
+    private fun createEmptyResourceBundle(): ResourceBundle {
+        return object : ResourceBundle() {
+
+            private val emptyEnumeration = Collections.enumeration(emptyList<String>())
+
+            override fun getKeys(): Enumeration<String> {
+                return emptyEnumeration
+            }
+
+            override fun handleGetObject(key: String?): Any? {
+                return null
+            }
+
+        }
     }
 
 
