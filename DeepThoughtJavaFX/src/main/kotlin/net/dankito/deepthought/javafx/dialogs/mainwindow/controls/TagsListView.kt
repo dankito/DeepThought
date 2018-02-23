@@ -152,6 +152,10 @@ class TagsListView : EntitiesListView(), ITagsListView {
     }
 
 
+    fun viewCameIntoView() {
+        showItemsForLastSelectedEntity()
+    }
+
     private fun tagSelected(selectedTagIndex: Int) {
         if(selectedTagIndex >= 0 && selectedTagIndex < tags.size) {
             tagSelected(tags[selectedTagIndex])
@@ -171,7 +175,7 @@ class TagsListView : EntitiesListView(), ITagsListView {
         }
     }
 
-    fun showItemsForLastSelectedEntity() {
+    private fun showItemsForLastSelectedEntity() {
         val selectedTag = lastSelectedTag
 
         if(selectedTag != null) {

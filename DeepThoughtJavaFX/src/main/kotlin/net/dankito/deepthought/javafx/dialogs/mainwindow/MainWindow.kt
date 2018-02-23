@@ -74,13 +74,13 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
                         tab(messages["tab.tags.label"]) {
                             add(tagsListView.root)
 
-                            selectedProperty().addListener { _, _, newValue -> if(newValue) tagsListView.showItemsForLastSelectedEntity() }
+                            selectedProperty().addListener { _, _, newValue -> if(newValue) tagsListView.viewCameIntoView() }
                         }
 
                         tab(messages["tab.sources.label"]) {
                             add(sourcesListView.root)
 
-                            selectedProperty().addListener { _, _, newValue -> if(newValue) sourcesListView.showItemsForLastSelectedEntity() }
+                            selectedProperty().addListener { _, _, newValue -> if(newValue) sourcesListView.viewCameIntoView() }
                         }
                     }
 

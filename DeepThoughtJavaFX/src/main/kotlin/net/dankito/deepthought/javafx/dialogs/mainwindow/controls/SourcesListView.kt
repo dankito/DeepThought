@@ -55,10 +55,6 @@ class SourcesListView : EntitiesListView(), ISourcesListView {
 
         presenter = SourcesListPresenter(this, searchEngine, router, clipboardService, deleteEntityService)
         searchBar = SourcesSearchBar(this)
-
-        searchEngine.addInitializationListener {
-            searchEntities(Search.EmptySearchTerm)
-        }
     }
 
     override fun onUndock() {
@@ -122,6 +118,15 @@ class SourcesListView : EntitiesListView(), ISourcesListView {
     }
 
 
+    fun viewCameIntoView() {
+        if(lastSelectedSource == null && sources.isEmpty()) { // tab gets displayed for first time
+            searchEntities(Search.EmptySearchTerm)
+        }
+        else {
+            showItemsForLastSelectedEntity()
+        }
+    }
+
     private fun sourceSelected(selectedSourceIndex: Int) {
         if(selectedSourceIndex >= 0 && selectedSourceIndex < sources.size) {
             sourceSelected(sources[selectedSourceIndex])
@@ -134,7 +139,7 @@ class SourcesListView : EntitiesListView(), ISourcesListView {
         showItemsForLastSelectedEntity()
     }
 
-    fun showItemsForLastSelectedEntity() {
+    private fun showItemsForLastSelectedEntity() {
         val selectedSource = lastSelectedSource
 
         if(selectedSource != null) {
