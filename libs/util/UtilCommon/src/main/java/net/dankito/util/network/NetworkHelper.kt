@@ -11,6 +11,11 @@ import kotlin.collections.ArrayList
 
 class NetworkHelper {
 
+    companion object {
+        private val log = LoggerFactory.getLogger(NetworkHelper::class.java)
+    }
+
+
     /*
          With Android:
 
@@ -52,23 +57,29 @@ class NetworkHelper {
      * *
      * @return  mac address or empty string
      */
-    fun getMACAddress(interfaceName: String?): String {
+    fun getMACAddress(interfaceName: String): String {
         try {
             val interfaces = Collections.list(NetworkInterface.getNetworkInterfaces())
-            for (intf in interfaces) {
-                if (interfaceName != null) {
-                    if (!intf.name.equals(interfaceName, ignoreCase = true)) continue
+            for(networkInterface in interfaces) {
+                if(networkInterface.name.equals(interfaceName, true) == false) {
+                    continue
                 }
-                val mac = intf.hardwareAddress ?: return ""
-                val buf = StringBuilder()
-                for (idx in mac.indices)
-                    buf.append(String.format("%02X:", mac[idx]))
-                if (buf.length > 0) buf.deleteCharAt(buf.length - 1)
-                return buf.toString()
+
+                val mac = networkInterface.hardwareAddress ?: return ""
+                val buffer = StringBuilder()
+
+                mac.indices.forEach { index ->
+                    buffer.append(String.format("%02X:", mac[index]))
+                }
+
+                if(buffer.isNotEmpty()) {
+                    buffer.deleteCharAt(buffer.length - 1)
+                }
+
+                return buffer.toString()
             }
-        } catch (ex: Exception) {
-        }
-        // for now eat exceptions
+        } catch (ex: Exception) { } // for now eat exceptions
+
         return ""
     }
 
@@ -80,7 +91,8 @@ class NetworkHelper {
      */
     fun getIPAddress(useIPv4: Boolean): InetAddress? {
         val addresses = getIPAddresses(useIPv4)
-        if (addresses.size > 0) {
+
+        if(addresses.isNotEmpty()) {
             return addresses[0]
         }
 
@@ -145,11 +157,6 @@ class NetworkHelper {
 
     fun isSocketCloseException(exception: Exception): Boolean {
         return exception is SocketException && "Socket closed" == exception.message
-    }
-
-    companion object {
-
-        private val log = LoggerFactory.getLogger(NetworkHelper::class.java)
     }
 
 }
