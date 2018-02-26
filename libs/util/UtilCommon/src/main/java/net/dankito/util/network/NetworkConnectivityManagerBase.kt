@@ -25,11 +25,11 @@ abstract class NetworkConnectivityManagerBase(protected val networkHelper: Netwo
         return networkInterfaces.values.filter { it.isUp && it.broadcastAddress != null }.map { it.broadcastAddress!! }
     }
 
-    protected fun networkInterfacesChanged() {
+    protected open fun networkInterfacesChanged() {
         val changedInterfaces = networkHelper.getRealNetworkInterfaces()
         val removedInterfaces = ArrayList(networkInterfaces.values)
 
-        for(changedInterface in changedInterfaces) {
+        changedInterfaces.forEach { changedInterface ->
             val knownInterfaceState = checkChangedNetworkInterface(changedInterface)
 
             removedInterfaces.remove(knownInterfaceState)
@@ -41,7 +41,7 @@ abstract class NetworkConnectivityManagerBase(protected val networkHelper: Netwo
         }
     }
 
-    private fun checkChangedNetworkInterface(changedInterface: NetworkInterface): NetworkInterfaceState? {
+    protected open fun checkChangedNetworkInterface(changedInterface: NetworkInterface): NetworkInterfaceState? {
         val knownInterfaceState = networkInterfaces.get(changedInterface.name)
         val changedInterfaceState = getNetworkInterfaceState(changedInterface)
 
@@ -57,12 +57,12 @@ abstract class NetworkConnectivityManagerBase(protected val networkHelper: Netwo
         return knownInterfaceState
     }
 
-    private fun didNetworkInterfaceChange(knownInterfaceState: NetworkInterfaceState, changedInterfaceState: NetworkInterfaceState): Boolean {
+    protected open fun didNetworkInterfaceChange(knownInterfaceState: NetworkInterfaceState, changedInterfaceState: NetworkInterfaceState): Boolean {
         // TODO: may also check ip addresses
         return knownInterfaceState.isUp != changedInterfaceState.isUp || knownInterfaceState.broadcastAddress != changedInterfaceState.broadcastAddress
     }
 
-    private fun networkInterfaceStateChanged(knownInterfaceState: NetworkInterfaceState, changedInterfaceState: NetworkInterfaceState) {
+    protected open fun networkInterfaceStateChanged(knownInterfaceState: NetworkInterfaceState, changedInterfaceState: NetworkInterfaceState) {
         knownInterfaceState.isUp = changedInterfaceState.isUp
 
         if(knownInterfaceState.broadcastAddress == null) {
@@ -75,16 +75,16 @@ abstract class NetworkConnectivityManagerBase(protected val networkHelper: Netwo
         callNetworkInterfaceConnectivityChangedListeners(knownInterfaceState)
     }
 
-    private fun newNetworkInterfaceAdded(addedNetworkInterfaceState: NetworkInterfaceState) {
+    protected open fun newNetworkInterfaceAdded(addedNetworkInterfaceState: NetworkInterfaceState) {
         callNetworkInterfaceConnectivityChangedListeners(addedNetworkInterfaceState)
     }
 
-    private fun networkInterfaceRemoved(removedNetworkInterfaceState: NetworkInterfaceState) {
+    protected open fun networkInterfaceRemoved(removedNetworkInterfaceState: NetworkInterfaceState) {
         callNetworkInterfaceConnectivityChangedListeners(removedNetworkInterfaceState)
     }
 
 
-    private fun getNetworkInterfaceState(nic: NetworkInterface): NetworkInterfaceState {
+    protected open fun getNetworkInterfaceState(nic: NetworkInterface): NetworkInterfaceState {
         return NetworkInterfaceState(nic.name, nic.isUp, networkHelper.getIPAddresses(nic, true).toMutableList(), networkHelper.getBroadcastAddress(nic))
     }
 
@@ -97,7 +97,7 @@ abstract class NetworkConnectivityManagerBase(protected val networkHelper: Netwo
         listeners.remove(listener)
     }
 
-    private fun callNetworkInterfaceConnectivityChangedListeners(state: NetworkInterfaceState) {
+    protected open fun callNetworkInterfaceConnectivityChangedListeners(state: NetworkInterfaceState) {
         listeners.forEach { it.invoke(state) }
     }
 
