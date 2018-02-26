@@ -6,8 +6,10 @@ import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
 
-open class AsyncProducerConsumerQueue<T>(protected val countThreadsToUse: Int, maxItemsToQueue: Int = NO_LIMIT_ITEMS_TO_QUEUE,
-                                    minimumMillisecondsToWaitBeforeConsumingItem: Int = WAITING_BEFORE_CONSUMING_ITEM_DISABLED, autoStart: Boolean = true,
+open class AsyncProducerConsumerQueue<T>(protected val countThreadsToUse: Int,
+                                         maxItemsToQueue: Int = NO_LIMIT_ITEMS_TO_QUEUE,
+                                         minimumMillisecondsToWaitBeforeConsumingItem: Int = WAITING_BEFORE_CONSUMING_ITEM_DISABLED,
+                                         autoStart: Boolean = true,
                                          protected val consumerListener: (item: T) -> Unit) {
 
     companion object {
