@@ -3,9 +3,9 @@ package net.dankito.util
 import java.net.URI
 
 
-class UrlUtil {
+open class UrlUtil {
 
-    fun isUri(string: String): Boolean {
+    open fun isUri(string: String): Boolean {
         try {
             val uri = URI.create(string)
             return uri != null && uri.scheme != null
@@ -17,7 +17,7 @@ class UrlUtil {
     /**
      * Returns true if parameter is a valid uri and scheme is either 'http' or 'https'.
      */
-    fun isHttpUri(string: String): Boolean {
+    open fun isHttpUri(string: String): Boolean {
         try {
             val uri = URI.create(string)
             return uri != null && (uri.scheme == "http" || uri.scheme == "https")
@@ -27,7 +27,7 @@ class UrlUtil {
     }
 
 
-    fun getHostName(url: String): String? {
+    open fun getHostName(url: String): String? {
         var host = url.substringAfter("://").substringBefore('/') // as fallback if parsing URI doesn't work
 
         try {
@@ -41,7 +41,7 @@ class UrlUtil {
         return host
     }
 
-    private fun tryToRemoveDomainUrlAndWWW(host: String): String {
+    protected open fun tryToRemoveDomainUrlAndWWW(host: String): String {
         try {
             val lastIndexOfDot = host.lastIndexOf('.')
 
@@ -62,7 +62,7 @@ class UrlUtil {
     }
 
 
-    fun getFileName(url: String): String {
+    open fun getFileName(url: String): String {
         try {
             val uri = URI(url)
             val path = uri.path
