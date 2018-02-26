@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.utils.services.network.INetworkConnectivityManager
+import net.dankito.util.network.INetworkConnectivityManager
 import javax.inject.Inject
 
 

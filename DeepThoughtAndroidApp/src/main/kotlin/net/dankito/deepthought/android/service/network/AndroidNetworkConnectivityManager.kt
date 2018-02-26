@@ -1,8 +1,8 @@
 package net.dankito.deepthought.android.service.network
 
 import android.content.Intent
-import net.dankito.utils.services.network.NetworkConnectivityManagerBase
-import net.dankito.utils.services.network.NetworkHelper
+import net.dankito.util.network.NetworkConnectivityManagerBase
+import net.dankito.util.network.NetworkHelper
 
 
 

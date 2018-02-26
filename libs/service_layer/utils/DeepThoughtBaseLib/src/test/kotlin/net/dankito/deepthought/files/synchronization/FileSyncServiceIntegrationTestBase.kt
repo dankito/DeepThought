@@ -48,8 +48,8 @@ import net.dankito.util.localization.Localization
 import net.dankito.utils.serialization.JacksonJsonSerializer
 import net.dankito.util.hashing.HashService
 import net.dankito.util.hashing.IBase64Service
-import net.dankito.utils.services.network.NetworkConnectivityManagerBase
-import net.dankito.utils.services.network.NetworkHelper
+import net.dankito.util.network.NetworkConnectivityManagerBase
+import net.dankito.util.network.NetworkHelper
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.settings.LocalSettingsStoreBase
 import net.dankito.utils.ui.IDialogService

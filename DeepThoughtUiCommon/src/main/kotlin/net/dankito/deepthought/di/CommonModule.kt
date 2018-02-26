@@ -53,7 +53,7 @@ import net.dankito.utils.language.ILanguageDetector
 import net.dankito.util.serialization.ISerializer
 import net.dankito.util.hashing.HashService
 import net.dankito.util.hashing.IBase64Service
-import net.dankito.utils.services.network.NetworkHelper
+import net.dankito.util.network.NetworkHelper
 import net.dankito.utils.ui.IDialogService
 import javax.inject.Singleton
 

@@ -1,4 +1,4 @@
-package net.dankito.utils.services.network
+package net.dankito.util.network
 
 import org.slf4j.LoggerFactory
 import java.net.Inet4Address

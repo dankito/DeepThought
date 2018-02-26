@@ -1,7 +1,7 @@
 package net.dankito.deepthought.javafx.service.network
 
-import net.dankito.utils.services.network.NetworkConnectivityManagerBase
-import net.dankito.utils.services.network.NetworkHelper
+import net.dankito.util.network.NetworkConnectivityManagerBase
+import net.dankito.util.network.NetworkHelper
 import java.util.*
 import kotlin.concurrent.schedule
 

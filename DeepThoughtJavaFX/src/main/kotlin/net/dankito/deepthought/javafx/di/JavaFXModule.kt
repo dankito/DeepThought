@@ -39,8 +39,8 @@ import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.util.IThreadPool
 import net.dankito.util.UrlUtil
 import net.dankito.util.localization.Localization
-import net.dankito.utils.services.network.INetworkConnectivityManager
-import net.dankito.utils.services.network.NetworkHelper
+import net.dankito.util.network.INetworkConnectivityManager
+import net.dankito.util.network.NetworkHelper
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.ui.IApplicationsService
 import net.dankito.utils.ui.IClipboardService
