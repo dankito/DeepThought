@@ -1,6 +1,5 @@
 package net.dankito.util.hashing
 
-
 import java.io.*
 import java.nio.charset.Charset
 import java.security.MessageDigest
@@ -53,7 +52,6 @@ class HashService {
         }
 
         return hexString.toString()
-
     }
 
 }
