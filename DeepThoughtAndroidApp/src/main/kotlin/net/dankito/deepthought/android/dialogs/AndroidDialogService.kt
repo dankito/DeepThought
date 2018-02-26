@@ -9,7 +9,7 @@ import android.widget.Toast
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.android.service.showKeyboardDelayed
-import net.dankito.utils.localization.Localization
+import net.dankito.util.localization.Localization
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogButton
 import net.dankito.utils.ui.model.ConfirmationDialogConfig

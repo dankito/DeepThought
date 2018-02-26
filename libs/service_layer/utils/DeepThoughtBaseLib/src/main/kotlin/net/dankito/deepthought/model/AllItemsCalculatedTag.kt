@@ -4,7 +4,7 @@ import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.ItemsSearch
-import net.dankito.utils.localization.Localization
+import net.dankito.util.localization.Localization
 
 
 class AllItemsCalculatedTag(searchEngine: ISearchEngine, eventBus: IEventBus, entityChangedNotifier: EntityChangedNotifier, localization: Localization)

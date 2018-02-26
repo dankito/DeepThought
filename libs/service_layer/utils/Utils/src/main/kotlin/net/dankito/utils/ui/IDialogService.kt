@@ -1,6 +1,6 @@
 package net.dankito.utils.ui
 
-import net.dankito.utils.localization.Localization
+import net.dankito.util.localization.Localization
 import net.dankito.utils.ui.model.ConfirmationDialogButton
 import net.dankito.utils.ui.model.ConfirmationDialogConfig
 

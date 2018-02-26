@@ -10,7 +10,7 @@ import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.service.synchronization.initialsync.model.SyncInfo
-import net.dankito.utils.localization.Localization
+import net.dankito.util.localization.Localization
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogButton
 

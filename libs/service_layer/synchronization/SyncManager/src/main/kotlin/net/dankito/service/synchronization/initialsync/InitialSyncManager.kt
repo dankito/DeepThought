@@ -9,7 +9,7 @@ import net.dankito.deepthought.model.User
 import net.dankito.service.synchronization.initialsync.model.DeepThoughtSyncInfo
 import net.dankito.service.synchronization.initialsync.model.SyncInfo
 import net.dankito.service.synchronization.initialsync.model.UserSyncInfo
-import net.dankito.utils.localization.Localization
+import net.dankito.util.localization.Localization
 
 
 class InitialSyncManager(private var entityManager: IEntityManager, private var localization: Localization) {

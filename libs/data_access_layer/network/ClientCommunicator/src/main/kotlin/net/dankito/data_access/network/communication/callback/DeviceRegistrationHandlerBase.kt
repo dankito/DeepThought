@@ -12,7 +12,7 @@ import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.service.synchronization.initialsync.model.DeepThoughtSyncInfo
 import net.dankito.service.synchronization.initialsync.model.SyncInfo
 import net.dankito.service.synchronization.initialsync.model.UserSyncInfo
-import net.dankito.utils.localization.Localization
+import net.dankito.util.localization.Localization
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.InputType
 import org.slf4j.LoggerFactory

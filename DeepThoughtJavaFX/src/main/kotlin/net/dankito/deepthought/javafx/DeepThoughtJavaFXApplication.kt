@@ -12,7 +12,7 @@ import net.dankito.deepthought.javafx.di.JavaFXInstanceProvider
 import net.dankito.deepthought.javafx.di.JavaFXModule
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindow
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
-import net.dankito.utils.localization.Localization
+import net.dankito.util.localization.Localization
 import tornadofx.*
 import java.util.*
 import javax.inject.Inject

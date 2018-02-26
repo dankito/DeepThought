@@ -6,7 +6,7 @@ import net.dankito.deepthought.model.LocalFileInfo
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.enums.FileSyncStatus
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.utils.localization.Localization
+import net.dankito.util.localization.Localization
 import net.dankito.utils.ui.IApplicationsService
 import java.io.File
 

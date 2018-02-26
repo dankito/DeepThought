@@ -1,4 +1,4 @@
-package net.dankito.utils.localization
+package net.dankito.util.localization
 
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -54,7 +54,7 @@ class Localization {
         try {
             messagesResourceBundle = ResourceBundle.getBundle(MessagesResourceBundleName, languageLocale, UTF8ResourceBundleControl())
         } catch (e: Exception) {
-            log.error("Could not load $MessagesResourceBundleName. No Strings will now be translated, only their resource keys will be displayed.", e)
+            log.error("Could not load ${MessagesResourceBundleName}. No Strings will now be translated, only their resource keys will be displayed.", e)
         }
     }
 

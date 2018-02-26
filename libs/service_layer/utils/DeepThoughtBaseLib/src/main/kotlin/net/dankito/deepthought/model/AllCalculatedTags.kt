@@ -3,7 +3,7 @@ package net.dankito.deepthought.model
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
-import net.dankito.utils.localization.Localization
+import net.dankito.util.localization.Localization
 
 
 class AllCalculatedTags(private val searchEngine: ISearchEngine, private val eventBus: IEventBus, private val entityChangedNotifier: EntityChangedNotifier,

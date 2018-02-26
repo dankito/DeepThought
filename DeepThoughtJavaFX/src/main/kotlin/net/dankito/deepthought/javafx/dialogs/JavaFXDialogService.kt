@@ -8,7 +8,7 @@ import javafx.scene.layout.VBox
 import javafx.stage.Screen
 import javafx.stage.Stage
 import net.dankito.deepthought.javafx.util.FXUtils
-import net.dankito.utils.localization.Localization
+import net.dankito.util.localization.Localization
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.InputType
 import net.dankito.utils.ui.model.ConfirmationDialogButton

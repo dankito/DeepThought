@@ -13,7 +13,7 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.service.importexport.pdf.*
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.utils.localization.Localization
+import net.dankito.util.localization.Localization
 import org.slf4j.LoggerFactory
 import java.io.File
 import javax.inject.Inject

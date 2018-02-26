@@ -24,7 +24,7 @@ import net.dankito.utils.OsHelper
 import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.util.ThreadPool
 import net.dankito.utils.language.NoOpLanguageDetector
-import net.dankito.utils.localization.Localization
+import net.dankito.util.localization.Localization
 import net.dankito.utils.serialization.JacksonJsonSerializer
 import net.dankito.utils.services.hashing.HashService
 import net.dankito.utils.settings.ILocalSettingsStore

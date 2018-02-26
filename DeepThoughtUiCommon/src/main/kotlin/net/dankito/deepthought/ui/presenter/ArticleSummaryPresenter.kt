@@ -13,7 +13,7 @@ import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.util.IThreadPool
-import net.dankito.utils.localization.Localization
+import net.dankito.util.localization.Localization
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import java.util.concurrent.CountDownLatch

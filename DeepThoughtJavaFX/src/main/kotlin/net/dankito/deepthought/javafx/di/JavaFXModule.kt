@@ -38,7 +38,7 @@ import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.util.IThreadPool
 import net.dankito.util.UrlUtil
-import net.dankito.utils.localization.Localization
+import net.dankito.util.localization.Localization
 import net.dankito.utils.services.network.INetworkConnectivityManager
 import net.dankito.utils.services.network.NetworkHelper
 import net.dankito.utils.settings.ILocalSettingsStore

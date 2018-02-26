@@ -5,7 +5,7 @@ import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.LocalSettings
 import net.dankito.deepthought.model.User
 import net.dankito.utils.IPlatformConfiguration
-import net.dankito.utils.localization.Localization
+import net.dankito.util.localization.Localization
 import net.dankito.utils.version.Versions
 import org.slf4j.LoggerFactory
 import java.util.*

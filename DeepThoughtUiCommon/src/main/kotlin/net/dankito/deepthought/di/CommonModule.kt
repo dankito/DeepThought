@@ -49,7 +49,7 @@ import net.dankito.util.IThreadPool
 import net.dankito.utils.ImageCache
 import net.dankito.utils.OsHelper
 import net.dankito.utils.language.ILanguageDetector
-import net.dankito.utils.localization.Localization
+import net.dankito.util.localization.Localization
 import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.services.hashing.HashService
 import net.dankito.utils.services.hashing.IBase64Service

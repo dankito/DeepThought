@@ -27,7 +27,7 @@ import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
-import net.dankito.utils.localization.Localization
+import net.dankito.util.localization.Localization
 import net.dankito.utils.services.network.INetworkConnectivityManager
 import net.dankito.utils.services.network.NetworkHelper
 import net.dankito.utils.settings.ILocalSettingsStore

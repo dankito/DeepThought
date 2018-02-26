@@ -12,7 +12,7 @@ import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.util.UrlUtil
-import net.dankito.utils.localization.Localization
+import net.dankito.util.localization.Localization
 import net.dankito.utils.services.network.download.IFileDownloader
 import net.dankito.utils.ui.IDialogService
 import java.io.File

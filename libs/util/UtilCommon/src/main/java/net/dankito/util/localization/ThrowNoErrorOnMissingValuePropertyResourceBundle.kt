@@ -1,4 +1,4 @@
-package net.dankito.utils.localization
+package net.dankito.util.localization
 
 
 class ThrowNoErrorOnMissingValuePropertyResourceBundle(reader: java.io.Reader) : java.util.PropertyResourceBundle(reader) {

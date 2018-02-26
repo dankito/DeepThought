@@ -1,4 +1,4 @@
-package net.dankito.utils.localization
+package net.dankito.util.localization
 
 
 /**

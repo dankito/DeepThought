@@ -18,7 +18,7 @@ import net.dankito.deepthought.ui.presenter.FileListPresenter
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.extensions.didCollectionChange
-import net.dankito.utils.localization.Localization
+import net.dankito.util.localization.Localization
 import net.dankito.utils.ui.Colors
 import net.dankito.utils.ui.IApplicationsService
 import net.engio.mbassy.listener.Handler
