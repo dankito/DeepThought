@@ -9,6 +9,7 @@ import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Tag
 import net.dankito.service.data.SeriesService
 import net.dankito.service.data.TagService
+import net.dankito.util.serialization.ISerializer
 import net.dankito.utils.serialization.serializer.PersistedSeriesDeserializer
 import net.dankito.utils.serialization.serializer.PersistedSeriesSerializer
 import net.dankito.utils.serialization.serializer.PersistedTagDeserializer

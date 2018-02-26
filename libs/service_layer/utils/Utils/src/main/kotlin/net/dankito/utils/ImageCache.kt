@@ -6,7 +6,7 @@ import net.dankito.data_access.network.webclient.RequestParameters
 import net.dankito.data_access.network.webclient.ResponseType
 import net.dankito.data_access.network.webclient.WebClientResponse
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
-import net.dankito.utils.serialization.ISerializer
+import net.dankito.util.serialization.ISerializer
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.FileNotFoundException

@@ -50,7 +50,7 @@ import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.ImageCache
 import net.dankito.utils.OsHelper
 import net.dankito.utils.language.ILanguageDetector
-import net.dankito.utils.serialization.ISerializer
+import net.dankito.util.serialization.ISerializer
 import net.dankito.utils.services.hashing.HashService
 import net.dankito.utils.services.hashing.IBase64Service
 import net.dankito.utils.services.network.NetworkHelper
@@ -172,7 +172,7 @@ open class CommonModule {
     @Provides
     @Singleton
     open fun provideClientCommunicator(networkSettings: INetworkSettings, registrationHandler: IDeviceRegistrationHandler, entityManager: IEntityManager,
-                                  serializer: ISerializer, base64Service: IBase64Service, hashService: HashService, threadPool: IThreadPool) : IClientCommunicator {
+                                       serializer: ISerializer, base64Service: IBase64Service, hashService: HashService, threadPool: IThreadPool) : IClientCommunicator {
         return TcpSocketClientCommunicator(networkSettings, registrationHandler, entityManager, serializer, base64Service, hashService, threadPool)
     }
 

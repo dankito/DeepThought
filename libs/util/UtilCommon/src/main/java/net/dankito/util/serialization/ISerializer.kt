@@ -1,4 +1,4 @@
-package net.dankito.utils.serialization
+package net.dankito.util.serialization
 
 
 interface ISerializer {

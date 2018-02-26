@@ -4,7 +4,7 @@ import net.dankito.data_access.network.communication.message.IMessageHandler
 import net.dankito.data_access.network.communication.message.Request
 import net.dankito.data_access.network.communication.message.Response
 import net.dankito.data_access.network.communication.message.ResponseErrorType
-import net.dankito.utils.serialization.ISerializer
+import net.dankito.util.serialization.ISerializer
 import org.slf4j.LoggerFactory
 import java.io.IOException
 

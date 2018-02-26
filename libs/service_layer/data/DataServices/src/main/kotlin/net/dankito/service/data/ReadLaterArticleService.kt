@@ -6,7 +6,7 @@ import net.dankito.deepthought.model.extensions.getItemPreviewWithSeriesAndPubli
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.event.EntityChangedNotifier
-import net.dankito.utils.serialization.ISerializer
+import net.dankito.util.serialization.ISerializer
 import org.slf4j.LoggerFactory
 
 

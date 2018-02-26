@@ -11,7 +11,7 @@ import net.dankito.deepthought.model.enums.FileSyncStatus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.util.IThreadPool
-import net.dankito.utils.serialization.ISerializer
+import net.dankito.util.serialization.ISerializer
 import org.slf4j.LoggerFactory
 import java.io.*
 import java.net.BindException

@@ -7,7 +7,7 @@ import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.service.synchronization.initialsync.model.SyncInfo
 import net.dankito.util.IThreadPool
-import net.dankito.utils.serialization.ISerializer
+import net.dankito.util.serialization.ISerializer
 import net.dankito.utils.services.hashing.HashService
 import net.dankito.utils.services.hashing.IBase64Service
 import java.net.InetSocketAddress

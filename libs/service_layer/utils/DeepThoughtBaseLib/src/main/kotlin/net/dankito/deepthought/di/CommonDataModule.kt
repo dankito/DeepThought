@@ -25,7 +25,7 @@ import net.dankito.service.synchronization.IConnectedDevicesService
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.util.IThreadPool
 import net.dankito.util.localization.Localization
-import net.dankito.utils.serialization.ISerializer
+import net.dankito.util.serialization.ISerializer
 import net.dankito.utils.serialization.JacksonJsonSerializer
 import net.dankito.utils.services.hashing.HashService
 import net.dankito.utils.settings.ILocalSettingsStore

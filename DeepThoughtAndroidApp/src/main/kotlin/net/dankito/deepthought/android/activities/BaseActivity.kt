@@ -9,7 +9,7 @@ import net.dankito.deepthought.android.service.ActivityStateHolder
 import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.filechooserdialog.service.IPermissionsService
 import net.dankito.filechooserdialog.service.PermissionsService
-import net.dankito.utils.serialization.ISerializer
+import net.dankito.util.serialization.ISerializer
 import org.slf4j.LoggerFactory
 import java.io.File
 import javax.inject.Inject
