@@ -32,9 +32,7 @@ class Localization(private val messagesResourceBundleName: String) {
 
     fun getLocalizedString(resourceKey: String): String {
         try {
-            messagesResourceBundle?.let { messagesResourceBundle ->
-                return messagesResourceBundle.getString(resourceKey)
-            }
+            return messagesResourceBundle.getString(resourceKey)
         } catch (e: Exception) {
             log.error("Could not get Resource for key {} from String Resource Bundle {}", resourceKey, messagesResourceBundleName)
         }
