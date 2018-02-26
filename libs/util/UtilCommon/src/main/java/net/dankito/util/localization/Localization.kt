@@ -4,7 +4,7 @@ import org.slf4j.LoggerFactory
 import java.util.*
 
 
-class Localization(private val messagesResourceBundleName: String) {
+open class Localization(private val messagesResourceBundleName: String) {
 
     companion object {
         private val log = LoggerFactory.getLogger(Localization::class.java)
@@ -30,7 +30,7 @@ class Localization(private val messagesResourceBundleName: String) {
     }
 
 
-    fun getLocalizedString(resourceKey: String): String {
+    open fun getLocalizedString(resourceKey: String): String {
         try {
             return messagesResourceBundle.getString(resourceKey)
         } catch (e: Exception) {
@@ -40,12 +40,12 @@ class Localization(private val messagesResourceBundleName: String) {
         return resourceKey
     }
 
-    fun getLocalizedString(resourceKey: String, vararg formatArguments: Any): String {
+    open fun getLocalizedString(resourceKey: String, vararg formatArguments: Any): String {
         return String.format(getLocalizedString(resourceKey), *formatArguments)
     }
 
 
-    private fun tryToLoadMessagesResourceBundle(languageLocale: Locale) {
+    protected open fun tryToLoadMessagesResourceBundle(languageLocale: Locale) {
         try {
             messagesResourceBundle = ResourceBundle.getBundle(messagesResourceBundleName, languageLocale, UTF8ResourceBundleControl())
         } catch (e: Exception) {
@@ -53,7 +53,7 @@ class Localization(private val messagesResourceBundleName: String) {
         }
     }
 
-    private fun createEmptyResourceBundle(): ResourceBundle {
+    protected open fun createEmptyResourceBundle(): ResourceBundle {
         return object : ResourceBundle() {
 
             private val emptyEnumeration = Collections.enumeration(emptyList<String>())
