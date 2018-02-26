@@ -1,4 +1,4 @@
-package net.dankito.utils.version
+package net.dankito.util
 
 
 class Version(val major: Int, val minor: Int, val patch: Int = 0, val build: String? = null) {
