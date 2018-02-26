@@ -44,12 +44,12 @@ import net.dankito.service.synchronization.ISyncManager
 import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
-import net.dankito.utils.IPlatformConfiguration
 import net.dankito.util.IThreadPool
+import net.dankito.util.localization.Localization
+import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.ImageCache
 import net.dankito.utils.OsHelper
 import net.dankito.utils.language.ILanguageDetector
-import net.dankito.util.localization.Localization
 import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.services.hashing.HashService
 import net.dankito.utils.services.hashing.IBase64Service
@@ -64,7 +64,7 @@ open class CommonModule {
     @Provides
     @Singleton
     open fun provideLocalization() : Localization {
-        return Localization()
+        return Localization("Messages")
     }
 
 

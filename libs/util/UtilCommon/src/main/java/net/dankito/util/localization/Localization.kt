@@ -4,12 +4,9 @@ import org.slf4j.LoggerFactory
 import java.util.*
 
 
-class Localization {
+class Localization(private val messagesResourceBundleName: String) {
 
     companion object {
-        private const val MessagesResourceBundleName = "Messages"
-
-
         private val log = LoggerFactory.getLogger(Localization::class.java)
     }
 
@@ -39,7 +36,7 @@ class Localization {
                 return messagesResourceBundle.getString(resourceKey)
             }
         } catch (e: Exception) {
-            log.error("Could not get Resource for key {} from String Resource Bundle {}", resourceKey, MessagesResourceBundleName)
+            log.error("Could not get Resource for key {} from String Resource Bundle {}", resourceKey, messagesResourceBundleName)
         }
 
         return resourceKey
@@ -52,9 +49,9 @@ class Localization {
 
     private fun tryToLoadMessagesResourceBundle(languageLocale: Locale) {
         try {
-            messagesResourceBundle = ResourceBundle.getBundle(MessagesResourceBundleName, languageLocale, UTF8ResourceBundleControl())
+            messagesResourceBundle = ResourceBundle.getBundle(messagesResourceBundleName, languageLocale, UTF8ResourceBundleControl())
         } catch (e: Exception) {
-            log.error("Could not load ${MessagesResourceBundleName}. No Strings will now be translated, only their resource keys will be displayed.", e)
+            log.error("Could not load $messagesResourceBundleName. No Strings will now be translated, only their resource keys will be displayed.", e)
         }
     }
 
