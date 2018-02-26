@@ -26,7 +26,7 @@ import net.dankito.util.ThreadPool
 import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.util.localization.Localization
 import net.dankito.utils.serialization.JacksonJsonSerializer
-import net.dankito.utils.services.hashing.HashService
+import net.dankito.util.hashing.HashService
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.settings.LocalSettingsStoreBase
 import net.dankito.utils.version.Versions

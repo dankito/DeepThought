@@ -1,6 +1,6 @@
 package net.dankito.deepthought.files.synchronization
 
-import net.dankito.utils.services.hashing.HashAlgorithm
+import net.dankito.util.hashing.HashAlgorithm
 
 
 class FileSyncConfig {

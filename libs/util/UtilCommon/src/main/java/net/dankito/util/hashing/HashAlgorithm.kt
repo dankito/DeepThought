@@ -1,4 +1,4 @@
-package net.dankito.utils.services.hashing
+package net.dankito.util.hashing
 
 
 enum class HashAlgorithm private constructor(val algorithmName: String) {

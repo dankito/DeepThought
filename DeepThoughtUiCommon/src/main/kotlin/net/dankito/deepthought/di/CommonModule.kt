@@ -51,8 +51,8 @@ import net.dankito.utils.ImageCache
 import net.dankito.utils.OsHelper
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.util.serialization.ISerializer
-import net.dankito.utils.services.hashing.HashService
-import net.dankito.utils.services.hashing.IBase64Service
+import net.dankito.util.hashing.HashService
+import net.dankito.util.hashing.IBase64Service
 import net.dankito.utils.services.network.NetworkHelper
 import net.dankito.utils.ui.IDialogService
 import javax.inject.Singleton

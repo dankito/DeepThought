@@ -8,8 +8,8 @@ import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.service.synchronization.initialsync.model.SyncInfo
 import net.dankito.util.IThreadPool
 import net.dankito.util.serialization.ISerializer
-import net.dankito.utils.services.hashing.HashService
-import net.dankito.utils.services.hashing.IBase64Service
+import net.dankito.util.hashing.HashService
+import net.dankito.util.hashing.IBase64Service
 import java.net.InetSocketAddress
 import java.net.SocketAddress
 

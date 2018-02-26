@@ -1,8 +1,8 @@
 package net.dankito.data_access.network.communication.message
 
-import net.dankito.utils.services.hashing.HashAlgorithm
-import net.dankito.utils.services.hashing.HashService
-import net.dankito.utils.services.hashing.IBase64Service
+import net.dankito.util.hashing.HashAlgorithm
+import net.dankito.util.hashing.HashService
+import net.dankito.util.hashing.IBase64Service
 import java.util.*
 
 

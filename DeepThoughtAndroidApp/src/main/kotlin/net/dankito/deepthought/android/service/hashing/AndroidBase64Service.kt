@@ -1,8 +1,8 @@
 package net.dankito.deepthought.android.service.hashing
 
 import android.util.Base64
-import net.dankito.utils.services.hashing.IBase64Service
-import net.dankito.utils.services.hashing.IBase64Service.Companion.DEFAULT_CHAR_SET
+import net.dankito.util.hashing.IBase64Service
+import net.dankito.util.hashing.IBase64Service.Companion.DEFAULT_CHAR_SET
 
 
 class AndroidBase64Service : IBase64Service {
