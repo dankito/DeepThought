@@ -1,4 +1,45 @@
+buildscript {
+    ext {
+        kotlinVersion = '1.2.21'
+
+        jacksonVersion = '2.9.4'
+
+        slf4jVersion = '1.7.25'
+    }
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+
+        // Nexus staging plugin has to be downgraded to 0.10.0 to be applicable to sub projects, see https://github.com/UweTrottmann/SeriesGuide/commit/ca33e8ad2fa6cc5c426450c8aef3417ba073ca7f
+        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.10.0"
+    }
+}
+
+
+group 'net.dankito.util'
+version '1.0.0'
+def mavenArtifactId = 'util-common'
+
+
 apply plugin: 'kotlin'
+
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+// So after executing uploadArchives staged repository can be closed and released by executing closeAndReleaseRepository
+apply plugin: 'io.codearte.nexus-staging'
+
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.6"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.6"
+}
 
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
@@ -13,4 +54,92 @@ dependencies {
 
     compile "org.slf4j:slf4j-api:$slf4jVersion"
 
+}
+
+
+/*          publish to maven central            */
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+
+def areSigningPropertiesSet = isPropertySet('signing.secretKeyRingFile') && isPropertySet('signing.keyId') && isPropertySet('signing.password')
+def areOssrhPropertiesSet = isPropertySet('ossrhUsername') && isPropertySet('ossrhPassword')
+
+def isPropertySet(propertyName) {
+    return properties[propertyName] != null &&  ! (properties[propertyName] as String).isEmpty()
+}
+
+
+if(areSigningPropertiesSet) {
+    signing {
+        sign configurations.archives
+    }
+}
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+
+            repository url: repositories.mavenLocal().url
+
+            if(areOssrhPropertiesSet) {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+            }
+
+            pom.project {
+                name mavenArtifactId
+                artifactId = mavenArtifactId
+                packaging 'jar'
+
+                description "Common, often used util classes."
+                url 'https://github.com/dankito/UtilCommon'
+
+                scm {
+                    connection 'scm:git:git://github.com/dankito/UtilCommon.git'
+                    developerConnection 'scm:git:git@github.com:dankito/UtilCommon.git'
+                    url 'https://github.com/dankito/UtilCommon'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'dankito'
+                        name 'Christian Dankl'
+                        email 'maven@dankito.net'
+                    }
+                }
+            }
+        }
+    }
+}
+
+nexusStaging {
+    packageGroup = "net.dankito"
 }

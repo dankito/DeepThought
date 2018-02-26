@@ -6,7 +6,7 @@ targetCompatibility = "1.7"
 
 dependencies {
     compile project(':DataModel')
-    compile project(':UtilCommon')
+    compile "net.dankito.util:util-common:1.0.0"
 
     compile project(':WebClient')
     compile project(':FileStorageService')
