@@ -12,15 +12,15 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
 
     companion object {
 
-        val WAITING_BEFORE_CONSUMING_ITEM_DISABLED = 0
+        const val WAITING_BEFORE_CONSUMING_ITEM_DISABLED = 0
 
-        val NO_LIMIT_ITEMS_TO_QUEUE = Integer.MAX_VALUE // no limit
+        const val NO_LIMIT_ITEMS_TO_QUEUE = Integer.MAX_VALUE // no limit
 
         private val log = LoggerFactory.getLogger(AsyncProducerConsumerQueue::class.java)
     }
 
 
-    private var producedItemsQueue: BlockingQueue<T>
+    private var producedItemsQueue: BlockingQueue<T> = LinkedBlockingQueue<T>(maxItemsToQueue)
 
     private var minimumMillisecondsToWaitBeforeConsumingItem = WAITING_BEFORE_CONSUMING_ITEM_DISABLED
 
@@ -30,7 +30,6 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
 
 
     init {
-        this.producedItemsQueue = LinkedBlockingQueue<T>(maxItemsToQueue)
         this.minimumMillisecondsToWaitBeforeConsumingItem = minimumMillisecondsToWaitBeforeConsumingItem
 
         if(autoStart) {
@@ -88,7 +87,7 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
 
 
     protected fun startConsumerThreads(countThreads: Int) {
-        for (i in 0..countThreads - 1) {
+        for(i in 0 until countThreads) {
             startConsumerThread()
         }
     }
@@ -102,14 +101,15 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
     }
 
     protected fun consumerThread() {
-        while (Thread.interrupted() == false) {
+        while(Thread.interrupted() == false) {
             try {
                 val nextItemToConsume = producedItemsQueue.take()
                 consumeItem(nextItemToConsume)
             } catch (e: Exception) {
-                if (e is InterruptedException == false) { // it's quite usual that on stopping thread an InterruptedException will be thrown
+                if(e is InterruptedException == false) { // it's quite usual that on stopping thread an InterruptedException will be thrown
                     log.error("An error occurred in consumerThread()", e)
-                } else
+                }
+                else
                 // Java, i love you! After having externally called Thread.interrupt(), InterruptedException will be thrown but you have to call Thread.currentThread().interrupt() manually
                     Thread.currentThread().interrupt()
             }
@@ -120,9 +120,10 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
     }
 
     protected fun consumeItem(nextItemToConsume: T) {
-        if (minimumMillisecondsToWaitBeforeConsumingItem <= WAITING_BEFORE_CONSUMING_ITEM_DISABLED) {
+        if(minimumMillisecondsToWaitBeforeConsumingItem <= WAITING_BEFORE_CONSUMING_ITEM_DISABLED) {
             passConsumedItemOnToListener(nextItemToConsume)
-        } else {
+        }
+        else {
             waitBeforeConsumingItemTimer.schedule(object : TimerTask() {
                 override fun run() {
                     passConsumedItemOnToListener(nextItemToConsume)
