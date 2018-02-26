@@ -9,7 +9,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class NetworkHelper {
+open class NetworkHelper {
 
     companion object {
         private val log = LoggerFactory.getLogger(NetworkHelper::class.java)
@@ -32,7 +32,7 @@ class NetworkHelper {
      */
 
     // in IPv6 there's no such thing as broadcast
-    fun getBroadcastAddress(networkInterface: NetworkInterface): Inet4Address? {
+    open fun getBroadcastAddress(networkInterface: NetworkInterface): Inet4Address? {
         for(address in networkInterface.inetAddresses) {
             if(address is Inet4Address) {
                 try {
@@ -44,7 +44,7 @@ class NetworkHelper {
         return null
     }
 
-    fun getBroadcastAddress(address: Inet4Address): Inet4Address? {
+    open fun getBroadcastAddress(address: Inet4Address): Inet4Address? {
         val broadcastAddress = address.address
         broadcastAddress[broadcastAddress.size - 1] = 255.toByte()
 
@@ -57,7 +57,7 @@ class NetworkHelper {
      * *
      * @return  mac address or empty string
      */
-    fun getMACAddress(interfaceName: String): String {
+    open fun getMACAddress(interfaceName: String): String {
         try {
             val interfaces = Collections.list(NetworkInterface.getNetworkInterfaces())
             for(networkInterface in interfaces) {
@@ -89,7 +89,7 @@ class NetworkHelper {
      * *
      * @return  address or empty string
      */
-    fun getIPAddress(useIPv4: Boolean): InetAddress? {
+    open fun getIPAddress(useIPv4: Boolean): InetAddress? {
         val addresses = getIPAddresses(useIPv4)
 
         if(addresses.isNotEmpty()) {
@@ -99,7 +99,7 @@ class NetworkHelper {
         return null
     }
 
-    fun getIPAddresses(onlyIPv4: Boolean): List<InetAddress> {
+    open fun getIPAddresses(onlyIPv4: Boolean): List<InetAddress> {
         val addresses = ArrayList<InetAddress>()
 
         try {
@@ -111,7 +111,7 @@ class NetworkHelper {
         return addresses
     }
 
-    fun getIPAddresses(networkInterface: NetworkInterface, onlyIPv4: Boolean): List<InetAddress> {
+    open fun getIPAddresses(networkInterface: NetworkInterface, onlyIPv4: Boolean): List<InetAddress> {
         val addresses = ArrayList<InetAddress>()
         val interfaceAddresses = Collections.list(networkInterface.inetAddresses)
 
@@ -126,36 +126,36 @@ class NetworkHelper {
         return addresses
     }
 
-    fun getRealNetworkInterfaces(): Collection<NetworkInterface> {
+    open fun getRealNetworkInterfaces(): Collection<NetworkInterface> {
         val allInterfaces = Collections.list(NetworkInterface.getNetworkInterfaces())
 
         return allInterfaces.filter { shouldInterfaceBeIgnored(it) == false }
     }
 
-    fun getConnectedRealNetworkInterfaces(): Collection<NetworkInterface> {
+    open fun getConnectedRealNetworkInterfaces(): Collection<NetworkInterface> {
         return getRealNetworkInterfaces().filter { it.isUp }
     }
 
     @Throws(SocketException::class)
-    private fun shouldInterfaceBeIgnored(networkInterface: NetworkInterface): Boolean {
+    protected open fun shouldInterfaceBeIgnored(networkInterface: NetworkInterface): Boolean {
         return networkInterface.isLoopback || isCellularOrUsbInterface(networkInterface) ||
                 isDockerInterface(networkInterface) || isDummyInterface(networkInterface)
     }
 
-    private fun isCellularOrUsbInterface(networkInterface: NetworkInterface): Boolean {
+    protected open fun isCellularOrUsbInterface(networkInterface: NetworkInterface): Boolean {
         return networkInterface.name.startsWith("rmnet") // see for example https://stackoverflow.com/a/33748594
     }
 
-    private fun isDockerInterface(networkInterface: NetworkInterface): Boolean {
+    protected open fun isDockerInterface(networkInterface: NetworkInterface): Boolean {
         return networkInterface.name.startsWith("docker")
     }
 
-    private fun isDummyInterface(networkInterface: NetworkInterface): Boolean {
+    protected open fun isDummyInterface(networkInterface: NetworkInterface): Boolean {
         return networkInterface.name.startsWith("dummy")
     }
 
 
-    fun isSocketCloseException(exception: Exception): Boolean {
+    open fun isSocketCloseException(exception: Exception): Boolean {
         return exception is SocketException && "Socket closed" == exception.message
     }
 
