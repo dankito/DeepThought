@@ -25,7 +25,7 @@ import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.util.ThreadPool
 import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.util.localization.Localization
-import net.dankito.utils.serialization.JacksonJsonSerializer
+import net.dankito.utils.serialization.DeepThoughtJacksonJsonSerializer
 import net.dankito.util.hashing.HashService
 import net.dankito.util.settings.ILocalSettingsStore
 import net.dankito.util.settings.LocalSettingsStoreBase
@@ -110,7 +110,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         tagService = TagService(dataManager, entityChangedNotifier)
         sourceService = SourceService(dataManager, entityChangedNotifier)
         seriesService = SeriesService(dataManager, entityChangedNotifier)
-        readLaterArticleService = ReadLaterArticleService(dataManager, entityChangedNotifier, JacksonJsonSerializer(tagService, seriesService))
+        readLaterArticleService = ReadLaterArticleService(dataManager, entityChangedNotifier, DeepThoughtJacksonJsonSerializer(tagService, seriesService))
         localFileInfoService = LocalFileInfoService(dataManager, entityChangedNotifier)
         fileService = FileService(dataManager, entityChangedNotifier)
         mimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypeCategorizer, dataManager)

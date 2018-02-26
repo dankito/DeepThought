@@ -45,7 +45,7 @@ import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.util.ThreadPool
 import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.util.localization.Localization
-import net.dankito.utils.serialization.JacksonJsonSerializer
+import net.dankito.utils.serialization.DeepThoughtJacksonJsonSerializer
 import net.dankito.util.hashing.HashService
 import net.dankito.util.hashing.IBase64Service
 import net.dankito.util.network.NetworkConnectivityManagerBase
@@ -133,7 +133,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     protected val localSocketHandler = SocketHandler()
 
-    protected val localSerializer = JacksonJsonSerializer(mock(), mock()) // in this case we don't need TagService and SeriesService
+    protected val localSerializer = DeepThoughtJacksonJsonSerializer(mock(), mock()) // in this case we don't need TagService and SeriesService
 
     protected val localThreadPool = ThreadPool()
 
@@ -229,7 +229,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     protected val remoteSocketHandler = SocketHandler()
 
-    protected val remoteSerializer = JacksonJsonSerializer(mock(), mock()) // in this case we don't need TagService and SeriesService
+    protected val remoteSerializer = DeepThoughtJacksonJsonSerializer(mock(), mock()) // in this case we don't need TagService and SeriesService
 
     protected val remoteThreadPool = ThreadPool()
 

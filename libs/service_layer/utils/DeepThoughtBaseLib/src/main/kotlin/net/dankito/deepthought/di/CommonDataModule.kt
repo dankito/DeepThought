@@ -26,7 +26,7 @@ import net.dankito.utils.IPlatformConfiguration
 import net.dankito.util.IThreadPool
 import net.dankito.util.localization.Localization
 import net.dankito.util.serialization.ISerializer
-import net.dankito.utils.serialization.JacksonJsonSerializer
+import net.dankito.utils.serialization.DeepThoughtJacksonJsonSerializer
 import net.dankito.util.hashing.HashService
 import net.dankito.util.settings.ILocalSettingsStore
 import net.dankito.util.ui.dialog.IDialogService
@@ -142,7 +142,7 @@ class CommonDataModule {
     @Provides
     @Singleton
     fun provideSerializer(tagService: TagService, seriesService: SeriesService) : ISerializer {
-        return JacksonJsonSerializer(tagService, seriesService)
+        return DeepThoughtJacksonJsonSerializer(tagService, seriesService)
     }
 
     @Provides

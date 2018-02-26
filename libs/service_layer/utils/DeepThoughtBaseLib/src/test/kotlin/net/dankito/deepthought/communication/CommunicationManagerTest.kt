@@ -34,7 +34,7 @@ import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.util.ThreadPool
 import net.dankito.util.localization.Localization
-import net.dankito.utils.serialization.JacksonJsonSerializer
+import net.dankito.utils.serialization.DeepThoughtJacksonJsonSerializer
 import net.dankito.util.hashing.HashService
 import net.dankito.util.hashing.IBase64Service
 import net.dankito.util.network.NetworkConnectivityManagerBase
@@ -92,7 +92,7 @@ class CommunicationManagerTest {
 
     private val fileStorageService = JavaFileStorageService()
 
-    private val serializer = JacksonJsonSerializer(mock(), mock())
+    private val serializer = DeepThoughtJacksonJsonSerializer(mock(), mock())
 
 
     private lateinit var localDevice: Device
