@@ -21,7 +21,7 @@ import net.dankito.utils.IPlatformConfiguration
 import net.dankito.util.IThreadPool
 import net.dankito.util.hashing.IBase64Service
 import net.dankito.util.network.INetworkConnectivityManager
-import net.dankito.utils.settings.ILocalSettingsStore
+import net.dankito.util.settings.ILocalSettingsStore
 import javax.inject.Singleton
 
 

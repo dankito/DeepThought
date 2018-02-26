@@ -1,7 +1,7 @@
 package net.dankito.data_access.database
 
 import com.couchbase.lite.Context
-import net.dankito.utils.settings.ILocalSettingsStore
+import net.dankito.util.settings.ILocalSettingsStore
 
 import java.io.File
 

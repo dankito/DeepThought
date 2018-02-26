@@ -1,6 +1,6 @@
 package net.dankito.deepthought.javafx.service.settings
 
-import net.dankito.utils.settings.LocalSettingsStoreBase
+import net.dankito.util.settings.LocalSettingsStoreBase
 import net.dankito.utils.version.Versions
 import org.slf4j.LoggerFactory
 import java.io.*

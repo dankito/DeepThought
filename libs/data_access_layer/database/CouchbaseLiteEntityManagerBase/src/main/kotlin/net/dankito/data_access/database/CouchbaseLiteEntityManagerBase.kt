@@ -10,7 +10,7 @@ import net.dankito.jpa.cache.ObjectCache
 import net.dankito.jpa.couchbaselite.Dao
 import net.dankito.jpa.util.DatabaseCompacter
 import net.dankito.util.AsyncProducerConsumerQueue
-import net.dankito.utils.settings.ILocalSettingsStore
+import net.dankito.util.settings.ILocalSettingsStore
 import net.dankito.utils.version.Versions
 import org.slf4j.LoggerFactory
 import java.io.IOException

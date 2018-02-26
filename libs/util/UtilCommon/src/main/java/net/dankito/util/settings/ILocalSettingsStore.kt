@@ -1,4 +1,4 @@
-package net.dankito.utils.settings
+package net.dankito.util.settings
 
 
 interface ILocalSettingsStore {

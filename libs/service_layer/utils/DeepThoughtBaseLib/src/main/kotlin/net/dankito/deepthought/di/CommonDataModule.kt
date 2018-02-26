@@ -28,7 +28,7 @@ import net.dankito.util.localization.Localization
 import net.dankito.util.serialization.ISerializer
 import net.dankito.utils.serialization.JacksonJsonSerializer
 import net.dankito.util.hashing.HashService
-import net.dankito.utils.settings.ILocalSettingsStore
+import net.dankito.util.settings.ILocalSettingsStore
 import net.dankito.utils.ui.IDialogService
 import javax.inject.Singleton
 

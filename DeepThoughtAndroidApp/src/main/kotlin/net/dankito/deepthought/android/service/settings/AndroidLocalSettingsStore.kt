@@ -1,7 +1,7 @@
 package net.dankito.deepthought.android.service.settings
 
 import android.content.Context
-import net.dankito.utils.settings.LocalSettingsStoreBase
+import net.dankito.util.settings.LocalSettingsStoreBase
 import net.dankito.utils.version.Versions
 
 

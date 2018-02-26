@@ -27,8 +27,8 @@ import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.util.localization.Localization
 import net.dankito.utils.serialization.JacksonJsonSerializer
 import net.dankito.util.hashing.HashService
-import net.dankito.utils.settings.ILocalSettingsStore
-import net.dankito.utils.settings.LocalSettingsStoreBase
+import net.dankito.util.settings.ILocalSettingsStore
+import net.dankito.util.settings.LocalSettingsStoreBase
 import net.dankito.utils.version.Versions
 import org.junit.After
 import java.io.File
