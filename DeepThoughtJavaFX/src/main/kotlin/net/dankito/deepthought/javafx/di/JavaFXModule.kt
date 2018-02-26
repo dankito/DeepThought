@@ -19,7 +19,7 @@ import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardService
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
 import net.dankito.deepthought.javafx.service.communication.JavaFXDeviceRegistrationHandler
 import net.dankito.deepthought.javafx.service.import_export.DataImporterExporterManager
-import net.dankito.deepthought.javafx.service.network.JavaFXNetworkConnectivityManager
+import net.dankito.util.network.JavaNetworkConnectivityManager
 import net.dankito.deepthought.javafx.service.settings.JavaFXLocalSettingsStore
 import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.news.article.ArticleExtractorManager
@@ -117,7 +117,7 @@ class JavaFXModule(private val primaryStage: Stage, private val flavorInstancePr
     @Provides
     @Singleton
     fun provideNetworkConnectivityManager(networkHelper: NetworkHelper) : INetworkConnectivityManager {
-        return JavaFXNetworkConnectivityManager(networkHelper)
+        return JavaNetworkConnectivityManager(networkHelper)
     }
 
 
