@@ -16,7 +16,7 @@ import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.service.synchronization.IConnectedDevicesService
 import net.dankito.service.synchronization.KnownSynchronizedDevicesListener
-import net.dankito.utils.AsyncProducerConsumerQueue
+import net.dankito.util.AsyncProducerConsumerQueue
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.services.hashing.HashService

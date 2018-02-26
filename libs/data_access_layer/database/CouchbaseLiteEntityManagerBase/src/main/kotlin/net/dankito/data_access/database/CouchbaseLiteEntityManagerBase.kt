@@ -9,7 +9,7 @@ import net.dankito.jpa.cache.DaoCache
 import net.dankito.jpa.cache.ObjectCache
 import net.dankito.jpa.couchbaselite.Dao
 import net.dankito.jpa.util.DatabaseCompacter
-import net.dankito.utils.AsyncProducerConsumerQueue
+import net.dankito.util.AsyncProducerConsumerQueue
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.version.Versions
 import org.slf4j.LoggerFactory

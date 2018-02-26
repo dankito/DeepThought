@@ -3,7 +3,7 @@ package net.dankito.service.data.event
 import net.dankito.deepthought.model.*
 import net.dankito.service.data.messages.*
 import net.dankito.service.eventbus.IEventBus
-import net.dankito.utils.AsyncProducerConsumerQueue
+import net.dankito.util.AsyncProducerConsumerQueue
 
 
 class EntityChangedNotifier(private val eventBus: IEventBus) {

@@ -10,7 +10,7 @@ import net.dankito.jpa.couchbaselite.Dao
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntityChangeType
-import net.dankito.utils.AsyncProducerConsumerQueue
+import net.dankito.util.AsyncProducerConsumerQueue
 import org.slf4j.LoggerFactory
 
 

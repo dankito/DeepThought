@@ -1,6 +1,6 @@
 package net.dankito.data_access.database
 
-import net.dankito.utils.AsyncProducerConsumerQueue
+import net.dankito.util.AsyncProducerConsumerQueue
 
 
 interface IEntityManager {

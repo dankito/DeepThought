@@ -4,7 +4,7 @@ import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
-import net.dankito.utils.AsyncProducerConsumerQueue
+import net.dankito.util.AsyncProducerConsumerQueue
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayList
