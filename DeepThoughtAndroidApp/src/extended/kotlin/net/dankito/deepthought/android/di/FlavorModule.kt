@@ -2,7 +2,7 @@ package net.dankito.deepthought.android.di
 
 import dagger.Module
 import dagger.Provides
-import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.util.web.IWebClient
 import net.dankito.deepthought.android.service.reporting.ICrashReporter
 import net.dankito.deepthought.android.service.reporting.NoOpCrashReporter
 import net.dankito.deepthought.news.article.ArticleExtractorManager

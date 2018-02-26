@@ -1,4 +1,4 @@
-package net.dankito.data_access.network.webclient
+package net.dankito.util.web
 
 import okhttp3.*
 import org.slf4j.LoggerFactory

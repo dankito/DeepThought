@@ -5,6 +5,8 @@ buildscript {
         jacksonVersion = '2.9.4'
 
         slf4jVersion = '1.7.25'
+
+        okHttpVersion = '3.9.1'
     }
 
     repositories {
@@ -51,6 +53,8 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion"
+
+    compile "com.squareup.okhttp3:okhttp:$okHttpVersion"
 
     compile "org.slf4j:slf4j-api:$slf4jVersion"
 

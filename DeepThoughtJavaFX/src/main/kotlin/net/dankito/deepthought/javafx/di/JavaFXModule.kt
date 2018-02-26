@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import javafx.stage.Stage
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
-import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.util.web.IWebClient
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.data.SourcePersister

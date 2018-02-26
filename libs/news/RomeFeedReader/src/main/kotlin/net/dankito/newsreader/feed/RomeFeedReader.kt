@@ -4,9 +4,9 @@ import com.rometools.rome.feed.synd.SyndEntry
 import com.rometools.rome.feed.synd.SyndFeed
 import com.rometools.rome.io.SyndFeedInput
 import com.rometools.rome.io.XmlReader
-import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.data_access.network.webclient.RequestParameters
-import net.dankito.data_access.network.webclient.ResponseType
+import net.dankito.util.web.IWebClient
+import net.dankito.util.web.RequestParameters
+import net.dankito.util.web.ResponseType
 import net.dankito.util.AsyncResult
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.newsreader.model.FeedArticleSummary

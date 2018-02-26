@@ -9,8 +9,8 @@ import net.dankito.data_access.network.communication.IClientCommunicator
 import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.discovery.IDevicesDiscoverer
-import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.data_access.network.webclient.OkHttpWebClient
+import net.dankito.util.web.IWebClient
+import net.dankito.util.web.OkHttpWebClient
 import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
 import net.dankito.deepthought.files.FileManager

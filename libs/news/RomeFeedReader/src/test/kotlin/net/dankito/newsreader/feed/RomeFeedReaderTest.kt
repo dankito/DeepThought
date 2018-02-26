@@ -1,6 +1,6 @@
 package net.dankito.newsreader.feed
 
-import net.dankito.data_access.network.webclient.OkHttpWebClient
+import net.dankito.util.web.OkHttpWebClient
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.newsreader.model.FeedArticleSummary
 import org.hamcrest.CoreMatchers.*

@@ -1,6 +1,6 @@
 package net.dankito.newsreader.article
 
-import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.util.web.IWebClient
 import net.dankito.util.AsyncResult
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.newsreader.article.recipes.ChefkochArticleExtractor

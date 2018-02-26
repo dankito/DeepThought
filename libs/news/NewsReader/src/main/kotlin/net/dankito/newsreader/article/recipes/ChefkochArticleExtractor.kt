@@ -1,6 +1,6 @@
 package net.dankito.newsreader.article.recipes
 
-import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.util.web.IWebClient
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult

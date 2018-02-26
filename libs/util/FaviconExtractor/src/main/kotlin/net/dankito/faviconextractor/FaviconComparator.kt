@@ -1,8 +1,8 @@
 package net.dankito.faviconextractor
 
-import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.data_access.network.webclient.RequestParameters
-import net.dankito.data_access.network.webclient.ResponseType
+import net.dankito.util.web.IWebClient
+import net.dankito.util.web.RequestParameters
+import net.dankito.util.web.ResponseType
 import org.slf4j.LoggerFactory
 
 

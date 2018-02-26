@@ -1,6 +1,6 @@
 package net.dankito.newsreader.summary
 
-import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.util.web.IWebClient
 import net.dankito.newsreader.article.TelepolisArticleExtractor
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem

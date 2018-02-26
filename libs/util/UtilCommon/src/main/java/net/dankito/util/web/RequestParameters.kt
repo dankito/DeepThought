@@ -1,16 +1,16 @@
-package net.dankito.data_access.network.webclient
+package net.dankito.util.web
 
 
 data class RequestParameters(val url: String, var body: String? = null,
                              var contentType: ContentType = ContentType.FORM_URL_ENCODED,
-                             var userAgent: String? = RequestParameters.DEFAULT_USER_AGENT,
+                             var userAgent: String? = DEFAULT_USER_AGENT,
                             // TODO: re-enable setting cookie handling (e.g. via adding com.squareup.okhttp3:okhttp-urlconnection dependency)
 //                             var cookieHandling: CookieHandling = CookieHandling.ACCEPT_NONE,
                             // TODO: re-enable setting connection timeout
 //                             var connectionTimeoutMillis: Int = RequestParameters.DEFAULT_CONNECTION_TIMEOUT_MILLIS,
-                             var countConnectionRetries: Int = RequestParameters.DEFAULT_COUNT_CONNECTION_RETRIES,
+                             var countConnectionRetries: Int = DEFAULT_COUNT_CONNECTION_RETRIES,
                              var responseType: ResponseType = ResponseType.String,
-                             var downloadBufferSize: Int = RequestParameters.DEFAULT_DOWNLOAD_BUFFER_SIZE,
+                             var downloadBufferSize: Int = DEFAULT_DOWNLOAD_BUFFER_SIZE,
                              var downloadProgressListener: ((progress: Float, downloadedChunk: ByteArray) -> Unit)? = null) {
 
     companion object {

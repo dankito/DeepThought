@@ -1,10 +1,10 @@
 package net.dankito.utils
 
 import net.dankito.data_access.filesystem.IFileStorageService
-import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.data_access.network.webclient.RequestParameters
-import net.dankito.data_access.network.webclient.ResponseType
-import net.dankito.data_access.network.webclient.WebClientResponse
+import net.dankito.util.web.IWebClient
+import net.dankito.util.web.RequestParameters
+import net.dankito.util.web.ResponseType
+import net.dankito.util.web.WebClientResponse
 import net.dankito.util.AsyncResult
 import net.dankito.util.serialization.ISerializer
 import org.slf4j.LoggerFactory

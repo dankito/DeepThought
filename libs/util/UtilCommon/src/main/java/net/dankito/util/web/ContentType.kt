@@ -1,4 +1,4 @@
-package net.dankito.data_access.network.webclient
+package net.dankito.util.web
 
 
 enum class ContentType {

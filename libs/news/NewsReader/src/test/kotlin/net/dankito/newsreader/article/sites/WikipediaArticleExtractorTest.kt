@@ -1,6 +1,6 @@
 package net.dankito.newsreader.article.sites
 
-import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.util.web.IWebClient
 import net.dankito.newsreader.article.ArticleExtractorTestBase
 import net.dankito.newsreader.article.IArticleExtractor
 import org.junit.Test

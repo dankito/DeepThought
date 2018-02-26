@@ -1,7 +1,7 @@
 package net.dankito.deepthought.service.clipboard
 
-import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.data_access.network.webclient.RequestParameters
+import net.dankito.util.web.IWebClient
+import net.dankito.util.web.RequestParameters
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.files.MimeTypeService
