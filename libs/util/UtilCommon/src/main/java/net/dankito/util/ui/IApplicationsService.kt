@@ -1,4 +1,4 @@
-package net.dankito.utils.ui
+package net.dankito.util.ui
 
 import java.io.File
 

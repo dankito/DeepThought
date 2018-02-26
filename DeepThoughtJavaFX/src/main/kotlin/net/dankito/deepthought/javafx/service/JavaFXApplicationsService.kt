@@ -1,7 +1,7 @@
 package net.dankito.deepthought.javafx.service
 
 import net.dankito.util.IThreadPool
-import net.dankito.utils.ui.IApplicationsService
+import net.dankito.util.ui.IApplicationsService
 import java.awt.Desktop
 import java.io.File
 

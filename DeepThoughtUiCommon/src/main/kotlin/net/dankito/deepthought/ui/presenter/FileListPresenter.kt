@@ -7,7 +7,7 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.enums.FileSyncStatus
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.util.localization.Localization
-import net.dankito.utils.ui.IApplicationsService
+import net.dankito.util.ui.IApplicationsService
 import java.io.File
 
 

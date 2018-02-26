@@ -7,7 +7,7 @@ import android.support.v4.content.FileProvider
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import net.dankito.deepthought.android.R
-import net.dankito.utils.ui.IApplicationsService
+import net.dankito.util.ui.IApplicationsService
 import java.io.File
 
 

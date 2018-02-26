@@ -30,7 +30,7 @@ import net.dankito.util.localization.Localization
 import net.dankito.util.network.INetworkConnectivityManager
 import net.dankito.util.network.NetworkHelper
 import net.dankito.util.settings.ILocalSettingsStore
-import net.dankito.utils.ui.IApplicationsService
+import net.dankito.util.ui.IApplicationsService
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import javax.inject.Singleton

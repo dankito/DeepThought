@@ -23,7 +23,7 @@ import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.extensions.didCollectionChange
 import net.dankito.util.localization.Localization
-import net.dankito.utils.ui.IApplicationsService
+import net.dankito.util.ui.IApplicationsService
 import net.engio.mbassy.listener.Handler
 import java.io.File
 import javax.inject.Inject
