@@ -43,8 +43,8 @@ abstract class LocalSettingsStoreBase : ILocalSettingsStore {
     }
 
 
-    protected fun readStringValue(key: String, defaultValue: String): String {
-        if(doesValueExist(key) == true) {
+    protected open fun readStringValue(key: String, defaultValue: String): String {
+        if(doesValueExist(key)) {
             return readValueFromStore(key, defaultValue)
         }
         else {
@@ -54,8 +54,8 @@ abstract class LocalSettingsStoreBase : ILocalSettingsStore {
         return defaultValue
     }
 
-    protected fun readIntValue(key: String, defaultValue: Int): Int {
-        if(doesValueExist(key) == true) {
+    protected open fun readIntValue(key: String, defaultValue: Int): Int {
+        if(doesValueExist(key)) {
             val value = readValueFromStore(key, Integer.toString(defaultValue))
             try {
                 return Integer.parseInt(value)
@@ -69,11 +69,11 @@ abstract class LocalSettingsStoreBase : ILocalSettingsStore {
         return defaultValue
     }
 
-    protected fun saveStringValue(key: String, value: String) {
+    protected open fun saveStringValue(key: String, value: String) {
         saveValueToStore(key, value)
     }
 
-    protected fun saveIntValue(key: String, value: Int) {
+    protected open fun saveIntValue(key: String, value: Int) {
         saveValueToStore(key, Integer.toString(value))
     }
 
