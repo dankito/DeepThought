@@ -6,9 +6,9 @@ import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
 
-class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItemsToQueue: Int = NO_LIMIT_ITEMS_TO_QUEUE,
+open class AsyncProducerConsumerQueue<T>(protected val countThreadsToUse: Int, maxItemsToQueue: Int = NO_LIMIT_ITEMS_TO_QUEUE,
                                     minimumMillisecondsToWaitBeforeConsumingItem: Int = WAITING_BEFORE_CONSUMING_ITEM_DISABLED, autoStart: Boolean = true,
-                                    private val consumerListener: (item: T) -> Unit) {
+                                         protected val consumerListener: (item: T) -> Unit) {
 
     companion object {
 
@@ -20,13 +20,13 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
     }
 
 
-    private var producedItemsQueue: BlockingQueue<T> = LinkedBlockingQueue<T>(maxItemsToQueue)
+    protected var producedItemsQueue: BlockingQueue<T> = LinkedBlockingQueue<T>(maxItemsToQueue)
 
-    private var minimumMillisecondsToWaitBeforeConsumingItem = WAITING_BEFORE_CONSUMING_ITEM_DISABLED
+    protected var minimumMillisecondsToWaitBeforeConsumingItem = WAITING_BEFORE_CONSUMING_ITEM_DISABLED
 
-    private var waitBeforeConsumingItemTimer = Timer("WaitBeforeConsumingItemTimer")
+    protected var waitBeforeConsumingItemTimer = Timer("WaitBeforeConsumingItemTimer")
 
-    private var consumerThreads: MutableList<Thread> = ArrayList()
+    protected var consumerThreads: MutableList<Thread> = ArrayList()
 
 
     init {
@@ -51,7 +51,7 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
     /**
      * To restart processing after a call to {@link #stop()} or start processing when constructor flag autoStart has been set to false, call this method.
      */
-    fun start() {
+    open fun start() {
         startConsumerThreads(countThreadsToUse)
     }
 
@@ -59,7 +59,7 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
      * Stops processing.
      * If processing should be restarted, call method {@link #restart()}.
      */
-    fun stop() {
+    open fun stop() {
         for(consumerThread in consumerThreads) {
             try {
                 consumerThread.interrupt()
@@ -73,7 +73,7 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
      * Stops processing and clears all items in queue.
      * If processing should be restarted, call method {@link #restart()}.
      */
-    fun stopAndClearQueue() {
+    open fun stopAndClearQueue() {
         val remainingItemsInQueue = ArrayList(producedItemsQueue)
         producedItemsQueue.clear()
 
@@ -86,13 +86,13 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
     }
 
 
-    protected fun startConsumerThreads(countThreads: Int) {
+    protected open fun startConsumerThreads(countThreads: Int) {
         for(i in 0 until countThreads) {
             startConsumerThread()
         }
     }
 
-    protected fun startConsumerThread() {
+    protected open fun startConsumerThread() {
         val consumerThread = Thread(Runnable { consumerThread() }, "AsyncProducerConsumerQueue" + consumerThreads.size)
 
         consumerThreads.add(consumerThread)
@@ -100,7 +100,7 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
         consumerThread.start()
     }
 
-    protected fun consumerThread() {
+    protected open fun consumerThread() {
         while(Thread.interrupted() == false) {
             try {
                 val nextItemToConsume = producedItemsQueue.take()
@@ -119,7 +119,7 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
         log.info("consumerThread() stopped")
     }
 
-    protected fun consumeItem(nextItemToConsume: T) {
+    protected open fun consumeItem(nextItemToConsume: T) {
         if(minimumMillisecondsToWaitBeforeConsumingItem <= WAITING_BEFORE_CONSUMING_ITEM_DISABLED) {
             passConsumedItemOnToListener(nextItemToConsume)
         }
@@ -132,7 +132,7 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
         }
     }
 
-    protected fun passConsumedItemOnToListener(nextItemToConsume: T) {
+    protected open fun passConsumedItemOnToListener(nextItemToConsume: T) {
         try {
             consumerListener(nextItemToConsume)
         } catch (e: Exception) { // urgently catch exceptions. otherwise if an uncaught exception occurs during handling, response loop would catch this exception and stop proceeding
@@ -142,7 +142,7 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
     }
 
 
-    fun add(producedItem: T): Boolean {
+    open fun add(producedItem: T): Boolean {
         // use offer() instead of put() and take() instead of poll(int), see http://supercoderz.in/2012/02/04/using-linkedblockingqueue-for-high-throughput-java-applications/
         return producedItemsQueue.offer(producedItem)
     }
