@@ -1,7 +1,7 @@
 package net.dankito.data_access.network.discovery
 
 import net.dankito.utils.AsyncProducerConsumerQueue
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import net.dankito.utils.services.network.INetworkConnectivityManager
 import net.dankito.utils.services.network.NetworkHelper
 import net.dankito.utils.services.network.NetworkInterfaceState

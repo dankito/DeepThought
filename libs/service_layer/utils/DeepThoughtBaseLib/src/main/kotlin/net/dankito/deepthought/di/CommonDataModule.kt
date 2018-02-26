@@ -23,7 +23,7 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.IConnectedDevicesService
 import net.dankito.utils.IPlatformConfiguration
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.serialization.JacksonJsonSerializer

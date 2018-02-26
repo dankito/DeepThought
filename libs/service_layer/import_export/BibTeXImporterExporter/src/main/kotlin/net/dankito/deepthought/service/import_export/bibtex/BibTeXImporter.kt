@@ -11,7 +11,7 @@ import net.dankito.service.search.SearchEngineBase
 import net.dankito.service.search.specific.SeriesSearch
 import net.dankito.service.search.specific.TagsSearch
 import net.dankito.service.search.specific.TagsSearchResult
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import org.jbibtex.*
 import org.slf4j.LoggerFactory
 import java.io.File

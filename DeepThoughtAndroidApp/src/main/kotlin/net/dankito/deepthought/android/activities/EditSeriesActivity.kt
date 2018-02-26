@@ -21,7 +21,7 @@ import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.SeriesChanged
 import net.dankito.service.eventbus.IEventBus
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogButton
 import net.dankito.utils.ui.model.ConfirmationDialogConfig

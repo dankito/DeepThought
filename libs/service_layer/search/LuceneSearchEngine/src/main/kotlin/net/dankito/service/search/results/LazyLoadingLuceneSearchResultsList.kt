@@ -3,7 +3,7 @@ package net.dankito.service.search.results
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.service.search.util.LazyLoadingList
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import net.dankito.utils.OsHelper
 import org.apache.lucene.document.Document
 import org.apache.lucene.search.IndexSearcher

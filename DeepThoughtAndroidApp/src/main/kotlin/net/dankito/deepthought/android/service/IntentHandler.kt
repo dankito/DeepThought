@@ -3,7 +3,7 @@ package net.dankito.deepthought.android.service
 import android.content.Intent
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.utils.UrlUtil
+import net.dankito.util.UrlUtil
 
 
 class IntentHandler(private val extractArticleHandler: ExtractArticleHandler, private val router: IRouter, private val urlUtil: UrlUtil) {

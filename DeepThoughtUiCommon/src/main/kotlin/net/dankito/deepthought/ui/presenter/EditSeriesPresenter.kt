@@ -4,7 +4,7 @@ import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.data.DeleteEntityService
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 
 
 class EditSeriesPresenter(router: IRouter, deleteEntityService: DeleteEntityService, private val seriesPersister: SeriesPersister, private val threadPool: IThreadPool)

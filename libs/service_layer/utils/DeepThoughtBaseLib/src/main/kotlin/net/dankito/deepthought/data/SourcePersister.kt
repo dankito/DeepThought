@@ -7,7 +7,7 @@ import net.dankito.deepthought.model.Source
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.SeriesService
 import net.dankito.service.data.SourceService
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import java.util.*
 import javax.inject.Inject
 

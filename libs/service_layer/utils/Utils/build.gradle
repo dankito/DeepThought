@@ -6,7 +6,7 @@ targetCompatibility = "1.7"
 
 dependencies {
     compile project(':DataModel')
-    compile project(':UtilsCommon')
+    compile project(':UtilCommon')
 
     compile project(':WebClient')
     compile project(':FileStorageService')

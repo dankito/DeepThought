@@ -6,7 +6,7 @@ import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.database.InMemoryEntityManager
 import net.dankito.data_access.network.discovery.IDevicesDiscoverer
 import net.dankito.data_access.network.discovery.NoOpDevicesDiscoverer
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import net.dankito.utils.services.network.INetworkConnectivityManager
 import net.dankito.utils.settings.ILocalSettingsStore
 

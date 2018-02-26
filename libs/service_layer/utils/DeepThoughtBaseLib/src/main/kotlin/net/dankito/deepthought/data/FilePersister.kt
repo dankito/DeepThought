@@ -3,7 +3,7 @@ package net.dankito.deepthought.data
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.FileLink
 import net.dankito.service.data.FileService
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 
 
 class FilePersister(private val fileService: FileService, private val fileManager: FileManager, private val threadPool: IThreadPool) {

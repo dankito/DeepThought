@@ -5,7 +5,7 @@ import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.contentPlainText
 import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.service.search.specific.*
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 
 
 class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool: IThreadPool) : SearchEngineBase(threadPool) {

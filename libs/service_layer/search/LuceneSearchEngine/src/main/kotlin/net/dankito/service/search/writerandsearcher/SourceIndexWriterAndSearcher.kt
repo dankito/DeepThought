@@ -10,7 +10,7 @@ import net.dankito.service.search.FieldValue
 import net.dankito.service.search.SortOption
 import net.dankito.service.search.SortOrder
 import net.dankito.service.search.specific.SourceSearch
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import net.dankito.utils.OsHelper
 import net.engio.mbassy.listener.Handler
 import org.apache.lucene.document.*

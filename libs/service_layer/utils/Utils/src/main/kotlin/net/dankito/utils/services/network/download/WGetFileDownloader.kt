@@ -7,7 +7,7 @@ import com.github.axet.wget.WGet
 import com.github.axet.wget.info.BrowserInfo
 import com.github.axet.wget.info.DownloadInfo
 import com.github.axet.wget.info.URLInfo
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.net.URL

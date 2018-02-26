@@ -42,7 +42,7 @@ import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHan
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.OsHelper
 import net.dankito.utils.PlatformConfigurationBase
-import net.dankito.utils.ThreadPool
+import net.dankito.util.ThreadPool
 import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.JacksonJsonSerializer

@@ -29,7 +29,7 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.filechooserdialog.service.IPermissionsService
 import net.dankito.filechooserdialog.service.PermissionsService
 import net.dankito.service.eventbus.IEventBus
-import net.dankito.utils.UrlUtil
+import net.dankito.util.UrlUtil
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 

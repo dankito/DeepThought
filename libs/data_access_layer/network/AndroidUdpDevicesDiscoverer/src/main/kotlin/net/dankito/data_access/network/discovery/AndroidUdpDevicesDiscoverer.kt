@@ -2,7 +2,7 @@ package net.dankito.data_access.network.discovery
 
 import android.content.Context
 import android.net.wifi.WifiManager
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import net.dankito.utils.services.network.INetworkConnectivityManager
 
 

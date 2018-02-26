@@ -13,7 +13,7 @@ import net.dankito.service.synchronization.ISyncManager
 import net.dankito.service.synchronization.NoOpSyncManager
 import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
 import net.dankito.service.synchronization.changeshandler.NoOpSynchronizedChangesHandler
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import net.dankito.utils.OsHelper
 import net.dankito.utils.language.ILanguageDetector
 

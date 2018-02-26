@@ -11,7 +11,7 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.specific.*
 import net.dankito.service.search.writerandsearcher.*
 import net.dankito.utils.AsyncProducerConsumerQueue
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import net.dankito.utils.OsHelper
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.services.Times

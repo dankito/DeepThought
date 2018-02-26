@@ -36,8 +36,8 @@ import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
-import net.dankito.utils.IThreadPool
-import net.dankito.utils.UrlUtil
+import net.dankito.util.IThreadPool
+import net.dankito.util.UrlUtil
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.services.network.INetworkConnectivityManager
 import net.dankito.utils.services.network.NetworkHelper

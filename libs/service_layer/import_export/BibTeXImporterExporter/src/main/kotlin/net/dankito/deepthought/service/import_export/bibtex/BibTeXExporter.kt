@@ -5,7 +5,7 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.extensions.contentPlainText
 import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.deepthought.service.import_export.IDataExporter
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import org.jbibtex.*
 import org.slf4j.LoggerFactory
 import java.io.File

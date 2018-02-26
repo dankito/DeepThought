@@ -3,7 +3,7 @@ package net.dankito.deepthought.ui.presenter
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import javax.inject.Inject
 
 

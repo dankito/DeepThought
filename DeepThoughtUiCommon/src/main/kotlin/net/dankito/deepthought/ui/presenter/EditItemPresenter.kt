@@ -7,7 +7,7 @@ import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.data.ReadLaterArticleService
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 

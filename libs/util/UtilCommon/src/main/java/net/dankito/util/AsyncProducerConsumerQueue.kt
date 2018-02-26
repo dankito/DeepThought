@@ -1,4 +1,4 @@
-package net.dankito.utils
+package net.dankito.util
 
 import org.slf4j.LoggerFactory
 import java.util.*

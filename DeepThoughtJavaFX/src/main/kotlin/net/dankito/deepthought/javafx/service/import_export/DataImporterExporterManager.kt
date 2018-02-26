@@ -9,7 +9,7 @@ import net.dankito.deepthought.service.import_export.bibtex.BibTeXExporter
 import net.dankito.deepthought.service.import_export.bibtex.BibTeXImporter
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import java.util.*
 
 

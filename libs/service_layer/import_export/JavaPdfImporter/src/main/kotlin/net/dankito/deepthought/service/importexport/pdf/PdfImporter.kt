@@ -1,6 +1,6 @@
 package net.dankito.deepthought.service.importexport.pdf
 
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import java.io.File
 
 

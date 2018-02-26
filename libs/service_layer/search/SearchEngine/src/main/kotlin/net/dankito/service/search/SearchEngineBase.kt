@@ -1,7 +1,7 @@
 package net.dankito.service.search
 
 import net.dankito.service.search.specific.*
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 
 
 

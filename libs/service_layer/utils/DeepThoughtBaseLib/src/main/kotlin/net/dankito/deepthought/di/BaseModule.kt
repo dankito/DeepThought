@@ -8,9 +8,9 @@ import net.dankito.mime.MimeTypeDetector
 import net.dankito.mime.MimeTypePicker
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
-import net.dankito.utils.IThreadPool
-import net.dankito.utils.ThreadPool
-import net.dankito.utils.UrlUtil
+import net.dankito.util.IThreadPool
+import net.dankito.util.ThreadPool
+import net.dankito.util.UrlUtil
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.utils.language.SupportedLanguages

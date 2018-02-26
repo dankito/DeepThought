@@ -46,7 +46,7 @@ import net.dankito.service.data.*
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.ItemChanged
 import net.dankito.service.eventbus.IEventBus
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogButton

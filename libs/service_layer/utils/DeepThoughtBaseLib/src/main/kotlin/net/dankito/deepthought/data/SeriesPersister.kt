@@ -3,7 +3,7 @@ package net.dankito.deepthought.data
 import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.model.Series
 import net.dankito.service.data.SeriesService
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import javax.inject.Inject
 
 

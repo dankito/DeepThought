@@ -14,7 +14,7 @@ import net.dankito.service.data.messages.ArticleSummaryExtractorConfigChanged
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.eventbus.EventBusPriorities
 import net.dankito.service.eventbus.IEventBus
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 

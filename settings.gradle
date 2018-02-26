@@ -68,7 +68,7 @@ include ':AndroidCouchbaseLiteEntityManager'
 
 /*       Utils                  */
 
-include ':UtilsCommon'
+include ':UtilCommon'
 
 
 project(':FaviconExtractor').projectDir = "$rootDir/libs/util/FaviconExtractor" as File
@@ -123,4 +123,4 @@ project(':JavaCouchbaseLiteEntityManager').projectDir = "$rootDir/libs/data_acce
 project(':AndroidCouchbaseLiteEntityManager').projectDir = "$rootDir/libs/data_access_layer/database/AndroidCouchbaseLiteEntityManager" as File
 
 
-project(':UtilsCommon').projectDir = "$rootDir/libs/util/UtilsCommon" as File
+project(':UtilCommon').projectDir = "$rootDir/libs/util/UtilCommon" as File

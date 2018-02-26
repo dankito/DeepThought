@@ -1,4 +1,4 @@
-package net.dankito.utils
+package net.dankito.util
 
 import java.util.concurrent.Executors
 

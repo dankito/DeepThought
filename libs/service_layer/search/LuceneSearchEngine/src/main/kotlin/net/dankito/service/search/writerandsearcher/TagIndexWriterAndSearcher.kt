@@ -16,7 +16,7 @@ import net.dankito.service.search.specific.FilteredTagsSearchResult
 import net.dankito.service.search.specific.TagsSearch
 import net.dankito.service.search.specific.TagsSearchResult
 import net.dankito.service.search.util.LazyLoadingList
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import net.dankito.utils.OsHelper
 import net.engio.mbassy.listener.Handler
 import org.apache.lucene.document.Document

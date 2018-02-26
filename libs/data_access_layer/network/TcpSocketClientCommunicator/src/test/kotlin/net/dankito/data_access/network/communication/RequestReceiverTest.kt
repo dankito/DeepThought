@@ -1,7 +1,7 @@
 package net.dankito.data_access.network.communication
 
 import net.dankito.data_access.network.communication.message.IMessageHandler
-import net.dankito.utils.ThreadPool
+import net.dankito.util.ThreadPool
 import org.hamcrest.CoreMatchers.`is`
 import org.junit.After
 import org.junit.Assert.assertThat

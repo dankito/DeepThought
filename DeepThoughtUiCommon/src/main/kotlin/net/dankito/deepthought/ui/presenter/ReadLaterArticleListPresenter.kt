@@ -11,7 +11,7 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
 import net.dankito.service.search.specific.ReadLaterArticleSearch
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import net.dankito.utils.ui.IClipboardService
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject

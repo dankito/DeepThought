@@ -18,7 +18,7 @@ import net.dankito.filechooserdialog.service.ThumbnailService
 import net.dankito.mime.MimeTypeCategorizer
 import net.dankito.mime.MimeTypeDetector
 import net.dankito.utils.IPlatformConfiguration
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import net.dankito.utils.services.hashing.IBase64Service
 import net.dankito.utils.services.network.INetworkConnectivityManager
 import net.dankito.utils.settings.ILocalSettingsStore

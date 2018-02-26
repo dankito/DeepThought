@@ -12,7 +12,7 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.service.data.ReadLaterArticleService
-import net.dankito.utils.IThreadPool
+import net.dankito.util.IThreadPool
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService

@@ -1,8 +1,8 @@
 package net.dankito.data_access.network.discovery
 
 
-import net.dankito.utils.IThreadPool
-import net.dankito.utils.ThreadPool
+import net.dankito.util.IThreadPool
+import net.dankito.util.ThreadPool
 import net.dankito.utils.services.network.NetworkConnectivityManagerBase
 import net.dankito.utils.services.network.NetworkHelper
 import org.junit.After
