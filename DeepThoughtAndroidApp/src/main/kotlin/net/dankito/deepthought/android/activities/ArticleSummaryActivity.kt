@@ -13,7 +13,7 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import kotlinx.android.synthetic.main.activity_article_summary.*
-import net.dankito.data_access.network.webclient.extractor.AsyncResult
+import net.dankito.util.AsyncResult
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.ArticleSummaryActivityParameters
 import net.dankito.deepthought.android.adapter.ArticleSummaryItemRecyclerAdapter

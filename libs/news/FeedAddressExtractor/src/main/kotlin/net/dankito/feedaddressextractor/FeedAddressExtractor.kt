@@ -3,7 +3,7 @@ package net.dankito.feedaddressextractor
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.RequestParameters
 import net.dankito.data_access.network.webclient.WebClientResponse
-import net.dankito.data_access.network.webclient.extractor.AsyncResult
+import net.dankito.util.AsyncResult
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element

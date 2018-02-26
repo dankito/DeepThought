@@ -6,7 +6,7 @@ import javafx.collections.SetChangeListener
 import javafx.geometry.Pos
 import javafx.scene.control.ContentDisplay
 import javafx.scene.image.ImageView
-import net.dankito.data_access.network.webclient.extractor.AsyncResult
+import net.dankito.util.AsyncResult
 import net.dankito.deepthought.javafx.res.icons.Icons
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig

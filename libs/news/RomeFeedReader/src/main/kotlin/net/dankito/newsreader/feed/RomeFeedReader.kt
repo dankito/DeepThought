@@ -7,7 +7,7 @@ import com.rometools.rome.io.XmlReader
 import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.RequestParameters
 import net.dankito.data_access.network.webclient.ResponseType
-import net.dankito.data_access.network.webclient.extractor.AsyncResult
+import net.dankito.util.AsyncResult
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.newsreader.model.FeedArticleSummary
 import org.jsoup.Jsoup

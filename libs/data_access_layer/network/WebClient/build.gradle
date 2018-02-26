@@ -9,6 +9,10 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
+    compile "net.dankito.util:util-common:1.0.0", {
+        exclude group: 'org.jetbrains.kotlin'
+    }
+
     compile "org.slf4j:slf4j-api:$slf4jVersion"
 
     compile "com.squareup.okhttp3:okhttp:$okHttpVersion"
