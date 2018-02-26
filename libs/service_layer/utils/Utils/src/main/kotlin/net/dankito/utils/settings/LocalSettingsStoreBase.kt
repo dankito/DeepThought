@@ -1,7 +1,5 @@
 package net.dankito.utils.settings
 
-import net.dankito.utils.version.Versions
-
 
 abstract class LocalSettingsStoreBase : ILocalSettingsStore {
 
@@ -12,11 +10,13 @@ abstract class LocalSettingsStoreBase : ILocalSettingsStore {
 
         const val DefaultDataFolder = "data/"
 
-        const val DefaultDatabaseDataModelVersion = Versions.DataModelVersion
+        const val DefaultDatabaseDataModelVersion = 1
     }
 
 
-    protected var DefaultDataFolder: String = Companion.DefaultDataFolder
+    protected var defaultDatabaseDataModelVersion = DefaultDatabaseDataModelVersion
+
+    protected var defaultDataFolder = DefaultDataFolder
 
 
     protected abstract fun readValueFromStore(key: String, defaultValue: String): String
@@ -27,7 +27,7 @@ abstract class LocalSettingsStoreBase : ILocalSettingsStore {
 
 
     override fun getDataFolder(): String {
-        return readStringValue(DataFolderKey, DefaultDataFolder)
+        return readStringValue(DataFolderKey, defaultDataFolder)
     }
 
     override fun setDataFolder(dataFolder: String) {
@@ -35,7 +35,7 @@ abstract class LocalSettingsStoreBase : ILocalSettingsStore {
     }
 
     override fun getDatabaseDataModelVersion(): Int {
-        return readIntValue(DatabaseDataModelVersionKey, DefaultDatabaseDataModelVersion)
+        return readIntValue(DatabaseDataModelVersionKey, defaultDatabaseDataModelVersion)
     }
 
     override fun setDatabaseDataModelVersion(newDataModelVersion: Int) {

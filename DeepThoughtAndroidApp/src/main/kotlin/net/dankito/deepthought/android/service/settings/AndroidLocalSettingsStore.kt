@@ -2,6 +2,7 @@ package net.dankito.deepthought.android.service.settings
 
 import android.content.Context
 import net.dankito.utils.settings.LocalSettingsStoreBase
+import net.dankito.utils.version.Versions
 
 
 class AndroidLocalSettingsStore(private val context: Context) : LocalSettingsStoreBase() {
@@ -10,7 +11,8 @@ class AndroidLocalSettingsStore(private val context: Context) : LocalSettingsSto
 
 
     init {
-        DefaultDataFolder = determineDefaultDataFolder()
+        defaultDatabaseDataModelVersion = Versions.DataModelVersion
+        defaultDataFolder = determineDefaultDataFolder()
     }
 
 
