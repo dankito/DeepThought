@@ -32,7 +32,7 @@ import net.dankito.util.network.NetworkHelper
 import net.dankito.util.settings.ILocalSettingsStore
 import net.dankito.util.ui.IApplicationsService
 import net.dankito.utils.ui.IClipboardService
-import net.dankito.utils.ui.IDialogService
+import net.dankito.util.ui.dialog.IDialogService
 import javax.inject.Singleton
 
 

@@ -4,7 +4,7 @@ import net.dankito.deepthought.model.*
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.util.IThreadPool
-import net.dankito.utils.ui.IDialogService
+import net.dankito.util.ui.dialog.IDialogService
 
 
 /**

@@ -15,7 +15,7 @@ import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.util.IThreadPool
 import net.dankito.util.localization.Localization
 import net.dankito.utils.ui.IClipboardService
-import net.dankito.utils.ui.IDialogService
+import net.dankito.util.ui.dialog.IDialogService
 import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 

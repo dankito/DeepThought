@@ -12,7 +12,7 @@ import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.SearchEngineBase
 import net.dankito.utils.extensions.sorted
-import net.dankito.utils.ui.IDialogService
+import net.dankito.util.ui.dialog.IDialogService
 import tornadofx.*
 import javax.inject.Inject
 

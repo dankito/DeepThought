@@ -1,4 +1,4 @@
-package net.dankito.utils.ui.model
+package net.dankito.util.ui.dialog
 
 
 enum class ConfirmationDialogButton {

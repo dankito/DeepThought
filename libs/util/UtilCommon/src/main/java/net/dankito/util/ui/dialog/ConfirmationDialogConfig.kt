@@ -1,4 +1,4 @@
-package net.dankito.utils.ui.model
+package net.dankito.util.ui.dialog
 
 
 data class ConfirmationDialogConfig(val showNoButton: Boolean = true, val noButtonText: String? = null,

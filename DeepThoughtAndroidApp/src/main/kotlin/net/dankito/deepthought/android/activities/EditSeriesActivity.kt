@@ -22,9 +22,9 @@ import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.SeriesChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.util.IThreadPool
-import net.dankito.utils.ui.IDialogService
-import net.dankito.utils.ui.model.ConfirmationDialogButton
-import net.dankito.utils.ui.model.ConfirmationDialogConfig
+import net.dankito.util.ui.dialog.IDialogService
+import net.dankito.util.ui.dialog.ConfirmationDialogButton
+import net.dankito.util.ui.dialog.ConfirmationDialogConfig
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 

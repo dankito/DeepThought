@@ -21,8 +21,8 @@ import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
 import net.dankito.utils.ui.IClipboardService
-import net.dankito.utils.ui.IDialogService
-import net.dankito.utils.ui.model.ConfirmationDialogButton
+import net.dankito.util.ui.dialog.IDialogService
+import net.dankito.util.ui.dialog.ConfirmationDialogButton
 import tornadofx.*
 import java.text.DateFormat
 import javax.inject.Inject

@@ -28,7 +28,7 @@ import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.utils.ImageCache
 import net.dankito.utils.ui.IClipboardService
-import net.dankito.utils.ui.IDialogService
+import net.dankito.util.ui.dialog.IDialogService
 import org.slf4j.LoggerFactory
 import java.io.File
 import javax.inject.Inject

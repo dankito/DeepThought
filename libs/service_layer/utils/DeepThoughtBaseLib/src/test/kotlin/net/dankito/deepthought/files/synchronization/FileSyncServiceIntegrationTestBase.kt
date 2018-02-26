@@ -52,7 +52,7 @@ import net.dankito.util.network.NetworkConnectivityManagerBase
 import net.dankito.util.network.NetworkHelper
 import net.dankito.util.settings.ILocalSettingsStore
 import net.dankito.util.settings.LocalSettingsStoreBase
-import net.dankito.utils.ui.IDialogService
+import net.dankito.util.ui.dialog.IDialogService
 import net.dankito.utils.version.Versions
 import net.engio.mbassy.listener.Handler
 import net.engio.mbassy.listener.Listener

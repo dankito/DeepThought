@@ -29,7 +29,7 @@ import net.dankito.util.serialization.ISerializer
 import net.dankito.utils.serialization.JacksonJsonSerializer
 import net.dankito.util.hashing.HashService
 import net.dankito.util.settings.ILocalSettingsStore
-import net.dankito.utils.ui.IDialogService
+import net.dankito.util.ui.dialog.IDialogService
 import javax.inject.Singleton
 
 

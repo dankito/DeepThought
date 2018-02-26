@@ -48,9 +48,9 @@ import net.dankito.service.data.messages.ItemChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.util.IThreadPool
 import net.dankito.utils.ui.IClipboardService
-import net.dankito.utils.ui.IDialogService
-import net.dankito.utils.ui.model.ConfirmationDialogButton
-import net.dankito.utils.ui.model.ConfirmationDialogConfig
+import net.dankito.util.ui.dialog.IDialogService
+import net.dankito.util.ui.dialog.ConfirmationDialogButton
+import net.dankito.util.ui.dialog.ConfirmationDialogConfig
 import net.engio.mbassy.listener.Handler
 import org.slf4j.LoggerFactory
 import java.util.*

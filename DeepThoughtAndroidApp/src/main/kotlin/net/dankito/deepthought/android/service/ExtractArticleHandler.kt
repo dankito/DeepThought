@@ -3,7 +3,7 @@ package net.dankito.deepthought.android.service
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.utils.ui.IDialogService
+import net.dankito.util.ui.dialog.IDialogService
 import javax.inject.Inject
 
 

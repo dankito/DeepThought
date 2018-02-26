@@ -14,7 +14,7 @@ import net.dankito.utils.IPlatformConfiguration
 import net.dankito.util.UrlUtil
 import net.dankito.util.localization.Localization
 import net.dankito.utils.services.network.download.IFileDownloader
-import net.dankito.utils.ui.IDialogService
+import net.dankito.util.ui.dialog.IDialogService
 import java.io.File
 import java.util.*
 import javax.inject.Inject

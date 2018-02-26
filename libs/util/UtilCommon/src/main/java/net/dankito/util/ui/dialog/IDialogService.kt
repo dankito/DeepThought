@@ -1,8 +1,6 @@
-package net.dankito.utils.ui
+package net.dankito.util.ui.dialog
 
 import net.dankito.util.localization.Localization
-import net.dankito.utils.ui.model.ConfirmationDialogButton
-import net.dankito.utils.ui.model.ConfirmationDialogConfig
 
 
 interface IDialogService {

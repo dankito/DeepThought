@@ -13,7 +13,7 @@ import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.results.FilteredTagsLazyLoadingLuceneSearchResultsList
 import net.dankito.service.search.specific.TagsSearchResults
 import net.dankito.service.search.util.CombinedLazyLoadingList
-import net.dankito.utils.ui.IDialogService
+import net.dankito.util.ui.dialog.IDialogService
 import kotlin.concurrent.thread
 
 

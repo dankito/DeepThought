@@ -54,7 +54,7 @@ import net.dankito.util.serialization.ISerializer
 import net.dankito.util.hashing.HashService
 import net.dankito.util.hashing.IBase64Service
 import net.dankito.util.network.NetworkHelper
-import net.dankito.utils.ui.IDialogService
+import net.dankito.util.ui.dialog.IDialogService
 import javax.inject.Singleton
 
 
