@@ -58,7 +58,7 @@ class TagsPreviewViewHelper {
                         else inflater.inflate(R.layout.view_tag, null)
         tagView.tag = TagViewTag
 
-        tagView.txtTagName.text = tag.name
+        tagView.txtTagName.text = tag.displayText
 
         tagView.btnRemoveTagFromItem.visibility = if (showButtonRemoveTag) View.VISIBLE else View.GONE
         tagView.btnRemoveTagFromItem.setOnClickListener { tagRemovedListener?.invoke(tag) }
