@@ -1,4 +1,4 @@
-package net.dankito.data_access.network.webclient.extractor
+package net.dankito.newsreader
 
 import net.dankito.util.HtmlUtil
 import net.dankito.util.web.IWebClient
@@ -8,7 +8,6 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
 
-// TODO: find a better library
 abstract class ExtractorBase(val webClient : IWebClient): HtmlUtil() {
 
     protected fun requestUrl(url: String): Document {

@@ -1,10 +1,10 @@
 package net.dankito.newsreader.article
 
-import net.dankito.data_access.network.webclient.extractor.ExtractorBase
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.extensions.getPlainTextForHtml
 import net.dankito.deepthought.model.util.ItemExtractionResult
+import net.dankito.newsreader.ExtractorBase
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.util.AsyncResult
 import net.dankito.util.web.IWebClient
