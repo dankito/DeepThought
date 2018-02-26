@@ -1,27 +1,23 @@
 package net.dankito.deepthought.javafx.service
 
-import net.dankito.deepthought.files.FileManager
-import net.dankito.deepthought.model.FileLink
+import net.dankito.util.IThreadPool
 import net.dankito.utils.ui.IApplicationsService
 import java.awt.Desktop
 import java.io.File
-import kotlin.concurrent.thread
 
 
-class JavaFXApplicationsService(private val fileManager: FileManager) : IApplicationsService {
+class JavaFXApplicationsService(private val threadPool: IThreadPool) : IApplicationsService {
 
-    override fun openFileInOsDefaultApplication(file: FileLink) {
-        fileManager.getLocalPathForFile(file)?.let { absoluteFile ->
-            openFile(absoluteFile)
-        }
+    override fun openFileInOsDefaultApplication(file: File) {
+        openFileOffUiThread(file)
     }
 
     override fun openDirectoryInOsFileBrowser(file: File) {
-        openFile(file)
+        openFileOffUiThread(file)
     }
 
-    private fun openFile(file: File) {
-        thread { // get off UI thread
+    private fun openFileOffUiThread(file: File) {
+        threadPool.runAsync { // get off UI thread
             try {
                 Desktop.getDesktop().open(file)
             } catch(ignored: Exception) { }

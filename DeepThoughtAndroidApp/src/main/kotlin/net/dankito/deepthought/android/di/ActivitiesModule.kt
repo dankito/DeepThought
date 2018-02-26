@@ -15,7 +15,6 @@ import net.dankito.deepthought.android.service.network.AndroidNetworkConnectivit
 import net.dankito.deepthought.android.service.permissions.AndroidPermissionsService
 import net.dankito.deepthought.android.service.settings.AndroidLocalSettingsStore
 import net.dankito.deepthought.data.ItemPersister
-import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
@@ -116,8 +115,8 @@ class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
-    fun provideApplicationsService(context: Context, fileManager: FileManager) : IApplicationsService {
-        return AndroidApplicationsService(context, fileManager)
+    fun provideApplicationsService(context: Context) : IApplicationsService {
+        return AndroidApplicationsService(context)
     }
 
     @Provides

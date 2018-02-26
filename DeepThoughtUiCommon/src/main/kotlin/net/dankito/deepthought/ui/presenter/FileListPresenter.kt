@@ -20,7 +20,9 @@ class FileListPresenter(private val fileManager: FileManager, private val applic
             router.showPdfView(file, sourceForFile)
         }
         else {
-            applicationsService.openFileInOsDefaultApplication(file)
+            fileManager.getLocalPathForFile(file)?.let { absoluteFile ->
+                applicationsService.openFileInOsDefaultApplication(absoluteFile)
+            }
         }
     }
 

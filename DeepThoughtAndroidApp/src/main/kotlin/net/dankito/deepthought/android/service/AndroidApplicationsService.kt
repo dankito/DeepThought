@@ -7,25 +7,21 @@ import android.support.v4.content.FileProvider
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.files.FileManager
-import net.dankito.deepthought.model.FileLink
 import net.dankito.utils.ui.IApplicationsService
 import java.io.File
 
 
 
 
-class AndroidApplicationsService(private val context: Context, private val fileManager: FileManager) : IApplicationsService {
+class AndroidApplicationsService(private val context: Context) : IApplicationsService {
 
-    override fun openFileInOsDefaultApplication(file: FileLink) {
-        fileManager.getLocalPathForFile(file)?.let { absoluteFile ->
-            try {
-                val intent = createOpenFileInOsDefaultApplicationIntent(absoluteFile)
+    override fun openFileInOsDefaultApplication(file: File) {
+        try {
+            val intent = createOpenFileInOsDefaultApplicationIntent(file)
 
-                context.startActivity(intent)
-            } catch (e: Exception) {
-                showErrorMessage(R.string.files_presenter_error_message_no_app_installed_for_this_file_type, absoluteFile?.extension)
-            }
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            showErrorMessage(R.string.files_presenter_error_message_no_app_installed_for_this_file_type, file.extension)
         }
     }
 

@@ -8,7 +8,6 @@ import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.data.SourcePersister
-import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.javafx.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.javafx.appstart.JavaFXAppInitializer
 import net.dankito.deepthought.javafx.dialogs.JavaFXDialogService
@@ -19,7 +18,6 @@ import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardService
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
 import net.dankito.deepthought.javafx.service.communication.JavaFXDeviceRegistrationHandler
 import net.dankito.deepthought.javafx.service.import_export.DataImporterExporterManager
-import net.dankito.util.network.JavaNetworkConnectivityManager
 import net.dankito.deepthought.javafx.service.settings.JavaFXLocalSettingsStore
 import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.news.article.ArticleExtractorManager
@@ -40,6 +38,7 @@ import net.dankito.util.IThreadPool
 import net.dankito.util.UrlUtil
 import net.dankito.util.localization.Localization
 import net.dankito.util.network.INetworkConnectivityManager
+import net.dankito.util.network.JavaNetworkConnectivityManager
 import net.dankito.util.network.NetworkHelper
 import net.dankito.util.settings.ILocalSettingsStore
 import net.dankito.utils.ui.IApplicationsService
@@ -97,8 +96,8 @@ class JavaFXModule(private val primaryStage: Stage, private val flavorInstancePr
 
     @Provides
     @Singleton
-    fun provideApplicationsService(fileManager: FileManager) : IApplicationsService {
-        return JavaFXApplicationsService(fileManager)
+    fun provideApplicationsService(threadPool: IThreadPool) : IApplicationsService {
+        return JavaFXApplicationsService(threadPool)
     }
 
     @Provides
