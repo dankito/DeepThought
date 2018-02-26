@@ -22,33 +22,38 @@ open class SettableEncodingResourceBundleControl(private val encoding: String) :
         val bundleName = toBundleName(baseName, locale)
         val resourceName = toResourceName(bundleName, "properties")
 
-        var bundle: ResourceBundle? = null
-        var stream: InputStream? = null
-
-        if(reload) {
-            val url = loader.getResource(resourceName)
-            if(url != null) {
-                val connection = url.openConnection()
-                if(connection != null) {
-                    connection.useCaches = false
-                    stream = connection.getInputStream()
-                }
-            }
-        }
-        else {
-            stream = SettableEncodingResourceBundleControl::class.java.classLoader.getResourceAsStream(resourceName)
-        }
+        val stream = loadStream(loader, reload, resourceName)
 
         if(stream != null) {
             try {
                 // Only this line is changed to make it to read properties files as UTF-8.
-                bundle = ThrowNoErrorOnMissingValuePropertyResourceBundle(InputStreamReader(stream, encoding))
+                return ThrowNoErrorOnMissingValuePropertyResourceBundle(InputStreamReader(stream, encoding))
             } finally {
                 stream.close()
             }
         }
 
-        return bundle
+        return null
+    }
+
+    protected open fun loadStream(loader: ClassLoader, reload: Boolean, resourceName: String?): InputStream? {
+        if(reload) {
+            val url = loader.getResource(resourceName)
+
+            if(url != null) {
+                val connection = url.openConnection()
+
+                if(connection != null) {
+                    connection.useCaches = false
+                    return connection.getInputStream()
+                }
+            }
+        }
+        else {
+            return SettableEncodingResourceBundleControl::class.java.classLoader.getResourceAsStream(resourceName)
+        }
+
+        return null
     }
 
 }
