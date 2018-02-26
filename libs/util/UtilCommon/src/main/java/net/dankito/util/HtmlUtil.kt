@@ -39,7 +39,7 @@ open class HtmlUtil {
         return absoluteUrl
     }
 
-    private fun tryToMakeUrlAbsolute(relativeUrl: String, siteUrl: String): String? {
+    protected open fun tryToMakeUrlAbsolute(relativeUrl: String, siteUrl: String): String? {
         try {
             val relativeUri = URI(relativeUrl)
             if(relativeUri.isAbsolute && relativeUri.scheme.startsWith("http") == false) {
@@ -67,7 +67,7 @@ open class HtmlUtil {
     }
 
 
-    protected fun parseIsoDateTimeString(isoDateTimeString: String): Date? {
+    protected open fun parseIsoDateTimeString(isoDateTimeString: String): Date? {
         var editableIsoDateTimeString = isoDateTimeString
 
         if(editableIsoDateTimeString.length > 18 && ':' == editableIsoDateTimeString[editableIsoDateTimeString.length - 3]) { // remove colon from time zone, Java DateFormat is  not able to parse it
@@ -81,7 +81,7 @@ open class HtmlUtil {
         return null
     }
 
-    protected fun parseIsoDateTimeStringWithoutTimezone(isoDateTimeString: String): Date? {
+    protected open fun parseIsoDateTimeStringWithoutTimezone(isoDateTimeString: String): Date? {
         try {
             return isoDateTimeFormatWithoutTimezone.parse(isoDateTimeString)
         } catch (e: Exception) { }
@@ -92,7 +92,7 @@ open class HtmlUtil {
     /**
      * Parses a date time string like Mo, 30 Okt 2017 12:36:45 MEZ
      */
-    protected fun parseVeryDetailedDateTimeString(detailedDateTimeString: String): Date? {
+    protected open fun parseVeryDetailedDateTimeString(detailedDateTimeString: String): Date? {
         try {
             return detailedDateTimeFormat.parse(detailedDateTimeString)
         } catch (e: Exception) { }
@@ -101,11 +101,11 @@ open class HtmlUtil {
     }
 
 
-    protected fun convertNonBreakableSpans(text: String): String {
+    protected open fun convertNonBreakableSpans(text: String): String {
         return text.replace("\u00A0", " ") // Converting &nbsp; entities
     }
 
-    protected fun convertGuardedAreaToDash(text: String): String {
+    protected open fun convertGuardedAreaToDash(text: String): String {
         return text.replace('\u0096', '-')
     }
 
