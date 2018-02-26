@@ -40,19 +40,19 @@ import net.dankito.service.synchronization.*
 import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
-import net.dankito.utils.OsHelper
-import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.util.ThreadPool
-import net.dankito.utils.language.NoOpLanguageDetector
-import net.dankito.util.localization.Localization
-import net.dankito.utils.serialization.DeepThoughtJacksonJsonSerializer
 import net.dankito.util.hashing.HashService
 import net.dankito.util.hashing.IBase64Service
+import net.dankito.util.localization.Localization
 import net.dankito.util.network.NetworkConnectivityManagerBase
 import net.dankito.util.network.NetworkHelper
 import net.dankito.util.settings.ILocalSettingsStore
 import net.dankito.util.settings.LocalSettingsStoreBase
 import net.dankito.util.ui.dialog.IDialogService
+import net.dankito.utils.OsHelper
+import net.dankito.utils.PlatformConfigurationBase
+import net.dankito.utils.language.NoOpLanguageDetector
+import net.dankito.utils.serialization.DeepThoughtJacksonJsonSerializer
 import net.dankito.utils.version.Versions
 import net.engio.mbassy.listener.Handler
 import net.engio.mbassy.listener.Listener
@@ -87,7 +87,7 @@ abstract class FileSyncServiceIntegrationTestBase {
     }
 
 
-    protected val localization = Localization()
+    protected val localization = Localization("Messages")
 
     protected val base64Service: IBase64Service = mock()
 
