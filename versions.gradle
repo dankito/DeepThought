@@ -44,7 +44,7 @@ ext {
 
     mimeUtilsVersion = '1.0.0'
 
-    annotationReaderVersion = '1.0-alpha2'
+    annotationReaderVersion = '1.0-alpha3'
 
     javaxPersistenceVersion = '2.1.1'
 
