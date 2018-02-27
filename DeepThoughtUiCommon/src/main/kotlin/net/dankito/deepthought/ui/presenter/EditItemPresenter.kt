@@ -24,7 +24,7 @@ class EditItemPresenter(private val itemPersister: ItemPersister, private val re
     }
 
 
-    fun saveItemAsync(item: Item, source: Source?, series: Series?, tags: Collection<Tag>, files: Collection<FileLink>, callback: (Boolean) -> Unit) {
+    fun saveItemAsync(item: Item, source: Source?, series: Series?, tags: Collection<Tag>, files: Collection<DeepThoughtFileLink>, callback: (Boolean) -> Unit) {
         itemPersister.saveItemAsync(item, source, series, tags, files, callback)
     }
 

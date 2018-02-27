@@ -1,7 +1,7 @@
 package net.dankito.deepthought.ui.presenter
 
 import net.dankito.deepthought.data.SourcePersister
-import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
@@ -60,7 +60,7 @@ class EditSourcePresenter(router: IRouter, clipboardService: IClipboardService, 
     }
 
 
-    fun saveSourceAsync(source: Source, series: Series?, publishingDateInput: Date?, publishingDateStringInput: String?, editedFiles: Collection<FileLink>, callback: (Boolean) -> Unit) {
+    fun saveSourceAsync(source: Source, series: Series?, publishingDateInput: Date?, publishingDateStringInput: String?, editedFiles: Collection<DeepThoughtFileLink>, callback: (Boolean) -> Unit) {
         val publishingDateString = if(publishingDateStringInput.isNullOrBlank()) null else publishingDateStringInput
         val publishingDate = if(publishingDateInput != null) publishingDateInput
                              else if(publishingDateString != null) parsePublishingDate(publishingDateString)

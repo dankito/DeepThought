@@ -6,7 +6,7 @@ import net.dankito.deepthought.model.extensions.contentPlainText
 import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.service.search.specific.*
 import net.dankito.synchronization.model.BaseEntity
-import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.util.IThreadPool
 
@@ -100,7 +100,7 @@ class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool
 
     override fun searchFiles(search: FilesSearch, termsToSearchFor: List<String>) {
         // TODO: implement fileType, searchUri, ...
-        searchForEntitiesOfType(FileLink::class.java, search, termsToSearchFor, { it.sortedByDescending { it.createdOn } }) { file ->
+        searchForEntitiesOfType(DeepThoughtFileLink::class.java, search, termsToSearchFor, { it.sortedByDescending { it.createdOn } }) { file ->
             listOf(file.uriString.toLowerCase(), file.name.toLowerCase(), file.description.toLowerCase(), file.sourceUriString.toLowerCase())
         }
     }

@@ -13,7 +13,7 @@ class ItemsSearch(searchTerm: String = Search.EmptySearchTerm,
                   val searchOnlyItemsWithoutTags: Boolean = false,
                   val itemsMustHaveTheseTags: Collection<Tag> = mutableListOf(),
                   val itemsMustHaveThisSource: Source? = null, val itemsMustHaveThisSeries: Series? = null,
-                  val itemsMustHaveTheseFiles: Collection<FileLink> = mutableListOf(),
+                  val itemsMustHaveTheseFiles: Collection<DeepThoughtFileLink> = mutableListOf(),
                   completedListener: (List<Item>) -> Unit) : SearchWithCollectionResult<Item>(searchTerm, completedListener) {
 
     fun isSearchingForItemIds(): Boolean {

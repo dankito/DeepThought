@@ -63,13 +63,13 @@ class DeleteEntityService(private val itemService: ItemService, private val tagS
         }
     }
 
-    private fun mayDeleteFiles(attachedFiles: List<FileLink>) {
+    private fun mayDeleteFiles(attachedFiles: List<DeepThoughtFileLink>) {
         attachedFiles.forEach { file ->
             mayDeleteFile(file)
         }
     }
 
-    fun mayDeleteFile(file: FileLink) {
+    fun mayDeleteFile(file: DeepThoughtFileLink) {
         // TODO: may ask user first if file should be deleted?
 
         if(file.isAttachedToItems == false && file.isAttachedToSource == false) {
@@ -130,11 +130,11 @@ class DeleteEntityService(private val itemService: ItemService, private val tagS
     }
 
 
-    fun deleteFileAsync(file: FileLink) {
+    fun deleteFileAsync(file: DeepThoughtFileLink) {
         threadPool.runAsync { deleteFile(file) }
     }
 
-    fun deleteFile(file: FileLink) {
+    fun deleteFile(file: DeepThoughtFileLink) {
         ArrayList(file.itemsAttachedTo).filterNotNull().filter { it.id != null }.forEach { item ->
             item.removeAttachedFile(file)
             itemService.update(item)

@@ -5,7 +5,7 @@ import net.dankito.util.web.RequestParameters
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.files.MimeTypeService
-import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.news.article.ArticleExtractorManager
@@ -164,7 +164,7 @@ class OptionsForClipboardContentDetector(private val articleExtractorManager: Ar
         }
     }
 
-    private fun createSourceForDownloadedFile(downloadedFile: FileLink, url: String, attachFileToSource: Boolean = true): Source {
+    private fun createSourceForDownloadedFile(downloadedFile: DeepThoughtFileLink, url: String, attachFileToSource: Boolean = true): Source {
         val source = Source(downloadedFile.name, url)
         source.lastAccessDate = Date()
 
@@ -175,7 +175,7 @@ class OptionsForClipboardContentDetector(private val articleExtractorManager: Ar
         return source
     }
 
-    private fun downloadFile(option: ClipboardContentOption, url: String, mimeType: String, callback: (downloadedFile: FileLink) -> Unit) {
+    private fun downloadFile(option: ClipboardContentOption, url: String, mimeType: String, callback: (downloadedFile: DeepThoughtFileLink) -> Unit) {
         val destination = getDestinationFileForUrl(url)
 
         fileDownloader.downloadAsync(url, destination) { downloadState ->

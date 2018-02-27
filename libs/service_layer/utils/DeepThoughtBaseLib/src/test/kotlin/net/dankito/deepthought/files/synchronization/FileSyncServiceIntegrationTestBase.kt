@@ -478,7 +478,7 @@ abstract class FileSyncServiceIntegrationTestBase {
         }
     }
 
-    protected fun createFile(): FileLink {
+    protected fun createFile(): DeepThoughtFileLink {
         val tempFile = File.createTempFile("FileSyncServiceIntegrationTest", ".tmp")
         tempFile.deleteOnExit()
 

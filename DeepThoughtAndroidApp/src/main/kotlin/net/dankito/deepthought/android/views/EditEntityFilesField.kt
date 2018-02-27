@@ -11,7 +11,7 @@ import net.dankito.deepthought.android.adapter.FilesRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.extensions.setLeftMargin
 import net.dankito.deepthought.files.FileManager
-import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.FileListPresenter
@@ -55,7 +55,7 @@ class EditEntityFilesField : EditEntityField {
     protected lateinit var previewImageService: PreviewImageService
 
 
-    private var originalFiles: MutableCollection<FileLink> = ArrayList()
+    private var originalFiles: MutableCollection<DeepThoughtFileLink> = ArrayList()
 
     private var sourceForFile: Source? = null
 
@@ -117,7 +117,7 @@ class EditEntityFilesField : EditEntityField {
     }
 
 
-    fun setFiles(originalFiles: MutableCollection<FileLink>, permissionsManager: IPermissionsService, sourceForFile: Source? = null) {
+    fun setFiles(originalFiles: MutableCollection<DeepThoughtFileLink>, permissionsManager: IPermissionsService, sourceForFile: Source? = null) {
         this.originalFiles = originalFiles
         this.sourceForFile = sourceForFile
         this.permissionsService = permissionsManager
@@ -127,7 +127,7 @@ class EditEntityFilesField : EditEntityField {
         attachedFilesAdapter.items = ArrayList(originalFiles) // make a copy to not edit original files
     }
 
-    fun getEditedFiles(): Collection<FileLink> {
+    fun getEditedFiles(): Collection<DeepThoughtFileLink> {
         return attachedFilesAdapter.items
     }
 
@@ -148,13 +148,13 @@ class EditEntityFilesField : EditEntityField {
         addFile(localFile)
     }
 
-    private fun addFile(file: FileLink) {
+    private fun addFile(file: DeepThoughtFileLink) {
         attachedFilesAdapter.addItem(file)
 
         updateDidValueChange()
     }
 
-    private fun removeFile(file: FileLink) {
+    private fun removeFile(file: DeepThoughtFileLink) {
         attachedFilesAdapter.removeItem(file)
 
         updateDidValueChange()
@@ -165,7 +165,7 @@ class EditEntityFilesField : EditEntityField {
     }
 
 
-    private fun showFile(file: FileLink) {
+    private fun showFile(file: DeepThoughtFileLink) {
         fileListPresenter.showFile(file, sourceForFile)
     }
 

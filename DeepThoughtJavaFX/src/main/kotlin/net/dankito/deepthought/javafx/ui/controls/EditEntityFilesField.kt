@@ -11,7 +11,7 @@ import javafx.stage.FileChooser
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.ui.controls.cell.FileListCellFragment
-import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.FileListPresenter
@@ -47,9 +47,9 @@ class EditEntityFilesField : View() {
 
     val didValueChange = SimpleBooleanProperty()
 
-    private val files = FXCollections.observableArrayList<FileLink>()
+    private val files = FXCollections.observableArrayList<DeepThoughtFileLink>()
 
-    private var originalFiles: MutableCollection<FileLink> = ArrayList()
+    private var originalFiles: MutableCollection<DeepThoughtFileLink> = ArrayList()
 
     private var sourceForFile: Source? = null
 
@@ -127,7 +127,7 @@ class EditEntityFilesField : View() {
 
 
 
-    fun setFiles(originalFiles: MutableCollection<FileLink>, sourceForFile: Source? = null) {
+    fun setFiles(originalFiles: MutableCollection<DeepThoughtFileLink>, sourceForFile: Source? = null) {
         this.originalFiles = originalFiles
         this.sourceForFile = sourceForFile
 
@@ -138,7 +138,7 @@ class EditEntityFilesField : View() {
         updateListViewHeight()
     }
 
-    fun getEditedFiles(): Collection<FileLink> {
+    fun getEditedFiles(): Collection<DeepThoughtFileLink> {
         return files
     }
 
@@ -159,14 +159,14 @@ class EditEntityFilesField : View() {
         addFile(localFile)
     }
 
-    private fun addFile(file: FileLink) {
+    private fun addFile(file: DeepThoughtFileLink) {
         files.add(file)
 
         updateListViewHeight()
         updateDidValueChange()
     }
 
-    private fun removeFile(file: FileLink) {
+    private fun removeFile(file: DeepThoughtFileLink) {
         files.remove(file)
 
         updateListViewHeight()
@@ -187,7 +187,7 @@ class EditEntityFilesField : View() {
     }
 
 
-    private fun showFile(file: FileLink?) {
+    private fun showFile(file: DeepThoughtFileLink?) {
         file?.let {
             fileListPresenter.showFile(file, sourceForFile)
         }

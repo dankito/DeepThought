@@ -2,7 +2,7 @@ package net.dankito.service.search.specific
 
 import net.dankito.service.search.Search
 import net.dankito.service.search.SearchWithCollectionResult
-import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.model.DeepThoughtFileLink
 
 
 class FilesSearch(searchTerm: String = Search.EmptySearchTerm,
@@ -10,7 +10,7 @@ class FilesSearch(searchTerm: String = Search.EmptySearchTerm,
                   val searchUri: Boolean = true, val searchName: Boolean = true,
                   val searchMimeType: Boolean = true, val searchFileType: Boolean = true,
                   val searchDescription: Boolean = true, val searchSourceUri: Boolean = true,
-                  completedListener: (List<FileLink>) -> Unit) : SearchWithCollectionResult<FileLink>(searchTerm, completedListener) {
+                  completedListener: (List<DeepThoughtFileLink>) -> Unit) : SearchWithCollectionResult<DeepThoughtFileLink>(searchTerm, completedListener) {
 
 
     enum class FileType {

@@ -78,7 +78,7 @@ data class Source(
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = TableConfig.SourceAttachedFileJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.SourceAttachedFileJoinTableSourceBaseIdColumnName)), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.SourceAttachedFileJoinTableFileLinkIdColumnName)))
-    var attachedFiles: MutableList<FileLink> = ArrayList()
+    var attachedFiles: MutableList<DeepThoughtFileLink> = ArrayList()
         private set
 
     @Column(name = TableConfig.SourcePreviewImageUrlColumnName)
@@ -86,7 +86,7 @@ data class Source(
 
     @OneToOne(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.PERSIST))
     @JoinColumn(name = TableConfig.SourcePreviewImageJoinColumnName)
-    var previewImage: FileLink? = null
+    var previewImage: DeepThoughtFileLink? = null
 
 
     constructor() : this("")
@@ -123,7 +123,7 @@ data class Source(
         return attachedFiles.size > 0
     }
 
-    fun setAllAttachedFiles(files: Collection<FileLink>) { // don't name it setAttachedFiles(), would cause conflicts in Java (e.g. for deserializing with Jackson)
+    fun setAllAttachedFiles(files: Collection<DeepThoughtFileLink>) { // don't name it setAttachedFiles(), would cause conflicts in Java (e.g. for deserializing with Jackson)
         val copy = ArrayList(files)  // make a copy. if files equals this.attachedFiles, all files would get removed by removeAttachedFile() otherwise
 
         for(previousFile in ArrayList(this.attachedFiles)) {
@@ -135,7 +135,7 @@ data class Source(
         }
     }
 
-    fun addAttachedFile(file: FileLink): Boolean {
+    fun addAttachedFile(file: DeepThoughtFileLink): Boolean {
         if(attachedFiles.add(file)) {
             file.addAsAttachmentToSource(this)
 
@@ -145,7 +145,7 @@ data class Source(
         return false
     }
 
-    fun removeAttachedFile(file: FileLink): Boolean {
+    fun removeAttachedFile(file: DeepThoughtFileLink): Boolean {
         if(attachedFiles.remove(file)) {
             file.removeAsAttachmentFromSource(this)
 

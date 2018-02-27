@@ -8,7 +8,7 @@ import javax.persistence.ManyToMany
 
 
 @Entity(name = TableConfig.DeepThoughtFileLinkTableName)
-class FileLink(uriString: String, name: String = "", isLocalFile: Boolean = false) : net.dankito.synchronization.model.FileLink(uriString, name, isLocalFile) {
+class DeepThoughtFileLink(uriString: String, name: String = "", isLocalFile: Boolean = false) : net.dankito.synchronization.model.FileLink(uriString, name, isLocalFile) {
 
     companion object {
         private const val serialVersionUID = -7508656557829870723L

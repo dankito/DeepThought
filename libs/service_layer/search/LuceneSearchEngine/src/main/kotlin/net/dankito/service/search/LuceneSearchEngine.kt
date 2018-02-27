@@ -151,7 +151,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
             Series::class.java -> seriesIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Series>)
             Source::class.java -> sourceIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Source>)
             ReadLaterArticleService::class.java -> readLaterArticleIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<ReadLaterArticle>)
-            FileLink::class.java -> fileIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<FileLink>)
+            DeepThoughtFileLink::class.java -> fileIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<DeepThoughtFileLink>)
             LocalFileInfo::class.java -> localFileInfoIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<LocalFileInfo>)
         }
     }

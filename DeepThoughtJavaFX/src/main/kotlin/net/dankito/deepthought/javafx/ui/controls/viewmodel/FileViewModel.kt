@@ -2,11 +2,11 @@ package net.dankito.deepthought.javafx.ui.controls.viewmodel
 
 import javafx.beans.property.SimpleLongProperty
 import javafx.beans.property.SimpleStringProperty
-import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.model.DeepThoughtFileLink
 import tornadofx.*
 
 
-class FileViewModel : ItemViewModel<FileLink>() {
+class FileViewModel : ItemViewModel<DeepThoughtFileLink>() {
 
     val name = bind { SimpleStringProperty(item?.name) }
 

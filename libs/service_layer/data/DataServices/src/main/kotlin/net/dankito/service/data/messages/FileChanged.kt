@@ -1,6 +1,6 @@
 package net.dankito.service.data.messages
 
-import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.model.DeepThoughtFileLink
 
 
-class FileChanged(entity: FileLink, changeType: EntityChangeType, source: EntityChangeSource): EntityChanged<FileLink>(entity, changeType, source)
+class FileChanged(entity: DeepThoughtFileLink, changeType: EntityChangeType, source: EntityChangeSource): EntityChanged<DeepThoughtFileLink>(entity, changeType, source)

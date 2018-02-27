@@ -34,13 +34,13 @@ class ItemPersister(private val itemService: ItemService, private val sourcePers
     }
 
 
-    fun saveItemAsync(item: Item, source: Source?, series: Series?, tags: Collection<Tag>, files: Collection<FileLink> = listOf(), callback: (Boolean) -> Unit) {
+    fun saveItemAsync(item: Item, source: Source?, series: Series?, tags: Collection<Tag>, files: Collection<DeepThoughtFileLink> = listOf(), callback: (Boolean) -> Unit) {
         threadPool.runAsync {
             callback(saveItem(item, source, series, tags, files))
         }
     }
 
-    private fun saveItem(item: Item, source: Source? = null, series: Series? = null, tags: Collection<Tag> = ArrayList<Tag>(), files: Collection<FileLink>): Boolean {
+    private fun saveItem(item: Item, source: Source? = null, series: Series? = null, tags: Collection<Tag> = ArrayList<Tag>(), files: Collection<DeepThoughtFileLink>): Boolean {
         val (addedTags, removedTags) = setTags(item, tags)
 
         val previousSource = setSource(item, source, series)
@@ -92,7 +92,7 @@ class ItemPersister(private val itemService: ItemService, private val sourcePers
         return previousSource
     }
 
-    private fun setFiles(item: Item, files: Collection<FileLink>): Pair<ArrayList<FileLink>, ArrayList<FileLink>> {
+    private fun setFiles(item: Item, files: Collection<DeepThoughtFileLink>): Pair<ArrayList<DeepThoughtFileLink>, ArrayList<DeepThoughtFileLink>> {
         ArrayList(files).forEach { file ->
             if(file.isPersisted() == false) {
                 filePersister.saveFile(file)
@@ -122,7 +122,7 @@ class ItemPersister(private val itemService: ItemService, private val sourcePers
         }
     }
 
-    private fun updateTagsAndFiles(addedTags: ArrayList<Tag>, removedTags: ArrayList<Tag>, addedFiles: ArrayList<FileLink>, removedFiles: ArrayList<FileLink>) {
+    private fun updateTagsAndFiles(addedTags: ArrayList<Tag>, removedTags: ArrayList<Tag>, addedFiles: ArrayList<DeepThoughtFileLink>, removedFiles: ArrayList<DeepThoughtFileLink>) {
         addedTags.filterNotNull().forEach { tagService.update(it) }
 
         removedTags.filterNotNull().forEach { tagService.update(it) }

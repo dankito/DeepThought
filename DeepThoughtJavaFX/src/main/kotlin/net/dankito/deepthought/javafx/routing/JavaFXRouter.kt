@@ -141,11 +141,11 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
         showImportFromPdfView(addNewPdfFile, null, sourceForFile)
     }
 
-    override fun showPdfView(persistedPdfFile: FileLink, sourceForFile: Source?) {
+    override fun showPdfView(persistedPdfFile: DeepThoughtFileLink, sourceForFile: Source?) {
         showImportFromPdfView(null, persistedPdfFile, sourceForFile)
     }
 
-    private fun showImportFromPdfView(addNewPdfFile: File?, persistedPdfFile: FileLink?, sourceForFile: Source?) {
+    private fun showImportFromPdfView(addNewPdfFile: File?, persistedPdfFile: DeepThoughtFileLink?, sourceForFile: Source?) {
         runLater {
             mainWindowController.find(ViewPdfDialog::class,
                     mapOf(ViewPdfDialog::addNewPdfFileParam to addNewPdfFile, ViewPdfDialog::persistedPdfFileParam to persistedPdfFile,
@@ -154,7 +154,7 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
         }
     }
 
-    private fun getViewPdfDialogTitle(addNewPdfFile: File?, persistedPdfFile: FileLink?): String {
+    private fun getViewPdfDialogTitle(addNewPdfFile: File?, persistedPdfFile: DeepThoughtFileLink?): String {
         return String.format(FX.messages["view.pdf.dialog.title"], addNewPdfFile?.name ?: persistedPdfFile?.name)
     }
 

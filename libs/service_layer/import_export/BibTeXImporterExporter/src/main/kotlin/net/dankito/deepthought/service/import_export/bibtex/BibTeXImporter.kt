@@ -86,7 +86,7 @@ class BibTeXImporter(private val searchEngine: ISearchEngine, private val itemPe
     private fun mapBibTeXEntryToItem(bibTeXEntry: BibTeXEntry, latexParser: LaTeXParser, latexPrinter: LaTeXPrinter): Item {
         val item = Item("")
         val tags = ArrayList<Tag>()
-        val files = ArrayList<FileLink>() // TODO
+        val files = ArrayList<DeepThoughtFileLink>() // TODO
         val source = Source()
         sourcePersister.saveSource(source)
 

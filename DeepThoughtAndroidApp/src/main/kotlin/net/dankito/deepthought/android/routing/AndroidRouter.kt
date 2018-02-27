@@ -131,7 +131,7 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
         showImportFromPdfView(ViewPdfActivityParameters(null, addNewPdfFile, sourceForFile))
     }
 
-    override fun showPdfView(persistedPdfFile: FileLink, sourceForFile: Source?) {
+    override fun showPdfView(persistedPdfFile: DeepThoughtFileLink, sourceForFile: Source?) {
         showImportFromPdfView(ViewPdfActivityParameters(persistedPdfFile, null, sourceForFile))
     }
 

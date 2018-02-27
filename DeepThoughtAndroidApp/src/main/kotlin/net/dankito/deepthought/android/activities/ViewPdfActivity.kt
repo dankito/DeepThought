@@ -7,7 +7,7 @@ import net.dankito.deepthought.android.activities.arguments.ViewPdfActivityParam
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.files.FileManager
-import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
@@ -132,7 +132,7 @@ class ViewPdfActivity : BaseActivity() {
         loadPdf(fileManager.createLocalFile(pdfFile))
     }
 
-    private fun loadPdf(pdfFile: FileLink) {
+    private fun loadPdf(pdfFile: DeepThoughtFileLink) {
         fileManager.getLocalPathForFile(pdfFile)?.let { localFile ->
             importer.loadFileAsync(localFile) { result ->
                 pdfFileLoaded(pdfFile, localFile, result)
@@ -140,7 +140,7 @@ class ViewPdfActivity : BaseActivity() {
         }
     }
 
-    private fun pdfFileLoaded(pdfFile: FileLink, localFile: File, result: LoadPdfFileResult) {
+    private fun pdfFileLoaded(pdfFile: DeepThoughtFileLink, localFile: File, result: LoadPdfFileResult) {
         this.pdfDocument = result.document
 
         result.fileMetadata?.let {
@@ -152,7 +152,7 @@ class ViewPdfActivity : BaseActivity() {
         }
     }
 
-    private fun loadedFileOnUiThread(pdfFile: FileLink, metadata: FileMetadata) {
+    private fun loadedFileOnUiThread(pdfFile: DeepThoughtFileLink, metadata: FileMetadata) {
         fileMetaData = metadata
 
         if(sourceForFile == null) {
@@ -182,7 +182,7 @@ class ViewPdfActivity : BaseActivity() {
         btnCreateItemFromSelectedText.isEnabled = isButtonCreateItemFromSelectedTextEnabled
     }
 
-    private fun createSource(metadata: FileMetadata, pdfFile: FileLink): Source {
+    private fun createSource(metadata: FileMetadata, pdfFile: DeepThoughtFileLink): Source {
         val source = Source("")
         setSourceProperties(source, metadata)
 

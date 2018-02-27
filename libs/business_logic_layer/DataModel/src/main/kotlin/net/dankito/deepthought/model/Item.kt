@@ -39,7 +39,7 @@ data class Item(
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = TableConfig.ItemAttachedFilesJoinTableName, joinColumns = arrayOf(JoinColumn(name = TableConfig.ItemAttachedFilesJoinTableItemIdColumnName)), inverseJoinColumns = arrayOf(JoinColumn(name = TableConfig.ItemAttachedFilesJoinTableFileLinkIdColumnName)))
-    var attachedFiles: MutableSet<FileLink> = HashSet()
+    var attachedFiles: MutableSet<DeepThoughtFileLink> = HashSet()
         private set
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = arrayOf(CascadeType.MERGE))
@@ -146,7 +146,7 @@ data class Item(
         return attachedFiles.size > 0
     }
 
-    fun setAllAttachedFiles(files: Collection<FileLink>) { // don't name it setAttachedFiles(), would cause conflicts in Java (e.g. for deserializing with Jackson)
+    fun setAllAttachedFiles(files: Collection<DeepThoughtFileLink>) { // don't name it setAttachedFiles(), would cause conflicts in Java (e.g. for deserializing with Jackson)
         val copy = ArrayList(files)  // make a copy. if files equals this.attachedFiles, all files would get removed by removeAttachedFile() otherwise
 
         for(previousFile in ArrayList(this.attachedFiles)) {
@@ -158,7 +158,7 @@ data class Item(
         }
     }
 
-    fun addAttachedFile(file: FileLink): Boolean {
+    fun addAttachedFile(file: DeepThoughtFileLink): Boolean {
         if(attachedFiles.add(file)) {
             file.addAsAttachmentToItem(this)
 
@@ -168,7 +168,7 @@ data class Item(
         return false
     }
 
-    fun removeAttachedFile(file: FileLink): Boolean {
+    fun removeAttachedFile(file: DeepThoughtFileLink): Boolean {
         if(attachedFiles.remove(file)) {
             file.removeAsAttachmentFromItem(this)
 

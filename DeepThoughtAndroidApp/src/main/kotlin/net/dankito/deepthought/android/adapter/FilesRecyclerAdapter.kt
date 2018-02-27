@@ -5,15 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.FileLinkViewHolder
-import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.ui.presenter.FileListPresenter
 import net.dankito.filechooserdialog.model.FileChooserDialogConfig
 import net.dankito.filechooserdialog.service.PreviewImageService
 import java.io.File
 
 
-class FilesRecyclerAdapter(private val presenter: FileListPresenter, private val previewImageService: PreviewImageService, private val removeFileListener: (FileLink) -> Unit)
-    : ListRecyclerSwipeAdapter<FileLink, FileLinkViewHolder>() {
+class FilesRecyclerAdapter(private val presenter: FileListPresenter, private val previewImageService: PreviewImageService, private val removeFileListener: (DeepThoughtFileLink) -> Unit)
+    : ListRecyclerSwipeAdapter<DeepThoughtFileLink, FileLinkViewHolder>() {
 
     override fun getSwipeLayoutResourceId(position: Int) = R.id.fileLinkSwipeLayout
 
@@ -46,7 +46,7 @@ class FilesRecyclerAdapter(private val presenter: FileListPresenter, private val
         viewHolder.txtFilePath.visibility = View.INVISIBLE
     }
 
-    override fun bindItemToView(viewHolder: FileLinkViewHolder, item: FileLink) {
+    override fun bindItemToView(viewHolder: FileLinkViewHolder, item: DeepThoughtFileLink) {
         viewHolder.txtFileName.text = item.name
         viewHolder.txtFileName.visibility = View.VISIBLE
 
@@ -68,7 +68,7 @@ class FilesRecyclerAdapter(private val presenter: FileListPresenter, private val
     }
 
 
-    override fun setupSwipeView(viewHolder: FileLinkViewHolder, item: FileLink) {
+    override fun setupSwipeView(viewHolder: FileLinkViewHolder, item: DeepThoughtFileLink) {
         viewHolder.btnOpenContainingFolder.setOnClickListener {
             presenter.openContainingDirectoryOfFile(item)
 

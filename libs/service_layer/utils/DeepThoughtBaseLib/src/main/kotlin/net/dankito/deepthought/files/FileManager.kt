@@ -2,7 +2,7 @@ package net.dankito.deepthought.files
 
 import net.dankito.deepthought.files.synchronization.FileSyncConfig
 import net.dankito.deepthought.files.synchronization.FileSyncService
-import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.service.data.LocalFileInfoService
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.FileChanged
@@ -31,7 +31,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
     }
 
 
-    private val localFileInfoCache = ConcurrentHashMap<FileLink, LocalFileInfo>()
+    private val localFileInfoCache = ConcurrentHashMap<DeepThoughtFileLink, LocalFileInfo>()
 
     private val eventBusListener = EventBusListener()
 
@@ -45,7 +45,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
     }
 
 
-    fun saveLocalFileInfoForLocalFile(file: FileLink) {
+    fun saveLocalFileInfoForLocalFile(file: DeepThoughtFileLink) {
         var localFileInfo = getStoredLocalFileInfo(file)
 
         if(localFileInfo == null) { // should actually never be the case
@@ -57,8 +57,8 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
         }
     }
 
-    fun createLocalFile(localFile: File, mimeType: String? = null): FileLink {
-        val file = FileLink(localFile.absolutePath, localFile.name, true)
+    fun createLocalFile(localFile: File, mimeType: String? = null): DeepThoughtFileLink {
+        val file = DeepThoughtFileLink(localFile.absolutePath, localFile.name, true)
 
         file.fileSize = localFile.length()
         file.fileLastModified = Date(localFile.lastModified())
@@ -71,7 +71,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
         return file
     }
 
-    private fun createLocalFileInfoForLocalFile(file: FileLink, localFile: File): LocalFileInfo {
+    private fun createLocalFileInfoForLocalFile(file: DeepThoughtFileLink, localFile: File): LocalFileInfo {
         val localFileInfo = LocalFileInfo(file, localFile.absolutePath, true, FileSyncStatus.UpToDate, file.fileSize, file.fileLastModified, file.hashSHA256)
         localFileInfoCache.put(file, localFileInfo)
 
@@ -80,7 +80,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
         return localFileInfo
     }
 
-    fun createDownloadedLocalFile(url: String, localFile: File, mimeType: String? = null): FileLink {
+    fun createDownloadedLocalFile(url: String, localFile: File, mimeType: String? = null): DeepThoughtFileLink {
         val file = createLocalFile(localFile, mimeType)
 
         file.sourceUriString = url
@@ -88,7 +88,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
         return file
     }
 
-    fun getLocalPathForFile(file: FileLink): File? {
+    fun getLocalPathForFile(file: DeepThoughtFileLink): File? {
         getStoredLocalFileInfo(file)?.let { localFileInfo ->
             localFileInfo.path?.let { return File(it) }
         }
@@ -96,13 +96,13 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
         return null
     }
 
-    private fun setFileHashAsync(file: FileLink, localFileInfo: LocalFileInfo, localFile: File) {
+    private fun setFileHashAsync(file: DeepThoughtFileLink, localFileInfo: LocalFileInfo, localFile: File) {
         threadPool.runAsync {
             setFileHash(file, localFileInfo, localFile)
         }
     }
 
-    private fun setFileHash(file: FileLink, localFileInfo: LocalFileInfo, localFile: File) {
+    private fun setFileHash(file: DeepThoughtFileLink, localFileInfo: LocalFileInfo, localFile: File) {
         try {
             file.hashSHA256 = hashService.getFileHash(FileSyncConfig.FileHashAlgorithm, localFile)
 
@@ -113,13 +113,13 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
     }
 
 
-    fun forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(files: Collection<FileLink>) {
+    fun forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(files: Collection<DeepThoughtFileLink>) {
         files.forEach { file ->
             forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(file)
         }
     }
 
-    fun forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(file: FileLink) {
+    fun forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(file: DeepThoughtFileLink) {
         if(file.isLocalFile) {
             ensureLocalFileInfoIsSet(file)
 
@@ -127,7 +127,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
         }
     }
 
-    private fun ensureLocalFileInfoIsSet(file: FileLink) {
+    private fun ensureLocalFileInfoIsSet(file: DeepThoughtFileLink) {
         val storedLocalFileInfo = getStoredLocalFileInfo(file)
 
         if(storedLocalFileInfo == null) {
@@ -138,7 +138,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
         }
     }
 
-    fun getStoredLocalFileInfo(file: FileLink): LocalFileInfo? {
+    fun getStoredLocalFileInfo(file: DeepThoughtFileLink): LocalFileInfo? {
         localFileInfoCache.get(file)?.let { return it }
 
         val localFileInfo = AtomicReference<LocalFileInfo?>(null)
@@ -154,7 +154,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
     }
 
 
-    private fun fileHasBeenDeleted(file: FileLink) {
+    private fun fileHasBeenDeleted(file: DeepThoughtFileLink) {
         getStoredLocalFileInfo(file)?.let { localFileInfo ->
             if(localFileInfo.isPersisted()) {
                 localFileInfoService.delete(localFileInfo)
@@ -165,7 +165,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
     }
 
 
-    private fun checkIfFileSynchronizationShouldGetStarted(file: FileLink) {
+    private fun checkIfFileSynchronizationShouldGetStarted(file: DeepThoughtFileLink) {
         getStoredLocalFileInfo(file)?.let { localFileInfo ->
             // TODO: when updating file has been implemented, also check if hash (and lastModified) still match
             if(localFileInfo.syncStatus != FileSyncStatus.UpToDate) {
@@ -174,7 +174,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
         }
     }
 
-    private fun startFileSynchronizationAsync(file: FileLink) {
+    private fun startFileSynchronizationAsync(file: DeepThoughtFileLink) {
         fileSyncService.addFileToSynchronize(file)
     }
 
@@ -182,7 +182,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
     private fun searchForNotSynchronizedFiles() {
         searchEngine.searchLocalFileInfo(LocalFileInfoSearch(doesNotHaveSyncStatus = FileSyncStatus.UpToDate) { notUpToDateLocalFileInfo ->
             notUpToDateLocalFileInfo.filterNotNull().sortedBy { it.file?.fileSize ?: Long.MAX_VALUE }.forEach { localFileInfo -> // sort files by their size so that smaller files get synchronized first
-                (localFileInfo.file as? FileLink)?.let { file ->
+                (localFileInfo.file as? DeepThoughtFileLink)?.let { file ->
                     startFileSynchronizationAsync(file)
                 }
             }

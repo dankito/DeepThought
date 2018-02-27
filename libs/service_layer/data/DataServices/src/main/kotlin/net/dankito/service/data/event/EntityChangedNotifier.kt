@@ -61,8 +61,8 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
         else if(entityClass == Source::class.java) {
             dispatchMessagesForSourceDependentEntities(entity as Source, source)
         }
-        else if(entityClass == FileLink::class.java) {
-            dispatchMessagesForFileLinkDependentEntities(entity as FileLink, source)
+        else if(entityClass == DeepThoughtFileLink::class.java) {
+            dispatchMessagesForFileLinkDependentEntities(entity as DeepThoughtFileLink, source)
         }
         else if(entityClass == LocalFileInfo::class.java) {
             dispatchMessagesForLocalFileInfoDependentEntities(entity as LocalFileInfo, source)
@@ -87,7 +87,7 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
         }
     }
 
-    private fun dispatchMessagesForFileLinkDependentEntities(file: FileLink, changeSource: EntityChangeSource) {
+    private fun dispatchMessagesForFileLinkDependentEntities(file: DeepThoughtFileLink, changeSource: EntityChangeSource) {
         file.itemsAttachedTo.filterNotNull().forEach { item ->
             notifyListenersOfEntityChange(item, EntityChangeType.Updated, changeSource)
         }
@@ -108,7 +108,7 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
             Source::class.java -> return SourceChanged(entity as Source, changeType, source)
             Series::class.java -> return SeriesChanged(entity as Series, changeType, source)
             ReadLaterArticle::class.java -> return ReadLaterArticleChanged(entity as ReadLaterArticle, changeType, source)
-            FileLink::class.java -> return FileChanged(entity as FileLink, changeType, source)
+            DeepThoughtFileLink::class.java -> return FileChanged(entity as DeepThoughtFileLink, changeType, source)
             LocalFileInfo::class.java -> return LocalFileInfoChanged(entity as LocalFileInfo, changeType, source)
             ArticleSummaryExtractorConfig::class.java -> return ArticleSummaryExtractorConfigChanged(entity as ArticleSummaryExtractorConfig, changeType, source)
             else -> {

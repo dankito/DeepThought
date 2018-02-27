@@ -188,7 +188,7 @@ abstract class EditItemViewBase : DialogFragment() {
     }
 
 
-    protected fun showData(item: Item, tags: MutableCollection<Tag>, source: Source?, series: Series?, files: MutableCollection<FileLink>, contentToEdit: String? = null) {
+    protected fun showData(item: Item, tags: MutableCollection<Tag>, source: Source?, series: Series?, files: MutableCollection<DeepThoughtFileLink>, contentToEdit: String? = null) {
         this.item = item
         originalSummary = item.summaryPlainText
 

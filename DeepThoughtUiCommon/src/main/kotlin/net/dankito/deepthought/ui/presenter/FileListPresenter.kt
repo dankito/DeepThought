@@ -1,7 +1,7 @@
 package net.dankito.deepthought.ui.presenter
 
 import net.dankito.deepthought.files.FileManager
-import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.synchronization.model.LocalFileInfo
@@ -14,7 +14,7 @@ import java.io.File
 class FileListPresenter(private val fileManager: FileManager, private val applicationsService: IApplicationsService, private val localization: Localization,
                         private val router: IRouter) {
 
-    fun showFile(file: FileLink, sourceForFile: Source? = null) {
+    fun showFile(file: DeepThoughtFileLink, sourceForFile: Source? = null) {
         // TODO: check if file can be opened in DeepThought directly, e.g PDFs
         if(isPdfFile(file)) { // TODO: remove for 0.4.0 release
             router.showPdfView(file, sourceForFile)
@@ -26,7 +26,7 @@ class FileListPresenter(private val fileManager: FileManager, private val applic
         }
     }
 
-    fun openContainingDirectoryOfFile(file: FileLink) {
+    fun openContainingDirectoryOfFile(file: DeepThoughtFileLink) {
         fileManager.getLocalPathForFile(file)?.let { absolutePath ->
             openDirectory(absolutePath.parentFile)
         }
@@ -37,7 +37,7 @@ class FileListPresenter(private val fileManager: FileManager, private val applic
     }
 
 
-    fun forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(files: Collection<FileLink>) {
+    fun forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(files: Collection<DeepThoughtFileLink>) {
         fileManager.forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(files)
     }
 
@@ -60,7 +60,7 @@ class FileListPresenter(private val fileManager: FileManager, private val applic
         }
     }
 
-    fun getUriOrSynchronizationState(file: FileLink): String {
+    fun getUriOrSynchronizationState(file: DeepThoughtFileLink): String {
         if(file.isLocalFile == false) {
             return file.uriString
         }
@@ -77,12 +77,12 @@ class FileListPresenter(private val fileManager: FileManager, private val applic
         }
     }
 
-    fun getLocalFileInfo(file: FileLink): LocalFileInfo? {
+    fun getLocalFileInfo(file: DeepThoughtFileLink): LocalFileInfo? {
         return fileManager.getStoredLocalFileInfo(file)
     }
 
 
-    private fun isPdfFile(file: FileLink): Boolean {
+    private fun isPdfFile(file: DeepThoughtFileLink): Boolean {
         getLocalFileInfo(file)?.path?.let { localFilePath ->
             return "pdf".equals(File(localFilePath).extension, true) // TODO: find better way
         }

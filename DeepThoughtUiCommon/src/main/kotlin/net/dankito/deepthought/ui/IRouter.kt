@@ -46,7 +46,7 @@ interface IRouter {
 
     fun showPdfView(addNewPdfFile: File, sourceForFile: Source? = null)
 
-    fun showPdfView(persistedPdfFile: FileLink, sourceForFile: Source? = null)
+    fun showPdfView(persistedPdfFile: DeepThoughtFileLink, sourceForFile: Source? = null)
 
 
     fun returnToPreviousView()

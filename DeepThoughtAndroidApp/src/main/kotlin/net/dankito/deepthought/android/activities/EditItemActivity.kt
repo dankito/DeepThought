@@ -1713,7 +1713,7 @@ class EditItemActivity : BaseActivity() {
         editItem(extractionResult.item, extractionResult.source, extractionResult.tags, extractionResult.files, updateContentPreview)
     }
 
-    private fun editItem(item: Item, source: Source?, tags: MutableCollection<Tag>, files: MutableCollection<FileLink>, updateContentPreview: Boolean = true) {
+    private fun editItem(item: Item, source: Source?, tags: MutableCollection<Tag>, files: MutableCollection<DeepThoughtFileLink>, updateContentPreview: Boolean = true) {
         originalContent = item.content
         originalTags = tags
         originalSource = source

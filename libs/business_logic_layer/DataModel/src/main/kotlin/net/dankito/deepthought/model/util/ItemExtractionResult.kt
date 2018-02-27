@@ -4,7 +4,7 @@ import net.dankito.deepthought.model.*
 
 
 data class ItemExtractionResult(var item: Item, var source: Source? = null, var series: Series? = null,
-                                var tags: MutableList<Tag> = ArrayList(), var files: MutableList<FileLink> = ArrayList(),
+                                var tags: MutableList<Tag> = ArrayList(), var files: MutableList<DeepThoughtFileLink> = ArrayList(),
                                 var seriesTitle: String? = null,
                                 var couldExtractContent: Boolean = false,
                                 var error: Exception? = null) {

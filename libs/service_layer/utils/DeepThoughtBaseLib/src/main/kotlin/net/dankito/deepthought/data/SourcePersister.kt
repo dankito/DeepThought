@@ -1,7 +1,7 @@
 package net.dankito.deepthought.data
 
 import net.dankito.deepthought.di.BaseComponent
-import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.service.data.DeleteEntityService
@@ -24,7 +24,7 @@ class SourcePersister(private val sourceService: SourceService, private val seri
     }
 
 
-    fun saveSourceAsync(source: Source, series: Series?, editedFiles: Collection<FileLink>, callback: (Boolean) -> Unit) {
+    fun saveSourceAsync(source: Source, series: Series?, editedFiles: Collection<DeepThoughtFileLink>, callback: (Boolean) -> Unit) {
         threadPool.runAsync {
             callback(saveSource(source, series, editedFiles))
         }
@@ -34,7 +34,7 @@ class SourcePersister(private val sourceService: SourceService, private val seri
         return saveSource(source, source.series)
     }
 
-    fun saveSource(source: Source, series: Series?, editedFiles: Collection<FileLink> = source.attachedFiles, doChangesAffectDependentEntities: Boolean = true): Boolean {
+    fun saveSource(source: Source, series: Series?, editedFiles: Collection<DeepThoughtFileLink> = source.attachedFiles, doChangesAffectDependentEntities: Boolean = true): Boolean {
         if(series != null && series.isPersisted() == false) { // if series has been newly created but not persisted yet
             seriesService.persist(series)
         }

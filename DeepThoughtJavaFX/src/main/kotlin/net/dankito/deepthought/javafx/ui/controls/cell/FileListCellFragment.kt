@@ -4,12 +4,12 @@ import javafx.beans.property.SimpleStringProperty
 import javafx.geometry.Pos
 import javafx.scene.control.OverrunStyle
 import net.dankito.deepthought.javafx.ui.controls.viewmodel.FileViewModel
-import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.ui.presenter.FileListPresenter
 import tornadofx.*
 
 
-class FileListCellFragment : ListCellFragment<FileLink>() {
+class FileListCellFragment : ListCellFragment<DeepThoughtFileLink>() {
 
     val file = FileViewModel().bindTo(this)
 

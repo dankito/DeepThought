@@ -89,7 +89,7 @@ abstract class DeepThoughtAndroidTestBase {
         readLaterArticleService.persist(article)
     }
 
-    protected open fun persistFile(file: FileLink) {
+    protected open fun persistFile(file: DeepThoughtFileLink) {
         fileService.persist(file)
     }
 

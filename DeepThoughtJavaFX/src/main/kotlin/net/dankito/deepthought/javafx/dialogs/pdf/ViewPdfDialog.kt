@@ -15,7 +15,7 @@ import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.javafx.res.icons.Icons
 import net.dankito.deepthought.javafx.util.FXUtils
-import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
@@ -37,7 +37,7 @@ class ViewPdfDialog : DialogFragment() {
         private const val FontSize = 16.0
 
         private val FileNullObject = File(".")
-        private val FileLinkNullObject = FileLink(".")
+        private val FileLinkNullObject = DeepThoughtFileLink(".")
         private val SourceNullObject = Source()
 
         private val logger = LoggerFactory.getLogger(ViewPdfDialog::class.java)
@@ -62,9 +62,9 @@ class ViewPdfDialog : DialogFragment() {
 
     private var addNewPdfFile: File? = if(addNewPdfFileParam == FileNullObject) null else addNewPdfFileParam
 
-    val persistedPdfFileParam: FileLink? by param(FileLinkNullObject) // by param() doesn't seem to like when passing null - on calling get() an exception gets thrown
+    val persistedPdfFileParam: DeepThoughtFileLink? by param(FileLinkNullObject) // by param() doesn't seem to like when passing null - on calling get() an exception gets thrown
 
-    private var persistedPdfFile: FileLink? = if(persistedPdfFileParam == FileLinkNullObject) null else persistedPdfFileParam
+    private var persistedPdfFile: DeepThoughtFileLink? = if(persistedPdfFileParam == FileLinkNullObject) null else persistedPdfFileParam
 
     val sourceForFileParam: Source? by param(SourceNullObject) // by param() doesn't seem to like when passing null - on calling get() an exception gets thrown
 
@@ -211,7 +211,7 @@ class ViewPdfDialog : DialogFragment() {
         loadPdf(fileManager.createLocalFile(pdfFile))
     }
 
-    private fun loadPdf(pdfFile: FileLink) {
+    private fun loadPdf(pdfFile: DeepThoughtFileLink) {
         fileManager.getLocalPathForFile(pdfFile)?.let { localFile ->
             importer.loadFileAsync(localFile) { result ->
                 pdfFileLoaded(pdfFile, localFile, result)
@@ -219,7 +219,7 @@ class ViewPdfDialog : DialogFragment() {
         }
     }
 
-    private fun pdfFileLoaded(pdfFile: FileLink, localFile: File, result: LoadPdfFileResult) {
+    private fun pdfFileLoaded(pdfFile: DeepThoughtFileLink, localFile: File, result: LoadPdfFileResult) {
         this.pdfDocument = result.document
 
         result.fileMetadata?.let {
@@ -231,7 +231,7 @@ class ViewPdfDialog : DialogFragment() {
         }
     }
 
-    private fun loadedFileOnUiThread(pdfFile: FileLink, metadata: FileMetadata) {
+    private fun loadedFileOnUiThread(pdfFile: DeepThoughtFileLink, metadata: FileMetadata) {
         fileMetaData = metadata
 
         if(sourceForFile == null) {
@@ -261,7 +261,7 @@ class ViewPdfDialog : DialogFragment() {
         canNavigateToNextPage.value = isPdfFileLoaded && currentPage > 0 && currentPage < (fileMetaData?.countPages ?: 0)
     }
 
-    private fun createSource(metadata: FileMetadata, pdfFile: FileLink): Source {
+    private fun createSource(metadata: FileMetadata, pdfFile: DeepThoughtFileLink): Source {
         val source = Source("")
         setSourceProperties(source, metadata)
 

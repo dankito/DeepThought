@@ -1,6 +1,6 @@
 package net.dankito.service.search.writerandsearcher
 
-import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.service.data.FileService
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.EventBusPriorities
@@ -20,7 +20,7 @@ import org.apache.lucene.search.*
 
 
 class FileLinkIndexWriterAndSearcher(fileService: FileService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool)
-    : IndexWriterAndSearcher<FileLink>(fileService, eventBus, osHelper, threadPool) {
+    : IndexWriterAndSearcher<DeepThoughtFileLink>(fileService, eventBus, osHelper, threadPool) {
 
 
     override fun getDirectoryName(): String {
@@ -32,7 +32,7 @@ class FileLinkIndexWriterAndSearcher(fileService: FileService, eventBus: IEventB
     }
 
 
-    override fun addEntityFieldsToDocument(entity: FileLink, doc: Document) {
+    override fun addEntityFieldsToDocument(entity: DeepThoughtFileLink, doc: Document) {
         // for an not analyzed String it's important to index it lower case as only then lower case search finds it
         doc.add(StringField(FieldName.FileUri, entity.uriString.toLowerCase(), Field.Store.NO))
         doc.add(StringField(FieldName.FileName, entity.name.toLowerCase(), Field.Store.NO))
@@ -63,7 +63,7 @@ class FileLinkIndexWriterAndSearcher(fileService: FileService, eventBus: IEventB
             return
         }
 
-        executeQueryForSearchWithCollectionResult(search, query, FileLink::class.java, sortOptions = SortOption(FieldName.FileName, SortOrder.Ascending, SortField.Type.STRING))
+        executeQueryForSearchWithCollectionResult(search, query, DeepThoughtFileLink::class.java, sortOptions = SortOption(FieldName.FileName, SortOrder.Ascending, SortField.Type.STRING))
     }
 
     private fun addQueryForSearchTerm(search: FilesSearch, termsToFilterFor: List<String>, query: BooleanQuery) {
