@@ -50,7 +50,6 @@ compileTestKotlin.kotlinOptions.jvmTarget = '1.8'
 dependencies {
     compile project(':DeepThoughtUiCommon')
     compile project(':JavaCouchbaseLiteEntityManager')
-    compile project(':UdpDevicesDiscoverer')
     compile "net.dankito.richtexteditor:richtexteditor-javafx:$richTextEditorVersion", {
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
         exclude group: 'com.fasterxml.jackson.module', module: 'jackson-module-kotlin'

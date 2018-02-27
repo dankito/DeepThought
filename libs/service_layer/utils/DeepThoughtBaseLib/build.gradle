@@ -62,7 +62,6 @@ dependencies {
     testCompile "ch.qos.logback:logback-core:$logbackVersion"
     testCompile "ch.qos.logback:logback-classic:$logbackVersion"
 
-    testCompile project(':UdpDevicesDiscoverer')
     testCompile project(':TcpSocketClientCommunicator')
     testCompile project(':LuceneSearchEngine')
     testCompile project(':JavaCouchbaseLiteEntityManager')

@@ -51,8 +51,6 @@ include ':DataModel'
 
 /*      Data Access Layer       */
 
-include ':DevicesDiscoverer'
-include ':UdpDevicesDiscoverer'
 include ':AndroidUdpDevicesDiscoverer'
 
 include ':ClientCommunicator'
@@ -108,8 +106,6 @@ project(':Synchronization').projectDir = "$rootDir/libs/business_logic_layer/Syn
 project(':DataModel').projectDir = "$rootDir/libs/business_logic_layer/DataModel" as File
 
 
-project(':DevicesDiscoverer').projectDir = "$rootDir/libs/data_access_layer/network/DevicesDiscoverer" as File
-project(':UdpDevicesDiscoverer').projectDir = "$rootDir/libs/data_access_layer/network/UdpDevicesDiscoverer" as File
 project(':AndroidUdpDevicesDiscoverer').projectDir = "$rootDir/libs/data_access_layer/network/AndroidUdpDevicesDiscoverer" as File
 
 project(':ClientCommunicator').projectDir = "$rootDir/libs/data_access_layer/network/ClientCommunicator" as File
