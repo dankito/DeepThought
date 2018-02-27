@@ -51,9 +51,10 @@ class RequestReceiver(private var socketHandler: SocketHandler, private var mess
             waitForArrivingRequests()
         } catch (e: Exception) {
             log.error("Could not bind receiverSocket to port " + desiredPort, e)
-            if (e is BindException || e is IOException) {
+            if((e is BindException || e is IOException) && desiredPort < 65536 - 1) {
                 createReceiverSocket(desiredPort + 1, callback)
-            } else {
+            }
+            else {
                 creatingReceiverSocketFailed(desiredPort, e, callback)
             }
         }
