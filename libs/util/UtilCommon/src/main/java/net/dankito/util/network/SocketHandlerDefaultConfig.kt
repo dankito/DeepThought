@@ -3,7 +3,7 @@ package net.dankito.util.network
 import java.nio.charset.Charset
 
 
-class CommunicationConfig {
+class SocketHandlerDefaultConfig {
 
     companion object {
 
