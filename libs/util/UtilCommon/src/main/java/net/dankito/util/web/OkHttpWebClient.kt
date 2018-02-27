@@ -10,7 +10,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 
-class OkHttpWebClient : IWebClient {
+open class OkHttpWebClient : IWebClient {
 
     companion object {
         private val FORM_URL_ENCODED_MEDIA_TYPE = MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8")
@@ -20,7 +20,7 @@ class OkHttpWebClient : IWebClient {
     }
 
 
-    private val noOpCookieJar = object : CookieJar {
+    protected val noOpCookieJar = object : CookieJar {
 
         override fun saveFromResponse(url: HttpUrl?, cookies: MutableList<Cookie>?) {
         }
@@ -32,10 +32,16 @@ class OkHttpWebClient : IWebClient {
     }
 
     // avoid creating several instances, should be singleton
-    private val client: OkHttpClient
+    protected val client: OkHttpClient
 
 
     init {
+        val builder = createOkHttpClientBuilder()
+
+        client = builder.build()
+    }
+
+    protected open fun createOkHttpClientBuilder(): OkHttpClient.Builder {
         val builder = OkHttpClient.Builder()
 
         builder.followRedirects(true)
@@ -45,7 +51,7 @@ class OkHttpWebClient : IWebClient {
         builder.writeTimeout(RequestParameters.DEFAULT_CONNECTION_TIMEOUT_MILLIS.toLong(), TimeUnit.MILLISECONDS)
         builder.cookieJar(noOpCookieJar)
 
-        client = builder.build()
+        return builder
     }
 
 
@@ -72,7 +78,7 @@ class OkHttpWebClient : IWebClient {
 
     }
 
-    private fun createGetRequest(parameters: RequestParameters): Request {
+    protected open fun createGetRequest(parameters: RequestParameters): Request {
         val requestBuilder = Request.Builder()
 
         applyParameters(requestBuilder, parameters)
@@ -105,7 +111,7 @@ class OkHttpWebClient : IWebClient {
 
     }
 
-    private fun createPostRequest(parameters: RequestParameters): Request {
+    protected open fun createPostRequest(parameters: RequestParameters): Request {
         val requestBuilder = Request.Builder()
 
         setPostBody(requestBuilder, parameters)
@@ -115,7 +121,7 @@ class OkHttpWebClient : IWebClient {
         return requestBuilder.build()
     }
 
-    private fun setPostBody(requestBuilder: Request.Builder, parameters: RequestParameters) {
+    protected open fun setPostBody(requestBuilder: Request.Builder, parameters: RequestParameters) {
         parameters.body?.let { body ->
             val mediaType = if(parameters.contentType === ContentType.JSON) JSON_MEDIA_TYPE else FORM_URL_ENCODED_MEDIA_TYPE
             val postBody = RequestBody.create(mediaType, body)
@@ -148,7 +154,7 @@ class OkHttpWebClient : IWebClient {
 
     }
 
-    private fun createHeadRequest(parameters: RequestParameters): Request {
+    protected open fun createHeadRequest(parameters: RequestParameters): Request {
         val requestBuilder = Request.Builder()
 
         applyParameters(requestBuilder, parameters)
@@ -159,7 +165,7 @@ class OkHttpWebClient : IWebClient {
     }
 
 
-    private fun applyParameters(requestBuilder: Request.Builder, parameters: RequestParameters) {
+    protected open fun applyParameters(requestBuilder: Request.Builder, parameters: RequestParameters) {
         requestBuilder.url(parameters.url)
 
         parameters.userAgent?.let { userAgent ->
@@ -178,7 +184,7 @@ class OkHttpWebClient : IWebClient {
         setCookieHandling(parameters)
     }
 
-    private fun setCookieHandling(parameters: RequestParameters) {
+    protected open fun setCookieHandling(parameters: RequestParameters) {
 //        when(parameters.cookieHandling) {
 //            CookieHandling.ACCEPT_ALL, CookieHandling.ACCEPT_ALL_ONLY_FOR_THIS_CALL -> cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
 //            CookieHandling.ACCEPT_ORIGINAL_SERVER, CookieHandling.ACCEPT_ORIGINAL_SERVER_ONLY_FOR_THIS_CALL -> cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ORIGINAL_SERVER)
@@ -187,7 +193,7 @@ class OkHttpWebClient : IWebClient {
     }
 
     @Throws(Exception::class)
-    private fun executeRequest(parameters: RequestParameters, request: Request): Response {
+    protected open fun executeRequest(parameters: RequestParameters, request: Request): Response {
         val response = client.newCall(request).execute()
 
 //        if(parameters.cookieHandling === CookieHandling.ACCEPT_ALL_ONLY_FOR_THIS_CALL || parameters.cookieHandling === CookieHandling.ACCEPT_ORIGINAL_SERVER_ONLY_FOR_THIS_CALL) {
@@ -203,7 +209,7 @@ class OkHttpWebClient : IWebClient {
         }
     }
 
-    private fun executeRequestAsync(parameters: RequestParameters, request: Request, callback: (response: WebClientResponse) -> Unit) {
+    protected open fun executeRequestAsync(parameters: RequestParameters, request: Request, callback: (response: WebClientResponse) -> Unit) {
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 asyncRequestFailed(parameters, request, e, callback)
@@ -216,7 +222,7 @@ class OkHttpWebClient : IWebClient {
         })
     }
 
-    private fun requestFailed(parameters: RequestParameters, e: Exception, methodToCallOnRetry: () -> WebClientResponse): WebClientResponse {
+    protected open fun requestFailed(parameters: RequestParameters, e: Exception, methodToCallOnRetry: () -> WebClientResponse): WebClientResponse {
         if(shouldRetryConnection(parameters, e)) {
             prepareConnectionRetry(parameters)
             return methodToCallOnRetry()
@@ -227,7 +233,7 @@ class OkHttpWebClient : IWebClient {
         }
     }
 
-    private fun asyncRequestFailed(parameters: RequestParameters, request: Request, e: Exception, callback: (response: WebClientResponse) -> Unit) {
+    protected open fun asyncRequestFailed(parameters: RequestParameters, request: Request, e: Exception, callback: (response: WebClientResponse) -> Unit) {
         if(shouldRetryConnection(parameters, e)) {
             prepareConnectionRetry(parameters)
             executeRequestAsync(parameters, request, callback)
@@ -238,22 +244,22 @@ class OkHttpWebClient : IWebClient {
         }
     }
 
-    private fun prepareConnectionRetry(parameters: RequestParameters) {
+    protected open fun prepareConnectionRetry(parameters: RequestParameters) {
         parameters.decrementCountConnectionRetries()
         log.info("Going to retry to connect to " + parameters.url + " (count tries left: " + parameters.countConnectionRetries + ")")
     }
 
-    private fun shouldRetryConnection(parameters: RequestParameters, e: Exception): Boolean {
+    protected open fun shouldRetryConnection(parameters: RequestParameters, e: Exception): Boolean {
         return parameters.isCountConnectionRetriesSet() && isConnectionException(e)
     }
 
-    private fun isConnectionException(e: Exception): Boolean {
+    protected open fun isConnectionException(e: Exception): Boolean {
         val errorMessage = e.message?.toLowerCase() ?: ""
         return errorMessage.contains("timeout") || errorMessage.contains("failed to connect")
     }
 
     @Throws(IOException::class)
-    private fun getResponse(parameters: RequestParameters, response: Response): WebClientResponse {
+    protected open fun getResponse(parameters: RequestParameters, response: Response): WebClientResponse {
         val headers = copyHeaders(response)
 
         if(parameters.responseType == ResponseType.String) {
@@ -267,7 +273,7 @@ class OkHttpWebClient : IWebClient {
         }
     }
 
-    private fun copyHeaders(response: Response): Map<String, String>? {
+    protected open fun copyHeaders(response: Response): Map<String, String>? {
         val headers = HashMap<String, String>()
 
         response.headers().names().forEach { name ->
@@ -277,7 +283,7 @@ class OkHttpWebClient : IWebClient {
         return headers
     }
 
-    private fun streamBinaryResponse(parameters: RequestParameters, response: Response, headers: Map<String, String>?): WebClientResponse {
+    protected open fun streamBinaryResponse(parameters: RequestParameters, response: Response, headers: Map<String, String>?): WebClientResponse {
         var inputStream: InputStream? = null
         try {
             inputStream = response.body()?.byteStream()
@@ -296,7 +302,8 @@ class OkHttpWebClient : IWebClient {
         }
     }
 
-    private fun streamBinaryResponse(parameters: RequestParameters, inputStream: InputStream, buffer: ByteArray, contentLength: Long, response: Response, headers: Map<String, String>?): WebClientResponse {
+    protected open fun streamBinaryResponse(parameters: RequestParameters, inputStream: InputStream, buffer: ByteArray, contentLength: Long, response: Response, headers: Map<String,
+            String>?): WebClientResponse {
         var downloaded: Long = 0
 
         publishProgress(parameters, ByteArray(0), 0L, contentLength)
@@ -319,11 +326,11 @@ class OkHttpWebClient : IWebClient {
         return WebClientResponse(true, response.code(), headers)
     }
 
-    private fun isCancelled(parameters: RequestParameters): Boolean {
+    protected open fun isCancelled(parameters: RequestParameters): Boolean {
         return false // TODO: implement mechanism to abort download
     }
 
-    private fun publishProgress(parameters: RequestParameters, buffer: ByteArray, downloaded: Long, contentLength: Long, read: Int) {
+    protected open fun publishProgress(parameters: RequestParameters, buffer: ByteArray, downloaded: Long, contentLength: Long, read: Int) {
         var downloadedData = buffer
 
         if(read < parameters.downloadBufferSize) {
@@ -333,7 +340,7 @@ class OkHttpWebClient : IWebClient {
         publishProgress(parameters, downloadedData, downloaded, contentLength)
     }
 
-    private fun publishProgress(parameters: RequestParameters, downloadedChunk: ByteArray, currentlyDownloaded: Long, total: Long) {
+    protected open fun publishProgress(parameters: RequestParameters, downloadedChunk: ByteArray, currentlyDownloaded: Long, total: Long) {
         val progressListener = parameters.downloadProgressListener
 
         if(progressListener != null) {
