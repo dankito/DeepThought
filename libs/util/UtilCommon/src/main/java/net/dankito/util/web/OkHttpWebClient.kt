@@ -20,7 +20,7 @@ class OkHttpWebClient : IWebClient {
     }
 
 
-    private val cookieJar = object : CookieJar {
+    private val noOpCookieJar = object : CookieJar {
 
         override fun saveFromResponse(url: HttpUrl?, cookies: MutableList<Cookie>?) {
         }
@@ -43,7 +43,7 @@ class OkHttpWebClient : IWebClient {
         builder.connectTimeout(RequestParameters.DEFAULT_CONNECTION_TIMEOUT_MILLIS.toLong(), TimeUnit.MILLISECONDS) // TODO: find a way to set per call
         builder.readTimeout(RequestParameters.DEFAULT_CONNECTION_TIMEOUT_MILLIS.toLong(), TimeUnit.MILLISECONDS)
         builder.writeTimeout(RequestParameters.DEFAULT_CONNECTION_TIMEOUT_MILLIS.toLong(), TimeUnit.MILLISECONDS)
-        builder.cookieJar(cookieJar)
+        builder.cookieJar(noOpCookieJar)
 
         client = builder.build()
     }
