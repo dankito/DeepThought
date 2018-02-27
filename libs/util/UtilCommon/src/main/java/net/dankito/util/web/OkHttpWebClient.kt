@@ -116,9 +116,9 @@ class OkHttpWebClient : IWebClient {
     }
 
     private fun setPostBody(requestBuilder: Request.Builder, parameters: RequestParameters) {
-        if(parameters.isBodySet()) {
-            val mediaType = if (parameters.contentType === ContentType.JSON) JSON_MEDIA_TYPE else FORM_URL_ENCODED_MEDIA_TYPE
-            val postBody = RequestBody.create(mediaType, parameters.body)
+        parameters.body?.let { body ->
+            val mediaType = if(parameters.contentType === ContentType.JSON) JSON_MEDIA_TYPE else FORM_URL_ENCODED_MEDIA_TYPE
+            val postBody = RequestBody.create(mediaType, body)
 
             requestBuilder.post(postBody)
         }
@@ -162,8 +162,8 @@ class OkHttpWebClient : IWebClient {
     private fun applyParameters(requestBuilder: Request.Builder, parameters: RequestParameters) {
         requestBuilder.url(parameters.url)
 
-        if(parameters.isUserAgentSet()) {
-            requestBuilder.header("User-Agent", parameters.userAgent)
+        parameters.userAgent?.let { userAgent ->
+            requestBuilder.header("User-Agent", userAgent)
         }
 
         // TODO: re-enable setting connection timeout
@@ -301,7 +301,7 @@ class OkHttpWebClient : IWebClient {
         val headers = HashMap<String, String>()
 
         response.headers().names().forEach { name ->
-            headers.put(name, response.header(name) ?: "")
+            headers[name] = response.header(name) ?: ""
         }
 
         return headers
@@ -313,32 +313,38 @@ class OkHttpWebClient : IWebClient {
             inputStream = response.body()?.byteStream()
 
             val buffer = ByteArray(parameters.downloadBufferSize)
-            var downloaded: Long = 0
             val contentLength = response.body()?.contentLength() ?: 0
 
-            publishProgress(parameters, ByteArray(0), 0L, contentLength)
-            while (true) {
-                val read = inputStream!!.read(buffer)
-                if(read == -1) {
-                    break
-                }
-
-                downloaded += read.toLong()
-
-                publishProgress(parameters, buffer, downloaded, contentLength, read)
-
-                if(isCancelled(parameters)) {
-                    return WebClientResponse(false, response.code(), headers)
-                }
-            }
-
-            return WebClientResponse(true, response.code(), headers)
-        } catch (e: IOException) {
+            return streamBinaryResponse(parameters, inputStream, buffer, contentLength, response, headers)
+        } catch (e: Exception) {
             log.error("Could not download binary Response for Url " + parameters.url, e)
             return WebClientResponse(false, response.code(), headers, e)
         } finally {
-            inputStream?.let { try { it.close() } catch (ignored: Exception) { } }
+            try { inputStream?.close() } catch (ignored: Exception) { }
         }
+    }
+
+    private fun streamBinaryResponse(parameters: RequestParameters, inputStream: InputStream?, buffer: ByteArray, contentLength: Long, response: Response, headers: Map<String, String>?): WebClientResponse {
+        var downloaded: Long = 0
+
+        publishProgress(parameters, ByteArray(0), 0L, contentLength)
+
+        while(true) {
+            val read = inputStream!!.read(buffer)
+            if(read == -1) {
+                break
+            }
+
+            downloaded += read
+
+            publishProgress(parameters, buffer, downloaded, contentLength, read)
+
+            if(isCancelled(parameters)) {
+                return WebClientResponse(false, response.code(), headers)
+            }
+        }
+
+        return WebClientResponse(true, response.code(), headers)
     }
 
     private fun isCancelled(parameters: RequestParameters): Boolean {
