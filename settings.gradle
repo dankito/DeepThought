@@ -39,6 +39,8 @@ include ':ConnectedDevicesService'
 include ':SearchEngine'
 include ':LuceneSearchEngine'
 
+include ':Synchronization'
+
 include ':EventBus'
 
 include ':JacksonJsonSerializer'
@@ -100,6 +102,8 @@ project(':PdfImporterBase').projectDir = "$rootDir/libs/service_layer/import_exp
 project(':JavaPdfImporter').projectDir = "$rootDir/libs/service_layer/import_export/JavaPdfImporter" as File
 project(':AndroidPdfImporter').projectDir = "$rootDir/libs/service_layer/import_export/AndroidPdfImporter" as File
 
+
+project(':Synchronization').projectDir = "$rootDir/libs/business_logic_layer/Synchronization" as File
 
 project(':DataModel').projectDir = "$rootDir/libs/business_logic_layer/DataModel" as File
 

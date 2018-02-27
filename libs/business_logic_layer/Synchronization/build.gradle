@@ -1,0 +1,51 @@
+buildscript {
+    ext {
+        kotlinVersion = '1.2.21'
+    }
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+
+        // Nexus staging plugin has to be downgraded to 0.10.0 to be applicable to sub projects, see https://github.com/UweTrottmann/SeriesGuide/commit/ca33e8ad2fa6cc5c426450c8aef3417ba073ca7f
+        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.10.0"
+    }
+}
+
+
+group 'net.dankito.synchronization'
+version '1.0.0-SNAPSHOT'
+def mavenArtifactId = 'synchronization'
+
+
+apply plugin: 'kotlin'
+
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+// So after executing uploadArchives staged repository can be closed and released by executing closeAndReleaseRepository
+apply plugin: 'io.codearte.nexus-staging'
+
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.6"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.6"
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+
+    compile "net.dankito.util:util-common:1.0.0", {
+        exclude group: 'org.jetbrains.kotlin'
+        exclude group: 'org.slf4j'
+    }
+}
