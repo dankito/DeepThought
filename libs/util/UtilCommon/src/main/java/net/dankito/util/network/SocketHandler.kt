@@ -17,11 +17,11 @@ open class SocketHandler {
     }
 
 
-    fun sendMessage(socket: Socket, message: ByteArray, messageEndChar: Char = SocketHandlerDefaultConfig.MESSAGE_END_CHAR): SocketResult {
+    open fun sendMessage(socket: Socket, message: ByteArray, messageEndChar: Char = SocketHandlerDefaultConfig.MESSAGE_END_CHAR): SocketResult {
         return sendMessage(socket, ByteArrayInputStream(message), messageEndChar)
     }
 
-    fun sendMessage(socket: Socket, inputStream: InputStream, messageEndChar: Char? = null): SocketResult {
+    open fun sendMessage(socket: Socket, inputStream: InputStream, messageEndChar: Char? = null): SocketResult {
         var countBytesSend = -1L
 
         try {
@@ -47,7 +47,7 @@ open class SocketHandler {
     }
 
 
-    fun receiveMessage(socket: Socket): SocketResult {
+    open fun receiveMessage(socket: Socket): SocketResult {
         try {
             val inputStream = BufferedInputStream(socket.getInputStream())
 
@@ -62,7 +62,7 @@ open class SocketHandler {
     }
 
     @Throws(IOException::class)
-    protected fun receiveMessage(inputStream: InputStream, bufferSize: Int = SocketHandlerDefaultConfig.BUFFER_SIZE,
+    protected open fun receiveMessage(inputStream: InputStream, bufferSize: Int = SocketHandlerDefaultConfig.BUFFER_SIZE,
                                  messageCharset: Charset = SocketHandlerDefaultConfig.MESSAGE_CHARSET,
                                  messageEndChar: Char = SocketHandlerDefaultConfig.MESSAGE_END_CHAR,
                                  maxMessageSize: Int = SocketHandlerDefaultConfig.MAX_MESSAGE_SIZE): SocketResult {
@@ -99,7 +99,7 @@ open class SocketHandler {
         }
     }
 
-    fun closeSocket(socket: Socket?) {
+    open fun closeSocket(socket: Socket?) {
         if(socket != null) {
             try {
                 socket.close()
