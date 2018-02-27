@@ -1,6 +1,5 @@
 package net.dankito.data_access.network.communication
 
-import com.nhaarman.mockito_kotlin.mock
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.communication.message.DeviceInfo
@@ -10,6 +9,7 @@ import net.dankito.deepthought.model.enums.OsType
 import net.dankito.util.ThreadPool
 import net.dankito.util.hashing.HashService
 import net.dankito.util.hashing.IBase64Service
+import net.dankito.util.serialization.JacksonJsonSerializer
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.After
@@ -46,7 +46,7 @@ class TcpSocketClientCommunicatorTest {
         val networkSettings = NetworkSettings(remoteDevice, User("Local", UUID.randomUUID().toString()))
 
         underTest = TcpSocketClientCommunicator(networkSettings, Mockito.mock(IDeviceRegistrationHandler::class.java), Mockito.mock(IEntityManager::class.java),
-                mock(), Mockito.mock(IBase64Service::class.java), HashService(), ThreadPool())
+                JacksonJsonSerializer(), Mockito.mock(IBase64Service::class.java), HashService(), ThreadPool())
 
         val countDownLatch = CountDownLatch(1)
 
