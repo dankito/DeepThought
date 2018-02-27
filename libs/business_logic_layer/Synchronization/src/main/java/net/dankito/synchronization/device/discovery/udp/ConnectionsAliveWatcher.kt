@@ -5,7 +5,7 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 
-class ConnectionsAliveWatcher(protected var connectionTimeout: Int) {
+open class ConnectionsAliveWatcher(protected var connectionTimeout: Int) {
 
     companion object {
         private val log = LoggerFactory.getLogger(ConnectionsAliveWatcher::class.java)
@@ -20,7 +20,7 @@ class ConnectionsAliveWatcher(protected var connectionTimeout: Int) {
     val isRunning: Boolean
         get() = connectionsAliveCheckTimer != null
 
-    fun startWatchingAsync(foundDevices: List<String>, listener: ConnectionsAliveWatcherListener) {
+    open fun startWatchingAsync(foundDevices: List<String>, listener: ConnectionsAliveWatcherListener) {
         synchronized(this) {
             stopWatching()
 
@@ -35,7 +35,7 @@ class ConnectionsAliveWatcher(protected var connectionTimeout: Int) {
         }
     }
 
-    fun stopWatching() {
+    open fun stopWatching() {
         synchronized(this) {
             connectionsAliveCheckTimer?.let { timer ->
                 log.info("Stopping ConnectionsAliveWatcher ...")
@@ -49,12 +49,12 @@ class ConnectionsAliveWatcher(protected var connectionTimeout: Int) {
     }
 
 
-    fun receivedMessageFromDevice(deviceInfo: String) {
+    open fun receivedMessageFromDevice(deviceInfo: String) {
         lastMessageReceivedFromDeviceTimestamps.put(deviceInfo, Date().time)
     }
 
 
-    protected fun checkIfConnectedDevicesStillAreConnected(foundDevices: List<String>, listener: ConnectionsAliveWatcherListener) {
+    protected open fun checkIfConnectedDevicesStillAreConnected(foundDevices: List<String>, listener: ConnectionsAliveWatcherListener) {
         val now = Date().time
 
         for(foundDeviceKey in foundDevices) {
@@ -68,7 +68,7 @@ class ConnectionsAliveWatcher(protected var connectionTimeout: Int) {
         }
     }
 
-    protected fun hasDeviceExpired(foundDeviceKey: String, now: Long): Boolean {
+    protected open fun hasDeviceExpired(foundDeviceKey: String, now: Long): Boolean {
         val lastMessageReceivedFromDeviceTimestamp = lastMessageReceivedFromDeviceTimestamps[foundDeviceKey]
 
         if(lastMessageReceivedFromDeviceTimestamp != null) {
@@ -87,7 +87,7 @@ class ConnectionsAliveWatcher(protected var connectionTimeout: Int) {
         return false
     }
 
-    private fun hasReconnected(deviceKey: String): Boolean {
+    protected open fun hasReconnected(deviceKey: String): Boolean {
         val index = deviceKey.lastIndexOf(":") // this is actually bad as it uses knowledge from ConnectedDevicesService.MESSAGES_PORT_AND_BASIC_DATA_SYNC_PORT_SEPARATOR
 
         if(index > 0) {
@@ -103,7 +103,7 @@ class ConnectionsAliveWatcher(protected var connectionTimeout: Int) {
         return false
     }
 
-    protected fun deviceDisconnected(disconnectedDeviceKey: String, listener: ConnectionsAliveWatcherListener?) {
+    protected open fun deviceDisconnected(disconnectedDeviceKey: String, listener: ConnectionsAliveWatcherListener?) {
         lastMessageReceivedFromDeviceTimestamps.remove(disconnectedDeviceKey)
 
         listener?.deviceDisconnected(disconnectedDeviceKey)
