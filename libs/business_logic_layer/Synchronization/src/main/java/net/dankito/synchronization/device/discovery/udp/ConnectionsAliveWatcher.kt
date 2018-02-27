@@ -27,7 +27,7 @@ class ConnectionsAliveWatcher(protected var connectionTimeout: Int) {
             log.info("Starting ConnectionsAliveWatcher ...")
 
             connectionsAliveCheckTimer = Timer("ConnectionsAliveWatcher Timer")
-            connectionsAliveCheckTimer!!.scheduleAtFixedRate(object : TimerTask() {
+            connectionsAliveCheckTimer?.scheduleAtFixedRate(object : TimerTask() {
                 override fun run() {
                     checkIfConnectedDevicesStillAreConnected(foundDevices, listener)
                 }
@@ -37,14 +37,14 @@ class ConnectionsAliveWatcher(protected var connectionTimeout: Int) {
 
     fun stopWatching() {
         synchronized(this) {
-            if (connectionsAliveCheckTimer != null) {
+            connectionsAliveCheckTimer?.let { timer ->
                 log.info("Stopping ConnectionsAliveWatcher ...")
 
-                connectionsAliveCheckTimer!!.cancel()
+                timer.cancel()
                 connectionsAliveCheckTimer = null
-
-                lastMessageReceivedFromDeviceTimestamps.clear()
             }
+
+            lastMessageReceivedFromDeviceTimestamps.clear()
         }
     }
 
@@ -73,6 +73,7 @@ class ConnectionsAliveWatcher(protected var connectionTimeout: Int) {
 
         if(lastMessageReceivedFromDeviceTimestamp != null) {
             val hasExpired = lastMessageReceivedFromDeviceTimestamp < now - connectionTimeout
+
             if(hasExpired) {
                 if(hasReconnected(foundDeviceKey)) {
                     lastMessageReceivedFromDeviceTimestamps.remove(foundDeviceKey)
@@ -88,6 +89,7 @@ class ConnectionsAliveWatcher(protected var connectionTimeout: Int) {
 
     private fun hasReconnected(deviceKey: String): Boolean {
         val index = deviceKey.lastIndexOf(":") // this is actually bad as it uses knowledge from ConnectedDevicesService.MESSAGES_PORT_AND_BASIC_DATA_SYNC_PORT_SEPARATOR
+
         if(index > 0) {
             val deviceKeyWithoutBasicDataSyncPort = deviceKey.substring(0, index)
 
