@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.InputStream
 import java.net.Socket
+import java.nio.charset.Charset
 
 
 open class SocketHandler {
@@ -16,8 +17,8 @@ open class SocketHandler {
     }
 
 
-    fun sendMessage(socket: Socket, message: ByteArray): SocketResult {
-        return sendMessage(socket, ByteArrayInputStream(message), SocketHandlerDefaultConfig.MESSAGE_END_CHAR)
+    fun sendMessage(socket: Socket, message: ByteArray, messageEndChar: Char = SocketHandlerDefaultConfig.MESSAGE_END_CHAR): SocketResult {
+        return sendMessage(socket, ByteArrayInputStream(message), messageEndChar)
     }
 
     fun sendMessage(socket: Socket, inputStream: InputStream, messageEndChar: Char? = null): SocketResult {
@@ -61,8 +62,11 @@ open class SocketHandler {
     }
 
     @Throws(IOException::class)
-    protected fun receiveMessage(inputStream: InputStream): SocketResult {
-        val buffer = ByteArray(SocketHandlerDefaultConfig.BUFFER_SIZE)
+    protected fun receiveMessage(inputStream: InputStream, bufferSize: Int = SocketHandlerDefaultConfig.BUFFER_SIZE,
+                                 messageCharset: Charset = SocketHandlerDefaultConfig.MESSAGE_CHARSET,
+                                 messageEndChar: Char = SocketHandlerDefaultConfig.MESSAGE_END_CHAR,
+                                 maxMessageSize: Int = SocketHandlerDefaultConfig.MAX_MESSAGE_SIZE): SocketResult {
+        val buffer = ByteArray(bufferSize)
         val receivedMessageBytes = ArrayList<Byte>()
 
         var receivedChunkSize: Int
@@ -75,14 +79,14 @@ open class SocketHandler {
             if(receivedChunkSize > 0) {
                 receivedMessageBytes.addAll(buffer.take(receivedChunkSize))
 
-                if(buffer[receivedChunkSize - 1] == SocketHandlerDefaultConfig.MESSAGE_END_CHAR.toByte()) {
+                if(buffer[receivedChunkSize - 1] == messageEndChar.toByte()) {
                     break
                 }
             }
         } while(receivedChunkSize > -1)
 
-        if(receivedMessageSize > 0 && receivedMessageSize < SocketHandlerDefaultConfig.MAX_MESSAGE_SIZE) {
-            val receivedMessage = String(receivedMessageBytes.toByteArray(), SocketHandlerDefaultConfig.MESSAGE_CHARSET)
+        if(receivedMessageSize > 0 && receivedMessageSize < maxMessageSize) {
+            val receivedMessage = String(receivedMessageBytes.toByteArray(), messageCharset)
             return SocketResult(true, receivedMessage = receivedMessage)
         }
         else {
@@ -90,7 +94,7 @@ open class SocketHandler {
                 return SocketResult(false, Exception("Could not receive any bytes"))
             }
             else {
-                return SocketResult(false, Exception("Received message exceeds max message length of " + SocketHandlerDefaultConfig.MAX_MESSAGE_SIZE))
+                return SocketResult(false, Exception("Received message exceeds max message length of " + maxMessageSize))
             }
         }
     }
