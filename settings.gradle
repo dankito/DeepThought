@@ -7,6 +7,10 @@ include ':DeepThoughtJavaFX'
 include ':DeepThoughtJavaFXExtended'
 
 include ':DeepThoughtUiCommon'
+
+
+/*      Service Layer       */
+
 include ':DeepThoughtBaseLib'
 
 include ':FaviconExtractor'
@@ -15,9 +19,15 @@ include ':NewsReader'
 include ':ArticleSummaryExtractors'
 include ':RomeFeedReader'
 include ':FeedAddressExtractor'
+include ':NorconexLanguageDetector'
+
+include ':BibTeXImporterExporter'
+include ':PdfImporterBase'
+include ':JavaPdfImporter'
+include ':AndroidPdfImporter'
 
 
-/*      Service Layer       */
+/*      Business logic Layer       */
 
 include ':DataManager'
 include ':DataServices'
@@ -33,15 +43,6 @@ include ':EventBus'
 
 include ':JacksonJsonSerializer'
 include ':Utils'
-include ':NorconexLanguageDetector'
-
-include ':BibTeXImporterExporter'
-include ':PdfImporterBase'
-include ':JavaPdfImporter'
-include ':AndroidPdfImporter'
-
-
-/*      Business logic Layer       */
 
 include ':DataModel'
 
