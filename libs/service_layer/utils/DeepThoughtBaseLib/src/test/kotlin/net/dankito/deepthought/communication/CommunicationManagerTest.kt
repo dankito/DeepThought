@@ -119,7 +119,7 @@ class CommunicationManagerTest {
 
     private val localThreadPool = ThreadPool()
 
-    private lateinit var localNetworkSettings: INetworkSettings
+    private lateinit var localNetworkSettings: NetworkSettings
 
     private lateinit var localDialogService: IDialogService
 
@@ -178,7 +178,7 @@ class CommunicationManagerTest {
 
     private val remoteThreadPool = ThreadPool()
 
-    private lateinit var remoteNetworkSettings: INetworkSettings
+    private lateinit var remoteNetworkSettings: NetworkSettings
 
     private lateinit var remoteDialogService: IDialogService
 
@@ -393,7 +393,7 @@ class CommunicationManagerTest {
         val countDownLatch = CountDownLatch(1)
 
         localNetworkSettings.addListener(object : NetworkSettingsChangedListener {
-            override fun settingsChanged(networkSettings: INetworkSettings, setting: NetworkSetting, newValue: Any, oldValue: Any?) {
+            override fun settingsChanged(networkSettings: NetworkSettings, setting: NetworkSetting, newValue: Any, oldValue: Any?) {
                 if(setting == NetworkSetting.REMOVED_DEVICES_ASKED_FOR_PERMITTING_SYNCHRONIZATION) {
                     println("Counting down ...")
                     countDownLatch.countDown()

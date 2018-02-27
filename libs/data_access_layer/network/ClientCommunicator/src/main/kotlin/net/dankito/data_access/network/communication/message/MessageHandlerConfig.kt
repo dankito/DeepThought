@@ -3,10 +3,10 @@ package net.dankito.data_access.network.communication.message
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.deepthought.model.DiscoveredDevice
-import net.dankito.deepthought.model.INetworkSettings
+import net.dankito.deepthought.model.NetworkSettings
 
 
-data class MessageHandlerConfig(val entityManager: IEntityManager, val networkSettings: INetworkSettings, val challengeHandler: ChallengeHandler, val registrationHandler: IDeviceRegistrationHandler) {
+data class MessageHandlerConfig(val entityManager: IEntityManager, val networkSettings: NetworkSettings, val challengeHandler: ChallengeHandler, val registrationHandler: IDeviceRegistrationHandler) {
 
     private val remoteRequestedToStartSynchronizationListeners = HashSet<(DiscoveredDevice) -> Unit>()
 

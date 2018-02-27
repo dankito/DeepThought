@@ -4,14 +4,13 @@ import net.dankito.data_access.network.communication.CommunicatorConfig
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
-import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.service.synchronization.initialsync.model.SyncInfo
 import kotlin.concurrent.thread
 
 
 class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler {
 
-    private val networkSettings: INetworkSettings = config.networkSettings
+    private val networkSettings = config.networkSettings
 
     private val challengeHandler: ChallengeHandler = config.challengeHandler
 

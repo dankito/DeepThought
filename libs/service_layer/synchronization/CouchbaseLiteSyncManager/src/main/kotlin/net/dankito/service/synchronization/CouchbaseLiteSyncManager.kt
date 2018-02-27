@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
 
 
 class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityManagerBase, private val synchronizedChangesHandler: ISynchronizedChangesHandler,
-                               private val networkSettings: INetworkSettings, private val usePushReplication: Boolean = false, private val usePullReplication: Boolean = true) :
+                               private val networkSettings: NetworkSettings, private val usePushReplication: Boolean = false, private val usePullReplication: Boolean = true) :
         ISyncManager {
 
     companion object {

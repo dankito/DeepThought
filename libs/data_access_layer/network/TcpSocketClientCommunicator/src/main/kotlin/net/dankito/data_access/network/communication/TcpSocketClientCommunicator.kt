@@ -4,7 +4,7 @@ import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.communication.message.*
 import net.dankito.deepthought.model.DiscoveredDevice
-import net.dankito.deepthought.model.INetworkSettings
+import net.dankito.deepthought.model.NetworkSettings
 import net.dankito.service.synchronization.initialsync.model.SyncInfo
 import net.dankito.util.IThreadPool
 import net.dankito.util.hashing.HashService
@@ -15,7 +15,7 @@ import java.net.InetSocketAddress
 import java.net.SocketAddress
 
 
-class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings, registrationHandler: IDeviceRegistrationHandler, entityManager: IEntityManager,
+class TcpSocketClientCommunicator(private val networkSettings: NetworkSettings, registrationHandler: IDeviceRegistrationHandler, entityManager: IEntityManager,
                                   serializer: ISerializer, base64Service: IBase64Service, hashService: HashService, threadPool: IThreadPool) : IClientCommunicator {
 
     private val requestSender: IRequestSender

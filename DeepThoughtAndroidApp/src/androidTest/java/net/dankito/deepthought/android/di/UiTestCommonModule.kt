@@ -2,7 +2,7 @@ package net.dankito.deepthought.android.di
 
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.deepthought.di.CommonModule
-import net.dankito.deepthought.model.INetworkSettings
+import net.dankito.deepthought.model.NetworkSettings
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
@@ -26,7 +26,7 @@ class UiTestCommonModule : CommonModule() {
         return InMemorySearchEngine(dataManager.entityManager, threadPool)
     }
 
-    override fun provideSyncManager(entityManager: IEntityManager, changesHandler: ISynchronizedChangesHandler, networkSettings: INetworkSettings): ISyncManager {
+    override fun provideSyncManager(entityManager: IEntityManager, changesHandler: ISynchronizedChangesHandler, networkSettings: NetworkSettings): ISyncManager {
         return NoOpSyncManager()
     }
 

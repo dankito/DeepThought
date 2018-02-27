@@ -11,7 +11,7 @@ import net.dankito.data_access.network.discovery.DevicesDiscovererListener
 import net.dankito.data_access.network.discovery.IDevicesDiscoverer
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
-import net.dankito.deepthought.model.INetworkSettings
+import net.dankito.deepthought.model.NetworkSettings
 import net.dankito.deepthought.model.User
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -21,7 +21,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 // TODO: replace IEntityManager with DevicesService
 class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer, private val clientCommunicator: IClientCommunicator, private val syncManager: ISyncManager,
-                              private val registrationHandler: IDeviceRegistrationHandler, private val networkSettings: INetworkSettings, private val entityManager: IEntityManager)
+                              private val registrationHandler: IDeviceRegistrationHandler, private val networkSettings: NetworkSettings, private val entityManager: IEntityManager)
     : IConnectedDevicesService {
 
     companion object {
@@ -265,7 +265,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
     }
 
 
-    private fun getDeviceInfoKey(networkSettings: INetworkSettings): String {
+    private fun getDeviceInfoKey(networkSettings: NetworkSettings): String {
         return networkSettings.localHostDevice.id + DEVICE_ID_AND_MESSAGES_PORT_SEPARATOR + networkSettings.messagePort +
                 MESSAGES_PORT_AND_BASIC_DATA_SYNC_PORT_SEPARATOR + networkSettings.basicDataSynchronizationPort
     }

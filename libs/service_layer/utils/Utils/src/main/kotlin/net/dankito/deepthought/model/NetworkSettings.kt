@@ -3,10 +3,15 @@ package net.dankito.deepthought.model
 import java.util.concurrent.CopyOnWriteArrayList
 
 
-class NetworkSettings(override val localHostDevice: Device, override val localUser: User,
-                      override val deviceDiscoveryMessagePrefix: String = INetworkSettings.DefaultDeviceDiscoveryMessagePrefix) : INetworkSettings {
+class NetworkSettings(val localHostDevice: Device, val localUser: User,
+                      val deviceDiscoveryMessagePrefix: String = DefaultDeviceDiscoveryMessagePrefix) {
 
-    override var messagePort: Int = 0
+    companion object {
+        const val DefaultDeviceDiscoveryMessagePrefix = "DeepThought"
+    }
+
+
+    var messagePort: Int = 0
         set(value) {
             val oldValue = this.messagePort
 
@@ -15,7 +20,7 @@ class NetworkSettings(override val localHostDevice: Device, override val localUs
             callSettingChangedListeners(NetworkSetting.MESSAGES_PORT, value, oldValue)
         }
 
-    override var basicDataSynchronizationPort: Int = 0
+    var basicDataSynchronizationPort: Int = 0
         set(value) {
             val oldValue = this.basicDataSynchronizationPort
 
@@ -24,7 +29,7 @@ class NetworkSettings(override val localHostDevice: Device, override val localUs
             callSettingChangedListeners(NetworkSetting.BASIC_DATA_SYNCHRONIZATION_PORT, value, oldValue)
         }
 
-    override var synchronizationPort: Int = 0
+    var synchronizationPort: Int = 0
         set(value) {
             val oldValue = this.synchronizationPort
 
@@ -33,7 +38,7 @@ class NetworkSettings(override val localHostDevice: Device, override val localUs
             callSettingChangedListeners(NetworkSetting.SYNCHRONIZATION_PORT, value, oldValue)
         }
 
-    override var fileSynchronizationPort: Int = 0
+    var fileSynchronizationPort: Int = 0
         set(value) {
             val oldValue = this.fileSynchronizationPort
 
@@ -54,30 +59,30 @@ class NetworkSettings(override val localHostDevice: Device, override val localUs
 
 
 
-    override fun getDiscoveredDevice(uniqueDeviceId: String): DiscoveredDevice? {
+    fun getDiscoveredDevice(uniqueDeviceId: String): DiscoveredDevice? {
         return discoveredDevices[uniqueDeviceId]
     }
 
-    override fun addDiscoveredDevice(device: DiscoveredDevice) {
+    fun addDiscoveredDevice(device: DiscoveredDevice) {
         discoveredDevices.put(device.device.uniqueDeviceId, device)
 
         callSettingChangedListeners(NetworkSetting.ADDED_DISCOVERED_DEVICE, device, null)
     }
 
-    override fun removeDiscoveredDevice(device: DiscoveredDevice) {
+    fun removeDiscoveredDevice(device: DiscoveredDevice) {
         discoveredDevices.remove(device.device.uniqueDeviceId)
 
         callSettingChangedListeners(NetworkSetting.REMOVED_DISCOVERED_DEVICE, device, null)
     }
 
 
-    override fun addConnectedDevicePermittedToSynchronize(device: DiscoveredDevice) {
+    fun addConnectedDevicePermittedToSynchronize(device: DiscoveredDevice) {
         connectedDevicesPermittedToSynchronization.put(device.device.uniqueDeviceId, device)
 
         callSettingChangedListeners(NetworkSetting.ADDED_CONNECTED_DEVICE_PERMITTED_TO_SYNCHRONIZE, device, null)
     }
 
-    override fun removeConnectedDevicePermittedToSynchronize(device: DiscoveredDevice) {
+    fun removeConnectedDevicePermittedToSynchronize(device: DiscoveredDevice) {
         connectedDevicesPermittedToSynchronization.remove(device.device.uniqueDeviceId)
 
         callSettingChangedListeners(NetworkSetting.REMOVED_CONNECTED_DEVICE_PERMITTED_TO_SYNCHRONIZE, device, null)
@@ -88,41 +93,41 @@ class NetworkSettings(override val localHostDevice: Device, override val localUs
      * Actually only needed to start CouchbaseLite Listener
      * @param device
      */
-    override fun addDevicesAskedForPermittingSynchronization(device: DiscoveredDevice) {
+    fun addDevicesAskedForPermittingSynchronization(device: DiscoveredDevice) {
         devicesAskedForPermittingSynchronization.put(device.device.uniqueDeviceId, device)
 
         callSettingChangedListeners(NetworkSetting.ADDED_DEVICES_ASKED_FOR_PERMITTING_SYNCHRONIZATION, device, null)
     }
 
-    override fun removeDevicesAskedForPermittingSynchronization(device: DiscoveredDevice) {
+    fun removeDevicesAskedForPermittingSynchronization(device: DiscoveredDevice) {
         devicesAskedForPermittingSynchronization.remove(device.device.uniqueDeviceId)
 
         callSettingChangedListeners(NetworkSetting.REMOVED_DEVICES_ASKED_FOR_PERMITTING_SYNCHRONIZATION, device, null)
     }
 
 
-    override fun didShowNotificationToUserForUnknownDevice(device: DiscoveredDevice): Boolean {
+    fun didShowNotificationToUserForUnknownDevice(device: DiscoveredDevice): Boolean {
         return unknownDeviceNotificationShownToUser.containsKey(device.device.uniqueDeviceId)
     }
 
-    override fun addUnknownDeviceNotificationShownToUser(device: DiscoveredDevice) {
+    fun addUnknownDeviceNotificationShownToUser(device: DiscoveredDevice) {
         unknownDeviceNotificationShownToUser.put(device.device.uniqueDeviceId, device)
 
         callSettingChangedListeners(NetworkSetting.ADDED_UNKNOWN_DEVICE_NOTIFICATION_SHOWN_TO_USER, device, null)
     }
 
-    override fun removeUnknownDeviceNotificationShownToUser(device: DiscoveredDevice) {
+    fun removeUnknownDeviceNotificationShownToUser(device: DiscoveredDevice) {
         unknownDeviceNotificationShownToUser.remove(device.device.uniqueDeviceId)
 
         callSettingChangedListeners(NetworkSetting.REMOVED_UNKNOWN_DEVICE_NOTIFICATION_SHOWN_TO_USER, device, null)
     }
 
 
-    override fun addListener(listener: NetworkSettingsChangedListener) {
+    fun addListener(listener: NetworkSettingsChangedListener) {
         listeners.add(listener)
     }
 
-    override fun removeListener(listener: NetworkSettingsChangedListener) {
+    fun removeListener(listener: NetworkSettingsChangedListener) {
         listeners.remove(listener)
     }
 

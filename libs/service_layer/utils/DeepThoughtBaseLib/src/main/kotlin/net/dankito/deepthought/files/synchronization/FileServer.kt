@@ -1,16 +1,16 @@
 package net.dankito.deepthought.files.synchronization
 
 import net.dankito.data_access.database.IEntityManager
-import net.dankito.util.network.SocketHandler
 import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFileRequest
 import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFileResponse
 import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFileResult
-import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.deepthought.model.LocalFileInfo
+import net.dankito.deepthought.model.NetworkSettings
 import net.dankito.deepthought.model.enums.FileSyncStatus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.util.IThreadPool
+import net.dankito.util.network.SocketHandler
 import net.dankito.util.serialization.ISerializer
 import org.slf4j.LoggerFactory
 import java.io.*
@@ -23,7 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.concurrent.thread
 
 
-class FileServer(private val searchEngine: ISearchEngine, private val entityManager: IEntityManager, private val networkSettings: INetworkSettings,
+class FileServer(private val searchEngine: ISearchEngine, private val entityManager: IEntityManager, private val networkSettings: NetworkSettings,
                  private val socketHandler: SocketHandler, private val serializer: ISerializer, private val threadPool: IThreadPool) {
 
 

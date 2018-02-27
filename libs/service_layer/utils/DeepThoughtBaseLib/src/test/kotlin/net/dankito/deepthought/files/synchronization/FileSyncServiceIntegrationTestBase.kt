@@ -179,7 +179,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     protected lateinit var localDevice: Device
 
-    protected lateinit var localNetworkSettings: INetworkSettings
+    protected lateinit var localNetworkSettings: NetworkSettings
 
     protected lateinit var localSynchronizedChangesHandler: ISynchronizedChangesHandler
 
@@ -275,7 +275,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     protected lateinit var remoteDevice: Device
 
-    protected lateinit var remoteNetworkSettings: INetworkSettings
+    protected lateinit var remoteNetworkSettings: NetworkSettings
 
     protected lateinit var remoteSynchronizedChangesHandler: ISynchronizedChangesHandler
 

@@ -12,7 +12,7 @@ import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.files.MimeTypeService
 import net.dankito.deepthought.files.synchronization.FileServer
 import net.dankito.deepthought.files.synchronization.FileSyncService
-import net.dankito.deepthought.model.INetworkSettings
+import net.dankito.deepthought.model.NetworkSettings
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.deepthought.service.permissions.IPermissionsService
@@ -133,7 +133,7 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideFileServer(searchEngine: ISearchEngine, entityManager: IEntityManager, networkSettings: INetworkSettings,
+    fun provideFileServer(searchEngine: ISearchEngine, entityManager: IEntityManager, networkSettings: NetworkSettings,
                           socketHandler: SocketHandler, serializer: ISerializer, threadPool: IThreadPool): FileServer {
         return FileServer(searchEngine, entityManager, networkSettings, socketHandler, serializer, threadPool)
     }
