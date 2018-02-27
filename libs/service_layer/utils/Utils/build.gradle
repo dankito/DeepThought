@@ -10,9 +10,10 @@ dependencies {
         exclude group: 'org.jetbrains.kotlin'
     }
 
-    compile project(':WebClient')
     compile project(':FileStorageService')
 
+
+    compile "org.jsoup:jsoup:$jsoupVersion"
 
     compile "com.github.axet:wget:$wgetVersion", {
         exclude group: 'com.thoughtworks.xstream', module: 'xstream'
