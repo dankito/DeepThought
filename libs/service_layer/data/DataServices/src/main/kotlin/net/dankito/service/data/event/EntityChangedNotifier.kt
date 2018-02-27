@@ -3,6 +3,8 @@ package net.dankito.service.data.event
 import net.dankito.deepthought.model.*
 import net.dankito.service.data.messages.*
 import net.dankito.service.eventbus.IEventBus
+import net.dankito.synchronization.model.BaseEntity
+import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.util.AsyncProducerConsumerQueue
 
 

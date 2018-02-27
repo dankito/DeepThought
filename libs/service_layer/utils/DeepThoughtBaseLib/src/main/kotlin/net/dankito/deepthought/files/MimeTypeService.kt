@@ -1,7 +1,7 @@
 package net.dankito.deepthought.files
 
-import net.dankito.deepthought.model.FileLink
-import net.dankito.deepthought.model.enums.FileType
+import net.dankito.synchronization.model.FileLink
+import net.dankito.synchronization.model.enums.FileType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.mime.MimeTypeCategorizer
 import net.dankito.mime.MimeTypeDetector

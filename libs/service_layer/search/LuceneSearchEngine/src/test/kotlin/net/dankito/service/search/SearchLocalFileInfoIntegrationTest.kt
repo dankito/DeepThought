@@ -1,8 +1,8 @@
 package net.dankito.service.search
 
-import net.dankito.deepthought.model.FileLink
-import net.dankito.deepthought.model.LocalFileInfo
-import net.dankito.deepthought.model.enums.FileSyncStatus
+import net.dankito.synchronization.model.FileLink
+import net.dankito.synchronization.model.LocalFileInfo
+import net.dankito.synchronization.model.enums.FileSyncStatus
 import net.dankito.service.search.specific.LocalFileInfoSearch
 import org.hamcrest.CoreMatchers.*
 import org.junit.Assert.assertThat

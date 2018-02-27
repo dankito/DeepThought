@@ -2,6 +2,8 @@ buildscript {
     ext {
         kotlinVersion = '1.2.21'
 
+        annotationReaderVersion = '1.0-alpha3'
+
 
         junitVersion = '4.12'
 
@@ -15,6 +17,7 @@ buildscript {
     repositories {
         mavenCentral()
         jcenter()
+        mavenLocal()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
@@ -52,10 +55,14 @@ targetCompatibility = "1.7"
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
     compile "net.dankito.util:util-common:1.0.0", {
         exclude group: 'org.jetbrains.kotlin'
     }
+
+    compile "net.dankito.jpa.annotationreader:api:$annotationReaderVersion"
+    kapt "net.dankito.jpa.annotationreader:jpa-apt:$annotationReaderVersion"
 
 
     testCompile ("junit:junit:$junitVersion", {

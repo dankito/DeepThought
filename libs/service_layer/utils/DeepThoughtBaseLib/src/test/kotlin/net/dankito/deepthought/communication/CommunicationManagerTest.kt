@@ -16,7 +16,7 @@ import net.dankito.data_access.network.communication.callback.IDeviceRegistratio
 import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.util.web.IWebClient
 import net.dankito.deepthought.model.*
-import net.dankito.deepthought.model.enums.OsType
+import net.dankito.synchronization.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.newsreader.model.ArticleSummary

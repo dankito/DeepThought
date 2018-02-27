@@ -2,7 +2,7 @@ package net.dankito.data_access.network.communication.message
 
 import net.dankito.data_access.network.communication.CommunicatorConfig
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
-import net.dankito.deepthought.model.Device
+import net.dankito.synchronization.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.service.synchronization.initialsync.model.SyncInfo
 import kotlin.concurrent.thread

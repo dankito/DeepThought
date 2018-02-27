@@ -1,6 +1,6 @@
 package net.dankito.deepthought.javafx.service.settings
 
-import net.dankito.deepthought.model.enums.OsType
+import net.dankito.synchronization.model.enums.OsType
 import net.dankito.utils.PlatformConfigurationBase
 import java.io.File
 

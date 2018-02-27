@@ -1,7 +1,7 @@
 package net.dankito.service.search
 
-import net.dankito.deepthought.model.FileLink
-import net.dankito.deepthought.model.enums.FileType
+import net.dankito.synchronization.model.FileLink
+import net.dankito.synchronization.model.enums.FileType
 import net.dankito.service.search.specific.FilesSearch
 import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.service.search.writerandsearcher.FileLinkIndexWriterAndSearcher

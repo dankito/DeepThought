@@ -17,7 +17,7 @@ import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import javafx.scene.text.TextAlignment
 import net.dankito.deepthought.javafx.util.FXUtils
-import net.dankito.deepthought.model.BaseEntity
+import net.dankito.synchronization.model.BaseEntity
 import tornadofx.*
 import java.util.*
 

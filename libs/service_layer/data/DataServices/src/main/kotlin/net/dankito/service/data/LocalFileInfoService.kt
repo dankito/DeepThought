@@ -1,6 +1,6 @@
 package net.dankito.service.data
 
-import net.dankito.deepthought.model.LocalFileInfo
+import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.data.messages.EntityChangeType

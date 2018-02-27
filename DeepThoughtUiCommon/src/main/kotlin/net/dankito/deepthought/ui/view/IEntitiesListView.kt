@@ -1,6 +1,6 @@
 package net.dankito.deepthought.ui.view
 
-import net.dankito.deepthought.model.BaseEntity
+import net.dankito.synchronization.model.BaseEntity
 
 
 interface IEntitiesListView<in T: BaseEntity> {

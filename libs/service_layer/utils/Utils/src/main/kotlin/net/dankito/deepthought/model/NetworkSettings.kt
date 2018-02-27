@@ -1,5 +1,7 @@
 package net.dankito.deepthought.model
 
+import net.dankito.synchronization.model.Device
+import net.dankito.synchronization.model.User
 import java.util.concurrent.CopyOnWriteArrayList
 
 

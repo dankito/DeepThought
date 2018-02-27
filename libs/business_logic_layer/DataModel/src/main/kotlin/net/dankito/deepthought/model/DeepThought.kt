@@ -1,6 +1,10 @@
 package net.dankito.deepthought.model
 
 import net.dankito.deepthought.model.config.TableConfig
+import net.dankito.synchronization.model.BaseEntity
+import net.dankito.synchronization.model.Device
+import net.dankito.synchronization.model.User
+import net.dankito.synchronization.model.enums.OsType
 import java.io.Serializable
 import javax.persistence.*
 
@@ -33,7 +37,7 @@ data class DeepThought(
         private set
 
 
-    private constructor() : this(User(), Device(), LocalSettings())
+    private constructor() : this(User("", ""), Device("", "", OsType.DESKTOP), LocalSettings())
 
 
     fun increaseNextItemIndex(): Long {

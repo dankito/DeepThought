@@ -15,7 +15,7 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.extensions.getColorFromResourceId
 import net.dankito.deepthought.android.extensions.getDimension
 import net.dankito.deepthought.android.extensions.setViewsEnabledState
-import net.dankito.deepthought.model.Device
+import net.dankito.synchronization.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.service.clipboard.ClipboardContentOption
 import net.dankito.deepthought.service.clipboard.OptionsForClipboardContent

@@ -5,7 +5,8 @@ import net.dankito.data_access.network.communication.callback.IDeviceRegistratio
 import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.data_access.network.communication.message.Response
 import net.dankito.deepthought.model.*
-import net.dankito.deepthought.model.enums.OsType
+import net.dankito.synchronization.model.enums.OsType
+import net.dankito.synchronization.model.BaseEntity
 import net.dankito.util.ThreadPool
 import net.dankito.util.hashing.HashService
 import net.dankito.util.hashing.IBase64Service

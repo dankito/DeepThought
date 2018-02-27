@@ -1,6 +1,6 @@
 package net.dankito.data_access.database
 
-import net.dankito.deepthought.model.BaseEntity
+import net.dankito.synchronization.model.BaseEntity
 import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source

@@ -16,11 +16,12 @@ import net.dankito.filechooserdialog.service.PreviewImageService
 import net.dankito.filechooserdialog.service.ThumbnailService
 import net.dankito.mime.MimeTypeCategorizer
 import net.dankito.mime.MimeTypeDetector
-import net.dankito.utils.IPlatformConfiguration
+import net.dankito.synchronization.device.discovery.IDevicesDiscoverer
 import net.dankito.util.IThreadPool
 import net.dankito.util.hashing.IBase64Service
 import net.dankito.util.network.INetworkConnectivityManager
 import net.dankito.util.settings.ILocalSettingsStore
+import net.dankito.utils.IPlatformConfiguration
 import javax.inject.Singleton
 
 

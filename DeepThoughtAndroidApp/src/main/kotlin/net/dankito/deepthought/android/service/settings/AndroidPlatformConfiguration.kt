@@ -3,7 +3,7 @@ package net.dankito.deepthought.android.service.settings
 import android.content.Context
 import android.os.Build
 import android.os.Environment
-import net.dankito.deepthought.model.enums.OsType
+import net.dankito.synchronization.model.enums.OsType
 import net.dankito.utils.PlatformConfigurationBase
 import org.slf4j.LoggerFactory
 import java.io.File

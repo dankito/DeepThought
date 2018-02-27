@@ -2,10 +2,10 @@ package net.dankito.deepthought.ui.presenter
 
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.FileLink
-import net.dankito.deepthought.model.LocalFileInfo
 import net.dankito.deepthought.model.Source
-import net.dankito.deepthought.model.enums.FileSyncStatus
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.synchronization.model.LocalFileInfo
+import net.dankito.synchronization.model.enums.FileSyncStatus
 import net.dankito.util.localization.Localization
 import net.dankito.util.ui.IApplicationsService
 import java.io.File

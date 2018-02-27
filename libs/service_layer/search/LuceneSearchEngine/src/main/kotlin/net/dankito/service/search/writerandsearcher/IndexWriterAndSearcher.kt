@@ -1,7 +1,6 @@
 package net.dankito.service.search.writerandsearcher
 
 import net.dankito.data_access.database.ChangedEntity
-import net.dankito.deepthought.model.BaseEntity
 import net.dankito.service.data.EntityServiceBase
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.EntityChanged
@@ -9,6 +8,7 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.*
 import net.dankito.service.search.results.LazyLoadingLuceneSearchResultsList
 import net.dankito.service.search.writerandsearcher.sorting.CorrectStringComparatorSource
+import net.dankito.synchronization.model.BaseEntity
 import net.dankito.util.IThreadPool
 import net.dankito.utils.OsHelper
 import net.engio.mbassy.listener.Synchronized

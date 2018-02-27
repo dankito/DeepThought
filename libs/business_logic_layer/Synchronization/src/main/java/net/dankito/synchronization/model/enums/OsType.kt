@@ -1,4 +1,4 @@
-package net.dankito.deepthought.model.enums
+package net.dankito.synchronization.model.enums
 
 
 enum class OsType {

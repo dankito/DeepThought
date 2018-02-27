@@ -1,7 +1,7 @@
-package net.dankito.deepthought.model
+package net.dankito.synchronization.model
 
-import net.dankito.deepthought.model.config.TableConfig
-import net.dankito.deepthought.model.enums.FileSyncStatus
+import net.dankito.synchronization.model.config.TableConfig
+import net.dankito.synchronization.model.enums.FileSyncStatus
 import java.io.Serializable
 import java.util.*
 import javax.persistence.*

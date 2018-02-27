@@ -5,6 +5,7 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntityChangeType
+import net.dankito.synchronization.model.BaseEntity
 import kotlin.concurrent.thread
 
 

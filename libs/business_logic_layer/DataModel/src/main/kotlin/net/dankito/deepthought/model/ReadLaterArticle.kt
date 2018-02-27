@@ -2,6 +2,7 @@ package net.dankito.deepthought.model
 
 import net.dankito.deepthought.model.config.TableConfig
 import net.dankito.deepthought.model.util.ItemExtractionResult
+import net.dankito.synchronization.model.BaseEntity
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Lob

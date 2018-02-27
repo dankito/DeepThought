@@ -1,7 +1,8 @@
-package net.dankito.deepthought.model
+package net.dankito.synchronization.model
 
-import net.dankito.deepthought.model.config.TableConfig
-import net.dankito.deepthought.model.enums.OsType
+import net.dankito.synchronization.model.BaseEntity
+import net.dankito.synchronization.model.config.TableConfig
+import net.dankito.synchronization.model.enums.OsType
 import javax.persistence.*
 
 

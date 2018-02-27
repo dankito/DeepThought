@@ -1,8 +1,8 @@
-package net.dankito.deepthought.model
+package net.dankito.synchronization.model
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo
 import com.fasterxml.jackson.annotation.ObjectIdGenerators
-import net.dankito.deepthought.model.config.TableConfig
+import net.dankito.synchronization.model.config.TableConfig
 import java.io.Serializable
 import java.util.*
 import javax.persistence.*

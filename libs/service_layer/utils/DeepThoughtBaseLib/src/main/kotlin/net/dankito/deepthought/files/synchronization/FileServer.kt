@@ -4,9 +4,9 @@ import net.dankito.data_access.database.IEntityManager
 import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFileRequest
 import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFileResponse
 import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFileResult
-import net.dankito.deepthought.model.LocalFileInfo
+import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.deepthought.model.NetworkSettings
-import net.dankito.deepthought.model.enums.FileSyncStatus
+import net.dankito.synchronization.model.enums.FileSyncStatus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.util.IThreadPool

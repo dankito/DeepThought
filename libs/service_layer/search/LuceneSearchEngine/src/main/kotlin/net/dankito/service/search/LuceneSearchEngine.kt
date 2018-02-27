@@ -10,6 +10,8 @@ import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.specific.*
 import net.dankito.service.search.writerandsearcher.*
+import net.dankito.synchronization.model.BaseEntity
+import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.util.AsyncProducerConsumerQueue
 import net.dankito.util.IThreadPool
 import net.dankito.utils.OsHelper

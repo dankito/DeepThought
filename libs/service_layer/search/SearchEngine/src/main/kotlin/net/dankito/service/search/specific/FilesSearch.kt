@@ -1,9 +1,8 @@
 package net.dankito.service.search.specific
 
-
-import net.dankito.deepthought.model.FileLink
 import net.dankito.service.search.Search
 import net.dankito.service.search.SearchWithCollectionResult
+import net.dankito.deepthought.model.FileLink
 
 
 class FilesSearch(searchTerm: String = Search.EmptySearchTerm,

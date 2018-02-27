@@ -1,6 +1,7 @@
 package net.dankito.deepthought.model
 
 import net.dankito.deepthought.model.config.TableConfig
+import net.dankito.synchronization.model.BaseEntity
 import java.util.*
 import javax.persistence.*
 
@@ -32,7 +33,7 @@ data class ArticleSummaryExtractorConfig(
         @Column(name = TableConfig.ArticleSummaryExtractorConfigFavoriteIndexColumnName)
         var favoriteIndex: Int? = null
 
-) :BaseEntity() {
+) : BaseEntity() {
 
     private constructor() : this("", "")
 

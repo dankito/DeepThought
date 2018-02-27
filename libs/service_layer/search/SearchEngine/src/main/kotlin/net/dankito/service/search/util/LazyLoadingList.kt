@@ -1,7 +1,7 @@
 package net.dankito.service.search.util
 
 import net.dankito.data_access.database.IEntityManager
-import net.dankito.deepthought.model.BaseEntity
+import net.dankito.synchronization.model.BaseEntity
 import org.slf4j.LoggerFactory
 import java.util.*
 

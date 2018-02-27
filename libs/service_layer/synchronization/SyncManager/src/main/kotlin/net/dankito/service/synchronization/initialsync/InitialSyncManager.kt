@@ -4,8 +4,8 @@ package net.dankito.service.synchronization.initialsync
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.model.DeepThought
-import net.dankito.deepthought.model.Device
-import net.dankito.deepthought.model.User
+import net.dankito.synchronization.model.Device
+import net.dankito.synchronization.model.User
 import net.dankito.service.synchronization.initialsync.model.DeepThoughtSyncInfo
 import net.dankito.service.synchronization.initialsync.model.SyncInfo
 import net.dankito.service.synchronization.initialsync.model.UserSyncInfo

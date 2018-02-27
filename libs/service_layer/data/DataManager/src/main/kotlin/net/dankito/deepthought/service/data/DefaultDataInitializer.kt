@@ -1,9 +1,9 @@
 package net.dankito.deepthought.service.data
 
 import net.dankito.deepthought.model.DeepThought
-import net.dankito.deepthought.model.Device
+import net.dankito.synchronization.model.Device
 import net.dankito.deepthought.model.LocalSettings
-import net.dankito.deepthought.model.User
+import net.dankito.synchronization.model.User
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.util.localization.Localization
 import net.dankito.utils.version.Versions

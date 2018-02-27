@@ -5,6 +5,9 @@ import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.contentPlainText
 import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.service.search.specific.*
+import net.dankito.synchronization.model.BaseEntity
+import net.dankito.deepthought.model.FileLink
+import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.util.IThreadPool
 
 

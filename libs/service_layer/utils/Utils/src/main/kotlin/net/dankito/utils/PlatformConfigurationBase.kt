@@ -1,7 +1,7 @@
 package net.dankito.utils
 
-import net.dankito.deepthought.model.enums.FileType
-import net.dankito.deepthought.model.enums.FileTypeDefaultFolderName
+import net.dankito.synchronization.model.enums.FileType
+import net.dankito.synchronization.model.enums.FileTypeDefaultFolderName
 import java.io.File
 
 

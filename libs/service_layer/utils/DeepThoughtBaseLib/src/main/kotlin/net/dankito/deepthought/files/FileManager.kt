@@ -3,17 +3,17 @@ package net.dankito.deepthought.files
 import net.dankito.deepthought.files.synchronization.FileSyncConfig
 import net.dankito.deepthought.files.synchronization.FileSyncService
 import net.dankito.deepthought.model.FileLink
-import net.dankito.deepthought.model.LocalFileInfo
-import net.dankito.deepthought.model.enums.FileSyncStatus
 import net.dankito.service.data.LocalFileInfoService
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.LocalFileInfoSearch
+import net.dankito.synchronization.model.LocalFileInfo
+import net.dankito.synchronization.model.enums.FileSyncStatus
 import net.dankito.util.IThreadPool
-import net.dankito.utils.services.Times
 import net.dankito.util.hashing.HashService
+import net.dankito.utils.services.Times
 import net.engio.mbassy.listener.Handler
 import org.slf4j.LoggerFactory
 import java.io.File
@@ -182,7 +182,7 @@ class FileManager(private val searchEngine: ISearchEngine, private val localFile
     private fun searchForNotSynchronizedFiles() {
         searchEngine.searchLocalFileInfo(LocalFileInfoSearch(doesNotHaveSyncStatus = FileSyncStatus.UpToDate) { notUpToDateLocalFileInfo ->
             notUpToDateLocalFileInfo.filterNotNull().sortedBy { it.file?.fileSize ?: Long.MAX_VALUE }.forEach { localFileInfo -> // sort files by their size so that smaller files get synchronized first
-                localFileInfo.file?.let { file ->
+                (localFileInfo.file as? FileLink)?.let { file ->
                     startFileSynchronizationAsync(file)
                 }
             }

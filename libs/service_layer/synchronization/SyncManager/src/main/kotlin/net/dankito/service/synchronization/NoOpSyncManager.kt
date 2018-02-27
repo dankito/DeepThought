@@ -1,6 +1,6 @@
 package net.dankito.service.synchronization
 
-import net.dankito.deepthought.model.Device
+import net.dankito.synchronization.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
 
 

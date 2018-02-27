@@ -1,6 +1,6 @@
 package net.dankito.service.search.writerandsearcher
 
-import net.dankito.deepthought.model.LocalFileInfo
+import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.service.data.LocalFileInfoService
 import net.dankito.service.data.messages.LocalFileInfoChanged
 import net.dankito.service.eventbus.EventBusPriorities

@@ -1,7 +1,7 @@
 package net.dankito.deepthought.files.synchronization.model
 
 import net.dankito.deepthought.model.DiscoveredDevice
-import net.dankito.deepthought.model.FileLink
+import net.dankito.synchronization.model.FileLink
 
 
 data class FileSyncState(val file: FileLink,

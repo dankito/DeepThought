@@ -1,6 +1,7 @@
 package net.dankito.deepthought.model
 
 import net.dankito.deepthought.model.config.TableConfig
+import net.dankito.synchronization.model.BaseEntity
 import java.util.*
 import javax.persistence.Column
 import javax.persistence.Entity

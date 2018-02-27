@@ -18,7 +18,7 @@ import net.dankito.deepthought.android.service.ActivityParameterHolder
 import net.dankito.deepthought.android.util.matchers.RecyclerViewItemCountAssertion
 import net.dankito.deepthought.android.util.screenshot.TakeScreenshotOnErrorTestRule
 import net.dankito.deepthought.android.views.EditEntityFilesField
-import net.dankito.deepthought.model.FileLink
+import net.dankito.synchronization.model.FileLink
 import net.dankito.deepthought.model.Item
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.allOf

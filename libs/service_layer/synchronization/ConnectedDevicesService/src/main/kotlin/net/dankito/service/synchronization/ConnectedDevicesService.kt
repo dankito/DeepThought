@@ -6,10 +6,10 @@ import net.dankito.data_access.network.communication.callback.IDeviceRegistratio
 import net.dankito.data_access.network.communication.message.RequestStartSynchronizationResponseBody
 import net.dankito.data_access.network.communication.message.RequestStartSynchronizationResult
 import net.dankito.data_access.network.communication.message.Response
-import net.dankito.deepthought.model.Device
+import net.dankito.synchronization.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.model.NetworkSettings
-import net.dankito.deepthought.model.User
+import net.dankito.synchronization.model.User
 import net.dankito.synchronization.device.discovery.DevicesDiscovererConfig
 import net.dankito.synchronization.device.discovery.DevicesDiscovererListener
 import net.dankito.synchronization.device.discovery.IDevicesDiscoverer

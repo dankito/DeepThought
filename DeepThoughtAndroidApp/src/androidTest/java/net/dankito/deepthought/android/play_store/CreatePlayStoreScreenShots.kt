@@ -10,7 +10,7 @@ import net.dankito.deepthought.android.util.TestUtil
 import net.dankito.deepthought.android.util.screenshot.TakeScreenshotOnErrorTestRule
 import net.dankito.deepthought.beta.preview.test.R
 import net.dankito.deepthought.model.*
-import net.dankito.deepthought.model.enums.OsType
+import net.dankito.synchronization.model.enums.OsType
 import net.dankito.richtexteditor.command.CommandName
 import net.dankito.service.search.specific.TagsSearch
 import org.junit.Before

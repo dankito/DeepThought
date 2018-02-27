@@ -5,13 +5,15 @@ targetCompatibility = "1.7"
 
 
 sourceSets {
-    main.java.srcDirs += 'build/generated/'
+    main.java.srcDirs += 'build/generated/source/kapt/main'
 }
 
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+
+    compile project(':Synchronization')
 
     compile "net.dankito.jpa.annotationreader:api:$annotationReaderVersion"
     kapt "net.dankito.jpa.annotationreader:jpa-apt:$annotationReaderVersion"

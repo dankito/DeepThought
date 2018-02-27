@@ -1,6 +1,6 @@
 package net.dankito.service.search
 
-import net.dankito.deepthought.model.BaseEntity
+import net.dankito.synchronization.model.BaseEntity
 
 
 open class SearchWithCollectionResult<TEntity : BaseEntity>(searchTerm: String, completedListener: (List<TEntity>) -> Unit) :

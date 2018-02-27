@@ -1,6 +1,6 @@
 package net.dankito.service.search
 
-import net.dankito.deepthought.model.FileLink
+import net.dankito.synchronization.model.FileLink
 import net.dankito.deepthought.model.Source
 import net.dankito.service.search.specific.SourceSearch
 import org.hamcrest.CoreMatchers.`is`

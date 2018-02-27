@@ -5,7 +5,7 @@ import com.couchbase.lite.Document
 import com.couchbase.lite.DocumentChange
 import com.couchbase.lite.SavedRevision
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
-import net.dankito.deepthought.model.BaseEntity
+import net.dankito.synchronization.model.BaseEntity
 import net.dankito.jpa.couchbaselite.Dao
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.data.messages.EntityChangeSource

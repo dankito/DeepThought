@@ -4,8 +4,8 @@ import com.couchbase.lite.Database
 import com.couchbase.lite.DocumentChange
 import com.couchbase.lite.SavedRevision
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
-import net.dankito.deepthought.model.BaseEntity
-import net.dankito.deepthought.model.config.TableConfig
+import net.dankito.synchronization.model.BaseEntity
+import net.dankito.synchronization.model.config.TableConfig
 import net.dankito.jpa.apt.config.ColumnConfig
 import net.dankito.jpa.apt.config.EntityConfig
 import net.dankito.jpa.couchbaselite.Dao

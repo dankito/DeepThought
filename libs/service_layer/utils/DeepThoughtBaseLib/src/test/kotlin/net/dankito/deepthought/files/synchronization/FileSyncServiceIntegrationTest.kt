@@ -1,7 +1,7 @@
 package net.dankito.deepthought.files.synchronization
 
-import net.dankito.deepthought.model.FileLink
-import net.dankito.deepthought.model.LocalFileInfo
+import net.dankito.synchronization.model.FileLink
+import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.service.data.messages.EntityChangeType
 import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.`is`
