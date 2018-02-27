@@ -5,6 +5,7 @@ interface IDevicesDiscoverer {
 
     val isRunning: Boolean
 
+
     fun startAsync(config: DevicesDiscovererConfig)
 
     fun stop()
