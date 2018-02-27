@@ -3,13 +3,7 @@ package net.dankito.deepthought.model
 import java.util.concurrent.CopyOnWriteArrayList
 
 
-class NetworkSettings(val localHostDevice: Device, val localUser: User,
-                      val deviceDiscoveryMessagePrefix: String = DefaultDeviceDiscoveryMessagePrefix) {
-
-    companion object {
-        const val DefaultDeviceDiscoveryMessagePrefix = "DeepThought"
-    }
-
+class NetworkSettings(val localHostDevice: Device, val localUser: User, val deviceDiscoveryMessagePrefix: String) {
 
     var messagePort: Int = 0
         set(value) {

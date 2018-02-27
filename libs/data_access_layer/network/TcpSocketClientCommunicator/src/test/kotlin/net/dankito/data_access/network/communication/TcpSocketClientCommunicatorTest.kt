@@ -43,7 +43,7 @@ class TcpSocketClientCommunicatorTest {
     fun setUp() {
         setUpRemoteDevice()
 
-        val networkSettings = NetworkSettings(remoteDevice, User("Local", UUID.randomUUID().toString()))
+        val networkSettings = NetworkSettings(remoteDevice, User("Local", UUID.randomUUID().toString()), IntegrationTestDevicesDiscoveryPrefix)
 
         underTest = TcpSocketClientCommunicator(networkSettings, Mockito.mock(IDeviceRegistrationHandler::class.java), Mockito.mock(IEntityManager::class.java),
                 JacksonJsonSerializer(), Mockito.mock(IBase64Service::class.java), HashService(), ThreadPool())
@@ -124,6 +124,8 @@ class TcpSocketClientCommunicatorTest {
         protected val DEVICE_OS_VERSION = "4.9"
 
         protected val DEVICE_OS_TYPE = OsType.DESKTOP
+
+        const val IntegrationTestDevicesDiscoveryPrefix = "DeepThought_TcpSocketClientCommunicator_IntegrationTest"
     }
 
 }

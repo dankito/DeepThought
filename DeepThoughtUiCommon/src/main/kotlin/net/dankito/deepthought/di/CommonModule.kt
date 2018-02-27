@@ -5,6 +5,7 @@ import dagger.Provides
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.filesystem.IFileStorageService
+import net.dankito.data_access.network.communication.CommunicationConfig
 import net.dankito.data_access.network.communication.IClientCommunicator
 import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
@@ -165,7 +166,7 @@ open class CommonModule {
     @Provides
     @Singleton
     open fun provideNetworkSettings(dataManager: DataManager) : NetworkSettings {
-        return NetworkSettings(dataManager.localDevice, dataManager.localUser)
+        return NetworkSettings(dataManager.localDevice, dataManager.localUser, CommunicationConfig.DefaultDeviceDiscoveryMessagePrefix)
     }
 
     @Provides

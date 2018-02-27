@@ -7,6 +7,9 @@ class CommunicationConfig {
 
     companion object {
 
+        const val DefaultDeviceDiscoveryMessagePrefix = "DeepThought"
+
+
         const val METHOD_NAME_AND_BODY_SEPARATOR = ":"
 
         const val MESSAGE_CHARSET_NAME = "UTF-8"
