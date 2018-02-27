@@ -1,16 +1,17 @@
 package net.dankito.data_access.network.communication
 
-import net.dankito.data_access.database.IEntityManager
-import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
-import net.dankito.data_access.network.communication.message.DeviceInfo
-import net.dankito.data_access.network.communication.message.Response
-import net.dankito.deepthought.model.*
+import net.dankito.synchronization.database.IEntityManager
+import net.dankito.synchronization.device.communication.callback.IDeviceRegistrationHandler
+import net.dankito.synchronization.device.communication.message.DeviceInfo
+import net.dankito.synchronization.device.communication.message.Response
+import net.dankito.synchronization.device.communication.IClientCommunicator
+import net.dankito.synchronization.model.*
 import net.dankito.synchronization.model.enums.OsType
-import net.dankito.synchronization.model.BaseEntity
 import net.dankito.util.ThreadPool
 import net.dankito.util.hashing.HashService
 import net.dankito.util.hashing.IBase64Service
 import net.dankito.util.serialization.JacksonJsonSerializer
+import net.dankito.utils.version.Versions
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.After
@@ -44,7 +45,7 @@ class TcpSocketClientCommunicatorTest {
     fun setUp() {
         setUpRemoteDevice()
 
-        val networkSettings = NetworkSettings(remoteDevice, User("Local", UUID.randomUUID().toString()), IntegrationTestDevicesDiscoveryPrefix)
+        val networkSettings = NetworkSettings(remoteDevice, User("Local", UUID.randomUUID().toString()), IntegrationTestDevicesDiscoveryPrefix, Versions.AppVersion, Versions.DataModelVersion)
 
         underTest = TcpSocketClientCommunicator(networkSettings, Mockito.mock(IDeviceRegistrationHandler::class.java), Mockito.mock(IEntityManager::class.java),
                 JacksonJsonSerializer(), Mockito.mock(IBase64Service::class.java), HashService(), ThreadPool())

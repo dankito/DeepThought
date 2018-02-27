@@ -1,4 +1,4 @@
-package net.dankito.data_access.network.communication.message
+package net.dankito.synchronization.device.communication.message
 
 
 data class RequestStartSynchronizationRequestBody(val deviceInfo: DeviceInfo, val synchronizationPort: Int = 0, val fileSynchronizationPort: Int = 0) {

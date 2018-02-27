@@ -1,6 +1,4 @@
-package net.dankito.service.synchronization.initialsync.model
-
-import net.dankito.synchronization.model.User
+package net.dankito.synchronization.model
 
 
 data class UserSyncInfo(val id: String, val userName: String, val universallyUniqueId: String, val firstName: String, val lastName: String,

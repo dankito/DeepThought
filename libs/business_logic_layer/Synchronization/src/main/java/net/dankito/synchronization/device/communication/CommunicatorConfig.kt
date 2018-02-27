@@ -1,4 +1,4 @@
-package net.dankito.data_access.network.communication
+package net.dankito.synchronization.device.communication
 
 
 class CommunicatorConfig {

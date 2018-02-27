@@ -1,4 +1,4 @@
-package net.dankito.data_access.database
+package net.dankito.synchronization.database
 
 
 data class EntityManagerConfiguration(val dataFolder: String, val databaseName: String)

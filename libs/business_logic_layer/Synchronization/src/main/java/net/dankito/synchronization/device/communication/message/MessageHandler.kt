@@ -1,10 +1,10 @@
-package net.dankito.data_access.network.communication.message
+package net.dankito.synchronization.device.communication.message
 
-import net.dankito.data_access.network.communication.CommunicatorConfig
-import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
+import net.dankito.synchronization.device.communication.CommunicatorConfig
+import net.dankito.synchronization.device.communication.callback.IDeviceRegistrationHandler
 import net.dankito.synchronization.model.Device
-import net.dankito.deepthought.model.DiscoveredDevice
-import net.dankito.service.synchronization.initialsync.model.SyncInfo
+import net.dankito.synchronization.model.DiscoveredDevice
+import net.dankito.synchronization.model.SyncInfo
 import kotlin.concurrent.thread
 
 
@@ -28,7 +28,7 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
 
 
     private fun handleGetDeviceInfoRequest(request: Request<*>): Response<DeviceInfo> {
-        return Response(DeviceInfo.fromDevice(networkSettings.localHostDevice))
+        return Response(DeviceInfo.fromNetworkSettings(networkSettings))
     }
 
 
@@ -154,7 +154,7 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
         }
         else {
             callback(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.INCOMPATIBLE_VERSION,
-                    deviceInfo = DeviceInfo.fromDevice(networkSettings.localHostDevice))))
+                    deviceInfo = DeviceInfo.fromNetworkSettings(networkSettings))))
         }
     }
 

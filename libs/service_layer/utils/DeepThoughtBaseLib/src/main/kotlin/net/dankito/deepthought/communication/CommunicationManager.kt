@@ -1,8 +1,8 @@
 package net.dankito.deepthought.communication
 
-import net.dankito.data_access.network.communication.CommunicatorConfig
-import net.dankito.data_access.network.communication.IClientCommunicator
-import net.dankito.deepthought.model.NetworkSettings
+import net.dankito.synchronization.device.communication.CommunicatorConfig
+import net.dankito.synchronization.device.communication.IClientCommunicator
+import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.service.synchronization.IConnectedDevicesService
 import net.dankito.service.synchronization.ISyncManager
 import java.util.*

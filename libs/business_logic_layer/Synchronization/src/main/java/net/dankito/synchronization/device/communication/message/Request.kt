@@ -1,4 +1,4 @@
-package net.dankito.data_access.network.communication.message
+package net.dankito.synchronization.device.communication.message
 
 
 open class Request<T>(val method: String, val body: T? = null) {

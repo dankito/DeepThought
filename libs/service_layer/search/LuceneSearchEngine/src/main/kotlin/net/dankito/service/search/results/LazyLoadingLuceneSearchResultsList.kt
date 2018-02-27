@@ -1,6 +1,6 @@
 package net.dankito.service.search.results
 
-import net.dankito.data_access.database.IEntityManager
+import net.dankito.synchronization.database.IEntityManager
 import net.dankito.synchronization.model.BaseEntity
 import net.dankito.service.search.util.LazyLoadingList
 import net.dankito.util.IThreadPool

@@ -1,7 +1,7 @@
 package net.dankito.deepthought.service.data
 
-import net.dankito.data_access.database.EntityManagerConfiguration
-import net.dankito.data_access.database.IEntityManager
+import net.dankito.synchronization.database.EntityManagerConfiguration
+import net.dankito.synchronization.database.IEntityManager
 import net.dankito.deepthought.model.DeepThought
 import net.dankito.synchronization.model.Device
 import net.dankito.deepthought.model.LocalSettings

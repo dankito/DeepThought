@@ -1,7 +1,7 @@
 package net.dankito.service.search
 
 import com.nhaarman.mockito_kotlin.mock
-import net.dankito.data_access.database.EntityManagerConfiguration
+import net.dankito.synchronization.database.EntityManagerConfiguration
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.deepthought.data.FilePersister

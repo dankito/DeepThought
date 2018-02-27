@@ -1,6 +1,6 @@
 package net.dankito.service.search.writerandsearcher
 
-import net.dankito.data_access.database.ChangedEntity
+import net.dankito.synchronization.database.ChangedEntity
 import net.dankito.service.data.EntityServiceBase
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.EntityChanged

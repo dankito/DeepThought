@@ -1,8 +1,8 @@
-package net.dankito.data_access.network.communication
+package net.dankito.synchronization.device.communication
 
-import net.dankito.data_access.network.communication.message.*
-import net.dankito.deepthought.model.DiscoveredDevice
-import net.dankito.service.synchronization.initialsync.model.SyncInfo
+import net.dankito.synchronization.device.communication.message.*
+import net.dankito.synchronization.model.DiscoveredDevice
+import net.dankito.synchronization.model.SyncInfo
 import java.net.SocketAddress
 
 

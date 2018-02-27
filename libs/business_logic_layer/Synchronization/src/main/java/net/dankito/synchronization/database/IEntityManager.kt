@@ -1,4 +1,4 @@
-package net.dankito.data_access.database
+package net.dankito.synchronization.database
 
 import net.dankito.util.AsyncProducerConsumerQueue
 

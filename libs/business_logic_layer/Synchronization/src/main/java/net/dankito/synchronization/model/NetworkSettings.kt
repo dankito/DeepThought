@@ -1,11 +1,10 @@
-package net.dankito.deepthought.model
+package net.dankito.synchronization.model
 
-import net.dankito.synchronization.model.Device
-import net.dankito.synchronization.model.User
+import net.dankito.util.Version
 import java.util.concurrent.CopyOnWriteArrayList
 
 
-class NetworkSettings(val localHostDevice: Device, val localUser: User, val deviceDiscoveryMessagePrefix: String) {
+class NetworkSettings(val localHostDevice: Device, val localUser: User, val deviceDiscoveryMessagePrefix: String, val appVersion: Version, val dataModelVersion: Int) {
 
     var messagePort: Int = 0
         set(value) {

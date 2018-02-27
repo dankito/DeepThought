@@ -1,6 +1,6 @@
 package net.dankito.deepthought.files.synchronization.model
 
-import net.dankito.deepthought.model.DiscoveredDevice
+import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.synchronization.model.FileLink
 
 

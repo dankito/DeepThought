@@ -1,9 +1,9 @@
-package net.dankito.data_access.network.communication.callback
+package net.dankito.synchronization.device.communication.callback
 
-import net.dankito.data_access.network.communication.IClientCommunicator
-import net.dankito.data_access.network.communication.message.DeviceInfo
-import net.dankito.deepthought.model.DiscoveredDevice
-import net.dankito.service.synchronization.initialsync.model.SyncInfo
+import net.dankito.synchronization.device.communication.IClientCommunicator
+import net.dankito.synchronization.device.communication.message.DeviceInfo
+import net.dankito.synchronization.model.DiscoveredDevice
+import net.dankito.synchronization.model.SyncInfo
 
 
 interface IDeviceRegistrationHandler {

@@ -1,7 +1,7 @@
 package net.dankito.service.synchronization
 
 import net.dankito.synchronization.model.Device
-import net.dankito.deepthought.model.DiscoveredDevice
+import net.dankito.synchronization.model.DiscoveredDevice
 
 
 interface IConnectedDevicesService {

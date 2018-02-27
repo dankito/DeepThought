@@ -1,8 +1,8 @@
 package net.dankito.deepthought.android.di
 
-import net.dankito.data_access.database.IEntityManager
+import net.dankito.synchronization.database.IEntityManager
 import net.dankito.deepthought.di.CommonModule
-import net.dankito.deepthought.model.NetworkSettings
+import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier

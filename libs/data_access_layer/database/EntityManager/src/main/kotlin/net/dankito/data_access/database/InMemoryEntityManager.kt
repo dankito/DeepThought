@@ -4,6 +4,9 @@ import net.dankito.synchronization.model.BaseEntity
 import net.dankito.deepthought.model.DeepThought
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
+import net.dankito.synchronization.database.ChangedEntity
+import net.dankito.synchronization.database.EntityManagerConfiguration
+import net.dankito.synchronization.database.IEntityManager
 import net.dankito.util.AsyncProducerConsumerQueue
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap

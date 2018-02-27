@@ -1,4 +1,4 @@
-package net.dankito.data_access.network.communication.message
+package net.dankito.synchronization.device.communication.message
 
 
 data class RequestPermitSynchronizationResponseBody(val result: RequestPermitSynchronizationResult, val nonce: String? = null) {

@@ -1,6 +1,6 @@
 package net.dankito.service.search.results
 
-import net.dankito.data_access.database.IEntityManager
+import net.dankito.synchronization.database.IEntityManager
 import net.dankito.deepthought.model.Item
 import net.dankito.service.search.FieldName
 import net.dankito.util.IThreadPool

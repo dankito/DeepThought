@@ -2,8 +2,8 @@ package net.dankito.deepthought.di
 
 import dagger.Module
 import dagger.Provides
-import net.dankito.data_access.database.EntityManagerConfiguration
-import net.dankito.data_access.database.IEntityManager
+import net.dankito.synchronization.database.EntityManagerConfiguration
+import net.dankito.synchronization.database.IEntityManager
 import net.dankito.deepthought.data.FilePersister
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.SeriesPersister
@@ -12,7 +12,7 @@ import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.files.MimeTypeService
 import net.dankito.deepthought.files.synchronization.FileServer
 import net.dankito.deepthought.files.synchronization.FileSyncService
-import net.dankito.deepthought.model.NetworkSettings
+import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.deepthought.service.permissions.IPermissionsService

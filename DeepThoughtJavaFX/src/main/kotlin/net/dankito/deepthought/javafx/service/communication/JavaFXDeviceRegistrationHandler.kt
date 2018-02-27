@@ -2,14 +2,14 @@ package net.dankito.deepthought.javafx.service.communication
 
 import javafx.application.Platform
 import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
-import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.deepthought.javafx.util.FXUtils
-import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
+import net.dankito.synchronization.device.communication.message.DeviceInfo
+import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.util.localization.Localization
-import net.dankito.util.ui.dialog.IDialogService
 import net.dankito.util.ui.dialog.ConfirmationDialogButton
+import net.dankito.util.ui.dialog.IDialogService
 import tornadofx.*
 
 

@@ -1,4 +1,4 @@
-package net.dankito.data_access.network.communication.message
+package net.dankito.synchronization.device.communication.message
 
 import net.dankito.util.hashing.HashAlgorithm
 import net.dankito.util.hashing.HashService

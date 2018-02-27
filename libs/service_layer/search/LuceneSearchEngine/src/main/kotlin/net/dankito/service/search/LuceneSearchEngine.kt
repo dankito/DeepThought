@@ -1,6 +1,6 @@
 package net.dankito.service.search
 
-import net.dankito.data_access.database.ChangedEntity
+import net.dankito.synchronization.database.ChangedEntity
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.*

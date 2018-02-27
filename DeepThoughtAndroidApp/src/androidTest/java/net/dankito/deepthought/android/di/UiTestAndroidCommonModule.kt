@@ -1,8 +1,8 @@
 package net.dankito.deepthought.android.di
 
 import android.content.Context
-import net.dankito.data_access.database.EntityManagerConfiguration
-import net.dankito.data_access.database.IEntityManager
+import net.dankito.synchronization.database.EntityManagerConfiguration
+import net.dankito.synchronization.database.IEntityManager
 import net.dankito.data_access.database.InMemoryEntityManager
 import net.dankito.synchronization.device.discovery.IDevicesDiscoverer
 import net.dankito.synchronization.device.discovery.NoOpDevicesDiscoverer

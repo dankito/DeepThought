@@ -1,6 +1,6 @@
-package net.dankito.data_access.network.communication.message
+package net.dankito.synchronization.device.communication.message
 
-import net.dankito.service.synchronization.initialsync.model.SyncInfo
+import net.dankito.synchronization.model.SyncInfo
 
 
 data class RespondToSynchronizationPermittingChallengeResponseBody(val result: RespondToSynchronizationPermittingChallengeResult,

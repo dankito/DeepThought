@@ -5,7 +5,7 @@ import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFi
 import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFileResult
 import net.dankito.deepthought.files.synchronization.model.FileSyncState
 import net.dankito.deepthought.files.synchronization.model.SynchronizeFileResult
-import net.dankito.deepthought.model.DiscoveredDevice
+import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.synchronization.model.FileLink
 import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.synchronization.model.enums.FileSyncStatus

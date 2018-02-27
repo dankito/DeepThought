@@ -3,17 +3,13 @@ package net.dankito.deepthought.di
 import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
-import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.data_access.network.communication.CommunicationConfig
-import net.dankito.data_access.network.communication.IClientCommunicator
 import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
-import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.files.MimeTypeService
-import net.dankito.deepthought.model.NetworkSettings
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.service.clipboard.OptionsForClipboardContentDetector
@@ -41,7 +37,11 @@ import net.dankito.service.synchronization.ISyncManager
 import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
+import net.dankito.synchronization.database.IEntityManager
+import net.dankito.synchronization.device.communication.IClientCommunicator
+import net.dankito.synchronization.device.communication.callback.IDeviceRegistrationHandler
 import net.dankito.synchronization.device.discovery.IDevicesDiscoverer
+import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.util.IThreadPool
 import net.dankito.util.hashing.HashService
 import net.dankito.util.hashing.IBase64Service
@@ -55,6 +55,7 @@ import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.ImageCache
 import net.dankito.utils.OsHelper
 import net.dankito.utils.language.ILanguageDetector
+import net.dankito.utils.version.Versions
 import javax.inject.Singleton
 
 
@@ -166,7 +167,7 @@ open class CommonModule {
     @Provides
     @Singleton
     open fun provideNetworkSettings(dataManager: DataManager) : NetworkSettings {
-        return NetworkSettings(dataManager.localDevice, dataManager.localUser, CommunicationConfig.DefaultDeviceDiscoveryMessagePrefix)
+        return NetworkSettings(dataManager.localDevice, dataManager.localUser, CommunicationConfig.DefaultDeviceDiscoveryMessagePrefix, Versions.AppVersion, Versions.DataModelVersion)
     }
 
     @Provides

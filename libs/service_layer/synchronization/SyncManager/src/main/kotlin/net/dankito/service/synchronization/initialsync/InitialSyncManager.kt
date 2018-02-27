@@ -1,14 +1,14 @@
 package net.dankito.service.synchronization.initialsync
 
 
-import net.dankito.data_access.database.IEntityManager
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.model.DeepThought
-import net.dankito.synchronization.model.Device
-import net.dankito.synchronization.model.User
 import net.dankito.service.synchronization.initialsync.model.DeepThoughtSyncInfo
-import net.dankito.service.synchronization.initialsync.model.SyncInfo
-import net.dankito.service.synchronization.initialsync.model.UserSyncInfo
+import net.dankito.synchronization.database.IEntityManager
+import net.dankito.synchronization.model.Device
+import net.dankito.synchronization.model.SyncInfo
+import net.dankito.synchronization.model.User
+import net.dankito.synchronization.model.UserSyncInfo
 import net.dankito.util.localization.Localization
 
 
@@ -26,7 +26,9 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
 
 
     fun syncUserDevices(localDeepThought: DeepThought, remoteSyncInfo: SyncInfo) {
-        syncUserDevices(localDeepThought, localDeepThought.localUser, remoteSyncInfo.deepThought, remoteSyncInfo.user)
+        (remoteSyncInfo as? DeepThoughtSyncInfo)?.let {
+            syncUserDevices(localDeepThought, localDeepThought.localUser, remoteSyncInfo, remoteSyncInfo.user)
+        }
     }
 
     private fun syncUserDevices(localDeepThought: DeepThought, localUser: User, remoteDeepThought: DeepThoughtSyncInfo, remoteUser: UserSyncInfo) {
@@ -68,17 +70,19 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
 
         entityManager.persistEntity(localUser)
 
-        updateArticleSummaryExtractorConfigs(remoteSyncInfo)
+        (remoteSyncInfo as? DeepThoughtSyncInfo)?.let {
+            updateArticleSummaryExtractorConfigs(remoteSyncInfo.articleSummaryExtractorConfigs)
+        }
 
 
         entityManager.updateEntity(localDeepThought)
     }
 
 
-    private fun updateArticleSummaryExtractorConfigs(remoteSyncInfo: SyncInfo) {
+    private fun updateArticleSummaryExtractorConfigs(articleSummaryExtractorConfigs: List<ArticleSummaryExtractorConfig>) {
         val localConfigs = entityManager.getAllEntitiesOfType(ArticleSummaryExtractorConfig::class.java)
 
-        remoteSyncInfo.articleSummaryExtractorConfigs.forEach { remoteConfig ->
+        articleSummaryExtractorConfigs.forEach { remoteConfig ->
             val localConfig = localConfigs.firstOrNull { it.url == remoteConfig.url }
 
             if(localConfig == null) {
@@ -143,12 +147,11 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
 
     @Throws(IllegalStateException::class)
     fun shouldUseLocalDatabaseIds(localDeepThought: DeepThought, remoteSyncInfo: SyncInfo): Boolean {
-        return shouldUseLocalDatabaseIds(localDeepThought, localDeepThought.localUser, remoteSyncInfo.deepThought, remoteSyncInfo.user)
+        return shouldUseLocalDatabaseIds(localDeepThought.localUser, remoteSyncInfo.user)
     }
 
     @Throws(IllegalStateException::class)
-    private fun shouldUseLocalDatabaseIds(localDeepThought: DeepThought, localUser: User,
-                                  remoteDeepThought: DeepThoughtSyncInfo, remoteUser: UserSyncInfo): Boolean {
+    private fun shouldUseLocalDatabaseIds(localUser: User, remoteUser: UserSyncInfo): Boolean {
         val localCountSynchronizingDevices = localUser.synchronizedDevices.size
         val remoteCountSynchronizingDevices = remoteUser.synchronizedDevicesIds.size
 
@@ -159,7 +162,7 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
             return false
         }
         if(localCountSynchronizingDevices > 0 && remoteCountSynchronizingDevices > 0) {
-            if (isTheSameUser(localUser, remoteUser, localDeepThought, remoteDeepThought) == false) {
+            if(isTheSameUser(localUser, remoteUser) == false) {
                 // TODO: now we're in a Trap, this has to be urgently resolved:
                 // Both devices have already synchronized their Database Ids with other Devices, so no matter which one we choose,
                 // these already synchronized devices must update their Database Ids as well
@@ -170,9 +173,8 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
         return true
     }
 
-    private fun isTheSameUser(localUser: User, remoteUser: UserSyncInfo, localDeepThought: DeepThought, remoteDeepThought: DeepThoughtSyncInfo): Boolean {
-        return localUser.id == remoteUser.id && localUser.universallyUniqueId == remoteUser.universallyUniqueId &&
-                localDeepThought.id == remoteDeepThought.deepThoughtId
+    private fun isTheSameUser(localUser: User, remoteUser: UserSyncInfo): Boolean {
+        return localUser.id == remoteUser.id && localUser.universallyUniqueId == remoteUser.universallyUniqueId
     }
 
 }

@@ -7,9 +7,9 @@ import com.couchbase.lite.replicator.Replication
 import com.couchbase.lite.support.CouchbaseLiteHttpClientFactory
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.deepthought.model.DeepThought
-import net.dankito.deepthought.model.DiscoveredDevice
+import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.deepthought.model.LocalSettings
-import net.dankito.deepthought.model.NetworkSettings
+import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.jpa.couchbaselite.Dao
 import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
 import net.dankito.synchronization.model.Device

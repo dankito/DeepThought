@@ -2,17 +2,17 @@ package net.dankito.deepthought.android.service.communication
 
 import android.content.Context
 import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
-import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.service.SnackbarService
 import net.dankito.deepthought.android.service.StringUtil
-import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
-import net.dankito.service.synchronization.initialsync.model.SyncInfo
+import net.dankito.synchronization.device.communication.message.DeviceInfo
+import net.dankito.synchronization.model.DiscoveredDevice
+import net.dankito.synchronization.model.SyncInfo
 import net.dankito.util.localization.Localization
-import net.dankito.util.ui.dialog.IDialogService
 import net.dankito.util.ui.dialog.ConfirmationDialogButton
+import net.dankito.util.ui.dialog.IDialogService
 
 
 class AndroidDeviceRegistrationHandler(private var context: Context, dataManager: DataManager, initialSyncManager: InitialSyncManager, dialogService: IDialogService,

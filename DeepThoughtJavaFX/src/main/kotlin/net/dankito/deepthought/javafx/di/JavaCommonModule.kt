@@ -2,8 +2,8 @@ package net.dankito.deepthought.javafx.di
 
 import dagger.Module
 import dagger.Provides
-import net.dankito.data_access.database.EntityManagerConfiguration
-import net.dankito.data_access.database.IEntityManager
+import net.dankito.synchronization.database.EntityManagerConfiguration
+import net.dankito.synchronization.database.IEntityManager
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.data_access.filesystem.JavaFileStorageService

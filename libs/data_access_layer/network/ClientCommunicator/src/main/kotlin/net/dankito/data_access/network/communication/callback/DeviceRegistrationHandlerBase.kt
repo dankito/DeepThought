@@ -1,17 +1,18 @@
 package net.dankito.data_access.network.communication.callback
 
-import net.dankito.data_access.network.communication.IClientCommunicator
-import net.dankito.data_access.network.communication.message.RequestPermitSynchronizationResult
-import net.dankito.data_access.network.communication.message.RespondToSynchronizationPermittingChallengeResponseBody
-import net.dankito.data_access.network.communication.message.RespondToSynchronizationPermittingChallengeResult
-import net.dankito.data_access.network.communication.message.Response
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
-import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.service.synchronization.initialsync.model.DeepThoughtSyncInfo
-import net.dankito.service.synchronization.initialsync.model.SyncInfo
-import net.dankito.service.synchronization.initialsync.model.UserSyncInfo
+import net.dankito.synchronization.device.communication.IClientCommunicator
+import net.dankito.synchronization.device.communication.callback.IDeviceRegistrationHandler
+import net.dankito.synchronization.device.communication.message.RequestPermitSynchronizationResult
+import net.dankito.synchronization.device.communication.message.RespondToSynchronizationPermittingChallengeResponseBody
+import net.dankito.synchronization.device.communication.message.RespondToSynchronizationPermittingChallengeResult
+import net.dankito.synchronization.device.communication.message.Response
+import net.dankito.synchronization.model.DiscoveredDevice
+import net.dankito.synchronization.model.SyncInfo
+import net.dankito.synchronization.model.UserSyncInfo
 import net.dankito.util.localization.Localization
 import net.dankito.util.ui.dialog.IDialogService
 import net.dankito.util.ui.dialog.InputType
@@ -95,7 +96,7 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
 
         val articleSummaryExtractorConfigs = dataManager.entityManager.getAllEntitiesOfType(ArticleSummaryExtractorConfig::class.java)
 
-        return DeepThoughtSyncInfo(userSyncInfo, useCallerDatabaseIds, useCallerUserName, deepThought.id!!, deepThought.localDevice.id!!, articleSummaryExtractorConfigs)
+        return DeepThoughtSyncInfo(userSyncInfo, useCallerDatabaseIds, useCallerUserName, deepThought.localDevice.id!!, articleSummaryExtractorConfigs)
     }
 
 

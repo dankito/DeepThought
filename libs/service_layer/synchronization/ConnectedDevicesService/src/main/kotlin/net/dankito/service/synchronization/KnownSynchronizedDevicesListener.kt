@@ -1,6 +1,6 @@
 package net.dankito.service.synchronization
 
-import net.dankito.deepthought.model.DiscoveredDevice
+import net.dankito.synchronization.model.DiscoveredDevice
 
 
 interface KnownSynchronizedDevicesListener {

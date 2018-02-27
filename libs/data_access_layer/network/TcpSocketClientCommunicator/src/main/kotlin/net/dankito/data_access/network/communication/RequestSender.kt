@@ -1,10 +1,10 @@
 package net.dankito.data_access.network.communication
 
-import net.dankito.data_access.network.communication.message.Request
-import net.dankito.data_access.network.communication.message.Response
-import net.dankito.data_access.network.communication.message.ResponseErrorType
-import net.dankito.util.network.SocketHandler
+import net.dankito.synchronization.device.communication.message.Request
+import net.dankito.synchronization.device.communication.message.Response
+import net.dankito.synchronization.device.communication.message.ResponseErrorType
 import net.dankito.util.IThreadPool
+import net.dankito.util.network.SocketHandler
 import org.slf4j.LoggerFactory
 import java.net.Socket
 import java.net.SocketAddress
