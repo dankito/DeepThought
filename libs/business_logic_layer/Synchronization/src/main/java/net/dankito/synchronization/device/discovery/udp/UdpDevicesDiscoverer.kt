@@ -7,35 +7,37 @@ import net.dankito.util.AsyncProducerConsumerQueue
 import net.dankito.util.IThreadPool
 import net.dankito.util.network.INetworkConnectivityManager
 import net.dankito.util.network.NetworkHelper
-import net.dankito.util.network.NetworkInterfaceState
 import org.slf4j.LoggerFactory
-import java.net.*
+import java.net.DatagramPacket
+import java.net.DatagramSocket
+import java.net.InetSocketAddress
+import java.net.SocketException
 import java.nio.charset.Charset
 import java.util.*
-import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
-import kotlin.concurrent.schedule
 
 
 // TODO: separate in Listener and Broadcast sender?
 
 // TODO: be aware that this approach can disturb busy local networks. From Wikipedia UPnP article:
 // UPnP is generally regarded as unsuitable for deployment in business settings for reasons of economy, complexity, and consistency: the multicast foundation makes it chatty, consuming too many network resources on networks with a large population of devices
-open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetworkConnectivityManager, protected var threadPool: IThreadPool) : IDevicesDiscoverer {
+open class UdpDevicesDiscoverer(protected val networkConnectivityManager: INetworkConnectivityManager, protected var threadPool: IThreadPool) : IDevicesDiscoverer {
 
     companion object {
 
-        protected val MESSAGE_HEADER_AND_BODY_SEPARATOR = ":"
+        const val MESSAGE_HEADER_AND_BODY_SEPARATOR = ":"
 
-        protected val MESSAGES_CHARSET = Charset.forName("utf8")
+        val MESSAGES_CHARSET = Charset.forName("utf8")
 
-        protected val DEVICE_KEY_ADDRESS_AND_DEVICE_INFO_SEPARATOR = " | "
+        const val DEVICE_KEY_ADDRESS_AND_DEVICE_INFO_SEPARATOR = " | "
 
-        protected val DELAY_BEFORE_RESTARTING_BROADCAST_FOR_ADDRESS_MILLIS = 5000
+        const val DELAY_BEFORE_RESTARTING_BROADCAST_FOR_ADDRESS_MILLIS = 5000
 
         private val log = LoggerFactory.getLogger(UdpDevicesDiscoverer::class.java)
     }
 
+
+    protected var broadcaster: UdpBroadcaster? = null
 
     protected var connectionsAliveWatcher: ConnectionsAliveWatcher? = null
 
@@ -45,15 +47,6 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
 
     protected var listenerSocket: DatagramSocket? = null
     protected var isListenerSocketOpened = false
-
-    protected var broadcastThreads: MutableMap<String, Thread> = ConcurrentHashMap()
-
-    protected var networkInterfaceConnectivityChangedListener: ((NetworkInterfaceState) -> Unit)? = null
-
-    protected var openedBroadcastSockets: MutableList<DatagramSocket> = ArrayList()
-    protected var areBroadcastSocketsOpened = false
-
-    protected var timerToRestartBroadcastForBroadcastAddress: Timer? = null
 
     protected val receivedPacketsQueue: AsyncProducerConsumerQueue<ReceivedUdpDevicesDiscovererPacket>
 
@@ -69,7 +62,7 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
 
 
     override val isRunning: Boolean
-        get() = isListenerSocketOpened && areBroadcastSocketsOpened
+        get() = isListenerSocketOpened && broadcaster?.areBroadcastSocketsOpened ?: false
 
     override fun startAsync(config: DevicesDiscovererConfig) {
         log.info("Starting UdpDevicesDiscoverer " + config.localDeviceInfo + " ...")
@@ -80,13 +73,19 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
 
         startListenerAsync(config)
 
-        startBroadcastAsync(config)
+        broadcaster = createBroadcaster()
+        broadcaster?.startBroadcastAsync(config)
     }
 
     protected open fun createConnectionsAliveWatcher(config: DevicesDiscovererConfig): ConnectionsAliveWatcher {
         // * 3.5 = from 3 messages one must be received to be still valued as 'connected'
         return ConnectionsAliveWatcher((config.checkForDevicesIntervalMillis * 3.5).toInt())
     }
+
+    protected open fun createBroadcaster(): UdpBroadcaster {
+        return UdpBroadcaster(networkConnectivityManager, threadPool)
+    }
+
 
     override fun stop() {
         log.info("Stopping UdpDevicesDiscoverer ...")
@@ -97,37 +96,9 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
 
         stopListener()
 
-        stopBroadcast()
-    }
+        broadcaster?.stopBroadcasting()
 
-    protected open fun stopBroadcast() {
-        synchronized(broadcastThreads) {
-            networkInterfaceConnectivityChangedListener?.let { networkConnectivityManager.removeNetworkInterfaceConnectivityChangedListener(it) }
-
-            areBroadcastSocketsOpened = false
-
-            for (clientSocket in openedBroadcastSockets) {
-                clientSocket.close()
-            }
-
-            openedBroadcastSockets.clear()
-
-            for (broadcastAddress in ArrayList(broadcastThreads.keys)) {
-                stopBroadcast(broadcastAddress)
-            }
-        }
-    }
-
-    protected open fun stopBroadcast(broadcastAddress: String) {
-        broadcastThreads[broadcastAddress]?.let { broadcastThread ->
-            try {
-                broadcastThread.interrupt()
-            } catch (ignored: Exception) {
-            }
-
-            broadcastThreads.remove(broadcastAddress)
-            log.info("Stopped broadcasting for Address " + broadcastAddress)
-        }
+        broadcaster = null
     }
 
     override fun disconnectedFromDevice(deviceInfo: String) {
@@ -274,110 +245,6 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
         extractDeviceInfoFromDeviceInfoKey(deviceKey)?.let { deviceInfo ->
             listener?.deviceDisconnected(deviceInfo)
         }
-    }
-
-
-    protected open fun startBroadcastAsync(config: DevicesDiscovererConfig) {
-        threadPool.runAsync { startBroadcast(config) }
-    }
-
-    protected open fun startBroadcast(config: DevicesDiscovererConfig) {
-        networkInterfaceConnectivityChangedListener = { networkInterfaceConnectivityChanged(it, config) }
-
-        networkInterfaceConnectivityChangedListener?.let { networkConnectivityManager.addNetworkInterfaceConnectivityChangedListener(it) }
-
-        for (broadcastAddress in networkConnectivityManager.getBroadcastAddresses()) {
-            startBroadcastForBroadcastAddressAsync(broadcastAddress, config)
-        }
-    }
-
-    protected open fun networkInterfaceConnectivityChanged(state: NetworkInterfaceState, config: DevicesDiscovererConfig) {
-        synchronized(broadcastThreads) {
-            state.broadcastAddress?.hostAddress?.let { broadcastAddress ->
-                if(broadcastThreads.containsKey(broadcastAddress)) {
-                    if(state.isUp == false) {
-                        stopBroadcast(broadcastAddress)
-                    }
-                }
-                else if(state.isUp) {
-                    state.broadcastAddress?.let { startBroadcastForBroadcastAddressAsync(it, config) }
-                }
-            }
-        }
-    }
-
-    protected open fun startBroadcastForBroadcastAddressAsync(broadcastAddress: InetAddress, config: DevicesDiscovererConfig) {
-        synchronized(broadcastThreads) {
-            val broadcastThread = Thread(Runnable { startBroadcastForBroadcastAddress(broadcastAddress, config) }, "UdpDevicesDiscoverer_BroadcastTo_" + broadcastAddress.hostAddress)
-
-            broadcastThreads.put(broadcastAddress.hostAddress, broadcastThread)
-
-            broadcastThread.start()
-        }
-    }
-
-    protected open fun startBroadcastForBroadcastAddress(broadcastAddress: InetAddress, config: DevicesDiscovererConfig) {
-        try {
-            log.info("Starting broadcast for address ${broadcastAddress.hostAddress}")
-            val broadcastSocket = DatagramSocket()
-
-            synchronized(broadcastThreads) {
-                openedBroadcastSockets.add(broadcastSocket)
-                areBroadcastSocketsOpened = true
-            }
-
-            broadcastSocket.soTimeout = 10000
-
-            val timer = Timer()
-            timer.schedule(config.checkForDevicesIntervalMillis.toLong(), config.checkForDevicesIntervalMillis.toLong()) {
-                if(broadcastSocket.isClosed || sendBroadcastOnSocket(broadcastSocket, broadcastAddress, config) == false) {
-                    timer.cancel()
-                }
-            }
-        } catch (e: Exception) {
-            log.error("Could not start broadcast for address ${broadcastAddress.hostAddress}", e)
-        }
-
-    }
-
-    protected open fun sendBroadcastOnSocket(broadcastSocket: DatagramSocket, broadcastAddress: InetAddress, config: DevicesDiscovererConfig): Boolean {
-        try {
-            val searchDevicesPacket = createSearchDevicesDatagramPacket(broadcastAddress, config)
-            broadcastSocket.send(searchDevicesPacket)
-        } catch (e: Exception) {
-            log.error("Could not send Broadcast to Address " + broadcastAddress, e)
-
-            synchronized(broadcastThreads) {
-                openedBroadcastSockets.remove(broadcastSocket)
-            }
-            broadcastSocket.close()
-
-            restartBroadcastForBroadcastAddress(broadcastAddress, config)
-
-            return false
-        }
-
-        return true
-    }
-
-    protected open fun restartBroadcastForBroadcastAddress(broadcastAddress: InetAddress, config: DevicesDiscovererConfig) {
-        if (timerToRestartBroadcastForBroadcastAddress == null) {
-            timerToRestartBroadcastForBroadcastAddress = Timer(true)
-        }
-
-        // TODO: a problem about using Timer is, that then broadcasts are send on Timer thread and not on broadcastThread
-        timerToRestartBroadcastForBroadcastAddress?.schedule(object : TimerTask() {
-            override fun run() {
-                startBroadcastForBroadcastAddress(broadcastAddress, config)
-            }
-        }, DELAY_BEFORE_RESTARTING_BROADCAST_FOR_ADDRESS_MILLIS.toLong())
-    }
-
-    protected open fun createSearchDevicesDatagramPacket(broadcastAddress: InetAddress, config: DevicesDiscovererConfig): DatagramPacket {
-        val message = config.discoveryMessagePrefix + MESSAGE_HEADER_AND_BODY_SEPARATOR + config.localDeviceInfo
-        val messageBytes = message.toByteArray(MESSAGES_CHARSET)
-
-        return DatagramPacket(messageBytes, messageBytes.size, broadcastAddress, config.discoverDevicesPort)
     }
 
     protected open fun getDeviceInfoFromMessage(receivedMessage: String): String {
