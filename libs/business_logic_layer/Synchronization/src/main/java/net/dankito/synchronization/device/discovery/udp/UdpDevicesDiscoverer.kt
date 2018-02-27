@@ -37,27 +37,27 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
     }
 
 
-    private var connectionsAliveWatcher: ConnectionsAliveWatcher? = null
+    protected var connectionsAliveWatcher: ConnectionsAliveWatcher? = null
 
-    private val networkHelper: NetworkHelper = NetworkHelper() // TODO: make configurable which NetworkHelper instance to use
+    protected val networkHelper: NetworkHelper = NetworkHelper() // TODO: make configurable which NetworkHelper instance to use
 
-    private var listenerThread: Thread? = null
+    protected var listenerThread: Thread? = null
 
-    private var listenerSocket: DatagramSocket? = null
-    private var isListenerSocketOpened = false
+    protected var listenerSocket: DatagramSocket? = null
+    protected var isListenerSocketOpened = false
 
-    private var broadcastThreads: MutableMap<String, Thread> = ConcurrentHashMap()
+    protected var broadcastThreads: MutableMap<String, Thread> = ConcurrentHashMap()
 
-    private var networkInterfaceConnectivityChangedListener: ((NetworkInterfaceState) -> Unit)? = null
+    protected var networkInterfaceConnectivityChangedListener: ((NetworkInterfaceState) -> Unit)? = null
 
-    private var openedBroadcastSockets: MutableList<DatagramSocket> = ArrayList()
-    private var areBroadcastSocketsOpened = false
+    protected var openedBroadcastSockets: MutableList<DatagramSocket> = ArrayList()
+    protected var areBroadcastSocketsOpened = false
 
-    private var timerToRestartBroadcastForBroadcastAddress: Timer? = null
+    protected var timerToRestartBroadcastForBroadcastAddress: Timer? = null
 
-    private val receivedPacketsQueue: AsyncProducerConsumerQueue<ReceivedUdpDevicesDiscovererPacket>
+    protected val receivedPacketsQueue: AsyncProducerConsumerQueue<ReceivedUdpDevicesDiscovererPacket>
 
-    private var foundDevices: MutableList<String> = CopyOnWriteArrayList()
+    protected var foundDevices: MutableList<String> = CopyOnWriteArrayList()
 
 
     init {
@@ -100,7 +100,7 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
         stopBroadcast()
     }
 
-    private fun stopBroadcast() {
+    protected open fun stopBroadcast() {
         synchronized(broadcastThreads) {
             networkInterfaceConnectivityChangedListener?.let { networkConnectivityManager.removeNetworkInterfaceConnectivityChangedListener(it) }
 
@@ -118,7 +118,7 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
         }
     }
 
-    private fun stopBroadcast(broadcastAddress: String) {
+    protected open fun stopBroadcast(broadcastAddress: String) {
         broadcastThreads[broadcastAddress]?.let { broadcastThread ->
             try {
                 broadcastThread.interrupt()
@@ -135,7 +135,7 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
     }
 
 
-    private fun startListenerAsync(config: DevicesDiscovererConfig) {
+    protected open fun startListenerAsync(config: DevicesDiscovererConfig) {
         stopListener()
 
         listenerThread = Thread({ startListener(config) }, "UdpDevicesDiscoverer_Listener")
@@ -143,7 +143,7 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
         listenerThread?.start()
     }
 
-    private fun stopListener() {
+    protected open fun stopListener() {
         try { listenerThread?.interrupt() } catch (ignored: Exception) { }
         listenerThread = null
 
@@ -154,7 +154,7 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
         }
     }
 
-    private fun startListener(config: DevicesDiscovererConfig) {
+    protected open fun startListener(config: DevicesDiscovererConfig) {
         try {
             this.listenerSocket = createListenerSocket(config.discoverDevicesPort)
 
@@ -183,7 +183,7 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
     }
 
     @Throws(SocketException::class)
-    private fun createListenerSocket(discoverDevicesPort: Int): DatagramSocket {
+    protected open fun createListenerSocket(discoverDevicesPort: Int): DatagramSocket {
         val listenerSocket = DatagramSocket(null) // so that other Applications on the same Host can also use this port, set bindAddress to null ..,
         listenerSocket.reuseAddress = true // and reuseAddress to true
         listenerSocket.bind(InetSocketAddress(discoverDevicesPort))
@@ -194,18 +194,18 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
         return listenerSocket
     }
 
-    private fun isSocketCloseException(ex: Exception): Boolean {
+    protected open fun isSocketCloseException(ex: Exception): Boolean {
         return networkHelper.isSocketCloseException(ex)
     }
 
 
-    private fun listenerReceivedPacket(buffer: ByteArray, packet: DatagramPacket, config: DevicesDiscovererConfig) {
+    protected open fun listenerReceivedPacket(buffer: ByteArray, packet: DatagramPacket, config: DevicesDiscovererConfig) {
         receivedPacketsQueue.add(ReceivedUdpDevicesDiscovererPacket(Arrays.copyOf(buffer, packet.length), packet, packet.address.hostAddress,
                 config.localDeviceInfo, config.discoveryMessagePrefix, config.listener))
     }
 
 
-    private fun handleReceivedPacket(receivedData: ByteArray, senderAddress: String, localDeviceInfo: String, discoveryMessagePrefix: String, listener: DevicesDiscovererListener) {
+    protected open fun handleReceivedPacket(receivedData: ByteArray, senderAddress: String, localDeviceInfo: String, discoveryMessagePrefix: String, listener: DevicesDiscovererListener) {
         val receivedMessage = parseBytesToString(receivedData, receivedData.size)
 
         if(isSearchingForDevicesMessage(receivedMessage, discoveryMessagePrefix)) {
@@ -217,7 +217,7 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
         }
     }
 
-    private fun handleReceivedRemotePacket(remoteDeviceInfo: String, senderAddress: String, listener: DevicesDiscovererListener) {
+    protected open fun handleReceivedRemotePacket(remoteDeviceInfo: String, senderAddress: String, listener: DevicesDiscovererListener) {
         val remoteDeviceKey = createDeviceKey(senderAddress, remoteDeviceInfo)
         connectionsAliveWatcher?.receivedMessageFromDevice(remoteDeviceKey) // if device just reconnected it's better to update its timestamp immediately
 
@@ -226,15 +226,15 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
         }
     }
 
-    private fun isSearchingForDevicesMessage(receivedMessage: String, discoveryMessagePrefix: String): Boolean {
+    protected open fun isSearchingForDevicesMessage(receivedMessage: String, discoveryMessagePrefix: String): Boolean {
         return receivedMessage.startsWith(discoveryMessagePrefix + MESSAGE_HEADER_AND_BODY_SEPARATOR)
     }
 
-    private fun isSelfSentPacket(remoteDeviceInfo: String, localDeviceInfo: String): Boolean {
+    protected open fun isSelfSentPacket(remoteDeviceInfo: String, localDeviceInfo: String): Boolean {
         return localDeviceInfo == remoteDeviceInfo
     }
 
-    private fun hasDeviceAlreadyBeenFound(deviceInfo: String): Boolean {
+    protected open fun hasDeviceAlreadyBeenFound(deviceInfo: String): Boolean {
         val foundDevicesCopy = ArrayList(foundDevices)
 
         for(foundDevice in foundDevicesCopy) {
@@ -246,7 +246,7 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
         return false
     }
 
-    private fun deviceFound(remoteDeviceKey: String, remoteDeviceInfo: String, remoteDeviceAddress: String, listener: DevicesDiscovererListener) {
+    protected open fun deviceFound(remoteDeviceKey: String, remoteDeviceInfo: String, remoteDeviceAddress: String, listener: DevicesDiscovererListener) {
         log.info("Found Device $remoteDeviceInfo on $remoteDeviceAddress")
 
         synchronized(this) {
@@ -260,7 +260,7 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
         listener.deviceFound(remoteDeviceInfo, remoteDeviceAddress)
     }
 
-    private fun startConnectionsAliveWatcher(listener: DevicesDiscovererListener) {
+    protected open fun startConnectionsAliveWatcher(listener: DevicesDiscovererListener) {
         connectionsAliveWatcher?.startWatchingAsync(foundDevices, object : ConnectionsAliveWatcherListener {
             override fun deviceDisconnected(deviceInfo: String) {
                 this@UdpDevicesDiscoverer.deviceDisconnected(deviceInfo, listener)
@@ -268,7 +268,7 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
         })
     }
 
-    protected fun deviceDisconnected(deviceKey: String, listener: DevicesDiscovererListener?) {
+    protected open fun deviceDisconnected(deviceKey: String, listener: DevicesDiscovererListener?) {
         removeDeviceFromFoundDevices(deviceKey)
 
         extractDeviceInfoFromDeviceInfoKey(deviceKey)?.let { deviceInfo ->
@@ -277,11 +277,11 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
     }
 
 
-    private fun startBroadcastAsync(config: DevicesDiscovererConfig) {
+    protected open fun startBroadcastAsync(config: DevicesDiscovererConfig) {
         threadPool.runAsync { startBroadcast(config) }
     }
 
-    private fun startBroadcast(config: DevicesDiscovererConfig) {
+    protected open fun startBroadcast(config: DevicesDiscovererConfig) {
         networkInterfaceConnectivityChangedListener = { networkInterfaceConnectivityChanged(it, config) }
 
         networkInterfaceConnectivityChangedListener?.let { networkConnectivityManager.addNetworkInterfaceConnectivityChangedListener(it) }
@@ -291,7 +291,7 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
         }
     }
 
-    private fun networkInterfaceConnectivityChanged(state: NetworkInterfaceState, config: DevicesDiscovererConfig) {
+    protected open fun networkInterfaceConnectivityChanged(state: NetworkInterfaceState, config: DevicesDiscovererConfig) {
         synchronized(broadcastThreads) {
             state.broadcastAddress?.hostAddress?.let { broadcastAddress ->
                 if(broadcastThreads.containsKey(broadcastAddress)) {
@@ -306,7 +306,7 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
         }
     }
 
-    private fun startBroadcastForBroadcastAddressAsync(broadcastAddress: InetAddress, config: DevicesDiscovererConfig) {
+    protected open fun startBroadcastForBroadcastAddressAsync(broadcastAddress: InetAddress, config: DevicesDiscovererConfig) {
         synchronized(broadcastThreads) {
             val broadcastThread = Thread(Runnable { startBroadcastForBroadcastAddress(broadcastAddress, config) }, "UdpDevicesDiscoverer_BroadcastTo_" + broadcastAddress.hostAddress)
 
@@ -316,7 +316,7 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
         }
     }
 
-    protected fun startBroadcastForBroadcastAddress(broadcastAddress: InetAddress, config: DevicesDiscovererConfig) {
+    protected open fun startBroadcastForBroadcastAddress(broadcastAddress: InetAddress, config: DevicesDiscovererConfig) {
         try {
             log.info("Starting broadcast for address ${broadcastAddress.hostAddress}")
             val broadcastSocket = DatagramSocket()
@@ -340,7 +340,7 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
 
     }
 
-    private fun sendBroadcastOnSocket(broadcastSocket: DatagramSocket, broadcastAddress: InetAddress, config: DevicesDiscovererConfig): Boolean {
+    protected open fun sendBroadcastOnSocket(broadcastSocket: DatagramSocket, broadcastAddress: InetAddress, config: DevicesDiscovererConfig): Boolean {
         try {
             val searchDevicesPacket = createSearchDevicesDatagramPacket(broadcastAddress, config)
             broadcastSocket.send(searchDevicesPacket)
@@ -360,7 +360,7 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
         return true
     }
 
-    private fun restartBroadcastForBroadcastAddress(broadcastAddress: InetAddress, config: DevicesDiscovererConfig) {
+    protected open fun restartBroadcastForBroadcastAddress(broadcastAddress: InetAddress, config: DevicesDiscovererConfig) {
         if (timerToRestartBroadcastForBroadcastAddress == null) {
             timerToRestartBroadcastForBroadcastAddress = Timer(true)
         }
@@ -373,33 +373,33 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
         }, DELAY_BEFORE_RESTARTING_BROADCAST_FOR_ADDRESS_MILLIS.toLong())
     }
 
-    private fun createSearchDevicesDatagramPacket(broadcastAddress: InetAddress, config: DevicesDiscovererConfig): DatagramPacket {
+    protected open fun createSearchDevicesDatagramPacket(broadcastAddress: InetAddress, config: DevicesDiscovererConfig): DatagramPacket {
         val message = config.discoveryMessagePrefix + MESSAGE_HEADER_AND_BODY_SEPARATOR + config.localDeviceInfo
         val messageBytes = message.toByteArray(MESSAGES_CHARSET)
 
         return DatagramPacket(messageBytes, messageBytes.size, broadcastAddress, config.discoverDevicesPort)
     }
 
-    private fun getDeviceInfoFromMessage(receivedMessage: String): String {
+    protected open fun getDeviceInfoFromMessage(receivedMessage: String): String {
         val bodyStartIndex = receivedMessage.indexOf(MESSAGE_HEADER_AND_BODY_SEPARATOR) + MESSAGE_HEADER_AND_BODY_SEPARATOR.length
 
         return receivedMessage.substring(bodyStartIndex)
     }
 
-    private fun parseBytesToString(receivedData: ByteArray, packetLength: Int): String {
+    protected open fun parseBytesToString(receivedData: ByteArray, packetLength: Int): String {
         return String(receivedData, 0, packetLength, MESSAGES_CHARSET)
     }
 
 
-    private fun removeDeviceFromFoundDevices(deviceInfo: String) {
+    protected open fun removeDeviceFromFoundDevices(deviceInfo: String) {
         foundDevices.remove(deviceInfo)
     }
 
-    private fun createDeviceKey(senderAddress: String, remoteDeviceInfo: String): String {
+    protected open fun createDeviceKey(senderAddress: String, remoteDeviceInfo: String): String {
         return senderAddress + DEVICE_KEY_ADDRESS_AND_DEVICE_INFO_SEPARATOR + remoteDeviceInfo
     }
 
-    private fun extractDeviceInfoFromDeviceInfoKey(deviceKey: String): String? {
+    protected open fun extractDeviceInfoFromDeviceInfoKey(deviceKey: String): String? {
         var deviceInfoStartIndex = deviceKey.indexOf(DEVICE_KEY_ADDRESS_AND_DEVICE_INFO_SEPARATOR)
 
         if (deviceInfoStartIndex > 0) {
