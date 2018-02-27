@@ -172,7 +172,7 @@ class InitialSyncManager(private var entityManager: IEntityManager, private var 
 
     private fun isTheSameUser(localUser: User, remoteUser: UserSyncInfo, localDeepThought: DeepThought, remoteDeepThought: DeepThoughtSyncInfo): Boolean {
         return localUser.id == remoteUser.id && localUser.universallyUniqueId == remoteUser.universallyUniqueId &&
-                localDeepThought.id == remoteDeepThought.id
+                localDeepThought.id == remoteDeepThought.deepThoughtId
     }
 
 }

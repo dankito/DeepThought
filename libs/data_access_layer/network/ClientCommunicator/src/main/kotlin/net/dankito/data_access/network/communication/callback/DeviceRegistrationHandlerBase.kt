@@ -91,11 +91,11 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
     private fun createSyncInfo(useCallerDatabaseIds: Boolean? = null, useCallerUserName: Boolean? = null): SyncInfo {
         val userSyncInfo = UserSyncInfo(dataManager.localUser)
 
-        val deepThoughtSyncInfo = DeepThoughtSyncInfo(dataManager.deepThought)
+        val deepThought = dataManager.deepThought
 
         val articleSummaryExtractorConfigs = dataManager.entityManager.getAllEntitiesOfType(ArticleSummaryExtractorConfig::class.java)
 
-        return SyncInfo(deepThoughtSyncInfo, userSyncInfo, articleSummaryExtractorConfigs, useCallerDatabaseIds, useCallerUserName)
+        return DeepThoughtSyncInfo(userSyncInfo, useCallerDatabaseIds, useCallerUserName, deepThought.id!!, deepThought.localDevice.id!!, articleSummaryExtractorConfigs)
     }
 
 

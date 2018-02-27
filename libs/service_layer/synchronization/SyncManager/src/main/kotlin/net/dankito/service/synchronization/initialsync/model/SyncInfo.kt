@@ -1,10 +1,7 @@
 package net.dankito.service.synchronization.initialsync.model
 
-import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 
+open class SyncInfo(val user: UserSyncInfo, val useCallerDatabaseIds: Boolean? = null, val useCallerUserName: Boolean? = null) {
 
-data class SyncInfo(val deepThought: DeepThoughtSyncInfo, val user: UserSyncInfo, val articleSummaryExtractorConfigs: List<ArticleSummaryExtractorConfig>,
-                    val useCallerDatabaseIds: Boolean? = null, val useCallerUserName: Boolean? = null) {
-
-    constructor() : this(DeepThoughtSyncInfo(), UserSyncInfo(), listOf()) // for Jackson
+    constructor() : this(UserSyncInfo(), false, false) // for Jackson
 }
