@@ -4,8 +4,8 @@ import android.content.Context
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.database.InMemoryEntityManager
-import net.dankito.data_access.network.discovery.IDevicesDiscoverer
-import net.dankito.data_access.network.discovery.NoOpDevicesDiscoverer
+import net.dankito.synchronization.device.discovery.IDevicesDiscoverer
+import net.dankito.synchronization.device.discovery.NoOpDevicesDiscoverer
 import net.dankito.util.IThreadPool
 import net.dankito.util.network.INetworkConnectivityManager
 import net.dankito.util.settings.ILocalSettingsStore

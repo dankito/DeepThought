@@ -9,7 +9,6 @@ import net.dankito.data_access.network.communication.CommunicationConfig
 import net.dankito.data_access.network.communication.IClientCommunicator
 import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
-import net.dankito.data_access.network.discovery.IDevicesDiscoverer
 import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
 import net.dankito.deepthought.files.FileManager
@@ -42,6 +41,7 @@ import net.dankito.service.synchronization.ISyncManager
 import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
+import net.dankito.synchronization.device.discovery.IDevicesDiscoverer
 import net.dankito.util.IThreadPool
 import net.dankito.util.hashing.HashService
 import net.dankito.util.hashing.IBase64Service
@@ -197,7 +197,7 @@ open class CommonModule {
     @Provides
     @Singleton
     open fun provideConnectedDevicesService(devicesDiscoverer: IDevicesDiscoverer, clientCommunicator: IClientCommunicator, syncManager: ISyncManager, registrationHandler: IDeviceRegistrationHandler,
-                                       networkSettings: NetworkSettings, entityManager: IEntityManager) : IConnectedDevicesService {
+                                            networkSettings: NetworkSettings, entityManager: IEntityManager) : IConnectedDevicesService {
         return ConnectedDevicesService(devicesDiscoverer, clientCommunicator, syncManager, registrationHandler, networkSettings, entityManager)
     }
 

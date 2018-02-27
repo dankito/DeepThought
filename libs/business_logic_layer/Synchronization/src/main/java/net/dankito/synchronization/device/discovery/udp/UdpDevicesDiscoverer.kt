@@ -1,5 +1,8 @@
-package net.dankito.data_access.network.discovery
+package net.dankito.synchronization.device.discovery.udp
 
+import net.dankito.synchronization.device.discovery.DevicesDiscovererConfig
+import net.dankito.synchronization.device.discovery.DevicesDiscovererListener
+import net.dankito.synchronization.device.discovery.IDevicesDiscoverer
 import net.dankito.util.AsyncProducerConsumerQueue
 import net.dankito.util.IThreadPool
 import net.dankito.util.network.INetworkConnectivityManager

@@ -9,7 +9,6 @@ import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.filesystem.AndroidFileStorageService
 import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.data_access.network.discovery.AndroidUdpDevicesDiscoverer
-import net.dankito.data_access.network.discovery.IDevicesDiscoverer
 import net.dankito.deepthought.android.service.hashing.AndroidBase64Service
 import net.dankito.deepthought.android.service.settings.AndroidPlatformConfiguration
 import net.dankito.deepthought.service.importexport.pdf.PdfImporter

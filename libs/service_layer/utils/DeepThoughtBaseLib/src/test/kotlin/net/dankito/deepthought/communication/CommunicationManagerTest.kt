@@ -14,7 +14,6 @@ import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
 import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.communication.message.DeviceInfo
-import net.dankito.data_access.network.discovery.UdpDevicesDiscoverer
 import net.dankito.util.web.IWebClient
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.enums.OsType
@@ -31,6 +30,7 @@ import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.service.synchronization.*
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
+import net.dankito.synchronization.device.discovery.udp.UdpDevicesDiscoverer
 import net.dankito.util.ThreadPool
 import net.dankito.util.hashing.HashService
 import net.dankito.util.hashing.IBase64Service

@@ -1,5 +1,6 @@
-package net.dankito.data_access.network.discovery
+package net.dankito.synchronization.device.discovery.udp
 
+import net.dankito.synchronization.device.discovery.DevicesDiscovererListener
 import java.net.DatagramPacket
 
 

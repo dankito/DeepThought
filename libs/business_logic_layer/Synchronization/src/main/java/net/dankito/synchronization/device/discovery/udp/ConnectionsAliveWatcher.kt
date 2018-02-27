@@ -1,4 +1,4 @@
-package net.dankito.data_access.network.discovery
+package net.dankito.synchronization.device.discovery.udp
 
 import org.slf4j.LoggerFactory
 import java.util.*
