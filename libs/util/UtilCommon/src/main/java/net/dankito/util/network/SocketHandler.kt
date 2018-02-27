@@ -18,12 +18,12 @@ open class SocketHandler {
 
 
     @JvmOverloads
-    open fun sendMessage(socket: Socket, message: ByteArray, messageEndChar: Char = SocketHandlerDefaultConfig.MESSAGE_END_CHAR): SocketResult {
+    open fun sendMessage(socket: Socket, message: ByteArray, messageEndChar: Char? = SocketHandlerDefaultConfig.MESSAGE_END_CHAR): SocketResult {
         return sendMessage(socket, ByteArrayInputStream(message), messageEndChar)
     }
 
     @JvmOverloads
-    open fun sendMessage(socket: Socket, inputStream: InputStream, messageEndChar: Char? = null): SocketResult {
+    open fun sendMessage(socket: Socket, inputStream: InputStream, messageEndChar: Char? = SocketHandlerDefaultConfig.MESSAGE_END_CHAR): SocketResult {
         var countBytesSend = -1L
 
         try {
