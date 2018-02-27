@@ -1,7 +1,7 @@
 package net.dankito.deepthought.files.synchronization
 
 import net.dankito.data_access.database.IEntityManager
-import net.dankito.data_access.network.communication.SocketHandler
+import net.dankito.util.network.SocketHandler
 import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFileRequest
 import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFileResponse
 import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFileResult

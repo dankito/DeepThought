@@ -4,7 +4,6 @@ import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.IEntityManager
-import net.dankito.data_access.network.communication.SocketHandler
 import net.dankito.deepthought.data.FilePersister
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.SeriesPersister
@@ -22,14 +21,15 @@ import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.IConnectedDevicesService
-import net.dankito.utils.IPlatformConfiguration
 import net.dankito.util.IThreadPool
-import net.dankito.util.localization.Localization
-import net.dankito.util.serialization.ISerializer
-import net.dankito.utils.serialization.DeepThoughtJacksonJsonSerializer
 import net.dankito.util.hashing.HashService
+import net.dankito.util.localization.Localization
+import net.dankito.util.network.SocketHandler
+import net.dankito.util.serialization.ISerializer
 import net.dankito.util.settings.ILocalSettingsStore
 import net.dankito.util.ui.dialog.IDialogService
+import net.dankito.utils.IPlatformConfiguration
+import net.dankito.utils.serialization.DeepThoughtJacksonJsonSerializer
 import javax.inject.Singleton
 
 

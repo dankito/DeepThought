@@ -9,7 +9,7 @@ import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.data_access.network.communication.IClientCommunicator
-import net.dankito.data_access.network.communication.SocketHandler
+import net.dankito.util.network.SocketHandler
 import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
 import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler

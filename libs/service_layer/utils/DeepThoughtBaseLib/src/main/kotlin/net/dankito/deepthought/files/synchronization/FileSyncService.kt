@@ -1,6 +1,5 @@
 package net.dankito.deepthought.files.synchronization
 
-import net.dankito.data_access.network.communication.SocketHandler
 import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFileRequest
 import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFileResponse
 import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFileResult
@@ -17,9 +16,10 @@ import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.service.synchronization.IConnectedDevicesService
 import net.dankito.service.synchronization.KnownSynchronizedDevicesListener
 import net.dankito.util.AsyncProducerConsumerQueue
-import net.dankito.utils.IPlatformConfiguration
-import net.dankito.util.serialization.ISerializer
 import net.dankito.util.hashing.HashService
+import net.dankito.util.network.SocketHandler
+import net.dankito.util.serialization.ISerializer
+import net.dankito.utils.IPlatformConfiguration
 import org.slf4j.LoggerFactory
 import java.io.*
 import java.net.Socket

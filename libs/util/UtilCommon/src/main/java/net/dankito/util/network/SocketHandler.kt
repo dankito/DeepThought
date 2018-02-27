@@ -1,4 +1,4 @@
-package net.dankito.data_access.network.communication
+package net.dankito.util.network
 
 import okio.Okio
 import org.slf4j.LoggerFactory
