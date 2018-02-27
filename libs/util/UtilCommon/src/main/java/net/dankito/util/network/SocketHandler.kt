@@ -17,10 +17,12 @@ open class SocketHandler {
     }
 
 
+    @JvmOverloads
     open fun sendMessage(socket: Socket, message: ByteArray, messageEndChar: Char = SocketHandlerDefaultConfig.MESSAGE_END_CHAR): SocketResult {
         return sendMessage(socket, ByteArrayInputStream(message), messageEndChar)
     }
 
+    @JvmOverloads
     open fun sendMessage(socket: Socket, inputStream: InputStream, messageEndChar: Char? = null): SocketResult {
         var countBytesSend = -1L
 
@@ -47,12 +49,16 @@ open class SocketHandler {
     }
 
 
-    open fun receiveMessage(socket: Socket): SocketResult {
+    @JvmOverloads
+    open fun receiveMessage(socket: Socket, bufferSize: Int = SocketHandlerDefaultConfig.BUFFER_SIZE,
+                            messageCharset: Charset = SocketHandlerDefaultConfig.MESSAGE_CHARSET,
+                            messageEndChar: Char = SocketHandlerDefaultConfig.MESSAGE_END_CHAR,
+                            maxMessageSize: Int = SocketHandlerDefaultConfig.MAX_MESSAGE_SIZE): SocketResult {
         try {
             val inputStream = BufferedInputStream(socket.getInputStream())
 
             // do not close inputStream, otherwise socket gets closed
-            return receiveMessage(inputStream)
+            return receiveMessage(inputStream, bufferSize, messageCharset, messageEndChar, maxMessageSize)
         } catch (e: Exception) {
             log.error("Could not receive response", e)
 
@@ -62,10 +68,8 @@ open class SocketHandler {
     }
 
     @Throws(IOException::class)
-    protected open fun receiveMessage(inputStream: InputStream, bufferSize: Int = SocketHandlerDefaultConfig.BUFFER_SIZE,
-                                 messageCharset: Charset = SocketHandlerDefaultConfig.MESSAGE_CHARSET,
-                                 messageEndChar: Char = SocketHandlerDefaultConfig.MESSAGE_END_CHAR,
-                                 maxMessageSize: Int = SocketHandlerDefaultConfig.MAX_MESSAGE_SIZE): SocketResult {
+    protected open fun receiveMessage(inputStream: InputStream, bufferSize: Int, messageCharset: Charset,
+                                 messageEndChar: Char, maxMessageSize: Int): SocketResult {
         val buffer = ByteArray(bufferSize)
         val receivedMessageBytes = ArrayList<Byte>()
 
