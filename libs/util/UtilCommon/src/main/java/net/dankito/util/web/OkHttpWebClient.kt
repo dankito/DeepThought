@@ -312,10 +312,12 @@ class OkHttpWebClient : IWebClient {
         try {
             inputStream = response.body()?.byteStream()
 
-            val buffer = ByteArray(parameters.downloadBufferSize)
-            val contentLength = response.body()?.contentLength() ?: 0
+            inputStream?.let {
+                val buffer = ByteArray(parameters.downloadBufferSize)
+                val contentLength = response.body()?.contentLength() ?: 0
 
-            return streamBinaryResponse(parameters, inputStream, buffer, contentLength, response, headers)
+                return streamBinaryResponse(parameters, inputStream, buffer, contentLength, response, headers)
+            } ?: return WebClientResponse(false, response.code(), headers)
         } catch (e: Exception) {
             log.error("Could not download binary Response for Url " + parameters.url, e)
             return WebClientResponse(false, response.code(), headers, e)
@@ -324,13 +326,13 @@ class OkHttpWebClient : IWebClient {
         }
     }
 
-    private fun streamBinaryResponse(parameters: RequestParameters, inputStream: InputStream?, buffer: ByteArray, contentLength: Long, response: Response, headers: Map<String, String>?): WebClientResponse {
+    private fun streamBinaryResponse(parameters: RequestParameters, inputStream: InputStream, buffer: ByteArray, contentLength: Long, response: Response, headers: Map<String, String>?): WebClientResponse {
         var downloaded: Long = 0
 
         publishProgress(parameters, ByteArray(0), 0L, contentLength)
 
         while(true) {
-            val read = inputStream!!.read(buffer)
+            val read = inputStream.read(buffer)
             if(read == -1) {
                 break
             }
