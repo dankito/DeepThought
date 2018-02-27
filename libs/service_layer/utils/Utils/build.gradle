@@ -8,6 +8,7 @@ dependencies {
     compile project(':DataModel')
     compile "net.dankito.util:util-common:1.0.0", {
         exclude group: 'org.jetbrains.kotlin'
+        exclude group: 'org.slf4j'
     }
 
     compile project(':FileStorageService')
@@ -18,5 +19,7 @@ dependencies {
     compile "com.github.axet:wget:$wgetVersion", {
         exclude group: 'com.thoughtworks.xstream', module: 'xstream'
     }
+
+    compile "org.slf4j:slf4j-api:$slf4jVersion"
 
 }
