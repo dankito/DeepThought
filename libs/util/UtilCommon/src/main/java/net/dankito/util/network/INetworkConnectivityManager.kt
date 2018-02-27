@@ -5,6 +5,9 @@ import java.net.Inet4Address
 
 interface INetworkConnectivityManager {
 
+    val networkHelper: NetworkHelper
+
+
     fun getBroadcastAddresses(): Collection<Inet4Address>
 
 

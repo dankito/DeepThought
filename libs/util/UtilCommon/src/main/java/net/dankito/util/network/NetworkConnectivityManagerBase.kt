@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
 
-abstract class NetworkConnectivityManagerBase(val networkHelper: NetworkHelper) : INetworkConnectivityManager {
+abstract class NetworkConnectivityManagerBase(override val networkHelper: NetworkHelper) : INetworkConnectivityManager {
 
 
     val networkInterfaces = ConcurrentHashMap<String, NetworkInterfaceState>()
