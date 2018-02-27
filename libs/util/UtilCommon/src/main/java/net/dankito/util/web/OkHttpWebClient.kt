@@ -57,7 +57,7 @@ class OkHttpWebClient : IWebClient {
 
             return getResponse(parameters, response)
         } catch (e: Exception) {
-            return getRequestFailed(parameters, e)
+            return requestFailed(parameters, e) { get(parameters) }
         }
     }
 
@@ -67,7 +67,7 @@ class OkHttpWebClient : IWebClient {
 
             executeRequestAsync(parameters, request, callback)
         } catch (e: Exception) {
-            asyncGetRequestFailed(parameters, e, callback)
+            callback(requestFailed(parameters, e) { get(parameters) })
         }
 
     }
@@ -89,7 +89,7 @@ class OkHttpWebClient : IWebClient {
 
             return getResponse(parameters, response)
         } catch (e: Exception) {
-            return postRequestFailed(parameters, e)
+            return requestFailed(parameters, e) { post(parameters) }
         }
 
     }
@@ -100,7 +100,7 @@ class OkHttpWebClient : IWebClient {
 
             executeRequestAsync(parameters, request, callback)
         } catch (e: Exception) {
-            asyncPostRequestFailed(parameters, e, callback)
+            callback(requestFailed(parameters, e) { post(parameters) })
         }
 
     }
@@ -133,7 +133,7 @@ class OkHttpWebClient : IWebClient {
 
             return getResponse(parameters, response)
         } catch (e: Exception) {
-            return getRequestFailed(parameters, e)
+            return requestFailed(parameters, e) { head(parameters) }
         }
     }
 
@@ -143,7 +143,7 @@ class OkHttpWebClient : IWebClient {
 
             executeRequestAsync(parameters, request, callback)
         } catch (e: Exception) {
-            asyncGetRequestFailed(parameters, e, callback)
+            callback(requestFailed(parameters, e) { head(parameters) })
         }
 
     }
@@ -216,44 +216,14 @@ class OkHttpWebClient : IWebClient {
         })
     }
 
-    private fun getRequestFailed(parameters: RequestParameters, e: Exception): WebClientResponse {
+    private fun requestFailed(parameters: RequestParameters, e: Exception, methodToCallOnRetry: () -> WebClientResponse): WebClientResponse {
         if(shouldRetryConnection(parameters, e)) {
             prepareConnectionRetry(parameters)
-            return get(parameters)
+            return methodToCallOnRetry()
         }
         else {
             log.error("Could not request url " + parameters.url, e)
             return WebClientResponse(false, error = e)
-        }
-    }
-
-    private fun asyncGetRequestFailed(parameters: RequestParameters, e: Exception, callback: (response: WebClientResponse) -> Unit) {
-        if(shouldRetryConnection(parameters, e)) {
-            prepareConnectionRetry(parameters)
-            getAsync(parameters, callback)
-        }
-        else {
-            callback(WebClientResponse(false, error = e))
-        }
-    }
-
-    private fun postRequestFailed(parameters: RequestParameters, e: Exception): WebClientResponse {
-        if(shouldRetryConnection(parameters, e)) {
-            prepareConnectionRetry(parameters)
-            return post(parameters)
-        }
-        else {
-            return WebClientResponse(false, error = e)
-        }
-    }
-
-    private fun asyncPostRequestFailed(parameters: RequestParameters, e: Exception, callback: (response: WebClientResponse) -> Unit) {
-        if(shouldRetryConnection(parameters, e)) {
-            prepareConnectionRetry(parameters)
-            postAsync(parameters, callback)
-        }
-        else {
-            callback(WebClientResponse(false, error = e))
         }
     }
 
