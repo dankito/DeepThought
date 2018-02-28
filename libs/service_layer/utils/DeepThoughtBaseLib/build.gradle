@@ -28,7 +28,6 @@ dependencies {
     compile project(':DataServices')
     compile project(':NewsReader')
 
-    compile project(':TcpSocketClientCommunicator')
     compile project(':ConnectedDevicesService')
     compile project(':SyncManager')
     compile project(':Synchronization')
@@ -62,7 +61,6 @@ dependencies {
     testCompile "ch.qos.logback:logback-core:$logbackVersion"
     testCompile "ch.qos.logback:logback-classic:$logbackVersion"
 
-    testCompile project(':TcpSocketClientCommunicator')
     testCompile project(':LuceneSearchEngine')
     testCompile project(':JavaCouchbaseLiteEntityManager')
     testCompile project(':CouchbaseLiteSyncManager')
