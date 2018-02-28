@@ -5,18 +5,13 @@ import com.nhaarman.mockito_kotlin.anyOrNull
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
-import net.dankito.synchronization.database.EntityManagerConfiguration
-import net.dankito.synchronization.database.IEntityManager
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
-import net.dankito.synchronization.device.messaging.IMessenger
-import net.dankito.synchronization.device.messaging.tcp.PlainTcpMessenger
 import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
-import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
-import net.dankito.synchronization.device.messaging.message.DeviceInfo
-import net.dankito.util.web.IWebClient
-import net.dankito.deepthought.model.*
-import net.dankito.synchronization.model.enums.OsType
+import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
+import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.newsreader.model.ArticleSummary
@@ -30,9 +25,17 @@ import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.service.synchronization.*
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
+import net.dankito.synchronization.database.EntityManagerConfiguration
+import net.dankito.synchronization.database.IEntityManager
 import net.dankito.synchronization.device.discovery.udp.UdpDevicesDiscoverer
+import net.dankito.synchronization.device.messaging.IMessenger
+import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
+import net.dankito.synchronization.device.messaging.message.DeviceInfo
+import net.dankito.synchronization.device.messaging.tcp.PlainTcpMessenger
 import net.dankito.synchronization.model.*
+import net.dankito.synchronization.model.enums.OsType
 import net.dankito.util.ThreadPool
+import net.dankito.util.Version
 import net.dankito.util.hashing.HashService
 import net.dankito.util.hashing.IBase64Service
 import net.dankito.util.localization.Localization
@@ -41,6 +44,7 @@ import net.dankito.util.network.NetworkHelper
 import net.dankito.util.settings.ILocalSettingsStore
 import net.dankito.util.settings.LocalSettingsStoreBase
 import net.dankito.util.ui.dialog.IDialogService
+import net.dankito.util.web.IWebClient
 import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.utils.serialization.DeepThoughtJacksonJsonSerializer
 import net.dankito.utils.version.Versions
@@ -77,6 +81,10 @@ class CommunicationManagerTest {
         val RemoteOsType = OsType.DESKTOP
 
         const val IntegrationTestDevicesDiscoveryPrefix = "DeepThought_IntegrationTest"
+
+        val AppVersion = Version(1, 0, 0)
+
+        const val DataModelVersion = 1
 
         const val InitializationTimeoutInSeconds = 5L
         const val FindRemoteDeviceTimeoutInSeconds = 300L // it really takes a long time till Couchbase opens its listener port
@@ -238,7 +246,7 @@ class CommunicationManagerTest {
 
         localDataManager.addInitializationListener {
             localDevice = localDataManager.localDevice
-            localNetworkSettings = NetworkSettings(localDevice, localDataManager.localUser, IntegrationTestDevicesDiscoveryPrefix) // set different discovery message prefix to not interfere with production device in same local network
+            localNetworkSettings = NetworkSettings(localDevice, localDataManager.localUser, IntegrationTestDevicesDiscoveryPrefix, AppVersion, DataModelVersion) // set different discovery message prefix to not interfere with production device in same local network
 
             localSynchronizedChangesHandler = SynchronizedChangesHandler(localEntityManager, localEntityChangedNotifier)
 
@@ -273,7 +281,7 @@ class CommunicationManagerTest {
 
         remoteDataManager.addInitializationListener {
             remoteDevice = remoteDataManager.localDevice
-            remoteNetworkSettings = NetworkSettings(remoteDevice, remoteDataManager.localUser, IntegrationTestDevicesDiscoveryPrefix)
+            remoteNetworkSettings = NetworkSettings(remoteDevice, remoteDataManager.localUser, IntegrationTestDevicesDiscoveryPrefix, AppVersion, DataModelVersion)
 
             remoteSynchronizedChangesHandler = SynchronizedChangesHandler(remoteEntityManager, remoteEntityChangedNotifier)
 

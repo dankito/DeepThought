@@ -1,8 +1,9 @@
 package net.dankito.deepthought.files.synchronization
 
+import net.dankito.deepthought.model.DeepThoughtFileLink
+import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.synchronization.model.FileLink
 import net.dankito.synchronization.model.LocalFileInfo
-import net.dankito.service.data.messages.EntityChangeType
 import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
@@ -46,7 +47,7 @@ class FileSyncServiceIntegrationTest : FileSyncServiceIntegrationTestBase() {
         waitLatch.await(SynchronizeEntityTimeoutInSeconds, TimeUnit.SECONDS)
 
 
-        val synchronizedFile = remoteEntityManager.getEntityById(FileLink::class.java, fileId)
+        val synchronizedFile = remoteEntityManager.getEntityById(DeepThoughtFileLink::class.java, fileId)
         assertThat(synchronizedFile, notNullValue())
 
         val synchronizedLocalFileInfo = remoteFileManager.getStoredLocalFileInfo(synchronizedFile!!)
