@@ -6,6 +6,5 @@ targetCompatibility = "1.7"
 
 dependencies {
     compile project(':DataModel')
-    compile project(':EntityManager')
     compile project(':Utils')
 }
