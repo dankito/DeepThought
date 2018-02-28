@@ -1,10 +1,6 @@
-package net.dankito.data_access.network.communication
+package net.dankito.synchronization.device.messaging.tcp
 
-import net.dankito.data_access.network.communication.message.IMessageHandler
-import net.dankito.synchronization.device.messaging.tcp.IMessageSerializer
-import net.dankito.synchronization.device.messaging.tcp.IRequestReceiver
-import net.dankito.synchronization.device.messaging.tcp.RequestReceiver
-import net.dankito.synchronization.device.messaging.tcp.RequestReceiverCallback
+import net.dankito.synchronization.device.messaging.message.IMessageHandler
 import net.dankito.util.ThreadPool
 import net.dankito.util.network.SocketHandler
 import org.hamcrest.CoreMatchers.`is`

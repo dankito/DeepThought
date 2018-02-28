@@ -1,18 +1,17 @@
-package net.dankito.data_access.network.communication
+package net.dankito.synchronization.device.messaging.tcp
 
 import net.dankito.synchronization.database.IEntityManager
+import net.dankito.synchronization.device.messaging.IMessenger
 import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.synchronization.device.messaging.message.DeviceInfo
 import net.dankito.synchronization.device.messaging.message.Response
-import net.dankito.synchronization.device.messaging.IMessenger
-import net.dankito.synchronization.device.messaging.tcp.TcpSocketClientCommunicator
 import net.dankito.synchronization.model.*
 import net.dankito.synchronization.model.enums.OsType
 import net.dankito.util.ThreadPool
+import net.dankito.util.Version
 import net.dankito.util.hashing.HashService
 import net.dankito.util.hashing.IBase64Service
 import net.dankito.util.serialization.JacksonJsonSerializer
-import net.dankito.utils.version.Versions
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.After
@@ -46,7 +45,7 @@ class TcpSocketClientCommunicatorTest {
     fun setUp() {
         setUpRemoteDevice()
 
-        val networkSettings = NetworkSettings(remoteDevice, User("Local", UUID.randomUUID().toString()), IntegrationTestDevicesDiscoveryPrefix, Versions.AppVersion, Versions.DataModelVersion)
+        val networkSettings = NetworkSettings(remoteDevice, User("Local", UUID.randomUUID().toString()), IntegrationTestDevicesDiscoveryPrefix, AppVersion, DataModelVersion)
 
         underTest = TcpSocketClientCommunicator(networkSettings, Mockito.mock(IDeviceRegistrationHandler::class.java), Mockito.mock(IEntityManager::class.java),
                 JacksonJsonSerializer(), Mockito.mock(IBase64Service::class.java), HashService(), ThreadPool())
@@ -129,6 +128,10 @@ class TcpSocketClientCommunicatorTest {
         protected val DEVICE_OS_TYPE = OsType.DESKTOP
 
         const val IntegrationTestDevicesDiscoveryPrefix = "DeepThought_TcpSocketClientCommunicator_IntegrationTest"
+
+        val AppVersion = Version(1, 0, 0)
+
+        const val DataModelVersion = 1
     }
 
 }
