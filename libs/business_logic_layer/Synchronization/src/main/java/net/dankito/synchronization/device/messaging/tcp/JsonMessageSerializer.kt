@@ -1,5 +1,6 @@
 package net.dankito.synchronization.device.messaging.tcp
 
+import net.dankito.synchronization.device.messaging.MessengerConfig
 import net.dankito.synchronization.device.messaging.message.IMessageHandler
 import net.dankito.synchronization.device.messaging.message.Request
 import net.dankito.synchronization.device.messaging.message.Response
@@ -28,7 +29,7 @@ class JsonMessageSerializer(private val messageHandler: IMessageHandler, private
     }
 
     protected fun createRequestString(methodName: String, body: String?): String {
-        var requestString = methodName + CommunicationConfig.METHOD_NAME_AND_BODY_SEPARATOR
+        var requestString = methodName + MessengerConfig.METHOD_NAME_AND_BODY_SEPARATOR
 
         if(body != null) {
             requestString += body
@@ -40,7 +41,7 @@ class JsonMessageSerializer(private val messageHandler: IMessageHandler, private
 
     @Throws(Exception::class)
     override fun deserializeRequest(requestString: String): Request<*> {
-        val requestParts = requestString.split(CommunicationConfig.METHOD_NAME_AND_BODY_SEPARATOR.toRegex(), 2).toTypedArray()
+        val requestParts = requestString.split(MessengerConfig.METHOD_NAME_AND_BODY_SEPARATOR.toRegex(), 2).toTypedArray()
 
         val methodName = requestParts[0]
         var requestBody: Any? = null
@@ -99,7 +100,7 @@ class JsonMessageSerializer(private val messageHandler: IMessageHandler, private
     }
 
     protected fun getBytesFromString(string: String): ByteArray {
-        return string.toByteArray(CommunicationConfig.MESSAGE_CHARSET)
+        return string.toByteArray(MessengerConfig.MESSAGE_CHARSET)
     }
 
 }
