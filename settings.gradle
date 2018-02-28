@@ -39,6 +39,7 @@ include ':ConnectedDevicesService'
 include ':SearchEngine'
 include ':LuceneSearchEngine'
 
+include ':DeepThoughtSynchronization'
 include ':Synchronization'
 
 include ':EventBus'
@@ -98,6 +99,7 @@ project(':JavaPdfImporter').projectDir = "$rootDir/libs/service_layer/import_exp
 project(':AndroidPdfImporter').projectDir = "$rootDir/libs/service_layer/import_export/AndroidPdfImporter" as File
 
 
+project(':DeepThoughtSynchronization').projectDir = "$rootDir/libs/business_logic_layer/DeepThoughtSynchronization" as File
 project(':Synchronization').projectDir = "$rootDir/libs/business_logic_layer/Synchronization" as File
 
 project(':DataModel').projectDir = "$rootDir/libs/business_logic_layer/DataModel" as File
