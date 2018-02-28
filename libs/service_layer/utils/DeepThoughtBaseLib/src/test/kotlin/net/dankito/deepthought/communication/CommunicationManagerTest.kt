@@ -10,7 +10,7 @@ import net.dankito.synchronization.database.IEntityManager
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.synchronization.device.messaging.IMessenger
-import net.dankito.synchronization.device.messaging.tcp.TcpSocketClientCommunicator
+import net.dankito.synchronization.device.messaging.tcp.PlainTcpMessenger
 import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
 import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.synchronization.device.messaging.message.DeviceInfo
@@ -31,10 +31,7 @@ import net.dankito.service.synchronization.*
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.synchronization.device.discovery.udp.UdpDevicesDiscoverer
-import net.dankito.synchronization.model.DiscoveredDevice
-import net.dankito.synchronization.model.NetworkSetting
-import net.dankito.synchronization.model.NetworkSettings
-import net.dankito.synchronization.model.NetworkSettingsChangedListener
+import net.dankito.synchronization.model.*
 import net.dankito.util.ThreadPool
 import net.dankito.util.hashing.HashService
 import net.dankito.util.hashing.IBase64Service
@@ -250,7 +247,7 @@ class CommunicationManagerTest {
             localRegistrationHandler = createDeviceRegistrationHandler(localRegisterAtRemote, localPermitRemoteToSynchronize, localCorrectChallengeResponse, localDataManager,
                     localInitialSyncManager, localDialogService, localization)
 
-            localMessenger = TcpSocketClientCommunicator(localNetworkSettings, localRegistrationHandler, localEntityManager, serializer, base64Service, hashService, localThreadPool)
+            localMessenger = PlainTcpMessenger(localNetworkSettings, localRegistrationHandler, localEntityManager, serializer, base64Service, hashService, localThreadPool)
 
             localConnectedDevicesService = ConnectedDevicesService(localDevicesDiscoverer, localMessenger, localSyncManager, localRegistrationHandler, localNetworkSettings, localEntityManager)
 
@@ -287,7 +284,7 @@ class CommunicationManagerTest {
 //            remoteRegistrationHandler = spy<IDeviceRegistrationHandler>(registrationHandlerInstance)
             remoteRegistrationHandler = registrationHandlerInstance
 
-            remoteMessenger = TcpSocketClientCommunicator(remoteNetworkSettings, remoteRegistrationHandler, remoteEntityManager, serializer, base64Service, hashService, remoteThreadPool)
+            remoteMessenger = PlainTcpMessenger(remoteNetworkSettings, remoteRegistrationHandler, remoteEntityManager, serializer, base64Service, hashService, remoteThreadPool)
 
             remoteConnectedDevicesService = ConnectedDevicesService(remoteDevicesDiscoverer, remoteMessenger, remoteSyncManager, remoteRegistrationHandler, remoteNetworkSettings, remoteEntityManager)
 

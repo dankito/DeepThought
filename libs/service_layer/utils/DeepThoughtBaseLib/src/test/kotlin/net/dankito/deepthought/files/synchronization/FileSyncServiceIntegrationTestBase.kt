@@ -7,7 +7,7 @@ import com.nhaarman.mockito_kotlin.whenever
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
-import net.dankito.synchronization.device.messaging.tcp.TcpSocketClientCommunicator
+import net.dankito.synchronization.device.messaging.tcp.PlainTcpMessenger
 import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
 import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
@@ -341,7 +341,7 @@ abstract class FileSyncServiceIntegrationTestBase {
             localRegistrationHandler = createDeviceRegistrationHandler(localRegisterAtRemote, localPermitRemoteToSynchronize, localCorrectChallengeResponse, localDataManager,
                     localInitialSyncManager, localDialogService, localization)
 
-            localMessenger = TcpSocketClientCommunicator(localNetworkSettings, localRegistrationHandler, localEntityManager, localSerializer, base64Service, hashService, localThreadPool)
+            localMessenger = PlainTcpMessenger(localNetworkSettings, localRegistrationHandler, localEntityManager, localSerializer, base64Service, hashService, localThreadPool)
 
             localConnectedDevicesService = ConnectedDevicesService(localDevicesDiscoverer, localMessenger, localSyncManager, localRegistrationHandler, localNetworkSettings, localEntityManager)
 
@@ -401,7 +401,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 //            remoteRegistrationHandler = spy<IDeviceRegistrationHandler>(registrationHandlerInstance)
             remoteRegistrationHandler = registrationHandlerInstance
 
-            remoteMessenger = TcpSocketClientCommunicator(remoteNetworkSettings, remoteRegistrationHandler, remoteEntityManager, remoteSerializer, base64Service, hashService, remoteThreadPool)
+            remoteMessenger = PlainTcpMessenger(remoteNetworkSettings, remoteRegistrationHandler, remoteEntityManager, remoteSerializer, base64Service, hashService, remoteThreadPool)
 
             remoteConnectedDevicesService = ConnectedDevicesService(remoteDevicesDiscoverer, remoteMessenger, remoteSyncManager, remoteRegistrationHandler, remoteNetworkSettings, remoteEntityManager)
 

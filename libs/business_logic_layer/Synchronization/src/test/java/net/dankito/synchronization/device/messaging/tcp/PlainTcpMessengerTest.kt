@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
 
 
-class TcpSocketClientCommunicatorTest {
+class PlainTcpMessengerTest {
 
 
     private lateinit var underTest: IMessenger
@@ -47,7 +47,7 @@ class TcpSocketClientCommunicatorTest {
 
         val networkSettings = NetworkSettings(remoteDevice, User("Local", UUID.randomUUID().toString()), IntegrationTestDevicesDiscoveryPrefix, AppVersion, DataModelVersion)
 
-        underTest = TcpSocketClientCommunicator(networkSettings, Mockito.mock(IDeviceRegistrationHandler::class.java), Mockito.mock(IEntityManager::class.java),
+        underTest = PlainTcpMessenger(networkSettings, Mockito.mock(IDeviceRegistrationHandler::class.java), Mockito.mock(IEntityManager::class.java),
                 JacksonJsonSerializer(), Mockito.mock(IBase64Service::class.java), HashService(), ThreadPool())
 
         val countDownLatch = CountDownLatch(1)

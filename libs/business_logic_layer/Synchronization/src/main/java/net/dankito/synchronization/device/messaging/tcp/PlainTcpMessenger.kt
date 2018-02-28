@@ -17,8 +17,8 @@ import java.net.InetSocketAddress
 import java.net.SocketAddress
 
 
-class TcpSocketClientCommunicator(private val networkSettings: NetworkSettings, registrationHandler: IDeviceRegistrationHandler, entityManager: IEntityManager,
-                                  serializer: ISerializer, base64Service: IBase64Service, hashService: HashService, threadPool: IThreadPool) : IMessenger {
+class PlainTcpMessenger(private val networkSettings: NetworkSettings, registrationHandler: IDeviceRegistrationHandler, entityManager: IEntityManager,
+                        serializer: ISerializer, base64Service: IBase64Service, hashService: HashService, threadPool: IThreadPool) : IMessenger {
 
     private val requestSender: IRequestSender
 

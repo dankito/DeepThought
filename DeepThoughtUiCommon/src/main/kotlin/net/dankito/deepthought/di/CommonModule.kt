@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.data_access.filesystem.IFileStorageService
-import net.dankito.synchronization.device.messaging.tcp.TcpSocketClientCommunicator
+import net.dankito.synchronization.device.messaging.tcp.PlainTcpMessenger
 import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
 import net.dankito.deepthought.files.FileManager
@@ -168,9 +168,9 @@ open class CommonModule {
 
     @Provides
     @Singleton
-    open fun provideClientCommunicator(networkSettings: NetworkSettings, registrationHandler: IDeviceRegistrationHandler, entityManager: IEntityManager,
+    open fun provideMessenger(networkSettings: NetworkSettings, registrationHandler: IDeviceRegistrationHandler, entityManager: IEntityManager,
                                        serializer: ISerializer, base64Service: IBase64Service, hashService: HashService, threadPool: IThreadPool) : IMessenger {
-        return TcpSocketClientCommunicator(networkSettings, registrationHandler, entityManager, serializer, base64Service, hashService, threadPool)
+        return PlainTcpMessenger(networkSettings, registrationHandler, entityManager, serializer, base64Service, hashService, threadPool)
     }
 
     @Provides
