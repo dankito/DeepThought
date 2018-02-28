@@ -5,22 +5,16 @@ import com.nhaarman.mockito_kotlin.anyOrNull
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
-import net.dankito.synchronization.database.EntityManagerConfiguration
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
-import net.dankito.synchronization.device.messaging.IMessenger
-import net.dankito.util.network.SocketHandler
 import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
 import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
-import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
-import net.dankito.synchronization.device.messaging.message.DeviceInfo
 import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
 import net.dankito.deepthought.data.FilePersister
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.files.MimeTypeService
-import net.dankito.deepthought.model.*
-import net.dankito.synchronization.model.enums.OsType
+import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.deepthought.service.permissions.JavaPermissionsService
@@ -39,15 +33,23 @@ import net.dankito.service.synchronization.*
 import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
+import net.dankito.synchronization.database.EntityManagerConfiguration
 import net.dankito.synchronization.device.discovery.udp.UdpDevicesDiscoverer
+import net.dankito.synchronization.device.messaging.IMessenger
+import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
+import net.dankito.synchronization.device.messaging.message.DeviceInfo
+import net.dankito.synchronization.model.Device
 import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.synchronization.model.NetworkSettings
+import net.dankito.synchronization.model.User
+import net.dankito.synchronization.model.enums.OsType
 import net.dankito.util.ThreadPool
 import net.dankito.util.hashing.HashService
 import net.dankito.util.hashing.IBase64Service
 import net.dankito.util.localization.Localization
 import net.dankito.util.network.NetworkConnectivityManagerBase
 import net.dankito.util.network.NetworkHelper
+import net.dankito.util.network.SocketHandler
 import net.dankito.util.settings.ILocalSettingsStore
 import net.dankito.util.settings.LocalSettingsStoreBase
 import net.dankito.util.ui.dialog.IDialogService
@@ -330,7 +332,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         localDataManager.addInitializationListener {
             localDevice = localDataManager.localDevice
-            localNetworkSettings = NetworkSettings(localDevice, localDataManager.localUser, IntegrationTestDevicesDiscoveryPrefix) // set different discovery message prefix to not interfere with production device in same local network
+            localNetworkSettings = NetworkSettings(localDevice, localDataManager.localUser, IntegrationTestDevicesDiscoveryPrefix, Versions.AppVersion, Versions.DataModelVersion) // set different discovery message prefix to not interfere with production device in same local network
 
             localSynchronizedChangesHandler = SynchronizedChangesHandler(localEntityManager, localEntityChangedNotifier)
 
@@ -388,7 +390,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         remoteDataManager.addInitializationListener {
             remoteDevice = remoteDataManager.localDevice
-            remoteNetworkSettings = NetworkSettings(remoteDevice, remoteDataManager.localUser, IntegrationTestDevicesDiscoveryPrefix)
+            remoteNetworkSettings = NetworkSettings(remoteDevice, remoteDataManager.localUser, IntegrationTestDevicesDiscoveryPrefix, Versions.AppVersion, Versions.DataModelVersion)
 
             remoteSynchronizedChangesHandler = SynchronizedChangesHandler(remoteEntityManager, remoteEntityChangedNotifier)
 
