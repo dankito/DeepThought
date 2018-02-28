@@ -33,7 +33,7 @@ import net.dankito.service.data.TagService
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
-import net.dankito.service.synchronization.initialsync.InitialSyncManager
+import net.dankito.synchronization.database.sync.InitialSyncManager
 import net.dankito.util.IThreadPool
 import net.dankito.util.UrlUtil
 import net.dankito.util.localization.Localization

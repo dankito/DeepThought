@@ -24,7 +24,7 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.service.synchronization.*
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
-import net.dankito.service.synchronization.initialsync.InitialSyncManager
+import net.dankito.synchronization.database.sync.InitialSyncManager
 import net.dankito.synchronization.database.EntityManagerConfiguration
 import net.dankito.synchronization.database.IEntityManager
 import net.dankito.synchronization.device.discovery.udp.UdpDevicesDiscoverer

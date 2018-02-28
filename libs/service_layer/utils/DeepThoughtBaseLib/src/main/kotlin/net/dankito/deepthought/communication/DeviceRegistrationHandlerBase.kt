@@ -2,8 +2,8 @@ package net.dankito.data_access.network.communication.callback
 
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.service.data.DataManager
-import net.dankito.service.synchronization.initialsync.InitialSyncManager
-import net.dankito.service.synchronization.initialsync.model.DeepThoughtSyncInfo
+import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
+import net.dankito.synchronization.database.sync.DeepThoughtSyncInfo
 import net.dankito.synchronization.device.messaging.IMessenger
 import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.synchronization.device.messaging.message.RequestPermitSynchronizationResult
@@ -19,7 +19,7 @@ import net.dankito.util.ui.dialog.InputType
 import org.slf4j.LoggerFactory
 
 
-abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataManager, private val initialSyncManager: InitialSyncManager, protected val dialogService: IDialogService,
+abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataManager, private val initialSyncManager: DeepThoughtInitialSyncManager, protected val dialogService: IDialogService,
                                              protected val localization: Localization) : IDeviceRegistrationHandler {
 
     companion object {
@@ -157,7 +157,7 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
         try {
             val localUser = dataManager.localUser
 
-            val useCallerDatabaseIds = ! initialSyncManager.shouldUseLocalDatabaseIds(dataManager.deepThought, remoteSyncInfo)
+            val useCallerDatabaseIds = ! initialSyncManager.shouldUseLocalDatabaseIds(dataManager.deepThought.localUser, remoteSyncInfo)
             val useCallerUserName = ! initialSyncManager.shouldUseLocalUserName(localUser, remoteSyncInfo.user)
 
             // this is kind a dirty hack, newly synchronized device has to be added on both sides as otherwise it may gets overwritten. Don't know how to solve this otherwise

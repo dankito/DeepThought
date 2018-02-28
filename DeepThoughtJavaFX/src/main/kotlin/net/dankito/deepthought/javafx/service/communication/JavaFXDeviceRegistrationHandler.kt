@@ -4,7 +4,7 @@ import javafx.application.Platform
 import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.service.data.DataManager
-import net.dankito.service.synchronization.initialsync.InitialSyncManager
+import net.dankito.synchronization.database.sync.InitialSyncManager
 import net.dankito.synchronization.device.messaging.message.DeviceInfo
 import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.util.localization.Localization

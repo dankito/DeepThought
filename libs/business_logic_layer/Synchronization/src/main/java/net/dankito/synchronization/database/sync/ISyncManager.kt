@@ -1,4 +1,4 @@
-package net.dankito.service.synchronization
+package net.dankito.synchronization.database.sync
 
 import net.dankito.synchronization.model.Device
 import net.dankito.synchronization.model.DiscoveredDevice

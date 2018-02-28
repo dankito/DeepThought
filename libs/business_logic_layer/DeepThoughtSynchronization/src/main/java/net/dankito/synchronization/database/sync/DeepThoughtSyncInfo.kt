@@ -1,4 +1,4 @@
-package net.dankito.service.synchronization.initialsync.model
+package net.dankito.synchronization.database.sync
 
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.synchronization.model.SyncInfo

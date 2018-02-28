@@ -4,7 +4,7 @@ import net.dankito.synchronization.device.messaging.MessengerConfig
 import net.dankito.synchronization.device.messaging.IMessenger
 import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.service.synchronization.IConnectedDevicesService
-import net.dankito.service.synchronization.ISyncManager
+import net.dankito.synchronization.database.sync.ISyncManager
 import java.util.*
 
 

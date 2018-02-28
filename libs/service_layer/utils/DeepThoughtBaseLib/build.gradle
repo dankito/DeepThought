@@ -30,7 +30,7 @@ dependencies {
 
     compile project(':ConnectedDevicesService')
     compile project(':SyncManager')
-    compile project(':Synchronization')
+    compile project(':DeepThoughtSynchronization')
 
 //    compile project(':NorconexLanguageDetector')
 //    compile project(':OptimaizeLanguageDetector')

@@ -32,8 +32,9 @@ import net.dankito.service.search.LuceneSearchEngine
 import net.dankito.service.synchronization.*
 import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
-import net.dankito.service.synchronization.initialsync.InitialSyncManager
+import net.dankito.synchronization.database.sync.InitialSyncManager
 import net.dankito.synchronization.database.EntityManagerConfiguration
+import net.dankito.synchronization.database.sync.ISyncManager
 import net.dankito.synchronization.device.discovery.udp.UdpDevicesDiscoverer
 import net.dankito.synchronization.device.messaging.IMessenger
 import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler

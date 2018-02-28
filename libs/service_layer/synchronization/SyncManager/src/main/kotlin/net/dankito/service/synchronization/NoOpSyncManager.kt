@@ -1,5 +1,6 @@
 package net.dankito.service.synchronization
 
+import net.dankito.synchronization.database.sync.ISyncManager
 import net.dankito.synchronization.model.Device
 import net.dankito.synchronization.model.DiscoveredDevice
 

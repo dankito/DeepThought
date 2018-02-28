@@ -1,14 +1,16 @@
 package net.dankito.service.synchronization
 
+import net.dankito.synchronization.ConnectedDevicesServiceConfig
 import net.dankito.synchronization.database.IEntityManager
+import net.dankito.synchronization.database.sync.ISyncManager
+import net.dankito.synchronization.device.discovery.DevicesDiscovererConfig
+import net.dankito.synchronization.device.discovery.DevicesDiscovererListener
+import net.dankito.synchronization.device.discovery.IDevicesDiscoverer
 import net.dankito.synchronization.device.messaging.IMessenger
 import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.synchronization.device.messaging.message.RequestStartSynchronizationResponseBody
 import net.dankito.synchronization.device.messaging.message.RequestStartSynchronizationResult
 import net.dankito.synchronization.device.messaging.message.Response
-import net.dankito.synchronization.device.discovery.DevicesDiscovererConfig
-import net.dankito.synchronization.device.discovery.DevicesDiscovererListener
-import net.dankito.synchronization.device.discovery.IDevicesDiscoverer
 import net.dankito.synchronization.model.Device
 import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.synchronization.model.NetworkSettings

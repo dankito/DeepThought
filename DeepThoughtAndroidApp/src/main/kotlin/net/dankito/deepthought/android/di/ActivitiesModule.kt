@@ -25,7 +25,7 @@ import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
-import net.dankito.service.synchronization.initialsync.InitialSyncManager
+import net.dankito.synchronization.database.sync.InitialSyncManager
 import net.dankito.util.localization.Localization
 import net.dankito.util.network.INetworkConnectivityManager
 import net.dankito.util.network.NetworkHelper

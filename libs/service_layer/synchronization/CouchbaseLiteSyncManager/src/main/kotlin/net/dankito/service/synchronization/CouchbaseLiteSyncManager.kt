@@ -12,6 +12,7 @@ import net.dankito.deepthought.model.LocalSettings
 import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.jpa.couchbaselite.Dao
 import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
+import net.dankito.synchronization.database.sync.ISyncManager
 import net.dankito.synchronization.model.Device
 import net.dankito.synchronization.model.LocalFileInfo
 import okhttp3.OkHttpClient
