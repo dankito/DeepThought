@@ -1,7 +1,8 @@
 package net.dankito.data_access.network.communication.callback
 
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
-import net.dankito.deepthought.service.data.DataManager
+import net.dankito.deepthought.model.DeepThought
+import net.dankito.synchronization.database.IEntityManager
 import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.database.sync.DeepThoughtSyncInfo
 import net.dankito.synchronization.device.messaging.IMessenger
@@ -11,6 +12,7 @@ import net.dankito.synchronization.device.messaging.message.RespondToSynchroniza
 import net.dankito.synchronization.device.messaging.message.RespondToSynchronizationPermittingChallengeResult
 import net.dankito.synchronization.device.messaging.message.Response
 import net.dankito.synchronization.model.DiscoveredDevice
+import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.synchronization.model.SyncInfo
 import net.dankito.synchronization.model.UserSyncInfo
 import net.dankito.util.localization.Localization
@@ -19,7 +21,8 @@ import net.dankito.util.ui.dialog.InputType
 import org.slf4j.LoggerFactory
 
 
-abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataManager, private val initialSyncManager: DeepThoughtInitialSyncManager, protected val dialogService: IDialogService,
+abstract class DeviceRegistrationHandlerBase(protected val deepThought: DeepThought, protected val entityManager: IEntityManager, protected val networkSettings: NetworkSettings,
+                                             protected val initialSyncManager: DeepThoughtInitialSyncManager, protected val dialogService: IDialogService,
                                              protected val localization: Localization) : IDeviceRegistrationHandler {
 
     companion object {
@@ -90,11 +93,9 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
     }
 
     private fun createSyncInfo(useCallerDatabaseIds: Boolean? = null, useCallerUserName: Boolean? = null): SyncInfo {
-        val userSyncInfo = UserSyncInfo(dataManager.localUser)
+        val userSyncInfo = UserSyncInfo(networkSettings.localUser)
 
-        val deepThought = dataManager.deepThought
-
-        val articleSummaryExtractorConfigs = dataManager.entityManager.getAllEntitiesOfType(ArticleSummaryExtractorConfig::class.java)
+        val articleSummaryExtractorConfigs = entityManager.getAllEntitiesOfType(ArticleSummaryExtractorConfig::class.java)
 
         return DeepThoughtSyncInfo(deepThought.localDevice.id!!, userSyncInfo, useCallerDatabaseIds, useCallerUserName, articleSummaryExtractorConfigs)
     }
@@ -118,14 +119,14 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
 
         body.syncInfo?.let { syncInfo ->
             // this is kind a dirty hack, newly synchronized device has to be added on both sides as otherwise it may gets overwritten. Don't know how to solve this otherwise
-            initialSyncManager.syncUserDevices(dataManager.deepThought, syncInfo)
+            initialSyncManager.syncUserDevices(networkSettings.localHostDevice.id!!, networkSettings.localUser, syncInfo)
 
             if(syncInfo.useCallerDatabaseIds == false) {
                 if(syncInfo.useCallerUserName == false) { // ensure that localUser object gets changed only on one side, otherwise there will be a conflict and chances are 50:50 which version will be used
-                    initialSyncManager.syncUserInformationWithRemoteOnes(dataManager.localUser, syncInfo.user)
+                    initialSyncManager.syncUserInformationWithRemoteOnes(networkSettings.localUser, syncInfo.user)
                 }
 
-                initialSyncManager.syncLocalDatabaseIdsWithRemoteOnes(dataManager.deepThought, syncInfo)
+                initialSyncManager.syncLocalDatabaseIdsWithRemoteOnes(deepThought, syncInfo)
             }
         }
 
@@ -155,20 +156,20 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
         log.info("Permitted device to synchronize: $device")
 
         try {
-            val localUser = dataManager.localUser
+            val localUser = networkSettings.localUser
 
-            val useCallerDatabaseIds = ! initialSyncManager.shouldUseLocalDatabaseIds(dataManager.deepThought.localUser, remoteSyncInfo)
+            val useCallerDatabaseIds = ! initialSyncManager.shouldUseLocalDatabaseIds(networkSettings.localUser, remoteSyncInfo)
             val useCallerUserName = ! initialSyncManager.shouldUseLocalUserName(localUser, remoteSyncInfo.user)
 
             // this is kind a dirty hack, newly synchronized device has to be added on both sides as otherwise it may gets overwritten. Don't know how to solve this otherwise
-            initialSyncManager.syncUserDevices(dataManager.deepThought, remoteSyncInfo)
+            initialSyncManager.syncUserDevices(networkSettings.localHostDevice.id!!, networkSettings.localUser, remoteSyncInfo)
 
             if(useCallerDatabaseIds) {
                 if(useCallerUserName) { // ensure that localUser object gets changed only on one side, otherwise there will be a conflict and chances are 50:50 which version will be used
                     initialSyncManager.syncUserInformationWithRemoteOnes(localUser, remoteSyncInfo.user)
                 }
 
-                initialSyncManager.syncLocalDatabaseIdsWithRemoteOnes(dataManager.deepThought, remoteSyncInfo)
+                initialSyncManager.syncLocalDatabaseIdsWithRemoteOnes(deepThought, remoteSyncInfo)
             }
 
             callNewDeviceRegisteredListeners(device)

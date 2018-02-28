@@ -21,9 +21,11 @@ open class InitialSyncManager(protected var entityManager: IEntityManager, prote
     }
 
 
-    open fun syncUserDevices(localDeviceId: String, localUser: User, remoteSyncInfo: SyncInfo, remoteUser: UserSyncInfo) {
+    open fun syncUserDevices(localDeviceId: String, localUser: User, remoteSyncInfo: SyncInfo) {
         addSynchronizedDevice(localUser, remoteSyncInfo.localDeviceId)
         addSynchronizedDevice(localUser, localDeviceId) // fix: so that remote also sees us as synchronized device
+
+        val remoteUser = remoteSyncInfo.user
 
         remoteUser.synchronizedDevicesIds.forEach { addSynchronizedDevice(localUser, it) }
 

@@ -31,8 +31,10 @@ import net.dankito.service.data.TagService
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
+import net.dankito.synchronization.database.IEntityManager
 import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
+import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.util.IThreadPool
 import net.dankito.util.UrlUtil
 import net.dankito.util.localization.Localization
@@ -109,8 +111,9 @@ class JavaFXModule(private val primaryStage: Stage, private val flavorInstancePr
 
     @Provides
     @Singleton
-    fun provideDeviceRegistrationHandler(dataManager: DataManager, initialSyncManager: DeepThoughtInitialSyncManager, dialogService: IDialogService, localization: Localization) : IDeviceRegistrationHandler {
-        return JavaFXDeviceRegistrationHandler(dataManager, initialSyncManager, dialogService, localization)
+    fun provideDeviceRegistrationHandler(dataManager: DataManager, entityManager: IEntityManager, networkSettings: NetworkSettings, initialSyncManager: DeepThoughtInitialSyncManager,
+                                         dialogService: IDialogService, localization: Localization) : IDeviceRegistrationHandler {
+        return JavaFXDeviceRegistrationHandler(dataManager.deepThought, entityManager, networkSettings, initialSyncManager, dialogService, localization)
     }
 
     @Provides

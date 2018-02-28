@@ -24,8 +24,10 @@ import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
+import net.dankito.synchronization.database.IEntityManager
 import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
+import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.util.localization.Localization
 import net.dankito.util.network.INetworkConnectivityManager
 import net.dankito.util.network.NetworkHelper
@@ -148,9 +150,10 @@ class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
-    fun provideDeviceRegistrationHandler(context: Context, dataManager: DataManager, initialSyncManager: DeepThoughtInitialSyncManager, dialogService: IDialogService,
+    fun provideDeviceRegistrationHandler(context: Context, dataManager: DataManager, entityManager: IEntityManager, networkSettings: NetworkSettings,
+                                         initialSyncManager: DeepThoughtInitialSyncManager, dialogService: IDialogService,
                                          localization: Localization, snackbarService: SnackbarService) : IDeviceRegistrationHandler {
-        return AndroidDeviceRegistrationHandler(context, dataManager, initialSyncManager, dialogService, localization, snackbarService)
+        return AndroidDeviceRegistrationHandler(context, dataManager.deepThought, entityManager, networkSettings, initialSyncManager, dialogService, localization, snackbarService)
     }
 
     @Provides

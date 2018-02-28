@@ -5,19 +5,21 @@ import net.dankito.data_access.network.communication.callback.DeviceRegistration
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.service.SnackbarService
 import net.dankito.deepthought.android.service.StringUtil
-import net.dankito.deepthought.service.data.DataManager
+import net.dankito.deepthought.model.DeepThought
+import net.dankito.synchronization.database.IEntityManager
 import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.device.messaging.message.DeviceInfo
 import net.dankito.synchronization.model.DiscoveredDevice
+import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.synchronization.model.SyncInfo
 import net.dankito.util.localization.Localization
 import net.dankito.util.ui.dialog.ConfirmationDialogButton
 import net.dankito.util.ui.dialog.IDialogService
 
 
-class AndroidDeviceRegistrationHandler(private var context: Context, dataManager: DataManager, initialSyncManager: DeepThoughtInitialSyncManager, dialogService: IDialogService,
-                                       localization: Localization, private var snackbarService: SnackbarService)
-    : DeviceRegistrationHandlerBase(dataManager, initialSyncManager, dialogService, localization) {
+class AndroidDeviceRegistrationHandler(private var context: Context, deepThought: DeepThought, entityManager: IEntityManager, networkSettings: NetworkSettings, initialSyncManager: DeepThoughtInitialSyncManager,
+                                       dialogService: IDialogService, localization: Localization, private var snackbarService: SnackbarService)
+    : DeviceRegistrationHandlerBase(deepThought, entityManager, networkSettings, initialSyncManager, dialogService, localization) {
 
 
     override fun shouldPermitSynchronizingWithDevice(remoteDeviceInfo: DeviceInfo, callback: (remoteDeviceInfo: DeviceInfo, permitsSynchronization: Boolean) -> Unit) {

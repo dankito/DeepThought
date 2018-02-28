@@ -9,11 +9,6 @@ import net.dankito.util.localization.Localization
 
 class DeepThoughtInitialSyncManager(entityManager: IEntityManager, localization: Localization) : InitialSyncManager(entityManager, localization) {
 
-    fun syncUserDevices(localDeepThought: DeepThought, remoteSyncInfo: SyncInfo) {
-        syncUserDevices(localDeepThought.localDevice.id!!, localDeepThought.localUser, remoteSyncInfo, remoteSyncInfo.user)
-    }
-
-
     fun syncLocalDatabaseIdsWithRemoteOnes(localDeepThought: DeepThought, remoteSyncInfo: SyncInfo) {
         // do not sync DeepThought as otherwise e.g. localDevice gets overwritten
 
