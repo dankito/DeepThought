@@ -13,7 +13,6 @@ sourceSets {
 
 dependencies {
     compile project(':DeepThoughtBaseLib')
-    compile project(':EntityManager')
     compile project(':DataManager')
     compile project(':LuceneSearchEngine')
 

@@ -32,7 +32,6 @@ include ':AndroidPdfImporter'
 include ':DataManager'
 include ':DataServices'
 
-include ':SyncManager'
 include ':CouchbaseLiteSyncManager'
 include ':ConnectedDevicesService'
 
@@ -57,7 +56,6 @@ include ':AndroidUdpDevicesDiscoverer'
 include ':FileStorageService'
 include ':AndroidFileStorageService'
 
-include ':EntityManager'
 include ':CouchbaseLiteEntityManagerBase'
 include ':JavaCouchbaseLiteEntityManager'
 include ':AndroidCouchbaseLiteEntityManager'
@@ -79,7 +77,6 @@ project(':FeedAddressExtractor').projectDir = "$rootDir/libs/news/FeedAddressExt
 project(':DataManager').projectDir = "$rootDir/libs/service_layer/data/DataManager" as File
 project(':DataServices').projectDir = "$rootDir/libs/service_layer/data/DataServices" as File
 
-project(':SyncManager').projectDir = "$rootDir/libs/service_layer/synchronization/SyncManager" as File
 project(':CouchbaseLiteSyncManager').projectDir = "$rootDir/libs/service_layer/synchronization/CouchbaseLiteSyncManager" as File
 project(':ConnectedDevicesService').projectDir = "$rootDir/libs/service_layer/synchronization/ConnectedDevicesService" as File
 
@@ -109,7 +106,6 @@ project(':AndroidUdpDevicesDiscoverer').projectDir = "$rootDir/libs/data_access_
 project(':FileStorageService').projectDir = "$rootDir/libs/data_access_layer/filesystem/FileStorageService" as File
 project(':AndroidFileStorageService').projectDir = "$rootDir/libs/data_access_layer/filesystem/AndroidFileStorageService" as File
 
-project(':EntityManager').projectDir = "$rootDir/libs/data_access_layer/database/EntityManager" as File
 project(':CouchbaseLiteEntityManagerBase').projectDir = "$rootDir/libs/data_access_layer/database/CouchbaseLiteEntityManagerBase" as File
 project(':JavaCouchbaseLiteEntityManager').projectDir = "$rootDir/libs/data_access_layer/database/JavaCouchbaseLiteEntityManager" as File
 project(':AndroidCouchbaseLiteEntityManager').projectDir = "$rootDir/libs/data_access_layer/database/AndroidCouchbaseLiteEntityManager" as File
