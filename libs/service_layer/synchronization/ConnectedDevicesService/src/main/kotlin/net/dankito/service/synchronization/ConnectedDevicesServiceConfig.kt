@@ -7,4 +7,6 @@ object ConnectedDevicesServiceConfig {
 
     const val CHECK_FOR_DEVICES_INTERVAL_MILLIS = 2000
 
+    const val DefaultDeviceDiscoveryMessagePrefix = "DeepThought"
+
 }

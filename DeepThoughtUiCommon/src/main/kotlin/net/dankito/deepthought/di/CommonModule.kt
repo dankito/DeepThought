@@ -4,7 +4,6 @@ import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.data_access.filesystem.IFileStorageService
-import net.dankito.data_access.network.communication.CommunicationConfig
 import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
 import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
@@ -30,10 +29,7 @@ import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.LuceneSearchEngine
-import net.dankito.service.synchronization.ConnectedDevicesService
-import net.dankito.service.synchronization.CouchbaseLiteSyncManager
-import net.dankito.service.synchronization.IConnectedDevicesService
-import net.dankito.service.synchronization.ISyncManager
+import net.dankito.service.synchronization.*
 import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
@@ -167,7 +163,7 @@ open class CommonModule {
     @Provides
     @Singleton
     open fun provideNetworkSettings(dataManager: DataManager) : NetworkSettings {
-        return NetworkSettings(dataManager.localDevice, dataManager.localUser, CommunicationConfig.DefaultDeviceDiscoveryMessagePrefix, Versions.AppVersion, Versions.DataModelVersion)
+        return NetworkSettings(dataManager.localDevice, dataManager.localUser, ConnectedDevicesServiceConfig.DefaultDeviceDiscoveryMessagePrefix, Versions.AppVersion, Versions.DataModelVersion)
     }
 
     @Provides
