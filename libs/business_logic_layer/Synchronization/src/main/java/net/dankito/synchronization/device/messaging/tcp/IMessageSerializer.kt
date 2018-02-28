@@ -1,4 +1,4 @@
-package net.dankito.data_access.network.communication
+package net.dankito.synchronization.device.messaging.tcp
 
 import net.dankito.synchronization.device.messaging.message.Request
 import net.dankito.synchronization.device.messaging.message.Response

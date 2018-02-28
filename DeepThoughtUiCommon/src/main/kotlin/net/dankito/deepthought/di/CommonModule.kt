@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.data_access.filesystem.IFileStorageService
-import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
+import net.dankito.synchronization.device.messaging.tcp.TcpSocketClientCommunicator
 import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
 import net.dankito.deepthought.files.FileManager

@@ -10,7 +10,7 @@ import net.dankito.synchronization.database.IEntityManager
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.synchronization.device.messaging.IMessenger
-import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
+import net.dankito.synchronization.device.messaging.tcp.TcpSocketClientCommunicator
 import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
 import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.synchronization.device.messaging.message.DeviceInfo

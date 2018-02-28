@@ -5,6 +5,7 @@ import net.dankito.synchronization.device.messaging.callback.IDeviceRegistration
 import net.dankito.synchronization.device.messaging.message.DeviceInfo
 import net.dankito.synchronization.device.messaging.message.Response
 import net.dankito.synchronization.device.messaging.IMessenger
+import net.dankito.synchronization.device.messaging.tcp.TcpSocketClientCommunicator
 import net.dankito.synchronization.model.*
 import net.dankito.synchronization.model.enums.OsType
 import net.dankito.util.ThreadPool
