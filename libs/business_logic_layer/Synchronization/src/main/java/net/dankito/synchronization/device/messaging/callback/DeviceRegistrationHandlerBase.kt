@@ -1,12 +1,7 @@
-package net.dankito.data_access.network.communication.callback
+package net.dankito.synchronization.device.messaging.callback
 
-import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
-import net.dankito.deepthought.model.DeepThought
 import net.dankito.synchronization.database.IEntityManager
-import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
-import net.dankito.synchronization.database.sync.DeepThoughtSyncInfo
 import net.dankito.synchronization.device.messaging.IMessenger
-import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.synchronization.device.messaging.message.RequestPermitSynchronizationResult
 import net.dankito.synchronization.device.messaging.message.RespondToSynchronizationPermittingChallengeResponseBody
 import net.dankito.synchronization.device.messaging.message.RespondToSynchronizationPermittingChallengeResult
