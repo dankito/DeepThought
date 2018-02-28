@@ -4,7 +4,6 @@ import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.data_access.filesystem.IFileStorageService
-import net.dankito.synchronization.device.messaging.tcp.PlainTcpMessenger
 import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
 import net.dankito.deepthought.files.FileManager
@@ -29,15 +28,19 @@ import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.LuceneSearchEngine
-import net.dankito.service.synchronization.*
+import net.dankito.service.synchronization.ConnectedDevicesService
+import net.dankito.service.synchronization.CouchbaseLiteSyncManager
+import net.dankito.service.synchronization.IConnectedDevicesService
 import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
-import net.dankito.synchronization.database.sync.InitialSyncManager
+import net.dankito.synchronization.ConnectedDevicesServiceConfig
 import net.dankito.synchronization.database.IEntityManager
+import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.database.sync.ISyncManager
 import net.dankito.synchronization.device.discovery.IDevicesDiscoverer
 import net.dankito.synchronization.device.messaging.IMessenger
 import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
+import net.dankito.synchronization.device.messaging.tcp.PlainTcpMessenger
 import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.util.IThreadPool
 import net.dankito.util.hashing.HashService
@@ -176,8 +179,8 @@ open class CommonModule {
 
     @Provides
     @Singleton
-    open fun provideInitialSyncManager(entityManager: IEntityManager, localization: Localization) : InitialSyncManager {
-        return InitialSyncManager(entityManager, localization)
+    open fun provideInitialSyncManager(entityManager: IEntityManager, localization: Localization) : DeepThoughtInitialSyncManager {
+        return DeepThoughtInitialSyncManager(entityManager, localization)
     }
 
     @Provides

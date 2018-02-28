@@ -4,7 +4,7 @@ import javafx.application.Platform
 import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.service.data.DataManager
-import net.dankito.synchronization.database.sync.InitialSyncManager
+import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.device.messaging.message.DeviceInfo
 import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.util.localization.Localization
@@ -13,7 +13,7 @@ import net.dankito.util.ui.dialog.IDialogService
 import tornadofx.*
 
 
-class JavaFXDeviceRegistrationHandler(dataManager: DataManager, initialSyncManager: InitialSyncManager, dialogService: IDialogService, localization: Localization)
+class JavaFXDeviceRegistrationHandler(dataManager: DataManager, initialSyncManager: DeepThoughtInitialSyncManager, dialogService: IDialogService, localization: Localization)
     : DeviceRegistrationHandlerBase(dataManager, initialSyncManager, dialogService, localization) {
 
     override fun shouldPermitSynchronizingWithDevice(remoteDeviceInfo: DeviceInfo, callback: (remoteDeviceInfo: DeviceInfo, permitsSynchronization: Boolean) -> Unit) {

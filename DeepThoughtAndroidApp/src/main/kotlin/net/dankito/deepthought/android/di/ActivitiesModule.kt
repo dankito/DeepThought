@@ -3,7 +3,6 @@ package net.dankito.deepthought.android.di
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.deepthought.android.appstart.AndroidAppInitializer
 import net.dankito.deepthought.android.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.android.dialogs.AndroidDialogService
@@ -25,14 +24,15 @@ import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
-import net.dankito.synchronization.database.sync.InitialSyncManager
+import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
+import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.util.localization.Localization
 import net.dankito.util.network.INetworkConnectivityManager
 import net.dankito.util.network.NetworkHelper
 import net.dankito.util.settings.ILocalSettingsStore
 import net.dankito.util.ui.IApplicationsService
-import net.dankito.utils.ui.IClipboardService
 import net.dankito.util.ui.dialog.IDialogService
+import net.dankito.utils.ui.IClipboardService
 import javax.inject.Singleton
 
 
@@ -148,7 +148,7 @@ class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
-    fun provideDeviceRegistrationHandler(context: Context, dataManager: DataManager, initialSyncManager: InitialSyncManager, dialogService: IDialogService,
+    fun provideDeviceRegistrationHandler(context: Context, dataManager: DataManager, initialSyncManager: DeepThoughtInitialSyncManager, dialogService: IDialogService,
                                          localization: Localization, snackbarService: SnackbarService) : IDeviceRegistrationHandler {
         return AndroidDeviceRegistrationHandler(context, dataManager, initialSyncManager, dialogService, localization, snackbarService)
     }

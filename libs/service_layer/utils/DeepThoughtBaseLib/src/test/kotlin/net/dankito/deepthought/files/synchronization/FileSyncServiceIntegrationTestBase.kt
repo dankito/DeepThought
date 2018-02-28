@@ -7,7 +7,6 @@ import com.nhaarman.mockito_kotlin.whenever
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
-import net.dankito.synchronization.device.messaging.tcp.PlainTcpMessenger
 import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
 import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
@@ -29,16 +28,20 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.LuceneSearchEngine
-import net.dankito.service.synchronization.*
+import net.dankito.service.synchronization.ConnectedDevicesService
+import net.dankito.service.synchronization.CouchbaseLiteSyncManager
+import net.dankito.service.synchronization.IConnectedDevicesService
+import net.dankito.service.synchronization.KnownSynchronizedDevicesListener
 import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
-import net.dankito.synchronization.database.sync.InitialSyncManager
 import net.dankito.synchronization.database.EntityManagerConfiguration
+import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.database.sync.ISyncManager
 import net.dankito.synchronization.device.discovery.udp.UdpDevicesDiscoverer
 import net.dankito.synchronization.device.messaging.IMessenger
 import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.synchronization.device.messaging.message.DeviceInfo
+import net.dankito.synchronization.device.messaging.tcp.PlainTcpMessenger
 import net.dankito.synchronization.model.Device
 import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.synchronization.model.NetworkSettings
@@ -152,7 +155,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     protected val localDialogService = mock<IDialogService>()
 
-    protected val localInitialSyncManager = InitialSyncManager(localEntityManager, localization)
+    protected val localInitialSyncManager = DeepThoughtInitialSyncManager(localEntityManager, localization)
 
     protected val localRegisterAtRemote = AtomicBoolean(false)
     protected val localPermitRemoteToSynchronize = AtomicBoolean(false)
@@ -248,7 +251,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     protected val remoteDialogService = mock<IDialogService>()
 
-    protected val remoteInitialSyncManager = InitialSyncManager(remoteEntityManager, localization)
+    protected val remoteInitialSyncManager = DeepThoughtInitialSyncManager(remoteEntityManager, localization)
 
     protected val remoteRegisterAtRemote = AtomicBoolean(false)
     protected val remotePermitRemoteToSynchronize = AtomicBoolean(false)
@@ -446,7 +449,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
 
     private fun createDeviceRegistrationHandler(registerAtRemote: AtomicBoolean, permitRemoteToSynchronize: AtomicBoolean, correctChallengeResponse: AtomicReference<String>,
-                                                dataManager: DataManager, initialSyncManager: InitialSyncManager,
+                                                dataManager: DataManager, initialSyncManager: DeepThoughtInitialSyncManager,
                                                 dialogService: IDialogService, localization: Localization): DeviceRegistrationHandlerBase {
         return object : DeviceRegistrationHandlerBase(dataManager, initialSyncManager, dialogService, localization) {
             override fun showUnknownDeviceDiscoveredView(unknownDevice: DiscoveredDevice, callback: (Boolean, Boolean) -> Unit) {

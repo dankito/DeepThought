@@ -24,9 +24,9 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.service.synchronization.*
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
-import net.dankito.synchronization.database.sync.InitialSyncManager
 import net.dankito.synchronization.database.EntityManagerConfiguration
 import net.dankito.synchronization.database.IEntityManager
+import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.device.discovery.udp.UdpDevicesDiscoverer
 import net.dankito.synchronization.device.messaging.IMessenger
 import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
@@ -132,7 +132,7 @@ class CommunicationManagerTest {
 
     private lateinit var localDialogService: IDialogService
 
-    private lateinit var localInitialSyncManager: InitialSyncManager
+    private lateinit var localInitialSyncManager: DeepThoughtInitialSyncManager
 
     private val localRegisterAtRemote = AtomicBoolean(false)
     private val localPermitRemoteToSynchronize = AtomicBoolean(false)
@@ -191,7 +191,7 @@ class CommunicationManagerTest {
 
     private lateinit var remoteDialogService: IDialogService
 
-    private lateinit var remoteInitialSyncManager: InitialSyncManager
+    private lateinit var remoteInitialSyncManager: DeepThoughtInitialSyncManager
 
     private val remoteRegisterAtRemote = AtomicBoolean(false)
     private val remotePermitRemoteToSynchronize = AtomicBoolean(false)
@@ -240,7 +240,7 @@ class CommunicationManagerTest {
         localDataManager = DataManager(localEntityManager, entityManagerConfiguration, DefaultDataInitializer(localPlatformConfiguration, localization), localPlatformConfiguration)
 
         localDialogService = mock<IDialogService>()
-        localInitialSyncManager = InitialSyncManager(localEntityManager, localization)
+        localInitialSyncManager = DeepThoughtInitialSyncManager(localEntityManager, localization)
 
         val initializationLatch = CountDownLatch(1)
 
@@ -275,7 +275,7 @@ class CommunicationManagerTest {
         remoteDataManager = DataManager(remoteEntityManager, entityManagerConfiguration, DefaultDataInitializer(remotePlatformConfiguration, localization), remotePlatformConfiguration)
 
         remoteDialogService = mock<IDialogService>()
-        remoteInitialSyncManager = InitialSyncManager(remoteEntityManager, localization)
+        remoteInitialSyncManager = DeepThoughtInitialSyncManager(remoteEntityManager, localization)
 
         val initializationLatch = CountDownLatch(1)
 
@@ -887,7 +887,7 @@ class CommunicationManagerTest {
 
 
     private fun createDeviceRegistrationHandler(registerAtRemote: AtomicBoolean, permitRemoteToSynchronize: AtomicBoolean, correctChallengeResponse: AtomicReference<String>,
-                                                dataManager: DataManager, initialSyncManager: InitialSyncManager,
+                                                dataManager: DataManager, initialSyncManager: DeepThoughtInitialSyncManager,
                                                 dialogService: IDialogService, localization: Localization): DeviceRegistrationHandlerBase {
         return object : DeviceRegistrationHandlerBase(dataManager, initialSyncManager, dialogService, localization) {
             override fun showUnknownDeviceDiscoveredView(unknownDevice: DiscoveredDevice, callback: (Boolean, Boolean) -> Unit) {

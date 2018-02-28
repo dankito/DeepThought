@@ -6,7 +6,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.service.SnackbarService
 import net.dankito.deepthought.android.service.StringUtil
 import net.dankito.deepthought.service.data.DataManager
-import net.dankito.synchronization.database.sync.InitialSyncManager
+import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.device.messaging.message.DeviceInfo
 import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.synchronization.model.SyncInfo
@@ -15,7 +15,7 @@ import net.dankito.util.ui.dialog.ConfirmationDialogButton
 import net.dankito.util.ui.dialog.IDialogService
 
 
-class AndroidDeviceRegistrationHandler(private var context: Context, dataManager: DataManager, initialSyncManager: InitialSyncManager, dialogService: IDialogService,
+class AndroidDeviceRegistrationHandler(private var context: Context, dataManager: DataManager, initialSyncManager: DeepThoughtInitialSyncManager, dialogService: IDialogService,
                                        localization: Localization, private var snackbarService: SnackbarService)
     : DeviceRegistrationHandlerBase(dataManager, initialSyncManager, dialogService, localization) {
 

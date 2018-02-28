@@ -3,8 +3,6 @@ package net.dankito.deepthought.javafx.di
 import dagger.Module
 import dagger.Provides
 import javafx.stage.Stage
-import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
-import net.dankito.util.web.IWebClient
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.data.SourcePersister
@@ -33,7 +31,8 @@ import net.dankito.service.data.TagService
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
-import net.dankito.synchronization.database.sync.InitialSyncManager
+import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
+import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.util.IThreadPool
 import net.dankito.util.UrlUtil
 import net.dankito.util.localization.Localization
@@ -42,8 +41,9 @@ import net.dankito.util.network.JavaNetworkConnectivityManager
 import net.dankito.util.network.NetworkHelper
 import net.dankito.util.settings.ILocalSettingsStore
 import net.dankito.util.ui.IApplicationsService
-import net.dankito.utils.ui.IClipboardService
 import net.dankito.util.ui.dialog.IDialogService
+import net.dankito.util.web.IWebClient
+import net.dankito.utils.ui.IClipboardService
 import javax.inject.Singleton
 
 
@@ -109,7 +109,7 @@ class JavaFXModule(private val primaryStage: Stage, private val flavorInstancePr
 
     @Provides
     @Singleton
-    fun provideDeviceRegistrationHandler(dataManager: DataManager, initialSyncManager: InitialSyncManager, dialogService: IDialogService, localization: Localization) : IDeviceRegistrationHandler {
+    fun provideDeviceRegistrationHandler(dataManager: DataManager, initialSyncManager: DeepThoughtInitialSyncManager, dialogService: IDialogService, localization: Localization) : IDeviceRegistrationHandler {
         return JavaFXDeviceRegistrationHandler(dataManager, initialSyncManager, dialogService, localization)
     }
 
