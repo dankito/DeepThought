@@ -1,11 +1,11 @@
 package net.dankito.service.synchronization
 
 import net.dankito.synchronization.database.IEntityManager
-import net.dankito.synchronization.device.communication.IClientCommunicator
-import net.dankito.synchronization.device.communication.callback.IDeviceRegistrationHandler
-import net.dankito.synchronization.device.communication.message.RequestStartSynchronizationResponseBody
-import net.dankito.synchronization.device.communication.message.RequestStartSynchronizationResult
-import net.dankito.synchronization.device.communication.message.Response
+import net.dankito.synchronization.device.messaging.IMessenger
+import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
+import net.dankito.synchronization.device.messaging.message.RequestStartSynchronizationResponseBody
+import net.dankito.synchronization.device.messaging.message.RequestStartSynchronizationResult
+import net.dankito.synchronization.device.messaging.message.Response
 import net.dankito.synchronization.device.discovery.DevicesDiscovererConfig
 import net.dankito.synchronization.device.discovery.DevicesDiscovererListener
 import net.dankito.synchronization.device.discovery.IDevicesDiscoverer
@@ -20,7 +20,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 
 // TODO: replace IEntityManager with DevicesService
-class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer, private val clientCommunicator: IClientCommunicator, private val syncManager: ISyncManager,
+class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer, private val messenger: IMessenger, private val syncManager: ISyncManager,
                               private val registrationHandler: IDeviceRegistrationHandler, private val networkSettings: NetworkSettings, private val entityManager: IEntityManager)
     : IConnectedDevicesService {
 
@@ -61,7 +61,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
 
         registrationHandler.addIgnoreDeviceListener { remoteDevice -> addDeviceToIgnoreList(remoteDevice) }
 
-        clientCommunicator.addRemoteRequestedToStartSynchronizationListener { remoteDevice -> startSynchronizingWithDevice(remoteDevice) }
+        messenger.addRemoteRequestedToStartSynchronizationListener { remoteDevice -> startSynchronizingWithDevice(remoteDevice) }
     }
 
     override fun start() {
@@ -176,7 +176,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
 
         devicesPendingStartSynchronization.put(deviceInfoKey, device)
 
-        clientCommunicator.requestStartSynchronization(device) { response ->
+        messenger.requestStartSynchronization(device) { response ->
             handleRequestStartSynchronizationResponse(response, device, deviceInfoKey)
         }
     }
@@ -244,7 +244,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
         synchronized(networkSettings) {
             if(networkSettings.didShowNotificationToUserForUnknownDevice(device) == false) {
                 networkSettings.addUnknownDeviceNotificationShownToUser(device)
-                registrationHandler.showUnknownDeviceDiscovered(clientCommunicator, device)
+                registrationHandler.showUnknownDeviceDiscovered(messenger, device)
             }
         }
     }

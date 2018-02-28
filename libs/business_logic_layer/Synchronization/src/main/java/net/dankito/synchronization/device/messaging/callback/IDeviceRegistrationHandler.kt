@@ -1,7 +1,7 @@
-package net.dankito.synchronization.device.communication.callback
+package net.dankito.synchronization.device.messaging.callback
 
-import net.dankito.synchronization.device.communication.IClientCommunicator
-import net.dankito.synchronization.device.communication.message.DeviceInfo
+import net.dankito.synchronization.device.messaging.IMessenger
+import net.dankito.synchronization.device.messaging.message.DeviceInfo
 import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.synchronization.model.SyncInfo
 
@@ -9,9 +9,9 @@ import net.dankito.synchronization.model.SyncInfo
 interface IDeviceRegistrationHandler {
 
     /*
-     *  To avoid circular dependency circle we cannot pass IClientCommunicator to DeviceRegistrationHandlerBase's constructor, so we pass it as method parameter
+     *  To avoid circular dependency circle we cannot pass IMessenger to DeviceRegistrationHandlerBase's constructor, so we pass it as method parameter
      */
-    fun showUnknownDeviceDiscovered(clientCommunicator: IClientCommunicator, unknownDevice: DiscoveredDevice)
+    fun showUnknownDeviceDiscovered(messenger: IMessenger, unknownDevice: DiscoveredDevice)
 
     fun unknownDeviceDisconnected(disconnectedDevice: DiscoveredDevice)
 

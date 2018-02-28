@@ -38,9 +38,9 @@ import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHa
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.synchronization.database.IEntityManager
-import net.dankito.synchronization.device.communication.IClientCommunicator
-import net.dankito.synchronization.device.communication.callback.IDeviceRegistrationHandler
 import net.dankito.synchronization.device.discovery.IDevicesDiscoverer
+import net.dankito.synchronization.device.messaging.IMessenger
+import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.util.IThreadPool
 import net.dankito.util.hashing.HashService
@@ -173,7 +173,7 @@ open class CommonModule {
     @Provides
     @Singleton
     open fun provideClientCommunicator(networkSettings: NetworkSettings, registrationHandler: IDeviceRegistrationHandler, entityManager: IEntityManager,
-                                       serializer: ISerializer, base64Service: IBase64Service, hashService: HashService, threadPool: IThreadPool) : IClientCommunicator {
+                                       serializer: ISerializer, base64Service: IBase64Service, hashService: HashService, threadPool: IThreadPool) : IMessenger {
         return TcpSocketClientCommunicator(networkSettings, registrationHandler, entityManager, serializer, base64Service, hashService, threadPool)
     }
 
@@ -197,16 +197,16 @@ open class CommonModule {
 
     @Provides
     @Singleton
-    open fun provideConnectedDevicesService(devicesDiscoverer: IDevicesDiscoverer, clientCommunicator: IClientCommunicator, syncManager: ISyncManager, registrationHandler: IDeviceRegistrationHandler,
+    open fun provideConnectedDevicesService(devicesDiscoverer: IDevicesDiscoverer, messenger: IMessenger, syncManager: ISyncManager, registrationHandler: IDeviceRegistrationHandler,
                                             networkSettings: NetworkSettings, entityManager: IEntityManager) : IConnectedDevicesService {
-        return ConnectedDevicesService(devicesDiscoverer, clientCommunicator, syncManager, registrationHandler, networkSettings, entityManager)
+        return ConnectedDevicesService(devicesDiscoverer, messenger, syncManager, registrationHandler, networkSettings, entityManager)
     }
 
     @Provides
     @Singleton
-    open fun provideCommunicationManager(connectedDevicesService: IConnectedDevicesService, syncManager: ISyncManager, clientCommunicator: IClientCommunicator, networkSettings: NetworkSettings)
+    open fun provideCommunicationManager(connectedDevicesService: IConnectedDevicesService, syncManager: ISyncManager, messenger: IMessenger, networkSettings: NetworkSettings)
             : ICommunicationManager {
-        return CommunicationManager(connectedDevicesService, syncManager, clientCommunicator, networkSettings)
+        return CommunicationManager(connectedDevicesService, syncManager, messenger, networkSettings)
     }
 
 }

@@ -15,7 +15,7 @@ import kotlin.concurrent.schedule
  *
  * To provide a more smooth application start up, we wait till all base data is retrieved.
  * Therefore after DataManager is initialized we give application some time to show initial data
- * before we start communicator classes like @see DevicesDiscoverer, @see IClientCommunicator, @see ISyncManager, ...
+ * before we start communicator classes like @see DevicesDiscoverer, @see IMessenger, @see ISyncManager, ...
  */
 abstract class CommunicationManagerStarterBase(dataManager: DataManager) {
 

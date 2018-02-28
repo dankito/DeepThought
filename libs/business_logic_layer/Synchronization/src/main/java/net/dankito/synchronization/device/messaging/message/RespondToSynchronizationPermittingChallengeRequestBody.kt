@@ -1,4 +1,4 @@
-package net.dankito.synchronization.device.communication.message
+package net.dankito.synchronization.device.messaging.message
 
 import net.dankito.synchronization.model.SyncInfo
 

@@ -1,10 +1,10 @@
 package net.dankito.data_access.network.communication
 
 import net.dankito.synchronization.database.IEntityManager
-import net.dankito.synchronization.device.communication.CommunicatorConfig
-import net.dankito.synchronization.device.communication.IClientCommunicator
-import net.dankito.synchronization.device.communication.callback.IDeviceRegistrationHandler
-import net.dankito.synchronization.device.communication.message.*
+import net.dankito.synchronization.device.messaging.IMessenger
+import net.dankito.synchronization.device.messaging.MessengerConfig
+import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
+import net.dankito.synchronization.device.messaging.message.*
 import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.synchronization.model.SyncInfo
@@ -18,7 +18,7 @@ import java.net.SocketAddress
 
 
 class TcpSocketClientCommunicator(private val networkSettings: NetworkSettings, registrationHandler: IDeviceRegistrationHandler, entityManager: IEntityManager,
-                                  serializer: ISerializer, base64Service: IBase64Service, hashService: HashService, threadPool: IThreadPool) : IClientCommunicator {
+                                  serializer: ISerializer, base64Service: IBase64Service, hashService: HashService, threadPool: IThreadPool) : IMessenger {
 
     private val requestSender: IRequestSender
 
@@ -57,14 +57,14 @@ class TcpSocketClientCommunicator(private val networkSettings: NetworkSettings, 
 
     override fun getDeviceInfo(destinationAddress: SocketAddress, callback: (Response<DeviceInfo>) -> Unit) {
         requestSender.sendRequestAndReceiveResponseAsync<Any, DeviceInfo>(destinationAddress,
-                Request<Any>(CommunicatorConfig.GET_DEVICE_INFO_METHOD_NAME)) { callback(it) }
+                Request<Any>(MessengerConfig.GET_DEVICE_INFO_METHOD_NAME)) { callback(it) }
     }
 
 
     override fun requestPermitSynchronization(remoteDevice: DiscoveredDevice, callback: (Response<RequestPermitSynchronizationResponseBody>) -> Unit) {
         networkSettings.addDevicesAskedForPermittingSynchronization(remoteDevice)
 
-        val request = Request(CommunicatorConfig.REQUEST_PERMIT_SYNCHRONIZATION_METHOD_NAME,
+        val request = Request(MessengerConfig.REQUEST_PERMIT_SYNCHRONIZATION_METHOD_NAME,
                 DeviceInfo.fromNetworkSettings(networkSettings))
 
         requestSender.sendRequestAndReceiveResponseAsync<DeviceInfo, RequestPermitSynchronizationResponseBody>(getSocketAddressFromDevice(remoteDevice), request) { response ->
@@ -81,7 +81,7 @@ class TcpSocketClientCommunicator(private val networkSettings: NetworkSettings, 
     override fun respondToSynchronizationPermittingChallenge(remoteDevice: DiscoveredDevice, nonce: String, challengeResponse: String, syncInfo: SyncInfo,
                                                              callback: (Response<RespondToSynchronizationPermittingChallengeResponseBody>) -> Unit) {
         challengeHandler.createChallengeResponse(nonce, challengeResponse)?.let { challengeResponse ->
-            val request = Request<RespondToSynchronizationPermittingChallengeRequestBody>(CommunicatorConfig.RESPONSE_TO_SYNCHRONIZATION_PERMITTING_CHALLENGE_METHOD_NAME,
+            val request = Request<RespondToSynchronizationPermittingChallengeRequestBody>(MessengerConfig.RESPONSE_TO_SYNCHRONIZATION_PERMITTING_CHALLENGE_METHOD_NAME,
                     RespondToSynchronizationPermittingChallengeRequestBody(nonce, challengeResponse, syncInfo, networkSettings.synchronizationPort, networkSettings.fileSynchronizationPort))
 
             requestSender.sendRequestAndReceiveResponseAsync(getSocketAddressFromDevice(remoteDevice), request) { response: Response<RespondToSynchronizationPermittingChallengeResponseBody> ->
@@ -111,7 +111,7 @@ class TcpSocketClientCommunicator(private val networkSettings: NetworkSettings, 
     override fun requestStartSynchronization(remoteDevice: DiscoveredDevice, callback: (Response<RequestStartSynchronizationResponseBody>) -> Unit) {
         networkSettings.addDevicesAskedForPermittingSynchronization(remoteDevice)
 
-        val request = Request(CommunicatorConfig.REQUEST_START_SYNCHRONIZATION_METHOD_NAME,
+        val request = Request(MessengerConfig.REQUEST_START_SYNCHRONIZATION_METHOD_NAME,
                 RequestStartSynchronizationRequestBody(DeviceInfo.fromNetworkSettings(networkSettings), networkSettings.synchronizationPort, networkSettings.fileSynchronizationPort))
 
         requestSender.sendRequestAndReceiveResponseAsync<RequestStartSynchronizationRequestBody, RequestStartSynchronizationResponseBody>(

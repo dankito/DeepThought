@@ -8,12 +8,12 @@ import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.synchronization.database.EntityManagerConfiguration
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
-import net.dankito.synchronization.device.communication.IClientCommunicator
+import net.dankito.synchronization.device.messaging.IMessenger
 import net.dankito.util.network.SocketHandler
 import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
 import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
-import net.dankito.synchronization.device.communication.callback.IDeviceRegistrationHandler
-import net.dankito.synchronization.device.communication.message.DeviceInfo
+import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
+import net.dankito.synchronization.device.messaging.message.DeviceInfo
 import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
 import net.dankito.deepthought.data.FilePersister
@@ -189,7 +189,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     protected lateinit var localRegistrationHandler : IDeviceRegistrationHandler
 
-    protected lateinit var localClientCommunicator: IClientCommunicator
+    protected lateinit var localMessenger: IMessenger
 
     protected lateinit var localConnectedDevicesService: IConnectedDevicesService
 
@@ -285,7 +285,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     protected lateinit var remoteRegistrationHandler : IDeviceRegistrationHandler
 
-    protected lateinit var remoteClientCommunicator: IClientCommunicator
+    protected lateinit var remoteMessenger: IMessenger
 
     protected lateinit var remoteConnectedDevicesService: IConnectedDevicesService
 
@@ -339,11 +339,11 @@ abstract class FileSyncServiceIntegrationTestBase {
             localRegistrationHandler = createDeviceRegistrationHandler(localRegisterAtRemote, localPermitRemoteToSynchronize, localCorrectChallengeResponse, localDataManager,
                     localInitialSyncManager, localDialogService, localization)
 
-            localClientCommunicator = TcpSocketClientCommunicator(localNetworkSettings, localRegistrationHandler, localEntityManager, localSerializer, base64Service, hashService, localThreadPool)
+            localMessenger = TcpSocketClientCommunicator(localNetworkSettings, localRegistrationHandler, localEntityManager, localSerializer, base64Service, hashService, localThreadPool)
 
-            localConnectedDevicesService = ConnectedDevicesService(localDevicesDiscoverer, localClientCommunicator, localSyncManager, localRegistrationHandler, localNetworkSettings, localEntityManager)
+            localConnectedDevicesService = ConnectedDevicesService(localDevicesDiscoverer, localMessenger, localSyncManager, localRegistrationHandler, localNetworkSettings, localEntityManager)
 
-            localCommunicationManager = CommunicationManager(localConnectedDevicesService, localSyncManager, localClientCommunicator, localNetworkSettings)
+            localCommunicationManager = CommunicationManager(localConnectedDevicesService, localSyncManager, localMessenger, localNetworkSettings)
 
             initializationLatch.countDown()
         }
@@ -399,11 +399,11 @@ abstract class FileSyncServiceIntegrationTestBase {
 //            remoteRegistrationHandler = spy<IDeviceRegistrationHandler>(registrationHandlerInstance)
             remoteRegistrationHandler = registrationHandlerInstance
 
-            remoteClientCommunicator = TcpSocketClientCommunicator(remoteNetworkSettings, remoteRegistrationHandler, remoteEntityManager, remoteSerializer, base64Service, hashService, remoteThreadPool)
+            remoteMessenger = TcpSocketClientCommunicator(remoteNetworkSettings, remoteRegistrationHandler, remoteEntityManager, remoteSerializer, base64Service, hashService, remoteThreadPool)
 
-            remoteConnectedDevicesService = ConnectedDevicesService(remoteDevicesDiscoverer, remoteClientCommunicator, remoteSyncManager, remoteRegistrationHandler, remoteNetworkSettings, remoteEntityManager)
+            remoteConnectedDevicesService = ConnectedDevicesService(remoteDevicesDiscoverer, remoteMessenger, remoteSyncManager, remoteRegistrationHandler, remoteNetworkSettings, remoteEntityManager)
 
-            remoteCommunicationManager = CommunicationManager(remoteConnectedDevicesService, remoteSyncManager, remoteClientCommunicator, remoteNetworkSettings)
+            remoteCommunicationManager = CommunicationManager(remoteConnectedDevicesService, remoteSyncManager, remoteMessenger, remoteNetworkSettings)
 
             initializationLatch.countDown()
         }

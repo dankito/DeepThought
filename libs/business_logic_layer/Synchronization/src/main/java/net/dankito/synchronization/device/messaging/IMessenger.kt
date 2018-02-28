@@ -1,12 +1,12 @@
-package net.dankito.synchronization.device.communication
+package net.dankito.synchronization.device.messaging
 
-import net.dankito.synchronization.device.communication.message.*
+import net.dankito.synchronization.device.messaging.message.*
 import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.synchronization.model.SyncInfo
 import java.net.SocketAddress
 
 
-interface IClientCommunicator {
+interface IMessenger {
 
     fun start(desiredCommunicatorPort: Int, startedCallback: (couldStartMessagesReceiver: Boolean, messagesReceiverPort: Int, startException: Exception?) -> Unit)
 

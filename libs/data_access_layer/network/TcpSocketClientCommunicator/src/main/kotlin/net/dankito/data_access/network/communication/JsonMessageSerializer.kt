@@ -1,9 +1,9 @@
 package net.dankito.data_access.network.communication
 
-import net.dankito.synchronization.device.communication.message.IMessageHandler
-import net.dankito.synchronization.device.communication.message.Request
-import net.dankito.synchronization.device.communication.message.Response
-import net.dankito.synchronization.device.communication.message.ResponseErrorType
+import net.dankito.synchronization.device.messaging.message.IMessageHandler
+import net.dankito.synchronization.device.messaging.message.Request
+import net.dankito.synchronization.device.messaging.message.Response
+import net.dankito.synchronization.device.messaging.message.ResponseErrorType
 import net.dankito.util.serialization.ISerializer
 import org.slf4j.LoggerFactory
 import java.io.IOException

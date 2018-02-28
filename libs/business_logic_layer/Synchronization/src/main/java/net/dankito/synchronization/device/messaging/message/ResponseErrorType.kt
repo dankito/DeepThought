@@ -1,4 +1,4 @@
-package net.dankito.synchronization.device.communication.message
+package net.dankito.synchronization.device.messaging.message
 
 
 enum class ResponseErrorType {

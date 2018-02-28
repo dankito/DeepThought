@@ -9,11 +9,11 @@ import net.dankito.synchronization.database.EntityManagerConfiguration
 import net.dankito.synchronization.database.IEntityManager
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
-import net.dankito.synchronization.device.communication.IClientCommunicator
+import net.dankito.synchronization.device.messaging.IMessenger
 import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
 import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
-import net.dankito.synchronization.device.communication.callback.IDeviceRegistrationHandler
-import net.dankito.synchronization.device.communication.message.DeviceInfo
+import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
+import net.dankito.synchronization.device.messaging.message.DeviceInfo
 import net.dankito.util.web.IWebClient
 import net.dankito.deepthought.model.*
 import net.dankito.synchronization.model.enums.OsType
@@ -141,7 +141,7 @@ class CommunicationManagerTest {
 
     private lateinit var localDataManager: DataManager
 
-    private lateinit var localClientCommunicator: IClientCommunicator
+    private lateinit var localMessenger: IMessenger
 
     private val localEventBus = MBassadorEventBus()
 
@@ -200,7 +200,7 @@ class CommunicationManagerTest {
 
     private lateinit var remoteDataManager: DataManager
 
-    private lateinit var remoteClientCommunicator: IClientCommunicator
+    private lateinit var remoteMessenger: IMessenger
 
     private val remoteEventBus = MBassadorEventBus()
 
@@ -250,11 +250,11 @@ class CommunicationManagerTest {
             localRegistrationHandler = createDeviceRegistrationHandler(localRegisterAtRemote, localPermitRemoteToSynchronize, localCorrectChallengeResponse, localDataManager,
                     localInitialSyncManager, localDialogService, localization)
 
-            localClientCommunicator = TcpSocketClientCommunicator(localNetworkSettings, localRegistrationHandler, localEntityManager, serializer, base64Service, hashService, localThreadPool)
+            localMessenger = TcpSocketClientCommunicator(localNetworkSettings, localRegistrationHandler, localEntityManager, serializer, base64Service, hashService, localThreadPool)
 
-            localConnectedDevicesService = ConnectedDevicesService(localDevicesDiscoverer, localClientCommunicator, localSyncManager, localRegistrationHandler, localNetworkSettings, localEntityManager)
+            localConnectedDevicesService = ConnectedDevicesService(localDevicesDiscoverer, localMessenger, localSyncManager, localRegistrationHandler, localNetworkSettings, localEntityManager)
 
-            localCommunicationManager = CommunicationManager(localConnectedDevicesService, localSyncManager, localClientCommunicator, localNetworkSettings)
+            localCommunicationManager = CommunicationManager(localConnectedDevicesService, localSyncManager, localMessenger, localNetworkSettings)
 
             initializationLatch.countDown()
         }
@@ -287,11 +287,11 @@ class CommunicationManagerTest {
 //            remoteRegistrationHandler = spy<IDeviceRegistrationHandler>(registrationHandlerInstance)
             remoteRegistrationHandler = registrationHandlerInstance
 
-            remoteClientCommunicator = TcpSocketClientCommunicator(remoteNetworkSettings, remoteRegistrationHandler, remoteEntityManager, serializer, base64Service, hashService, remoteThreadPool)
+            remoteMessenger = TcpSocketClientCommunicator(remoteNetworkSettings, remoteRegistrationHandler, remoteEntityManager, serializer, base64Service, hashService, remoteThreadPool)
 
-            remoteConnectedDevicesService = ConnectedDevicesService(remoteDevicesDiscoverer, remoteClientCommunicator, remoteSyncManager, remoteRegistrationHandler, remoteNetworkSettings, remoteEntityManager)
+            remoteConnectedDevicesService = ConnectedDevicesService(remoteDevicesDiscoverer, remoteMessenger, remoteSyncManager, remoteRegistrationHandler, remoteNetworkSettings, remoteEntityManager)
 
-            remoteCommunicationManager = CommunicationManager(remoteConnectedDevicesService, remoteSyncManager, remoteClientCommunicator, remoteNetworkSettings)
+            remoteCommunicationManager = CommunicationManager(remoteConnectedDevicesService, remoteSyncManager, remoteMessenger, remoteNetworkSettings)
 
             initializationLatch.countDown()
         }

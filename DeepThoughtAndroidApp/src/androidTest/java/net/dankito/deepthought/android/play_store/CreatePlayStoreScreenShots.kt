@@ -1,7 +1,7 @@
 package net.dankito.deepthought.android.play_store
 
 import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
-import net.dankito.synchronization.device.communication.callback.IDeviceRegistrationHandler
+import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.deepthought.android.DeepThoughtActivityTestRule
 import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
 import net.dankito.deepthought.android.MainActivity

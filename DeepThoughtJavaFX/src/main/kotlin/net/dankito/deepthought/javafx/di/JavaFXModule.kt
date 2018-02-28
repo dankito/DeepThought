@@ -3,7 +3,7 @@ package net.dankito.deepthought.javafx.di
 import dagger.Module
 import dagger.Provides
 import javafx.stage.Stage
-import net.dankito.synchronization.device.communication.callback.IDeviceRegistrationHandler
+import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.util.web.IWebClient
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.SeriesPersister

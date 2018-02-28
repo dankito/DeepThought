@@ -4,12 +4,12 @@ import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.service.synchronization.initialsync.model.DeepThoughtSyncInfo
-import net.dankito.synchronization.device.communication.IClientCommunicator
-import net.dankito.synchronization.device.communication.callback.IDeviceRegistrationHandler
-import net.dankito.synchronization.device.communication.message.RequestPermitSynchronizationResult
-import net.dankito.synchronization.device.communication.message.RespondToSynchronizationPermittingChallengeResponseBody
-import net.dankito.synchronization.device.communication.message.RespondToSynchronizationPermittingChallengeResult
-import net.dankito.synchronization.device.communication.message.Response
+import net.dankito.synchronization.device.messaging.IMessenger
+import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
+import net.dankito.synchronization.device.messaging.message.RequestPermitSynchronizationResult
+import net.dankito.synchronization.device.messaging.message.RespondToSynchronizationPermittingChallengeResponseBody
+import net.dankito.synchronization.device.messaging.message.RespondToSynchronizationPermittingChallengeResult
+import net.dankito.synchronization.device.messaging.message.Response
 import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.synchronization.model.SyncInfo
 import net.dankito.synchronization.model.UserSyncInfo
@@ -34,10 +34,10 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
     private val ignoreDeviceListeners = HashSet<(DiscoveredDevice) -> Unit>()
 
 
-    override fun showUnknownDeviceDiscovered(clientCommunicator: IClientCommunicator, unknownDevice: DiscoveredDevice) {
+    override fun showUnknownDeviceDiscovered(messenger: IMessenger, unknownDevice: DiscoveredDevice) {
         showUnknownDeviceDiscoveredView(unknownDevice) { likesToRegister, neverAskAgainForThisDevice ->
             if(likesToRegister) {
-                askForRegistration(clientCommunicator, unknownDevice)
+                askForRegistration(messenger, unknownDevice)
             }
             if(neverAskAgainForThisDevice) {
                 callIgnoreDeviceListeners(unknownDevice)
@@ -48,11 +48,11 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
     abstract fun showUnknownDeviceDiscoveredView(unknownDevice: DiscoveredDevice, callback: (Boolean, Boolean) -> Unit)
 
 
-    private fun askForRegistration(clientCommunicator: IClientCommunicator, remoteDevice: DiscoveredDevice) {
-        clientCommunicator.requestPermitSynchronization(remoteDevice) { response ->
+    private fun askForRegistration(messenger: IMessenger, remoteDevice: DiscoveredDevice) {
+        messenger.requestPermitSynchronization(remoteDevice) { response ->
             response.body?.let { body ->
                 if(body.result == RequestPermitSynchronizationResult.RESPOND_TO_CHALLENGE) {
-                    body.nonce?.let { getChallengeResponseFromUser(clientCommunicator, remoteDevice, it, false) }
+                    body.nonce?.let { getChallengeResponseFromUser(messenger, remoteDevice, it, false) }
                 }
                 else {
                     showAlertSynchronizingIsNotPermitted(remoteDevice)
@@ -65,7 +65,7 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
         }
     }
 
-    private fun getChallengeResponseFromUser(clientCommunicator: IClientCommunicator, remoteDevice: DiscoveredDevice, nonce: String, wasCodePreviouslyWronglyEntered: Boolean) {
+    private fun getChallengeResponseFromUser(messenger: IMessenger, remoteDevice: DiscoveredDevice, nonce: String, wasCodePreviouslyWronglyEntered: Boolean) {
         var questionText = localization.getLocalizedString("alert.title.enter.response.code.for.permitting.synchronization", remoteDevice.device.getDisplayText())
         if(wasCodePreviouslyWronglyEntered) {
             questionText = localization.getLocalizedString("alert.title.entered.response.code.was.wrong", remoteDevice.device.getDisplayText())
@@ -73,7 +73,7 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
 
         dialogService.askForTextInput(questionText, type = InputType.Numbers) { didEnterText, enteredResponse ->
             enteredResponse?.let { enteredResponse ->
-                sendChallengeResponseToRemote(clientCommunicator, remoteDevice, nonce, enteredResponse);
+                sendChallengeResponseToRemote(messenger, remoteDevice, nonce, enteredResponse);
             }
             if(didEnterText == false) {
 //                networkSettings.removeDevicesAskedForPermittingSynchronization(remoteDevice);
@@ -81,11 +81,11 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
         }
     }
 
-    private fun sendChallengeResponseToRemote(clientCommunicator: IClientCommunicator, remoteDevice: DiscoveredDevice, nonce: String, enteredResponse: String) {
+    private fun sendChallengeResponseToRemote(messenger: IMessenger, remoteDevice: DiscoveredDevice, nonce: String, enteredResponse: String) {
         callRequestingToSynchronizeWithRemoteListeners(remoteDevice) // opens synchronization port needed in respondToSynchronizationPermittingChallenge()
 
-        clientCommunicator.respondToSynchronizationPermittingChallenge(remoteDevice, nonce, enteredResponse, createSyncInfo()) { response ->
-            handleEnteredChallengeResponse(clientCommunicator, remoteDevice, response, nonce)
+        messenger.respondToSynchronizationPermittingChallenge(remoteDevice, nonce, enteredResponse, createSyncInfo()) { response ->
+            handleEnteredChallengeResponse(messenger, remoteDevice, response, nonce)
         }
     }
 
@@ -100,13 +100,13 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
     }
 
 
-    private fun handleEnteredChallengeResponse(clientCommunicator: IClientCommunicator, remoteDevice: DiscoveredDevice, response: Response<RespondToSynchronizationPermittingChallengeResponseBody>, nonce: String) {
+    private fun handleEnteredChallengeResponse(messenger: IMessenger, remoteDevice: DiscoveredDevice, response: Response<RespondToSynchronizationPermittingChallengeResponseBody>, nonce: String) {
         response.error?.let { showErrorMessage(it) }
 
         response.body?.let { body ->
             when(body.result) {
                 RespondToSynchronizationPermittingChallengeResult.ALLOWED -> remoteAllowedSynchronization(remoteDevice, body)
-                RespondToSynchronizationPermittingChallengeResult.WRONG_CODE -> getChallengeResponseFromUser(clientCommunicator, remoteDevice, nonce, true)
+                RespondToSynchronizationPermittingChallengeResult.WRONG_CODE -> getChallengeResponseFromUser(messenger, remoteDevice, nonce, true)
                 RespondToSynchronizationPermittingChallengeResult.ERROR_OCCURRED -> showErrorMessage()
                 else -> showAlertSynchronizingIsNotPermitted(remoteDevice)
             }

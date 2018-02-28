@@ -1,18 +1,18 @@
 package net.dankito.deepthought.communication
 
-import net.dankito.synchronization.device.communication.CommunicatorConfig
-import net.dankito.synchronization.device.communication.IClientCommunicator
+import net.dankito.synchronization.device.messaging.MessengerConfig
+import net.dankito.synchronization.device.messaging.IMessenger
 import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.service.synchronization.IConnectedDevicesService
 import net.dankito.service.synchronization.ISyncManager
 import java.util.*
 
 
-class CommunicationManager(private val connectedDevicesService: IConnectedDevicesService, private val syncManager: ISyncManager, private val clientCommunicator: IClientCommunicator,
+class CommunicationManager(private val connectedDevicesService: IConnectedDevicesService, private val syncManager: ISyncManager, private val messenger: IMessenger,
                            private val networkSettings: NetworkSettings) : ICommunicationManager {
 
     override fun startAsync() {
-        clientCommunicator.start(CommunicatorConfig.DEFAULT_MESSAGES_RECEIVER_PORT) { couldStartMessagesReceiver, messagesReceiverPort, startException ->
+        messenger.start(MessengerConfig.DEFAULT_MESSAGES_RECEIVER_PORT) { couldStartMessagesReceiver, messagesReceiverPort, startException ->
             if (couldStartMessagesReceiver) {
                 successfullyStartedClientCommunicator(messagesReceiverPort)
             }
@@ -27,7 +27,7 @@ class CommunicationManager(private val connectedDevicesService: IConnectedDevice
     override fun stop() {
         connectedDevicesService.stop()
 
-        clientCommunicator.stop()
+        messenger.stop()
 
         syncManager.stop()
     }

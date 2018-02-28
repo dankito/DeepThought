@@ -3,7 +3,7 @@ package net.dankito.deepthought.android.di
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import net.dankito.synchronization.device.communication.callback.IDeviceRegistrationHandler
+import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.deepthought.android.appstart.AndroidAppInitializer
 import net.dankito.deepthought.android.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.android.dialogs.AndroidDialogService

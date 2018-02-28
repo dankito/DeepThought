@@ -1,10 +1,10 @@
 package net.dankito.data_access.network.communication
 
 import net.dankito.synchronization.database.IEntityManager
-import net.dankito.synchronization.device.communication.callback.IDeviceRegistrationHandler
-import net.dankito.synchronization.device.communication.message.DeviceInfo
-import net.dankito.synchronization.device.communication.message.Response
-import net.dankito.synchronization.device.communication.IClientCommunicator
+import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
+import net.dankito.synchronization.device.messaging.message.DeviceInfo
+import net.dankito.synchronization.device.messaging.message.Response
+import net.dankito.synchronization.device.messaging.IMessenger
 import net.dankito.synchronization.model.*
 import net.dankito.synchronization.model.enums.OsType
 import net.dankito.util.ThreadPool
@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicReference
 class TcpSocketClientCommunicatorTest {
 
 
-    private lateinit var underTest: IClientCommunicator
+    private lateinit var underTest: IMessenger
 
 
     private lateinit var remoteDevice: Device

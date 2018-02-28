@@ -1,7 +1,7 @@
-package net.dankito.synchronization.device.communication
+package net.dankito.synchronization.device.messaging
 
 
-class CommunicatorConfig {
+class MessengerConfig {
 
     companion object {
 

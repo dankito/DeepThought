@@ -1,7 +1,7 @@
-package net.dankito.synchronization.device.communication.message
+package net.dankito.synchronization.device.messaging.message
 
-import net.dankito.synchronization.device.communication.CommunicatorConfig
-import net.dankito.synchronization.device.communication.callback.IDeviceRegistrationHandler
+import net.dankito.synchronization.device.messaging.MessengerConfig
+import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.synchronization.model.Device
 import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.synchronization.model.SyncInfo
@@ -19,10 +19,10 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
 
     override fun handleReceivedRequest(request: Request<*>, callback: (Response<out Any>) -> Unit) {
         when (request.method) {
-            CommunicatorConfig.GET_DEVICE_INFO_METHOD_NAME -> callback(handleGetDeviceInfoRequest(request))
-            CommunicatorConfig.REQUEST_PERMIT_SYNCHRONIZATION_METHOD_NAME -> handleRequestPermitSynchronizationRequest(request as Request<DeviceInfo>, callback)
-            CommunicatorConfig.RESPONSE_TO_SYNCHRONIZATION_PERMITTING_CHALLENGE_METHOD_NAME -> handleRespondToSynchronizationPermittingChallengeRequest(request as Request<RespondToSynchronizationPermittingChallengeRequestBody>, callback)
-            CommunicatorConfig.REQUEST_START_SYNCHRONIZATION_METHOD_NAME -> handleRequestStartSynchronizationRequest(request as Request<RequestStartSynchronizationRequestBody>, callback)
+            MessengerConfig.GET_DEVICE_INFO_METHOD_NAME -> callback(handleGetDeviceInfoRequest(request))
+            MessengerConfig.REQUEST_PERMIT_SYNCHRONIZATION_METHOD_NAME -> handleRequestPermitSynchronizationRequest(request as Request<DeviceInfo>, callback)
+            MessengerConfig.RESPONSE_TO_SYNCHRONIZATION_PERMITTING_CHALLENGE_METHOD_NAME -> handleRespondToSynchronizationPermittingChallengeRequest(request as Request<RespondToSynchronizationPermittingChallengeRequestBody>, callback)
+            MessengerConfig.REQUEST_START_SYNCHRONIZATION_METHOD_NAME -> handleRequestStartSynchronizationRequest(request as Request<RequestStartSynchronizationRequestBody>, callback)
         }
     }
 
@@ -178,10 +178,10 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
     @Throws(Exception::class)
     override fun getRequestBodyClassForMethod(methodName: String): Class<*>? {
         when (methodName) {
-            CommunicatorConfig.REQUEST_PERMIT_SYNCHRONIZATION_METHOD_NAME -> return DeviceInfo::class.java
-            CommunicatorConfig.RESPONSE_TO_SYNCHRONIZATION_PERMITTING_CHALLENGE_METHOD_NAME -> return RespondToSynchronizationPermittingChallengeRequestBody::class.java
-            CommunicatorConfig.REQUEST_START_SYNCHRONIZATION_METHOD_NAME -> return RequestStartSynchronizationRequestBody::class.java
-            CommunicatorConfig.GET_DEVICE_INFO_METHOD_NAME -> return null // requests without request bodies
+            MessengerConfig.REQUEST_PERMIT_SYNCHRONIZATION_METHOD_NAME -> return DeviceInfo::class.java
+            MessengerConfig.RESPONSE_TO_SYNCHRONIZATION_PERMITTING_CHALLENGE_METHOD_NAME -> return RespondToSynchronizationPermittingChallengeRequestBody::class.java
+            MessengerConfig.REQUEST_START_SYNCHRONIZATION_METHOD_NAME -> return RequestStartSynchronizationRequestBody::class.java
+            MessengerConfig.GET_DEVICE_INFO_METHOD_NAME -> return null // requests without request bodies
             else -> throw Exception("Don't know how to deserialize response of method " + methodName) // TODO: translate
         }
     }
@@ -189,10 +189,10 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
     @Throws(Exception::class)
     override fun getResponseBodyClassForMethod(methodName: String): Class<*> {
         when (methodName) {
-            CommunicatorConfig.GET_DEVICE_INFO_METHOD_NAME -> return DeviceInfo::class.java
-            CommunicatorConfig.REQUEST_PERMIT_SYNCHRONIZATION_METHOD_NAME -> return RequestPermitSynchronizationResponseBody::class.java
-            CommunicatorConfig.RESPONSE_TO_SYNCHRONIZATION_PERMITTING_CHALLENGE_METHOD_NAME -> return RespondToSynchronizationPermittingChallengeResponseBody::class.java
-            CommunicatorConfig.REQUEST_START_SYNCHRONIZATION_METHOD_NAME -> return RequestStartSynchronizationResponseBody::class.java
+            MessengerConfig.GET_DEVICE_INFO_METHOD_NAME -> return DeviceInfo::class.java
+            MessengerConfig.REQUEST_PERMIT_SYNCHRONIZATION_METHOD_NAME -> return RequestPermitSynchronizationResponseBody::class.java
+            MessengerConfig.RESPONSE_TO_SYNCHRONIZATION_PERMITTING_CHALLENGE_METHOD_NAME -> return RespondToSynchronizationPermittingChallengeResponseBody::class.java
+            MessengerConfig.REQUEST_START_SYNCHRONIZATION_METHOD_NAME -> return RequestStartSynchronizationResponseBody::class.java
             else -> throw Exception("Don't know how to deserialize response of method " + methodName) // TODO: translate
         }
     }

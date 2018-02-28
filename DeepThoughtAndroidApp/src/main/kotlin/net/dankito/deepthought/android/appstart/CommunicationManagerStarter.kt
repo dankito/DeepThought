@@ -10,7 +10,7 @@ import net.dankito.deepthought.service.data.DataManager
  *
  * To provide a more smooth application start up, we wait till all base data is retrieved.
  * Therefore after SearchEngine is initialized we give application some time to show initial data
- * before we start communicator classes like @see DevicesDiscoverer, @see IClientCommunicator, @see ISyncManager, ...
+ * before we start communicator classes like @see DevicesDiscoverer, @see IMessenger, @see ISyncManager, ...
  */
 class CommunicationManagerStarter(dataManager: DataManager) : CommunicationManagerStarterBase(dataManager) {
 
