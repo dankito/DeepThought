@@ -29,6 +29,29 @@ import java.util.concurrent.atomic.AtomicReference
 
 class PlainTcpMessengerTest {
 
+    companion object {
+
+        protected val MESSAGES_RECEIVER_PORT = 54321
+
+        protected val DEVICE_ID = "1"
+
+        protected val DEVICE_UNIQUE_ID = "Remote_1"
+
+        protected val DEVICE_NAME = "Love"
+
+        protected val DEVICE_OS_NAME = "Arch Linux"
+
+        protected val DEVICE_OS_VERSION = "4.9"
+
+        protected val DEVICE_OS_TYPE = OsType.DESKTOP
+
+        const val IntegrationTestDevicesDiscoveryPrefix = "DeepThought_TcpSocketClientCommunicator_IntegrationTest"
+
+        val AppVersion = Version(1, 0, 0)
+
+        const val DataModelVersion = 1
+    }
+
 
     private lateinit var underTest: IMessenger
 
@@ -109,29 +132,6 @@ class PlainTcpMessengerTest {
             assertThat(remoteDeviceInfo.id, `is`(DEVICE_ID))
             assertThat(remoteDeviceInfo.uniqueDeviceId, `is`(DEVICE_UNIQUE_ID))
         }
-    }
-
-    companion object {
-
-        protected val MESSAGES_RECEIVER_PORT = 54321
-
-        protected val DEVICE_ID = "1"
-
-        protected val DEVICE_UNIQUE_ID = "Remote_1"
-
-        protected val DEVICE_NAME = "Love"
-
-        protected val DEVICE_OS_NAME = "Arch Linux"
-
-        protected val DEVICE_OS_VERSION = "4.9"
-
-        protected val DEVICE_OS_TYPE = OsType.DESKTOP
-
-        const val IntegrationTestDevicesDiscoveryPrefix = "DeepThought_TcpSocketClientCommunicator_IntegrationTest"
-
-        val AppVersion = Version(1, 0, 0)
-
-        const val DataModelVersion = 1
     }
 
 }
