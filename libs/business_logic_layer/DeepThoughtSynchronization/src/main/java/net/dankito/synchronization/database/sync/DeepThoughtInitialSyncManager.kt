@@ -4,28 +4,13 @@ import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.model.DeepThought
 import net.dankito.synchronization.database.IEntityManager
 import net.dankito.synchronization.model.SyncInfo
-import net.dankito.synchronization.model.User
-import net.dankito.synchronization.model.UserSyncInfo
 import net.dankito.util.localization.Localization
 
 
 class DeepThoughtInitialSyncManager(entityManager: IEntityManager, localization: Localization) : InitialSyncManager(entityManager, localization) {
 
     fun syncUserDevices(localDeepThought: DeepThought, remoteSyncInfo: SyncInfo) {
-        (remoteSyncInfo as? DeepThoughtSyncInfo)?.let {
-            syncUserDevices(localDeepThought, localDeepThought.localUser, remoteSyncInfo, remoteSyncInfo.user)
-        }
-    }
-
-    private fun syncUserDevices(localDeepThought: DeepThought, localUser: User, remoteDeepThought: DeepThoughtSyncInfo, remoteUser: UserSyncInfo) {
-        addSynchronizedDevice(localUser, remoteDeepThought.localDeviceId)
-        addSynchronizedDevice(localUser, localDeepThought.localDevice.id!!) // fix: so that remote also sees us as synchronized device
-
-        remoteUser.synchronizedDevicesIds.forEach { addSynchronizedDevice(localUser, it) }
-
-        remoteUser.ignoredDevicesIds.forEach { addIgnoredDevice(localUser, it) }
-
-        entityManager.updateEntity(localUser)
+        syncUserDevices(localDeepThought.localDevice.id!!, localDeepThought.localUser, remoteSyncInfo, remoteSyncInfo.user)
     }
 
 

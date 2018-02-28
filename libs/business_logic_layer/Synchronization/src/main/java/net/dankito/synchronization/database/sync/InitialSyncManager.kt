@@ -21,6 +21,17 @@ open class InitialSyncManager(protected var entityManager: IEntityManager, prote
     }
 
 
+    open fun syncUserDevices(localDeviceId: String, localUser: User, remoteSyncInfo: SyncInfo, remoteUser: UserSyncInfo) {
+        addSynchronizedDevice(localUser, remoteSyncInfo.localDeviceId)
+        addSynchronizedDevice(localUser, localDeviceId) // fix: so that remote also sees us as synchronized device
+
+        remoteUser.synchronizedDevicesIds.forEach { addSynchronizedDevice(localUser, it) }
+
+        remoteUser.ignoredDevicesIds.forEach { addIgnoredDevice(localUser, it) }
+
+        entityManager.updateEntity(localUser)
+    }
+
     protected open fun addSynchronizedDevice(user: User, deviceId: String) {
         entityManager.getEntityById(Device::class.java, deviceId)?.let { device ->
             if(user.containsSynchronizedDevice(device) == false) {

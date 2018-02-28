@@ -96,7 +96,7 @@ abstract class DeviceRegistrationHandlerBase(protected val dataManager: DataMana
 
         val articleSummaryExtractorConfigs = dataManager.entityManager.getAllEntitiesOfType(ArticleSummaryExtractorConfig::class.java)
 
-        return DeepThoughtSyncInfo(userSyncInfo, useCallerDatabaseIds, useCallerUserName, deepThought.localDevice.id!!, articleSummaryExtractorConfigs)
+        return DeepThoughtSyncInfo(deepThought.localDevice.id!!, userSyncInfo, useCallerDatabaseIds, useCallerUserName, articleSummaryExtractorConfigs)
     }
 
 

@@ -6,10 +6,10 @@ import net.dankito.synchronization.model.User
 import net.dankito.synchronization.model.UserSyncInfo
 
 
-open class DeepThoughtSyncInfo(user: UserSyncInfo, useCallerDatabaseIds: Boolean?, useCallerUserName: Boolean?,
-                               val localDeviceId: String, val articleSummaryExtractorConfigs: List<ArticleSummaryExtractorConfig>)
-    : SyncInfo(user, useCallerDatabaseIds, useCallerUserName) {
+open class DeepThoughtSyncInfo(localDeviceId: String, user: UserSyncInfo, useCallerDatabaseIds: Boolean?, useCallerUserName: Boolean?,
+                               val articleSummaryExtractorConfigs: List<ArticleSummaryExtractorConfig>)
+    : SyncInfo(localDeviceId, user, useCallerDatabaseIds, useCallerUserName) {
 
-    internal constructor() : this(UserSyncInfo(User("", "")), false, false, "", listOf()) // for Jackson
+    internal constructor() : this("", UserSyncInfo(User("", "")), false, false, listOf()) // for Jackson
 
 }
