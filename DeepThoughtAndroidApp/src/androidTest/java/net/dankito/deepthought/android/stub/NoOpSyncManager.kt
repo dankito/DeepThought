@@ -1,4 +1,4 @@
-package net.dankito.service.synchronization
+package net.dankito.deepthought.android.stub
 
 import net.dankito.synchronization.database.sync.ISyncManager
 import net.dankito.synchronization.model.Device

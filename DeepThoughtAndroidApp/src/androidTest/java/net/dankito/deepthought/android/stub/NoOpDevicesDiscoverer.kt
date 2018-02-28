@@ -1,4 +1,7 @@
-package net.dankito.synchronization.device.discovery
+package net.dankito.deepthought.android.stub
+
+import net.dankito.synchronization.device.discovery.DevicesDiscovererConfig
+import net.dankito.synchronization.device.discovery.IDevicesDiscoverer
 
 
 class NoOpDevicesDiscoverer : IDevicesDiscoverer {
