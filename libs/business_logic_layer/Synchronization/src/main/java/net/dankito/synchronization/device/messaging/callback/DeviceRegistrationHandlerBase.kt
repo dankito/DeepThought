@@ -1,6 +1,7 @@
 package net.dankito.synchronization.device.messaging.callback
 
 import net.dankito.synchronization.database.IEntityManager
+import net.dankito.synchronization.database.sync.InitialSyncManager
 import net.dankito.synchronization.device.messaging.IMessenger
 import net.dankito.synchronization.device.messaging.message.RequestPermitSynchronizationResult
 import net.dankito.synchronization.device.messaging.message.RespondToSynchronizationPermittingChallengeResponseBody
@@ -16,8 +17,8 @@ import net.dankito.util.ui.dialog.InputType
 import org.slf4j.LoggerFactory
 
 
-abstract class DeviceRegistrationHandlerBase(protected val deepThought: DeepThought, protected val entityManager: IEntityManager, protected val networkSettings: NetworkSettings,
-                                             protected val initialSyncManager: DeepThoughtInitialSyncManager, protected val dialogService: IDialogService,
+abstract class DeviceRegistrationHandlerBase(protected val entityManager: IEntityManager, protected val networkSettings: NetworkSettings,
+                                             protected val initialSyncManager: InitialSyncManager, protected val dialogService: IDialogService,
                                              protected val localization: Localization) : IDeviceRegistrationHandler {
 
     companion object {
@@ -25,11 +26,11 @@ abstract class DeviceRegistrationHandlerBase(protected val deepThought: DeepThou
     }
 
 
-    private val requestingToSynchronizeWithRemoteListener = HashSet<(DiscoveredDevice) -> Unit>()
+    protected val requestingToSynchronizeWithRemoteListener = HashSet<(DiscoveredDevice) -> Unit>()
 
-    private val newDeviceRegisteredListeners = HashSet<(DiscoveredDevice) -> Unit>()
+    protected val newDeviceRegisteredListeners = HashSet<(DiscoveredDevice) -> Unit>()
 
-    private val ignoreDeviceListeners = HashSet<(DiscoveredDevice) -> Unit>()
+    protected val ignoreDeviceListeners = HashSet<(DiscoveredDevice) -> Unit>()
 
 
     override fun showUnknownDeviceDiscovered(messenger: IMessenger, unknownDevice: DiscoveredDevice) {
@@ -46,7 +47,7 @@ abstract class DeviceRegistrationHandlerBase(protected val deepThought: DeepThou
     abstract fun showUnknownDeviceDiscoveredView(unknownDevice: DiscoveredDevice, callback: (Boolean, Boolean) -> Unit)
 
 
-    private fun askForRegistration(messenger: IMessenger, remoteDevice: DiscoveredDevice) {
+    protected open fun askForRegistration(messenger: IMessenger, remoteDevice: DiscoveredDevice) {
         messenger.requestPermitSynchronization(remoteDevice) { response ->
             response.body?.let { body ->
                 if(body.result == RequestPermitSynchronizationResult.RESPOND_TO_CHALLENGE) {
@@ -63,7 +64,7 @@ abstract class DeviceRegistrationHandlerBase(protected val deepThought: DeepThou
         }
     }
 
-    private fun getChallengeResponseFromUser(messenger: IMessenger, remoteDevice: DiscoveredDevice, nonce: String, wasCodePreviouslyWronglyEntered: Boolean) {
+    protected open fun getChallengeResponseFromUser(messenger: IMessenger, remoteDevice: DiscoveredDevice, nonce: String, wasCodePreviouslyWronglyEntered: Boolean) {
         var questionText = localization.getLocalizedString("alert.title.enter.response.code.for.permitting.synchronization", remoteDevice.device.getDisplayText())
         if(wasCodePreviouslyWronglyEntered) {
             questionText = localization.getLocalizedString("alert.title.entered.response.code.was.wrong", remoteDevice.device.getDisplayText())
@@ -79,7 +80,7 @@ abstract class DeviceRegistrationHandlerBase(protected val deepThought: DeepThou
         }
     }
 
-    private fun sendChallengeResponseToRemote(messenger: IMessenger, remoteDevice: DiscoveredDevice, nonce: String, enteredResponse: String) {
+    protected open fun sendChallengeResponseToRemote(messenger: IMessenger, remoteDevice: DiscoveredDevice, nonce: String, enteredResponse: String) {
         callRequestingToSynchronizeWithRemoteListeners(remoteDevice) // opens synchronization port needed in respondToSynchronizationPermittingChallenge()
 
         messenger.respondToSynchronizationPermittingChallenge(remoteDevice, nonce, enteredResponse, createSyncInfo()) { response ->
@@ -87,12 +88,10 @@ abstract class DeviceRegistrationHandlerBase(protected val deepThought: DeepThou
         }
     }
 
-    private fun createSyncInfo(useCallerDatabaseIds: Boolean? = null, useCallerUserName: Boolean? = null): SyncInfo {
+    protected open fun createSyncInfo(useCallerDatabaseIds: Boolean? = null, useCallerUserName: Boolean? = null): SyncInfo {
         val userSyncInfo = UserSyncInfo(networkSettings.localUser)
 
-        val articleSummaryExtractorConfigs = entityManager.getAllEntitiesOfType(ArticleSummaryExtractorConfig::class.java)
-
-        return DeepThoughtSyncInfo(deepThought.localDevice.id!!, userSyncInfo, useCallerDatabaseIds, useCallerUserName, articleSummaryExtractorConfigs)
+        return SyncInfo(networkSettings.localHostDevice.id!!, userSyncInfo, useCallerDatabaseIds, useCallerUserName)
     }
 
 
@@ -109,20 +108,11 @@ abstract class DeviceRegistrationHandlerBase(protected val deepThought: DeepThou
         }
     }
 
-    private fun remoteAllowedSynchronization(remoteDevice: DiscoveredDevice, body: RespondToSynchronizationPermittingChallengeResponseBody) {
+    protected open fun remoteAllowedSynchronization(remoteDevice: DiscoveredDevice, body: RespondToSynchronizationPermittingChallengeResponseBody) {
         log.info("Remote allowed synchronization: $remoteDevice")
 
         body.syncInfo?.let { syncInfo ->
-            // this is kind a dirty hack, newly synchronized device has to be added on both sides as otherwise it may gets overwritten. Don't know how to solve this otherwise
-            initialSyncManager.syncUserDevices(networkSettings.localHostDevice.id!!, networkSettings.localUser, syncInfo)
-
-            if(syncInfo.useCallerDatabaseIds == false) {
-                if(syncInfo.useCallerUserName == false) { // ensure that localUser object gets changed only on one side, otherwise there will be a conflict and chances are 50:50 which version will be used
-                    initialSyncManager.syncUserInformationWithRemoteOnes(networkSettings.localUser, syncInfo.user)
-                }
-
-                initialSyncManager.syncLocalDatabaseIdsWithRemoteOnes(deepThought, syncInfo)
-            }
+            doInitialSynchronization(syncInfo, syncInfo.useCallerDatabaseIds == false, syncInfo.useCallerUserName == false)
         }
 
         callNewDeviceRegisteredListeners(remoteDevice)
@@ -130,19 +120,19 @@ abstract class DeviceRegistrationHandlerBase(protected val deepThought: DeepThou
         showDeviceRegistrationHasBeenSuccessfulMessage(remoteDevice)
     }
 
-    private fun showDeviceRegistrationHasBeenSuccessfulMessage(remoteDevice: DiscoveredDevice) {
+    protected open fun showDeviceRegistrationHasBeenSuccessfulMessage(remoteDevice: DiscoveredDevice) {
         val successMessage = localization.getLocalizedString("alert.message.registering.at.device.successful", remoteDevice.device.getDisplayText())
 
         dialogService.showInfoMessage(successMessage)
     }
 
-    private fun showAlertSynchronizingIsNotPermitted(remoteDevice: DiscoveredDevice) {
+    protected open fun showAlertSynchronizingIsNotPermitted(remoteDevice: DiscoveredDevice) {
         val remoteDidNotAllowSynchronization = localization.getLocalizedString("alert.message.remote.did.not.allow.synchronization", remoteDevice.device.getDisplayText())
 
         dialogService.showInfoMessage(remoteDidNotAllowSynchronization)
     }
 
-    private fun showErrorMessage(error: Exception? = null) {
+    protected open fun showErrorMessage(error: Exception? = null) {
         dialogService.showErrorMessage(localization.getLocalizedString("alert.message.an.error.occurred"), exception = error)
     }
 
@@ -156,16 +146,7 @@ abstract class DeviceRegistrationHandlerBase(protected val deepThought: DeepThou
             val useCallerDatabaseIds = ! initialSyncManager.shouldUseLocalDatabaseIds(networkSettings.localUser, remoteSyncInfo)
             val useCallerUserName = ! initialSyncManager.shouldUseLocalUserName(localUser, remoteSyncInfo.user)
 
-            // this is kind a dirty hack, newly synchronized device has to be added on both sides as otherwise it may gets overwritten. Don't know how to solve this otherwise
-            initialSyncManager.syncUserDevices(networkSettings.localHostDevice.id!!, networkSettings.localUser, remoteSyncInfo)
-
-            if(useCallerDatabaseIds) {
-                if(useCallerUserName) { // ensure that localUser object gets changed only on one side, otherwise there will be a conflict and chances are 50:50 which version will be used
-                    initialSyncManager.syncUserInformationWithRemoteOnes(localUser, remoteSyncInfo.user)
-                }
-
-                initialSyncManager.syncLocalDatabaseIdsWithRemoteOnes(deepThought, remoteSyncInfo)
-            }
+            doInitialSynchronization(remoteSyncInfo, useCallerDatabaseIds, useCallerUserName)
 
             callNewDeviceRegisteredListeners(device)
 
@@ -179,12 +160,23 @@ abstract class DeviceRegistrationHandlerBase(protected val deepThought: DeepThou
         return null
     }
 
+    protected open fun doInitialSynchronization(syncInfo: SyncInfo, syncDatabaseIds: Boolean, syncUserInfo: Boolean) {
+        // this is kind a dirty hack, newly synchronized device has to be added on both sides as otherwise it may gets overwritten. Don't know how to solve this otherwise
+        initialSyncManager.syncUserDevices(networkSettings.localHostDevice.id!!, networkSettings.localUser, syncInfo)
+
+        if(syncDatabaseIds) {
+            if(syncUserInfo) { // ensure that localUser object gets changed only on one side, otherwise there will be a conflict and chances are 50:50 which version will be used
+                initialSyncManager.syncUserInformationWithRemoteOnes(networkSettings.localUser, syncInfo.user)
+            }
+        }
+    }
+
 
     override fun addRequestingToSynchronizeWithRemoteListener(listener: (remoteDevice: DiscoveredDevice) -> Unit) {
         requestingToSynchronizeWithRemoteListener.add(listener)
     }
 
-    private fun callRequestingToSynchronizeWithRemoteListeners(remoteDevice: DiscoveredDevice) {
+    protected open fun callRequestingToSynchronizeWithRemoteListeners(remoteDevice: DiscoveredDevice) {
         requestingToSynchronizeWithRemoteListener.forEach { it(remoteDevice) }
     }
 
@@ -192,7 +184,7 @@ abstract class DeviceRegistrationHandlerBase(protected val deepThought: DeepThou
         newDeviceRegisteredListeners.add(listener)
     }
 
-    private fun callNewDeviceRegisteredListeners(remoteDevice: DiscoveredDevice) {
+    protected open fun callNewDeviceRegisteredListeners(remoteDevice: DiscoveredDevice) {
         newDeviceRegisteredListeners.forEach { it(remoteDevice) }
     }
 
@@ -200,7 +192,7 @@ abstract class DeviceRegistrationHandlerBase(protected val deepThought: DeepThou
         ignoreDeviceListeners.add(listener)
     }
 
-    private fun callIgnoreDeviceListeners(remoteDevice: DiscoveredDevice) {
+    protected open fun callIgnoreDeviceListeners(remoteDevice: DiscoveredDevice) {
         ignoreDeviceListeners.forEach { it(remoteDevice) }
     }
 
