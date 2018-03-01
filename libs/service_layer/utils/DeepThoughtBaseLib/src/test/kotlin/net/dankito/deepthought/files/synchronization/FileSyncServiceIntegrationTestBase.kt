@@ -7,7 +7,6 @@ import com.nhaarman.mockito_kotlin.whenever
 import net.dankito.data_access.database.DeepThoughtCouchbaseLiteEntityManagerBase
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
-import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
 import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
 import net.dankito.deepthought.data.FilePersister
@@ -39,6 +38,7 @@ import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.database.sync.ISyncManager
 import net.dankito.synchronization.device.discovery.udp.UdpDevicesDiscoverer
 import net.dankito.synchronization.device.messaging.IMessenger
+import net.dankito.synchronization.device.messaging.callback.DeepThoughtDeviceRegistrationHandlerBase
 import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.synchronization.device.messaging.message.DeviceInfo
 import net.dankito.synchronization.device.messaging.tcp.PlainTcpMessenger
@@ -343,7 +343,7 @@ abstract class FileSyncServiceIntegrationTestBase {
             localSyncManager = CouchbaseLiteSyncManager(localEntityManager, localSynchronizedChangesHandler, localNetworkSettings)
 
             localRegistrationHandler = createDeviceRegistrationHandler(localRegisterAtRemote, localPermitRemoteToSynchronize, localCorrectChallengeResponse, localDataManager,
-                    localInitialSyncManager, localDialogService, localization)
+                    localNetworkSettings, localInitialSyncManager, localDialogService, localization)
 
             localMessenger = PlainTcpMessenger(localNetworkSettings, localRegistrationHandler, localEntityManager, localSerializer, base64Service, hashService, localThreadPool)
 
@@ -401,7 +401,7 @@ abstract class FileSyncServiceIntegrationTestBase {
             remoteSyncManager = CouchbaseLiteSyncManager(remoteEntityManager as DeepThoughtCouchbaseLiteEntityManagerBase, remoteSynchronizedChangesHandler, remoteNetworkSettings)
 
             val registrationHandlerInstance = createDeviceRegistrationHandler(remoteRegisterAtRemote, remotePermitRemoteToSynchronize, remoteCorrectChallengeResponse, remoteDataManager,
-                    remoteInitialSyncManager, remoteDialogService, localization)
+                    remoteNetworkSettings, remoteInitialSyncManager, remoteDialogService, localization)
 //            remoteRegistrationHandler = spy<IDeviceRegistrationHandler>(registrationHandlerInstance)
             remoteRegistrationHandler = registrationHandlerInstance
 
@@ -449,9 +449,9 @@ abstract class FileSyncServiceIntegrationTestBase {
 
 
     private fun createDeviceRegistrationHandler(registerAtRemote: AtomicBoolean, permitRemoteToSynchronize: AtomicBoolean, correctChallengeResponse: AtomicReference<String>,
-                                                dataManager: DataManager, initialSyncManager: DeepThoughtInitialSyncManager,
-                                                dialogService: IDialogService, localization: Localization): DeviceRegistrationHandlerBase {
-        return object : DeviceRegistrationHandlerBase(dataManager, initialSyncManager, dialogService, localization) {
+                                                dataManager: DataManager, networkSettings: NetworkSettings, initialSyncManager: DeepThoughtInitialSyncManager,
+                                                dialogService: IDialogService, localization: Localization): IDeviceRegistrationHandler {
+        return object : DeepThoughtDeviceRegistrationHandlerBase(dataManager.deepThought, dataManager.entityManager, networkSettings, initialSyncManager, dialogService, localization) {
             override fun showUnknownDeviceDiscoveredView(unknownDevice: DiscoveredDevice, callback: (Boolean, Boolean) -> Unit) {
                 callback(registerAtRemote.get(), false)
             }
