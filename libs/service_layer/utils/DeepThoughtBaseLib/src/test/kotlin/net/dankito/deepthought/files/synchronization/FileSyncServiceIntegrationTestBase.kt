@@ -8,8 +8,8 @@ import net.dankito.data_access.database.DeepThoughtCouchbaseLiteEntityManagerBas
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.deepthought.data.FilePersister
-import net.dankito.synchronization.files.DeepThoughtFileManager
 import net.dankito.deepthought.model.DeepThoughtFileLink
+import net.dankito.deepthought.serialization.DeepThoughtJacksonJsonSerializer
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.jpa.entitymanager.EntityManagerConfiguration
@@ -37,13 +37,15 @@ import net.dankito.synchronization.device.messaging.tcp.PlainTcpMessenger
 import net.dankito.synchronization.device.service.DiscoveredDevicesManager
 import net.dankito.synchronization.device.service.IDiscoveredDevicesManager
 import net.dankito.synchronization.device.service.KnownSynchronizedDevicesListener
+import net.dankito.synchronization.files.DeepThoughtFileManager
+import net.dankito.synchronization.files.DeepThoughtFileSyncService
 import net.dankito.synchronization.files.FileServer
 import net.dankito.synchronization.files.FileSyncService
-import net.dankito.synchronization.service.MimeTypeService
 import net.dankito.synchronization.model.*
 import net.dankito.synchronization.model.enums.OsType
 import net.dankito.synchronization.service.CommunicationManager
 import net.dankito.synchronization.service.ICommunicationManager
+import net.dankito.synchronization.service.MimeTypeService
 import net.dankito.synchronization.service.permissions.JavaPermissionsService
 import net.dankito.util.ThreadPool
 import net.dankito.util.event.EntityChangeSource
@@ -60,7 +62,6 @@ import net.dankito.util.ui.dialog.IDialogService
 import net.dankito.utils.OsHelper
 import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.utils.language.NoOpLanguageDetector
-import net.dankito.utils.serialization.DeepThoughtJacksonJsonSerializer
 import net.dankito.utils.version.Versions
 import net.engio.mbassy.listener.Handler
 import net.engio.mbassy.listener.Listener
@@ -362,7 +363,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         localFileServer = FileServer(localSearchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>, localNetworkSettings, localSocketHandler, localSerializer, localThreadPool)
 
-        localFileSyncService = FileSyncService(localDiscoveredDevicesManager, localSearchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>,
+        localFileSyncService = DeepThoughtFileSyncService(localDiscoveredDevicesManager, localSearchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>,
                 localSocketHandler, localLocalFileInfoService, localSerializer, JavaPermissionsService(), localPlatformConfiguration, hashService
         )
 
@@ -424,7 +425,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         remoteFileServer = FileServer(remoteSearchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>, remoteNetworkSettings, remoteSocketHandler, remoteSerializer, remoteThreadPool)
 
-        remoteFileSyncService = FileSyncService(remoteDiscoveredDevicesManager, remoteSearchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>,
+        remoteFileSyncService = DeepThoughtFileSyncService(remoteDiscoveredDevicesManager, remoteSearchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>,
                 remoteSocketHandler, remoteLocalFileInfoService, remoteSerializer, JavaPermissionsService(), remotePlatformConfiguration, hashService
         )
 

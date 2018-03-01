@@ -11,6 +11,7 @@ import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.serialization.DeepThoughtJacksonJsonSerializer
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.jpa.entitymanager.EntityManagerConfiguration
@@ -50,7 +51,6 @@ import net.dankito.util.settings.LocalSettingsStoreBase
 import net.dankito.util.ui.dialog.IDialogService
 import net.dankito.util.web.IWebClient
 import net.dankito.utils.PlatformConfigurationBase
-import net.dankito.utils.serialization.DeepThoughtJacksonJsonSerializer
 import net.dankito.utils.version.Versions
 import net.engio.mbassy.listener.Handler
 import net.engio.mbassy.listener.Listener
