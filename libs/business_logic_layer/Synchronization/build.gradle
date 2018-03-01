@@ -61,6 +61,9 @@ dependencies {
         exclude group: 'org.jetbrains.kotlin'
     }
 
+    compile "com.couchbase.lite:couchbase-lite-java-listener:$couchbaseLiteVersion"
+
+
     compile "net.dankito.util:util-common:1.0.0", {
         exclude group: 'org.jetbrains.kotlin'
     }
@@ -77,6 +80,8 @@ dependencies {
     testCompile "org.mockito:mockito-core:$mockitoVersion"
     testCompile "com.nhaarman:mockito-kotlin-kt1.1:$mockitoKotlinVersion" // so that Mockito.any() doesn't return null which null-safe Kotlin parameter don't like
     // for how to enable mocking final class (which is standard in Kotlin) with Mockito see https://github.com/mockito/mockito/wiki/What's-new-in-Mockito-2#mock-the-unmockable-opt-in-mocking-of-final-classesmethods
+
+    testCompile "com.couchbase.lite:couchbase-lite-java:$couchbaseLiteVersion"
 
     testCompile "ch.qos.logback:logback-core:$logbackVersion"
     testCompile "ch.qos.logback:logback-classic:$logbackVersion"

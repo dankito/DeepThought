@@ -1,10 +1,10 @@
-package net.dankito.service.synchronization.changeshandler
+package net.dankito.synchronization.database.sync.changeshandler
 
 import com.couchbase.lite.Database
 import com.couchbase.lite.Document
 import com.couchbase.lite.DocumentChange
 import com.couchbase.lite.SavedRevision
-import net.dankito.data_access.database.DeepThoughtCouchbaseLiteEntityManagerBase
+import net.dankito.jpa.couchbaselite.CouchbaseLiteEntityManagerBase
 import net.dankito.synchronization.model.BaseEntity
 import net.dankito.jpa.couchbaselite.Dao
 import net.dankito.service.data.event.EntityChangedNotifier
@@ -14,7 +14,7 @@ import net.dankito.util.AsyncProducerConsumerQueue
 import org.slf4j.LoggerFactory
 
 
-class SynchronizedChangesHandler(private val entityManager: DeepThoughtCouchbaseLiteEntityManagerBase, private val changeNotifier: EntityChangedNotifier) : ISynchronizedChangesHandler {
+class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityManagerBase, private val changeNotifier: EntityChangedNotifier) : ISynchronizedChangesHandler {
 
     companion object {
         private val log = LoggerFactory.getLogger(SynchronizedChangesHandler::class.java)

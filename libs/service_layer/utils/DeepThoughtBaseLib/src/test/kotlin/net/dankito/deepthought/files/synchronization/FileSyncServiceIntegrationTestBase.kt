@@ -28,9 +28,9 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.LuceneSearchEngine
-import net.dankito.service.synchronization.CouchbaseLiteSyncManager
-import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
-import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
+import net.dankito.synchronization.database.sync.CouchbaseLiteSyncManager
+import net.dankito.synchronization.database.sync.changeshandler.ISynchronizedChangesHandler
+import net.dankito.synchronization.database.sync.changeshandler.SynchronizedChangesHandler
 import net.dankito.synchronization.ConnectedDevicesServiceConfig
 import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.database.sync.ISyncManager

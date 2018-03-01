@@ -23,10 +23,10 @@ import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
-import net.dankito.service.synchronization.CouchbaseLiteSyncManager
-import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.synchronization.ConnectedDevicesServiceConfig
+import net.dankito.synchronization.database.sync.CouchbaseLiteSyncManager
 import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
+import net.dankito.synchronization.database.sync.changeshandler.SynchronizedChangesHandler
 import net.dankito.synchronization.device.discovery.udp.UdpDevicesDiscoverer
 import net.dankito.synchronization.device.messaging.IMessenger
 import net.dankito.synchronization.device.messaging.callback.DeepThoughtDeviceRegistrationHandlerBase

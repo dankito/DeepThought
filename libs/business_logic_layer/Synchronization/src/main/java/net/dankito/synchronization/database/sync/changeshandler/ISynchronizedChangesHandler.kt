@@ -1,4 +1,4 @@
-package net.dankito.service.synchronization.changeshandler
+package net.dankito.synchronization.database.sync.changeshandler
 
 import com.couchbase.lite.Database
 

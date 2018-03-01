@@ -1,20 +1,17 @@
-package net.dankito.service.synchronization
+package net.dankito.synchronization.database.sync
 
 import com.couchbase.lite.Database
 import com.couchbase.lite.listener.Credentials
 import com.couchbase.lite.listener.LiteListener
 import com.couchbase.lite.replicator.Replication
 import com.couchbase.lite.support.CouchbaseLiteHttpClientFactory
-import net.dankito.data_access.database.DeepThoughtCouchbaseLiteEntityManagerBase
-import net.dankito.deepthought.model.DeepThought
-import net.dankito.synchronization.model.DiscoveredDevice
-import net.dankito.deepthought.model.LocalSettings
-import net.dankito.synchronization.model.NetworkSettings
+import net.dankito.jpa.couchbaselite.CouchbaseLiteEntityManagerBase
 import net.dankito.jpa.couchbaselite.Dao
-import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
-import net.dankito.synchronization.database.sync.ISyncManager
+import net.dankito.synchronization.database.sync.changeshandler.ISynchronizedChangesHandler
 import net.dankito.synchronization.model.Device
+import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.synchronization.model.LocalFileInfo
+import net.dankito.synchronization.model.NetworkSettings
 import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
 import java.net.MalformedURLException
@@ -24,44 +21,43 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 
 
-class CouchbaseLiteSyncManager(private val entityManager: DeepThoughtCouchbaseLiteEntityManagerBase, private val synchronizedChangesHandler: ISynchronizedChangesHandler,
+open class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityManagerBase, private val synchronizedChangesHandler: ISynchronizedChangesHandler,
                                private val networkSettings: NetworkSettings, private val usePushReplication: Boolean = false, private val usePullReplication: Boolean = true) :
         ISyncManager {
 
     companion object {
         val PortNotSet = -1
 
-        private val SynchronizationDefaultPort = 27387
+        protected val SynchronizationDefaultPort = 27387
 
-        private val EntitiesFilterName = "Entities_Filter"
+        protected val EntitiesFilterName = "Entities_Filter"
 
         private val log = LoggerFactory.getLogger(CouchbaseLiteSyncManager::class.java)
     }
 
 
-    private val database = entityManager.database
-    private val manager = entityManager.manager
+    protected val database = entityManager.database
+    protected val manager = entityManager.manager
 
-    private var basicDataSyncListener: LiteListener? = null
-    private var basicDataSyncPort: Int = PortNotSet
-    private var basicDataSyncListenerThread: Thread? = null
+    protected val entitiesToFilter = ArrayList<String>()
 
-    private var couchbaseLiteListener: LiteListener? = null
-    private var synchronizationPort: Int = PortNotSet
-    private var listenerThread: Thread? = null
+    protected var basicDataSyncListener: LiteListener? = null
+    protected var basicDataSyncPort: Int = PortNotSet
+    protected var basicDataSyncListenerThread: Thread? = null
 
-    private var pushReplications: MutableMap<DiscoveredDevice, Replication> = ConcurrentHashMap()
-    private var pullReplications: MutableMap<DiscoveredDevice, Replication> = ConcurrentHashMap()
+    protected var couchbaseLiteListener: LiteListener? = null
+    protected var synchronizationPort: Int = PortNotSet
+    protected var listenerThread: Thread? = null
+
+    protected var pushReplications: MutableMap<DiscoveredDevice, Replication> = ConcurrentHashMap()
+    protected var pullReplications: MutableMap<DiscoveredDevice, Replication> = ConcurrentHashMap()
 
 
     init {
         setReplicationFilter(database)
     }
 
-    private fun setReplicationFilter(database: Database) {
-        val entitiesToFilter = ArrayList<String>()
-        entitiesToFilter.add(DeepThought::class.java.name)
-        entitiesToFilter.add(LocalSettings::class.java.name)
+    protected open fun setReplicationFilter(database: Database) {
         entitiesToFilter.add(LocalFileInfo::class.java.name)
 
         database.setFilter(EntitiesFilterName) { revision, params ->
@@ -85,7 +81,7 @@ class CouchbaseLiteSyncManager(private val entityManager: DeepThoughtCouchbaseLi
         startBasicDataSyncListener(desiredBasicDataSynchronizationPort, null, initializedCallback)
     }
 
-    private fun startBasicDataSyncListener(desiredPort: Int, allowedCredentials: Credentials? = null, initializedCallback: (Int) -> Unit): Boolean {
+    protected open fun startBasicDataSyncListener(desiredPort: Int, allowedCredentials: Credentials? = null, initializedCallback: (Int) -> Unit): Boolean {
         log.info("Starting basic data Couchbase Lite sync listener ...")
 
         basicDataSyncListener = LiteListener(manager, desiredPort, allowedCredentials)
@@ -103,7 +99,7 @@ class CouchbaseLiteSyncManager(private val entityManager: DeepThoughtCouchbaseLi
         return basicDataSyncPort > 0 && basicDataSyncPort < 65536
     }
 
-    private fun stopBasicDataSyncListener() {
+    protected open fun stopBasicDataSyncListener() {
         basicDataSyncListener?.stop()
 
         basicDataSyncListenerThread?.let { basicDataSyncListenerThread ->
@@ -148,7 +144,7 @@ class CouchbaseLiteSyncManager(private val entityManager: DeepThoughtCouchbaseLi
         push.start()
     }
 
-    private fun createPushForBasicDataSync(remoteDeviceAddress: String, basicDataSyncPort: Int): Replication {
+    protected open fun createPushForBasicDataSync(remoteDeviceAddress: String, basicDataSyncPort: Int): Replication {
         val push = database.createPushReplication(createSyncUrl(remoteDeviceAddress, basicDataSyncPort))
 
         // sync all known devices so that remote also knows our synchronized and ignored devices
@@ -160,7 +156,7 @@ class CouchbaseLiteSyncManager(private val entityManager: DeepThoughtCouchbaseLi
         return push
     }
 
-    private fun checkIfBasicDataSynchronizationIsDone(didSynchronizationStop: Boolean, receivedRemoteDevice: Device?, push: Replication,
+    protected open fun checkIfBasicDataSynchronizationIsDone(didSynchronizationStop: Boolean, receivedRemoteDevice: Device?, push: Replication,
                                pushChangeListener: Replication.ChangeListener, databaseChangeListener: Database.ChangeListener, syncDone: (Device) -> Unit) {
         if (didSynchronizationStop && receivedRemoteDevice != null) {
             push.stop()
@@ -237,7 +233,7 @@ class CouchbaseLiteSyncManager(private val entityManager: DeepThoughtCouchbaseLi
         }
     }
 
-    private fun startReplication(syncUrl: URL, device: DiscoveredDevice) {
+    protected open fun startReplication(syncUrl: URL, device: DiscoveredDevice) {
         if(usePushReplication) {
             val pushReplication = Replication(database, syncUrl, Replication.Direction.PUSH, httpClientFactory)
 
@@ -260,7 +256,7 @@ class CouchbaseLiteSyncManager(private val entityManager: DeepThoughtCouchbaseLi
         }
     }
 
-    private fun stopSynchronizingWithAllDevices() {
+    protected open fun stopSynchronizingWithAllDevices() {
         for(device in ArrayList(pushReplications.keys)) {
             stopSynchronizationWithDevice(device)
         }
@@ -282,17 +278,17 @@ class CouchbaseLiteSyncManager(private val entityManager: DeepThoughtCouchbaseLi
     }
 
 
-    private fun createSyncUrl(address: String, syncPort: Int): URL {
+    protected open fun createSyncUrl(address: String, syncPort: Int): URL {
         return URL("http://" + address + ":" + syncPort + "/" + database.name)
     }
 
 
-    private val databaseChangeListener = Database.ChangeListener { event ->
+    protected open val databaseChangeListener = Database.ChangeListener { event ->
         synchronizedChangesHandler.handleChange(event)
     }
 
 
-    private val httpClientFactory = object : CouchbaseLiteHttpClientFactory(database.persistentCookieStore) {
+    protected val httpClientFactory = object : CouchbaseLiteHttpClientFactory(database.persistentCookieStore) {
 
         private var client: OkHttpClient? = null
 

@@ -1,7 +1,7 @@
 package net.dankito.deepthought.android.stub
 
 import com.couchbase.lite.Database
-import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
+import net.dankito.synchronization.database.sync.changeshandler.ISynchronizedChangesHandler
 
 
 class NoOpSynchronizedChangesHandler : ISynchronizedChangesHandler {
