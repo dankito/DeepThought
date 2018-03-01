@@ -43,14 +43,14 @@ import net.dankito.filechooserdialog.service.IPermissionsService
 import net.dankito.filechooserdialog.service.PermissionsService
 import net.dankito.richtexteditor.android.animation.ShowHideViewAnimator
 import net.dankito.service.data.*
-import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.ItemChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.util.IThreadPool
-import net.dankito.utils.ui.IClipboardService
-import net.dankito.util.ui.dialog.IDialogService
+import net.dankito.util.event.EntityChangeSource
 import net.dankito.util.ui.dialog.ConfirmationDialogButton
 import net.dankito.util.ui.dialog.ConfirmationDialogConfig
+import net.dankito.util.ui.dialog.IDialogService
+import net.dankito.utils.ui.IClipboardService
 import net.engio.mbassy.listener.Handler
 import org.slf4j.LoggerFactory
 import java.util.*

@@ -22,10 +22,10 @@ import net.dankito.filechooserdialog.service.PermissionsService
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.SeriesService
 import net.dankito.service.data.SourceService
-import net.dankito.service.data.messages.EntityChangeSource
-import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.SourceChanged
 import net.dankito.service.eventbus.IEventBus
+import net.dankito.util.event.EntityChangeSource
+import net.dankito.util.event.EntityChangeType
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.util.ui.dialog.IDialogService
 import net.dankito.util.ui.dialog.ConfirmationDialogButton

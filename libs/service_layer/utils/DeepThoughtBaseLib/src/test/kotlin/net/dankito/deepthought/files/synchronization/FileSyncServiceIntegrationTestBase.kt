@@ -22,8 +22,6 @@ import net.dankito.mime.MimeTypeDetector
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
-import net.dankito.service.data.messages.EntityChangeSource
-import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.service.search.ISearchEngine
@@ -49,6 +47,8 @@ import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.synchronization.model.User
 import net.dankito.synchronization.model.enums.OsType
 import net.dankito.util.ThreadPool
+import net.dankito.util.event.EntityChangeSource
+import net.dankito.util.event.EntityChangeType
 import net.dankito.util.hashing.HashService
 import net.dankito.util.hashing.IBase64Service
 import net.dankito.util.localization.Localization

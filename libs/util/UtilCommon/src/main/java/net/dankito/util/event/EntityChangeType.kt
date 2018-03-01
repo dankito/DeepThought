@@ -1,4 +1,4 @@
-package net.dankito.service.data.messages
+package net.dankito.util.event
 
 
 enum class EntityChangeType {

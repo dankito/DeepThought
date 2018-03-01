@@ -6,9 +6,12 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.synchronization.model.BaseEntity
 import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.util.AsyncProducerConsumerQueue
+import net.dankito.util.event.EntityChangeSource
+import net.dankito.util.event.EntityChangeType
+import net.dankito.util.event.IEntityChangedNotifier
 
 
-class EntityChangedNotifier(private val eventBus: IEventBus) : IEntityChangedNotifier {
+class EntityChangedNotifier(private val eventBus: IEventBus) : IEntityChangedNotifier<BaseEntity> {
 
     data class QueuedChange(val entity: BaseEntity, val changeType: EntityChangeType, val source: EntityChangeSource, val didChangesAffectingDependentEntities: Boolean)
 

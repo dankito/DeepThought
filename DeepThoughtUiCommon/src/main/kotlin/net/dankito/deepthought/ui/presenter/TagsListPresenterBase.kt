@@ -7,7 +7,6 @@ import net.dankito.deepthought.ui.view.ITagsListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
-import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
@@ -16,6 +15,7 @@ import net.dankito.service.search.specific.FilteredTagsSearchResult
 import net.dankito.service.search.specific.TagsSearch
 import net.dankito.service.search.specific.TagsSearchResults
 import net.dankito.util.IThreadPool
+import net.dankito.util.event.EntityChangeType
 import net.dankito.util.localization.Localization
 import net.dankito.util.ui.dialog.IDialogService
 import net.engio.mbassy.listener.Handler

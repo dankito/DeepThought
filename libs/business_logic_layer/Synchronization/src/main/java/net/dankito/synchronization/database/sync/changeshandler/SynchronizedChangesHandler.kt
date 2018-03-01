@@ -7,14 +7,14 @@ import com.couchbase.lite.SavedRevision
 import net.dankito.jpa.couchbaselite.CouchbaseLiteEntityManagerBase
 import net.dankito.synchronization.model.BaseEntity
 import net.dankito.jpa.couchbaselite.Dao
-import net.dankito.service.data.event.EntityChangedNotifier
-import net.dankito.service.data.messages.EntityChangeSource
-import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.util.AsyncProducerConsumerQueue
+import net.dankito.util.event.EntityChangeSource
+import net.dankito.util.event.EntityChangeType
+import net.dankito.util.event.IEntityChangedNotifier
 import org.slf4j.LoggerFactory
 
 
-class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityManagerBase, private val changeNotifier: EntityChangedNotifier) : ISynchronizedChangesHandler {
+class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityManagerBase, private val changeNotifier: IEntityChangedNotifier<BaseEntity>) : ISynchronizedChangesHandler {
 
     companion object {
         private val log = LoggerFactory.getLogger(SynchronizedChangesHandler::class.java)

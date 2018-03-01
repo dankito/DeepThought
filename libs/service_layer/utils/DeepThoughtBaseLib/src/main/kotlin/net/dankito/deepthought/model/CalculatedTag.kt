@@ -1,11 +1,11 @@
 package net.dankito.deepthought.model
 
 import net.dankito.service.data.event.EntityChangedNotifier
-import net.dankito.service.data.messages.EntityChangeSource
-import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.ItemChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
+import net.dankito.util.event.EntityChangeSource
+import net.dankito.util.event.EntityChangeType
 import net.engio.mbassy.listener.Handler
 
 

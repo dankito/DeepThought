@@ -20,7 +20,6 @@ import net.dankito.newsreader.summary.ArticleSummaryExtractorBase
 import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractor
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
-import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.synchronization.ConnectedDevicesServiceConfig
@@ -38,6 +37,7 @@ import net.dankito.synchronization.model.*
 import net.dankito.synchronization.model.enums.OsType
 import net.dankito.util.ThreadPool
 import net.dankito.util.Version
+import net.dankito.util.event.EntityChangeType
 import net.dankito.util.hashing.HashService
 import net.dankito.util.hashing.IBase64Service
 import net.dankito.util.localization.Localization

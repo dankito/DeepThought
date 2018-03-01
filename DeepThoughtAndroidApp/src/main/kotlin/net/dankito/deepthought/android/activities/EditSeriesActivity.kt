@@ -17,11 +17,11 @@ import net.dankito.deepthought.ui.presenter.EditSeriesPresenter
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.SourceService
 import net.dankito.service.data.SeriesService
-import net.dankito.service.data.messages.EntityChangeSource
-import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.SeriesChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.util.IThreadPool
+import net.dankito.util.event.EntityChangeSource
+import net.dankito.util.event.EntityChangeType
 import net.dankito.util.ui.dialog.IDialogService
 import net.dankito.util.ui.dialog.ConfirmationDialogButton
 import net.dankito.util.ui.dialog.ConfirmationDialogConfig

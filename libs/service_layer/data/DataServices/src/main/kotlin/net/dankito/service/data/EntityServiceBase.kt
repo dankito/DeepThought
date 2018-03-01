@@ -3,9 +3,9 @@ package net.dankito.service.data
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.event.EntityChangedNotifier
-import net.dankito.service.data.messages.EntityChangeSource
-import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.synchronization.model.BaseEntity
+import net.dankito.util.event.EntityChangeSource
+import net.dankito.util.event.EntityChangeType
 import kotlin.concurrent.thread
 
 

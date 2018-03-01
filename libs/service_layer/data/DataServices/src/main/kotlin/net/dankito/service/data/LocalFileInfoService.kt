@@ -3,7 +3,7 @@ package net.dankito.service.data
 import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.event.EntityChangedNotifier
-import net.dankito.service.data.messages.EntityChangeType
+import net.dankito.util.event.EntityChangeType
 
 
 class LocalFileInfoService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier)

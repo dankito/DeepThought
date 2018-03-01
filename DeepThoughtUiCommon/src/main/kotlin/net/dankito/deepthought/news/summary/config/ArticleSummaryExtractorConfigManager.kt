@@ -11,10 +11,10 @@ import net.dankito.newsreader.feed.IFeedReader
 import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractorsManager
 import net.dankito.service.data.ArticleSummaryExtractorConfigService
 import net.dankito.service.data.messages.ArticleSummaryExtractorConfigChanged
-import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.eventbus.EventBusPriorities
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.util.IThreadPool
+import net.dankito.util.event.EntityChangeSource
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 

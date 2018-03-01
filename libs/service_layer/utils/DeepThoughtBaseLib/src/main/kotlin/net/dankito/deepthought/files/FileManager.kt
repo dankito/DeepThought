@@ -4,7 +4,6 @@ import net.dankito.deepthought.files.synchronization.FileSyncConfig
 import net.dankito.deepthought.files.synchronization.FileSyncService
 import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.service.data.LocalFileInfoService
-import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
@@ -12,6 +11,7 @@ import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.synchronization.model.enums.FileSyncStatus
 import net.dankito.util.IThreadPool
+import net.dankito.util.event.EntityChangeType
 import net.dankito.util.hashing.HashService
 import net.dankito.utils.services.Times
 import net.engio.mbassy.listener.Handler

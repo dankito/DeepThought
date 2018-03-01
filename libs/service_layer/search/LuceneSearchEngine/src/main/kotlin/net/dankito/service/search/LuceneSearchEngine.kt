@@ -5,8 +5,6 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.jpa.entitymanager.ChangedEntity
 import net.dankito.service.data.*
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
-import net.dankito.service.data.messages.EntityChangeSource
-import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.specific.*
 import net.dankito.service.search.writerandsearcher.*
@@ -15,6 +13,8 @@ import net.dankito.synchronization.model.BaseEntity
 import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.util.AsyncProducerConsumerQueue
 import net.dankito.util.IThreadPool
+import net.dankito.util.event.EntityChangeSource
+import net.dankito.util.event.EntityChangeType
 import net.dankito.utils.OsHelper
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.services.Times
