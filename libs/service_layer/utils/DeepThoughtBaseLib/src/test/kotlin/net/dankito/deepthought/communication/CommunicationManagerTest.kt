@@ -4,7 +4,7 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.anyOrNull
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
-import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
+import net.dankito.data_access.database.DeepThoughtCouchbaseLiteEntityManagerBase
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
@@ -142,7 +142,7 @@ class CommunicationManagerTest {
 
     private val localDevicesDiscoverer = UdpDevicesDiscoverer(object : NetworkConnectivityManagerBase(NetworkHelper()) { }, localThreadPool)
 
-    private lateinit var localEntityManager: CouchbaseLiteEntityManagerBase
+    private lateinit var localEntityManager: DeepThoughtCouchbaseLiteEntityManagerBase
 
     private lateinit var localDataManager: DataManager
 
@@ -201,7 +201,7 @@ class CommunicationManagerTest {
 
     private val remoteDevicesDiscoverer = UdpDevicesDiscoverer(object : NetworkConnectivityManagerBase(NetworkHelper()) { }, remoteThreadPool)
 
-    private lateinit var remoteEntityManager: CouchbaseLiteEntityManagerBase
+    private lateinit var remoteEntityManager: DeepThoughtCouchbaseLiteEntityManagerBase
 
     private lateinit var remoteDataManager: DataManager
 
@@ -285,7 +285,7 @@ class CommunicationManagerTest {
 
             remoteSynchronizedChangesHandler = SynchronizedChangesHandler(remoteEntityManager, remoteEntityChangedNotifier)
 
-            remoteSyncManager = CouchbaseLiteSyncManager(remoteEntityManager as CouchbaseLiteEntityManagerBase, remoteSynchronizedChangesHandler, remoteNetworkSettings)
+            remoteSyncManager = CouchbaseLiteSyncManager(remoteEntityManager as DeepThoughtCouchbaseLiteEntityManagerBase, remoteSynchronizedChangesHandler, remoteNetworkSettings)
 
             val registrationHandlerInstance = createDeviceRegistrationHandler(remoteRegisterAtRemote, remotePermitRemoteToSynchronize, remoteCorrectChallengeResponse, remoteDataManager,
                     remoteInitialSyncManager, remoteDialogService, localization)

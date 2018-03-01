@@ -22,10 +22,10 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-abstract class CouchbaseLiteEntityManagerBase(protected var context: Context, private val localSettingsStore: ILocalSettingsStore) : IEntityManager {
+abstract class DeepThoughtCouchbaseLiteEntityManagerBase(protected var context: Context, private val localSettingsStore: ILocalSettingsStore) : IEntityManager {
 
     companion object {
-        private val log = LoggerFactory.getLogger(CouchbaseLiteEntityManagerBase::class.java)
+        private val log = LoggerFactory.getLogger(DeepThoughtCouchbaseLiteEntityManagerBase::class.java)
     }
 
 

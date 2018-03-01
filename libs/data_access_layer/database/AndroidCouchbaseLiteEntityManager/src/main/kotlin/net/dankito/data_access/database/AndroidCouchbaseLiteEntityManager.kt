@@ -8,7 +8,7 @@ import java.io.File
 
 
 class AndroidCouchbaseLiteEntityManager(androidContext: android.content.Context, localSettingsStore: ILocalSettingsStore)
-    : CouchbaseLiteEntityManagerBase(AndroidContext(androidContext), localSettingsStore) {
+    : DeepThoughtCouchbaseLiteEntityManagerBase(AndroidContext(androidContext), localSettingsStore) {
 
     override fun adjustDatabasePath(context: Context, configuration: EntityManagerConfiguration): String {
         return File(this.context.getFilesDir(), configuration.databaseName).absolutePath

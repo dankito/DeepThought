@@ -8,7 +8,7 @@ import java.io.File
 
 
 class JavaCouchbaseLiteEntityManager(configuration: EntityManagerConfiguration, localSettingsStore: ILocalSettingsStore)
-    : CouchbaseLiteEntityManagerBase(DeepThoughtJavaContext(configuration.dataFolder), localSettingsStore) {
+    : DeepThoughtCouchbaseLiteEntityManagerBase(DeepThoughtJavaContext(configuration.dataFolder), localSettingsStore) {
 
     override fun adjustDatabasePath(context: Context, configuration: EntityManagerConfiguration): String {
         // TODO: implement this in a better way as this uses implementation internal details

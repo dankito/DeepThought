@@ -3,7 +3,7 @@ package net.dankito.service.synchronization.changeshandler
 import com.couchbase.lite.Database
 import com.couchbase.lite.DocumentChange
 import com.couchbase.lite.SavedRevision
-import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
+import net.dankito.data_access.database.DeepThoughtCouchbaseLiteEntityManagerBase
 import net.dankito.synchronization.model.BaseEntity
 import net.dankito.synchronization.model.config.TableConfig
 import net.dankito.jpa.apt.config.ColumnConfig
@@ -15,7 +15,7 @@ import java.sql.SQLException
 import java.util.*
 
 
-class SynchronizedDataMerger(private val entityManager: CouchbaseLiteEntityManagerBase) {
+class SynchronizedDataMerger(private val entityManager: DeepThoughtCouchbaseLiteEntityManagerBase) {
 
     companion object {
         private val log = LoggerFactory.getLogger(SynchronizedDataMerger::class.java)

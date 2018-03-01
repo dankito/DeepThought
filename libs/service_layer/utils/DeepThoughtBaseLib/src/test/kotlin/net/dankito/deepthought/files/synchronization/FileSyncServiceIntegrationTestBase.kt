@@ -4,7 +4,7 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.anyOrNull
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
-import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
+import net.dankito.data_access.database.DeepThoughtCouchbaseLiteEntityManagerBase
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
@@ -398,7 +398,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
             remoteSynchronizedChangesHandler = SynchronizedChangesHandler(remoteEntityManager, remoteEntityChangedNotifier)
 
-            remoteSyncManager = CouchbaseLiteSyncManager(remoteEntityManager as CouchbaseLiteEntityManagerBase, remoteSynchronizedChangesHandler, remoteNetworkSettings)
+            remoteSyncManager = CouchbaseLiteSyncManager(remoteEntityManager as DeepThoughtCouchbaseLiteEntityManagerBase, remoteSynchronizedChangesHandler, remoteNetworkSettings)
 
             val registrationHandlerInstance = createDeviceRegistrationHandler(remoteRegisterAtRemote, remotePermitRemoteToSynchronize, remoteCorrectChallengeResponse, remoteDataManager,
                     remoteInitialSyncManager, remoteDialogService, localization)

@@ -5,7 +5,7 @@ import com.couchbase.lite.listener.Credentials
 import com.couchbase.lite.listener.LiteListener
 import com.couchbase.lite.replicator.Replication
 import com.couchbase.lite.support.CouchbaseLiteHttpClientFactory
-import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
+import net.dankito.data_access.database.DeepThoughtCouchbaseLiteEntityManagerBase
 import net.dankito.deepthought.model.DeepThought
 import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.deepthought.model.LocalSettings
@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 
 
-class CouchbaseLiteSyncManager(private val entityManager: CouchbaseLiteEntityManagerBase, private val synchronizedChangesHandler: ISynchronizedChangesHandler,
+class CouchbaseLiteSyncManager(private val entityManager: DeepThoughtCouchbaseLiteEntityManagerBase, private val synchronizedChangesHandler: ISynchronizedChangesHandler,
                                private val networkSettings: NetworkSettings, private val usePushReplication: Boolean = false, private val usePullReplication: Boolean = true) :
         ISyncManager {
 

@@ -2,7 +2,7 @@ package net.dankito.deepthought.di
 
 import dagger.Module
 import dagger.Provides
-import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
+import net.dankito.data_access.database.DeepThoughtCouchbaseLiteEntityManagerBase
 import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
@@ -186,13 +186,13 @@ open class CommonModule {
     @Provides
     @Singleton
     open fun provideSynchronizedChangesHandler(entityManager: IEntityManager, changesNotifier: EntityChangedNotifier) : ISynchronizedChangesHandler {
-        return SynchronizedChangesHandler(entityManager as CouchbaseLiteEntityManagerBase, changesNotifier)
+        return SynchronizedChangesHandler(entityManager as DeepThoughtCouchbaseLiteEntityManagerBase, changesNotifier)
     }
 
     @Provides
     @Singleton
     open fun provideSyncManager(entityManager: IEntityManager, changesHandler: ISynchronizedChangesHandler, networkSettings: NetworkSettings) : ISyncManager {
-        return CouchbaseLiteSyncManager(entityManager as CouchbaseLiteEntityManagerBase, changesHandler, networkSettings)
+        return CouchbaseLiteSyncManager(entityManager as DeepThoughtCouchbaseLiteEntityManagerBase, changesHandler, networkSettings)
     }
 
     @Provides
