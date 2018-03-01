@@ -8,7 +8,7 @@ import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.util.AsyncProducerConsumerQueue
 
 
-class EntityChangedNotifier(private val eventBus: IEventBus) {
+class EntityChangedNotifier(private val eventBus: IEventBus) : IEntityChangedNotifier {
 
     data class QueuedChange(val entity: BaseEntity, val changeType: EntityChangeType, val source: EntityChangeSource, val didChangesAffectingDependentEntities: Boolean)
 
@@ -18,11 +18,11 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
     }
 
 
-    fun notifyListenersOfEntityChangeAsync(entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource, didChangesAffectingDependentEntities: Boolean = false) {
+    override fun notifyListenersOfEntityChangeAsync(entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource, didChangesAffectingDependentEntities: Boolean) {
         queue.add(QueuedChange(entity, changeType, source, didChangesAffectingDependentEntities))
     }
 
-    fun notifyListenersOfEntityChange(entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource, didChangesAffectingDependentEntities: Boolean = false, isDependentChange: Boolean = false) {
+    override fun notifyListenersOfEntityChange(entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource, didChangesAffectingDependentEntities: Boolean, isDependentChange: Boolean) {
         val entityClass = getEntityClass(entity)
 
         dispatchMessagesForChangedEntity(entityClass, entity, changeType, source, isDependentChange)
