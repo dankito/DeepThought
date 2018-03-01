@@ -6,6 +6,7 @@ import net.dankito.utils.version.Versions
 import org.slf4j.LoggerFactory
 
 
+// TODO: may move to a separate class DatabaseMigrater, Android- and JavaCouchbaseLiteEntityManager then just call this class. This class is then not needed anymore
 abstract class DeepThoughtCouchbaseLiteEntityManagerBase(context: Context, private val localSettingsStore: ILocalSettingsStore) : CouchbaseLiteEntityManagerBase(context) {
 
     companion object {
