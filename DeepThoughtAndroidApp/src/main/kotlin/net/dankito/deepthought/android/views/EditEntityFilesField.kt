@@ -10,7 +10,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.FilesRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.extensions.setLeftMargin
-import net.dankito.deepthought.files.DeepThoughtFileManager
+import net.dankito.synchronization.files.DeepThoughtFileManager
 import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter

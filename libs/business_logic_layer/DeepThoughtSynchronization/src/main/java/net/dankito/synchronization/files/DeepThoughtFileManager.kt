@@ -1,11 +1,8 @@
-package net.dankito.deepthought.files
+package net.dankito.synchronization.files
 
 import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
-import net.dankito.synchronization.files.FileManager
-import net.dankito.synchronization.files.FileSyncService
-import net.dankito.synchronization.files.MimeTypeService
 import net.dankito.synchronization.files.persistence.ILocalFileInfoRepository
 import net.dankito.synchronization.model.FileLink
 import net.dankito.synchronization.search.ISearchEngine

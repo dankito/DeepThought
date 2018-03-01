@@ -1,7 +1,6 @@
-package net.dankito.deepthought.files.synchronization
+package net.dankito.synchronization.files
 
 import net.dankito.synchronization.device.service.IConnectedDevicesService
-import net.dankito.synchronization.files.FileSyncService
 import net.dankito.synchronization.files.persistence.ILocalFileInfoRepository
 import net.dankito.synchronization.model.FileLink
 import net.dankito.synchronization.search.ISearchEngine

@@ -1,7 +1,7 @@
 package net.dankito.deepthought.service.clipboard
 
 import net.dankito.deepthought.di.CommonComponent
-import net.dankito.deepthought.files.DeepThoughtFileManager
+import net.dankito.synchronization.files.DeepThoughtFileManager
 import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source

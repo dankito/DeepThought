@@ -8,7 +8,7 @@ import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.di.DaggerBaseComponent
-import net.dankito.deepthought.files.DeepThoughtFileManager
+import net.dankito.synchronization.files.DeepThoughtFileManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.jpa.entitymanager.EntityManagerConfiguration
@@ -21,6 +21,7 @@ import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.synchronization.files.MimeTypeService
 import net.dankito.synchronization.model.FileLink
 import net.dankito.synchronization.model.enums.OsType
+import net.dankito.synchronization.search.ISearchEngine
 import net.dankito.util.ThreadPool
 import net.dankito.util.hashing.HashService
 import net.dankito.util.localization.Localization
@@ -121,7 +122,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         initLuceneSearchEngine(underTest)
 
         deleteEntityService = DeleteEntityService(itemService, tagService, sourceService, seriesService, fileService, localFileInfoService, underTest, mock(), threadPool)
-        fileManager = DeepThoughtFileManager(underTest as net.dankito.synchronization.search.ISearchEngine<FileLink>, localFileInfoService, mock(), mimeTypeService, HashService(), eventBus, threadPool)
+        fileManager = DeepThoughtFileManager(underTest as ISearchEngine<FileLink>, localFileInfoService, mock(), mimeTypeService, HashService(), eventBus, threadPool)
         filePersister = FilePersister(fileService, fileManager, threadPool)
         sourcePersister = SourcePersister(sourceService, seriesService, filePersister, deleteEntityService)
         itemPersister = ItemPersister(itemService, sourcePersister, tagService, filePersister, deleteEntityService)

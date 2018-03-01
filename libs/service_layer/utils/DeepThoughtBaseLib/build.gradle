@@ -21,14 +21,11 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
-    compile project(':DataModel')
-    compile project(':EventBus')
+    compile project(':DeepThoughtSynchronization')
+
     compile project(':JacksonJsonSerializer')
     compile project(':SearchEngine')
-    compile project(':DataServices')
     compile project(':NewsReader')
-
-    compile project(':DeepThoughtSynchronization')
 
 //    compile project(':NorconexLanguageDetector')
 //    compile project(':OptimaizeLanguageDetector')
