@@ -33,7 +33,7 @@ import net.dankito.service.synchronization.CouchbaseLiteSyncManager
 import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.synchronization.ConnectedDevicesServiceConfig
-import net.dankito.synchronization.database.IDatabaseUtil
+import net.dankito.utils.database.IDatabaseUtil
 import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.database.sync.ISyncManager
 import net.dankito.synchronization.device.discovery.IDevicesDiscoverer

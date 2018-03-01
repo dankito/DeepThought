@@ -1,4 +1,4 @@
-package net.dankito.synchronization.database
+package net.dankito.utils.database
 
 import net.dankito.jpa.entitymanager.ChangedEntity
 import net.dankito.util.AsyncProducerConsumerQueue

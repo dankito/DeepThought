@@ -18,7 +18,7 @@ import net.dankito.jpa.entitymanager.EntityManagerConfiguration
 import net.dankito.jpa.entitymanager.IEntityManager
 import net.dankito.mime.MimeTypeCategorizer
 import net.dankito.mime.MimeTypeDetector
-import net.dankito.synchronization.database.IDatabaseUtil
+import net.dankito.utils.database.IDatabaseUtil
 import net.dankito.synchronization.device.discovery.IDevicesDiscoverer
 import net.dankito.util.IThreadPool
 import net.dankito.util.hashing.IBase64Service

@@ -12,7 +12,7 @@ import net.dankito.deepthought.service.importexport.pdf.PdfImporter
 import net.dankito.jpa.couchbaselite.CouchbaseLiteEntityManagerBase
 import net.dankito.jpa.entitymanager.EntityManagerConfiguration
 import net.dankito.jpa.entitymanager.IEntityManager
-import net.dankito.synchronization.database.IDatabaseUtil
+import net.dankito.utils.database.IDatabaseUtil
 import net.dankito.synchronization.device.discovery.IDevicesDiscoverer
 import net.dankito.synchronization.device.discovery.udp.UdpDevicesDiscoverer
 import net.dankito.util.IThreadPool

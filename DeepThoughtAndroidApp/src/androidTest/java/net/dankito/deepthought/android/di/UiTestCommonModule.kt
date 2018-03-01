@@ -11,7 +11,7 @@ import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
-import net.dankito.synchronization.database.IDatabaseUtil
+import net.dankito.utils.database.IDatabaseUtil
 import net.dankito.synchronization.database.sync.ISyncManager
 import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.util.IThreadPool
