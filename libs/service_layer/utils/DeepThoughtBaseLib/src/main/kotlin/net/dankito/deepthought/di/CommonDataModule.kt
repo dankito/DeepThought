@@ -7,6 +7,7 @@ import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.files.DeepThoughtFileManager
+import net.dankito.deepthought.files.synchronization.DeepThoughtFileSyncService
 import net.dankito.deepthought.files.synchronization.FileServer
 import net.dankito.deepthought.files.synchronization.FileSyncService
 import net.dankito.deepthought.service.data.DataManager
@@ -130,7 +131,7 @@ class CommonDataModule {
     @Singleton
     fun provideFileSyncService(connectedDevicesService: IConnectedDevicesService, searchEngine: ISearchEngine, socketHandler: SocketHandler, localFileInfoService: LocalFileInfoService,
                                serializer: ISerializer, permissionsService: IPermissionsService, platformConfiguration: IPlatformConfiguration, hashService: HashService): FileSyncService {
-        return FileSyncService(connectedDevicesService, searchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>,
+        return DeepThoughtFileSyncService(connectedDevicesService, searchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>,
                 socketHandler, localFileInfoService, serializer, permissionsService, platformConfiguration, hashService)
     }
 

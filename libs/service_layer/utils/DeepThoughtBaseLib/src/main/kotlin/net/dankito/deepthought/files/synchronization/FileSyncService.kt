@@ -19,7 +19,6 @@ import net.dankito.util.AsyncProducerConsumerQueue
 import net.dankito.util.hashing.HashService
 import net.dankito.util.network.SocketHandler
 import net.dankito.util.serialization.ISerializer
-import net.dankito.utils.IPlatformConfiguration
 import org.slf4j.LoggerFactory
 import java.io.*
 import java.net.Socket
@@ -30,29 +29,29 @@ import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.schedule
 
 
-class FileSyncService(private val connectedDevicesService: IConnectedDevicesService, private val searchEngine: ISearchEngine<FileLink>, private val socketHandler: SocketHandler,
-                      private val localFileInfoRepository: ILocalFileInfoRepository, private val serializer: ISerializer, private val permissionsService: IPermissionsService,
-                      private val platformConfiguration: IPlatformConfiguration, private val hashService: HashService) {
+open class FileSyncService(protected val connectedDevicesService: IConnectedDevicesService, protected val searchEngine: ISearchEngine<FileLink>,
+                           protected val socketHandler: SocketHandler, protected val localFileInfoRepository: ILocalFileInfoRepository, protected val serializer: ISerializer,
+                           protected val permissionsService: IPermissionsService, protected val hashService: HashService) {
 
     companion object {
-        private const val MaxDelayBeforeRetryingToSynchronizeFile = 60 * 60 * 1000L // 1 hour
+        protected const val MaxDelayBeforeRetryingToSynchronizeFile = 60 * 60 * 1000L // 1 hour
 
         private val log = LoggerFactory.getLogger(FileSyncService::class.java)
     }
 
 
-    private val currentFileSynchronizations = ConcurrentHashMap<FileLink, FileSyncState>()
+    protected val currentFileSynchronizations = ConcurrentHashMap<FileLink, FileSyncState>()
 
-    private val syncStatesOfNotSuccessfullySynchronizedFiles = ConcurrentHashMap<FileLink, FileSyncState>()
+    protected val syncStatesOfNotSuccessfullySynchronizedFiles = ConcurrentHashMap<FileLink, FileSyncState>()
 
-    private val timerForNotSuccessfullySynchronizedFiles = Timer()
+    protected val timerForNotSuccessfullySynchronizedFiles = Timer()
 
-    private val isRequestingPermissionToWriteFiles = AtomicBoolean(false)
+    protected val isRequestingPermissionToWriteFiles = AtomicBoolean(false)
 
-    private val synchronizedFilesWaitingForWriteFilePermissionResult = mutableListOf<FileLink>()
+    protected val synchronizedFilesWaitingForWriteFilePermissionResult = mutableListOf<FileLink>()
 
 
-    private val queue = AsyncProducerConsumerQueue<FileLink>(FileSyncConfig.MaxSimultaneousConnections, autoStart = false) {
+    protected val queue = AsyncProducerConsumerQueue<FileLink>(FileSyncConfig.MaxSimultaneousConnections, autoStart = false) {
         tryToSynchronizeFile(it)
     }
 
@@ -75,11 +74,11 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
     }
 
 
-    fun addFileToSynchronize(file: FileLink) {
+    open fun addFileToSynchronize(file: FileLink) {
         queue.add(file)
     }
 
-    private fun addNotSuccessfullySynchronizedFile(file: FileLink, state: FileSyncState) {
+    protected open fun addNotSuccessfullySynchronizedFile(file: FileLink, state: FileSyncState) {
         syncStatesOfNotSuccessfullySynchronizedFiles.put(file, state)
 
         val delay = calculateDelay(state) // countTries times 1 minute
@@ -89,7 +88,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         }
     }
 
-    private fun calculateDelay(state: FileSyncState): Long {
+    protected open fun calculateDelay(state: FileSyncState): Long {
         if(state.devicesWithGoodChances.isNotEmpty()) { // wait only a short time and re-try again if other file(s) have finished
             return 30 * 1000L
         }
@@ -107,7 +106,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
     }
 
 
-    private fun tryToSynchronizeFile(file: FileLink) {
+    protected open fun tryToSynchronizeFile(file: FileLink) {
         if(permissionsService.hasPermissionToWriteFiles()) {
             tryToSynchronizeFileWithPermissionToWriteFile(file)
         }
@@ -127,7 +126,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         }
     }
 
-    private fun retrievedRequestWriteFilePermissionResult(isGranted: Boolean, file: FileLink) {
+    protected open fun retrievedRequestWriteFilePermissionResult(isGranted: Boolean, file: FileLink) {
         if(isGranted) {
             tryToSynchronizeFileWithPermissionToWriteFile(file)
 
@@ -146,7 +145,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         synchronizedFilesWaitingForWriteFilePermissionResult.clear()
     }
 
-    private fun tryToSynchronizeFileWithPermissionToWriteFile(file: FileLink) {
+    protected open fun tryToSynchronizeFileWithPermissionToWriteFile(file: FileLink) {
         val localFileInfo = getStoredLocalFileInfo(file)
         log.info("Trying to synchronize file $file ($localFileInfo)")
 
@@ -179,7 +178,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         }
     }
 
-    private fun tryToSynchronizeFile(file: FileLink, status: FileSyncState, connectedDevices: ArrayList<DiscoveredDevice>): Boolean {
+    protected open fun tryToSynchronizeFile(file: FileLink, status: FileSyncState, connectedDevices: ArrayList<DiscoveredDevice>): Boolean {
         status.countTries = status.countTries + 1
         status.devicesWithGoodChances.clear()
         status.devicesUnlikelyToGetFileFrom.clear()
@@ -207,7 +206,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         return false
     }
 
-    private fun setSynchronizationErrorOnStatus(result: SynchronizeFileResult, status: FileSyncState, connectedDevice: DiscoveredDevice) {
+    protected open fun setSynchronizationErrorOnStatus(result: SynchronizeFileResult, status: FileSyncState, connectedDevice: DiscoveredDevice) {
         when(result) {
             SynchronizeFileResult.NoSlotsAvailableTryLater,
             SynchronizeFileResult.DidNotReceiveAllBytes
@@ -222,7 +221,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         }
     }
 
-    private fun tryToSynchronizeFileWithDevice(file: FileLink, connectedDevice: DiscoveredDevice): SynchronizeFileResult {
+    protected open fun tryToSynchronizeFileWithDevice(file: FileLink, connectedDevice: DiscoveredDevice): SynchronizeFileResult {
         if(connectedDevice.fileSynchronizationPort > 0) {
             try {
                 val fileId = file.id
@@ -248,7 +247,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         return SynchronizeFileResult.RemoteFileSynchronizationPortNotSet
     }
 
-    private fun sendRequestAndTryToSynchronizeFileWithDevice(clientSocket: Socket, fileId: String, file: FileLink): SynchronizeFileResult {
+    protected open fun sendRequestAndTryToSynchronizeFileWithDevice(clientSocket: Socket, fileId: String, file: FileLink): SynchronizeFileResult {
         sendMessage(clientSocket, PermitSynchronizeFileRequest(fileId))
 
         val result = socketHandler.receiveMessage(clientSocket)
@@ -273,9 +272,9 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         return SynchronizeFileResult.ErrorOccurred
     }
 
-    private fun receiveFile(clientSocket: Socket, file: FileLink, fileSize: Long): SynchronizeFileResult {
+    protected open fun receiveFile(clientSocket: Socket, file: FileLink, fileSize: Long): SynchronizeFileResult {
         getStoredLocalFileInfo(file)?.let { localFileInfo -> // should actually never come to this with localFileInfo == null
-            val destinationFile = if(localFileInfo.path != null) File(localFileInfo.path) else platformConfiguration.getDefaultSavePathForFile(file.name, file.fileType)
+            val destinationFile = if(localFileInfo.path != null) File(localFileInfo.path) else getDefaultSavePathForFile(file)
             destinationFile.parentFile.mkdirs()
 
             val startTime = Date().time
@@ -298,7 +297,11 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         return SynchronizeFileResult.LocalFileInfoNotSet // can this ever happen?
     }
 
-    private fun saveStreamToFile(destinationFile: File, clientSocket: Socket, fileSize: Long): Long {
+    protected open fun getDefaultSavePathForFile(file: FileLink): File {
+        return File("data", file.name) // better overwrite this to find a better save path for file
+    }
+
+    protected open fun saveStreamToFile(destinationFile: File, clientSocket: Socket, fileSize: Long): Long {
         val tempFile = File.createTempFile("DeepThought_SynchronizedFile", destinationFile.extension) // don't write directly to destinationFile as when synchronization fails a
         // corrupt file remains, may having overwritten a fully synchronized version of that file
         val outputStream = BufferedOutputStream(FileOutputStream(tempFile))
@@ -330,7 +333,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         return receivedMessageSize
     }
 
-    private fun fileSuccessfullySynchronized(file: FileLink, localFileInfo: LocalFileInfo, destinationFile: File) {
+    protected open fun fileSuccessfullySynchronized(file: FileLink, localFileInfo: LocalFileInfo, destinationFile: File) {
         localFileInfo.path = destinationFile.path // use path not absolute path, see comment in getDefaultSavePathForFile()
 
         localFileInfo.fileSize = File(destinationFile.absolutePath).length() // we have to create a new File object to get file size
@@ -346,7 +349,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
         localFileInfoRepository.update(localFileInfo)
     }
 
-    private fun sendMessage(clientSocket: Socket, message: Any) {
+    protected open fun sendMessage(clientSocket: Socket, message: Any) {
         val serializedResponse = serializer.serializeObject(message)
         val responseBytes = serializedResponse.toByteArray(FileServer.MESSAGE_CHARSET)
 
@@ -354,7 +357,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
     }
 
 
-    private fun getStoredLocalFileInfo(file: FileLink): LocalFileInfo? { // duplicate of FileManager.getStoredLocalFileInfo() but cannot inject FileManager here to avoid dependency cycle
+    protected open fun getStoredLocalFileInfo(file: FileLink): LocalFileInfo? { // duplicate of FileManager.getStoredLocalFileInfo() but cannot inject FileManager here to avoid dependency cycle
         val localFileInfo = AtomicReference<LocalFileInfo?>(null)
 
         searchEngine.searchLocalFileInfo(LocalFileInfoSearch(file.id) { result ->
@@ -367,7 +370,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
     }
 
 
-    private fun mapPermitSynchronizeFileResultToSynchronizeFileResult(result: PermitSynchronizeFileResult): SynchronizeFileResult {
+    protected open fun mapPermitSynchronizeFileResultToSynchronizeFileResult(result: PermitSynchronizeFileResult): SynchronizeFileResult {
         when(result) {
             PermitSynchronizeFileResult.DoNotHaveFile -> return SynchronizeFileResult.RemoteDoesNotHaveFile
             PermitSynchronizeFileResult.NoSlotsAvailableTryLater -> return SynchronizeFileResult.NoSlotsAvailableTryLater
