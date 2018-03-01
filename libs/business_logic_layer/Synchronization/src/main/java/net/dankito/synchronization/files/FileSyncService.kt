@@ -1,4 +1,4 @@
-package net.dankito.deepthought.files.synchronization
+package net.dankito.synchronization.files
 
 import net.dankito.synchronization.device.service.IConnectedDevicesService
 import net.dankito.synchronization.device.service.KnownSynchronizedDevicesListener

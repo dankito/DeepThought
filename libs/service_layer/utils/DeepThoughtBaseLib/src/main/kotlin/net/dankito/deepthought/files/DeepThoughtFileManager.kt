@@ -1,9 +1,10 @@
 package net.dankito.deepthought.files
 
-import net.dankito.deepthought.files.synchronization.FileSyncService
 import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
+import net.dankito.synchronization.files.FileManager
+import net.dankito.synchronization.files.FileSyncService
 import net.dankito.synchronization.files.MimeTypeService
 import net.dankito.synchronization.files.persistence.ILocalFileInfoRepository
 import net.dankito.synchronization.model.FileLink
@@ -11,13 +12,14 @@ import net.dankito.synchronization.search.ISearchEngine
 import net.dankito.util.IThreadPool
 import net.dankito.util.event.EntityChangeType
 import net.dankito.util.hashing.HashService
+import net.dankito.utils.services.Times
 import net.engio.mbassy.listener.Handler
 import java.io.File
 
 
 class DeepThoughtFileManager(searchEngine: ISearchEngine<FileLink>, localFileInfoRepository: ILocalFileInfoRepository, fileSyncService: FileSyncService,
                              mimeTypeService: MimeTypeService, hashService: HashService, private val eventBus: IEventBus, threadPool: IThreadPool)
-    : FileManager(searchEngine, localFileInfoRepository, fileSyncService, mimeTypeService, hashService, threadPool) {
+    : FileManager(searchEngine, localFileInfoRepository, fileSyncService, mimeTypeService, hashService, threadPool, Times.DefaultDelayBeforeSearchingForNotSynchronizedFilesSeconds) {
 
     protected val eventBusListener = EventBusListener()
 

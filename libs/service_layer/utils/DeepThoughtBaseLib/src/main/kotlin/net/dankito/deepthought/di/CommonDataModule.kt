@@ -8,8 +8,8 @@ import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.files.DeepThoughtFileManager
 import net.dankito.deepthought.files.synchronization.DeepThoughtFileSyncService
-import net.dankito.deepthought.files.synchronization.FileServer
-import net.dankito.deepthought.files.synchronization.FileSyncService
+import net.dankito.synchronization.files.FileServer
+import net.dankito.synchronization.files.FileSyncService
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.jpa.entitymanager.EntityManagerConfiguration

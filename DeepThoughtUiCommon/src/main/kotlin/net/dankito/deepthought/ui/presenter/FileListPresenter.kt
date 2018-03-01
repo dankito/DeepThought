@@ -1,6 +1,6 @@
 package net.dankito.deepthought.ui.presenter
 
-import net.dankito.deepthought.files.FileManager
+import net.dankito.synchronization.files.FileManager
 import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter

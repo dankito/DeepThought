@@ -1,8 +1,5 @@
-package net.dankito.deepthought.files
+package net.dankito.synchronization.files
 
-import net.dankito.deepthought.files.synchronization.FileSyncConfig
-import net.dankito.deepthought.files.synchronization.FileSyncService
-import net.dankito.synchronization.files.MimeTypeService
 import net.dankito.synchronization.files.persistence.ILocalFileInfoRepository
 import net.dankito.synchronization.model.FileLink
 import net.dankito.synchronization.model.LocalFileInfo
@@ -11,7 +8,6 @@ import net.dankito.synchronization.search.ISearchEngine
 import net.dankito.synchronization.search.specific.LocalFileInfoSearch
 import net.dankito.util.IThreadPool
 import net.dankito.util.hashing.HashService
-import net.dankito.utils.services.Times
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.*
@@ -21,7 +17,8 @@ import kotlin.concurrent.schedule
 
 
 open class FileManager(protected val searchEngine: ISearchEngine<FileLink>, protected val localFileInfoRepository: ILocalFileInfoRepository, protected val fileSyncService: FileSyncService,
-                  protected val mimeTypeService: MimeTypeService, protected val hashService: HashService, protected val threadPool: IThreadPool) {
+                       protected val mimeTypeService: MimeTypeService, protected val hashService: HashService, protected val threadPool: IThreadPool,
+                       delayBeforeSearchingForNotSynchronizedFilesSeconds: Int) {
 
     companion object {
         private val log = LoggerFactory.getLogger(FileManager::class.java)
@@ -32,7 +29,7 @@ open class FileManager(protected val searchEngine: ISearchEngine<FileLink>, prot
 
 
     init {
-        Timer().schedule(Times.DefaultDelayBeforeSearchingForNotSynchronizedFilesSeconds * 1000L) {
+        Timer().schedule(delayBeforeSearchingForNotSynchronizedFilesSeconds * 1000L) {
             searchForNotSynchronizedFiles()
         }
     }

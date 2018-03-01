@@ -1,4 +1,4 @@
-package net.dankito.deepthought.files.synchronization
+package net.dankito.synchronization.files
 
 import net.dankito.util.hashing.HashAlgorithm
 

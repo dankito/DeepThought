@@ -1,4 +1,4 @@
-package net.dankito.deepthought.files.synchronization
+package net.dankito.synchronization.files
 
 import net.dankito.synchronization.files.message.PermitSynchronizeFileRequest
 import net.dankito.synchronization.files.message.PermitSynchronizeFileResponse

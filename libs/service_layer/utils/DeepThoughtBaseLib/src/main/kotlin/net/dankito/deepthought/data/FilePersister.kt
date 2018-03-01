@@ -1,6 +1,6 @@
 package net.dankito.deepthought.data
 
-import net.dankito.deepthought.files.FileManager
+import net.dankito.synchronization.files.FileManager
 import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.service.data.FileService
 import net.dankito.util.IThreadPool
