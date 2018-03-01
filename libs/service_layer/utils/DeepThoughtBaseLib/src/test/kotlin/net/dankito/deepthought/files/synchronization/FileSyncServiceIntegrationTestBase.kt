@@ -9,11 +9,9 @@ import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.deepthought.data.FilePersister
 import net.dankito.deepthought.files.FileManager
-import net.dankito.synchronization.files.MimeTypeService
 import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
-import net.dankito.synchronization.service.permissions.JavaPermissionsService
 import net.dankito.jpa.entitymanager.EntityManagerConfiguration
 import net.dankito.mime.MimeTypeCategorizer
 import net.dankito.mime.MimeTypeDetector
@@ -39,13 +37,12 @@ import net.dankito.synchronization.device.messaging.tcp.PlainTcpMessenger
 import net.dankito.synchronization.device.service.ConnectedDevicesService
 import net.dankito.synchronization.device.service.IConnectedDevicesService
 import net.dankito.synchronization.device.service.KnownSynchronizedDevicesListener
-import net.dankito.synchronization.model.Device
-import net.dankito.synchronization.model.DiscoveredDevice
-import net.dankito.synchronization.model.NetworkSettings
-import net.dankito.synchronization.model.User
+import net.dankito.synchronization.files.MimeTypeService
+import net.dankito.synchronization.model.*
 import net.dankito.synchronization.model.enums.OsType
 import net.dankito.synchronization.service.CommunicationManager
 import net.dankito.synchronization.service.ICommunicationManager
+import net.dankito.synchronization.service.permissions.JavaPermissionsService
 import net.dankito.util.ThreadPool
 import net.dankito.util.event.EntityChangeSource
 import net.dankito.util.event.EntityChangeType
@@ -361,13 +358,13 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         localMimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypeCategorizer)
 
-        localFileServer = FileServer(localSearchEngine, localEntityManager, localNetworkSettings, localSocketHandler, localSerializer, localThreadPool)
+        localFileServer = FileServer(localSearchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>, localNetworkSettings, localSocketHandler, localSerializer, localThreadPool)
 
-        localFileSyncService = FileSyncService(localConnectedDevicesService, localSearchEngine,
+        localFileSyncService = FileSyncService(localConnectedDevicesService, localSearchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>,
                 localSocketHandler, localLocalFileInfoService, localSerializer, JavaPermissionsService(), localPlatformConfiguration, hashService
         )
 
-        localFileManager = FileManager(localSearchEngine, localLocalFileInfoService, localFileSyncService, localMimeTypeService, hashService, localEventBus, localThreadPool)
+        localFileManager = FileManager(localSearchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>, localLocalFileInfoService, localFileSyncService, localMimeTypeService, hashService, localEventBus, localThreadPool)
 
         localFilePersister = FilePersister(localFileService, localFileManager, localThreadPool)
     }
@@ -422,13 +419,13 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         remoteMimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypeCategorizer)
 
-        remoteFileServer = FileServer(remoteSearchEngine, remoteEntityManager, remoteNetworkSettings, remoteSocketHandler, remoteSerializer, remoteThreadPool)
+        remoteFileServer = FileServer(remoteSearchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>, remoteNetworkSettings, remoteSocketHandler, remoteSerializer, remoteThreadPool)
 
-        remoteFileSyncService = FileSyncService(remoteConnectedDevicesService, remoteSearchEngine,
+        remoteFileSyncService = FileSyncService(remoteConnectedDevicesService, remoteSearchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>,
                 remoteSocketHandler, remoteLocalFileInfoService, remoteSerializer, JavaPermissionsService(), remotePlatformConfiguration, hashService
         )
 
-        remoteFileManager = FileManager(remoteSearchEngine, remoteLocalFileInfoService, remoteFileSyncService, remoteMimeTypeService, hashService, remoteEventBus, remoteThreadPool)
+        remoteFileManager = FileManager(remoteSearchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>, remoteLocalFileInfoService, remoteFileSyncService, remoteMimeTypeService, hashService, remoteEventBus, remoteThreadPool)
 
         remoteFilePersister = FilePersister(remoteFileService, remoteFileManager, remoteThreadPool)
     }

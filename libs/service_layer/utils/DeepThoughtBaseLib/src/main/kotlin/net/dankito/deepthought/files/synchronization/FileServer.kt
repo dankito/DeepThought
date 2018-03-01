@@ -1,6 +1,5 @@
 package net.dankito.deepthought.files.synchronization
 
-import net.dankito.jpa.entitymanager.IEntityManager
 import net.dankito.synchronization.files.message.PermitSynchronizeFileRequest
 import net.dankito.synchronization.files.message.PermitSynchronizeFileResponse
 import net.dankito.synchronization.files.message.PermitSynchronizeFileResult
@@ -24,7 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.concurrent.thread
 
 
-class FileServer(private val searchEngine: ISearchEngine<FileLink>, private val entityManager: IEntityManager, private val networkSettings: NetworkSettings,
+class FileServer(private val searchEngine: ISearchEngine<FileLink>, private val networkSettings: NetworkSettings,
                  private val socketHandler: SocketHandler, private val serializer: ISerializer, private val threadPool: IThreadPool) {
 
 

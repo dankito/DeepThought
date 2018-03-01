@@ -136,10 +136,10 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideFileServer(searchEngine: ISearchEngine, entityManager: IEntityManager, networkSettings: NetworkSettings,
+    fun provideFileServer(searchEngine: ISearchEngine, networkSettings: NetworkSettings,
                           socketHandler: SocketHandler, serializer: ISerializer, threadPool: IThreadPool): FileServer {
         return FileServer(searchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>,
-                entityManager, networkSettings, socketHandler, serializer, threadPool)
+                networkSettings, socketHandler, serializer, threadPool)
     }
 
 
