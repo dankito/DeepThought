@@ -3,7 +3,7 @@ package net.dankito.deepthought.di
 import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.database.DeepThoughtCouchbaseLiteEntityManagerBase
-import net.dankito.data_access.filesystem.IFileStorageService
+import net.dankito.util.filesystem.IFileStorageService
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.service.clipboard.OptionsForClipboardContentDetector

@@ -28,8 +28,6 @@ dependencies {
         exclude group: 'org.jsoup'
     }
 
-    compile project(':FileStorageService')
-
     compile project(':Utils')
 
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"

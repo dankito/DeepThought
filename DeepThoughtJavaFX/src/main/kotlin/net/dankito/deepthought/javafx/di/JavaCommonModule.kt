@@ -4,22 +4,22 @@ import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.database.CouchbaseLiteDatabaseUtil
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
-import net.dankito.data_access.filesystem.IFileStorageService
-import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.deepthought.javafx.service.hashing.Java8Base64Service
 import net.dankito.deepthought.javafx.service.settings.JavaFXPlatformConfiguration
 import net.dankito.deepthought.service.importexport.pdf.PdfImporter
 import net.dankito.jpa.couchbaselite.CouchbaseLiteEntityManagerBase
 import net.dankito.jpa.entitymanager.EntityManagerConfiguration
 import net.dankito.jpa.entitymanager.IEntityManager
-import net.dankito.utils.database.IDatabaseUtil
 import net.dankito.synchronization.device.discovery.IDevicesDiscoverer
 import net.dankito.synchronization.device.discovery.udp.UdpDevicesDiscoverer
 import net.dankito.util.IThreadPool
+import net.dankito.util.filesystem.IFileStorageService
+import net.dankito.util.filesystem.JavaFileStorageService
 import net.dankito.util.hashing.IBase64Service
 import net.dankito.util.network.INetworkConnectivityManager
 import net.dankito.util.settings.ILocalSettingsStore
 import net.dankito.utils.IPlatformConfiguration
+import net.dankito.utils.database.IDatabaseUtil
 import javax.inject.Singleton
 
 

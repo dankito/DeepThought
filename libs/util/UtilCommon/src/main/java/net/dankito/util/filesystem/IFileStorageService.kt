@@ -1,4 +1,4 @@
-package net.dankito.data_access.filesystem
+package net.dankito.util.filesystem
 
 import java.io.File
 import java.io.FileNotFoundException

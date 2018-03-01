@@ -6,7 +6,7 @@ import dagger.Provides
 import net.dankito.data_access.database.AndroidCouchbaseLiteEntityManager
 import net.dankito.data_access.database.CouchbaseLiteDatabaseUtil
 import net.dankito.data_access.filesystem.AndroidFileStorageService
-import net.dankito.data_access.filesystem.IFileStorageService
+import net.dankito.util.filesystem.IFileStorageService
 import net.dankito.data_access.network.discovery.AndroidUdpDevicesDiscoverer
 import net.dankito.deepthought.android.service.hashing.AndroidBase64Service
 import net.dankito.deepthought.android.service.settings.AndroidPlatformConfiguration

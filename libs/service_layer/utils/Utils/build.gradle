@@ -7,8 +7,6 @@ targetCompatibility = "1.7"
 dependencies {
     compile project(':DataModel')
 
-    compile project(':FileStorageService')
-
 
     compile "org.jsoup:jsoup:$jsoupVersion"
 

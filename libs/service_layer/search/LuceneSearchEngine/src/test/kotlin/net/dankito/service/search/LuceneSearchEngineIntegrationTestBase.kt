@@ -2,7 +2,7 @@ package net.dankito.service.search
 
 import com.nhaarman.mockito_kotlin.mock
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
-import net.dankito.data_access.filesystem.JavaFileStorageService
+import net.dankito.util.filesystem.JavaFileStorageService
 import net.dankito.deepthought.data.FilePersister
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.SourcePersister

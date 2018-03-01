@@ -28,6 +28,5 @@ dependencies {
     testCompile "ch.qos.logback:logback-classic:$logbackVersion"
 
     testCompile project(':JavaCouchbaseLiteEntityManager')
-    testCompile project(':FileStorageService')
 
 }

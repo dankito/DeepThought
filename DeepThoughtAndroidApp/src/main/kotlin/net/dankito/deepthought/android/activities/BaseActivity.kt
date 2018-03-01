@@ -2,7 +2,7 @@ package net.dankito.deepthought.android.activities
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import net.dankito.data_access.filesystem.IFileStorageService
+import net.dankito.util.filesystem.IFileStorageService
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.ActivityParameterHolder
 import net.dankito.deepthought.android.service.ActivityStateHolder

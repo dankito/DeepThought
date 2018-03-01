@@ -23,7 +23,6 @@ dependencies {
     testCompile "com.couchbase.lite:couchbase-lite-java:$couchbaseLiteVersion"
 
     testCompile project(':JavaCouchbaseLiteEntityManager')
-    testCompile project(':FileStorageService')
 
     testCompile "ch.qos.logback:logback-core:$logbackVersion"
     testCompile "ch.qos.logback:logback-classic:$logbackVersion"

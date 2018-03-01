@@ -49,5 +49,4 @@ dependencies {
 
     testCompile project(':LuceneSearchEngine')
     testCompile project(':JavaCouchbaseLiteEntityManager')
-    testCompile project(':FileStorageService')
 }

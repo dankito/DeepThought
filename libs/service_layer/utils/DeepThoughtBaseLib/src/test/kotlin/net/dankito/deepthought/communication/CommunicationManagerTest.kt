@@ -6,7 +6,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import net.dankito.data_access.database.DeepThoughtCouchbaseLiteEntityManagerBase
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
-import net.dankito.data_access.filesystem.JavaFileStorageService
+import net.dankito.util.filesystem.JavaFileStorageService
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source

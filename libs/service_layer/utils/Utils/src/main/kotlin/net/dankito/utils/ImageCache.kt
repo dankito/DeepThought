@@ -1,6 +1,6 @@
 package net.dankito.utils
 
-import net.dankito.data_access.filesystem.IFileStorageService
+import net.dankito.util.filesystem.IFileStorageService
 import net.dankito.util.web.IWebClient
 import net.dankito.util.web.RequestParameters
 import net.dankito.util.web.ResponseType
