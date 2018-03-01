@@ -1,10 +1,10 @@
-package net.dankito.deepthought.communication
+package net.dankito.synchronization.service
 
-import net.dankito.synchronization.device.messaging.MessengerConfig
-import net.dankito.synchronization.device.messaging.IMessenger
-import net.dankito.synchronization.model.NetworkSettings
-import net.dankito.synchronization.device.service.IConnectedDevicesService
 import net.dankito.synchronization.database.sync.ISyncManager
+import net.dankito.synchronization.device.messaging.IMessenger
+import net.dankito.synchronization.device.messaging.MessengerConfig
+import net.dankito.synchronization.device.service.IConnectedDevicesService
+import net.dankito.synchronization.model.NetworkSettings
 import java.util.*
 
 

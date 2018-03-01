@@ -35,6 +35,8 @@ import net.dankito.synchronization.device.messaging.tcp.PlainTcpMessenger
 import net.dankito.synchronization.device.service.*
 import net.dankito.synchronization.model.*
 import net.dankito.synchronization.model.enums.OsType
+import net.dankito.synchronization.service.CommunicationManager
+import net.dankito.synchronization.service.ICommunicationManager
 import net.dankito.util.ThreadPool
 import net.dankito.util.Version
 import net.dankito.util.event.EntityChangeType

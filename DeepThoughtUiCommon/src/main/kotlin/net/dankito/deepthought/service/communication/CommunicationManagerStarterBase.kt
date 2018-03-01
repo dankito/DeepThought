@@ -1,6 +1,6 @@
 package net.dankito.deepthought.service.communication
 
-import net.dankito.deepthought.communication.ICommunicationManager
+import net.dankito.synchronization.service.ICommunicationManager
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.files.synchronization.FileServer
 import net.dankito.deepthought.service.data.DataManager

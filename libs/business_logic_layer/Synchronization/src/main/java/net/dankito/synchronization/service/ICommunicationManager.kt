@@ -1,4 +1,4 @@
-package net.dankito.deepthought.communication
+package net.dankito.synchronization.service
 
 
 interface ICommunicationManager {

@@ -4,8 +4,8 @@ import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.database.DeepThoughtCouchbaseLiteEntityManagerBase
 import net.dankito.data_access.filesystem.IFileStorageService
-import net.dankito.deepthought.communication.CommunicationManager
-import net.dankito.deepthought.communication.ICommunicationManager
+import net.dankito.synchronization.service.CommunicationManager
+import net.dankito.synchronization.service.ICommunicationManager
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.files.MimeTypeService
 import net.dankito.deepthought.news.article.ArticleExtractorManager

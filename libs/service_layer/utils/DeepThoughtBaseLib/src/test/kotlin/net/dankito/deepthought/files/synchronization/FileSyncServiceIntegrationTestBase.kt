@@ -7,8 +7,8 @@ import com.nhaarman.mockito_kotlin.whenever
 import net.dankito.data_access.database.DeepThoughtCouchbaseLiteEntityManagerBase
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
-import net.dankito.deepthought.communication.CommunicationManager
-import net.dankito.deepthought.communication.ICommunicationManager
+import net.dankito.synchronization.service.CommunicationManager
+import net.dankito.synchronization.service.ICommunicationManager
 import net.dankito.deepthought.data.FilePersister
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.files.MimeTypeService
