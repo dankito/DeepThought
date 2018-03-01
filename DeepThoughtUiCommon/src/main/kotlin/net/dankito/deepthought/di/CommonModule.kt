@@ -29,9 +29,7 @@ import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.LuceneSearchEngine
-import net.dankito.service.synchronization.ConnectedDevicesService
 import net.dankito.service.synchronization.CouchbaseLiteSyncManager
-import net.dankito.service.synchronization.IConnectedDevicesService
 import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.synchronization.ConnectedDevicesServiceConfig
@@ -42,6 +40,8 @@ import net.dankito.synchronization.device.discovery.IDevicesDiscoverer
 import net.dankito.synchronization.device.messaging.IMessenger
 import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.synchronization.device.messaging.tcp.PlainTcpMessenger
+import net.dankito.synchronization.device.service.ConnectedDevicesService
+import net.dankito.synchronization.device.service.IConnectedDevicesService
 import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.util.IThreadPool
 import net.dankito.util.hashing.HashService
@@ -200,7 +200,8 @@ open class CommonModule {
     @Singleton
     open fun provideConnectedDevicesService(devicesDiscoverer: IDevicesDiscoverer, messenger: IMessenger, syncManager: ISyncManager, registrationHandler: IDeviceRegistrationHandler,
                                             networkSettings: NetworkSettings, entityManager: IEntityManager) : IConnectedDevicesService {
-        return ConnectedDevicesService(devicesDiscoverer, messenger, syncManager, registrationHandler, networkSettings, entityManager)
+        return ConnectedDevicesService(devicesDiscoverer, messenger, syncManager, registrationHandler, networkSettings, entityManager,
+                ConnectedDevicesServiceConfig.DEVICES_DISCOVERER_PORT, ConnectedDevicesServiceConfig.CHECK_FOR_DEVICES_INTERVAL_MILLIS)
     }
 
     @Provides

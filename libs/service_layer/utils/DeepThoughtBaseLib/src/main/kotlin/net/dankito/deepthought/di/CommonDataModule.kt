@@ -19,7 +19,7 @@ import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
-import net.dankito.service.synchronization.IConnectedDevicesService
+import net.dankito.synchronization.device.service.IConnectedDevicesService
 import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.util.IThreadPool
 import net.dankito.util.hashing.HashService

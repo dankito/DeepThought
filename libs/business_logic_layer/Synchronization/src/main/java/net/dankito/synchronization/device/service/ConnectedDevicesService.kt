@@ -1,7 +1,6 @@
-package net.dankito.service.synchronization
+package net.dankito.synchronization.device.service
 
 import net.dankito.jpa.entitymanager.IEntityManager
-import net.dankito.synchronization.ConnectedDevicesServiceConfig
 import net.dankito.synchronization.database.sync.ISyncManager
 import net.dankito.synchronization.device.discovery.DevicesDiscovererConfig
 import net.dankito.synchronization.device.discovery.DevicesDiscovererListener
@@ -21,9 +20,9 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
 
-// TODO: replace IEntityManager with DevicesService
 class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer, private val messenger: IMessenger, private val syncManager: ISyncManager,
-                              private val registrationHandler: IDeviceRegistrationHandler, private val networkSettings: NetworkSettings, private val entityManager: IEntityManager)
+                              private val registrationHandler: IDeviceRegistrationHandler, private val networkSettings: NetworkSettings, private val entityManager: IEntityManager,
+                              private val devicesDiscovererPort: Int, private val checkForDevicesInterval: Int)
     : IConnectedDevicesService {
 
     companion object {
@@ -70,8 +69,8 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
         val localDeviceInfoKey = getDeviceInfoKey(networkSettings)
 
         // TODO: move devicesDiscoverer starting / stopping to CommunicationManager, only add listener here
-        devicesDiscoverer.startAsync(DevicesDiscovererConfig(localDeviceInfoKey, ConnectedDevicesServiceConfig.DEVICES_DISCOVERER_PORT,
-                ConnectedDevicesServiceConfig.CHECK_FOR_DEVICES_INTERVAL_MILLIS, networkSettings.deviceDiscoveryMessagePrefix, discovererListener))
+        devicesDiscoverer.startAsync(DevicesDiscovererConfig(localDeviceInfoKey, devicesDiscovererPort, checkForDevicesInterval,
+                networkSettings.deviceDiscoveryMessagePrefix, discovererListener))
     }
 
     override fun stop() {

@@ -31,6 +31,7 @@ import net.dankito.synchronization.device.messaging.callback.DeepThoughtDeviceRe
 import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.synchronization.device.messaging.message.DeviceInfo
 import net.dankito.synchronization.device.messaging.tcp.PlainTcpMessenger
+import net.dankito.synchronization.device.service.*
 import net.dankito.synchronization.model.*
 import net.dankito.synchronization.model.enums.OsType
 import net.dankito.util.ThreadPool

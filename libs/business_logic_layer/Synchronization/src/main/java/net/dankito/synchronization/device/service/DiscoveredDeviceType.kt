@@ -1,4 +1,4 @@
-package net.dankito.service.synchronization
+package net.dankito.synchronization.device.service
 
 
 enum class DiscoveredDeviceType {

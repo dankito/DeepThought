@@ -24,6 +24,7 @@ import net.dankito.deepthought.service.permissions.IPermissionsService
 import net.dankito.deepthought.service.permissions.JavaPermissionsService
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
+import net.dankito.jpa.entitymanager.IEntityManager
 import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractorsManager
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.SeriesService
@@ -31,7 +32,6 @@ import net.dankito.service.data.TagService
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
-import net.dankito.synchronization.database.IEntityManager
 import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.synchronization.model.NetworkSettings

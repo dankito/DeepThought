@@ -3,7 +3,7 @@ package net.dankito.deepthought.javafx.service.communication
 import javafx.application.Platform
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.DeepThought
-import net.dankito.synchronization.database.IEntityManager
+import net.dankito.jpa.entitymanager.IEntityManager
 import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.device.messaging.callback.DeepThoughtDeviceRegistrationHandlerBase
 import net.dankito.synchronization.device.messaging.message.DeviceInfo

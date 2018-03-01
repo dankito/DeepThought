@@ -13,8 +13,8 @@ import net.dankito.deepthought.service.permissions.IPermissionsService
 import net.dankito.service.data.LocalFileInfoService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.LocalFileInfoSearch
-import net.dankito.service.synchronization.IConnectedDevicesService
-import net.dankito.service.synchronization.KnownSynchronizedDevicesListener
+import net.dankito.synchronization.device.service.IConnectedDevicesService
+import net.dankito.synchronization.device.service.KnownSynchronizedDevicesListener
 import net.dankito.util.AsyncProducerConsumerQueue
 import net.dankito.util.hashing.HashService
 import net.dankito.util.network.SocketHandler
