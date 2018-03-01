@@ -4,8 +4,7 @@ import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.database.DeepThoughtCouchbaseLiteEntityManagerBase
 import net.dankito.data_access.filesystem.IFileStorageService
-import net.dankito.deepthought.files.FileManager
-import net.dankito.synchronization.files.MimeTypeService
+import net.dankito.deepthought.files.DeepThoughtFileManager
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.service.clipboard.OptionsForClipboardContentDetector
@@ -39,6 +38,7 @@ import net.dankito.synchronization.device.messaging.callback.IDeviceRegistration
 import net.dankito.synchronization.device.messaging.tcp.PlainTcpMessenger
 import net.dankito.synchronization.device.service.ConnectedDevicesService
 import net.dankito.synchronization.device.service.IConnectedDevicesService
+import net.dankito.synchronization.files.MimeTypeService
 import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.synchronization.service.CommunicationManager
 import net.dankito.synchronization.service.ICommunicationManager
@@ -84,7 +84,7 @@ open class CommonModule {
 
     @Provides
     @Singleton
-    open fun provideOptionsForClipboardContentDetector(articleExtractorManager: ArticleExtractorManager, fileManager: FileManager, dialogService: IDialogService,
+    open fun provideOptionsForClipboardContentDetector(articleExtractorManager: ArticleExtractorManager, fileManager: DeepThoughtFileManager, dialogService: IDialogService,
                                                        mimeTypeService: MimeTypeService, platformConfiguration: IPlatformConfiguration, router: IRouter) : OptionsForClipboardContentDetector {
         return OptionsForClipboardContentDetector(articleExtractorManager, fileManager, dialogService, mimeTypeService, platformConfiguration, router)
     }

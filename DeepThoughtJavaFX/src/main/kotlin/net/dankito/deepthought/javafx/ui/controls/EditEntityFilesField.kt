@@ -8,7 +8,7 @@ import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
 import javafx.stage.FileChooser
-import net.dankito.deepthought.files.FileManager
+import net.dankito.deepthought.files.DeepThoughtFileManager
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.ui.controls.cell.FileListCellFragment
 import net.dankito.deepthought.model.DeepThoughtFileLink
@@ -17,10 +17,10 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.FileListPresenter
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
-import net.dankito.utils.extensions.didCollectionChange
 import net.dankito.util.localization.Localization
-import net.dankito.utils.ui.Colors
 import net.dankito.util.ui.IApplicationsService
+import net.dankito.utils.extensions.didCollectionChange
+import net.dankito.utils.ui.Colors
 import net.engio.mbassy.listener.Handler
 import tornadofx.*
 import java.io.File
@@ -30,7 +30,7 @@ import javax.inject.Inject
 class EditEntityFilesField : View() {
 
     @Inject
-    protected lateinit var fileManager: FileManager
+    protected lateinit var fileManager: DeepThoughtFileManager
 
     @Inject
     protected lateinit var applicationsService: IApplicationsService
@@ -154,7 +154,7 @@ class EditEntityFilesField : View() {
     }
 
     private fun addLocalFile(file: File) {
-        val localFile = fileManager.createLocalFile(file)
+        val localFile = fileManager.createLocalDeepThoughtFile(file)
 
         addFile(localFile)
     }

@@ -10,7 +10,7 @@ import javafx.scene.input.KeyCode
 import javafx.scene.layout.Priority
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
-import net.dankito.deepthought.files.FileManager
+import net.dankito.deepthought.files.DeepThoughtFileManager
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.javafx.res.icons.Icons
@@ -48,7 +48,7 @@ class ViewPdfDialog : DialogFragment() {
     protected lateinit var importer: PdfImporter
 
     @Inject
-    protected lateinit var fileManager: FileManager
+    protected lateinit var fileManager: DeepThoughtFileManager
 
     @Inject
     protected lateinit var router: IRouter
@@ -208,7 +208,7 @@ class ViewPdfDialog : DialogFragment() {
 
 
     private fun loadPdf(pdfFile: File) {
-        loadPdf(fileManager.createLocalFile(pdfFile))
+        loadPdf(fileManager.createLocalDeepThoughtFile(pdfFile))
     }
 
     private fun loadPdf(pdfFile: DeepThoughtFileLink) {

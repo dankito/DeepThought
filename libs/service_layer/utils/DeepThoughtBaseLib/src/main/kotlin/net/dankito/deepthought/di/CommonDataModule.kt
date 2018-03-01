@@ -6,7 +6,7 @@ import net.dankito.deepthought.data.FilePersister
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.data.SourcePersister
-import net.dankito.deepthought.files.FileManager
+import net.dankito.deepthought.files.DeepThoughtFileManager
 import net.dankito.deepthought.files.synchronization.FileServer
 import net.dankito.deepthought.files.synchronization.FileSyncService
 import net.dankito.deepthought.service.data.DataManager
@@ -102,8 +102,8 @@ class CommonDataModule {
     @Provides
     @Singleton
     fun provideFileManager(searchEngine: ISearchEngine, localFileInfoService: LocalFileInfoService, fileSyncService: FileSyncService,
-                           mimeTypeService: MimeTypeService, hashService: HashService, eventBus: IEventBus, threadPool: IThreadPool) : FileManager {
-        return FileManager(searchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>, // TODO: why is this cast needed?
+                           mimeTypeService: MimeTypeService, hashService: HashService, eventBus: IEventBus, threadPool: IThreadPool) : DeepThoughtFileManager {
+        return DeepThoughtFileManager(searchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>, // TODO: why is this cast needed?
                 localFileInfoService, fileSyncService, mimeTypeService, hashService, eventBus, threadPool)
     }
 
@@ -171,7 +171,7 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideFilePersister(fileService: FileService, fileManager: FileManager, threadPool: IThreadPool): FilePersister {
+    fun provideFilePersister(fileService: FileService, fileManager: DeepThoughtFileManager, threadPool: IThreadPool): FilePersister {
         return FilePersister(fileService, fileManager, threadPool)
     }
 

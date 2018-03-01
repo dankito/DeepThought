@@ -10,7 +10,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.FilesRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.extensions.setLeftMargin
-import net.dankito.deepthought.files.FileManager
+import net.dankito.deepthought.files.DeepThoughtFileManager
 import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
@@ -21,9 +21,9 @@ import net.dankito.filechooserdialog.service.IPermissionsService
 import net.dankito.filechooserdialog.service.PreviewImageService
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
-import net.dankito.utils.extensions.didCollectionChange
 import net.dankito.util.localization.Localization
 import net.dankito.util.ui.IApplicationsService
+import net.dankito.utils.extensions.didCollectionChange
 import net.engio.mbassy.listener.Handler
 import java.io.File
 import javax.inject.Inject
@@ -37,7 +37,7 @@ class EditEntityFilesField : EditEntityField {
 
 
     @Inject
-    protected lateinit var fileManager: FileManager
+    protected lateinit var fileManager: DeepThoughtFileManager
 
     @Inject
     protected lateinit var applicationsService: IApplicationsService
@@ -143,7 +143,7 @@ class EditEntityFilesField : EditEntityField {
     }
 
     private fun addLocalFile(file: File) {
-        val localFile = fileManager.createLocalFile(file)
+        val localFile = fileManager.createLocalDeepThoughtFile(file)
 
         addFile(localFile)
     }

@@ -8,7 +8,7 @@ import net.dankito.data_access.database.DeepThoughtCouchbaseLiteEntityManagerBas
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.deepthought.data.FilePersister
-import net.dankito.deepthought.files.FileManager
+import net.dankito.deepthought.files.DeepThoughtFileManager
 import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
@@ -134,7 +134,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     protected lateinit var localFileSyncService: FileSyncService
 
-    protected lateinit var localFileManager: FileManager
+    protected lateinit var localFileManager: DeepThoughtFileManager
 
 
     protected val localSocketHandler = SocketHandler()
@@ -230,7 +230,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     protected lateinit var remoteFileSyncService: FileSyncService
 
-    protected lateinit var remoteFileManager: FileManager
+    protected lateinit var remoteFileManager: DeepThoughtFileManager
 
 
     protected val remoteSocketHandler = SocketHandler()
@@ -364,7 +364,8 @@ abstract class FileSyncServiceIntegrationTestBase {
                 localSocketHandler, localLocalFileInfoService, localSerializer, JavaPermissionsService(), localPlatformConfiguration, hashService
         )
 
-        localFileManager = FileManager(localSearchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>, localLocalFileInfoService, localFileSyncService, localMimeTypeService, hashService, localEventBus, localThreadPool)
+        localFileManager = DeepThoughtFileManager(localSearchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>, localLocalFileInfoService, localFileSyncService,
+                localMimeTypeService, hashService, localEventBus, localThreadPool)
 
         localFilePersister = FilePersister(localFileService, localFileManager, localThreadPool)
     }
@@ -425,7 +426,7 @@ abstract class FileSyncServiceIntegrationTestBase {
                 remoteSocketHandler, remoteLocalFileInfoService, remoteSerializer, JavaPermissionsService(), remotePlatformConfiguration, hashService
         )
 
-        remoteFileManager = FileManager(remoteSearchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>, remoteLocalFileInfoService, remoteFileSyncService, remoteMimeTypeService, hashService, remoteEventBus, remoteThreadPool)
+        remoteFileManager = DeepThoughtFileManager(remoteSearchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>, remoteLocalFileInfoService, remoteFileSyncService, remoteMimeTypeService, hashService, remoteEventBus, remoteThreadPool)
 
         remoteFilePersister = FilePersister(remoteFileService, remoteFileManager, remoteThreadPool)
     }
@@ -494,7 +495,7 @@ abstract class FileSyncServiceIntegrationTestBase {
         writer.write("Liebe") // write any content so that file size != 0
         writer.close()
 
-        val file = localFileManager.createLocalFile(tempFile)
+        val file = localFileManager.createLocalDeepThoughtFile(tempFile)
         localFilePersister.saveFile(file)
 
         return file

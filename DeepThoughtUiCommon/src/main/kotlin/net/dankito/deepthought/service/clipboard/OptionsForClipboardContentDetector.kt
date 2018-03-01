@@ -1,26 +1,26 @@
 package net.dankito.deepthought.service.clipboard
 
-import net.dankito.util.web.IWebClient
-import net.dankito.util.web.RequestParameters
 import net.dankito.deepthought.di.CommonComponent
-import net.dankito.deepthought.files.FileManager
-import net.dankito.synchronization.files.MimeTypeService
+import net.dankito.deepthought.files.DeepThoughtFileManager
 import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.utils.IPlatformConfiguration
+import net.dankito.synchronization.files.MimeTypeService
 import net.dankito.util.UrlUtil
 import net.dankito.util.localization.Localization
-import net.dankito.utils.services.network.download.IFileDownloader
 import net.dankito.util.ui.dialog.IDialogService
+import net.dankito.util.web.IWebClient
+import net.dankito.util.web.RequestParameters
+import net.dankito.utils.IPlatformConfiguration
+import net.dankito.utils.services.network.download.IFileDownloader
 import java.io.File
 import java.util.*
 import javax.inject.Inject
 
 
-class OptionsForClipboardContentDetector(private val articleExtractorManager: ArticleExtractorManager, private val fileManager: FileManager, private val dialogService: IDialogService,
+class OptionsForClipboardContentDetector(private val articleExtractorManager: ArticleExtractorManager, private val fileManager: DeepThoughtFileManager, private val dialogService: IDialogService,
                                          private val mimeTypeService: MimeTypeService, private val platformConfiguration: IPlatformConfiguration, private val router: IRouter) {
 
 
@@ -182,7 +182,7 @@ class OptionsForClipboardContentDetector(private val articleExtractorManager: Ar
             option.updateIsExecutingState(downloadState.progress)
 
             if(downloadState.finished && downloadState.successful) {
-                val downloadedFile = fileManager.createDownloadedLocalFile(url, destination, mimeType)
+                val downloadedFile = fileManager.createDownloadedLocalDeepThoughtFile(url, destination, mimeType)
                 callback(downloadedFile)
             }
 

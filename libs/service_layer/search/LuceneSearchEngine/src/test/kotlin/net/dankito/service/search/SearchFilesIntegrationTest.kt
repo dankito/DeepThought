@@ -1,11 +1,11 @@
 package net.dankito.service.search
 
 import net.dankito.deepthought.model.DeepThoughtFileLink
-import net.dankito.synchronization.search.specific.FilesSearch
-import net.dankito.synchronization.search.specific.LocalFileInfoSearch
 import net.dankito.service.search.writerandsearcher.FileLinkIndexWriterAndSearcher
 import net.dankito.synchronization.model.FileLink
 import net.dankito.synchronization.model.enums.FileType
+import net.dankito.synchronization.search.specific.FilesSearch
+import net.dankito.synchronization.search.specific.LocalFileInfoSearch
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.Matchers.nullValue
@@ -147,7 +147,7 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
         val fileIndexWriterAndSearcher = fileIndexWriterAndSearcherField?.get(underTest) as? FileLinkIndexWriterAndSearcher
 
         for(i in 0 until 5) {
-            fileService.persist(fileManager.createLocalFile(File("/tmp", "With_$i")))
+            fileService.persist(fileManager.createLocalDeepThoughtFile(File("/tmp", "With_$i")))
 
             fileService.persist(DeepThoughtFileLink("", "Remote_$i", false))
         }
@@ -181,7 +181,7 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
     fun persistFile_LocalFileInfoGetsFound() {
         val tempFile = createTempFile()
 
-        val file = fileManager.createLocalFile(tempFile)
+        val file = fileManager.createLocalDeepThoughtFile(tempFile)
         assertThat(file.id, nullValue())
 
         val localFileInfo = fileManager.getStoredLocalFileInfo(file)
@@ -215,7 +215,7 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
     @Test
     fun deletePersistedFile_LocalFileInfoGetsAlsoDeleted() {
         val tempFile = createTempFile()
-        val file = fileManager.createLocalFile(tempFile)
+        val file = fileManager.createLocalDeepThoughtFile(tempFile)
         filePersister.saveFile(file)
 
         waitTillEntityGetsIndexed() // file gets indexed async -> wait some time
@@ -229,7 +229,7 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
             assertThat(file.id, notNullValue())
             assertThat(retrievedLocalFileInfo.id, notNullValue())
 
-            val fileCopy = fileManager.createLocalFile(tempFile)
+            val fileCopy = fileManager.createLocalDeepThoughtFile(tempFile)
             fileCopy.id = file.id
 
 
@@ -302,7 +302,7 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
 
     private fun persistFileAndTestField(localFile: File, fieldValueToSearchFor: String, searchUri: Boolean = false, searchName: Boolean = false,
                                  searchMimeType: Boolean = false, searchFileType: Boolean = false, searchDescription: Boolean = false, searchSourceUri: Boolean = false) {
-        val file = fileManager.createLocalFile(localFile)
+        val file = fileManager.createLocalDeepThoughtFile(localFile)
         filePersister.saveFile(file)
 
         testField(file, fieldValueToSearchFor, searchUri, searchName, searchMimeType, searchFileType, searchDescription, searchSourceUri)

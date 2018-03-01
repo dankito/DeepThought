@@ -6,7 +6,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.ViewPdfActivityParameters
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.hideKeyboard
-import net.dankito.deepthought.files.FileManager
+import net.dankito.deepthought.files.DeepThoughtFileManager
 import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
@@ -30,7 +30,7 @@ class ViewPdfActivity : BaseActivity() {
     protected lateinit var importer: PdfImporter
 
     @Inject
-    protected lateinit var fileManager: FileManager
+    protected lateinit var fileManager: DeepThoughtFileManager
 
     @Inject
     protected lateinit var router: IRouter
@@ -129,7 +129,7 @@ class ViewPdfActivity : BaseActivity() {
     }
 
     private fun loadPdf(pdfFile: File) {
-        loadPdf(fileManager.createLocalFile(pdfFile))
+        loadPdf(fileManager.createLocalDeepThoughtFile(pdfFile))
     }
 
     private fun loadPdf(pdfFile: DeepThoughtFileLink) {

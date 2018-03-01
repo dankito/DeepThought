@@ -1,9 +1,9 @@
 package net.dankito.deepthought.service.communication
 
-import net.dankito.synchronization.service.ICommunicationManager
-import net.dankito.deepthought.files.FileManager
+import net.dankito.deepthought.files.DeepThoughtFileManager
 import net.dankito.deepthought.files.synchronization.FileServer
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.synchronization.service.ICommunicationManager
 import net.dankito.utils.services.Times
 import java.util.*
 import javax.inject.Inject
@@ -23,7 +23,7 @@ abstract class CommunicationManagerStarterBase(dataManager: DataManager) {
     protected lateinit var fileServer: FileServer
 
     @Inject
-    protected lateinit var fileManager: FileManager // to create FileManager so that listening for changes to FileLinks and FileSyncService is started
+    protected lateinit var fileManager: DeepThoughtFileManager // to create FileManager so that listening for changes to FileLinks and FileSyncService is started
 
     @Inject
     protected lateinit var communicationManager: ICommunicationManager
