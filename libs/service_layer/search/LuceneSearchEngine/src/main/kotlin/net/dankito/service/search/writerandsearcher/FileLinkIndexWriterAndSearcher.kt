@@ -52,7 +52,7 @@ class FileLinkIndexWriterAndSearcher(fileService: FileService, eventBus: IEventB
     }
 
 
-    fun searchFiles(search: FilesSearch, termsToSearchFor: List<String>) {
+    fun searchFiles(search: FilesSearch<DeepThoughtFileLink>, termsToSearchFor: List<String>) {
         val query = BooleanQuery()
 
         addQueryForSearchTerm(search, termsToSearchFor, query)
@@ -66,7 +66,7 @@ class FileLinkIndexWriterAndSearcher(fileService: FileService, eventBus: IEventB
         executeQueryForSearchWithCollectionResult(search, query, DeepThoughtFileLink::class.java, sortOptions = SortOption(FieldName.FileName, SortOrder.Ascending, SortField.Type.STRING))
     }
 
-    private fun addQueryForSearchTerm(search: FilesSearch, termsToFilterFor: List<String>, query: BooleanQuery) {
+    private fun addQueryForSearchTerm(search: FilesSearch<DeepThoughtFileLink>, termsToFilterFor: List<String>, query: BooleanQuery) {
         if(termsToFilterFor.isEmpty()) {
             query.add(WildcardQuery(Term(getIdFieldName(), "*")), BooleanClause.Occur.MUST)
         }
@@ -79,7 +79,7 @@ class FileLinkIndexWriterAndSearcher(fileService: FileService, eventBus: IEventB
         }
     }
 
-    private fun createQueryForSearchTerm(search: FilesSearch, term: String): BooleanQuery {
+    private fun createQueryForSearchTerm(search: FilesSearch<DeepThoughtFileLink>, term: String): BooleanQuery {
         val escapedTerm = QueryParser.escape(term)
         val escapedWildcardTerm = "*" + escapedTerm + "*"
         val termQuery = BooleanQuery()
@@ -108,7 +108,7 @@ class FileLinkIndexWriterAndSearcher(fileService: FileService, eventBus: IEventB
         return termQuery
     }
 
-    private fun addQueryForOptions(search: FilesSearch, query: BooleanQuery) {
+    private fun addQueryForOptions(search: FilesSearch<DeepThoughtFileLink>, query: BooleanQuery) {
         when(search.fileType) {
             FilesSearch.FileType.LocalFilesOnly -> query.add(TermQuery(Term(FieldName.FileIsLocalFile, FieldValue.BooleanFieldTrueValue)), BooleanClause.Occur.MUST)
             FilesSearch.FileType.RemoteFilesOnly -> query.add(TermQuery(Term(FieldName.FileIsLocalFile, FieldValue.BooleanFieldFalseValue)), BooleanClause.Occur.MUST)

@@ -1,5 +1,6 @@
 package net.dankito.service.search
 
+import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.service.search.specific.*
 import net.dankito.synchronization.search.specific.FilesSearch
 import net.dankito.util.IThreadPool
@@ -84,13 +85,13 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
     abstract fun searchReadLaterArticles(search: ReadLaterArticleSearch, termsToSearchFor: List<String>)
 
 
-    override fun searchFiles(search: FilesSearch) {
+    override fun searchFiles(search: FilesSearch<DeepThoughtFileLink>) {
         val termsToSearchFor = getSingleSearchTerms(search.searchTerm, DefaultSearchTermSeparator)
 
         threadPool.runAsync { searchFiles(search, termsToSearchFor) }
     }
 
-    abstract  fun searchFiles(search: FilesSearch, termsToSearchFor: List<String>)
+    abstract  fun searchFiles(search: FilesSearch<DeepThoughtFileLink>, termsToSearchFor: List<String>)
 
 
     private fun getSingleSearchTerms(overallSearchTerm: String, separator: String, lowerCaseSearchTerm: Boolean = true, removeEmptySearchTerms: Boolean = true): List<String> {

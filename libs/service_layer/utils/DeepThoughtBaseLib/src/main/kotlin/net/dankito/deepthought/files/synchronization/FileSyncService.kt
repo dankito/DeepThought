@@ -1,7 +1,6 @@
 package net.dankito.deepthought.files.synchronization
 
 import net.dankito.service.data.LocalFileInfoService
-import net.dankito.synchronization.search.ISearchEngine
 import net.dankito.synchronization.device.service.IConnectedDevicesService
 import net.dankito.synchronization.device.service.KnownSynchronizedDevicesListener
 import net.dankito.synchronization.files.message.PermitSynchronizeFileRequest
@@ -13,6 +12,7 @@ import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.synchronization.model.FileLink
 import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.synchronization.model.enums.FileSyncStatus
+import net.dankito.synchronization.search.ISearchEngine
 import net.dankito.synchronization.search.specific.LocalFileInfoSearch
 import net.dankito.synchronization.service.permissions.IPermissionsService
 import net.dankito.util.AsyncProducerConsumerQueue
@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.schedule
 
 
-class FileSyncService(private val connectedDevicesService: IConnectedDevicesService, private val searchEngine: ISearchEngine, private val socketHandler: SocketHandler,
+class FileSyncService(private val connectedDevicesService: IConnectedDevicesService, private val searchEngine: ISearchEngine<FileLink>, private val socketHandler: SocketHandler,
                       private val localFileInfoService: LocalFileInfoService, private val serializer: ISerializer, private val permissionsService: IPermissionsService,
                       private val platformConfiguration: IPlatformConfiguration, private val hashService: HashService) {
 

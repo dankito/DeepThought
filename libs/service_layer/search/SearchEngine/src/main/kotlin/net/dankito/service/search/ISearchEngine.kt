@@ -1,9 +1,10 @@
 package net.dankito.service.search
 
+import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.service.search.specific.*
 
 
-interface ISearchEngine : net.dankito.synchronization.search.ISearchEngine {
+interface ISearchEngine : net.dankito.synchronization.search.ISearchEngine<DeepThoughtFileLink> {
 
     fun addInitializationListener(listener: () -> Unit)
 

@@ -7,12 +7,10 @@ import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.files.FileManager
-import net.dankito.synchronization.files.MimeTypeService
 import net.dankito.deepthought.files.synchronization.FileServer
 import net.dankito.deepthought.files.synchronization.FileSyncService
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
-import net.dankito.synchronization.service.permissions.IPermissionsService
 import net.dankito.jpa.entitymanager.EntityManagerConfiguration
 import net.dankito.jpa.entitymanager.IEntityManager
 import net.dankito.service.data.*
@@ -20,7 +18,10 @@ import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.synchronization.device.service.IConnectedDevicesService
+import net.dankito.synchronization.files.MimeTypeService
+import net.dankito.synchronization.model.FileLink
 import net.dankito.synchronization.model.NetworkSettings
+import net.dankito.synchronization.service.permissions.IPermissionsService
 import net.dankito.util.IThreadPool
 import net.dankito.util.hashing.HashService
 import net.dankito.util.localization.Localization
@@ -102,7 +103,8 @@ class CommonDataModule {
     @Singleton
     fun provideFileManager(searchEngine: ISearchEngine, localFileInfoService: LocalFileInfoService, fileSyncService: FileSyncService,
                            mimeTypeService: MimeTypeService, hashService: HashService, eventBus: IEventBus, threadPool: IThreadPool) : FileManager {
-        return FileManager(searchEngine, localFileInfoService, fileSyncService, mimeTypeService, hashService, eventBus, threadPool)
+        return FileManager(searchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>, // TODO: why is this cast needed?
+                localFileInfoService, fileSyncService, mimeTypeService, hashService, eventBus, threadPool)
     }
 
     @Provides
@@ -128,14 +130,16 @@ class CommonDataModule {
     @Singleton
     fun provideFileSyncService(connectedDevicesService: IConnectedDevicesService, searchEngine: ISearchEngine, socketHandler: SocketHandler, localFileInfoService: LocalFileInfoService,
                                serializer: ISerializer, permissionsService: IPermissionsService, platformConfiguration: IPlatformConfiguration, hashService: HashService): FileSyncService {
-        return FileSyncService(connectedDevicesService, searchEngine, socketHandler, localFileInfoService, serializer, permissionsService, platformConfiguration, hashService)
+        return FileSyncService(connectedDevicesService, searchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>,
+                socketHandler, localFileInfoService, serializer, permissionsService, platformConfiguration, hashService)
     }
 
     @Provides
     @Singleton
     fun provideFileServer(searchEngine: ISearchEngine, entityManager: IEntityManager, networkSettings: NetworkSettings,
                           socketHandler: SocketHandler, serializer: ISerializer, threadPool: IThreadPool): FileServer {
-        return FileServer(searchEngine, entityManager, networkSettings, socketHandler, serializer, threadPool)
+        return FileServer(searchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>,
+                entityManager, networkSettings, socketHandler, serializer, threadPool)
     }
 
 

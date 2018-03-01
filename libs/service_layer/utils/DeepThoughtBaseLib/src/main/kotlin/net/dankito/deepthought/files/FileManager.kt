@@ -6,10 +6,11 @@ import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.service.data.LocalFileInfoService
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
-import net.dankito.synchronization.search.ISearchEngine
 import net.dankito.synchronization.files.MimeTypeService
+import net.dankito.synchronization.model.FileLink
 import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.synchronization.model.enums.FileSyncStatus
+import net.dankito.synchronization.search.ISearchEngine
 import net.dankito.synchronization.search.specific.LocalFileInfoSearch
 import net.dankito.util.IThreadPool
 import net.dankito.util.event.EntityChangeType
@@ -24,7 +25,7 @@ import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.schedule
 
 
-class FileManager(private val searchEngine: ISearchEngine, private val localFileInfoService: LocalFileInfoService, private val fileSyncService: FileSyncService,
+class FileManager(private val searchEngine: ISearchEngine<FileLink>, private val localFileInfoService: LocalFileInfoService, private val fileSyncService: FileSyncService,
                   private val mimeTypeService: MimeTypeService, private val hashService: HashService, eventBus: IEventBus, private val threadPool: IThreadPool) {
 
     companion object {

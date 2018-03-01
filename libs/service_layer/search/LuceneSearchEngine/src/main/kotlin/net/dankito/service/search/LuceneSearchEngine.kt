@@ -8,7 +8,6 @@ import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.specific.*
 import net.dankito.service.search.writerandsearcher.*
-import net.dankito.utils.database.IDatabaseUtil
 import net.dankito.synchronization.model.BaseEntity
 import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.synchronization.search.specific.FilesSearch
@@ -18,6 +17,7 @@ import net.dankito.util.IThreadPool
 import net.dankito.util.event.EntityChangeSource
 import net.dankito.util.event.EntityChangeType
 import net.dankito.utils.OsHelper
+import net.dankito.utils.database.IDatabaseUtil
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.services.Times
 import org.apache.lucene.store.Directory
@@ -263,7 +263,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val datab
         readLaterArticleIndexWriterAndSearcher.searchReadLaterArticles(search, termsToSearchFor)
     }
 
-    override fun searchFiles(search: FilesSearch, termsToSearchFor: List<String>) {
+    override fun searchFiles(search: FilesSearch<DeepThoughtFileLink>, termsToSearchFor: List<String>) {
         fileIndexWriterAndSearcher.searchFiles(search, termsToSearchFor)
     }
 
