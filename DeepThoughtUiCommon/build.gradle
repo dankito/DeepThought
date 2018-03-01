@@ -28,7 +28,6 @@ dependencies {
         exclude group: 'org.jsoup'
     }
 
-    compile project(':JacksonJsonSerializer')
     compile project(':FileStorageService')
 
     compile project(':Utils')
