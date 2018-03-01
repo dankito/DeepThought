@@ -11,8 +11,6 @@ sourceSets {
 
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-
     compile project(':DeepThoughtBaseLib')
 
     compile 'org.jbibtex:jbibtex:1.0.15'
