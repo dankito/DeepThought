@@ -3,10 +3,10 @@ package net.dankito.deepthought.files
 import net.dankito.deepthought.files.synchronization.FileSyncConfig
 import net.dankito.deepthought.files.synchronization.FileSyncService
 import net.dankito.deepthought.model.DeepThoughtFileLink
-import net.dankito.service.data.LocalFileInfoService
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.synchronization.files.MimeTypeService
+import net.dankito.synchronization.files.persistence.ILocalFileInfoRepository
 import net.dankito.synchronization.model.FileLink
 import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.synchronization.model.enums.FileSyncStatus
@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.schedule
 
 
-class FileManager(private val searchEngine: ISearchEngine<FileLink>, private val localFileInfoService: LocalFileInfoService, private val fileSyncService: FileSyncService,
+class FileManager(private val searchEngine: ISearchEngine<FileLink>, private val localFileInfoRepository: ILocalFileInfoRepository, private val fileSyncService: FileSyncService,
                   private val mimeTypeService: MimeTypeService, private val hashService: HashService, eventBus: IEventBus, private val threadPool: IThreadPool) {
 
     companion object {
@@ -55,7 +55,7 @@ class FileManager(private val searchEngine: ISearchEngine<FileLink>, private val
         }
 
         if(localFileInfo.isPersisted() == false) {
-            localFileInfoService.persist(localFileInfo)
+            localFileInfoRepository.persist(localFileInfo)
         }
     }
 
@@ -136,7 +136,7 @@ class FileManager(private val searchEngine: ISearchEngine<FileLink>, private val
             val localFileInfo = LocalFileInfo(file)
             localFileInfoCache.put(file, localFileInfo)
 
-            localFileInfoService.persist(localFileInfo)
+            localFileInfoRepository.persist(localFileInfo)
         }
     }
 
@@ -159,7 +159,7 @@ class FileManager(private val searchEngine: ISearchEngine<FileLink>, private val
     private fun fileHasBeenDeleted(file: DeepThoughtFileLink) {
         getStoredLocalFileInfo(file)?.let { localFileInfo ->
             if(localFileInfo.isPersisted()) {
-                localFileInfoService.delete(localFileInfo)
+                localFileInfoRepository.delete(localFileInfo)
             }
         }
 

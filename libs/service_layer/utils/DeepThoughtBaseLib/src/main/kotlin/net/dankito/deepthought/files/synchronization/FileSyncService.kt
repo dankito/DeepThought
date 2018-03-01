@@ -1,6 +1,5 @@
 package net.dankito.deepthought.files.synchronization
 
-import net.dankito.service.data.LocalFileInfoService
 import net.dankito.synchronization.device.service.IConnectedDevicesService
 import net.dankito.synchronization.device.service.KnownSynchronizedDevicesListener
 import net.dankito.synchronization.files.message.PermitSynchronizeFileRequest
@@ -8,6 +7,7 @@ import net.dankito.synchronization.files.message.PermitSynchronizeFileResponse
 import net.dankito.synchronization.files.message.PermitSynchronizeFileResult
 import net.dankito.synchronization.files.model.FileSyncState
 import net.dankito.synchronization.files.model.SynchronizeFileResult
+import net.dankito.synchronization.files.persistence.ILocalFileInfoRepository
 import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.synchronization.model.FileLink
 import net.dankito.synchronization.model.LocalFileInfo
@@ -31,7 +31,7 @@ import kotlin.concurrent.schedule
 
 
 class FileSyncService(private val connectedDevicesService: IConnectedDevicesService, private val searchEngine: ISearchEngine<FileLink>, private val socketHandler: SocketHandler,
-                      private val localFileInfoService: LocalFileInfoService, private val serializer: ISerializer, private val permissionsService: IPermissionsService,
+                      private val localFileInfoRepository: ILocalFileInfoRepository, private val serializer: ISerializer, private val permissionsService: IPermissionsService,
                       private val platformConfiguration: IPlatformConfiguration, private val hashService: HashService) {
 
     companion object {
@@ -343,7 +343,7 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
 
         localFileInfo.syncStatus = if(localFileInfo.fileSize == file.fileSize) FileSyncStatus.UpToDate else FileSyncStatus.NotSynchronizedYet
 
-        localFileInfoService.update(localFileInfo, true)
+        localFileInfoRepository.update(localFileInfo)
     }
 
     private fun sendMessage(clientSocket: Socket, message: Any) {
