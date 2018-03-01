@@ -1,4 +1,4 @@
-package net.dankito.service.search
+package net.dankito.synchronization.search
 
 import net.dankito.synchronization.model.BaseEntity
 

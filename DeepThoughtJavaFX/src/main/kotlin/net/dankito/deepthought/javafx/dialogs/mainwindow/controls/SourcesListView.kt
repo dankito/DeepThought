@@ -15,7 +15,7 @@ import net.dankito.deepthought.ui.presenter.SourcesListPresenter
 import net.dankito.deepthought.ui.view.ISourcesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.search.ISearchEngine
-import net.dankito.service.search.Search
+import net.dankito.synchronization.search.Search
 import net.dankito.utils.ui.IClipboardService
 import tornadofx.*
 import javax.inject.Inject

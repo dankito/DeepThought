@@ -19,7 +19,7 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ItemsListPresenter
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.search.ISearchEngine
-import net.dankito.service.search.Search
+import net.dankito.synchronization.search.Search
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.util.ui.dialog.IDialogService
 import net.dankito.util.ui.dialog.ConfirmationDialogButton

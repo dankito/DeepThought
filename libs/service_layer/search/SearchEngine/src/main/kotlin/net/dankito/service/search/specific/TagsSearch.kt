@@ -2,7 +2,7 @@ package net.dankito.service.search.specific
 
 
 import net.dankito.deepthought.model.Tag
-import net.dankito.service.search.Search
+import net.dankito.synchronization.search.Search
 
 
 class TagsSearch(searchTerm: String = Search.EmptySearchTerm, completedListener: (TagsSearchResults) -> Unit) : Search<TagsSearchResults>(searchTerm, completedListener) {

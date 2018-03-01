@@ -1,7 +1,7 @@
 package net.dankito.service.search
 
 import net.dankito.deepthought.model.DeepThoughtFileLink
-import net.dankito.service.search.specific.LocalFileInfoSearch
+import net.dankito.synchronization.search.specific.LocalFileInfoSearch
 import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.synchronization.model.enums.FileSyncStatus
 import org.hamcrest.CoreMatchers.*

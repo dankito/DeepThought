@@ -18,7 +18,7 @@ import net.dankito.deepthought.ui.view.ITagsListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
-import net.dankito.service.search.Search
+import net.dankito.synchronization.search.Search
 import net.dankito.util.ui.dialog.IDialogService
 import tornadofx.*
 import javax.inject.Inject

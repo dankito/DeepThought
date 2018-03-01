@@ -8,6 +8,7 @@ import net.dankito.service.search.*
 import net.dankito.service.search.results.LazyLoadingLuceneSearchResultsList
 import net.dankito.service.search.writerandsearcher.sorting.CorrectStringComparatorSource
 import net.dankito.synchronization.model.BaseEntity
+import net.dankito.synchronization.search.SearchWithCollectionResult
 import net.dankito.util.IThreadPool
 import net.dankito.util.event.EntityChangeType
 import net.dankito.utils.OsHelper

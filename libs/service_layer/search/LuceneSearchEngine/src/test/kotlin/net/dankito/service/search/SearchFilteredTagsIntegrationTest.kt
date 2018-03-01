@@ -4,6 +4,7 @@ import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Tag
 import net.dankito.service.search.specific.FilteredTagsSearch
 import net.dankito.service.search.specific.FilteredTagsSearchResult
+import net.dankito.synchronization.search.Search
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.Assert.assertThat

@@ -1,14 +1,14 @@
 package net.dankito.deepthought.files.synchronization
 
+import net.dankito.jpa.entitymanager.IEntityManager
+import net.dankito.synchronization.search.ISearchEngine
 import net.dankito.synchronization.files.message.PermitSynchronizeFileRequest
 import net.dankito.synchronization.files.message.PermitSynchronizeFileResponse
 import net.dankito.synchronization.files.message.PermitSynchronizeFileResult
-import net.dankito.jpa.entitymanager.IEntityManager
-import net.dankito.service.search.ISearchEngine
-import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.synchronization.model.enums.FileSyncStatus
+import net.dankito.synchronization.search.specific.LocalFileInfoSearch
 import net.dankito.util.IThreadPool
 import net.dankito.util.network.SocketHandler
 import net.dankito.util.serialization.ISerializer

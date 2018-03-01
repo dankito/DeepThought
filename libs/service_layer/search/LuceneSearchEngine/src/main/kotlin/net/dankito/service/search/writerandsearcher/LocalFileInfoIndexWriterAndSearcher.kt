@@ -6,7 +6,7 @@ import net.dankito.service.data.messages.LocalFileInfoChanged
 import net.dankito.service.eventbus.EventBusPriorities
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.FieldName
-import net.dankito.service.search.specific.LocalFileInfoSearch
+import net.dankito.synchronization.search.specific.LocalFileInfoSearch
 import net.dankito.util.IThreadPool
 import net.dankito.utils.OsHelper
 import net.engio.mbassy.listener.Handler

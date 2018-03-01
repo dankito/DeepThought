@@ -26,7 +26,7 @@ import net.dankito.synchronization.model.BaseEntity
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.service.search.ISearchEngine
-import net.dankito.service.search.Search
+import net.dankito.synchronization.search.Search
 import javax.inject.Inject
 
 

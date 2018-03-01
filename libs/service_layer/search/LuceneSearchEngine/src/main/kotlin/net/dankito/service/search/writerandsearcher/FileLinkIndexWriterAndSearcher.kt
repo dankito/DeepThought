@@ -9,7 +9,7 @@ import net.dankito.service.search.FieldName
 import net.dankito.service.search.FieldValue
 import net.dankito.service.search.SortOption
 import net.dankito.service.search.SortOrder
-import net.dankito.service.search.specific.FilesSearch
+import net.dankito.synchronization.search.specific.FilesSearch
 import net.dankito.util.IThreadPool
 import net.dankito.utils.OsHelper
 import net.engio.mbassy.listener.Handler

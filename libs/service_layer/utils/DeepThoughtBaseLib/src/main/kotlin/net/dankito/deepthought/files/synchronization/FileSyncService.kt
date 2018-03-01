@@ -1,5 +1,9 @@
 package net.dankito.deepthought.files.synchronization
 
+import net.dankito.service.data.LocalFileInfoService
+import net.dankito.synchronization.search.ISearchEngine
+import net.dankito.synchronization.device.service.IConnectedDevicesService
+import net.dankito.synchronization.device.service.KnownSynchronizedDevicesListener
 import net.dankito.synchronization.files.message.PermitSynchronizeFileRequest
 import net.dankito.synchronization.files.message.PermitSynchronizeFileResponse
 import net.dankito.synchronization.files.message.PermitSynchronizeFileResult
@@ -9,12 +13,8 @@ import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.synchronization.model.FileLink
 import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.synchronization.model.enums.FileSyncStatus
+import net.dankito.synchronization.search.specific.LocalFileInfoSearch
 import net.dankito.synchronization.service.permissions.IPermissionsService
-import net.dankito.service.data.LocalFileInfoService
-import net.dankito.service.search.ISearchEngine
-import net.dankito.service.search.specific.LocalFileInfoSearch
-import net.dankito.synchronization.device.service.IConnectedDevicesService
-import net.dankito.synchronization.device.service.KnownSynchronizedDevicesListener
 import net.dankito.util.AsyncProducerConsumerQueue
 import net.dankito.util.hashing.HashService
 import net.dankito.util.network.SocketHandler

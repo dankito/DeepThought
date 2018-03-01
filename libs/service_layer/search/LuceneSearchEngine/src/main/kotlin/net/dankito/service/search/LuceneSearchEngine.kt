@@ -11,6 +11,8 @@ import net.dankito.service.search.writerandsearcher.*
 import net.dankito.utils.database.IDatabaseUtil
 import net.dankito.synchronization.model.BaseEntity
 import net.dankito.synchronization.model.LocalFileInfo
+import net.dankito.synchronization.search.specific.FilesSearch
+import net.dankito.synchronization.search.specific.LocalFileInfoSearch
 import net.dankito.util.AsyncProducerConsumerQueue
 import net.dankito.util.IThreadPool
 import net.dankito.util.event.EntityChangeSource

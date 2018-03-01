@@ -2,7 +2,7 @@ package net.dankito.service.data
 
 import net.dankito.deepthought.model.*
 import net.dankito.service.search.ISearchEngine
-import net.dankito.service.search.specific.LocalFileInfoSearch
+import net.dankito.synchronization.search.specific.LocalFileInfoSearch
 import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.util.IThreadPool
 import net.dankito.util.ui.dialog.IDialogService

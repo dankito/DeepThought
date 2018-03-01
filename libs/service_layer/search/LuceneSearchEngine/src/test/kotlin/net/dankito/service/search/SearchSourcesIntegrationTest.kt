@@ -4,6 +4,7 @@ import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.model.Source
 import net.dankito.service.search.specific.SourceSearch
 import net.dankito.synchronization.model.FileLink
+import net.dankito.synchronization.search.Search
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.Assert

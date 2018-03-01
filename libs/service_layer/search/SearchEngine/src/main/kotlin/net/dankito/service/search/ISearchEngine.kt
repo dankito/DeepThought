@@ -3,7 +3,7 @@ package net.dankito.service.search
 import net.dankito.service.search.specific.*
 
 
-interface ISearchEngine {
+interface ISearchEngine : net.dankito.synchronization.search.ISearchEngine {
 
     fun addInitializationListener(listener: () -> Unit)
 
@@ -19,10 +19,6 @@ interface ISearchEngine {
     fun searchSeries(search: SeriesSearch)
 
     fun searchReadLaterArticles(search: ReadLaterArticleSearch)
-
-    fun searchFiles(search: FilesSearch)
-
-    fun searchLocalFileInfo(search: LocalFileInfoSearch)
 
 
     fun close()

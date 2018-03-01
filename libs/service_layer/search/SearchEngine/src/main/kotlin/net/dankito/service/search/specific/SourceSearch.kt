@@ -4,8 +4,8 @@ package net.dankito.service.search.specific
 import net.dankito.synchronization.model.FileLink
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
-import net.dankito.service.search.Search
-import net.dankito.service.search.SearchWithCollectionResult
+import net.dankito.synchronization.search.Search
+import net.dankito.synchronization.search.SearchWithCollectionResult
 
 
 class SourceSearch(searchTerm: String = Search.EmptySearchTerm,

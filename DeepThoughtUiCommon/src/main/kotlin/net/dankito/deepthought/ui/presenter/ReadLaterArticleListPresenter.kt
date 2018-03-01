@@ -9,7 +9,7 @@ import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
-import net.dankito.service.search.Search
+import net.dankito.synchronization.search.Search
 import net.dankito.service.search.specific.ReadLaterArticleSearch
 import net.dankito.util.IThreadPool
 import net.dankito.utils.ui.IClipboardService

@@ -10,7 +10,7 @@ import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.ui.view.IReadLaterArticleView
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.search.ISearchEngine
-import net.dankito.service.search.Search
+import net.dankito.synchronization.search.Search
 import net.dankito.utils.ui.IClipboardService
 import tornadofx.*
 import javax.inject.Inject

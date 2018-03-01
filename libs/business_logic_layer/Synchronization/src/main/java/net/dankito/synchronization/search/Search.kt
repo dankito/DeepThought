@@ -1,4 +1,4 @@
-package net.dankito.service.search
+package net.dankito.synchronization.search
 
 import java.util.concurrent.atomic.AtomicBoolean
 

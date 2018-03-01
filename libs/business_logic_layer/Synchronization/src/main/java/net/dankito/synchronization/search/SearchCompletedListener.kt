@@ -1,4 +1,4 @@
-package net.dankito.service.search
+package net.dankito.synchronization.search
 
 
 interface SearchCompletedListener<T> {

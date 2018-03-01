@@ -1,10 +1,10 @@
-package net.dankito.service.search.specific
+package net.dankito.synchronization.search.specific
 
 
 import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.synchronization.model.enums.FileSyncStatus
-import net.dankito.service.search.Search
-import net.dankito.service.search.SearchWithCollectionResult
+import net.dankito.synchronization.search.Search
+import net.dankito.synchronization.search.SearchWithCollectionResult
 
 
 class LocalFileInfoSearch(val fileId: String? = null, val hasSyncStatus: FileSyncStatus? = null, val doesNotHaveSyncStatus: FileSyncStatus? = null,
