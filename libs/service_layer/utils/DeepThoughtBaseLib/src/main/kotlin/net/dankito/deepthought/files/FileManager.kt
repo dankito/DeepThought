@@ -2,8 +2,6 @@ package net.dankito.deepthought.files
 
 import net.dankito.deepthought.files.synchronization.FileSyncConfig
 import net.dankito.deepthought.files.synchronization.FileSyncService
-import net.dankito.service.data.messages.FileChanged
-import net.dankito.service.eventbus.IEventBus
 import net.dankito.synchronization.files.MimeTypeService
 import net.dankito.synchronization.files.persistence.ILocalFileInfoRepository
 import net.dankito.synchronization.model.FileLink
@@ -12,10 +10,8 @@ import net.dankito.synchronization.model.enums.FileSyncStatus
 import net.dankito.synchronization.search.ISearchEngine
 import net.dankito.synchronization.search.specific.LocalFileInfoSearch
 import net.dankito.util.IThreadPool
-import net.dankito.util.event.EntityChangeType
 import net.dankito.util.hashing.HashService
 import net.dankito.utils.services.Times
-import net.engio.mbassy.listener.Handler
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.*
@@ -25,7 +21,7 @@ import kotlin.concurrent.schedule
 
 
 open class FileManager(protected val searchEngine: ISearchEngine<FileLink>, protected val localFileInfoRepository: ILocalFileInfoRepository, protected val fileSyncService: FileSyncService,
-                  protected val mimeTypeService: MimeTypeService, protected val hashService: HashService, eventBus: IEventBus, protected val threadPool: IThreadPool) {
+                  protected val mimeTypeService: MimeTypeService, protected val hashService: HashService, protected val threadPool: IThreadPool) {
 
     companion object {
         private val log = LoggerFactory.getLogger(FileManager::class.java)
@@ -34,12 +30,8 @@ open class FileManager(protected val searchEngine: ISearchEngine<FileLink>, prot
 
     protected val localFileInfoCache = ConcurrentHashMap<FileLink, LocalFileInfo>()
 
-    protected val eventBusListener = EventBusListener()
-
 
     init {
-        eventBus.register(eventBusListener)
-
         Timer().schedule(Times.DefaultDelayBeforeSearchingForNotSynchronizedFilesSeconds * 1000L) {
             searchForNotSynchronizedFiles()
         }
@@ -198,21 +190,6 @@ open class FileManager(protected val searchEngine: ISearchEngine<FileLink>, prot
 
     protected open fun searchForLocalFilesWithoutLocalFileInfoSet() {
         // TODO
-    }
-
-
-    inner class EventBusListener {
-
-        @Handler()
-        fun fileChanged(fileChanged: FileChanged) {
-            if(fileChanged.changeType == EntityChangeType.PreDelete || fileChanged.changeType == EntityChangeType.Deleted || fileChanged.entity.deleted) {
-                fileHasBeenDeleted(fileChanged.entity)
-            }
-            else {
-                forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(fileChanged.entity)
-            }
-        }
-
     }
 
 }
