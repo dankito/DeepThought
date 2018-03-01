@@ -32,8 +32,6 @@ include ':AndroidPdfImporter'
 include ':DataManager'
 include ':DataServices'
 
-include ':CouchbaseLiteSyncManager'
-
 include ':SearchEngine'
 include ':LuceneSearchEngine'
 
@@ -75,8 +73,6 @@ project(':FeedAddressExtractor').projectDir = "$rootDir/libs/news/FeedAddressExt
 
 project(':DataManager').projectDir = "$rootDir/libs/service_layer/data/DataManager" as File
 project(':DataServices').projectDir = "$rootDir/libs/service_layer/data/DataServices" as File
-
-project(':CouchbaseLiteSyncManager').projectDir = "$rootDir/libs/service_layer/synchronization/CouchbaseLiteSyncManager" as File
 
 project(':SearchEngine').projectDir = "$rootDir/libs/service_layer/search/SearchEngine" as File
 project(':LuceneSearchEngine').projectDir = "$rootDir/libs/service_layer/search/LuceneSearchEngine" as File
