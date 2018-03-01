@@ -7,7 +7,7 @@ import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.synchronization.files.MimeTypeService
+import net.dankito.synchronization.service.MimeTypeService
 import net.dankito.util.UrlUtil
 import net.dankito.util.localization.Localization
 import net.dankito.util.ui.dialog.IDialogService

@@ -39,7 +39,7 @@ import net.dankito.synchronization.device.service.IConnectedDevicesService
 import net.dankito.synchronization.device.service.KnownSynchronizedDevicesListener
 import net.dankito.synchronization.files.FileServer
 import net.dankito.synchronization.files.FileSyncService
-import net.dankito.synchronization.files.MimeTypeService
+import net.dankito.synchronization.service.MimeTypeService
 import net.dankito.synchronization.model.*
 import net.dankito.synchronization.model.enums.OsType
 import net.dankito.synchronization.service.CommunicationManager

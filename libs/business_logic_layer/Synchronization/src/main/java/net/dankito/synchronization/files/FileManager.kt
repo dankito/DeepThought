@@ -6,6 +6,7 @@ import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.synchronization.model.enums.FileSyncStatus
 import net.dankito.synchronization.search.ISearchEngine
 import net.dankito.synchronization.search.specific.LocalFileInfoSearch
+import net.dankito.synchronization.service.MimeTypeService
 import net.dankito.util.IThreadPool
 import net.dankito.util.hashing.HashService
 import org.slf4j.LoggerFactory

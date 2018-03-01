@@ -6,6 +6,7 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.synchronization.files.persistence.ILocalFileInfoRepository
 import net.dankito.synchronization.model.FileLink
 import net.dankito.synchronization.search.ISearchEngine
+import net.dankito.synchronization.service.MimeTypeService
 import net.dankito.util.IThreadPool
 import net.dankito.util.event.EntityChangeType
 import net.dankito.util.hashing.HashService

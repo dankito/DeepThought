@@ -19,7 +19,7 @@ import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.synchronization.device.service.IConnectedDevicesService
-import net.dankito.synchronization.files.MimeTypeService
+import net.dankito.synchronization.service.MimeTypeService
 import net.dankito.synchronization.model.FileLink
 import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.synchronization.service.permissions.IPermissionsService

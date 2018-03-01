@@ -18,7 +18,7 @@ import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
-import net.dankito.synchronization.files.MimeTypeService
+import net.dankito.synchronization.service.MimeTypeService
 import net.dankito.synchronization.model.FileLink
 import net.dankito.synchronization.model.enums.OsType
 import net.dankito.synchronization.search.ISearchEngine

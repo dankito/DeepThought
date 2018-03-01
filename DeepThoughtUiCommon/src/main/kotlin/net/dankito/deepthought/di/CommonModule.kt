@@ -38,7 +38,7 @@ import net.dankito.synchronization.device.messaging.tcp.PlainTcpMessenger
 import net.dankito.synchronization.device.service.ConnectedDevicesService
 import net.dankito.synchronization.device.service.IConnectedDevicesService
 import net.dankito.synchronization.files.DeepThoughtFileManager
-import net.dankito.synchronization.files.MimeTypeService
+import net.dankito.synchronization.service.MimeTypeService
 import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.synchronization.service.CommunicationManager
 import net.dankito.synchronization.service.ICommunicationManager
