@@ -113,7 +113,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         readLaterArticleService = ReadLaterArticleService(dataManager, entityChangedNotifier, DeepThoughtJacksonJsonSerializer(tagService, seriesService))
         localFileInfoService = LocalFileInfoService(dataManager, entityChangedNotifier)
         fileService = FileService(dataManager, entityChangedNotifier)
-        mimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypeCategorizer, dataManager)
+        mimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypeCategorizer)
 
         underTest = LuceneSearchEngine(dataManager, mock(), NoOpLanguageDetector(), OsHelper(platformConfiguration), ThreadPool(), eventBus,
                 itemService, tagService, sourceService, seriesService, readLaterArticleService, fileService, localFileInfoService)

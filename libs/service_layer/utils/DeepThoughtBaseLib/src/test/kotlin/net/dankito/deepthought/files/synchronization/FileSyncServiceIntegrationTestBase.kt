@@ -7,8 +7,6 @@ import com.nhaarman.mockito_kotlin.whenever
 import net.dankito.data_access.database.DeepThoughtCouchbaseLiteEntityManagerBase
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
-import net.dankito.synchronization.service.CommunicationManager
-import net.dankito.synchronization.service.ICommunicationManager
 import net.dankito.deepthought.data.FilePersister
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.files.MimeTypeService
@@ -26,12 +24,12 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.LuceneSearchEngine
-import net.dankito.synchronization.database.sync.CouchbaseLiteSyncManager
-import net.dankito.synchronization.database.sync.changeshandler.ISynchronizedChangesHandler
-import net.dankito.synchronization.database.sync.changeshandler.SynchronizedChangesHandler
 import net.dankito.synchronization.ConnectedDevicesServiceConfig
+import net.dankito.synchronization.database.sync.CouchbaseLiteSyncManager
 import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.database.sync.ISyncManager
+import net.dankito.synchronization.database.sync.changeshandler.ISynchronizedChangesHandler
+import net.dankito.synchronization.database.sync.changeshandler.SynchronizedChangesHandler
 import net.dankito.synchronization.device.discovery.udp.UdpDevicesDiscoverer
 import net.dankito.synchronization.device.messaging.IMessenger
 import net.dankito.synchronization.device.messaging.callback.DeepThoughtDeviceRegistrationHandlerBase
@@ -46,6 +44,8 @@ import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.synchronization.model.User
 import net.dankito.synchronization.model.enums.OsType
+import net.dankito.synchronization.service.CommunicationManager
+import net.dankito.synchronization.service.ICommunicationManager
 import net.dankito.util.ThreadPool
 import net.dankito.util.event.EntityChangeSource
 import net.dankito.util.event.EntityChangeType
@@ -359,7 +359,7 @@ abstract class FileSyncServiceIntegrationTestBase {
         initializationLatch.await(InitializationTimeoutInSeconds, TimeUnit.SECONDS)
 
 
-        localMimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypeCategorizer, localDataManager)
+        localMimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypeCategorizer)
 
         localFileServer = FileServer(localSearchEngine, localEntityManager, localNetworkSettings, localSocketHandler, localSerializer, localThreadPool)
 
@@ -420,7 +420,7 @@ abstract class FileSyncServiceIntegrationTestBase {
         initializationLatch.await(InitializationTimeoutInSeconds, TimeUnit.SECONDS)
 
 
-        remoteMimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypeCategorizer, remoteDataManager)
+        remoteMimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypeCategorizer)
 
         remoteFileServer = FileServer(remoteSearchEngine, remoteEntityManager, remoteNetworkSettings, remoteSocketHandler, remoteSerializer, remoteThreadPool)
 

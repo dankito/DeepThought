@@ -1,15 +1,14 @@
 package net.dankito.deepthought.files
 
-import net.dankito.synchronization.model.FileLink
-import net.dankito.synchronization.model.enums.FileType
-import net.dankito.deepthought.service.data.DataManager
 import net.dankito.mime.MimeTypeCategorizer
 import net.dankito.mime.MimeTypeDetector
+import net.dankito.synchronization.model.FileLink
+import net.dankito.synchronization.model.enums.FileType
 import java.io.File
 import java.net.URI
 
 
-class MimeTypeService(val detector: MimeTypeDetector, val categorizer: MimeTypeCategorizer, private val dataManager: DataManager) {
+class MimeTypeService(val detector: MimeTypeDetector, val categorizer: MimeTypeCategorizer) {
 
     fun getBestMimeType(uri: URI): String? {
         return detector.getBestPickForUri(uri)

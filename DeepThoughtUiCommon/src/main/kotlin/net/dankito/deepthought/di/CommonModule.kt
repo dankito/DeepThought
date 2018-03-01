@@ -4,8 +4,6 @@ import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.database.DeepThoughtCouchbaseLiteEntityManagerBase
 import net.dankito.data_access.filesystem.IFileStorageService
-import net.dankito.synchronization.service.CommunicationManager
-import net.dankito.synchronization.service.ICommunicationManager
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.files.MimeTypeService
 import net.dankito.deepthought.news.article.ArticleExtractorManager
@@ -29,13 +27,12 @@ import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.LuceneSearchEngine
-import net.dankito.synchronization.database.sync.CouchbaseLiteSyncManager
-import net.dankito.synchronization.database.sync.changeshandler.ISynchronizedChangesHandler
-import net.dankito.synchronization.database.sync.changeshandler.SynchronizedChangesHandler
 import net.dankito.synchronization.ConnectedDevicesServiceConfig
-import net.dankito.utils.database.IDatabaseUtil
+import net.dankito.synchronization.database.sync.CouchbaseLiteSyncManager
 import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.database.sync.ISyncManager
+import net.dankito.synchronization.database.sync.changeshandler.ISynchronizedChangesHandler
+import net.dankito.synchronization.database.sync.changeshandler.SynchronizedChangesHandler
 import net.dankito.synchronization.device.discovery.IDevicesDiscoverer
 import net.dankito.synchronization.device.messaging.IMessenger
 import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
@@ -43,6 +40,8 @@ import net.dankito.synchronization.device.messaging.tcp.PlainTcpMessenger
 import net.dankito.synchronization.device.service.ConnectedDevicesService
 import net.dankito.synchronization.device.service.IConnectedDevicesService
 import net.dankito.synchronization.model.NetworkSettings
+import net.dankito.synchronization.service.CommunicationManager
+import net.dankito.synchronization.service.ICommunicationManager
 import net.dankito.util.IThreadPool
 import net.dankito.util.hashing.HashService
 import net.dankito.util.hashing.IBase64Service
@@ -55,6 +54,7 @@ import net.dankito.util.web.OkHttpWebClient
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.ImageCache
 import net.dankito.utils.OsHelper
+import net.dankito.utils.database.IDatabaseUtil
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.version.Versions
 import javax.inject.Singleton
@@ -98,8 +98,8 @@ open class CommonModule {
 
     @Provides
     @Singleton
-    fun provideMimeTypeService(mimeTypeDetector: MimeTypeDetector, mimeTypeCategorizer: MimeTypeCategorizer, dataManager: DataManager) : MimeTypeService {
-        return MimeTypeService(mimeTypeDetector, mimeTypeCategorizer, dataManager)
+    fun provideMimeTypeService(mimeTypeDetector: MimeTypeDetector, mimeTypeCategorizer: MimeTypeCategorizer) : MimeTypeService {
+        return MimeTypeService(mimeTypeDetector, mimeTypeCategorizer)
     }
 
     @Provides
