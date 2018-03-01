@@ -1,4 +1,4 @@
-package net.dankito.synchronization.files
+package net.dankito.synchronization.service
 
 import net.dankito.mime.MimeTypeCategorizer
 import net.dankito.mime.MimeTypeDetector
