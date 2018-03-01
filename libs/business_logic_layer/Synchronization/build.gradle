@@ -57,7 +57,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
-    compile "net.dankito.jpa.couchbaselite:couchbase-lite-jpa:1.0-SNAPSHOT", {
+    compile "net.dankito.jpa.couchbaselite:couchbase-lite-jpa:1.0-alpha3", {
         exclude group: 'org.jetbrains.kotlin'
     }
 
