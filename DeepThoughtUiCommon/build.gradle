@@ -16,8 +16,6 @@ dependencies {
     compile project(':DataManager')
     compile project(':LuceneSearchEngine')
 
-    compile project(':CouchbaseLiteEntityManagerBase')
-
     compile project(':RomeFeedReader')
     compile project(':FeedAddressExtractor'), {
         exclude group: 'org.jetbrains.kotlin'
@@ -27,8 +25,6 @@ dependencies {
         exclude group: 'org.jetbrains.kotlin'
         exclude group: 'org.jsoup'
     }
-
-    compile project(':Utils')
 
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
