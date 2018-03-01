@@ -5,7 +5,7 @@ import android.content.Context
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.service.CurrentActivityTracker
-import net.dankito.deepthought.service.permissions.IPermissionsService
+import net.dankito.synchronization.service.permissions.IPermissionsService
 import net.dankito.filechooserdialog.service.PermissionsService
 
 

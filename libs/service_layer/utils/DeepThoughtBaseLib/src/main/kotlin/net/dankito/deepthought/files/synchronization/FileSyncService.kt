@@ -9,7 +9,7 @@ import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.synchronization.model.FileLink
 import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.synchronization.model.enums.FileSyncStatus
-import net.dankito.deepthought.service.permissions.IPermissionsService
+import net.dankito.synchronization.service.permissions.IPermissionsService
 import net.dankito.service.data.LocalFileInfoService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.LocalFileInfoSearch

@@ -1,4 +1,4 @@
-package net.dankito.deepthought.service.permissions
+package net.dankito.synchronization.service.permissions
 
 
 interface IPermissionsService {

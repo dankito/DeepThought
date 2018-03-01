@@ -13,7 +13,7 @@ import net.dankito.deepthought.files.MimeTypeService
 import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
-import net.dankito.deepthought.service.permissions.JavaPermissionsService
+import net.dankito.synchronization.service.permissions.JavaPermissionsService
 import net.dankito.jpa.entitymanager.EntityManagerConfiguration
 import net.dankito.mime.MimeTypeCategorizer
 import net.dankito.mime.MimeTypeDetector

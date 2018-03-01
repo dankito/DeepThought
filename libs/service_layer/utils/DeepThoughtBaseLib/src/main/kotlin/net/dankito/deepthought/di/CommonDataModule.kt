@@ -12,7 +12,7 @@ import net.dankito.deepthought.files.synchronization.FileServer
 import net.dankito.deepthought.files.synchronization.FileSyncService
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
-import net.dankito.deepthought.service.permissions.IPermissionsService
+import net.dankito.synchronization.service.permissions.IPermissionsService
 import net.dankito.jpa.entitymanager.EntityManagerConfiguration
 import net.dankito.jpa.entitymanager.IEntityManager
 import net.dankito.service.data.*

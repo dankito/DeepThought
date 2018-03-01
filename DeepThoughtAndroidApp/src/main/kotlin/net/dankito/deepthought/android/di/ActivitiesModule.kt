@@ -17,7 +17,7 @@ import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
-import net.dankito.deepthought.service.permissions.IPermissionsService
+import net.dankito.synchronization.service.permissions.IPermissionsService
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.jpa.entitymanager.IEntityManager
