@@ -1,4 +1,4 @@
-package net.dankito.deepthought.files.synchronization.message
+package net.dankito.synchronization.files.message
 
 
 enum class PermitSynchronizeFileResult {

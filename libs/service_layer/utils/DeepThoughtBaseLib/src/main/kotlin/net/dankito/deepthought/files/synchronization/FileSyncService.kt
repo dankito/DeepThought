@@ -1,10 +1,10 @@
 package net.dankito.deepthought.files.synchronization
 
-import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFileRequest
-import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFileResponse
-import net.dankito.deepthought.files.synchronization.message.PermitSynchronizeFileResult
-import net.dankito.deepthought.files.synchronization.model.FileSyncState
-import net.dankito.deepthought.files.synchronization.model.SynchronizeFileResult
+import net.dankito.synchronization.files.message.PermitSynchronizeFileRequest
+import net.dankito.synchronization.files.message.PermitSynchronizeFileResponse
+import net.dankito.synchronization.files.message.PermitSynchronizeFileResult
+import net.dankito.synchronization.files.model.FileSyncState
+import net.dankito.synchronization.files.model.SynchronizeFileResult
 import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.synchronization.model.FileLink
 import net.dankito.synchronization.model.LocalFileInfo
