@@ -1,13 +1,13 @@
 package net.dankito.synchronization.sync.changeshandler
 
 import com.couchbase.lite.DocumentChange
-import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
-import net.dankito.util.filesystem.JavaFileStorageService
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
+import net.dankito.jpa.couchbaselite.JavaCouchbaseLiteEntityManager
 import net.dankito.jpa.entitymanager.EntityManagerConfiguration
 import net.dankito.jpa.entitymanager.IEntityManager
 import net.dankito.synchronization.database.sync.changeshandler.SynchronizedDataMerger
+import net.dankito.util.filesystem.JavaFileStorageService
 import net.dankito.util.settings.ILocalSettingsStore
 import net.dankito.utils.version.Versions
 import org.hamcrest.CoreMatchers.`is`

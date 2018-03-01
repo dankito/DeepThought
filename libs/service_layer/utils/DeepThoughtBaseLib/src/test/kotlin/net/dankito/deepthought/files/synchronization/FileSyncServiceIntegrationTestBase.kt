@@ -4,14 +4,13 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.anyOrNull
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
-import net.dankito.data_access.database.DeepThoughtCouchbaseLiteEntityManagerBase
-import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
-import net.dankito.util.filesystem.JavaFileStorageService
 import net.dankito.deepthought.data.FilePersister
 import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.serialization.DeepThoughtJacksonJsonSerializer
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
+import net.dankito.jpa.couchbaselite.DeepThoughtCouchbaseLiteEntityManagerBase
+import net.dankito.jpa.couchbaselite.JavaCouchbaseLiteEntityManager
 import net.dankito.jpa.entitymanager.EntityManagerConfiguration
 import net.dankito.mime.MimeTypeCategorizer
 import net.dankito.mime.MimeTypeDetector
@@ -50,6 +49,7 @@ import net.dankito.synchronization.service.permissions.JavaPermissionsService
 import net.dankito.util.ThreadPool
 import net.dankito.util.event.EntityChangeSource
 import net.dankito.util.event.EntityChangeType
+import net.dankito.util.filesystem.JavaFileStorageService
 import net.dankito.util.hashing.HashService
 import net.dankito.util.hashing.IBase64Service
 import net.dankito.util.localization.Localization

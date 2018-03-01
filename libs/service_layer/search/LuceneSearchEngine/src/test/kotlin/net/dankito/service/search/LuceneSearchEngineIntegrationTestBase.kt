@@ -1,16 +1,15 @@
 package net.dankito.service.search
 
 import com.nhaarman.mockito_kotlin.mock
-import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
-import net.dankito.util.filesystem.JavaFileStorageService
 import net.dankito.deepthought.data.FilePersister
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.di.DaggerBaseComponent
-import net.dankito.synchronization.files.DeepThoughtFileManager
+import net.dankito.deepthought.serialization.DeepThoughtJacksonJsonSerializer
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
+import net.dankito.jpa.couchbaselite.JavaCouchbaseLiteEntityManager
 import net.dankito.jpa.entitymanager.EntityManagerConfiguration
 import net.dankito.mime.MimeTypeCategorizer
 import net.dankito.mime.MimeTypeDetector
@@ -18,11 +17,13 @@ import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
-import net.dankito.synchronization.service.MimeTypeService
+import net.dankito.synchronization.files.DeepThoughtFileManager
 import net.dankito.synchronization.model.FileLink
 import net.dankito.synchronization.model.enums.OsType
 import net.dankito.synchronization.search.ISearchEngine
+import net.dankito.synchronization.service.MimeTypeService
 import net.dankito.util.ThreadPool
+import net.dankito.util.filesystem.JavaFileStorageService
 import net.dankito.util.hashing.HashService
 import net.dankito.util.localization.Localization
 import net.dankito.util.settings.ILocalSettingsStore
@@ -30,7 +31,6 @@ import net.dankito.util.settings.LocalSettingsStoreBase
 import net.dankito.utils.OsHelper
 import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.utils.language.NoOpLanguageDetector
-import net.dankito.utils.serialization.DeepThoughtJacksonJsonSerializer
 import net.dankito.utils.version.Versions
 import org.junit.After
 import java.io.File

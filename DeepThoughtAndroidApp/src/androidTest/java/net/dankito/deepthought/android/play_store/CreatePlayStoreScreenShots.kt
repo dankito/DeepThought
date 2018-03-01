@@ -1,6 +1,5 @@
 package net.dankito.deepthought.android.play_store
 
-import net.dankito.data_access.network.communication.callback.DeviceRegistrationHandlerBase
 import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.deepthought.android.DeepThoughtActivityTestRule
 import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
@@ -13,6 +12,8 @@ import net.dankito.deepthought.model.*
 import net.dankito.synchronization.model.enums.OsType
 import net.dankito.richtexteditor.command.CommandName
 import net.dankito.service.search.specific.TagsSearch
+import net.dankito.synchronization.device.messaging.callback.DeviceRegistrationHandlerBase
+import net.dankito.synchronization.model.Device
 import net.dankito.synchronization.model.DiscoveredDevice
 import org.junit.Before
 import org.junit.ClassRule

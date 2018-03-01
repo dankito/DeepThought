@@ -4,9 +4,6 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.anyOrNull
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
-import net.dankito.data_access.database.DeepThoughtCouchbaseLiteEntityManagerBase
-import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
-import net.dankito.util.filesystem.JavaFileStorageService
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
@@ -14,6 +11,8 @@ import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.serialization.DeepThoughtJacksonJsonSerializer
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
+import net.dankito.jpa.couchbaselite.DeepThoughtCouchbaseLiteEntityManagerBase
+import net.dankito.jpa.couchbaselite.JavaCouchbaseLiteEntityManager
 import net.dankito.jpa.entitymanager.EntityManagerConfiguration
 import net.dankito.jpa.entitymanager.IEntityManager
 import net.dankito.newsreader.model.ArticleSummary
@@ -41,6 +40,7 @@ import net.dankito.synchronization.service.ICommunicationManager
 import net.dankito.util.ThreadPool
 import net.dankito.util.Version
 import net.dankito.util.event.EntityChangeType
+import net.dankito.util.filesystem.JavaFileStorageService
 import net.dankito.util.hashing.HashService
 import net.dankito.util.hashing.IBase64Service
 import net.dankito.util.localization.Localization
