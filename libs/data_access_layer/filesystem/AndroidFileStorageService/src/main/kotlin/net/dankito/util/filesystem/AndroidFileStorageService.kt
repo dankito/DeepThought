@@ -1,7 +1,6 @@
-package net.dankito.data_access.filesystem
+package net.dankito.util.filesystem
 
 import android.content.Context
-import net.dankito.util.filesystem.JavaFileStorageService
 import java.io.File
 
 

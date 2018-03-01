@@ -2,12 +2,12 @@ package net.dankito.deepthought.javafx.di
 
 import dagger.Module
 import dagger.Provides
-import net.dankito.data_access.database.CouchbaseLiteDatabaseUtil
-import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.deepthought.javafx.service.hashing.Java8Base64Service
 import net.dankito.deepthought.javafx.service.settings.JavaFXPlatformConfiguration
 import net.dankito.deepthought.service.importexport.pdf.PdfImporter
+import net.dankito.jpa.couchbaselite.CouchbaseLiteDatabaseUtil
 import net.dankito.jpa.couchbaselite.CouchbaseLiteEntityManagerBase
+import net.dankito.jpa.couchbaselite.JavaCouchbaseLiteEntityManager
 import net.dankito.jpa.entitymanager.EntityManagerConfiguration
 import net.dankito.jpa.entitymanager.IEntityManager
 import net.dankito.synchronization.device.discovery.IDevicesDiscoverer

@@ -1,9 +1,8 @@
-package net.dankito.data_access.network.discovery
+package net.dankito.synchronization.device.discovery.udp
 
 import android.content.Context
 import android.net.wifi.WifiManager
 import net.dankito.synchronization.device.discovery.DevicesDiscovererConfig
-import net.dankito.synchronization.device.discovery.udp.UdpDevicesDiscoverer
 import net.dankito.util.IThreadPool
 import net.dankito.util.network.INetworkConnectivityManager
 

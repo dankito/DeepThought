@@ -1,4 +1,4 @@
-package net.dankito.data_access.database
+package net.dankito.jpa.couchbaselite
 
 import com.couchbase.lite.JavaContext
 

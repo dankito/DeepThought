@@ -3,28 +3,28 @@ package net.dankito.deepthought.android.di
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import net.dankito.data_access.database.AndroidCouchbaseLiteEntityManager
-import net.dankito.data_access.database.CouchbaseLiteDatabaseUtil
-import net.dankito.data_access.filesystem.AndroidFileStorageService
-import net.dankito.util.filesystem.IFileStorageService
-import net.dankito.data_access.network.discovery.AndroidUdpDevicesDiscoverer
 import net.dankito.deepthought.android.service.hashing.AndroidBase64Service
 import net.dankito.deepthought.android.service.settings.AndroidPlatformConfiguration
 import net.dankito.deepthought.service.importexport.pdf.PdfImporter
 import net.dankito.filechooserdialog.service.PreviewImageService
 import net.dankito.filechooserdialog.service.ThumbnailService
+import net.dankito.jpa.couchbaselite.AndroidCouchbaseLiteEntityManager
+import net.dankito.jpa.couchbaselite.CouchbaseLiteDatabaseUtil
 import net.dankito.jpa.couchbaselite.CouchbaseLiteEntityManagerBase
 import net.dankito.jpa.entitymanager.EntityManagerConfiguration
 import net.dankito.jpa.entitymanager.IEntityManager
 import net.dankito.mime.MimeTypeCategorizer
 import net.dankito.mime.MimeTypeDetector
-import net.dankito.utils.database.IDatabaseUtil
 import net.dankito.synchronization.device.discovery.IDevicesDiscoverer
+import net.dankito.synchronization.device.discovery.udp.AndroidUdpDevicesDiscoverer
 import net.dankito.util.IThreadPool
+import net.dankito.util.filesystem.AndroidFileStorageService
+import net.dankito.util.filesystem.IFileStorageService
 import net.dankito.util.hashing.IBase64Service
 import net.dankito.util.network.INetworkConnectivityManager
 import net.dankito.util.settings.ILocalSettingsStore
 import net.dankito.utils.IPlatformConfiguration
+import net.dankito.utils.database.IDatabaseUtil
 import javax.inject.Singleton
 
 

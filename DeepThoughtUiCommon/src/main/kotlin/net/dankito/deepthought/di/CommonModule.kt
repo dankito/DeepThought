@@ -2,8 +2,6 @@ package net.dankito.deepthought.di
 
 import dagger.Module
 import dagger.Provides
-import net.dankito.data_access.database.DeepThoughtCouchbaseLiteEntityManagerBase
-import net.dankito.util.filesystem.IFileStorageService
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.service.clipboard.OptionsForClipboardContentDetector
@@ -13,6 +11,7 @@ import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.faviconextractor.FaviconComparator
 import net.dankito.faviconextractor.FaviconExtractor
 import net.dankito.feedaddressextractor.FeedAddressExtractor
+import net.dankito.jpa.couchbaselite.DeepThoughtCouchbaseLiteEntityManagerBase
 import net.dankito.jpa.entitymanager.IEntityManager
 import net.dankito.mime.MimeTypeCategorizer
 import net.dankito.mime.MimeTypeDetector
@@ -38,11 +37,12 @@ import net.dankito.synchronization.device.messaging.tcp.PlainTcpMessenger
 import net.dankito.synchronization.device.service.DiscoveredDevicesManager
 import net.dankito.synchronization.device.service.IDiscoveredDevicesManager
 import net.dankito.synchronization.files.DeepThoughtFileManager
-import net.dankito.synchronization.service.MimeTypeService
 import net.dankito.synchronization.model.NetworkSettings
 import net.dankito.synchronization.service.CommunicationManager
 import net.dankito.synchronization.service.ICommunicationManager
+import net.dankito.synchronization.service.MimeTypeService
 import net.dankito.util.IThreadPool
+import net.dankito.util.filesystem.IFileStorageService
 import net.dankito.util.hashing.HashService
 import net.dankito.util.hashing.IBase64Service
 import net.dankito.util.localization.Localization

@@ -1,15 +1,13 @@
-package net.dankito.data_access.database
+package net.dankito.jpa.couchbaselite
 
 import com.couchbase.lite.ChangesOptions
 import com.couchbase.lite.Document
 import com.couchbase.lite.SavedRevision
 import net.dankito.deepthought.model.Item
-import net.dankito.jpa.couchbaselite.CouchbaseLiteEntityManagerBase
-import net.dankito.jpa.couchbaselite.Dao
 import net.dankito.jpa.entitymanager.ChangedEntity
-import net.dankito.utils.database.IDatabaseUtil
 import net.dankito.synchronization.model.BaseEntity
 import net.dankito.util.AsyncProducerConsumerQueue
+import net.dankito.utils.database.IDatabaseUtil
 import org.slf4j.LoggerFactory
 import java.lang.Exception
 
