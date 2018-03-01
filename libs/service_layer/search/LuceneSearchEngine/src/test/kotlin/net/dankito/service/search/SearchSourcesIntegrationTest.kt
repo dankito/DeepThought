@@ -1,8 +1,9 @@
 package net.dankito.service.search
 
-import net.dankito.synchronization.model.FileLink
+import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.model.Source
 import net.dankito.service.search.specific.SourceSearch
+import net.dankito.synchronization.model.FileLink
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.Assert
@@ -58,7 +59,7 @@ class SearchSourcesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
     }
 
     private fun persistSourceWithAttachedFile(countDummyItems: Int = 3): Pair<Source, FileLink> {
-        val file = FileLink(File1Uri, File1Name, File1IsLocalFile)
+        val file = DeepThoughtFileLink(File1Uri, File1Name, File1IsLocalFile)
         fileService.persist(file)
 
         val source = Source("Test")

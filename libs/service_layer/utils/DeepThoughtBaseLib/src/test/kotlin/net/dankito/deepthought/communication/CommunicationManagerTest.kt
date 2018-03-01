@@ -13,6 +13,7 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
+import net.dankito.jpa.entitymanager.EntityManagerConfiguration
 import net.dankito.jpa.entitymanager.IEntityManager
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.summary.ArticleSummaryExtractorBase
@@ -22,8 +23,9 @@ import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
-import net.dankito.service.synchronization.*
+import net.dankito.service.synchronization.CouchbaseLiteSyncManager
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
+import net.dankito.synchronization.ConnectedDevicesServiceConfig
 import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.device.discovery.udp.UdpDevicesDiscoverer
 import net.dankito.synchronization.device.messaging.IMessenger
@@ -257,7 +259,8 @@ class CommunicationManagerTest {
 
             localMessenger = PlainTcpMessenger(localNetworkSettings, localRegistrationHandler, localEntityManager, serializer, base64Service, hashService, localThreadPool)
 
-            localConnectedDevicesService = ConnectedDevicesService(localDevicesDiscoverer, localMessenger, localSyncManager, localRegistrationHandler, localNetworkSettings, localEntityManager)
+            localConnectedDevicesService = ConnectedDevicesService(localDevicesDiscoverer, localMessenger, localSyncManager, localRegistrationHandler, localNetworkSettings,
+                    localEntityManager, ConnectedDevicesServiceConfig.DEVICES_DISCOVERER_PORT, ConnectedDevicesServiceConfig.CHECK_FOR_DEVICES_INTERVAL_MILLIS)
 
             localCommunicationManager = CommunicationManager(localConnectedDevicesService, localSyncManager, localMessenger, localNetworkSettings)
 
@@ -294,7 +297,8 @@ class CommunicationManagerTest {
 
             remoteMessenger = PlainTcpMessenger(remoteNetworkSettings, remoteRegistrationHandler, remoteEntityManager, serializer, base64Service, hashService, remoteThreadPool)
 
-            remoteConnectedDevicesService = ConnectedDevicesService(remoteDevicesDiscoverer, remoteMessenger, remoteSyncManager, remoteRegistrationHandler, remoteNetworkSettings, remoteEntityManager)
+            remoteConnectedDevicesService = ConnectedDevicesService(remoteDevicesDiscoverer, remoteMessenger, remoteSyncManager, remoteRegistrationHandler, remoteNetworkSettings,
+                    remoteEntityManager, ConnectedDevicesServiceConfig.DEVICES_DISCOVERER_PORT, ConnectedDevicesServiceConfig.CHECK_FOR_DEVICES_INTERVAL_MILLIS)
 
             remoteCommunicationManager = CommunicationManager(remoteConnectedDevicesService, remoteSyncManager, remoteMessenger, remoteNetworkSettings)
 

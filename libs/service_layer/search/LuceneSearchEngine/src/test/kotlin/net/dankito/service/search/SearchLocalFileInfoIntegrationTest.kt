@@ -1,9 +1,9 @@
 package net.dankito.service.search
 
-import net.dankito.synchronization.model.FileLink
+import net.dankito.deepthought.model.DeepThoughtFileLink
+import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.synchronization.model.enums.FileSyncStatus
-import net.dankito.service.search.specific.LocalFileInfoSearch
 import org.hamcrest.CoreMatchers.*
 import org.junit.Assert.assertThat
 import org.junit.Test
@@ -84,7 +84,7 @@ class SearchLocalFileInfoIntegrationTest : LuceneSearchEngineIntegrationTestBase
 
     private fun createCountLocalFileInfoWithSyncStatus(countLocalFileInfo: Int, syncStatus: FileSyncStatus) {
         for(i in 0 until countLocalFileInfo) {
-            val file = FileLink("")
+            val file = DeepThoughtFileLink("")
             fileService.persist(file)
 
             val localFileInfo = LocalFileInfo(file, syncStatus = syncStatus)

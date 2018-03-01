@@ -1,10 +1,11 @@
 package net.dankito.service.search
 
-import net.dankito.synchronization.model.FileLink
-import net.dankito.synchronization.model.enums.FileType
+import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.service.search.specific.FilesSearch
 import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.service.search.writerandsearcher.FileLinkIndexWriterAndSearcher
+import net.dankito.synchronization.model.FileLink
+import net.dankito.synchronization.model.enums.FileType
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.Matchers.nullValue
@@ -148,7 +149,7 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
         for(i in 0 until 5) {
             fileService.persist(fileManager.createLocalFile(File("/tmp", "With_$i")))
 
-            fileService.persist(FileLink("", "Remote_$i", false))
+            fileService.persist(DeepThoughtFileLink("", "Remote_$i", false))
         }
 
         waitTillEntityGetsIndexed()
@@ -340,7 +341,7 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
 
 
     private fun persistTestFiles(isLocalFile: Boolean = true, countDummyFiles: Int = 3, isDummyLocalFile: Boolean = true): FileLink {
-        val file = FileLink(File1Uri, File1Name, isLocalFile)
+        val file = DeepThoughtFileLink(File1Uri, File1Name, isLocalFile)
         file.description = File1Description
         file.sourceUriString = File1SourceUri
 
@@ -354,7 +355,7 @@ class SearchFilesIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
 
     private fun persistDummyFiles(countDummyFiles: Int, isLocalFile: Boolean = true) {
         for(i in 0 until countDummyFiles) {
-            val dummyFile = FileLink("/Dummy$i", "Dummy$i", isLocalFile)
+            val dummyFile = DeepThoughtFileLink("/Dummy$i", "Dummy$i", isLocalFile)
             fileService.persist(dummyFile)
         }
     }

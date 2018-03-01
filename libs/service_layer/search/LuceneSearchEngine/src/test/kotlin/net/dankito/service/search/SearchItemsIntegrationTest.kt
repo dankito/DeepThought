@@ -1,6 +1,6 @@
 package net.dankito.service.search
 
-import net.dankito.synchronization.model.FileLink
+import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.model.Item
 import net.dankito.service.search.specific.ItemsSearch
 import org.hamcrest.CoreMatchers.`is`
@@ -39,7 +39,7 @@ class SearchItemsIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
     }
 
 
-    private fun getAndTestResult(testResult: Item, searchTerm: String = Search.EmptySearchTerm, searchInFiles: Boolean = false, itemsMustHaveTheseFiles: Collection<FileLink> = listOf()) {
+    private fun getAndTestResult(testResult: Item, searchTerm: String = Search.EmptySearchTerm, searchInFiles: Boolean = false, itemsMustHaveTheseFiles: Collection<DeepThoughtFileLink> = listOf()) {
         val resultHolder = AtomicReference<List<Item>?>(null)
         val waitForResultLatch = CountDownLatch(1)
 
@@ -58,8 +58,8 @@ class SearchItemsIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
         assertThat(resultHolder.get()?.get(0), `is`(testResult))
     }
 
-    private fun persistItemWithAttachedFile(countDummyItems: Int = 3): Pair<Item, FileLink> {
-        val file = FileLink(File1Uri, File1Name, File1IsLocalFile)
+    private fun persistItemWithAttachedFile(countDummyItems: Int = 3): Pair<Item, DeepThoughtFileLink> {
+        val file = DeepThoughtFileLink(File1Uri, File1Name, File1IsLocalFile)
         fileService.persist(file)
 
         val item = Item("Test")

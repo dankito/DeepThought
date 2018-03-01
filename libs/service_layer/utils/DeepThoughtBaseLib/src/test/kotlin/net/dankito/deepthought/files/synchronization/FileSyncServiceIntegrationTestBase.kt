@@ -16,6 +16,7 @@ import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.deepthought.service.permissions.JavaPermissionsService
+import net.dankito.jpa.entitymanager.EntityManagerConfiguration
 import net.dankito.mime.MimeTypeCategorizer
 import net.dankito.mime.MimeTypeDetector
 import net.dankito.service.data.*
@@ -28,11 +29,9 @@ import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.LuceneSearchEngine
 import net.dankito.service.synchronization.CouchbaseLiteSyncManager
-import net.dankito.synchronization.device.service.ConnectedDevicesService
-import net.dankito.synchronization.device.service.IConnectedDevicesService
-import net.dankito.synchronization.device.service.KnownSynchronizedDevicesListener
 import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
+import net.dankito.synchronization.ConnectedDevicesServiceConfig
 import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.database.sync.ISyncManager
 import net.dankito.synchronization.device.discovery.udp.UdpDevicesDiscoverer
@@ -41,6 +40,9 @@ import net.dankito.synchronization.device.messaging.callback.DeepThoughtDeviceRe
 import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.synchronization.device.messaging.message.DeviceInfo
 import net.dankito.synchronization.device.messaging.tcp.PlainTcpMessenger
+import net.dankito.synchronization.device.service.ConnectedDevicesService
+import net.dankito.synchronization.device.service.IConnectedDevicesService
+import net.dankito.synchronization.device.service.KnownSynchronizedDevicesListener
 import net.dankito.synchronization.model.Device
 import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.synchronization.model.NetworkSettings
@@ -346,7 +348,8 @@ abstract class FileSyncServiceIntegrationTestBase {
 
             localMessenger = PlainTcpMessenger(localNetworkSettings, localRegistrationHandler, localEntityManager, localSerializer, base64Service, hashService, localThreadPool)
 
-            localConnectedDevicesService = ConnectedDevicesService(localDevicesDiscoverer, localMessenger, localSyncManager, localRegistrationHandler, localNetworkSettings, localEntityManager)
+            localConnectedDevicesService = ConnectedDevicesService(localDevicesDiscoverer, localMessenger, localSyncManager, localRegistrationHandler, localNetworkSettings,
+                    localEntityManager, ConnectedDevicesServiceConfig.DEVICES_DISCOVERER_PORT, ConnectedDevicesServiceConfig.CHECK_FOR_DEVICES_INTERVAL_MILLIS)
 
             localCommunicationManager = CommunicationManager(localConnectedDevicesService, localSyncManager, localMessenger, localNetworkSettings)
 
@@ -406,7 +409,8 @@ abstract class FileSyncServiceIntegrationTestBase {
 
             remoteMessenger = PlainTcpMessenger(remoteNetworkSettings, remoteRegistrationHandler, remoteEntityManager, remoteSerializer, base64Service, hashService, remoteThreadPool)
 
-            remoteConnectedDevicesService = ConnectedDevicesService(remoteDevicesDiscoverer, remoteMessenger, remoteSyncManager, remoteRegistrationHandler, remoteNetworkSettings, remoteEntityManager)
+            remoteConnectedDevicesService = ConnectedDevicesService(remoteDevicesDiscoverer, remoteMessenger, remoteSyncManager, remoteRegistrationHandler, remoteNetworkSettings,
+                    remoteEntityManager, ConnectedDevicesServiceConfig.DEVICES_DISCOVERER_PORT, ConnectedDevicesServiceConfig.CHECK_FOR_DEVICES_INTERVAL_MILLIS)
 
             remoteCommunicationManager = CommunicationManager(remoteConnectedDevicesService, remoteSyncManager, remoteMessenger, remoteNetworkSettings)
 
