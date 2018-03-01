@@ -5,7 +5,7 @@ targetCompatibility = "1.7"
 
 
 dependencies {
-    compile project(':CouchbaseLiteEntityManagerBase')
+    compile project(':DeepThoughtSynchronization')
 
     compile "com.couchbase.lite:couchbase-lite-java:$couchbaseLiteVersion"
 }

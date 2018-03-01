@@ -35,7 +35,7 @@ android {
 }
 
 dependencies {
-    compile project(':CouchbaseLiteEntityManagerBase')
+    compile project(':DeepThoughtSynchronization')
 
     compile 'com.couchbase.lite:couchbase-lite-android:' + couchbaseLiteVersion
 }
