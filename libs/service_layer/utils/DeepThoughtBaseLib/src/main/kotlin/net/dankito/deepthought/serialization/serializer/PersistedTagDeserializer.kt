@@ -1,4 +1,4 @@
-package net.dankito.utils.serialization.serializer
+package net.dankito.deepthought.serialization.serializer
 
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.JsonProcessingException

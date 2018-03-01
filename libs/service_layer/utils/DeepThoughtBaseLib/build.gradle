@@ -23,8 +23,6 @@ dependencies {
 
     compile project(':DeepThoughtSynchronization')
 
-    compile project(':JacksonJsonSerializer')
-    compile project(':SearchEngine')
     compile project(':NewsReader')
 
 //    compile project(':NorconexLanguageDetector')

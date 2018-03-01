@@ -1,4 +1,4 @@
-package net.dankito.utils.serialization.serializer
+package net.dankito.deepthought.serialization.serializer
 
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.SerializerProvider
@@ -9,7 +9,7 @@ import net.dankito.deepthought.model.Tag
 class PersistedTagSerializer : StdSerializer<Tag>(Tag::class.java) {
 
     override fun serialize(value: Tag?, gen: JsonGenerator?, provider: SerializerProvider?) {
-        value?.let { value ->
+        value?.let {
             gen?.let { jsonGenerator ->
                 jsonGenerator.writeStartObject()
 

@@ -18,7 +18,6 @@ dependencies {
 
     compile project(':CouchbaseLiteEntityManagerBase')
 
-    compile project(':NewsReader')
     compile project(':RomeFeedReader')
     compile project(':FeedAddressExtractor'), {
         exclude group: 'org.jetbrains.kotlin'

@@ -1,16 +1,16 @@
-package net.dankito.utils.serialization
+package net.dankito.deepthought.serialization
 
 import com.fasterxml.jackson.databind.module.SimpleModule
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.serialization.serializer.PersistedSeriesDeserializer
+import net.dankito.deepthought.serialization.serializer.PersistedSeriesSerializer
+import net.dankito.deepthought.serialization.serializer.PersistedTagDeserializer
+import net.dankito.deepthought.serialization.serializer.PersistedTagSerializer
 import net.dankito.service.data.SeriesService
 import net.dankito.service.data.TagService
 import net.dankito.util.serialization.ISerializer
 import net.dankito.util.serialization.JacksonJsonSerializer
-import net.dankito.utils.serialization.serializer.PersistedSeriesDeserializer
-import net.dankito.utils.serialization.serializer.PersistedSeriesSerializer
-import net.dankito.utils.serialization.serializer.PersistedTagDeserializer
-import net.dankito.utils.serialization.serializer.PersistedTagSerializer
 
 
 class DeepThoughtJacksonJsonSerializer(tagService: TagService, seriesService: SeriesService) : JacksonJsonSerializer(), ISerializer {

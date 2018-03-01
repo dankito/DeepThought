@@ -31,7 +31,7 @@ import net.dankito.util.serialization.ISerializer
 import net.dankito.util.settings.ILocalSettingsStore
 import net.dankito.util.ui.dialog.IDialogService
 import net.dankito.utils.IPlatformConfiguration
-import net.dankito.utils.serialization.DeepThoughtJacksonJsonSerializer
+import net.dankito.deepthought.serialization.DeepThoughtJacksonJsonSerializer
 import javax.inject.Singleton
 
 
