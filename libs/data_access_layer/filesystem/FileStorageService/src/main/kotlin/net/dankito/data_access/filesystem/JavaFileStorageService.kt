@@ -10,7 +10,7 @@ open class JavaFileStorageService : IFileStorageService {
     }
 
 
-    override fun getFileInDataFolder(filename: String, folderName: String?) : File {
+    override fun getFileInDataFolder(filename: String, folderName: String?) : File { // not that senseful for Java, so we simply create a subdirectory of current directory
         return ensureFolderInDataFolderExists(File(DATA_FOLDER_NAME), filename, folderName)
     }
 
