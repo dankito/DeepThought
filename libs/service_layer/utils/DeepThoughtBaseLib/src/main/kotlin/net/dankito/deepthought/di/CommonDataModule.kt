@@ -18,7 +18,7 @@ import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
-import net.dankito.synchronization.device.service.IConnectedDevicesService
+import net.dankito.synchronization.device.service.IDiscoveredDevicesManager
 import net.dankito.synchronization.service.MimeTypeService
 import net.dankito.synchronization.model.FileLink
 import net.dankito.synchronization.model.NetworkSettings
@@ -129,9 +129,9 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideFileSyncService(connectedDevicesService: IConnectedDevicesService, searchEngine: ISearchEngine, socketHandler: SocketHandler, localFileInfoService: LocalFileInfoService,
+    fun provideFileSyncService(discoveredDevicesManager: IDiscoveredDevicesManager, searchEngine: ISearchEngine, socketHandler: SocketHandler, localFileInfoService: LocalFileInfoService,
                                serializer: ISerializer, permissionsService: IPermissionsService, platformConfiguration: IPlatformConfiguration, hashService: HashService): FileSyncService {
-        return DeepThoughtFileSyncService(connectedDevicesService, searchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>,
+        return DeepThoughtFileSyncService(discoveredDevicesManager, searchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>,
                 socketHandler, localFileInfoService, serializer, permissionsService, platformConfiguration, hashService)
     }
 

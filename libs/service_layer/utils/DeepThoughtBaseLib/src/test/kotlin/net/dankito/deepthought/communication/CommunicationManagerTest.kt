@@ -160,7 +160,7 @@ class CommunicationManagerTest {
 
     private lateinit var localSyncManager: CouchbaseLiteSyncManager
 
-    private lateinit var localConnectedDevicesService: IConnectedDevicesService
+    private lateinit var localDiscoveredDevicesManager: IDiscoveredDevicesManager
 
     private lateinit var localCommunicationManager: ICommunicationManager
 
@@ -219,7 +219,7 @@ class CommunicationManagerTest {
 
     private lateinit var remoteSyncManager: CouchbaseLiteSyncManager
 
-    private lateinit var remoteConnectedDevicesService: IConnectedDevicesService
+    private lateinit var remoteDiscoveredDevicesManager: IDiscoveredDevicesManager
 
     private lateinit var remoteCommunicationManager: ICommunicationManager
 
@@ -261,10 +261,10 @@ class CommunicationManagerTest {
 
             localMessenger = PlainTcpMessenger(localNetworkSettings, localRegistrationHandler, localEntityManager, serializer, base64Service, hashService, localThreadPool)
 
-            localConnectedDevicesService = ConnectedDevicesService(localDevicesDiscoverer, localMessenger, localSyncManager, localRegistrationHandler, localNetworkSettings,
+            localDiscoveredDevicesManager = DiscoveredDevicesManager(localDevicesDiscoverer, localMessenger, localSyncManager, localRegistrationHandler, localNetworkSettings,
                     localEntityManager, ConnectedDevicesServiceConfig.DEVICES_DISCOVERER_PORT, ConnectedDevicesServiceConfig.CHECK_FOR_DEVICES_INTERVAL_MILLIS)
 
-            localCommunicationManager = CommunicationManager(localConnectedDevicesService, localSyncManager, localMessenger, localNetworkSettings)
+            localCommunicationManager = CommunicationManager(localDiscoveredDevicesManager, localSyncManager, localMessenger, localNetworkSettings)
 
             initializationLatch.countDown()
         }
@@ -299,10 +299,10 @@ class CommunicationManagerTest {
 
             remoteMessenger = PlainTcpMessenger(remoteNetworkSettings, remoteRegistrationHandler, remoteEntityManager, serializer, base64Service, hashService, remoteThreadPool)
 
-            remoteConnectedDevicesService = ConnectedDevicesService(remoteDevicesDiscoverer, remoteMessenger, remoteSyncManager, remoteRegistrationHandler, remoteNetworkSettings,
+            remoteDiscoveredDevicesManager = DiscoveredDevicesManager(remoteDevicesDiscoverer, remoteMessenger, remoteSyncManager, remoteRegistrationHandler, remoteNetworkSettings,
                     remoteEntityManager, ConnectedDevicesServiceConfig.DEVICES_DISCOVERER_PORT, ConnectedDevicesServiceConfig.CHECK_FOR_DEVICES_INTERVAL_MILLIS)
 
-            remoteCommunicationManager = CommunicationManager(remoteConnectedDevicesService, remoteSyncManager, remoteMessenger, remoteNetworkSettings)
+            remoteCommunicationManager = CommunicationManager(remoteDiscoveredDevicesManager, remoteSyncManager, remoteMessenger, remoteNetworkSettings)
 
             initializationLatch.countDown()
         }
@@ -331,9 +331,9 @@ class CommunicationManagerTest {
         val remoteDiscoveredDevicesList = CopyOnWriteArrayList<DiscoveredDevice>()
         val countDownLatch = CountDownLatch(2)
 
-        localConnectedDevicesService.addDiscoveredDevicesListener(createDiscoveredDevicesListener(localDiscoveredDevicesList, countDownLatch))
+        localDiscoveredDevicesManager.addDiscoveredDevicesListener(createDiscoveredDevicesListener(localDiscoveredDevicesList, countDownLatch))
 
-        remoteConnectedDevicesService.addDiscoveredDevicesListener(createDiscoveredDevicesListener(remoteDiscoveredDevicesList, countDownLatch))
+        remoteDiscoveredDevicesManager.addDiscoveredDevicesListener(createDiscoveredDevicesListener(remoteDiscoveredDevicesList, countDownLatch))
 
         startCommunicationManagersAndWait(countDownLatch)
 
@@ -354,15 +354,15 @@ class CommunicationManagerTest {
 
         mockDialogServiceTextInput(localDialogService, remoteCorrectChallengeResponse)
 
-        waitTillKnownSynchronizedDeviceConnected(localConnectedDevicesService, countDownLatch)
+        waitTillKnownSynchronizedDeviceConnected(localDiscoveredDevicesManager, countDownLatch)
 
         startCommunicationManagersAndWait(countDownLatch)
 
         assertThat(localNetworkSettings.synchronizationPort, greaterThan(1023))
-        assertThat(localConnectedDevicesService.knownSynchronizedDiscoveredDevices.size, `is`(1))
+        assertThat(localDiscoveredDevicesManager.knownSynchronizedDiscoveredDevices.size, `is`(1))
 
         assertThat(remoteNetworkSettings.synchronizationPort, greaterThan(1023))
-        assertThat(remoteConnectedDevicesService.knownSynchronizedDiscoveredDevices.size, `is`(1))
+        assertThat(remoteDiscoveredDevicesManager.knownSynchronizedDiscoveredDevices.size, `is`(1))
     }
 
 
@@ -388,15 +388,15 @@ class CommunicationManagerTest {
             }
         }
 
-        waitTillKnownSynchronizedDeviceConnected(localConnectedDevicesService, countDownLatch)
+        waitTillKnownSynchronizedDeviceConnected(localDiscoveredDevicesManager, countDownLatch)
 
         startCommunicationManagersAndWait(countDownLatch)
 
         assertThat(localNetworkSettings.synchronizationPort, greaterThan(1023))
-        assertThat(localConnectedDevicesService.knownSynchronizedDiscoveredDevices.size, `is`(1))
+        assertThat(localDiscoveredDevicesManager.knownSynchronizedDiscoveredDevices.size, `is`(1))
 
         assertThat(remoteNetworkSettings.synchronizationPort, greaterThan(1023))
-        assertThat(remoteConnectedDevicesService.knownSynchronizedDiscoveredDevices.size, `is`(1))
+        assertThat(remoteDiscoveredDevicesManager.knownSynchronizedDiscoveredDevices.size, `is`(1))
     }
 
 
@@ -419,10 +419,10 @@ class CommunicationManagerTest {
         startCommunicationManagersAndWait(countDownLatch)
 
         assertThat(localNetworkSettings.synchronizationPort, lessThanOrEqualTo(0))
-        assertThat(localConnectedDevicesService.knownSynchronizedDiscoveredDevices.size, `is`(0))
+        assertThat(localDiscoveredDevicesManager.knownSynchronizedDiscoveredDevices.size, `is`(0))
 
         assertThat(remoteNetworkSettings.synchronizationPort, lessThanOrEqualTo(0))
-        assertThat(remoteConnectedDevicesService.knownSynchronizedDiscoveredDevices.size, `is`(0))
+        assertThat(remoteDiscoveredDevicesManager.knownSynchronizedDiscoveredDevices.size, `is`(0))
     }
 
 
@@ -435,7 +435,7 @@ class CommunicationManagerTest {
 
         mockDialogServiceTextInput(localDialogService, remoteCorrectChallengeResponse)
 
-        waitTillKnownSynchronizedDeviceConnected(localConnectedDevicesService, countDownLatch)
+        waitTillKnownSynchronizedDeviceConnected(localDiscoveredDevicesManager, countDownLatch)
 
 
         startCommunicationManagersAndWait(countDownLatch)
@@ -466,7 +466,7 @@ class CommunicationManagerTest {
 
         mockDialogServiceTextInput(remoteDialogService, localCorrectChallengeResponse)
 
-        waitTillKnownSynchronizedDeviceConnected(remoteConnectedDevicesService, countDownLatch)
+        waitTillKnownSynchronizedDeviceConnected(remoteDiscoveredDevicesManager, countDownLatch)
 
 
         startCommunicationManagersAndWait(countDownLatch)
@@ -636,7 +636,7 @@ class CommunicationManagerTest {
 
         mockDialogServiceTextInput(localDialogService, remoteCorrectChallengeResponse)
 
-        waitTillKnownSynchronizedDeviceConnected(localConnectedDevicesService, countDownLatch)
+        waitTillKnownSynchronizedDeviceConnected(localDiscoveredDevicesManager, countDownLatch)
 
         startCommunicationManagersAndWait(countDownLatch)
 
@@ -839,8 +839,8 @@ class CommunicationManagerTest {
         }
     }
 
-    private fun waitTillKnownSynchronizedDeviceConnected(connectedDevicesService: IConnectedDevicesService, countDownLatch: CountDownLatch) {
-        connectedDevicesService.addKnownSynchronizedDevicesListener(object : KnownSynchronizedDevicesListener {
+    private fun waitTillKnownSynchronizedDeviceConnected(discoveredDevicesManager: IDiscoveredDevicesManager, countDownLatch: CountDownLatch) {
+        discoveredDevicesManager.addKnownSynchronizedDevicesListener(object : KnownSynchronizedDevicesListener {
             override fun knownSynchronizedDeviceConnected(connectedDevice: DiscoveredDevice) {
                 log.info("Counting down ...")
                 countDownLatch.countDown()

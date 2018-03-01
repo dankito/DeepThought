@@ -34,8 +34,8 @@ import net.dankito.synchronization.device.messaging.callback.DeepThoughtDeviceRe
 import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.synchronization.device.messaging.message.DeviceInfo
 import net.dankito.synchronization.device.messaging.tcp.PlainTcpMessenger
-import net.dankito.synchronization.device.service.ConnectedDevicesService
-import net.dankito.synchronization.device.service.IConnectedDevicesService
+import net.dankito.synchronization.device.service.DiscoveredDevicesManager
+import net.dankito.synchronization.device.service.IDiscoveredDevicesManager
 import net.dankito.synchronization.device.service.KnownSynchronizedDevicesListener
 import net.dankito.synchronization.files.FileServer
 import net.dankito.synchronization.files.FileSyncService
@@ -197,7 +197,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     protected lateinit var localMessenger: IMessenger
 
-    protected lateinit var localConnectedDevicesService: IConnectedDevicesService
+    protected lateinit var localDiscoveredDevicesManager: IDiscoveredDevicesManager
 
     protected lateinit var localCommunicationManager: ICommunicationManager
 
@@ -293,7 +293,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     protected lateinit var remoteMessenger: IMessenger
 
-    protected lateinit var remoteConnectedDevicesService: IConnectedDevicesService
+    protected lateinit var remoteDiscoveredDevicesManager: IDiscoveredDevicesManager
 
     protected lateinit var remoteCommunicationManager: ICommunicationManager
 
@@ -347,10 +347,10 @@ abstract class FileSyncServiceIntegrationTestBase {
 
             localMessenger = PlainTcpMessenger(localNetworkSettings, localRegistrationHandler, localEntityManager, localSerializer, base64Service, hashService, localThreadPool)
 
-            localConnectedDevicesService = ConnectedDevicesService(localDevicesDiscoverer, localMessenger, localSyncManager, localRegistrationHandler, localNetworkSettings,
+            localDiscoveredDevicesManager = DiscoveredDevicesManager(localDevicesDiscoverer, localMessenger, localSyncManager, localRegistrationHandler, localNetworkSettings,
                     localEntityManager, ConnectedDevicesServiceConfig.DEVICES_DISCOVERER_PORT, ConnectedDevicesServiceConfig.CHECK_FOR_DEVICES_INTERVAL_MILLIS)
 
-            localCommunicationManager = CommunicationManager(localConnectedDevicesService, localSyncManager, localMessenger, localNetworkSettings)
+            localCommunicationManager = CommunicationManager(localDiscoveredDevicesManager, localSyncManager, localMessenger, localNetworkSettings)
 
             initializationLatch.countDown()
         }
@@ -362,7 +362,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         localFileServer = FileServer(localSearchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>, localNetworkSettings, localSocketHandler, localSerializer, localThreadPool)
 
-        localFileSyncService = FileSyncService(localConnectedDevicesService, localSearchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>,
+        localFileSyncService = FileSyncService(localDiscoveredDevicesManager, localSearchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>,
                 localSocketHandler, localLocalFileInfoService, localSerializer, JavaPermissionsService(), localPlatformConfiguration, hashService
         )
 
@@ -409,10 +409,10 @@ abstract class FileSyncServiceIntegrationTestBase {
 
             remoteMessenger = PlainTcpMessenger(remoteNetworkSettings, remoteRegistrationHandler, remoteEntityManager, remoteSerializer, base64Service, hashService, remoteThreadPool)
 
-            remoteConnectedDevicesService = ConnectedDevicesService(remoteDevicesDiscoverer, remoteMessenger, remoteSyncManager, remoteRegistrationHandler, remoteNetworkSettings,
+            remoteDiscoveredDevicesManager = DiscoveredDevicesManager(remoteDevicesDiscoverer, remoteMessenger, remoteSyncManager, remoteRegistrationHandler, remoteNetworkSettings,
                     remoteEntityManager, ConnectedDevicesServiceConfig.DEVICES_DISCOVERER_PORT, ConnectedDevicesServiceConfig.CHECK_FOR_DEVICES_INTERVAL_MILLIS)
 
-            remoteCommunicationManager = CommunicationManager(remoteConnectedDevicesService, remoteSyncManager, remoteMessenger, remoteNetworkSettings)
+            remoteCommunicationManager = CommunicationManager(remoteDiscoveredDevicesManager, remoteSyncManager, remoteMessenger, remoteNetworkSettings)
 
             initializationLatch.countDown()
         }
@@ -424,7 +424,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         remoteFileServer = FileServer(remoteSearchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>, remoteNetworkSettings, remoteSocketHandler, remoteSerializer, remoteThreadPool)
 
-        remoteFileSyncService = FileSyncService(remoteConnectedDevicesService, remoteSearchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>,
+        remoteFileSyncService = FileSyncService(remoteDiscoveredDevicesManager, remoteSearchEngine as net.dankito.synchronization.search.ISearchEngine<FileLink>,
                 remoteSocketHandler, remoteLocalFileInfoService, remoteSerializer, JavaPermissionsService(), remotePlatformConfiguration, hashService
         )
 
@@ -539,7 +539,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         mockDialogServiceTextInput(localDialogService, remoteCorrectChallengeResponse)
 
-        waitTillKnownSynchronizedDeviceConnected(localConnectedDevicesService, countDownLatch)
+        waitTillKnownSynchronizedDeviceConnected(localDiscoveredDevicesManager, countDownLatch)
 
         startCommunicationManagersAndWait(countDownLatch)
     }
@@ -552,8 +552,8 @@ abstract class FileSyncServiceIntegrationTestBase {
         }
     }
 
-    protected fun waitTillKnownSynchronizedDeviceConnected(connectedDevicesService: IConnectedDevicesService, countDownLatch: CountDownLatch) {
-        connectedDevicesService.addKnownSynchronizedDevicesListener(object : KnownSynchronizedDevicesListener {
+    protected fun waitTillKnownSynchronizedDeviceConnected(discoveredDevicesManager: IDiscoveredDevicesManager, countDownLatch: CountDownLatch) {
+        discoveredDevicesManager.addKnownSynchronizedDevicesListener(object : KnownSynchronizedDevicesListener {
             override fun knownSynchronizedDeviceConnected(connectedDevice: DiscoveredDevice) {
                 log.info("Counting down ...")
                 countDownLatch.countDown()

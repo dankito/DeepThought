@@ -1,6 +1,6 @@
 package net.dankito.synchronization.files
 
-import net.dankito.synchronization.device.service.IConnectedDevicesService
+import net.dankito.synchronization.device.service.IDiscoveredDevicesManager
 import net.dankito.synchronization.files.persistence.ILocalFileInfoRepository
 import net.dankito.synchronization.model.FileLink
 import net.dankito.synchronization.search.ISearchEngine
@@ -12,10 +12,10 @@ import net.dankito.utils.IPlatformConfiguration
 import java.io.File
 
 
-class DeepThoughtFileSyncService(connectedDevicesService: IConnectedDevicesService, searchEngine: ISearchEngine<FileLink>, socketHandler: SocketHandler,
+class DeepThoughtFileSyncService(discoveredDevicesManager: IDiscoveredDevicesManager, searchEngine: ISearchEngine<FileLink>, socketHandler: SocketHandler,
                                  localFileInfoRepository: ILocalFileInfoRepository, serializer: ISerializer, permissionsService: IPermissionsService,
                                  protected val platformConfiguration: IPlatformConfiguration, hashService: HashService)
-    : FileSyncService(connectedDevicesService, searchEngine, socketHandler, localFileInfoRepository, serializer, permissionsService, hashService) {
+    : FileSyncService(discoveredDevicesManager, searchEngine, socketHandler, localFileInfoRepository, serializer, permissionsService, hashService) {
 
     override fun getDefaultSavePathForFile(file: FileLink): File {
         return platformConfiguration.getDefaultSavePathForFile(file.name, file.fileType)

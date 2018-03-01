@@ -3,12 +3,12 @@ package net.dankito.synchronization.service
 import net.dankito.synchronization.database.sync.ISyncManager
 import net.dankito.synchronization.device.messaging.IMessenger
 import net.dankito.synchronization.device.messaging.MessengerConfig
-import net.dankito.synchronization.device.service.IConnectedDevicesService
+import net.dankito.synchronization.device.service.IDiscoveredDevicesManager
 import net.dankito.synchronization.model.NetworkSettings
 import java.util.*
 
 
-class CommunicationManager(private val connectedDevicesService: IConnectedDevicesService, private val syncManager: ISyncManager, private val messenger: IMessenger,
+class CommunicationManager(private val discoveredDevicesManager: IDiscoveredDevicesManager, private val syncManager: ISyncManager, private val messenger: IMessenger,
                            private val networkSettings: NetworkSettings) : ICommunicationManager {
 
     override fun startAsync() {
@@ -25,7 +25,7 @@ class CommunicationManager(private val connectedDevicesService: IConnectedDevice
     }
 
     override fun stop() {
-        connectedDevicesService.stop()
+        discoveredDevicesManager.stop()
 
         messenger.stop()
 
@@ -51,7 +51,7 @@ class CommunicationManager(private val connectedDevicesService: IConnectedDevice
     }
 
     private fun successfullyStartedSyncManager(basicDataSyncPort: Int) {
-        connectedDevicesService.start()
+        discoveredDevicesManager.start()
     }
 
 }

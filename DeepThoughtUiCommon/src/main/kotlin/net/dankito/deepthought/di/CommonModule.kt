@@ -35,8 +35,8 @@ import net.dankito.synchronization.device.discovery.IDevicesDiscoverer
 import net.dankito.synchronization.device.messaging.IMessenger
 import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.synchronization.device.messaging.tcp.PlainTcpMessenger
-import net.dankito.synchronization.device.service.ConnectedDevicesService
-import net.dankito.synchronization.device.service.IConnectedDevicesService
+import net.dankito.synchronization.device.service.DiscoveredDevicesManager
+import net.dankito.synchronization.device.service.IDiscoveredDevicesManager
 import net.dankito.synchronization.files.DeepThoughtFileManager
 import net.dankito.synchronization.service.MimeTypeService
 import net.dankito.synchronization.model.NetworkSettings
@@ -199,16 +199,16 @@ open class CommonModule {
     @Provides
     @Singleton
     open fun provideConnectedDevicesService(devicesDiscoverer: IDevicesDiscoverer, messenger: IMessenger, syncManager: ISyncManager, registrationHandler: IDeviceRegistrationHandler,
-                                            networkSettings: NetworkSettings, entityManager: IEntityManager) : IConnectedDevicesService {
-        return ConnectedDevicesService(devicesDiscoverer, messenger, syncManager, registrationHandler, networkSettings, entityManager,
+                                            networkSettings: NetworkSettings, entityManager: IEntityManager) : IDiscoveredDevicesManager {
+        return DiscoveredDevicesManager(devicesDiscoverer, messenger, syncManager, registrationHandler, networkSettings, entityManager,
                 ConnectedDevicesServiceConfig.DEVICES_DISCOVERER_PORT, ConnectedDevicesServiceConfig.CHECK_FOR_DEVICES_INTERVAL_MILLIS)
     }
 
     @Provides
     @Singleton
-    open fun provideCommunicationManager(connectedDevicesService: IConnectedDevicesService, syncManager: ISyncManager, messenger: IMessenger, networkSettings: NetworkSettings)
+    open fun provideCommunicationManager(discoveredDevicesManager: IDiscoveredDevicesManager, syncManager: ISyncManager, messenger: IMessenger, networkSettings: NetworkSettings)
             : ICommunicationManager {
-        return CommunicationManager(connectedDevicesService, syncManager, messenger, networkSettings)
+        return CommunicationManager(discoveredDevicesManager, syncManager, messenger, networkSettings)
     }
 
 }

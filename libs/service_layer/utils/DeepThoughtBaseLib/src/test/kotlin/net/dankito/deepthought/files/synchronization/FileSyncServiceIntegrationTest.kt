@@ -24,10 +24,10 @@ class FileSyncServiceIntegrationTest : FileSyncServiceIntegrationTestBase() {
         connectDevices()
 
         Assert.assertThat(localNetworkSettings.fileSynchronizationPort, OrderingComparison.greaterThan(1023))
-        Assert.assertThat(localConnectedDevicesService.knownSynchronizedDiscoveredDevices.size, CoreMatchers.`is`(1))
+        Assert.assertThat(localDiscoveredDevicesManager.knownSynchronizedDiscoveredDevices.size, CoreMatchers.`is`(1))
 
         Assert.assertThat(remoteNetworkSettings.fileSynchronizationPort, OrderingComparison.greaterThan(1023))
-        Assert.assertThat(remoteConnectedDevicesService.knownSynchronizedDiscoveredDevices.size, CoreMatchers.`is`(1))
+        Assert.assertThat(remoteDiscoveredDevicesManager.knownSynchronizedDiscoveredDevices.size, CoreMatchers.`is`(1))
     }
 
 

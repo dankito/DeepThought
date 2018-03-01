@@ -20,17 +20,15 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
 
-class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer, private val messenger: IMessenger, private val syncManager: ISyncManager,
-                              private val registrationHandler: IDeviceRegistrationHandler, private val networkSettings: NetworkSettings, private val entityManager: IEntityManager,
-                              private val devicesDiscovererPort: Int, private val checkForDevicesInterval: Int)
-    : IConnectedDevicesService {
+class DiscoveredDevicesManager(private val devicesDiscoverer: IDevicesDiscoverer, private val messenger: IMessenger, private val syncManager: ISyncManager, private val registrationHandler: IDeviceRegistrationHandler, private val networkSettings: NetworkSettings, private val entityManager: IEntityManager, private val devicesDiscovererPort: Int, private val checkForDevicesInterval: Int)
+    : IDiscoveredDevicesManager {
 
     companion object {
         const val DEVICE_ID_AND_MESSAGES_PORT_SEPARATOR = "|"
 
         const val MESSAGES_PORT_AND_BASIC_DATA_SYNC_PORT_SEPARATOR = ":"
 
-        private val log = LoggerFactory.getLogger(ConnectedDevicesService::class.java)
+        private val log = LoggerFactory.getLogger(DiscoveredDevicesManager::class.java)
     }
 
 
@@ -99,7 +97,7 @@ class ConnectedDevicesService(private val devicesDiscoverer: IDevicesDiscoverer,
         }
 
         override fun deviceDisconnected(deviceInfo: String) {
-            this@ConnectedDevicesService.deviceDisconnected(deviceInfo)
+            this@DiscoveredDevicesManager.deviceDisconnected(deviceInfo)
         }
     }
 

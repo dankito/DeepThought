@@ -1,6 +1,6 @@
 package net.dankito.synchronization.files
 
-import net.dankito.synchronization.device.service.IConnectedDevicesService
+import net.dankito.synchronization.device.service.IDiscoveredDevicesManager
 import net.dankito.synchronization.device.service.KnownSynchronizedDevicesListener
 import net.dankito.synchronization.files.message.PermitSynchronizeFileRequest
 import net.dankito.synchronization.files.message.PermitSynchronizeFileResponse
@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.schedule
 
 
-open class FileSyncService(protected val connectedDevicesService: IConnectedDevicesService, protected val searchEngine: ISearchEngine<FileLink>,
+open class FileSyncService(protected val discoveredDevicesManager: IDiscoveredDevicesManager, protected val searchEngine: ISearchEngine<FileLink>,
                            protected val socketHandler: SocketHandler, protected val localFileInfoRepository: ILocalFileInfoRepository, protected val serializer: ISerializer,
                            protected val permissionsService: IPermissionsService, protected val hashService: HashService) {
 
@@ -57,7 +57,7 @@ open class FileSyncService(protected val connectedDevicesService: IConnectedDevi
 
 
     init {
-        connectedDevicesService.addKnownSynchronizedDevicesListener(object : KnownSynchronizedDevicesListener {
+        discoveredDevicesManager.addKnownSynchronizedDevicesListener(object : KnownSynchronizedDevicesListener {
             override fun knownSynchronizedDeviceConnected(connectedDevice: DiscoveredDevice) {
                 if(queue.isRunning == false) {
                     queue.start()
@@ -65,7 +65,7 @@ open class FileSyncService(protected val connectedDevicesService: IConnectedDevi
             }
 
             override fun knownSynchronizedDeviceDisconnected(disconnectedDevice: DiscoveredDevice) {
-                if(connectedDevicesService.knownSynchronizedDiscoveredDevices.size == 0) {
+                if(discoveredDevicesManager.knownSynchronizedDiscoveredDevices.size == 0) {
                     queue.stop()
                 }
             }
@@ -150,7 +150,7 @@ open class FileSyncService(protected val connectedDevicesService: IConnectedDevi
         log.info("Trying to synchronize file $file ($localFileInfo)")
 
         val state = syncStatesOfNotSuccessfullySynchronizedFiles[file] ?: FileSyncState(file)
-        val connectedDevices = ArrayList(connectedDevicesService.knownSynchronizedDiscoveredDevices)
+        val connectedDevices = ArrayList(discoveredDevicesManager.knownSynchronizedDiscoveredDevices)
 
         synchronized(currentFileSynchronizations) {
             if(currentFileSynchronizations.containsKey(file) || localFileInfo?.syncStatus == FileSyncStatus.UpToDate) { // already synchronized in the meantime

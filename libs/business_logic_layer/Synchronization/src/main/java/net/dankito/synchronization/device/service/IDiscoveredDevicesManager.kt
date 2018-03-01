@@ -4,7 +4,7 @@ import net.dankito.synchronization.model.Device
 import net.dankito.synchronization.model.DiscoveredDevice
 
 
-interface IConnectedDevicesService {
+interface IDiscoveredDevicesManager {
 
     fun start()
 
