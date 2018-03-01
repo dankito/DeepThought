@@ -21,14 +21,13 @@ class CouchbaseLiteDatabaseUtil(private val entityManager: CouchbaseLiteEntityMa
     }
 
 
-    private val database = entityManager.database
-
     /**
      * Passes all entities that have been updated after (Couchbase database) sequenceNumber on to queue.
      * Using a AsyncProducerConsumerQueue so that retrieved entities can be consumed immediately and not loading all of them into memory first
      * which could result in an OutOfMemory exception when there are too many changes for little Android's memory.
      */
     override fun <T> getAllEntitiesUpdatedAfter(sequenceNumber: Long, queue: AsyncProducerConsumerQueue<ChangedEntity<T>>): Long {
+        val database = entityManager.database
         val currentSequenceNumber = database.lastSequenceNumber
 
         val options = ChangesOptions(Int.MAX_VALUE, true, true, true)
@@ -46,7 +45,7 @@ class CouchbaseLiteDatabaseUtil(private val entityManager: CouchbaseLiteEntityMa
 
     private fun <T> getUpdatedEntityFromDocument(documentId: String, anyDao: Dao, queue: AsyncProducerConsumerQueue<ChangedEntity<T>>) {
         try {
-            database.getDocument(documentId)?.let {
+            entityManager.database.getDocument(documentId)?.let {
                 getUpdatedEntityFromDocument(it, anyDao, queue)
             }
         } catch(e: Exception) {
@@ -90,7 +89,7 @@ class CouchbaseLiteDatabaseUtil(private val entityManager: CouchbaseLiteEntityMa
 
 
     private fun loadDeletedEntity(documentId: String): BaseEntity? {
-        val document = database.getDocument(documentId)
+        val document = entityManager.database.getDocument(documentId)
         if (document != null) {
             val lastUndeletedRevision = findLastUndeletedRevision(document)
 
