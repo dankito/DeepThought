@@ -4,7 +4,7 @@ import net.dankito.util.web.IWebClient
 import net.dankito.util.web.RequestParameters
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.files.FileManager
-import net.dankito.deepthought.files.MimeTypeService
+import net.dankito.synchronization.files.MimeTypeService
 import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source

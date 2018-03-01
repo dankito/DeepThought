@@ -9,7 +9,7 @@ import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.deepthought.data.FilePersister
 import net.dankito.deepthought.files.FileManager
-import net.dankito.deepthought.files.MimeTypeService
+import net.dankito.synchronization.files.MimeTypeService
 import net.dankito.deepthought.model.DeepThoughtFileLink
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer

@@ -9,7 +9,7 @@ import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.di.DaggerBaseComponent
 import net.dankito.deepthought.files.FileManager
-import net.dankito.deepthought.files.MimeTypeService
+import net.dankito.synchronization.files.MimeTypeService
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.jpa.entitymanager.EntityManagerConfiguration

@@ -68,6 +68,13 @@ dependencies {
         exclude group: 'org.jetbrains.kotlin'
     }
 
+    compile "net.dankito.mime:mime-utils:$mimeUtilsVersion", {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jre7:'
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+        exclude group: 'org.jsoup', module: 'jsoup'
+    }
+
     compile "net.dankito.jpa.annotationreader:api:$annotationReaderVersion"
     kapt "net.dankito.jpa.annotationreader:jpa-apt:$annotationReaderVersion"
 

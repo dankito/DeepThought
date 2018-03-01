@@ -1,4 +1,4 @@
-package net.dankito.deepthought.files
+package net.dankito.synchronization.files
 
 import net.dankito.mime.MimeTypeCategorizer
 import net.dankito.mime.MimeTypeDetector

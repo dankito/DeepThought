@@ -7,7 +7,7 @@ import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.files.FileManager
-import net.dankito.deepthought.files.MimeTypeService
+import net.dankito.synchronization.files.MimeTypeService
 import net.dankito.deepthought.files.synchronization.FileServer
 import net.dankito.deepthought.files.synchronization.FileSyncService
 import net.dankito.deepthought.service.data.DataManager

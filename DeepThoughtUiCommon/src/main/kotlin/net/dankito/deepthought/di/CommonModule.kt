@@ -5,7 +5,7 @@ import dagger.Provides
 import net.dankito.data_access.database.DeepThoughtCouchbaseLiteEntityManagerBase
 import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.deepthought.files.FileManager
-import net.dankito.deepthought.files.MimeTypeService
+import net.dankito.synchronization.files.MimeTypeService
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.service.clipboard.OptionsForClipboardContentDetector
