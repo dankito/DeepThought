@@ -28,7 +28,6 @@ dependencies {
     compile project(':DataServices')
     compile project(':NewsReader')
 
-    compile project(':ConnectedDevicesService')
     compile project(':DeepThoughtSynchronization')
 
 //    compile project(':NorconexLanguageDetector')
