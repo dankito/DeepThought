@@ -1,6 +1,5 @@
 package net.dankito.service.search
 
-import net.dankito.synchronization.database.ChangedEntity
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.*
@@ -10,6 +9,8 @@ import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.specific.*
 import net.dankito.service.search.writerandsearcher.*
+import net.dankito.synchronization.database.ChangedEntity
+import net.dankito.synchronization.database.IDatabaseUtil
 import net.dankito.synchronization.model.BaseEntity
 import net.dankito.synchronization.model.LocalFileInfo
 import net.dankito.util.AsyncProducerConsumerQueue
@@ -27,7 +28,8 @@ import kotlin.concurrent.schedule
 import kotlin.concurrent.thread
 
 
-class LuceneSearchEngine(private val dataManager: DataManager, private val languageDetector: ILanguageDetector, osHelper: OsHelper, threadPool: IThreadPool, private val eventBus: IEventBus,
+class LuceneSearchEngine(private val dataManager: DataManager, private val databaseUtil: IDatabaseUtil, private val languageDetector: ILanguageDetector, osHelper: OsHelper,
+                         threadPool: IThreadPool, private val eventBus: IEventBus,
                          itemService: ItemService, tagService: TagService, sourceService: SourceService, seriesService: SeriesService,
                          readLaterArticleService: ReadLaterArticleService, fileService: FileService, localFileInfoService: LocalFileInfoService)
     : SearchEngineBase(threadPool) {
@@ -127,7 +129,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
             updateEntityInIndex(it)
         }
 
-        val currentSequenceNumber = dataManager.entityManager.getAllEntitiesUpdatedAfter<BaseEntity>(dataManager.localSettings.lastSearchIndexUpdateSequenceNumber, queue)
+        val currentSequenceNumber = databaseUtil.getAllEntitiesUpdatedAfter<BaseEntity>(dataManager.localSettings.lastSearchIndexUpdateSequenceNumber, queue)
 
         while(queue.isEmpty == false) { try { Thread.sleep(50) } catch(ignored: Exception) { } } // wait till queue is empty otherwise not all entity types would get added to updatedEntityTypes
 

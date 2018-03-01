@@ -1,7 +1,6 @@
 package net.dankito.service.search
 
 import com.nhaarman.mockito_kotlin.mock
-import net.dankito.synchronization.database.EntityManagerConfiguration
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.deepthought.data.FilePersister
@@ -11,7 +10,6 @@ import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.di.DaggerBaseComponent
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.files.MimeTypeService
-import net.dankito.synchronization.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.mime.MimeTypeCategorizer
@@ -20,6 +18,8 @@ import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
+import net.dankito.synchronization.database.EntityManagerConfiguration
+import net.dankito.synchronization.model.enums.OsType
 import net.dankito.util.ThreadPool
 import net.dankito.util.hashing.HashService
 import net.dankito.util.localization.Localization
@@ -115,7 +115,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         fileService = FileService(dataManager, entityChangedNotifier)
         mimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypeCategorizer, dataManager)
 
-        underTest = LuceneSearchEngine(dataManager, NoOpLanguageDetector(), OsHelper(platformConfiguration), ThreadPool(), eventBus,
+        underTest = LuceneSearchEngine(dataManager, mock(), NoOpLanguageDetector(), OsHelper(platformConfiguration), ThreadPool(), eventBus,
                 itemService, tagService, sourceService, seriesService, readLaterArticleService, fileService, localFileInfoService)
         initLuceneSearchEngine(underTest)
 

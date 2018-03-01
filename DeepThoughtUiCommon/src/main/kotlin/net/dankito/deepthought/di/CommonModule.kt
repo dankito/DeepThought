@@ -34,6 +34,7 @@ import net.dankito.service.synchronization.IConnectedDevicesService
 import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.synchronization.ConnectedDevicesServiceConfig
+import net.dankito.synchronization.database.IDatabaseUtil
 import net.dankito.synchronization.database.IEntityManager
 import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.database.sync.ISyncManager
@@ -116,10 +117,10 @@ open class CommonModule {
 
     @Provides
     @Singleton
-    open fun provideSearchEngine(dataManager: DataManager, languageDetector: ILanguageDetector, threadPool: IThreadPool, osHelper: OsHelper, eventBus: IEventBus,
+    open fun provideSearchEngine(dataManager: DataManager, databaseUtil: IDatabaseUtil, languageDetector: ILanguageDetector, threadPool: IThreadPool, osHelper: OsHelper, eventBus: IEventBus,
                                  itemService: ItemService, tagService: TagService, sourceService: SourceService, seriesService: SeriesService,
                                  readLaterArticleService: ReadLaterArticleService, fileService: FileService, localFileInfoService: LocalFileInfoService) : ISearchEngine {
-        return LuceneSearchEngine(dataManager, languageDetector, osHelper, threadPool, eventBus, itemService, tagService, sourceService, seriesService,
+        return LuceneSearchEngine(dataManager, databaseUtil, languageDetector, osHelper, threadPool, eventBus, itemService, tagService, sourceService, seriesService,
                 readLaterArticleService, fileService, localFileInfoService)
     }
 
