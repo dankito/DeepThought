@@ -13,6 +13,7 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
+import net.dankito.jpa.entitymanager.IEntityManager
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.summary.ArticleSummaryExtractorBase
 import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractor
@@ -23,8 +24,6 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.service.synchronization.*
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
-import net.dankito.synchronization.database.EntityManagerConfiguration
-import net.dankito.synchronization.database.IEntityManager
 import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.device.discovery.udp.UdpDevicesDiscoverer
 import net.dankito.synchronization.device.messaging.IMessenger

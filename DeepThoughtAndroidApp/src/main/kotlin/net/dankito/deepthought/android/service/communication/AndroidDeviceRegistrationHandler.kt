@@ -5,7 +5,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.service.SnackbarService
 import net.dankito.deepthought.android.service.StringUtil
 import net.dankito.deepthought.model.DeepThought
-import net.dankito.synchronization.database.IEntityManager
+import net.dankito.jpa.entitymanager.IEntityManager
 import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.device.messaging.callback.DeepThoughtDeviceRegistrationHandlerBase
 import net.dankito.synchronization.device.messaging.message.DeviceInfo

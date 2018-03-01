@@ -2,7 +2,7 @@ package net.dankito.synchronization.database.sync
 
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.model.DeepThought
-import net.dankito.synchronization.database.IEntityManager
+import net.dankito.jpa.entitymanager.IEntityManager
 import net.dankito.synchronization.model.SyncInfo
 import net.dankito.util.localization.Localization
 

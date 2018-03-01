@@ -2,7 +2,7 @@ package net.dankito.synchronization.device.messaging.callback
 
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.model.DeepThought
-import net.dankito.synchronization.database.IEntityManager
+import net.dankito.jpa.entitymanager.IEntityManager
 import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.database.sync.DeepThoughtSyncInfo
 import net.dankito.synchronization.model.NetworkSettings

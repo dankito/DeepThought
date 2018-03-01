@@ -1,5 +1,6 @@
 package net.dankito.synchronization.database
 
+import net.dankito.jpa.entitymanager.ChangedEntity
 import net.dankito.util.AsyncProducerConsumerQueue
 
 

@@ -17,6 +17,7 @@ import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.faviconextractor.FaviconComparator
 import net.dankito.faviconextractor.FaviconExtractor
 import net.dankito.feedaddressextractor.FeedAddressExtractor
+import net.dankito.jpa.entitymanager.IEntityManager
 import net.dankito.mime.MimeTypeCategorizer
 import net.dankito.mime.MimeTypeDetector
 import net.dankito.newsreader.article.ArticleExtractors
@@ -35,7 +36,6 @@ import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHa
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.synchronization.ConnectedDevicesServiceConfig
 import net.dankito.synchronization.database.IDatabaseUtil
-import net.dankito.synchronization.database.IEntityManager
 import net.dankito.synchronization.database.sync.DeepThoughtInitialSyncManager
 import net.dankito.synchronization.database.sync.ISyncManager
 import net.dankito.synchronization.device.discovery.IDevicesDiscoverer

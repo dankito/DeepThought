@@ -5,8 +5,5 @@ targetCompatibility = "1.7"
 
 
 dependencies {
-    compile "net.dankito.jpa.couchbaselite:couchbase-lite-jpa:1.0-alpha2"
-
-    compile project(':DataModel')
     compile project(':Utils')
 }

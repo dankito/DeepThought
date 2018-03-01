@@ -2,21 +2,24 @@ package net.dankito.deepthought.javafx.di
 
 import dagger.Module
 import dagger.Provides
-import net.dankito.synchronization.database.EntityManagerConfiguration
-import net.dankito.synchronization.database.IEntityManager
+import net.dankito.data_access.database.CouchbaseLiteDatabaseUtil
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.deepthought.javafx.service.hashing.Java8Base64Service
 import net.dankito.deepthought.javafx.service.settings.JavaFXPlatformConfiguration
 import net.dankito.deepthought.service.importexport.pdf.PdfImporter
+import net.dankito.jpa.couchbaselite.CouchbaseLiteEntityManagerBase
+import net.dankito.jpa.entitymanager.EntityManagerConfiguration
+import net.dankito.jpa.entitymanager.IEntityManager
+import net.dankito.synchronization.database.IDatabaseUtil
 import net.dankito.synchronization.device.discovery.IDevicesDiscoverer
 import net.dankito.synchronization.device.discovery.udp.UdpDevicesDiscoverer
-import net.dankito.utils.IPlatformConfiguration
 import net.dankito.util.IThreadPool
 import net.dankito.util.hashing.IBase64Service
 import net.dankito.util.network.INetworkConnectivityManager
 import net.dankito.util.settings.ILocalSettingsStore
+import net.dankito.utils.IPlatformConfiguration
 import javax.inject.Singleton
 
 
@@ -34,6 +37,12 @@ class JavaCommonModule {
     @Singleton
     fun provideEntityManager(configuration: EntityManagerConfiguration, localSettingsStore: ILocalSettingsStore) : IEntityManager {
         return JavaCouchbaseLiteEntityManager(configuration, localSettingsStore)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDatabaseUtil(entityManager: IEntityManager) : IDatabaseUtil {
+        return CouchbaseLiteDatabaseUtil(entityManager as CouchbaseLiteEntityManagerBase)
     }
 
     @Provides

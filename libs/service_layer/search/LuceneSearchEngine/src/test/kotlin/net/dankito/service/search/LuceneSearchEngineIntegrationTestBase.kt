@@ -18,7 +18,6 @@ import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
-import net.dankito.synchronization.database.EntityManagerConfiguration
 import net.dankito.synchronization.model.enums.OsType
 import net.dankito.util.ThreadPool
 import net.dankito.util.hashing.HashService

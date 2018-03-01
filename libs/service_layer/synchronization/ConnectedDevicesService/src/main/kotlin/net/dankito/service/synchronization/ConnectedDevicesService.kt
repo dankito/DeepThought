@@ -1,7 +1,7 @@
 package net.dankito.service.synchronization
 
+import net.dankito.jpa.entitymanager.IEntityManager
 import net.dankito.synchronization.ConnectedDevicesServiceConfig
-import net.dankito.synchronization.database.IEntityManager
 import net.dankito.synchronization.database.sync.ISyncManager
 import net.dankito.synchronization.device.discovery.DevicesDiscovererConfig
 import net.dankito.synchronization.device.discovery.DevicesDiscovererListener

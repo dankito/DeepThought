@@ -1,6 +1,6 @@
 package net.dankito.synchronization.device.messaging.message
 
-import net.dankito.synchronization.database.IEntityManager
+import net.dankito.jpa.entitymanager.IEntityManager
 import net.dankito.synchronization.device.messaging.callback.IDeviceRegistrationHandler
 import net.dankito.synchronization.model.DiscoveredDevice
 import net.dankito.synchronization.model.NetworkSettings

@@ -1,10 +1,10 @@
 package net.dankito.deepthought.service.data
 
-import net.dankito.synchronization.database.EntityManagerConfiguration
-import net.dankito.synchronization.database.IEntityManager
 import net.dankito.deepthought.model.DeepThought
-import net.dankito.synchronization.model.Device
 import net.dankito.deepthought.model.LocalSettings
+import net.dankito.jpa.entitymanager.EntityManagerConfiguration
+import net.dankito.jpa.entitymanager.IEntityManager
+import net.dankito.synchronization.model.Device
 import net.dankito.synchronization.model.User
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.services.Times

@@ -2,6 +2,7 @@ package net.dankito.service.search
 
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.jpa.entitymanager.ChangedEntity
 import net.dankito.service.data.*
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.data.messages.EntityChangeSource
@@ -9,7 +10,6 @@ import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.specific.*
 import net.dankito.service.search.writerandsearcher.*
-import net.dankito.synchronization.database.ChangedEntity
 import net.dankito.synchronization.database.IDatabaseUtil
 import net.dankito.synchronization.model.BaseEntity
 import net.dankito.synchronization.model.LocalFileInfo

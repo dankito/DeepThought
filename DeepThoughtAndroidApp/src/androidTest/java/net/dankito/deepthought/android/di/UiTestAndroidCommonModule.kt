@@ -3,8 +3,8 @@ package net.dankito.deepthought.android.di
 import android.content.Context
 import net.dankito.deepthought.android.stub.InMemoryEntityManager
 import net.dankito.deepthought.android.stub.NoOpDevicesDiscoverer
-import net.dankito.synchronization.database.EntityManagerConfiguration
-import net.dankito.synchronization.database.IEntityManager
+import net.dankito.jpa.entitymanager.EntityManagerConfiguration
+import net.dankito.jpa.entitymanager.IEntityManager
 import net.dankito.synchronization.device.discovery.IDevicesDiscoverer
 import net.dankito.util.IThreadPool
 import net.dankito.util.network.INetworkConnectivityManager

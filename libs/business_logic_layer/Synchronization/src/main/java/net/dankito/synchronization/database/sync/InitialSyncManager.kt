@@ -1,6 +1,6 @@
 package net.dankito.synchronization.database.sync
 
-import net.dankito.synchronization.database.IEntityManager
+import net.dankito.jpa.entitymanager.IEntityManager
 import net.dankito.synchronization.model.Device
 import net.dankito.synchronization.model.SyncInfo
 import net.dankito.synchronization.model.User
