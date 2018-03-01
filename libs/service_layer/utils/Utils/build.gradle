@@ -6,10 +6,6 @@ targetCompatibility = "1.7"
 
 dependencies {
     compile project(':DataModel')
-    compile "net.dankito.util:util-common:1.0.0", {
-        exclude group: 'org.jetbrains.kotlin'
-        exclude group: 'org.slf4j'
-    }
 
     compile project(':FileStorageService')
 
