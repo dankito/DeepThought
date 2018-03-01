@@ -5,7 +5,7 @@ import dagger.Provides
 import net.dankito.deepthought.javafx.service.hashing.Java8Base64Service
 import net.dankito.deepthought.javafx.service.settings.JavaFXPlatformConfiguration
 import net.dankito.deepthought.service.importexport.pdf.PdfImporter
-import net.dankito.jpa.couchbaselite.CouchbaseLiteDatabaseUtil
+import net.dankito.deepthought.database.CouchbaseLiteDatabaseUtil
 import net.dankito.jpa.couchbaselite.CouchbaseLiteEntityManagerBase
 import net.dankito.jpa.couchbaselite.JavaCouchbaseLiteEntityManager
 import net.dankito.jpa.entitymanager.EntityManagerConfiguration

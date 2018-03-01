@@ -9,7 +9,7 @@ import net.dankito.deepthought.service.importexport.pdf.PdfImporter
 import net.dankito.filechooserdialog.service.PreviewImageService
 import net.dankito.filechooserdialog.service.ThumbnailService
 import net.dankito.jpa.couchbaselite.AndroidCouchbaseLiteEntityManager
-import net.dankito.jpa.couchbaselite.CouchbaseLiteDatabaseUtil
+import net.dankito.deepthought.database.CouchbaseLiteDatabaseUtil
 import net.dankito.jpa.couchbaselite.CouchbaseLiteEntityManagerBase
 import net.dankito.jpa.entitymanager.EntityManagerConfiguration
 import net.dankito.jpa.entitymanager.IEntityManager
