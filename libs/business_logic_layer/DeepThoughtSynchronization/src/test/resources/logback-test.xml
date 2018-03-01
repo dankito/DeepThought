@@ -1,0 +1,53 @@
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+
+    <!-- Insert the current time formatted as "yyyyMMdd'T'HHmmss" under
+         the key "bySecond" into the logger context. This value will be
+         available to all subsequent configuration elements. -->
+    <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss"/>
+
+    <!--<appender name="FILE" class="ch.qos.logback.core.FileAppender">-->
+        <!--<file>data/tests/logs/DeepThoughtLib/DeepThoughtLib_${bySecond}.log</file>-->
+        <!--&lt;!&ndash; encoders are assigned the type-->
+             <!--ch.qos.logback.classic.encoder.PatternLayoutEncoder by default &ndash;&gt;-->
+        <!--<encoder>-->
+            <!--<pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>-->
+        <!--</encoder>-->
+
+        <!--<filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+            <!--<level>DEBUG</level>-->
+        <!--</filter>-->
+    <!--</appender>-->
+
+    <!--<appender name="TRACE_FILE" class="ch.qos.logback.core.FileAppender">-->
+        <!--<file>data/tests/logs/DeepThoughtLib/DeepThoughtLib_${bySecond}_trace.log</file>-->
+        <!--&lt;!&ndash; encoders are assigned the type-->
+             <!--ch.qos.logback.classic.encoder.PatternLayoutEncoder by default &ndash;&gt;-->
+        <!--<encoder>-->
+            <!--<pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>-->
+        <!--</encoder>-->
+
+        <!--<filter class="ch.qos.logback.classic.filter.LevelFilter">-->
+            <!--<level>TRACE</level>-->
+            <!--<onMatch>ACCEPT</onMatch>-->
+            <!--<onMismatch>DENY</onMismatch>-->
+        <!--</filter>-->
+    <!--</appender>-->
+
+    <root level="ALL">
+        <appender-ref ref="STDOUT"/>
+        <!--<appender-ref ref="FILE"/>-->
+        <!--<appender-ref ref="TRACE_FILE"/>-->
+    </root>
+</configuration>
