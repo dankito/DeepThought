@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
-import net.dankito.util.web.IWebClient
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
+import net.dankito.util.web.IWebClient
 import org.jsoup.nodes.Comment
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -19,8 +19,6 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         private val MultiPageMobileArticleDateTimeFormat = SimpleDateFormat("yyyy-MM-dd")
     }
 
-
-    abstract protected fun parseArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleElement: Element, url: String, title: String)
 
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
@@ -57,6 +55,44 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         }
 
         return null
+    }
+
+    protected open fun parseArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleElement: Element, url: String, title: String) {
+        articleElement.select(".meldung_wrapper").first()?.let { contentElement ->
+            parseMeldungWrapperArticle(extractionResult, headerElement, articleElement, contentElement, url, title)
+            return
+        }
+
+        articleElement.select(".article-content").first()?.let { articleContentElement ->
+            parseArticleContentArticle(extractionResult, headerElement, articleContentElement, url, title)
+        }
+    }
+
+
+    // new version
+    private fun parseArticleContentArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleContentElement: Element, url: String, title: String) {
+        val source = Source(title, url, extractPublishingDate(headerElement))
+        articleContentElement.select(".aufmacherbild img").first()?.let { previewImageElement ->
+            source.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), url)
+        }
+
+        cleanContentElement(articleContentElement)
+
+        makeLinksAbsolute(articleContentElement, url)
+
+        extractionResult.setExtractedContent(Item(articleContentElement.outerHtml()), source)
+    }
+
+
+    // old version
+    private fun parseMeldungWrapperArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleElement: Element, contentElement: Element, url: String, title: String) {
+        val item = Item(extractContent(articleElement, url))
+
+        val publishingDate = extractPublishingDate(headerElement)
+        val source = Source(title, url, publishingDate)
+        source.previewImageUrl = makeLinkAbsolute(contentElement.select(".aufmacherbild img").first()?.attr("src") ?: "", url)
+
+        extractionResult.setExtractedContent(item, source)
     }
 
 
