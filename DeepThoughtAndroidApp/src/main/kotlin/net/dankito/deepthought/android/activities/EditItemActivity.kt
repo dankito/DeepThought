@@ -62,8 +62,6 @@ import kotlin.concurrent.schedule
 class EditItemActivity : BaseActivity() {
 
     companion object {
-        private const val STATE_NAME_PREFIX_INTENT_EXTRA_NAME = "STATE_NAME_PREFIX"
-
         private const val ITEM_ID_INTENT_EXTRA_NAME = "ITEM_ID"
         private const val READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME = "READ_LATER_ARTICLE_ID"
         private const val ITEM_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ITEM_EXTRACTION_RESULT"
@@ -240,8 +238,6 @@ class EditItemActivity : BaseActivity() {
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
-        val stateNamePrefix = savedInstanceState.getString(STATE_NAME_PREFIX_INTENT_EXTRA_NAME)
-
         this.forceShowTagsPreview = savedInstanceState.getBoolean(FORCE_SHOW_TAGS_PREVIEW_INTENT_EXTRA_NAME, false)
         this.forceShowSourcePreview = savedInstanceState.getBoolean(FORCE_SHOW_SOURCE_PREVIEW_INTENT_EXTRA_NAME, false)
         this.forceShowSummaryPreview = savedInstanceState.getBoolean(FORCE_SHOW_SUMMARY_PREVIEW_INTENT_EXTRA_NAME, false)
@@ -299,9 +295,6 @@ class EditItemActivity : BaseActivity() {
         super.onSaveInstanceState(outState)
 
         outState?.let {
-            val stateNamePrefix = getStateNamePrefix()
-            outState.putString(STATE_NAME_PREFIX_INTENT_EXTRA_NAME, stateNamePrefix) // we need to save the state name prefix as on restore we wouldn't otherwise know how to  restore ItemExtractionResult as state name prefix is derived from it
-
             outState.putString(ITEM_ID_INTENT_EXTRA_NAME, null)
             item?.id?.let { itemId -> outState.putString(ITEM_ID_INTENT_EXTRA_NAME, itemId) }
 
@@ -339,24 +332,6 @@ class EditItemActivity : BaseActivity() {
 
             floatingActionMenu.saveInstanceState(outState)
         }
-    }
-
-    private fun getKeyForState(stateNamePrefix: String, stateName: String): String {
-        return stateNamePrefix + "_" + stateName
-    }
-
-    /**
-     * As there may be multiple EditItemActivities opened at a time (e.g. when the user selected multiple articles to view), get a unique key prefix for each opened activity as
-     * otherwise they overwrite their states.
-     */
-    private fun getStateNamePrefix(): String {
-        item?.id?.let { return it }
-
-        readLaterArticle?.id?.let { return it }
-
-        itemExtractionResult?.source?.url?.let { return it }
-
-        return "UNPERSISTED_ITEM" // an unpersisted Item -> currently there's no way to have two EditItemActivities for two unpersisted items in parallel
     }
 
 
