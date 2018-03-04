@@ -350,7 +350,7 @@ class EditItemActivity : BaseActivity() {
 
         itemExtractionResult?.source?.url?.let { return it }
 
-        return "" // an unpersisted Item -> currently there's no way to have two EditItemActivities for two unpersisted items in parallel
+        return "UNPERSISTED_ITEM" // an unpersisted Item -> currently there's no way to have two EditItemActivities for two unpersisted items in parallel
     }
 
 
