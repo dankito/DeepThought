@@ -249,7 +249,10 @@ class EditItemActivity : BaseActivity() {
         this.isInEditContentMode = savedInstanceState.getBoolean(IS_IN_EDIT_CONTENT_MODE_INTENT_EXTRA_NAME, false)
         this.isInReaderMode = savedInstanceState.getBoolean(IS_IN_READER_MODE_INTENT_EXTRA_NAME, false)
 
-        (getAndClearState(getKeyForState(stateNamePrefix, ITEM_EXTRACTION_RESULT_INTENT_EXTRA_NAME)) as? ItemExtractionResult)?.let { editItemExtractionResult(it) }
+        restoreStateFromDisk(savedInstanceState, ITEM_EXTRACTION_RESULT_INTENT_EXTRA_NAME, ItemExtractionResult::class.java)?.let {
+            editItemExtractionResult(it)
+        }
+
         savedInstanceState.getString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME)?.let { readLaterArticleId -> editReadLaterArticle(readLaterArticleId) }
         savedInstanceState.getString(ITEM_ID_INTENT_EXTRA_NAME)?.let { itemId -> editItem(itemId) }
 
@@ -258,7 +261,7 @@ class EditItemActivity : BaseActivity() {
             createItem(false) // don't go to EditHtmlTextDialog for content here as we're restoring state, content may already be set
         }
 
-        getAndClearStringState(getKeyForState(stateNamePrefix, CONTENT_INTENT_EXTRA_NAME))?.let { content ->
+        restoreStateFromDisk(savedInstanceState, CONTENT_INTENT_EXTRA_NAME, String::class.java)?.let { content ->
             contentToEdit = content
             setContentPreviewOnUIThread()
         }
@@ -282,7 +285,10 @@ class EditItemActivity : BaseActivity() {
 
         floatingActionMenu.restoreInstanceState(savedInstanceState)
 
-        getAndClearStringState(getKeyForState(stateNamePrefix, EDIT_CONTENT_HTML_INTENT_EXTRA_NAME))?.let { editHtmlView.setHtml(it, sourceToEdit?.url) }
+
+        restoreStateFromDisk(savedInstanceState, EDIT_CONTENT_HTML_INTENT_EXTRA_NAME, String::class.java)?.let {
+            editHtmlView.setHtml(it, sourceToEdit?.url)
+        }
 
         if(isInEditContentMode) {
             editContent()
@@ -302,7 +308,7 @@ class EditItemActivity : BaseActivity() {
             outState.putString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME, null)
             readLaterArticle?.id?.let { readLaterArticleId -> outState.putString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME, readLaterArticleId) }
 
-            itemExtractionResult?.let { storeState(getKeyForState(stateNamePrefix, ITEM_EXTRACTION_RESULT_INTENT_EXTRA_NAME), it) }
+            serializeStateToDiskIfNotNull(outState, ITEM_EXTRACTION_RESULT_INTENT_EXTRA_NAME, itemExtractionResult)
 
             outState.putBoolean(FORCE_SHOW_TAGS_PREVIEW_INTENT_EXTRA_NAME, forceShowTagsPreview)
             outState.putBoolean(FORCE_SHOW_SOURCE_PREVIEW_INTENT_EXTRA_NAME, forceShowSourcePreview)
@@ -322,11 +328,11 @@ class EditItemActivity : BaseActivity() {
             outState.putString(SUMMARY_INTENT_EXTRA_NAME, summaryToEdit)
 
             if(contentToEdit != originalContent) {
-                storeState(getKeyForState(stateNamePrefix, CONTENT_INTENT_EXTRA_NAME), contentToEdit) // application crashes if objects put into bundle are too large (> 1 MB) for Android
+                serializeStateToDiskIfNotNull(outState, CONTENT_INTENT_EXTRA_NAME, contentToEdit) // application crashes if objects put into bundle are too large (> 1 MB) for Android
             }
 
             if(isInEditContentMode) {
-                storeState(getKeyForState(stateNamePrefix, EDIT_CONTENT_HTML_INTENT_EXTRA_NAME), editHtmlView.getHtml()) // application crashes if objects put into bundle are too large (> 1 MB) for Android
+                serializeStateToDiskIfNotNull(outState, EDIT_CONTENT_HTML_INTENT_EXTRA_NAME, editHtmlView.getHtml()) // application crashes if objects put into bundle are too large (> 1 MB) for Android
             }
 
             wbvwContent.onSaveInstanceState(outState)

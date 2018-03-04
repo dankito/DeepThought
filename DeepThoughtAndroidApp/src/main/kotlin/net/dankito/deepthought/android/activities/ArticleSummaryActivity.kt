@@ -103,7 +103,9 @@ class ArticleSummaryActivity : BaseActivity() {
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
-        restoreState(savedInstanceState.getString(EXTRACTOR_URL_INTENT_EXTRA_NAME), getAndClearState(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME) as? ArticleSummary)
+        val lastLoadedSummary = restoreStateFromDisk(savedInstanceState, LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME, ArticleSummary::class.java)
+
+        restoreState(savedInstanceState.getString(EXTRACTOR_URL_INTENT_EXTRA_NAME), lastLoadedSummary)
     }
 
     private fun restoreState(extractorUrl: String?, lastLoadedSummary: ArticleSummary? = null) {
@@ -122,11 +124,13 @@ class ArticleSummaryActivity : BaseActivity() {
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
 
-        outState?.putString(EXTRACTOR_URL_INTENT_EXTRA_NAME, extractorConfig?.url)
+        outState?.let {
+            outState.putString(EXTRACTOR_URL_INTENT_EXTRA_NAME, extractorConfig?.url)
 
-        presenter.lastLoadedSummary?.let { storeState(LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME, it) }
+            serializeStateToDiskIfNotNull(outState, LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME, presenter.lastLoadedSummary)
 
-        adapter.onSaveInstanceState(outState)
+            adapter.onSaveInstanceState(outState)
+        }
     }
 
 

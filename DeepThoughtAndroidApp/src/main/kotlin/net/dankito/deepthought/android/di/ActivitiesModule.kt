@@ -80,12 +80,6 @@ class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
-    fun provideActivityStateHolder() : ActivityStateHolder {
-        return ActivityStateHolder()
-    }
-
-    @Provides
-    @Singleton
     fun provideExtractArticleHandler() : ExtractArticleHandler {
         return ExtractArticleHandler()
     }
