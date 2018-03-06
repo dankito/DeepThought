@@ -6,6 +6,8 @@ import com.couchbase.lite.DocumentChange
 import com.couchbase.lite.SavedRevision
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.deepthought.model.BaseEntity
+import net.dankito.deepthought.model.Series
+import net.dankito.deepthought.model.Tag
 import net.dankito.jpa.couchbaselite.Dao
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.data.messages.EntityChangeSource
@@ -212,7 +214,10 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
         try { log.info("Calling notifyListenersOfEntityChange() for $synchronizedEntity of type $changeType") } // toString() may throws an exception for deleted entities
         catch(ignored: Exception) { log.info("Calling notifyListenersOfEntityChange() for ${synchronizedEntity.id} of type $changeType") }
 
-        changeNotifier.notifyListenersOfEntityChangeAsync(synchronizedEntity, changeType, EntityChangeSource.Synchronization, true)
+        // TODO: check for which entities it should be set to true. E.g. Series would notify a lot of Sources without benefit, the same with tags
+        // e.g. an item has been synchronized without its source -> source couldn't be retrieved from database. Now source gets synchronized -> item gets updated and its source therefore set
+        val didChangesAffectingDependentEntities = !( synchronizedEntity is Series || synchronizedEntity is Tag)
+        changeNotifier.notifyListenersOfEntityChangeAsync(synchronizedEntity, changeType, EntityChangeSource.Synchronization, didChangesAffectingDependentEntities)
     }
 
 }
