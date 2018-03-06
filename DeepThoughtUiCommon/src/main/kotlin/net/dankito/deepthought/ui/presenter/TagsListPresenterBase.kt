@@ -23,7 +23,8 @@ import javax.inject.Inject
 
 
 abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, protected val searchEngine: ISearchEngine, protected val tagService: TagService,
-                                     protected val deleteEntityService: DeleteEntityService, protected val searchResultsUtil: TagsSearchResultsUtil, protected val dialogService: IDialogService) {
+                                     protected val deleteEntityService: DeleteEntityService, protected val searchResultsUtil: TagsSearchResultsUtil,
+                                     protected val dialogService: IDialogService) : IMainViewSectionPresenter {
 
     protected var lastSearchTermProperty = Search.EmptySearchTerm
 
@@ -50,16 +51,6 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
 
 
     private val eventBusListener = EventBusListener()
-
-
-
-    protected fun initialized() {
-        eventBus.register(eventBusListener)
-    }
-
-    fun destroy() {
-        eventBus.unregister(eventBusListener)
-    }
 
 
     protected fun searchTags() {
@@ -140,6 +131,20 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
 
     fun deleteTag(tag: Tag) {
         deleteEntityService.deleteTag(tag)
+    }
+
+
+    override fun getLastSearchTerm(): String {
+        return lastSearchTermProperty
+    }
+
+
+    override fun viewBecomesVisible() {
+        eventBus.register(eventBusListener)
+    }
+
+    override fun viewGetsHidden() {
+        eventBus.unregister(eventBusListener)
     }
 
 

@@ -40,13 +40,7 @@ class ItemsListPresenter(private val itemsListView: IItemsListView, private val 
     init {
         thread {
             CommonComponent.component.inject(this)
-
-            eventBus.register(eventBusListener)
         }
-    }
-
-    override fun cleanUp() {
-        eventBus.unregister(eventBusListener)
     }
 
 
@@ -110,6 +104,15 @@ class ItemsListPresenter(private val itemsListView: IItemsListView, private val 
 
     override fun getLastSearchTerm(): String {
         return lastSearchTermProperty
+    }
+
+
+    override fun viewBecomesVisible() {
+        eventBus.register(eventBusListener)
+    }
+
+    override fun viewGetsHidden() {
+        eventBus.unregister(eventBusListener)
     }
 
 

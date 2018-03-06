@@ -604,6 +604,9 @@ class EditItemActivity : BaseActivity() {
         wbvwContent.activityResumed()
 
         mayRegisterEventBusListener()
+        lytSourcePreview.viewBecomesVisible()
+        lytTagsPreview.viewBecomesVisible()
+        lytFilesPreview.viewBecomesVisible()
     }
 
     private fun sourceTitleChanged(didSourceTitleChange: Boolean) {
@@ -1154,6 +1157,9 @@ class EditItemActivity : BaseActivity() {
 
     override fun onPause() {
         unregisterEventBusListener()
+        lytSourcePreview.viewGetsHidden()
+        lytTagsPreview.viewGetsHidden()
+        lytFilesPreview.viewGetsHidden()
 
         wbvwContent.activityPaused()
 

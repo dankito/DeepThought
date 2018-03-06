@@ -221,10 +221,14 @@ class EditSourceActivity : BaseActivity() {
         }
 
         mayRegisterEventBusListener()
+        lytEditSourceSeries.viewBecomesVisible()
+        lytEditAttachedFiles.viewBecomesVisible()
     }
 
     override fun onPause() {
         unregisterEventBusListener()
+        lytEditSourceSeries.viewGetsHidden()
+        lytEditAttachedFiles.viewGetsHidden()
 
         super.onPause()
     }

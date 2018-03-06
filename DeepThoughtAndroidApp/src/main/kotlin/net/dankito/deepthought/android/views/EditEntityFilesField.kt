@@ -76,8 +76,6 @@ class EditEntityFilesField : EditEntityField {
 
         rcySearchResult.adapter = attachedFilesAdapter
         attachedFilesAdapter.itemClickListener = { showFile(it) }
-
-        eventBus.register(eventBusListener)
     }
 
 
@@ -167,6 +165,19 @@ class EditEntityFilesField : EditEntityField {
 
     private fun showFile(file: FileLink) {
         fileListPresenter.showFile(file, sourceForFile)
+    }
+
+
+    override fun viewBecomesVisible() {
+        super.viewBecomesVisible()
+
+        eventBus.register(eventBusListener)
+    }
+
+    override fun viewGetsHidden() {
+        eventBus.unregister(eventBusListener)
+
+        super.viewGetsHidden()
     }
 
 

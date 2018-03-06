@@ -265,6 +265,19 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
     }
 
 
+    override fun viewBecomesVisible() {
+        super.viewBecomesVisible()
+
+        presenter.viewBecomesVisible()
+    }
+
+    override fun viewGetsHidden() {
+        presenter.viewGetsHidden()
+
+        super.viewGetsHidden()
+    }
+
+
     /*      ITagsOnItemListView implementation         */
 
     override fun showEntities(entities: List<Tag>) {

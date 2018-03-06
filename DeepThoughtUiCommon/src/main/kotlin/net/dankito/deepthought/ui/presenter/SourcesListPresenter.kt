@@ -35,13 +35,11 @@ class SourcesListPresenter(private var view: ISourcesListView, private val searc
     init {
         thread {
             CommonComponent.component.inject(this)
-
-            eventBus.register(eventBusListener)
         }
     }
 
 
-    private fun retrieveAndShowSourcess() {
+    private fun retrieveAndShowSources() {
         searchSources(lastSearchTermProperty)
     }
 
@@ -75,7 +73,11 @@ class SourcesListPresenter(private var view: ISourcesListView, private val searc
     }
 
 
-    override fun cleanUp() {
+    override fun viewBecomesVisible() {
+        eventBus.register(eventBusListener)
+    }
+
+    override fun viewGetsHidden() {
         eventBus.unregister(eventBusListener)
     }
 
@@ -85,7 +87,7 @@ class SourcesListPresenter(private var view: ISourcesListView, private val searc
         @Handler()
         fun entityChanged(entityChanged: EntitiesOfTypeChanged) {
             if(entityChanged.entityType == Source::class.java) {
-                retrieveAndShowSourcess()
+                retrieveAndShowSources()
             }
         }
 

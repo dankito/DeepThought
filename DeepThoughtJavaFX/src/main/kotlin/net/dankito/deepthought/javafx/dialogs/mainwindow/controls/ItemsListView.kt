@@ -82,8 +82,16 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
         }
     }
 
+
+    override fun onDock() {
+        super.onDock()
+
+        presenter.viewBecomesVisible()
+    }
+
     override fun onUndock() {
-        presenter.cleanUp()
+        presenter.viewGetsHidden()
+
         super.onUndock()
     }
 

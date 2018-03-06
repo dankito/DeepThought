@@ -169,6 +169,19 @@ class EditItemSourceField : EditEntityEntityReferenceField, ISourcesListView {
     }
 
 
+    override fun viewBecomesVisible() {
+        super.viewBecomesVisible()
+
+        presenter.viewBecomesVisible()
+    }
+
+    override fun viewGetsHidden() {
+        presenter.viewGetsHidden()
+
+        super.viewGetsHidden()
+    }
+
+
     /*      ISourceListView implementation       */
 
     override fun showEntities(entities: List<Source>) {

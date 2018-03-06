@@ -154,6 +154,15 @@ open class EditEntityField : RelativeLayout {
     }
 
 
+    open fun viewBecomesVisible() {
+
+    }
+
+    open fun viewGetsHidden() {
+
+    }
+
+
     open fun setFieldNameOnUiThread(fieldNameResourceId: Int, isEditable: Boolean = true, didValueChangeListener: ((didValueChange: Boolean) -> Unit)?) {
         setFieldNameOnUiThread(fieldNameResourceId, isEditable)
 

@@ -231,13 +231,15 @@ abstract class EntitiesListViewFragment<T : BaseEntity>(private val contextualAc
     override fun onResume() {
         super.onResume()
 
+        presenter?.viewBecomesVisible()
+
         resumedFragment()
     }
 
-    override fun onDestroy() {
-        presenter?.cleanUp()
+    override fun onPause() {
+        presenter?.viewGetsHidden()
 
-        super.onDestroy()
+        super.onPause()
     }
 
 

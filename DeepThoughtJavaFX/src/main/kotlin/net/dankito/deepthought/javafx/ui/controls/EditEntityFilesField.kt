@@ -64,8 +64,19 @@ class EditEntityFilesField : View() {
         AppComponent.component.inject(this)
 
         fileListPresenter = FileListPresenter(fileManager, applicationsService, localization, router)
+    }
+
+
+    override fun onDock() {
+        super.onDock()
 
         eventBus.register(eventBusListener)
+    }
+
+    override fun onUndock() {
+        eventBus.unregister(eventBusListener)
+
+        super.onUndock()
     }
 
 

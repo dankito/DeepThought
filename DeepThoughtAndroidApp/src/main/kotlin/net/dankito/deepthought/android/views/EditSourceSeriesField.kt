@@ -64,6 +64,19 @@ class EditSourceSeriesField : EditEntityEntityReferenceField, ISeriesListView {
     }
 
 
+    override fun viewBecomesVisible() {
+        super.viewBecomesVisible()
+
+        presenter.viewBecomesVisible()
+    }
+
+    override fun viewGetsHidden() {
+        presenter.viewGetsHidden()
+
+        super.viewGetsHidden()
+    }
+
+
     fun setOriginalSeriesToEdit(series: Series?, activity: BaseActivity, seriesChangedListener: (Series?) -> Unit) {
         this.activity = activity
         this.seriesChangedListener = seriesChangedListener

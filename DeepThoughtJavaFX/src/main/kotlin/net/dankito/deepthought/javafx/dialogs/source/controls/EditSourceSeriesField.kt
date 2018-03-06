@@ -8,7 +8,6 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.SeriesListPresenter
 import net.dankito.deepthought.ui.view.ISeriesListView
 import net.dankito.service.data.DeleteEntityService
-import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import tornadofx.*
 import javax.inject.Inject
@@ -34,9 +33,6 @@ class EditSourceSeriesField : EditEntityReferenceField<Series>(FX.messages["edit
 
     @Inject
     protected lateinit var router: IRouter
-
-    @Inject
-    protected lateinit var eventBus: IEventBus
 
 
     init {
@@ -73,6 +69,19 @@ class EditSourceSeriesField : EditEntityReferenceField<Series>(FX.messages["edit
         seriesListPresenter.searchSeries(searchTerm) { result ->
             retrievedSearchResults(result)
         }
+    }
+
+
+    override fun onDock() {
+        super.onDock()
+
+        seriesListPresenter.viewBecomesVisible()
+    }
+
+    override fun onUndock() {
+        seriesListPresenter.viewGetsHidden()
+
+        super.onUndock()
     }
 
 

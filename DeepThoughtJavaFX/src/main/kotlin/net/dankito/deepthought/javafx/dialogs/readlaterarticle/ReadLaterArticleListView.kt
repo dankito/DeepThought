@@ -1,12 +1,12 @@
 package net.dankito.deepthought.javafx.dialogs.readlaterarticle
 
+import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.EntitiesListView
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.controls.ReadLaterArticleListCellFragment
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ReadLaterArticleListPresenter
-import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.ui.view.IReadLaterArticleView
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.search.ISearchEngine
@@ -47,8 +47,14 @@ class ReadLaterArticleListView : EntitiesListView(), IReadLaterArticleView {
     }
 
 
+    override fun onDock() {
+        super.onDock()
+
+        presenter.viewBecomesVisible()
+    }
+
     override fun onUndock() {
-        presenter.cleanUp()
+        presenter.viewGetsHidden()
 
         super.onDock()
     }

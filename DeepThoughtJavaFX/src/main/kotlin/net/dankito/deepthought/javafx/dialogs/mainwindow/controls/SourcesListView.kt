@@ -57,8 +57,16 @@ class SourcesListView : EntitiesListView(), ISourcesListView {
         searchBar = SourcesSearchBar(this)
     }
 
+
+    override fun onDock() {
+        super.onDock()
+
+        presenter.viewBecomesVisible()
+    }
+
     override fun onUndock() {
-        presenter.cleanUp()
+        presenter.viewGetsHidden()
+
         super.onUndock()
     }
 

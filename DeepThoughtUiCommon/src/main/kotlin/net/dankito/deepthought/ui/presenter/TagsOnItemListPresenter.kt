@@ -24,8 +24,6 @@ class TagsOnItemListPresenter(private val tagsOnItemListView: ITagsOnItemListVie
 
     init {
         CommonComponent.component.inject(this)
-
-        initialized()
     }
 
 

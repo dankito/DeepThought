@@ -37,13 +37,6 @@ class ReadLaterArticleListPresenter(private val view: IReadLaterArticleView, pri
 
     init {
         CommonComponent.component.inject(this)
-
-        eventBus.register(eventBusListener)
-    }
-
-
-    override fun cleanUp() {
-        eventBus.unregister(eventBusListener)
     }
 
 
@@ -94,6 +87,15 @@ class ReadLaterArticleListPresenter(private val view: IReadLaterArticleView, pri
         article.sourceUrl?.let { url ->
             clipboardService.copyUrlToClipboard(url)
         }
+    }
+
+
+    override fun viewBecomesVisible() {
+        eventBus.register(eventBusListener)
+    }
+
+    override fun viewGetsHidden() {
+        eventBus.unregister(eventBusListener)
     }
 
 

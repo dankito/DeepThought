@@ -132,6 +132,19 @@ class EditItemSourceField : EditEntityReferenceField<Source>(FX.messages["edit.i
     }
 
 
+    override fun onDock() {
+        super.onDock()
+
+        presenter.viewBecomesVisible()
+    }
+
+    override fun onUndock() {
+        presenter.viewGetsHidden()
+
+        super.onUndock()
+    }
+
+
     inner class EventBusListener {
 
         @Handler

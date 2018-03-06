@@ -19,7 +19,7 @@ import kotlin.concurrent.thread
 
 class TagsListPresenter(tagsListView: ITagsListView, private val allCalculatedTags: AllCalculatedTags, searchEngine: ISearchEngine, searchResultsUtil: TagsSearchResultsUtil,
                         tagService: TagService, deleteEntityService: DeleteEntityService, dialogService: IDialogService, private val router: IRouter)
-    : TagsListPresenterBase(tagsListView, searchEngine, tagService, deleteEntityService, searchResultsUtil, dialogService), IMainViewSectionPresenter {
+    : TagsListPresenterBase(tagsListView, searchEngine, tagService, deleteEntityService, searchResultsUtil, dialogService) {
 
 
     var tagFilterListener: ((List<Tag>) -> Unit)? = null
@@ -28,13 +28,7 @@ class TagsListPresenter(tagsListView: ITagsListView, private val allCalculatedTa
     init {
         thread {
             CommonComponent.component.inject(this)
-
-            initialized()
         }
-    }
-
-    override fun cleanUp() {
-        destroy()
     }
 
 
@@ -115,11 +109,6 @@ class TagsListPresenter(tagsListView: ITagsListView, private val allCalculatedTa
         }
 
         return 0 // there are not items having this combination of tags
-    }
-
-
-    override fun getLastSearchTerm(): String {
-        return lastSearchTermProperty
     }
 
 
