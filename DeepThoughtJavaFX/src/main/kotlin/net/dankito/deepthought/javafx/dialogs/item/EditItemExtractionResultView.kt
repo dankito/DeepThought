@@ -35,9 +35,12 @@ class EditItemExtractionResultView : EditItemViewBase() {
 
         articleExtractorManager.extractArticleUserDidSeeBefore(extractionResult, html, url)
 
-        if(extractionResult.couldExtractContent) { // now content could get extracted, therefore show it
-            showExtractionResult()
+        if(extractionResult.couldExtractContent == false) { // then load full web site html into editor
+            extractionResult.couldExtractContent = true
+            extractionResult.item.content = html
         }
+
+        showExtractionResult()
     }
 
 
