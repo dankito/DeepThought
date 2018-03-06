@@ -5,9 +5,7 @@ import com.couchbase.lite.Document
 import com.couchbase.lite.DocumentChange
 import com.couchbase.lite.SavedRevision
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
-import net.dankito.deepthought.model.BaseEntity
-import net.dankito.deepthought.model.Series
-import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.model.*
 import net.dankito.jpa.couchbaselite.Dao
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.data.messages.EntityChangeSource
@@ -97,6 +95,10 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
 
     private fun hasEntityBeenCreated(change: DocumentChange, entity: BaseEntity?): Boolean {
         try {
+            if(hasEntityWithReferencedEntityBeenCreated(entity)) {
+                return true
+            }
+
             val document = entityManager.database.getDocument(change.documentId)
             val leafRevisions = document.leafRevisions
             if(leafRevisions.size == 0) {
@@ -112,6 +114,14 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
         } catch (ignored: Exception) { }
 
         return (entity != null && entity.version == 1L)
+    }
+
+
+    // an entity with referenced entities has been created -> version is 2 but first revision never gets synchronized
+    private fun hasEntityWithReferencedEntityBeenCreated(entity: BaseEntity?): Boolean {
+        return entity?.version == 2L &&
+                (entity is Item && (entity.hasTags() || entity.hasSource() || entity.hasAttachedFiles() || entity.hasNotes())) ||
+                (entity is Source && (entity.series != null || entity.hasAttachedFiles()))
     }
 
 
