@@ -20,6 +20,7 @@ import net.dankito.deepthought.ui.presenter.ItemsListPresenter
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
+import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogButton
@@ -66,11 +67,14 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
     @Inject
     protected lateinit var dataManager: DataManager
 
+    @Inject
+    protected lateinit var threadPool: IThreadPool
+
 
     init {
         AppComponent.component.inject(this)
 
-        presenter = ItemsListPresenter(this, router, searchEngine, deleteEntityService, clipboardService)
+        presenter = ItemsListPresenter(this, router, searchEngine, deleteEntityService, clipboardService, threadPool)
         searchBar = ItemsSearchBar(this, presenter, dataManager)
 
         (router as? JavaFXRouter)?.itemsListView = this // TODO: this is bad code design
@@ -159,7 +163,7 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
     private fun askIfShouldDeleteItem(item: Item) {
         dialogService.showConfirmationDialog(dialogService.getLocalization().getLocalizedString("alert.message.really.delete.item")) { selectedButton ->
             if(selectedButton == ConfirmationDialogButton.Confirm) {
-                presenter.deleteItem(item)
+                presenter.deleteItemAsync(item)
             }
         }
     }

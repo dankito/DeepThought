@@ -16,6 +16,7 @@ import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.deepthought.ui.presenter.ItemsListPresenter
 import net.dankito.deepthought.ui.view.IItemsListView
 import net.dankito.service.data.DeleteEntityService
+import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
@@ -31,6 +32,9 @@ class ItemsListView : EntitiesListViewFragment<Item>(R.menu.item_contextual_acti
     @Inject
     protected lateinit var clipboardService: IClipboardService
 
+    @Inject
+    protected lateinit var threadPool: IThreadPool
+
 
     private val presenter: ItemsListPresenter
 
@@ -42,7 +46,7 @@ class ItemsListView : EntitiesListViewFragment<Item>(R.menu.item_contextual_acti
     init {
         AppComponent.component.inject(this)
 
-        presenter = ItemsListPresenter(this, router, searchEngine, deleteEntityService, clipboardService)
+        presenter = ItemsListPresenter(this, router, searchEngine, deleteEntityService, clipboardService, threadPool)
         itemAdapter = ItemRecyclerAdapter(presenter)
     }
 
@@ -67,7 +71,7 @@ class ItemsListView : EntitiesListViewFragment<Item>(R.menu.item_contextual_acti
                 return true
             }
             R.id.mnDeleteItem -> {
-                selectedItems.forEach { presenter.deleteItem(it) }
+                presenter.deleteItemsAsync(selectedItems)
                 mode.finish()
                 return true
             }

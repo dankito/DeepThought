@@ -14,6 +14,7 @@ import net.dankito.deepthought.ui.presenter.EntityItemsListPresenter
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
+import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
@@ -40,11 +41,14 @@ abstract class ItemsListDialogBase : FullscreenDialogFragment() {
     @Inject
     protected lateinit var router: IRouter
 
+    @Inject
+    protected lateinit var threadPool: IThreadPool
+
 
     init {
         AppComponent.component.inject(this)
 
-        presenter = EntityItemsListPresenter(deleteEntityService, clipboardService, router)
+        presenter = EntityItemsListPresenter(deleteEntityService, clipboardService, router, threadPool)
 
         adapter = ItemRecyclerAdapter(presenter)
     }
