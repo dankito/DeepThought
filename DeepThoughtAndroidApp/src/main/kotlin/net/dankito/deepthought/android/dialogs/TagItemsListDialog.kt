@@ -66,10 +66,18 @@ class TagItemsListDialog : ItemsListDialogBase() {
         super.onResume()
 
         eventBus.register(eventBusListener)
+
+        allCalculatedTags.getCalculatedTags().forEach {
+            it.tagBecomesVisible()
+        }
     }
 
     override fun onPause() {
         eventBus.unregister(eventBusListener)
+
+        allCalculatedTags.getCalculatedTags().forEach {
+            it.tagGetsHidden()
+        }
 
         super.onPause()
     }

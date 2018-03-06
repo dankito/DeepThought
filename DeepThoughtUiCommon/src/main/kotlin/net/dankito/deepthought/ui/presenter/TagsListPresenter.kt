@@ -116,4 +116,21 @@ class TagsListPresenter(tagsListView: ITagsListView, private val allCalculatedTa
         router.showItemsForTag(tag, tagsFilter)
     }
 
+
+    override fun viewBecomesVisible() {
+        super.viewBecomesVisible()
+
+        allCalculatedTags.getCalculatedTags().forEach {
+            it.tagBecomesVisible()
+        }
+    }
+
+    override fun viewGetsHidden() {
+        allCalculatedTags.getCalculatedTags().forEach {
+            it.tagGetsHidden()
+        }
+
+        super.viewGetsHidden()
+    }
+
 }

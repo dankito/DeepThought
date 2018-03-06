@@ -19,11 +19,29 @@ abstract class CalculatedTag(name: String, protected val searchEngine: ISearchEn
 
     private val eventBusListener = EventBusListener()
 
+    private var visibleCount = 0
 
-    init {
+
+    /*  Actually only needed for Android: If a CalculatedTag is not visible (which there is true in almost all circumstances), don't listen to EventBus to not unnecessarily execute SearchEngine query */
+
+    fun tagBecomesVisible() {
         searchEngine.addInitializationListener { retrieveAndUpdateItemsAsync(true) }
 
-        eventBus.register(eventBusListener)
+        if(visibleCount == 0) {
+            eventBus.register(eventBusListener)
+        }
+
+        visibleCount++
+    }
+
+    fun tagGetsHidden() {
+        if(visibleCount > 0) {
+            visibleCount--
+
+            if(visibleCount == 0) {
+                eventBus.unregister(eventBusListener)
+            }
+        }
     }
 
 
