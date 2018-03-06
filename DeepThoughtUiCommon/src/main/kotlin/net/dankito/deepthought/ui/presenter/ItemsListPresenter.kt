@@ -6,6 +6,7 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.IItemsListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
+import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
@@ -121,7 +122,11 @@ class ItemsListPresenter(private val itemsListView: IItemsListView, private val 
         @Handler()
         fun entityChanged(entityChanged: EntitiesOfTypeChanged) {
             if(entityChanged.entityType == Item::class.java) {
-                searchItems(lastSearchTermProperty)
+                when(entityChanged.changeType) {
+                    EntityChangeType.Created, EntityChangeType.Deleted -> searchItems(lastSearchTermProperty)
+                    EntityChangeType.Updated -> itemsListView.updateDisplayedItems()
+                    else -> { } // to make compiler happy
+                }
             }
         }
 

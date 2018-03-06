@@ -186,6 +186,12 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
         }
     }
 
+    override fun updateDisplayedItems() {
+        runLater {
+            tableItems.refresh()
+        }
+    }
+
     override fun showItemsForTag(tag: Tag, tagsFilter: List<Tag>) {
         presenter.showItemsForTag(tag, tagsFilter)
     }
