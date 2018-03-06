@@ -77,8 +77,10 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
 
         var synchronizedEntity = dataMerger.updateCachedSynchronizedEntity(change, entityType)
         var entityChangeType = EntityChangeType.Updated
-        if(synchronizedEntity == null) { // this entity is new to our side or hasn't been in cache
+        if(synchronizedEntity == null) { // this entity is either new to our side or hasn't been in cache
+            // TODO: if it hasn't been created, shouldn't we then avoid loading it from db as it means as not cached means: Not loaded and therefore not displayed on our side -> we don't have to update any UI elements
             synchronizedEntity = entityManager.getEntityById(entityType, change.documentId)
+
             if(hasEntityBeenCreated(change, synchronizedEntity)) {
                 entityChangeType = EntityChangeType.Created
             }
