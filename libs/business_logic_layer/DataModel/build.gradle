@@ -13,6 +13,6 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
-    compile "net.dankito.jpa.annotationreader:api:1.0-alpha2"
-    kapt "net.dankito.jpa.annotationreader:jpa-apt:1.0-alpha2"
+    compile "net.dankito.jpa.annotationreader:api:$jpaAnnotationReaderVersion"
+    kapt "net.dankito.jpa.annotationreader:jpa-apt:$jpaAnnotationReaderVersion"
 }
