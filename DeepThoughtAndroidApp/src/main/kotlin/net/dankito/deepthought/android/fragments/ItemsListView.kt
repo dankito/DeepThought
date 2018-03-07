@@ -134,10 +134,4 @@ class ItemsListView : EntitiesListViewFragment<Item>(R.menu.item_contextual_acti
         }
     }
 
-    override fun updateDisplayedItems() {
-        activity?.runOnUiThread {
-            itemAdapter.notifyDataSetChanged()
-        }
-    }
-
 }

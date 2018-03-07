@@ -5,6 +5,4 @@ import net.dankito.deepthought.model.Item
 
 interface IItemsListView : IEntitiesListView<Item> {
 
-    fun updateDisplayedItems()
-
 }
