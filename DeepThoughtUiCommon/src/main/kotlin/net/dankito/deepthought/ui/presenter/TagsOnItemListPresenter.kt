@@ -40,11 +40,13 @@ class TagsOnItemListPresenter(private val tagsOnItemListView: ITagsOnItemListVie
 
         lastTagsSearchResults?.let { results ->
             results.results.forEach { result ->
-                if(result.hasExactMatches()) {
-                    tags.addAll(result.exactMatches)
-                }
-                else if(result.searchTerm.isNotBlank() && result.searchTerm != replacedTagName) {
-                    tags.add(Tag(result.searchTerm))
+                if(result.searchTerm != replacedTagName || result != results.lastResult) { // don't add replacedTagName, but only if it's the last search result (only the last one can be autocompleted)
+                    if(result.hasExactMatches()) {
+                        tags.addAll(result.exactMatches)
+                    }
+                    else if(result.searchTerm.isNotBlank()) {
+                        tags.add(Tag(result.searchTerm))
+                    }
                 }
             }
         }
