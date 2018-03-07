@@ -48,9 +48,9 @@ ext {
 
     couchbaseLiteVersion = '1.4.1'
 
-    jpaAnnotationReaderVersion = '1.0-alpha2'
+    jpaAnnotationReaderVersion = '1.0-alpha3'
 
-    couchbaseLiteJpaVersion = '1.0-alpha2'
+    couchbaseLiteJpaVersion = '1.0-alpha3'
 
     // Lucene 5.x and 4.8 and above need java.nio.file.Path to create an index Directory which is not supported by Android (yet) -> use an older Version to be compatible with Android
     luceneVersion = '4.7.2'
