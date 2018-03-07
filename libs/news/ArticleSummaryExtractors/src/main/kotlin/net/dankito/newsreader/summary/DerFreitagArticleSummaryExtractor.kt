@@ -5,11 +5,17 @@ import net.dankito.newsreader.article.DerFreitagArticleExtractor
 import net.dankito.newsreader.article.IArticleExtractor
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
+import net.dankito.utils.UrlUtil
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
 
 class DerFreitagArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryExtractorBase(webClient) {
+
+    companion object {
+        private val urlUtil = UrlUtil()
+    }
+
 
     override fun getName(): String {
         return "Der Freitag"
@@ -42,6 +48,13 @@ class DerFreitagArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryE
 
             articleCardElement.select(".c-article-card__teaser").first()?.let { teaserElement ->
                 item.summary = teaserElement.text().trim()
+
+                articleCardElement.select(".c-article-card__source").first()?.let { source ->
+                    val url = source.attr("href")
+                    if(url.contains(".freitag.de/") == false) {
+                        item.summary += "\r\n" + urlUtil.getHostName(url)
+                    }
+                }
             }
 
             articleCardElement.select(".c-article-card__image img").first()?.let { previewImageElement ->
