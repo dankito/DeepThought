@@ -52,7 +52,7 @@ class EditHtmlView : View {
         editorToolbar.addCommand(BoldCommand())
         editorToolbar.addCommand(ItalicCommand())
         editorToolbar.addCommand(UnderlineCommand())
-        val switchBackgroundColorCommand = SwitchTextBackgroundColorOnOffCommand(icon = AndroidIcon(R.drawable.ic_marker_white_48dp))
+        val switchBackgroundColorCommand = SwitchTextBackgroundColorOnOffCommand(icon = AndroidIcon(R.drawable.ic_marker_white_48dp), setOnColorToCurrentColor = false)
         switchBackgroundColorCommand.style.marginRightDp = ToolbarCommandStyle.GroupDefaultMarginRightDp
         editorToolbar.addCommand(switchBackgroundColorCommand)
 

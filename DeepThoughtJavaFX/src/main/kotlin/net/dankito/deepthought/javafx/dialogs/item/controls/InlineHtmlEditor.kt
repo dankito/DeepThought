@@ -44,7 +44,7 @@ class InlineHtmlEditor : RichTextEditor() {
 
         // manually add command to mark text
         toolbar.getCommand(CommandName.UNDERLINE)?.let { underlineCommand ->
-            toolbar.addAfterCommand(SwitchTextBackgroundColorOnOffCommand(icon = JavaFXIcon(Icons.MarkTextIconPath)), underlineCommand)
+            toolbar.addAfterCommand(SwitchTextBackgroundColorOnOffCommand(icon = JavaFXIcon(Icons.MarkTextIconPath), setOnColorToCurrentColor = false), underlineCommand)
         }
 
         toolbar.editor = this
