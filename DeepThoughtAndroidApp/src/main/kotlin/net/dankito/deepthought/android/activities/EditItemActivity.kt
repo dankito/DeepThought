@@ -337,7 +337,7 @@ class EditItemActivity : BaseActivity() {
         lytSummaryPreview.setFieldNameOnUiThread(R.string.activity_edit_item_title_summary_label) { didSummaryChange -> summaryChanged(didSummaryChange) }
         lytSummaryPreview.fieldValueFocusChangedListener = { hasFocus ->
             if(hasFocus == false) {
-                appliedChangesToSummary(lytSummaryPreview.didValueChange)
+                summaryChanged(lytSummaryPreview.didValueChange)
             }
         }
 
@@ -671,12 +671,6 @@ class EditItemActivity : BaseActivity() {
     }
 
     private fun summaryChanged(didSummaryChange: Boolean) {
-        itemPropertySet()
-
-        updateItemFieldChanged(ItemField.TitleOrSummary, didSummaryChange)
-    }
-
-    private fun appliedChangesToSummary(didSummaryChange: Boolean) {
         itemPropertySet()
 
         updateItemFieldChanged(ItemField.TitleOrSummary, didSummaryChange)
