@@ -1692,7 +1692,7 @@ class EditItemActivity : BaseActivity() {
         source?.let { this.forceShowSourcePreview = true } // forcing that once it has been shown it doesn't get hidden anymore
         lytSourcePreview.setOriginalSourceToEdit(source, series, item.indication, this) { sourceChanged(it) }
 
-        this.forceShowSourcePreview = item.indication.isNotEmpty()
+        this.forceShowSourcePreview = forceShowSourcePreview || item.indication.isNotEmpty()
 
         tags.forEach { tag ->
             if(tagsOnItem.contains(tag) == false) { // to avoid have a tag twice we really have to check each single tag
