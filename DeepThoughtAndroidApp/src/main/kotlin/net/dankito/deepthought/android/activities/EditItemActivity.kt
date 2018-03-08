@@ -385,7 +385,7 @@ class EditItemActivity : BaseActivity() {
         editHtmlView.setupHtmlEditor(lytEditContent)
 
         editHtmlView.setHtmlChangedCallback { didChange ->
-            runOnUiThread { updateItemFieldChangedOnUIThread(ItemField.Content,didChange)  }
+            updateItemFieldChanged(ItemField.Content,didChange)
         }
     }
 
@@ -688,9 +688,7 @@ class EditItemActivity : BaseActivity() {
         summaryToEdit = lytSummaryPreview.getCurrentFieldValue()
         itemPropertySet()
 
-        runOnUiThread {
-            updateItemFieldChangedOnUIThread(ItemField.TitleOrSummary, didSummaryChange)
-        }
+        updateItemFieldChanged(ItemField.TitleOrSummary, didSummaryChange)
     }
 
     private fun appliedChangesToSummary(didSummaryChange: Boolean) {
@@ -721,6 +719,12 @@ class EditItemActivity : BaseActivity() {
     private fun editTagsOnItem() {
         lytTagsPreview.visibility = View.VISIBLE
         lytTagsPreview.startEditing()
+    }
+
+    private fun updateItemFieldChanged(field: ItemField, didChange: Boolean) {
+        runOnUiThread {
+            updateItemFieldChangedOnUIThread(field, didChange)
+        }
     }
 
     private fun updateItemFieldChangedOnUIThread(field: ItemField, didChange: Boolean) {
