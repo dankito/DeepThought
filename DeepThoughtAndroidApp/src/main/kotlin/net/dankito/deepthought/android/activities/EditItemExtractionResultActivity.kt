@@ -49,14 +49,14 @@ class EditItemExtractionResultActivity : EditItemActivityBase() {
 
 
     override fun resetSeries() {
-        itemExtractionResult?.series = null
+        itemExtractionResult.series = null
     }
 
 
     override fun createViewHtmlOptionsMenu(menu: Menu) {
         super.createViewHtmlOptionsMenu(menu)
 
-        mnToggleReaderMode?.isVisible = itemExtractionResult?.couldExtractContent == true
+        mnToggleReaderMode?.isVisible = itemExtractionResult.couldExtractContent == true
 
         mnSaveItemExtractionResultForLaterReading?.isVisible = true
     }
@@ -90,21 +90,15 @@ class EditItemExtractionResultActivity : EditItemActivityBase() {
         val content = contentToEdit ?: ""
         val summary = lytSummaryPreview.getCurrentFieldValue()
 
-        itemExtractionResult?.let { extractionResult ->
-            updateItem(extractionResult.item, content, summary)
-            extractionResult.source = updateSource()
-            extractionResult.series = lytSourcePreview.series
-            extractionResult.tags = tagsOnItem
-            extractionResult.files = lytFilesPreview.getEditedFiles().toMutableList()
+        updateItem(itemExtractionResult.item, content, summary)
+        itemExtractionResult.source = updateSource()
+        itemExtractionResult.series = lytSourcePreview.series
+        itemExtractionResult.tags = tagsOnItem
+        itemExtractionResult.files = lytFilesPreview.getEditedFiles().toMutableList()
 
-            presenter.saveItemExtractionResultForLaterReading(extractionResult)
-            setActivityResult(EditItemActivityResult(didSaveForLaterReading = true, savedItem = extractionResult.item))
-            callback(true)
-        }
-
-        if(itemExtractionResult == null) {
-            callback(false)
-        }
+        presenter.saveItemExtractionResultForLaterReading(itemExtractionResult)
+        setActivityResult(EditItemActivityResult(didSaveForLaterReading = true, savedItem = itemExtractionResult.item))
+        callback(true)
     }
 
 }
