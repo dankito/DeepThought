@@ -267,11 +267,11 @@ abstract class EditItemViewBase : DialogFragment() {
 
         if(source?.isPersisted() == false && editSourceField.enteredTitle.isNullOrBlank()) {
             source = null
-            resetSeries()
+            resetSeries() // TODO: is this really necessary as we then pass editSourceField.seriesToEdit to ItemPersister -> does editSourceField.seriesToEdit know now that series changed?
         }
 
         if(source != editSourceField.originalSource) {
-            resetSeries()
+            resetSeries() // TODO: is this really necessary as we then pass editSourceField.seriesToEdit to ItemPersister -> does editSourceField.seriesToEdit know now that series changed?
         }
 
         return source
