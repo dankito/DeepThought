@@ -145,8 +145,6 @@ class EditItemActivity : BaseActivity() {
 
     private var originalSource: Source? = null
 
-    private var originalTitleOrSummary: String? = null
-
 
     private var contentToEdit: String? = null
 
@@ -1704,7 +1702,6 @@ class EditItemActivity : BaseActivity() {
         originalContent = item.content
         originalTags = tags
         originalSource = source
-        originalTitleOrSummary = item.summary
 
         contentToEdit = item.content
         summaryToEdit = item.summary
