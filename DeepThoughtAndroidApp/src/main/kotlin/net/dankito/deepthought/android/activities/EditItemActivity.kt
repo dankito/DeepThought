@@ -66,6 +66,8 @@ class EditItemActivity : BaseActivity() {
         private const val READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME = "READ_LATER_ARTICLE_ID"
         private const val ITEM_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ITEM_EXTRACTION_RESULT"
 
+        private const val CHANGED_FIELDS_INTENT_EXTRA_NAME = "CHANGED_FIELDS"
+
         private const val FORCE_SHOW_TAGS_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_TAGS_PREVIEW"
         private const val FORCE_SHOW_SOURCE_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_SOURCE_PREVIEW"
         private const val FORCE_SHOW_SUMMARY_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_SUMMARY_PREVIEW"
@@ -230,6 +232,13 @@ class EditItemActivity : BaseActivity() {
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
+        val itemFields = ItemField.values()
+        savedInstanceState.getIntArray(CHANGED_FIELDS_INTENT_EXTRA_NAME)?.forEach { ordinal ->
+            if(ordinal < itemFields.size) {
+                changedFields.add(itemFields[ordinal])
+            }
+        }
+
         this.forceShowTagsPreview = savedInstanceState.getBoolean(FORCE_SHOW_TAGS_PREVIEW_INTENT_EXTRA_NAME, false)
         this.forceShowSourcePreview = savedInstanceState.getBoolean(FORCE_SHOW_SOURCE_PREVIEW_INTENT_EXTRA_NAME, false)
         this.forceShowSummaryPreview = savedInstanceState.getBoolean(FORCE_SHOW_SUMMARY_PREVIEW_INTENT_EXTRA_NAME, false)
@@ -275,6 +284,8 @@ class EditItemActivity : BaseActivity() {
         if(isInEditContentMode) {
             editContent()
         }
+
+        setMenuSaveItemVisibleStateOnUIThread()
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -288,6 +299,8 @@ class EditItemActivity : BaseActivity() {
             readLaterArticle?.id?.let { readLaterArticleId -> outState.putString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME, readLaterArticleId) }
 
             serializeStateToDiskIfNotNull(outState, ITEM_EXTRACTION_RESULT_INTENT_EXTRA_NAME, itemExtractionResult)
+
+            outState.putIntArray(CHANGED_FIELDS_INTENT_EXTRA_NAME, changedFields.map { it.ordinal }.toIntArray())
 
             outState.putBoolean(FORCE_SHOW_TAGS_PREVIEW_INTENT_EXTRA_NAME, forceShowTagsPreview)
             outState.putBoolean(FORCE_SHOW_SOURCE_PREVIEW_INTENT_EXTRA_NAME, forceShowSourcePreview)
