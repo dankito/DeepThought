@@ -130,20 +130,24 @@ class EditItemSourceField : EditEntityEntityReferenceField, ISourcesListView {
     override fun onRestoreInstanceState(state: Parcelable?) {
         super.onRestoreInstanceState(state)
 
-        this.source = null // if source has been null nothing got saved to outState bundle
-
         (state as? Bundle)?.let { savedInstanceState ->
+           var source: Source? = null // if source has been null nothing got saved to outState bundle
+
             savedInstanceState.getString(SOURCE_ID_EXTRA_NAME)?.let { sourceId ->
-                this.source = sourceService.retrieve(sourceId)
+                source = sourceService.retrieve(sourceId)
             }
 
             savedInstanceState.getString(SOURCE_EXTRA_NAME)?.let { serializedSource ->
-                this.source = serializer.deserializeObject(serializedSource, Source::class.java)
+                source = serializer.deserializeObject(serializedSource, Source::class.java)
             }
 
+            var series: Series? = source?.series
+
             savedInstanceState.getString(SERIES_ID_EXTRA_NAME)?.let { seriesId ->
-                this.series = seriesService.retrieve(seriesId)
+                series = seriesService.retrieve(seriesId)
             }
+
+            sourceChanged(source, series)
         }
     }
 
