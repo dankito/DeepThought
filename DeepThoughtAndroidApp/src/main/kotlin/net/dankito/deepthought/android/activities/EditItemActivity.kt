@@ -75,7 +75,6 @@ class EditItemActivity : BaseActivity() {
 
         private const val CONTENT_INTENT_EXTRA_NAME = "CONTENT"
         private const val EDIT_CONTENT_HTML_INTENT_EXTRA_NAME = "EDIT_CONTENT_HTML"
-        private const val SUMMARY_INTENT_EXTRA_NAME = "SUMMARY"
         private const val SOURCE_INTENT_EXTRA_NAME = "SOURCE"
         private const val TAGS_ON_ITEM_INTENT_EXTRA_NAME = "TAGS_ON_ITEM"
         private const val FILES_INTENT_EXTRA_NAME = "ATTACHED_FILES"
@@ -260,11 +259,6 @@ class EditItemActivity : BaseActivity() {
             setContentPreviewOnUIThread()
         }
 
-        savedInstanceState.getString(SUMMARY_INTENT_EXTRA_NAME)?.let { summary ->
-            summaryToEdit = summary
-            setSummaryPreviewOnUIThread()
-        }
-
         // TODO: how to restore indication?
 
         if(savedInstanceState.containsKey(SOURCE_INTENT_EXTRA_NAME)) {
@@ -315,8 +309,6 @@ class EditItemActivity : BaseActivity() {
             if(sourceToEdit == null || sourceToEdit?.id != null) { // save value only if source has been deleted or a persisted source is set (-> don't store ItemExtractionResult's or ReadLaterArticle's unpersisted source)
                 outState.putString(SOURCE_INTENT_EXTRA_NAME, sourceToEdit?.id)
             }
-
-            outState.putString(SUMMARY_INTENT_EXTRA_NAME, summaryToEdit)
 
             if(contentToEdit != originalContent) {
                 serializeStateToDiskIfNotNull(outState, CONTENT_INTENT_EXTRA_NAME, contentToEdit) // application crashes if objects put into bundle are too large (> 1 MB) for Android
