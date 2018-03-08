@@ -158,8 +158,10 @@ abstract class EditItemViewBase : DialogFragment() {
 
         wbvwShowUrl.engine.loadWorker.stateProperty().addListener { _, _, newState ->
             if(newState === Worker.State.SUCCEEDED) {
-                val html = wbvwShowUrl.engine.executeScript("document.documentElement.outerHTML") as String
-                currentlyDisplayedUrl?.let { urlLoaded(it, html) }
+                currentlyDisplayedUrl?.let {
+                    val html = wbvwShowUrl.engine.executeScript("document.documentElement.outerHTML") as String
+                    urlLoaded(it, html)
+                }
             }
         }
 
