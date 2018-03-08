@@ -78,9 +78,13 @@ class EditItemSourceField : EditEntityEntityReferenceField, ISourcesListView {
     }
 
 
-    fun setOriginalSourceToEdit(source: Source?, series: Series? = source?.series, activity: BaseActivity, sourceChangedListener: (Source?) -> Unit) {
+    fun setOriginalSourceToEdit(source: Source?, series: Series? = source?.series, indication: String, activity: BaseActivity, sourceChangedListener: (Source?) -> Unit) {
         this.activity = activity
         this.sourceChangedListener = sourceChangedListener
+
+        if(indication.isNotEmpty()) {
+            showSecondaryInformationValueOnUiThread(indication)
+        }
 
         sourceChanged(source, series)
     }

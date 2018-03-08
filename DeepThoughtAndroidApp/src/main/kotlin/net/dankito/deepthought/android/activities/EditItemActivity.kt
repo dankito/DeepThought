@@ -260,7 +260,7 @@ class EditItemActivity : BaseActivity() {
         // TODO: how to restore indication?
 
         if(savedInstanceState.containsKey(SOURCE_INTENT_EXTRA_NAME)) {
-            restoreSource(savedInstanceState.getString(SOURCE_INTENT_EXTRA_NAME))
+            restoreSource(savedInstanceState.getString(SOURCE_INTENT_EXTRA_NAME), "")
         }
 
         savedInstanceState.getString(TAGS_ON_ITEM_INTENT_EXTRA_NAME)?.let { tagsOnItemIds -> restoreTagsOnItemAsync(tagsOnItemIds) }
@@ -1681,12 +1681,9 @@ class EditItemActivity : BaseActivity() {
         if(item.summary.isEmpty() == false) { this.forceShowSummaryPreview = true } // forcing that once it has been shown it doesn't get hidden anymore
 
         source?.let { this.forceShowSourcePreview = true } // forcing that once it has been shown it doesn't get hidden anymore
-        lytSourcePreview.setOriginalSourceToEdit(source, series, this) { setSourceToEdit(it) }
+        lytSourcePreview.setOriginalSourceToEdit(source, series, item.indication, this) { setSourceToEdit(it) }
 
-        if(item.indication.isNotEmpty()) {
-            this.forceShowSourcePreview = true
-            lytSourcePreview.showSecondaryInformationValueOnUiThread(item.indication)
-        }
+        this.forceShowSourcePreview = item.indication.isNotEmpty()
 
         tags.forEach { tag ->
             if(tagsOnItem.contains(tag) == false) { // to avoid have a tag twice we really have to check each single tag
@@ -1716,7 +1713,7 @@ class EditItemActivity : BaseActivity() {
         setFilesPreviewOnUIThread()
     }
 
-    private fun restoreSource(sourceId: String?) {
+    private fun restoreSource(sourceId: String?, indication: String) {
         if(sourceId != null) {
             sourceToEdit = sourceService.retrieve(sourceId)
         }
@@ -1726,7 +1723,7 @@ class EditItemActivity : BaseActivity() {
 
         runOnUiThread {
             // TODO: save and restore series
-            lytSourcePreview.setOriginalSourceToEdit(sourceToEdit, sourceToEdit?.series, this) { setSourceToEdit(it) }
+            lytSourcePreview.setOriginalSourceToEdit(sourceToEdit, sourceToEdit?.series, indication, this) { setSourceToEdit(it) }
             setSourcePreviewOnUIThread()
         }
     }

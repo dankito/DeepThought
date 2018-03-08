@@ -88,6 +88,8 @@ open class EditEntityField : RelativeLayout {
         bundle.putString(FIELD_NAME_BUNDLE_EXTRA_NAME, txtEntityFieldName.text.toString())
         bundle.putString(FIELD_VALUE_BUNDLE_EXTRA_NAME, getCurrentFieldValue())
 
+        // TODO: also save and restore originalValue and secondaryInformation
+
         return bundle
     }
 
