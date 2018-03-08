@@ -695,10 +695,7 @@ class EditItemActivity : BaseActivity() {
         summaryToEdit = lytSummaryPreview.getCurrentFieldValue()
         itemPropertySet()
 
-        runOnUiThread {
-            updateItemFieldChangedOnUIThread(ItemField.TitleOrSummary, didSummaryChange)
-            setSummaryPreviewOnUIThread()
-        }
+        updateItemFieldChanged(ItemField.TitleOrSummary, didSummaryChange)
     }
 
     private fun setSourceToEdit(source: Source?) {
