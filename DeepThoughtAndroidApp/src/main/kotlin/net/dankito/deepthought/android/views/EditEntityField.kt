@@ -47,7 +47,7 @@ open class EditEntityField : RelativeLayout {
 
     var didValueChange = false
 
-    protected var originalValue = ""
+    protected var originalValue: String? = null
 
     protected var disableActionOnKeyboard = false
 
@@ -183,8 +183,8 @@ open class EditEntityField : RelativeLayout {
         edtxtEntityFieldValue.inputType = inputType
     }
 
-    open fun setFieldValueOnUiThread(fieldValue: String) {
-        setEditTextEntityFieldValueOnUiThread(fieldValue)
+    open fun setFieldValueOnUiThread(fieldValue: String?) {
+        setEditTextEntityFieldValueOnUiThread(fieldValue ?: "")
 
         edtxtEntityFieldValue.setTypeface(null, Typeface.NORMAL)
         edtxtEntityFieldValue.setTextColorToColorResource(R.color.entity_field_value_text_color)
@@ -365,7 +365,8 @@ open class EditEntityField : RelativeLayout {
     }
 
     protected open fun enteredTextChanged(enteredText: String) {
-        updateDidValueChange(enteredText != originalValue)
+        val valueDidNotChange = enteredText == originalValue || (originalValue == null && enteredText.isEmpty())
+        updateDidValueChange( ! valueDidNotChange)
     }
 
     protected open fun updateDidValueChange(didValueChange: Boolean) {

@@ -878,11 +878,10 @@ class EditItemActivity : BaseActivity() {
     private fun setSummaryPreviewOnUIThread() {
         lytSummaryPreview.setFieldNameOnUiThread(if(alsoShowTitleForSummary()) R.string.activity_edit_item_title_summary_label else R.string.activity_edit_item_summary_only_label)
 
+        lytSummaryPreview.setFieldValueOnUiThread(summaryToEdit?.getPlainTextForHtml())
+
         if(summaryToEdit.isNullOrBlank()) {
 //            lytSummaryPreview.setOnboardingTextOnUiThread(R.string.activity_edit_item_summary_onboarding_text)
-        }
-        else {
-            lytSummaryPreview.setFieldValueOnUiThread(summaryToEdit.getPlainTextForHtml())
         }
 
         val showSummaryPreview = (this.forceShowSummaryPreview || summaryToEdit.isNullOrBlank() == false) && isEditingTagsOnItem == false
