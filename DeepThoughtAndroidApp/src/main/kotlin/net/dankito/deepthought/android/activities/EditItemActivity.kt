@@ -69,6 +69,7 @@ class EditItemActivity : BaseActivity() {
         private const val FORCE_SHOW_TAGS_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_TAGS_PREVIEW"
         private const val FORCE_SHOW_SOURCE_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_SOURCE_PREVIEW"
         private const val FORCE_SHOW_SUMMARY_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_SUMMARY_PREVIEW"
+        private const val FORCE_SHOW_FILES_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_FILES_PREVIEW"
 
         private const val IS_IN_EDIT_CONTENT_MODE_INTENT_EXTRA_NAME = "IS_IN_EDIT_CONTENT_MODE"
         private const val IS_IN_READER_MODE_INTENT_EXTRA_NAME = "IS_IN_READER_MODE"
@@ -232,6 +233,7 @@ class EditItemActivity : BaseActivity() {
         this.forceShowTagsPreview = savedInstanceState.getBoolean(FORCE_SHOW_TAGS_PREVIEW_INTENT_EXTRA_NAME, false)
         this.forceShowSourcePreview = savedInstanceState.getBoolean(FORCE_SHOW_SOURCE_PREVIEW_INTENT_EXTRA_NAME, false)
         this.forceShowSummaryPreview = savedInstanceState.getBoolean(FORCE_SHOW_SUMMARY_PREVIEW_INTENT_EXTRA_NAME, false)
+        this.forceShowFilesPreview = savedInstanceState.getBoolean(FORCE_SHOW_FILES_PREVIEW_INTENT_EXTRA_NAME, false)
 
         this.isInEditContentMode = savedInstanceState.getBoolean(IS_IN_EDIT_CONTENT_MODE_INTENT_EXTRA_NAME, false)
         this.isInReaderMode = savedInstanceState.getBoolean(IS_IN_READER_MODE_INTENT_EXTRA_NAME, false)
@@ -290,6 +292,7 @@ class EditItemActivity : BaseActivity() {
             outState.putBoolean(FORCE_SHOW_TAGS_PREVIEW_INTENT_EXTRA_NAME, forceShowTagsPreview)
             outState.putBoolean(FORCE_SHOW_SOURCE_PREVIEW_INTENT_EXTRA_NAME, forceShowSourcePreview)
             outState.putBoolean(FORCE_SHOW_SUMMARY_PREVIEW_INTENT_EXTRA_NAME, forceShowSummaryPreview)
+            outState.putBoolean(FORCE_SHOW_FILES_PREVIEW_INTENT_EXTRA_NAME, forceShowFilesPreview)
 
             outState.putBoolean(IS_IN_EDIT_CONTENT_MODE_INTENT_EXTRA_NAME, isInEditContentMode)
             outState.putBoolean(IS_IN_READER_MODE_INTENT_EXTRA_NAME, isInReaderMode)
@@ -1703,7 +1706,7 @@ class EditItemActivity : BaseActivity() {
         forceShowTagsPreview = tags.isNotEmpty()
 
         lytFilesPreview.setFiles(files, permissionsManager)
-        forceShowFilesPreview = files.isNotEmpty()
+        forceShowFilesPreview = forceShowFilesPreview || files.isNotEmpty()
 
         updateDisplayedValuesOnUIThread(source, item.summary, updateContentPreview)
     }
