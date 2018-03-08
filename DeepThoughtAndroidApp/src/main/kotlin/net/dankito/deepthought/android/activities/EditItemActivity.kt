@@ -905,14 +905,6 @@ class EditItemActivity : BaseActivity() {
         mnShareItem?.isVisible = sourceToEdit?.url.isNullOrBlank() == false
     }
 
-    private fun getCurrentSeries(): Series? {
-        readLaterArticle?.let { return it.itemExtractionResult.series }
-
-        itemExtractionResult?.let { return it.series }
-
-        return sourceToEdit?.series
-    }
-
     private fun tagsPreviewFocusChanged(hasFocus: Boolean) {
         if(hasFocus) {
             lytTagsPreview.visibility = View.VISIBLE
@@ -1654,7 +1646,7 @@ class EditItemActivity : BaseActivity() {
 
         mnDeleteExistingItem?.isVisible = item.isPersisted()
 
-        editItem(item, item.source, item.tags, item.attachedFiles)
+        editItem(item, item.source, item.source?.series, item.tags, item.attachedFiles)
     }
 
     private fun editReadLaterArticle(readLaterArticleId: String) {
@@ -1668,16 +1660,17 @@ class EditItemActivity : BaseActivity() {
         val extractionResult = readLaterArticle.itemExtractionResult
 
         mnSaveItem?.setIcon(R.drawable.ic_tab_items)
-        editItem(extractionResult.item, extractionResult.source, extractionResult.tags, extractionResult.files, updateContentPreview)
+        editItem(extractionResult.item, extractionResult.source, extractionResult.series, extractionResult.tags, extractionResult.files, updateContentPreview)
     }
 
     private fun editItemExtractionResult(extractionResult: ItemExtractionResult, updateContentPreview: Boolean = true) {
         this.itemExtractionResult = extractionResult
 
-        editItem(extractionResult.item, extractionResult.source, extractionResult.tags, extractionResult.files, updateContentPreview)
+        editItem(extractionResult.item, extractionResult.source, extractionResult.series, extractionResult.tags, extractionResult.files, updateContentPreview)
     }
 
-    private fun editItem(item: Item, source: Source?, tags: MutableCollection<Tag>, files: MutableCollection<FileLink>, updateContentPreview: Boolean = true) {
+    private fun editItem(item: Item, source: Source?, series: Series? = source?.series, tags: MutableCollection<Tag>, files: MutableCollection<FileLink>,
+                         updateContentPreview: Boolean = true) {
         originalContent = item.content
         originalTags = tags
         originalSource = source
@@ -1688,7 +1681,7 @@ class EditItemActivity : BaseActivity() {
         if(item.summary.isEmpty() == false) { this.forceShowSummaryPreview = true } // forcing that once it has been shown it doesn't get hidden anymore
 
         source?.let { this.forceShowSourcePreview = true } // forcing that once it has been shown it doesn't get hidden anymore
-        lytSourcePreview.setOriginalSourceToEdit(sourceToEdit, getCurrentSeries(), this) { setSourceToEdit(it) }
+        lytSourcePreview.setOriginalSourceToEdit(source, series, this) { setSourceToEdit(it) }
 
         if(item.indication.isNotEmpty()) {
             this.forceShowSourcePreview = true
@@ -1732,7 +1725,8 @@ class EditItemActivity : BaseActivity() {
         }
 
         runOnUiThread {
-            lytSourcePreview.setOriginalSourceToEdit(sourceToEdit, getCurrentSeries(), this) { setSourceToEdit(it) }
+            // TODO: save and restore series
+            lytSourcePreview.setOriginalSourceToEdit(sourceToEdit, sourceToEdit?.series, this) { setSourceToEdit(it) }
             setSourcePreviewOnUIThread()
         }
     }
