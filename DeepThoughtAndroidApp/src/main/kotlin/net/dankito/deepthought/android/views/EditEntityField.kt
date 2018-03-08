@@ -29,6 +29,7 @@ open class EditEntityField : RelativeLayout {
     companion object {
         private const val FIELD_NAME_BUNDLE_EXTRA_NAME = "FIELD_NAME"
         private const val FIELD_VALUE_BUNDLE_EXTRA_NAME = "FIELD_VALUE"
+        private const val IS_EDITABLE_BUNDLE_EXTRA_NAME = "IS_EDITABLE"
     }
 
 
@@ -90,6 +91,7 @@ open class EditEntityField : RelativeLayout {
 
         bundle.putInt(FIELD_NAME_BUNDLE_EXTRA_NAME, fieldNameResourceId)
         bundle.putString(FIELD_VALUE_BUNDLE_EXTRA_NAME, getCurrentFieldValue())
+        bundle.putBoolean(IS_EDITABLE_BUNDLE_EXTRA_NAME, isFieldEditable)
 
         // TODO: also save and restore originalValue and secondaryInformation
 
@@ -100,7 +102,7 @@ open class EditEntityField : RelativeLayout {
         super.onRestoreInstanceState(AbsSavedState.EMPTY_STATE) // don't call with state as super.onRestoreInstanceState() doesn't like a Bundle as parameter value
 
         (state as? Bundle)?.let { bundle ->
-            setFieldNameOnUiThread(bundle.getInt(FIELD_NAME_BUNDLE_EXTRA_NAME))
+            setFieldNameOnUiThread(bundle.getInt(FIELD_NAME_BUNDLE_EXTRA_NAME), bundle.getBoolean(IS_EDITABLE_BUNDLE_EXTRA_NAME, true))
             bundle.getString(FIELD_VALUE_BUNDLE_EXTRA_NAME)?.let {  edtxtEntityFieldValue.setText(it) }
         }
     }
@@ -221,6 +223,9 @@ open class EditEntityField : RelativeLayout {
         edtxtEntityFieldValue.isFocusable = isEditable
         edtxtEntityFieldValue.isFocusableInTouchMode = isEditable
     }
+
+    protected val isFieldEditable: Boolean
+        get() = edtxtEntityFieldValue.isFocusable && edtxtEntityFieldValue.isFocusableInTouchMode
 
 
     open fun showActionIconOnUiThread(iconResourceId: Int, useAccentColorAsTintColor: Boolean = true) {
