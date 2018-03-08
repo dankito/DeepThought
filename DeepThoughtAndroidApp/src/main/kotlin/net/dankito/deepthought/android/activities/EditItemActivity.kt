@@ -753,7 +753,8 @@ class EditItemActivity : BaseActivity() {
     }
 
     private fun haveAllFieldsBeenCleared(): Boolean {
-        return contentToEdit.isNullOrBlank() && tagsOnItem.isEmpty() && sourceToEdit == null && summaryToEdit.isNullOrBlank() && lytFilesPreview.getEditedFiles().size == 0
+        return contentToEdit.isNullOrBlank() && tagsOnItem.isEmpty() && sourceToEdit == null
+                && lytSummaryPreview.getCurrentFieldValue().isEmpty() && lytFilesPreview.getEditedFiles().size == 0
     }
 
     private fun itemPropertySet() {
@@ -1528,7 +1529,7 @@ class EditItemActivity : BaseActivity() {
 
     private fun saveItemForLaterReading(callback: (Boolean) -> Unit) {
         val content = contentToEdit ?: ""
-        val summary = summaryToEdit ?: ""
+        val summary = lytSummaryPreview.getCurrentFieldValue()
 
         itemExtractionResult?.let { extractionResult ->
             updateItem(extractionResult.item, content, summary)
@@ -1706,7 +1707,7 @@ class EditItemActivity : BaseActivity() {
         summaryToEdit = item.summary
         sourceToEdit = source
 
-        if(summaryToEdit.isNullOrBlank() == false) { this.forceShowSummaryPreview = true } // forcing that once it has been shown it doesn't get hidden anymore
+        if(item.summary.isEmpty() == false) { this.forceShowSummaryPreview = true } // forcing that once it has been shown it doesn't get hidden anymore
 
         source?.let { this.forceShowSourcePreview = true } // forcing that once it has been shown it doesn't get hidden anymore
         lytSourcePreview.setOriginalSourceToEdit(sourceToEdit, getCurrentSeries(), this) { setSourceToEdit(it) }
