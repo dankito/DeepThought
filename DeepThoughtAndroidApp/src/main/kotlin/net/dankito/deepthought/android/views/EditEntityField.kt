@@ -112,7 +112,7 @@ open class EditEntityField : RelativeLayout {
 
         (state as? Bundle)?.let { bundle ->
             setFieldNameOnUiThread(bundle.getInt(FIELD_NAME_BUNDLE_EXTRA_NAME), bundle.getBoolean(IS_EDITABLE_BUNDLE_EXTRA_NAME, true))
-            bundle.getString(FIELD_VALUE_BUNDLE_EXTRA_NAME)?.let {  edtxtEntityFieldValue.setText(it) } // TODO: this calls text change listener -> valueToEdit gets set to a false value
+            bundle.getString(FIELD_VALUE_BUNDLE_EXTRA_NAME)?.let {  setEditTextEntityFieldValueOnUiThread(it) } // TODO: this calls text change listener -> valueToEdit gets set to a false value
 
             if(secondaryInformationLabelResourceId > 0) { // still didn't figure out how that works that secondaryInformationLabelResourceId and secondaryInformationHintResourceId get automatically restored
                 setupSecondaryInformation(secondaryInformationLabelResourceId, secondaryInformationHintResourceId)
