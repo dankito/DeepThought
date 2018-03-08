@@ -57,6 +57,9 @@ open class EditEntityField : RelativeLayout {
     protected var originalSecondaryInformationValue = ""
 
 
+    protected var fieldNameResourceId: Int = 0
+
+
     var didValueChangeListener: ((didValueChange: Boolean) -> Unit)? = null
 
     var didSecondaryInformationValueChangeListener: ((didValueChange: Boolean) -> Unit)? = null
@@ -85,7 +88,7 @@ open class EditEntityField : RelativeLayout {
 
         val bundle = Bundle()
 
-        bundle.putString(FIELD_NAME_BUNDLE_EXTRA_NAME, txtEntityFieldName.text.toString())
+        bundle.putInt(FIELD_NAME_BUNDLE_EXTRA_NAME, fieldNameResourceId)
         bundle.putString(FIELD_VALUE_BUNDLE_EXTRA_NAME, getCurrentFieldValue())
 
         // TODO: also save and restore originalValue and secondaryInformation
@@ -97,7 +100,7 @@ open class EditEntityField : RelativeLayout {
         super.onRestoreInstanceState(AbsSavedState.EMPTY_STATE) // don't call with state as super.onRestoreInstanceState() doesn't like a Bundle as parameter value
 
         (state as? Bundle)?.let { bundle ->
-            bundle.getString(FIELD_NAME_BUNDLE_EXTRA_NAME)?.let {  txtEntityFieldName.text = it }
+            setFieldNameOnUiThread(bundle.getInt(FIELD_NAME_BUNDLE_EXTRA_NAME))
             bundle.getString(FIELD_VALUE_BUNDLE_EXTRA_NAME)?.let {  edtxtEntityFieldValue.setText(it) }
         }
     }
@@ -173,6 +176,7 @@ open class EditEntityField : RelativeLayout {
 
     open fun setFieldNameOnUiThread(fieldNameResourceId: Int, isEditable: Boolean = true) {
         txtEntityFieldName.text = context.getString(fieldNameResourceId)
+        this.fieldNameResourceId = fieldNameResourceId
 
         setEditTextEntityFieldValueIsEditableOnUiThread(isEditable)
     }
