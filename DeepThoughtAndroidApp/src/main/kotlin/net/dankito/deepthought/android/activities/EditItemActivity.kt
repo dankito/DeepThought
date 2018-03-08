@@ -351,7 +351,7 @@ class EditItemActivity : BaseActivity() {
             }
         }
 
-        lytSourcePreview.didValueChangeListener = { didSourceTitleChange -> sourceTitleChanged(didSourceTitleChange) }
+        lytSourcePreview.didValueChangeListener = { didSourceTitleChange -> updateItemFieldChangedOnUIThread(ItemField.SourceTitle, didSourceTitleChange) }
         lytSourcePreview.didSecondaryInformationValueChangeListener = { updateItemFieldChangedOnUIThread(ItemField.Indication, it) }
 
         lytTagsPreview.didValueChangeListener = { didTagsChange ->
@@ -604,10 +604,6 @@ class EditItemActivity : BaseActivity() {
         lytSourcePreview.viewBecomesVisible()
         lytTagsPreview.viewBecomesVisible()
         lytFilesPreview.viewBecomesVisible()
-    }
-
-    private fun sourceTitleChanged(didSourceTitleChange: Boolean) {
-        updateItemFieldChangedOnUIThread(ItemField.SourceTitle, didSourceTitleChange)
     }
 
 
