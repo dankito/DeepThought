@@ -2,7 +2,6 @@ package net.dankito.deepthought.android.views
 
 import android.app.Activity
 import android.view.LayoutInflater
-import android.view.View
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import kotlinx.android.synthetic.main.view_floating_action_button_main.view.*
@@ -43,18 +42,10 @@ class MainActivityFloatingActionMenuButton(floatingActionMenu: FloatingActionMen
 
     private fun setupEventBusListener() {
         eventBus.register(eventBusListener)
+    }
 
-        floatingActionMenu.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
-            override fun onViewDetachedFromWindow(v: View?) {
-                eventBus.unregister(eventBusListener)
-
-                floatingActionMenu.removeOnAttachStateChangeListener(this)
-            }
-
-            override fun onViewAttachedToWindow(v: View?) {
-            }
-
-        })
+    fun cleanUp() {
+        eventBus.unregister(eventBusListener) // floatingActionMenu.addOnAttachStateChangeListener() didn't work, caused a memory leak, calling it explicitly now from MainActivity
     }
 
 

@@ -181,6 +181,14 @@ class MainActivity : BaseActivity() {
         // EditSourceActivity from SourcesListView tab first, then going to EditItemActivity -> Source of first called EditSourceActivity is then shown in second EditItemActivity
     }
 
+    override fun onDestroy() {
+        floatingActionMenuButton.cleanUp()
+
+        super.onDestroy()
+    }
+
+
+
     override fun onBackPressed() {
         if(floatingActionMenuButton.handlesBackButtonPress()) {
 
