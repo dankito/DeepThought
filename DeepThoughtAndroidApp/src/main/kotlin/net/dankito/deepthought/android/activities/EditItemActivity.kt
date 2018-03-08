@@ -147,8 +147,6 @@ class EditItemActivity : BaseActivity() {
 
     private var contentToEdit: String? = null
 
-    private var summaryToEdit: String? = null
-
     private var sourceToEdit: Source? = null
 
     private val tagsOnItem: MutableList<Tag> = ArrayList()
@@ -673,14 +671,12 @@ class EditItemActivity : BaseActivity() {
     }
 
     private fun summaryChanged(didSummaryChange: Boolean) {
-        summaryToEdit = lytSummaryPreview.getCurrentFieldValue()
         itemPropertySet()
 
         updateItemFieldChanged(ItemField.TitleOrSummary, didSummaryChange)
     }
 
     private fun appliedChangesToSummary(didSummaryChange: Boolean) {
-        summaryToEdit = lytSummaryPreview.getCurrentFieldValue()
         itemPropertySet()
 
         updateItemFieldChanged(ItemField.TitleOrSummary, didSummaryChange)
@@ -865,12 +861,13 @@ class EditItemActivity : BaseActivity() {
     }
 
 
-    private fun setSummaryPreviewOnUIThread() {
-        lytSummaryPreview.setFieldNameOnUiThread(if(alsoShowTitleForSummary()) R.string.activity_edit_item_title_summary_label else R.string.activity_edit_item_summary_only_label)
+    private fun setSummaryPreviewOnUIThread(summaryToEdit: String) {
+        val alsoShowTitleInCaption = sourceToEdit?.url == null && summaryToEdit.length < 35 // TODO: shouldn't it be sourceToEdit == null ?
+        lytSummaryPreview.setFieldNameOnUiThread(if(alsoShowTitleInCaption) R.string.activity_edit_item_title_summary_label else R.string.activity_edit_item_summary_only_label)
 
-        lytSummaryPreview.setFieldValueOnUiThread(summaryToEdit?.getPlainTextForHtml())
+        lytSummaryPreview.setFieldValueOnUiThread(summaryToEdit.getPlainTextForHtml())
 
-        if(summaryToEdit.isNullOrBlank()) {
+        if(summaryToEdit.isBlank()) {
 //            lytSummaryPreview.setOnboardingTextOnUiThread(R.string.activity_edit_item_summary_onboarding_text)
         }
 
@@ -886,10 +883,6 @@ class EditItemActivity : BaseActivity() {
         if(fabEditItemSummary.visibility != View.INVISIBLE) { // visibility already set by FloatingActionMenu
             fabEditItemSummary.visibility = if(showSummaryPreview) View.GONE else View.VISIBLE
         }
-    }
-
-    private fun alsoShowTitleForSummary(): Boolean {
-        return sourceToEdit?.url == null && (summaryToEdit?.length ?: 0) < 35
     }
 
     private fun setSourcePreviewOnUIThread() {
@@ -1437,10 +1430,8 @@ class EditItemActivity : BaseActivity() {
     }
 
     private fun saveItemAsync(callback: (Boolean) -> Unit) {
-        summaryToEdit = lytSummaryPreview.getCurrentFieldValue() // update summaryToEdit as Samsung's Swipe keyboard doesn't raise text changed event (TextWatcher) -> fetch value before saving
-
         val content = contentToEdit ?: ""
-        val summary = summaryToEdit ?: ""
+        val summary = lytSummaryPreview.getCurrentFieldValue()
 
         item?.let { item ->
             updateItem(item, content, summary)
@@ -1698,7 +1689,6 @@ class EditItemActivity : BaseActivity() {
         originalSource = source
 
         contentToEdit = item.content
-        summaryToEdit = item.summary
         sourceToEdit = source
 
         if(item.summary.isEmpty() == false) { this.forceShowSummaryPreview = true } // forcing that once it has been shown it doesn't get hidden anymore
@@ -1722,10 +1712,10 @@ class EditItemActivity : BaseActivity() {
         lytFilesPreview.setFiles(files, permissionsManager)
         forceShowFilesPreview = files.isNotEmpty()
 
-        updateDisplayedValuesOnUIThread(source, updateContentPreview)
+        updateDisplayedValuesOnUIThread(source, item.summary, updateContentPreview)
     }
 
-    private fun updateDisplayedValuesOnUIThread(source: Source? = sourceToEdit, updateContentPreview: Boolean = true) {
+    private fun updateDisplayedValuesOnUIThread(source: Source? = sourceToEdit, summaryToEdit: String = lytSummaryPreview.getCurrentFieldValue(), updateContentPreview: Boolean = true) {
         if(updateContentPreview) {
             setContentPreviewOnUIThread(source)
         }
@@ -1734,7 +1724,7 @@ class EditItemActivity : BaseActivity() {
 
         setSourcePreviewOnUIThread()
 
-        setSummaryPreviewOnUIThread()
+        setSummaryPreviewOnUIThread(summaryToEdit)
 
         setFilesPreviewOnUIThread()
     }
