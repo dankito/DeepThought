@@ -64,14 +64,14 @@ class EditItemExtractionResultActivity : EditItemActivityBase() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.mnSaveItemExtractionResultForLaterReading -> {
-                saveItemExtrationResultForLaterReadingAndCloseDialog()
+                saveItemExtractionResultForLaterReadingAndCloseDialog()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
         }
     }
 
-    private fun saveItemExtrationResultForLaterReadingAndCloseDialog() {
+    private fun saveItemExtractionResultForLaterReadingAndCloseDialog() {
         mnSaveItem?.isEnabled = false // disable to that save cannot be pressed a second time
         mnSaveItemExtractionResultForLaterReading?.isEnabled = false
 
