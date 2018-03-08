@@ -66,7 +66,6 @@ open class EditItemActivityBase : BaseActivity() {
 
     companion object {
         private const val ITEM_ID_INTENT_EXTRA_NAME = "ITEM_ID"
-        private const val READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME = "READ_LATER_ARTICLE_ID"
 
         private const val CHANGED_FIELDS_INTENT_EXTRA_NAME = "CHANGED_FIELDS"
 
@@ -134,8 +133,6 @@ open class EditItemActivityBase : BaseActivity() {
 
     private var item: Item? = null
 
-    private var readLaterArticle: ReadLaterArticle? = null
-
 
     private var originalContent: String? = null
 
@@ -172,7 +169,7 @@ open class EditItemActivityBase : BaseActivity() {
     protected var isEditingTagsOnItem = false
 
 
-    private val contextHelpUtil = ContextHelpUtil()
+    protected val contextHelpUtil = ContextHelpUtil()
 
     private val toolbarUtil = ToolbarUtil()
 
@@ -191,8 +188,6 @@ open class EditItemActivityBase : BaseActivity() {
     protected var mnToggleReaderMode: MenuItem? = null
 
     protected var mnSaveItemExtractionResultForLaterReading: MenuItem? = null
-
-    protected var mnDeleteReadLaterArticle: MenuItem? = null
 
     protected var mnShareItem: MenuItem? = null
 
@@ -247,10 +242,9 @@ open class EditItemActivityBase : BaseActivity() {
 
         restoreEntity(savedInstanceState)
 
-        savedInstanceState.getString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME)?.let { readLaterArticleId -> editReadLaterArticle(readLaterArticleId) }
         savedInstanceState.getString(ITEM_ID_INTENT_EXTRA_NAME)?.let { itemId -> editItem(itemId) }
 
-        if(getItemExtractionResult() == null && savedInstanceState.getString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME) == null &&
+        if(getItemExtractionResult() == null &&
                 savedInstanceState.getString(ITEM_ID_INTENT_EXTRA_NAME) == null) { // a new Item is being created then
             createItem(false) // don't go to EditHtmlTextDialog for content here as we're restoring state, content may already be set
         }
@@ -294,9 +288,6 @@ open class EditItemActivityBase : BaseActivity() {
         outState?.let {
             outState.putString(ITEM_ID_INTENT_EXTRA_NAME, null)
             item?.id?.let { itemId -> outState.putString(ITEM_ID_INTENT_EXTRA_NAME, itemId) }
-
-            outState.putString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME, null)
-            readLaterArticle?.id?.let { readLaterArticleId -> outState.putString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME, readLaterArticleId) }
 
             saveState(outState)
 
@@ -513,7 +504,7 @@ open class EditItemActivityBase : BaseActivity() {
         urlLoadedNow()
 
         // now try to extract item content from WebView's html
-        val extractionResult = getItemExtractionResult() ?: readLaterArticle?.itemExtractionResult
+        val extractionResult = getItemExtractionResult()
         if(extractionResult != null && isInReaderMode == false) {
             webSiteHtml = html
             contentToEdit = html
@@ -529,7 +520,7 @@ open class EditItemActivityBase : BaseActivity() {
     }
 
     protected open fun getItemExtractionResult(): ItemExtractionResult? {
-        return readLaterArticle?.itemExtractionResult
+        return null
     }
 
     private fun urlLoadedNow() {
@@ -1226,26 +1217,27 @@ open class EditItemActivityBase : BaseActivity() {
         menuInflater.inflate(R.menu.activity_edit_item_menu, menu)
 
         mnSaveItem = menu.findItem(R.id.mnSaveItem)
-        readLaterArticle?.let { mnSaveItem?.setIcon(R.drawable.ic_tab_items) }
 
         mnDeleteExistingItem = menu.findItem(R.id.mnDeleteExistingItem)
         mnDeleteExistingItem?.isVisible = item?.isPersisted() == true
 
         mnToggleReaderMode = menu.findItem(R.id.mnToggleReaderMode)
-        mnToggleReaderMode?.isVisible = readLaterArticle?.itemExtractionResult?.couldExtractContent == true /*&& webSiteHtml != null*/ // show mnToggleReaderMode only if previously original web site was shown
         setReaderModeActionStateOnUIThread()
 
         mnSaveItemExtractionResultForLaterReading = menu.findItem(R.id.mnSaveItemExtractionResultForLaterReading)
-
-        mnDeleteReadLaterArticle = menu.findItem(R.id.mnDeleteReadLaterArticle)
-        mnDeleteReadLaterArticle?.isVisible = readLaterArticle != null
 
         mnShareItem = menu.findItem(R.id.mnShareItem)
         updateShowMenuItemShareItem()
 
         setMenuSaveItemVisibleStateOnUIThread()
 
+        adjustViewHtmlOptionsMenu(menu) // adjusting icons has to be done before toolbarUtil.setupActionItemsLayout() gets called
+
         toolbarUtil.setupActionItemsLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
+    }
+
+    protected open fun adjustViewHtmlOptionsMenu(menu: Menu) {
+
     }
 
     private fun setReaderModeActionStateOnUIThread() {
@@ -1286,10 +1278,6 @@ open class EditItemActivityBase : BaseActivity() {
             }
             R.id.mnToggleReaderMode -> {
                 toggleReaderMode()
-                return true
-            }
-            R.id.mnDeleteReadLaterArticle -> {
-                deleteReadLaterArticleAndCloseDialog()
                 return true
             }
             R.id.mnShareItem -> {
@@ -1400,10 +1388,7 @@ open class EditItemActivityBase : BaseActivity() {
         unregisterEventBusListener()
 
         saveItemAsync { successful ->
-            if(successful) {
-                mayShowSavedReadLaterArticleHelpAndCloseDialog()
-            }
-            else {
+            if(successful == false) {
                 mnSaveItem?.isEnabled = true
                 mnSaveItemExtractionResultForLaterReading?.isEnabled = true
                 mayRegisterEventBusListener()
@@ -1423,39 +1408,17 @@ open class EditItemActivityBase : BaseActivity() {
         updateItem(itemToSave, content, summary)
         presenter.saveItemAsync(itemToSave, editedSource, editedSeries, tagsOnItem, lytFilesPreview.getEditedFiles()) { successful ->
             if(successful) {
-                readLaterArticle?.let { readLaterArticle ->
-                    readLaterArticleService.delete(readLaterArticle)
-                }
+                itemSuccessfullySaved()
 
                 setActivityResult(EditItemActivityResult(didSaveItem = true, savedItem = itemToSave))
             }
+
             callback(successful)
         }
     }
 
-    private fun mayShowSavedReadLaterArticleHelpAndCloseDialog() {
-        mayShowSavedReadLaterArticleHelp {
-            runOnUiThread {
-                closeDialog()
-            }
-        }
-    }
+    protected open fun itemSuccessfullySaved() {
 
-    private fun mayShowSavedReadLaterArticleHelp(callback: () -> Unit) {
-        val localSettings = itemService.dataManager.localSettings
-
-        if(readLaterArticle != null && localSettings.didShowSavedReadLaterArticleIsNowInItemsHelp == false) {
-            localSettings.didShowSavedReadLaterArticleIsNowInItemsHelp = true
-            itemService.dataManager.localSettingsUpdated()
-
-            val helpText = getText(R.string.context_help_saved_read_later_article_is_now_in_items).toString()
-            dialogService.showConfirmationDialog(contextHelpUtil.stringUtil.getSpannedFromHtml(helpText), config = ConfirmationDialogConfig(false)) {
-                callback()
-            }
-        }
-        else {
-            callback()
-        }
     }
 
 
@@ -1470,18 +1433,6 @@ open class EditItemActivityBase : BaseActivity() {
                     closeDialog()
                 }
             }
-        }
-    }
-
-    private fun deleteReadLaterArticleAndCloseDialog() {
-        readLaterArticle?.let { readLaterArticle ->
-            mnSaveItem?.isEnabled = false // disable to that save cannot be pressed a second time
-            mnDeleteReadLaterArticle?.isEnabled = false
-            unregisterEventBusListener()
-
-            presenter.deleteReadLaterArticle(readLaterArticle)
-
-            runOnUiThread { closeDialog() }
         }
     }
 
@@ -1524,7 +1475,7 @@ open class EditItemActivityBase : BaseActivity() {
     }
 
     protected open fun resetSeries() {
-        readLaterArticle?.itemExtractionResult?.series = null
+
     }
 
 
@@ -1559,11 +1510,6 @@ open class EditItemActivityBase : BaseActivity() {
     protected open fun showParameters(parameters: EditItemActivityParameters) {
         parameters.item?.let { editItem(it) }
 
-        parameters.readLaterArticle?.let {
-            isInReaderMode = it.itemExtractionResult.couldExtractContent
-            editReadLaterArticle(it)
-        }
-
         if(parameters.createItem) {
             createItem()
         }
@@ -1589,20 +1535,6 @@ open class EditItemActivityBase : BaseActivity() {
         mnDeleteExistingItem?.isVisible = item.isPersisted()
 
         editItem(item, item.source, item.source?.series, item.tags, item.attachedFiles)
-    }
-
-    private fun editReadLaterArticle(readLaterArticleId: String) {
-        readLaterArticleService.retrieve(readLaterArticleId)?.let { readLaterArticle ->
-            editReadLaterArticle(readLaterArticle)
-        }
-    }
-
-    private fun editReadLaterArticle(readLaterArticle: ReadLaterArticle, updateContentPreview: Boolean = true) {
-        this.readLaterArticle = readLaterArticle
-        val extractionResult = readLaterArticle.itemExtractionResult
-
-        mnSaveItem?.setIcon(R.drawable.ic_tab_items)
-        editItem(extractionResult.item, extractionResult.source, extractionResult.series, extractionResult.tags, extractionResult.files, updateContentPreview)
     }
 
     protected fun editItem(item: Item, source: Source?, series: Series? = source?.series, tags: MutableCollection<Tag>, files: MutableCollection<FileLink>,

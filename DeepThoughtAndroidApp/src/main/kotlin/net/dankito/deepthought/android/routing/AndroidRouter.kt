@@ -73,7 +73,7 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
     }
 
     override fun showEditItemView(article: ReadLaterArticle) {
-        showEditItemView(EditItemActivityParameters(readLaterArticle = article))
+        showEditItemView(EditItemActivityParameters(readLaterArticle = article), EditReadLaterArticleActivity::class.java)
     }
 
     override fun showEditItemView(extractionResult: ItemExtractionResult) {

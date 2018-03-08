@@ -85,6 +85,12 @@
         />
 
         <activity
+            android:name=".activities.EditReadLaterArticleActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
+        />
+
+        <activity
             android:name=".activities.EditSourceActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize"
