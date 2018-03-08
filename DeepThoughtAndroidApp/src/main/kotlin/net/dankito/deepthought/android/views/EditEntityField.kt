@@ -30,6 +30,9 @@ open class EditEntityField : RelativeLayout {
         private const val FIELD_NAME_BUNDLE_EXTRA_NAME = "FIELD_NAME"
         private const val FIELD_VALUE_BUNDLE_EXTRA_NAME = "FIELD_VALUE"
         private const val IS_EDITABLE_BUNDLE_EXTRA_NAME = "IS_EDITABLE"
+
+        private const val IS_SECONDARY_INFORMATION_VISIBLE_BUNDLE_EXTRA_NAME = "IS_SECONDARY_INFORMATION_VISIBLE"
+        private const val SECONDARY_INFORMATION_VALUE_BUNDLE_EXTRA_NAME = "SECONDARY_INFORMATION_VALUE"
     }
 
 
@@ -58,7 +61,11 @@ open class EditEntityField : RelativeLayout {
     protected var originalSecondaryInformationValue = ""
 
 
-    protected var fieldNameResourceId: Int = 0
+    private var fieldNameResourceId: Int = 0
+
+    private var secondaryInformationLabelResourceId: Int = 0
+
+    private var secondaryInformationHintResourceId: Int? = null
 
 
     var didValueChangeListener: ((didValueChange: Boolean) -> Unit)? = null
@@ -93,7 +100,10 @@ open class EditEntityField : RelativeLayout {
         bundle.putString(FIELD_VALUE_BUNDLE_EXTRA_NAME, getCurrentFieldValue())
         bundle.putBoolean(IS_EDITABLE_BUNDLE_EXTRA_NAME, isFieldEditable)
 
-        // TODO: also save and restore originalValue and secondaryInformation
+        // TODO: also save and restore originalValue
+
+        bundle.putBoolean(IS_SECONDARY_INFORMATION_VISIBLE_BUNDLE_EXTRA_NAME, isSecondaryInformationVisible())
+        bundle.putString(SECONDARY_INFORMATION_VALUE_BUNDLE_EXTRA_NAME, getEditedSecondaryInformation())
 
         return bundle
     }
@@ -103,7 +113,21 @@ open class EditEntityField : RelativeLayout {
 
         (state as? Bundle)?.let { bundle ->
             setFieldNameOnUiThread(bundle.getInt(FIELD_NAME_BUNDLE_EXTRA_NAME), bundle.getBoolean(IS_EDITABLE_BUNDLE_EXTRA_NAME, true))
-            bundle.getString(FIELD_VALUE_BUNDLE_EXTRA_NAME)?.let {  edtxtEntityFieldValue.setText(it) }
+            bundle.getString(FIELD_VALUE_BUNDLE_EXTRA_NAME)?.let {  edtxtEntityFieldValue.setText(it) } // TODO: this calls text change listener -> valueToEdit gets set to a false value
+
+            if(secondaryInformationLabelResourceId > 0) { // still didn't figure out how that works that secondaryInformationLabelResourceId and secondaryInformationHintResourceId get automatically restored
+                setupSecondaryInformation(secondaryInformationLabelResourceId, secondaryInformationHintResourceId)
+            }
+
+            if(bundle.getBoolean(IS_SECONDARY_INFORMATION_VISIBLE_BUNDLE_EXTRA_NAME)) {
+                showSecondaryInformationOnUiThread()
+            }
+
+            val secondaryInformation = bundle.getString(SECONDARY_INFORMATION_VALUE_BUNDLE_EXTRA_NAME)
+            setEditTextSecondaryInformationValueOnUiThread(secondaryInformation)
+            postDelayed({ // don't know why but simply calling setEditTextSecondaryInformationValueOnUiThread() doesn't work, has to be done delayed
+                setEditTextSecondaryInformationValueOnUiThread(secondaryInformation)
+            }, 250)
         }
     }
 
@@ -321,6 +345,9 @@ open class EditEntityField : RelativeLayout {
     }
 
     protected fun setupSecondaryInformation(labelResourceId: Int, hintResourceId: Int? = null) {
+        this.secondaryInformationLabelResourceId = labelResourceId
+        this.secondaryInformationHintResourceId = hintResourceId
+
         txtSecondaryInformationLabel.setText(labelResourceId)
 
         hintResourceId?.let {
