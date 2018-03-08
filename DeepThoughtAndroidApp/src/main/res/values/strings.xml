@@ -166,8 +166,10 @@
     <string name="activity_edit_item_summary_onboarding_text">Title or summary for this information</string>
     <string name="activity_edit_item_alert_message_item_contains_unsaved_changes">Item contains unsaved changes.\n\nShould these changes now get saved?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
-    <string name="activity_edit_item_alert_message_item_has_been_edited">Item has been edited (probably on a synchronized device).\n\nWhen
+    <string name="activity_edit_item_alert_message_item_has_been_edited">Item has been edited (probably on a synchronized device).\n\If
         you now save the item the other changes get overwritten.</string>
+    <string name="activity_edit_item_alert_message_read_later_article_has_been_edited">Read later article has been edited (probably on a synchronized device).\n\If
+        you now save the article these other changes get overwritten.</string>
     <string name="activity_edit_item_alert_message_delete_item">Would you really like to delete item \'%s\'?</string>
 
     <string name="menu_open_url_open_in_new_activity">Open in DeepThought</string>
@@ -186,7 +188,7 @@
     <string name="activity_edit_source_error_could_not_parse_publishing_date" formatted="false">Cannot parse %s to date</string>
     <string name="activity_edit_source_alert_message_source_contains_unsaved_changes">Source contains unsaved changes.\n\nShould these changes now get saved?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
-    <string name="activity_edit_source_alert_message_source_has_been_edited">Source has been edited (probably on a synchronized device).\n\nWhen
+    <string name="activity_edit_source_alert_message_source_has_been_edited">Source has been edited (probably on a synchronized device).\n\If
         you now save the source the other changes get overwritten.</string>
 
     <string name="activity_edit_series_title">Series</string>
@@ -200,7 +202,7 @@
         save these before?</string>
     <string name="activity_edit_series_alert_message_series_contains_unsaved_changes">Series has unsaved changes.\n\nDo you want to save these changes?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
-    <string name="activity_edit_series_alert_message_series_has_been_edited">Series has been edited (probably on a synchronized device).\n\nWhen
+    <string name="activity_edit_series_alert_message_series_has_been_edited">Series has been edited (probably on a synchronized device).\n\If
         you now save the series the other changes get overwritten.
     </string>
 

@@ -161,7 +161,7 @@ class EditItemActivity : EditItemActivityBase() {
     inner class EventBusListener {
 
         @Handler
-        fun itemChanged(change: ItemChanged) { // TODO: what about ReadLaterArticle?
+        fun itemChanged(change: ItemChanged) {
             if(change.entity.id == item.id) {
                 if(change.source == EntityChangeSource.Synchronization && change.isDependentChange == false) {
                     warnItemHasBeenEdited()

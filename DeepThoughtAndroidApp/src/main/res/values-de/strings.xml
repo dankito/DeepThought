@@ -205,6 +205,8 @@
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
     <string name="activity_edit_item_alert_message_item_has_been_edited">Ihr Eintrag wurde geändert, wahrscheinlich auf einem synchronisierten Gerät.\n\nWenn
         Sie den Eintrag hier nun ebenfalls speichern, überschreiben Sie jene Änderungen.</string>
+    <string name="activity_edit_item_alert_message_read_later_article_has_been_edited">Ihr Artikel zum später Lesen wurde geändert, wahrscheinlich auf einem synchronisierten
+        Gerät.\n\nWenn Sie den Artikel auf diesem Gerät nun ebenfalls speichern, überschreiben Sie diese Änderungen.</string>
     <string name="activity_edit_item_alert_message_delete_item">Möchten Sie den Eintrag \'%s\' wirklich löschen?</string>
 
     <string name="menu_open_url_open_in_new_activity">In DeepThought öffnen</string>

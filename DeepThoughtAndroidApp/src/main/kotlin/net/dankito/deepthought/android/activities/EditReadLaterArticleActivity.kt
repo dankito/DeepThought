@@ -7,7 +7,10 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditItemActivityParameters
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.model.util.ItemExtractionResult
+import net.dankito.service.data.messages.EntityChangeSource
+import net.dankito.service.data.messages.ReadLaterArticleChanged
 import net.dankito.utils.ui.model.ConfirmationDialogConfig
+import net.engio.mbassy.listener.Handler
 
 
 class EditReadLaterArticleActivity : EditItemActivityBase() {
@@ -20,11 +23,27 @@ class EditReadLaterArticleActivity : EditItemActivityBase() {
     private lateinit var readLaterArticle: ReadLaterArticle
 
 
+    private var eventBusListener: EventBusListener? = null
+
+
     private var mnDeleteReadLaterArticle: MenuItem? = null
 
 
     override fun getItemExtractionResult(): ItemExtractionResult? {
         return readLaterArticle.itemExtractionResult
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+
+        mayRegisterEventBusListener()
+    }
+
+    override fun onPause() {
+        unregisterEventBusListener()
+
+        super.onPause()
     }
 
 
@@ -80,7 +99,7 @@ class EditReadLaterArticleActivity : EditItemActivityBase() {
     private fun deleteReadLaterArticleAndCloseDialog() {
         mnSaveItem?.isEnabled = false // disable to that save cannot be pressed a second time
         mnDeleteReadLaterArticle?.isEnabled = false
-//        unregisterEventBusListener()
+        unregisterEventBusListener()
 
         presenter.deleteReadLaterArticle(readLaterArticle)
 
@@ -90,6 +109,7 @@ class EditReadLaterArticleActivity : EditItemActivityBase() {
 
     override fun beforeSavingItem() {
         mnSaveItemExtractionResultForLaterReading?.isEnabled = false
+        unregisterEventBusListener()
     }
 
     override fun resetSeries() {
@@ -104,6 +124,9 @@ class EditReadLaterArticleActivity : EditItemActivityBase() {
         }
         else {
             mnSaveItemExtractionResultForLaterReading?.isEnabled = true
+            mayRegisterEventBusListener()
+
+            super.savingItemDone(successful)
         }
     }
 
@@ -129,6 +152,50 @@ class EditReadLaterArticleActivity : EditItemActivityBase() {
         }
         else {
             callback()
+        }
+    }
+
+
+    private fun mayRegisterEventBusListener() {
+        if(eventBusListener == null) {
+            synchronized(this) {
+                val eventBusListenerInit = EventBusListener()
+
+                eventBus.register(eventBusListenerInit)
+
+                this.eventBusListener = eventBusListenerInit
+            }
+        }
+    }
+
+    private fun unregisterEventBusListener() {
+        synchronized(this) {
+            eventBusListener?.let {
+                eventBus.unregister(it)
+            }
+
+            this.eventBusListener = null
+        }
+    }
+
+    private fun warnReadLaterArticleHasBeenEdited() {
+        unregisterEventBusListener() // message now gets shown, don't display it a second time
+
+        runOnUiThread {
+            dialogService.showInfoMessage(getString(R.string.activity_edit_item_alert_message_read_later_article_has_been_edited))
+        }
+    }
+
+
+    inner class EventBusListener {
+
+        @Handler
+        fun itemChanged(change: ReadLaterArticleChanged) {
+            if(change.entity.id == readLaterArticle.id) {
+                if(change.source == EntityChangeSource.Synchronization && change.isDependentChange == false) {
+                    warnReadLaterArticleHasBeenEdited()
+                }
+            }
         }
     }
 
