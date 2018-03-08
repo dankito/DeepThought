@@ -466,7 +466,7 @@ class EditItemActivity : BaseActivity() {
     private val webViewClient = object : WebViewClient() {
 
         @TargetApi(Build.VERSION_CODES.N)
-        override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+        override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
             request?.url?.toString()?.let { url ->
                 userClickedOnUrl(url)
             }
@@ -474,7 +474,7 @@ class EditItemActivity : BaseActivity() {
             return true
         }
 
-        @SuppressWarnings("deprecation")
+        @Suppress("OverridingDeprecatedMember")
         override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
             userClickedOnUrl(url)
 
@@ -494,6 +494,7 @@ class EditItemActivity : BaseActivity() {
         else {
             wbvwContent.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
 
+            @Suppress("DEPRECATION")
             wbvwContent.settings.setRenderPriority(WebSettings.RenderPriority.HIGH)
         }
     }
@@ -524,12 +525,10 @@ class EditItemActivity : BaseActivity() {
             contentToEdit = html
 
             if(extractionResult?.couldExtractContent == false) {
-                extractionResult?.let { extractionResult ->
-                    articleExtractorManager.extractArticleUserDidSeeBefore(extractionResult, html, url)
+                articleExtractorManager.extractArticleUserDidSeeBefore(extractionResult, html, url)
 
-                    if(extractionResult.couldExtractContent) {
-                        runOnUiThread { extractedContentOnUiThread(extractionResult) }
-                    }
+                if(extractionResult.couldExtractContent) {
+                    runOnUiThread { extractedContentOnUiThread(extractionResult) }
                 }
             }
         }
@@ -838,6 +837,7 @@ class EditItemActivity : BaseActivity() {
 
     private fun clearWebViewItem() {
         if(Build.VERSION.SDK_INT < 18) {
+            @Suppress("DEPRECATION")
             wbvwContent.clearView()
         }
         else {
@@ -1557,7 +1557,7 @@ class EditItemActivity : BaseActivity() {
                     mnDeleteExistingItem?.isEnabled = false
                     unregisterEventBusListener()
 
-                    deleteEntityService.deleteItem(item)
+                    deleteEntityService.deleteItem(item) // TODO: move to presenter
                     closeDialog()
                 }
             }
@@ -1589,7 +1589,7 @@ class EditItemActivity : BaseActivity() {
             sourceToEdit?.title = lytSourcePreview.getEditedValue() ?: ""
         }
         if(changedFields.contains(ItemField.Indication)) {
-            item.indication = lytSourcePreview.getEditedSecondaryInformation() ?: ""
+            item.indication = lytSourcePreview.getEditedSecondaryInformation()
         }
 
         if(sourceToEdit?.isPersisted() == false && lytSourcePreview.getEditedValue().isNullOrBlank()) {
@@ -1799,7 +1799,7 @@ class EditItemActivity : BaseActivity() {
 
 
     private fun mayRegisterEventBusListener() {
-        if(item?.isPersisted() ?: false && eventBusListener == null) {
+        if(item?.isPersisted() == true && eventBusListener == null) {
             synchronized(this) {
                 val eventBusListenerInit = EventBusListener()
 
@@ -1820,7 +1820,7 @@ class EditItemActivity : BaseActivity() {
         }
     }
 
-    private fun warnItemHasBeenEdited(item: Item) {
+    private fun warnItemHasBeenEdited() {
         unregisterEventBusListener() // message now gets shown, don't display it a second time
 
         runOnUiThread {
@@ -1838,7 +1838,7 @@ class EditItemActivity : BaseActivity() {
         fun itemChanged(change: ItemChanged) { // TODO: what about ReadLaterArticle?
             if(change.entity.id == item?.id) {
                 if(change.source == EntityChangeSource.Synchronization && change.isDependentChange == false) {
-                    warnItemHasBeenEdited(change.entity)
+                    warnItemHasBeenEdited()
                 }
                 else { // TODO: or will changes then may get overwritten? As sometimes it's really senseful to update values, e.g. when a file synchronization state gets updated
                     updateDisplayedValues()
