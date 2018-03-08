@@ -6,6 +6,7 @@ import javafx.concurrent.Worker
 import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.control.Control
+import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
 import javafx.scene.web.WebView
@@ -186,7 +187,9 @@ abstract class EditItemViewBase : DialogFragment() {
 
         htmlEditor.cleanUp()
 
-        System.gc()
+        (wbvwShowUrl.parent as? Pane)?.children?.remove(wbvwShowUrl)
+
+        System.gc() // WebView is known for consuming a lot of memory (and causing memory leaks), may this helps some
     }
 
 
