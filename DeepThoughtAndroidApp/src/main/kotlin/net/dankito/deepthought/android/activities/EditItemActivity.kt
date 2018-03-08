@@ -142,12 +142,8 @@ class EditItemActivity : BaseActivity() {
 
     private var originalTags: MutableCollection<Tag>? = null
 
-    private var originalSource: Source? = null
-
 
     private var contentToEdit: String? = null
-
-    private var sourceToEdit: Source? = null
 
     private val tagsOnItem: MutableList<Tag> = ArrayList()
 
@@ -273,7 +269,7 @@ class EditItemActivity : BaseActivity() {
 
 
         restoreStateFromDisk(savedInstanceState, EDIT_CONTENT_HTML_INTENT_EXTRA_NAME, String::class.java)?.let {
-            editHtmlView.setHtml(it, sourceToEdit?.url)
+            editHtmlView.setHtml(it, lytSourcePreview.source?.url)
         }
 
         if(isInEditContentMode) {
@@ -304,8 +300,9 @@ class EditItemActivity : BaseActivity() {
             // TODO: add PersistedFilesSerializer
             outState.putString(FILES_INTENT_EXTRA_NAME, serializer.serializeObject(lytFilesPreview.getEditedFiles()))
 
-            if(sourceToEdit == null || sourceToEdit?.id != null) { // save value only if source has been deleted or a persisted source is set (-> don't store ItemExtractionResult's or ReadLaterArticle's unpersisted source)
-                outState.putString(SOURCE_INTENT_EXTRA_NAME, sourceToEdit?.id)
+            val editedSource = lytSourcePreview.source
+            if(editedSource == null || editedSource.id != null) { // save value only if source has been deleted or a persisted source is set (-> don't store ItemExtractionResult's or ReadLaterArticle's unpersisted source)
+                outState.putString(SOURCE_INTENT_EXTRA_NAME, editedSource?.id)
             }
 
             if(contentToEdit != originalContent) {
@@ -603,7 +600,7 @@ class EditItemActivity : BaseActivity() {
         }
 
         contentToEdit?.let { content ->
-            editHtmlView.setHtml(content, sourceToEdit?.url)
+            editHtmlView.setHtml(content, lytSourcePreview.source?.url)
 
             txtEnterContentHint.visibility =
                     if(content.isBlank() == false || dataManager.localSettings.didShowAddItemPropertiesHelp) View.GONE
@@ -676,10 +673,8 @@ class EditItemActivity : BaseActivity() {
         updateItemFieldChanged(ItemField.TitleOrSummary, didSummaryChange)
     }
 
-    private fun setSourceToEdit(source: Source?) {
-        sourceToEdit = source
-
-        updateItemFieldChangedOnUIThread(ItemField.Source, source != originalSource)
+    private fun sourceChanged(source: Source?) {
+        updateItemFieldChangedOnUIThread(ItemField.Source, source != lytSourcePreview.originalSource)
 
         itemPropertySet() // TODO: still senseful?
 
@@ -732,7 +727,7 @@ class EditItemActivity : BaseActivity() {
     }
 
     private fun haveAllFieldsBeenCleared(): Boolean {
-        return contentToEdit.isNullOrBlank() && tagsOnItem.isEmpty() && sourceToEdit == null
+        return contentToEdit.isNullOrBlank() && tagsOnItem.isEmpty() && lytSourcePreview.source == null
                 && lytSummaryPreview.getCurrentFieldValue().isEmpty() && lytFilesPreview.getEditedFiles().size == 0
     }
 
@@ -747,7 +742,7 @@ class EditItemActivity : BaseActivity() {
 
 
     private fun setContentPreviewOnUIThread() {
-        setContentPreviewOnUIThread(sourceToEdit)
+        setContentPreviewOnUIThread(lytSourcePreview.source)
     }
 
     private fun setContentPreviewOnUIThread(source: Source?) {
@@ -856,7 +851,7 @@ class EditItemActivity : BaseActivity() {
 
 
     private fun setSummaryPreviewOnUIThread(summaryToEdit: String) {
-        val alsoShowTitleInCaption = sourceToEdit?.url == null && summaryToEdit.length < 35 // TODO: shouldn't it be sourceToEdit == null ?
+        val alsoShowTitleInCaption = lytSourcePreview.source?.url == null && summaryToEdit.length < 35 // TODO: shouldn't it be sourceToEdit == null ?
         lytSummaryPreview.setFieldNameOnUiThread(if(alsoShowTitleInCaption) R.string.activity_edit_item_title_summary_label else R.string.activity_edit_item_summary_only_label)
 
         lytSummaryPreview.setFieldValueOnUiThread(summaryToEdit.getPlainTextForHtml())
@@ -880,15 +875,20 @@ class EditItemActivity : BaseActivity() {
     }
 
     private fun setSourcePreviewOnUIThread() {
-        val showSourcePreview = (this.forceShowSourcePreview || sourceToEdit != null) && isEditingTagsOnItem == false
+        updateShowSourcePreviewOnUiThread()
+
+        setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread()
+
+        updateShowMenuItemShareItem()
+    }
+
+    private fun updateShowSourcePreviewOnUiThread() {
+        val showSourcePreview = (this.forceShowSourcePreview || lytSourcePreview.source != null) && isEditingTagsOnItem == false
 
         lytSourcePreview.visibility = if(showSourcePreview) View.VISIBLE else View.GONE
         if(fabEditItemSource.visibility != View.INVISIBLE) { // visibility already set by FloatingActionMenu
             fabEditItemSource.visibility = if(showSourcePreview) View.GONE else View.VISIBLE
         }
-        setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread()
-
-        updateShowMenuItemShareItem()
     }
 
     private fun setFilesPreviewOnUIThread() {
@@ -902,7 +902,7 @@ class EditItemActivity : BaseActivity() {
     }
 
     private fun updateShowMenuItemShareItem() {
-        mnShareItem?.isVisible = sourceToEdit?.url.isNullOrBlank() == false
+        mnShareItem?.isVisible = lytSourcePreview.source?.url.isNullOrBlank() == false
     }
 
     private fun tagsPreviewFocusChanged(hasFocus: Boolean) {
@@ -1233,7 +1233,7 @@ class EditItemActivity : BaseActivity() {
         mnDeleteReadLaterArticle?.isVisible = readLaterArticle != null
 
         mnShareItem = menu.findItem(R.id.mnShareItem)
-        mnShareItem?.isVisible = sourceToEdit?.url.isNullOrBlank() == false
+        updateShowMenuItemShareItem()
 
         setMenuSaveItemVisibleStateOnUIThread()
 
@@ -1343,7 +1343,7 @@ class EditItemActivity : BaseActivity() {
 
         popup.menuInflater.inflate(R.menu.share_item_menu, popup.menu)
 
-        val source = sourceToEdit
+        val source = lytSourcePreview.source
         if(source == null || source.url.isNullOrBlank()) {
             popup.menu.findItem(R.id.mnShareItemSourceUrl).isVisible = false
         }
@@ -1378,7 +1378,7 @@ class EditItemActivity : BaseActivity() {
     }
 
     private fun shareSourceUrl() {
-        sourceToEdit?.let { source ->
+        lytSourcePreview.source?.let { source ->
             presenter.shareSourceUrl(source)
         }
     }
@@ -1418,10 +1418,12 @@ class EditItemActivity : BaseActivity() {
     private fun saveItemAsync(callback: (Boolean) -> Unit) {
         val content = contentToEdit ?: ""
         val summary = lytSummaryPreview.getCurrentFieldValue()
+        val editedSource = updateSource()
+        val editedSeries = lytSourcePreview.series
 
         item?.let { item ->
             updateItem(item, content, summary)
-            presenter.saveItemAsync(item, sourceToEdit, sourceToEdit?.series, tagsOnItem, lytFilesPreview.getEditedFiles()) { successful ->
+            presenter.saveItemAsync(item, editedSource, editedSeries, tagsOnItem, lytFilesPreview.getEditedFiles()) { successful ->
                 if(successful) {
                     setActivityResult(EditItemActivityResult(didSaveItem = true, savedItem = item))
                 }
@@ -1434,7 +1436,7 @@ class EditItemActivity : BaseActivity() {
             // TODO: contentToEdit show now always contain the correct value depending on is or is not in reader mode, doesn't it?
 
             updateItem(extractionResult.item, content, summary)
-            presenter.saveItemAsync(extractionResult.item, sourceToEdit, extractionResult.series, tagsOnItem, lytFilesPreview.getEditedFiles()) { successful ->
+            presenter.saveItemAsync(extractionResult.item, editedSource, editedSeries, tagsOnItem, lytFilesPreview.getEditedFiles()) { successful ->
                 if(successful) {
                     setActivityResult(EditItemActivityResult(didSaveItemExtractionResult = true, savedItem = extractionResult.item))
                 }
@@ -1446,7 +1448,7 @@ class EditItemActivity : BaseActivity() {
             val extractionResult = readLaterArticle.itemExtractionResult
             updateItem(extractionResult.item, content, summary)
 
-            presenter.saveItemAsync(extractionResult.item, sourceToEdit, extractionResult.series, tagsOnItem, lytFilesPreview.getEditedFiles()) { successful ->
+            presenter.saveItemAsync(extractionResult.item, editedSource, editedSeries, tagsOnItem, lytFilesPreview.getEditedFiles()) { successful ->
                 if(successful) {
                     readLaterArticleService.delete(readLaterArticle)
                     setActivityResult(EditItemActivityResult(didSaveReadLaterArticle = true, savedItem = extractionResult.item))
@@ -1504,7 +1506,8 @@ class EditItemActivity : BaseActivity() {
 
         itemExtractionResult?.let { extractionResult ->
             updateItem(extractionResult.item, content, summary)
-            extractionResult.source = sourceToEdit
+            extractionResult.source = updateSource()
+            extractionResult.series = lytSourcePreview.series
             extractionResult.tags = tagsOnItem
             extractionResult.files = lytFilesPreview.getEditedFiles().toMutableList()
 
@@ -1554,28 +1557,38 @@ class EditItemActivity : BaseActivity() {
         item.content = content
         item.summary = summary
 
-        if(changedFields.contains(ItemField.SourceTitle)) {
-            sourceToEdit?.title = lytSourcePreview.getEditedValue() ?: ""
-        }
         if(changedFields.contains(ItemField.Indication)) {
             item.indication = lytSourcePreview.getEditedSecondaryInformation()
-        }
-
-        if(sourceToEdit?.isPersisted() == false && lytSourcePreview.getEditedValue().isNullOrBlank()) {
-            sourceToEdit = null
-            readLaterArticle?.itemExtractionResult?.series = null
-            itemExtractionResult?.series = null
-        }
-
-        if(sourceToEdit != originalSource) {
-            readLaterArticle?.itemExtractionResult?.series = null
-            itemExtractionResult?.series = null
         }
 
         if(changedFields.contains(ItemField.Tags)) {
             tagsOnItem.clear()
             tagsOnItem.addAll(lytTagsPreview.applyChangesAndGetTags())
         }
+    }
+
+    private fun updateSource(): Source? {
+        var source = lytSourcePreview.source
+
+        if(changedFields.contains(ItemField.SourceTitle)) {
+            source?.title = lytSourcePreview.getEditedValue() ?: ""
+        }
+
+        if(source?.isPersisted() == false && lytSourcePreview.getEditedValue().isNullOrBlank()) {
+            source = null
+            resetSeries() // TODO: is this really necessary as we then pass lytSourcePreview.series to ItemPersister -> does editSourceField.seriesToEdit know now that series changed?
+        }
+
+        if(source != lytSourcePreview.originalSource) {
+            resetSeries() // TODO: is this really necessary as we then pass lytSourcePreview.series to ItemPersister -> does editSourceField.seriesToEdit know now that series changed?
+        }
+
+        return source
+    }
+
+    protected open fun resetSeries() {
+        readLaterArticle?.itemExtractionResult?.series = null
+        itemExtractionResult?.series = null
     }
 
 
@@ -1673,15 +1686,13 @@ class EditItemActivity : BaseActivity() {
                          updateContentPreview: Boolean = true) {
         originalContent = item.content
         originalTags = tags
-        originalSource = source
 
         contentToEdit = item.content
-        sourceToEdit = source
 
         if(item.summary.isEmpty() == false) { this.forceShowSummaryPreview = true } // forcing that once it has been shown it doesn't get hidden anymore
 
         source?.let { this.forceShowSourcePreview = true } // forcing that once it has been shown it doesn't get hidden anymore
-        lytSourcePreview.setOriginalSourceToEdit(source, series, item.indication, this) { setSourceToEdit(it) }
+        lytSourcePreview.setOriginalSourceToEdit(source, series, item.indication, this) { sourceChanged(it) }
 
         this.forceShowSourcePreview = item.indication.isNotEmpty()
 
@@ -1699,7 +1710,7 @@ class EditItemActivity : BaseActivity() {
         updateDisplayedValuesOnUIThread(source, item.summary, updateContentPreview)
     }
 
-    private fun updateDisplayedValuesOnUIThread(source: Source? = sourceToEdit, summaryToEdit: String = lytSummaryPreview.getCurrentFieldValue(), updateContentPreview: Boolean = true) {
+    private fun updateDisplayedValuesOnUIThread(source: Source? = lytSourcePreview.source, summaryToEdit: String = lytSummaryPreview.getCurrentFieldValue(), updateContentPreview: Boolean = true) {
         if(updateContentPreview) {
             setContentPreviewOnUIThread(source)
         }
@@ -1714,16 +1725,14 @@ class EditItemActivity : BaseActivity() {
     }
 
     private fun restoreSource(sourceId: String?, indication: String) {
+        var restoredSource: Source? = null
         if(sourceId != null) {
-            sourceToEdit = sourceService.retrieve(sourceId)
-        }
-        else {
-            sourceToEdit = null
+            restoredSource = sourceService.retrieve(sourceId)
         }
 
         runOnUiThread {
             // TODO: save and restore series
-            lytSourcePreview.setOriginalSourceToEdit(sourceToEdit, sourceToEdit?.series, indication, this) { setSourceToEdit(it) }
+            lytSourcePreview.setOriginalSourceToEdit(restoredSource, restoredSource?.series, indication, this) { sourceChanged(it) }
             setSourcePreviewOnUIThread()
         }
     }
@@ -1795,6 +1804,7 @@ class EditItemActivity : BaseActivity() {
     }
 
     private fun updateDisplayedValues() {
+        // TODO: this is wrong, we have to re-fetch content, summary, tags, source, series and files from item, itemExtractionResult or readLaterArticle
         runOnUiThread { updateDisplayedValuesOnUIThread() }
     }
 

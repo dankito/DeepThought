@@ -41,9 +41,14 @@ class EditItemSourceField : EditEntityEntityReferenceField, ISourcesListView {
     protected lateinit var deleteEntityService: DeleteEntityService
 
 
-    private var source: Source? = null
+    var source: Source? = null
+        private set
 
-    private var series: Series? = null
+    var series: Series? = null
+        private set
+
+    var originalSource: Source? = null
+        private set
 
     private var activity: BaseActivity? = null
 
@@ -79,6 +84,7 @@ class EditItemSourceField : EditEntityEntityReferenceField, ISourcesListView {
 
 
     fun setOriginalSourceToEdit(source: Source?, series: Series? = source?.series, indication: String, activity: BaseActivity, sourceChangedListener: (Source?) -> Unit) {
+        this.originalSource = source
         this.activity = activity
         this.sourceChangedListener = sourceChangedListener
 
