@@ -54,7 +54,6 @@ class EditReadLaterArticleActivity : EditItemActivityBase() {
     }
 
     override fun saveState(outState: Bundle) {
-        outState.putString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME, null)
         outState.putString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME, readLaterArticle.id)
     }
 
