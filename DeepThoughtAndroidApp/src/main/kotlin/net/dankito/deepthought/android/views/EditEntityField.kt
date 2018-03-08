@@ -1,6 +1,5 @@
 package net.dankito.deepthought.android.views
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.Typeface
 import android.os.Build
@@ -367,9 +366,9 @@ open class EditEntityField : RelativeLayout {
         showSecondaryInformationOnUiThread()
 
         edtxtSecondaryInformationValue.showKeyboard()
-        (context as? Activity)?.runOnUiThread { // wait till edtxtSecondaryInformationValue is displayed
+        postDelayed({ // wait till edtxtSecondaryInformationValue is displayed
             edtxtSecondaryInformationValue.showKeyboard()
-        }
+        }, 250)
     }
 
     fun showSecondaryInformationValueOnUiThread(secondaryInformationValue: String) {
