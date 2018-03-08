@@ -397,7 +397,7 @@ class EditItemActivity : BaseActivity() {
 
     private fun addSummaryToItem() {
         forceShowSummaryPreview = true
-        setSummaryPreviewOnUIThread()
+        updateShowSummaryPreviewOnUiThread()
 
         lytSummaryPreview.startEditing()
     }
@@ -874,13 +874,18 @@ class EditItemActivity : BaseActivity() {
 //            lytSummaryPreview.setOnboardingTextOnUiThread(R.string.activity_edit_item_summary_onboarding_text)
         }
 
-        val showSummaryPreview = (this.forceShowSummaryPreview || summaryToEdit.isNullOrBlank() == false) && isEditingTagsOnItem == false
+        updateShowSummaryPreviewOnUiThread()
+
+        setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread()
+    }
+
+    private fun updateShowSummaryPreviewOnUiThread() {
+        val showSummaryPreview = (this.forceShowSummaryPreview || lytSummaryPreview.getCurrentFieldValue().isEmpty() == false) && isEditingTagsOnItem == false
 
         lytSummaryPreview.visibility = if(showSummaryPreview) View.VISIBLE else View.GONE
         if(fabEditItemSummary.visibility != View.INVISIBLE) { // visibility already set by FloatingActionMenu
             fabEditItemSummary.visibility = if(showSummaryPreview) View.GONE else View.VISIBLE
         }
-        setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread()
     }
 
     private fun alsoShowTitleForSummary(): Boolean {
