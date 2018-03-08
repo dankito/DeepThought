@@ -42,7 +42,10 @@ import net.dankito.deepthought.ui.presenter.EditItemPresenter
 import net.dankito.filechooserdialog.service.IPermissionsService
 import net.dankito.filechooserdialog.service.PermissionsService
 import net.dankito.richtexteditor.android.animation.ShowHideViewAnimator
-import net.dankito.service.data.*
+import net.dankito.service.data.DeleteEntityService
+import net.dankito.service.data.ItemService
+import net.dankito.service.data.ReadLaterArticleService
+import net.dankito.service.data.TagService
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.ItemChanged
 import net.dankito.service.eventbus.IEventBus
@@ -78,7 +81,6 @@ class EditItemActivity : BaseActivity() {
 
         private const val CONTENT_INTENT_EXTRA_NAME = "CONTENT"
         private const val EDIT_CONTENT_HTML_INTENT_EXTRA_NAME = "EDIT_CONTENT_HTML"
-        private const val SOURCE_INTENT_EXTRA_NAME = "SOURCE"
         private const val TAGS_ON_ITEM_INTENT_EXTRA_NAME = "TAGS_ON_ITEM"
         private const val FILES_INTENT_EXTRA_NAME = "ATTACHED_FILES"
 
@@ -102,9 +104,6 @@ class EditItemActivity : BaseActivity() {
 
     @Inject
     protected lateinit var tagService: TagService
-
-    @Inject
-    protected lateinit var sourceService: SourceService
 
     @Inject
     protected lateinit var itemPersister: ItemPersister
@@ -264,10 +263,6 @@ class EditItemActivity : BaseActivity() {
             setContentPreviewOnUIThread()
         }
 
-        if(savedInstanceState.containsKey(SOURCE_INTENT_EXTRA_NAME)) {
-            restoreSource(savedInstanceState.getString(SOURCE_INTENT_EXTRA_NAME), "") // passing "" as indication means that it won't get set in EditItemSourceField -> doesn't disturb its internal restoring of indication (secondaryInformation)
-        }
-
         savedInstanceState.getString(TAGS_ON_ITEM_INTENT_EXTRA_NAME)?.let { tagsOnItemIds -> restoreTagsOnItemAsync(tagsOnItemIds) }
         // TODO:
 //        savedInstanceState.getString(FILES_INTENT_EXTRA_NAME)?.let { fileIds -> restoreFilesAsync(fileIds) }
@@ -313,11 +308,6 @@ class EditItemActivity : BaseActivity() {
             outState.putString(TAGS_ON_ITEM_INTENT_EXTRA_NAME, serializer.serializeObject(tagsOnItem))
             // TODO: add PersistedFilesSerializer
             outState.putString(FILES_INTENT_EXTRA_NAME, serializer.serializeObject(lytFilesPreview.getEditedFiles()))
-
-            val editedSource = lytSourcePreview.source
-            if(editedSource == null || editedSource.id != null) { // save value only if source has been deleted or a persisted source is set (-> don't store ItemExtractionResult's or ReadLaterArticle's unpersisted source)
-                outState.putString(SOURCE_INTENT_EXTRA_NAME, editedSource?.id)
-            }
 
             if(contentToEdit != originalContent) {
                 serializeStateToDiskIfNotNull(outState, CONTENT_INTENT_EXTRA_NAME, contentToEdit) // application crashes if objects put into bundle are too large (> 1 MB) for Android
@@ -1736,19 +1726,6 @@ class EditItemActivity : BaseActivity() {
         setSummaryPreviewOnUIThread(summaryToEdit)
 
         setFilesPreviewOnUIThread()
-    }
-
-    private fun restoreSource(sourceId: String?, indication: String) {
-        var restoredSource: Source? = null
-        if(sourceId != null) {
-            restoredSource = sourceService.retrieve(sourceId)
-        }
-
-        runOnUiThread {
-            // TODO: save and restore series
-            lytSourcePreview.setOriginalSourceToEdit(restoredSource, restoredSource?.series, indication, this) { sourceChanged(it) }
-            setSourcePreviewOnUIThread()
-        }
     }
 
     private fun restoreTagsOnItemAsync(tagsOnItemIdsString: String) {

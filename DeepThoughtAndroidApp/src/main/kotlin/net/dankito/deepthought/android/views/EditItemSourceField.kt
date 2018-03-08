@@ -1,6 +1,8 @@
 package net.dankito.deepthought.android.views
 
 import android.content.Context
+import android.os.Bundle
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.ViewGroup
 import net.dankito.deepthought.android.R
@@ -16,12 +18,22 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.SourcesListPresenter
 import net.dankito.deepthought.ui.view.ISourcesListView
 import net.dankito.service.data.DeleteEntityService
+import net.dankito.service.data.SeriesService
+import net.dankito.service.data.SourceService
 import net.dankito.service.search.ISearchEngine
+import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 
 
 class EditItemSourceField : EditEntityEntityReferenceField, ISourcesListView {
+
+    companion object {
+        private const val SOURCE_ID_EXTRA_NAME = "SOURCE_ID"
+        private const val SOURCE_EXTRA_NAME = "SOURCE"
+        private const val SERIES_ID_EXTRA_NAME = "SERIES_ID"
+    }
+
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -29,16 +41,25 @@ class EditItemSourceField : EditEntityEntityReferenceField, ISourcesListView {
 
 
     @Inject
-    protected lateinit var router: IRouter
+    protected lateinit var searchEngine: ISearchEngine
 
     @Inject
-    protected lateinit var searchEngine: ISearchEngine
+    protected lateinit var sourceService: SourceService
+
+    @Inject
+    protected lateinit var seriesService: SeriesService
+
+    @Inject
+    protected lateinit var serializer: ISerializer
+
+    @Inject
+    protected lateinit var deleteEntityService: DeleteEntityService
 
     @Inject
     protected lateinit var clipboardService: IClipboardService
 
     @Inject
-    protected lateinit var deleteEntityService: DeleteEntityService
+    protected lateinit var router: IRouter
 
 
     var source: Source? = null
@@ -80,6 +101,50 @@ class EditItemSourceField : EditEntityEntityReferenceField, ISourcesListView {
         setupSecondaryInformation(R.string.edit_entity_source_field_indication_label, R.string.edit_entity_source_field_indication_hint)
 
         addSecondaryInformationMenuItemTitleResId = R.string.edit_entity_source_field_add_indication_menu_item_title
+    }
+
+
+    override fun onSaveInstanceState(): Parcelable {
+        val parcelable = super.onSaveInstanceState()
+
+        (parcelable as? Bundle)?.let { bundle ->
+            val constSource = this.source
+
+            if(constSource != originalSource) {
+                if(constSource?.id != null) {
+                    bundle.putString(SOURCE_ID_EXTRA_NAME, constSource.id)
+                }
+                else if(constSource != null) { // a unpersisted source
+                    bundle.putString(SOURCE_EXTRA_NAME, serializer.serializeObject(constSource))
+                }
+            }
+
+            series?.id?.let { seriesId ->
+                bundle.putString(SERIES_ID_EXTRA_NAME, seriesId)
+            }
+        }
+
+        return parcelable
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        super.onRestoreInstanceState(state)
+
+        this.source = null // if source has been null nothing got saved to outState bundle
+
+        (state as? Bundle)?.let { savedInstanceState ->
+            savedInstanceState.getString(SOURCE_ID_EXTRA_NAME)?.let { sourceId ->
+                this.source = sourceService.retrieve(sourceId)
+            }
+
+            savedInstanceState.getString(SOURCE_EXTRA_NAME)?.let { serializedSource ->
+                this.source = serializer.deserializeObject(serializedSource, Source::class.java)
+            }
+
+            savedInstanceState.getString(SERIES_ID_EXTRA_NAME)?.let { seriesId ->
+                this.series = seriesService.retrieve(seriesId)
+            }
+        }
     }
 
 
