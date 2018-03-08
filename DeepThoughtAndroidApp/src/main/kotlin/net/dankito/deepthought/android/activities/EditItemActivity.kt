@@ -253,10 +253,8 @@ class EditItemActivity : BaseActivity() {
             setContentPreviewOnUIThread()
         }
 
-        // TODO: how to restore indication?
-
         if(savedInstanceState.containsKey(SOURCE_INTENT_EXTRA_NAME)) {
-            restoreSource(savedInstanceState.getString(SOURCE_INTENT_EXTRA_NAME), "")
+            restoreSource(savedInstanceState.getString(SOURCE_INTENT_EXTRA_NAME), "") // passing "" as indication means that it won't get set in EditItemSourceField -> doesn't disturb its internal restoring of indication (secondaryInformation)
         }
 
         savedInstanceState.getString(TAGS_ON_ITEM_INTENT_EXTRA_NAME)?.let { tagsOnItemIds -> restoreTagsOnItemAsync(tagsOnItemIds) }
