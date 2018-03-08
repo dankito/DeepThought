@@ -111,10 +111,10 @@ class EditItemSourceField : EditEntityEntityReferenceField, ISourcesListView {
             val constSource = this.source
 
             if(constSource != originalSource) {
-                if(constSource?.id != null) {
-                    bundle.putString(SOURCE_ID_EXTRA_NAME, constSource.id)
+                if(constSource == null || constSource.id != null) {
+                    bundle.putString(SOURCE_ID_EXTRA_NAME, constSource?.id)
                 }
-                else if(constSource != null) { // a unpersisted source
+                else { // a unpersisted source
                     bundle.putString(SOURCE_EXTRA_NAME, serializer.serializeObject(constSource))
                 }
             }
@@ -131,10 +131,11 @@ class EditItemSourceField : EditEntityEntityReferenceField, ISourcesListView {
         super.onRestoreInstanceState(state)
 
         (state as? Bundle)?.let { savedInstanceState ->
-           var source: Source? = null // if source has been null nothing got saved to outState bundle
+            var source: Source? = originalSource // if source has been null nothing got saved to outState bundle
 
-            savedInstanceState.getString(SOURCE_ID_EXTRA_NAME)?.let { sourceId ->
-                source = sourceService.retrieve(sourceId)
+            if(savedInstanceState.containsKey(SOURCE_ID_EXTRA_NAME)) {
+                val sourceId = savedInstanceState.getString(SOURCE_ID_EXTRA_NAME)
+                source = if(sourceId != null) sourceService.retrieve(sourceId) else null
             }
 
             savedInstanceState.getString(SOURCE_EXTRA_NAME)?.let { serializedSource ->
