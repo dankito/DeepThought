@@ -174,7 +174,7 @@ class EditSourceActivity : BaseActivity() {
 
         lytEditSourceTitle.setFieldNameOnUiThread(R.string.activity_edit_source_title_label) { updateDidSourceChangeOnUiThread(SourceField.Title, it) }
 
-        lytEditSourceSeries.didValueChangeListener = { didSeriesTitleChange -> seriesTitleChanged(didSeriesTitleChange) }
+        lytEditSourceSeries.didValueChangeListener = { didSeriesTitleChange -> updateDidSourceChangeOnUiThread(SourceField.SeriesTitle, didSeriesTitleChange) }
 
         lytEditSourceIssue.setFieldNameOnUiThread(R.string.activity_edit_source_issue_label) { updateDidSourceChangeOnUiThread(SourceField.Issue, it) }
         lytEditSourceLength.setFieldNameOnUiThread(R.string.activity_edit_source_length_label) { updateDidSourceChangeOnUiThread(SourceField.Length, it) }
@@ -190,10 +190,6 @@ class EditSourceActivity : BaseActivity() {
         lytEditSourceUrl.setFieldNameOnUiThread(R.string.activity_edit_source_url_label) { updateDidSourceChangeOnUiThread(SourceField.Url, it) }
 
         lytEditAttachedFiles.didValueChangeListener = { updateDidSourceChangeOnUiThread(SourceField.Files, it) }
-    }
-
-    private fun seriesTitleChanged(didSeriesTitleChange: Boolean) {
-        updateDidSourceChangeOnUiThread(SourceField.SeriesTitle, didSeriesTitleChange)
     }
 
     private fun setSeriesToEdit(series: Series?) {
