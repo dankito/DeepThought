@@ -80,7 +80,7 @@ class EditReadLaterArticleActivity : EditItemActivityBase() {
     private fun deleteReadLaterArticleAndCloseDialog() {
         mnSaveItem?.isEnabled = false // disable to that save cannot be pressed a second time
         mnDeleteReadLaterArticle?.isEnabled = false
-        unregisterEventBusListener()
+//        unregisterEventBusListener()
 
         presenter.deleteReadLaterArticle(readLaterArticle)
 
@@ -88,14 +88,23 @@ class EditReadLaterArticleActivity : EditItemActivityBase() {
     }
 
 
+    override fun beforeSavingItem() {
+        mnSaveItemExtractionResultForLaterReading?.isEnabled = false
+    }
+
     override fun resetSeries() {
         readLaterArticle.itemExtractionResult.series = null
     }
 
-    override fun itemSuccessfullySaved() {
-        readLaterArticleService.delete(readLaterArticle)
+    override fun savingItemDone(successful: Boolean) {
+        if(successful) {
+            readLaterArticleService.delete(readLaterArticle)
 
-        mayShowSavedReadLaterArticleHelpAndCloseDialog()
+            mayShowSavedReadLaterArticleHelpAndCloseDialog()
+        }
+        else {
+            mnSaveItemExtractionResultForLaterReading?.isEnabled = true
+        }
     }
 
     private fun mayShowSavedReadLaterArticleHelpAndCloseDialog() {

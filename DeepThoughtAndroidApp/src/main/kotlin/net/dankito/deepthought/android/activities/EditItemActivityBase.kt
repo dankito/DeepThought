@@ -46,15 +46,12 @@ import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ItemService
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.TagService
-import net.dankito.service.data.messages.EntityChangeSource
-import net.dankito.service.data.messages.ItemChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogButton
 import net.dankito.utils.ui.model.ConfirmationDialogConfig
-import net.engio.mbassy.listener.Handler
 import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
@@ -62,11 +59,9 @@ import kotlin.collections.ArrayList
 import kotlin.concurrent.schedule
 
 
-open class EditItemActivityBase : BaseActivity() {
+abstract class EditItemActivityBase : BaseActivity() {
 
     companion object {
-        private const val ITEM_ID_INTENT_EXTRA_NAME = "ITEM_ID"
-
         private const val CHANGED_FIELDS_INTENT_EXTRA_NAME = "CHANGED_FIELDS"
 
         private const val FORCE_SHOW_TAGS_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_TAGS_PREVIEW"
@@ -131,9 +126,6 @@ open class EditItemActivityBase : BaseActivity() {
     protected lateinit var eventBus: IEventBus
 
 
-    private var item: Item? = null
-
-
     private var originalContent: String? = null
 
     private var originalTags: MutableCollection<Tag>? = null
@@ -196,7 +188,12 @@ open class EditItemActivityBase : BaseActivity() {
 
     private val dataManager: DataManager
 
-    private var eventBusListener: EventBusListener? = null
+
+    protected abstract fun showParameters(parameters: EditItemActivityParameters)
+
+    protected abstract fun restoreEntity(savedInstanceState: Bundle)
+
+    protected abstract fun saveState(outState: Bundle)
 
 
     init {
@@ -242,13 +239,6 @@ open class EditItemActivityBase : BaseActivity() {
 
         restoreEntity(savedInstanceState)
 
-        savedInstanceState.getString(ITEM_ID_INTENT_EXTRA_NAME)?.let { itemId -> editItem(itemId) }
-
-        if(getItemExtractionResult() == null &&
-                savedInstanceState.getString(ITEM_ID_INTENT_EXTRA_NAME) == null) { // a new Item is being created then
-            createItem(false) // don't go to EditHtmlTextDialog for content here as we're restoring state, content may already be set
-        }
-
         restoreStateFromDisk(savedInstanceState, CONTENT_INTENT_EXTRA_NAME, String::class.java)?.let { content ->
             contentToEdit = content
             setContentPreviewOnUIThread()
@@ -274,21 +264,10 @@ open class EditItemActivityBase : BaseActivity() {
         setMenuSaveItemVisibleStateOnUIThread()
     }
 
-    protected open fun restoreEntity(savedInstanceState: Bundle) {
-
-    }
-
-    protected open fun saveState(outState: Bundle) {
-
-    }
-
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
 
         outState?.let {
-            outState.putString(ITEM_ID_INTENT_EXTRA_NAME, null)
-            item?.id?.let { itemId -> outState.putString(ITEM_ID_INTENT_EXTRA_NAME, itemId) }
-
             saveState(outState)
 
             outState.putIntArray(CHANGED_FIELDS_INTENT_EXTRA_NAME, changedFields.map { it.ordinal }.toIntArray())
@@ -489,14 +468,14 @@ open class EditItemActivityBase : BaseActivity() {
     }
 
     private fun webPageCompletelyLoadedOnUiThread(webView: WebView) {
+        if(getItemExtractionResult() == null) { // an item
+            urlLoadedNow()
+        }
         // if ItemExtractionResult's item content hasn't been extracted yet, wait till WebView is loaded and extract item content then
-        if(getItemExtractionResult() != null && isInReaderMode == false &&
+        else if(getItemExtractionResult() != null && isInReaderMode == false &&
                 webView.url != null && webView.url != "about:blank" && webView.url.startsWith("data:text/html") == false) {
             webView.loadUrl("javascript:$GetHtmlCodeFromWebViewJavaScriptInterfaceName.finishedLoadingSite" +
                     "(document.URL, '<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');")
-        }
-        else if(item != null) {
-            urlLoadedNow()
         }
     }
 
@@ -588,14 +567,13 @@ open class EditItemActivityBase : BaseActivity() {
 
         wbvwContent.activityResumed()
 
-        mayRegisterEventBusListener()
         lytSourcePreview.viewBecomesVisible()
         lytTagsPreview.viewBecomesVisible()
         lytFilesPreview.viewBecomesVisible()
     }
 
 
-    private fun editContent() {
+    protected fun editContent() {
         if(isLoadingUrl) { // while WebView is still loading contentToEdit is not set yet (contentToEdit gets set when loading finishes)
             return
         }
@@ -710,26 +688,11 @@ open class EditItemActivityBase : BaseActivity() {
     }
 
     private fun setMenuSaveItemVisibleStateOnUIThread() {
-        if(haveAllFieldsOfExistingItemBeenCleared()) {
-            mnSaveItem?.isVisible = false
-        }
-        else {
-            mnSaveItem?.isVisible = item == null // ItemExtractionResult and ReadLaterArticle always can be saved
-                    || item?.isPersisted() == false || changedFields.size > 0
-        }
+        mnSaveItem?.isVisible = isEntitySavable()
     }
 
-    private fun haveAllFieldsOfExistingItemBeenCleared(): Boolean {
-        if(item != null && item?.isPersisted() == true) {
-            return haveAllFieldsBeenCleared()
-        }
-
-        return false
-    }
-
-    private fun haveAllFieldsBeenCleared(): Boolean {
-        return contentToEdit.isNullOrBlank() && tagsOnItem.isEmpty() && lytSourcePreview.source == null
-                && lytSummaryPreview.getCurrentFieldValue().isEmpty() && lytFilesPreview.getEditedFiles().size == 0
+    protected open fun isEntitySavable(): Boolean {
+        return true // ItemExtractionResult and ReadLaterArticle always can be saved, only EditItemActivity has to set this value
     }
 
     private fun itemPropertySet() {
@@ -762,7 +725,7 @@ open class EditItemActivityBase : BaseActivity() {
             wbvwContent.setWebViewClient(webViewClient)
             showContentOnboarding = false
         }
-        else if(url != null && item == null) { // then load url (but don't show it for an Item)
+        else if(url != null && getItemExtractionResult() != null) { // then load url (but don't show it for an Item)
             clearWebViewItem()
             isLoadingUrl = true
             wbvwContent.elementClickedListener = { true } // disable link clicks during loading url
@@ -778,7 +741,7 @@ open class EditItemActivityBase : BaseActivity() {
     private fun shouldShowContent(content: String?): Boolean {
         // TODO: currently we assume that for item content is always set, this may change in the feature
         return content.isNullOrBlank() == false &&
-                (item != null || (isInReaderMode && getItemExtractionResult()?.couldExtractContent == true) )
+                (getItemExtractionResult() == null || (isInReaderMode && getItemExtractionResult()?.couldExtractContent == true) ) // getItemExtractionResult() == null -> it's an Item
     }
 
     private fun showContentInWebView(contentParam: String?, url: String?) {
@@ -1127,7 +1090,6 @@ open class EditItemActivityBase : BaseActivity() {
 
 
     override fun onPause() {
-        unregisterEventBusListener()
         lytSourcePreview.viewGetsHidden()
         lytTagsPreview.viewGetsHidden()
         lytFilesPreview.viewGetsHidden()
@@ -1182,7 +1144,8 @@ open class EditItemActivityBase : BaseActivity() {
             return
         }
         else if(isInEditContentMode) {
-            if(item == null || item?.isPersisted() == true || this.haveAllFieldsBeenCleared() == false) {
+            // TODO: haveAllFieldsBeenCleared() doesn't reflect currently set content!
+            if(getItemExtractionResult() != null || itemToSave.isPersisted() == true || haveAllFieldsBeenCleared() == false) { // if creating an item and no value has been set, leave EditItemActivity directly, don't just hide contentEditor (as there's nothing to see)
                 leaveEditContentView()
                 return
             }
@@ -1195,6 +1158,11 @@ open class EditItemActivityBase : BaseActivity() {
         }
 
         askIfUnsavedChangesShouldBeSavedAndCloseDialog()
+    }
+
+    protected fun haveAllFieldsBeenCleared(): Boolean {
+        return contentToEdit.isNullOrBlank() && tagsOnItem.isEmpty() && lytSourcePreview.source == null
+                && lytSummaryPreview.getCurrentFieldValue().isEmpty() && lytFilesPreview.getEditedFiles().size == 0
     }
 
 
@@ -1217,9 +1185,6 @@ open class EditItemActivityBase : BaseActivity() {
         menuInflater.inflate(R.menu.activity_edit_item_menu, menu)
 
         mnSaveItem = menu.findItem(R.id.mnSaveItem)
-
-        mnDeleteExistingItem = menu.findItem(R.id.mnDeleteExistingItem)
-        mnDeleteExistingItem?.isVisible = item?.isPersisted() == true
 
         mnToggleReaderMode = menu.findItem(R.id.mnToggleReaderMode)
         setReaderModeActionStateOnUIThread()
@@ -1272,10 +1237,6 @@ open class EditItemActivityBase : BaseActivity() {
                 saveItemAndCloseDialog()
                 return true
             }
-            R.id.mnDeleteExistingItem -> {
-                askIfShouldDeleteExistingItemAndCloseDialog()
-                return true
-            }
             R.id.mnToggleReaderMode -> {
                 toggleReaderMode()
                 return true
@@ -1297,7 +1258,7 @@ open class EditItemActivityBase : BaseActivity() {
         isInReaderMode = !isInReaderMode
 
         if(isInReaderMode) {
-            contentToEdit = item?.content ?: getItemExtractionResult()?.item?.content ?: ""
+            contentToEdit = itemToSave.content // TODO: but in this way changes made to contentToEdit get overwritten!
         }
         else {
             contentToEdit = webSiteHtml ?: ""
@@ -1384,16 +1345,22 @@ open class EditItemActivityBase : BaseActivity() {
 
     private fun saveItemAndCloseDialog() {
         mnSaveItem?.isEnabled = false // disable to that save cannot be pressed a second time
-        mnSaveItemExtractionResultForLaterReading?.isEnabled = false
-        unregisterEventBusListener()
+        beforeSavingItem()
 
         saveItemAsync { successful ->
-            if(successful == false) {
-                mnSaveItem?.isEnabled = true
-                mnSaveItemExtractionResultForLaterReading?.isEnabled = true
-                mayRegisterEventBusListener()
+            if(successful) {
+                setActivityResult(EditItemActivityResult(didSaveItem = true, savedItem = itemToSave))
             }
+            else {
+                mnSaveItem?.isEnabled = true
+            }
+
+            savingItemDone(successful)
         }
+    }
+
+    protected open fun beforeSavingItem() {
+
     }
 
     private fun saveItemAsync(callback: (Boolean) -> Unit) {
@@ -1407,34 +1374,16 @@ open class EditItemActivityBase : BaseActivity() {
 
         updateItem(itemToSave, content, summary)
         presenter.saveItemAsync(itemToSave, editedSource, editedSeries, tagsOnItem, lytFilesPreview.getEditedFiles()) { successful ->
-            if(successful) {
-                itemSuccessfullySaved()
-
-                setActivityResult(EditItemActivityResult(didSaveItem = true, savedItem = itemToSave))
-            }
-
             callback(successful)
         }
     }
 
-    protected open fun itemSuccessfullySaved() {
-
-    }
-
-
-    private fun askIfShouldDeleteExistingItemAndCloseDialog() {
-        item?.let { item ->
-            dialogService.showConfirmationDialog(getString(R.string.activity_edit_item_alert_message_delete_item, item.preview)) { selectedButton ->
-                if(selectedButton == ConfirmationDialogButton.Confirm) {
-                    mnDeleteExistingItem?.isEnabled = false
-                    unregisterEventBusListener()
-
-                    deleteEntityService.deleteItem(item) // TODO: move to presenter
-                    closeDialog()
-                }
-            }
+    protected open fun savingItemDone(successful: Boolean) {
+        if(successful) {
+            closeDialog()
         }
     }
+
 
 
     protected fun setActivityResult(result: EditItemActivityResult) {
@@ -1480,13 +1429,18 @@ open class EditItemActivityBase : BaseActivity() {
 
 
     private fun askIfUnsavedChangesShouldBeSavedAndCloseDialog() {
-        if(changedFields.size > 0) {
+        if(hasUnsavedChanges) {
             askIfUnsavedChangesShouldBeSaved()
         }
         else {
             closeDialog()
         }
     }
+
+    protected val hasUnsavedChanges: Boolean
+        get() {
+            return changedFields.size > 0
+        }
 
     private fun askIfUnsavedChangesShouldBeSaved() {
         val config = ConfirmationDialogConfig(true, getString(R.string.action_cancel), true, getString(R.string.action_dismiss), getString(R.string.action_save))
@@ -1506,36 +1460,6 @@ open class EditItemActivityBase : BaseActivity() {
         finish()
     }
 
-
-    protected open fun showParameters(parameters: EditItemActivityParameters) {
-        parameters.item?.let { editItem(it) }
-
-        if(parameters.createItem) {
-            createItem()
-        }
-    }
-
-    private fun createItem(editContent: Boolean = true) {
-        editItem(Item(""))
-
-        if(editContent) {
-            editContent() // go directly to edit content dialog, there's absolutely nothing to see on this almost empty screen
-        }
-    }
-
-    private fun editItem(itemId: String) {
-        itemService.retrieve(itemId)?.let { item ->
-            editItem(item)
-        }
-    }
-
-    private fun editItem(item: Item) {
-        this.item = item
-
-        mnDeleteExistingItem?.isVisible = item.isPersisted()
-
-        editItem(item, item.source, item.source?.series, item.tags, item.attachedFiles)
-    }
 
     protected fun editItem(item: Item, source: Source?, series: Series? = source?.series, tags: MutableCollection<Tag>, files: MutableCollection<FileLink>,
                          updateContentPreview: Boolean = true) {
@@ -1566,7 +1490,7 @@ open class EditItemActivityBase : BaseActivity() {
         updateDisplayedValuesOnUIThread(source, item.summary, updateContentPreview)
     }
 
-    private fun updateDisplayedValuesOnUIThread(source: Source? = lytSourcePreview.source, summaryToEdit: String = lytSummaryPreview.getCurrentFieldValue(), updateContentPreview: Boolean = true) {
+    private fun updateDisplayedValuesOnUIThread(source: Source?, summaryToEdit: String, updateContentPreview: Boolean = true) {
         if(updateContentPreview) {
             setContentPreviewOnUIThread(source)
         }
@@ -1613,57 +1537,6 @@ open class EditItemActivityBase : BaseActivity() {
             intent.data = Uri.parse(url)
             startActivity(intent)
         } catch(e: Exception) { log.error("Could not open url $url with other app", e) }
-    }
-
-
-    protected fun mayRegisterEventBusListener() {
-        if(item?.isPersisted() == true && eventBusListener == null) {
-            synchronized(this) {
-                val eventBusListenerInit = EventBusListener()
-
-                eventBus.register(eventBusListenerInit)
-
-                this.eventBusListener = eventBusListenerInit
-            }
-        }
-    }
-
-    protected fun unregisterEventBusListener() {
-        synchronized(this) {
-            eventBusListener?.let {
-                eventBus.unregister(it)
-            }
-
-            this.eventBusListener = null
-        }
-    }
-
-    private fun warnItemHasBeenEdited() {
-        unregisterEventBusListener() // message now gets shown, don't display it a second time
-
-        runOnUiThread {
-            dialogService.showInfoMessage(getString(R.string.activity_edit_item_alert_message_item_has_been_edited))
-        }
-    }
-
-    private fun updateDisplayedValues() {
-        // TODO: this is wrong, we have to re-fetch content, summary, tags, source, series and files from item, itemExtractionResult or readLaterArticle
-        runOnUiThread { updateDisplayedValuesOnUIThread() }
-    }
-
-    inner class EventBusListener {
-
-        @Handler
-        fun itemChanged(change: ItemChanged) { // TODO: what about ReadLaterArticle?
-            if(change.entity.id == item?.id) {
-                if(change.source == EntityChangeSource.Synchronization && change.isDependentChange == false) {
-                    warnItemHasBeenEdited()
-                }
-                else { // TODO: or will changes then may get overwritten? As sometimes it's really senseful to update values, e.g. when a file synchronization state gets updated
-                    updateDisplayedValues()
-                }
-            }
-        }
     }
 
 }

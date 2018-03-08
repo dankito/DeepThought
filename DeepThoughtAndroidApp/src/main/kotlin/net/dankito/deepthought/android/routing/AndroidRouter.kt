@@ -65,22 +65,22 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
 
 
     override fun showCreateItemView() {
-        showEditItemView(EditItemActivityParameters(createItem = true))
+        showEditItemView(EditItemActivity::class.java, EditItemActivityParameters(createItem = true))
     }
 
     override fun showEditItemView(item: Item) {
-        showEditItemView(EditItemActivityParameters(item))
+        showEditItemView(EditItemActivity::class.java, EditItemActivityParameters(item))
     }
 
     override fun showEditItemView(article: ReadLaterArticle) {
-        showEditItemView(EditItemActivityParameters(readLaterArticle = article), EditReadLaterArticleActivity::class.java)
+        showEditItemView(EditReadLaterArticleActivity::class.java, EditItemActivityParameters(readLaterArticle = article))
     }
 
     override fun showEditItemView(extractionResult: ItemExtractionResult) {
-        showEditItemView(EditItemActivityParameters(itemExtractionResult = extractionResult), EditItemExtractionResultActivity::class.java)
+        showEditItemView(EditItemExtractionResultActivity::class.java, EditItemActivityParameters(itemExtractionResult = extractionResult))
     }
 
-    private fun showEditItemView(parameters: EditItemActivityParameters, editItemActivityClass: Class<out EditItemActivityBase> = EditItemActivityBase::class.java) {
+    private fun showEditItemView(editItemActivityClass: Class<out EditItemActivityBase>, parameters: EditItemActivityParameters) {
         dataManager.addInitializationListener { // if you have a very large data set and are very, very quick, you can enter EditItemActivityBase before DataManager is initialized -> localSettings is null
             navigateToActivity(editItemActivityClass, parameters)
         }

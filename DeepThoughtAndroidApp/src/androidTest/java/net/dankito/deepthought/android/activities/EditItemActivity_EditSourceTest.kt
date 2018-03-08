@@ -65,7 +65,7 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
     var takeScreenshotOnError = TakeScreenshotOnErrorTestRule()
 
     @get:Rule
-    val testRule = DeepThoughtActivityTestRule<EditItemActivityBase>(EditItemActivityBase::class.java)
+    val testRule = DeepThoughtActivityTestRule<EditItemActivity>(EditItemActivity::class.java)
 
 
     init {
