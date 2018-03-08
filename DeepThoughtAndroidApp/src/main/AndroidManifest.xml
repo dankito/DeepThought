@@ -73,7 +73,13 @@
         />
 
         <activity
-            android:name=".activities.EditItemActivity"
+            android:name=".activities.EditItemActivityBase"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
+        />
+
+        <activity
+            android:name=".activities.EditItemExtractionResultActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize"
         />

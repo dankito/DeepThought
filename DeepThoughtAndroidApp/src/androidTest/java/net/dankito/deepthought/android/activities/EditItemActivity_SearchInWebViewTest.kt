@@ -47,7 +47,7 @@ class EditItemActivity_SearchInWebViewTest : DeepThoughtAndroidTestBase() {
     var takeScreenshotOnError = TakeScreenshotOnErrorTestRule()
 
     @get:Rule
-    val testRule = DeepThoughtActivityTestRule<EditItemActivity>(EditItemActivity::class.java)
+    val testRule = DeepThoughtActivityTestRule<EditItemActivityBase>(EditItemActivityBase::class.java)
 
 
     init {

@@ -92,7 +92,7 @@ interface AppComponent : CommonComponent {
 
     fun inject(articleSummaryActivity: ArticleSummaryActivity)
 
-    fun inject(editItemActivity: EditItemActivity)
+    fun inject(editItemActivityBase: EditItemActivityBase)
 
     fun inject(editEntityTagsField: EditEntityTagsField)
 

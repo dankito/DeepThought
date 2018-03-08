@@ -62,12 +62,11 @@ import kotlin.collections.ArrayList
 import kotlin.concurrent.schedule
 
 
-class EditItemActivity : BaseActivity() {
+open class EditItemActivityBase : BaseActivity() {
 
     companion object {
         private const val ITEM_ID_INTENT_EXTRA_NAME = "ITEM_ID"
         private const val READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME = "READ_LATER_ARTICLE_ID"
-        private const val ITEM_EXTRACTION_RESULT_INTENT_EXTRA_NAME = "ITEM_EXTRACTION_RESULT"
 
         private const val CHANGED_FIELDS_INTENT_EXTRA_NAME = "CHANGED_FIELDS"
 
@@ -92,7 +91,7 @@ class EditItemActivity : BaseActivity() {
 
         private const val ShowHideEditTagsAnimationDurationMillis = 250L
 
-        private val log = LoggerFactory.getLogger(EditItemActivity::class.java)
+        private val log = LoggerFactory.getLogger(EditItemActivityBase::class.java)
     }
 
 
@@ -137,17 +136,17 @@ class EditItemActivity : BaseActivity() {
 
     private var readLaterArticle: ReadLaterArticle? = null
 
-    private var itemExtractionResult: ItemExtractionResult? = null
-
 
     private var originalContent: String? = null
 
     private var originalTags: MutableCollection<Tag>? = null
 
 
-    private var contentToEdit: String? = null
+    protected lateinit var itemToSave: Item
 
-    private val tagsOnItem: MutableList<Tag> = ArrayList()
+    protected var contentToEdit: String? = null
+
+    protected val tagsOnItem: MutableList<Tag> = ArrayList()
 
     private val changedFields = HashSet<ItemField>()
 
@@ -160,17 +159,17 @@ class EditItemActivity : BaseActivity() {
     private var forceShowFilesPreview = false
 
 
-    private val presenter: EditItemPresenter
+    protected val presenter: EditItemPresenter
 
-    private var isInEditContentMode = false
+    protected var isInEditContentMode = false
 
-    private var isInReaderMode = false
+    protected var isInReaderMode = false
 
-    private var webSiteHtml: String? = null
+    protected var webSiteHtml: String? = null
 
-    private var isLoadingUrl = false
+    protected var isLoadingUrl = false
 
-    private var isEditingTagsOnItem = false
+    protected var isEditingTagsOnItem = false
 
 
     private val contextHelpUtil = ContextHelpUtil()
@@ -185,17 +184,17 @@ class EditItemActivity : BaseActivity() {
 
     private val animator = ShowHideViewAnimator()
 
-    private var mnSaveItem: MenuItem? = null
+    protected var mnSaveItem: MenuItem? = null
 
-    private var mnDeleteExistingItem: MenuItem? = null
+    protected var mnDeleteExistingItem: MenuItem? = null
 
-    private var mnToggleReaderMode: MenuItem? = null
+    protected var mnToggleReaderMode: MenuItem? = null
 
-    private var mnSaveItemExtractionResultForLaterReading: MenuItem? = null
+    protected var mnSaveItemExtractionResultForLaterReading: MenuItem? = null
 
-    private var mnDeleteReadLaterArticle: MenuItem? = null
+    protected var mnDeleteReadLaterArticle: MenuItem? = null
 
-    private var mnShareItem: MenuItem? = null
+    protected var mnShareItem: MenuItem? = null
 
     private lateinit var floatingActionMenu: EditItemActivityFloatingActionMenuButton
 
@@ -226,7 +225,7 @@ class EditItemActivity : BaseActivity() {
         savedInstanceState?.let { restoreState(it) }
 
         if(savedInstanceState == null) {
-            showParameters(getParameters() as? EditItemActivityParameters)
+            (getParameters() as? EditItemActivityParameters)?.let { showParameters(it) }
         }
     }
 
@@ -246,14 +245,12 @@ class EditItemActivity : BaseActivity() {
         this.isInEditContentMode = savedInstanceState.getBoolean(IS_IN_EDIT_CONTENT_MODE_INTENT_EXTRA_NAME, false)
         this.isInReaderMode = savedInstanceState.getBoolean(IS_IN_READER_MODE_INTENT_EXTRA_NAME, false)
 
-        restoreStateFromDisk(savedInstanceState, ITEM_EXTRACTION_RESULT_INTENT_EXTRA_NAME, ItemExtractionResult::class.java)?.let {
-            editItemExtractionResult(it)
-        }
+        restoreEntity(savedInstanceState)
 
         savedInstanceState.getString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME)?.let { readLaterArticleId -> editReadLaterArticle(readLaterArticleId) }
         savedInstanceState.getString(ITEM_ID_INTENT_EXTRA_NAME)?.let { itemId -> editItem(itemId) }
 
-        if(itemExtractionResult == null && savedInstanceState.getString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME) == null &&
+        if(getItemExtractionResult() == null && savedInstanceState.getString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME) == null &&
                 savedInstanceState.getString(ITEM_ID_INTENT_EXTRA_NAME) == null) { // a new Item is being created then
             createItem(false) // don't go to EditHtmlTextDialog for content here as we're restoring state, content may already be set
         }
@@ -283,6 +280,14 @@ class EditItemActivity : BaseActivity() {
         setMenuSaveItemVisibleStateOnUIThread()
     }
 
+    protected open fun restoreEntity(savedInstanceState: Bundle) {
+
+    }
+
+    protected open fun saveState(outState: Bundle) {
+
+    }
+
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
 
@@ -293,7 +298,7 @@ class EditItemActivity : BaseActivity() {
             outState.putString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME, null)
             readLaterArticle?.id?.let { readLaterArticleId -> outState.putString(READ_LATER_ARTICLE_ID_INTENT_EXTRA_NAME, readLaterArticleId) }
 
-            serializeStateToDiskIfNotNull(outState, ITEM_EXTRACTION_RESULT_INTENT_EXTRA_NAME, itemExtractionResult)
+            saveState(outState)
 
             outState.putIntArray(CHANGED_FIELDS_INTENT_EXTRA_NAME, changedFields.map { it.ordinal }.toIntArray())
 
@@ -494,7 +499,7 @@ class EditItemActivity : BaseActivity() {
 
     private fun webPageCompletelyLoadedOnUiThread(webView: WebView) {
         // if ItemExtractionResult's item content hasn't been extracted yet, wait till WebView is loaded and extract item content then
-        if((itemExtractionResult != null || readLaterArticle != null) && isInReaderMode == false &&
+        if(getItemExtractionResult() != null && isInReaderMode == false &&
                 webView.url != null && webView.url != "about:blank" && webView.url.startsWith("data:text/html") == false) {
             webView.loadUrl("javascript:$GetHtmlCodeFromWebViewJavaScriptInterfaceName.finishedLoadingSite" +
                     "(document.URL, '<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');")
@@ -508,12 +513,12 @@ class EditItemActivity : BaseActivity() {
         urlLoadedNow()
 
         // now try to extract item content from WebView's html
-        val extractionResult = itemExtractionResult ?: readLaterArticle?.itemExtractionResult
+        val extractionResult = getItemExtractionResult() ?: readLaterArticle?.itemExtractionResult
         if(extractionResult != null && isInReaderMode == false) {
             webSiteHtml = html
             contentToEdit = html
 
-            if(extractionResult?.couldExtractContent == false) {
+            if(extractionResult.couldExtractContent == false) {
                 articleExtractorManager.extractArticleUserDidSeeBefore(extractionResult, html, url)
 
                 if(extractionResult.couldExtractContent) {
@@ -521,6 +526,10 @@ class EditItemActivity : BaseActivity() {
                 }
             }
         }
+    }
+
+    protected open fun getItemExtractionResult(): ItemExtractionResult? {
+        return readLaterArticle?.itemExtractionResult
     }
 
     private fun urlLoadedNow() {
@@ -539,12 +548,9 @@ class EditItemActivity : BaseActivity() {
         mnToggleReaderMode?.isVisible = extractionResult.couldExtractContent
         invalidateOptionsMenu()
 
-        itemExtractionResult?.let {
-            editItemExtractionResult(it, false) // updates source and summary, but avoids that extracted content gets shown (this is important according to our
-            // lawyer, user must click on toggleReaderMode menu first)
-        }
-
-        readLaterArticle?.let { editReadLaterArticle(it, false) }
+        // updates source and summary, but avoids that extracted content gets shown (this is important according to our
+        // lawyer, user must click on toggleReaderMode menu first)
+        editItem(extractionResult.item, extractionResult.source, extractionResult.series, extractionResult.tags, extractionResult.files, false)
 
         mayShowReaderViewHelp()
     }
@@ -781,8 +787,7 @@ class EditItemActivity : BaseActivity() {
     private fun shouldShowContent(content: String?): Boolean {
         // TODO: currently we assume that for item content is always set, this may change in the feature
         return content.isNullOrBlank() == false &&
-                (item != null || (isInReaderMode &&
-                        (itemExtractionResult?.couldExtractContent == true || readLaterArticle?.itemExtractionResult?.couldExtractContent == true)) )
+                (item != null || (isInReaderMode && getItemExtractionResult()?.couldExtractContent == true) )
     }
 
     private fun showContentInWebView(contentParam: String?, url: String?) {
@@ -1153,7 +1158,7 @@ class EditItemActivity : BaseActivity() {
     }
 
     private fun pauseWebView() {
-        // to prevent that a video keeps on playing in WebView when navigating away from EditItemActivity
+        // to prevent that a video keeps on playing in WebView when navigating away from EditItemActivityBase
         // see https://stackoverflow.com/a/6230902
         try {
             Class.forName("android.webkit.WebView")
@@ -1217,7 +1222,7 @@ class EditItemActivity : BaseActivity() {
         menuInflater.inflate(R.menu.activity_edit_item_edit_content_menu, menu)
     }
 
-    private fun createViewHtmlOptionsMenu(menu: Menu) {
+    protected open fun createViewHtmlOptionsMenu(menu: Menu) {
         menuInflater.inflate(R.menu.activity_edit_item_menu, menu)
 
         mnSaveItem = menu.findItem(R.id.mnSaveItem)
@@ -1227,11 +1232,10 @@ class EditItemActivity : BaseActivity() {
         mnDeleteExistingItem?.isVisible = item?.isPersisted() == true
 
         mnToggleReaderMode = menu.findItem(R.id.mnToggleReaderMode)
-        mnToggleReaderMode?.isVisible = itemExtractionResult?.couldExtractContent == true || readLaterArticle?.itemExtractionResult?.couldExtractContent == true /*&& webSiteHtml != null*/ // show mnToggleReaderMode only if previously original web site was shown
+        mnToggleReaderMode?.isVisible = readLaterArticle?.itemExtractionResult?.couldExtractContent == true /*&& webSiteHtml != null*/ // show mnToggleReaderMode only if previously original web site was shown
         setReaderModeActionStateOnUIThread()
 
         mnSaveItemExtractionResultForLaterReading = menu.findItem(R.id.mnSaveItemExtractionResultForLaterReading)
-        mnSaveItemExtractionResultForLaterReading?.isVisible = itemExtractionResult != null
 
         mnDeleteReadLaterArticle = menu.findItem(R.id.mnDeleteReadLaterArticle)
         mnDeleteReadLaterArticle?.isVisible = readLaterArticle != null
@@ -1284,10 +1288,6 @@ class EditItemActivity : BaseActivity() {
                 toggleReaderMode()
                 return true
             }
-            R.id.mnSaveItemExtractionResultForLaterReading -> {
-                saveItemExtrationResultForLaterReadingAndCloseDialog()
-                return true
-            }
             R.id.mnDeleteReadLaterArticle -> {
                 deleteReadLaterArticleAndCloseDialog()
                 return true
@@ -1309,8 +1309,7 @@ class EditItemActivity : BaseActivity() {
         isInReaderMode = !isInReaderMode
 
         if(isInReaderMode) {
-            val extractionResult = itemExtractionResult ?: readLaterArticle?.itemExtractionResult
-            contentToEdit = extractionResult?.item?.content ?: ""
+            contentToEdit = item?.content ?: getItemExtractionResult()?.item?.content ?: ""
         }
         else {
             contentToEdit = webSiteHtml ?: ""
@@ -1388,17 +1387,10 @@ class EditItemActivity : BaseActivity() {
     }
 
     private fun shareItemContent() {
-        item?.let { item ->
-            presenter.shareItem(item, item.tags, item.source, item.source?.series)
-        }
+        val currentSource = lytSourcePreview.source
 
-        readLaterArticle?.itemExtractionResult?.let { extractionResult ->
-            presenter.shareItem(extractionResult.item, extractionResult.tags, extractionResult.source, extractionResult.series)
-        }
-
-        itemExtractionResult?.let { extractionResult ->
-            presenter.shareItem(extractionResult.item, extractionResult.tags, extractionResult.source, extractionResult.series)
-        }
+        presenter.shareItem(Item(contentToEdit ?: "", lytSummaryPreview.getCurrentFieldValue()), tagsOnItem,
+                Source(lytSourcePreview.getCurrentFieldValue(), currentSource?.url ?: "", currentSource?.publishingDate, currentSource?.subTitle), lytSourcePreview.series)
     }
 
 
@@ -1425,40 +1417,19 @@ class EditItemActivity : BaseActivity() {
         val editedSource = updateSource()
         val editedSeries = lytSourcePreview.series
 
-        item?.let { item ->
-            updateItem(item, content, summary)
-            presenter.saveItemAsync(item, editedSource, editedSeries, tagsOnItem, lytFilesPreview.getEditedFiles()) { successful ->
-                if(successful) {
-                    setActivityResult(EditItemActivityResult(didSaveItem = true, savedItem = item))
-                }
-                callback(successful)
-            }
-        }
+        // TODO: save extracted content when in reader mode and webSiteHtml when not in reader mode
+        // TODO: contentToEdit show now always contain the correct value depending on is or is not in reader mode, doesn't it?
 
-        itemExtractionResult?.let { extractionResult ->
-            // TODO: save extracted content when in reader mode and webSiteHtml when not in reader mode
-            // TODO: contentToEdit show now always contain the correct value depending on is or is not in reader mode, doesn't it?
-
-            updateItem(extractionResult.item, content, summary)
-            presenter.saveItemAsync(extractionResult.item, editedSource, editedSeries, tagsOnItem, lytFilesPreview.getEditedFiles()) { successful ->
-                if(successful) {
-                    setActivityResult(EditItemActivityResult(didSaveItemExtractionResult = true, savedItem = extractionResult.item))
-                }
-                callback(successful)
-            }
-        }
-
-        readLaterArticle?.let { readLaterArticle ->
-            val extractionResult = readLaterArticle.itemExtractionResult
-            updateItem(extractionResult.item, content, summary)
-
-            presenter.saveItemAsync(extractionResult.item, editedSource, editedSeries, tagsOnItem, lytFilesPreview.getEditedFiles()) { successful ->
-                if(successful) {
+        updateItem(itemToSave, content, summary)
+        presenter.saveItemAsync(itemToSave, editedSource, editedSeries, tagsOnItem, lytFilesPreview.getEditedFiles()) { successful ->
+            if(successful) {
+                readLaterArticle?.let { readLaterArticle ->
                     readLaterArticleService.delete(readLaterArticle)
-                    setActivityResult(EditItemActivityResult(didSaveReadLaterArticle = true, savedItem = extractionResult.item))
                 }
-                callback(successful)
+
+                setActivityResult(EditItemActivityResult(didSaveItem = true, savedItem = itemToSave))
             }
+            callback(successful)
         }
     }
 
@@ -1484,44 +1455,6 @@ class EditItemActivity : BaseActivity() {
         }
         else {
             callback()
-        }
-    }
-
-    private fun saveItemExtrationResultForLaterReadingAndCloseDialog() {
-        mnSaveItem?.isEnabled = false // disable to that save cannot be pressed a second time
-        mnSaveItemExtractionResultForLaterReading?.isEnabled = false
-        unregisterEventBusListener()
-
-        saveItemForLaterReading { successful ->
-            if(successful) {
-                runOnUiThread { closeDialog() }
-            }
-            else {
-                mnSaveItem?.isEnabled = true
-                mnSaveItemExtractionResultForLaterReading?.isEnabled = true
-                mayRegisterEventBusListener()
-            }
-        }
-    }
-
-    private fun saveItemForLaterReading(callback: (Boolean) -> Unit) {
-        val content = contentToEdit ?: ""
-        val summary = lytSummaryPreview.getCurrentFieldValue()
-
-        itemExtractionResult?.let { extractionResult ->
-            updateItem(extractionResult.item, content, summary)
-            extractionResult.source = updateSource()
-            extractionResult.series = lytSourcePreview.series
-            extractionResult.tags = tagsOnItem
-            extractionResult.files = lytFilesPreview.getEditedFiles().toMutableList()
-
-            presenter.saveItemExtractionResultForLaterReading(extractionResult)
-            setActivityResult(EditItemActivityResult(didSaveItemExtractionResult = true, savedItem = extractionResult.item))
-            callback(true)
-        }
-
-        if(itemExtractionResult == null) {
-            callback(false)
         }
     }
 
@@ -1553,11 +1486,11 @@ class EditItemActivity : BaseActivity() {
     }
 
 
-    private fun setActivityResult(result: EditItemActivityResult) {
+    protected fun setActivityResult(result: EditItemActivityResult) {
         parameterHolder.setActivityResult(ResultId, result)
     }
 
-    private fun updateItem(item: Item, content: String, summary: String) {
+    protected fun updateItem(item: Item, content: String, summary: String) {
         item.content = content
         item.summary = summary
 
@@ -1571,7 +1504,7 @@ class EditItemActivity : BaseActivity() {
         }
     }
 
-    private fun updateSource(): Source? {
+    protected fun updateSource(): Source? {
         var source = lytSourcePreview.source
 
         if(changedFields.contains(ItemField.SourceTitle)) {
@@ -1592,7 +1525,6 @@ class EditItemActivity : BaseActivity() {
 
     protected open fun resetSeries() {
         readLaterArticle?.itemExtractionResult?.series = null
-        itemExtractionResult?.series = null
     }
 
 
@@ -1619,28 +1551,21 @@ class EditItemActivity : BaseActivity() {
         }
     }
 
-    private fun closeDialog() {
+    protected fun closeDialog() {
         finish()
     }
 
 
-    private fun showParameters(parameters: EditItemActivityParameters?) {
-        if(parameters != null) {
-            parameters.item?.let { editItem(it) }
+    protected open fun showParameters(parameters: EditItemActivityParameters) {
+        parameters.item?.let { editItem(it) }
 
-            parameters.readLaterArticle?.let {
-                isInReaderMode = it.itemExtractionResult.couldExtractContent
-                editReadLaterArticle(it)
-            }
+        parameters.readLaterArticle?.let {
+            isInReaderMode = it.itemExtractionResult.couldExtractContent
+            editReadLaterArticle(it)
+        }
 
-            parameters.itemExtractionResult?.let {
-                isInReaderMode = it.couldExtractContent
-                editItemExtractionResult(it)
-            }
-
-            if(parameters.createItem) {
-                createItem()
-            }
+        if(parameters.createItem) {
+            createItem()
         }
     }
 
@@ -1680,14 +1605,9 @@ class EditItemActivity : BaseActivity() {
         editItem(extractionResult.item, extractionResult.source, extractionResult.series, extractionResult.tags, extractionResult.files, updateContentPreview)
     }
 
-    private fun editItemExtractionResult(extractionResult: ItemExtractionResult, updateContentPreview: Boolean = true) {
-        this.itemExtractionResult = extractionResult
-
-        editItem(extractionResult.item, extractionResult.source, extractionResult.series, extractionResult.tags, extractionResult.files, updateContentPreview)
-    }
-
-    private fun editItem(item: Item, source: Source?, series: Series? = source?.series, tags: MutableCollection<Tag>, files: MutableCollection<FileLink>,
+    protected fun editItem(item: Item, source: Source?, series: Series? = source?.series, tags: MutableCollection<Tag>, files: MutableCollection<FileLink>,
                          updateContentPreview: Boolean = true) {
+        itemToSave = item
         originalContent = item.content
         originalTags = tags
 
@@ -1764,7 +1684,7 @@ class EditItemActivity : BaseActivity() {
     }
 
 
-    private fun mayRegisterEventBusListener() {
+    protected fun mayRegisterEventBusListener() {
         if(item?.isPersisted() == true && eventBusListener == null) {
             synchronized(this) {
                 val eventBusListenerInit = EventBusListener()
@@ -1776,7 +1696,7 @@ class EditItemActivity : BaseActivity() {
         }
     }
 
-    private fun unregisterEventBusListener() {
+    protected fun unregisterEventBusListener() {
         synchronized(this) {
             eventBusListener?.let {
                 eventBus.unregister(it)

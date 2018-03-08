@@ -232,7 +232,7 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
 
     private fun removeTagFromItem(tag: Tag) {
         if(originalTagsOnItem.remove(tag)) {
-            updateDidValueChange(true) // so that we can notify EditItemActivity that it's tags changed
+            updateDidValueChange(true) // so that we can notify EditItemActivityBase that it's tags changed
         }
 
         removeTagFromCurrentTagsOnItem(tag)

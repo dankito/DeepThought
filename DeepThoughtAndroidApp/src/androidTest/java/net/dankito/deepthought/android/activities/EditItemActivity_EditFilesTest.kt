@@ -59,7 +59,7 @@ class EditItemActivity_EditFilesTest : DeepThoughtAndroidTestBase() {
     var takeScreenshotOnError = TakeScreenshotOnErrorTestRule()
 
     @get:Rule
-    val testRule = DeepThoughtActivityTestRule<EditItemActivity>(EditItemActivity::class.java)
+    val testRule = DeepThoughtActivityTestRule<EditItemActivityBase>(EditItemActivityBase::class.java)
 
 
     init {
@@ -113,7 +113,7 @@ class EditItemActivity_EditFilesTest : DeepThoughtAndroidTestBase() {
                         addFileMethod.call(editFilesField, file)
                     }
                 }
-            } catch(e: Exception) { log.error("Could not add file ($file) to EditItemActivity (${testRule.activity})", e) }
+            } catch(e: Exception) { log.error("Could not add file ($file) to EditItemActivityBase (${testRule.activity})", e) }
         }
     }
 
