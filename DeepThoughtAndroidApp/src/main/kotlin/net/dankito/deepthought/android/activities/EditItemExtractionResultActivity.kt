@@ -56,7 +56,7 @@ class EditItemExtractionResultActivity : EditItemActivityBase() {
     override fun createViewHtmlOptionsMenu(menu: Menu) {
         super.createViewHtmlOptionsMenu(menu)
 
-        mnToggleReaderMode?.isVisible = itemExtractionResult.couldExtractContent == true
+        mnToggleReaderMode?.isVisible = itemExtractionResult.couldExtractContent == true // show mnToggleReaderMode only if original web site has been shown before
 
         mnSaveItemExtractionResultForLaterReading?.isVisible = true
     }
