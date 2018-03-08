@@ -1703,7 +1703,7 @@ class EditItemActivity : BaseActivity() {
             }
         }
 
-        forceShowTagsPreview = tags.isNotEmpty()
+        forceShowTagsPreview = forceShowTagsPreview || tags.isNotEmpty()
 
         lytFilesPreview.setFiles(files, permissionsManager)
         forceShowFilesPreview = forceShowFilesPreview || files.isNotEmpty()
