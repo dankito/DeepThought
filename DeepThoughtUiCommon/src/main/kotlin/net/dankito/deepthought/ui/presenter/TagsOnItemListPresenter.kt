@@ -42,7 +42,7 @@ class TagsOnItemListPresenter(private val tagsOnItemListView: ITagsOnItemListVie
             results.results.forEach { result ->
                 if(result.searchTerm != replacedTagName || result != results.lastResult) { // don't add replacedTagName, but only if it's the last search result (only the last one can be autocompleted)
                     if(result.hasExactMatches()) {
-                        tags.addAll(result.exactMatches)
+                        tags.addAll(result.exactMatches.filterNotNull()) // happened that a tag was still in index but not in DB anymore -> app crashed
                     }
                     else if(result.searchTerm.isNotBlank()) {
                         tags.add(Tag(result.searchTerm))
