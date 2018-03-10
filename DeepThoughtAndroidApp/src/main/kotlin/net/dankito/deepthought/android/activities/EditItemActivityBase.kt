@@ -648,13 +648,12 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // TODO
-//        if(isInEditContentMode) {
-//            createEditHtmlOptionsMenu(menu)
-//        }
-//        else {
+        if(itemContentView.isInEditContentMode) { // TODO to decide which menu to inflate; remove itemContentView.isInEditContentMode
+            createEditHtmlOptionsMenu(menu)
+        }
+        else {
             createViewHtmlOptionsMenu(menu)
-//        }
+        }
 
         return true
     }
