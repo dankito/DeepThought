@@ -26,7 +26,6 @@ import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.SourceChanged
 import net.dankito.service.eventbus.IEventBus
-import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogButton
@@ -73,9 +72,6 @@ class EditSourceActivity : BaseActivity() {
 
     @Inject
     protected lateinit var eventBus: IEventBus
-
-    @Inject
-    protected lateinit var serializer: ISerializer
 
 
     private val presenter: EditSourcePresenter
@@ -128,7 +124,7 @@ class EditSourceActivity : BaseActivity() {
                     outState.putString(SOURCE_ID_BUNDLE_EXTRA_NAME, source.id)
                 }
                 else {
-                    outState.putString(UNPERSISTED_SOURCE_BUNDLE_EXTRA_NAME, serializer.serializeObject(source))
+                    serializeStateToDiskIfNotNull(outState, UNPERSISTED_SOURCE_BUNDLE_EXTRA_NAME, source)
                 }
             }
 
@@ -143,7 +139,7 @@ class EditSourceActivity : BaseActivity() {
             savedInstanceState.getString(SOURCE_ID_BUNDLE_EXTRA_NAME)?.let { sourceId -> showSource(sourceId) }
 
             // TODO: also restore selected Series
-            savedInstanceState.getString(UNPERSISTED_SOURCE_BUNDLE_EXTRA_NAME)?.let { showSource(serializer.deserializeObject(it, Source::class.java)) }
+            restoreStateFromDisk(savedInstanceState, UNPERSISTED_SOURCE_BUNDLE_EXTRA_NAME, Source::class.java)?.let { showSource(it) }
 
             savedInstanceState.getString(ORIGINALLY_SET_SOURCE_SERIES_ID_BUNDLE_EXTRA_NAME)?.let { originallySetSeriesId ->
                 this.originallySetSeries = seriesService.retrieve(originallySetSeriesId)
