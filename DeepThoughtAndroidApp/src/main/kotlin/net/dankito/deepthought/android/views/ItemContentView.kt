@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android.views
 
+import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.TargetApi
@@ -691,6 +692,19 @@ class ItemContentView @JvmOverloads constructor(
 
         val animatorSet = AnimatorSet()
         animatorSet.playTogether(fieldsPreviewYAnimator, editContentViewYAnimator)
+
+        animatorSet.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(animation: Animator?) { }
+
+            override fun onAnimationRepeat(animation: Animator?) { }
+
+            override fun onAnimationCancel(animation: Animator?) { }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                itemFieldsPreview.visibility = View.GONE // hide itemFieldsPreview so that editor uses all available space
+            }
+
+        })
         animatorSet.start()
     }
 
