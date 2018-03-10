@@ -49,7 +49,6 @@ class EditReadLaterArticleActivity : EditItemActivityBase() {
 
     override fun showParameters(parameters: EditItemActivityParameters) {
         parameters.readLaterArticle?.let {
-            isInReaderMode = it.itemExtractionResult.couldExtractContent
             editReadLaterArticle(it)
         }
     }
@@ -79,8 +78,6 @@ class EditReadLaterArticleActivity : EditItemActivityBase() {
 
     override fun adjustViewHtmlOptionsMenu(menu: Menu) {
         mnSaveItem?.setIcon(R.drawable.ic_tab_items)
-
-        mnToggleReaderMode?.isVisible = readLaterArticle.itemExtractionResult.couldExtractContent == true // show mnToggleReaderMode only if original web site has been shown before
 
         mnDeleteReadLaterArticle = menu.findItem(R.id.mnDeleteReadLaterArticle)
         mnDeleteReadLaterArticle?.isVisible = true

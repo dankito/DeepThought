@@ -26,7 +26,6 @@ class EditItemExtractionResultActivity : EditItemActivityBase() {
 
     override fun showParameters(parameters: EditItemActivityParameters) {
         parameters.itemExtractionResult?.let {
-            isInReaderMode = it.couldExtractContent
             editItemExtractionResult(it)
         }
     }
@@ -54,8 +53,6 @@ class EditItemExtractionResultActivity : EditItemActivityBase() {
 
 
     override fun adjustViewHtmlOptionsMenu(menu: Menu) {
-        mnToggleReaderMode?.isVisible = itemExtractionResult.couldExtractContent == true // show mnToggleReaderMode only if original web site has been shown before
-
         mnSaveItemExtractionResultForLaterReading?.isVisible = true
     }
 
@@ -85,7 +82,7 @@ class EditItemExtractionResultActivity : EditItemActivityBase() {
     }
 
     private fun saveItemForLaterReading(callback: (Boolean) -> Unit) {
-        val content = contentToEdit ?: ""
+        val content = itemContentView.currentValue
         val summary = lytSummaryPreview.getCurrentFieldValue()
 
         updateItem(itemExtractionResult.item, content, summary)

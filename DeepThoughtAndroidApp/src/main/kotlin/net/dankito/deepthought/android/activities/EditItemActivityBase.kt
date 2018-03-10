@@ -3,11 +3,8 @@ package net.dankito.deepthought.android.activities
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.annotation.TargetApi
-import android.content.Intent
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
 import android.support.v7.widget.ActionMenuView
 import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.PopupMenu
@@ -16,7 +13,6 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateInterpolator
-import android.webkit.*
 import com.github.clans.fab.FloatingActionMenu
 import kotlinx.android.synthetic.main.activity_edit_item.*
 import kotlinx.android.synthetic.main.view_floating_action_button_item_fields.*
@@ -25,23 +21,18 @@ import net.dankito.deepthought.android.activities.arguments.EditItemActivityPara
 import net.dankito.deepthought.android.activities.arguments.EditItemActivityResult
 import net.dankito.deepthought.android.activities.arguments.EditSourceActivityResult
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
-import net.dankito.deepthought.android.service.hideKeyboard
-import net.dankito.deepthought.android.service.hideKeyboardDelayed
 import net.dankito.deepthought.android.views.*
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.getPlainTextForHtml
 import net.dankito.deepthought.model.fields.ItemField
 import net.dankito.deepthought.model.util.ItemExtractionResult
-import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditItemPresenter
 import net.dankito.filechooserdialog.service.IPermissionsService
 import net.dankito.filechooserdialog.service.PermissionsService
-import net.dankito.richtexteditor.android.animation.ShowHideViewAnimator
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ItemService
 import net.dankito.service.data.ReadLaterArticleService
@@ -56,10 +47,9 @@ import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
-import kotlin.concurrent.schedule
 
 
-abstract class EditItemActivityBase : BaseActivity() {
+abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
 
     companion object {
         private const val CHANGED_FIELDS_INTENT_EXTRA_NAME = "CHANGED_FIELDS"
@@ -69,19 +59,10 @@ abstract class EditItemActivityBase : BaseActivity() {
         private const val FORCE_SHOW_SUMMARY_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_SUMMARY_PREVIEW"
         private const val FORCE_SHOW_FILES_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_FILES_PREVIEW"
 
-        private const val IS_IN_EDIT_CONTENT_MODE_INTENT_EXTRA_NAME = "IS_IN_EDIT_CONTENT_MODE"
-        private const val IS_IN_READER_MODE_INTENT_EXTRA_NAME = "IS_IN_READER_MODE"
-
-        private const val CONTENT_INTENT_EXTRA_NAME = "CONTENT"
-        private const val EDIT_CONTENT_HTML_INTENT_EXTRA_NAME = "EDIT_CONTENT_HTML"
         private const val TAGS_ON_ITEM_INTENT_EXTRA_NAME = "TAGS_ON_ITEM"
         private const val FILES_INTENT_EXTRA_NAME = "ATTACHED_FILES"
 
         const val ResultId = "EDIT_ITEM_ACTIVITY_RESULT"
-
-        private const val GetHtmlCodeFromWebViewJavaScriptInterfaceName = "HtmlViewer"
-
-        private const val ShowHideEditContentViewAnimationDurationMillis = 500L
 
         private const val ShowHideEditTagsAnimationDurationMillis = 250L
 
@@ -114,26 +95,16 @@ abstract class EditItemActivityBase : BaseActivity() {
     protected lateinit var threadPool: IThreadPool
 
     @Inject
-    protected lateinit var articleExtractorManager: ArticleExtractorManager
-
-    @Inject
-    protected lateinit var extractArticleHandler: ExtractArticleHandler
-
-    @Inject
     protected lateinit var dialogService: IDialogService
 
     @Inject
     protected lateinit var eventBus: IEventBus
 
 
-    private var originalContent: String? = null
-
     private var originalTags: MutableCollection<Tag>? = null
 
 
     protected lateinit var itemToSave: Item
-
-    protected var contentToEdit: String? = null
 
     protected val tagsOnItem: MutableList<Tag> = ArrayList()
 
@@ -150,14 +121,6 @@ abstract class EditItemActivityBase : BaseActivity() {
 
     protected val presenter: EditItemPresenter
 
-    protected var isInEditContentMode = false
-
-    protected var isInReaderMode = false
-
-    protected var webSiteHtml: String? = null
-
-    protected var isLoadingUrl = false
-
     protected var isEditingTagsOnItem = false
 
 
@@ -165,13 +128,7 @@ abstract class EditItemActivityBase : BaseActivity() {
 
     private val toolbarUtil = ToolbarUtil()
 
-    private val openUrlOptionsView = OpenUrlOptionsView()
-
     private val permissionsManager: IPermissionsService
-
-    private lateinit var editHtmlView: EditHtmlView
-
-    private val animator = ShowHideViewAnimator()
 
     protected var mnSaveItem: MenuItem? = null
 
@@ -194,6 +151,10 @@ abstract class EditItemActivityBase : BaseActivity() {
     protected abstract fun restoreEntity(savedInstanceState: Bundle)
 
     protected abstract fun saveState(outState: Bundle)
+
+    override fun getItemExtractionResult(): ItemExtractionResult? {
+        return null
+    }
 
 
     init {
@@ -234,32 +195,13 @@ abstract class EditItemActivityBase : BaseActivity() {
         this.forceShowSummaryPreview = savedInstanceState.getBoolean(FORCE_SHOW_SUMMARY_PREVIEW_INTENT_EXTRA_NAME, false)
         this.forceShowFilesPreview = savedInstanceState.getBoolean(FORCE_SHOW_FILES_PREVIEW_INTENT_EXTRA_NAME, false)
 
-        this.isInEditContentMode = savedInstanceState.getBoolean(IS_IN_EDIT_CONTENT_MODE_INTENT_EXTRA_NAME, false)
-        this.isInReaderMode = savedInstanceState.getBoolean(IS_IN_READER_MODE_INTENT_EXTRA_NAME, false)
-
         restoreEntity(savedInstanceState)
-
-        restoreStateFromDisk(savedInstanceState, CONTENT_INTENT_EXTRA_NAME, String::class.java)?.let { content ->
-            contentToEdit = content
-            setContentPreviewOnUIThread()
-        }
 
         savedInstanceState.getString(TAGS_ON_ITEM_INTENT_EXTRA_NAME)?.let { tagsOnItemIds -> restoreTagsOnItemAsync(tagsOnItemIds) }
         // TODO:
 //        savedInstanceState.getString(FILES_INTENT_EXTRA_NAME)?.let { fileIds -> restoreFilesAsync(fileIds) }
 
-        wbvwContent.restoreInstanceState(savedInstanceState)
-
         floatingActionMenu.restoreInstanceState(savedInstanceState)
-
-
-        restoreStateFromDisk(savedInstanceState, EDIT_CONTENT_HTML_INTENT_EXTRA_NAME, String::class.java)?.let {
-            editHtmlView.setHtml(it, lytSourcePreview.source?.url)
-        }
-
-        if(isInEditContentMode) {
-            editContent()
-        }
 
         setMenuSaveItemVisibleStateOnUIThread()
     }
@@ -277,22 +219,9 @@ abstract class EditItemActivityBase : BaseActivity() {
             outState.putBoolean(FORCE_SHOW_SUMMARY_PREVIEW_INTENT_EXTRA_NAME, forceShowSummaryPreview)
             outState.putBoolean(FORCE_SHOW_FILES_PREVIEW_INTENT_EXTRA_NAME, forceShowFilesPreview)
 
-            outState.putBoolean(IS_IN_EDIT_CONTENT_MODE_INTENT_EXTRA_NAME, isInEditContentMode)
-            outState.putBoolean(IS_IN_READER_MODE_INTENT_EXTRA_NAME, isInReaderMode)
-
             outState.putString(TAGS_ON_ITEM_INTENT_EXTRA_NAME, serializer.serializeObject(tagsOnItem))
             // TODO: add PersistedFilesSerializer
             outState.putString(FILES_INTENT_EXTRA_NAME, serializer.serializeObject(lytFilesPreview.getEditedFiles()))
-
-            if(contentToEdit != originalContent) {
-                serializeStateToDiskIfNotNull(outState, CONTENT_INTENT_EXTRA_NAME, contentToEdit) // application crashes if objects put into bundle are too large (> 1 MB) for Android
-            }
-
-            if(isInEditContentMode) {
-                serializeStateToDiskIfNotNull(outState, EDIT_CONTENT_HTML_INTENT_EXTRA_NAME, editHtmlView.getHtml()) // application crashes if objects put into bundle are too large (> 1 MB) for Android
-            }
-
-            wbvwContent.onSaveInstanceState(outState)
 
             floatingActionMenu.saveInstanceState(outState)
         }
@@ -336,22 +265,18 @@ abstract class EditItemActivityBase : BaseActivity() {
             updateItemFieldChangedOnUIThread(ItemField.Files, didFilesChange)
         }
 
-        wbvwContent?.requestFocus() // avoid that lytSummaryPreview gets focus and keyboard therefore gets show on activity start
-
         floatingActionMenu = EditItemActivityFloatingActionMenuButton(findViewById(R.id.floatingActionMenu) as FloatingActionMenu, { addTagsToItem() },
                 { addSourceToItem() }, { addSummaryToItem() }, { addFilesToItem() } )
 
-        setupItemContentView()
+        itemContentView.didContentChangeListener = { didChange ->
+            updateItemFieldChanged(ItemField.Content, didChange)
+        }
 
-        setupItemContentEditor()
-    }
-
-    private fun setupItemContentEditor() {
-        editHtmlView = EditHtmlView(this)
-        editHtmlView.setupHtmlEditor(lytEditContent)
-
-        editHtmlView.setHtmlChangedCallback { didChange ->
-            updateItemFieldChanged(ItemField.Content,didChange)
+        itemContentView.fullscreenGestureListener = { swipeDirection ->
+            when(swipeDirection) {
+                OnSwipeTouchListener.SwipeDirection.Left ->  presenter.returnToPreviousView()
+                OnSwipeTouchListener.SwipeDirection.Right -> editTagsOnItem()
+            }
         }
     }
 
@@ -383,170 +308,10 @@ abstract class EditItemActivityBase : BaseActivity() {
         lytFilesPreview.selectFilesToAdd()
     }
 
-    private fun setupItemContentView() {
-        lytViewContent.setOnClickListener { lytViewContent.requestFocus() } // so that EditEntityField previews loose focus
-
-        wbvwContent.setOptionsBar(lytFullscreenWebViewOptionsBar)
-        wbvwContent.changeFullscreenModeListener = { mode -> handleChangeFullscreenModeEvent(mode) }
-
-        wbvwContent.singleTapListener = { handleWebViewSingleTap(it) }
-        wbvwContent.swipeListener = { isInFullscreen, swipeDirection -> handleWebViewSwipe(isInFullscreen, swipeDirection) }
-
-        fixThatWebViewIsLoadingVerySlow()
-
-        val settings = wbvwContent.settings
-        settings.defaultTextEncodingName = "UTF-8" // otherwise non ASCII text doesn't get displayed correctly
-        settings.defaultFontSize = 18 // default font is too small
-        settings.domStorageEnabled = true // otherwise images may not load, see https://stackoverflow.com/questions/29888395/images-not-loading-in-android-webview
-        settings.setSupportZoom(true)
-        settings.builtInZoomControls = true
-        settings.displayZoomControls = false
-        settings.javaScriptEnabled = true // so that embedded videos etc. work
-
-        wbvwContent.addJavascriptInterface(GetHtmlCodeFromWebViewJavaScripInterface { url, html -> siteFinishedLoading(url, html) }, GetHtmlCodeFromWebViewJavaScriptInterfaceName)
-
-        wbvwContent.setWebChromeClient(object : WebChromeClient() {
-            private var hasCompletelyFinishedLoadingPage = false
-            private val timerCheckIfHasCompletelyFinishedLoadingPage = Timer()
-
-            override fun onProgressChanged(webView: WebView, newProgress: Int) {
-                super.onProgressChanged(webView, newProgress)
-
-                if(newProgress < 100) {
-                    hasCompletelyFinishedLoadingPage = false
-                }
-                else {
-                    hasCompletelyFinishedLoadingPage = true
-                    timerCheckIfHasCompletelyFinishedLoadingPage.schedule(1000L) { // 100 % may only means a part of the page but not the whole page is loaded -> wait some time and check if not loading another part of the page
-                        if(hasCompletelyFinishedLoadingPage) {
-                            webPageCompletelyLoaded(webView)
-                        }
-                    }
-                }
-            }
-        })
-    }
-
-    private val webViewClient = object : WebViewClient() {
-
-        @TargetApi(Build.VERSION_CODES.N)
-        override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-            request?.url?.toString()?.let { url ->
-                userClickedOnUrl(url)
-            }
-
-            return true
-        }
-
-        @Suppress("OverridingDeprecatedMember")
-        override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-            userClickedOnUrl(url)
-
-            return true
-        }
-    }
-
-    private fun fixThatWebViewIsLoadingVerySlow() {
-        // avoid that WebView is loading very, very slow, see https://stackoverflow.com/questions/7422427/android-webview-slow
-        // but actually had no effect on my side
-
-        wbvwContent.settings.cacheMode = WebSettings.LOAD_NO_CACHE
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            wbvwContent.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        }
-        else {
-            wbvwContent.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-
-            @Suppress("DEPRECATION")
-            wbvwContent.settings.setRenderPriority(WebSettings.RenderPriority.HIGH)
-        }
-    }
-
-    private fun webPageCompletelyLoaded(webView: WebView) {
-        runOnUiThread { webPageCompletelyLoadedOnUiThread(webView) }
-    }
-
-    private fun webPageCompletelyLoadedOnUiThread(webView: WebView) {
-        if(getItemExtractionResult() == null) { // an item
-            urlLoadedNow()
-        }
-        // if ItemExtractionResult's item content hasn't been extracted yet, wait till WebView is loaded and extract item content then
-        else if(getItemExtractionResult() != null && isInReaderMode == false &&
-                webView.url != null && webView.url != "about:blank" && webView.url.startsWith("data:text/html") == false) {
-            webView.loadUrl("javascript:$GetHtmlCodeFromWebViewJavaScriptInterfaceName.finishedLoadingSite" +
-                    "(document.URL, '<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');")
-        }
-    }
-
-    private fun siteFinishedLoading(url: String, html: String) {
-        urlLoadedNow()
-
-        // now try to extract item content from WebView's html
-        val extractionResult = getItemExtractionResult()
-        if(extractionResult != null && isInReaderMode == false) {
-            webSiteHtml = html
-            contentToEdit = html
-
-            if(extractionResult.couldExtractContent == false) {
-                articleExtractorManager.extractArticleUserDidSeeBefore(extractionResult, html, url)
-
-                if(extractionResult.couldExtractContent) {
-                    runOnUiThread { extractedContentOnUiThread(extractionResult) }
-                }
-            }
-        }
-    }
-
-    protected open fun getItemExtractionResult(): ItemExtractionResult? {
-        return null
-    }
-
-    private fun urlLoadedNow() {
-        isLoadingUrl = false
-        wbvwContent.elementClickedListener = null
-
-        runOnUiThread {
-            wbvwContent.setWebViewClient(webViewClient) // now reactivate default url handling
-            prgIsLoadingWebPage.visibility = View.GONE
-        }
-    }
-
-    private fun extractedContentOnUiThread(extractionResult: ItemExtractionResult) { // extractionResult can either be from itemExtractionResult or readLaterArticle
-        wbvwContent.removeJavascriptInterface(GetHtmlCodeFromWebViewJavaScriptInterfaceName)
-
-        mnToggleReaderMode?.isVisible = extractionResult.couldExtractContent
-        invalidateOptionsMenu()
-
+    override fun extractedContentOnUiThread(extractionResult: ItemExtractionResult) {
         // updates source and summary, but avoids that extracted content gets shown (this is important according to our
         // lawyer, user must click on toggleReaderMode menu first)
         editItem(extractionResult.item, extractionResult.source, extractionResult.series, extractionResult.tags, extractionResult.files, false)
-
-        mayShowReaderViewHelp()
-    }
-
-    private fun mayShowReaderViewHelp() {
-        val localSettings = itemService.dataManager.localSettings
-        if(localSettings.didShowReaderViewHelp == false) {
-            contextHelpUtil.showContextHelp(lytContextHelpReaderView, R.string.context_help_reader_view) {
-                setFloatingActionButtonVisibilityOnUIThread()
-                localSettings.didShowReaderViewHelp = true
-                itemService.dataManager.localSettingsUpdated()
-            }
-
-            setFloatingActionButtonVisibilityOnUIThread()
-        }
-    }
-
-
-    inner class GetHtmlCodeFromWebViewJavaScripInterface(private val retrievedHtmlCode: ((url: String, html: String) -> Unit)) {
-
-        @JavascriptInterface
-        @SuppressWarnings("unused")
-        fun finishedLoadingSite(url: String, html: String) {
-            retrievedHtmlCode(url, html)
-        }
-
     }
 
 
@@ -563,87 +328,11 @@ abstract class EditItemActivityBase : BaseActivity() {
             lytSourcePreview.editingSourceDone(result)
         }
 
-        setContentPreviewOnUIThread()
-
-        wbvwContent.activityResumed()
+        itemContentView.onResume(lytSourcePreview.source)
 
         lytSourcePreview.viewBecomesVisible()
         lytTagsPreview.viewBecomesVisible()
         lytFilesPreview.viewBecomesVisible()
-    }
-
-
-    protected fun editContent() {
-        if(isLoadingUrl) { // while WebView is still loading contentToEdit is not set yet (contentToEdit gets set when loading finishes)
-            return
-        }
-
-        contentToEdit?.let { content ->
-            editHtmlView.setHtml(content, lytSourcePreview.source?.url)
-
-            txtEnterContentHint.visibility =
-                    if(content.isBlank() == false || dataManager.localSettings.didShowAddItemPropertiesHelp) View.GONE
-                    else View.VISIBLE
-
-            val webViewContentLocation = IntArray(2)
-            wbvwContent.getLocationInWindow(webViewContentLocation)
-            val start = webViewContentLocation[1].toFloat()
-            lytViewContent.visibility = View.GONE
-            lytEditContent.visibility = View.VISIBLE
-            playShowEditContentViewAnimation(start)
-            setFloatingActionButtonVisibilityOnUIThread()
-
-            isInEditContentMode = true
-
-            invalidateOptionsMenu()
-            contentEditor.focusEditorAndShowKeyboardDelayed()
-        }
-    }
-
-    private fun playShowEditContentViewAnimation(start: Float) {
-        val interpolator = AccelerateInterpolator()
-
-        val fieldsPreviewYAnimator = ObjectAnimator
-                .ofFloat(lytItemFieldsPreview, View.Y, lytItemFieldsPreview.top.toFloat(), -1 * lytItemFieldsPreview.measuredHeight.toFloat())
-                .setDuration(ShowHideEditContentViewAnimationDurationMillis)
-        fieldsPreviewYAnimator.interpolator = interpolator
-
-        val editContentViewYAnimator = ObjectAnimator
-                .ofFloat(lytEditContent, View.Y, start, 0f)
-                .setDuration(ShowHideEditContentViewAnimationDurationMillis)
-        editContentViewYAnimator.interpolator = interpolator
-
-        val animatorSet = AnimatorSet()
-        animatorSet.playTogether(fieldsPreviewYAnimator, editContentViewYAnimator)
-        animatorSet.start()
-    }
-
-    private fun isEditingContent() = lytEditContent.visibility == View.VISIBLE
-
-    private fun appliedChangesToContent() {
-        contentEditor.retrieveCurrentHtmlAsync { html -> // update contentToEdit as paste or Samsung's Swipe keyboard doesn't raise changed event -> fetch value before saving
-            contentToEdit = html
-
-            runOnUiThread {
-                leaveEditContentView()
-
-                updateItemFieldChangedOnUIThread(ItemField.Content, originalContent != contentToEdit)
-                setContentPreviewOnUIThread()
-            }
-        }
-    }
-
-    private fun leaveEditContentView() {
-        contentEditor.hideKeyboardDelayed(250) // for Samsungs we need a delay (again an exception of Samsung devices, i really dislike them)
-
-        animator.playShowAnimation(lytItemFieldsPreview)
-        lytEditContent.visibility = View.GONE
-        lytViewContent.visibility = View.VISIBLE
-        setFloatingActionButtonVisibilityOnUIThread()
-
-        isInEditContentMode = false
-
-        invalidateOptionsMenu()
     }
 
     private fun summaryChanged(didSummaryChange: Boolean) {
@@ -698,114 +387,11 @@ abstract class EditItemActivityBase : BaseActivity() {
     private fun itemPropertySet() {
         val localSettings = itemService.dataManager.localSettings
 
-        if(localSettings.didShowAddItemPropertiesHelp == false && contentToEdit.isNullOrBlank() == false) {
+        if(localSettings.didShowAddItemPropertiesHelp == false && itemContentView.currentValue.isBlank() == false) {
             localSettings.didShowAddItemPropertiesHelp = true
             itemService.dataManager.localSettingsUpdated()
         }
     }
-
-
-    private fun setContentPreviewOnUIThread() {
-        setContentPreviewOnUIThread(lytSourcePreview.source)
-    }
-
-    private fun setContentPreviewOnUIThread(source: Source?) {
-        val content = contentToEdit
-        val url = source?.url
-        var showContentOnboarding = true
-        prgIsLoadingWebPage.visibility = View.GONE
-
-        if(shouldShowContent(content)) {
-            showContentInWebView(content, url)
-            wbvwContent.setWebViewClient(webViewClient)
-            showContentOnboarding = false
-        }
-        else if(isInReaderMode == false && webSiteHtml != null) {
-            showContentInWebView(webSiteHtml, url)
-            wbvwContent.setWebViewClient(webViewClient)
-            showContentOnboarding = false
-        }
-        else if(url != null && getItemExtractionResult() != null) { // then load url (but don't show it for an Item)
-            clearWebViewItem()
-            isLoadingUrl = true
-            wbvwContent.elementClickedListener = { true } // disable link clicks during loading url
-            wbvwContent.setWebViewClient(WebViewClient()) // to avoid that redirects open url in browser
-            prgIsLoadingWebPage.visibility = View.VISIBLE
-            wbvwContent.loadUrl(url)
-            showContentOnboarding = false
-        }
-
-        setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread(showContentOnboarding)
-    }
-
-    private fun shouldShowContent(content: String?): Boolean {
-        // TODO: currently we assume that for item content is always set, this may change in the feature
-        return content.isNullOrBlank() == false &&
-                (getItemExtractionResult() == null || (isInReaderMode && getItemExtractionResult()?.couldExtractContent == true) ) // getItemExtractionResult() == null -> it's an Item
-    }
-
-    private fun showContentInWebView(contentParam: String?, url: String?) {
-        var content = contentParam
-
-        // TODO: remove and set font in css
-        if(content?.startsWith("<html") == false && content.startsWith("<body") == false && content.startsWith("<!doctype") == false) {
-            // this is the same style as in Android app's platform_style.css
-            content = "<html><head><style type=\"text/css\">\n" +
-                        "body {\n" +
-                        "    font-family: serif;\n" +
-                        "    font-size: 18px;" +
-                        "}\n" +
-                        "h1, h2, h3, h4, h5, h6 {\n" +
-                        "    font-family: Roboto, sans-serif;\n" +
-                        "    color: #7f7f7f;\n" +
-                        "}\n" +
-                        "</style></head><body>$content</body></html>"
-        }
-
-        clearWebViewItem() // clear WebView
-        if(url != null && Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) { // loading html with loadDataWithBaseURL() didn't work for me on 4.1 (API 16), just displayed HTML code
-            wbvwContent.loadDataWithBaseURL(url, content, "text/html; charset=UTF-8", "utf-8", null)
-        }
-        else {
-            wbvwContent.loadData(content, "text/html; charset=UTF-8", "utf-8")
-        }
-    }
-
-    private fun clearWebViewItem() {
-        if(Build.VERSION.SDK_INT < 18) {
-            @Suppress("DEPRECATION")
-            wbvwContent.clearView()
-        }
-        else {
-            wbvwContent.loadUrl("about:blank")
-        }
-    }
-
-    private fun setOnboardingTextVisibilityOnUIThread(showContentOnboarding: Boolean? = null) {
-        val showOnboardingForItemProperties = shouldShowOnboardingForItemProperties()
-        if(showContentOnboarding == true || showOnboardingForItemProperties) {
-            lytOnboardingText.visibility = View.VISIBLE
-            lytContentWebViewAndOnboardingText.setOnClickListener { editContent() } // only enable editing content by clicking on lytContentWebViewAndOnboardingText when showing onboarding text
-
-            val onboardingTextId = if(showContentOnboarding == true) R.string.activity_edit_item_edit_content_onboarding_text else R.string.activity_edit_item_add_item_properties_onboarding_text
-            val onboardingText = if(showContentOnboarding == true) getText(onboardingTextId).toString() else getText(onboardingTextId).toString()
-            txtOnboardingText.text = contextHelpUtil.stringUtil.getSpannedFromHtml(onboardingText)
-
-            arrowToFloatingActionButton.visibility = if(showContentOnboarding != true && showOnboardingForItemProperties) View.VISIBLE else View.GONE
-        }
-        else {
-            lytOnboardingText.visibility = View.GONE
-            lytContentWebViewAndOnboardingText.setOnClickListener(null)
-        }
-
-        if(showContentOnboarding == true) {
-            lytContentWebView.visibility = View.GONE
-        }
-        else if(showContentOnboarding == false) {
-            lytContentWebView.visibility = View.VISIBLE
-        }
-    }
-
     private fun shouldShowOnboardingForItemProperties(): Boolean {
         return itemService.dataManager.localSettings.didShowAddItemPropertiesHelp == false &&
                 lytTagsPreview.visibility == View.GONE && lytSourcePreview.visibility == View.GONE &&
@@ -995,97 +581,17 @@ abstract class EditItemActivityBase : BaseActivity() {
     }
 
     private fun setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread(showContentOnboarding: Boolean? = null) {
-        val calculatedShowContentOnboarding = if(showContentOnboarding == null) lytContentWebView.visibility != View.VISIBLE else showContentOnboarding
-        setOnboardingTextVisibilityOnUIThread(calculatedShowContentOnboarding)
+        itemContentView.mayShowOnboardingTextVisibilityOnUIThread(shouldShowOnboardingForItemProperties(), showContentOnboarding)
+
         setFloatingActionButtonVisibilityOnUIThread()
     }
 
-    private fun setFloatingActionButtonVisibilityOnUIThread() {
-        val forceHidingFloatingActionButton = wbvwContent.isInFullscreenMode || isEditingContent() || isEditingTagsOnItem || lytContextHelpReaderView.visibility == View.VISIBLE
+    override fun setFloatingActionButtonVisibilityOnUIThread() {
+        val forceHidingFloatingActionButton = isEditingTagsOnItem || itemContentView.shouldHideFloatingActionButton
         // when user comes to EditItemDialog, don't show floatingActionMenu till some content has been entered. She/he should focus on the content
-        val hasUserEverEnteredSomeContent = dataManager.localSettings.didShowAddItemPropertiesHelp || contentToEdit.isNullOrBlank() == false
+        val hasUserEverEnteredSomeContent = dataManager.localSettings.didShowAddItemPropertiesHelp || itemContentView.currentValue.isBlank() == false
 
         floatingActionMenu.setVisibilityOnUIThread(forceHidingFloatingActionButton, hasUserEverEnteredSomeContent)
-    }
-
-
-    private fun handleChangeFullscreenModeEvent(mode: FullscreenWebView.FullscreenMode) {
-        when(mode) {
-            FullscreenWebView.FullscreenMode.Enter -> enterFullscreenMode()
-            FullscreenWebView.FullscreenMode.Leave -> leaveFullscreenMode()
-        }
-    }
-
-    private fun handleWebViewSingleTap(isInFullscreen: Boolean) {
-        if(isInFullscreen == false) {
-            editContent()
-        }
-    }
-
-    private fun handleWebViewSwipe(isInFullscreen: Boolean, swipeDirection: OnSwipeTouchListener.SwipeDirection) {
-        if(isInFullscreen) {
-            when(swipeDirection) {
-                OnSwipeTouchListener.SwipeDirection.Left -> {
-                    mayShowItemInformationFullscreenGesturesHelpOnUIThread { presenter.returnToPreviousView() }
-                }
-                OnSwipeTouchListener.SwipeDirection.Right -> {
-                    mayShowItemInformationFullscreenGesturesHelpOnUIThread { editTagsOnItem() }
-                }
-            }
-        }
-    }
-
-    private fun mayShowItemInformationFullscreenGesturesHelpOnUIThread(userConfirmedHelpOnUIThread: () -> Unit) {
-        val localSettings = itemService.dataManager.localSettings
-
-        if(localSettings.didShowItemInformationFullscreenGesturesHelp == false) {
-            dialogService.showConfirmationDialog(getString(R.string.context_help_item_content_fullscreen_gestures), config = ConfirmationDialogConfig(false)) {
-                runOnUiThread {
-                    wbvwContent.leaveFullscreenModeAndWaitTillLeft { // leave fullscreen otherwise a lot of unwanted behaviour occurs
-                        userConfirmedHelpOnUIThread()
-                    }
-                }
-            }
-
-            localSettings.didShowItemInformationFullscreenGesturesHelp = true
-            itemService.dataManager.localSettingsUpdated()
-        }
-        else {
-            wbvwContent.leaveFullscreenModeAndWaitTillLeft {// leave fullscreen otherwise a lot of unwanted behaviour occurs
-                userConfirmedHelpOnUIThread()
-            }
-        }
-    }
-
-
-    private fun leaveFullscreenMode() {
-        lytItemFieldsPreview.visibility = View.VISIBLE
-        txtItemContentLabel.visibility = View.VISIBLE
-        appBarLayout.visibility = View.VISIBLE
-        setOnboardingTextAndFloatingActionButtonVisibilityOnUIThread()
-    }
-
-    private fun enterFullscreenMode() {
-        lytItemFieldsPreview.visibility = View.GONE
-        txtItemContentLabel.visibility = View.GONE
-        lytOnboardingText.visibility = View.GONE
-        appBarLayout.visibility = View.GONE
-        setFloatingActionButtonVisibilityOnUIThread()
-
-        content_layout_root.invalidate()
-
-        mayShowItemInformationFullscreenHelpOnUIThread()
-    }
-
-    private fun mayShowItemInformationFullscreenHelpOnUIThread() {
-        val localSettings = itemService.dataManager.localSettings
-
-        if(localSettings.didShowItemInformationFullscreenHelp == false) {
-            contextHelpUtil.showContextHelp(lytContextHelpFullscreenMode, R.string.context_help_item_content_fullscreen)
-
-            localSettings.didShowItemInformationFullscreenHelp = true
-            itemService.dataManager.localSettingsUpdated()
-        }
     }
 
 
@@ -1094,42 +600,23 @@ abstract class EditItemActivityBase : BaseActivity() {
         lytTagsPreview.viewGetsHidden()
         lytFilesPreview.viewGetsHidden()
 
-        wbvwContent.activityPaused()
+        itemContentView.onPause()
 
-        contentEditor.hideKeyboard()
         lytSummaryPreview.stopEditing()
 
         super.onPause()
     }
 
     override fun onDestroy() {
-        pauseWebView()
+        itemContentView.onDestroy()
 
         parameterHolder.clearActivityResults(EditSourceActivity.ResultId)
 
         super.onDestroy()
     }
 
-    private fun pauseWebView() {
-        // to prevent that a video keeps on playing in WebView when navigating away from EditItemActivityBase
-        // see https://stackoverflow.com/a/6230902
-        try {
-            Class.forName("android.webkit.WebView")
-                    .getMethod("onPause")
-                    .invoke(wbvwContent)
-
-            Class.forName("android.webkit.WebView")
-                    .getMethod("destroy") // so that also pod casts are for sure stopped
-                    .invoke(wbvwContent)
-
-        } catch(ignored: Exception) { }
-    }
-
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if(openUrlOptionsView.handlesTouch(event)) {
-            return true
-        }
-        else if(floatingActionMenu.handlesTouch(event)) { // close menu when menu is opened and touch is outside floatingActionMenuButton
+        if(floatingActionMenu.handlesTouch(event)) { // close menu when menu is opened and touch is outside floatingActionMenuButton
             return true
         }
 
@@ -1137,18 +624,12 @@ abstract class EditItemActivityBase : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        if(openUrlOptionsView.handlesBackButtonPress()) {
+        // TODO: haveAllFieldsBeenCleared() doesn't reflect currently set content!
+        if(itemContentView.handlesBackButtonPress(getItemExtractionResult() != null || itemToSave.isPersisted() == true || haveAllFieldsBeenCleared() == false)) {
             return
         }
         else if(floatingActionMenu.handlesBackButtonPress()) {
             return
-        }
-        else if(isInEditContentMode) {
-            // TODO: haveAllFieldsBeenCleared() doesn't reflect currently set content!
-            if(getItemExtractionResult() != null || itemToSave.isPersisted() == true || haveAllFieldsBeenCleared() == false) { // if creating an item and no value has been set, leave EditItemActivity directly, don't just hide contentEditor (as there's nothing to see)
-                leaveEditContentView()
-                return
-            }
         }
         else if(lytSourcePreview.handlesBackButtonPress()) {
             return
@@ -1161,18 +642,19 @@ abstract class EditItemActivityBase : BaseActivity() {
     }
 
     protected fun haveAllFieldsBeenCleared(): Boolean {
-        return contentToEdit.isNullOrBlank() && tagsOnItem.isEmpty() && lytSourcePreview.source == null
+        return itemContentView.currentValue.isBlank() && tagsOnItem.isEmpty() && lytSourcePreview.source == null
                 && lytSummaryPreview.getCurrentFieldValue().isEmpty() && lytFilesPreview.getEditedFiles().size == 0
     }
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        if(isInEditContentMode) {
-            createEditHtmlOptionsMenu(menu)
-        }
-        else {
+        // TODO
+//        if(isInEditContentMode) {
+//            createEditHtmlOptionsMenu(menu)
+//        }
+//        else {
             createViewHtmlOptionsMenu(menu)
-        }
+//        }
 
         return true
     }
@@ -1187,7 +669,7 @@ abstract class EditItemActivityBase : BaseActivity() {
         mnSaveItem = menu.findItem(R.id.mnSaveItem)
 
         mnToggleReaderMode = menu.findItem(R.id.mnToggleReaderMode)
-        setReaderModeActionStateOnUIThread()
+        mnToggleReaderMode?.let { itemContentView.optionMenuCreated(it, toolbarUtil) }
 
         mnSaveItemExtractionResultForLaterReading = menu.findItem(R.id.mnSaveItemExtractionResultForLaterReading)
 
@@ -1205,84 +687,27 @@ abstract class EditItemActivityBase : BaseActivity() {
 
     }
 
-    private fun setReaderModeActionStateOnUIThread() {
-        mnToggleReaderMode?.let { mnToggleReaderMode ->
-            if(mnToggleReaderMode.isVisible == true) {
-                if(isInReaderMode) {
-                    mnToggleReaderMode.title = getString(R.string.action_website_view)
-                    mnToggleReaderMode.setIcon(R.drawable.ic_reader_mode_disabled)
-                }
-                else {
-                    mnToggleReaderMode.title = getString(R.string.action_reader_view)
-                    mnToggleReaderMode.setIcon(R.drawable.ic_reader_mode)
-                }
-
-                toolbarUtil.updateMenuItemView(mnToggleReaderMode)
-            }
-        }
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(itemContentView.handleOptionsItemSelected(item)) {
+            return true
+        }
+
         when(item.itemId) {
             android.R.id.home -> {
-                if(isInEditContentMode) {
-                    leaveEditContentView()
-                }
-                else {
-                    askIfUnsavedChangesShouldBeSavedAndCloseDialog()
-                }
+                askIfUnsavedChangesShouldBeSavedAndCloseDialog()
                 return true
             }
             R.id.mnSaveItem -> {
                 saveItemAndCloseDialog()
                 return true
             }
-            R.id.mnToggleReaderMode -> {
-                toggleReaderMode()
-                return true
-            }
             R.id.mnShareItem -> {
                 showShareItemPopupMenu()
-                return true
-            }
-            R.id.mnApplyHtmlChanges -> {
-                appliedChangesToContent()
                 return true
             }
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun toggleReaderMode() {
-        isInReaderMode = !isInReaderMode
-
-        if(isInReaderMode) {
-            contentToEdit = itemToSave.content // TODO: but in this way changes made to contentToEdit get overwritten!
-        }
-        else {
-            contentToEdit = webSiteHtml ?: ""
-        }
-
-        setContentPreviewOnUIThread()
-        invalidateOptionsMenu()
-
-        checkIsShowingReaderViewHelp()
-    }
-
-    private fun checkIsShowingReaderViewHelp() {
-        val dataManager = itemService.dataManager
-
-        if (dataManager.localSettings.didShowReaderViewHelp == false) {
-            dataManager.localSettings.didShowReaderViewHelp = true
-            dataManager.localSettingsUpdated()
-
-            if(lytContextHelpReaderView.visibility == View.VISIBLE) {
-                contextHelpUtil.animateHideContextHelp(lytContextHelpReaderView) {
-                    setFloatingActionButtonVisibilityOnUIThread()
-                }
-            }
-        }
     }
 
     private fun showShareItemPopupMenu() {
@@ -1338,7 +763,7 @@ abstract class EditItemActivityBase : BaseActivity() {
     private fun shareItemContent() {
         val currentSource = lytSourcePreview.source
 
-        presenter.shareItem(Item(contentToEdit ?: "", lytSummaryPreview.getCurrentFieldValue()), tagsOnItem,
+        presenter.shareItem(Item(itemContentView.currentValue, lytSummaryPreview.getCurrentFieldValue()), tagsOnItem,
                 Source(lytSourcePreview.getCurrentFieldValue(), currentSource?.url ?: "", currentSource?.publishingDate, currentSource?.subTitle), lytSourcePreview.series)
     }
 
@@ -1364,7 +789,7 @@ abstract class EditItemActivityBase : BaseActivity() {
     }
 
     private fun saveItemAsync(callback: (Boolean) -> Unit) {
-        val content = contentToEdit ?: ""
+        val content = itemContentView.currentValue
         val summary = lytSummaryPreview.getCurrentFieldValue()
         val editedSource = updateSource()
         val editedSeries = lytSourcePreview.series
@@ -1464,10 +889,8 @@ abstract class EditItemActivityBase : BaseActivity() {
     protected fun editItem(item: Item, source: Source?, series: Series? = source?.series, tags: MutableCollection<Tag>, files: MutableCollection<FileLink>,
                          updateContentPreview: Boolean = true) {
         itemToSave = item
-        originalContent = item.content
+        itemContentView.initialize(item.content, this)
         originalTags = tags
-
-        contentToEdit = item.content
 
         if(item.summary.isEmpty() == false) { this.forceShowSummaryPreview = true } // forcing that once it has been shown it doesn't get hidden anymore
 
@@ -1492,7 +915,7 @@ abstract class EditItemActivityBase : BaseActivity() {
 
     private fun updateDisplayedValuesOnUIThread(source: Source?, summaryToEdit: String, updateContentPreview: Boolean = true) {
         if(updateContentPreview) {
-            setContentPreviewOnUIThread(source)
+            itemContentView.setContentPreviewOnUIThread(source)
         }
 
         setTagsOnItemPreviewOnUIThread()
@@ -1518,25 +941,15 @@ abstract class EditItemActivityBase : BaseActivity() {
     }
 
 
-    private fun userClickedOnUrl(url: String) {
-        openUrlOptionsView.showMenuCenter(txtItemContentLabel) { selectedOption ->
-            when(selectedOption) {
-                OpenUrlOptionsView.OpenUrlOption.OpenInNewActivity -> showUrlInNewActivity(url)
-                OpenUrlOptionsView.OpenUrlOption.OpenWithOtherApp -> openUrlWithOtherApp(url)
-            }
-        }
-    }
+    /*          IEditItemView implementation            */
 
-    private fun showUrlInNewActivity(url: String) {
-        extractArticleHandler.extractAndShowArticleUserDidNotSeeBefore(url)
-    }
+    override val currentSource: Source?
+        get() = lytSourcePreview.source
 
-    private fun openUrlWithOtherApp(url: String) {
-        try {
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(url)
-            startActivity(intent)
-        } catch(e: Exception) { log.error("Could not open url $url with other app", e) }
-    }
+    override val appBar: AppBarLayout
+        get() = appBarLayout
+
+    override val itemFieldsPreview: View
+        get() = lytItemFieldsPreview
 
 }

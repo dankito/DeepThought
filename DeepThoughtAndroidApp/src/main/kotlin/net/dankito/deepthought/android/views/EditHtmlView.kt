@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import kotlinx.android.synthetic.main.activity_edit_item.view.*
+import kotlinx.android.synthetic.main.view_item_content.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.extensions.getColorFromResourceId
 import net.dankito.richtexteditor.Color
@@ -19,7 +19,6 @@ class EditHtmlView : View {
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
 
 
     private lateinit var editor: RichTextEditor
