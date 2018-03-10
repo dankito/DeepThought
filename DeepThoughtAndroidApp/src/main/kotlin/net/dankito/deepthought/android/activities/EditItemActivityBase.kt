@@ -39,6 +39,7 @@ import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.TagService
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogButton
@@ -90,6 +91,9 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
 
     @Inject
     protected lateinit var router: IRouter
+
+    @Inject
+    protected lateinit var serializer: ISerializer
 
     @Inject
     protected lateinit var threadPool: IThreadPool

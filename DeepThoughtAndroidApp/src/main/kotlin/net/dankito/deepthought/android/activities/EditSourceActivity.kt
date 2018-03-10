@@ -26,6 +26,7 @@ import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.SourceChanged
 import net.dankito.service.eventbus.IEventBus
+import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogButton
@@ -72,6 +73,9 @@ class EditSourceActivity : BaseActivity() {
 
     @Inject
     protected lateinit var eventBus: IEventBus
+
+    @Inject
+    protected lateinit var serializer: ISerializer
 
 
     private val presenter: EditSourcePresenter

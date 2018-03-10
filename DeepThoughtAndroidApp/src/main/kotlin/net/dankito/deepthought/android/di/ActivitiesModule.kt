@@ -3,6 +3,7 @@ package net.dankito.deepthought.android.di
 import android.content.Context
 import dagger.Module
 import dagger.Provides
+import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.deepthought.android.appstart.AndroidAppInitializer
 import net.dankito.deepthought.android.appstart.CommunicationManagerStarter
@@ -14,6 +15,7 @@ import net.dankito.deepthought.android.service.communication.AndroidDeviceRegist
 import net.dankito.deepthought.android.service.network.AndroidNetworkConnectivityManager
 import net.dankito.deepthought.android.service.permissions.AndroidPermissionsService
 import net.dankito.deepthought.android.service.settings.AndroidLocalSettingsStore
+import net.dankito.deepthought.android.ui.UiStatePersister
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.AllCalculatedTags
@@ -28,6 +30,7 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.localization.Localization
+import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.services.network.INetworkConnectivityManager
 import net.dankito.utils.services.network.NetworkHelper
 import net.dankito.utils.settings.ILocalSettingsStore
@@ -76,6 +79,12 @@ class ActivitiesModule(private val applicationContext: Context) {
     @Singleton
     fun provideActivityParameterHolder() : ActivityParameterHolder {
         return ActivityParameterHolder()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUiStatePersister(fileStorageService: IFileStorageService, serializer: ISerializer) : UiStatePersister {
+        return UiStatePersister(fileStorageService, serializer)
     }
 
     @Provides
