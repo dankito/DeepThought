@@ -23,6 +23,7 @@ import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.service.hideKeyboardDelayed
+import net.dankito.deepthought.android.ui.UiStatePersister
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.news.article.ArticleExtractorManager
@@ -69,6 +70,9 @@ class ItemContentView @JvmOverloads constructor(
     @Inject
     protected lateinit var dialogService: IDialogService
 
+    @Inject
+    protected lateinit var uiStatePersister: UiStatePersister
+
 
     val currentValue: String
         get() = contentToEdit
@@ -88,7 +92,8 @@ class ItemContentView @JvmOverloads constructor(
     private lateinit var editItemView: IEditItemView
 
 
-    private var isInEditContentMode = false
+    var isInEditContentMode = false
+        private set
 
     private var isInReaderMode = false
 
@@ -608,13 +613,11 @@ class ItemContentView @JvmOverloads constructor(
         outState.putBoolean(IS_IN_READER_MODE_INTENT_EXTRA_NAME, isInReaderMode)
 
         if(contentToEdit != originalContent) {
-            // TODO
-//            serializeStateToDiskIfNotNull(outState, CONTENT_INTENT_EXTRA_NAME, contentToEdit) // application crashes if objects put into bundle are too large (> 1 MB) for Android
+            uiStatePersister.serializeStateToDiskIfNotNull(outState, CONTENT_INTENT_EXTRA_NAME, contentToEdit) // application crashes if objects put into bundle are too large (> 1 MB) for Android
         }
 
         if(isInEditContentMode) {
-            // TODO
-//            serializeStateToDiskIfNotNull(outState, EDIT_CONTENT_HTML_INTENT_EXTRA_NAME, editHtmlView.getHtml()) // application crashes if objects put into bundle are too large (> 1 MB) for Android
+            uiStatePersister.serializeStateToDiskIfNotNull(outState, EDIT_CONTENT_HTML_INTENT_EXTRA_NAME, editHtmlView.getHtml()) // application crashes if objects put into bundle are too large (> 1 MB) for Android
         }
 
         wbvwContent.onSaveInstanceState(outState)
@@ -629,18 +632,16 @@ class ItemContentView @JvmOverloads constructor(
             this.isInEditContentMode = savedInstanceState.getBoolean(IS_IN_EDIT_CONTENT_MODE_INTENT_EXTRA_NAME, false)
             this.isInReaderMode = savedInstanceState.getBoolean(IS_IN_READER_MODE_INTENT_EXTRA_NAME, false)
 
-            // TODO
-//            restoreStateFromDisk(savedInstanceState, CONTENT_INTENT_EXTRA_NAME, String::class.java)?.let { content ->
-//                contentToEdit = content
-//                setContentPreviewOnUIThread()
-//            }
+            uiStatePersister.restoreStateFromDisk(savedInstanceState, CONTENT_INTENT_EXTRA_NAME, String::class.java)?.let { content ->
+                contentToEdit = content
+                setContentPreviewOnUIThread()
+            }
 
             wbvwContent.restoreInstanceState(savedInstanceState)
 
-            // TODO
-//            restoreStateFromDisk(savedInstanceState, EDIT_CONTENT_HTML_INTENT_EXTRA_NAME, String::class.java)?.let {
-//                editHtmlView.setHtml(it, editItemView.currentSource?.url)
-//            }
+            uiStatePersister.restoreStateFromDisk(savedInstanceState, EDIT_CONTENT_HTML_INTENT_EXTRA_NAME, String::class.java)?.let {
+                editHtmlView.setHtml(it, editItemView.currentSource?.url)
+            }
 
             if(isInEditContentMode) {
                 editContent()
