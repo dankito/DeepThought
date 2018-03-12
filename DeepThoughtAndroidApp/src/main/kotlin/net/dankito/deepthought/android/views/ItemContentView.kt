@@ -327,12 +327,12 @@ class ItemContentView @JvmOverloads constructor(
         isInReaderMode = editItemView.getItemExtractionResult()?.couldExtractContent ?: false
         readerModeContent = editItemView.getItemExtractionResult()?.item?.content ?: contentToEdit // TODO: is this correct?
 
-        editor.setToolAndOptionsBar(editItemView.appBar, lytFullscreenWebViewOptionsBar)
+        contentEditor.setToolAndOptionsBar(editItemView.appBar, lytFullscreenWebViewOptionsBar)
 
         // TODO: try to use editor only
         editContent()
 
-        editor.enterViewingMode()
+        contentEditor.enterViewingMode()
     }
 
     fun optionMenuCreated(mnToggleReaderMode: MenuItem, toolbarUtil: ToolbarUtil) {

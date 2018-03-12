@@ -74,7 +74,7 @@
                     android:layout_alignParentBottom="true"
                 />
 
-                <net.dankito.richtexteditor.android.FullscreenOptionsBar
+                <net.dankito.richtexteditor.android.view.FullscreenWebViewOptionsBar
                     android:id="@+id/lytFullscreenWebViewOptionsBar"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/fullscreen_web_view_options_bar_button_height"
@@ -83,9 +83,7 @@
                     android:layout_alignParentBottom="true"
                     android:background="@color/web_view_toolbar_background"
                     android:visibility="gone"
-                >
-
-                </net.dankito.richtexteditor.android.FullscreenOptionsBar>
+                />
 
             </RelativeLayout>
 
