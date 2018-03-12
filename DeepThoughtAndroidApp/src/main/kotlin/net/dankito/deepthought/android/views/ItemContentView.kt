@@ -153,7 +153,8 @@ class ItemContentView @JvmOverloads constructor(
     private fun setupItemContentView() {
         lytViewContent.setOnClickListener { lytViewContent.requestFocus() } // so that EditEntityField previews loose focus
 
-        wbvwContent.setOptionsBar(lytFullscreenWebViewOptionsBar)
+        // TODO: re-enable
+//        wbvwContent.setOptionsBar(lytFullscreenWebViewOptionsBar)
         wbvwContent.changeFullscreenModeListener = { mode -> handleChangeFullscreenModeEvent(mode) }
 
         wbvwContent.singleTapListener = { handleWebViewSingleTap(it) }
@@ -325,6 +326,13 @@ class ItemContentView @JvmOverloads constructor(
 
         isInReaderMode = editItemView.getItemExtractionResult()?.couldExtractContent ?: false
         readerModeContent = editItemView.getItemExtractionResult()?.item?.content ?: contentToEdit // TODO: is this correct?
+
+        editor.setToolAndOptionsBar(editItemView.appBar, lytFullscreenWebViewOptionsBar)
+
+        // TODO: try to use editor only
+        editContent()
+
+        editor.enterViewingMode()
     }
 
     fun optionMenuCreated(mnToggleReaderMode: MenuItem, toolbarUtil: ToolbarUtil) {
