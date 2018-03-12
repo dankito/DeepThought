@@ -8,7 +8,8 @@
     android:background="@color/edit_entity_activity_background"
 >
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/move_upward_behaviour"
@@ -18,7 +19,6 @@
             android:id="@+id/lytItemFieldsPreview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_marginTop="@dimen/activity_edit_item_fields_margin_top"
             android:layout_marginLeft="@dimen/activity_edit_item_field_margin_left"
             android:layout_marginStart="@dimen/activity_edit_item_field_margin_left"
@@ -60,8 +60,6 @@
             android:id="@+id/itemContentView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/lytItemFieldsPreview"
-            android:layout_above="@+id/appBarLayout"
             />
 
 
@@ -69,7 +67,6 @@
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:theme="@style/AppTheme.AppBarOverlay">
 
             <android.support.v7.widget.Toolbar
@@ -79,7 +76,7 @@
 
         </android.support.design.widget.AppBarLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <include
         layout="@layout/view_floating_action_button_item_fields"

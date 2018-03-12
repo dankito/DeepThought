@@ -74,9 +74,8 @@
                     android:layout_alignParentBottom="true"
                 />
 
-                <LinearLayout
+                <net.dankito.richtexteditor.android.FullscreenOptionsBar
                     android:id="@+id/lytFullscreenWebViewOptionsBar"
-                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/fullscreen_web_view_options_bar_button_height"
                     android:layout_alignParentRight="true"
@@ -86,15 +85,7 @@
                     android:visibility="gone"
                 >
 
-                    <ImageButton
-                        android:id="@+id/btnLeaveFullscreen"
-                        android:layout_width="@dimen/fullscreen_web_view_options_bar_button_width"
-                        android:layout_height="match_parent"
-                        android:background="@android:color/transparent"
-                        android:src="@drawable/ic_fullscreen_exit_white_48dp"
-                    />
-
-                </LinearLayout>
+                </net.dankito.richtexteditor.android.FullscreenOptionsBar>
 
             </RelativeLayout>
 
