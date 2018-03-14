@@ -28,9 +28,11 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.richtexteditor.JavaScriptExecutorBase
 import net.dankito.richtexteditor.android.FullscreenWebView
 import net.dankito.richtexteditor.android.animation.ShowHideViewAnimator
 import net.dankito.richtexteditor.android.util.OnSwipeTouchListener
+import net.dankito.utils.UrlUtil
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogConfig
 import org.slf4j.LoggerFactory
@@ -74,6 +76,9 @@ class ItemContentView @JvmOverloads constructor(
 
     @Inject
     protected lateinit var uiStatePersister: UiStatePersister
+
+    @Inject
+    protected lateinit var urlUtil: UrlUtil
 
 
     val currentValue: String
@@ -148,6 +153,8 @@ class ItemContentView @JvmOverloads constructor(
         editHtmlView.setHtmlChangedCallback { didChange ->
             didContentChangeListener?.invoke(didChange)
         }
+
+        contentEditor.elementClickedListener = { type -> elementInEditorClicked(type) }
     }
 
 
@@ -418,6 +425,14 @@ class ItemContentView @JvmOverloads constructor(
     }
 
     fun setContentPreviewOnUIThread(source: Source?) {
+        contentEditor.javaScriptExecutor.addLoadedListener {
+            runOnUiThread {
+                setContentPreviewAfterLoadingEditorOnUIThread(source)
+            }
+        }
+    }
+
+    fun setContentPreviewAfterLoadingEditorOnUIThread(source: Source?) {
         val content = contentToEdit
         val url = source?.url
         var showContentOnboarding = true
@@ -782,7 +797,28 @@ class ItemContentView @JvmOverloads constructor(
     }
 
 
+    /**
+     * Don't know why webViewClient doesn't receive clicks on urls anymore, so handling them manually
+     */
+    private fun elementInEditorClicked(type: Int): Boolean {
+        if(contentEditor.isInViewingMode && (type == WebView.HitTestResult.SRC_ANCHOR_TYPE || type == WebView.HitTestResult.ANCHOR_TYPE)) {
+            contentEditor.hitTestResult?.extra?.let { extra -> // extra contains url if clicked on a link
+                if(urlUtil.isHttpUri(extra)) {
+                    userClickedOnUrl(extra)
+
+                    return true
+                }
+            }
+        }
+
+        return false
+    }
+
     private fun userClickedOnUrl(url: String) {
+        if(url.startsWith(JavaScriptExecutorBase.EditorStateChangedCallbackScheme)) {
+            return
+        }
+
         openUrlOptionsView.showMenuCenter(txtItemContentLabel) { selectedOption ->
             when(selectedOption) {
                 OpenUrlOptionsView.OpenUrlOption.OpenInNewActivity -> showUrlInNewActivity(url)
