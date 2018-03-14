@@ -371,10 +371,12 @@ class ItemContentView @JvmOverloads constructor(
         setContentPreviewOnUIThread(source) // TODO: is this really senseful in all circumstances or is it causing more trouble then solving problems?
 
         wbvwContent.activityResumed()
+        contentEditor.activityResumed()
     }
 
     fun onPause() {
         wbvwContent.activityPaused()
+        contentEditor.activityPaused()
 
         contentEditor.hideKeyboard()
     }
