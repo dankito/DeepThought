@@ -21,7 +21,6 @@ import kotlinx.android.synthetic.main.view_item_content.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.ExtractArticleHandler
-import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.service.hideKeyboardDelayed
 import net.dankito.deepthought.android.ui.UiStatePersister
@@ -29,7 +28,9 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.richtexteditor.android.FullscreenWebView
 import net.dankito.richtexteditor.android.animation.ShowHideViewAnimator
+import net.dankito.richtexteditor.android.util.OnSwipeTouchListener
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogConfig
 import org.slf4j.LoggerFactory
@@ -79,7 +80,7 @@ class ItemContentView @JvmOverloads constructor(
         get() = contentToEdit
 
     val shouldHideFloatingActionButton: Boolean
-        get() = wbvwContent.isInFullscreenMode || isEditingContent() || lytContextHelpReaderView.visibility == View.VISIBLE
+        get() = wbvwContent.isInFullscreenMode || contentEditor.isInFullscreenMode || isInEditContentMode || lytContextHelpReaderView.visibility == View.VISIBLE
 
     var didContentChangeListener: ((Boolean) -> Unit)? = null
 
@@ -93,8 +94,8 @@ class ItemContentView @JvmOverloads constructor(
     private lateinit var editItemView: IEditItemView
 
 
-    var isInEditContentMode = false
-        private set
+    val isInEditContentMode: Boolean
+        get() = ! contentEditor.isInViewingMode
 
     private var isInReaderMode = false
 
@@ -142,7 +143,7 @@ class ItemContentView @JvmOverloads constructor(
 
     private fun setupItemContentEditor() {
         editHtmlView = EditHtmlView(context)
-        editHtmlView.setupHtmlEditor(lytEditContent)
+        editHtmlView.setupHtmlEditor(lytContentWebViewAndOnboardingText)
 
         editHtmlView.setHtmlChangedCallback { didChange ->
             didContentChangeListener?.invoke(didChange)
@@ -157,7 +158,6 @@ class ItemContentView @JvmOverloads constructor(
 //        wbvwContent.setOptionsBar(lytFullscreenWebViewOptionsBar)
         wbvwContent.changeFullscreenModeListener = { mode -> handleChangeFullscreenModeEvent(mode) }
 
-        wbvwContent.singleTapListener = { handleWebViewSingleTap(it) }
         wbvwContent.swipeListener = { isInFullscreen, swipeDirection -> handleWebViewSwipe(isInFullscreen, swipeDirection) }
 
         fixThatWebViewIsLoadingVerySlow()
@@ -327,12 +327,13 @@ class ItemContentView @JvmOverloads constructor(
         isInReaderMode = editItemView.getItemExtractionResult()?.couldExtractContent ?: false
         readerModeContent = editItemView.getItemExtractionResult()?.item?.content ?: contentToEdit // TODO: is this correct?
 
-        contentEditor.setToolAndOptionsBar(editItemView.appBar, lytFullscreenWebViewOptionsBar)
+        contentEditor.setEditorToolbarAndOptionsBar(editorToolbar, lytFullscreenWebViewOptionsBar)
 
-        // TODO: try to use editor only
-        editContent()
+        contentEditor.changeFullscreenModeListener = { mode -> handleChangeFullscreenModeEvent(mode) }
 
-        contentEditor.enterViewingMode()
+        contentEditor.changeDisplayModeListener = { mode -> handleChangeDisplayModeEvent(mode) }
+
+        contentEditor.swipeListener = { isInFullscreen, swipeDirection -> handleWebViewSwipe(isInFullscreen, swipeDirection) }
     }
 
     fun optionMenuCreated(mnToggleReaderMode: MenuItem, toolbarUtil: ToolbarUtil) {
@@ -424,12 +425,10 @@ class ItemContentView @JvmOverloads constructor(
 
         if(shouldShowContent(content)) {
             showContentInWebView(content, url)
-            wbvwContent.setWebViewClient(webViewClient)
             showContentOnboarding = false
         }
         else if(isInReaderMode == false && webSiteHtml != null) {
             showContentInWebView(webSiteHtml, url)
-            wbvwContent.setWebViewClient(webViewClient)
             showContentOnboarding = false
         }
         else if(url != null && editItemView.getItemExtractionResult() != null) { // then load url (but don't show it for an Item)
@@ -453,31 +452,12 @@ class ItemContentView @JvmOverloads constructor(
                 (extractionResult == null || (isInReaderMode && extractionResult?.couldExtractContent == true) ) // extractionResult == null -> it's an Item
     }
 
-    private fun showContentInWebView(contentParam: String?, url: String?) {
-        var content = contentParam
+    private fun showContentInWebView(content: String?, url: String?) {
+        contentEditor.setHtml(content ?: "", url)
 
-        // TODO: remove and set font in css
-        if(content?.startsWith("<html") == false && content.startsWith("<body") == false && content.startsWith("<!doctype") == false) {
-            // this is the same style as in Android app's platform_style.css
-            content = "<html><head><style type=\"text/css\">\n" +
-                    "body {\n" +
-                    "    font-family: serif;\n" +
-                    "    font-size: 18px;" +
-                    "}\n" +
-                    "h1, h2, h3, h4, h5, h6 {\n" +
-                    "    font-family: Roboto, sans-serif;\n" +
-                    "    color: #7f7f7f;\n" +
-                    "}\n" +
-                    "</style></head><body>$content</body></html>"
-        }
+        contentEditor.enterViewingMode()
 
-        clearWebViewItem() // clear WebView
-        if(url != null && Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) { // loading html with loadDataWithBaseURL() didn't work for me on 4.1 (API 16), just displayed HTML code
-            wbvwContent.loadDataWithBaseURL(url, content, "text/html; charset=UTF-8", "utf-8", null)
-        }
-        else {
-            wbvwContent.loadData(content, "text/html; charset=UTF-8", "utf-8")
-        }
+        contentEditor.setWebViewClient(webViewClient)
     }
 
     private fun clearWebViewItem() {
@@ -538,14 +518,72 @@ class ItemContentView @JvmOverloads constructor(
         }
     }
 
-    private fun handleWebViewSingleTap(isInFullscreen: Boolean) {
-        if(isInFullscreen == false) {
-            editContent()
+    private fun handleChangeDisplayModeEvent(mode: FullscreenWebView.DisplayMode) {
+        when(mode) {
+            FullscreenWebView.DisplayMode.Viewing -> leftEditContentView()
+            FullscreenWebView.DisplayMode.Editing -> leftViewContentView()
         }
     }
 
+    private fun leftEditContentView() {
+        contentEditor.setWebViewClient(webViewClient)
+        contentEditor.hideKeyboardDelayed(250) // for Samsungs we need a delay (again an exception of Samsung devices, i really dislike them)
+
+        animator.playShowAnimation(editItemView.itemFieldsPreview)
+
+        txtItemContentLabel.visibility = View.VISIBLE
+        editItemView.setFloatingActionButtonVisibilityOnUIThread()
+
+        invalidateOptionsMenu(context as Activity)
+    }
+
+    private fun leftViewContentView() {
+        val webViewContentLocation = IntArray(2)
+        wbvwContent.getLocationInWindow(webViewContentLocation)
+        val start = webViewContentLocation[1].toFloat()
+        playShowEditContentViewAnimation(start)
+
+        txtItemContentLabel.visibility = View.GONE
+        editItemView.setFloatingActionButtonVisibilityOnUIThread()
+
+        invalidateOptionsMenu(context as Activity)
+        contentEditor.focusEditorAndShowKeyboardDelayed()
+    }
+
+    private fun playShowEditContentViewAnimation(start: Float) {
+        val itemFieldsPreview = editItemView.itemFieldsPreview
+        val interpolator = AccelerateInterpolator()
+
+        val fieldsPreviewYAnimator = ObjectAnimator
+                .ofFloat(itemFieldsPreview, View.Y, itemFieldsPreview.top.toFloat(), -1 * itemFieldsPreview.measuredHeight.toFloat())
+                .setDuration(ShowHideEditContentViewAnimationDurationMillis)
+        fieldsPreviewYAnimator.interpolator = interpolator
+
+//        val editContentViewYAnimator = ObjectAnimator
+//                .ofFloat(lytEditContent, View.Y, start, 0f)
+//                .setDuration(ShowHideEditContentViewAnimationDurationMillis)
+//        editContentViewYAnimator.interpolator = interpolator
+
+        val animatorSet = AnimatorSet()
+        animatorSet.playTogether(fieldsPreviewYAnimator)
+
+        animatorSet.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(animation: Animator?) { }
+
+            override fun onAnimationRepeat(animation: Animator?) { }
+
+            override fun onAnimationCancel(animation: Animator?) { }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                itemFieldsPreview.visibility = View.GONE // hide itemFieldsPreview so that editor uses all available space
+            }
+
+        })
+        animatorSet.start()
+    }
+
     private fun handleWebViewSwipe(isInFullscreen: Boolean, swipeDirection: OnSwipeTouchListener.SwipeDirection) {
-        if(isInFullscreen && fullscreenGestureListener != null) {
+        if(isInFullscreen && isInEditContentMode == false && fullscreenGestureListener != null) {
             when(swipeDirection) {
                 OnSwipeTouchListener.SwipeDirection.Left,
                 OnSwipeTouchListener.SwipeDirection.Right -> {
@@ -582,7 +620,7 @@ class ItemContentView @JvmOverloads constructor(
         txtItemContentLabel.visibility = View.VISIBLE
 
         editItemView.itemFieldsPreview.visibility = View.VISIBLE
-        editItemView.appBar.visibility = View.VISIBLE
+        editItemView.viewToolbar.visibility = View.VISIBLE
         mayShowOnboardingTextVisibilityOnUIThread()
         editItemView.setFloatingActionButtonVisibilityOnUIThread()
     }
@@ -592,7 +630,7 @@ class ItemContentView @JvmOverloads constructor(
         lytOnboardingText.visibility = View.GONE
 
         editItemView.itemFieldsPreview.visibility = View.GONE
-        editItemView.appBar.visibility = View.GONE
+        editItemView.viewToolbar.visibility = View.GONE
         editItemView.setFloatingActionButtonVisibilityOnUIThread()
 
         (parent?.parent as? ViewGroup)?.invalidate()
@@ -638,7 +676,7 @@ class ItemContentView @JvmOverloads constructor(
         super.onRestoreInstanceState(AbsSavedState.EMPTY_STATE) // don't call with state as super.onRestoreInstanceState() doesn't like a Bundle as parameter value
 
         (state as? Bundle)?.let { savedInstanceState ->
-            this.isInEditContentMode = savedInstanceState.getBoolean(IS_IN_EDIT_CONTENT_MODE_INTENT_EXTRA_NAME, false)
+            val isInEditContentMode = savedInstanceState.getBoolean(IS_IN_EDIT_CONTENT_MODE_INTENT_EXTRA_NAME, false)
             this.isInReaderMode = savedInstanceState.getBoolean(IS_IN_READER_MODE_INTENT_EXTRA_NAME, false)
 
             uiStatePersister.restoreStateFromDisk(savedInstanceState, CONTENT_INTENT_EXTRA_NAME, String::class.java)?.let { content ->
@@ -649,7 +687,7 @@ class ItemContentView @JvmOverloads constructor(
             wbvwContent.restoreInstanceState(savedInstanceState)
 
             uiStatePersister.restoreStateFromDisk(savedInstanceState, EDIT_CONTENT_HTML_INTENT_EXTRA_NAME, String::class.java)?.let {
-                editHtmlView.setHtml(it, editItemView.currentSource?.url)
+                showContentInWebView(it, editItemView.currentSource?.url)
             }
 
             if(isInEditContentMode) {
@@ -664,59 +702,10 @@ class ItemContentView @JvmOverloads constructor(
             return
         }
 
-        editHtmlView.setHtml(contentToEdit, editItemView.currentSource?.url)
-
         txtEnterContentHint.visibility =
                 if(contentToEdit.isBlank() == false || dataManager.localSettings.didShowAddItemPropertiesHelp) View.GONE
                 else View.VISIBLE
-
-        val webViewContentLocation = IntArray(2)
-        wbvwContent.getLocationInWindow(webViewContentLocation)
-        val start = webViewContentLocation[1].toFloat()
-        lytViewContent.visibility = View.GONE
-        lytEditContent.visibility = View.VISIBLE
-        playShowEditContentViewAnimation(start)
-        editItemView.setFloatingActionButtonVisibilityOnUIThread()
-
-        isInEditContentMode = true
-
-        invalidateOptionsMenu(context as Activity)
-        contentEditor.focusEditorAndShowKeyboardDelayed()
     }
-
-    private fun playShowEditContentViewAnimation(start: Float) {
-        val itemFieldsPreview = editItemView.itemFieldsPreview
-        val interpolator = AccelerateInterpolator()
-
-        val fieldsPreviewYAnimator = ObjectAnimator
-                .ofFloat(itemFieldsPreview, View.Y, itemFieldsPreview.top.toFloat(), -1 * itemFieldsPreview.measuredHeight.toFloat())
-                .setDuration(ShowHideEditContentViewAnimationDurationMillis)
-        fieldsPreviewYAnimator.interpolator = interpolator
-
-        val editContentViewYAnimator = ObjectAnimator
-                .ofFloat(lytEditContent, View.Y, start, 0f)
-                .setDuration(ShowHideEditContentViewAnimationDurationMillis)
-        editContentViewYAnimator.interpolator = interpolator
-
-        val animatorSet = AnimatorSet()
-        animatorSet.playTogether(fieldsPreviewYAnimator, editContentViewYAnimator)
-
-        animatorSet.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator?) { }
-
-            override fun onAnimationRepeat(animation: Animator?) { }
-
-            override fun onAnimationCancel(animation: Animator?) { }
-
-            override fun onAnimationEnd(animation: Animator?) {
-                itemFieldsPreview.visibility = View.GONE // hide itemFieldsPreview so that editor uses all available space
-            }
-
-        })
-        animatorSet.start()
-    }
-
-    private fun isEditingContent() = lytEditContent.visibility == View.VISIBLE
 
     private fun appliedChangesToContent() {
         contentEditor.retrieveCurrentHtmlAsync { html -> // update contentToEdit as paste or Samsung's Swipe keyboard doesn't raise changed event -> fetch value before saving
@@ -735,16 +724,7 @@ class ItemContentView @JvmOverloads constructor(
 
 
     private fun leaveEditContentView() {
-        contentEditor.hideKeyboardDelayed(250) // for Samsungs we need a delay (again an exception of Samsung devices, i really dislike them)
-
-        animator.playShowAnimation(editItemView.itemFieldsPreview)
-        lytEditContent.visibility = View.GONE
-        lytViewContent.visibility = View.VISIBLE
-        editItemView.setFloatingActionButtonVisibilityOnUIThread()
-
-        isInEditContentMode = false
-
-        invalidateOptionsMenu(context as Activity)
+        contentEditor.enterViewingMode()
     }
 
     private fun pauseWebView() {

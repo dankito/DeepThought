@@ -59,22 +59,16 @@
         <net.dankito.deepthought.android.views.ItemContentView
             android:id="@+id/itemContentView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             />
 
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/appBarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                app:title="@string/activity_edit_item_title"
-                style="@style/ToolbarStyle"/>
-
-        </android.support.design.widget.AppBarLayout>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            app:title="@string/activity_edit_item_title"
+            style="@style/ToolbarStyle"
+        />
 
     </LinearLayout>
 

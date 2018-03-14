@@ -59,19 +59,43 @@
             android:layout_alignParentBottom="true"
         >
 
+            <TextView
+                android:id="@+id/txtEnterContentHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="4dp"
+                style="@style/TextBodyStyle"
+                android:textSize="16sp"
+                android:text="@string/activity_edit_item_edit_content_hint"
+                android:visibility="gone"
+            />
+
             <RelativeLayout
                 android:id="@+id/lytContentWebView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_weight="10"
             >
 
-                <net.dankito.deepthought.android.views.FullscreenWebView
+                <net.dankito.richtexteditor.android.FullscreenWebView
                     android:id="@+id/wbvwContent"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentBottom="true"
+                    android:visibility="gone"
+                />
+
+                <net.dankito.richtexteditor.android.RichTextEditor
+                    android:id="@+id/contentEditor"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:visibility="visible"
                 />
 
                 <net.dankito.richtexteditor.android.view.FullscreenWebViewOptionsBar
@@ -81,11 +105,17 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/web_view_toolbar_background"
                     android:visibility="gone"
                 />
 
             </RelativeLayout>
+
+            <net.dankito.richtexteditor.android.toolbar.EditorToolbar
+                android:id="@+id/editorToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/activity_edit_item_html_editor_toolbar_height"
+                android:background="@color/colorAccent"
+            />
 
             <RelativeLayout
                 android:id="@+id/lytOnboardingText"
@@ -132,45 +162,5 @@
         </LinearLayout>
 
     </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/lytEditContent"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone"
-    >
-
-        <TextView
-            android:id="@+id/txtEnterContentHint"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="4dp"
-            style="@style/TextBodyStyle"
-            android:textSize="16sp"
-            android:text="@string/activity_edit_item_edit_content_hint"
-            android:visibility="gone"
-        />
-
-        <net.dankito.richtexteditor.android.RichTextEditor
-            android:id="@+id/contentEditor"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="10"
-        />
-
-        <net.dankito.richtexteditor.android.toolbar.EditorToolbar
-            android:id="@+id/editorToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/activity_edit_item_html_editor_toolbar_height"
-            android:background="@color/colorAccent"
-        />
-
-    </LinearLayout>
 
 </RelativeLayout>

@@ -4,14 +4,10 @@ import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
 import android.support.v7.widget.ActionMenuView
 import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.PopupMenu
-import android.view.Menu
-import android.view.MenuItem
-import android.view.MotionEvent
-import android.view.View
+import android.view.*
 import android.view.animation.AccelerateInterpolator
 import com.github.clans.fab.FloatingActionMenu
 import kotlinx.android.synthetic.main.activity_edit_item.*
@@ -21,7 +17,6 @@ import net.dankito.deepthought.android.activities.arguments.EditItemActivityPara
 import net.dankito.deepthought.android.activities.arguments.EditItemActivityResult
 import net.dankito.deepthought.android.activities.arguments.EditSourceActivityResult
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.service.OnSwipeTouchListener
 import net.dankito.deepthought.android.views.*
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.model.*
@@ -33,6 +28,7 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditItemPresenter
 import net.dankito.filechooserdialog.service.IPermissionsService
 import net.dankito.filechooserdialog.service.PermissionsService
+import net.dankito.richtexteditor.android.util.OnSwipeTouchListener
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ItemService
 import net.dankito.service.data.ReadLaterArticleService
@@ -949,8 +945,8 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
     override val currentSource: Source?
         get() = lytSourcePreview.source
 
-    override val appBar: AppBarLayout
-        get() = appBarLayout
+    override val viewToolbar: ViewGroup
+        get() = toolbar
 
     override val itemFieldsPreview: View
         get() = lytItemFieldsPreview
