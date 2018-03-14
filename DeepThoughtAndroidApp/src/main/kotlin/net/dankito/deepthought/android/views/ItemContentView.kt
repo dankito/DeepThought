@@ -216,8 +216,6 @@ class ItemContentView @JvmOverloads constructor(
         isInReaderMode = editItemView.getItemExtractionResult()?.couldExtractContent ?: false
         readerModeContent = editItemView.getItemExtractionResult()?.item?.content ?: contentToEdit // TODO: is this correct?
 
-        contentEditor.setEditorToolbarAndOptionsBar(editorToolbar, lytFullscreenWebViewOptionsBar)
-
         contentEditor.changeFullscreenModeListener = { mode -> handleChangeFullscreenModeEvent(mode) }
 
         contentEditor.changeDisplayModeListener = { mode -> handleChangeDisplayModeEvent(mode) }

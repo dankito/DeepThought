@@ -35,6 +35,10 @@ class EditHtmlView : View {
         }
 
         setupEditorToolbar(rootView)
+
+        val lytFullscreenWebViewOptionsBar = rootView.lytFullscreenWebViewOptionsBar
+        lytFullscreenWebViewOptionsBar.showMarkSelectedTextButton(editor)
+        editor.setEditorToolbarAndOptionsBar(rootView.editorToolbar, lytFullscreenWebViewOptionsBar)
     }
 
     private fun editorHasLoaded() {
