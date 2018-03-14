@@ -3,24 +3,23 @@ package net.dankito.deepthought.android.views
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.ActivityCompat.invalidateOptionsMenu
 import android.util.AttributeSet
 import android.view.*
 import android.view.animation.AccelerateInterpolator
-import android.webkit.*
+import android.webkit.WebView
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.view_item_content.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.ExtractArticleHandler
+import net.dankito.deepthought.android.service.WebPageLoader
 import net.dankito.deepthought.android.service.hideKeyboard
 import net.dankito.deepthought.android.service.hideKeyboardDelayed
 import net.dankito.deepthought.android.ui.UiStatePersister
@@ -36,9 +35,7 @@ import net.dankito.utils.UrlUtil
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogConfig
 import org.slf4j.LoggerFactory
-import java.util.*
 import javax.inject.Inject
-import kotlin.concurrent.schedule
 
 
 class ItemContentView @JvmOverloads constructor(
@@ -52,8 +49,6 @@ class ItemContentView @JvmOverloads constructor(
         private const val IS_IN_READER_MODE_INTENT_EXTRA_NAME = "IS_IN_READER_MODE"
 
         private const val CONTENT_INTENT_EXTRA_NAME = "CONTENT"
-
-        private const val GetHtmlCodeFromWebViewJavaScriptInterfaceName = "HtmlViewer"
 
         private const val ShowHideEditContentViewAnimationDurationMillis = 500L
 
@@ -85,7 +80,7 @@ class ItemContentView @JvmOverloads constructor(
         get() = contentToEdit
 
     val shouldHideFloatingActionButton: Boolean
-        get() = wbvwContent.isInFullscreenMode || contentEditor.isInFullscreenMode || isInEditContentMode || lytContextHelpReaderView.visibility == View.VISIBLE
+        get() = contentEditor.isInFullscreenMode || isInEditContentMode || lytContextHelpReaderView.visibility == View.VISIBLE
 
     var didContentChangeListener: ((Boolean) -> Unit)? = null
 
@@ -118,7 +113,7 @@ class ItemContentView @JvmOverloads constructor(
 
     private lateinit var editHtmlView: EditHtmlView
 
-    private lateinit var mnToggleReaderMode: MenuItem
+    private var mnToggleReaderMode: MenuItem? = null
 
     protected val contextHelpUtil = ContextHelpUtil()
 
@@ -138,10 +133,6 @@ class ItemContentView @JvmOverloads constructor(
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val rootView = inflater.inflate(R.layout.view_item_content, this)
 
-        wbvwContent?.requestFocus() // avoid that lytSummaryPreview gets focus and keyboard therefore gets displayed on activity start
-
-        setupItemContentView()
-
         setupItemContentEditor()
 
     }
@@ -154,121 +145,16 @@ class ItemContentView @JvmOverloads constructor(
             didContentChangeListener?.invoke(didChange)
         }
 
+        contentEditor?.requestFocus() // avoid that lytSummaryPreview gets focus and keyboard therefore gets displayed on activity start
+
         contentEditor.elementClickedListener = { type -> elementInEditorClicked(type) }
     }
 
 
-    private fun setupItemContentView() {
-        lytViewContent.setOnClickListener { lytViewContent.requestFocus() } // so that EditEntityField previews loose focus
-
-        // TODO: re-enable
-//        wbvwContent.setOptionsBar(lytFullscreenWebViewOptionsBar)
-        wbvwContent.changeFullscreenModeListener = { mode -> handleChangeFullscreenModeEvent(mode) }
-
-        wbvwContent.swipeListener = { isInFullscreen, swipeDirection -> handleWebViewSwipe(isInFullscreen, swipeDirection) }
-
-        fixThatWebViewIsLoadingVerySlow()
-
-        val settings = wbvwContent.settings
-        settings.defaultTextEncodingName = "UTF-8" // otherwise non ASCII text doesn't get displayed correctly
-        settings.defaultFontSize = 18 // default font is too small
-        settings.domStorageEnabled = true // otherwise images may not load, see https://stackoverflow.com/questions/29888395/images-not-loading-in-android-webview
-        settings.setSupportZoom(true)
-        settings.builtInZoomControls = true
-        settings.displayZoomControls = false
-        settings.javaScriptEnabled = true // so that embedded videos etc. work
-
-        wbvwContent.addJavascriptInterface(GetHtmlCodeFromWebViewJavaScripInterface { url, html -> siteFinishedLoading(url, html) }, GetHtmlCodeFromWebViewJavaScriptInterfaceName)
-
-        wbvwContent.setWebChromeClient(object : WebChromeClient() {
-            private var hasCompletelyFinishedLoadingPage = false
-            private val timerCheckIfHasCompletelyFinishedLoadingPage = Timer()
-
-            override fun onProgressChanged(webView: WebView, newProgress: Int) {
-                super.onProgressChanged(webView, newProgress)
-
-                if(newProgress < 100) {
-                    hasCompletelyFinishedLoadingPage = false
-                }
-                else {
-                    hasCompletelyFinishedLoadingPage = true
-                    timerCheckIfHasCompletelyFinishedLoadingPage.schedule(1000L) { // 100 % may only means a part of the page but not the whole page is loaded -> wait some time and check if not loading another part of the page
-                        if(hasCompletelyFinishedLoadingPage) {
-                            webPageCompletelyLoaded(webView)
-                        }
-                    }
-                }
-            }
-        })
-    }
-
-    private val webViewClient = object : WebViewClient() {
-
-        @TargetApi(Build.VERSION_CODES.N)
-        override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-            request?.url?.toString()?.let { url ->
-                userClickedOnUrl(url)
-            }
-
-            return true
-        }
-
-        @Suppress("OverridingDeprecatedMember")
-        override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-            userClickedOnUrl(url)
-
-            return true
-        }
-    }
-
-
-    inner class GetHtmlCodeFromWebViewJavaScripInterface(private val retrievedHtmlCode: ((url: String, html: String) -> Unit)) {
-
-        @JavascriptInterface
-        @SuppressWarnings("unused")
-        fun finishedLoadingSite(url: String, html: String) {
-            retrievedHtmlCode(url, html)
-        }
-
-    }
-
-    private fun fixThatWebViewIsLoadingVerySlow() {
-        // avoid that WebView is loading very, very slow, see https://stackoverflow.com/questions/7422427/android-webview-slow
-        // but actually had no effect on my side
-
-        wbvwContent.settings.cacheMode = WebSettings.LOAD_NO_CACHE
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            wbvwContent.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        }
-        else {
-            wbvwContent.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-
-            @Suppress("DEPRECATION")
-            wbvwContent.settings.setRenderPriority(WebSettings.RenderPriority.HIGH)
-        }
-    }
-
-    private fun webPageCompletelyLoaded(webView: WebView) {
-        runOnUiThread { webPageCompletelyLoadedOnUiThread(webView) }
-    }
-
-    private fun webPageCompletelyLoadedOnUiThread(webView: WebView) {
-        val extractionResult = editItemView.getItemExtractionResult()
-
-        if(extractionResult == null) { // an item
-            urlLoadedNow()
-        }
-        // if ItemExtractionResult's item content hasn't been extracted yet, wait till WebView is loaded and extract item content then
-        else if(extractionResult != null && isInReaderMode == false &&
-                webView.url != null && webView.url != "about:blank" && webView.url.startsWith("data:text/html") == false) {
-            webView.loadUrl("javascript:$GetHtmlCodeFromWebViewJavaScriptInterfaceName.finishedLoadingSite" +
-                    "(document.URL, '<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');")
-        }
-    }
-
     private fun siteFinishedLoading(url: String, html: String) {
         urlLoadedNow()
+
+        contentEditor.setHtml(html, url)
 
         // now try to extract item content from WebView's html
         val extractionResult = editItemView.getItemExtractionResult()
@@ -289,11 +175,9 @@ class ItemContentView @JvmOverloads constructor(
     }
 
     private fun extractedContentOnUiThread(extractionResult: ItemExtractionResult) {
-        wbvwContent.removeJavascriptInterface(GetHtmlCodeFromWebViewJavaScriptInterfaceName)
-
         readerModeContent = extractionResult.item.content
 
-        mnToggleReaderMode.isVisible = extractionResult.couldExtractContent
+        mnToggleReaderMode?.isVisible = extractionResult.couldExtractContent
         invalidateOptionsMenu(context as Activity)
 
         editItemView.extractedContentOnUiThread(extractionResult)
@@ -316,10 +200,8 @@ class ItemContentView @JvmOverloads constructor(
 
     private fun urlLoadedNow() {
         isLoadingUrl = false
-        wbvwContent.elementClickedListener = null
 
         runOnUiThread {
-            wbvwContent.setWebViewClient(webViewClient) // now reactivate default url handling
             prgIsLoadingWebPage.visibility = View.GONE
         }
     }
@@ -346,23 +228,25 @@ class ItemContentView @JvmOverloads constructor(
     fun optionMenuCreated(mnToggleReaderMode: MenuItem, toolbarUtil: ToolbarUtil) {
         this.mnToggleReaderMode = mnToggleReaderMode
 
-        mnToggleReaderMode.isVisible = editItemView.getItemExtractionResult()?.couldExtractContent == true // show mnToggleReaderMode only if original web site has been shown before
+        mnToggleReaderMode?.isVisible = editItemView.getItemExtractionResult()?.couldExtractContent == true // show mnToggleReaderMode only if original web site has been shown before
 
         setReaderModeActionStateOnUIThread(toolbarUtil)
     }
 
     private fun setReaderModeActionStateOnUIThread(toolbarUtil: ToolbarUtil) {
-        if(mnToggleReaderMode.isVisible == true) {
-            if(isInReaderMode) {
-                mnToggleReaderMode.title = context.getString(R.string.action_website_view)
-                mnToggleReaderMode.setIcon(R.drawable.ic_reader_mode_disabled)
-            }
-            else {
-                mnToggleReaderMode.title = context.getString(R.string.action_reader_view)
-                mnToggleReaderMode.setIcon(R.drawable.ic_reader_mode)
-            }
+        mnToggleReaderMode?.let { mnToggleReaderMode ->
+            if(mnToggleReaderMode.isVisible == true) {
+                if(isInReaderMode) {
+                    mnToggleReaderMode.title = context.getString(R.string.action_website_view)
+                    mnToggleReaderMode.setIcon(R.drawable.ic_reader_mode_disabled)
+                }
+                else {
+                    mnToggleReaderMode.title = context.getString(R.string.action_reader_view)
+                    mnToggleReaderMode.setIcon(R.drawable.ic_reader_mode)
+                }
 
-            toolbarUtil.updateMenuItemView(mnToggleReaderMode)
+                toolbarUtil.updateMenuItemView(mnToggleReaderMode)
+            }
         }
     }
 
@@ -370,12 +254,10 @@ class ItemContentView @JvmOverloads constructor(
     fun onResume(source: Source?) {
         setContentPreviewOnUIThread(source) // TODO: is this really senseful in all circumstances or is it causing more trouble then solving problems?
 
-        wbvwContent.activityResumed()
         contentEditor.activityResumed()
     }
 
     fun onPause() {
-        wbvwContent.activityPaused()
         contentEditor.activityPaused()
 
         contentEditor.hideKeyboard()
@@ -451,12 +333,9 @@ class ItemContentView @JvmOverloads constructor(
             showContentOnboarding = false
         }
         else if(url != null && editItemView.getItemExtractionResult() != null) { // then load url (but don't show it for an Item)
-            clearWebViewItem()
             isLoadingUrl = true
-            wbvwContent.elementClickedListener = { true } // disable link clicks during loading url
-            wbvwContent.setWebViewClient(WebViewClient()) // to avoid that redirects open url in browser
             prgIsLoadingWebPage.visibility = View.VISIBLE
-            wbvwContent.loadUrl(url)
+            WebPageLoader(context as Activity).loadUrl(url, { contentEditor.setHtml(it, url) } ) { html -> siteFinishedLoading(url, html) }
             showContentOnboarding = false
         }
 
@@ -475,18 +354,6 @@ class ItemContentView @JvmOverloads constructor(
         contentEditor.setHtml(content ?: "", url)
 
         contentEditor.enterViewingMode()
-
-        contentEditor.setWebViewClient(webViewClient)
-    }
-
-    private fun clearWebViewItem() {
-        if(Build.VERSION.SDK_INT < 18) {
-            @Suppress("DEPRECATION")
-            wbvwContent.clearView()
-        }
-        else {
-            wbvwContent.loadUrl("about:blank")
-        }
     }
 
 
@@ -545,7 +412,6 @@ class ItemContentView @JvmOverloads constructor(
     }
 
     private fun leftEditContentView() {
-        contentEditor.setWebViewClient(webViewClient)
         contentEditor.hideKeyboardDelayed(250) // for Samsungs we need a delay (again an exception of Samsung devices, i really dislike them)
 
         animator.playShowAnimation(editItemView.itemFieldsPreview)
@@ -686,8 +552,6 @@ class ItemContentView @JvmOverloads constructor(
             uiStatePersister.serializeStateToDiskIfNotNull(outState, EDIT_CONTENT_HTML_INTENT_EXTRA_NAME, editHtmlView.getHtml()) // application crashes if objects put into bundle are too large (> 1 MB) for Android
         }
 
-        wbvwContent.onSaveInstanceState(outState)
-
         return outState
     }
 
@@ -702,8 +566,6 @@ class ItemContentView @JvmOverloads constructor(
                 contentToEdit = content
                 setContentPreviewOnUIThread()
             }
-
-            wbvwContent.restoreInstanceState(savedInstanceState)
 
             uiStatePersister.restoreStateFromDisk(savedInstanceState, EDIT_CONTENT_HTML_INTENT_EXTRA_NAME, String::class.java)?.let {
                 showContentInWebView(it, editItemView.currentSource?.url)
@@ -752,11 +614,11 @@ class ItemContentView @JvmOverloads constructor(
         try {
             Class.forName("android.webkit.WebView")
                     .getMethod("onPause")
-                    .invoke(wbvwContent)
+                    .invoke(contentEditor)
 
             Class.forName("android.webkit.WebView")
                     .getMethod("destroy") // so that also pod casts are for sure stopped
-                    .invoke(wbvwContent)
+                    .invoke(contentEditor)
 
         } catch(ignored: Exception) { }
     }
