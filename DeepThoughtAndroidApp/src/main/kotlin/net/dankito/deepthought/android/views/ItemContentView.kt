@@ -379,6 +379,8 @@ class ItemContentView @JvmOverloads constructor(
         contentEditor.activityPaused()
 
         contentEditor.hideKeyboard()
+
+        openUrlOptionsView.cleanUp()
     }
 
     fun onDestroy() {
