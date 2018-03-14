@@ -809,8 +809,7 @@ class ItemContentView @JvmOverloads constructor(
             contentEditor.hitTestResult?.extra?.let { extra -> // extra contains url if clicked on a link
                 if(urlUtil.isHttpUri(extra)) {
                     userClickedOnUrl(extra)
-
-                    return true
+                    // do not return true even though we handled click as otherwise text user clicked on would get selected (still have to figure out why?)
                 }
             }
         }
