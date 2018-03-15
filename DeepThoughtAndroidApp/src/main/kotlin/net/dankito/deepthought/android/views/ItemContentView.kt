@@ -145,6 +145,8 @@ class ItemContentView @JvmOverloads constructor(
             didContentChangeListener?.invoke(didChange)
         }
 
+        contentEditor.enterViewingMode() // by default we start in viewing not editing mode
+
         contentEditor?.requestFocus() // avoid that lytSummaryPreview gets focus and keyboard therefore gets displayed on activity start
 
         contentEditor.elementClickedListener = { type -> elementInEditorClicked(type) }
@@ -353,8 +355,6 @@ class ItemContentView @JvmOverloads constructor(
 
     private fun showContentInWebView(content: String?, url: String?) {
         contentEditor.setHtml(content ?: "", url)
-
-        contentEditor.enterViewingMode()
     }
 
 
