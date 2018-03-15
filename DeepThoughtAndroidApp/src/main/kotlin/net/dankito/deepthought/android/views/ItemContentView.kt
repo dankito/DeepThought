@@ -468,17 +468,17 @@ class ItemContentView @JvmOverloads constructor(
         val interpolator = AccelerateInterpolator()
 
         val fieldsPreviewYAnimator = ObjectAnimator
-                .ofFloat(itemFieldsPreview, View.Y, itemFieldsPreview.top.toFloat(), -1 * itemFieldsPreview.measuredHeight.toFloat())
+                .ofFloat(itemFieldsPreview, View.Y, itemFieldsPreview.top.toFloat(), -1f * itemFieldsPreview.measuredHeight)
                 .setDuration(ShowHideEditContentViewAnimationDurationMillis)
         fieldsPreviewYAnimator.interpolator = interpolator
 
-//        val editContentViewYAnimator = ObjectAnimator
-//                .ofFloat(lytEditContent, View.Y, start, 0f)
-//                .setDuration(ShowHideEditContentViewAnimationDurationMillis)
-//        editContentViewYAnimator.interpolator = interpolator
+        val editContentViewYAnimator = ObjectAnimator
+                .ofFloat(contentEditor, View.Y, start, 0f)
+                .setDuration(ShowHideEditContentViewAnimationDurationMillis / 2)
+        editContentViewYAnimator.interpolator = interpolator
 
         val animatorSet = AnimatorSet()
-        animatorSet.playTogether(fieldsPreviewYAnimator)
+        animatorSet.playTogether(fieldsPreviewYAnimator, editContentViewYAnimator)
 
         animatorSet.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animation: Animator?) { }
