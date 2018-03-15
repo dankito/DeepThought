@@ -142,8 +142,8 @@ class EditReadLaterArticleActivity : EditItemActivityBase() {
             localSettings.didShowSavedReadLaterArticleIsNowInItemsHelp = true
             itemService.dataManager.localSettingsUpdated()
 
-            val helpText = getText(R.string.context_help_saved_read_later_article_is_now_in_items).toString()
-            dialogService.showConfirmationDialog(contextHelpUtil.stringUtil.getSpannedFromHtml(helpText), config = ConfirmationDialogConfig(false)) {
+            dialogService.showConfirmationDialog(contextHelpUtil.stringUtil.getSpannedFromHtml(this, R.string.context_help_saved_read_later_article_is_now_in_items),
+                    config = ConfirmationDialogConfig(false)) {
                 callback()
             }
         }

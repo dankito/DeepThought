@@ -8,6 +8,11 @@ import android.text.Spanned
 
 class StringUtil {
 
+    fun getSpannedFromHtml(context: Context, stringResourceId: Int): Spanned {
+        val html = context.getText(stringResourceId).toString()
+        return getSpannedFromHtmlWithImages(html)
+    }
+
     fun getSpannedFromHtml(html: String): Spanned {
         return getSpannedFromHtmlWithImages(html)
     }
