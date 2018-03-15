@@ -98,6 +98,7 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
         val parcelable = super.onSaveInstanceState()
 
         (parcelable as? Bundle)?.let { bundle ->
+            // TODO: use UiStatePersister
             bundle.putString(EnteredTagsSearchTerm, presenter.getLastSearchTerm())
         }
 
