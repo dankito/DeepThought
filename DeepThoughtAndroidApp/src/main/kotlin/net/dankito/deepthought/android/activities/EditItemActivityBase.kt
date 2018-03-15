@@ -60,8 +60,11 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
         private const val FORCE_SHOW_SUMMARY_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_SUMMARY_PREVIEW"
         private const val FORCE_SHOW_FILES_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_FILES_PREVIEW"
 
-        private const val TAGS_ON_ITEM_INTENT_EXTRA_NAME = "TAGS_ON_ITEM"
-        private const val FILES_INTENT_EXTRA_NAME = "ATTACHED_FILES"
+        private const val IS_IN_EDIT_CONTENT_MODE_INTENT_EXTRA_NAME = "IS_IN_EDIT_CONTENT_MODE"
+        private const val IS_IN_READER_MODE_INTENT_EXTRA_NAME = "IS_IN_READER_MODE"
+
+        private const val CONTENT_INTENT_EXTRA_NAME = "CONTENT"
+        private const val EDIT_CONTENT_HTML_INTENT_EXTRA_NAME = "EDIT_CONTENT_HTML"
 
         const val ResultId = "EDIT_ITEM_ACTIVITY_RESULT"
 
@@ -201,9 +204,12 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
 
         restoreEntity(savedInstanceState)
 
-        savedInstanceState.getString(TAGS_ON_ITEM_INTENT_EXTRA_NAME)?.let { tagsOnItemIds -> restoreTagsOnItemAsync(tagsOnItemIds) }
-        // TODO:
-//        savedInstanceState.getString(FILES_INTENT_EXTRA_NAME)?.let { fileIds -> restoreFilesAsync(fileIds) }
+        restoreStateFromDisk(savedInstanceState, CONTENT_INTENT_EXTRA_NAME, String::class.java)?.let { content ->
+            contentToEdit = content
+            setContentPreviewOnUIThread()
+        }
+
+        wbvwContent.restoreInstanceState(savedInstanceState)
 
         floatingActionMenu.restoreInstanceState(savedInstanceState)
 
@@ -223,9 +229,18 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
             outState.putBoolean(FORCE_SHOW_SUMMARY_PREVIEW_INTENT_EXTRA_NAME, forceShowSummaryPreview)
             outState.putBoolean(FORCE_SHOW_FILES_PREVIEW_INTENT_EXTRA_NAME, forceShowFilesPreview)
 
-            outState.putString(TAGS_ON_ITEM_INTENT_EXTRA_NAME, serializer.serializeObject(tagsOnItem))
-            // TODO: add PersistedFilesSerializer
-            outState.putString(FILES_INTENT_EXTRA_NAME, serializer.serializeObject(lytFilesPreview.getEditedFiles()))
+            outState.putBoolean(IS_IN_EDIT_CONTENT_MODE_INTENT_EXTRA_NAME, isInEditContentMode)
+            outState.putBoolean(IS_IN_READER_MODE_INTENT_EXTRA_NAME, isInReaderMode)
+
+            if(contentToEdit != originalContent) {
+                serializeStateToDiskIfNotNull(outState, CONTENT_INTENT_EXTRA_NAME, contentToEdit) // application crashes if objects put into bundle are too large (> 1 MB) for Android
+            }
+
+            if(isInEditContentMode) {
+                serializeStateToDiskIfNotNull(outState, EDIT_CONTENT_HTML_INTENT_EXTRA_NAME, editHtmlView.getHtml()) // application crashes if objects put into bundle are too large (> 1 MB) for Android
+            }
+
+            wbvwContent.onSaveInstanceState(outState)
 
             floatingActionMenu.saveInstanceState(outState)
         }
