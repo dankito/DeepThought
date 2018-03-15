@@ -587,11 +587,11 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
     }
 
     override fun setFloatingActionButtonVisibilityOnUIThread() {
-        val forceHidingFloatingActionButton = isEditingTagsOnItem || itemContentView.shouldHideFloatingActionButton
+        val forceHideFloatingActionButton = isEditingTagsOnItem || itemContentView.shouldHideFloatingActionButton
         // when user comes to EditItemDialog, don't show floatingActionMenu till some content has been entered. She/he should focus on the content
         val hasUserEverEnteredSomeContent = dataManager.localSettings.didShowAddItemPropertiesHelp || itemContentView.currentValue.isBlank() == false
 
-        floatingActionMenu.setVisibilityOnUIThread(forceHidingFloatingActionButton, hasUserEverEnteredSomeContent)
+        floatingActionMenu.setVisibilityOnUIThread(forceHideFloatingActionButton, hasUserEverEnteredSomeContent)
     }
 
 
