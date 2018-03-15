@@ -584,6 +584,8 @@ class ItemContentView @JvmOverloads constructor(
             return
         }
 
+        contentEditor.enterEditingMode()
+
         txtEnterContentHint.visibility =
                 if(contentToEdit.isBlank() == false || dataManager.localSettings.didShowAddItemPropertiesHelp) View.GONE
                 else View.VISIBLE
