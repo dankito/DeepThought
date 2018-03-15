@@ -21,6 +21,8 @@ class WebPageLoader(private val activity: Activity) {
 
     private var siteLoadedCallback: ((String) -> Unit)? = null
 
+    private var getHtmlCallback: ((String, String) -> Unit)? = null
+
 
     init {
         setupWebView()
@@ -37,7 +39,9 @@ class WebPageLoader(private val activity: Activity) {
         settings.domStorageEnabled = true // otherwise images may not load, see https://stackoverflow.com/questions/29888395/images-not-loading-in-android-webview
         settings.javaScriptEnabled = true // so that embedded videos etc. work
 
-        webView.addJavascriptInterface(GetHtmlCodeFromWebViewJavaScripInterface { url, html -> siteFinishedLoading(url, html) }, GetHtmlCodeFromWebViewJavaScriptInterfaceName)
+        // adding JavaScriptInterface just before the call to getWebViewHtml() does not work as injected object will only appear in JavaScript next time web page is loaded
+        // so i had to introduce getHtmlCallback
+        webView.addJavascriptInterface(GetHtmlCodeFromWebViewJavaScripInterface { url, html -> getHtmlCallback?.invoke(url, html) }, GetHtmlCodeFromWebViewJavaScriptInterfaceName)
 
         webView.setWebChromeClient(object : WebChromeClient() {
             private var hasCompletelyFinishedLoadingPage = false
@@ -46,13 +50,13 @@ class WebPageLoader(private val activity: Activity) {
             override fun onProgressChanged(webView: WebView, newProgress: Int) {
                 super.onProgressChanged(webView, newProgress)
 
-//                firstRetrievedHtmlCallbacks.remove(webView.url)?.let { it }
-
                 if(newProgress < 100) {
                     hasCompletelyFinishedLoadingPage = false
                 }
                 else {
                     hasCompletelyFinishedLoadingPage = true
+
+                    retrieveFirstHtml()
 
                     timerCheckIfHasCompletelyFinishedLoadingPage.schedule(1000L) { // 100 % may only means a part of the page but not the whole page is loaded -> wait some time and check if not loading another part of the page
                         if(hasCompletelyFinishedLoadingPage) {
@@ -64,16 +68,6 @@ class WebPageLoader(private val activity: Activity) {
         })
     }
 
-
-    inner class GetHtmlCodeFromWebViewJavaScripInterface(private val retrievedHtmlCode: ((url: String, html: String) -> Unit)) {
-
-        @JavascriptInterface
-        @SuppressWarnings("unused")
-        fun finishedLoadingSite(url: String, html: String) {
-            retrievedHtmlCode(url, html)
-        }
-
-    }
 
     private fun fixThatWebViewIsLoadingVerySlow() {
         // avoid that WebView is loading very, very slow, see https://stackoverflow.com/questions/7422427/android-webview-slow
@@ -92,35 +86,52 @@ class WebPageLoader(private val activity: Activity) {
         }
     }
 
+
+    private fun retrieveFirstHtml() {
+        firstRetrievedHtmlCallback?.let { callback ->
+            getWebViewHtml { _, html ->
+                if(html != "<html><head></head><body></body></html>") { // filter out html with no yet received data
+                    firstRetrievedHtmlCallback = null // to flag firstRetrievedHtmlCallback has now been fired
+
+                    callback(html)
+                }
+            }
+        }
+    }
+
+
     private fun webPageCompletelyLoaded() {
         activity.runOnUiThread { webPageCompletelyLoadedOnUiThread() }
     }
 
     private fun webPageCompletelyLoadedOnUiThread() {
         if(webView.url != null && webView.url != "about:blank" && webView.url.startsWith("data:text/html") == false) {
-            getWebViewHtml("finishedLoadingSite")
+            getWebViewHtml { _, html ->
+                siteLoadedCallback?.invoke(html)
+
+                webView.removeJavascriptInterface(GetHtmlCodeFromWebViewJavaScriptInterfaceName)
+            }
         }
     }
 
-    private fun getWebViewHtml(callbackMethodName: String) {
-        webView.loadUrl("javascript:${GetHtmlCodeFromWebViewJavaScriptInterfaceName}.$callbackMethodName" +
+
+    private fun getWebViewHtml(htmlRetrieved: (url: String, html: String) -> Unit) {
+        getHtmlCallback = htmlRetrieved
+
+        webView.loadUrl("javascript:${GetHtmlCodeFromWebViewJavaScriptInterfaceName}.currentHtmlCode" +
                 "(document.URL, '<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');")
     }
 
-    private fun retrievedWebViewCurrentHtml(url: String, html: String) {
-        activity.runOnUiThread {
-            webView.removeJavascriptInterface(GetHtmlCodeFromWebViewJavaScriptInterfaceName)
+    inner class GetHtmlCodeFromWebViewJavaScripInterface(private val retrievedHtmlCode: ((url: String, html: String) -> Unit)) {
 
-            siteLoadedCallback?.invoke(html)
+        @JavascriptInterface
+        @SuppressWarnings("unused")
+        fun currentHtmlCode(url: String, html: String) {
+            activity.runOnUiThread {
+                retrievedHtmlCode(url, html)
+            }
         }
-    }
 
-    private fun siteFinishedLoading(url: String, html: String) {
-        activity.runOnUiThread {
-            webView.removeJavascriptInterface(GetHtmlCodeFromWebViewJavaScriptInterfaceName)
-
-            siteLoadedCallback?.invoke(html)
-        }
     }
 
 
