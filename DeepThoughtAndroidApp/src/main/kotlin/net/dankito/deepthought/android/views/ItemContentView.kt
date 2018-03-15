@@ -424,6 +424,8 @@ class ItemContentView @JvmOverloads constructor(
         txtItemContentLabel.visibility = View.VISIBLE
         editItemView.setFloatingActionButtonVisibilityOnUIThread()
 
+        txtEnterContentHint.visibility = View.GONE
+
         invalidateOptionsMenu(context as Activity)
     }
 
@@ -435,6 +437,8 @@ class ItemContentView @JvmOverloads constructor(
 
         txtItemContentLabel.visibility = View.GONE
         editItemView.setFloatingActionButtonVisibilityOnUIThread()
+
+        txtEnterContentHint.visibility = if(hasUserEnteredSomeContent) View.GONE else View.VISIBLE
 
         invalidateOptionsMenu(context as Activity)
         contentEditor.focusEditorAndShowKeyboardDelayed()
@@ -589,8 +593,6 @@ class ItemContentView @JvmOverloads constructor(
         }
 
         contentEditor.enterEditingMode()
-
-        txtEnterContentHint.visibility = if(hasUserEnteredSomeContent) View.GONE else View.VISIBLE
     }
 
     private fun appliedChangesToContent() {
