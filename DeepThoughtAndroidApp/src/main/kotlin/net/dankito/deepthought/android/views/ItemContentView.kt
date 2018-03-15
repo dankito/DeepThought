@@ -346,7 +346,7 @@ class ItemContentView @JvmOverloads constructor(
             showContentOnboarding = false
         }
 
-        setOnboardingTextVisibilityOnUIThread(showContentOnboarding)
+        setOnboardingTextVisibilityOnUIThread(lastShowOnboardingForItemProperties, showContentOnboarding)
     }
 
     private fun shouldShowContent(content: String?): Boolean {
