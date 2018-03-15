@@ -152,7 +152,7 @@ class ItemContentView @JvmOverloads constructor(
 
     private fun setupItemContentEditor() {
         editHtmlView = EditHtmlView(context)
-        editHtmlView.setupHtmlEditor(lytContentWebViewAndOnboardingText)
+        editHtmlView.setupHtmlEditor(lytContentViewAndOnboardingText)
 
         editHtmlView.setHtmlChangedCallback { didChange ->
             didContentChangeListener?.invoke(didChange)
@@ -386,7 +386,7 @@ class ItemContentView @JvmOverloads constructor(
     private fun setOnboardingTextVisibilityOnUIThread(showOnboardingForItemProperties: Boolean, showContentOnboarding: Boolean? = null) {
         if(isInEditContentMode == false && (showContentOnboarding == true || showOnboardingForItemProperties)) {
             lytOnboardingText.visibility = View.VISIBLE
-            lytContentWebViewAndOnboardingText.setOnClickListener { editContent() } // only enable editing content by clicking on lytContentWebViewAndOnboardingText when showing onboarding text
+            lytContentViewAndOnboardingText.setOnClickListener { editContent() } // only enable editing content by clicking on lytContentViewAndOnboardingText when showing onboarding text
 
             val onboardingTextId = if(showContentOnboarding == true) R.string.activity_edit_item_edit_content_onboarding_text else R.string.activity_edit_item_add_item_properties_onboarding_text
             txtOnboardingText.text = contextHelpUtil.stringUtil.getSpannedFromHtml(context, onboardingTextId)
@@ -395,14 +395,14 @@ class ItemContentView @JvmOverloads constructor(
         }
         else {
             lytOnboardingText.visibility = View.GONE
-            lytContentWebViewAndOnboardingText.setOnClickListener(null)
+            lytContentViewAndOnboardingText.setOnClickListener(null)
         }
 
         if(showContentOnboarding == true && isInEditContentMode == false) {
-            lytContentWebView.visibility = View.GONE
+            lytContentView.visibility = View.GONE
         }
         else if(showContentOnboarding == false) {
-            lytContentWebView.visibility = View.VISIBLE
+            lytContentView.visibility = View.VISIBLE
         }
     }
 
@@ -603,7 +603,7 @@ class ItemContentView @JvmOverloads constructor(
             return
         }
 
-        lytContentWebView.visibility = View.VISIBLE
+        lytContentView.visibility = View.VISIBLE
 
         contentEditor.enterEditingMode()
     }
