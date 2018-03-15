@@ -332,7 +332,7 @@ class ItemContentView @JvmOverloads constructor(
     fun setContentPreviewAfterLoadingEditorOnUIThread(source: Source?) {
         val content = contentToEdit
         val url = source?.url
-        var showContentOnboarding = true
+        var showContentOnboarding = isContentSet == false
         prgIsLoadingWebPage.visibility = View.GONE
 
         if(shouldShowContent(content)) {
@@ -358,7 +358,7 @@ class ItemContentView @JvmOverloads constructor(
         // TODO: currently we assume that for item content is always set, this may change in the feature
         val extractionResult = editItemView.getItemExtractionResult()
 
-        return content.isNullOrBlank() == false &&
+        return isContentSet &&
                 (extractionResult == null || (isInReaderMode && extractionResult?.couldExtractContent == true) ) // extractionResult == null -> it's an Item
     }
 
@@ -375,7 +375,7 @@ class ItemContentView @JvmOverloads constructor(
         this.lastShowOnboardingForItemProperties = showOnboardingForItemProperties
         this.lastShowContentOnboarding = showContentOnboarding
 
-        val calculatedShowContentOnboarding = if(showContentOnboarding == null) lytContentWebView.visibility != View.VISIBLE else showContentOnboarding
+        val calculatedShowContentOnboarding = if(showContentOnboarding != null) showContentOnboarding else isContentSet == false
 
         setOnboardingTextVisibilityOnUIThread(showOnboardingForItemProperties, calculatedShowContentOnboarding)
     }
@@ -597,6 +597,8 @@ class ItemContentView @JvmOverloads constructor(
         if(isLoadingUrl) { // while WebView is still loading contentToEdit is not set yet (contentToEdit gets set when loading finishes)
             return
         }
+
+        lytContentWebView.visibility = View.VISIBLE
 
         contentEditor.enterEditingMode()
     }
