@@ -426,10 +426,10 @@ class ItemContentView @JvmOverloads constructor(
         animator.playShowAnimation(editItemView.itemFieldsPreview)
 
         txtItemContentLabel.visibility = View.VISIBLE
+        txtEnterContentHint.visibility = View.GONE
+
         editItemView.setFloatingActionButtonVisibilityOnUIThread()
         mayShowOnboardingTextVisibilityOnUIThread()
-
-        txtEnterContentHint.visibility = View.GONE
 
         invalidateOptionsMenu(context as Activity)
     }
@@ -441,10 +441,10 @@ class ItemContentView @JvmOverloads constructor(
         playShowEditContentViewAnimation(start)
 
         txtItemContentLabel.visibility = View.GONE
-        editItemView.setFloatingActionButtonVisibilityOnUIThread()
-
-        lytOnboardingText.visibility = View.GONE
         txtEnterContentHint.visibility = if(didUserEnterSomeContent) View.GONE else View.VISIBLE
+
+        editItemView.setFloatingActionButtonVisibilityOnUIThread()
+        lytOnboardingText.visibility = View.GONE
 
         invalidateOptionsMenu(context as Activity)
         contentEditor.focusEditorAndShowKeyboardDelayed()
