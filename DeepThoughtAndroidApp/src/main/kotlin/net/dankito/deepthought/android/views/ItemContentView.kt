@@ -82,6 +82,10 @@ class ItemContentView @JvmOverloads constructor(
     val shouldHideFloatingActionButton: Boolean
         get() = contentEditor.isInFullscreenMode || isInEditContentMode || lytContextHelpReaderView.visibility == View.VISIBLE
 
+    val hasUserEnteredSomeContent: Boolean
+        get() = dataManager.localSettings.didShowAddItemPropertiesHelp || currentValue.isBlank() == false
+
+
     var didContentChangeListener: ((Boolean) -> Unit)? = null
 
     var fullscreenGestureListener: ((OnSwipeTouchListener.SwipeDirection) -> Unit)? = null
@@ -586,9 +590,7 @@ class ItemContentView @JvmOverloads constructor(
 
         contentEditor.enterEditingMode()
 
-        txtEnterContentHint.visibility =
-                if(contentToEdit.isBlank() == false || dataManager.localSettings.didShowAddItemPropertiesHelp) View.GONE
-                else View.VISIBLE
+        txtEnterContentHint.visibility = if(hasUserEnteredSomeContent) View.GONE else View.VISIBLE
     }
 
     private fun appliedChangesToContent() {
