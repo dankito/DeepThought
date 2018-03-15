@@ -430,7 +430,7 @@ class ItemContentView @JvmOverloads constructor(
 
     private fun leftViewContentView() {
         val webViewContentLocation = IntArray(2)
-        wbvwContent.getLocationInWindow(webViewContentLocation)
+        contentEditor.getLocationInWindow(webViewContentLocation)
         val start = webViewContentLocation[1].toFloat()
         playShowEditContentViewAnimation(start)
 
@@ -494,7 +494,7 @@ class ItemContentView @JvmOverloads constructor(
         if(localSettings.didShowItemInformationFullscreenGesturesHelp == false) {
             dialogService.showConfirmationDialog(context.getString(R.string.context_help_item_content_fullscreen_gestures), config = ConfirmationDialogConfig(false)) {
                 runOnUiThread {
-                    wbvwContent.leaveFullscreenModeAndWaitTillLeft { // leave fullscreen otherwise a lot of unwanted behaviour occurs
+                    contentEditor.leaveFullscreenModeAndWaitTillLeft { // leave fullscreen otherwise a lot of unwanted behaviour occurs
                         userConfirmedHelpOnUIThread()
                     }
                 }
@@ -504,7 +504,7 @@ class ItemContentView @JvmOverloads constructor(
             dataManager.localSettingsUpdated()
         }
         else {
-            wbvwContent.leaveFullscreenModeAndWaitTillLeft {// leave fullscreen otherwise a lot of unwanted behaviour occurs
+            contentEditor.leaveFullscreenModeAndWaitTillLeft {// leave fullscreen otherwise a lot of unwanted behaviour occurs
                 userConfirmedHelpOnUIThread()
             }
         }
