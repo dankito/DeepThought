@@ -1,6 +1,8 @@
 package net.dankito.deepthought.android.views
 
 import android.content.Context
+import android.os.Bundle
+import android.os.Parcelable
 import android.util.AttributeSet
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.BaseActivity
@@ -18,11 +20,14 @@ import net.dankito.service.search.SearchEngineBase
 import net.dankito.utils.ui.IDialogService
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.LinkedHashSet
 
 
 class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
 
     companion object {
+        private const val EnteredTagsSearchTerm = "ENTERED_TAGS_SEARCH_TERM"
+
         private val DoubleTapMaxDelayMillis = 500L
     }
 
@@ -86,6 +91,28 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
         // the next item so that user knows there's more
 
         this.disableActionOnKeyboard = false
+    }
+
+
+    override fun onSaveInstanceState(): Parcelable {
+        val parcelable = super.onSaveInstanceState()
+
+        (parcelable as? Bundle)?.let { bundle ->
+            bundle.putString(EnteredTagsSearchTerm, presenter.getLastSearchTerm())
+        }
+
+        return parcelable
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        super.onRestoreInstanceState(state)
+
+        (state as? Bundle)?.let { savedInstanceState ->
+            savedInstanceState.getString(EnteredTagsSearchTerm)?.let { enteredTagsSearchTerm ->
+                edtxtEntityFieldValue.setText(enteredTagsSearchTerm) // call in a way that TextChanged listener gets fired
+                searchEntities(enteredTagsSearchTerm) // but EditEntityCollectionField.enteredTextChanged() doesn't call searchEntities() as field doesn't have focus
+            }
+        }
     }
 
 
