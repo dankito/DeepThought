@@ -111,6 +111,10 @@ open class ArticleExtractorManager(private val seriesService: SeriesService, pri
             log.info("Using $extractor to extract html from url $url")
 
             extractor.parseHtml(extractionResult, html, url)
+
+            if(extractionResult.couldExtractContent == false && articleExtractors.isDefaultExtractor(extractor) == false) {
+                articleExtractors.defaultExtractor.parseHtml(extractionResult, html, url)
+            }
         }
     }
 
