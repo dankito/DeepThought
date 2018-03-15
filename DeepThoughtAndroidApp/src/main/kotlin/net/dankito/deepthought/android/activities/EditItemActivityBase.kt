@@ -56,9 +56,6 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
         private const val FORCE_SHOW_SUMMARY_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_SUMMARY_PREVIEW"
         private const val FORCE_SHOW_FILES_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_FILES_PREVIEW"
 
-        private const val TAGS_ON_ITEM_INTENT_EXTRA_NAME = "TAGS_ON_ITEM"
-        private const val FILES_INTENT_EXTRA_NAME = "ATTACHED_FILES"
-
         const val ResultId = "EDIT_ITEM_ACTIVITY_RESULT"
 
         private const val ShowHideEditTagsAnimationDurationMillis = 250L
@@ -197,10 +194,6 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
 
         restoreEntity(savedInstanceState)
 
-        savedInstanceState.getString(TAGS_ON_ITEM_INTENT_EXTRA_NAME)?.let { tagsOnItemIds -> restoreTagsOnItemAsync(tagsOnItemIds) }
-        // TODO:
-//        savedInstanceState.getString(FILES_INTENT_EXTRA_NAME)?.let { fileIds -> restoreFilesAsync(fileIds) }
-
         floatingActionMenu.restoreInstanceState(savedInstanceState)
 
         setMenuSaveItemVisibleStateOnUIThread()
@@ -218,10 +211,6 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
             outState.putBoolean(FORCE_SHOW_SOURCE_PREVIEW_INTENT_EXTRA_NAME, forceShowSourcePreview)
             outState.putBoolean(FORCE_SHOW_SUMMARY_PREVIEW_INTENT_EXTRA_NAME, forceShowSummaryPreview)
             outState.putBoolean(FORCE_SHOW_FILES_PREVIEW_INTENT_EXTRA_NAME, forceShowFilesPreview)
-
-            outState.putString(TAGS_ON_ITEM_INTENT_EXTRA_NAME, serializer.serializeObject(tagsOnItem))
-            // TODO: add PersistedFilesSerializer
-            outState.putString(FILES_INTENT_EXTRA_NAME, serializer.serializeObject(lytFilesPreview.getEditedFiles()))
 
             floatingActionMenu.saveInstanceState(outState)
         }

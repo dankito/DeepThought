@@ -111,6 +111,10 @@ open class ArticleExtractorManager(private val seriesService: SeriesService, pri
             log.info("Using $extractor to extract html from url $url")
 
             extractor.parseHtml(extractionResult, html, url)
+
+            if(extractionResult.couldExtractContent == false && articleExtractors.isDefaultExtractor(extractor) == false) {
+                articleExtractors.defaultExtractor.parseHtml(extractionResult, html, url)
+            }
         }
     }
 
@@ -187,7 +191,7 @@ open class ArticleExtractorManager(private val seriesService: SeriesService, pri
             siteName = extractionResult.seriesTitle
         }
 
-        if(siteName == null) { // when extractor is default article extractor, use host name for default tag and series
+        if(siteName.isNullOrBlank()) { // when extractor is default article extractor, use host name for default tag and series
             siteName = getSiteNameForUrl(urlString)
         }
 

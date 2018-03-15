@@ -18,7 +18,7 @@ class AndroidClipboardContent(private val item: ClipData.Item, private val descr
     override fun hasUrl(): Boolean {
         // urls are mostly copied as plain text to clipboard, not as Android Uri
         return description.hasMimeType(ClipDescription.MIMETYPE_TEXT_URILIST) ||
-                (hasPlainText() && plainText != null && urlUtil.isHttpUri(plainText))
+                (hasPlainText() && plainText != null && urlUtil.isHttpUri(plainText.trim()))
     }
 
     override val url: String?
@@ -26,8 +26,8 @@ class AndroidClipboardContent(private val item: ClipData.Item, private val descr
             if(description.hasMimeType(ClipDescription.MIMETYPE_TEXT_URILIST)) {
                 return item.uri?.toString()
             }
-            else if(plainText != null && urlUtil.isHttpUri(plainText)) {
-                return plainText
+            else if(plainText != null && urlUtil.isHttpUri(plainText.trim())) {
+                return plainText.trim()
             }
 
             return null

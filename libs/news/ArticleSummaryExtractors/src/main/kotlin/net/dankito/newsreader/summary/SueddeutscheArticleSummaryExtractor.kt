@@ -43,11 +43,32 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
 
     private fun extractTeasers(articles: MutableList<ArticleSummaryItem>, siteUrl: String, document: Document) {
         document.body().select("#sitecontent").first()?.let { siteContent ->
-            articles.addAll(siteContent.select(".teaser").map { mapTeaserElementToArticleSummaryItem(it, siteUrl) }.filterNotNull())
+            articles.addAll(siteContent.select(".sz-teaser").map { mapTeaserElementToArticleSummaryItem(it, siteUrl) }.filterNotNull())
+            articles.addAll(siteContent.select(".teaser").map { mapOldTeaserElementToArticleSummaryItem(it, siteUrl) }.filterNotNull())
         }
     }
 
     private fun mapTeaserElementToArticleSummaryItem(teaserElement: Element, siteUrl: String): ArticleSummaryItem? {
+        teaserElement.select(".sz-teaser__title").first()?.let { titleElement ->
+            val articleUrl = makeLinkAbsolute(teaserElement.attr("href"), siteUrl)
+            val item = ArticleSummaryItem(articleUrl, titleElement.text(), getArticleExtractorClass(articleUrl))
+
+            teaserElement.select("img.sz-teaser__image--mobile, img.sz-teaser__image--desktop, img").first()?.let {
+                item.previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(it, "src", siteUrl)
+            }
+
+            teaserElement.select(".sz-teaser__summary").first()?.let { summaryElement ->
+                summaryElement.select(".author, .more").remove()
+                item.summary = summaryElement.text()
+            }
+
+            return item
+        }
+
+        return null
+    }
+
+    private fun mapOldTeaserElementToArticleSummaryItem(teaserElement: Element, siteUrl: String): ArticleSummaryItem? {
         teaserElement.select(".entry-title").first()?.let { titleElement ->
             val articleUrl = makeLinkAbsolute(titleElement.attr("href"), siteUrl)
             val item = ArticleSummaryItem(articleUrl, titleElement.text(), getArticleExtractorClass(articleUrl))
