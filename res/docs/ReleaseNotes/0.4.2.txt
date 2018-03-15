@@ -1,0 +1,12 @@
+Android App:
+- Showing now count items tag is set on in tag preview
+- Fixed memory leak in MainActivityFloatingActionMenuButton, RichTextEditor and others
+- Adjusted to new Sueddeutsche home page
+- Fixed restoring source, tags, files, secondaryInformation, changedFields, forceXyz values in EditItemActivity
+- Fixed showing keyboard for edtxtSecondaryInformationValue
+- Listening for changes to ReadLaterArticle in EditReadLaterArticleActivity
+- Implemented trimming plain text from Clipboard before checking if it's an url
+- If Readability4J returns an empty string for siteName then getSiteNameForUrl() now gets called
+- ArticleExtractorManager.extractArticleUserDidSeeBefore() tries now default extractor is specific extractor failed to extract content
+- Fixed that tags in extactMatches can be null in TagsOnItemListPresenter
+- Extracted EditItemActivityBase, EditItemExtractionResultActivity and EditReadLaterArticleActivity
