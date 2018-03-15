@@ -60,12 +60,6 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
         private const val FORCE_SHOW_SUMMARY_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_SUMMARY_PREVIEW"
         private const val FORCE_SHOW_FILES_PREVIEW_INTENT_EXTRA_NAME = "FORCE_SHOW_FILES_PREVIEW"
 
-        private const val IS_IN_EDIT_CONTENT_MODE_INTENT_EXTRA_NAME = "IS_IN_EDIT_CONTENT_MODE"
-        private const val IS_IN_READER_MODE_INTENT_EXTRA_NAME = "IS_IN_READER_MODE"
-
-        private const val CONTENT_INTENT_EXTRA_NAME = "CONTENT"
-        private const val EDIT_CONTENT_HTML_INTENT_EXTRA_NAME = "EDIT_CONTENT_HTML"
-
         const val ResultId = "EDIT_ITEM_ACTIVITY_RESULT"
 
         private const val ShowHideEditTagsAnimationDurationMillis = 250L
@@ -204,13 +198,6 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
 
         restoreEntity(savedInstanceState)
 
-        restoreStateFromDisk(savedInstanceState, CONTENT_INTENT_EXTRA_NAME, String::class.java)?.let { content ->
-            contentToEdit = content
-            setContentPreviewOnUIThread()
-        }
-
-        wbvwContent.restoreInstanceState(savedInstanceState)
-
         floatingActionMenu.restoreInstanceState(savedInstanceState)
 
         setMenuSaveItemVisibleStateOnUIThread()
@@ -228,19 +215,6 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
             outState.putBoolean(FORCE_SHOW_SOURCE_PREVIEW_INTENT_EXTRA_NAME, forceShowSourcePreview)
             outState.putBoolean(FORCE_SHOW_SUMMARY_PREVIEW_INTENT_EXTRA_NAME, forceShowSummaryPreview)
             outState.putBoolean(FORCE_SHOW_FILES_PREVIEW_INTENT_EXTRA_NAME, forceShowFilesPreview)
-
-            outState.putBoolean(IS_IN_EDIT_CONTENT_MODE_INTENT_EXTRA_NAME, isInEditContentMode)
-            outState.putBoolean(IS_IN_READER_MODE_INTENT_EXTRA_NAME, isInReaderMode)
-
-            if(contentToEdit != originalContent) {
-                serializeStateToDiskIfNotNull(outState, CONTENT_INTENT_EXTRA_NAME, contentToEdit) // application crashes if objects put into bundle are too large (> 1 MB) for Android
-            }
-
-            if(isInEditContentMode) {
-                serializeStateToDiskIfNotNull(outState, EDIT_CONTENT_HTML_INTENT_EXTRA_NAME, editHtmlView.getHtml()) // application crashes if objects put into bundle are too large (> 1 MB) for Android
-            }
-
-            wbvwContent.onSaveInstanceState(outState)
 
             floatingActionMenu.saveInstanceState(outState)
         }
