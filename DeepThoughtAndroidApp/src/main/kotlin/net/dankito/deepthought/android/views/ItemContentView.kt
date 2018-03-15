@@ -79,6 +79,9 @@ class ItemContentView @JvmOverloads constructor(
     val currentValue: String
         get() = contentToEdit
 
+    val isInEditContentMode: Boolean
+        get() = ! contentEditor.isInViewingMode
+
     val shouldHideFloatingActionButton: Boolean
         get() = contentEditor.isInFullscreenMode || isInEditContentMode || lytContextHelpReaderView.visibility == View.VISIBLE
 
@@ -97,9 +100,6 @@ class ItemContentView @JvmOverloads constructor(
 
     private lateinit var editItemView: IEditItemView
 
-
-    val isInEditContentMode: Boolean
-        get() = ! contentEditor.isInViewingMode
 
     private var isInReaderMode = false
 
