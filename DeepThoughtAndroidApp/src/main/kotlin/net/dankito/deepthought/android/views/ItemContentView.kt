@@ -86,7 +86,10 @@ class ItemContentView @JvmOverloads constructor(
         get() = contentEditor.isInFullscreenMode || isInEditContentMode || lytContextHelpReaderView.visibility == View.VISIBLE
 
     val didUserEnterSomeContent: Boolean
-        get() = dataManager.localSettings.didShowAddItemPropertiesHelp || currentValue.isBlank() == false
+        get() = dataManager.localSettings.didShowAddItemPropertiesHelp || isContentSet
+
+    val isContentSet: Boolean
+        get() = currentValue.isBlank() == false
 
 
     var didContentChangeListener: ((Boolean) -> Unit)? = null

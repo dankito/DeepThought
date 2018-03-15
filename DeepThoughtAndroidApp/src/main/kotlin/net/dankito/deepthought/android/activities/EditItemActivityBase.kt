@@ -387,7 +387,7 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
     private fun itemPropertySet() {
         val localSettings = itemService.dataManager.localSettings
 
-        if(localSettings.didShowAddItemPropertiesHelp == false && itemContentView.currentValue.isBlank() == false) {
+        if(localSettings.didShowAddItemPropertiesHelp == false && itemContentView.isContentSet) {
             localSettings.didShowAddItemPropertiesHelp = true
             itemService.dataManager.localSettingsUpdated()
         }
@@ -642,7 +642,7 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
     }
 
     protected fun haveAllFieldsBeenCleared(): Boolean {
-        return itemContentView.currentValue.isBlank() && tagsOnItem.isEmpty() && lytSourcePreview.source == null
+        return itemContentView.isContentSet == false && tagsOnItem.isEmpty() && lytSourcePreview.source == null
                 && lytSummaryPreview.getCurrentFieldValue().isEmpty() && lytFilesPreview.getEditedFiles().size == 0
     }
 
