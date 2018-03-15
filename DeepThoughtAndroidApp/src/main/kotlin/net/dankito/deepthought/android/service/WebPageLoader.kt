@@ -153,7 +153,13 @@ class WebPageLoader(private val activity: Activity) {
         activity.runOnUiThread {
             retrievedBaseHtmlCallback(webSiteBaseHtml)
 
-            webView.loadDataWithBaseURL(url, webSiteBaseHtml, "text/html; charset=UTF-8", "utf-8", null)
+
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) { // loading html with loadDataWithBaseURL() didn't work for me on 4.1 (API 16), just displayed HTML code
+                webView.loadDataWithBaseURL(url, webSiteBaseHtml, "text/html; charset=UTF-8", "utf-8", null)
+            }
+            else {
+                webView.loadData(webSiteBaseHtml, "text/html; charset=UTF-8", "utf-8")
+            }
         }
     }
 
