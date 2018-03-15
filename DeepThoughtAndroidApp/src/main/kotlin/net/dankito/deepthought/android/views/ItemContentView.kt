@@ -79,6 +79,11 @@ class ItemContentView @JvmOverloads constructor(
     val currentValue: String
         get() = contentToEdit
 
+    val isContentSet: Boolean
+        get() {
+            return currentValue.isBlank() == false && currentValue != "<p>\u200B</p>" // = RichTextEditor's default html
+        }
+
     val isInEditContentMode: Boolean
         get() = ! contentEditor.isInViewingMode
 
@@ -87,9 +92,6 @@ class ItemContentView @JvmOverloads constructor(
 
     val didUserEnterSomeContent: Boolean
         get() = dataManager.localSettings.didShowAddItemPropertiesHelp || isContentSet
-
-    val isContentSet: Boolean
-        get() = currentValue.isBlank() == false
 
 
     var didContentChangeListener: ((Boolean) -> Unit)? = null
