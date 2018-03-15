@@ -381,7 +381,7 @@ class ItemContentView @JvmOverloads constructor(
             lytContentWebViewAndOnboardingText.setOnClickListener { editContent() } // only enable editing content by clicking on lytContentWebViewAndOnboardingText when showing onboarding text
 
             val onboardingTextId = if(showContentOnboarding == true) R.string.activity_edit_item_edit_content_onboarding_text else R.string.activity_edit_item_add_item_properties_onboarding_text
-            val onboardingText = if(showContentOnboarding == true) context.getText(onboardingTextId).toString() else context.getText(onboardingTextId).toString()
+            val onboardingText = context.getText(onboardingTextId).toString()
             txtOnboardingText.text = contextHelpUtil.stringUtil.getSpannedFromHtml(onboardingText)
 
             arrowToFloatingActionButton.visibility = if(showContentOnboarding != true && showOnboardingForItemProperties) View.VISIBLE else View.GONE
