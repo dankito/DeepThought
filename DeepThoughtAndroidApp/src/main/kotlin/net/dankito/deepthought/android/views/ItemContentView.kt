@@ -250,7 +250,9 @@ class ItemContentView @JvmOverloads constructor(
 
 
     fun onResume(source: Source?) {
-        setContentPreviewOnUIThread(source) // TODO: is this really senseful in all circumstances or is it causing more trouble then solving problems?
+        // avoiding call to setContentPreviewOnUIThread() for now as on start it simply loads content a second time // TODO: find cases where it has been senseful
+        // was needed for: Fixed that on resume non reader mode (= load url) hasn't been restored correctly or onboarding text got displayed
+//        setContentPreviewOnUIThread(source) // TODO: is this really senseful in all circumstances or is it causing more trouble then solving problems?
 
         contentEditor.activityResumed()
     }
