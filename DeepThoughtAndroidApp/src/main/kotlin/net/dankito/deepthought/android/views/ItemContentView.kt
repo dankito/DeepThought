@@ -438,6 +438,7 @@ class ItemContentView @JvmOverloads constructor(
         txtItemContentLabel.visibility = View.GONE
         editItemView.setFloatingActionButtonVisibilityOnUIThread()
 
+        lytOnboardingText.visibility = View.GONE
         txtEnterContentHint.visibility = if(hasUserEnteredSomeContent) View.GONE else View.VISIBLE
 
         invalidateOptionsMenu(context as Activity)
