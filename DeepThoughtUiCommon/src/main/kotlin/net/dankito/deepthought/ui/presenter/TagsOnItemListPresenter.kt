@@ -134,7 +134,7 @@ class TagsOnItemListPresenter(private val tagsOnItemListView: ITagsOnItemListVie
 
     private fun toggleTagOnItem(tagsOnItem: MutableCollection<Tag>, result: TagsSearchResult, isLastSearchResult: Boolean, state: TagsSearcherButtonState, notExistingEnteredTags: ArrayList<String>) {
         if(result.hasExactMatches()) {
-            result.exactMatches.forEach { toggleTagAffiliation(it, tagsOnItem, state) }
+            result.exactMatches.filterNotNull().forEach { toggleTagAffiliation(it, tagsOnItem, state) }
         }
         else if(isLastSearchResult == false && result.hasSingleMatch()) {
             result.getSingleMatch()?.let { toggleTagAffiliation(it, tagsOnItem, state) }
