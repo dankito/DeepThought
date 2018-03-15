@@ -354,7 +354,7 @@ class ItemContentView @JvmOverloads constructor(
     }
 
     private fun showContentInWebView(content: String?, url: String?) {
-        contentEditor.setHtml(content ?: "", url)
+        editHtmlView.setHtml(content ?: "", url)
     }
 
 
