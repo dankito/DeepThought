@@ -34,6 +34,8 @@ class WebPageLoader(private val activity: Activity) {
 
     private val timerCheckIfHasCompletelyFinishedLoadingPage = Timer()
 
+    private var scheduledCheckIfHasCompletelyFinishedLoadingPageTask: TimerTask? = null
+
 
     init {
         AppComponent.component.inject(this)
@@ -67,13 +69,16 @@ class WebPageLoader(private val activity: Activity) {
     }
 
     private fun webSiteProgressChanged(newProgress: Int) {
+        scheduledCheckIfHasCompletelyFinishedLoadingPageTask?.cancel()
+        scheduledCheckIfHasCompletelyFinishedLoadingPageTask = null
+
         if(newProgress < 100) {
             hasCompletelyFinishedLoadingPage = false
         }
         else {
             hasCompletelyFinishedLoadingPage = true
 
-            timerCheckIfHasCompletelyFinishedLoadingPage.schedule(1000L) {
+            scheduledCheckIfHasCompletelyFinishedLoadingPageTask = timerCheckIfHasCompletelyFinishedLoadingPage.schedule(1000L) {
                 // 100 % may only means a part of the page but not the whole page is loaded -> wait some time and check if not loading another part of the page
                 if(hasCompletelyFinishedLoadingPage) {
                     webPageCompletelyLoaded()
