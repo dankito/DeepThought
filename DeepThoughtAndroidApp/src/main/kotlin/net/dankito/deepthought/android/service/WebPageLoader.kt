@@ -30,6 +30,11 @@ class WebPageLoader(private val activity: Activity) {
     private var getHtmlCallback: ((String, String) -> Unit)? = null
 
 
+    private var hasCompletelyFinishedLoadingPage = false
+
+    private val timerCheckIfHasCompletelyFinishedLoadingPage = Timer()
+
+
     init {
         AppComponent.component.inject(this)
 
@@ -52,26 +57,29 @@ class WebPageLoader(private val activity: Activity) {
         webView.addJavascriptInterface(GetHtmlCodeFromWebViewJavaScripInterface { url, html -> getHtmlCallback?.invoke(url, html) }, GetHtmlCodeFromWebViewJavaScriptInterfaceName)
 
         webView.setWebChromeClient(object : WebChromeClient() {
-            private var hasCompletelyFinishedLoadingPage = false
-            private val timerCheckIfHasCompletelyFinishedLoadingPage = Timer()
 
             override fun onProgressChanged(webView: WebView, newProgress: Int) {
                 super.onProgressChanged(webView, newProgress)
 
-                if(newProgress < 100) {
-                    hasCompletelyFinishedLoadingPage = false
-                }
-                else {
-                    hasCompletelyFinishedLoadingPage = true
-
-                    timerCheckIfHasCompletelyFinishedLoadingPage.schedule(1000L) { // 100 % may only means a part of the page but not the whole page is loaded -> wait some time and check if not loading another part of the page
-                        if(hasCompletelyFinishedLoadingPage) {
-                            webPageCompletelyLoaded()
-                        }
-                    }
-                }
+                webSiteProgressChanged(newProgress)
             }
         })
+    }
+
+    private fun webSiteProgressChanged(newProgress: Int) {
+        if(newProgress < 100) {
+            hasCompletelyFinishedLoadingPage = false
+        }
+        else {
+            hasCompletelyFinishedLoadingPage = true
+
+            timerCheckIfHasCompletelyFinishedLoadingPage.schedule(1000L) {
+                // 100 % may only means a part of the page but not the whole page is loaded -> wait some time and check if not loading another part of the page
+                if(hasCompletelyFinishedLoadingPage) {
+                    webPageCompletelyLoaded()
+                }
+            }
+        }
     }
 
 
