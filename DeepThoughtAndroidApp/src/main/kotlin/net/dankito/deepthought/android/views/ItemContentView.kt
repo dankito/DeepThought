@@ -333,7 +333,8 @@ class ItemContentView @JvmOverloads constructor(
         else if(url != null && editItemView.getItemExtractionResult() != null) { // then load url (but don't show it for an Item)
             isLoadingUrl = true
             prgIsLoadingWebPage.visibility = View.VISIBLE
-            WebPageLoader(context as Activity).loadUrl(url, { contentEditor.setHtml(it, url) } ) { html -> siteFinishedLoading(url, html) }
+            // in retrievedBaseHtmlCallback set url to null so that RichTextEditor doesn't load referenced parts (scripts, ...) that WebPageLoader also does in background
+            WebPageLoader(context as Activity).loadUrl(url, { contentEditor.setHtml(it, null) } ) { html -> siteFinishedLoading(url, html) }
             showContentOnboarding = false
         }
 
