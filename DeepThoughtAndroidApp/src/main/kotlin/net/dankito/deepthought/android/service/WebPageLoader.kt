@@ -115,7 +115,7 @@ class WebPageLoader(private val activity: Activity) {
             if(html != "<html><head></head><body></body></html>") { // don't know where this is coming from but definitely filter them out
                 siteLoadedCallback?.invoke(html)
 
-                webView.removeJavascriptInterface(GetHtmlCodeFromWebViewJavaScriptInterfaceName)
+                cleanUp()
             }
         }
     }
@@ -174,6 +174,18 @@ class WebPageLoader(private val activity: Activity) {
                 webView.loadData(webSiteBaseHtml, "text/html; charset=UTF-8", "utf-8")
             }
         }
+    }
+
+
+    fun cleanUp() {
+        this.siteLoadedCallback = null
+
+        this.scheduledCheckIfHasCompletelyFinishedLoadingPageTask?.cancel() // to avoid memory leaks
+        this.scheduledCheckIfHasCompletelyFinishedLoadingPageTask = null
+
+        webView.removeJavascriptInterface(GetHtmlCodeFromWebViewJavaScriptInterfaceName)
+
+        webView.loadUrl("about:blank")
     }
 
 }

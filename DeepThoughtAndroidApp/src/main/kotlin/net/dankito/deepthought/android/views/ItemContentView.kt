@@ -134,6 +134,8 @@ class ItemContentView @JvmOverloads constructor(
 
     private val openUrlOptionsView = OpenUrlOptionsView()
 
+    private var currentWebPageLoader: WebPageLoader? = null
+
 
 
     init {
@@ -287,6 +289,9 @@ class ItemContentView @JvmOverloads constructor(
         contentEditor.hideKeyboard()
 
         openUrlOptionsView.cleanUp()
+
+        currentWebPageLoader?.cleanUp()
+        currentWebPageLoader = null
     }
 
     fun onDestroy() {
@@ -349,8 +354,11 @@ class ItemContentView @JvmOverloads constructor(
         else if(url != null && editItemView.getItemExtractionResult() != null) { // then load url (but don't show it for an Item)
             isLoadingUrl = true
             prgIsLoadingWebPage.visibility = View.VISIBLE
+
+            currentWebPageLoader?.cleanUp()
+            currentWebPageLoader = WebPageLoader(context as Activity)
             // in retrievedBaseHtmlCallback set url to null so that RichTextEditor doesn't load referenced parts (scripts, ...) that WebPageLoader also does in background
-            WebPageLoader(context as Activity).loadUrl(url, { showContentInWebView(it, null) } ) { html -> siteFinishedLoading(url, html) }
+            currentWebPageLoader?.loadUrl(url, { showContentInWebView(it, null) } ) { html -> siteFinishedLoading(url, html) }
             showContentOnboarding = false
         }
 
