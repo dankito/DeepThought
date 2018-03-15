@@ -648,21 +648,6 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        if(itemContentView.isInEditContentMode) { // TODO to decide which menu to inflate; remove itemContentView.isInEditContentMode
-            createEditHtmlOptionsMenu(menu)
-        }
-        else {
-            createViewHtmlOptionsMenu(menu)
-        }
-
-        return true
-    }
-
-    private fun createEditHtmlOptionsMenu(menu: Menu) {
-        menuInflater.inflate(R.menu.activity_edit_item_edit_content_menu, menu)
-    }
-
-    protected open fun createViewHtmlOptionsMenu(menu: Menu) {
         menuInflater.inflate(R.menu.activity_edit_item_menu, menu)
 
         mnSaveItem = menu.findItem(R.id.mnSaveItem)
@@ -680,6 +665,8 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
         adjustViewHtmlOptionsMenu(menu) // adjusting icons has to be done before toolbarUtil.setupActionItemsLayout() gets called
 
         toolbarUtil.setupActionItemsLayout(menu) { menuItem -> onOptionsItemSelected(menuItem) }
+
+        return true
     }
 
     protected open fun adjustViewHtmlOptionsMenu(menu: Menu) {
