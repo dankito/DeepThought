@@ -156,7 +156,7 @@ class ItemContentView @JvmOverloads constructor(
     private fun siteFinishedLoading(url: String, html: String) {
         urlLoadedNow()
 
-        contentEditor.setHtml(html, url)
+        showContentInWebView(html, url)
 
         // now try to extract item content from WebView's html
         val extractionResult = editItemView.getItemExtractionResult()
@@ -338,7 +338,7 @@ class ItemContentView @JvmOverloads constructor(
             isLoadingUrl = true
             prgIsLoadingWebPage.visibility = View.VISIBLE
             // in retrievedBaseHtmlCallback set url to null so that RichTextEditor doesn't load referenced parts (scripts, ...) that WebPageLoader also does in background
-            WebPageLoader(context as Activity).loadUrl(url, { contentEditor.setHtml(it, null) } ) { html -> siteFinishedLoading(url, html) }
+            WebPageLoader(context as Activity).loadUrl(url, { showContentInWebView(it, null) } ) { html -> siteFinishedLoading(url, html) }
             showContentOnboarding = false
         }
 
