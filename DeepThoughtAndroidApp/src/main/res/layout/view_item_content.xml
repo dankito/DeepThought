@@ -80,15 +80,6 @@
                 android:layout_weight="10"
             >
 
-                <net.dankito.richtexteditor.android.FullscreenWebView
-                    android:id="@+id/wbvwContent"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentBottom="true"
-                    android:visibility="gone"
-                />
-
                 <net.dankito.richtexteditor.android.RichTextEditor
                     android:id="@+id/contentEditor"
                     android:layout_width="match_parent"
