@@ -376,7 +376,7 @@ class ItemContentView @JvmOverloads constructor(
     }
 
     private fun setOnboardingTextVisibilityOnUIThread(showOnboardingForItemProperties: Boolean, showContentOnboarding: Boolean? = null) {
-        if(showContentOnboarding == true || showOnboardingForItemProperties) {
+        if(isInEditContentMode == false && (showContentOnboarding == true || showOnboardingForItemProperties)) {
             lytOnboardingText.visibility = View.VISIBLE
             lytContentWebViewAndOnboardingText.setOnClickListener { editContent() } // only enable editing content by clicking on lytContentWebViewAndOnboardingText when showing onboarding text
 
@@ -390,7 +390,7 @@ class ItemContentView @JvmOverloads constructor(
             lytContentWebViewAndOnboardingText.setOnClickListener(null)
         }
 
-        if(showContentOnboarding == true) {
+        if(showContentOnboarding == true && isInEditContentMode == false) {
             lytContentWebView.visibility = View.GONE
         }
         else if(showContentOnboarding == false) {
@@ -422,6 +422,7 @@ class ItemContentView @JvmOverloads constructor(
 
         txtItemContentLabel.visibility = View.VISIBLE
         editItemView.setFloatingActionButtonVisibilityOnUIThread()
+        mayShowOnboardingTextVisibilityOnUIThread()
 
         txtEnterContentHint.visibility = View.GONE
 
