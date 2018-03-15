@@ -82,7 +82,7 @@ class ItemContentView @JvmOverloads constructor(
     val shouldHideFloatingActionButton: Boolean
         get() = contentEditor.isInFullscreenMode || isInEditContentMode || lytContextHelpReaderView.visibility == View.VISIBLE
 
-    val hasUserEnteredSomeContent: Boolean
+    val didUserEnterSomeContent: Boolean
         get() = dataManager.localSettings.didShowAddItemPropertiesHelp || currentValue.isBlank() == false
 
 
@@ -439,7 +439,7 @@ class ItemContentView @JvmOverloads constructor(
         editItemView.setFloatingActionButtonVisibilityOnUIThread()
 
         lytOnboardingText.visibility = View.GONE
-        txtEnterContentHint.visibility = if(hasUserEnteredSomeContent) View.GONE else View.VISIBLE
+        txtEnterContentHint.visibility = if(didUserEnterSomeContent) View.GONE else View.VISIBLE
 
         invalidateOptionsMenu(context as Activity)
         contentEditor.focusEditorAndShowKeyboardDelayed()
