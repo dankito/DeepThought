@@ -10,3 +10,4 @@ Android App:
 - ArticleExtractorManager.extractArticleUserDidSeeBefore() tries now default extractor is specific extractor failed to extract content
 - Fixed that tags in extactMatches can be null in TagsOnItemListPresenter
 - Extracted EditItemActivityBase, EditItemExtractionResultActivity and EditReadLaterArticleActivity
+- Using now version 1.0-alpha3 of couchbase-lite-jpa and JpaAnnotationReader which fixes among others encoding but on Windows 7 for CLOBs
