@@ -74,7 +74,6 @@ abstract class EditItemActivityBase : BaseActivity() {
 
         private const val CONTENT_INTENT_EXTRA_NAME = "CONTENT"
         private const val EDIT_CONTENT_HTML_INTENT_EXTRA_NAME = "EDIT_CONTENT_HTML"
-        private const val FILES_INTENT_EXTRA_NAME = "ATTACHED_FILES"
 
         const val ResultId = "EDIT_ITEM_ACTIVITY_RESULT"
 
@@ -243,9 +242,6 @@ abstract class EditItemActivityBase : BaseActivity() {
             setContentPreviewOnUIThread()
         }
 
-        // TODO:
-//        savedInstanceState.getString(FILES_INTENT_EXTRA_NAME)?.let { fileIds -> restoreFilesAsync(fileIds) }
-
         wbvwContent.restoreInstanceState(savedInstanceState)
 
         floatingActionMenu.restoreInstanceState(savedInstanceState)
@@ -277,9 +273,6 @@ abstract class EditItemActivityBase : BaseActivity() {
 
             outState.putBoolean(IS_IN_EDIT_CONTENT_MODE_INTENT_EXTRA_NAME, isInEditContentMode)
             outState.putBoolean(IS_IN_READER_MODE_INTENT_EXTRA_NAME, isInReaderMode)
-
-            // TODO: add PersistedFilesSerializer
-            outState.putString(FILES_INTENT_EXTRA_NAME, serializer.serializeObject(lytFilesPreview.getEditedFiles()))
 
             if(contentToEdit != originalContent) {
                 serializeStateToDiskIfNotNull(outState, CONTENT_INTENT_EXTRA_NAME, contentToEdit) // application crashes if objects put into bundle are too large (> 1 MB) for Android
