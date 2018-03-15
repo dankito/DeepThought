@@ -132,8 +132,6 @@ class WebPageLoader(private val activity: Activity) {
         this.siteLoadedCallback = siteLoadedCallback
 
         loadWebSiteBaseHtml(url, retrievedBaseHtmlCallback)
-
-        clearWebView() // TODO: remove
     }
 
     private fun loadWebSiteBaseHtml(url: String, retrievedBaseHtmlCallback: (html: String) -> Unit) {
@@ -156,16 +154,6 @@ class WebPageLoader(private val activity: Activity) {
             retrievedBaseHtmlCallback(webSiteBaseHtml)
 
             webView.loadDataWithBaseURL(url, webSiteBaseHtml, "text/html; charset=UTF-8", "utf-8", null)
-        }
-    }
-
-    private fun clearWebView() {
-        if(Build.VERSION.SDK_INT < 18) {
-            @Suppress("DEPRECATION")
-            webView.clearView()
-        }
-        else {
-            webView.loadUrl("about:blank")
         }
     }
 
