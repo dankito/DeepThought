@@ -31,6 +31,7 @@ import net.dankito.richtexteditor.JavaScriptExecutorBase
 import net.dankito.richtexteditor.android.FullscreenWebView
 import net.dankito.richtexteditor.android.animation.ShowHideViewAnimator
 import net.dankito.richtexteditor.android.util.OnSwipeTouchListener
+import net.dankito.utils.IThreadPool
 import net.dankito.utils.UrlUtil
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogConfig
@@ -74,6 +75,9 @@ class ItemContentView @JvmOverloads constructor(
 
     @Inject
     protected lateinit var urlUtil: UrlUtil
+
+    @Inject
+    protected lateinit var threadPool: IThreadPool
 
 
     val currentValue: String
@@ -177,12 +181,18 @@ class ItemContentView @JvmOverloads constructor(
             contentToEdit = html
 
             if(extractionResult.couldExtractContent == false) {
-                articleExtractorManager.extractArticleUserDidSeeBefore(extractionResult, html, url)
+                extractContentAsync(extractionResult, html, url)
+            }
+        }
+    }
 
-                if(extractionResult.couldExtractContent) {
-                    runOnUiThread {
-                        extractedContentOnUiThread(extractionResult)
-                    }
+    private fun extractContentAsync(extractionResult: ItemExtractionResult, html: String, url: String) {
+        threadPool.runAsync {
+            articleExtractorManager.extractArticleUserDidSeeBefore(extractionResult, html, url)
+
+            if(extractionResult.couldExtractContent) {
+                runOnUiThread {
+                    extractedContentOnUiThread(extractionResult)
                 }
             }
         }
