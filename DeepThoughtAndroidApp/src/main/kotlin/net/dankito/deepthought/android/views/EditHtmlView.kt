@@ -11,6 +11,7 @@ import net.dankito.richtexteditor.Color
 import net.dankito.richtexteditor.android.AndroidIcon
 import net.dankito.richtexteditor.android.RichTextEditor
 import net.dankito.richtexteditor.android.command.*
+import net.dankito.richtexteditor.android.util.StyleApplier
 import net.dankito.richtexteditor.command.ToolbarCommandStyle
 
 
@@ -38,7 +39,7 @@ class EditHtmlView : View {
 
         val optionsBar = rootView.lytFullscreenWebViewOptionsBar
         optionsBar.showMarkSelectedTextButton(editor)
-        editor.setEditorToolbarAndOptionsBar(rootView.editorToolbar, optionsBar)
+        editor.setEditorToolbarAndOptionsBar(rootView.lytEditorToolbar, optionsBar)
     }
 
     private fun editorHasLoaded() {
@@ -47,14 +48,19 @@ class EditHtmlView : View {
     }
 
     private fun setupEditorToolbar(rootView: View) {
+        val styleApplier = StyleApplier()
+        styleApplier.applyCommandStyle(AndroidIcon(R.drawable.ic_arrow_back_white_48dp), ToolbarCommandStyle(), rootView.btnCancelEditingContent)
+        styleApplier.applyCommandStyle(AndroidIcon(R.drawable.ic_check_white_48dp), ToolbarCommandStyle(), rootView.btnApplyEditedContent)
+
         val editorToolbar = rootView.editorToolbar
         editorToolbar.editor = editor
 
         editorToolbar.commandStyle.isActivatedColor = Color.fromArgb(context.getColorFromResourceId(R.color.colorPrimaryDark))
 
         editorToolbar.addCommand(BoldCommand())
-        editorToolbar.addCommand(ItalicCommand())
-        editorToolbar.addCommand(UnderlineCommand())
+        // temporarily removed some commands due to apply and cancel button not all commands fit onto the display // TODO: re-add
+//        editorToolbar.addCommand(ItalicCommand())
+//        editorToolbar.addCommand(UnderlineCommand())
         val switchBackgroundColorCommand = SwitchTextBackgroundColorOnOffCommand(icon = AndroidIcon(R.drawable.ic_marker_white_48dp), setOnColorToCurrentColor = false)
         switchBackgroundColorCommand.style.marginRightDp = ToolbarCommandStyle.GroupDefaultMarginRightDp
         editorToolbar.addCommand(switchBackgroundColorCommand)
@@ -65,7 +71,7 @@ class EditHtmlView : View {
         editorToolbar.addCommand(redoCommand)
 
         editorToolbar.addCommand(InsertBulletListCommand())
-        editorToolbar.addCommand(InsertNumberedListCommand())
+//        editorToolbar.addCommand(InsertNumberedListCommand())
 
         editorToolbar.addSearchView()
     }

@@ -154,6 +154,9 @@ class ItemContentView @JvmOverloads constructor(
             didContentChangeListener?.invoke(didChange)
         }
 
+        btnCancelEditingContent.setOnClickListener { leaveEditContentView() }
+        btnApplyEditedContent.setOnClickListener { appliedChangesToContent() }
+
         contentEditor.enterViewingMode() // by default we start in viewing not editing mode
 
         contentEditor?.requestFocus() // avoid that lytSummaryPreview gets focus and keyboard therefore gets displayed on activity start
@@ -297,18 +300,8 @@ class ItemContentView @JvmOverloads constructor(
 
     fun handleOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
-            android.R.id.home -> {
-                if(isInEditContentMode) {
-                    leaveEditContentView()
-                    return true
-                }
-            }
             R.id.mnToggleReaderMode -> {
                 toggleReaderMode()
-                return true
-            }
-            R.id.mnApplyHtmlChanges -> {
-                appliedChangesToContent()
                 return true
             }
         }
@@ -428,6 +421,7 @@ class ItemContentView @JvmOverloads constructor(
         txtItemContentLabel.visibility = View.VISIBLE
         txtEnterContentHint.visibility = View.GONE
 
+        editItemView.viewToolbar.visibility = View.VISIBLE
         editItemView.setFloatingActionButtonVisibilityOnUIThread()
         mayShowOnboardingTextVisibilityOnUIThread()
 
@@ -443,6 +437,7 @@ class ItemContentView @JvmOverloads constructor(
         txtItemContentLabel.visibility = View.GONE
         txtEnterContentHint.visibility = if(didUserEnterSomeContent) View.GONE else View.VISIBLE
 
+        editItemView.viewToolbar.visibility = View.GONE
         editItemView.setFloatingActionButtonVisibilityOnUIThread()
         lytOnboardingText.visibility = View.GONE
 
