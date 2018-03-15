@@ -4,7 +4,11 @@ import android.app.Activity
 import android.os.Build
 import android.view.View
 import android.webkit.*
+import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.data_access.network.webclient.RequestParameters
+import net.dankito.deepthought.android.di.AppComponent
 import java.util.*
+import javax.inject.Inject
 import kotlin.concurrent.schedule
 
 
@@ -15,9 +19,11 @@ class WebPageLoader(private val activity: Activity) {
     }
 
 
-    private val webView = WebView(activity)
+    @Inject
+    protected lateinit var webClient: IWebClient
 
-    private var firstRetrievedHtmlCallback: ((String) -> Unit)? = null
+
+    private val webView = WebView(activity)
 
     private var siteLoadedCallback: ((String) -> Unit)? = null
 
@@ -25,6 +31,8 @@ class WebPageLoader(private val activity: Activity) {
 
 
     init {
+        AppComponent.component.inject(this)
+
         setupWebView()
     }
 
@@ -56,8 +64,6 @@ class WebPageLoader(private val activity: Activity) {
                 else {
                     hasCompletelyFinishedLoadingPage = true
 
-                    retrieveFirstHtml()
-
                     timerCheckIfHasCompletelyFinishedLoadingPage.schedule(1000L) { // 100 % may only means a part of the page but not the whole page is loaded -> wait some time and check if not loading another part of the page
                         if(hasCompletelyFinishedLoadingPage) {
                             webPageCompletelyLoaded()
@@ -87,26 +93,13 @@ class WebPageLoader(private val activity: Activity) {
     }
 
 
-    private fun retrieveFirstHtml() {
-        firstRetrievedHtmlCallback?.let { callback ->
-            getWebViewHtml { _, html ->
-                if(html != "<html><head></head><body></body></html>") { // filter out html with no yet received data
-                    firstRetrievedHtmlCallback = null // to flag firstRetrievedHtmlCallback has now been fired
-
-                    callback(html)
-                }
-            }
-        }
-    }
-
-
     private fun webPageCompletelyLoaded() {
         activity.runOnUiThread { webPageCompletelyLoadedOnUiThread() }
     }
 
     private fun webPageCompletelyLoadedOnUiThread() {
-        if(webView.url != null && webView.url != "about:blank" && webView.url.startsWith("data:text/html") == false) {
-            getWebViewHtml { _, html ->
+        getWebViewHtml { _, html ->
+            if(html != "<html><head></head><body></body></html>") { // don't know where this is coming from but definitely filter them out
                 siteLoadedCallback?.invoke(html)
 
                 webView.removeJavascriptInterface(GetHtmlCodeFromWebViewJavaScriptInterfaceName)
@@ -135,13 +128,35 @@ class WebPageLoader(private val activity: Activity) {
     }
 
 
-    fun loadUrl(url: String, firstRetrievedHtmlCallback: (html: String) -> Unit, siteLoadedCallback: (html: String) -> Unit) {
-        this.firstRetrievedHtmlCallback = firstRetrievedHtmlCallback
+    fun loadUrl(url: String, retrievedBaseHtmlCallback: (html: String) -> Unit, siteLoadedCallback: (html: String) -> Unit) {
         this.siteLoadedCallback = siteLoadedCallback
 
-        clearWebView()
+        loadWebSiteBaseHtml(url, retrievedBaseHtmlCallback)
 
-        webView.loadUrl(url)
+        clearWebView() // TODO: remove
+    }
+
+    private fun loadWebSiteBaseHtml(url: String, retrievedBaseHtmlCallback: (html: String) -> Unit) {
+        webClient.getAsync(RequestParameters(url)) { response ->
+            response.body?.let { webSiteBaseHtml ->
+                retrievedWebSiteBaseHtml(url, webSiteBaseHtml, retrievedBaseHtmlCallback)
+            }
+
+            response.error?.let {
+                // TODO: what to do in error case?
+                activity.runOnUiThread {
+                    webView.loadUrl(url)
+                }
+            }
+        }
+    }
+
+    private fun retrievedWebSiteBaseHtml(url: String, webSiteBaseHtml: String, retrievedBaseHtmlCallback: (html: String) -> Unit) {
+        activity.runOnUiThread {
+            retrievedBaseHtmlCallback(webSiteBaseHtml)
+
+            webView.loadDataWithBaseURL(url, webSiteBaseHtml, "text/html; charset=UTF-8", "utf-8", null)
+        }
     }
 
     private fun clearWebView() {

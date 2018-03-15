@@ -17,6 +17,7 @@ import net.dankito.deepthought.android.fragments.TagsListView
 import net.dankito.deepthought.android.service.AndroidClipboardService
 import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.SnackbarService
+import net.dankito.deepthought.android.service.WebPageLoader
 import net.dankito.deepthought.android.service.clipboard.AndroidClipboardWatcher
 import net.dankito.deepthought.android.service.network.NetworkConnectivityChangeBroadcastReceiver
 import net.dankito.deepthought.android.views.*
@@ -62,6 +63,8 @@ interface AppComponent : CommonComponent {
     fun inject(androidClipboardWatcher: AndroidClipboardWatcher)
 
     fun inject(extractArticleHandler: ExtractArticleHandler)
+
+    fun inject(webPageLoader: WebPageLoader)
 
     fun inject(itemsListView: ItemsListView)
 
