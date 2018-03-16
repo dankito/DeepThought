@@ -1,0 +1,7 @@
+Android App:
+- Merged content viewer and editor, using now RichTextEditor for both
+- Web site html for ItemExtractionResult is now loaded in background, showing only site's base html and then final html in content editor
+- Added text marker to FullscreenOptionsBar
+- Merged toolbars in content editor so that there's now more space for content
+- Fixed memory leak in onProgressChanged() in WebPageLoader
+- Fixed memory leak in OpenUrlOptionsView
