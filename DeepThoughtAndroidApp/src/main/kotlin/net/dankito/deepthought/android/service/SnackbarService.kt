@@ -1,24 +1,24 @@
 package net.dankito.deepthought.android.service
 
 import android.app.Activity
-import android.net.Uri
-import android.support.design.internal.SnackbarContentLayout
+import android.os.Build
 import android.support.design.widget.Snackbar
-import android.text.Spanned
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.snackbar_ask_sync_data_with_device.view.*
+import kotlinx.android.synthetic.main.snackbar_clipboard_content.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.extensions.getColorFromResourceId
-import net.dankito.deepthought.android.extensions.setTintColor
+import net.dankito.deepthought.android.extensions.getDimension
+import net.dankito.deepthought.android.extensions.setViewsEnabledState
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
+import net.dankito.deepthought.service.clipboard.ClipboardContentOption
+import net.dankito.deepthought.service.clipboard.OptionsForClipboardContent
 import net.dankito.deepthought.ui.IRouter
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -54,60 +54,106 @@ class SnackbarService {
 
     private val unknownDevicesWaitingToShowNotificationToUser = ConcurrentHashMap<DiscoveredDevice, (Boolean, Boolean) -> Unit>()
 
-    private val stringUtil = StringUtil()
-
 
     init {
         AppComponent.component.inject(this)
     }
 
 
-    fun showUrlInClipboardDetectedSnackbarOnUiThread(activity: Activity, url: String, actionInvokedListener: () -> Unit) {
+    fun showClipboardContentOptionsSnackbarOnUiThread(options: OptionsForClipboardContent, activity: Activity) {
         if(lifeCycleListener.didAppJustStart()) {
             showSnackbarAfterAppStartupDelay { activity.runOnUiThread {
-                doShowUrlInClipboardDetectedSnackbarOnUiThread(activity, url, actionInvokedListener)
+                doShowClipboardContentOptionsSnackbarOnUiThread(options, activity)
             } }
         }
         else {
-            doShowUrlInClipboardDetectedSnackbarOnUiThread(activity, url, actionInvokedListener)
+            doShowClipboardContentOptionsSnackbarOnUiThread(options, activity)
         }
     }
 
-    private fun doShowUrlInClipboardDetectedSnackbarOnUiThread(activity: Activity, url: String, actionInvokedListener: () -> Unit) {
+    private fun doShowClipboardContentOptionsSnackbarOnUiThread(options: OptionsForClipboardContent, activity: Activity) {
         try {
-            val text = showUrlInClipboardDetectedSnackbarText(url, activity)
-            showSnackbarOnUiThread(text, url, activity, { customizeUrlInClipboardDetectedSnackbar(activity, it) }) {
-                actionInvokedListener()
-            }
-        } catch(e: Exception) { log.error("Could not show snackbar for Clipboard url $url", e) }
+            showSnackbarOnUiThread("", options, activity, { customizeClipboardContentOptionsSnackbar(options, activity, it) }) { }
+        } catch(e: Exception) { log.error("Could not show snackbar for Clipboard content options $options", e) }
     }
 
-    private fun showUrlInClipboardDetectedSnackbarText(url: String, activity: Activity): Spanned {
-        val uri = Uri.parse(url)
-        var host = uri.host
-        if (host.startsWith("www.")) {
-            host = host.substring(4)
-        }
-
-        val unformattedText = activity.getText(R.string.snackbar_extract_item_from_url).toString().replace("%1\$s", host)
-
-        return stringUtil.getSpannedFromHtml(unformattedText)
-    }
-
-    private fun customizeUrlInClipboardDetectedSnackbar(activity: Activity, snackbar: Snackbar) {
+    private fun customizeClipboardContentOptionsSnackbar(options: OptionsForClipboardContent, activity: Activity, snackbar: Snackbar) {
+        val layout = snackbar.view as Snackbar.SnackbarLayout
         val textColor = activity.getColorFromResourceId(R.color.colorPrimary)
-        snackbar.setActionTextColor(textColor)
 
-        (snackbar.view.findViewById(android.support.design.R.id.snackbar_text) as? TextView)?.let { txtvwSnackbarStandardText ->
-            txtvwSnackbarStandardText.setTextColor(textColor)
-            txtvwSnackbarStandardText.maxLines = 4
+        (layout.findViewById(android.support.design.R.id.snackbar_text) as? TextView)?.visibility = View.INVISIBLE
+
+        snackbar.setActionTextColor(textColor)
+        (layout.findViewById(android.support.design.R.id.snackbar_action) as? Button)?.let { actionButton ->
+            actionButton.setText(R.string.snackbar_clipboard_content_options_close)
+            val paddingLeftRight = activity.resources.getDimension(R.dimen.snackbar_clipboard_content_options_action_button_padding_left_right).toInt()
+            actionButton.setPadding(paddingLeftRight, 0, paddingLeftRight, 0)
         }
 
-        val icon = ImageView(activity)
-        icon.setImageResource(R.drawable.ic_help_outline_white_48dp)
-        icon.setTintColor(R.color.colorPrimary)
 
-        addIconToSnackbar(snackbar, icon)
+        val snackView = activity.layoutInflater.inflate(R.layout.snackbar_clipboard_content, null) as ViewGroup
+
+        snackView.txtvwClipboardContentHeader.text = options.headerTitle
+
+        val optionsLayout = snackView.lytClipboardContentOptions
+        options.options.forEach { option ->
+            addClipboardContentOptionButton(activity, option, snackbar, optionsLayout, textColor, snackView)
+        }
+
+        layout.addView(snackView, 0)
+    }
+
+    private fun addClipboardContentOptionButton(activity: Activity, option: ClipboardContentOption, snackbar: Snackbar, optionsLayout: ViewGroup, textColor: Int, snackView: ViewGroup) {
+        val lytActionProgress = snackView.lytActionProgress
+        val actionProgress = lytActionProgress.txtActionProgress
+        val imgHelpIcon = snackView.imgHelpIcon
+
+
+        val optionButton = Button(activity, null, android.support.v7.appcompat.R.style.Widget_AppCompat_ButtonBar)
+
+        optionButton.text = option.title
+        optionButton.setTextColor(textColor)
+
+        optionButton.setPadding(activity.getDimension(R.dimen.snackbar_clipboard_content_options_button_margin_left),
+                activity.getDimension(R.dimen.snackbar_clipboard_content_options_button_margin_top), 0,
+                activity.getDimension(R.dimen.snackbar_clipboard_content_options_button_margin_bottom))
+        optionButton.gravity = Gravity.CENTER_VERTICAL
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            optionButton.textAlignment = View.TEXT_ALIGNMENT_GRAVITY
+        }
+
+        optionButton.setOnClickListener {
+            lytActionProgress.visibility = View.VISIBLE
+            imgHelpIcon.visibility = View.INVISIBLE
+            snackView.setViewsEnabledState(false)
+            actionProgress.text = ""
+
+            option.callAction()
+        }
+
+        optionsLayout.addView(optionButton)
+
+
+        option.addIsExecutingListener { progress ->
+            actionIsExecuting(option, activity, snackbar, actionProgress)
+        }
+    }
+
+    private fun actionIsExecuting(option: ClipboardContentOption, activity: Activity, snackbar: Snackbar, actionProgress: TextView) {
+        activity.runOnUiThread {
+            actionIsExecutingOnUiThread(option, activity, snackbar, actionProgress)
+        }
+    }
+
+    private fun actionIsExecutingOnUiThread(option: ClipboardContentOption, activity: Activity, snackbar: Snackbar, actionProgress: TextView) {
+        actionProgress.text = option.progressString
+
+
+        if(option.isDone) {
+            activity.runOnUiThread {
+                snackbar.dismiss()
+            }
+        }
     }
 
 
@@ -172,6 +218,8 @@ class SnackbarService {
         }
 
         layout.addView(snackView, 0)
+
+        snackView.lytRoot.layoutParams?.height = snackView.context.getDimension(R.dimen.snackbar_ask_sync_data_with_device_height) // don't know where this bug comes from that height got reset to MATCH_PARENT
     }
 
     private fun getOsLogoId(device: Device): Int {
@@ -266,21 +314,6 @@ class SnackbarService {
             val layoutParams = snackbarContentLayout.layoutParams
             layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
             snackbarContentLayout.layoutParams = layoutParams
-        }
-    }
-
-    private fun addIconToSnackbar(snackbar: Snackbar, icon: ImageView) {
-        (snackbar.view as? Snackbar.SnackbarLayout)?.let { snackbarLayout ->
-            for (i in 0..snackbarLayout.childCount - 1) {
-                val child = snackbarLayout.getChildAt(i)
-                if (child is SnackbarContentLayout) {
-                    child.addView(icon, 0)
-
-                    (icon.layoutParams as? LinearLayout.LayoutParams)?.let { layoutParams ->
-                        layoutParams.gravity = Gravity.CENTER_VERTICAL
-                    }
-                }
-            }
         }
     }
 

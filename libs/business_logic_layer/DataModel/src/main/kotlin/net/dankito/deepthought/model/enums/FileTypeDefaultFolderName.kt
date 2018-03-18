@@ -5,8 +5,8 @@ enum class FileTypeDefaultFolderName(val folderName: String) {
 
     Documents("documents"),
     Images("images"),
-    Audio("audio"),
-    Video("video"),
+    Audios("audios"),
+    Videos("videos"),
     OtherFilesFolderName("other")
 
 }

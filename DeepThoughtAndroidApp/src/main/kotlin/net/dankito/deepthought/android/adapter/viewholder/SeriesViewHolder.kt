@@ -10,7 +10,7 @@ import net.dankito.deepthought.android.views.SwipeButton
 
 class SeriesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    val vwIsSeriesSetOnReference: IsAddedToEntityView = itemView.vwIsSeriesSetOnReference
+    val vwIsSeriesSetOnSource: IsAddedToEntityView = itemView.vwIsSeriesSetOnSource
 
     val imgChevronRight: ImageView = itemView.imgChevronRight
 

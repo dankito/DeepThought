@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/content_layout_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:background="@color/edit_entity_activity_background"
+>
+    <!-- Set focusable and focusableInTouchMode to true so that keyboard doesn't get shown on Activity start -->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/move_upward_behaviour"
+    >
+
+        <ScrollView
+            android:id="@+id/scrEditSource"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_above="@id/toolbar"
+            android:paddingTop="@dimen/activity_edit_source_padding_left_right"
+            android:paddingLeft="@dimen/activity_edit_source_padding_left_right"
+            android:paddingStart="@dimen/activity_edit_source_padding_left_right"
+            android:paddingRight="@dimen/activity_edit_source_padding_left_right"
+            android:paddingEnd="@dimen/activity_edit_source_padding_left_right"
+        >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+            >
+
+                <net.dankito.deepthought.android.views.EditEntityField
+                    android:id="@+id/lytEditSourceTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                />
+
+                <net.dankito.deepthought.android.views.EditSourceSeriesField
+                    android:id="@+id/lytEditSourceSeries"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/lytEditSourceTitle"
+                />
+
+                <net.dankito.deepthought.android.views.EditEntityField
+                    android:id="@+id/lytEditSourceIssue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/lytEditSourceSeries"
+                />
+
+                <net.dankito.deepthought.android.views.EditEntityField
+                    android:id="@+id/lytEditSourceLength"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/lytEditSourceIssue"
+                />
+
+                <net.dankito.deepthought.android.views.EditEntityField
+                    android:id="@+id/lytEditSourcePublishingDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/lytEditSourceLength"
+                />
+
+                <net.dankito.deepthought.android.views.EditEntityField
+                    android:id="@+id/lytEditSourceUrl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/lytEditSourcePublishingDate"
+                />
+
+                <net.dankito.deepthought.android.views.EditEntityFilesField
+                    android:id="@+id/lytEditAttachedFiles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/lytEditSourceUrl"
+                />
+
+            </RelativeLayout>
+
+        </ScrollView>
+
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_alignParentBottom="true"
+            app:title="@string/activity_edit_source_title"
+            style="@style/ToolbarStyle"
+        />
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

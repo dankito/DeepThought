@@ -14,7 +14,7 @@ class ChefkochArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(web
         return "Chefkoch"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return url.contains("://www.chefkoch.de/rezepte/") && url.length > "http://www.chefkoch.de/rezepte/".length + 4
     }
 

@@ -20,40 +20,40 @@ class TazArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClien
         return "taz"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return isHttpOrHttpsUrlFromHost(url, "taz.de/")
     }
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select(".sectbody").first()?.let { bodyElement ->
-            val reference = extractReference(document, url, bodyElement)
+            val source = extractSource(document, url, bodyElement)
 
             bodyElement.select("h1, h4, .caption, .rack, .ad_bin, .contentad, .sold").remove()
             val content = bodyElement.children().joinToString("") { it.outerHtml() }
 
-            extractionResult.setExtractedContent(Item(content), reference)
+            extractionResult.setExtractedContent(Item(content), source)
         }
     }
 
-    private fun extractReference(document: Document, url: String, bodyElement: Element): Source {
+    private fun extractSource(document: Document, url: String, bodyElement: Element): Source {
         var title = ""
         bodyElement.select("h1").first()?.let { title = it.text().trim() }
 
         var subTitle = ""
         bodyElement.select("h4").first()?.let { subTitle = it.text().trim() }
 
-        val reference = Source(title, url, subTitle = subTitle)
+        val source = Source(title, url, subTitle = subTitle)
 
-        bodyElement.select(".picture img").first()?.let { reference.previewImageUrl = makeLinkAbsolute(it.attr("src"), url) }
+        bodyElement.select(".picture img").first()?.let { source.previewImageUrl = makeLinkAbsolute(it.attr("src"), url) }
 
         document.body().select(".wing .date").first()?.let { dateElement ->
             try {
                 val dateString = dateElement.text().trim().replace(" ", "").replace(8201.toChar().toString(), "")
-                reference.publishingDate = tazDateFormat.parse(dateString)
+                source.publishingDate = tazDateFormat.parse(dateString)
             } catch(ignored: Exception) { }
         }
 
-        return reference
+        return source
     }
 
 }

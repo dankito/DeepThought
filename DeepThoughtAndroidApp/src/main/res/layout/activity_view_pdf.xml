@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="net.dankito.deepthought.android.activities.ViewPdfActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/txtPageText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_above="@+id/lytPageControls"
+            android:textIsSelectable="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:text="@string/loading"
+        />
+
+        <LinearLayout
+            android:id="@+id/lytPageControls"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:focusable="true"
+        >
+
+            <ImageButton
+                android:id="@+id/btnNavigateToPreviousPage"
+                android:layout_width="@dimen/activity_view_pdf_buttons_size"
+                android:layout_height="@dimen/activity_view_pdf_buttons_size"
+                android:layout_marginRight="@dimen/activity_view_pdf_button_previous_next_margin_left_right"
+                android:layout_marginEnd="@dimen/activity_view_pdf_button_previous_next_margin_left_right"
+                android:padding="@dimen/activity_view_pdf_button_previous_next_padding"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_navigate_before_black_48dp"
+                android:enabled="false"
+            />
+
+            <EditText
+                android:id="@+id/edtxtCurrentPage"
+                android:layout_width="@dimen/activity_view_pdf_page_current_page_width"
+                android:layout_height="match_parent"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="-2dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textAlignment="gravity"
+                android:textColor="@color/view_pdf_select_page_text_color"
+                android:textSize="@dimen/activity_view_pdf_page_select_page_text_size"
+                android:enabled="false"
+            />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/activity_view_pdf_page_separator_margin_left_right"
+                android:layout_marginStart="@dimen/activity_view_pdf_page_separator_margin_left_right"
+                android:layout_marginRight="@dimen/activity_view_pdf_page_separator_margin_left_right"
+                android:layout_marginEnd="@dimen/activity_view_pdf_page_separator_margin_left_right"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textAlignment="gravity"
+                android:textColor="@color/view_pdf_select_page_text_color"
+                android:focusable="true"
+                android:textSize="@dimen/activity_view_pdf_page_select_page_text_size"
+                android:text="@string/activity_view_pdf_current_page_and_count_pages_separator"
+            />
+
+            <TextView
+                android:id="@+id/txtCountPages"
+                android:layout_width="@dimen/activity_view_pdf_page_current_page_width"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textAlignment="gravity"
+                android:textColor="@color/view_pdf_select_page_text_color"
+                android:focusable="true"
+                android:textSize="@dimen/activity_view_pdf_page_select_page_text_size"
+            />
+
+            <ImageButton
+                android:id="@+id/btnNavigateToNextPage"
+                android:layout_width="@dimen/activity_view_pdf_buttons_size"
+                android:layout_height="@dimen/activity_view_pdf_buttons_size"
+                android:layout_marginLeft="@dimen/activity_view_pdf_button_previous_next_margin_left_right"
+                android:layout_marginStart="@dimen/activity_view_pdf_button_previous_next_margin_left_right"
+                android:padding="@dimen/activity_view_pdf_button_previous_next_padding"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_navigate_next_black_48dp"
+                android:enabled="false"
+            />
+
+        </LinearLayout>
+
+
+        <ImageButton
+            android:id="@+id/btnCreateItemFromSelectedText"
+            android:layout_width="@dimen/activity_view_pdf_buttons_size"
+            android:layout_height="@dimen/activity_view_pdf_buttons_size"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:tint="@color/colorPrimary"
+            android:src="@drawable/ic_tab_items"
+            android:enabled="false"
+        />
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

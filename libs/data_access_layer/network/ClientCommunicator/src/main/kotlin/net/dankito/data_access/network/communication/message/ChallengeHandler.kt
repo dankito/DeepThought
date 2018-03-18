@@ -6,7 +6,7 @@ import net.dankito.utils.services.hashing.IBase64Service
 import java.util.*
 
 
-class ChallengeHandler(private val base64Service: IBase64Service) {
+class ChallengeHandler(private val base64Service: IBase64Service, private val hashService: HashService) {
 
     companion object {
         private val DEFAULT_COUNT_RETRIES = 2
@@ -15,15 +15,13 @@ class ChallengeHandler(private val base64Service: IBase64Service) {
     }
 
 
-    private var hashService = HashService()
+    private val random = Random(System.nanoTime())
 
-    private var random = Random(System.nanoTime())
+    private val nonceToDeviceInfoMap: MutableMap<String, DeviceInfo> = HashMap()
 
-    private var nonceToDeviceInfoMap: MutableMap<String, DeviceInfo> = HashMap()
+    private val nonceToCorrectResponsesMap: MutableMap<String, String> = HashMap()
 
-    private var nonceToCorrectResponsesMap: MutableMap<String, String> = HashMap()
-
-    private var nonceToCountRetriesMap: MutableMap<String, Int> = HashMap()
+    private val nonceToCountRetriesMap: MutableMap<String, Int> = HashMap()
 
 
     fun createChallengeForDevice(deviceInfo: DeviceInfo): NonceToResponsePair {

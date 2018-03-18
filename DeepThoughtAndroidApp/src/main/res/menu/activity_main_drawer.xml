@@ -35,7 +35,7 @@
 
         <item
             android:id="@+id/navArticleSummaryExtractors"
-            android:icon="@drawable/ic_menu_send"
+            android:icon="@drawable/ic_newspaper_white_48dp"
             android:title="@string/nav_menu_article_summary_extractors_title"
         />
 

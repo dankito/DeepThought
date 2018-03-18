@@ -9,4 +9,10 @@ dependencies {
 
     compile project(':WebClient')
     compile project(':FileStorageService')
+
+
+    compile "com.github.axet:wget:$wgetVersion", {
+        exclude group: 'com.thoughtworks.xstream', module: 'xstream'
+    }
+
 }

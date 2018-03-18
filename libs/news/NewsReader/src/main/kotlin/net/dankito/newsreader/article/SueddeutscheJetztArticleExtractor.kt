@@ -24,32 +24,32 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
         return "SZ Jetzt"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return isHttpOrHttpsUrlFromHost(url, "jetzt.de/")
     }
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         // TODO: may re-add extracting old version
-        parseHtmlToEntryNewVersion(extractionResult, url, document)
+        parseHtmlToItemNewVersion(extractionResult, url, document)
     }
 
 
     /*        Parsing an SZ Jetzt article of new Homepage Style, introduced beginning 2016      */
 
-    private fun parseHtmlToEntryNewVersion(extractionResult: ItemExtractionResult, articleUrl: String, document: Document) {
+    private fun parseHtmlToItemNewVersion(extractionResult: ItemExtractionResult, articleUrl: String, document: Document) {
         document.body().select("article").first()?.let { articleElement ->
             articleElement.select(".article__content").first()?.let { articleContentElement ->
-                val content = extractAbstract(articleElement) + parseContent(articleContentElement)
+                val content = extractSummary(articleElement) + parseContent(articleContentElement)
 
-                val entry = Item(content)
-                val reference = extractReference( articleElement, articleUrl)
+                val item = Item(content)
+                val source = extractSource( articleElement, articleUrl)
 
-                extractionResult.setExtractedContent(entry, reference)
+                extractionResult.setExtractedContent(item, source)
             }
         }
     }
 
-    private fun extractAbstract(articleElement: Element): String {
+    private fun extractSummary(articleElement: Element): String {
         return articleElement.select("div.article__header-teaser").first()?.outerHtml() ?: ""
     }
 
@@ -88,14 +88,14 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
     }
 
 
-    private fun extractReference(articleElement: Element, articleUrl: String): Source? {
+    private fun extractSource(articleElement: Element, articleUrl: String): Source? {
         val title = extractTitle(articleElement)
         val publishingDate = extractPublishingDate(articleElement)
 
         if(title != null && publishingDate != null) {
-            val articleReference = Source(title, articleUrl, publishingDate)
+            val articleSource = Source(title, articleUrl, publishingDate)
 
-            return articleReference
+            return articleSource
         }
 
         return null

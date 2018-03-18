@@ -15,9 +15,9 @@
 
 
     <fragment
-        class="net.dankito.deepthought.android.fragments.EntriesListView"
-        android:tag="EntriesListView"
-        android:id="@+id/frgmEntriesListView"
+        class="net.dankito.deepthought.android.fragments.ItemsListView"
+        android:tag="ItemsListView"
+        android:id="@+id/frgmItemsListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/multiSelectModeAppBarLayout"

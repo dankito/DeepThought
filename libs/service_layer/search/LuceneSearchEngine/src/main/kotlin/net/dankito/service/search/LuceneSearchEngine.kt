@@ -14,6 +14,7 @@ import net.dankito.utils.AsyncProducerConsumerQueue
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.OsHelper
 import net.dankito.utils.language.ILanguageDetector
+import net.dankito.utils.services.Times
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.FSDirectory
 import org.slf4j.LoggerFactory
@@ -25,29 +26,30 @@ import kotlin.concurrent.thread
 
 
 class LuceneSearchEngine(private val dataManager: DataManager, private val languageDetector: ILanguageDetector, osHelper: OsHelper, threadPool: IThreadPool, private val eventBus: IEventBus,
-                         entryService: EntryService, tagService: TagService, referenceService: ReferenceService, seriesService: SeriesService, readLaterArticleService: ReadLaterArticleService)
+                         itemService: ItemService, tagService: TagService, sourceService: SourceService, seriesService: SeriesService,
+                         readLaterArticleService: ReadLaterArticleService, fileService: FileService, localFileInfoService: LocalFileInfoService)
     : SearchEngineBase(threadPool) {
 
     companion object {
-        private const val DefaultDelayBeforeUpdatingIndexSeconds = 60
-
-        private const val DefaultIntervalToRunOptimizationDays = 7
-
         private val log = LoggerFactory.getLogger(LuceneSearchEngine::class.java)
     }
 
 
-    private val entryIdsIndexWriterAndSearcher = EntryIdsIndexWriterAndSearcher(entryService, eventBus, osHelper, threadPool)
+    private val itemIdsIndexWriterAndSearcher = ItemIdsIndexWriterAndSearcher(itemService, eventBus, osHelper, threadPool)
 
-    private val entryIndexWriterAndSearcher = EntryIndexWriterAndSearcher(entryService, eventBus, osHelper, threadPool)
+    private val itemIndexWriterAndSearcher = ItemIndexWriterAndSearcher(itemService, eventBus, osHelper, threadPool)
 
-    private val tagIndexWriterAndSearcher = TagIndexWriterAndSearcher(tagService, eventBus, osHelper, threadPool, entryIndexWriterAndSearcher)
+    private val tagIndexWriterAndSearcher = TagIndexWriterAndSearcher(tagService, eventBus, osHelper, threadPool, itemIndexWriterAndSearcher)
 
-    private val referenceIndexWriterAndSearcher = ReferenceIndexWriterAndSearcher(referenceService, eventBus, osHelper, threadPool)
+    private val sourceIndexWriterAndSearcher = SourceIndexWriterAndSearcher(sourceService, eventBus, osHelper, threadPool)
 
     private val seriesIndexWriterAndSearcher = SeriesIndexWriterAndSearcher(seriesService, eventBus, osHelper, threadPool)
 
     private val readLaterArticleIndexWriterAndSearcher = ReadLaterArticleIndexWriterAndSearcher(readLaterArticleService, eventBus, osHelper, threadPool)
+
+    private val fileIndexWriterAndSearcher = FileLinkIndexWriterAndSearcher(fileService, eventBus, osHelper, threadPool)
+
+    private val localFileInfoIndexWriterAndSearcher = LocalFileInfoIndexWriterAndSearcher(localFileInfoService, eventBus, osHelper, threadPool)
 
     private val indexWritersAndSearchers: List<IndexWriterAndSearcher<*>>
 
@@ -55,8 +57,8 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
 
     init {
-        indexWritersAndSearchers = listOf(entryIdsIndexWriterAndSearcher, entryIndexWriterAndSearcher, tagIndexWriterAndSearcher, referenceIndexWriterAndSearcher,
-                seriesIndexWriterAndSearcher, readLaterArticleIndexWriterAndSearcher)
+        indexWritersAndSearchers = listOf(itemIdsIndexWriterAndSearcher, itemIndexWriterAndSearcher, tagIndexWriterAndSearcher, sourceIndexWriterAndSearcher,
+                seriesIndexWriterAndSearcher, readLaterArticleIndexWriterAndSearcher, fileIndexWriterAndSearcher, localFileInfoIndexWriterAndSearcher)
 
         createDirectoryAndIndexSearcherAndWritersAsync()
     }
@@ -83,7 +85,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
             dataManager.addInitializationListener {
                 if(indexDirExists == false) {
                     // TODO: inform user that index is going to be rebuilt and that this takes some time
-                    rebuildIndex() // do not rebuild index asynchronously as Application depends on some functions of SearchEngine (like Entries without Tags)
+                    rebuildIndex() // do not rebuild index asynchronously as Application depends on some functions of SearchEngine (like Items without Tags)
                 }
 
                 searchEngineInitialized()
@@ -104,7 +106,7 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
     override fun searchEngineInitialized() {
         super.searchEngineInitialized()
 
-        Timer().schedule(DefaultDelayBeforeUpdatingIndexSeconds * 1000L) {
+        Timer().schedule(Times.DefaultDelayBeforeUpdatingIndexSeconds * 1000L) {
             updateIndex()
             optimizeIndicesIfNeeded()
         }
@@ -125,10 +127,13 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
         val currentSequenceNumber = dataManager.entityManager.getAllEntitiesUpdatedAfter<BaseEntity>(dataManager.localSettings.lastSearchIndexUpdateSequenceNumber, queue)
 
+        while(queue.isEmpty == false) { try { Thread.sleep(50) } catch(ignored: Exception) { } } // wait till queue is empty otherwise not all entity types would get added to updatedEntityTypes
+
         dataManager.localSettings.lastSearchIndexUpdateSequenceNumber = currentSequenceNumber
         dataManager.localSettingsUpdated()
 
-        while(queue.isEmpty == false) { try { Thread.sleep(50) } catch(ignored: Exception) { } } // wait till queue is empty otherwise not all entity types would get added to updatedEntityTypes
+        // TODO: why Local? as most probably it's been due to a remote change when an entity couldn't get indexed. I see that sending Synchronization is also dangerous,
+        // e.g. currently editing an entity which got updated in index -> an alert gets shown. Introduce an extra value for it? ProbablySynchronization? EnsuringEntityIsUpToDate?
         updatedEntityTypes.forEach { eventBus.postAsync(EntitiesOfTypeChanged(it, EntityChangeType.Updated, EntityChangeSource.Local)) }
 
         log.info("Done updating index")
@@ -137,23 +142,25 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
     private fun updateEntityInIndex(changedEntity: ChangedEntity<BaseEntity>) {
         when(changedEntity.entityClass) {
             Item::class.java -> {
-                entryIdsIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Item>)
-                entryIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Item>)
+                itemIdsIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Item>)
+                itemIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Item>)
             }
             Tag::class.java -> tagIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Tag>)
             Series::class.java -> seriesIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Series>)
-            Source::class.java -> referenceIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Source>)
+            Source::class.java -> sourceIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<Source>)
             ReadLaterArticleService::class.java -> readLaterArticleIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<ReadLaterArticle>)
+            FileLink::class.java -> fileIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<FileLink>)
+            LocalFileInfo::class.java -> localFileInfoIndexWriterAndSearcher.updateEntityInIndex(changedEntity as ChangedEntity<LocalFileInfo>)
         }
     }
 
     /**
-     * Checks if time since last optimization run is greater than DefaultIntervalToRunOptimizationDays and if so calls optimizeIndices()
+     * Checks if time since last optimization run is greater than Times.DefaultIntervalToRunIndexOptimizationDays and if so calls optimizeIndices()
      */
     private fun optimizeIndicesIfNeeded() {
         val startTime = Date()
         val timeSinceLastOptimizationMillis = startTime.time - dataManager.localSettings.lastSearchIndexOptimizationTime.time
-        if(timeSinceLastOptimizationMillis > DefaultIntervalToRunOptimizationDays * 24 * 60 * 60 * 1000) {
+        if(timeSinceLastOptimizationMillis > Times.DefaultIntervalToRunIndexOptimizationDays * 24 * 60 * 60 * 1000) {
             optimizeIndices()
 
             dataManager.localSettings.lastSearchIndexOptimizationTime = startTime
@@ -167,12 +174,14 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
     private fun optimizeIndices() {
         log.info("Starting to optimize indices ...")
 
-        entryIdsIndexWriterAndSearcher.optimizeIndex()
-        entryIndexWriterAndSearcher.optimizeIndex()
+        itemIdsIndexWriterAndSearcher.optimizeIndex()
+        itemIndexWriterAndSearcher.optimizeIndex()
         tagIndexWriterAndSearcher.optimizeIndex()
         seriesIndexWriterAndSearcher.optimizeIndex()
-        referenceIndexWriterAndSearcher.optimizeIndex()
+        sourceIndexWriterAndSearcher.optimizeIndex()
         readLaterArticleIndexWriterAndSearcher.optimizeIndex()
+        fileIndexWriterAndSearcher.optimizeIndex()
+        localFileInfoIndexWriterAndSearcher.optimizeIndex()
 
         log.info("Done optimizing indices")
     }
@@ -219,12 +228,12 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
     /*      ISearchEngine implementation        */
 
-    override fun searchEntries(search: EntriesSearch, termsToSearchFor: List<String>) {
-        if(search.isSearchingForEntryIds()) {
-            entryIdsIndexWriterAndSearcher.searchEntryIds(search, termsToSearchFor)
+    override fun searchItems(search: ItemsSearch, termsToSearchFor: List<String>) {
+        if(search.isSearchingForItemIds()) {
+            itemIdsIndexWriterAndSearcher.searchItemIds(search, termsToSearchFor)
         }
         else {
-            entryIndexWriterAndSearcher.searchEntries(search, termsToSearchFor)
+            itemIndexWriterAndSearcher.searchItems(search, termsToSearchFor)
         }
     }
 
@@ -236,8 +245,8 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
         tagIndexWriterAndSearcher.searchFilteredTags(search, termsToSearchFor)
     }
 
-    override fun searchReferences(search: ReferenceSearch, termsToSearchFor: List<String>) {
-        referenceIndexWriterAndSearcher.searchReferences(search, termsToSearchFor)
+    override fun searchSources(search: SourceSearch, termsToSearchFor: List<String>) {
+        sourceIndexWriterAndSearcher.searchSources(search, termsToSearchFor)
     }
 
     override fun searchSeries(search: SeriesSearch, termsToSearchFor: List<String>) {
@@ -246,6 +255,14 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
 
     override fun searchReadLaterArticles(search: ReadLaterArticleSearch, termsToSearchFor: List<String>) {
         readLaterArticleIndexWriterAndSearcher.searchReadLaterArticles(search, termsToSearchFor)
+    }
+
+    override fun searchFiles(search: FilesSearch, termsToSearchFor: List<String>) {
+        fileIndexWriterAndSearcher.searchFiles(search, termsToSearchFor)
+    }
+
+    override fun searchLocalFileInfo(search: LocalFileInfoSearch) {
+        localFileInfoIndexWriterAndSearcher.searchLocalFileInfo(search)
     }
 
 }

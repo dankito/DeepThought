@@ -1,11 +1,8 @@
 package net.dankito.deepthought.javafx.appstart
 
-import net.dankito.deepthought.communication.ICommunicationManager
 import net.dankito.deepthought.javafx.di.AppComponent
+import net.dankito.deepthought.service.communication.CommunicationManagerStarterBase
 import net.dankito.deepthought.service.data.DataManager
-import java.util.*
-import javax.inject.Inject
-import kotlin.concurrent.schedule
 
 
 /**
@@ -15,32 +12,10 @@ import kotlin.concurrent.schedule
  * Therefore after DataManager is initialized we give application some time to show initial data
  * before we start communicator classes like @see DevicesDiscoverer, @see IClientCommunicator, @see ISyncManager, ...
  */
-class CommunicationManagerStarter(dataManager: DataManager) {
+class CommunicationManagerStarter(dataManager: DataManager) : CommunicationManagerStarterBase(dataManager) {
 
-    companion object {
-        const val DefaultWaitTimeBeforeStartingCommunicationManagerMillis = 5000L
-    }
-
-
-    @Inject
-    protected lateinit var communicationManager: ICommunicationManager
-
-
-    init {
-        dataManager.addInitializationListener { dataManagerInitialized() }
-    }
-
-    private fun dataManagerInitialized() {
-        Timer().schedule(DefaultWaitTimeBeforeStartingCommunicationManagerMillis) {
-            startCommunicationManager()
-        }
-    }
-
-
-    private fun startCommunicationManager() {
-        AppComponent.component.inject(this) // and only now create CommunicationManager as now localDevice is loaded from Db
-
-        communicationManager.startAsync()
+    override fun injectDependencies() {
+        AppComponent.component.inject(this)
     }
 
 }

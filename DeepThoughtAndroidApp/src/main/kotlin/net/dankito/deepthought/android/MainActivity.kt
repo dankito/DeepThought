@@ -18,19 +18,18 @@ import net.dankito.deepthought.android.activities.SourcesListViewActivity
 import net.dankito.deepthought.android.activities.TagsListViewActivity
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.TagsListViewDialog
-import net.dankito.deepthought.android.fragments.EntriesListView
+import net.dankito.deepthought.android.fragments.ItemsListView
 import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.IntentHandler
 import net.dankito.deepthought.android.views.MainActivityFloatingActionMenuButton
-import net.dankito.deepthought.model.*
+import net.dankito.deepthought.model.LocalSettings
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.service.data.messages.EntitiesOfTypeChanged
-import net.dankito.service.data.messages.EntityChangeType
+import net.dankito.filechooserdialog.service.IPermissionsService
+import net.dankito.filechooserdialog.service.PermissionsService
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.UrlUtil
-import net.engio.mbassy.listener.Handler
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
@@ -46,9 +45,9 @@ class MainActivity : BaseActivity() {
 
     protected lateinit var drawerToggle: ActionBarDrawerToggle
 
-    private lateinit var entriesListView: EntriesListView
+    private lateinit var itemsListView: ItemsListView
 
-    private var eventBusListener: EventBusListener? = null
+    private val permissionsManager: IPermissionsService
 
 
     @Inject
@@ -72,6 +71,8 @@ class MainActivity : BaseActivity() {
 
     init {
         AppComponent.component.inject(this)
+
+        permissionsManager = PermissionsService(this)
     }
 
 
@@ -106,7 +107,7 @@ class MainActivity : BaseActivity() {
         showAppVersion(navigationView)
         navigationView.setNavigationItemSelectedListener(navigationListener)
 
-        entriesListView = supportFragmentManager.findFragmentByTag("EntriesListView") as EntriesListView
+        itemsListView = supportFragmentManager.findFragmentByTag("ItemsListView") as ItemsListView
 
         floatingActionMenuButton = MainActivityFloatingActionMenuButton(floatingActionMenu, summaryExtractorManager, router, eventBus)
     }
@@ -135,21 +136,25 @@ class MainActivity : BaseActivity() {
         }
 
         if(dataManager.localSettings.didUserCreateDataEntity == false) {
-            val eventBusListener = EventBusListener()
-            this.eventBusListener = eventBusListener
-            eventBus.register(eventBusListener)
+            listenToDidUserCreateDataEntityChanges()
         }
     }
 
-    private fun userCreatedDataEntity() {
-        eventBusListener?.let {
-            eventBus.unregister(it)
-            this.eventBusListener = null
+    private fun listenToDidUserCreateDataEntityChanges() {
+        var listener: ((LocalSettings) -> Unit)? = null
+
+        listener = { localSettings ->
+            if(localSettings.didUserCreateDataEntity) {
+                listener?.let { dataManager.removeLocalSettingsChangedListener(it) }
+
+                userCreatedDataEntity()
+            }
         }
 
-        dataManager.localSettings.didUserCreateDataEntity = true
-        dataManager.localSettingsUpdated()
+        dataManager.addLocalSettingsChangedListener(listener)
+    }
 
+    private fun userCreatedDataEntity() {
         runOnUiThread {
             drawerToggle.isDrawerIndicatorEnabled = true
         }
@@ -173,14 +178,22 @@ class MainActivity : BaseActivity() {
         super.onResume()
 
         clearAllActivityResults() // important, so that the results from Activities opened from one of the tabs aren't displayed later in another activity (e.g. opening
-        // EditReferenceActivity from ReferenceListView tab first, then going to EditEntryActivity -> Source of first called EditReferenceActivity is then shown in second EditEntryActivity
+        // EditSourceActivity from SourcesListView tab first, then going to EditItemActivityBase -> Source of first called EditSourceActivity gets then shown in second EditItemActivityBase
     }
+
+    override fun onDestroy() {
+        floatingActionMenuButton.cleanUp()
+
+        super.onDestroy()
+    }
+
+
 
     override fun onBackPressed() {
         if(floatingActionMenuButton.handlesBackButtonPress()) {
 
         }
-        else if(dialogHandlesBackButton() == false && entriesListView.onBackPressed() == false) {
+        else if(dialogHandlesBackButton() == false && itemsListView.onBackPressed() == false) {
             super.onBackPressed() // when not handling by fragment call default back button press handling
         }
     }
@@ -193,6 +206,14 @@ class MainActivity : BaseActivity() {
 
         return false
     }
+
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
@@ -224,11 +245,21 @@ class MainActivity : BaseActivity() {
         true
     }
 
-    private fun navigateToActivity(activityClass: Class<out BaseActivity>) {
+    // TODO: move to Router
+    private fun navigateToActivity(activityClass: Class<out BaseActivity>, parameters: Any? = null) {
         val intent = Intent(this, activityClass)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
+        parameters?.let { addParametersToIntent(intent, parameters) }
+
         startActivity(intent)
+    }
+
+
+    private fun addParametersToIntent(intent: Intent, parameters: Any) {
+        val id = parameterHolder.setParameters(parameters)
+
+        intent.putExtra(BaseActivity.ParametersId, id)
     }
 
 
@@ -238,25 +269,6 @@ class MainActivity : BaseActivity() {
         }
 
         IntentHandler(extractArticleHandler, router, urlUtil).handle(intent)
-    }
-
-
-
-    inner class EventBusListener {
-
-        @Handler
-        fun entryChanged(change: EntitiesOfTypeChanged) {
-            if(change.changeType == EntityChangeType.Created) {
-                when(change.entityType) {
-                    Item::class.java,
-                    Tag::class.java,
-                    Source::class.java,
-                    Series::class.java,
-                    ReadLaterArticle::class.java ->
-                        userCreatedDataEntity()
-                }
-            }
-        }
     }
 
 }

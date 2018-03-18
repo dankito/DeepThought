@@ -1,12 +1,12 @@
 package net.dankito.deepthought.javafx.dialogs.readlaterarticle
 
+import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.EntitiesListView
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.controls.ReadLaterArticleListCellFragment
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ReadLaterArticleListPresenter
-import net.dankito.deepthought.data.EntryPersister
 import net.dankito.deepthought.ui.view.IReadLaterArticleView
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.search.ISearchEngine
@@ -26,7 +26,7 @@ class ReadLaterArticleListView : EntitiesListView(), IReadLaterArticleView {
     protected lateinit var readLaterArticleService: ReadLaterArticleService
 
     @Inject
-    protected lateinit var entryPersister: EntryPersister
+    protected lateinit var itemPersister: ItemPersister
 
     @Inject
     protected lateinit var clipboardService: IClipboardService
@@ -41,14 +41,20 @@ class ReadLaterArticleListView : EntitiesListView(), IReadLaterArticleView {
     init {
         AppComponent.component.inject(this)
 
-        presenter = ReadLaterArticleListPresenter(this, searchEngine, readLaterArticleService, entryPersister, clipboardService, router)
+        presenter = ReadLaterArticleListPresenter(this, searchEngine, readLaterArticleService, itemPersister, clipboardService, router)
 
         searchEntities(Search.EmptySearchTerm)
     }
 
 
+    override fun onDock() {
+        super.onDock()
+
+        presenter.viewBecomesVisible()
+    }
+
     override fun onUndock() {
-        presenter.cleanUp()
+        presenter.viewGetsHidden()
 
         super.onDock()
     }
@@ -76,7 +82,7 @@ class ReadLaterArticleListView : EntitiesListView(), IReadLaterArticleView {
                 isDisable = true
 
                 action {
-                    selectedItem?.let { presenter.copyReferenceUrlToClipboard(it) }
+                    selectedItem?.let { presenter.copySourceUrlToClipboard(it) }
                 }
             }
 

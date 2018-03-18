@@ -5,4 +5,4 @@ import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Tag
 
 
-class FilteredTagsSearchResult(val entriesHavingFilteredTags: List<Item>, val tagsOnEntriesContainingFilteredTags: List<Tag>)
+class FilteredTagsSearchResult(val itemsHavingFilteredTags: List<Item>, val tagsOnItemsContainingFilteredTags: List<Tag>)

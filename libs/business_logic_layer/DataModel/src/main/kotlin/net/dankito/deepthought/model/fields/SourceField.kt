@@ -7,7 +7,9 @@ enum class SourceField {
     Series,
     SeriesTitle,
     Issue,
+    Length,
     PublishingDate,
-    Url
+    Url,
+    Files
 
 }

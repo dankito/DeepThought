@@ -33,8 +33,8 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/fragment_tab_entries_filtered_entities_margin_top"
-            android:layout_marginBottom="@dimen/fragment_tab_entries_filtered_entities_margin_bottom"
+            android:layout_marginTop="@dimen/fragment_tab_items_filtered_entities_margin_top"
+            android:layout_marginBottom="@dimen/fragment_tab_items_filtered_entities_margin_bottom"
             android:layout_alignParentBottom="true"
             android:visibility="gone"
         >
@@ -86,16 +86,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginLeft="@dimen/fragment_tab_entries_onboarding_left_right_margin"
-            android:layout_marginStart="@dimen/fragment_tab_entries_onboarding_left_right_margin"
-            android:layout_marginRight="@dimen/fragment_tab_entries_onboarding_left_right_margin"
-            android:layout_marginEnd="@dimen/fragment_tab_entries_onboarding_left_right_margin"
+            android:layout_marginLeft="@dimen/fragment_tab_items_onboarding_left_right_margin"
+            android:layout_marginStart="@dimen/fragment_tab_items_onboarding_left_right_margin"
+            android:layout_marginRight="@dimen/fragment_tab_items_onboarding_left_right_margin"
+            android:layout_marginEnd="@dimen/fragment_tab_items_onboarding_left_right_margin"
             android:textAlignment="center"
-            android:textSize="@dimen/fragment_tab_entries_onboarding_text_size"
+            android:textSize="@dimen/fragment_tab_items_onboarding_text_size"
             android:gravity="center_horizontal"
         />
 
-        <!-- In EntriesListView i'd like to show txtOnboardingText a bit above the center as it looks more naturally and leaves more place for arrowToFloatingActionButton -->
+        <!--ItemsListViewView i'd like to show txtOnboardingText a bit above the center as it looks more naturally and leaves more place for arrowToFloatingActionButton -->
         <!-- So i added vwStartingWhereTranslatedTextViewOnboardingTextEnds which takes txtOnboardingText's translationY into account and align arrowToFloatingActionButton to it -->
 
         <View

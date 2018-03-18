@@ -15,7 +15,7 @@ class GuardianArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(web
         return "The Guardian"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return isHttpOrHttpsUrlFromHost(url, "www.theguardian.co.uk/") || isHttpOrHttpsUrlFromHost(url, "www.theguardian.co.uk/")
     }
 
@@ -33,17 +33,17 @@ class GuardianArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(web
     }
 
     private fun extractArticle(extractionResult: ItemExtractionResult, url: String, articleElement: Element, titleElement: Element, contentMainElement: Element) {
-        val entry = Item(extractContent(contentMainElement, articleElement))
+        val item = Item(extractContent(contentMainElement, articleElement))
 
         // TODO: but then we don't have summary in database / index anymore -> try to add it to content
-//        articleElement.select(".content__standfirst").first()?.let { entry.summary = it.text() }
+//        articleElement.select(".content__standfirst").first()?.let { item.summary = it.text() }
 
 
-        val reference = Source(titleElement.text(), url, extractPublishingDate(contentMainElement))
+        val source = Source(titleElement.text(), url, extractPublishingDate(contentMainElement))
 
-        contentMainElement.select(".media-primary").first()?.let { reference.previewImageUrl = extractUrlFromFigureElement(it) }
+        contentMainElement.select(".media-primary").first()?.let { source.previewImageUrl = extractUrlFromFigureElement(it) }
 
-        extractionResult.setExtractedContent(entry, reference)
+        extractionResult.setExtractedContent(item, source)
     }
 
     private fun extractUrlFromFigureElement(figureElement: Element): String? {

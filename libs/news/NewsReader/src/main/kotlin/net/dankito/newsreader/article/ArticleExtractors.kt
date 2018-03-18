@@ -50,16 +50,16 @@ class ArticleExtractors(webClient: IWebClient) {
     }
 
     fun getExtractorForUrl(url: String) : IArticleExtractor? {
-        findImplementedExtractorThatCanExtractEntryFromUrl(url)?.let {
+        findImplementedExtractorThatCanExtractItemFromUrl(url)?.let {
             return it
         }
 
         return defaultExtractor
     }
 
-    private fun findImplementedExtractorThatCanExtractEntryFromUrl(url: String): IArticleExtractor? {
+    private fun findImplementedExtractorThatCanExtractItemFromUrl(url: String): IArticleExtractor? {
         implementedExtractors.forEach { (_, extractor) ->
-            if(extractor.canExtractEntryFromUrl(url)) {
+            if(extractor.canExtractItemFromUrl(url)) {
                 return extractor
             }
         }

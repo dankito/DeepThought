@@ -54,7 +54,7 @@ class IntentHandler(private val extractArticleHandler: ExtractArticleHandler, pr
             abstractPlain = intent.getStringExtra(Intent.EXTRA_TITLE)
         }
 
-        router.showEditEntryView(Item("<p>$sharedText</p>", abstractPlain ?: ""))
+        router.showEditItemView(Item("<p>$sharedText</p>", abstractPlain ?: ""))
     }
 
 

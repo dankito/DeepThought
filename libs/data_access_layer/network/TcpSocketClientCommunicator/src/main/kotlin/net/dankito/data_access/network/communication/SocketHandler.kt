@@ -17,19 +17,31 @@ open class SocketHandler {
 
 
     fun sendMessage(socket: Socket, message: ByteArray): SocketResult {
+        return sendMessage(socket, ByteArrayInputStream(message), CommunicationConfig.MESSAGE_END_CHAR)
+    }
+
+    fun sendMessage(socket: Socket, inputStream: InputStream, messageEndChar: Char? = null): SocketResult {
+        var countBytesSend = -1L
+
         try {
             val sink = Okio.buffer(Okio.sink(socket))
-            val source = Okio.buffer(Okio.source(BufferedInputStream(ByteArrayInputStream(message))))
+            val source = Okio.buffer(Okio.source(BufferedInputStream(inputStream)))
 
-            sink.writeAll(source)
-            sink.writeUtf8(CommunicationConfig.MESSAGE_END_CHAR.toString()) // to signal receiver that message ends here
+            countBytesSend = sink.writeAll(source)
+
+            messageEndChar?.let {
+                sink.writeUtf8(it.toString()) // to signal receiver that message ends here
+            }
+
             sink.flush()
 
             source.close()
 
-            return SocketResult(true)
+            return SocketResult(true, countBytesSend = countBytesSend)
         } catch(e: Exception) {
-            return SocketResult(false, e)
+            log.error("Could not send message to ${socket.inetAddress}", e)
+
+            return SocketResult(false, e, countBytesSend = countBytesSend)
         }
     }
 
@@ -69,12 +81,12 @@ open class SocketHandler {
             }
         } while(receivedChunkSize > -1)
 
-        if (receivedChunkSize > 0 && receivedChunkSize < CommunicationConfig.MAX_MESSAGE_SIZE) {
+        if(receivedMessageSize > 0 && receivedMessageSize < CommunicationConfig.MAX_MESSAGE_SIZE) {
             val receivedMessage = String(receivedMessageBytes.toByteArray(), CommunicationConfig.MESSAGE_CHARSET)
             return SocketResult(true, receivedMessage = receivedMessage)
         }
         else {
-            if (receivedChunkSize <= 0) {
+            if(receivedMessageSize <= 0) {
                 return SocketResult(false, Exception("Could not receive any bytes"))
             }
             else {
@@ -84,7 +96,7 @@ open class SocketHandler {
     }
 
     fun closeSocket(socket: Socket?) {
-        if (socket != null) {
+        if(socket != null) {
             try {
                 socket.close()
             } catch (e: Exception) {

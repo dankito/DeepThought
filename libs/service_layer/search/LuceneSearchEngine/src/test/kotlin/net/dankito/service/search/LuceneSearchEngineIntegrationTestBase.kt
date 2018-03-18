@@ -1,48 +1,81 @@
 package net.dankito.service.search
 
+import com.nhaarman.mockito_kotlin.mock
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
 import net.dankito.data_access.filesystem.JavaFileStorageService
+import net.dankito.deepthought.data.FilePersister
+import net.dankito.deepthought.data.ItemPersister
+import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.di.DaggerBaseComponent
+import net.dankito.deepthought.files.FileManager
+import net.dankito.deepthought.files.MimeTypeService
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
+import net.dankito.mime.MimeTypeCategorizer
+import net.dankito.mime.MimeTypeDetector
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
+import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
-import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.OsHelper
+import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.JacksonJsonSerializer
+import net.dankito.utils.services.hashing.HashService
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.settings.LocalSettingsStoreBase
 import net.dankito.utils.version.Versions
 import org.junit.After
-import org.junit.Before
 import java.io.File
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 abstract class LuceneSearchEngineIntegrationTestBase {
 
-    protected lateinit var underTest: LuceneSearchEngine
+    protected val underTest: LuceneSearchEngine
 
 
-    protected lateinit var entryService: EntryService
+    protected val itemService: ItemService
 
-    protected lateinit var tagService: TagService
+    protected val tagService: TagService
 
-    protected lateinit var referenceService: ReferenceService
+    protected val sourceService: SourceService
 
-    protected lateinit var seriesService: SeriesService
+    protected val seriesService: SeriesService
 
-    protected lateinit var readLaterArticleService: ReadLaterArticleService
+    protected val readLaterArticleService: ReadLaterArticleService
+
+    protected val localFileInfoService: LocalFileInfoService
+
+    protected val fileService: FileService
+
+    private val mimeTypeDetector = MimeTypeDetector()
+
+    private val mimeTypeCategorizer = MimeTypeCategorizer()
+
+    private val mimeTypeService: MimeTypeService
+
+    protected val fileManager: FileManager
+
+    protected val deleteEntityService: DeleteEntityService
+
+    protected val filePersister: FilePersister
+
+    protected val sourcePersister: SourcePersister
+
+    protected val itemPersister: ItemPersister
+
+    protected val eventBus: IEventBus
+
+    protected val threadPool = ThreadPool()
 
 
-    private val platformConfiguration = object: IPlatformConfiguration {
+    protected val platformConfiguration = object: PlatformConfigurationBase() {
         override fun getUserName() = "User"
         override fun getDeviceName() = "Device"
         override fun getOsType() = OsType.DESKTOP
@@ -50,15 +83,15 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         override fun getOsVersion() = 0
         override fun getOsVersionString() = "0.0"
 
+        override fun getApplicationFolder(): File { return File(".").absoluteFile.parentFile }
         override fun getDefaultDataFolder(): File { return File(File(File("data"), "test"), "lucene") }
+        override fun getDefaultFilesFolder(): File { return File(getDefaultDataFolder(), FilesFolderName) }
     }
 
     private val fileStorageService = JavaFileStorageService()
 
 
-    @Before
-    @Throws(Exception::class)
-    fun setUp() {
+    init {
         val component = DaggerBaseComponent.builder().build()
         BaseComponent.component = component
 
@@ -70,18 +103,27 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         val dataManager = DataManager(entityManager, entityManagerConfiguration, DefaultDataInitializer(platformConfiguration, localization), platformConfiguration)
         initDataManager(dataManager)
 
-        val eventBus = MBassadorEventBus()
+        eventBus = MBassadorEventBus()
         val entityChangedNotifier = EntityChangedNotifier(eventBus)
 
-        entryService = EntryService(dataManager, entityChangedNotifier)
+        itemService = ItemService(dataManager, entityChangedNotifier)
         tagService = TagService(dataManager, entityChangedNotifier)
-        referenceService = ReferenceService(dataManager, entityChangedNotifier)
+        sourceService = SourceService(dataManager, entityChangedNotifier)
         seriesService = SeriesService(dataManager, entityChangedNotifier)
         readLaterArticleService = ReadLaterArticleService(dataManager, entityChangedNotifier, JacksonJsonSerializer(tagService, seriesService))
+        localFileInfoService = LocalFileInfoService(dataManager, entityChangedNotifier)
+        fileService = FileService(dataManager, entityChangedNotifier)
+        mimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypeCategorizer, dataManager)
 
         underTest = LuceneSearchEngine(dataManager, NoOpLanguageDetector(), OsHelper(platformConfiguration), ThreadPool(), eventBus,
-                entryService, tagService, referenceService, seriesService, readLaterArticleService)
+                itemService, tagService, sourceService, seriesService, readLaterArticleService, fileService, localFileInfoService)
         initLuceneSearchEngine(underTest)
+
+        deleteEntityService = DeleteEntityService(itemService, tagService, sourceService, seriesService, fileService, localFileInfoService, underTest, mock(), threadPool)
+        fileManager = FileManager(underTest, localFileInfoService, mock(), mimeTypeService, HashService(), eventBus, threadPool)
+        filePersister = FilePersister(fileService, fileManager, threadPool)
+        sourcePersister = SourcePersister(sourceService, seriesService, filePersister, deleteEntityService)
+        itemPersister = ItemPersister(itemService, sourcePersister, tagService, filePersister, deleteEntityService)
     }
 
     private fun initDataManager(dataManager: DataManager) {
@@ -102,6 +144,13 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         underTest.close()
 
         fileStorageService.deleteFolderRecursively(platformConfiguration.getDefaultDataFolder())
+    }
+
+
+    protected fun waitTillEntityGetsIndexed() {
+        try {
+            Thread.sleep(1000)
+        } catch (ignored: Exception) { }
     }
 
 

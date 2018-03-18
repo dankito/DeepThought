@@ -1,5 +1,6 @@
 package net.dankito.utils
 
+import net.dankito.deepthought.model.enums.FileType
 import net.dankito.deepthought.model.enums.OsType
 import java.io.File
 
@@ -19,6 +20,12 @@ interface IPlatformConfiguration {
     fun getOsVersionString(): String
 
 
+    fun getApplicationFolder(): File
+
     fun getDefaultDataFolder(): File
+
+    fun getDefaultFilesFolder(): File
+
+    fun getDefaultSavePathForFile(filename: String, fileType: FileType): File
 
 }

@@ -9,19 +9,19 @@ import net.dankito.deepthought.javafx.DeepThoughtJavaFXApplication
 import net.dankito.deepthought.javafx.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.javafx.appstart.JavaFXAppInitializer
 import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
-import net.dankito.deepthought.javafx.dialogs.entry.EditEntryExtractionResultView
-import net.dankito.deepthought.javafx.dialogs.entry.EditEntryViewBase
-import net.dankito.deepthought.javafx.dialogs.entry.EditReadLaterArticleView
-import net.dankito.deepthought.javafx.dialogs.entry.TagsOnEntryDialog
-import net.dankito.deepthought.javafx.dialogs.entry.controls.EditItemSourceField
-import net.dankito.deepthought.javafx.dialogs.entry.controls.EditItemTagsField
+import net.dankito.deepthought.javafx.dialogs.item.EditItemExtractionResultView
+import net.dankito.deepthought.javafx.dialogs.item.EditItemViewBase
+import net.dankito.deepthought.javafx.dialogs.item.EditReadLaterArticleView
+import net.dankito.deepthought.javafx.dialogs.item.controls.EditItemSourceField
+import net.dankito.deepthought.javafx.dialogs.item.controls.EditItemTagsField
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindow
-import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.ArticleExtractorsMenuButton
-import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.EntriesListView
-import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.MainMenuBar
-import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.TagsListView
+import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.*
+import net.dankito.deepthought.javafx.dialogs.pdf.ViewPdfDialog
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.ReadLaterArticleListView
 import net.dankito.deepthought.javafx.dialogs.source.EditSourceDialog
+import net.dankito.deepthought.javafx.dialogs.source.controls.EditSourceSeriesField
+import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
+import net.dankito.deepthought.javafx.ui.controls.EditEntityFilesField
 import javax.inject.Singleton
 
 
@@ -45,28 +45,38 @@ interface AppComponent : CommonComponent {
 
     fun inject(mainMenuBar: MainMenuBar)
 
+    fun inject(javaFXClipboardWatcher: JavaFXClipboardWatcher)
+
+    fun inject(messagePopupPane: MessagePopupPane)
+
     fun inject(articleExtractorsMenuButton: ArticleExtractorsMenuButton)
 
-    fun inject(entriesListView: EntriesListView)
+    fun inject(itemsListView: ItemsListView)
 
     fun inject(tagsListView: TagsListView)
+
+    fun inject(sourcesListView: SourcesListView)
 
     fun inject(articleSummaryView: ArticleSummaryView)
 
     fun inject(readLaterArticleListView: ReadLaterArticleListView)
 
-    fun inject(editEntryViewBase: EditEntryViewBase)
+    fun inject(editItemViewBase: EditItemViewBase)
 
-    fun inject(editEntryExtractionResultView: EditEntryExtractionResultView)
+    fun inject(editItemExtractionResultView: EditItemExtractionResultView)
+
+    fun inject(editReadLaterArticleView: EditReadLaterArticleView)
+
+    fun inject(editEntityFilesField: EditEntityFilesField)
 
     fun inject(editItemSourceField: EditItemSourceField)
 
     fun inject(editItemTagsField: EditItemTagsField)
 
-    fun inject(tagsOnEntryDialog: TagsOnEntryDialog)
-
     fun inject(editSourceDialog: EditSourceDialog)
 
-    fun inject(editReadLaterArticleView: EditReadLaterArticleView)
+    fun inject(editSourceSeriesField: EditSourceSeriesField)
+
+    fun inject(viewPdfDialog: ViewPdfDialog)
 
 }

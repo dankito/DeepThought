@@ -15,7 +15,7 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
         return "Telepolis"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return isHttpOrHttpsUrlFromHost(url, "www.heise.de/tp/features/") ||  isHttpOrHttpsUrlFromHost(url, "m.heise.de/tp/features/")
     }
 
@@ -63,14 +63,14 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
 
 
     override fun parseArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleElement: Element, url: String, title: String) {
-        val reference = extractReference(headerElement, articleElement, url, title)
+        val source = extractSource(headerElement, articleElement, url, title)
 
         cleanContent(articleElement)
         transformElements(articleElement)
         makeLinksAbsolute(articleElement, url)
         val content = articleElement.children().joinToString("") { it.outerHtml()}
 
-        extractionResult.setExtractedContent(Item(content), reference)
+        extractionResult.setExtractedContent(Item(content), source)
     }
 
     private fun cleanContent(articleElement: Element) {
@@ -83,24 +83,24 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
         articleElement.select("div.frage, div.antwort").tagName("p") // convert question / answer divs to paragraphs
     }
 
-    private fun extractReference(headerElement: Element, articleElement: Element, url: String, title: String): Source? {
-        val reference = Source(title, url, extractPublishingDate(headerElement))
+    private fun extractSource(headerElement: Element, articleElement: Element, url: String, title: String): Source? {
+        val source = Source(title, url, extractPublishingDate(headerElement))
 
         articleElement.select(".aufmacherbild img").first()?.let { previewImageElement ->
-            reference.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), url)
+            source.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), url)
         }
 
-        return reference
+        return source
     }
 
 
     private fun parsePrintVersionToArticle(extractionResult: ItemExtractionResult, articleElement: Element, url: String) {
-        val reference = extractReferenceForPrintVersion(articleElement, url)
+        val source = extractSourceForPrintVersion(articleElement, url)
 
         // TODO: now we don't have the summary anymore (print version doesn't have it in Fliesstext) -> try to add it
         val content = extractContentForPrintVersion(articleElement, url)
 
-        extractionResult.setExtractedContent(Item(content), reference)
+        extractionResult.setExtractedContent(Item(content), source)
     }
 
     private fun extractContentForPrintVersion(articleElement: Element, url: String): String {
@@ -182,20 +182,20 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
         return null
     }
 
-    private fun extractReferenceForPrintVersion(articleElement: Element, url: String): Source {
+    private fun extractSourceForPrintVersion(articleElement: Element, url: String): Source {
         val title = articleElement.select("h1").first()?.text()?.trim() ?: ""
         val publishingDate = articleElement.select(".publish-info").first()?.let { extractPublishingDate(it) }
 
-        val reference = Source(title, url, publishingDate)
+        val source = Source(title, url, publishingDate)
 
         articleElement.select(".aufmacherbild img").first()?.let { previewImageElement ->
-            reference.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), url)
+            source.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), url)
         }
         articleElement.ownerDocument().head().select("meta[property=og:image]").first()?.attr("content")?.let {
-            reference.previewImageUrl = it
+            source.previewImageUrl = it
         }
 
-        return reference
+        return source
     }
 
     private fun removeReferencesFromPrintVersion(articleElement: Element) {

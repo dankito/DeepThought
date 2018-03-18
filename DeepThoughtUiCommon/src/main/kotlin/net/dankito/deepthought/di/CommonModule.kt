@@ -13,14 +13,21 @@ import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.data_access.network.webclient.OkHttpWebClient
 import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
+import net.dankito.deepthought.files.FileManager
+import net.dankito.deepthought.files.MimeTypeService
 import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.deepthought.model.NetworkSettings
+import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
+import net.dankito.deepthought.service.clipboard.OptionsForClipboardContentDetector
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
 import net.dankito.faviconextractor.FaviconComparator
 import net.dankito.faviconextractor.FaviconExtractor
 import net.dankito.feedaddressextractor.FeedAddressExtractor
+import net.dankito.mime.MimeTypeCategorizer
+import net.dankito.mime.MimeTypeDetector
 import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.newsreader.feed.IFeedReader
 import net.dankito.newsreader.feed.RomeFeedReader
@@ -32,6 +39,7 @@ import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.LuceneSearchEngine
 import net.dankito.service.synchronization.ConnectedDevicesService
 import net.dankito.service.synchronization.CouchbaseLiteSyncManager
+import net.dankito.service.synchronization.IConnectedDevicesService
 import net.dankito.service.synchronization.ISyncManager
 import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
@@ -43,8 +51,10 @@ import net.dankito.utils.OsHelper
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.ISerializer
+import net.dankito.utils.services.hashing.HashService
 import net.dankito.utils.services.hashing.IBase64Service
 import net.dankito.utils.services.network.NetworkHelper
+import net.dankito.utils.ui.IDialogService
 import javax.inject.Singleton
 
 
@@ -70,11 +80,24 @@ open class CommonModule {
         return NetworkHelper()
     }
 
+    @Provides
+    @Singleton
+    open fun provideOptionsForClipboardContentDetector(articleExtractorManager: ArticleExtractorManager, fileManager: FileManager, dialogService: IDialogService,
+                                                       mimeTypeService: MimeTypeService, platformConfiguration: IPlatformConfiguration, router: IRouter) : OptionsForClipboardContentDetector {
+        return OptionsForClipboardContentDetector(articleExtractorManager, fileManager, dialogService, mimeTypeService, platformConfiguration, router)
+    }
+
 
     @Provides
     @Singleton
     open fun provideOsHelper(platformConfiguration: IPlatformConfiguration) : OsHelper {
         return OsHelper(platformConfiguration)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMimeTypeService(mimeTypeDetector: MimeTypeDetector, mimeTypeCategorizer: MimeTypeCategorizer, dataManager: DataManager) : MimeTypeService {
+        return MimeTypeService(mimeTypeDetector, mimeTypeCategorizer, dataManager)
     }
 
     @Provides
@@ -93,9 +116,10 @@ open class CommonModule {
     @Provides
     @Singleton
     open fun provideSearchEngine(dataManager: DataManager, languageDetector: ILanguageDetector, threadPool: IThreadPool, osHelper: OsHelper, eventBus: IEventBus,
-                            entryService: EntryService, tagService: TagService,
-                            referenceService: ReferenceService, seriesService: SeriesService, readLaterArticleService: ReadLaterArticleService) : ISearchEngine {
-        return LuceneSearchEngine(dataManager, languageDetector, osHelper, threadPool, eventBus, entryService, tagService, referenceService, seriesService, readLaterArticleService)
+                                 itemService: ItemService, tagService: TagService, sourceService: SourceService, seriesService: SeriesService,
+                                 readLaterArticleService: ReadLaterArticleService, fileService: FileService, localFileInfoService: LocalFileInfoService) : ISearchEngine {
+        return LuceneSearchEngine(dataManager, languageDetector, osHelper, threadPool, eventBus, itemService, tagService, sourceService, seriesService,
+                readLaterArticleService, fileService, localFileInfoService)
     }
 
 
@@ -148,8 +172,8 @@ open class CommonModule {
     @Provides
     @Singleton
     open fun provideClientCommunicator(networkSettings: INetworkSettings, registrationHandler: IDeviceRegistrationHandler, entityManager: IEntityManager,
-                                  serializer: ISerializer, base64Service: IBase64Service, threadPool: IThreadPool) : IClientCommunicator {
-        return TcpSocketClientCommunicator(networkSettings, registrationHandler, entityManager, serializer, base64Service, threadPool)
+                                  serializer: ISerializer, base64Service: IBase64Service, hashService: HashService, threadPool: IThreadPool) : IClientCommunicator {
+        return TcpSocketClientCommunicator(networkSettings, registrationHandler, entityManager, serializer, base64Service, hashService, threadPool)
     }
 
     @Provides
@@ -173,13 +197,13 @@ open class CommonModule {
     @Provides
     @Singleton
     open fun provideConnectedDevicesService(devicesDiscoverer: IDevicesDiscoverer, clientCommunicator: IClientCommunicator, syncManager: ISyncManager, registrationHandler: IDeviceRegistrationHandler,
-                                       networkSettings: INetworkSettings, entityManager: IEntityManager) : ConnectedDevicesService {
+                                       networkSettings: INetworkSettings, entityManager: IEntityManager) : IConnectedDevicesService {
         return ConnectedDevicesService(devicesDiscoverer, clientCommunicator, syncManager, registrationHandler, networkSettings, entityManager)
     }
 
     @Provides
     @Singleton
-    open fun provideCommunicationManager(connectedDevicesService: ConnectedDevicesService, syncManager: ISyncManager, clientCommunicator: IClientCommunicator, networkSettings: INetworkSettings)
+    open fun provideCommunicationManager(connectedDevicesService: IConnectedDevicesService, syncManager: ISyncManager, clientCommunicator: IClientCommunicator, networkSettings: INetworkSettings)
             : ICommunicationManager {
         return CommunicationManager(connectedDevicesService, syncManager, clientCommunicator, networkSettings)
     }

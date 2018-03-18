@@ -6,7 +6,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.activities.EditSeriesActivity
 import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityResult
-import net.dankito.deepthought.android.adapter.SeriesOnReferenceRecyclerAdapter
+import net.dankito.deepthought.android.adapter.SeriesOnSourceRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
@@ -44,7 +44,7 @@ class EditSourceSeriesField : EditEntityEntityReferenceField, ISeriesListView {
 
     private val presenter: SeriesListPresenter
 
-    private val existingSeriesSearchResultsAdapter: SeriesOnReferenceRecyclerAdapter
+    private val existingSeriesSearchResultsAdapter: SeriesOnSourceRecyclerAdapter
 
 
     init {
@@ -54,13 +54,26 @@ class EditSourceSeriesField : EditEntityEntityReferenceField, ISeriesListView {
 
         presenter = SeriesListPresenter(this, searchEngine, router, deleteEntityService)
 
-        existingSeriesSearchResultsAdapter = SeriesOnReferenceRecyclerAdapter(presenter)
+        existingSeriesSearchResultsAdapter = SeriesOnSourceRecyclerAdapter(presenter)
         existingSeriesSearchResultsAdapter.itemClickListener = { item -> existingSeriesSelected(item) }
 
         rcySearchResult.adapter = existingSeriesSearchResultsAdapter
         rcySearchResult.maxHeightInPixel = (context.resources.getDimension(R.dimen.list_item_series_height) * 5.25).toInt() // show at max five list items and a little bit from the next item so that user knows there's more
 
         showEditDetailsMenuItem = false
+    }
+
+
+    override fun viewBecomesVisible() {
+        super.viewBecomesVisible()
+
+        presenter.viewBecomesVisible()
+    }
+
+    override fun viewGetsHidden() {
+        presenter.viewGetsHidden()
+
+        super.viewGetsHidden()
     }
 
 
@@ -109,7 +122,7 @@ class EditSourceSeriesField : EditEntityEntityReferenceField, ISeriesListView {
         // currently not used as mnEditDetails is hidden (showEditDetailsMenuItem set to false)
         activity?.setWaitingForResult(EditSeriesActivity.ResultId)
 
-        router.showEditReferenceSeriesView(Source(""), series)
+        router.showEditSourceSeriesView(Source(""), series)
     }
 
     override fun createNewEntity() {

@@ -1,8 +1,8 @@
 package net.dankito.service.data
 
 import net.dankito.deepthought.model.ReadLaterArticle
-import net.dankito.deepthought.model.extensions.getEntryPreview
-import net.dankito.deepthought.model.extensions.getEntryPreviewWithSeriesAndPublishingDate
+import net.dankito.deepthought.model.extensions.getItemPreview
+import net.dankito.deepthought.model.extensions.getItemPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.data.event.EntityChangedNotifier
@@ -22,8 +22,8 @@ class ReadLaterArticleService(dataManager: DataManager, entityChangedNotifier: E
         super.onPrePersist(entity)
 
         val extractionResult = entity.itemExtractionResult
-        extractionResult.item.preview = extractionResult.item.getEntryPreview(true)
-        entity.itemPreview = extractionResult.item.getEntryPreviewWithSeriesAndPublishingDate(extractionResult.source, extractionResult.series)
+        extractionResult.item.preview = extractionResult.item.getItemPreview(true)
+        entity.itemPreview = extractionResult.item.getItemPreviewWithSeriesAndPublishingDate(extractionResult.source, extractionResult.series)
 
         entity.serializedItemExtractionResult = serializer.serializeObject(entity.itemExtractionResult)
     }
@@ -31,7 +31,7 @@ class ReadLaterArticleService(dataManager: DataManager, entityChangedNotifier: E
     override fun getAll(): List<ReadLaterArticle> {
         val readLaterArticles = super.getAll()
 
-        readLaterArticles.forEach { article -> deserializeEntryExtractionResult(article) }
+        readLaterArticles.forEach { article -> deserializeItemExtractionResult(article) }
 
         return readLaterArticles
     }
@@ -39,13 +39,13 @@ class ReadLaterArticleService(dataManager: DataManager, entityChangedNotifier: E
     override fun retrieve(id: String): ReadLaterArticle? {
         val article = super.retrieve(id)
 
-        article?.let { deserializeEntryExtractionResult(it) }
+        article?.let { deserializeItemExtractionResult(it) }
 
         return article
     }
 
 
-    fun deserializeEntryExtractionResult(readLaterArticle: ReadLaterArticle) {
+    fun deserializeItemExtractionResult(readLaterArticle: ReadLaterArticle) {
         if(readLaterArticle.itemExtractionResult.item.content.isBlank()) { // itemExtractionResult not deserialized yet
             try {
                 readLaterArticle.itemExtractionResult = serializer.deserializeObject(readLaterArticle.serializedItemExtractionResult, ItemExtractionResult::class.java)

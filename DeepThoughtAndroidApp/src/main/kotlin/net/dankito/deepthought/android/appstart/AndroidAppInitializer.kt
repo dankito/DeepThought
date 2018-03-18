@@ -5,6 +5,7 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.android.service.clipboard.AndroidClipboardWatcher
 import net.dankito.deepthought.android.service.network.NetworkConnectivityChangeBroadcastReceiver
 import net.dankito.deepthought.android.service.reporting.ICrashReporter
 import net.dankito.deepthought.service.data.DataManager
@@ -29,6 +30,9 @@ class AndroidAppInitializer {
 
     @Inject
     protected lateinit var communicationManagerStarter: CommunicationManagerStarter // same here: just create instance, CommunicationManagerStarter initializes itself
+
+    @Inject
+    protected lateinit var clipboardWatcher: AndroidClipboardWatcher
 
     @Inject
     protected lateinit var crashReporter: ICrashReporter

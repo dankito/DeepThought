@@ -2,10 +2,7 @@ package net.dankito.deepthought.android.di
 
 import dagger.Component
 import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
-import net.dankito.deepthought.android.activities.EditItemActivity_EditItemWithNoSourceTest
-import net.dankito.deepthought.android.activities.EditItemActivity_EditSourceTest
-import net.dankito.deepthought.android.activities.EditItemActivity_EditTagsTest
-import net.dankito.deepthought.android.activities.EditItemActivity_SearchInWebViewTest
+import net.dankito.deepthought.android.activities.*
 import net.dankito.deepthought.android.play_store.CreatePlayStoreScreenShots
 import net.dankito.deepthought.di.BaseModule
 import net.dankito.deepthought.di.CommonDataModule
@@ -35,7 +32,9 @@ interface TestComponent : AppComponent {
 
     fun inject(editItemActivity_EditTagsTest: EditItemActivity_EditTagsTest)
 
-    fun inject(editItemActivity_EditSourceTest: EditItemActivity_SearchInWebViewTest)
+    fun inject(editItemActivity_SearchInWebViewTest: EditItemActivity_SearchInWebViewTest)
+
+    fun inject(editItemActivity_EditFilesTest: EditItemActivity_EditFilesTest)
 
     fun inject(createPlayStoreScreenShots: CreatePlayStoreScreenShots)
 

@@ -12,7 +12,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.TagRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.dialogs.TagEntriesListDialog
+import net.dankito.deepthought.android.dialogs.TagItemsListDialog
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
@@ -154,7 +154,7 @@ class TagsListView : EntitiesListViewFragment<Tag>(R.menu.tag_contextual_action_
     private fun tagSelected(selectedTag: Tag?) {
         if(selectedTag != null) {
             hideSearchViewKeyboard()
-            presenter.showEntriesForTag(selectedTag)
+            presenter.showItemsForTag(selectedTag)
         }
         else {
 //            presenter.clearSelectedTag() // TODO
@@ -163,7 +163,7 @@ class TagsListView : EntitiesListViewFragment<Tag>(R.menu.tag_contextual_action_
 
 
     override fun onBackPressed(): Boolean {
-        if(isTagEntriesListDialogVisible()) { // let TagEntriesListDialog handle back button press
+        if(isTagItemsListDialogVisible()) { // let TagItemsListDialog handle back button press
             return false
         }
 
@@ -176,8 +176,8 @@ class TagsListView : EntitiesListViewFragment<Tag>(R.menu.tag_contextual_action_
         return super.onBackPressed()
     }
 
-    private fun isTagEntriesListDialogVisible(): Boolean {
-        return fragmentManager.findFragmentByTag(TagEntriesListDialog.TAG) != null
+    private fun isTagItemsListDialogVisible(): Boolean {
+        return fragmentManager.findFragmentByTag(TagItemsListDialog.TAG) != null
     }
 
 

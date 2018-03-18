@@ -7,7 +7,7 @@ import kotlinx.android.synthetic.main.activity_edit_series.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityResult
-import net.dankito.deepthought.android.adapter.SeriesOnReferenceRecyclerAdapter
+import net.dankito.deepthought.android.adapter.SeriesOnSourceRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.views.ToolbarUtil
 import net.dankito.deepthought.data.SeriesPersister
@@ -15,7 +15,7 @@ import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditSeriesPresenter
 import net.dankito.service.data.DeleteEntityService
-import net.dankito.service.data.ReferenceService
+import net.dankito.service.data.SourceService
 import net.dankito.service.data.SeriesService
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.EntityChangeType
@@ -43,7 +43,7 @@ class EditSeriesActivity : BaseActivity() {
     protected lateinit var seriesService: SeriesService
 
     @Inject
-    protected lateinit var referenceService: ReferenceService
+    protected lateinit var sourceService: SourceService
 
     @Inject
     protected lateinit var seriesPersister: SeriesPersister
@@ -68,7 +68,7 @@ class EditSeriesActivity : BaseActivity() {
 
     private val presenter: EditSeriesPresenter
 
-    private val existingSeriesSearchResultsAdapter: SeriesOnReferenceRecyclerAdapter
+    private val existingSeriesSearchResultsAdapter: SeriesOnSourceRecyclerAdapter
 
     private var didSeriesChange = false
 
@@ -86,7 +86,7 @@ class EditSeriesActivity : BaseActivity() {
 
         presenter = EditSeriesPresenter(router, deleteEntityService, seriesPersister, threadPool)
 
-        existingSeriesSearchResultsAdapter = SeriesOnReferenceRecyclerAdapter(presenter)
+        existingSeriesSearchResultsAdapter = SeriesOnSourceRecyclerAdapter(presenter)
     }
 
 
@@ -336,7 +336,7 @@ class EditSeriesActivity : BaseActivity() {
     inner class EventBusListener {
 
         @Handler
-        fun entryChanged(change: SeriesChanged) {
+        fun seriesChanged(change: SeriesChanged) {
             if(change.entity.id == series?.id) {
                 if(change.source == EntityChangeSource.Local && (change.changeType == EntityChangeType.PreDelete || change.changeType == EntityChangeType.Deleted)) {
                     setActivityResult(EditSeriesActivityResult(didDeleteSeries = true))

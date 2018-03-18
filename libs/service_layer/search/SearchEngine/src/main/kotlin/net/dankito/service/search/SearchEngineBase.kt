@@ -9,6 +9,7 @@ import net.dankito.utils.IThreadPool
 abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearchEngine {
 
     companion object {
+        const val DefaultSearchTermSeparator = " "
         const val TagsSearchTermSeparator = ","
     }
 
@@ -18,20 +19,20 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
     private val initializationListeners = mutableSetOf<() -> Unit>()
 
 
-    override fun searchEntries(search: EntriesSearch) {
-        val termsToSearchFor = getSingleSearchTerms(search.searchTerm, " ")
+    override fun searchItems(search: ItemsSearch) {
+        val termsToSearchFor = getSingleSearchTerms(search.searchTerm, DefaultSearchTermSeparator)
 
-        threadPool.runAsync { searchEntries(search, termsToSearchFor) }
+        threadPool.runAsync { searchItems(search, termsToSearchFor) }
     }
 
-    abstract fun searchEntries(search: EntriesSearch, termsToSearchFor: List<String>)
+    abstract fun searchItems(search: ItemsSearch, termsToSearchFor: List<String>)
 
 
     override fun searchTags(search: TagsSearch) {
         var tagNamesToFilterFor: List<String> = ArrayList<String>()
 
         if (search.searchTerm.isNullOrBlank() == false) {
-            tagNamesToFilterFor = getSingleSearchTerms(search.searchTerm, TagsSearchTermSeparator, false)
+            tagNamesToFilterFor = getSingleSearchTerms(search.searchTerm, TagsSearchTermSeparator, false, false)
         }
 
         search.results.tagNamesToSearchFor = tagNamesToFilterFor
@@ -46,7 +47,7 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
         var tagNamesToFilterFor: List<String> = ArrayList<String>()
 
         if (search.searchTerm.isNullOrBlank() == false) {
-            tagNamesToFilterFor = getSingleSearchTerms(search.searchTerm, TagsSearchTermSeparator)
+            tagNamesToFilterFor = getSingleSearchTerms(search.searchTerm, TagsSearchTermSeparator, removeEmptySearchTerms = false)
         }
 
         threadPool.runAsync { searchFilteredTags(search, tagNamesToFilterFor) }
@@ -55,17 +56,17 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
     abstract fun searchFilteredTags(search: FilteredTagsSearch, termsToSearchFor: List<String>)
 
 
-    override fun searchReferences(search: ReferenceSearch) {
-        val termsToSearchFor = getSingleSearchTerms(search.searchTerm, " ")
+    override fun searchSources(search: SourceSearch) {
+        val termsToSearchFor = getSingleSearchTerms(search.searchTerm, DefaultSearchTermSeparator)
 
-        threadPool.runAsync { searchReferences(search, termsToSearchFor) }
+        threadPool.runAsync { searchSources(search, termsToSearchFor) }
     }
 
-    abstract fun searchReferences(search: ReferenceSearch, termsToSearchFor: List<String>)
+    abstract fun searchSources(search: SourceSearch, termsToSearchFor: List<String>)
 
 
     override fun searchSeries(search: SeriesSearch) {
-        val termsToSearchFor = getSingleSearchTerms(search.searchTerm, " ")
+        val termsToSearchFor = getSingleSearchTerms(search.searchTerm, DefaultSearchTermSeparator)
 
         threadPool.runAsync { searchSeries(search, termsToSearchFor) }
     }
@@ -74,7 +75,7 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
 
 
     override fun searchReadLaterArticles(search: ReadLaterArticleSearch) {
-        val termsToSearchFor = getSingleSearchTerms(search.searchTerm, " ")
+        val termsToSearchFor = getSingleSearchTerms(search.searchTerm, DefaultSearchTermSeparator)
 
         threadPool.runAsync { searchReadLaterArticles(search, termsToSearchFor) }
     }
@@ -82,10 +83,26 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
     abstract fun searchReadLaterArticles(search: ReadLaterArticleSearch, termsToSearchFor: List<String>)
 
 
-    private fun getSingleSearchTerms(overallSearchTerm: String, separator: String, lowerCaseSearchTerm: Boolean = true): List<String> {
+    override fun searchFiles(search: FilesSearch) {
+        val termsToSearchFor = getSingleSearchTerms(search.searchTerm, DefaultSearchTermSeparator)
+
+        threadPool.runAsync { searchFiles(search, termsToSearchFor) }
+    }
+
+    abstract  fun searchFiles(search: FilesSearch, termsToSearchFor: List<String>)
+
+
+    private fun getSingleSearchTerms(overallSearchTerm: String, separator: String, lowerCaseSearchTerm: Boolean = true, removeEmptySearchTerms: Boolean = true): List<String> {
         val searchTerm = if(lowerCaseSearchTerm) overallSearchTerm.toLowerCase() else overallSearchTerm
         // make overallSearchTerm lower case, split it at all separators and trim resulting single search terms
-        return searchTerm.split(separator).map { it.trim() }.filter { it.isNullOrBlank() == false }.dropLastWhile { it.isEmpty() }
+        val singleSearchTerms = searchTerm.split(separator).map { it.trim() }
+
+        if(removeEmptySearchTerms) {
+            return singleSearchTerms.filter { it.isNullOrBlank() == false }.dropLastWhile { it.isEmpty() }
+        }
+        else {
+            return singleSearchTerms
+        }
     }
 
 

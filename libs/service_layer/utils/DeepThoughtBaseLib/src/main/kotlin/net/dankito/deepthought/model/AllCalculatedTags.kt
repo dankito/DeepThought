@@ -14,7 +14,7 @@ class AllCalculatedTags(private val searchEngine: ISearchEngine, private val eve
     private val calculatedTags = ArrayList<CalculatedTag>()
 
 
-    fun getCalculatedTags(): List<Tag> {
+    fun getCalculatedTags(): List<CalculatedTag> {
         synchronized(this) {
             if(hasInitializedCalculatedTags == false) {
                 initCalculatedTags()
@@ -25,14 +25,14 @@ class AllCalculatedTags(private val searchEngine: ISearchEngine, private val eve
     }
 
     private fun initCalculatedTags() {
-        calculatedTags.add(AllEntriesCalculatedTag(searchEngine, eventBus, entityChangedNotifier, localization))
-        calculatedTags.add(EntriesWithoutTagsCalculatedTag(searchEngine, eventBus, entityChangedNotifier, localization))
+        calculatedTags.add(AllItemsCalculatedTag(searchEngine, eventBus, entityChangedNotifier, localization))
+        calculatedTags.add(ItemsWithoutTagsCalculatedTag(searchEngine, eventBus, entityChangedNotifier, localization))
 
         hasInitializedCalculatedTags = true
     }
 
 
-    fun getCalculatedTagForName(name: String): Tag? {
+    fun getCalculatedTagForName(name: String): CalculatedTag? {
         getCalculatedTags().forEach { tag ->
             if(tag.name == name) {
                 return tag

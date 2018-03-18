@@ -20,11 +20,11 @@ abstract class ArticleExtractorTestBase {
     abstract fun createArticleExtractor(webClient: IWebClient): IArticleExtractor
 
 
-    protected open fun getAndTestArticle(url: String, title: String, abstract: String?, previewImageUrl: String? = null, minContentLength: Int? = null,
+    protected open fun getAndTestArticle(url: String, title: String, summary: String?, previewImageUrl: String? = null, minContentLength: Int? = null,
                                          canPublishingDateBeNull: Boolean = false, subTitle: String? = null) {
         val article = getArticle(url)
 
-        testArticle(article, url, title, abstract, previewImageUrl, minContentLength, canPublishingDateBeNull, subTitle)
+        testArticle(article, url, title, summary, previewImageUrl, minContentLength, canPublishingDateBeNull, subTitle)
     }
 
     protected open fun getArticle(url: String) : ItemExtractionResult? {
@@ -42,7 +42,7 @@ abstract class ArticleExtractorTestBase {
         return extractionResult
     }
 
-    protected open fun testArticle(extractionResult: ItemExtractionResult?, url: String, title: String, abstract: String?, previewImageUrl: String? = null, minContentLength: Int? = null, canPublishingDateBeNull: Boolean = false, subTitle: String?) {
+    protected open fun testArticle(extractionResult: ItemExtractionResult?, url: String, title: String, summary: String?, previewImageUrl: String? = null, minContentLength: Int? = null, canPublishingDateBeNull: Boolean = false, subTitle: String?) {
         assertThat(extractionResult, notNullValue())
 
         extractionResult?.let {
@@ -58,14 +58,14 @@ abstract class ArticleExtractorTestBase {
 
             assertThat(extractionResult.source, notNullValue())
 
-            extractionResult.source?.let { reference ->
-                assertThat(reference.url, `is`(url))
-                assertThat(reference.title, `is`(title))
+            extractionResult.source?.let { source ->
+                assertThat(source.url, `is`(url))
+                assertThat(source.title, `is`(title))
                 if(canPublishingDateBeNull == false) {
-                    assertThat(reference.publishingDate, notNullValue())
+                    assertThat(source.publishingDate, notNullValue())
                 }
 
-                subTitle?.let { assertThat(reference.subTitle, `is`(subTitle)) }
+                subTitle?.let { assertThat(source.subTitle, `is`(subTitle)) }
             }
         }
     }

@@ -8,34 +8,36 @@ object FieldName {
     val ModifiedOn = "modified_on"
 
 
-    /*      Entries      */
+    /*      Items      */
 
-    val EntryIdsId = "item_ids_id"
-
-    val EntryIdsCreated = "created"
+    val ItemIdsId = "item_ids_id"
 
 
-    val EntryId = "item_id"
+    val ItemId = "item_id"
 
-    val EntryAbstract = "summary"
+    val ItemSummary = "summary"
 
-    val EntryContent = "content"
+    val ItemContent = "content"
 
-    val EntryIndex = "item_index"
+    val ItemIndex = "item_index"
 
-    val EntryCreated = "created"
+    val ItemCreated = "created"
 
-    val EntryTagsIds = "tags_ids"
-    val EntryTagsNames = "tags_names"
-    val EntryNoTags = "no_tags"
+    val ItemTagsIds = "tags_ids"
+    val ItemTagsNames = "tags_names"
+    val ItemNoTags = "no_tags"
 
-    val EntryReference = "source"
-    val EntryReferenceId = "source_id"
-    val EntryReferenceSeriesId = "source_series_id"
-    val EntryNoReference = "no_source"
+    val ItemSource = "source"
+    val ItemSourceId = "source_id"
+    val ItemSourceSeriesId = "source_series_id"
+    val ItemNoSource = "no_source"
 
-    val EntryNotes = "notes"
-    val EntryNoNotes = "no_notes"
+    val ItemAttachedFilesIds = "item_attached_files_ids"
+    val ItemAttachedFilesDetails = "item_attached_files_details"
+    val ItemNoAttachedFiles = "item_no_attached_files"
+
+    val ItemNotes = "notes"
+    val ItemNoNotes = "no_notes"
 
 
     /*      Tags      */
@@ -45,17 +47,21 @@ object FieldName {
     val TagName = "tag_name"
 
 
-    /*      References      */
+    /*      Sources      */
 
-    val ReferenceId = "source_id"
+    val SourceId = "source_id"
 
-    val ReferenceTitle = "source_title"
-    val ReferenceSubTitle = "source_subtitle"
-    val ReferenceSeries = "source_series"
-    val ReferenceSeriesId = "source_series_id"
-    val ReferenceIssue = "source_issue"
-    val ReferencePublishingDate = "source_publishing_date"
-    val ReferencePublishingDateString = "source_publishing_date_string"
+    val SourceTitle = "source_title"
+    val SourceSubTitle = "source_subtitle"
+    val SourceSeries = "source_series"
+    val SourceSeriesId = "source_series_id"
+    val SourceIssue = "source_issue"
+    val SourcePublishingDate = "source_publishing_date"
+    val SourcePublishingDateString = "source_publishing_date_string"
+
+    val SourceAttachedFilesIds = "source_attached_files_ids"
+    val SourceAttachedFilesDetails = "source_attached_files_details"
+    val SourceNoAttachedFiles = "source_no_attached_files"
 
 
     /*      Series      */
@@ -69,15 +75,8 @@ object FieldName {
 
     val ReadLaterArticleId = "read_later_article_id"
 
-    val ReadLaterArticleEntry = "read_later_article_item"
-    val ReadLaterArticleReference = "read_later_article_source"
-
-
-    /*      Notes      */
-
-    val NoteId = "note_id"
-
-    val NoteNote = "note_note"
+    val ReadLaterArticleItem = "read_later_article_item"
+    val ReadLaterArticleSource = "read_later_article_source"
 
 
     /*      Files      */
@@ -88,21 +87,35 @@ object FieldName {
 
     val FileUri = "file_uri"
 
-    val FileSourceUri = "file_source_uri"
+    val FileIsLocalFile = "file_is_local_file"
+
+    val FileMimeType = "file_mime_type"
 
     val FileFileType = "file_type"
 
-    val FileIsEmbeddableInHtml = "file_embeddable_in_html"
+    val FileFileSize = "file_size"
+
+    val FileFileLastModified = "file_last_modified"
 
     val FileDescription = "file_description"
 
-    val FileIsAttachedToEntries = "file_attached_to_item"
+    val FileSourceUri = "file_source_uri"
 
-    val FileIsEmbeddedInEntries = "file_embedded_in_item"
 
-    val FileIsAttachedToReferenceBase = "file_attached_to_source"
+    /*      LocalFileInfo      */
 
-    val FileIsEmbeddedInReferenceBase = "file_embedded_in_source"
+    val LocalFileInfoId = "local_file_info_id"
+
+    val LocalFileInfoFile = "local_file_info_file_id"
+
+    val LocalFileInfoSyncStatus = "local_file_info_title_sync_status"
+
+
+    /*      Notes      */
+
+    val NoteId = "note_id"
+
+    val NoteNote = "note_note"
 
 
 }

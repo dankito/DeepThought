@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<net.dankito.deepthought.android.views.FixedSwipeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fileLinkSwipeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/list_item_file_height"
+    android:background="@android:color/transparent"
+>
+
+    <!-- Bottom View Start (the view that gets displayed when the user swipes from right to left. for explanation see https://github.com/daimajia/AndroidSwipeLayout/wiki/usage) -->
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:padding="@dimen/list_item_file_button_padding"
+    >
+
+        <net.dankito.deepthought.android.views.SwipeButton
+            android:id="@+id/btnOpenContainingFolder"
+            android:layout_width="@dimen/list_item_file_button_width"
+            android:layout_height="match_parent"
+            app:icon="@drawable/ic_folder_white_48dp"
+        />
+
+        <net.dankito.deepthought.android.views.SwipeButton
+            android:id="@+id/btnRemoveFile"
+            android:layout_width="@dimen/list_item_file_button_width"
+            android:layout_height="match_parent"
+            app:icon="@drawable/ic_delete_white_48dp"
+        />
+
+    </LinearLayout>
+
+
+    <!-- Surface View Start (the view that's displayed by default) -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/list_item_file_padding"
+    >
+
+        <ImageView
+            android:id="@+id/imgPreviewImage"
+            android:layout_width="@dimen/list_item_file_preview_image_width"
+            android:layout_height="@dimen/list_item_file_preview_image_height"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/list_item_file_preview_image_margin_left"
+            android:layout_marginStart="@dimen/list_item_file_preview_image_margin_left"
+            android:layout_marginRight="@dimen/list_item_file_preview_image_margin_right"
+            android:layout_marginEnd="@dimen/list_item_file_preview_image_margin_right"
+            android:scaleType="fitCenter"
+        />
+
+        <TextView
+            android:id="@+id/txtFileName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/imgPreviewImage"
+            android:layout_toEndOf="@+id/imgPreviewImage"
+            android:layout_above="@+id/txtFilePath"
+            android:layout_toLeftOf="@+id/txtFileSize"
+            android:layout_toStartOf="@+id/txtFileSize"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            style="@style/Header1Style"
+        />
+
+        <TextView
+            android:id="@+id/txtFileSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/txtFilePath"
+            android:layout_marginLeft="@dimen/list_item_file_file_size_padding_left"
+            android:layout_marginStart="@dimen/list_item_file_file_size_padding_left"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            style="@style/Header2Style"
+        />
+
+        <TextView
+            android:id="@+id/txtFilePath"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/imgPreviewImage"
+            android:layout_toEndOf="@+id/imgPreviewImage"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/list_item_file_file_path_padding_top"
+            android:maxLines="2"
+            android:ellipsize="end"
+        />
+
+    </RelativeLayout>
+
+</net.dankito.deepthought.android.views.FixedSwipeLayout>

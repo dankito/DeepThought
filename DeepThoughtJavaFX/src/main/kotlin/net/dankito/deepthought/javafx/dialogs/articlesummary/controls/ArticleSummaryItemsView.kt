@@ -18,10 +18,8 @@ class ArticleSummaryItemsView(private val presenter: ArticleSummaryPresenter) : 
     private val items = FXCollections.observableArrayList<ArticleSummaryItem>()
 
 
-    override val root = listview<ArticleSummaryItem> {
-        items = this@ArticleSummaryItemsView.items
-
-        userData = checkedItems // bad code design
+    override val root = listview<ArticleSummaryItem>(items) {
+        userData = checkedItems // bad code design, but found no other way to pass checkedItems on ArticleSummaryItemListCellFragment
 
         bindSelected(itemModel)
 
@@ -47,7 +45,7 @@ class ArticleSummaryItemsView(private val presenter: ArticleSummaryPresenter) : 
 
             item(messages["context.menu.article.summary.item.copy.url.to.clipboard"]) {
                 action {
-                    selectedItem?.let { presenter.copyReferenceUrlToClipboard(it) }
+                    selectedItem?.let { presenter.copySourceUrlToClipboard(it) }
                 }
             }
         }

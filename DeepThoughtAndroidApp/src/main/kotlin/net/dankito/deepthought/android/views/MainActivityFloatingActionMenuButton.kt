@@ -2,7 +2,6 @@ package net.dankito.deepthought.android.views
 
 import android.app.Activity
 import android.view.LayoutInflater
-import android.view.View
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import kotlinx.android.synthetic.main.view_floating_action_button_main.view.*
@@ -32,44 +31,21 @@ class MainActivityFloatingActionMenuButton(floatingActionMenu: FloatingActionMen
 
 
     private fun setup() {
-        floatingActionMenu.fab_add_entry.setOnClickListener { executeAndCloseMenu { router.showCreateEntryView() } }
-        floatingActionMenu.fab_add_newspaper_article.setOnClickListener { executeAndCloseMenu { router.showArticleSummaryExtractorsView() } }
+        floatingActionMenu.fabCreateItem.setOnClickListener { executeAndCloseMenu { router.showCreateItemView() } }
+        floatingActionMenu.fabCreateItemFromPdf.setOnClickListener { executeAndCloseMenu { router.createItemFromPdf() } }
+        floatingActionMenu.fabAddNewspaperArticle.setOnClickListener { executeAndCloseMenu { router.showArticleSummaryExtractorsView() } }
 
         setFavoriteArticleSummaryExtractors()
 
         setupEventBusListener()
     }
 
-    /**
-     * Disables the floating action menu.
-     * Is used when there are no favorite ArticleSummaryExtractors. The a click on floating action directly goes to EditEntryActivity to create an item.
-     */
-    private fun disableFloatingActionMenu() {
-        floatingActionMenu.setOnMenuButtonClickListener { router.showCreateEntryView() }
-    }
-
-    /**
-     * Enables the floating action menu.
-     * Is used when there is at least one favorite ArticleSummaryExtractors.
-     */
-    private fun enableFloatingActionMenu() {
-        floatingActionMenu.setOnMenuButtonClickListener { floatingActionMenu.toggle(floatingActionMenu.isAnimated) } // just copies the default behaviour
-    }
-
     private fun setupEventBusListener() {
         eventBus.register(eventBusListener)
+    }
 
-        floatingActionMenu.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
-            override fun onViewDetachedFromWindow(v: View?) {
-                eventBus.unregister(eventBusListener)
-
-                floatingActionMenu.removeOnAttachStateChangeListener(this)
-            }
-
-            override fun onViewAttachedToWindow(v: View?) {
-            }
-
-        })
+    fun cleanUp() {
+        eventBus.unregister(eventBusListener) // floatingActionMenu.addOnAttachStateChangeListener() didn't work, caused a memory leak, calling it explicitly now from MainActivity
     }
 
 
@@ -82,12 +58,7 @@ class MainActivityFloatingActionMenuButton(floatingActionMenu: FloatingActionMen
     private fun setFavoriteArticleSummaryExtractorsOnUIThread(activity: Activity, favoriteArticleSummaryExtractors: List<ArticleSummaryExtractorConfig>) {
         clearFavoriteArticleSummaryExtractorsButtons()
 
-        if(favoriteArticleSummaryExtractors.size == 0) {
-            disableFloatingActionMenu()
-        }
-        else {
-            enableFloatingActionMenu()
-
+        if(favoriteArticleSummaryExtractors.isNotEmpty()) {
             val layoutInflater = activity.layoutInflater
 
             favoriteArticleSummaryExtractors.forEach { extractorConfig ->

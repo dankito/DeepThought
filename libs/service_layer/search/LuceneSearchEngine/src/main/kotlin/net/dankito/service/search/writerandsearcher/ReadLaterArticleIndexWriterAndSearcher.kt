@@ -1,9 +1,9 @@
 package net.dankito.service.search.writerandsearcher
 
 import net.dankito.deepthought.model.ReadLaterArticle
-import net.dankito.deepthought.model.extensions.abstractPlainText
 import net.dankito.deepthought.model.extensions.contentPlainText
 import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
+import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.messages.ReadLaterArticleChanged
 import net.dankito.service.eventbus.EventBusPriorities
@@ -36,17 +36,17 @@ class ReadLaterArticleIndexWriterAndSearcher(readLaterArticleService: ReadLaterA
 
 
     override fun addEntityFieldsToDocument(entity: ReadLaterArticle, doc: Document) {
-        val entry = entity.itemExtractionResult.item
+        val item = entity.itemExtractionResult.item
 
-        val textToIndex = entry.abstractPlainText + " " + entry.contentPlainText
+        val textToIndex = item.summaryPlainText + " " + item.contentPlainText
         if(textToIndex.isNotBlank()) { // Lucene crashes when trying to index empty strings
-            doc.add(Field(FieldName.ReadLaterArticleEntry, textToIndex, TextField.TYPE_NOT_STORED))
+            doc.add(Field(FieldName.ReadLaterArticleItem, textToIndex, TextField.TYPE_NOT_STORED))
         }
 
-        entity.itemExtractionResult.source?.let { reference ->
-            val referencePreview = reference.previewWithSeriesAndPublishingDate
-            if(referencePreview.isNotEmpty()) {
-                doc.add(Field(FieldName.ReadLaterArticleReference, referencePreview, TextField.TYPE_NOT_STORED))
+        entity.itemExtractionResult.source?.let { source ->
+            val sourcePreview = source.previewWithSeriesAndPublishingDate
+            if(sourcePreview.isNotEmpty()) {
+                doc.add(Field(FieldName.ReadLaterArticleSource, sourcePreview, TextField.TYPE_NOT_STORED))
             }
         }
     }
@@ -70,9 +70,9 @@ class ReadLaterArticleIndexWriterAndSearcher(readLaterArticleService: ReadLaterA
                 val escapedTerm = QueryParser.escape(term)
                 val termQuery = BooleanQuery()
 
-                termQuery.add(PrefixQuery(Term(FieldName.ReadLaterArticleEntry, escapedTerm)), BooleanClause.Occur.SHOULD)
+                termQuery.add(PrefixQuery(Term(FieldName.ReadLaterArticleItem, escapedTerm)), BooleanClause.Occur.SHOULD)
 
-                termQuery.add(PrefixQuery(Term(FieldName.ReadLaterArticleReference, escapedTerm)), BooleanClause.Occur.SHOULD)
+                termQuery.add(PrefixQuery(Term(FieldName.ReadLaterArticleSource, escapedTerm)), BooleanClause.Occur.SHOULD)
 
                 query.add(termQuery, BooleanClause.Occur.MUST)
             }

@@ -13,6 +13,8 @@ apply from: '../keys.gradle'
 
 
 repositories {
+    maven { url "https://dl.bintray.com/firzenyogesh/maven" }
+
     maven { url 'https://www.testfairy.com/maven' }
     maven { url 'https://maven.fabric.io/public' }
 }
@@ -157,24 +159,41 @@ dependencies {
     compile project(':AndroidCouchbaseLiteEntityManager')
     compile project(':AndroidUdpDevicesDiscoverer')
     compile project(':AndroidFileStorageService')
+    compile project(':AndroidPdfImporter')
 
     compile "com.squareup.picasso:picasso:$picassoVersion"
 
     compile "com.github.clans:fab:$clansFloatingActionButtonVersion"
     compile "com.daimajia.swipelayout:library:$swipeLayoutVersion"
     compile "com.google.android:flexbox:$flexboxVersion"
-    compile 'net.dankito.richtexteditor:richtexteditor-android:1.0.2'
+    compile "net.dankito.richtexteditor:richtexteditor-android:$richTextEditorVersion", {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
+        exclude group: 'com.fasterxml.jackson.module', module: 'jackson-module-kotlin'
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+        exclude group: 'org.slf4j', module: 'slf4j-android'
+    }
+
+    compile "net.dankito.filechooserdialog:filechooserdialog-android:$fileChooserVersion", {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jre7'
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+        exclude group: 'com.android.support', module: 'design'
+        exclude group: 'com.android.support.constraint', module: 'constraint-layout'
+        exclude module: 'recyclerview-v7'
+    }
 
     compile "org.slf4j:slf4j-android:$slf4jVersion"
 
-    compile 'com.android.support:multidex:1.0.1'
+    compile "com.android.support:multidex:$multiDexVersion"
 
     compile "com.android.support:appcompat-v7:$androidAppCompatVersion"
     compile "com.android.support:cardview-v7:$androidAppCompatVersion"
     compile "com.android.support:design:$androidDesignVersion"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
-    betaCompile 'testfairy:testfairy-android-sdk:1.+@aar'
+    debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+
+    betaCompile "testfairy:testfairy-android-sdk:$testFairyVersion@aar"
 //    betaCompile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
 //        transitive = true
 //    }

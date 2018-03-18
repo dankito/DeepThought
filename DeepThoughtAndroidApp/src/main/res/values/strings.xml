@@ -15,10 +15,12 @@
     <string name="nav_menu_device_management_title">Device management (to do)</string>
     <string name="nav_menu_settings_title">Settings (to do)</string>
     <string name="nav_menu_about_title">About (to do)</string>
+    <string name="nav_menu_import_pdf">Import PDF</string>
 
     <string name="nav_menu_version_label">Version\u0020</string>
 
-    <string name="floating_action_menu_add_item">Item</string>
+    <string name="floating_action_menu_create_item">Item</string>
+    <string name="floating_action_menu_create_item_from_pdf">Item from PDF</string>
     <string name="floating_action_menu_add_newspaper_article">Newspaper Article</string>
     <string name="floating_action_button_add_article_of_newspaper">%s Article</string>
 
@@ -50,6 +52,12 @@
     <string name="search_hint_tags">Tag names</string>
     <string name="search_hint_sources">Source title, date, series, issue, …</string>
     <string name="search_hint_read_later_articles">Title, summary, date, series</string>
+
+
+    <string name="loading">Loading …</string>
+
+    <string name="open_file_permission_request_message">For importing PDF files, DeepThought needs permission to read files.</string>
+    <string name="open_settings">Open settings</string>
 
     <string name="fragment_main_activity_tabs_filtered_entities_label">Filtered:</string>
 
@@ -147,7 +155,7 @@
     <string name="activity_edit_item_title_summary_label">Title / Summary</string>
     <string name="activity_edit_item_summary_only_label">Summary</string>
     <string name="activity_edit_item_edit_summary_title">Title / Summary</string>
-    <string name="activity_edit_item_source_label">Source</string>
+    <string name="activity_edit_item_files_label">Files</string>
     <string name="activity_edit_item_edit_source_menu_edit_details">Edit details</string>
     <string name="activity_edit_item_edit_source_menu_create_new_entity">Create new one</string>
     <string name="activity_edit_item_edit_source_menu_remove_entity">Clear</string>
@@ -158,8 +166,10 @@
     <string name="activity_edit_item_summary_onboarding_text">Title or summary for this information</string>
     <string name="activity_edit_item_alert_message_item_contains_unsaved_changes">Item contains unsaved changes.\n\nShould these changes now get saved?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
-    <string name="activity_edit_item_alert_message_item_has_been_edited">Item has been edited (probably on a synchronized device).\n\nWhen
+    <string name="activity_edit_item_alert_message_item_has_been_edited">Item has been edited (probably on a synchronized device).\n\If
         you now save the item the other changes get overwritten.</string>
+    <string name="activity_edit_item_alert_message_read_later_article_has_been_edited">Read later article has been edited (probably on a synchronized device).\n\If
+        you now save the article these other changes get overwritten.</string>
     <string name="activity_edit_item_alert_message_delete_item">Would you really like to delete item \'%s\'?</string>
 
     <string name="menu_open_url_open_in_new_activity">Open in DeepThought</string>
@@ -172,16 +182,13 @@
     <string name="activity_edit_source_title_label">Source title</string>
     <string name="activity_edit_source_series_label">Series</string>
     <string name="activity_edit_source_issue_label">Issue</string>
+    <string name="activity_edit_source_length_label">Length</string>
     <string name="activity_edit_source_publishing_date_label">Publishing date</string>
     <string name="activity_edit_source_url_label">Web address</string>
     <string name="activity_edit_source_error_could_not_parse_publishing_date" formatted="false">Cannot parse %s to date</string>
-    <string name="activity_edit_source_alert_message_create_new_source">Do you really want to create a new source?\n\nThe current source then
-        gets discarded and a new one will be created.</string>
-    <string name="activity_edit_source_alert_message_create_new_source_current_one_has_unsaved_changes">Current source has unsaved changes.\n\nDo you want to
-        save these before?</string>
     <string name="activity_edit_source_alert_message_source_contains_unsaved_changes">Source contains unsaved changes.\n\nShould these changes now get saved?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
-    <string name="activity_edit_source_alert_message_source_has_been_edited">Source has been edited (probably on a synchronized device).\n\nWhen
+    <string name="activity_edit_source_alert_message_source_has_been_edited">Source has been edited (probably on a synchronized device).\n\If
         you now save the source the other changes get overwritten.</string>
 
     <string name="activity_edit_series_title">Series</string>
@@ -195,14 +202,27 @@
         save these before?</string>
     <string name="activity_edit_series_alert_message_series_contains_unsaved_changes">Series has unsaved changes.\n\nDo you want to save these changes?</string>
     <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
-    <string name="activity_edit_series_alert_message_series_has_been_edited">Series has been edited (probably on a synchronized device).\n\nWhen
+    <string name="activity_edit_series_alert_message_series_has_been_edited">Series has been edited (probably on a synchronized device).\n\If
         you now save the series the other changes get overwritten.
     </string>
 
-    <string name="snackbar_extract_item_from_url"><![CDATA[
-        Detected a link in clipboard from <b><u>%1$s</u></b>. Would you like to create an item from it?
-    ]]>
-    </string>
+    <string name="edit_entity_source_field_source_label">Source</string>
+    <string name="edit_entity_source_field_add_indication_menu_item_title">Set indication</string>
+    <string name="edit_entity_source_field_indication_label">Indication</string>
+    <string name="edit_entity_source_field_indication_hint">p. 14, 2:14 min, …</string>
+
+    <string name="edit_entity_files_field_files_label">Files</string>
+    <string name="edit_entity_files_field_read_files_permission_rational">To add files the permission to read files is required.</string>
+
+    <string name="files_presenter_error_message_no_app_installed_for_this_file_type" formatted="false">You don\'t have an app installed that can handle this file type (%s).</string>
+    <string name="files_presenter_error_message_no_file_explorer_app_installed">You don\'t have any file explorer app installed.</string>
+    <string name="files_presenter_error_message_could_not_open_directory" formatted="false">Could not open directory: %s.</string>
+
+    <string name="activity_view_pdf_current_page_and_count_pages_separator">/</string>
+
+    <string name="request_write_synchronized_file_permission_rational">To save synchronized files locally on this device the permission to write files is required.</string>
+
+    <string name="snackbar_clipboard_content_options_close">x</string>
 
     <string name="synchronize_data_with_this_device">Synchronize data with</string>
     <string name="never_ask_again">Never ask again</string>

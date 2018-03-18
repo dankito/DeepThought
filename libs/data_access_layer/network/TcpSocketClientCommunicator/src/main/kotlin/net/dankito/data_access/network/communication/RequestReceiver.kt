@@ -38,7 +38,7 @@ class RequestReceiver(private var socketHandler: SocketHandler, private var mess
     private fun createReceiverSocketAsync(desiredPort: Int, callback: RequestReceiverCallback) {
         receiverThread = Thread(Runnable { createReceiverSocket(desiredPort, callback) })
 
-        receiverThread!!.start()
+        receiverThread?.start()
     }
 
     private fun createReceiverSocket(desiredPort: Int, callback: RequestReceiverCallback) {
@@ -70,9 +70,11 @@ class RequestReceiver(private var socketHandler: SocketHandler, private var mess
     private fun waitForArrivingRequests() {
         while (Thread.currentThread().isInterrupted == false && receiverSocket != null) {
             try {
-                val clientSocket = receiverSocket!!.accept()
+                receiverSocket?.let { receiverSocket ->
+                    val clientSocket = receiverSocket.accept()
 
-                receivedRequestAsync(clientSocket)
+                    receivedRequestAsync(clientSocket)
+                } ?: break
             } catch (e: Exception) {
                 if (e is InterruptedException || e is SocketException) {
                     break

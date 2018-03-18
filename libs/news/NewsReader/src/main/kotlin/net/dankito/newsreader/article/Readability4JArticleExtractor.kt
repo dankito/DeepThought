@@ -13,7 +13,7 @@ class Readability4JArticleExtractor(webClient: IWebClient) : ArticleExtractorBas
         return null
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return true
     }
 

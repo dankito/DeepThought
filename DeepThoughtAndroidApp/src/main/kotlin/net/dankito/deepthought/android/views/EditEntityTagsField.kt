@@ -4,13 +4,13 @@ import android.content.Context
 import android.util.AttributeSet
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.BaseActivity
-import net.dankito.deepthought.android.adapter.TagsOnEntryRecyclerAdapter
+import net.dankito.deepthought.android.adapter.TagsOnItemRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Tag
-import net.dankito.deepthought.ui.presenter.TagsOnEntryListPresenter
+import net.dankito.deepthought.ui.presenter.TagsOnItemListPresenter
 import net.dankito.deepthought.ui.tags.TagAutoCompleteResult
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
-import net.dankito.deepthought.ui.view.ITagsOnEntryListView
+import net.dankito.deepthought.ui.view.ITagsOnItemListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
@@ -20,7 +20,7 @@ import java.util.*
 import javax.inject.Inject
 
 
-class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
+class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
 
     companion object {
         private val DoubleTapMaxDelayMillis = 500L
@@ -52,11 +52,11 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
     var saveChangesListener: (() -> Unit)? = null
 
 
-    private val presenter: TagsOnEntryListPresenter
+    private val presenter: TagsOnItemListPresenter
 
-    private val adapter: TagsOnEntryRecyclerAdapter
+    private val adapter: TagsOnItemRecyclerAdapter
 
-    private var originalTagsOnEntry: MutableCollection<Tag> = ArrayList<Tag>()
+    private var originalTagsOnItem: MutableCollection<Tag> = ArrayList<Tag>()
 
     private var autoCompleteResult: TagAutoCompleteResult? = null
 
@@ -74,27 +74,27 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
 
         setFieldNameOnUiThread(R.string.activity_edit_item_tags_label)
 
-        presenter = TagsOnEntryListPresenter(this, searchEngine, tagService, deleteEntityService, searchResultsUtil, dialogService)
+        presenter = TagsOnItemListPresenter(this, searchEngine, tagService, deleteEntityService, searchResultsUtil, dialogService)
 
         edtxtEntityFieldValue.setHint(R.string.activity_edit_item_edit_tags_hint)
 
-        adapter = TagsOnEntryRecyclerAdapter(presenter) { tagChange, tag, _ -> activity?.runOnUiThread { tagAddedOrRemoved(tagChange, tag) } }
+        adapter = TagsOnItemRecyclerAdapter(presenter) { tagChange, tag, _ -> activity?.runOnUiThread { tagAddedOrRemoved(tagChange, tag) } }
         adapter.deleteTagListener = { tag -> deleteTag(tag) }
 
         rcySearchResult.adapter = adapter
-        rcySearchResult.maxHeightInPixel = (context.resources.getDimension(R.dimen.list_item_tag_on_entry_height) * 5.25).toInt() // show at max five list items and a little bit from
+        rcySearchResult.maxHeightInPixel = (context.resources.getDimension(R.dimen.list_item_tag_on_item_height) * 5.25).toInt() // show at max five list items and a little bit from
         // the next item so that user knows there's more
 
         this.disableActionOnKeyboard = false
     }
 
 
-    fun setTagsToEdit(originalTagsOnEntry: MutableCollection<Tag>, activity: BaseActivity) {
-        this.originalTagsOnEntry = originalTagsOnEntry
+    fun setTagsToEdit(originalTagsOnItem: MutableCollection<Tag>, activity: BaseActivity) {
+        this.originalTagsOnItem = originalTagsOnItem
         this.activity = activity
 
-        adapter.tagsOnEntry = LinkedHashSet(originalTagsOnEntry) // make a copy so that original collection doesn't get manipulated
-        setTagsOnEntryPreviewOnUIThread(originalTagsOnEntry)
+        adapter.tagsOnItem = LinkedHashSet(originalTagsOnItem) // make a copy so that original collection doesn't get manipulated
+        setTagsOnItemPreviewOnUIThread(originalTagsOnItem)
     }
 
 
@@ -134,21 +134,21 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
         return currentActionPressTime.time - previousActionPressTime.time <= DoubleTapMaxDelayMillis
     }
 
-    private fun tagAddedOrRemoved(tagChange: TagsOnEntryRecyclerAdapter.TagChange, tag: Tag) {
-        if(tagChange == TagsOnEntryRecyclerAdapter.TagChange.Added) {
+    private fun tagAddedOrRemoved(tagChange: TagsOnItemRecyclerAdapter.TagChange, tag: Tag) {
+        if(tagChange == TagsOnItemRecyclerAdapter.TagChange.Added) {
             addTag(tag)
         }
-        else if(tagChange == TagsOnEntryRecyclerAdapter.TagChange.Removed) {
+        else if(tagChange == TagsOnItemRecyclerAdapter.TagChange.Removed) {
             removeRemovedTagFromEnteredSearchTerm(tag)
         }
 
-        setTagsOnEntryPreviewOnUIThread()
+        setTagsOnItemPreviewOnUIThread()
     }
 
     private fun addTagAndUpdatePreview(tag: Tag) {
         addTag(tag)
 
-        setTagsOnEntryPreviewOnUIThread()
+        setTagsOnItemPreviewOnUIThread()
     }
 
     private fun addTag(tag: Tag) {
@@ -197,21 +197,21 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
                 }
 
                 searchEntities(edtxtEntityFieldValue.text.toString())
-                // TODO: may avoid that setTagsOnEntryPreviewOnUIThread() gets called in tagAddedOrRemoved()
+                // TODO: may avoid that setTagsOnItemPreviewOnUIThread() gets called in tagAddedOrRemoved()
             }
         }
     }
 
-    private fun setTagsOnEntryPreviewOnUIThread() {
-        setTagsOnEntryPreviewOnUIThread(getMergedTags())
+    private fun setTagsOnItemPreviewOnUIThread() {
+        setTagsOnItemPreviewOnUIThread(getMergedTags())
     }
 
     private fun getMergedTags(): Collection<Tag> {
-        return presenter.getMergedTags(adapter.tagsOnEntry, autoCompleteResult)
+        return presenter.getMergedTags(adapter.tagsOnItem, autoCompleteResult)
     }
 
-    private fun setTagsOnEntryPreviewOnUIThread(tagsOnEntry: Collection<Tag>) {
-        lytPreview.let { tagsPreviewViewHelper.showTagsPreview(it, tagsOnEntry, showButtonRemoveTag = true) { removeTagFromCurrentTagsOnEntry(it) } }
+    private fun setTagsOnItemPreviewOnUIThread(tagsOnItem: Collection<Tag>) {
+        lytPreview.let { tagsPreviewViewHelper.showTagsPreview(it, tagsOnItem, showButtonRemoveTag = true) { removeTagFromCurrentTagsOnItem(it) } }
 
         if(adapter.items.isEmpty() || edtxtEntityFieldValue.hasFocus() == false) {
             hideSearchResultsView()
@@ -220,34 +220,34 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
             showSearchResultsView()
         }
 
-        updateDidValueChange(presenter.didTagsOnEntryChange(originalTagsOnEntry, tagsOnEntry))
+        updateDidValueChange(presenter.didTagsOnItemChange(originalTagsOnItem, tagsOnItem))
     }
 
 
     private fun deleteTag(tag: Tag) {
-        removeTagFromEntry(tag)
+        removeTagFromItem(tag)
 
         presenter.deleteTagAsync(tag)
     }
 
-    private fun removeTagFromEntry(tag: Tag) {
-        if(originalTagsOnEntry.remove(tag)) {
-            updateDidValueChange(true) // so that we can notify EditEntryActivity that it's tags changed
+    private fun removeTagFromItem(tag: Tag) {
+        if(originalTagsOnItem.remove(tag)) {
+            updateDidValueChange(true) // so that we can notify EditItemActivityBase that it's tags changed
         }
 
-        removeTagFromCurrentTagsOnEntry(tag)
+        removeTagFromCurrentTagsOnItem(tag)
     }
 
-    private fun removeTagFromCurrentTagsOnEntry(tag: Tag) {
-        if(adapter.tagsOnEntry.contains(tag)) {
-            adapter.tagsOnEntry.remove(tag)
+    private fun removeTagFromCurrentTagsOnItem(tag: Tag) {
+        if(adapter.tagsOnItem.contains(tag)) {
+            adapter.tagsOnItem.remove(tag)
         }
 
         activity?.runOnUiThread {
             removeRemovedTagFromEnteredSearchTerm(tag)
 
             adapter.notifyDataSetChanged()
-            setTagsOnEntryPreviewOnUIThread()
+            setTagsOnItemPreviewOnUIThread()
         }
     }
 
@@ -265,23 +265,36 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnEntryListView {
     }
 
 
-    /*      ITagsOnEntryListView implementation         */
+    override fun viewBecomesVisible() {
+        super.viewBecomesVisible()
+
+        presenter.viewBecomesVisible()
+    }
+
+    override fun viewGetsHidden() {
+        presenter.viewGetsHidden()
+
+        super.viewGetsHidden()
+    }
+
+
+    /*      ITagsOnItemListView implementation         */
 
     override fun showEntities(entities: List<Tag>) {
         activity?.runOnUiThread {
             adapter.items = entities
-            setTagsOnEntryPreviewOnUIThread()
+            setTagsOnItemPreviewOnUIThread()
         }
     }
 
     override fun updateDisplayedTags() {
         activity?.runOnUiThread {
             adapter.notifyDataSetChanged()
-            setTagsOnEntryPreviewOnUIThread()
+            setTagsOnItemPreviewOnUIThread()
         }
     }
 
-    override fun shouldCreateNotExistingTags(notExistingTags: List<String>, tagsShouldGetCreatedCallback: (tagsOnEntry: MutableCollection<Tag>) -> Unit) {
+    override fun shouldCreateNotExistingTags(notExistingTags: List<String>, tagsShouldGetCreatedCallback: (tagsOnItem: MutableCollection<Tag>) -> Unit) {
         // we don't need to handle this anymore
     }
 

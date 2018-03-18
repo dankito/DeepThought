@@ -7,6 +7,7 @@ import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.LocalSettings
 import net.dankito.deepthought.model.User
 import net.dankito.utils.IPlatformConfiguration
+import net.dankito.utils.services.Times
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.*
@@ -18,10 +19,6 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
                   private val defaultDataInitializer: DefaultDataInitializer, platformConfiguration: IPlatformConfiguration) {
 
     companion object {
-        private const val DefaultDelayBeforeOptimizingDatabaseSeconds = 5 * 60
-
-        private const val DefaultIntervalToRunOptimizationDays = 7
-
         private val log = LoggerFactory.getLogger(DataManager::class.java)
     }
 
@@ -38,6 +35,8 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
         private set
 
     private val initializationListeners = mutableSetOf<() -> Unit>()
+
+    private val localSettingsChangedListeners = mutableSetOf<(LocalSettings) -> Unit>()
 
 
     init {
@@ -93,7 +92,7 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
     }
 
     private fun mayOptimizeDatabase() {
-        Timer().schedule(DefaultDelayBeforeOptimizingDatabaseSeconds * 1000L) {
+        Timer().schedule(Times.DefaultDelayBeforeOptimizingDatabaseSeconds * 1000L) {
             optimizeDatabaseIfNeeded()
         }
     }
@@ -101,7 +100,7 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
     private fun optimizeDatabaseIfNeeded() {
         val startTime = Date()
         val timeSinceLastOptimizationMillis = startTime.time - localSettings.lastDatabaseOptimizationTime.time
-        if(timeSinceLastOptimizationMillis > DefaultIntervalToRunOptimizationDays * 24 * 60 * 60 * 1000) {
+        if(timeSinceLastOptimizationMillis > Times.DefaultIntervalToRunDatabaseOptimizationDays * 24 * 60 * 60 * 1000) {
             optimizeDatabase()
 
             localSettings.lastDatabaseOptimizationTime = startTime
@@ -116,6 +115,8 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
 
     fun localSettingsUpdated() {
         entityManager.updateEntity(localSettings)
+
+        callLocalSettingsChangedListeners(localSettings)
     }
 
 
@@ -141,4 +142,22 @@ class DataManager(val entityManager: IEntityManager, private val configuration: 
     private fun callInitializationListener(listener: () -> Unit) {
         listener()
     }
+
+
+    fun addLocalSettingsChangedListener(listener: (LocalSettings) -> Unit) {
+        localSettingsChangedListeners.add(listener)
+    }
+
+    fun removeLocalSettingsChangedListener(listener: (LocalSettings) -> Unit) {
+        localSettingsChangedListeners.remove(listener)
+    }
+
+    private fun callLocalSettingsChangedListeners(settings: LocalSettings) {
+        val copy = ArrayList(localSettingsChangedListeners) // make a copy before calling forEach() as ArrayList(localSettingsChangedListeners).forEach() still results in
+        // ConcurrentModificationException when a listener removes it listener again during forEach()
+        copy.forEach { listener -> // to avoid ConcurrentModificationException
+            listener(settings)
+        }
+    }
+
 }

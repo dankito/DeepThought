@@ -35,7 +35,7 @@ open class LazyLoadingLuceneSearchResultsList<T : BaseEntity>(entityManager: IEn
                 retrieveEntityFromDatabaseAndCacheIfNotRetrievedYet(1)
             }
 
-            if(hits.size > 3) { // not loading item with index 2, leads to problems for Entries (on fast CPUs is not fully displayed)
+            if(hits.size > 3) { // not loading item with index 2, leads to problems for Items (on fast CPUs is not fully displayed)
                 preloadItemsAsync(3, MaxItemsToPreloadOnStart - 2) // preload items that for sure gonna get displayed off the UI thread
             }
         }

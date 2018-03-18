@@ -10,6 +10,6 @@ interface IClipboardService {
 
     fun copyUrlToClipboard(url: String)
 
-    fun copyEntryToClipboard(item: Item, tags: Collection<Tag>, source: Source?, series: Series?)
+    fun copyItemToClipboard(item: Item, tags: Collection<Tag>, source: Source?, series: Series?)
 
 }

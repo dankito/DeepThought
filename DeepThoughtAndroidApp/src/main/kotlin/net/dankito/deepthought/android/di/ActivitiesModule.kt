@@ -9,13 +9,17 @@ import net.dankito.deepthought.android.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.android.dialogs.AndroidDialogService
 import net.dankito.deepthought.android.routing.AndroidRouter
 import net.dankito.deepthought.android.service.*
+import net.dankito.deepthought.android.service.clipboard.AndroidClipboardWatcher
 import net.dankito.deepthought.android.service.communication.AndroidDeviceRegistrationHandler
 import net.dankito.deepthought.android.service.network.AndroidNetworkConnectivityManager
+import net.dankito.deepthought.android.service.permissions.AndroidPermissionsService
 import net.dankito.deepthought.android.service.settings.AndroidLocalSettingsStore
-import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.ItemPersister
+import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.deepthought.service.permissions.IPermissionsService
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.service.data.ReadLaterArticleService
@@ -27,6 +31,7 @@ import net.dankito.utils.localization.Localization
 import net.dankito.utils.services.network.INetworkConnectivityManager
 import net.dankito.utils.services.network.NetworkHelper
 import net.dankito.utils.settings.ILocalSettingsStore
+import net.dankito.utils.ui.IApplicationsService
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import javax.inject.Singleton
@@ -75,12 +80,6 @@ class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
-    fun provideActivityStateHolder() : ActivityStateHolder {
-        return ActivityStateHolder()
-    }
-
-    @Provides
-    @Singleton
     fun provideExtractArticleHandler() : ExtractArticleHandler {
         return ExtractArticleHandler()
     }
@@ -95,6 +94,24 @@ class ActivitiesModule(private val applicationContext: Context) {
     @Singleton
     fun provideClipboardService() : IClipboardService {
         return AndroidClipboardService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAndroidClipboardWatcher(dataManager: DataManager) : AndroidClipboardWatcher {
+        return AndroidClipboardWatcher(dataManager)
+    }
+
+    @Provides
+    @Singleton
+    fun providePermissionsService(context: Context, currentActivityTracker: CurrentActivityTracker) : IPermissionsService {
+        return AndroidPermissionsService(context, currentActivityTracker)
+    }
+
+    @Provides
+    @Singleton
+    fun provideApplicationsService(context: Context, fileManager: FileManager) : IApplicationsService {
+        return AndroidApplicationsService(context, fileManager)
     }
 
     @Provides
@@ -118,9 +135,9 @@ class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
-    fun provideArticleSummaryPresenter(entryPersister: EntryPersister, readLaterArticleService: ReadLaterArticleService, articleExtractorManager: ArticleExtractorManager,
+    fun provideArticleSummaryPresenter(itemPersister: ItemPersister, readLaterArticleService: ReadLaterArticleService, articleExtractorManager: ArticleExtractorManager,
                                        router: IRouter, clipboardService: IClipboardService, dialogService: IDialogService) : ArticleSummaryPresenter {
-        return ArticleSummaryPresenter(entryPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService)
+        return ArticleSummaryPresenter(itemPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService)
     }
 
 

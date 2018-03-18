@@ -4,19 +4,30 @@ import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.IEntityManager
-import net.dankito.deepthought.data.EntryPersister
-import net.dankito.deepthought.data.ReferencePersister
+import net.dankito.data_access.network.communication.SocketHandler
+import net.dankito.deepthought.data.FilePersister
+import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.SeriesPersister
+import net.dankito.deepthought.data.SourcePersister
+import net.dankito.deepthought.files.FileManager
+import net.dankito.deepthought.files.MimeTypeService
+import net.dankito.deepthought.files.synchronization.FileServer
+import net.dankito.deepthought.files.synchronization.FileSyncService
+import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
+import net.dankito.deepthought.service.permissions.IPermissionsService
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
+import net.dankito.service.search.ISearchEngine
+import net.dankito.service.synchronization.IConnectedDevicesService
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.serialization.JacksonJsonSerializer
+import net.dankito.utils.services.hashing.HashService
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.ui.IDialogService
 import javax.inject.Singleton
@@ -47,14 +58,14 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideEntryService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : EntryService {
-        return EntryService(dataManager, entityChangedNotifier)
+    fun provideItemService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : ItemService {
+        return ItemService(dataManager, entityChangedNotifier)
     }
 
     @Provides
     @Singleton
-    fun provideReferenceService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : ReferenceService {
-        return ReferenceService(dataManager, entityChangedNotifier)
+    fun provideReferenceService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : SourceService {
+        return SourceService(dataManager, entityChangedNotifier)
     }
 
     @Provides
@@ -77,15 +88,54 @@ class CommonDataModule {
 
     @Provides
     @Singleton
+    fun provideLocalFileInfoService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier): LocalFileInfoService {
+        return LocalFileInfoService(dataManager, entityChangedNotifier)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFileService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier): FileService {
+        return FileService(dataManager, entityChangedNotifier)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFileManager(searchEngine: ISearchEngine, localFileInfoService: LocalFileInfoService, fileSyncService: FileSyncService,
+                           mimeTypeService: MimeTypeService, hashService: HashService, eventBus: IEventBus, threadPool: IThreadPool) : FileManager {
+        return FileManager(searchEngine, localFileInfoService, fileSyncService, mimeTypeService, hashService, eventBus, threadPool)
+    }
+
+    @Provides
+    @Singleton
     fun provideArticleSummaryExtractorConfigService(dataManager: DataManager, entityChangedNotifier: EntityChangedNotifier) : ArticleSummaryExtractorConfigService {
         return ArticleSummaryExtractorConfigService(dataManager, entityChangedNotifier)
     }
 
     @Provides
     @Singleton
-    fun provideDeleteEntityService(entryService: EntryService, tagService: TagService, referenceService: ReferenceService, seriesService: SeriesService,
-                                   dialogService: IDialogService, threadPool: IThreadPool) : DeleteEntityService {
-        return DeleteEntityService(entryService, tagService, referenceService, seriesService, dialogService, threadPool)
+    fun provideDeleteEntityService(itemService: ItemService, tagService: TagService, sourceService: SourceService, seriesService: SeriesService,
+                                   fileService: FileService, localFileInfoService: LocalFileInfoService, searchEngine: ISearchEngine, dialogService: IDialogService, threadPool: IThreadPool) : DeleteEntityService {
+        return DeleteEntityService(itemService, tagService, sourceService, seriesService, fileService, localFileInfoService, searchEngine, dialogService, threadPool)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSocketHandler(): SocketHandler {
+        return SocketHandler()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFileSyncService(connectedDevicesService: IConnectedDevicesService, searchEngine: ISearchEngine, socketHandler: SocketHandler, localFileInfoService: LocalFileInfoService,
+                               serializer: ISerializer, permissionsService: IPermissionsService, platformConfiguration: IPlatformConfiguration, hashService: HashService): FileSyncService {
+        return FileSyncService(connectedDevicesService, searchEngine, socketHandler, localFileInfoService, serializer, permissionsService, platformConfiguration, hashService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFileServer(searchEngine: ISearchEngine, entityManager: IEntityManager, networkSettings: INetworkSettings,
+                          socketHandler: SocketHandler, serializer: ISerializer, threadPool: IThreadPool): FileServer {
+        return FileServer(searchEngine, entityManager, networkSettings, socketHandler, serializer, threadPool)
     }
 
 
@@ -97,20 +147,34 @@ class CommonDataModule {
 
     @Provides
     @Singleton
-    fun provideEntryPersister(entryService: EntryService, referencePersister: ReferencePersister, tagService: TagService): EntryPersister {
-        return EntryPersister(entryService, referencePersister, tagService)
+    fun provideItemPersister(itemService: ItemService, sourcePersister: SourcePersister, tagService: TagService, filePersister: FilePersister,
+                             deleteEntityService: DeleteEntityService): ItemPersister {
+        return ItemPersister(itemService, sourcePersister, tagService, filePersister, deleteEntityService)
     }
 
     @Provides
     @Singleton
-    fun provideReferencePersister(referenceService: ReferenceService, seriesService: SeriesService): ReferencePersister {
-        return ReferencePersister(referenceService, seriesService)
+    fun provideReferencePersister(sourceService: SourceService, seriesService: SeriesService, filePersister: FilePersister, deleteEntityService: DeleteEntityService)
+            : SourcePersister {
+        return SourcePersister(sourceService, seriesService, filePersister, deleteEntityService)
     }
 
     @Provides
     @Singleton
     fun provideSeriesPersister(seriesService: SeriesService): SeriesPersister {
         return SeriesPersister(seriesService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFilePersister(fileService: FileService, fileManager: FileManager, threadPool: IThreadPool): FilePersister {
+        return FilePersister(fileService, fileManager, threadPool)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHashService() : HashService {
+        return HashService()
     }
 
 

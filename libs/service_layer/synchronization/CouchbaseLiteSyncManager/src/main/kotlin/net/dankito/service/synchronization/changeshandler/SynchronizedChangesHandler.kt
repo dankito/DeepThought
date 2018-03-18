@@ -6,6 +6,8 @@ import com.couchbase.lite.DocumentChange
 import com.couchbase.lite.SavedRevision
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.deepthought.model.BaseEntity
+import net.dankito.deepthought.model.Series
+import net.dankito.deepthought.model.Tag
 import net.dankito.jpa.couchbaselite.Dao
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.data.messages.EntityChangeSource
@@ -75,8 +77,10 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
 
         var synchronizedEntity = dataMerger.updateCachedSynchronizedEntity(change, entityType)
         var entityChangeType = EntityChangeType.Updated
-        if(synchronizedEntity == null) { // this entity is new to our side or hasn't been in cache
+        if(synchronizedEntity == null) { // this entity is either new to our side or hasn't been in cache
+            // TODO: if it hasn't been created, shouldn't we then avoid loading it from db as it means as not cached means: Not loaded and therefore not displayed on our side -> we don't have to update any UI elements
             synchronizedEntity = entityManager.getEntityById(entityType, change.documentId)
+
             if(hasEntityBeenCreated(change, synchronizedEntity)) {
                 entityChangeType = EntityChangeType.Created
             }
@@ -94,6 +98,12 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
     private fun hasEntityBeenCreated(change: DocumentChange, entity: BaseEntity?): Boolean {
         try {
             val document = entityManager.database.getDocument(change.documentId)
+
+            // ah, figured it out, current (06.03.2018) implementation of Dao first creates an empty document in DB (= revision 1) and then adds and stores entity's properties (= revision 2)
+            if(entity?.version == 2L) { // TODO: get version from revision, so that we don't need entity instance
+                return true
+            }
+
             val leafRevisions = document.leafRevisions
             if(leafRevisions.size == 0) {
                 return true
@@ -212,7 +222,10 @@ class SynchronizedChangesHandler(private val entityManager: CouchbaseLiteEntityM
         try { log.info("Calling notifyListenersOfEntityChange() for $synchronizedEntity of type $changeType") } // toString() may throws an exception for deleted entities
         catch(ignored: Exception) { log.info("Calling notifyListenersOfEntityChange() for ${synchronizedEntity.id} of type $changeType") }
 
-        changeNotifier.notifyListenersOfEntityChangeAsync(synchronizedEntity, changeType, EntityChangeSource.Synchronization)
+        // TODO: check for which entities it should be set to true. E.g. Series would notify a lot of Sources without benefit, the same with tags
+        // e.g. an item has been synchronized without its source -> source couldn't be retrieved from database. Now source gets synchronized -> item gets updated and its source therefore set
+        val didChangesAffectingDependentEntities = !( synchronizedEntity is Series || synchronizedEntity is Tag)
+        changeNotifier.notifyListenersOfEntityChangeAsync(synchronizedEntity, changeType, EntityChangeSource.Synchronization, didChangesAffectingDependentEntities)
     }
 
 }

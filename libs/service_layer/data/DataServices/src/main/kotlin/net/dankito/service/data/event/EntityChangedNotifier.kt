@@ -57,35 +57,57 @@ class EntityChangedNotifier(private val eventBus: IEventBus) {
             dispatchMessagesForSeriesDependentEntities(entity as Series, source)
         }
         else if(entityClass == Source::class.java) {
-            dispatchMessagesForReferenceDependentEntities(entity as Source, source)
+            dispatchMessagesForSourceDependentEntities(entity as Source, source)
+        }
+        else if(entityClass == FileLink::class.java) {
+            dispatchMessagesForFileLinkDependentEntities(entity as FileLink, source)
+        }
+        else if(entityClass == LocalFileInfo::class.java) {
+            dispatchMessagesForLocalFileInfoDependentEntities(entity as LocalFileInfo, source)
         }
     }
 
     private fun dispatchMessagesForTagDependentEntities(tag: Tag, source: EntityChangeSource) {
-        tag.items.filterNotNull().forEach { entry ->
-            notifyListenersOfEntityChange(entry, EntityChangeType.Updated, source)
+        tag.items.filterNotNull().forEach { item ->
+            notifyListenersOfEntityChange(item, EntityChangeType.Updated, source)
         }
     }
 
-    private fun dispatchMessagesForSeriesDependentEntities(series: Series, source: EntityChangeSource) {
-        series.sources.filterNotNull().forEach { reference ->
-            notifyListenersOfEntityChange(reference, EntityChangeType.Updated, source)
+    private fun dispatchMessagesForSeriesDependentEntities(series: Series, changeSource: EntityChangeSource) {
+        series.sources.filterNotNull().forEach { source ->
+            notifyListenersOfEntityChange(source, EntityChangeType.Updated, changeSource)
         }
     }
 
-    private fun dispatchMessagesForReferenceDependentEntities(reference: Source, source: EntityChangeSource) {
-        reference.items.filterNotNull().forEach { entry ->
-            notifyListenersOfEntityChange(entry, EntityChangeType.Updated, source)
+    private fun dispatchMessagesForSourceDependentEntities(source: Source, changeSource: EntityChangeSource) {
+        source.items.filterNotNull().forEach { item ->
+            notifyListenersOfEntityChange(item, EntityChangeType.Updated, changeSource)
         }
+    }
+
+    private fun dispatchMessagesForFileLinkDependentEntities(file: FileLink, changeSource: EntityChangeSource) {
+        file.itemsAttachedTo.filterNotNull().forEach { item ->
+            notifyListenersOfEntityChange(item, EntityChangeType.Updated, changeSource)
+        }
+
+        file.sourcesAttachedTo.filterNotNull().forEach { source ->
+            notifyListenersOfEntityChange(source, EntityChangeType.Updated, changeSource)
+        }
+    }
+
+    private fun dispatchMessagesForLocalFileInfoDependentEntities(localFileInfo: LocalFileInfo, source: EntityChangeSource) {
+        notifyListenersOfEntityChange(localFileInfo.file, EntityChangeType.Updated, source)
     }
 
     private fun createEntityChangedMessage(entityClass: Class<out BaseEntity>, entity: BaseEntity, changeType: EntityChangeType, source: EntityChangeSource): EntityChanged<out BaseEntity>? {
         when(entityClass) {
-            Item::class.java -> return EntryChanged(entity as Item, changeType, source)
+            Item::class.java -> return ItemChanged(entity as Item, changeType, source)
             Tag::class.java -> return TagChanged(entity as Tag, changeType, source)
-            Source::class.java -> return ReferenceChanged(entity as Source, changeType, source)
+            Source::class.java -> return SourceChanged(entity as Source, changeType, source)
             Series::class.java -> return SeriesChanged(entity as Series, changeType, source)
             ReadLaterArticle::class.java -> return ReadLaterArticleChanged(entity as ReadLaterArticle, changeType, source)
+            FileLink::class.java -> return FileChanged(entity as FileLink, changeType, source)
+            LocalFileInfo::class.java -> return LocalFileInfoChanged(entity as LocalFileInfo, changeType, source)
             ArticleSummaryExtractorConfig::class.java -> return ArticleSummaryExtractorConfigChanged(entity as ArticleSummaryExtractorConfig, changeType, source)
             else -> {
                 if(Tag::class.java.isAssignableFrom(entityClass)) {

@@ -21,24 +21,25 @@ class TagesschauArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
         return "Tagesschau"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return isHttpOrHttpsUrlFromHost(url, "www.tagesschau.de/")
     }
 
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("#content .storywrapper").first()?.let { contentElement ->
-            extractEntry(contentElement)?.let { entry ->
-                val reference = extractReference(url, contentElement)
+            extractItem(contentElement, url)?.let { item ->
+                val source = extractSource(url, contentElement)
 
-                extractionResult.setExtractedContent(entry, reference)
+                extractionResult.setExtractedContent(item, source)
             }
         }
     }
 
-    private fun extractEntry(contentElement: Element): Item? {
+    private fun extractItem(contentElement: Element, articleUrl: String): Item? {
         contentElement.select(".sectionZ .modParagraph").first()?.let { articleContentElement ->
             cleanArticleContentElement(articleContentElement)
+            makeLinksAbsolute(articleContentElement, articleUrl)
 
             val content = articleContentElement.outerHtml()
 
@@ -66,20 +67,20 @@ class TagesschauArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
         }
     }
 
-    private fun extractReference(url: String, contentElement: Element): Source? {
+    private fun extractSource(url: String, contentElement: Element): Source? {
         contentElement.select(".sectionA .box").first()?.let { headerElement ->
             val title = headerElement.select(".headline").first()?.text()?.trim() ?: ""
             val subTitle = headerElement.select(".dachzeile").first()?.text()?.trim() ?: ""
 
             val publishingDate = extractPublishingDate(headerElement)
 
-            val reference = Source(title, url, publishingDate, subTitle = subTitle)
+            val source = Source(title, url, publishingDate, subTitle = subTitle)
 
             headerElement.select(".media img").first()?.let { previewImageElement ->
-                reference.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), url)
+                source.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), url)
             }
 
-            return reference
+            return source
         }
 
         return null

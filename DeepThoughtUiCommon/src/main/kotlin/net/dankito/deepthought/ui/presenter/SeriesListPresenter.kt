@@ -32,8 +32,6 @@ class SeriesListPresenter(private val view: ISeriesListView, private val searchE
     init {
         thread {
             CommonComponent.component.inject(this)
-
-            eventBus.register(eventBusListener)
         }
     }
 
@@ -57,7 +55,11 @@ class SeriesListPresenter(private val view: ISeriesListView, private val searchE
     }
 
 
-    override fun cleanUp() {
+    override fun viewBecomesVisible() {
+        eventBus.register(eventBusListener)
+    }
+
+    override fun viewGetsHidden() {
         eventBus.unregister(eventBusListener)
     }
 

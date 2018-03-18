@@ -14,6 +14,10 @@ import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.concurrent.schedule
 
 
+// TODO: separate in Listener and Broadcast sender?
+
+// TODO: be aware that this approach can disturb busy local networks. From Wikipedia UPnP article:
+// UPnP is generally regarded as unsuitable for deployment in business settings for reasons of economy, complexity, and consistency: the multicast foundation makes it chatty, consuming too many network resources on networks with a large population of devices
 open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetworkConnectivityManager, protected var threadPool: IThreadPool) : IDevicesDiscoverer {
 
     companion object {
@@ -32,7 +36,7 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
 
     private var connectionsAliveWatcher: ConnectionsAliveWatcher? = null
 
-    private val networkHelper: NetworkHelper = NetworkHelper()
+    private val networkHelper: NetworkHelper = NetworkHelper() // TODO: make configurable which NetworkHelper instance to use
 
     private var listenerThread: Thread? = null
 
@@ -80,7 +84,7 @@ open class UdpDevicesDiscoverer(private val networkConnectivityManager: INetwork
     override fun stop() {
         log.info("Stopping UdpDevicesDiscoverer ...")
 
-        receivedPacketsQueue.stop()
+        receivedPacketsQueue.stopAndClearQueue()
 
         connectionsAliveWatcher?.stopWatching()
 

@@ -23,17 +23,17 @@ class DerFreitagArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
         return "Der Freitag"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return isHttpOrHttpsUrlFromHost(url, "www.freitag.de/")
     }
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("article").first()?.let { articleElement ->
-            val articleEntry = Item(extractContent(articleElement, url))
+            val articleItem = Item(extractContent(articleElement, url))
 
-            val reference = createReference(url, articleElement)
+            val source = createSource(url, articleElement)
             
-            extractionResult.setExtractedContent(articleEntry, reference)
+            extractionResult.setExtractedContent(articleItem, source)
         }
     }
 
@@ -82,7 +82,7 @@ class DerFreitagArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
         return ""
     }
 
-    private fun createReference(articleUrl: String, articleElement: Element): Source {
+    private fun createSource(articleUrl: String, articleElement: Element): Source {
         var title = ""
 
         articleElement.select("h1.title").first()?.let { titleElement ->
@@ -91,12 +91,12 @@ class DerFreitagArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
 
         val publishingDate = extractDate(articleElement)
 
-        val articleReference = Source(title, articleUrl, publishingDate)
-        articleReference.issue = tryToGetIssue(articleElement)
+        val articleSource = Source(title, articleUrl, publishingDate)
+        articleSource.issue = tryToGetIssue(articleElement)
 
-        tryToExtractPreviewImage(articleElement, articleReference)
+        tryToExtractPreviewImage(articleElement, articleSource)
 
-        return articleReference
+        return articleSource
     }
 
     private fun tryToExtractPreviewImage(articleElement: Element, articleSource: Source) {

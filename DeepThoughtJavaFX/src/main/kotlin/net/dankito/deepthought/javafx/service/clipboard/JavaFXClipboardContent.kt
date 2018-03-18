@@ -1,27 +1,29 @@
 package net.dankito.deepthought.javafx.service.clipboard
 
-import javafx.scene.image.Image
 import javafx.scene.input.Clipboard
+import net.dankito.deepthought.javafx.ui.JavaFXImage
+import net.dankito.deepthought.service.clipboard.ClipboardContent
+import net.dankito.deepthought.ui.Image
 import net.dankito.utils.UrlUtil
 import java.io.File
 
 
-class JavaFXClipboardContent(private val clipboard: Clipboard, private val urlUtil: UrlUtil) {
+class JavaFXClipboardContent(private val clipboard: Clipboard, private val urlUtil: UrlUtil) : ClipboardContent() {
 
 
-    fun hasPlainText(): Boolean {
+    override fun hasPlainText(): Boolean {
         return clipboard.hasString()
     }
 
-    val plainText: String? = clipboard.string
+    override val plainText: String? = clipboard.string
 
 
-    fun hasUrl(): Boolean {
+    override fun hasUrl(): Boolean {
         val text = this.plainText
         return clipboard.hasUrl() || (text != null && urlUtil.isHttpUri(text))
     }
 
-    val url: String?
+    override val url: String?
         get() {
             clipboard.url?.let { return it }
 
@@ -35,31 +37,38 @@ class JavaFXClipboardContent(private val clipboard: Clipboard, private val urlUt
         }
 
 
-    fun hasHtml(): Boolean {
+    override fun hasHtml(): Boolean {
         return clipboard.hasHtml()
     }
 
-    val html: String? = clipboard.html
+    override val html: String? = clipboard.html
 
 
-    fun hasRtf(): Boolean {
+    override fun hasRtf(): Boolean {
         return clipboard.hasRtf()
     }
 
-    val rtf: String? = clipboard.rtf
+    override val rtf: String? = clipboard.rtf
 
 
-    fun hasImage(): Boolean {
+    override fun hasImage(): Boolean {
         return clipboard.hasImage()
     }
 
-    val image: Image? = clipboard.image
+    override val image: Image?
+        get() {
+            clipboard.image?.let {
+                return JavaFXImage(clipboard.image)
+            }
+
+            return null
+        }
 
 
-    fun hasFiles(): Boolean {
+    override fun hasFiles(): Boolean {
         return clipboard.hasFiles()
     }
 
-    val files: List<File>? = clipboard.files
+    override val files: List<File>? = clipboard.files
 
 }

@@ -23,7 +23,7 @@ import android.view.View
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import net.dankito.deepthought.android.R
-import net.dankito.richtexteditor.android.command.Command
+import net.dankito.richtexteditor.command.CommandName
 import net.dankito.service.search.SearchEngineBase
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.Matcher
@@ -62,7 +62,7 @@ open class UiNavigator {
 
     private fun createTagsInEditItemActivity(vararg tagNames: String) {
         clickOnEditItemActivityFloatingActionButton()
-        onView(withId(R.id.fabEditEntryTags)).perform(click())
+        onView(withId(R.id.fabEditItemTags)).perform(click())
         TestUtil.sleep(500)
 
         setValueOfEditEntityField(R.id.lytTagsPreview, tagNames.joinToString(SearchEngineBase.TagsSearchTermSeparator))
@@ -86,23 +86,23 @@ open class UiNavigator {
 
     private fun createSourceInEditItemActivity(sourceTitle: String, seriesTitle: String? = null) {
         clickOnEditItemActivityFloatingActionButton()
-        onView(withId(R.id.fabEditEntryReference)).perform(click())
+        onView(withId(R.id.fabEditItemSource)).perform(click())
         TestUtil.sleep(1000)
 
-        clickOnEditEntityReferenceFieldEditDetailsPopupMenu(R.id.lytReferencePreview)
+        clickOnEditEntityReferenceFieldEditDetailsPopupMenu(R.id.lytSourcePreview)
 
-        setValueOfEditEntityField(R.id.lytEditReferenceTitle, sourceTitle)
+        setValueOfEditEntityField(R.id.lytEditSourceTitle, sourceTitle)
 
         seriesTitle?.let { createSeriesInEditSourceActivity(it) }
 
-        onView(withId(R.id.mnSaveReference)).perform(click())
+        onView(withId(R.id.mnSaveSource)).perform(click())
         TestUtil.sleep(500)
     }
 
     private fun createSeriesInEditSourceActivity(seriesTitle: String) {
-        onView(withId(R.id.lytEditReferenceSeries)).perform(click())
+        onView(withId(R.id.lytEditSourceSeries)).perform(click())
 
-        clickOnEditSourceSeriesFieldEditDetailsPopupMenu(R.id.lytEditReferenceSeries)
+        clickOnEditSourceSeriesFieldEditDetailsPopupMenu(R.id.lytEditSourceSeries)
 
         setValueOfEditEntityField(R.id.lytEditSeriesTitle, seriesTitle)
 
@@ -115,9 +115,9 @@ open class UiNavigator {
         createItemFromMainActivity(itemContent, false)
 
         clickOnEditItemActivityFloatingActionButton()
-        onView(withId(R.id.fabEditEntryAbstract)).perform(click())
+        onView(withId(R.id.fabEditItemSummary)).perform(click())
         TestUtil.sleep(1000)
-        setValueOfEditEntityField(R.id.lytAbstractPreview, itemSummary)
+        setValueOfEditEntityField(R.id.lytSummaryPreview, itemSummary)
 
         createSourceInEditItemActivity(sourceTitle, seriesTitle)
 
@@ -247,12 +247,12 @@ open class UiNavigator {
     }
 
 
-    open fun clickOnEditorCommand(command: Command) {
+    open fun clickOnEditorCommand(command: CommandName) {
         onView(withTagValue(`is`(command))).perform(click())
     }
 
     private fun saveItemInEditItemActivity() {
-        onView(withId(R.id.mnSaveEntry)).perform(click())
+        onView(withId(R.id.mnSaveItem)).perform(click())
     }
 
 

@@ -2,17 +2,21 @@ package net.dankito.deepthought.javafx.di
 
 import dagger.Module
 import dagger.Provides
+import javafx.stage.Stage
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.deepthought.data.EntryPersister
-import net.dankito.deepthought.data.ReferencePersister
+import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.SeriesPersister
+import net.dankito.deepthought.data.SourcePersister
+import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.javafx.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.javafx.appstart.JavaFXAppInitializer
 import net.dankito.deepthought.javafx.dialogs.JavaFXDialogService
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
+import net.dankito.deepthought.javafx.service.JavaFXApplicationsService
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardService
+import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
 import net.dankito.deepthought.javafx.service.communication.JavaFXDeviceRegistrationHandler
 import net.dankito.deepthought.javafx.service.import_export.DataImporterExporterManager
 import net.dankito.deepthought.javafx.service.network.JavaFXNetworkConnectivityManager
@@ -20,6 +24,8 @@ import net.dankito.deepthought.javafx.service.settings.JavaFXLocalSettingsStore
 import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.deepthought.service.permissions.IPermissionsService
+import net.dankito.deepthought.service.permissions.JavaPermissionsService
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractorsManager
@@ -31,17 +37,19 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.UrlUtil
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.services.network.INetworkConnectivityManager
 import net.dankito.utils.services.network.NetworkHelper
 import net.dankito.utils.settings.ILocalSettingsStore
+import net.dankito.utils.ui.IApplicationsService
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import javax.inject.Singleton
 
 
 @Module
-class JavaFXModule(private val flavorInstanceProvider: JavaFXInstanceProvider, private val mainWindowController: MainWindowController) {
+class JavaFXModule(private val primaryStage: Stage, private val flavorInstanceProvider: JavaFXInstanceProvider, private val mainWindowController: MainWindowController) {
 
     @Provides
     @Singleton
@@ -77,8 +85,26 @@ class JavaFXModule(private val flavorInstanceProvider: JavaFXInstanceProvider, p
 
     @Provides
     @Singleton
+    fun provideJavaFXClipboardWatcher(urlUtil: UrlUtil) : JavaFXClipboardWatcher {
+        return JavaFXClipboardWatcher(primaryStage, urlUtil)
+    }
+
+    @Provides
+    @Singleton
+    fun providePermissionsService() : IPermissionsService {
+        return JavaPermissionsService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideApplicationsService(fileManager: FileManager) : IApplicationsService {
+        return JavaFXApplicationsService(fileManager)
+    }
+
+    @Provides
+    @Singleton
     fun provideDialogService(localization: Localization) : IDialogService {
-        return JavaFXDialogService(localization)
+        return JavaFXDialogService(localization, true, "deepthought@dankito.net", "Bug in DeepThought")
     }
 
 
@@ -97,9 +123,9 @@ class JavaFXModule(private val flavorInstanceProvider: JavaFXInstanceProvider, p
 
     @Provides
     @Singleton
-    fun provideArticleSummaryPresenter(entryPersister: EntryPersister, readLaterArticleService: ReadLaterArticleService, articleExtractorManager: ArticleExtractorManager,
+    fun provideArticleSummaryPresenter(itemPersister: ItemPersister, readLaterArticleService: ReadLaterArticleService, articleExtractorManager: ArticleExtractorManager,
                                        router: IRouter, clipboardService: IClipboardService, dialogService: IDialogService) : ArticleSummaryPresenter {
-        return ArticleSummaryPresenter(entryPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService)
+        return ArticleSummaryPresenter(itemPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService)
     }
 
     @Provides
@@ -124,10 +150,10 @@ class JavaFXModule(private val flavorInstanceProvider: JavaFXInstanceProvider, p
     // TODO: move to CommonModule again as soon as importing/exporting is implemented in Android
     @Provides
     @Singleton
-    fun provideDataImporterExporterManager(searchEngine: ISearchEngine, entryPersister: EntryPersister, tagService: TagService,
-                                           referencePersister: ReferencePersister, seriesPersister: SeriesPersister, threadPool: IThreadPool)
+    fun provideDataImporterExporterManager(searchEngine: ISearchEngine, itemPersister: ItemPersister, tagService: TagService,
+                                           sourcePersister: SourcePersister, seriesPersister: SeriesPersister, threadPool: IThreadPool)
             : DataImporterExporterManager {
-        return DataImporterExporterManager(searchEngine, entryPersister, tagService, referencePersister, seriesPersister, threadPool)
+        return DataImporterExporterManager(searchEngine, itemPersister, tagService, sourcePersister, seriesPersister, threadPool)
     }
 
 }

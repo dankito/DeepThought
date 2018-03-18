@@ -7,12 +7,17 @@ import android.util.AttributeSet
 
 class MaxHeightRecyclerView : RecyclerView {
 
+    companion object {
+        const val DisableMaxHeight = -1
+    }
+
+
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
 
-    var maxHeightInPixel = 0
+    var maxHeightInPixel = DisableMaxHeight
 
 
     init {
@@ -25,11 +30,20 @@ class MaxHeightRecyclerView : RecyclerView {
         maxHeightInPixel = (maxHeightInDp * density).toInt()
     }
 
+    fun disableMaxHeight() {
+        maxHeightInPixel = DisableMaxHeight
+    }
+
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val adjustedHeightMeasureSpec = MeasureSpec.makeMeasureSpec(maxHeightInPixel, MeasureSpec.AT_MOST)
+        if(maxHeightInPixel >= 0) {
+            val adjustedHeightMeasureSpec = MeasureSpec.makeMeasureSpec(maxHeightInPixel, MeasureSpec.AT_MOST)
 
-        super.onMeasure(widthMeasureSpec, adjustedHeightMeasureSpec)
+            super.onMeasure(widthMeasureSpec, adjustedHeightMeasureSpec)
+        }
+        else {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        }
     }
 
 }

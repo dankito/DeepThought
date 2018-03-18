@@ -2,13 +2,10 @@ package net.dankito.service.search
 
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.deepthought.model.*
-import net.dankito.deepthought.model.extensions.abstractPlainText
 import net.dankito.deepthought.model.extensions.contentPlainText
+import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.service.search.specific.*
 import net.dankito.utils.IThreadPool
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashSet
 
 
 class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool: IThreadPool) : SearchEngineBase(threadPool) {
@@ -21,13 +18,13 @@ class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool
     override fun close() {
     }
 
-    override fun searchEntries(search: EntriesSearch, termsToSearchFor: List<String>) {
-        if(search.filterOnlyEntriesWithoutTags) {
+    override fun searchItems(search: ItemsSearch, termsToSearchFor: List<String>) {
+        if(search.searchOnlyItemsWithoutTags) {
             getItemsWithoutTags(search)
         }
         else {
             searchForEntitiesOfType(Item::class.java, search, termsToSearchFor, { it.sortedByDescending { it.createdOn } }) { item ->
-                val entityValues = Arrays.asList(item.contentPlainText.toLowerCase(), item.abstractPlainText.toLowerCase(), item.source?.title?.toLowerCase() ?: "",
+                val entityValues = listOf(item.contentPlainText.toLowerCase(), item.summaryPlainText.toLowerCase(), item.source?.title?.toLowerCase() ?: "",
                         item.source?.publishingDateString ?: "", item.source?.series?.title?.toLowerCase() ?: "").toMutableList()
                 entityValues.addAll(item.tags.map { it.name.toLowerCase() })
 
@@ -36,7 +33,7 @@ class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool
         }
     }
 
-    private fun getItemsWithoutTags(search: EntriesSearch) {
+    private fun getItemsWithoutTags(search: ItemsSearch) {
         val items = entityManager.getAllEntitiesOfType(Item::class.java)
 
         items.forEach { item ->
@@ -79,23 +76,50 @@ class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool
         // TODO
     }
 
-    override fun searchReferences(search: ReferenceSearch, termsToSearchFor: List<String>) {
+    override fun searchSources(search: SourceSearch, termsToSearchFor: List<String>) {
         searchForEntitiesOfType(Source::class.java, search, termsToSearchFor, { it.sortedBy { it.title }.sortedByDescending { it.publishingDate }.sortedBy { it.series?.title }}) { source ->
-            Arrays.asList(source.title.toLowerCase(), source.subTitle.toLowerCase(), source.series?.title?.toLowerCase() ?: "",
+            listOf(source.title.toLowerCase(), source.subTitle.toLowerCase(), source.series?.title?.toLowerCase() ?: "",
                     source.publishingDateString ?: "", source.issue?.toLowerCase() ?: "")
         }
     }
 
     override fun searchSeries(search: SeriesSearch, termsToSearchFor: List<String>) {
         searchForEntitiesOfType(Series::class.java, search, termsToSearchFor, { it.sortedBy { it.title } }) { series ->
-            Arrays.asList(series.title.toLowerCase())
+            listOf(series.title.toLowerCase())
         }
     }
 
     override fun searchReadLaterArticles(search: ReadLaterArticleSearch, termsToSearchFor: List<String>) {
         searchForEntitiesOfType(ReadLaterArticle::class.java, search, termsToSearchFor, { it.sortedByDescending { it.createdOn } }) { article ->
-            Arrays.asList(article.itemPreview.toLowerCase(), article.sourcePreview.toLowerCase())
+            listOf(article.itemPreview.toLowerCase(), article.sourcePreview.toLowerCase())
         }
+    }
+
+    override fun searchFiles(search: FilesSearch, termsToSearchFor: List<String>) {
+        // TODO: implement fileType, searchUri, ...
+        searchForEntitiesOfType(FileLink::class.java, search, termsToSearchFor, { it.sortedByDescending { it.createdOn } }) { file ->
+            listOf(file.uriString.toLowerCase(), file.name.toLowerCase(), file.description.toLowerCase(), file.sourceUriString.toLowerCase())
+        }
+    }
+
+    override fun searchLocalFileInfo(search: LocalFileInfoSearch) {
+        val allLocalFileInfo = entityManager.getAllEntitiesOfType(LocalFileInfo::class.java)
+
+        allLocalFileInfo.forEach { localFileInfo ->
+            search.hasSyncStatus?.let {
+                if(localFileInfo.syncStatus == it) {
+                    search.addResult(localFileInfo)
+                }
+            }
+
+            search.doesNotHaveSyncStatus?.let {
+                if(localFileInfo.syncStatus != it) {
+                    search.addResult(localFileInfo)
+                }
+            }
+        }
+
+        search.fireSearchCompleted()
     }
 
 

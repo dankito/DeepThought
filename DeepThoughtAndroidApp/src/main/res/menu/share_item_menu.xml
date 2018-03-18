@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/mnShareItemSourceUrl"
+        android:title="@string/menu_share_source_url"
+    />
+
+    <item
+        android:id="@+id/mnShareItemContent"
+        android:title="@string/menu_share_item_content"
+    />
+
+</menu>

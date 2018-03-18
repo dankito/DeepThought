@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="96dp"
-              android:layout_marginRight="60dp"
-              android:layout_marginEnd="60dp">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lytRoot"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/snackbar_ask_sync_data_with_device_height"
+    android:layout_marginRight="@dimen/snackbar_ask_sync_data_with_device_margin_right"
+    android:layout_marginEnd="@dimen/snackbar_ask_sync_data_with_device_margin_right">
 
     <ImageView
         android:id="@+id/imgvwDeviceIcon"
-        android:layout_width="60dp"
-        android:layout_height="96dp"
+        android:layout_width="@dimen/snackbar_ask_sync_data_with_device_icon_width"
+        android:layout_height="@dimen/snackbar_ask_sync_data_with_device_icon_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
     />
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="96dp"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginRight="60dp"
-        android:layout_marginEnd="60dp"
+        android:layout_marginLeft="@dimen/snackbar_ask_sync_data_with_device_text_margin_left"
+        android:layout_marginStart="@dimen/snackbar_ask_sync_data_with_device_text_margin_left"
+        android:layout_marginRight="@dimen/snackbar_ask_sync_data_with_device_text_margin_right"
+        android:layout_marginEnd="@dimen/snackbar_ask_sync_data_with_device_text_margin_right"
         android:layout_toRightOf="@+id/imgvwDeviceIcon"
         android:layout_toEndOf="@+id/imgvwDeviceIcon"
         android:layout_alignParentRight="true"
@@ -31,14 +32,14 @@
         <TextView
             android:id="@+id/txtvwAskSynchronizeDataWithThisDevice"
             android:layout_width="wrap_content"
-            android:layout_height="24dp"
+            android:layout_height="@dimen/snackbar_ask_sync_data_with_device_text_view_height"
             android:text="@string/synchronize_data_with_this_device"
         />
 
         <TextView
             android:id="@+id/txtvwDeviceInfo"
             android:layout_width="wrap_content"
-            android:layout_height="24dp"
+            android:layout_height="@dimen/snackbar_ask_sync_data_with_device_text_view_height"
             android:maxLines="1"
             android:ellipsize="end"
         />
@@ -46,17 +47,17 @@
         <TextView
             android:id="@+id/txtvwDeviceAddress"
             android:layout_width="wrap_content"
-            android:layout_height="24dp"
+            android:layout_height="@dimen/snackbar_ask_sync_data_with_device_text_view_height"
             android:maxLines="1"
         />
 
         <CheckBox
             android:id="@+id/chkbxNeverAskAgainToConnectWithThisDevice"
             android:layout_width="wrap_content"
-            android:layout_height="24dp"
+            android:layout_height="@dimen/snackbar_ask_sync_data_with_device_text_view_height"
             android:text="@string/never_ask_again"
-            android:layout_marginLeft="-8dp"
-            android:layout_marginStart="-8dp"
+            android:layout_marginLeft="@dimen/snackbar_ask_sync_data_with_device_ask_never_again_margin_left"
+            android:layout_marginStart="@dimen/snackbar_ask_sync_data_with_device_ask_never_again_margin_left"
         />
 
     </LinearLayout>

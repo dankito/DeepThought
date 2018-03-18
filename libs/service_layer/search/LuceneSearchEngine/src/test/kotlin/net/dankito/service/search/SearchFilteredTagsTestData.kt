@@ -4,14 +4,14 @@ import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Tag
 
 
-data class SearchFilteredTagsTestData(val countTagsToFilter: Int, val countTagsOnEntriesWithTagsToFilter: Int, val countEntriesOnTagsToFilter: Int,
-                                 val countNoiseTags: Int = 20, val countNoiseEntries: Int = 30) {
+data class SearchFilteredTagsTestData(val countTagsToFilter: Int, val countTagsOnItemsWithTagsToFilter: Int, val countItemsOnTagsToFilter: Int,
+                                      val countNoiseTags: Int = 20, val countNoiseItems: Int = 30) {
 
     lateinit var tagsToFilter: List<Tag>
 
-    lateinit var tagsOnEntriesWithTagsToFilter: List<Tag>
+    lateinit var tagsOnItemsWithTagsToFilter: List<Tag>
 
-    lateinit var entriesOnTagsToFilter: List<Item>
+    lateinit var itemsOnTagsToFilter: List<Item>
 
     lateinit var noiseTags: List<Tag>
 

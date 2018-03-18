@@ -3,13 +3,14 @@ package net.dankito.deepthought.ui
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.newsreader.model.ArticleSummary
+import java.io.File
 
 
 interface IRouter {
 
-    fun showEntriesForTag(tag: Tag, tagsFilter: List<Tag>)
+    fun showItemsForTag(tag: Tag, tagsFilter: List<Tag>)
 
-    fun showEntriesForReference(source: Source)
+    fun showItemsForSource(source: Source)
 
 
     fun showArticleSummaryExtractorsView()
@@ -21,23 +22,31 @@ interface IRouter {
     fun showReadLaterArticlesView()
 
 
-    fun showCreateEntryView()
+    fun showCreateItemView()
 
-    fun showEditEntryView(item: Item)
+    fun showEditItemView(item: Item)
 
-    fun showEditEntryView(article: ReadLaterArticle)
+    fun showEditItemView(article: ReadLaterArticle)
 
-    fun showEditEntryView(extractionResult: ItemExtractionResult)
+    fun showEditItemView(extractionResult: ItemExtractionResult)
 
 
-    fun showEditReferenceView(source: Source)
+    fun createItemFromPdf()
 
-    fun showEditEntryReferenceView(source: Source?, series: Series?, editedSourceTitle: String? = null)
+
+    fun showEditSourceView(source: Source)
+
+    fun showEditItemSourceView(source: Source?, series: Series?, editedSourceTitle: String? = null)
 
 
     fun showEditSeriesView(series: Series)
 
-    fun showEditReferenceSeriesView(forSource: Source, series: Series?)
+    fun showEditSourceSeriesView(forSource: Source, series: Series?)
+
+
+    fun showPdfView(addNewPdfFile: File, sourceForFile: Source? = null)
+
+    fun showPdfView(persistedPdfFile: FileLink, sourceForFile: Source? = null)
 
 
     fun returnToPreviousView()

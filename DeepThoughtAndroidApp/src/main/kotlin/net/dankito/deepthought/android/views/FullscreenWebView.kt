@@ -10,7 +10,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
-import kotlinx.android.synthetic.main.activity_edit_entry.view.*
+import kotlinx.android.synthetic.main.activity_edit_item.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.extensions.getColorFromResourceId
 import net.dankito.deepthought.android.service.OnSwipeTouchListener
@@ -102,6 +102,8 @@ class FullscreenWebView : WebView {
     private lateinit var searchView: SearchView
 
     private var isSearchViewVisible = false
+
+    private var wasSearchFocusedFocusedBeforeScrolling = false
 
     private var checkIfScrollingStoppedTimer = Timer()
 
@@ -235,6 +237,10 @@ class FullscreenWebView : WebView {
     override fun onScrollChanged(scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int) {
         super.onScrollChanged(scrollX, scrollY, oldScrollX, oldScrollY)
 
+        if(searchView.isScrollingToSearchResult) { // filter out non-user scrolls
+            return
+        }
+
         if(hasFullscreenModeToggledShortlyBefore()) {
             return // when toggling reader mode there's a huge jump in scroll difference due to displaying additional / hiding controls -> filter out these events shortly after  entering/leaving reader mode
         }
@@ -248,6 +254,7 @@ class FullscreenWebView : WebView {
         val tolerance = computeVerticalScrollExtent() / 10
         this.hasReachedEnd = scrollY >= computeVerticalScrollRange() - computeVerticalScrollExtent() - tolerance
 
+        wasSearchFocusedFocusedBeforeScrolling = wasSearchFocusedFocusedBeforeScrolling || searchView.searchField.isFocused // wasSearchFocusedFocusedBeforeScrolling || : otherwise in scroll events short after hiding options bar wasSearchFocusedFocusedBeforeScrolling would get set from true to false
         hideOptionsBarOnUiThread()
         startCheckIfScrollingStopped()
     }
@@ -286,6 +293,12 @@ class FullscreenWebView : WebView {
 
     private fun showOptionsBarOnUiThread() {
         lytFullscreenWebViewOptionsBar?.visibility = View.VISIBLE
+
+        if(wasSearchFocusedFocusedBeforeScrolling) {
+            searchView.requestFocus()
+
+            wasSearchFocusedFocusedBeforeScrolling = false // reset value to not focus accidentally again
+        }
     }
 
 

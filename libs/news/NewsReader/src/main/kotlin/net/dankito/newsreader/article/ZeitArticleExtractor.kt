@@ -27,7 +27,7 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
         return "Zeit"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return isHttpOrHttpsUrlFromHost(url, "www.zeit.de/")
     }
 
@@ -43,11 +43,11 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
                 }
             }
 
-            val articleEntry = createEntry(articleElement)
+            val articleItem = createItem(articleElement)
 
-            val reference = createReference(url, articleElement)
+            val source = createSource(url, articleElement)
 
-            extractionResult.setExtractedContent(articleEntry, reference)
+            extractionResult.setExtractedContent(articleItem, source)
         }
     }
 
@@ -61,7 +61,7 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
         return null
     }
 
-    private fun createEntry(articleBodyElement: Element): Item {
+    private fun createItem(articleBodyElement: Element): Item {
         var content = ""
 
         // remove <noscript> elements which impede that <img>s in <figure> get loaded
@@ -98,7 +98,7 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
         return dataCollectionScriptsAndStyles
     }
 
-    private fun createReference(articleUrl: String, articleBodyElement: Element): Source {
+    private fun createSource(articleUrl: String, articleBodyElement: Element): Source {
         val title = articleBodyElement.select(".article-heading__title").text()
 
         var subTitle = articleBodyElement.select(".article-heading__kicker").text()
@@ -108,13 +108,13 @@ class ZeitArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClie
 
         val publishingDate = parseDate(articleBodyElement)
 
-        val reference = Source(title, articleUrl, publishingDate, subTitle = subTitle)
+        val source = Source(title, articleUrl, publishingDate, subTitle = subTitle)
 
         articleBodyElement.parent().select(".article__media-item").first()?.let { previewImageElement ->
-            reference.previewImageUrl = previewImageElement.attr("src")
+            source.previewImageUrl = previewImageElement.attr("src")
         }
 
-        return reference
+        return source
     }
 
 

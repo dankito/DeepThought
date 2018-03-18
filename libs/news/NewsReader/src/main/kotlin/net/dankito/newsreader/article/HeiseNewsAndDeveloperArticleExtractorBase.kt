@@ -20,9 +20,6 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
     }
 
 
-    abstract protected fun parseArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleElement: Element, url: String, title: String)
-
-
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("article").first()?.let { article ->
             getReadAllOnOnePageUrl(article, url)?.let { allOnOnePageUrl ->
@@ -60,44 +57,84 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
     }
 
 
+    protected open fun parseArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleElement: Element, url: String, title: String) {
+        articleElement.select(".meldung_wrapper").first()?.let { contentElement ->
+            parseMeldungWrapperArticle(extractionResult, headerElement, articleElement, contentElement, url, title)
+            return
+        }
+
+        articleElement.select(".article-content").first()?.let { articleContentElement ->
+            parseArticleContentArticle(extractionResult, headerElement, articleContentElement, url, title)
+        }
+    }
+
+
+    // new version
+    protected fun parseArticleContentArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleContentElement: Element, url: String, title: String) {
+        val source = Source(title, url, extractPublishingDate(headerElement))
+        articleContentElement.select(".aufmacherbild img").first()?.let { previewImageElement ->
+            source.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), url)
+        }
+
+        cleanContentElement(articleContentElement)
+
+        makeLinksAbsolute(articleContentElement, url)
+
+        extractionResult.setExtractedContent(Item(articleContentElement.outerHtml()), source)
+    }
+
+
+    // old version
+    protected fun parseMeldungWrapperArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleElement: Element, contentElement: Element, url: String, title: String) {
+        val item = Item(extractContent(articleElement, url))
+
+        val publishingDate = extractPublishingDate(headerElement)
+        val source = Source(title, url, publishingDate)
+        source.previewImageUrl = makeLinkAbsolute(contentElement.select(".aufmacherbild img").first()?.attr("src") ?: "", url)
+
+        extractionResult.setExtractedContent(item, source)
+    }
+
+
     private fun isMobileArticle(article: Element, document: Document, url: String): Boolean {
         return url.contains("://m.heise.de/")
     }
 
     private fun parseMobileArticle(extractionResult: ItemExtractionResult, article: Element, url: String) {
-        val reference = extractMobileArticleReference(article, url)
+        val source = extractMobileArticleSource(article, url)
 
         cleanContentElement(article)
         article.select("h1").remove()
 
         val content = article.html()
 
-        extractionResult.setExtractedContent(Item(content), reference)
+        extractionResult.setExtractedContent(Item(content), source)
     }
 
     protected fun cleanContentElement(contentElement: Element) {
         contentElement.select("h1, time, span.author, a.comments, .comment, .btn-toolbar, .whatsbroadcast-toolbar, #whatsbroadcast, " +
-                ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta, .widget-werbung, .ad_container, .ad_content").remove()
+                ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta, .widget-werbung, .ad_container, .ad_content, " +
+                ".akwa-ad-container, .akwa-ad-container--native").remove()
 
         removeEmptyParagraphs(contentElement, Arrays.asList("video"))
     }
 
-    private fun extractMobileArticleReference(article: Element, url: String): Source {
+    private fun extractMobileArticleSource(article: Element, url: String): Source {
         val title = article.select("h1").first()?.text()?.trim() ?: ""
 
-        val reference = Source(title, url)
+        val source = Source(title, url)
 
         article.select("figure.aufmacherbild img").first()?.let {
-            reference.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
+            source.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
         }
         article.select("time").first()?.let {
-            reference.publishingDate = parseIsoDateTimeString(it.attr("datetime"))
-            if(reference.publishingDate == null) {
-                reference.publishingDate = tryToParseMultiPageMobileArticleDate(it.attr("datetime"))
+            source.publishingDate = parseIsoDateTimeString(it.attr("datetime"))
+            if(source.publishingDate == null) {
+                source.publishingDate = tryToParseMultiPageMobileArticleDate(it.attr("datetime"))
             }
         }
 
-        return reference
+        return source
     }
 
     private fun tryToParseMultiPageMobileArticleDate(date: String?): Date? {
@@ -110,6 +147,17 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         return null
     }
 
+
+    protected open fun extractContent(articleElement: Element, url: String): String {
+        return articleElement.select(".meldung_wrapper").first()?.children()?.filter { element ->
+            shouldFilterElement(element) == false
+        }?.joinToString(separator = "") { getContentElementHtml(it, url) }
+        ?: ""
+    }
+
+    protected open fun shouldFilterElement(element: Element): Boolean {
+        return element.select(".widget-werbung, .akwa-ad-container, .akwa-ad-container--native, .hinweis_anzeige").isNotEmpty() || containsOnlyComment(element)
+    }
 
     protected open fun containsOnlyComment(element: Element) : Boolean {
         return element.childNodeSize() == 3 && element.childNode(1) is Comment && element.childNode(0) is TextNode && element.childNode(2) is TextNode

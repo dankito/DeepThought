@@ -11,6 +11,21 @@ import kotlin.collections.ArrayList
 
 class NetworkHelper {
 
+    /*
+         With Android:
+
+         WifiManager wifi = mContext.getSystemService(Context.WIFI_SERVICE);
+        DhcpInfo dhcp = wifi.getDhcpInfo();
+        // handle null somehow
+
+        int broadcast = (dhcp.ipAddress & dhcp.netmask) | ~dhcp.netmask;
+        byte[] quads = new byte[4];
+        for (int k = 0; k < 4; k++)
+          quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
+        return InetAddress.getByAddress(quads);
+
+     */
+
     // in IPv6 there's no such thing as broadcast
     fun getBroadcastAddress(networkInterface: NetworkInterface): Inet4Address? {
         for(address in networkInterface.inetAddresses) {

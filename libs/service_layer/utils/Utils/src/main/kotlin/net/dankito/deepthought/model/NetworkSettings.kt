@@ -33,6 +33,15 @@ class NetworkSettings(override val localHostDevice: Device, override val localUs
             callSettingChangedListeners(NetworkSetting.SYNCHRONIZATION_PORT, value, oldValue)
         }
 
+    override var fileSynchronizationPort: Int = 0
+        set(value) {
+            val oldValue = this.fileSynchronizationPort
+
+            field = value
+
+            callSettingChangedListeners(NetworkSetting.FILE_SYNCHRONIZATION_PORT, value, oldValue)
+        }
+
     private val discoveredDevices: MutableMap<String, DiscoveredDevice> = HashMap()
 
     private val connectedDevicesPermittedToSynchronization: MutableMap<String, DiscoveredDevice> = HashMap()
@@ -125,7 +134,7 @@ class NetworkSettings(override val localHostDevice: Device, override val localUs
 
 
     override fun toString(): String {
-        return "$localHostDevice, Messages Port: $messagePort, Synchronization Port: $synchronizationPort"
+        return "$localHostDevice, Messages Port: $messagePort, Synchronization Port: $synchronizationPort, File Synchronization Port: $fileSynchronizationPort"
     }
 
 }

@@ -13,7 +13,7 @@ import android.widget.TextView
 import net.dankito.deepthought.android.DeepThoughtActivityTestRule
 import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.activities.arguments.EditEntryActivityParameters
+import net.dankito.deepthought.android.activities.arguments.EditItemActivityParameters
 import net.dankito.deepthought.android.di.TestComponent
 import net.dankito.deepthought.android.service.ActivityParameterHolder
 import net.dankito.deepthought.android.util.Assert
@@ -47,13 +47,13 @@ class EditItemActivity_SearchInWebViewTest : DeepThoughtAndroidTestBase() {
     var takeScreenshotOnError = TakeScreenshotOnErrorTestRule()
 
     @get:Rule
-    val testRule = DeepThoughtActivityTestRule<EditEntryActivity>(EditEntryActivity::class.java)
+    val testRule = DeepThoughtActivityTestRule<EditItemActivity>(EditItemActivity::class.java)
 
 
     init {
         TestComponent.component.inject(this)
 
-        testRule.setActivityParameter(parameterHolder, EditEntryActivityParameters(testItem))
+        testRule.setActivityParameter(parameterHolder, EditItemActivityParameters(testItem))
 
         dataManager.localSettings.didShowItemInformationFullscreenHelp = true
     }

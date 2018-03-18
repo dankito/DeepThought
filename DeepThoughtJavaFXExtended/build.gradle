@@ -43,5 +43,7 @@ jar {
                 'Implementation-Version': appVersionName
     }
 
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE // DeepThoughtJavaFX collects already call files, recollecting them would duplicate them
+
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }

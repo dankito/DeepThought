@@ -5,6 +5,9 @@ interface IMainViewSectionPresenter {
 
     fun getLastSearchTerm(): String
 
-    fun cleanUp()
+
+    fun viewBecomesVisible()
+
+    fun viewGetsHidden()
 
 }

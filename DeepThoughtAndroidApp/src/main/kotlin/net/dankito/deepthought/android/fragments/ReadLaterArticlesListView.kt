@@ -8,7 +8,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.ReadLaterArticleRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.data.EntryPersister
+import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
@@ -27,7 +27,7 @@ class ReadLaterArticlesListView : EntitiesListViewFragment<ReadLaterArticle>(R.m
     protected lateinit var readLaterArticleService: ReadLaterArticleService
 
     @Inject
-    protected lateinit var entryPersister: EntryPersister
+    protected lateinit var itemPersister: ItemPersister
 
     @Inject
     protected lateinit var clipboardService: IClipboardService
@@ -44,7 +44,7 @@ class ReadLaterArticlesListView : EntitiesListViewFragment<ReadLaterArticle>(R.m
     init {
         AppComponent.component.inject(this)
 
-        presenter = ReadLaterArticleListPresenter(this, searchEngine, readLaterArticleService, entryPersister, clipboardService, router)
+        presenter = ReadLaterArticleListPresenter(this, searchEngine, readLaterArticleService, itemPersister, clipboardService, router)
 
         adapter = ReadLaterArticleRecyclerAdapter(presenter)
     }

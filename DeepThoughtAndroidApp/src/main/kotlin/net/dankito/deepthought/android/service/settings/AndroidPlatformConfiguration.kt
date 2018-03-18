@@ -2,12 +2,19 @@ package net.dankito.deepthought.android.service.settings
 
 import android.content.Context
 import android.os.Build
+import android.os.Environment
 import net.dankito.deepthought.model.enums.OsType
-import net.dankito.utils.IPlatformConfiguration
+import net.dankito.utils.PlatformConfigurationBase
+import org.slf4j.LoggerFactory
 import java.io.File
 
 
-class AndroidPlatformConfiguration(val context: Context) : IPlatformConfiguration {
+class AndroidPlatformConfiguration(val context: Context) : PlatformConfigurationBase() {
+
+    companion object {
+        private val log = LoggerFactory.getLogger(AndroidPlatformConfiguration::class.java)
+    }
+
 
     override fun getUserName(): String {
         // here's a hint how it can be done but in my eyes it's not worth the effort: https://stackoverflow.com/questions/9323207/how-can-i-get-the-first-name-or-full-name-of-the-user-of-the-phone
@@ -40,14 +47,29 @@ class AndroidPlatformConfiguration(val context: Context) : IPlatformConfiguratio
     }
 
 
-    override fun getDefaultDataFolder(): File {
-        val dataFolderFile = context.getDir("data", Context.MODE_PRIVATE)
+    override fun getApplicationFolder(): File {
+        try {
+            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
 
-        if (dataFolderFile.exists() == false) {
-            dataFolderFile.mkdirs()
+            // app data dir
+//            return File(packageInfo.applicationInfo.dataDir)
+
+            // apk dir
+            return File(packageInfo.applicationInfo.sourceDir).parentFile // or publicSourceDir ?
+        } catch (e: Exception) {
+            log.error("Could not get app's data dir", e)
         }
 
-        return dataFolderFile
+        return File("/")
+    }
+
+    override fun getDefaultDataFolder(): File {
+        return ensureFolderExists(context.getDir(DataFolderName, Context.MODE_PRIVATE))
+    }
+
+    override fun getDefaultFilesFolder(): File {
+        // saving files to internal data dir is no alternative as then viewer applications cannot access files
+        return ensureFolderExists(File(Environment.getExternalStorageDirectory(), "DeepThought")) // TODO: also add a 'files' subfolder?
     }
 
 }

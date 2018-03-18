@@ -56,9 +56,9 @@ class LanguageDependentAnalyzer(private val languageDetector: ILanguageDetector)
     }
 
     override fun getWrappedAnalyzer(fieldName: String): Analyzer {
-        // only Item's EntryContent and EntryAbstract are analyzed based on current language (so that stop words get removed and words are being stemmed)
+        // only Item's ItemContent and ItemSummary are analyzed based on current language (so that stop words get removed and words are being stemmed)
         // this is a bit problematic: as we only be the field name, but not the field value, we cannot determine the language of Abstract and Content directly
-        if(FieldName.EntryContent == fieldName || FieldName.EntryAbstract == fieldName) {
+        if(FieldName.ItemContent == fieldName || FieldName.ItemSummary == fieldName) {
             return currentLanguageAnalyzer
         }
 
@@ -142,7 +142,7 @@ class LanguageDependentAnalyzer(private val languageDetector: ILanguageDetector)
      *
      * @param item
      */
-    fun setNextEntryToBeAnalyzed(item: Item, contentPlainText: String, abstractPlainText: String) {
+    fun setNextItemToBeAnalyzed(item: Item, contentPlainText: String, abstractPlainText: String) {
         currentLanguageAnalyzer = getAnalyzerForTextLanguage(abstractPlainText + " " + contentPlainText)
     }
 

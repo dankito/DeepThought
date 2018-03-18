@@ -17,7 +17,7 @@ class CommunicationManager(private val connectedDevicesService: IConnectedDevice
                 successfullyStartedClientCommunicator(messagesReceiverPort)
             }
             else {
-                startException?.let { startException ->
+                startException?.let {
                     startingClientCommunicatorFailed(startException)
                 }
             }

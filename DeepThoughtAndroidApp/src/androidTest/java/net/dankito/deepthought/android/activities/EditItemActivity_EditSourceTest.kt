@@ -10,7 +10,7 @@ import android.support.v7.widget.RecyclerView
 import net.dankito.deepthought.android.DeepThoughtActivityTestRule
 import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.activities.arguments.EditEntryActivityParameters
+import net.dankito.deepthought.android.activities.arguments.EditItemActivityParameters
 import net.dankito.deepthought.android.di.TestComponent
 import net.dankito.deepthought.android.service.ActivityParameterHolder
 import net.dankito.deepthought.android.util.TestUtil
@@ -65,7 +65,7 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
     var takeScreenshotOnError = TakeScreenshotOnErrorTestRule()
 
     @get:Rule
-    val testRule = DeepThoughtActivityTestRule<EditEntryActivity>(EditEntryActivity::class.java)
+    val testRule = DeepThoughtActivityTestRule<EditItemActivity>(EditItemActivity::class.java)
 
 
     init {
@@ -73,7 +73,7 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
 
         testItem.source = source
 
-        testRule.setActivityParameter(parameterHolder, EditEntryActivityParameters(testItem))
+        testRule.setActivityParameter(parameterHolder, EditItemActivityParameters(testItem))
     }
 
 
@@ -82,13 +82,13 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
         assertThat(source.title, `is`(SourceTitleAtStart))
         checkDisplayedSourceValue(Source(SourceTitleAtStart, "", PublishingDate).getPreviewWithSeriesAndPublishingDate(series)) // on start Source title with Series and publishing date preview is displayed
 
-        onView(withId(R.id.lytReferencePreview)).perform(click())
+        onView(withId(R.id.lytSourcePreview)).perform(click())
         checkDisplayedSourceValue(SourceTitleAtStart) // after a click only Source title is displayed and can be edited
 
-        navigator.setValueOfEditEntityField(R.id.lytReferencePreview, SourceTitleAfterEditing)
+        navigator.setValueOfEditEntityField(R.id.lytSourcePreview, SourceTitleAfterEditing)
         checkDisplayedSourceValue(SourceTitleAfterEditing)
 
-        onView(withId(R.id.mnSaveEntry)).perform(click())
+        onView(withId(R.id.mnSaveItem)).perform(click())
         assertThat(source.title, `is`(SourceTitleAfterEditing))
     }
 
@@ -97,10 +97,10 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
         assertThat(source.title, `is`(SourceTitleAtStart))
         checkDisplayedSourceValue(Source(SourceTitleAtStart, "", PublishingDate).getPreviewWithSeriesAndPublishingDate(series)) // on start Source title with Series and publishing date preview is displayed
 
-        onView(withId(R.id.lytReferencePreview)).perform(click())
+        onView(withId(R.id.lytSourcePreview)).perform(click())
         checkDisplayedSourceValue(SourceTitleAtStart) // after a click only Source title is displayed and can be edited
 
-        navigator.setValueOfEditEntityField(R.id.lytReferencePreview, SourceTitleAfterEditing)
+        navigator.setValueOfEditEntityField(R.id.lytSourcePreview, SourceTitleAfterEditing)
         checkDisplayedSourceValue(SourceTitleAfterEditing)
 
         // now lose focus
@@ -109,7 +109,7 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
         onView(withId(R.id.mnApplyHtmlChanges)).perform(click())
         checkDisplayedSourceValue(Source(SourceTitleAfterEditing, "", PublishingDate).getPreviewWithSeriesAndPublishingDate(series))
 
-        onView(withId(R.id.mnSaveEntry)).perform(click())
+        onView(withId(R.id.mnSaveItem)).perform(click())
         assertThat(source.title, `is`(SourceTitleAfterEditing))
     }
 
@@ -119,16 +119,16 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
         assertThat(source.title, `is`(SourceTitleAtStart))
         checkDisplayedSourceValue(Source(SourceTitleAtStart, "", PublishingDate).getPreviewWithSeriesAndPublishingDate(series)) // on start Source title with Series and publishing date preview is displayed
 
-        onView(withId(R.id.lytReferencePreview)).perform(click())
+        onView(withId(R.id.lytSourcePreview)).perform(click())
         checkDisplayedSourceValue(SourceTitleAtStart) // after a click only Source title is displayed and can be edited
 
-        navigator.clickOnEditEntityReferenceFieldCreateNewEntityPopupMenu(R.id.lytReferencePreview)
+        navigator.clickOnEditEntityReferenceFieldCreateNewEntityPopupMenu(R.id.lytSourcePreview)
         checkDisplayedSourceValue("")
 
-        navigator.setValueOfEditEntityField(R.id.lytReferencePreview, SourceTitleAfterEditing)
+        navigator.setValueOfEditEntityField(R.id.lytSourcePreview, SourceTitleAfterEditing)
         checkDisplayedSourceValue(SourceTitleAfterEditing)
 
-        onView(withId(R.id.mnSaveEntry)).perform(click())
+        onView(withId(R.id.mnSaveItem)).perform(click())
         assertThat(testItem.source, `is`(not(source)))
         assertThat(source.title, `is`(SourceTitleAtStart))
         assertThat(testItem.source?.title, `is`(SourceTitleAfterEditing))
@@ -141,23 +141,23 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
         assertThat(source.title, `is`(SourceTitleAtStart))
         checkDisplayedSourceValue(Source(SourceTitleAtStart, "", PublishingDate).getPreviewWithSeriesAndPublishingDate(series)) // on start Source title with Series and publishing date preview is displayed
 
-        onView(withId(R.id.lytReferencePreview)).perform(click())
+        onView(withId(R.id.lytSourcePreview)).perform(click())
         checkDisplayedSourceValue(SourceTitleAtStart) // after a click only Source title is displayed and can be edited
 
-        navigator.clickOnEditEntityReferenceFieldCreateNewEntityPopupMenu(R.id.lytReferencePreview)
+        navigator.clickOnEditEntityReferenceFieldCreateNewEntityPopupMenu(R.id.lytSourcePreview)
         checkDisplayedSourceValue("")
 
-        onView(withId(R.id.mnSaveEntry)).check(matches(isDisplayed()))
+        onView(withId(R.id.mnSaveItem)).check(matches(isDisplayed()))
         assertThat(testItem.source, `is`(source))
 
 
-        onView(withId(R.id.lytReferencePreview)).perform(click())
-        navigator.setValueOfEditEntityField(R.id.lytReferencePreview, SourceTitleAtStart)
+        onView(withId(R.id.lytSourcePreview)).perform(click())
+        navigator.setValueOfEditEntityField(R.id.lytSourcePreview, SourceTitleAtStart)
         checkDisplayedSourceValue(SourceTitleAtStart)
         checkRecyclerViewSearchResultsIsVisible()
         checkCountItemsInRecyclerViewSearchResults(1)
 
-        onView(RecyclerViewInViewMatcher.withRecyclerView(R.id.lytReferencePreview, R.id.rcySearchResults)
+        onView(RecyclerViewInViewMatcher.withRecyclerView(R.id.lytSourcePreview, R.id.rcySearchResults)
                 .atPosition(0))
                 .perform(click())
 
@@ -173,14 +173,14 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
         assertThat(source.title, `is`(SourceTitleAtStart))
         checkDisplayedSourceValue(Source(SourceTitleAtStart, "", PublishingDate).getPreviewWithSeriesAndPublishingDate(series)) // on start Source title with Series and publishing date preview is displayed
 
-        onView(withId(R.id.lytReferencePreview)).perform(click())
+        onView(withId(R.id.lytSourcePreview)).perform(click())
         checkDisplayedSourceValue(SourceTitleAtStart) // after a click only Source title is displayed and can be edited
 
-        navigator.clickOnEditEntityReferenceFieldRemoveEntityPopupMenu(R.id.lytReferencePreview)
+        navigator.clickOnEditEntityReferenceFieldRemoveEntityPopupMenu(R.id.lytSourcePreview)
 //        checkDisplayedSourceValue(testRule.activity.getString(R.string.activity_edit_item_source_onboarding_text))
         checkDisplayedSourceValue("")
 
-        onView(withId(R.id.mnSaveEntry)).perform(click())
+        onView(withId(R.id.mnSaveItem)).perform(click())
         assertThat(testItem.source, `is`(not(source)))
         assertThat(source.title, `is`(SourceTitleAtStart))
         assertThat(testItem.source, nullValue())
@@ -191,20 +191,20 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
         assertThat(source.title, `is`(SourceTitleAtStart))
         checkDisplayedSourceValue(Source(SourceTitleAtStart, "", PublishingDate).getPreviewWithSeriesAndPublishingDate(series)) // on start Source title with Series and publishing date preview is displayed
 
-        onView(withId(R.id.lytReferencePreview)).perform(click())
+        onView(withId(R.id.lytSourcePreview)).perform(click())
         checkDisplayedSourceValue(SourceTitleAtStart) // after a click only Source title is displayed and can be edited
 
-        navigator.setValueOfEditEntityField(R.id.lytReferencePreview, SourceTitleAfterEditing)
+        navigator.setValueOfEditEntityField(R.id.lytSourcePreview, SourceTitleAfterEditing)
         checkDisplayedSourceValue(SourceTitleAfterEditing)
 
-        navigator.clickOnEditEntityReferenceFieldEditDetailsPopupMenu(R.id.lytReferencePreview)
+        navigator.clickOnEditEntityReferenceFieldEditDetailsPopupMenu(R.id.lytSourcePreview)
 
-        checkDisplayedValueInEditEntityField(SourceTitleAfterEditing, R.id.lytEditReferenceTitle)
+        checkDisplayedValueInEditEntityField(SourceTitleAfterEditing, R.id.lytEditSourceTitle)
 
-        navigator.setValueOfEditEntityField(R.id.lytEditReferenceTitle, SourceTitleAfterEditingDetails)
-        checkDisplayedValueInEditEntityField(SourceTitleAfterEditingDetails, R.id.lytEditReferenceTitle)
+        navigator.setValueOfEditEntityField(R.id.lytEditSourceTitle, SourceTitleAfterEditingDetails)
+        checkDisplayedValueInEditEntityField(SourceTitleAfterEditingDetails, R.id.lytEditSourceTitle)
 
-        onView(withId(R.id.mnSaveReference)).perform(click())
+        onView(withId(R.id.mnSaveSource)).perform(click())
         TestUtil.sleep(1000)
 
         checkDisplayedSourceValue(Source(SourceTitleAfterEditingDetails, "", PublishingDate).getPreviewWithSeriesAndPublishingDate(series))
@@ -223,28 +223,28 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
         checkDisplayedSourceValue(Source(SourceTitleAtStart, "", PublishingDate).getPreviewWithSeriesAndPublishingDate(series)) // on start Source title with Series and publishing date preview is displayed
         checkRecyclerViewSearchResultsIsNotVisible()
 
-        onView(withId(R.id.lytReferencePreview)).perform(click())
+        onView(withId(R.id.lytSourcePreview)).perform(click())
         checkDisplayedSourceValue(SourceTitleAtStart) // after a click only Source title is displayed and can be edited
 
-        navigator.setValueOfEditEntityField(R.id.lytReferencePreview, "")
+        navigator.setValueOfEditEntityField(R.id.lytSourcePreview, "")
         checkDisplayedSourceValue("")
         checkRecyclerViewSearchResultsIsVisible()
         checkCountItemsInRecyclerViewSearchResults(CountExistingSources)
         TestUtil.sleep(1000) // so that user can see what happened
 
-        navigator.setValueOfEditEntityField(R.id.lytReferencePreview, SourceWithThreeResultsTitleStart)
+        navigator.setValueOfEditEntityField(R.id.lytSourcePreview, SourceWithThreeResultsTitleStart)
         checkRecyclerViewSearchResultsIsVisible()
         checkCountItemsInRecyclerViewSearchResults(3)
         TestUtil.sleep(1000) // so that user can see what happened
 
-        navigator.setValueOfEditEntityField(R.id.lytReferencePreview, SourceToSelectTitle)
+        navigator.setValueOfEditEntityField(R.id.lytSourcePreview, SourceToSelectTitle)
         checkRecyclerViewSearchResultsIsVisible()
         checkCountItemsInRecyclerViewSearchResults(1)
-        onView(RecyclerViewInViewMatcher.withRecyclerView(R.id.lytReferencePreview, R.id.rcySearchResults)
+        onView(RecyclerViewInViewMatcher.withRecyclerView(R.id.lytSourcePreview, R.id.rcySearchResults)
                 .atPosition(0))
                 .perform(click())
 
-        onView(withId(R.id.mnSaveEntry)).perform(click())
+        onView(withId(R.id.mnSaveItem)).perform(click())
         assertThat(testItem.source, `is`(not(source)))
         assertThat(source.title, `is`(SourceTitleAtStart))
         assertThat(testItem.source?.title, `is`(SourceToSelectTitle))
@@ -261,7 +261,7 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
 
 
     private fun checkDisplayedSourceValue(valueToMatch: String) {
-        checkDisplayedValueInEditEntityField(valueToMatch, R.id.lytReferencePreview)
+        checkDisplayedValueInEditEntityField(valueToMatch, R.id.lytSourcePreview)
     }
 
     private fun checkDisplayedValueInEditEntityField(valueToMatch: String, editEntityFieldId: Int) {
@@ -270,17 +270,17 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
     }
 
     private fun checkRecyclerViewSearchResultsIsVisible() {
-        onView(allOf(instanceOf(RecyclerView::class.java), isDescendantOfA(withId(R.id.lytReferencePreview)))) // find RecyclerView in EditEntityField
+        onView(allOf(instanceOf(RecyclerView::class.java), isDescendantOfA(withId(R.id.lytSourcePreview)))) // find RecyclerView in EditEntityField
                 .check(matches(isDisplayed()))
     }
 
     private fun checkRecyclerViewSearchResultsIsNotVisible() {
-        onView(allOf(instanceOf(RecyclerView::class.java), isDescendantOfA(withId(R.id.lytReferencePreview)))) // find RecyclerView in EditEntityField
+        onView(allOf(instanceOf(RecyclerView::class.java), isDescendantOfA(withId(R.id.lytSourcePreview)))) // find RecyclerView in EditEntityField
                 .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)))
     }
 
     private fun checkCountItemsInRecyclerViewSearchResults(expectedCount: Int) {
-        onView(allOf(instanceOf(RecyclerView::class.java), isDescendantOfA(withId(R.id.lytReferencePreview)))) // find RecyclerView in EditEntityField
+        onView(allOf(instanceOf(RecyclerView::class.java), isDescendantOfA(withId(R.id.lytSourcePreview)))) // find RecyclerView in EditEntityField
                 .check(RecyclerViewItemCountAssertion(expectedCount))
     }
 

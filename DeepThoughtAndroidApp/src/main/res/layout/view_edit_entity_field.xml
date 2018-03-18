@@ -22,8 +22,6 @@
             android:paddingStart="@dimen/view_edit_entity_field_padding_left"
         >
 
-
-
             <com.google.android.flexbox.FlexboxLayout
                 android:id="@+id/lytPreview"
                 android:layout_width="wrap_content"
@@ -41,7 +39,7 @@
                 app:alignContent="flex_start"
                 app:justifyContent="flex_start"
                 app:showDivider="middle"
-                app:dividerDrawable="@drawable/flexbox_tags_on_entry_divider"
+                app:dividerDrawable="@drawable/flexbox_tags_on_item_divider"
             >
 
                 <!-- EditText has a padding of 4dp, so set TextView's padding left also to 4dp so that they are left aligned -->
@@ -53,11 +51,50 @@
                     android:layout_marginStart="@dimen/edit_text_padding_left"
                     style="@style/EntityFieldName"
                     app:layout_alignSelf="center"
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
                 />
 
             </com.google.android.flexbox.FlexboxLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:id="@+id/lytSecondaryInformation"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/view_edit_entity_field_secondary_information_height"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/btnEntityFieldAction"
+                android:layout_toStartOf="@+id/btnEntityFieldAction"
+                android:layout_marginTop="-8dp"
+                android:layout_marginBottom="-8dp"
+                android:visibility="gone"
+            >
+
+                <TextView
+                    android:id="@+id/txtSecondaryInformationLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/view_edit_entity_field_secondary_information_label_margin_right"
+                    android:layout_marginEnd="@dimen/view_edit_entity_field_secondary_information_label_margin_right"
+                    android:gravity="center_vertical"
+                    android:textAlignment="gravity"
+                    style="@style/EntityFieldName"
+                />
+
+                <EditText
+                    android:id="@+id/edtxtSecondaryInformationValue"
+                    android:layout_width="@dimen/view_edit_entity_field_secondary_information_value_width"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginRight="@dimen/view_edit_entity_field_value_margin_right"
+                    android:layout_marginEnd="@dimen/view_edit_entity_field_value_margin_right"
+                    android:lines="1"
+                    style="@style/EditableEntityFieldValue"
+                />
+
+            </LinearLayout>
 
             <View
                 android:id="@+id/vwHorizontalLineWhenEditTextNotShown"

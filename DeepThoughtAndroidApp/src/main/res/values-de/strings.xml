@@ -21,11 +21,13 @@
     <string name="nav_menu_settings_title">Einstellungen (to do)</string>
     <string name="nav_menu_about_title">Über … (to do)</string>
     <string name="nav_menu_version_label">Version\u0020</string>
+    <string name="nav_menu_import_pdf">PDF importieren</string>
 
     <!-- Floating Action Button ist der + Button auf der Startseite. Die Werte hier werden dann im Menü angezeigt, wenn ich auf diesen Button klicke -->
     <!-- In Platzhalter wie '%s' füge ich dann im Code etwas ein (z. B. hier: SZ) -->
 
-    <string name="floating_action_menu_add_item">Eintrag</string>
+    <string name="floating_action_menu_create_item">Eintrag</string>
+    <string name="floating_action_menu_create_item_from_pdf">Eintrag aus PDF Datei</string>
     <string name="floating_action_menu_add_newspaper_article">Zeitungsartikel</string>
     <string name="floating_action_button_add_article_of_newspaper">%s Artikel</string>
 
@@ -64,6 +66,11 @@
     <string name="search_hint_sources">Quellentitel, Datum, Reihe, Ausgabe, …</string>
     <string name="search_hint_read_later_articles">Titel, Text, Datum, Reihe</string>
 
+
+    <string name="loading">Lade …</string>
+
+    <string name="open_file_permission_request_message">Um PDF Dateien importieren zu können benötigt DeepThought die Erlaubnis Dateien zu lesen.</string>
+    <string name="open_settings">Gehe zu Einstellungen</string>
 
     <!-- Wenn du im Hauptfenster bei den Schlagwörtern auf das Filtersymbol eines Schlagwortes tippst -->
 
@@ -184,7 +191,7 @@
     <string name="activity_edit_item_title_summary_label">Titel / Zusammenfassung</string>
     <string name="activity_edit_item_summary_only_label">Zusammenfassung</string>
     <string name="activity_edit_item_edit_summary_title">Titel / Zusammenfassung</string>
-    <string name="activity_edit_item_source_label">Quelle</string>
+    <string name="activity_edit_item_files_label">Dateien</string>
     <string name="activity_edit_item_edit_source_menu_edit_details">Details bearbeiten</string>
     <string name="activity_edit_item_edit_source_menu_create_new_entity">Neue erstellen</string>
     <string name="activity_edit_item_edit_source_menu_remove_entity">Entfernen</string>
@@ -198,6 +205,8 @@
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
     <string name="activity_edit_item_alert_message_item_has_been_edited">Ihr Eintrag wurde geändert, wahrscheinlich auf einem synchronisierten Gerät.\n\nWenn
         Sie den Eintrag hier nun ebenfalls speichern, überschreiben Sie jene Änderungen.</string>
+    <string name="activity_edit_item_alert_message_read_later_article_has_been_edited">Ihr Artikel zum später Lesen wurde geändert, wahrscheinlich auf einem synchronisierten
+        Gerät.\n\nWenn Sie den Artikel auf diesem Gerät nun ebenfalls speichern, überschreiben Sie diese Änderungen.</string>
     <string name="activity_edit_item_alert_message_delete_item">Möchten Sie den Eintrag \'%s\' wirklich löschen?</string>
 
     <string name="menu_open_url_open_in_new_activity">In DeepThought öffnen</string>
@@ -210,13 +219,10 @@
     <string name="activity_edit_source_title_label">Titel der Quelle</string>
     <string name="activity_edit_source_series_label">Reihe</string>
     <string name="activity_edit_source_issue_label">Ausgabe</string>
+    <string name="activity_edit_source_length_label">Länge</string>
     <string name="activity_edit_source_publishing_date_label">Veröffentlichungsdatum</string>
     <string name="activity_edit_source_url_label">Webadresse</string>
     <string name="activity_edit_source_error_could_not_parse_publishing_date" formatted="false">Kann %s nicht in ein Datum umwandeln</string>
-    <string name="activity_edit_source_alert_message_create_new_source">Möchten Sie wirklich eine neue Quelle erstellen?\n\nDie aktuelle wird dann verworfen
-        und eine neue Quelle wird angelegt.</string>
-    <string name="activity_edit_source_alert_message_create_new_source_current_one_has_unsaved_changes">Die aktuelle Quelle enthält nicht gespeicherte
-        Änderungen.\n\nSollen diese Änderungen zuvor gespeichert werden?</string>
     <string name="activity_edit_source_alert_message_source_contains_unsaved_changes">Quelle enthält nicht gespeicherte Änderungen.\n\nSollen diese Änderungen gespeichert
         werden?</string>
     <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
@@ -238,10 +244,25 @@
     <string name="activity_edit_series_alert_message_series_has_been_edited">Reihe wurde geändert, wahrscheinlich auf einem synchronisierten Gerät.\n\nWenn
         Sie die Reihe hier nun ebenfalls speichern, überschreiben Sie jene Änderungen.</string>
 
-    <string name="snackbar_extract_item_from_url"><![CDATA[
-        Zwischenablage enthält einen Link von <b><u>%1$s</u></b>. Möchten Sie hieraus einen Eintrag erstellen?
-    ]]>
-    </string>
+    <string name="edit_entity_source_field_source_label">Quelle</string>
+    <string name="edit_entity_source_field_add_indication_menu_item_title">Stelle setzen</string>
+    <string name="edit_entity_source_field_indication_label">Stelle</string>
+    <string name="edit_entity_source_field_indication_hint">S. 14, 2:14 min, …</string>
+
+    <string name="edit_entity_files_field_files_label">Dateien</string>
+    <string name="edit_entity_files_field_read_files_permission_rational">Um Dateien anhängen zu können wird die Berechtigung zum Lesen von Dateien benötigt.</string>
+
+    <string name="files_presenter_error_message_no_app_installed_for_this_file_type" formatted="false">Sie haben keine App installiert, die
+        diesen Dateitypen (%s) anzeigen kann.</string>
+    <string name="files_presenter_error_message_no_file_explorer_app_installed">Sie haben keine Dateiexplorer App installiert.</string>
+    <string name="files_presenter_error_message_could_not_open_directory" formatted="false">Kann Verzeichnis nicht anzeigen: %s.</string>
+
+    <string name="activity_view_pdf_current_page_and_count_pages_separator">/</string>
+
+    <string name="request_write_synchronized_file_permission_rational">Um synchronisierte Dateien lokal auf diesem Gerät speichern zu können wird die Berechtigung zum Schreiben
+        von Dateien benötigt.</string>
+
+    <string name="snackbar_clipboard_content_options_close">x</string>
 
     <string name="synchronize_data_with_this_device">Daten synchronisieren mit</string>
     <string name="never_ask_again">Nicht mehr fragen</string>

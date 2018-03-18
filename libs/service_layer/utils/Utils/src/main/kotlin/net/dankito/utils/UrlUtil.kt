@@ -26,4 +26,51 @@ class UrlUtil {
         return false
     }
 
+
+    fun getHostName(url: String): String? {
+        var host = url.substringAfter("://").substringBefore('/') // as fallback if parsing URI doesn't work
+
+        try {
+            val uri = URI.create(url)
+            host = uri.host
+        } catch(e: Exception) { }
+
+
+        host = tryToRemoveDomainUrlAndWWW(host)
+
+        return host
+    }
+
+    private fun tryToRemoveDomainUrlAndWWW(host: String): String {
+        try {
+            val lastIndexOfDot = host.lastIndexOf('.')
+
+            if(lastIndexOfDot > 0) {
+                var nextIndexOfDot = host.lastIndexOf('.', lastIndexOfDot - 1)
+
+                if(nextIndexOfDot >= lastIndexOfDot - 4) { // e.g. domains like .co.uk, ...
+                    nextIndexOfDot = host.lastIndexOf('.', nextIndexOfDot - 1)
+                }
+
+                if(nextIndexOfDot > -1) {
+                    return host.substring(nextIndexOfDot + 1)
+                }
+            }
+        } catch(e: Exception) { }
+
+        return host
+    }
+
+
+    fun getFileName(url: String): String {
+        try {
+            val uri = URI(url)
+            val path = uri.path
+
+            return path.substringAfterLast('/')
+        } catch(e: Exception) { }
+
+        return url.substringAfterLast('/').substringBefore('?')
+    }
+
 }

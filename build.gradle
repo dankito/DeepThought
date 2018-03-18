@@ -4,7 +4,7 @@ apply plugin: 'kotlin'
 
 
 buildscript {
-    ext.kotlin_version = '1.1.51' // don't know why but gradle cannot resolve variable kotlinVersion from versions.gradle
+    ext.kotlin_version = '1.2.21' // don't know why but gradle cannot resolve variable kotlinVersion from versions.gradle
 
     repositories {
         mavenCentral()
@@ -40,6 +40,7 @@ allprojects {
         maven { url 'https://maven.google.com' }
         jcenter()
         mavenCentral()
+        mavenLocal()
     }
 }
 
@@ -83,7 +84,7 @@ subprojects {
 
         reports {
             xml {
-                destination "$project.buildDir/reports/findbugs/findbugs.xml"
+                destination file("$project.buildDir/reports/findbugs/findbugs.xml")
                 xml.withMessages true
             }
             html {

@@ -25,7 +25,7 @@ class SpiegelMobileArticleExtractor(webClient: IWebClient) : ArticleExtractorBas
         return "Spiegel Mobile"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return isHttpOrHttpsUrlFromHost(url, "m.spiegel.de/")
     }
 

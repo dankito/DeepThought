@@ -11,13 +11,13 @@ import net.dankito.deepthought.ui.presenter.SeriesPresenterBase
 
 abstract class SeriesRecyclerAdapterBase(private val presenter: SeriesPresenterBase): MultiSelectListRecyclerSwipeAdapter<Series, SeriesViewHolder>() {
 
-    abstract val shouldShowImageIsSeriesSetOnReference: Boolean
+    abstract val shouldShowImageIsSeriesSetOnSource: Boolean
 
     abstract val shouldShowChevronRight: Boolean
 
     abstract val shouldShowButtonEditSeries: Boolean
 
-    protected open fun isSetOnReference(series: Series): Boolean {
+    protected open fun isSetOnSource(series: Series): Boolean {
         return false
     }
 
@@ -37,13 +37,13 @@ abstract class SeriesRecyclerAdapterBase(private val presenter: SeriesPresenterB
     override fun bindViewForNullValue(viewHolder: SeriesViewHolder) {
         super.bindViewForNullValue(viewHolder)
 
-        viewHolder.vwIsSeriesSetOnReference.showState("", false)
+        viewHolder.vwIsSeriesSetOnSource.showState("", false)
 
         viewHolder.imgChevronRight.visibility = View.GONE
     }
 
     override fun bindItemToView(viewHolder: SeriesViewHolder, item: Series) {
-        viewHolder.vwIsSeriesSetOnReference.showState(item.displayText, shouldShowImageIsSeriesSetOnReference && isSetOnReference(item))
+        viewHolder.vwIsSeriesSetOnSource.showState(item.displayText, shouldShowImageIsSeriesSetOnSource && isSetOnSource(item))
 
         viewHolder.imgChevronRight.visibility = if(shouldShowChevronRight) View.VISIBLE else View.GONE
     }

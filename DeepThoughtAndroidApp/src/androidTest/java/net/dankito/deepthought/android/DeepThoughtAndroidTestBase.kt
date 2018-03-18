@@ -4,14 +4,11 @@ import android.support.test.InstrumentationRegistry
 import net.dankito.deepthought.android.di.TestComponent
 import net.dankito.deepthought.android.util.TestUtil
 import net.dankito.deepthought.android.util.UiNavigator
-import net.dankito.deepthought.data.EntryPersister
-import net.dankito.deepthought.data.ReferencePersister
+import net.dankito.deepthought.data.ItemPersister
+import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.service.data.DataManager
-import net.dankito.service.data.DeleteEntityService
-import net.dankito.service.data.ReadLaterArticleService
-import net.dankito.service.data.SeriesService
-import net.dankito.service.data.TagService
+import net.dankito.service.data.*
 import net.dankito.service.search.ISearchEngine
 import org.junit.After
 import java.util.*
@@ -28,19 +25,22 @@ abstract class DeepThoughtAndroidTestBase {
     protected lateinit var deleteEntityService: DeleteEntityService
 
     @Inject
-    protected lateinit var itemPersister: EntryPersister
+    protected lateinit var itemPersister: ItemPersister
 
     @Inject
     protected lateinit var tagService: TagService
 
     @Inject
-    protected lateinit var sourcePersister: ReferencePersister
+    protected lateinit var sourcePersister: SourcePersister
 
     @Inject
     protected lateinit var seriesService: SeriesService
 
     @Inject
     protected lateinit var readLaterArticleService: ReadLaterArticleService
+
+    @Inject
+    protected lateinit var fileService: FileService
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
@@ -67,7 +67,7 @@ abstract class DeepThoughtAndroidTestBase {
     protected open fun persistItem(item: Item, source: Source? = null, vararg tags: Tag) {
         val waitLatch = CountDownLatch(1)
 
-        itemPersister.saveEntryAsync(item, source, source?.series, tags = tags.toList()) { waitLatch.countDown() }
+        itemPersister.saveItemAsync(item, source, source?.series, tags.toList()) { waitLatch.countDown() }
 
         try { waitLatch.await() } catch(ignored: Exception) { }
         TestUtil.sleep(1000)
@@ -78,7 +78,7 @@ abstract class DeepThoughtAndroidTestBase {
     }
 
     protected open fun persistSource(source: Source, series: Series? = source.series) {
-        sourcePersister.saveReference(source, series)
+        sourcePersister.saveSource(source, series)
     }
 
     protected open fun persistSeries(series: Series) {
@@ -87,6 +87,10 @@ abstract class DeepThoughtAndroidTestBase {
 
     protected open fun persistReadLaterArticle(article: ReadLaterArticle) {
         readLaterArticleService.persist(article)
+    }
+
+    protected open fun persistFile(file: FileLink) {
+        fileService.persist(file)
     }
 
 

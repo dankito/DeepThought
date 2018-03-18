@@ -16,25 +16,25 @@ class SueddeutscheMagazinArticleExtractor(webClient: IWebClient) : ArticleExtrac
         return "SZ Magazin"
     }
 
-    override fun canExtractEntryFromUrl(url: String): Boolean {
+    override fun canExtractItemFromUrl(url: String): Boolean {
         return isHttpOrHttpsUrlFromHost(url, "sz-magazin.sueddeutsche.de/texte/")
     }
 
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
-        val referenceAndAbstract = extractReferenceAndAbstract(document, url)
+        val sourceAndSummary = extractSourceAndSummary(document, url)
 
         document.body().select(".content").first()?.let { contentElement ->
 
             contentElement.select(".maincontent").first()?.let { mainContent ->
-                val entry = Item((referenceAndAbstract?.second ?: "") + extractContent(mainContent))
+                val item = Item((sourceAndSummary?.second ?: "") + extractContent(mainContent))
 
-                val reference = referenceAndAbstract?.first
+                val source = sourceAndSummary?.first
                 mainContent.select(".text-image-container img, .img-text-fullwidth-container img").first()?.let {
-                    reference?.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
+                    source?.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
                 }
 
-                extractionResult.setExtractedContent(entry, reference)
+                extractionResult.setExtractedContent(item, source)
             }
         }
     }
@@ -77,9 +77,9 @@ class SueddeutscheMagazinArticleExtractor(webClient: IWebClient) : ArticleExtrac
     }
 
 
-    private fun extractReferenceAndAbstract(document: Document, siteUrl: String): Pair<Source, String?>? {
+    private fun extractSourceAndSummary(document: Document, siteUrl: String): Pair<Source, String?>? {
         var source: Source? = null
-        var abstract: String? = null
+        var summary: String? = null
 
         document.body().select("#artikelhead").first()?.let { articleHeader ->
             articleHeader.select(".vorspann").first()?.let { vorspanElement ->
@@ -87,15 +87,15 @@ class SueddeutscheMagazinArticleExtractor(webClient: IWebClient) : ArticleExtrac
                     source = Source(titleElement.text(), siteUrl)
                     titleElement.remove()
                     vorspanElement.select(".autor").remove()
-                    abstract = convertNonBreakableSpans(vorspanElement.outerHtml())
+                    summary = convertNonBreakableSpans(vorspanElement.outerHtml())
                 }
             }
 
             extractSubTitleAndPublishingDate(articleHeader, source)
         }
 
-        source?.let { reference ->
-            return Pair<Source, String?>(reference, abstract)
+        source?.let { source ->
+            return Pair<Source, String?>(source, summary)
         }
 
         return null

@@ -26,10 +26,10 @@
     <dimen name="swipe_button_max_icon_height">55dp</dimen>
     <dimen name="swipe_button_corner_radius">6dp</dimen>
 
-    <dimen name="fragment_tab_entries_filtered_entities_margin_top">12dp</dimen>
-    <dimen name="fragment_tab_entries_filtered_entities_margin_bottom">20dp</dimen>
-    <dimen name="fragment_tab_entries_onboarding_text_size">16sp</dimen>
-    <dimen name="fragment_tab_entries_onboarding_left_right_margin">20dp</dimen>
+    <dimen name="fragment_tab_items_filtered_entities_margin_top">12dp</dimen>
+    <dimen name="fragment_tab_items_filtered_entities_margin_bottom">20dp</dimen>
+    <dimen name="fragment_tab_items_onboarding_text_size">16sp</dimen>
+    <dimen name="fragment_tab_items_onboarding_left_right_margin">20dp</dimen>
 
     <dimen name="chevron_right_width">40dp</dimen>
     <dimen name="chevron_right_text_size">20sp</dimen>
@@ -42,18 +42,18 @@
     <dimen name="view_context_help_button_width">48dp</dimen>
     <dimen name="view_context_help_confirm_button_height">36dp</dimen>
 
-    <dimen name="list_item_entry_height">110dp</dimen>
-    <dimen name="list_item_entry_button_width">84dp</dimen>
-    <dimen name="list_item_entry_padding_top_bottom">4dp</dimen>
-    <dimen name="list_item_entry_padding_left_right">8dp</dimen>
-    <dimen name="list_item_entry_reference_preview_min_height">18dp</dimen>
-    <dimen name="list_item_entry_reference_preview_text_size">11sp</dimen>
-    <dimen name="list_item_entry_reference_preview_margin_bottom">2dp</dimen>
-    <dimen name="list_item_entry_preview_height">50dp</dimen>
-    <dimen name="list_item_entry_preview_text_size">11sp</dimen>
-    <dimen name="list_item_entry_tags_height">20dp</dimen>
-    <dimen name="list_item_entry_tags_text_size">11sp</dimen>
-    <dimen name="list_item_entry_tags_margin_top">4dp</dimen>
+    <dimen name="list_item_item_height">110dp</dimen>
+    <dimen name="list_item_item_button_width">84dp</dimen>
+    <dimen name="list_item_item_padding_top_bottom">4dp</dimen>
+    <dimen name="list_item_item_padding_left_right">8dp</dimen>
+    <dimen name="list_item_item_source_preview_min_height">18dp</dimen>
+    <dimen name="list_item_item_source_preview_text_size">11sp</dimen>
+    <dimen name="list_item_item_source_preview_margin_bottom">2dp</dimen>
+    <dimen name="list_item_item_preview_height">50dp</dimen>
+    <dimen name="list_item_item_preview_text_size">11sp</dimen>
+    <dimen name="list_item_item_tags_height">20dp</dimen>
+    <dimen name="list_item_item_tags_text_size">11sp</dimen>
+    <dimen name="list_item_item_tags_margin_top">4dp</dimen>
 
     <dimen name="view_tag_corner_radius">18dp</dimen>
     <dimen name="view_tag_text_padding_left_right">8dp</dimen>
@@ -70,12 +70,23 @@
     <dimen name="list_item_tag_filter_icon_width">22dp</dimen>
     <dimen name="list_item_tag_filter_icon_height">22dp</dimen>
 
-    <dimen name="list_item_reference_height">72dp</dimen>
-    <dimen name="list_item_reference_button_width">72dp</dimen>
+    <dimen name="list_item_source_height">72dp</dimen>
+    <dimen name="list_item_source_button_width">72dp</dimen>
 
     <dimen name="list_item_series_height">48dp</dimen>
     <dimen name="list_item_series_button_width">48dp</dimen>
     <dimen name="list_item_series_margin_left">12dp</dimen>
+
+    <dimen name="list_item_file_height">70dp</dimen>
+    <dimen name="list_item_file_button_padding">2dp</dimen>
+    <dimen name="list_item_file_button_width">70dp</dimen>
+    <dimen name="list_item_file_padding">6dp</dimen>
+    <dimen name="list_item_file_preview_image_width">56dp</dimen>
+    <dimen name="list_item_file_preview_image_height">56dp</dimen>
+    <dimen name="list_item_file_preview_image_margin_left">6dp</dimen>
+    <dimen name="list_item_file_preview_image_margin_right">6dp</dimen>
+    <dimen name="list_item_file_file_size_padding_left">6dp</dimen>
+    <dimen name="list_item_file_file_path_padding_top">-4dp</dimen>
 
     <dimen name="list_item_article_summary_extractor_height">60dp</dimen>
     <dimen name="list_item_article_summary_extractor_button_width">60dp</dimen>
@@ -121,30 +132,30 @@
     <dimen name="divider_height">1dp</dimen>
     <dimen name="divider_margin_left_right">20dp</dimen>
 
-    <dimen name="activity_edit_entry_fields_margin_top">8dp</dimen>
-    <dimen name="activity_edit_entry_field_margin_left">12dp</dimen>
-    <dimen name="activity_edit_entry_field_margin_right">12dp</dimen>
-    <dimen name="activity_edit_entry_content_label_margin_top">-4dp</dimen>
-    <dimen name="activity_edit_entry_content_label_margin_bottom">4dp</dimen>
-    <dimen name="activity_edit_entry_progress_is_loading_web_page_width">18dp</dimen>
-    <dimen name="activity_edit_entry_html_editor_toolbar_height">36dp</dimen>
-    <dimen name="activity_edit_entry_html_editor_toolbar_button_width">36dp</dimen>
-    <dimen name="activity_edit_entry_html_editor_toolbar_button_margin_right">4dp</dimen>
-    <dimen name="activity_edit_entry_onboarding_left_right_margin">20dp</dimen>
+    <dimen name="activity_edit_item_fields_margin_top">8dp</dimen>
+    <dimen name="activity_edit_item_field_margin_left">12dp</dimen>
+    <dimen name="activity_edit_item_field_margin_right">12dp</dimen>
+    <dimen name="activity_edit_item_content_label_margin_top">-4dp</dimen>
+    <dimen name="activity_edit_item_content_label_margin_bottom">4dp</dimen>
+    <dimen name="activity_edit_item_progress_is_loading_web_page_width">18dp</dimen>
+    <dimen name="activity_edit_item_html_editor_toolbar_height">36dp</dimen>
+    <dimen name="activity_edit_item_html_editor_toolbar_button_width">36dp</dimen>
+    <dimen name="activity_edit_item_html_editor_toolbar_button_margin_right">4dp</dimen>
+    <dimen name="activity_edit_item_onboarding_left_right_margin">20dp</dimen>
 
     <dimen name="fullscreen_web_view_options_bar_button_height">40dp</dimen>
     <dimen name="fullscreen_web_view_options_bar_button_width">40dp</dimen>
 
-    <dimen name="list_item_tag_on_entry_height">40dp</dimen>
-    <dimen name="list_item_tag_on_entry_button_width">40dp</dimen>
+    <dimen name="list_item_tag_on_item_height">40dp</dimen>
+    <dimen name="list_item_tag_on_item_button_width">40dp</dimen>
 
-    <dimen name="activity_edit_reference_padding_left_right">8dp</dimen>
-    <dimen name="activity_edit_reference_find_existing_margin_left">6dp</dimen>
-    <dimen name="activity_edit_reference_find_existing_controls_margin_bottom">12dp</dimen>
-    <dimen name="activity_edit_reference_create_buttons_min_width">120dp</dimen>
-    <dimen name="activity_edit_reference_create_buttons_text_size">13sp</dimen>
-    <dimen name="activity_edit_reference_section_top_margin">16dp</dimen>
-    <dimen name="activity_edit_reference_icons_padding">4dp</dimen>
+    <dimen name="activity_edit_source_padding_left_right">8dp</dimen>
+    <dimen name="activity_edit_source_find_existing_margin_left">6dp</dimen>
+    <dimen name="activity_edit_source_find_existing_controls_margin_bottom">12dp</dimen>
+    <dimen name="activity_edit_source_create_buttons_min_width">120dp</dimen>
+    <dimen name="activity_edit_source_create_buttons_text_size">13sp</dimen>
+    <dimen name="activity_edit_source_section_top_margin">16dp</dimen>
+    <dimen name="activity_edit_source_icons_padding">4dp</dimen>
 
     <dimen name="activity_edit_series_padding">8dp</dimen>
     <dimen name="activity_edit_series_find_existing_margin_left">6dp</dimen>
@@ -162,6 +173,9 @@
     <dimen name="view_edit_entity_field_value_margin_top">-10dp</dimen>
     <dimen name="view_edit_entity_field_value_margin_right">3dp</dimen>
     <dimen name="view_edit_entity_field_value_margin_right_including_edit_text_padding_left">8dp</dimen>
+    <dimen name="view_edit_entity_field_secondary_information_height">36dp</dimen>
+    <dimen name="view_edit_entity_field_secondary_information_label_margin_right">3dp</dimen>
+    <dimen name="view_edit_entity_field_secondary_information_value_width">120dp</dimen>
     <dimen name="view_edit_entity_field_horizontal_line_when_edit_text_not_shown_margin_top">4dp</dimen>
     <dimen name="view_edit_entity_field_horizontal_line_when_edit_text_not_shown_margin_bottom">8dp</dimen>
     <dimen name="view_edit_entity_field_icon_max_size">32dp</dimen>
@@ -179,7 +193,38 @@
     <dimen name="view_is_added_to_entity_icon_margin_right">12dp</dimen>
     <dimen name="view_is_added_to_entity_secondary_information_margin_top">4dp</dimen>
 
+    <dimen name="activity_view_pdf_buttons_size">40dp</dimen>
+    <dimen name="activity_view_pdf_button_previous_next_margin_left_right">6dp</dimen>
+    <dimen name="activity_view_pdf_button_previous_next_padding">4dp</dimen>
+    <dimen name="activity_view_pdf_page_current_page_width">48dp</dimen>
+    <dimen name="activity_view_pdf_page_select_page_text_size">18sp</dimen>
+    <dimen name="activity_view_pdf_page_separator_margin_left_right">4dp</dimen>
+
     <!-- EditText has a padding of 4dp, so to left align a control with it add this value as paddingLeft / marginLeft -->
     <dimen name="edit_text_padding_left">4dp</dimen>
+
+    <dimen name="snackbar_clipboard_content_options_icon_width">40dp</dimen>
+    <dimen name="snackbar_clipboard_content_options_header_padding_top">8dp</dimen>
+    <dimen name="snackbar_clipboard_content_options_header_padding_bottom">4dp</dimen>
+    <dimen name="snackbar_clipboard_content_options_options_margin_left">6dp</dimen>
+    <dimen name="snackbar_clipboard_content_options_options_margin_right">40dp</dimen>
+    <dimen name="snackbar_clipboard_content_options_options_margin_bottom">4dp</dimen>
+    <dimen name="snackbar_clipboard_content_options_progress_indicator_width">16dp</dimen>
+    <dimen name="snackbar_clipboard_content_options_progress_width">40dp</dimen>
+    <dimen name="snackbar_clipboard_content_options_progress_margin_left">4dp</dimen>
+    <dimen name="snackbar_clipboard_content_options_progress_margin_right">4dp</dimen>
+    <dimen name="snackbar_clipboard_content_options_button_margin_left">16dp</dimen>
+    <dimen name="snackbar_clipboard_content_options_button_margin_top">2dp</dimen>
+    <dimen name="snackbar_clipboard_content_options_button_margin_bottom">8dp</dimen>
+    <dimen name="snackbar_clipboard_content_options_action_button_padding_left_right">8dp</dimen>
+
+    <dimen name="snackbar_ask_sync_data_with_device_height">96dp</dimen>
+    <dimen name="snackbar_ask_sync_data_with_device_margin_right">60dp</dimen>
+    <dimen name="snackbar_ask_sync_data_with_device_icon_width">60dp</dimen>
+    <dimen name="snackbar_ask_sync_data_with_device_icon_height">96dp</dimen>
+    <dimen name="snackbar_ask_sync_data_with_device_text_margin_left">20dp</dimen>
+    <dimen name="snackbar_ask_sync_data_with_device_text_margin_right">60dp</dimen>
+    <dimen name="snackbar_ask_sync_data_with_device_text_view_height">24dp</dimen>
+    <dimen name="snackbar_ask_sync_data_with_device_ask_never_again_margin_left">-8dp</dimen>
 
 </resources>

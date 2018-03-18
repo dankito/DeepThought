@@ -39,7 +39,7 @@ class ReadLaterArticleListCellFragment : ListCellFragment<ReadLaterArticle>() {
                 marginLeftRight(6.0)
             }
 
-            label(article.reference) {
+            label(article.source) {
                 maxHeight = 20.0
                 FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
 

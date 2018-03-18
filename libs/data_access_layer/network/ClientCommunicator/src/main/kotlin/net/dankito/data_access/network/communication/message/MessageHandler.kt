@@ -66,7 +66,7 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
                 val initialSyncDetails = addToPermittedSynchronizedDevices(body)
 
                 if(initialSyncDetails != null) {
-                    responseBody = RespondToSynchronizationPermittingChallengeResponseBody(networkSettings.synchronizationPort, initialSyncDetails)
+                    responseBody = RespondToSynchronizationPermittingChallengeResponseBody(networkSettings.synchronizationPort, networkSettings.fileSynchronizationPort, initialSyncDetails)
                 }
                 else {
                     responseBody = RespondToSynchronizationPermittingChallengeResponseBody(RespondToSynchronizationPermittingChallengeResult.ERROR_OCCURRED)
@@ -83,6 +83,7 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
     private fun addToPermittedSynchronizedDevices(body: RespondToSynchronizationPermittingChallengeRequestBody): SyncInfo? {
         getDiscoveredDevices(body)?.let { discoveredDevice ->
             discoveredDevice.synchronizationPort = body.synchronizationPort
+            discoveredDevice.fileSynchronizationPort = body.fileSynchronizationPort
 
             return registrationHandler.deviceHasBeenPermittedToSynchronize(discoveredDevice, body.syncInfo)
         }
@@ -145,11 +146,12 @@ class MessageHandler(private var config: MessageHandlerConfig) : IMessageHandler
 
             if(permittedSynchronizedDevice != null) {
                 permittedSynchronizedDevice.synchronizationPort = body.synchronizationPort
+                permittedSynchronizedDevice.fileSynchronizationPort = body.fileSynchronizationPort
 
                 config.callRemoteRequestedToStartSynchronizationListeners(permittedSynchronizedDevice)
             }
 
-            callback(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.ALLOWED, networkSettings.synchronizationPort)))
+            callback(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.ALLOWED, networkSettings.synchronizationPort, networkSettings.fileSynchronizationPort)))
         }
         else {
             callback(Response(RequestStartSynchronizationResponseBody(RequestStartSynchronizationResult.INCOMPATIBLE_VERSION,

@@ -45,6 +45,10 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
     val queuedItemsCount: Int
         get() = producedItemsQueue.size
 
+    val isRunning: Boolean
+        get() = consumerThreads.size > 0
+
+
     /**
      * To restart processing after a call to {@link #stop()} or start processing when constructor flag autoStart has been set to false, call this method.
      */
@@ -57,17 +61,27 @@ class AsyncProducerConsumerQueue<T>(private val countThreadsToUse: Int, maxItems
      * If processing should be restarted, call method {@link #restart()}.
      */
     fun stop() {
-        val remainingItemsInQueue = ArrayList(producedItemsQueue)
-        producedItemsQueue.clear()
-
-        for (consumerThread in consumerThreads) {
+        for(consumerThread in consumerThreads) {
             try {
                 consumerThread.interrupt()
             } catch (ignored: Exception) { }
         }
 
+        consumerThreads.clear()
+    }
+
+    /**
+     * Stops processing and clears all items in queue.
+     * If processing should be restarted, call method {@link #restart()}.
+     */
+    fun stopAndClearQueue() {
+        val remainingItemsInQueue = ArrayList(producedItemsQueue)
+        producedItemsQueue.clear()
+
+        stop()
+
         // TODO: really consume remaining items even though stop() has already been called?
-        for (item in remainingItemsInQueue) {
+        for(item in remainingItemsInQueue) {
             consumeItem(item)
         }
     }

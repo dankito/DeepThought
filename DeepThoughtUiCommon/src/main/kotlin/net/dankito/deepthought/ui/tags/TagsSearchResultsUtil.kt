@@ -29,7 +29,7 @@ class TagsSearchResultsUtil {
     }
 
 
-    fun getButtonStateForSearchResult(searchResults: TagsSearchResults?, tagsOnEntry: Collection<Tag>): TagsSearcherButtonState {
+    fun getButtonStateForSearchResult(searchResults: TagsSearchResults?, tagsOnItem: Collection<Tag>): TagsSearcherButtonState {
         if(searchResults == null || searchResults.overAllSearchTerm.isBlank()) {
             return TagsSearcherButtonState.DISABLED
         }
@@ -38,11 +38,11 @@ class TagsSearchResultsUtil {
             return TagsSearcherButtonState.CREATE_TAG
         }
 
-        if(containsOnlyAddedTags(tagsOnEntry, searchResults)) {
+        if(containsOnlyAddedTags(tagsOnItem, searchResults)) {
             return TagsSearcherButtonState.REMOVE_TAGS
         }
 
-        if(containsAddedTags(tagsOnEntry, searchResults) == false) {
+        if(containsAddedTags(tagsOnItem, searchResults) == false) {
             return TagsSearcherButtonState.ADD_TAGS
         }
 
@@ -70,25 +70,25 @@ class TagsSearchResultsUtil {
         return false
     }
 
-    private fun containsOnlyAddedTags(tagsOnEntry: Collection<Tag>, searchResults: TagsSearchResults): Boolean {
-        if(tagsOnEntry.isEmpty() || searchResults.getRelevantMatchesSorted().size > (tagsOnEntry.size + searchResults.getSearchTermsWithoutMatches().size)) {
+    private fun containsOnlyAddedTags(tagsOnItem: Collection<Tag>, searchResults: TagsSearchResults): Boolean {
+        if(tagsOnItem.isEmpty() || searchResults.getRelevantMatchesSorted().size > (tagsOnItem.size + searchResults.getSearchTermsWithoutMatches().size)) {
             return false
         }
 
         val allMatches = searchResults.getRelevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossible()
         val tagsAlreadyAddedToItem = ArrayList(allMatches)
-        tagsAlreadyAddedToItem.retainAll(tagsOnEntry)
+        tagsAlreadyAddedToItem.retainAll(tagsOnItem)
 
         return tagsAlreadyAddedToItem.size == allMatches.size // contains only added tags or search terms without matches
     }
 
-    private fun containsAddedTags(tagsOnEntry: Collection<Tag>, searchResults: TagsSearchResults): Boolean {
-        if(tagsOnEntry.isEmpty() || searchResults.getRelevantMatchesSorted().size > (tagsOnEntry.size + searchResults.getSearchTermsWithoutMatches().size)) {
+    private fun containsAddedTags(tagsOnItem: Collection<Tag>, searchResults: TagsSearchResults): Boolean {
+        if(tagsOnItem.isEmpty() || searchResults.getRelevantMatchesSorted().size > (tagsOnItem.size + searchResults.getSearchTermsWithoutMatches().size)) {
             return false
         }
 
         val remainingMatches = ArrayList(searchResults.getRelevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossible())
-        remainingMatches.removeAll(tagsOnEntry)
+        remainingMatches.removeAll(tagsOnItem)
 
         return remainingMatches.size < searchResults.getRelevantMatchesSortedButFromLastResultOnlyExactMatchesIfPossible().size
     }

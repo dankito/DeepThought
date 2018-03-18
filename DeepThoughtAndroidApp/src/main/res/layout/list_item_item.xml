@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<net.dankito.deepthought.android.views.FixedSwipeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/itemSwipeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/list_item_item_height"
+    android:background="@drawable/list_item_background"
+>
+
+    <!-- Bottom View Start (the view that gets displayed when the user swipes from right to left. for explanation see https://github.com/daimajia/AndroidSwipeLayout/wiki/usage) -->
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+    >
+
+        <net.dankito.deepthought.android.views.SwipeButton
+            android:id="@+id/btnShareItem"
+            android:layout_height="match_parent"
+            android:layout_width="@dimen/list_item_item_button_width"
+            app:icon="@drawable/ic_share_white_48dp"
+        />
+
+        <net.dankito.deepthought.android.views.SwipeButton
+            android:id="@+id/btnDeleteItem"
+            android:layout_width="@dimen/list_item_item_button_width"
+            android:layout_height="match_parent"
+            app:icon="@drawable/ic_delete_white_48dp"
+        />
+
+    </LinearLayout>
+
+
+    <!-- Surface View Start (the view that's displayed by default) -->
+    <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:gravity="center_vertical"
+          android:paddingTop="@dimen/list_item_item_padding_top_bottom"
+          android:paddingLeft="@dimen/list_item_item_padding_left_right"
+          android:paddingStart="@dimen/list_item_item_padding_left_right"
+          android:paddingRight="@dimen/list_item_item_padding_left_right"
+          android:paddingEnd="@dimen/list_item_item_padding_left_right"
+          android:paddingBottom="@dimen/list_item_item_padding_top_bottom"
+        >
+
+        <net.dankito.deepthought.android.views.CustomFontTextView
+            android:id="@+id/txtSourcePreview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/list_item_item_source_preview_min_height"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="@dimen/list_item_item_source_preview_margin_bottom"
+            android:maxLines="2"
+            android:ellipsize="end"
+            style="@style/Header1Style"
+            android:textSize="@dimen/header_1_larger_text_size"
+            />
+
+        <TextView
+            android:id="@+id/txtItemPreview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/list_item_item_preview_height"
+            android:maxHeight="@dimen/list_item_item_height"
+            android:layout_below="@+id/txtSourcePreview"
+            android:layout_above="@+id/lytItemTags"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:minLines="3"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            style="@style/TextBodyStyle"
+            />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:id="@+id/lytItemTags"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_item_item_tags_height"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/list_item_item_tags_margin_top"
+            />
+
+    </RelativeLayout>
+
+</net.dankito.deepthought.android.views.FixedSwipeLayout>

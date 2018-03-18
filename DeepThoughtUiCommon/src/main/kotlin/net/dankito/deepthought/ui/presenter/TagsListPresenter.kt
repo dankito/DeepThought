@@ -19,7 +19,7 @@ import kotlin.concurrent.thread
 
 class TagsListPresenter(tagsListView: ITagsListView, private val allCalculatedTags: AllCalculatedTags, searchEngine: ISearchEngine, searchResultsUtil: TagsSearchResultsUtil,
                         tagService: TagService, deleteEntityService: DeleteEntityService, dialogService: IDialogService, private val router: IRouter)
-    : TagsListPresenterBase(tagsListView, searchEngine, tagService, deleteEntityService, searchResultsUtil, dialogService), IMainViewSectionPresenter {
+    : TagsListPresenterBase(tagsListView, searchEngine, tagService, deleteEntityService, searchResultsUtil, dialogService) {
 
 
     var tagFilterListener: ((List<Tag>) -> Unit)? = null
@@ -28,13 +28,7 @@ class TagsListPresenter(tagsListView: ITagsListView, private val allCalculatedTa
     init {
         thread {
             CommonComponent.component.inject(this)
-
-            initialized()
         }
-    }
-
-    override fun cleanUp() {
-        destroy()
     }
 
 
@@ -87,7 +81,7 @@ class TagsListPresenter(tagsListView: ITagsListView, private val allCalculatedTa
         }
 
         lastFilteredTagsSearchResults?.let { searchResult ->
-            toggleFilterTags(searchResult.tagsOnEntriesContainingFilteredTags)
+            toggleFilterTags(searchResult.tagsOnItemsContainingFilteredTags)
         }
     }
 
@@ -102,14 +96,14 @@ class TagsListPresenter(tagsListView: ITagsListView, private val allCalculatedTa
         tagFilterListener?.invoke(tagsFilter)
     }
 
-    fun getCountEntriesForFilteredTag(tag: Tag): Int {
+    fun getCountItemsForFilteredTag(tag: Tag): Int {
         lastFilteredTagsSearchResults?.let {
             // TODO: this is bad code, uses knowledge of  implementation details
-            (it.entriesHavingFilteredTags as? FilteredTagsLazyLoadingLuceneSearchResultsList)?.entityIds?.let { allFilteredEntryIds ->
+            (it.itemsHavingFilteredTags as? FilteredTagsLazyLoadingLuceneSearchResultsList)?.entityIds?.let { allFilteredItemIds ->
                 (tag.items as? LazyLoadingEntitiesCollection)?.let { // TODO: here as well
-                    val filteredEntriesOnTag = ArrayList(it.targetEntitiesIds)
-                    filteredEntriesOnTag.retainAll(allFilteredEntryIds)
-                    return filteredEntriesOnTag.size
+                    val filteredItemsOnTag = ArrayList(it.targetEntitiesIds)
+                    filteredItemsOnTag.retainAll(allFilteredItemIds)
+                    return filteredItemsOnTag.size
                 }
             }
         }
@@ -118,13 +112,25 @@ class TagsListPresenter(tagsListView: ITagsListView, private val allCalculatedTa
     }
 
 
-    override fun getLastSearchTerm(): String {
-        return lastSearchTermProperty
+    fun showItemsForTag(tag: Tag) {
+        router.showItemsForTag(tag, tagsFilter)
     }
 
 
-    fun showEntriesForTag(tag: Tag) {
-        router.showEntriesForTag(tag, tagsFilter)
+    override fun viewBecomesVisible() {
+        super.viewBecomesVisible()
+
+        allCalculatedTags.getCalculatedTags().forEach {
+            it.tagBecomesVisible()
+        }
+    }
+
+    override fun viewGetsHidden() {
+        allCalculatedTags.getCalculatedTags().forEach {
+            it.tagGetsHidden()
+        }
+
+        super.viewGetsHidden()
     }
 
 }

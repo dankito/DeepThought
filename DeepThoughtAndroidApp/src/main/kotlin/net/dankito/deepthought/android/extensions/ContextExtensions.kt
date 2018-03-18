@@ -12,3 +12,8 @@ fun Context.getColorFromResourceId(colorResourceId: Int): Int {
         return this.resources.getColor(colorResourceId)
     }
 }
+
+
+fun Context.getDimension(dimensionResourceId: Int): Int {
+    return resources.getDimension(dimensionResourceId).toInt()
+}

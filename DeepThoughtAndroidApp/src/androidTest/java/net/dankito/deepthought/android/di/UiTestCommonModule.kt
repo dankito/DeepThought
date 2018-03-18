@@ -20,7 +20,9 @@ import net.dankito.utils.language.ILanguageDetector
 
 class UiTestCommonModule : CommonModule() {
 
-    override fun provideSearchEngine(dataManager: DataManager, languageDetector: ILanguageDetector, threadPool: IThreadPool, osHelper: OsHelper, eventBus: IEventBus, entryService: EntryService, tagService: TagService, referenceService: ReferenceService, seriesService: SeriesService, readLaterArticleService: ReadLaterArticleService): ISearchEngine {
+    override fun provideSearchEngine(dataManager: DataManager, languageDetector: ILanguageDetector, threadPool: IThreadPool, osHelper: OsHelper, eventBus: IEventBus,
+                                     itemService: ItemService, tagService: TagService, sourceService: SourceService, seriesService: SeriesService,
+                                     readLaterArticleService: ReadLaterArticleService, fileService: FileService, localFileInfoService: LocalFileInfoService): ISearchEngine {
         return InMemorySearchEngine(dataManager.entityManager, threadPool)
     }
 

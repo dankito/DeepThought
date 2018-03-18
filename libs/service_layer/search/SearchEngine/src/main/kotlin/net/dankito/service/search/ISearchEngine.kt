@@ -8,19 +8,21 @@ interface ISearchEngine {
     fun addInitializationListener(listener: () -> Unit)
 
 
-    fun searchEntries(search: EntriesSearch)
+    fun searchItems(search: ItemsSearch)
 
     fun searchTags(search: TagsSearch)
 
     fun searchFilteredTags(search: FilteredTagsSearch)
 
-    fun searchReferences(search: ReferenceSearch)
+    fun searchSources(search: SourceSearch)
 
     fun searchSeries(search: SeriesSearch)
 
     fun searchReadLaterArticles(search: ReadLaterArticleSearch)
 
-//    fun searchFiles(search: FilesSearch)
+    fun searchFiles(search: FilesSearch)
+
+    fun searchLocalFileInfo(search: LocalFileInfoSearch)
 
 
     fun close()

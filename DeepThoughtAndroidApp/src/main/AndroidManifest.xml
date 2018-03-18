@@ -4,8 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".DeepThoughtApplication"
@@ -72,13 +73,25 @@
         />
 
         <activity
-            android:name=".activities.EditEntryActivity"
+            android:name=".activities.EditItemActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize"
         />
 
         <activity
-            android:name=".activities.EditReferenceActivity"
+            android:name=".activities.EditItemExtractionResultActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
+        />
+
+        <activity
+            android:name=".activities.EditReadLaterArticleActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
+        />
+
+        <activity
+            android:name=".activities.EditSourceActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize"
         />
@@ -110,6 +123,22 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize"
         />
+
+        <activity android:name=".activities.ViewPdfActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize"
+        />
+
+
+        <provider
+            android:name=".service.GenericFileProvider"
+            android:authorities="${applicationId}.net.dankito.deepthought.android.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
 
     </application>
 

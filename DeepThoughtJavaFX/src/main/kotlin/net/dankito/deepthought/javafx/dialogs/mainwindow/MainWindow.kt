@@ -1,18 +1,17 @@
 package net.dankito.deepthought.javafx.dialogs.mainwindow
 
 import javafx.scene.control.SplitPane
-import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import javafx.scene.image.Image
-import javafx.scene.layout.Priority
-import javafx.scene.layout.VBox
+import javafx.scene.layout.AnchorPane
+import javafx.scene.layout.StackPane
 import net.dankito.deepthought.javafx.di.AppComponent
-import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.EntriesListView
-import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.MainMenuBar
-import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.StatusBar
-import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.TagsListView
+import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.*
+import net.dankito.deepthought.javafx.service.extensions.setAnchorPaneOverallAnchor
+import net.dankito.deepthought.service.data.DataManager
 import tornadofx.*
 import tornadofx.FX.Companion.messages
+import javax.inject.Inject
 
 
 class MainWindow : View(String.format(messages["main.window.title"], getAppVersion())) {
@@ -32,19 +31,21 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
     }
 
 
-    private var tbpnOverview: TabPane by singleAssign()
+    @Inject
+    protected lateinit var dataManager: DataManager
 
-    private var tabTags: Tab by singleAssign()
+
+    private var stckpnContent: StackPane by singleAssign()
 
     private var splpnContent: SplitPane by singleAssign()
 
-    private var contentPane: VBox by singleAssign()
-
-    val mainMenuBar: MainMenuBar by inject()
+    private var mainMenuBar: MainMenuBar by singleAssign()
 
     val tagsListView: TagsListView by inject()
 
-    val entriesListView: EntriesListView by inject()
+    val sourcesListView: SourcesListView by inject()
+
+    val itemsListView: ItemsListView by inject()
 
     val statusBar: StatusBar by inject()
 
@@ -56,39 +57,57 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
     }
 
 
-
     override val root = borderpane {
         prefHeight = 620.0
         prefWidth = 1150.0
 
+        mainMenuBar = MainMenuBar(dataManager)
         top = mainMenuBar.root
 
         center {
-            splpnContent = splitpane {
-                tbpnOverview = tabpane {
-                    prefWidth = 300.0
-                    tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
-
-                    tabTags = tab(messages["tags.tab.label"]) {
+            stckpnContent = stackpane {
+                splpnContent = splitpane {
+                    tabpane {
                         prefWidth = 300.0
+                        tabClosingPolicy = TabPane.TabClosingPolicy.UNAVAILABLE
 
-                        add(tagsListView.root)
+                        tab(messages["tab.tags.label"]) {
+                            add(tagsListView.root)
+
+                            selectedProperty().addListener { _, _, newValue -> if(newValue) tagsListView.viewCameIntoView() }
+                        }
+
+                        tab(messages["tab.sources.label"]) {
+                            add(sourcesListView.root)
+
+                            selectedProperty().addListener { _, _, newValue -> if(newValue) sourcesListView.viewCameIntoView() }
+                        }
+                    }
+
+                    anchorpane {
+                        itemsListView.statusBar = statusBar
+                        add(itemsListView)
+                        itemsListView.setAnchorPaneOverallAnchor(0.0)
+
+                        addCMessagePopupPane(this)
                     }
                 }
-
-                contentPane = vbox {
-
-                }
             }
-
-            contentPane.add(entriesListView.root)
-            VBox.setVgrow(entriesListView.root, Priority.ALWAYS)
-            entriesListView.statusBar = statusBar
 
             splpnContent.setDividerPosition(0, 0.2)
         }
 
         bottom = statusBar.root
+
+        mainMenuBar.createNewItemMenuClicked = { itemsListView.createNewItem() }
+    }
+
+    private fun addCMessagePopupPane(pane: AnchorPane) {
+        val messagePopupPane = MessagePopupPane(dataManager)
+        pane.add(messagePopupPane)
+
+        AnchorPane.setRightAnchor(messagePopupPane.root, 8.0)
+        AnchorPane.setBottomAnchor(messagePopupPane.root, 8.0)
     }
 
 

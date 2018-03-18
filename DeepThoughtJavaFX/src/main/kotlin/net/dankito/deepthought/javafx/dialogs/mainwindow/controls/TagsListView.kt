@@ -2,13 +2,15 @@ package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
+import javafx.scene.control.ContextMenu
 import javafx.scene.control.TableView
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.TagViewModel
+import net.dankito.deepthought.javafx.service.extensions.findClickedTableRow
 import net.dankito.deepthought.model.AllCalculatedTags
+import net.dankito.deepthought.model.CalculatedTag
 import net.dankito.deepthought.model.Tag
-import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.TagsListPresenter
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
@@ -35,9 +37,8 @@ class TagsListView : EntitiesListView(), ITagsListView {
 
     private val tagViewModel = TagViewModel()
 
+    private var lastSelectedTag: Tag? = null
 
-    @Inject
-    protected lateinit var dataManager: DataManager
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
@@ -67,13 +68,23 @@ class TagsListView : EntitiesListView(), ITagsListView {
         presenter = TagsListPresenter(this, allCalculatedTags, searchEngine, searchResultsUtil, tagService, deleteEntityService, dialogService, router)
         searchBar = TagsSearchBar(this)
 
-        searchEngine.addInitializationListener {
-            searchEntities(Search.EmptySearchTerm)
+        runLater { // wait till UI is initialized before search index
+            searchEngine.addInitializationListener {
+                searchEntities(Search.EmptySearchTerm)
+            }
         }
     }
 
+
+    override fun onDock() {
+        super.onDock()
+
+        presenter.viewBecomesVisible()
+    }
+
     override fun onUndock() {
-        presenter.cleanUp()
+        presenter.viewGetsHidden()
+
         super.onUndock()
     }
 
@@ -108,36 +119,81 @@ class TagsListView : EntitiesListView(), ITagsListView {
 
             vgrow = Priority.ALWAYS
 
-            selectionModel.selectedItemProperty().addListener { _, _, newValue -> tagSelected(newValue) }
+            // don't know why but selectionModel.selectedItemProperty() doesn't work reliably. Another tag gets selected but selectedItemProperty() doesn't fire this change
+            selectionModel.selectedIndexProperty().addListener { _, _, newValue -> tagSelected(newValue.toInt()) }
 
-            contextmenu {
-                item(messages["action.edit"]) {
-                    isDisable = true
-                    action {
-                        selectedItem?.let { presenter.editTag(it) }
-                    }
-                }
+            var currentMenu: ContextMenu? = null
+            setOnContextMenuRequested { event ->
+                currentMenu?.hide()
 
-                separator()
-
-                item(messages["action.delete"]) {
-                    action {
-                        selectedItem?.let { presenter.deleteTagAsync(it) }
-                    }
+                val tableRow = event.pickResult?.findClickedTableRow<Tag>()
+                tableRow?.item?.let { clickedItem ->
+                    currentMenu = createContextMenuForItem(clickedItem)
+                    currentMenu?.show(this, event.screenX, event.screenY)
                 }
             }
         }
     }
 
-
-    private fun tagSelected(selectedTag: Tag?) {
-        if(selectedTag != null) {
-            presenter.showEntriesForTag(selectedTag)
+    private fun createContextMenuForItem(clickedTag: Tag): ContextMenu? {
+        if(clickedTag is CalculatedTag) {
+            return null
         }
-        else {
-//            presenter.clearSelectedTag() // TODO
+
+        val contextMenu = ContextMenu()
+
+        contextMenu.item(messages["action.edit"]) {
+            action {
+                presenter.editTag(clickedTag)
+            }
+        }
+
+        separator()
+
+        contextMenu.item(messages["action.delete"]) {
+            action {
+                presenter.deleteTagAsync(clickedTag)
+            }
+        }
+
+        return contextMenu
+    }
+
+
+    fun viewCameIntoView() {
+        showItemsForLastSelectedEntity()
+    }
+
+    private fun tagSelected(selectedTagIndex: Int) {
+        if(selectedTagIndex >= 0 && selectedTagIndex < tags.size) {
+            tagSelected(tags[selectedTagIndex])
         }
     }
+
+    private fun tagSelected(selectedTag: Tag?) {
+        if(selectedTag != lastSelectedTag) { // to avoid that Lucene is unnecessarily queried for the same Tag again
+            if(selectedTag != null) {
+                lastSelectedTag = selectedTag
+            }
+            else {
+//            presenter.clearSelectedTag() // TODO
+            }
+
+            showItemsForLastSelectedEntity()
+        }
+    }
+
+    private fun showItemsForLastSelectedEntity() {
+        val selectedTag = lastSelectedTag
+
+        if(selectedTag != null) {
+            presenter.showItemsForTag(selectedTag)
+        }
+        else if(tags.isNotEmpty()) {
+            tableTags.selectionModel.select(0) // this will select first tag in list and then show its items
+        }
+    }
+
 
     override fun searchEntities(query: String) {
         presenter.searchTags(query)
@@ -147,7 +203,13 @@ class TagsListView : EntitiesListView(), ITagsListView {
     /*          ITagsListView implementation            */
 
     override fun showEntities(entities: List<Tag>) {
-        runLater { this.tags.setAll(entities) }
+        runLater {
+            this.tags.setAll(entities)
+
+            if(tableTags.selectedItem == null && entities.isNotEmpty()) { // on start up no tag is selected -> select first from list
+                tableTags.selectionModel.select(0)
+            }
+        }
     }
 
     override fun updateDisplayedTags() {

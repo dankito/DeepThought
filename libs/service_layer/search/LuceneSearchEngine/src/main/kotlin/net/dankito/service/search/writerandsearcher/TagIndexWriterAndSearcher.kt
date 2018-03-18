@@ -28,7 +28,7 @@ import org.apache.lucene.search.*
 import org.slf4j.LoggerFactory
 
 
-class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool, private val entryIndexWriterAndSearcher: EntryIndexWriterAndSearcher)
+class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool, private val itemIndexWriterAndSearcher: ItemIndexWriterAndSearcher)
     : IndexWriterAndSearcher<Tag>(tagService, eventBus, osHelper, threadPool) {
 
     companion object {
@@ -78,10 +78,6 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osH
 
     private fun executeSearchForNonEmptySearchTerm(search: TagsSearch, tagNamesToSearchFor: List<String>) {
         for(tagNameToSearchFor in tagNamesToSearchFor) {
-            if(search.isInterrupted) {
-                return
-            }
-
             try {
                 val interrupted = executeSearchForSingleTagName(search, tagNameToSearchFor)
                 if(interrupted) {
@@ -99,6 +95,23 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osH
     }
 
     private fun executeSearchForSingleTagName(search: TagsSearch, tagNameToSearchFor: String): Boolean {
+        if(tagNameToSearchFor.isBlank()) {
+            val query = WildcardQuery(Term(FieldName.TagName, "*"))
+
+            if(search.isInterrupted) {
+                return true
+            }
+
+            search.addResult(TagsSearchResult(tagNameToSearchFor, executeSearchTagsQuery(query)))
+
+            return false
+        }
+        else {
+            return executeSearchForNonBlankSingleTagName(search, tagNameToSearchFor)
+        }
+    }
+
+    private fun executeSearchForNonBlankSingleTagName(search: TagsSearch, tagNameToSearchFor: String): Boolean {
         val searchTerm = QueryParser.escape(tagNameToSearchFor.toLowerCase())
         if(search.isInterrupted) {
             return true
@@ -152,13 +165,13 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osH
 
 
     fun searchFilteredTags(search: FilteredTagsSearch, termsToSearchFor: List<String>) {
-        var entriesHavingFilteredTags: List<Item> = listOf()
-        var tagsOnEntriesContainingFilteredTags: List<Tag> = listOf()
+        var itemsHavingFilteredTags: List<Item> = listOf()
+        var tagsOnItemsContainingFilteredTags: List<Tag> = listOf()
         val tagsToFilterForIds = search.tagsToFilterFor.map { it.id }
         val query = BooleanQuery()
 
         search.tagsToFilterFor.forEach { tag ->
-            query.add(BooleanClause(TermQuery(Term(FieldName.EntryTagsIds, tag.id)), BooleanClause.Occur.MUST))
+            query.add(BooleanClause(TermQuery(Term(FieldName.ItemTagsIds, tag.id)), BooleanClause.Occur.MUST))
         }
 
         if(search.isInterrupted) {
@@ -166,15 +179,15 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osH
         }
 
         try {
-            entryIndexWriterAndSearcher.executeQuery(query, FILTERED_TAGS_DEFAULT_COUNT_MAX_SEARCH_RESULTS, SortOption(FieldName.EntryCreated, SortOrder.Descending, SortField.Type.LONG))?.let { (searcher, hits) ->
-                val entries = FilteredTagsLazyLoadingLuceneSearchResultsList(entityService.entityManager, searcher, hits, osHelper, threadPool)
-                entriesHavingFilteredTags = entries
+            itemIndexWriterAndSearcher.executeQuery(query, FILTERED_TAGS_DEFAULT_COUNT_MAX_SEARCH_RESULTS, SortOption(FieldName.ItemCreated, SortOrder.Descending, SortField.Type.LONG))?.let { (searcher, hits) ->
+                val items = FilteredTagsLazyLoadingLuceneSearchResultsList(entityService.entityManager, searcher, hits, osHelper, threadPool)
+                itemsHavingFilteredTags = items
 
-                val tagIdsOnEntriesContainingFilteredTags: Collection<String> = entries.tagIdsOnResultEntries.filter { tagsToFilterForIds.contains(it) == false }
+                val tagIdsOnItemsContainingFilteredTags: Collection<String> = items.tagIdsOnResultItems.filter { tagsToFilterForIds.contains(it) == false }
 
-                val sortedTagIdsOnEntriesContainingFilteredTags = searchInGivenTags(tagIdsOnEntriesContainingFilteredTags, termsToSearchFor)
+                val sortedTagIdsOnItemsContainingFilteredTags = searchInGivenTags(tagIdsOnItemsContainingFilteredTags, termsToSearchFor)
 
-                tagsOnEntriesContainingFilteredTags = LazyLoadingList<Tag>(entityService.entityManager, Tag::class.java, sortedTagIdsOnEntriesContainingFilteredTags.toMutableList())
+                tagsOnItemsContainingFilteredTags = LazyLoadingList<Tag>(entityService.entityManager, Tag::class.java, sortedTagIdsOnItemsContainingFilteredTags.toMutableList())
             }
         } catch (ex: Exception) {
             log.error("Could not execute Query " + query.toString(), ex)
@@ -184,7 +197,7 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osH
             return
         }
 
-        search.results = FilteredTagsSearchResult(entriesHavingFilteredTags, tagsOnEntriesContainingFilteredTags)
+        search.results = FilteredTagsSearchResult(itemsHavingFilteredTags, tagsOnItemsContainingFilteredTags)
         search.fireSearchCompleted()
     }
 

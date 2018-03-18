@@ -6,11 +6,6 @@ include ':DeepThoughtAndroidApp'
 include ':DeepThoughtJavaFX'
 include ':DeepThoughtJavaFXExtended'
 
-include ':RichTextEditor'
-include ':RichTextEditorCommon'
-include ':RichTextEditorAndroid'
-include ':RichTextEditorJavaFX'
-
 include ':DeepThoughtUiCommon'
 include ':DeepThoughtBaseLib'
 
@@ -18,8 +13,6 @@ include ':FaviconExtractor'
 
 include ':NewsReader'
 include ':ArticleSummaryExtractors'
-include ':Crux'
-include ':Readability4JAdvanced'
 include ':RomeFeedReader'
 include ':FeedAddressExtractor'
 
@@ -43,6 +36,9 @@ include ':Utils'
 include ':NorconexLanguageDetector'
 
 include ':BibTeXImporterExporter'
+include ':PdfImporterBase'
+include ':JavaPdfImporter'
+include ':AndroidPdfImporter'
 
 
 /*      Business logic Layer       */
@@ -68,18 +64,12 @@ include ':EntityManager'
 include ':CouchbaseLiteEntityManagerBase'
 include ':JavaCouchbaseLiteEntityManager'
 include ':AndroidCouchbaseLiteEntityManager'
-include ':couchbase-lite-jpa'
-include ':jpa-apt'
-include ':JPAAnnotationReaderAPI'
-include ':JPAAnnotationProcessor'
 
 
 project(':FaviconExtractor').projectDir = "$rootDir/libs/util/FaviconExtractor" as File
 
 project(':NewsReader').projectDir = "$rootDir/libs/news/NewsReader" as File
 project(':ArticleSummaryExtractors').projectDir = "$rootDir/libs/news/ArticleSummaryExtractors" as File
-project(':Crux').projectDir = "$rootDir/libs/news/Crux" as File
-project(':Readability4JAdvanced').projectDir = "$rootDir/libs/news/Readability4JAdvanced" as File
 project(':RomeFeedReader').projectDir = "$rootDir/libs/news/RomeFeedReader" as File
 project(':FeedAddressExtractor').projectDir = "$rootDir/libs/news/FeedAddressExtractor" as File
 
@@ -99,8 +89,12 @@ project(':EventBus').projectDir = "$rootDir/libs/service_layer/eventbus/EventBus
 project(':JacksonJsonSerializer').projectDir = "$rootDir/libs/service_layer/serializer/JacksonJsonSerializer" as File
 project(':Utils').projectDir = "$rootDir/libs/service_layer/utils/Utils" as File
 project(':NorconexLanguageDetector').projectDir = "$rootDir/libs/service_layer/utils/NorconexLanguageDetector" as File
-project(':BibTeXImporterExporter').projectDir = "$rootDir/libs/service_layer/import_export/BibTeXImporterExporter" as File
 project(':DeepThoughtBaseLib').projectDir = "$rootDir/libs/service_layer/utils/DeepThoughtBaseLib" as File
+
+project(':BibTeXImporterExporter').projectDir = "$rootDir/libs/service_layer/import_export/BibTeXImporterExporter" as File
+project(':PdfImporterBase').projectDir = "$rootDir/libs/service_layer/import_export/PdfImporterBase" as File
+project(':JavaPdfImporter').projectDir = "$rootDir/libs/service_layer/import_export/JavaPdfImporter" as File
+project(':AndroidPdfImporter').projectDir = "$rootDir/libs/service_layer/import_export/AndroidPdfImporter" as File
 
 
 project(':DataModel').projectDir = "$rootDir/libs/business_logic_layer/DataModel" as File
@@ -122,12 +116,3 @@ project(':EntityManager').projectDir = "$rootDir/libs/data_access_layer/database
 project(':CouchbaseLiteEntityManagerBase').projectDir = "$rootDir/libs/data_access_layer/database/CouchbaseLiteEntityManagerBase" as File
 project(':JavaCouchbaseLiteEntityManager').projectDir = "$rootDir/libs/data_access_layer/database/JavaCouchbaseLiteEntityManager" as File
 project(':AndroidCouchbaseLiteEntityManager').projectDir = "$rootDir/libs/data_access_layer/database/AndroidCouchbaseLiteEntityManager" as File
-project(':couchbase-lite-jpa').projectDir = "$rootDir/libs/data_access_layer/database/couchbase-lite-jpa" as File
-project(':jpa-apt').projectDir = "$rootDir/libs/data_access_layer/database/jpa-apt" as File
-project(':JPAAnnotationReaderAPI').projectDir = "$rootDir/libs/data_access_layer/database/jpa-apt/JPAAnnotationReaderAPI" as File
-project(':JPAAnnotationProcessor').projectDir = "$rootDir/libs/data_access_layer/database/jpa-apt/JPAAnnotationProcessor" as File
-
-project(':RichTextEditor').projectDir = "$rootDir/libs/ui_layer/RichTextEditor" as File
-project(':RichTextEditorCommon').projectDir = "$rootDir/libs/ui_layer/RichTextEditor/RichTextEditorCommon" as File
-project(':RichTextEditorAndroid').projectDir = "$rootDir/libs/ui_layer/RichTextEditor/RichTextEditorAndroid" as File
-project(':RichTextEditorJavaFX').projectDir = "$rootDir/libs/ui_layer/RichTextEditor/RichTextEditorJavaFX" as File

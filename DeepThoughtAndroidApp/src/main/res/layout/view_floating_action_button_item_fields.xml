@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.github.clans.fab.FloatingActionMenu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+
+    android:id="@+id/floatingActionMenu"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+
+    fab:menu_labels_style="@style/MenuLabelsStyle"
+    fab:menu_shadowColor="#444"
+    fab:menu_colorNormal="?attr/colorAccent"
+    fab:menu_colorPressed="?attr/colorPrimary"
+    fab:menu_colorRipple="?attr/colorPrimaryDark"
+
+    fab:menu_animationDelayPerItem="50">
+
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fabEditItemFiles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/MenuButtonsStyle"
+        fab:fab_label="@string/activity_edit_item_files_label"
+    />
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fabEditItemSource"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/MenuButtonsStyle"
+        fab:fab_label="@string/edit_entity_source_field_source_label"
+    />
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fabEditItemSummary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/MenuButtonsStyle"
+        fab:fab_label="@string/activity_edit_item_title_summary_label"
+    />
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fabEditItemTags"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/MenuButtonsStyle"
+        fab:fab_label="@string/activity_edit_item_tags_label"
+    />
+
+</com.github.clans.fab.FloatingActionMenu>

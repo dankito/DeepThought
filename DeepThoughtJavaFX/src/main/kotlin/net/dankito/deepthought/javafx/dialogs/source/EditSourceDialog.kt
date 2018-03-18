@@ -2,17 +2,20 @@ package net.dankito.deepthought.javafx.dialogs.source
 
 import com.sun.prism.impl.Disposer.cleanUp
 import javafx.beans.property.SimpleBooleanProperty
-import net.dankito.deepthought.data.ReferencePersister
+import javafx.scene.Parent
+import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
+import net.dankito.deepthought.javafx.dialogs.source.controls.EditSourceSeriesField
 import net.dankito.deepthought.javafx.service.events.EditingSourceDoneEvent
 import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
-import net.dankito.deepthought.javafx.ui.controls.EditDateFieldValueView
-import net.dankito.deepthought.javafx.ui.controls.EditFieldValueView
+import net.dankito.deepthought.javafx.ui.controls.EditEntityDateField
+import net.dankito.deepthought.javafx.ui.controls.EditEntityField
+import net.dankito.deepthought.javafx.ui.controls.EditEntityFilesField
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.presenter.EditReferencePresenter
+import net.dankito.deepthought.ui.presenter.EditSourcePresenter
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.ui.IClipboardService
@@ -28,7 +31,7 @@ class EditSourceDialog : DialogFragment() {
 
 
     @Inject
-    protected lateinit var referencePersister: ReferencePersister
+    protected lateinit var sourcePersister: SourcePersister
 
     @Inject
     protected lateinit var router: IRouter
@@ -43,23 +46,27 @@ class EditSourceDialog : DialogFragment() {
     protected lateinit var eventBus: IEventBus
 
 
-    private val titleField = EditFieldValueView(messages["edit.source.title"])
+    private val titleField = EditEntityField(messages["edit.source.title"])
 
-    private val issueField = EditFieldValueView(messages["edit.source.issue"])
+    private val editSeriesField = EditSourceSeriesField()
 
-    private val publishingDateField = EditDateFieldValueView(messages["edit.source.publishing.date"])
+    private val issueField = EditEntityField(messages["edit.source.issue"])
 
-    private val webAddressField = EditFieldValueView(messages["edit.source.web.address"])
+    private val lengthField = EditEntityField(messages["edit.source.length"])
+
+    private val publishingDateField = EditEntityDateField(messages["edit.source.publishing.date"])
+
+    private val webAddressField = EditEntityField(messages["edit.source.web.address"])
+
+    private val editFilesField = EditEntityFilesField()
 
 
-    private val presenter: EditReferencePresenter
+    private val presenter: EditSourcePresenter
 
 
     val source: Source by param()
 
     val seriesParam: Series? by param(SeriesNullObject) // by param() doesn't seem to like when passing null - on calling get() an exception gets thrown
-
-    val series: Series? = if(seriesParam == SeriesNullObject) null else seriesParam
 
     val editedSourceTitle: String? by param<String?>(source.title)
 
@@ -71,51 +78,85 @@ class EditSourceDialog : DialogFragment() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = EditReferencePresenter(router, clipboardService, deleteEntityService, referencePersister)
+        presenter = EditSourcePresenter(router, clipboardService, deleteEntityService, sourcePersister)
     }
 
 
     override val root = vbox {
         prefWidth = 850.0
 
-        setupEntityField(titleField, editedSourceTitle ?: source.title)
-        add(titleField)
+        scrollpane {
+            isFitToWidth = true
+            isFitToHeight = true
 
-        setupEntityField(issueField, source.issue ?: "")
-        add(issueField)
+            vbox {
+                setupEntityField(titleField, editedSourceTitle ?: source.title, this)
 
-        setupEntityField(publishingDateField, source.publishingDateString ?: "")
-        add(publishingDateField)
+                add(editSeriesField)
+                editSeriesField.didEntityChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
+                editSeriesField.didTitleChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
+                editSeriesField.setSeriesToEdit(if(seriesParam != SeriesNullObject) seriesParam else source.series)
 
-        setupEntityField(webAddressField, source.url ?: "")
-        add(webAddressField)
+                setupEntityField(issueField, source.issue ?: "", this)
+
+                setupEntityField(lengthField, source.length ?: "", this)
+
+                setupEntityField(publishingDateField, source.publishingDateString ?: "", this)
+
+                setupEntityField(webAddressField, source.url ?: "", this)
+
+                editFilesField.didValueChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
+                editFilesField.setFiles(source.attachedFiles, source)
+                add(editFilesField)
+            }
+        }
 
         val buttons = DialogButtonBar({ closeDialog() }, { saveSource(it) }, hasUnsavedChanges, messages["action.save"])
         add(buttons)
     }
 
-    private fun setupEntityField(field: EditFieldValueView, value: String) {
-        field.value = value
+    private fun setupEntityField(entityField: EditEntityField, value: String, pane: Parent) {
+        entityField.value = value
 
-        field.didValueChange.addListener { _, _, _ -> setHasUnsavedChanges() }
+        entityField.didValueChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
+
+        pane.add(entityField)
     }
 
-    private fun setHasUnsavedChanges() {
-        hasUnsavedChanges.value = titleField.didValueChange.value or issueField.didValueChange.value or publishingDateField.didValueChange.value or
-                webAddressField.didValueChange.value
+    private fun updateHasUnsavedChanges() {
+        hasUnsavedChanges.value = titleField.didValueChange.value or
+                editSeriesField.didEntityChange.value or editSeriesField.didTitleChange.value or
+                issueField.didValueChange.value or lengthField.didValueChange.value or
+                publishingDateField.didValueChange.value or webAddressField.didValueChange.value or editFilesField.didValueChange.value
     }
 
 
     private fun saveSource(done: () -> Unit) {
         source.title = titleField.value
         source.issue = if(issueField.value.isBlank()) null else issueField.value
+        source.length = if(lengthField.value.isBlank()) null else lengthField.value
         source.url = if(webAddressField.value.isBlank()) null else webAddressField.value
 
-        presenter.saveReferenceAsync(source, series, null, publishingDateField.value) {
-            postResult(EditingSourceDoneEvent(true, source))
+        val series = updateSeries()
 
+        presenter.saveSourceAsync(source, series, null, publishingDateField.value, editFilesField.getEditedFiles()) {
+            postResult(EditingSourceDoneEvent(true, source))
             done()
         }
+    }
+
+    private fun updateSeries(): Series? {
+        var series = editSeriesField.seriesToEdit
+
+        if(editSeriesField.didTitleChange.value) {
+            series?.title = editSeriesField.enteredTitle
+        }
+
+        if(series?.isPersisted() == false && editSeriesField.enteredTitle.isNullOrBlank()) {
+            series = null
+        }
+
+        return series
     }
 
     private fun closeDialog() {

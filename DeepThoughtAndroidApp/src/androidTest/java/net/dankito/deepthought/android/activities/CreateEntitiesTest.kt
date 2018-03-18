@@ -10,8 +10,8 @@ import net.dankito.deepthought.android.DeepThoughtActivityTestRule
 import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
 import net.dankito.deepthought.android.MainActivity
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.fragments.EntriesListView
-import net.dankito.deepthought.android.fragments.ReferencesListView
+import net.dankito.deepthought.android.fragments.ItemsListView
+import net.dankito.deepthought.android.fragments.SourcesListView
 import net.dankito.deepthought.android.fragments.TagsListView
 import net.dankito.deepthought.android.util.TestUtil
 import net.dankito.deepthought.android.util.matchers.RecyclerViewInViewPagerMatcher.Companion.withRecyclerView
@@ -58,14 +58,14 @@ class CreateEntitiesTest : DeepThoughtAndroidTestBase() {
 
         matchRecyclerViewEntitiesIsDisplayed()
 
-        matchReferencePreviewAtPosition(0, TestSourceTitle)
+        matchSourcePreviewAtPosition(0, TestSourceTitle)
 
-        matchEntryPreviewAtPositionContains(0, TestContent)
-        matchEntryPreviewAtPositionContains(0, TestSummary)
-        matchEntryPreviewAtPositionContains(0, TestSeriesTitle)
+        matchItemPreviewAtPositionContains(0, TestContent)
+        matchItemPreviewAtPositionContains(0, TestSummary)
+        matchItemPreviewAtPositionContains(0, TestSeriesTitle)
 
         // TODO: how to match tags?
-//        onView(withRecyclerView(R.id.rcyEntities).atPositionOnView(0, R.id.lytEntryTags)).check(matches(withText(containsString(TestTag1Name))))
+//        onView(withRecyclerView(R.id.rcyEntities).atPositionOnView(0, R.id.lytItemTags)).check(matches(withText(containsString(TestTag1Name))))
 
 
         navigator.navigateToTabTags()
@@ -81,8 +81,8 @@ class CreateEntitiesTest : DeepThoughtAndroidTestBase() {
 
         matchRecyclerViewEntitiesIsDisplayed()
 
-        matchListItemAtPositionText(ReferencesListView::class.java, 0, R.id.txtvwEntityName, TestSourceTitle)
-        matchListItemAtPositionText(ReferencesListView::class.java, 0, R.id.txtvwEntitySecondaryInformation, TestSeriesTitle)
+        matchListItemAtPositionText(SourcesListView::class.java, 0, R.id.txtvwEntityName, TestSourceTitle)
+        matchListItemAtPositionText(SourcesListView::class.java, 0, R.id.txtvwEntitySecondaryInformation, TestSeriesTitle)
     }
 
 
@@ -114,12 +114,12 @@ class CreateEntitiesTest : DeepThoughtAndroidTestBase() {
         onView(allOf(withId(R.id.rcyEntities))).check(matches(isDisplayed()))
     }
 
-    private fun matchEntryPreviewAtPositionContains(position: Int, entryPreview: String) {
-        matchListItemAtPositionText(EntriesListView::class.java, position, R.id.txtEntryPreview, entryPreview)
+    private fun matchItemPreviewAtPositionContains(position: Int, itemPreview: String) {
+        matchListItemAtPositionText(ItemsListView::class.java, position, R.id.txtItemPreview, itemPreview)
     }
 
-    private fun matchReferencePreviewAtPosition(position: Int, referencePreview: String) {
-        matchListItemAtPositionText(EntriesListView::class.java, position, R.id.txtReferencePreview, referencePreview)
+    private fun matchSourcePreviewAtPosition(position: Int, sourcePreview: String) {
+        matchListItemAtPositionText(ItemsListView::class.java, position, R.id.txtSourcePreview, sourcePreview)
     }
 
     private fun matchTagNameAtPosition(position: Int, tagName: String) {

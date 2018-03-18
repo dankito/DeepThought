@@ -1,29 +1,12 @@
 package net.dankito.deepthought.model.enums
 
-import net.dankito.deepthought.model.config.TableConfig
-import javax.persistence.Column
-import javax.persistence.Entity
 
-@Entity(name = TableConfig.FileTypeTableName)
-class FileType : ExtensibleEnumeration {
+enum class FileType {
 
-    companion object {
-        private const val serialVersionUID = -1765124075257854178L
-    }
-
-
-    @Column(name = TableConfig.FileTypeFolderNameColumnName)
-    var folderName: String
-
-
-    private constructor() : this("", "")
-
-    constructor(name: String, folderName: String) : super(name) {
-        this.folderName = folderName
-    }
-
-    constructor(nameResourceKey: String, folderName: String, isSystemValue: Boolean, sortOrder: Int) : super(nameResourceKey, isSystemValue, sortOrder) {
-        this.folderName = folderName
-    }
+    Other, // place as first one so that its numerical ordinal (important for database serialization) doesn't change when new values get added
+    Document,
+    Image,
+    Audio,
+    Video
 
 }

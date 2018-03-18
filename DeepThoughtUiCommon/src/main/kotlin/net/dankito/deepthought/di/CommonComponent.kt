@@ -3,6 +3,7 @@ package net.dankito.deepthought.di
 import dagger.Component
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
+import net.dankito.deepthought.service.clipboard.OptionsForClipboardContentDetector
 import net.dankito.deepthought.ui.presenter.*
 import javax.inject.Singleton
 
@@ -16,11 +17,11 @@ interface CommonComponent : BaseComponent {
     }
 
 
-    fun inject(entriesListPresenter: EntriesListPresenter)
+    fun inject(itemsListPresenter: ItemsListPresenter)
 
     fun inject(tagsListPresenter: TagsListPresenter)
 
-    fun inject(referencesListPresenter: ReferencesListPresenter)
+    fun inject(sourcesListPresenter: SourcesListPresenter)
 
     fun inject(seriesListPresenter: SeriesListPresenter)
 
@@ -32,10 +33,12 @@ interface CommonComponent : BaseComponent {
 
     fun inject(readLaterArticleListPresenter: ReadLaterArticleListPresenter)
 
-    fun inject(editEntryPresenter: EditEntryPresenter)
+    fun inject(editItemPresenter: EditItemPresenter)
 
-    fun inject(tagsOnEntryListPresenter: TagsOnEntryListPresenter)
+    fun inject(tagsOnItemListPresenter: TagsOnItemListPresenter)
 
     fun inject(articleExtractorManager: ArticleExtractorManager)
+
+    fun inject(optionsForClipboardContentDetector: OptionsForClipboardContentDetector)
 
 }

@@ -8,19 +8,20 @@ import net.dankito.deepthought.model.INetworkSettings
 import net.dankito.service.synchronization.initialsync.model.SyncInfo
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.serialization.ISerializer
+import net.dankito.utils.services.hashing.HashService
 import net.dankito.utils.services.hashing.IBase64Service
 import java.net.InetSocketAddress
 import java.net.SocketAddress
 
 
 class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings, registrationHandler: IDeviceRegistrationHandler, entityManager: IEntityManager,
-                                  serializer: ISerializer, base64Service: IBase64Service, threadPool: IThreadPool) : IClientCommunicator {
+                                  serializer: ISerializer, base64Service: IBase64Service, hashService: HashService, threadPool: IThreadPool) : IClientCommunicator {
 
     private val requestSender: IRequestSender
 
     private val requestReceiver: IRequestReceiver
 
-    private val challengeHandler: ChallengeHandler = ChallengeHandler(base64Service)
+    private val challengeHandler: ChallengeHandler = ChallengeHandler(base64Service, hashService)
 
     private val messageHandlerConfig: MessageHandlerConfig
 
@@ -78,7 +79,7 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
                                                              callback: (Response<RespondToSynchronizationPermittingChallengeResponseBody>) -> Unit) {
         challengeHandler.createChallengeResponse(nonce, challengeResponse)?.let { challengeResponse ->
             val request = Request<RespondToSynchronizationPermittingChallengeRequestBody>(CommunicatorConfig.RESPONSE_TO_SYNCHRONIZATION_PERMITTING_CHALLENGE_METHOD_NAME,
-                    RespondToSynchronizationPermittingChallengeRequestBody(nonce, challengeResponse, syncInfo, networkSettings.synchronizationPort))
+                    RespondToSynchronizationPermittingChallengeRequestBody(nonce, challengeResponse, syncInfo, networkSettings.synchronizationPort, networkSettings.fileSynchronizationPort))
 
             requestSender.sendRequestAndReceiveResponseAsync(getSocketAddressFromDevice(remoteDevice), request) { response: Response<RespondToSynchronizationPermittingChallengeResponseBody> ->
                 handleRespondToSynchronizationPermittingChallengeResponse(remoteDevice, response)
@@ -98,6 +99,7 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
 
             if(result == RespondToSynchronizationPermittingChallengeResult.ALLOWED) {
                 remoteDevice.synchronizationPort = body.synchronizationPort
+                remoteDevice.fileSynchronizationPort = body.fileSynchronizationPort
             }
         }
     }
@@ -107,7 +109,7 @@ class TcpSocketClientCommunicator(private val networkSettings: INetworkSettings,
         networkSettings.addDevicesAskedForPermittingSynchronization(remoteDevice)
 
         val request = Request(CommunicatorConfig.REQUEST_START_SYNCHRONIZATION_METHOD_NAME,
-                RequestStartSynchronizationRequestBody(DeviceInfo.fromDevice(networkSettings.localHostDevice), networkSettings.synchronizationPort))
+                RequestStartSynchronizationRequestBody(DeviceInfo.fromDevice(networkSettings.localHostDevice), networkSettings.synchronizationPort, networkSettings.fileSynchronizationPort))
 
         requestSender.sendRequestAndReceiveResponseAsync<RequestStartSynchronizationRequestBody, RequestStartSynchronizationResponseBody>(
                 getSocketAddressFromDevice(remoteDevice), request) { response ->

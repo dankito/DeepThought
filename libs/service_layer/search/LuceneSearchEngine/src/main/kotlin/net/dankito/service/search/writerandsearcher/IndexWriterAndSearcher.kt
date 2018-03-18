@@ -200,7 +200,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
         if(entityChanged.changeType == EntityChangeType.Created) {
             indexEntity(entityChanged.entity)
         }
-        else if(entityChanged.changeType == EntityChangeType.Updated) {
+        else if(entityChanged.changeType == EntityChangeType.Updated && entityChanged.entity.id != null) { // an entity got updated and shortly after deleted, e.g. a file that has been removed from an item (EntityChangedNotifier fires delayed)
             updateEntityInIndex(entityChanged.entity)
         }
         else if(entityChanged.changeType == EntityChangeType.PreDelete || (entityChanged.changeType == EntityChangeType.Deleted && entityChanged.entity.id != null)) {
@@ -276,6 +276,12 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
     }
 
     abstract fun addEntityFieldsToDocument(entity: TEntity, doc: Document)
+
+    protected fun addBooleanFieldToDocument(fieldName: String, fieldValue: Boolean, doc: Document) {
+        val convertedFieldValue = if(fieldValue) FieldValue.BooleanFieldTrueValue else FieldValue.BooleanFieldFalseValue
+
+        doc.add(StringField(fieldName, convertedFieldValue, Field.Store.NO))
+    }
 
     private fun indexDocument(doc: Document) {
         try {

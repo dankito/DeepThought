@@ -10,16 +10,18 @@ import net.dankito.deepthought.android.androidservice.DeepThoughtBackgroundAndro
 import net.dankito.deepthought.android.appstart.AndroidAppInitializer
 import net.dankito.deepthought.android.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.android.dialogs.*
-import net.dankito.deepthought.android.fragments.EntriesListView
+import net.dankito.deepthought.android.fragments.ItemsListView
 import net.dankito.deepthought.android.fragments.ReadLaterArticlesListView
-import net.dankito.deepthought.android.fragments.ReferencesListView
+import net.dankito.deepthought.android.fragments.SourcesListView
 import net.dankito.deepthought.android.fragments.TagsListView
 import net.dankito.deepthought.android.service.AndroidClipboardService
 import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.SnackbarService
+import net.dankito.deepthought.android.service.clipboard.AndroidClipboardWatcher
 import net.dankito.deepthought.android.service.network.NetworkConnectivityChangeBroadcastReceiver
+import net.dankito.deepthought.android.views.EditEntityFilesField
 import net.dankito.deepthought.android.views.EditEntityTagsField
-import net.dankito.deepthought.android.views.EditEntrySourceField
+import net.dankito.deepthought.android.views.EditItemSourceField
 import net.dankito.deepthought.android.views.EditSourceSeriesField
 import net.dankito.deepthought.di.BaseModule
 import net.dankito.deepthought.di.CommonComponent
@@ -60,21 +62,23 @@ interface AppComponent : CommonComponent {
 
     fun inject(androidClipboardService: AndroidClipboardService)
 
+    fun inject(androidClipboardWatcher: AndroidClipboardWatcher)
+
     fun inject(extractArticleHandler: ExtractArticleHandler)
 
-    fun inject(entriesListView: EntriesListView)
+    fun inject(itemsListView: ItemsListView)
 
     fun inject(tagsListView: TagsListView)
 
-    fun inject(referencesListView: ReferencesListView)
+    fun inject(sourcesListView: SourcesListView)
 
     fun inject(readLaterArticlesListView: ReadLaterArticlesListView)
 
-    fun inject(entriesListDialogBase: EntriesListDialogBase)
+    fun inject(itemsListDialogBase: ItemsListDialogBase)
 
-    fun inject(tagEntriesListDialog: TagEntriesListDialog)
+    fun inject(tagItemsListDialog: TagItemsListDialog)
 
-    fun inject(referenceEntriesListDialog: ReferenceEntriesListDialog)
+    fun inject(sourceItemsListDialog: SourceItemsListDialog)
 
     fun inject(addArticleSummaryExtractorDialog: AddArticleSummaryExtractorDialog)
 
@@ -88,16 +92,20 @@ interface AppComponent : CommonComponent {
 
     fun inject(articleSummaryActivity: ArticleSummaryActivity)
 
-    fun inject(editEntryActivity: EditEntryActivity)
+    fun inject(editItemActivityBase: EditItemActivityBase)
 
     fun inject(editEntityTagsField: EditEntityTagsField)
 
-    fun inject(editEntrySourceField: EditEntrySourceField)
+    fun inject(editItemSourceField: EditItemSourceField)
 
     fun inject(editSourceSeriesField: EditSourceSeriesField)
 
-    fun inject(editReferenceActivity: EditReferenceActivity)
+    fun inject(editEntityFilesField: EditEntityFilesField)
+
+    fun inject(editSourceActivity: EditSourceActivity)
 
     fun inject(editSeriesActivity: EditSeriesActivity)
+
+    fun inject(viewPdfActivity: ViewPdfActivity)
 
 }

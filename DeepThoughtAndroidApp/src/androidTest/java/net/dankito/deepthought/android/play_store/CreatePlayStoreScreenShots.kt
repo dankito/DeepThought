@@ -8,10 +8,10 @@ import net.dankito.deepthought.android.MainActivity
 import net.dankito.deepthought.android.di.TestComponent
 import net.dankito.deepthought.android.util.TestUtil
 import net.dankito.deepthought.android.util.screenshot.TakeScreenshotOnErrorTestRule
+import net.dankito.deepthought.beta.preview.test.R
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.enums.OsType
-import net.dankito.deepthought.preview.test.R
-import net.dankito.richtexteditor.android.command.Command
+import net.dankito.richtexteditor.command.CommandName
 import net.dankito.service.search.specific.TagsSearch
 import org.junit.Before
 import org.junit.ClassRule
@@ -99,32 +99,32 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
         navigator.enterText(R.string.item_content_editor_introduction_line)
 
         navigator.enterNewLine()
-        navigator.clickOnEditorCommand(Command.INSERTUNORDEREDLIST)
+        navigator.clickOnEditorCommand(CommandName.INSERTUNORDEREDLIST)
 
-        navigator.clickOnEditorCommand(Command.BOLD)
+        navigator.clickOnEditorCommand(CommandName.BOLD)
         navigator.enterText(R.string.item_content_editor_bold)
-        navigator.clickOnEditorCommand(Command.BOLD)
+        navigator.clickOnEditorCommand(CommandName.BOLD)
         navigator.enterNewLine()
 
-        navigator.clickOnEditorCommand(Command.ITALIC)
+        navigator.clickOnEditorCommand(CommandName.ITALIC)
         navigator.enterText(R.string.item_content_editor_italic)
-        navigator.clickOnEditorCommand(Command.ITALIC)
+        navigator.clickOnEditorCommand(CommandName.ITALIC)
         navigator.enterNewLine()
 
-        navigator.clickOnEditorCommand(Command.UNDERLINE)
+        navigator.clickOnEditorCommand(CommandName.UNDERLINE)
         navigator.enterText(R.string.item_content_editor_underline)
-        navigator.clickOnEditorCommand(Command.UNDERLINE)
+        navigator.clickOnEditorCommand(CommandName.UNDERLINE)
         navigator.enterNewLine()
 
         navigator.enterText(R.string.item_content_editor_text_color_introduction)
-        navigator.clickOnEditorCommand(Command.BACKCOLOR)
+        navigator.clickOnEditorCommand(CommandName.BACKCOLOR)
         navigator.enterText(R.string.item_content_editor_text_background_color)
-        navigator.clickOnEditorCommand(Command.BACKCOLOR)
+        navigator.clickOnEditorCommand(CommandName.BACKCOLOR)
         navigator.enterText(R.string.item_content_editor_text_color_end)
         navigator.enterNewLine()
 
-        navigator.clickOnEditorCommand(Command.INSERTUNORDEREDLIST)
-        navigator.clickOnEditorCommand(Command.INSERTORDEREDLIST)
+        navigator.clickOnEditorCommand(CommandName.INSERTUNORDEREDLIST)
+        navigator.clickOnEditorCommand(CommandName.INSERTORDEREDLIST)
 
         navigator.enterText(R.string.item_content_editor_ordered_list)
         navigator.enterNewLine()
@@ -136,7 +136,7 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
         navigator.enterNewLine()
 
         TestUtil.sleep(500)
-        navigator.clickOnEditorCommand(Command.INSERTORDEREDLIST)
+        navigator.clickOnEditorCommand(CommandName.INSERTORDEREDLIST)
 
         takeScreenShot(RichTextEditorScreenshotName)
 
@@ -146,7 +146,7 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
 
 
     private fun createSearchScreenshot() {
-        navigator.search(getString(net.dankito.deepthought.preview.test.R.string.search_items_query))
+        navigator.search(getString(R.string.search_items_query))
         navigator.hideKeyboard()
         TestUtil.sleep(1000)
 
@@ -166,7 +166,7 @@ class CreatePlayStoreScreenShots : DeepThoughtAndroidTestBase() {
 
         takeScreenShot(TagsListScreenshotName)
 
-        createdItems.forEach { deleteEntityService.deleteEntry(it) }
+        createdItems.forEach { deleteEntityService.deleteItem(it) }
         TestUtil.sleep(1000)
     }
 

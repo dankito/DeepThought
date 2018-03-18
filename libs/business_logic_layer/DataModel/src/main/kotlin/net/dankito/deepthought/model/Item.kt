@@ -145,8 +145,20 @@ data class Item(
         return attachedFiles.size > 0
     }
 
+    fun setAllAttachedFiles(files: Collection<FileLink>) { // don't name it setAttachedFiles(), would cause conflicts in Java (e.g. for deserializing with Jackson)
+        val copy = ArrayList(files)  // make a copy. if files equals this.attachedFiles, all files would get removed by removeAttachedFile() otherwise
+
+        for(previousFile in ArrayList(this.attachedFiles)) {
+            removeAttachedFile(previousFile)
+        }
+
+        for(newFile in copy) {
+            addAttachedFile(newFile)
+        }
+    }
+
     fun addAttachedFile(file: FileLink): Boolean {
-        if (attachedFiles.contains(file)) {
+        if(attachedFiles.add(file)) {
             file.addAsAttachmentToItem(this)
 
             return true
@@ -156,7 +168,7 @@ data class Item(
     }
 
     fun removeAttachedFile(file: FileLink): Boolean {
-        if (attachedFiles.remove(file)) {
+        if(attachedFiles.remove(file)) {
             file.removeAsAttachmentFromItem(this)
 
             return true
