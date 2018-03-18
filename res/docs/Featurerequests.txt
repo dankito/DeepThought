@@ -1,0 +1,24 @@
+- Modul- und Packagestruktur vereinheitlichen
+
+- OCR Erkennung einbauen (TextFairy, https://ocr.space/)
+
+- DefaultArticleExtractor (= Extractor für unbekannte Webseiten) verbessern (Boilerpipe, Mercury, ...)
+
+- Kommunikation verschlüsseln
+
+- Dateien anhängen können (Synchronisierung zwischen den Apps!)
+
+- Notizen hinzufügen können (nur beim Content?)
+
+- ToDos hinzufügen können (nur Entry oder auf Reference?)
+
+- Bilder einfügen können (in alle HtmlEditoren)
+
+
+
+- Zeichnen koennen
+InkML:
+https://github.com/gouzouni625/symbol_extractor
+https://github.com/glauberrleite/ramos-ink
+https://www.findbestopensource.com/product/libinkml
+http://code.google.com/archive/p/libinkml/source
