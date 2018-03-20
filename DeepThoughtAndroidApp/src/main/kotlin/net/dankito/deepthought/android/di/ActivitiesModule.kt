@@ -14,15 +14,11 @@ import net.dankito.deepthought.android.service.communication.AndroidDeviceRegist
 import net.dankito.deepthought.android.service.network.AndroidNetworkConnectivityManager
 import net.dankito.deepthought.android.service.permissions.AndroidPermissionsService
 import net.dankito.deepthought.android.service.settings.AndroidLocalSettingsStore
-import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.AllCalculatedTags
-import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.permissions.IPermissionsService
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
-import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
@@ -131,13 +127,6 @@ class ActivitiesModule(private val applicationContext: Context) {
     @Singleton
     fun provideAllCalculatedTags(searchEngine: ISearchEngine, eventBus: IEventBus, entityChangedNotifier: EntityChangedNotifier, localization: Localization) : AllCalculatedTags {
         return AllCalculatedTags(searchEngine, eventBus, entityChangedNotifier, localization)
-    }
-
-    @Provides
-    @Singleton
-    fun provideArticleSummaryPresenter(itemPersister: ItemPersister, readLaterArticleService: ReadLaterArticleService, articleExtractorManager: ArticleExtractorManager,
-                                       router: IRouter, clipboardService: IClipboardService, dialogService: IDialogService) : ArticleSummaryPresenter {
-        return ArticleSummaryPresenter(itemPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService)
     }
 
 

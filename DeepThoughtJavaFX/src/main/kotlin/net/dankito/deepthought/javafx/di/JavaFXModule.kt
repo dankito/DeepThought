@@ -123,13 +123,6 @@ class JavaFXModule(private val primaryStage: Stage, private val flavorInstancePr
 
     @Provides
     @Singleton
-    fun provideArticleSummaryPresenter(itemPersister: ItemPersister, readLaterArticleService: ReadLaterArticleService, articleExtractorManager: ArticleExtractorManager,
-                                       router: IRouter, clipboardService: IClipboardService, dialogService: IDialogService) : ArticleSummaryPresenter {
-        return ArticleSummaryPresenter(itemPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService)
-    }
-
-    @Provides
-    @Singleton
     fun provideArticleExtractorManager(seriesService: SeriesService, searchEngine: ISearchEngine) : ArticleExtractorManager {
         return flavorInstanceProvider.provideArticleExtractorManager(seriesService, searchEngine)
     }
