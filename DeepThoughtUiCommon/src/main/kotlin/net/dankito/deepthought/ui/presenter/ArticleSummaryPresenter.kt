@@ -20,7 +20,7 @@ import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 
 
-open class ArticleSummaryPresenter(protected val itemPersister: ItemPersister, protected val readLaterArticleService: ReadLaterArticleService, protected val articleExtractorManager: ArticleExtractorManager,
+class ArticleSummaryPresenter(protected val itemPersister: ItemPersister, protected val readLaterArticleService: ReadLaterArticleService, protected val articleExtractorManager: ArticleExtractorManager,
                                    protected val router: IRouter, private val clipboardService: IClipboardService, protected val dialogService: IDialogService) {
 
 
