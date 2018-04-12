@@ -2,7 +2,7 @@ ext {
 
     versionMajor = 0
     versionMinor = 4
-    versionPatch = 2
+    versionPatch = 3
     versionBuild = 0 // for pre-releases
     versionClassifier = null
 
