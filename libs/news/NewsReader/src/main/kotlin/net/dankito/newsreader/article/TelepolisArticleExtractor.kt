@@ -74,7 +74,7 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
     }
 
     private fun cleanContent(articleElement: Element) {
-        articleElement.select("header, footer").remove()
+        articleElement.select("header, footer, .apester-media, .apester-element").remove()
 
         articleElement.select(".hinweis_anzeige").forEach { it.parent().remove() }
     }
