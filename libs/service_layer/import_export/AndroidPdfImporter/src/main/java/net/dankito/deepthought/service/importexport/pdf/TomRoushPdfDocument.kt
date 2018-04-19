@@ -13,9 +13,9 @@ class TomRoushPdfDocument(pdfFile: File) : IPdfDocument {
 
     override val numberOfPages = document.numberOfPages
 
-    override val title = info.title
+    override val title = info.title ?: ""
 
-    override val author = info.author
+    override val author = info.author ?: ""
 
 
     override fun close() {
