@@ -179,10 +179,12 @@ class MainActivity : BaseActivity() {
 
         clearAllActivityResults() // important, so that the results from Activities opened from one of the tabs aren't displayed later in another activity (e.g. opening
         // EditSourceActivity from SourcesListView tab first, then going to EditItemActivityBase -> Source of first called EditSourceActivity gets then shown in second EditItemActivityBase
+
+        floatingActionMenuButton.viewBecomesVisible()
     }
 
     override fun onDestroy() {
-        floatingActionMenuButton.cleanUp()
+        floatingActionMenuButton.viewGetsHidden()
 
         super.onDestroy()
     }
