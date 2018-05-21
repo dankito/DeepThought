@@ -44,6 +44,14 @@ class TechStageArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
                 }
             }
         }
+
+        contentElement.parent().select(".a-grid").first()?.let { asideElement ->
+            ArrayList(asideElement.children()).forEach { childElement ->
+                if(childElement.toString().contains("Ähnliche Produkte im Test") == false) {
+                    childElement.remove()
+                }
+            }
+        }
     }
 
 
