@@ -79,13 +79,17 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
             articlePageTextElement.select("div.article_text").first()?.let { pageTextElement = it }
 
             pageTextElement.children()
-                    .filter { it.text().isNotBlank() }
+                    .filter { shouldFilterParagraph(it) == false }
                     .forEach { content += it.outerHtml() }
         }
 
         content += extractPatchesIfAny(sectionElement)
 
         return Item(content)
+    }
+
+    private fun shouldFilterParagraph(paragraph: Element): Boolean {
+        return paragraph.text().isBlank() || paragraph.hasClass("akwa-ad-container")
     }
 
     private fun extractPatchesIfAny(sectionElement: Element): String {

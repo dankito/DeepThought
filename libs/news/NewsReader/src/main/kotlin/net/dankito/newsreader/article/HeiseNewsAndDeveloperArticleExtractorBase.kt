@@ -79,6 +79,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         cleanContentElement(articleContentElement)
 
         makeLinksAbsolute(articleContentElement, url)
+        unwrapImagesFromNoscriptElements(articleContentElement);
 
         extractionResult.setExtractedContent(Item(articleContentElement.outerHtml()), source)
     }

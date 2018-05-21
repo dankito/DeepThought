@@ -98,6 +98,15 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun ensureDataPollGetsRemoved() {
+        getAndTestArticle("http://www.sueddeutsche.de/sport/sandro-wagner-ein-abschied-der-lauten-art-1.3983350",
+                "Ein Abschied der lauten Art",
+                "",
+                "http://media-cdn.sueddeutsche.de/image/sz.1.3983351/940x528?v=1526542261",
+                4500, subTitle = "Sandro Wagner")
+    }
+
+    @Test
     fun ensureSZPlusNotificationGetsShown() {
         getAndTestArticle("http://www.sueddeutsche.de/wissen/menschen-ueber-wie-man-alt-und-zufrieden-wird-1.3733043?reduced=true",
                 "Wie man alt und zufrieden wird",
