@@ -34,8 +34,8 @@ class TechStageArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
 
     private fun cleanContent(contentElement: Element) {
         // TODO: remove asides ?
-        contentElement.select("#article_comments, #article_navigation, .meta, .rectangle_ad, .ad_container ,.ad_content, #pvg-deals-anchor, .pvgs, .a-pvgs, .a-pvg, " +
-                ".techstage--aside-pvg-header, .article_tags_hl, .article_tags").remove()
+        contentElement.select("#article_comments, #article_navigation, .meta, .rectangle_ad, .ad_container, .ad_content, #pvg-deals-anchor, .pvgs, .a-pvgs, .a-pvg, " +
+                ".techstage--aside-pvg-header, .article_tags_hl, .article_tags, .OUTBRAIN").remove()
 
         contentElement.parent().select("#article_content > aside").first()?.let { asideElement ->
             ArrayList(asideElement.children()).forEach { childElement ->
