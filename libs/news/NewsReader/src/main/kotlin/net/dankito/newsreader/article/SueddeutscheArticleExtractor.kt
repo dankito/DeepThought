@@ -229,7 +229,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
             imageHtml.append("<p>" + caption.html() + "</p>")
         }
 
-        getUrlOfNextImageInGallery(articleBody)?.let { nextImageUrl ->
+        getUrlOfNextImageInGallery(articleBody, currentImageUrl)?.let { nextImageUrl ->
             if(imageUrlAlreadyLoaded(currentImageUrl, nextImageUrl, imageHtml) == false) {
                 // otherwise image gallery starts over again with first image -> would cause an infinite loop
                 readHtmlOfAllImagesInGallery(imageHtml, nextImageUrl)
@@ -241,8 +241,14 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         return currentImageUrl.contains(nextImageUrl) || imageHtml.contains(nextImageUrl)
     }
 
-    private fun getUrlOfNextImageInGallery(articleBody: Element): String? {
-        return articleBody.select("a.next").first()?.attr("href")
+    private fun getUrlOfNextImageInGallery(articleBody: Element, siteUrl: String): String? {
+        var url = articleBody.select("a.next").first()?.attr("href")
+
+        url?.let {  notNullUrl ->
+            url = makeLinkAbsolute(notNullUrl, siteUrl)
+        }
+
+        return url
     }
 
     private fun readHtmlOfAllImagesInGallery(imageHtml: StringBuilder, nextImageUrl: String) {

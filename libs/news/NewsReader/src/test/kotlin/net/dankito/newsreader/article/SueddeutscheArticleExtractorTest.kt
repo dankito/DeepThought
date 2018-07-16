@@ -76,7 +76,7 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
                 "Stellt die Arbeitsagentur Hartz-IV-Empfänger bloß?",
                 null,
                 null,
-                4900, subTitle = "Agentur für Arbeit")
+                4800, subTitle = "Agentur für Arbeit")
     }
 
     @Test
