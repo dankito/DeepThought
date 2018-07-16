@@ -213,7 +213,9 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
             val content = StringBuilder()
 
             // try to read publishing date first as readHtmlOfAllImagesInGallery() removes it
-            articleBody.select(".offscreen").first()?.let { source?.publishingDate = parseSueddeutscheDateString(it.text()) }
+            articleBody.select(".offscreen").first()?.let {
+                source?.setPublishingDate(parseSueddeutscheDateString(it.text()), it.text())
+            }
 
             readHtmlOfAllImagesInGallery(content, articleBody, siteUrl)
 
