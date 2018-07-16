@@ -211,9 +211,11 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
         galleryArticleElement.select("#article-body").first()?.let { articleBody ->
             val content = StringBuilder()
-            readHtmlOfAllImagesInGallery(content, articleBody, siteUrl)
 
+            // try to read publishing date first as readHtmlOfAllImagesInGallery() removes it
             articleBody.select(".offscreen").first()?.let { source?.publishingDate = parseSueddeutscheDateString(it.text()) }
+
+            readHtmlOfAllImagesInGallery(content, articleBody, siteUrl)
 
             extractionResult.setExtractedContent(Item(content.toString()), source)
         }
