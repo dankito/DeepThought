@@ -22,10 +22,14 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
     }
 
     private fun determineHasMore(summary: ArticleSummary, url: String, document: Document) {
-        var weitereMeldungenElements = document.body().select(".itemlist-nav a") // frontpage
+        var weitereMeldungenElements = document.body().select("li.a-pagination__item--next > a.a-pagination__link")
 
-        if(weitereMeldungenElements.size == 0) { // starting with page 2 the 'Weitere Meldungen' link changes
-            weitereMeldungenElements = document.body().select("a.seite_weiter")
+        if(weitereMeldungenElements.size == 0) { // then check old version
+            weitereMeldungenElements = document.body().select(".itemlist-nav a") // frontpage
+
+            if(weitereMeldungenElements.size == 0) { // starting with page 2 the 'Weitere Meldungen' link changes
+                weitereMeldungenElements = document.body().select("a.seite_weiter")
+            }
         }
 
         summary.canLoadMoreItems = weitereMeldungenElements.size == 1
