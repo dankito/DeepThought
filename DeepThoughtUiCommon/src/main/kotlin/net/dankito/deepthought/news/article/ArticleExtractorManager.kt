@@ -155,9 +155,11 @@ open class ArticleExtractorManager(private val seriesService: SeriesService, pri
     }
 
     private fun addDefaultTags(extractor: IArticleExtractor, extractionResult: ItemExtractionResult) {
-        configManager.getConfigs().forEach { config ->
-            if (extractor.canExtractItemFromUrl(config.url)) {
-                extractionResult.tags.addAll(config.tagsToAddOnExtractedArticles)
+        if(articleExtractors.isDefaultExtractor(extractor) == false) {
+            configManager.getConfigs().forEach { config ->
+                if (extractor.canExtractItemFromUrl(config.url)) {
+                    extractionResult.tags.addAll(config.tagsToAddOnExtractedArticles)
+                }
             }
         }
     }
