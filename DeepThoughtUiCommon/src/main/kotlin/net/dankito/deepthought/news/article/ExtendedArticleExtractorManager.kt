@@ -2,6 +2,7 @@ package net.dankito.deepthought.news.article
 
 import net.dankito.data_access.network.webclient.extractor.AsyncResult
 import net.dankito.deepthought.model.util.ItemExtractionResult
+import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.service.data.SeriesService
 import net.dankito.service.search.ISearchEngine
@@ -9,7 +10,8 @@ import net.dankito.service.search.ISearchEngine
 /**
  * ArticleExtractorManager version i only use for my purposes, not publicly available
  */
-class ExtendedArticleExtractorManager(private val seriesService: SeriesService, private val searchEngine: ISearchEngine) : ArticleExtractorManager(seriesService, searchEngine) {
+class ExtendedArticleExtractorManager(seriesService: SeriesService, searchEngine: ISearchEngine, configManager: ArticleSummaryExtractorConfigManager)
+    : ArticleExtractorManager(seriesService, searchEngine, configManager) {
 
 
     override fun extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(item: ArticleSummaryItem, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {

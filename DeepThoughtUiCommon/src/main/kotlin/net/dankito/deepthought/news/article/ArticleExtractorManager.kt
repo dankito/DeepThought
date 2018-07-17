@@ -6,6 +6,7 @@ import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
+import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.newsreader.article.ArticleExtractors
 import net.dankito.newsreader.article.IArticleExtractor
 import net.dankito.newsreader.model.ArticleSummaryItem
@@ -19,7 +20,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-open class ArticleExtractorManager(private val seriesService: SeriesService, private val searchEngine: ISearchEngine) {
+open class ArticleExtractorManager(private val seriesService: SeriesService, private val searchEngine: ISearchEngine, private val configManager: ArticleSummaryExtractorConfigManager) {
 
     companion object {
         private val log = LoggerFactory.getLogger(ArticleExtractorManager::class.java)
@@ -148,7 +149,17 @@ open class ArticleExtractorManager(private val seriesService: SeriesService, pri
     private fun addDefaultData(extractor: IArticleExtractor, url: String, extractionResult: ItemExtractionResult, callback: () -> Unit) {
         val siteName = getSiteName(extractor, url, extractionResult)
 
+        addDefaultTags(extractor, extractionResult)
+
         addDefaultDataForSiteName(siteName, extractionResult, callback)
+    }
+
+    private fun addDefaultTags(extractor: IArticleExtractor, extractionResult: ItemExtractionResult) {
+        configManager.getConfigs().forEach { config ->
+            if (extractor.canExtractItemFromUrl(config.url)) {
+                extractionResult.tags.addAll(config.tagsToAddOnExtractedArticles)
+            }
+        }
     }
 
     private fun addDefaultDataForSiteName(siteName: String?, extractionResult: ItemExtractionResult, callback: () -> Unit) {

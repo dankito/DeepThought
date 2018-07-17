@@ -17,8 +17,8 @@ class FlavorModule {
 
     @Provides
     @Singleton
-    fun provideArticleExtractorManager(seriesService: SeriesService, searchEngine: ISearchEngine) : ArticleExtractorManager {
-        return ArticleExtractorManager(seriesService, searchEngine)
+    fun provideArticleExtractorManager(seriesService: SeriesService, searchEngine: ISearchEngine, configManager: ArticleSummaryExtractorConfigManager) : ArticleExtractorManager {
+        return ArticleExtractorManager(seriesService, searchEngine, configManager)
     }
 
 

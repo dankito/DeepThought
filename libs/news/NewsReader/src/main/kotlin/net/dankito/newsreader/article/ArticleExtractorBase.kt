@@ -178,7 +178,7 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
 
 
     protected fun isHttpOrHttpsUrlFromHost(url: String, expectedHostAndPath: String): Boolean {
-        return startsWithHttpOrHttps(url) && url.contains(expectedHostAndPath) && url.length > expectedHostAndPath.length + 7
+        return startsWithHttpOrHttps(url) && url.contains(expectedHostAndPath) && url.length > expectedHostAndPath.length + 6
     }
 
     protected fun startsWithHttpOrHttps(hostAndPath: String): Boolean {
