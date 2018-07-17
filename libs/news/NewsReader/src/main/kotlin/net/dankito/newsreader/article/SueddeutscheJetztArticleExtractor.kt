@@ -57,7 +57,7 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
         var content = ""
 
         // data-type=html and iframe e.g. for WhatsApp Kolumne
-        articleContentElement.select(".apos-item[data-type=\"richText\"], .apos-item[data-type=\"html\"]").forEach { itemsContainer ->
+        articleContentElement.select(".apos-item[data-type=\"richText\"], .apos-item[data-type=\"html\"], .apos-rich-text").forEach { itemsContainer ->
             itemsContainer.select("p, h3, iframe").forEach { paragraph ->
                 content += parseParagraph(paragraph)
             }
