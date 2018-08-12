@@ -20,7 +20,7 @@ class UrlUtil {
     fun isHttpUri(string: String): Boolean {
         try {
             val uri = URI.create(string)
-            return uri != null && (uri.scheme == "http" || uri.scheme == "https")
+            return uri != null && (uri.scheme.equals("http", true) || uri.scheme.equals("https", true))
         } catch(ignored: Exception) { } // ok, sharedText is not an Uri
 
         return false
