@@ -42,8 +42,12 @@ class ArticleSummaryItemRecyclerAdapter(activity: AppCompatActivity, private val
         }
         viewHolder.txtSummary.text = summary
 
+        val imageSize = viewHolder.itemView.context.resources
+                .getDimensionPixelSize(R.dimen.list_item_read_later_article_preview_image_size)
+
         Picasso.with(viewHolder.itemView.context)
                 .load(item.previewImageUrl)
+                .resize(imageSize, 0)
                 .into(viewHolder.imgPreviewImage)
     }
 
