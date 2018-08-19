@@ -4,7 +4,6 @@ import dagger.Module
 import dagger.Provides
 import javafx.stage.Stage
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
-import net.dankito.utils.web.client.IWebClient
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.data.SourcePersister
@@ -23,13 +22,12 @@ import net.dankito.deepthought.javafx.service.network.JavaFXNetworkConnectivityM
 import net.dankito.deepthought.javafx.service.settings.JavaFXLocalSettingsStore
 import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.news.article.ArticleExtractorManager
+import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.permissions.IPermissionsService
 import net.dankito.deepthought.service.permissions.JavaPermissionsService
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractorsManager
-import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.SeriesService
 import net.dankito.service.data.TagService
 import net.dankito.service.data.event.EntityChangedNotifier
@@ -45,6 +43,7 @@ import net.dankito.utils.ui.IApplicationsService
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.web.UrlUtil
+import net.dankito.utils.web.client.IWebClient
 import javax.inject.Singleton
 
 
@@ -123,8 +122,8 @@ class JavaFXModule(private val primaryStage: Stage, private val flavorInstancePr
 
     @Provides
     @Singleton
-    fun provideArticleExtractorManager(seriesService: SeriesService, searchEngine: ISearchEngine) : ArticleExtractorManager {
-        return flavorInstanceProvider.provideArticleExtractorManager(seriesService, searchEngine)
+    fun provideArticleExtractorManager(seriesService: SeriesService, searchEngine: ISearchEngine, configManager: ArticleSummaryExtractorConfigManager) : ArticleExtractorManager {
+        return flavorInstanceProvider.provideArticleExtractorManager(seriesService, searchEngine, configManager)
     }
 
     @Provides
