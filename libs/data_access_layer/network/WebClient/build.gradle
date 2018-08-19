@@ -9,7 +9,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
-    compile "net.dankito.utils:java-utils:1.0.1-SNAPSHOT"
+    compile "net.dankito.utils:java-utils:1.0.1"
 
     compile "org.slf4j:slf4j-api:$slf4jVersion"
 
