@@ -36,9 +36,9 @@ import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditItemPresenter
-import net.dankito.filechooserdialog.service.IPermissionsService
-import net.dankito.filechooserdialog.service.PermissionsService
-import net.dankito.richtexteditor.android.animation.ShowHideViewAnimator
+import net.dankito.utils.permissions.IPermissionsService
+import net.dankito.utils.permissions.PermissionsService
+import net.dankito.utils.animation.ShowHideViewAnimator
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ItemService
 import net.dankito.service.data.ReadLaterArticleService

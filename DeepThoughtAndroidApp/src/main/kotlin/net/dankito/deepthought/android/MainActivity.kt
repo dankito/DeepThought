@@ -26,10 +26,10 @@ import net.dankito.deepthought.model.LocalSettings
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.filechooserdialog.service.IPermissionsService
-import net.dankito.filechooserdialog.service.PermissionsService
+import net.dankito.utils.permissions.IPermissionsService
+import net.dankito.utils.permissions.PermissionsService
 import net.dankito.service.eventbus.IEventBus
-import net.dankito.utils.UrlUtil
+import net.dankito.utils.web.UrlUtil
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 

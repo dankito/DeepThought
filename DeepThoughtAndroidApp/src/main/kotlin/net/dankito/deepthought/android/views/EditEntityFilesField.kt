@@ -19,8 +19,8 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.FileListPresenter
 import net.dankito.filechooserdialog.FileChooserDialog
 import net.dankito.filechooserdialog.model.FileChooserDialogConfig
-import net.dankito.filechooserdialog.service.IPermissionsService
 import net.dankito.filechooserdialog.service.PreviewImageService
+import net.dankito.utils.permissions.IPermissionsService
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.extensions.didCollectionChange
