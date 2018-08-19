@@ -1,7 +1,7 @@
 package net.dankito.data_access.network.webclient.extractor
 
-import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.data_access.network.webclient.RequestParameters
+import net.dankito.utils.web.client.IWebClient
+import net.dankito.utils.web.client.RequestParameters
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -50,7 +50,7 @@ abstract class ExtractorBase(val webClient : IWebClient) {
     }
 
     protected open fun createParametersForUrl(url: String, body: String? = null): RequestParameters {
-        val parameters = RequestParameters(url, body, userAgent = RequestParameters.DEFAULT_MOBILE_USER_AGENT)
+        val parameters = RequestParameters(url, body, userAgent = RequestParameters.DefaultMobileUserAgent)
 
         return parameters
     }

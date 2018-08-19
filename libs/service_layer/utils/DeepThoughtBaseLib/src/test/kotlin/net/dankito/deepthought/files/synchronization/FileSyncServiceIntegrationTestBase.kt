@@ -46,7 +46,7 @@ import net.dankito.utils.ThreadPool
 import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.JacksonJsonSerializer
-import net.dankito.utils.services.hashing.HashService
+import net.dankito.utils.hashing.HashService
 import net.dankito.utils.services.hashing.IBase64Service
 import net.dankito.utils.services.network.NetworkConnectivityManagerBase
 import net.dankito.utils.services.network.NetworkHelper

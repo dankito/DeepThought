@@ -34,6 +34,7 @@ class AndroidPermissionsService(private val applicationContext: Context, private
     }
 
     private fun requestPermissionToWriteSynchronizedFiles(currentActivity: BaseActivity, requestPermissionResult: (Boolean) -> Unit) {
+        // TODO: this will not work as currentActivity has to call this permissionsManager instance in its onPermissionResult() method
         val permissionsManager = PermissionsService(currentActivity)
         val rational = currentActivity.getString(R.string.request_write_synchronized_file_permission_rational)
 

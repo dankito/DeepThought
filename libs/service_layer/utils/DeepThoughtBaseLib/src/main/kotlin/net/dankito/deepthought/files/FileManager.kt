@@ -13,7 +13,7 @@ import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.services.Times
-import net.dankito.utils.services.hashing.HashService
+import net.dankito.utils.hashing.HashService
 import net.engio.mbassy.listener.Handler
 import org.slf4j.LoggerFactory
 import java.io.File

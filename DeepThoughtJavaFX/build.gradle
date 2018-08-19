@@ -52,6 +52,7 @@ dependencies {
     compile project(':JavaCouchbaseLiteEntityManager')
     compile project(':UdpDevicesDiscoverer')
     compile "net.dankito.richtexteditor:richtexteditor-javafx:$richTextEditorVersion", {
+        exclude group: 'net.dankito.utils', module: 'java-utils'
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
         exclude group: 'com.fasterxml.jackson.module', module: 'jackson-module-kotlin'
         exclude group: 'org.slf4j', module: 'slf4j-api'

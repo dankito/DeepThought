@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import javafx.stage.Stage
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
-import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.utils.web.client.IWebClient
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.data.SourcePersister
@@ -37,7 +37,6 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.IThreadPool
-import net.dankito.utils.UrlUtil
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.services.network.INetworkConnectivityManager
 import net.dankito.utils.services.network.NetworkHelper
@@ -45,6 +44,7 @@ import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.ui.IApplicationsService
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.web.UrlUtil
 import javax.inject.Singleton
 
 

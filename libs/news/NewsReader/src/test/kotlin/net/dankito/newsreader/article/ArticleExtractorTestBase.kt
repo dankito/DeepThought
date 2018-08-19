@@ -1,7 +1,7 @@
 package net.dankito.newsreader.article
 
-import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.data_access.network.webclient.OkHttpWebClient
+import net.dankito.utils.web.client.IWebClient
+import net.dankito.utils.web.client.OkHttpWebClient
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.Matchers.greaterThan

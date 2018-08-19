@@ -1,6 +1,6 @@
 package net.dankito.deepthought.javafx.di
 
-import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.utils.web.client.IWebClient
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.article.ExtendedArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager

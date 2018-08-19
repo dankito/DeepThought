@@ -1,7 +1,7 @@
 package net.dankito.newsreader.summary
 
-import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.data_access.network.webclient.extractor.AsyncResult
+import net.dankito.utils.web.client.IWebClient
+import net.dankito.utils.AsyncResult
 import net.dankito.data_access.network.webclient.extractor.ExtractorBase
 import net.dankito.newsreader.model.ArticleSummary
 import org.jsoup.nodes.Document

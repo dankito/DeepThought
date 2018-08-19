@@ -1,6 +1,6 @@
 package net.dankito.faviconextractor
 
-import net.dankito.data_access.network.webclient.OkHttpWebClient
+import net.dankito.utils.web.client.OkHttpWebClient
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.Assert.assertThat
