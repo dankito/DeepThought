@@ -17,10 +17,10 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.view_edit_entity_field.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
-import net.dankito.deepthought.android.extensions.setTextColorToColorResource
-import net.dankito.deepthought.android.extensions.setTintColor
-import net.dankito.deepthought.android.service.hideKeyboard
-import net.dankito.deepthought.android.service.showKeyboard
+import net.dankito.utils.extensions.setTextColorToColorResource
+import net.dankito.utils.extensions.setTintColor
+import net.dankito.utils.extensions.hideKeyboard
+import net.dankito.utils.extensions.showKeyboard
 
 
 open class EditEntityField : RelativeLayout {

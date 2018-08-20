@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.TextView
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.extensions.setCustomTypeface
+import net.dankito.utils.extensions.setCustomTypeface
 
 
 class CustomFontTextView : TextView {

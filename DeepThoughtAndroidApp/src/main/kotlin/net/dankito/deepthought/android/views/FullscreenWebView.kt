@@ -12,12 +12,12 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import kotlinx.android.synthetic.main.activity_edit_item.view.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.extensions.getColorFromResourceId
-import net.dankito.deepthought.android.service.OnSwipeTouchListener
-import net.dankito.deepthought.android.service.showKeyboard
+import net.dankito.utils.OnSwipeTouchListener
+import net.dankito.utils.extensions.showKeyboard
 import net.dankito.richtexteditor.android.toolbar.SearchView
 import net.dankito.richtexteditor.android.toolbar.SearchViewStyle
 import net.dankito.richtexteditor.command.ToolbarCommandStyle
+import net.dankito.utils.extensions.getColorFromResource
 import java.util.*
 
 
@@ -138,7 +138,7 @@ class FullscreenWebView : WebView {
         lytFullscreenWebViewOptionsBar.addView(searchView, 0)
 
         val width = context.resources.getDimension(R.dimen.fullscreen_web_view_options_bar_button_width) / context.resources.displayMetrics.density
-        val backgroundColor = context.getColorFromResourceId(R.color.colorPrimary)
+        val backgroundColor = context.getColorFromResource(R.color.colorPrimary)
         searchView.applyStyle(SearchViewStyle(ToolbarCommandStyle(widthDp = width.toInt()), backgroundColor, 16f))
         searchView.webView = this
 

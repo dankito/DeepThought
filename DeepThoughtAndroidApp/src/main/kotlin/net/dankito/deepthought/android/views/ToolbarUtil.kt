@@ -11,7 +11,7 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.contextual_action_mode_item_action_layout.view.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.extensions.setRightMargin
+import net.dankito.utils.extensions.setRightMargin
 import org.slf4j.LoggerFactory
 
 
