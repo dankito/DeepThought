@@ -165,6 +165,7 @@ dependencies {
     compile "net.dankito.richtexteditor:richtexteditor-android:$richTextEditorVersion", {
         exclude group: 'net.dankito.utils', module: 'java-utils'
         exclude group: 'net.dankito.filechooserdialog', module: 'filechooserdialog-android'
+        exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
         exclude group: 'com.fasterxml.jackson.module', module: 'jackson-module-kotlin'
         exclude group: 'org.slf4j', module: 'slf4j-api'
