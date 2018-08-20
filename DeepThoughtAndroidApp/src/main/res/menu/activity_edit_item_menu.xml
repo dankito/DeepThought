@@ -42,10 +42,19 @@
     />
 
     <item
-        android:id="@+id/mnShareItem"
+        android:id="@+id/mnShareItemSourceUrl"
         app:showAsAction="never"
         android:orderInCategory="1000"
-        android:title="@string/action_share"
+        android:title="@string/action_share_link"
+        android:icon="@drawable/ic_share_white_48dp"
+        app:actionLayout="@layout/contextual_action_mode_item_action_layout"
+    />
+
+    <item
+        android:id="@+id/mnShareItemContent"
+        app:showAsAction="never"
+        android:orderInCategory="1100"
+        android:title="@string/action_share_content"
         android:icon="@drawable/ic_share_white_48dp"
         app:actionLayout="@layout/contextual_action_mode_item_action_layout"
     />

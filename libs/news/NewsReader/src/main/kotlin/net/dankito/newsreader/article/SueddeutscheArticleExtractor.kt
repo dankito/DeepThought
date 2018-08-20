@@ -1,6 +1,6 @@
 package net.dankito.newsreader.article
 
-import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.utils.web.client.IWebClient
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
@@ -118,7 +118,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
     private fun cleanArticleBody(articleBody: Element) {
-        articleBody.select("#article-sidebar-wrapper, #sharingbaranchor, .ad, .authors, .teaserable-layout, .flexible-teaser, #iq-artikelanker").remove()
+        articleBody.select("#article-sidebar-wrapper, #sharingbaranchor, .ad, .authors, .teaserable-layout, .flexible-teaser, #iq-artikelanker, [data-poll]").remove()
 
         // remove scripts with try{window.performance.mark('monitor_articleTeaser');}catch(e){};
         articleBody.select("script").filter { it.html().contains("window.performance.mark") }.forEach { it.remove() }
@@ -211,9 +211,13 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
         galleryArticleElement.select("#article-body").first()?.let { articleBody ->
             val content = StringBuilder()
-            readHtmlOfAllImagesInGallery(content, articleBody, siteUrl)
 
-            articleBody.select(".offscreen").first()?.let { source?.publishingDate = parseSueddeutscheDateString(it.text()) }
+            // try to read publishing date first as readHtmlOfAllImagesInGallery() removes it
+            articleBody.select(".offscreen").first()?.let {
+                source?.setPublishingDate(parseSueddeutscheDateString(it.text()), it.text())
+            }
+
+            readHtmlOfAllImagesInGallery(content, articleBody, siteUrl)
 
             extractionResult.setExtractedContent(Item(content.toString()), source)
         }
@@ -229,7 +233,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
             imageHtml.append("<p>" + caption.html() + "</p>")
         }
 
-        getUrlOfNextImageInGallery(articleBody)?.let { nextImageUrl ->
+        getUrlOfNextImageInGallery(articleBody, currentImageUrl)?.let { nextImageUrl ->
             if(imageUrlAlreadyLoaded(currentImageUrl, nextImageUrl, imageHtml) == false) {
                 // otherwise image gallery starts over again with first image -> would cause an infinite loop
                 readHtmlOfAllImagesInGallery(imageHtml, nextImageUrl)
@@ -241,8 +245,14 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         return currentImageUrl.contains(nextImageUrl) || imageHtml.contains(nextImageUrl)
     }
 
-    private fun getUrlOfNextImageInGallery(articleBody: Element): String? {
-        return articleBody.select("a.next").first()?.attr("href")
+    private fun getUrlOfNextImageInGallery(articleBody: Element, siteUrl: String): String? {
+        var url = articleBody.select("a.next").first()?.attr("href")
+
+        url?.let {  notNullUrl ->
+            url = makeLinkAbsolute(notNullUrl, siteUrl)
+        }
+
+        return url
     }
 
     private fun readHtmlOfAllImagesInGallery(imageHtml: StringBuilder, nextImageUrl: String) {

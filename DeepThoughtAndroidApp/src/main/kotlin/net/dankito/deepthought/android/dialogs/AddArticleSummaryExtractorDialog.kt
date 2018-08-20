@@ -13,7 +13,7 @@ import android.widget.ListView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.dialog_add_article_summary_extractor.*
 import kotlinx.android.synthetic.main.dialog_add_article_summary_extractor.view.*
-import net.dankito.data_access.network.webclient.extractor.AsyncResult
+import net.dankito.utils.AsyncResult
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.FoundFeedAddressesAdapter
 import net.dankito.deepthought.android.di.AppComponent

@@ -1,12 +1,12 @@
 package net.dankito.newsreader.summary
 
-import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.newsreader.article.ArticleExtractorBase
 import net.dankito.newsreader.article.SueddeutscheArticleExtractor
 import net.dankito.newsreader.article.SueddeutscheJetztArticleExtractor
 import net.dankito.newsreader.article.SueddeutscheMagazinArticleExtractor
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
+import net.dankito.utils.web.client.IWebClient
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
@@ -37,15 +37,14 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
 
     private fun loadArticlesFromHomePage(articles: MutableList<ArticleSummaryItem>, url: String, document: Document) {
         extractTeasers(articles, url, document)
-        extractTeaserListItems(articles, url, document)
         extractTileTeasers(articles, url, document)
     }
 
     private fun extractTeasers(articles: MutableList<ArticleSummaryItem>, siteUrl: String, document: Document) {
-        document.body().select("#sitecontent").first()?.let { siteContent ->
-            articles.addAll(siteContent.select(".sz-teaser").map { mapTeaserElementToArticleSummaryItem(it, siteUrl) }.filterNotNull())
-            articles.addAll(siteContent.select(".teaser").map { mapOldTeaserElementToArticleSummaryItem(it, siteUrl) }.filterNotNull())
-        }
+        articles.addAll(
+                document.body().select(".teaserlist > .sz-teaser")
+                        .map { mapTeaserElementToArticleSummaryItem(it, siteUrl) }.filterNotNull()
+        )
     }
 
     private fun mapTeaserElementToArticleSummaryItem(teaserElement: Element, siteUrl: String): ArticleSummaryItem? {
@@ -58,24 +57,6 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
             }
 
             teaserElement.select(".sz-teaser__summary").first()?.let { summaryElement ->
-                summaryElement.select(".author, .more").remove()
-                item.summary = summaryElement.text()
-            }
-
-            return item
-        }
-
-        return null
-    }
-
-    private fun mapOldTeaserElementToArticleSummaryItem(teaserElement: Element, siteUrl: String): ArticleSummaryItem? {
-        teaserElement.select(".entry-title").first()?.let { titleElement ->
-            val articleUrl = makeLinkAbsolute(titleElement.attr("href"), siteUrl)
-            val item = ArticleSummaryItem(articleUrl, titleElement.text(), getArticleExtractorClass(articleUrl))
-
-            titleElement.select("img").first()?.let { item.previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(it, "src", siteUrl) }
-
-            teaserElement.select(".entry-summary").first()?.let { summaryElement ->
                 summaryElement.select(".author, .more").remove()
                 item.summary = summaryElement.text()
             }
@@ -112,30 +93,6 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
     }
 
 
-    private fun extractTeaserListItems(articles: MutableList<ArticleSummaryItem>, siteUrl: String, document: Document) {
-        document.body().select("#relatedcontent").first()?.let { relatedContentElement ->
-            articles.addAll(relatedContentElement.select(".teaserElement").map { mapTeaserListItemToArticleSummaryItem(it, siteUrl) }.filterNotNull())
-        }
-    }
-
-    private fun mapTeaserListItemToArticleSummaryItem(teaserListItemElement: Element, siteUrl: String): ArticleSummaryItem? {
-        teaserListItemElement.select("a").first()?.let {
-            val articleUrl = makeLinkAbsolute(it.attr("href"), siteUrl)
-            val item = ArticleSummaryItem(articleUrl, it.text(), getArticleExtractorClass(articleUrl))
-
-            it.select("img").first()?.let { item.previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(it, "src", siteUrl) }
-
-            teaserListItemElement.select(".teaserElement__text").first()?.let { teaserTextElement ->
-                teaserTextElement.select(".teaserElement__author").remove()
-                item.summary = teaserTextElement.text()
-            }
-
-            return item
-        }
-
-        return null
-    }
-
     private fun getArticleExtractorClass(articleUrl: String): Class<out ArticleExtractorBase> {
         if(articleUrl.contains("://sz-magazin.sueddeutsche.de/")) {
             return SueddeutscheMagazinArticleExtractor::class.java
@@ -165,8 +122,33 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
             val sectionUrl = politicsNavigationElement.attr("href")
 
             val subSectionDoc = requestUrl(sectionUrl)
-            extractTeasers(articles, siteUrl, subSectionDoc)
+            extractTeasersOld(articles, siteUrl, subSectionDoc)
         }
+    }
+
+    private fun extractTeasersOld(articles: MutableList<ArticleSummaryItem>, siteUrl: String, document: Document) {
+        document.body().select("#sitecontent").first()?.let { siteContent ->
+            articles.addAll(siteContent.select(".sz-teaser").map { mapTeaserElementToArticleSummaryItem(it, siteUrl) }.filterNotNull())
+            articles.addAll(siteContent.select(".teaser").map { mapOldTeaserElementToArticleSummaryItem(it, siteUrl) }.filterNotNull())
+        }
+    }
+
+    private fun mapOldTeaserElementToArticleSummaryItem(teaserElement: Element, siteUrl: String): ArticleSummaryItem? {
+        teaserElement.select(".entry-title").first()?.let { titleElement ->
+            val articleUrl = makeLinkAbsolute(titleElement.attr("href"), siteUrl)
+            val item = ArticleSummaryItem(articleUrl, titleElement.text(), getArticleExtractorClass(articleUrl))
+
+            titleElement.select("img").first()?.let { item.previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(it, "src", siteUrl) }
+
+            teaserElement.select(".entry-summary").first()?.let { summaryElement ->
+                summaryElement.select(".author, .more").remove()
+                item.summary = summaryElement.text()
+            }
+
+            return item
+        }
+
+        return null
     }
 
 }

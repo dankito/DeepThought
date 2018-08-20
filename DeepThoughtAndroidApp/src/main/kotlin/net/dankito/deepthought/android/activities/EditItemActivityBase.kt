@@ -8,9 +8,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.support.v7.widget.ActionMenuView
-import android.support.v7.widget.AppCompatImageView
-import android.support.v7.widget.PopupMenu
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -26,9 +23,10 @@ import net.dankito.deepthought.android.activities.arguments.EditItemActivityResu
 import net.dankito.deepthought.android.activities.arguments.EditSourceActivityResult
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.ExtractArticleHandler
-import net.dankito.deepthought.android.service.OnSwipeTouchListener
-import net.dankito.deepthought.android.service.hideKeyboard
-import net.dankito.deepthought.android.service.hideKeyboardDelayed
+import net.dankito.utils.OnSwipeTouchListener
+import net.dankito.utils.extensions.hideKeyboard
+import net.dankito.utils.extensions.hideKeyboardDelayed
+import net.dankito.utils.extensions.executeActionAfterMeasuringSize
 import net.dankito.deepthought.android.views.*
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.model.*
@@ -39,9 +37,9 @@ import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditItemPresenter
-import net.dankito.filechooserdialog.service.IPermissionsService
-import net.dankito.filechooserdialog.service.PermissionsService
-import net.dankito.richtexteditor.android.animation.ShowHideViewAnimator
+import net.dankito.utils.permissions.IPermissionsService
+import net.dankito.utils.permissions.PermissionsService
+import net.dankito.utils.animation.ShowHideViewAnimator
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ItemService
 import net.dankito.service.data.ReadLaterArticleService
@@ -74,8 +72,6 @@ abstract class EditItemActivityBase : BaseActivity() {
 
         private const val CONTENT_INTENT_EXTRA_NAME = "CONTENT"
         private const val EDIT_CONTENT_HTML_INTENT_EXTRA_NAME = "EDIT_CONTENT_HTML"
-        private const val TAGS_ON_ITEM_INTENT_EXTRA_NAME = "TAGS_ON_ITEM"
-        private const val FILES_INTENT_EXTRA_NAME = "ATTACHED_FILES"
 
         const val ResultId = "EDIT_ITEM_ACTIVITY_RESULT"
 
@@ -181,7 +177,9 @@ abstract class EditItemActivityBase : BaseActivity() {
 
     protected var mnSaveItemExtractionResultForLaterReading: MenuItem? = null
 
-    protected var mnShareItem: MenuItem? = null
+    protected var mnShareItemSourceUrl: MenuItem? = null
+
+    protected var mnShareItemContent: MenuItem? = null
 
     private lateinit var floatingActionMenu: EditItemActivityFloatingActionMenuButton
 
@@ -244,10 +242,6 @@ abstract class EditItemActivityBase : BaseActivity() {
             setContentPreviewOnUIThread()
         }
 
-        savedInstanceState.getString(TAGS_ON_ITEM_INTENT_EXTRA_NAME)?.let { tagsOnItemIds -> restoreTagsOnItemAsync(tagsOnItemIds) }
-        // TODO:
-//        savedInstanceState.getString(FILES_INTENT_EXTRA_NAME)?.let { fileIds -> restoreFilesAsync(fileIds) }
-
         wbvwContent.restoreInstanceState(savedInstanceState)
 
         floatingActionMenu.restoreInstanceState(savedInstanceState)
@@ -279,10 +273,6 @@ abstract class EditItemActivityBase : BaseActivity() {
 
             outState.putBoolean(IS_IN_EDIT_CONTENT_MODE_INTENT_EXTRA_NAME, isInEditContentMode)
             outState.putBoolean(IS_IN_READER_MODE_INTENT_EXTRA_NAME, isInReaderMode)
-
-            outState.putString(TAGS_ON_ITEM_INTENT_EXTRA_NAME, serializer.serializeObject(tagsOnItem))
-            // TODO: add PersistedFilesSerializer
-            outState.putString(FILES_INTENT_EXTRA_NAME, serializer.serializeObject(lytFilesPreview.getEditedFiles()))
 
             if(contentToEdit != originalContent) {
                 serializeStateToDiskIfNotNull(outState, CONTENT_INTENT_EXTRA_NAME, contentToEdit) // application crashes if objects put into bundle are too large (> 1 MB) for Android
@@ -865,7 +855,8 @@ abstract class EditItemActivityBase : BaseActivity() {
     }
 
     private fun updateShowMenuItemShareItem() {
-        mnShareItem?.isVisible = lytSourcePreview.source?.url.isNullOrBlank() == false
+        mnShareItemSourceUrl?.isVisible = lytSourcePreview.source?.url.isNullOrBlank() == false
+        mnShareItemContent?.isVisible = contentToEdit.isNullOrBlank() == false
     }
 
     private fun tagsPreviewFocusChanged(hasFocus: Boolean) {
@@ -873,7 +864,7 @@ abstract class EditItemActivityBase : BaseActivity() {
             lytTagsPreview.visibility = View.VISIBLE
 
             if(lytSourcePreview.visibility == View.VISIBLE || lytSummaryPreview.visibility == View.VISIBLE || lytFilesPreview.visibility == View.VISIBLE) {
-                lytTagsPreview.executeActionAfterMeasuringHeight {
+                lytTagsPreview.executeActionAfterMeasuringSize {
                     playHideOtherItemFieldsPreviewExceptTagsAnimation()
                 }
             }
@@ -1191,7 +1182,8 @@ abstract class EditItemActivityBase : BaseActivity() {
 
         mnSaveItemExtractionResultForLaterReading = menu.findItem(R.id.mnSaveItemExtractionResultForLaterReading)
 
-        mnShareItem = menu.findItem(R.id.mnShareItem)
+        mnShareItemSourceUrl = menu.findItem(R.id.mnShareItemSourceUrl)
+        mnShareItemContent = menu.findItem(R.id.mnShareItemContent)
         updateShowMenuItemShareItem()
 
         setMenuSaveItemVisibleStateOnUIThread()
@@ -1241,8 +1233,12 @@ abstract class EditItemActivityBase : BaseActivity() {
                 toggleReaderMode()
                 return true
             }
-            R.id.mnShareItem -> {
-                showShareItemPopupMenu()
+            R.id.mnShareItemSourceUrl -> {
+                shareSourceUrl()
+                return true
+            }
+            R.id.mnShareItemContent -> {
+                shareItemContent()
                 return true
             }
             R.id.mnApplyHtmlChanges -> {
@@ -1283,50 +1279,6 @@ abstract class EditItemActivityBase : BaseActivity() {
                 }
             }
         }
-    }
-
-    private fun showShareItemPopupMenu() {
-        val overflowMenuButton = getOverflowMenuButton()
-        if(overflowMenuButton == null) {
-            return
-        }
-
-        val popup = PopupMenu(this, overflowMenuButton)
-
-        popup.menuInflater.inflate(R.menu.share_item_menu, popup.menu)
-
-        val source = lytSourcePreview.source
-        if(source == null || source.url.isNullOrBlank()) {
-            popup.menu.findItem(R.id.mnShareItemSourceUrl).isVisible = false
-        }
-
-        popup.setOnMenuItemClickListener { item ->
-            when(item.itemId) {
-                R.id.mnShareItemSourceUrl -> shareSourceUrl()
-                R.id.mnShareItemContent -> shareItemContent()
-            }
-            true
-        }
-
-        popup.show()
-    }
-
-    private fun getOverflowMenuButton(): View? {
-        for(i in 0..toolbar.childCount - 1) { // OverflowMenuButton is child of ActionMenuView which is child of toolbar (both don't have an id so i cannot search for them)
-            val child = toolbar.getChildAt(i)
-
-            if(child is ActionMenuView) {
-                for(j in 0..child.childCount) {
-                    val actionMenuViewChild = child.getChildAt(j)
-
-                    if(actionMenuViewChild is AppCompatImageView && actionMenuViewChild is ActionMenuView.ActionMenuChildView) {
-                        return actionMenuViewChild
-                    }
-                }
-            }
-        }
-
-        return null
     }
 
     private fun shareSourceUrl() {

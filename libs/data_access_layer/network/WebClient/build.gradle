@@ -9,9 +9,9 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
-    compile "org.slf4j:slf4j-api:$slf4jVersion"
+    compile "net.dankito.utils:java-utils:1.0.1"
 
-    compile "com.squareup.okhttp3:okhttp:$okHttpVersion"
+    compile "org.slf4j:slf4j-api:$slf4jVersion"
 
     compile "org.jsoup:jsoup:$jsoupVersion"
 }

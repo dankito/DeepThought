@@ -1,6 +1,6 @@
 package net.dankito.newsreader.summary
 
-import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.utils.web.client.IWebClient
 
 
 class SpiegelArticleSummaryExtractorTest : ArticleSummaryExtractorTestBase() {

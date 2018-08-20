@@ -3,13 +3,15 @@ package net.dankito.deepthought.android.views
 import android.app.Activity
 import android.content.Context
 import android.os.Build
+import android.os.Bundle
+import android.os.Parcelable
 import android.support.v4.app.FragmentActivity
 import android.util.AttributeSet
 import android.view.ViewGroup
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.FilesRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.extensions.setLeftMargin
+import net.dankito.utils.extensions.setLeftMargin
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Source
@@ -17,8 +19,8 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.FileListPresenter
 import net.dankito.filechooserdialog.FileChooserDialog
 import net.dankito.filechooserdialog.model.FileChooserDialogConfig
-import net.dankito.filechooserdialog.service.IPermissionsService
 import net.dankito.filechooserdialog.service.PreviewImageService
+import net.dankito.utils.permissions.IPermissionsService
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.extensions.didCollectionChange
@@ -30,6 +32,11 @@ import javax.inject.Inject
 
 
 class EditEntityFilesField : EditEntityField {
+
+    companion object {
+        private const val UnpersistedFilesUrisExtraName = "UNPERSISTED_FILES"
+    }
+
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -76,6 +83,28 @@ class EditEntityFilesField : EditEntityField {
 
         rcySearchResult.adapter = attachedFilesAdapter
         attachedFilesAdapter.itemClickListener = { showFile(it) }
+    }
+
+
+    override fun onSaveInstanceState(): Parcelable {
+        val parcelable = super.onSaveInstanceState()
+
+        (parcelable as? Bundle)?.let { bundle ->
+            // TODO: use UiStatePersister
+            bundle.putStringArray(UnpersistedFilesUrisExtraName, attachedFilesAdapter.items.filter { it.isPersisted() == false }.map { it.uriString }.toTypedArray())
+        }
+
+        return parcelable
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        super.onRestoreInstanceState(state)
+
+        (state as? Bundle)?.let { savedInstanceState ->
+            savedInstanceState.getStringArray(UnpersistedFilesUrisExtraName)?.forEach { uri ->
+                addLocalFile(File(uri))
+            }
+        }
     }
 
 

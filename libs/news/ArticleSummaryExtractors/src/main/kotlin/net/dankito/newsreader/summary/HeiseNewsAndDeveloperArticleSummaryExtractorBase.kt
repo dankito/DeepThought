@@ -1,6 +1,6 @@
 package net.dankito.newsreader.summary
 
-import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.utils.web.client.IWebClient
 import net.dankito.newsreader.article.ArticleExtractorBase
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
@@ -22,10 +22,14 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
     }
 
     private fun determineHasMore(summary: ArticleSummary, url: String, document: Document) {
-        var weitereMeldungenElements = document.body().select(".itemlist-nav a") // frontpage
+        var weitereMeldungenElements = document.body().select("li.a-pagination__item--next > a.a-pagination__link")
 
-        if(weitereMeldungenElements.size == 0) { // starting with page 2 the 'Weitere Meldungen' link changes
-            weitereMeldungenElements = document.body().select("a.seite_weiter")
+        if(weitereMeldungenElements.size == 0) { // then check old version
+            weitereMeldungenElements = document.body().select(".itemlist-nav a") // frontpage
+
+            if(weitereMeldungenElements.size == 0) { // starting with page 2 the 'Weitere Meldungen' link changes
+                weitereMeldungenElements = document.body().select("a.seite_weiter")
+            }
         }
 
         summary.canLoadMoreItems = weitereMeldungenElements.size == 1
@@ -35,11 +39,40 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
     private fun extractArticles(url: String, document: Document): List<ArticleSummaryItem> {
         val articles = mutableListOf<ArticleSummaryItem>()
 
+        articles.addAll(extractNewHeiseArticles(url, document))
+        // TODO: remove as soon as current Heise Developer homepage is also outdated
         articles.addAll(extractTopArticles(url, document))
         articles.addAll(extractIndexItems(url, document)) // now Heise News only
         articles.addAll(extractHeiseDeveloperArticles(url, document)) // now Heise Developer
 
         return articles
+    }
+
+    private fun extractNewHeiseArticles(url: String, document: Document): Collection<ArticleSummaryItem> {
+        return document.select(".a-article-teaser > a").map { parseHeiseNewsArticle(it, url) }.filterNotNull()
+    }
+
+    private fun parseHeiseNewsArticle(articleElement: Element, url: String): ArticleSummaryItem? {
+        val articleUrl = makeLinkAbsolute(articleElement.attr("href"), url)
+        val article = ArticleSummaryItem(articleUrl, articleElement.attr("title"), getArticleExtractorClass(articleUrl))
+
+        extractKicker(articleElement, article)
+
+        articleElement.select(".a-article-teaser__image-container img").first()?.let {
+            article.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
+        }
+
+        articleElement.select(".a-article-teaser__synopsis").first()?.let { article.summary = it.text() }
+
+        return article
+    }
+
+    private fun extractKicker(articleElement: Element, article: ArticleSummaryItem) {
+        articleElement.select(".a-article-teaser__kicker").first()?.let {
+            if (it.text().isNullOrEmpty() == false) {
+                article.title = it.text() + " - " + article.title
+            }
+        }
     }
 
     private fun extractTopArticles(url: String, document: Document): Collection<ArticleSummaryItem> {

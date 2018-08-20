@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.TextView
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.service.StringUtil
+import net.dankito.utils.extensions.executeActionAfterMeasuringSize
 
 
 class ContextHelpUtil {
@@ -68,7 +69,7 @@ class ContextHelpUtil {
 
     // TODO: animation currently only works on top off screen, not in other places
     private fun animateShowContextHelp(lytContextHelp: View) {
-        lytContextHelp.executeActionAfterMeasuringHeight {
+        lytContextHelp.executeActionAfterMeasuringSize {
             animateShowContextHelpAfterMeasuringHeight(lytContextHelp)
         }
     }

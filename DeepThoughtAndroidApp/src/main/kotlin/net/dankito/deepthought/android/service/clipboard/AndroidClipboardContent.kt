@@ -4,7 +4,7 @@ import android.content.ClipData
 import android.content.ClipDescription
 import android.os.Build
 import net.dankito.deepthought.service.clipboard.ClipboardContent
-import net.dankito.utils.UrlUtil
+import net.dankito.utils.web.UrlUtil
 
 
 class AndroidClipboardContent(private val item: ClipData.Item, private val description: ClipDescription, private val urlUtil: UrlUtil) : ClipboardContent() {

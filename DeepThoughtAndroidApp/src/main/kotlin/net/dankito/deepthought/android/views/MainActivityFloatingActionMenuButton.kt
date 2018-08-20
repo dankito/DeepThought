@@ -36,15 +36,16 @@ class MainActivityFloatingActionMenuButton(floatingActionMenu: FloatingActionMen
         floatingActionMenu.fabAddNewspaperArticle.setOnClickListener { executeAndCloseMenu { router.showArticleSummaryExtractorsView() } }
 
         setFavoriteArticleSummaryExtractors()
-
-        setupEventBusListener()
     }
 
-    private fun setupEventBusListener() {
+
+    fun viewBecomesVisible() {
         eventBus.register(eventBusListener)
+
+        setFavoriteArticleSummaryExtractors() // as may in the meantime favorite article summary extractors changed
     }
 
-    fun cleanUp() {
+    fun viewGetsHidden() {
         eventBus.unregister(eventBusListener) // floatingActionMenu.addOnAttachStateChangeListener() didn't work, caused a memory leak, calling it explicitly now from MainActivity
     }
 

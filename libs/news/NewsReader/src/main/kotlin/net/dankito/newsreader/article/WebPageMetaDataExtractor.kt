@@ -1,6 +1,6 @@
 package net.dankito.newsreader.article
 
-import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.utils.web.client.IWebClient
 import net.dankito.data_access.network.webclient.extractor.ExtractorBase
 import org.jsoup.nodes.Document
 import java.util.*

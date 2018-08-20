@@ -1,6 +1,6 @@
 package net.dankito.newsreader.article
 
-import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.utils.web.client.IWebClient
 import org.junit.Test
 
 class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
@@ -76,7 +76,7 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
                 "Stellt die Arbeitsagentur Hartz-IV-Empfänger bloß?",
                 null,
                 null,
-                4900, subTitle = "Agentur für Arbeit")
+                4800, subTitle = "Agentur für Arbeit")
     }
 
     @Test
@@ -95,6 +95,15 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
                 "Scharfschützen auf den Dächern, vermummte Polizisten in den Straßen: Abiturient und Juso-Vorstand Daniel Meier im \"Interview am Morgen\" über den Ausnahmezustand vor Trumps Besuch in Davos.",
                 "http://media-cdn.sueddeutsche.de/image/sz.1.3838573/640x360?v=1516783464000",
                 4500, subTitle = "Interview am Morgen")
+    }
+
+    @Test
+    fun ensureDataPollGetsRemoved() {
+        getAndTestArticle("http://www.sueddeutsche.de/sport/sandro-wagner-ein-abschied-der-lauten-art-1.3983350",
+                "Ein Abschied der lauten Art",
+                "",
+                "http://media-cdn.sueddeutsche.de/image/sz.1.3983351/940x528?v=1526542261",
+                4500, subTitle = "Sandro Wagner")
     }
 
     @Test

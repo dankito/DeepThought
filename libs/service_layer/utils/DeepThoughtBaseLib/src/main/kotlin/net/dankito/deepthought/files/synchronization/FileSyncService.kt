@@ -19,7 +19,7 @@ import net.dankito.service.synchronization.KnownSynchronizedDevicesListener
 import net.dankito.utils.AsyncProducerConsumerQueue
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.serialization.ISerializer
-import net.dankito.utils.services.hashing.HashService
+import net.dankito.utils.hashing.HashService
 import org.slf4j.LoggerFactory
 import java.io.*
 import java.net.Socket

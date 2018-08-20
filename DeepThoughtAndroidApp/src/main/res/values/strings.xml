@@ -27,6 +27,8 @@
     <string name="action_edit">Edit</string>
     <string name="action_save">Save</string>
     <string name="action_share">Share</string>
+    <string name="action_share_link">Share link</string>
+    <string name="action_share_content">Share content</string>
     <string name="action_view">View</string>
     <string name="action_read_article_later">Read later</string>
     <string name="action_website_view">Website</string>

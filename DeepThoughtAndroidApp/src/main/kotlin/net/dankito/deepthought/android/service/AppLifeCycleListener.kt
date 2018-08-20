@@ -12,7 +12,7 @@ import kotlin.concurrent.schedule
 class AppLifeCycleListener : Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
 
     companion object {
-        private val MAX_ACTIVITY_TRANSITION_TIME_MS = 2000L
+        private const val MaxActivityTransitionTimeMillis = 2000L
     }
 
 
@@ -76,7 +76,7 @@ class AppLifeCycleListener : Application.ActivityLifecycleCallbacks, ComponentCa
 
         activityTransitionTimer = Timer()
 
-        activityTransitionTimer?.schedule(MAX_ACTIVITY_TRANSITION_TIME_MS) {
+        activityTransitionTimer?.schedule(MaxActivityTransitionTimeMillis) {
             setIsInForegroundValue(false)
         }
     }
