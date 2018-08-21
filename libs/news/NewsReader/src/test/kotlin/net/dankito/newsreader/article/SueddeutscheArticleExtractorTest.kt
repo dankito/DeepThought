@@ -35,6 +35,15 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
                 null, 16000, true)
     }
 
+    // TODO:
+//    @Test
+//    fun extractArticleWithImage() {
+//        getAndTestArticle("https://www.sueddeutsche.de/politik/krieg-im-jemen-die-welt-schaut-weg-1.4080943",
+//                "Revolution am Bettrand",
+//                "Thomas Hesterberg machte 1967 das legendäre Foto der Kommune 1, auf dem die Bewohner ihre nackten Hintern der Kamera entgegenstrecken. Tatsächlich ging es dort gar nicht so freizügig zu. Wir zeigen weitere, bislang unveröffentlichte Bilder.",
+//                null, 16000, true)
+//    }
+
     @Test
     fun extractArticleWithInlineImageCarousel() {
         getAndTestArticle("http://www.sueddeutsche.de/reise/uebernachten-im-wald-traeumen-unter-baeumen-1.3713211",
