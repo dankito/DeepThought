@@ -4,10 +4,10 @@ import com.rometools.rome.feed.synd.SyndEntry
 import com.rometools.rome.feed.synd.SyndFeed
 import com.rometools.rome.io.SyndFeedInput
 import com.rometools.rome.io.XmlReader
-import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.data_access.network.webclient.RequestParameters
-import net.dankito.data_access.network.webclient.ResponseType
-import net.dankito.data_access.network.webclient.extractor.AsyncResult
+import net.dankito.utils.web.client.IWebClient
+import net.dankito.utils.web.client.RequestParameters
+import net.dankito.utils.web.client.ResponseType
+import net.dankito.utils.AsyncResult
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.newsreader.model.FeedArticleSummary
 import org.jsoup.Jsoup

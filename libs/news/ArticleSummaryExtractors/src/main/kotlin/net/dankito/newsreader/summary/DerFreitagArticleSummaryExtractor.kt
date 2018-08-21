@@ -1,11 +1,11 @@
 package net.dankito.newsreader.summary
 
-import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.utils.web.client.IWebClient
 import net.dankito.newsreader.article.DerFreitagArticleExtractor
 import net.dankito.newsreader.article.IArticleExtractor
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
-import net.dankito.utils.UrlUtil
+import net.dankito.utils.web.UrlUtil
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 

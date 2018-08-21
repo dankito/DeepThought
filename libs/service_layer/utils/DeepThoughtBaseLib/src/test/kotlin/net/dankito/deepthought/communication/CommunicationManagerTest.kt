@@ -15,7 +15,7 @@ import net.dankito.data_access.network.communication.callback.DeviceRegistration
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.data_access.network.discovery.UdpDevicesDiscoverer
-import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.utils.web.client.IWebClient
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
@@ -35,7 +35,7 @@ import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.JacksonJsonSerializer
-import net.dankito.utils.services.hashing.HashService
+import net.dankito.utils.hashing.HashService
 import net.dankito.utils.services.hashing.IBase64Service
 import net.dankito.utils.services.network.NetworkConnectivityManagerBase
 import net.dankito.utils.services.network.NetworkHelper

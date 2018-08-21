@@ -9,8 +9,8 @@ import net.dankito.data_access.network.communication.IClientCommunicator
 import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.discovery.IDevicesDiscoverer
-import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.data_access.network.webclient.OkHttpWebClient
+import net.dankito.utils.web.client.IWebClient
+import net.dankito.utils.web.client.OkHttpWebClient
 import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
 import net.dankito.deepthought.files.FileManager
@@ -51,7 +51,7 @@ import net.dankito.utils.OsHelper
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.ISerializer
-import net.dankito.utils.services.hashing.HashService
+import net.dankito.utils.hashing.HashService
 import net.dankito.utils.services.hashing.IBase64Service
 import net.dankito.utils.services.network.NetworkHelper
 import net.dankito.utils.ui.IDialogService
@@ -64,7 +64,7 @@ open class CommonModule {
     @Provides
     @Singleton
     open fun provideLocalization() : Localization {
-        return Localization()
+        return Localization("Messages")
     }
 
 

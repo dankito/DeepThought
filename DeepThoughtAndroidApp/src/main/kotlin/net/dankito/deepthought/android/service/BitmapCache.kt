@@ -2,7 +2,7 @@ package net.dankito.deepthought.android.service
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import net.dankito.data_access.network.webclient.extractor.AsyncResult
+import net.dankito.utils.AsyncResult
 import net.dankito.utils.ImageCache
 import java.io.File
 import java.lang.Exception

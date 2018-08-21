@@ -1,10 +1,10 @@
 package net.dankito.faviconextractor
 
-import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.data_access.network.webclient.RequestParameters
-import net.dankito.data_access.network.webclient.ResponseType
-import net.dankito.data_access.network.webclient.WebClientResponse
-import net.dankito.data_access.network.webclient.extractor.AsyncResult
+import net.dankito.utils.web.client.IWebClient
+import net.dankito.utils.web.client.RequestParameters
+import net.dankito.utils.web.client.ResponseType
+import net.dankito.utils.web.client.WebClientResponse
+import net.dankito.utils.AsyncResult
 import net.dankito.data_access.network.webclient.extractor.ExtractorBase
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

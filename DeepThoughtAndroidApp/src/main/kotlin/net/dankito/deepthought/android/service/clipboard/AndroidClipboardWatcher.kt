@@ -10,7 +10,7 @@ import net.dankito.deepthought.android.service.SnackbarService
 import net.dankito.deepthought.service.clipboard.OptionsForClipboardContent
 import net.dankito.deepthought.service.clipboard.OptionsForClipboardContentDetector
 import net.dankito.deepthought.service.data.DataManager
-import net.dankito.utils.UrlUtil
+import net.dankito.utils.web.UrlUtil
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 

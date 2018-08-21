@@ -2,7 +2,6 @@ package net.dankito.deepthought.android.di
 
 import dagger.Module
 import dagger.Provides
-import net.dankito.data_access.network.webclient.IWebClient
 import net.dankito.deepthought.android.service.reporting.ICrashReporter
 import net.dankito.deepthought.android.service.reporting.NoOpCrashReporter
 import net.dankito.deepthought.news.article.ArticleExtractorManager
@@ -12,6 +11,7 @@ import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractorsManage
 import net.dankito.newsreader.summary.ImplementedArticleSummaryExtractorsManager
 import net.dankito.service.data.SeriesService
 import net.dankito.service.search.ISearchEngine
+import net.dankito.utils.web.client.IWebClient
 import javax.inject.Singleton
 
 
