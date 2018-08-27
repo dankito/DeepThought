@@ -6,7 +6,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.service.permissions.IPermissionsService
-import net.dankito.filechooserdialog.service.PermissionsService
+import net.dankito.utils.permissions.PermissionsService
 
 
 class AndroidPermissionsService(private val applicationContext: Context, private val activityTracker: CurrentActivityTracker) : IPermissionsService {
@@ -34,6 +34,7 @@ class AndroidPermissionsService(private val applicationContext: Context, private
     }
 
     private fun requestPermissionToWriteSynchronizedFiles(currentActivity: BaseActivity, requestPermissionResult: (Boolean) -> Unit) {
+        // TODO: this will not work as currentActivity has to call this permissionsManager instance in its onPermissionResult() method
         val permissionsManager = PermissionsService(currentActivity)
         val rational = currentActivity.getString(R.string.request_write_synchronized_file_permission_rational)
 

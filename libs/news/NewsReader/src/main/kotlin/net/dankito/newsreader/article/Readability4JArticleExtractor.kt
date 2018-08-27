@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
-import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.utils.web.client.IWebClient
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.util.ItemExtractionResult
-import net.dankito.readability4j.Readability4J
+import net.dankito.readability4j.extended.Readability4JExtended
 import org.jsoup.nodes.Document
 
 
@@ -18,7 +18,7 @@ class Readability4JArticleExtractor(webClient: IWebClient) : ArticleExtractorBas
     }
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
-        val readability = Readability4J(url, document)
+        val readability = Readability4JExtended(url, document)
         val article = readability.parse()
 
         article.content?.let { articleContent ->

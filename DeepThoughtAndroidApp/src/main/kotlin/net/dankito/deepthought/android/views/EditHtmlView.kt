@@ -6,13 +6,13 @@ import android.util.AttributeSet
 import android.view.View
 import kotlinx.android.synthetic.main.view_item_content.view.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.extensions.getColorFromResourceId
 import net.dankito.richtexteditor.Color
 import net.dankito.richtexteditor.android.AndroidIcon
 import net.dankito.richtexteditor.android.RichTextEditor
 import net.dankito.richtexteditor.android.command.*
 import net.dankito.richtexteditor.android.util.StyleApplier
 import net.dankito.richtexteditor.command.ToolbarCommandStyle
+import net.dankito.utils.extensions.getColorFromResource
 
 
 class EditHtmlView : View {
@@ -55,7 +55,7 @@ class EditHtmlView : View {
         val editorToolbar = rootView.editorToolbar
         editorToolbar.editor = editor
 
-        editorToolbar.commandStyle.isActivatedColor = Color.fromArgb(context.getColorFromResourceId(R.color.colorPrimaryDark))
+        editorToolbar.commandStyle.isActivatedColor = Color.fromArgb(context.getColorFromResource(R.color.colorPrimaryDark))
 
         editorToolbar.addCommand(BoldCommand())
         // temporarily removed some commands due to apply and cancel button not all commands fit onto the display // TODO: re-add

@@ -1,6 +1,6 @@
 package net.dankito.newsreader.article
 
-import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.utils.web.client.IWebClient
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
@@ -79,6 +79,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         cleanContentElement(articleContentElement)
 
         makeLinksAbsolute(articleContentElement, url)
+        unwrapImagesFromNoscriptElements(articleContentElement);
 
         extractionResult.setExtractedContent(Item(articleContentElement.outerHtml()), source)
     }
@@ -114,7 +115,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
     protected fun cleanContentElement(contentElement: Element) {
         contentElement.select("h1, time, span.author, a.comments, .comment, .btn-toolbar, .whatsbroadcast-toolbar, #whatsbroadcast, " +
                 ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta, .widget-werbung, .ad_container, .ad_content, " +
-                ".akwa-ad-container, .akwa-ad-container--native").remove()
+                ".akwa-ad-container, .akwa-ad-container--native, a-ad, .pvgs, .a-pvgs, .a-pvg").remove()
 
         removeEmptyParagraphs(contentElement, Arrays.asList("video"))
     }

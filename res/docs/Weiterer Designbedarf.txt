@@ -1,0 +1,17 @@
+Weiterer Designbedarf:
+
+- Calculated Tags in einer anderen Hintergrundfarbe (z. B. grau?)
+
+- Gefilterten / Gepinnten Schlagworte
+
+- Auswahl einer bestehenden Quelle
+
+- Löschen einer gesetzten Quelle
+
+- Liste der gefundenen Feeds
+
+- Icons in Swipe Layout
+
+- Icon zum Löschen der gefilterten Tags
+
+- Icon zum Löschen einer gesetzten Quelle auf Eintrag

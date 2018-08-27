@@ -13,19 +13,22 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import kotlinx.android.synthetic.main.activity_article_summary.*
-import net.dankito.data_access.network.webclient.extractor.AsyncResult
+import net.dankito.utils.AsyncResult
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.ArticleSummaryActivityParameters
 import net.dankito.deepthought.android.adapter.ArticleSummaryItemRecyclerAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.views.ToolbarUtil
+import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
+import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
+import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.utils.ImageCache
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
@@ -44,6 +47,15 @@ class ArticleSummaryActivity : BaseActivity() {
 
 
     @Inject
+    protected lateinit var itemPersister: ItemPersister
+
+    @Inject
+    protected lateinit var readLaterArticleService: ReadLaterArticleService
+
+    @Inject
+    protected lateinit var articleExtractorManager: ArticleExtractorManager
+
+    @Inject
     protected lateinit var extractorsConfigManager: ArticleSummaryExtractorConfigManager
 
     @Inject
@@ -59,8 +71,7 @@ class ArticleSummaryActivity : BaseActivity() {
     protected lateinit var dialogService: IDialogService
 
 
-    @Inject
-    protected lateinit var presenter: ArticleSummaryPresenter
+    private val presenter: ArticleSummaryPresenter
 
     private var extractorConfig: ArticleSummaryExtractorConfig? = null
 
@@ -79,6 +90,8 @@ class ArticleSummaryActivity : BaseActivity() {
 
     init {
         AppComponent.component.inject(this)
+
+        presenter = ArticleSummaryPresenter(itemPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService)
 
         adapter = ArticleSummaryItemRecyclerAdapter(this, presenter)
     }

@@ -17,6 +17,11 @@ import net.dankito.deepthought.android.activities.arguments.EditItemActivityPara
 import net.dankito.deepthought.android.activities.arguments.EditItemActivityResult
 import net.dankito.deepthought.android.activities.arguments.EditSourceActivityResult
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.deepthought.android.service.ExtractArticleHandler
+import net.dankito.utils.OnSwipeTouchListener
+import net.dankito.utils.extensions.hideKeyboard
+import net.dankito.utils.extensions.hideKeyboardDelayed
+import net.dankito.utils.extensions.executeActionAfterMeasuringSize
 import net.dankito.deepthought.android.views.*
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.model.*
@@ -26,9 +31,9 @@ import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditItemPresenter
-import net.dankito.filechooserdialog.service.IPermissionsService
-import net.dankito.filechooserdialog.service.PermissionsService
-import net.dankito.richtexteditor.android.util.OnSwipeTouchListener
+import net.dankito.utils.permissions.IPermissionsService
+import net.dankito.utils.permissions.PermissionsService
+import net.dankito.utils.animation.ShowHideViewAnimator
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ItemService
 import net.dankito.service.data.ReadLaterArticleService
@@ -135,7 +140,9 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
 
     protected var mnSaveItemExtractionResultForLaterReading: MenuItem? = null
 
-    protected var mnShareItem: MenuItem? = null
+    protected var mnShareItemSourceUrl: MenuItem? = null
+
+    protected var mnShareItemContent: MenuItem? = null
 
     private lateinit var floatingActionMenu: EditItemActivityFloatingActionMenuButton
 
@@ -440,7 +447,8 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
     }
 
     private fun updateShowMenuItemShareItem() {
-        mnShareItem?.isVisible = lytSourcePreview.source?.url.isNullOrBlank() == false
+        mnShareItemSourceUrl?.isVisible = lytSourcePreview.source?.url.isNullOrBlank() == false
+        mnShareItemContent?.isVisible = contentToEdit.isNullOrBlank() == false
     }
 
     private fun tagsPreviewFocusChanged(hasFocus: Boolean) {
@@ -448,7 +456,7 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
             lytTagsPreview.visibility = View.VISIBLE
 
             if(lytSourcePreview.visibility == View.VISIBLE || lytSummaryPreview.visibility == View.VISIBLE || lytFilesPreview.visibility == View.VISIBLE) {
-                lytTagsPreview.executeActionAfterMeasuringHeight {
+                lytTagsPreview.executeActionAfterMeasuringSize {
                     playHideOtherItemFieldsPreviewExceptTagsAnimation()
                 }
             }
@@ -646,7 +654,8 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
 
         mnSaveItemExtractionResultForLaterReading = menu.findItem(R.id.mnSaveItemExtractionResultForLaterReading)
 
-        mnShareItem = menu.findItem(R.id.mnShareItem)
+        mnShareItemSourceUrl = menu.findItem(R.id.mnShareItemSourceUrl)
+        mnShareItemContent = menu.findItem(R.id.mnShareItemContent)
         updateShowMenuItemShareItem()
 
         setMenuSaveItemVisibleStateOnUIThread()
@@ -676,8 +685,12 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
                 saveItemAndCloseDialog()
                 return true
             }
-            R.id.mnShareItem -> {
-                showShareItemPopupMenu()
+            R.id.mnShareItemSourceUrl -> {
+                shareSourceUrl()
+                return true
+            }
+            R.id.mnShareItemContent -> {
+                shareItemContent()
                 return true
             }
         }

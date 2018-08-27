@@ -1,0 +1,1 @@
+java.lang.ClassCastException: com.android.tools.profiler.support.network.httpurl.HttpURLConnection$ cannot be cast to com.couchbase.lite.router.URLConnection

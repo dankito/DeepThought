@@ -4,6 +4,8 @@ Remember
 
 Memorize
 
+Logbook
+
 Light / Licht
 
 YourNotes
@@ -13,6 +15,10 @@ PowerNotes
 Mirror
 
 MindStorm
+
+Ninive
+
+Elements
 
 Heureka (Heurieka)
 (invendi ?)

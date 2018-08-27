@@ -1,6 +1,6 @@
 package net.dankito.newsreader.feed
 
-import net.dankito.data_access.network.webclient.extractor.AsyncResult
+import net.dankito.utils.AsyncResult
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.summary.IArticleSummaryExtractor
 

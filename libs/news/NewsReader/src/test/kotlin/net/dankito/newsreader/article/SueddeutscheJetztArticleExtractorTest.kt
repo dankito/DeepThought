@@ -1,6 +1,6 @@
 package net.dankito.newsreader.article
 
-import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.utils.web.client.IWebClient
 import org.junit.Test
 
 class SueddeutscheJetztArticleExtractorTest : ArticleExtractorTestBase() {
@@ -48,6 +48,15 @@ class SueddeutscheJetztArticleExtractorTest : ArticleExtractorTestBase() {
                 "\"Heute können wir unsere Neurosen viel besser ausleben\"",
                 "Die Psychologin Stefanie Stahl über den Mythos Beziehungsunfähigkeit.",
                 null, 10400)
+    }
+
+    @Test
+    fun importUntenrumKolumne() {
+        getAndTestArticle("https://www.jetzt.de/sex/untenrum-kolumne-vorget%C3%A4uschte-orgasmen",
+                "Liebe Frauen, bitte keine Fake-Orgasmen mehr!",
+                null,
+                "https://caching-production.jetzt.de/attachments/cjjnzth84001i0kzkj1dzpk3m-untenrum-orgasmus-vortauschen-sde.0.24.1200.628.full.jpg",
+                6000)
     }
 
 }

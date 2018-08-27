@@ -1,6 +1,6 @@
 package net.dankito.newsreader.article
 
-import net.dankito.data_access.network.webclient.IWebClient
+import net.dankito.utils.web.client.IWebClient
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
@@ -74,9 +74,15 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
     }
 
     private fun cleanContent(articleElement: Element) {
-        articleElement.select("header, footer").remove()
+        articleElement.select("header, footer, .apester-media, .apester-element, .OUTBRAIN").remove()
 
         articleElement.select(".hinweis_anzeige").forEach { it.parent().remove() }
+
+        ArrayList(articleElement.select("script")).forEach { script ->
+            if(script.attr("src").contains("outbrain.com/")) {
+                script.remove()
+            }
+        }
     }
 
     private fun transformElements(articleElement: Element) {

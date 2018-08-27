@@ -1,6 +1,6 @@
 package net.dankito.deepthought.ui.presenter
 
-import net.dankito.data_access.network.webclient.extractor.AsyncResult
+import net.dankito.utils.AsyncResult
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.extensions.extractor
@@ -20,7 +20,7 @@ import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 
 
-open class ArticleSummaryPresenter(protected val itemPersister: ItemPersister, protected val readLaterArticleService: ReadLaterArticleService, protected val articleExtractorManager: ArticleExtractorManager,
+class ArticleSummaryPresenter(protected val itemPersister: ItemPersister, protected val readLaterArticleService: ReadLaterArticleService, protected val articleExtractorManager: ArticleExtractorManager,
                                    protected val router: IRouter, private val clipboardService: IClipboardService, protected val dialogService: IDialogService) {
 
 

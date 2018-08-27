@@ -6,8 +6,8 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.ActivityParameterHolder
 import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.android.ui.UiStatePersister
-import net.dankito.filechooserdialog.service.IPermissionsService
-import net.dankito.filechooserdialog.service.PermissionsService
+import net.dankito.utils.permissions.IPermissionsService
+import net.dankito.utils.permissions.PermissionsService
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
