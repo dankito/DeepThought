@@ -4,9 +4,6 @@ import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.os.Bundle
-import android.support.v7.widget.ActionMenuView
-import android.support.v7.widget.AppCompatImageView
-import android.support.v7.widget.PopupMenu
 import android.view.*
 import android.view.animation.AccelerateInterpolator
 import com.github.clans.fab.FloatingActionMenu
@@ -17,7 +14,6 @@ import net.dankito.deepthought.android.activities.arguments.EditItemActivityPara
 import net.dankito.deepthought.android.activities.arguments.EditItemActivityResult
 import net.dankito.deepthought.android.activities.arguments.EditSourceActivityResult
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.utils.OnSwipeTouchListener
 import net.dankito.utils.extensions.hideKeyboard
 import net.dankito.utils.extensions.hideKeyboardDelayed
@@ -448,7 +444,7 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
 
     private fun updateShowMenuItemShareItem() {
         mnShareItemSourceUrl?.isVisible = lytSourcePreview.source?.url.isNullOrBlank() == false
-        mnShareItemContent?.isVisible = contentToEdit.isNullOrBlank() == false
+        mnShareItemContent?.isVisible = itemToSave.content.isNullOrBlank() == false
     }
 
     private fun tagsPreviewFocusChanged(hasFocus: Boolean) {
@@ -696,50 +692,6 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun showShareItemPopupMenu() {
-        val overflowMenuButton = getOverflowMenuButton()
-        if(overflowMenuButton == null) {
-            return
-        }
-
-        val popup = PopupMenu(this, overflowMenuButton)
-
-        popup.menuInflater.inflate(R.menu.share_item_menu, popup.menu)
-
-        val source = lytSourcePreview.source
-        if(source == null || source.url.isNullOrBlank()) {
-            popup.menu.findItem(R.id.mnShareItemSourceUrl).isVisible = false
-        }
-
-        popup.setOnMenuItemClickListener { item ->
-            when(item.itemId) {
-                R.id.mnShareItemSourceUrl -> shareSourceUrl()
-                R.id.mnShareItemContent -> shareItemContent()
-            }
-            true
-        }
-
-        popup.show()
-    }
-
-    private fun getOverflowMenuButton(): View? {
-        for(i in 0..toolbar.childCount - 1) { // OverflowMenuButton is child of ActionMenuView which is child of toolbar (both don't have an id so i cannot search for them)
-            val child = toolbar.getChildAt(i)
-
-            if(child is ActionMenuView) {
-                for(j in 0..child.childCount) {
-                    val actionMenuViewChild = child.getChildAt(j)
-
-                    if(actionMenuViewChild is AppCompatImageView && actionMenuViewChild is ActionMenuView.ActionMenuChildView) {
-                        return actionMenuViewChild
-                    }
-                }
-            }
-        }
-
-        return null
     }
 
     private fun shareSourceUrl() {

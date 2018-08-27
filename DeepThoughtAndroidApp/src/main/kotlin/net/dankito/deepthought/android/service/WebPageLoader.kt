@@ -4,9 +4,9 @@ import android.app.Activity
 import android.os.Build
 import android.view.View
 import android.webkit.*
-import net.dankito.data_access.network.webclient.IWebClient
-import net.dankito.data_access.network.webclient.RequestParameters
 import net.dankito.deepthought.android.di.AppComponent
+import net.dankito.utils.web.client.IWebClient
+import net.dankito.utils.web.client.RequestParameters
 import java.util.*
 import javax.inject.Inject
 import kotlin.concurrent.schedule
