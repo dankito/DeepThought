@@ -3,8 +3,8 @@ ext {
     versionMajor = 0
     versionMinor = 5
     versionPatch = 0
-    versionBuild = 0 // for pre-releases
-    versionClassifier = 'Alpha 1'
+    versionBuild = 1 // for pre-releases
+    versionClassifier = 'Alpha 2'
 
 
     appVersionName = generateVersionName()
