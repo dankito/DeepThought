@@ -20,8 +20,8 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.WebPageLoader
-import net.dankito.utils.extensions.hideKeyboard
-import net.dankito.utils.extensions.hideKeyboardDelayed
+import net.dankito.utils.android.extensions.hideKeyboard
+import net.dankito.utils.android.extensions.hideKeyboardDelayed
 import net.dankito.deepthought.android.ui.UiStatePersister
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
@@ -29,8 +29,8 @@ import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.richtexteditor.JavaScriptExecutorBase
 import net.dankito.richtexteditor.android.FullscreenWebView
-import net.dankito.utils.animation.ShowHideViewAnimator
-import net.dankito.utils.OnSwipeTouchListener
+import net.dankito.utils.android.animation.ShowHideViewAnimator
+import net.dankito.utils.android.OnSwipeTouchListener
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogConfig

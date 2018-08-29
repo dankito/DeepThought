@@ -12,7 +12,7 @@ import net.dankito.richtexteditor.android.RichTextEditor
 import net.dankito.richtexteditor.android.command.*
 import net.dankito.richtexteditor.android.util.StyleApplier
 import net.dankito.richtexteditor.command.ToolbarCommandStyle
-import net.dankito.utils.extensions.getColorFromResource
+import net.dankito.utils.android.extensions.getColorFromResource
 
 
 class EditHtmlView : View {

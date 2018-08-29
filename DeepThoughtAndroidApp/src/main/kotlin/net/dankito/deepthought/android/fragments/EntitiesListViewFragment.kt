@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_entities_list_view.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
-import net.dankito.utils.extensions.hideKeyboard
+import net.dankito.utils.android.extensions.hideKeyboard
 import net.dankito.deepthought.android.views.ContextHelpUtil
 import net.dankito.deepthought.android.views.FullscreenRecyclerView
 import net.dankito.deepthought.model.BaseEntity

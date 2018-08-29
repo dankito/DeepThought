@@ -8,7 +8,7 @@ import android.widget.Button
 import android.widget.TextView
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.service.StringUtil
-import net.dankito.utils.extensions.executeActionAfterMeasuringSize
+import net.dankito.utils.android.extensions.executeActionAfterMeasuringSize
 
 
 class ContextHelpUtil {

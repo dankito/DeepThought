@@ -12,14 +12,14 @@ import kotlinx.android.synthetic.main.snackbar_ask_sync_data_with_device.view.*
 import kotlinx.android.synthetic.main.snackbar_clipboard_content.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.utils.extensions.getDimension
-import net.dankito.utils.extensions.setViewsEnabledState
+import net.dankito.utils.android.extensions.getDimension
+import net.dankito.utils.android.extensions.setViewsEnabledState
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.service.clipboard.ClipboardContentOption
 import net.dankito.deepthought.service.clipboard.OptionsForClipboardContent
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.utils.extensions.getColorFromResource
+import net.dankito.utils.android.extensions.getColorFromResource
 import org.slf4j.LoggerFactory
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap

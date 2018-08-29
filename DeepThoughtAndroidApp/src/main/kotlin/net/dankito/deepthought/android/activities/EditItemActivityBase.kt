@@ -14,10 +14,8 @@ import net.dankito.deepthought.android.activities.arguments.EditItemActivityPara
 import net.dankito.deepthought.android.activities.arguments.EditItemActivityResult
 import net.dankito.deepthought.android.activities.arguments.EditSourceActivityResult
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.utils.OnSwipeTouchListener
-import net.dankito.utils.extensions.hideKeyboard
-import net.dankito.utils.extensions.hideKeyboardDelayed
-import net.dankito.utils.extensions.executeActionAfterMeasuringSize
+import net.dankito.utils.android.OnSwipeTouchListener
+import net.dankito.utils.android.extensions.executeActionAfterMeasuringSize
 import net.dankito.deepthought.android.views.*
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.model.*
@@ -27,9 +25,8 @@ import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditItemPresenter
-import net.dankito.utils.permissions.IPermissionsService
-import net.dankito.utils.permissions.PermissionsService
-import net.dankito.utils.animation.ShowHideViewAnimator
+import net.dankito.utils.android.permissions.IPermissionsService
+import net.dankito.utils.android.permissions.PermissionsService
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ItemService
 import net.dankito.service.data.ReadLaterArticleService

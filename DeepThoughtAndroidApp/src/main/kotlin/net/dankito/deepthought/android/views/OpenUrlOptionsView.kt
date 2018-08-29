@@ -13,7 +13,7 @@ import android.widget.ListView
 import android.widget.PopupWindow
 import android.widget.TextView
 import net.dankito.deepthought.android.R
-import net.dankito.utils.extensions.isTouchInsideView
+import net.dankito.utils.android.extensions.isTouchInsideView
 
 
 class OpenUrlOptionsView {
