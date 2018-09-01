@@ -55,6 +55,8 @@ class EditHtmlView : View {
         editorToolbar.editor = editor
 
         editorToolbar.commandStyle.isActivatedColor = Color.fromArgb(context.getColorFromResource(R.color.colorPrimaryDark))
+        editorToolbar.commandStyle.widthDp = 48
+        editorToolbar.styleChanged()
 
         editorToolbar.centerCommandsHorizontally()
     }
