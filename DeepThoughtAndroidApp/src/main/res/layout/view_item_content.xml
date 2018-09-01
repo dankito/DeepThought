@@ -117,7 +117,7 @@
                     android:src="@android:drawable/arrow_up_float"
                 />
 
-                <net.dankito.richtexteditor.android.toolbar.EditorToolbar
+                <net.dankito.richtexteditor.android.toolbar.GroupedCommandsEditorToolbar
                     android:id="@+id/editorToolbar"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
