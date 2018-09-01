@@ -6,11 +6,6 @@
     <color name="colorPrimaryDark">#22685d</color>
     <color name="colorAccent">#078176</color>
 
-    <!-- blue / orange -->
-    <!--<color name="colorPrimary">#0D47A1</color> &lt;!&ndash; Material Design Color Code: Blue 900 &ndash;&gt;-->
-    <!--<color name="colorPrimaryDark">#1A237E</color> &lt;!&ndash; Material Design Color Code: Indigo 900 &ndash;&gt;-->
-    <!--<color name="colorAccent">#FF9100</color> &lt;!&ndash; Material Design Color Code: Orange A400 &ndash;&gt;-->
-
     <color name="colorPrimaryGradientStart">#078176</color>
     <!-- according to design actually #319B7C should be used -->
     <color name="colorPrimaryGradientEnd">#309c7c</color>
@@ -57,7 +52,6 @@
 
     <!-- The same as colorPrimary but with a higher transparency -->
     <color name="richtexteditor_fullscreen_options_bar_background">#7D359e7d</color>
-    <color name="richtexteditor_fullscreen_options_bar_search_view_background">@color/colorPrimary</color>
 
     <!-- This is bad: Actually i wanted to define tag background colors centrally in one place for Android and JavaFX, but their parse methods have different formats (Android
          has opacity at the beginning, JavaFX at the end) -->
@@ -65,11 +59,5 @@
     <color name="tag_state_exact_or_single_match_but_not_of_last_result">@color/colorPrimaryGradientEnd</color>
     <color name="tag_state_exact_or_single_match_of_last_result">#800277BD</color>
     <color name="tag_state_default">@android:color/transparent</color>
-
-
-    <!-- Overwrite FileChooserDialog colors -->
-
-    <color name="file_chooser_dialog_list_item_default_background">@color/list_item_default_background</color>
-    <color name="file_chooser_dialog_list_item_selected_background">@color/list_item_selected_background</color>
 
 </resources>
