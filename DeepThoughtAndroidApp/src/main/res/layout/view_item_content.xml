@@ -129,6 +129,7 @@
                     android:layout_marginStart="@dimen/activity_edit_item_html_editor_toolbar_margin_left_right"
                     android:layout_marginRight="@dimen/activity_edit_item_html_editor_toolbar_margin_left_right"
                     android:layout_marginEnd="@dimen/activity_edit_item_html_editor_toolbar_margin_left_right"
+                    android:background="@android:color/transparent"
                 />
 
                 <ImageButton
