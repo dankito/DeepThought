@@ -55,8 +55,10 @@ class EditHtmlView : View {
         editorToolbar.editor = editor
 
         editorToolbar.commandStyle.isActivatedColor = Color.fromArgb(context.getColorFromResource(R.color.colorPrimaryDark))
+        editorToolbar.styleChanged(true) // isActivatedColor should also get applied to GroupedCommandView's toolbars
+
         editorToolbar.commandStyle.widthDp = 48
-        editorToolbar.styleChanged()
+        editorToolbar.styleChanged() // but not widthDp, they should keep their default width
 
         editorToolbar.centerCommandsHorizontally()
     }
