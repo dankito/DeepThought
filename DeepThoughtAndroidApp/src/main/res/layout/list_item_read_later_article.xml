@@ -81,7 +81,7 @@
             android:layout_centerVertical="true"
         >
 
-            <net.dankito.deepthought.android.views.CustomFontTextView
+            <net.dankito.utils.android.ui.view.CustomFontTextView
                 android:id="@+id/txtTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

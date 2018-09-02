@@ -37,26 +37,6 @@
 
     <!-- Text styles -->
 
-    <style name="Header1Style">
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">@dimen/header_1_text_size</item>
-        <item name="android:textColor">@color/header_1_text_color</item>
-        <item name="android:typeface">serif</item>
-        <item name="customFont">RobotoSlab-Bold</item>
-    </style>
-
-    <style name="Header2Style">
-        <item name="android:textStyle">italic</item>
-        <item name="android:textSize">@dimen/header_2_text_size</item>
-        <item name="android:textColor">@color/header_2_text_color</item>
-    </style>
-
-    <style name="TextBodyStyle">
-        <item name="android:textStyle">normal</item>
-        <item name="android:textSize">@dimen/text_body_text_size</item>
-        <item name="android:textColor">@color/text_body_text_color</item>
-    </style>
-
     <style name="EntityFieldName">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -82,33 +62,6 @@
         <item name="android:background">@android:color/transparent</item>
         <item name="android:scaleType">fitCenter</item>
         <item name="android:padding">4dp</item>
-    </style>
-
-    <style name="ChevronRightStyle">
-        <item name="android:layout_width">@dimen/chevron_right_width</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_alignParentTop">true</item>
-        <item name="android:layout_alignParentRight">true</item>
-        <item name="android:layout_alignParentEnd">true</item>
-        <item name="android:layout_alignParentBottom">true</item>
-        <item name="android:layout_centerInParent">true</item>
-        <item name="android:gravity">end|center_vertical</item>
-        <item name="android:layout_marginLeft">@dimen/chevron_right_margin_left</item>
-        <item name="android:layout_marginStart">@dimen/chevron_right_margin_left</item>
-        <item name="android:src">@drawable/ic_chevron_right_black_48dp</item>
-        <!-- according to design actually colorPrimary should be used-->
-        <item name="android:tint">@color/colorAccent</item>
-    </style>
-
-
-    <style name="DividerStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/divider_height</item>
-        <item name="android:background">@color/divider_line_color</item>
-        <item name="android:layout_marginLeft">@dimen/divider_margin_left_right</item>
-        <item name="android:layout_marginStart">@dimen/divider_margin_left_right</item>
-        <item name="android:layout_marginRight">@dimen/divider_margin_left_right</item>
-        <item name="android:layout_marginEnd">@dimen/divider_margin_left_right</item>
     </style>
 
 </resources>

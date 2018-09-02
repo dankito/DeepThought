@@ -47,7 +47,7 @@
           android:paddingBottom="@dimen/list_item_item_padding_top_bottom"
         >
 
-        <net.dankito.deepthought.android.views.CustomFontTextView
+        <net.dankito.utils.android.ui.view.CustomFontTextView
             android:id="@+id/txtSourcePreview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
