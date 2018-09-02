@@ -37,6 +37,7 @@ import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.ui.IApplicationsService
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.android.ui.activities.AppLifeCycleListener
 import javax.inject.Singleton
 
 

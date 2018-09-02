@@ -20,6 +20,7 @@ import net.dankito.deepthought.service.clipboard.ClipboardContentOption
 import net.dankito.deepthought.service.clipboard.OptionsForClipboardContent
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.utils.android.extensions.getColorFromResource
+import net.dankito.utils.android.ui.activities.AppLifeCycleListener
 import org.slf4j.LoggerFactory
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap

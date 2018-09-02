@@ -13,7 +13,7 @@ import net.dankito.deepthought.android.appstart.AndroidAppInitializer
 import net.dankito.deepthought.android.di.ActivitiesModule
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.di.DaggerAppComponent
-import net.dankito.deepthought.android.service.AppLifeCycleListener
+import net.dankito.utils.android.ui.activities.AppLifeCycleListener
 import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.di.CommonModule
