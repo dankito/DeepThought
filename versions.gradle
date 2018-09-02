@@ -30,6 +30,8 @@ ext {
 
     slf4jVersion = '1.7.25'
 
+    javaUtilsVersion = '1.0.1'
+
     commonsLangVersion = '3.7'
 
     okHttpVersion = '3.9.1'
