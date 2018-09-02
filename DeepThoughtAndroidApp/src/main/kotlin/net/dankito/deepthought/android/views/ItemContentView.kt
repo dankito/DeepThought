@@ -33,6 +33,7 @@ import net.dankito.utils.android.animation.ShowHideViewAnimator
 import net.dankito.utils.android.OnSwipeTouchListener
 import net.dankito.utils.android.ui.view.ToolbarUtil
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.android.extensions.HtmlExtensions
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogConfig
 import net.dankito.utils.web.UrlUtil
@@ -398,7 +399,7 @@ class ItemContentView @JvmOverloads constructor(
             lytContentViewAndOnboardingText.setOnClickListener { editContent() } // only enable editing content by clicking on lytContentViewAndOnboardingText when showing onboarding text
 
             val onboardingTextId = if(showContentOnboarding == true) R.string.activity_edit_item_edit_content_onboarding_text else R.string.activity_edit_item_add_item_properties_onboarding_text
-            txtOnboardingText.text = contextHelpUtil.stringUtil.getSpannedFromHtml(context, onboardingTextId)
+            txtOnboardingText.text = HtmlExtensions.getSpannedFromHtml(context, onboardingTextId)
 
             arrowToFloatingActionButton.visibility = if(showContentOnboarding != true && showOnboardingForItemProperties) View.VISIBLE else View.GONE
         }

@@ -27,6 +27,7 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
+import net.dankito.utils.android.extensions.getSpannedFromHtmlWithImages
 import javax.inject.Inject
 
 
@@ -329,7 +330,8 @@ abstract class EntitiesListViewFragment<T : BaseEntity>(private val contextualAc
         txtOnboardingText?.let { txtOnboardingText ->
             lytOnboardingText?.visibility = View.VISIBLE
 
-            txtOnboardingText.text = contextHelpUtil.stringUtil.getSpannedFromHtmlWithImages(context.getText(onboardingTextResourceId).toString(), context, txtOnboardingText.currentTextColor)
+            val unresolvedHtml = context.getText(onboardingTextResourceId).toString()
+            txtOnboardingText.text = unresolvedHtml.getSpannedFromHtmlWithImages(context, txtOnboardingText.currentTextColor)
         }
 
         searchMenuItem?.isVisible = false
