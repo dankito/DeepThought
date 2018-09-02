@@ -6,11 +6,11 @@ import android.util.AttributeSet
 import android.view.View
 import kotlinx.android.synthetic.main.view_item_content.view.*
 import net.dankito.deepthought.android.R
-import net.dankito.utils.Color
 import net.dankito.richtexteditor.android.AndroidIcon
 import net.dankito.richtexteditor.android.RichTextEditor
 import net.dankito.richtexteditor.android.util.StyleApplier
 import net.dankito.richtexteditor.command.ToolbarCommandStyle
+import net.dankito.utils.Color
 import net.dankito.utils.android.extensions.ColorExtensions
 import net.dankito.utils.android.extensions.getColorFromResource
 
@@ -68,7 +68,7 @@ class EditHtmlView : View {
 
 
     fun getHtml(): String {
-        return editor.getHtml()
+        return editor.getCachedHtml()
     }
 
     fun setHtml(html: String, baseUrl: String?) {
