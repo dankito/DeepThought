@@ -9,7 +9,7 @@ import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityRe
 import net.dankito.deepthought.android.activities.arguments.EditSourceActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditSourceActivityResult
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.dialogs.PickDateDialog
+import net.dankito.utils.android.ui.dialogs.PickDateDialog
 import net.dankito.utils.android.ui.view.ToolbarUtil
 import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.model.Series
