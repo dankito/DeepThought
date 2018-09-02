@@ -1,6 +1,7 @@
 package net.dankito.faviconextractor
 
 import net.dankito.utils.AsyncResult
+import net.dankito.utils.Size
 import net.dankito.utils.web.UrlUtil
 import net.dankito.utils.web.client.IWebClient
 import net.dankito.utils.web.client.RequestParameters
