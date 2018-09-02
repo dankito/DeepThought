@@ -1,11 +1,12 @@
 package net.dankito.faviconextractor
 
+import net.dankito.data_access.network.webclient.extractor.ExtractorBase
+import net.dankito.utils.AsyncResult
+import net.dankito.utils.web.UrlUtil
 import net.dankito.utils.web.client.IWebClient
 import net.dankito.utils.web.client.RequestParameters
 import net.dankito.utils.web.client.ResponseType
 import net.dankito.utils.web.client.WebClientResponse
-import net.dankito.utils.AsyncResult
-import net.dankito.data_access.network.webclient.extractor.ExtractorBase
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -14,7 +15,7 @@ import java.net.URL
 import kotlin.concurrent.thread
 
 
-class FaviconExtractor(webClient : IWebClient) : ExtractorBase(webClient) {
+class FaviconExtractor(webClient : IWebClient, urlUtil: UrlUtil = UrlUtil()) : ExtractorBase(webClient) {
 
     companion object {
         private val log = LoggerFactory.getLogger(FaviconExtractor::class.java)
@@ -112,10 +113,10 @@ class FaviconExtractor(webClient : IWebClient) : ExtractorBase(webClient) {
 
     private fun mapMetaElementToFavicon(metaElement: Element, siteUrl: String): Favicon? {
         if(isOpenGraphImageDeclaration(metaElement)) {
-            return Favicon(makeLinkAbsolute(metaElement.attr("content"), siteUrl), FaviconType.OpenGraphImage)
+            return Favicon(urlUtil.makeLinkAbsolute(metaElement.attr("content"), siteUrl), FaviconType.OpenGraphImage)
         }
         else if(isMsTileMetaElement(metaElement)) {
-            return Favicon(makeLinkAbsolute(metaElement.attr("content"), siteUrl), FaviconType.MsTileImage)
+            return Favicon(urlUtil.makeLinkAbsolute(metaElement.attr("content"), siteUrl), FaviconType.MsTileImage)
         }
 
         return null
@@ -128,7 +129,7 @@ class FaviconExtractor(webClient : IWebClient) : ExtractorBase(webClient) {
 
     private fun createFavicon(url: String?, siteUrl: String, iconType: FaviconType, sizesString: String?, type: String?): Favicon? {
         if(url != null) {
-            val favicon = Favicon(makeLinkAbsolute(url, siteUrl), iconType, type = type)
+            val favicon = Favicon(urlUtil.makeLinkAbsolute(url, siteUrl), iconType, type = type)
 
             if (sizesString != null) {
                 val sizes = extractSizesFromString(sizesString)
