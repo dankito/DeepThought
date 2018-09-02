@@ -6,7 +6,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.list_item_article_summary_extractor.view.*
-import net.dankito.deepthought.android.views.SwipeButton
+import net.dankito.utils.android.ui.view.SwipeButton
 
 
 class ArticleSummaryExtractorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)  {

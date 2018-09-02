@@ -31,6 +31,7 @@ import net.dankito.richtexteditor.JavaScriptExecutorBase
 import net.dankito.richtexteditor.android.FullscreenWebView
 import net.dankito.utils.android.animation.ShowHideViewAnimator
 import net.dankito.utils.android.OnSwipeTouchListener
+import net.dankito.utils.android.ui.view.ToolbarUtil
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.ui.model.ConfirmationDialogConfig

@@ -12,16 +12,6 @@
 
     <dimen name="single_line_list_item_text_size">18sp</dimen>
 
-    <dimen name="action_item_width">58dp</dimen>
-    <dimen name="action_title_height">13dp</dimen>
-    <dimen name="action_title_text_size">10sp</dimen>
-    <dimen name="action_padding_top_bottom">6dp</dimen>
-    <dimen name="action_margin_right">1dp</dimen>
-
-    <dimen name="swipe_button_margin">3dp</dimen>
-    <dimen name="swipe_button_max_icon_height">55dp</dimen>
-    <dimen name="swipe_button_corner_radius">6dp</dimen>
-
     <dimen name="fragment_tab_items_filtered_entities_margin_top">12dp</dimen>
     <dimen name="fragment_tab_items_filtered_entities_margin_bottom">20dp</dimen>
     <dimen name="fragment_tab_items_onboarding_text_size">16sp</dimen>

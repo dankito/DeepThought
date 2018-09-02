@@ -17,7 +17,7 @@
         android:orientation="horizontal"
     >
 
-        <net.dankito.deepthought.android.views.SwipeButton
+        <net.dankito.utils.android.ui.view.SwipeButton
             android:id="@+id/btnSaveArticleSummaryItemForLaterReading"
             android:layout_width="@dimen/list_item_read_later_article_button_width"
             android:layout_height="match_parent"
@@ -25,14 +25,14 @@
             android:visibility="gone"
         />
 
-        <net.dankito.deepthought.android.views.SwipeButton
+        <net.dankito.utils.android.ui.view.SwipeButton
             android:id="@+id/btnSaveArticleSummaryItemOrReadLaterArticle"
             android:layout_width="@dimen/list_item_read_later_article_button_width"
             android:layout_height="match_parent"
             app:icon="@drawable/ic_save_white_48dp"
         />
 
-        <net.dankito.deepthought.android.views.SwipeButton
+        <net.dankito.utils.android.ui.view.SwipeButton
             android:id="@+id/btnShareArticleSummaryItemOrReadLaterArticle"
             android:layout_width="@dimen/list_item_read_later_article_button_width"
             android:layout_height="match_parent"
@@ -40,7 +40,7 @@
             android:visibility="gone"
         />
 
-        <net.dankito.deepthought.android.views.SwipeButton
+        <net.dankito.utils.android.ui.view.SwipeButton
             android:id="@+id/btnDeleteReadLaterArticle"
             android:layout_width="@dimen/list_item_read_later_article_button_width"
             android:layout_height="match_parent"

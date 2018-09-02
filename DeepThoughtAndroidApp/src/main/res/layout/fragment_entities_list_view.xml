@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
     >
 
-        <net.dankito.deepthought.android.views.FullscreenRecyclerView
+        <net.dankito.utils.android.ui.view.FullscreenRecyclerView
             android:id="@+id/rcyEntities"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

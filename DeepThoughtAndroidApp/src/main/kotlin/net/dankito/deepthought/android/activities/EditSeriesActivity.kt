@@ -9,7 +9,7 @@ import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityPa
 import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityResult
 import net.dankito.deepthought.android.adapter.SeriesOnSourceRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.views.ToolbarUtil
+import net.dankito.utils.android.ui.view.ToolbarUtil
 import net.dankito.deepthought.data.SeriesPersister
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.ui.IRouter

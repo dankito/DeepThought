@@ -17,14 +17,14 @@
         android:orientation="horizontal"
     >
 
-        <net.dankito.deepthought.android.views.SwipeButton
+        <net.dankito.utils.android.ui.view.SwipeButton
             android:id="@+id/btnShareItem"
             android:layout_height="match_parent"
             android:layout_width="@dimen/list_item_item_button_width"
             app:icon="@drawable/ic_share_white_48dp"
         />
 
-        <net.dankito.deepthought.android.views.SwipeButton
+        <net.dankito.utils.android.ui.view.SwipeButton
             android:id="@+id/btnDeleteItem"
             android:layout_width="@dimen/list_item_item_button_width"
             android:layout_height="match_parent"

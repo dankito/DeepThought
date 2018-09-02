@@ -164,7 +164,7 @@
             android:visibility="gone"
         />
 
-        <net.dankito.deepthought.android.views.MaxHeightRecyclerView
+        <net.dankito.utils.android.ui.view.MaxHeightRecyclerView
             android:id="@+id/rcySearchResults"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -1,7 +1,5 @@
 <resources>
 
-    <string name="move_upward_behaviour" translatable="false">net.dankito.deepthought.android.views.MoveUpwardBehavior</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
