@@ -15,6 +15,7 @@ import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.android.ui.dialogs.FullscreenDialogFragment
 import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
 

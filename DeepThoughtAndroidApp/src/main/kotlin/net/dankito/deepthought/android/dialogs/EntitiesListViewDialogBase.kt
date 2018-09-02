@@ -7,6 +7,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.dialog_entities_list_view.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.fragments.EntitiesListViewFragment
+import net.dankito.utils.android.ui.dialogs.FullscreenDialogFragment
 
 
 abstract class EntitiesListViewDialogBase<T : EntitiesListViewFragment<*>> : FullscreenDialogFragment() {
