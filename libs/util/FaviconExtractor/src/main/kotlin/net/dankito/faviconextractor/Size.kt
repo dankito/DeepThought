@@ -17,12 +17,8 @@ data class Size(val width: Int, val height: Int) : Comparable<Size> {
     }
 
 
-    fun getDisplayText(): String {
-        return "" + width + "x" + height
-    }
-
     override fun toString(): String {
-        return getDisplayText()
+        return "$width x $height"
     }
 
 }
