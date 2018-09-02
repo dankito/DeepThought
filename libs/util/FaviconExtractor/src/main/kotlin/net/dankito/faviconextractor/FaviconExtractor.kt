@@ -1,6 +1,5 @@
 package net.dankito.faviconextractor
 
-import net.dankito.data_access.network.webclient.extractor.ExtractorBase
 import net.dankito.utils.AsyncResult
 import net.dankito.utils.web.UrlUtil
 import net.dankito.utils.web.client.IWebClient
@@ -15,7 +14,7 @@ import java.net.URL
 import kotlin.concurrent.thread
 
 
-class FaviconExtractor(webClient : IWebClient, urlUtil: UrlUtil = UrlUtil()) : ExtractorBase(webClient) {
+open class FaviconExtractor(protected val webClient : IWebClient, protected val urlUtil: UrlUtil = UrlUtil()) {
 
     companion object {
         private val log = LoggerFactory.getLogger(FaviconExtractor::class.java)
