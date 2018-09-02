@@ -13,7 +13,7 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.services.network.download.IFileDownloader
-import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.dialogs.IDialogService
 import net.dankito.utils.web.UrlUtil
 import java.io.File
 import java.util.*

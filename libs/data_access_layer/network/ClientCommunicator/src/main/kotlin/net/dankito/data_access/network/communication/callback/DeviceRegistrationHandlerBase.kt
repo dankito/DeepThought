@@ -13,8 +13,8 @@ import net.dankito.service.synchronization.initialsync.model.DeepThoughtSyncInfo
 import net.dankito.service.synchronization.initialsync.model.SyncInfo
 import net.dankito.service.synchronization.initialsync.model.UserSyncInfo
 import net.dankito.utils.localization.Localization
-import net.dankito.utils.ui.IDialogService
-import net.dankito.utils.ui.InputType
+import net.dankito.utils.ui.dialogs.IDialogService
+import net.dankito.utils.ui.dialogs.InputType
 import org.slf4j.LoggerFactory
 
 

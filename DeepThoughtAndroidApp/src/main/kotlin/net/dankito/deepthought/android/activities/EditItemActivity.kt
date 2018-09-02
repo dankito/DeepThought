@@ -9,7 +9,7 @@ import net.dankito.deepthought.android.activities.arguments.EditItemActivityPara
 import net.dankito.deepthought.model.Item
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.ItemChanged
-import net.dankito.utils.ui.model.ConfirmationDialogButton
+import net.dankito.utils.ui.dialogs.ConfirmationDialogButton
 import net.engio.mbassy.listener.Handler
 
 

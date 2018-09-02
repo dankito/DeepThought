@@ -1,7 +1,7 @@
 package net.dankito.deepthought.javafx.service.hashing
 
-import net.dankito.utils.services.hashing.IBase64Service
-import net.dankito.utils.services.hashing.IBase64Service.Companion.DEFAULT_CHAR_SET
+import net.dankito.utils.hashing.IBase64Service
+import net.dankito.utils.hashing.IBase64Service.Companion.DEFAULT_CHAR_SET
 import java.util.*
 
 

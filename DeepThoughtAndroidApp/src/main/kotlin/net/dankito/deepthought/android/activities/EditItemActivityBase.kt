@@ -36,9 +36,9 @@ import net.dankito.utils.IThreadPool
 import net.dankito.utils.android.ui.view.ToolbarUtil
 import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.ui.IClipboardService
-import net.dankito.utils.ui.IDialogService
-import net.dankito.utils.ui.model.ConfirmationDialogButton
-import net.dankito.utils.ui.model.ConfirmationDialogConfig
+import net.dankito.utils.ui.dialogs.IDialogService
+import net.dankito.utils.ui.dialogs.ConfirmationDialogButton
+import net.dankito.utils.ui.dialogs.ConfirmationDialogConfig
 import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject

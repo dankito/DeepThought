@@ -34,8 +34,8 @@ import net.dankito.utils.android.OnSwipeTouchListener
 import net.dankito.utils.android.ui.view.ToolbarUtil
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.android.extensions.HtmlExtensions
-import net.dankito.utils.ui.IDialogService
-import net.dankito.utils.ui.model.ConfirmationDialogConfig
+import net.dankito.utils.ui.dialogs.IDialogService
+import net.dankito.utils.ui.dialogs.ConfirmationDialogConfig
 import net.dankito.utils.web.UrlUtil
 import org.slf4j.LoggerFactory
 import javax.inject.Inject

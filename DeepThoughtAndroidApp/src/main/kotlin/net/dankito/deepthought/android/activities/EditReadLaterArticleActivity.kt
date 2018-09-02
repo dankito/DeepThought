@@ -10,7 +10,7 @@ import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.ReadLaterArticleChanged
 import net.dankito.utils.android.extensions.HtmlExtensions
-import net.dankito.utils.ui.model.ConfirmationDialogConfig
+import net.dankito.utils.ui.dialogs.ConfirmationDialogConfig
 import net.engio.mbassy.listener.Handler
 
 

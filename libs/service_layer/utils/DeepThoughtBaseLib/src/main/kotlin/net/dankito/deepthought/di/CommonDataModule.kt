@@ -36,7 +36,7 @@ import net.dankito.utils.serialization.serializer.PersistedSeriesSerializer
 import net.dankito.utils.serialization.serializer.PersistedTagDeserializer
 import net.dankito.utils.serialization.serializer.PersistedTagSerializer
 import net.dankito.utils.settings.ILocalSettingsStore
-import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.dialogs.IDialogService
 import javax.inject.Singleton
 
 

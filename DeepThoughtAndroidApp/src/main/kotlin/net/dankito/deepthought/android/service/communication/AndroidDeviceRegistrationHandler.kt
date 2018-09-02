@@ -11,8 +11,8 @@ import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.service.synchronization.initialsync.model.SyncInfo
 import net.dankito.utils.android.extensions.getSpannedFromHtml
 import net.dankito.utils.localization.Localization
-import net.dankito.utils.ui.IDialogService
-import net.dankito.utils.ui.model.ConfirmationDialogButton
+import net.dankito.utils.ui.dialogs.IDialogService
+import net.dankito.utils.ui.dialogs.ConfirmationDialogButton
 
 
 class AndroidDeviceRegistrationHandler(private var context: Context, dataManager: DataManager, initialSyncManager: InitialSyncManager, dialogService: IDialogService,

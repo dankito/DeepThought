@@ -27,9 +27,9 @@ import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.SourceChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.ui.IClipboardService
-import net.dankito.utils.ui.IDialogService
-import net.dankito.utils.ui.model.ConfirmationDialogButton
-import net.dankito.utils.ui.model.ConfirmationDialogConfig
+import net.dankito.utils.ui.dialogs.IDialogService
+import net.dankito.utils.ui.dialogs.ConfirmationDialogButton
+import net.dankito.utils.ui.dialogs.ConfirmationDialogConfig
 import net.engio.mbassy.listener.Handler
 import java.util.*
 import javax.inject.Inject
