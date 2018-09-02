@@ -11,6 +11,7 @@ import net.dankito.richtexteditor.android.AndroidIcon
 import net.dankito.richtexteditor.android.RichTextEditor
 import net.dankito.richtexteditor.android.util.StyleApplier
 import net.dankito.richtexteditor.command.ToolbarCommandStyle
+import net.dankito.utils.android.extensions.ColorExtensions
 import net.dankito.utils.android.extensions.getColorFromResource
 
 
@@ -54,7 +55,9 @@ class EditHtmlView : View {
         val editorToolbar = rootView.editorToolbar
         editorToolbar.editor = editor
 
-        editorToolbar.commandStyle.isActivatedColor = Color.fromArgb(context.getColorFromResource(R.color.colorPrimaryDark))
+        val primaryColorDark = context.getColorFromResource(R.color.colorPrimaryDark)
+        val primaryColorDarkWithTransparency = ColorExtensions.setTransparency(primaryColorDark, ToolbarCommandStyle.GroupedViewsDefaultBackgroundTransparency)
+        editorToolbar.commandStyle.isActivatedColor = Color.fromArgb(primaryColorDarkWithTransparency)
         editorToolbar.styleChanged(true) // isActivatedColor should also get applied to GroupedCommandView's toolbars
 
         editorToolbar.commandStyle.widthDp = 48
