@@ -13,6 +13,9 @@ import net.dankito.richtexteditor.command.ToolbarCommandStyle
 import net.dankito.utils.Color
 import net.dankito.utils.android.extensions.ColorExtensions
 import net.dankito.utils.android.extensions.getColorFromResource
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicReference
 
 
 class EditHtmlView : View {
@@ -67,8 +70,18 @@ class EditHtmlView : View {
     }
 
 
-    fun getHtml(): String {
-        return editor.getCachedHtml()
+    fun getCurrentHtmlBlocking(): String {
+        val retrievedHtml = AtomicReference<String>(editor.getCachedHtml()) // as a fallback use cached html
+        val countDownLatch = CountDownLatch(1)
+
+        editor.getCurrentHtmlAsync { currentHtml ->
+            retrievedHtml.set(currentHtml)
+            countDownLatch.countDown()
+        }
+
+        try { countDownLatch.await(10, TimeUnit.SECONDS) } catch (ignored: Exception) { } // don't block endlessly (10 seconds are already a lot of time)
+
+        return retrievedHtml.get()
     }
 
     fun setHtml(html: String, baseUrl: String?) {

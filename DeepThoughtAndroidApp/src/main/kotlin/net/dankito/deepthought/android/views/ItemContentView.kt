@@ -579,7 +579,7 @@ class ItemContentView @JvmOverloads constructor(
         }
 
         if(isInEditContentMode) {
-            uiStatePersister.serializeStateToDiskIfNotNull(outState, EDIT_CONTENT_HTML_INTENT_EXTRA_NAME, editHtmlView.getHtml()) // application crashes if objects put into bundle are too large (> 1 MB) for Android
+            uiStatePersister.serializeStateToDiskIfNotNull(outState, EDIT_CONTENT_HTML_INTENT_EXTRA_NAME, editHtmlView.getCurrentHtmlBlocking()) // application crashes if objects put into bundle are too large (> 1 MB) for Android
         }
 
         return outState
