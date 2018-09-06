@@ -619,7 +619,7 @@ class ItemContentView @JvmOverloads constructor(
     }
 
     private fun appliedChangesToContent() {
-        contentEditor.retrieveCurrentHtmlAsync { html -> // update contentToEdit as paste or Samsung's Swipe keyboard doesn't raise changed event -> fetch value before saving
+        contentEditor.getCurrentHtmlAsync { html -> // update contentToEdit as paste or Samsung's Swipe keyboard doesn't raise changed event -> fetch value before saving
             contentToEdit = html
 
             runOnUiThread {
