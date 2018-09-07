@@ -34,6 +34,7 @@ import net.dankito.utils.android.OnSwipeTouchListener
 import net.dankito.utils.android.ui.view.ToolbarUtil
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.android.extensions.HtmlExtensions
+import net.dankito.utils.android.permissions.IPermissionsService
 import net.dankito.utils.ui.dialogs.IDialogService
 import net.dankito.utils.ui.dialogs.ConfirmationDialogConfig
 import net.dankito.utils.web.UrlUtil
@@ -234,7 +235,7 @@ class ItemContentView @JvmOverloads constructor(
     }
 
 
-    fun initialize(contentToEdit: String, editItemView: IEditItemView) {
+    fun initialize(contentToEdit: String, editItemView: IEditItemView, permissionsService: IPermissionsService) {
         originalContent = contentToEdit
         this.contentToEdit = contentToEdit
 
@@ -242,6 +243,8 @@ class ItemContentView @JvmOverloads constructor(
 
         isInReaderMode = editItemView.getItemExtractionResult()?.couldExtractContent ?: false
         readerModeContent = editItemView.getItemExtractionResult()?.item?.content ?: contentToEdit // TODO: is this correct?
+
+        contentEditor.permissionsService = permissionsService
 
         contentEditor.changeFullscreenModeListener = { mode -> handleChangeFullscreenModeEvent(mode) }
 
@@ -307,7 +310,7 @@ class ItemContentView @JvmOverloads constructor(
             if(editHtmlView.handlesBackButtonPress()) {
                 return true
             }
-            
+
             if(isCreatingNewItemAndAllFieldsHaveBeenCleared) { // if creating an item and no value has been set, leave EditItemActivity directly, don't just hide contentEditor (as there's nothing to see)
                 appliedChangesToContent()
                 return true

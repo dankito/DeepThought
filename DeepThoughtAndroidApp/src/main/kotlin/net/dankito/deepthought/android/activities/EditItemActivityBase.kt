@@ -825,7 +825,7 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
     protected fun editItem(item: Item, source: Source?, series: Series? = source?.series, tags: MutableCollection<Tag>, files: MutableCollection<FileLink>,
                          updateContentPreview: Boolean = true) {
         itemToSave = item
-        itemContentView.initialize(item.content, this)
+        itemContentView.initialize(item.content, this, permissionsService)
         originalTags = tags
 
         if(item.summary.isEmpty() == false) { this.forceShowSummaryPreview = true } // forcing that once it has been shown it doesn't get hidden anymore
