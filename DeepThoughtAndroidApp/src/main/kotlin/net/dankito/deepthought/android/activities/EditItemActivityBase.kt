@@ -120,8 +120,6 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
     protected var isEditingTagsOnItem = false
 
 
-    protected val contextHelpUtil = ContextHelpUtil()
-
     private val toolbarUtil = ToolbarUtil()
 
     private val permissionsService: IPermissionsService
