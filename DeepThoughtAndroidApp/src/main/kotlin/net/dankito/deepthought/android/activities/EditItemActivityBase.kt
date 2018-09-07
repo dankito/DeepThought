@@ -124,7 +124,7 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
 
     private val toolbarUtil = ToolbarUtil()
 
-    private val permissionsManager: IPermissionsService
+    private val permissionsService: IPermissionsService
 
     protected var mnSaveItem: MenuItem? = null
 
@@ -162,7 +162,7 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
 
         presenter = EditItemPresenter(itemPersister, readLaterArticleService, clipboardService, router)
 
-        permissionsManager = PermissionsService(this)
+        permissionsService = PermissionsService(this)
     }
 
 
@@ -308,7 +308,7 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        permissionsService.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun onResume() {
@@ -845,7 +845,7 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
 
         forceShowTagsPreview = forceShowTagsPreview || tags.isNotEmpty()
 
-        lytFilesPreview.setFiles(files, permissionsManager)
+        lytFilesPreview.setFiles(files, permissionsService)
         forceShowFilesPreview = forceShowFilesPreview || files.isNotEmpty()
 
         updateDisplayedValuesOnUIThread(source, item.summary, updateContentPreview)
