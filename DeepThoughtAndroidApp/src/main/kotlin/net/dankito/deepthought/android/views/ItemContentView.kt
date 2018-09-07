@@ -297,7 +297,6 @@ class ItemContentView @JvmOverloads constructor(
 
     fun onDestroy() {
         pauseWebView()
-
     }
 
     fun handlesBackButtonPress(isCreatingNewItemAndAllFieldsHaveBeenCleared: Boolean): Boolean {
@@ -305,6 +304,10 @@ class ItemContentView @JvmOverloads constructor(
             return true
         }
         else if(isInEditContentMode) {
+            if(editHtmlView.handlesBackButtonPress()) {
+                return true
+            }
+            
             if(isCreatingNewItemAndAllFieldsHaveBeenCleared) { // if creating an item and no value has been set, leave EditItemActivity directly, don't just hide contentEditor (as there's nothing to see)
                 appliedChangesToContent()
                 return true

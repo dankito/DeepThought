@@ -8,17 +8,19 @@ import kotlinx.android.synthetic.main.view_item_content.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.richtexteditor.android.AndroidIcon
 import net.dankito.richtexteditor.android.RichTextEditor
+import net.dankito.richtexteditor.android.toolbar.EditorToolbar
 import net.dankito.richtexteditor.android.util.StyleApplier
 import net.dankito.richtexteditor.command.ToolbarCommandStyle
 import net.dankito.utils.Color
 import net.dankito.utils.android.extensions.ColorExtensions
 import net.dankito.utils.android.extensions.getColorFromResource
+import net.dankito.utils.android.ui.view.IHandlesBackButtonPress
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
 
 
-class EditHtmlView : View {
+class EditHtmlView : View, IHandlesBackButtonPress {
 
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
@@ -26,6 +28,8 @@ class EditHtmlView : View {
 
 
     private lateinit var editor: RichTextEditor
+
+    private lateinit var editorToolbar: EditorToolbar
 
     private var setHtml: String? = null
 
@@ -54,7 +58,7 @@ class EditHtmlView : View {
         val styleApplier = StyleApplier()
         styleApplier.applyCommandStyle(AndroidIcon(R.drawable.ic_check_white_48dp), ToolbarCommandStyle(), rootView.btnApplyEditedContent)
 
-        val editorToolbar = rootView.editorToolbar
+        editorToolbar = rootView.editorToolbar
         editorToolbar.editor = editor
 
         val primaryColorDark = context.getColorFromResource(R.color.colorPrimaryDark)
@@ -64,6 +68,11 @@ class EditHtmlView : View {
 
         editorToolbar.commandStyle.widthDp = 48
         editorToolbar.styleChanged() // but not widthDp, they should keep their default width
+    }
+
+
+    override fun handlesBackButtonPress(): Boolean {
+        return editorToolbar.handlesBackButtonPress()
     }
 
 
