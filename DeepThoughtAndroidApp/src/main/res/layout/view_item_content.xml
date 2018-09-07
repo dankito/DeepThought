@@ -109,24 +109,14 @@
                 android:visibility="gone"
             >
 
-                <ImageButton
-                    android:id="@+id/btnCancelEditingContent"
-                    android:layout_width="@dimen/activity_edit_item_html_editor_toolbar_height"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
-                    android:src="@android:drawable/arrow_up_float"
-                />
-
                 <net.dankito.richtexteditor.android.toolbar.GroupedCommandsEditorToolbar
                     android:id="@+id/editorToolbar"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_toRightOf="@+id/btnCancelEditingContent"
-                    android:layout_toEndOf="@+id/btnCancelEditingContent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:layout_toLeftOf="@+id/btnApplyEditedContent"
                     android:layout_toStartOf="@+id/btnApplyEditedContent"
-                    android:layout_marginLeft="@dimen/activity_edit_item_html_editor_toolbar_margin_left_right"
-                    android:layout_marginStart="@dimen/activity_edit_item_html_editor_toolbar_margin_left_right"
                     android:layout_marginRight="@dimen/activity_edit_item_html_editor_toolbar_margin_left_right"
                     android:layout_marginEnd="@dimen/activity_edit_item_html_editor_toolbar_margin_left_right"
                     android:background="@android:color/transparent"

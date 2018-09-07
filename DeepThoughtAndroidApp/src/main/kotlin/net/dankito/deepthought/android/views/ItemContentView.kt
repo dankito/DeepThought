@@ -162,7 +162,6 @@ class ItemContentView @JvmOverloads constructor(
             didContentChangeListener?.invoke(didChange)
         }
 
-        btnCancelEditingContent.setOnClickListener { leaveEditContentView() }
         btnApplyEditedContent.setOnClickListener { appliedChangesToContent() }
 
         contentEditor.enterViewingMode() // by default we start in viewing not editing mode
@@ -307,7 +306,7 @@ class ItemContentView @JvmOverloads constructor(
         }
         else if(isInEditContentMode) {
             if(isCreatingNewItemAndAllFieldsHaveBeenCleared) { // if creating an item and no value has been set, leave EditItemActivity directly, don't just hide contentEditor (as there's nothing to see)
-                leaveEditContentView()
+                appliedChangesToContent()
                 return true
             }
         }

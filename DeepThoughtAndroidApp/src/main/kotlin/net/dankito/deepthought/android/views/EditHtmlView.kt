@@ -52,7 +52,6 @@ class EditHtmlView : View {
 
     private fun setupEditorToolbar(rootView: View) {
         val styleApplier = StyleApplier()
-        styleApplier.applyCommandStyle(AndroidIcon(R.drawable.ic_arrow_back_white_48dp), ToolbarCommandStyle(), rootView.btnCancelEditingContent)
         styleApplier.applyCommandStyle(AndroidIcon(R.drawable.ic_check_white_48dp), ToolbarCommandStyle(), rootView.btnApplyEditedContent)
 
         val editorToolbar = rootView.editorToolbar
@@ -65,8 +64,6 @@ class EditHtmlView : View {
 
         editorToolbar.commandStyle.widthDp = 48
         editorToolbar.styleChanged() // but not widthDp, they should keep their default width
-
-        editorToolbar.centerCommandsHorizontally()
     }
 
 
