@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
-import net.dankito.utils.web.client.IWebClient
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
+import net.dankito.utils.web.client.IWebClient
 import org.jsoup.nodes.Comment
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -15,6 +15,9 @@ import java.util.*
 abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) : ArticleExtractorBase(webClient), IArticleExtractor {
 
     companion object {
+        private val ContentFilterSelector = ".widget-werbung, .akwa-ad-container, .akwa-ad-container--native, .hinweis_anzeige" +
+                "a-paternoster, a-ad, [name=Teads], .a-teaser-header__heading, .article-footer__content, [name=meldung.newsticker.bottom.zurstartseite]"
+
         private val DateTimeFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
         private val MultiPageMobileArticleDateTimeFormat = SimpleDateFormat("yyyy-MM-dd")
     }
@@ -58,6 +61,10 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
 
 
     protected open fun parseArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleElement: Element, url: String, title: String) {
+        articleElement.select("article#meldung").first()?.let { articleMeldungElement -> // article#meldung is the new version
+            parseArticleMeldungArticle(extractionResult, headerElement, articleMeldungElement, url, title)
+        }
+
         articleElement.select(".meldung_wrapper").first()?.let { contentElement ->
             parseMeldungWrapperArticle(extractionResult, headerElement, articleElement, contentElement, url, title)
             return
@@ -66,6 +73,29 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         articleElement.select(".article-content").first()?.let { articleContentElement ->
             parseArticleContentArticle(extractionResult, headerElement, articleContentElement, url, title)
         }
+    }
+
+    // even newer version
+    protected fun parseArticleMeldungArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleMeldungElement: Element, url: String, title: String) {
+        var contentHtml = extractArticleMeldungContent(articleMeldungElement, url)
+
+        val previewImageElement = articleMeldungElement.select(".article-image").firstOrNull()
+        val summaryElement = articleMeldungElement.select(".article-content__lead").firstOrNull()
+
+        if(previewImageElement != null || summaryElement != null) {
+            contentHtml = "<div>" + previewImageElement?.outerHtml() + summaryElement?.outerHtml() + contentHtml + "</div>"
+        }
+
+        val item = Item(contentHtml)
+
+        val publishingDate = extractPublishingDate(headerElement)
+        val source = Source(title, url, publishingDate)
+
+        previewImageElement?.let {
+            source.previewImageUrl = makeLinkAbsolute(previewImageElement.select(".article-image img").first()?.attr("src") ?: "", url)
+        }
+
+        extractionResult.setExtractedContent(item, source)
     }
 
 
@@ -87,7 +117,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
 
     // old version
     protected fun parseMeldungWrapperArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleElement: Element, contentElement: Element, url: String, title: String) {
-        val item = Item(extractContent(articleElement, url))
+        val item = Item(extractMeldungWrapperContent(articleElement, url))
 
         val publishingDate = extractPublishingDate(headerElement)
         val source = Source(title, url, publishingDate)
@@ -149,15 +179,24 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
     }
 
 
-    protected open fun extractContent(articleElement: Element, url: String): String {
-        return articleElement.select(".meldung_wrapper").first()?.children()?.filter { element ->
+    protected open fun extractArticleMeldungContent(articleElement: Element, url: String): String {
+        return extractContent(articleElement, url, ".akwa-article__content")
+    }
+
+    protected open fun extractMeldungWrapperContent(articleElement: Element, url: String): String {
+        return extractContent(articleElement, url, ".meldung_wrapper")
+    }
+
+    protected open fun extractContent(articleElement: Element, url: String, contentSelector: String): String {
+        return articleElement.select(contentSelector).first()?.children()?.filter { element ->
             shouldFilterElement(element) == false
         }?.joinToString(separator = "") { getContentElementHtml(it, url) }
         ?: ""
     }
 
     protected open fun shouldFilterElement(element: Element): Boolean {
-        return element.select(".widget-werbung, .akwa-ad-container, .akwa-ad-container--native, .hinweis_anzeige").isNotEmpty() || containsOnlyComment(element)
+        return element.select(ContentFilterSelector).isNotEmpty() ||
+                containsOnlyComment(element)
     }
 
     protected open fun containsOnlyComment(element: Element) : Boolean {
