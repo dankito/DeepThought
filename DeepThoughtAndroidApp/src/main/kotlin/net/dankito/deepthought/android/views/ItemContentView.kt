@@ -167,8 +167,6 @@ class ItemContentView @JvmOverloads constructor(
 
         contentEditor.enterViewingMode() // by default we start in viewing not editing mode
 
-        contentEditor?.requestFocus() // avoid that lytSummaryPreview gets focus and keyboard therefore gets displayed on activity start
-
         contentEditor.elementClickedListener = { type -> elementInEditorClicked(type) }
     }
 
@@ -467,7 +465,6 @@ class ItemContentView @JvmOverloads constructor(
         lytOnboardingText.visibility = View.GONE
 
         invalidateOptionsMenu(context as Activity)
-        contentEditor.focusEditorAndShowKeyboardDelayed()
     }
 
     private fun playShowEditContentViewAnimation(start: Float) {
