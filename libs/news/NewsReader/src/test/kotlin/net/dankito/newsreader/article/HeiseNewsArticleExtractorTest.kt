@@ -19,6 +19,14 @@ class HeiseNewsArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun extractMultiPageArticleMeldungArticle() {
+        getAndTestArticle("https://www.heise.de/newsticker/meldung/Urheberrechtsreform-Was-hat-das-EU-Parlament-tatsaechlich-beschlossen-4165818.html",
+                "Zeitumstellung: Wissenschaftler warnen vor ewiger \"Sommerzeit\"",
+                "Die Zeitumstellung abschaffen – das wollen nicht nur viele Deutsche. Doch Forscher warnen: Eine dauerhafte \"Sommerzeit\" könne schlimme Auswirkungen haben.",
+                "https://heise.cloudimg.io/width/700/q75.png-lossy-75.webp-lossy-75.foil1/_www-heise-de_/imgs/18/2/4/9/9/6/3/1/Unbenannt-1-40f434de35bf8b60.jpeg", 3000)
+    }
+
+    @Test
     fun extractZwistMitBundesnetzAgenturArticle() {
         getAndTestArticle("https://www.heise.de/newsticker/meldung/Zwist-mit-Bundesnetzagentur-Keine-Neuanmeldungen-beim-E-Mail-Anbieter-FastMail-in-Deutschland-3755918.html",
                 "Zwist mit Bundesnetzagentur: Keine Neuanmeldungen beim E-Mail-Anbieter FastMail in Deutschland",

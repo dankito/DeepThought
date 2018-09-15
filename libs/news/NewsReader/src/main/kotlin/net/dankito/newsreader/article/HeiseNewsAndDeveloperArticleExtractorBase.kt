@@ -48,6 +48,10 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
     }
 
     private fun getReadAllOnOnePageUrl(article: Element, siteUrl: String): String? {
+        article.select(".a-toc__text--onepage").first()?.let { allOnOnePageAnchorElement ->
+            return makeLinkAbsolute(allOnOnePageAnchorElement.attr("href"), siteUrl)
+        }
+
         article.select(".pre-akwa-toc__item--onepage a.pre-akwa-toc__link").first()?.let { allOnOnePageAnchorElement ->
             return makeLinkAbsolute(allOnOnePageAnchorElement.attr("href"), siteUrl)
         }
