@@ -631,7 +631,6 @@ class ItemContentView @JvmOverloads constructor(
                 leaveEditContentView()
 
                 didContentChangeListener?.invoke(originalContent != contentToEdit) // TODO: is this really needed as actually calling didContentChangeListener in setupItemContentEditor() should be enough
-                setContentPreviewOnUIThread()
             }
         }
     }
