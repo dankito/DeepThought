@@ -1,8 +1,8 @@
 package net.dankito.newsreader.article
 
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.utils.web.client.IWebClient
 import net.dankito.utils.web.client.OkHttpWebClient
-import net.dankito.deepthought.model.util.ItemExtractionResult
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.Matchers.greaterThan
 import org.junit.Assert.assertThat

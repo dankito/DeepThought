@@ -1,8 +1,12 @@
 package net.dankito.newsreader.summary
 
-import net.dankito.utils.web.client.IWebClient
 import net.dankito.newsreader.model.ArticleSummary
+import net.dankito.utils.web.client.IWebClient
 import org.hamcrest.CoreMatchers
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.notNullValue
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.greaterThan
 import org.junit.Assert
 import org.junit.Test
 import java.util.concurrent.CountDownLatch
@@ -36,9 +40,12 @@ class SueddeutscheArticleSummaryExtractorTest : ArticleSummaryExtractorTestBase(
     @Test
     fun loadMoreItems() {
         var summary: ArticleSummary? = null
+        var primarySummaryArticlesCount: Int? = null
         val countDownLatch = CountDownLatch(1)
 
         underTest.extractSummaryAsync {
+            primarySummaryArticlesCount = it.result?.articles?.size
+
             it.result?.let { extractSummaryResult ->
                 underTest.loadMoreItemsAsync(extractSummaryResult) {
                     summary = it.result
@@ -48,9 +55,12 @@ class SueddeutscheArticleSummaryExtractorTest : ArticleSummaryExtractorTestBase(
             }
         }
 
-        countDownLatch.await(31, TimeUnit.SECONDS)
+        countDownLatch.await(31, TimeUnit.MINUTES)
 
         testSummary(summary)
+
+        assertThat(primarySummaryArticlesCount, `is`(notNullValue()))
+        assertThat(summary?.articles?.size, `is`(greaterThan(primarySummaryArticlesCount!!)))
     }
 
 }
