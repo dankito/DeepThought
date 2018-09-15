@@ -1,9 +1,9 @@
 package net.dankito.newsreader.summary
 
-import net.dankito.utils.web.client.IWebClient
-import net.dankito.utils.web.client.OkHttpWebClient
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
+import net.dankito.utils.web.client.IWebClient
+import net.dankito.utils.web.client.OkHttpWebClient
 import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.*
 import org.junit.Assert
