@@ -122,33 +122,8 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
             val sectionUrl = politicsNavigationElement.attr("href")
 
             val subSectionDoc = requestUrl(sectionUrl)
-            extractTeasersOld(articles, siteUrl, subSectionDoc)
+            extractTeasers(articles, siteUrl, subSectionDoc)
         }
-    }
-
-    private fun extractTeasersOld(articles: MutableList<ArticleSummaryItem>, siteUrl: String, document: Document) {
-        document.body().select("#sitecontent").first()?.let { siteContent ->
-            articles.addAll(siteContent.select(".sz-teaser").map { mapTeaserElementToArticleSummaryItem(it, siteUrl) }.filterNotNull())
-            articles.addAll(siteContent.select(".teaser").map { mapOldTeaserElementToArticleSummaryItem(it, siteUrl) }.filterNotNull())
-        }
-    }
-
-    private fun mapOldTeaserElementToArticleSummaryItem(teaserElement: Element, siteUrl: String): ArticleSummaryItem? {
-        teaserElement.select(".entry-title").first()?.let { titleElement ->
-            val articleUrl = makeLinkAbsolute(titleElement.attr("href"), siteUrl)
-            val item = ArticleSummaryItem(articleUrl, titleElement.text(), getArticleExtractorClass(articleUrl))
-
-            titleElement.select("img").first()?.let { item.previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(it, "src", siteUrl) }
-
-            teaserElement.select(".entry-summary").first()?.let { summaryElement ->
-                summaryElement.select(".author, .more").remove()
-                item.summary = summaryElement.text()
-            }
-
-            return item
-        }
-
-        return null
     }
 
 }
