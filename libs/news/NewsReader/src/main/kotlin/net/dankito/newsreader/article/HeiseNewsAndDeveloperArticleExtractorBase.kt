@@ -208,6 +208,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
     }
 
     protected open fun getContentElementHtml(element: Element, url: String) : String {
+        unwrapImagesFromNoscriptElements(element)
         makeLinksAbsolute(element, url)
 
         if(element.hasClass("gallery") && element.hasClass("compact") && element.hasAttr("data-data-url")) {
