@@ -91,6 +91,9 @@ class ItemContentView @JvmOverloads constructor(
             return currentValue.isBlank() == false && currentValue != "<p>\u200B</p>" // = RichTextEditor's default html
         }
 
+    var didContentChange: Boolean = false
+        protected set
+
     val isInEditContentMode: Boolean
         get() = ! contentEditor.isInViewingMode
 
@@ -160,6 +163,8 @@ class ItemContentView @JvmOverloads constructor(
         editHtmlView.setupHtmlEditor(lytContentViewAndOnboardingText)
 
         editHtmlView.setHtmlChangedCallback { didChange ->
+            this.didContentChange = didChange
+
             didContentChangeListener?.invoke(didChange)
         }
 
@@ -300,7 +305,7 @@ class ItemContentView @JvmOverloads constructor(
         pauseWebView()
     }
 
-    fun handlesBackButtonPress(isCreatingNewItemAndAllFieldsHaveBeenCleared: Boolean): Boolean {
+    fun handlesBackButtonPress(didOtherDataChange: Boolean): Boolean {
         if(openUrlOptionsView.handlesBackButtonPress()) {
             return true
         }
@@ -309,8 +314,8 @@ class ItemContentView @JvmOverloads constructor(
                 return true
             }
 
-            if(isCreatingNewItemAndAllFieldsHaveBeenCleared) { // if creating an item and no value has been set, leave EditItemActivity directly, don't just hide contentEditor (as there's nothing to see)
-                appliedChangesToContent()
+            if(didOtherDataChange || didContentChange) { // if creating a new item and no value (either tags, source, ...) has been set, leave EditItemActivity directly, don't just leave editing mode (as there's nothing to see)
+                appliedChangesToContent() // otherwise apply changes
                 return true
             }
         }
