@@ -25,6 +25,8 @@ import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.deepthought.service.permissions.JavaPermissionsService
+import net.dankito.deepthought.utils.DeepThoughtJacksonJsonSerializer
+import net.dankito.deepthought.utils.DeepThoughtLocalization
 import net.dankito.mime.MimeTypeCategorizer
 import net.dankito.mime.MimeTypeDetector
 import net.dankito.service.data.*
@@ -43,10 +45,9 @@ import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.OsHelper
 import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.utils.ThreadPool
+import net.dankito.utils.hashing.HashService
 import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.utils.localization.Localization
-import net.dankito.utils.serialization.JacksonJsonSerializer
-import net.dankito.utils.hashing.HashService
 import net.dankito.utils.services.hashing.IBase64Service
 import net.dankito.utils.services.network.NetworkConnectivityManagerBase
 import net.dankito.utils.services.network.NetworkHelper
@@ -87,7 +88,7 @@ abstract class FileSyncServiceIntegrationTestBase {
     }
 
 
-    protected val localization = Localization()
+    protected val localization = DeepThoughtLocalization()
 
     protected val base64Service: IBase64Service = mock()
 
@@ -133,7 +134,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     protected val localSocketHandler = SocketHandler()
 
-    protected val localSerializer = JacksonJsonSerializer(mock(), mock()) // in this case we don't need TagService and SeriesService
+    protected val localSerializer = DeepThoughtJacksonJsonSerializer(mock(), mock()) // in this case we don't need TagService and SeriesService
 
     protected val localThreadPool = ThreadPool()
 
@@ -229,7 +230,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     protected val remoteSocketHandler = SocketHandler()
 
-    protected val remoteSerializer = JacksonJsonSerializer(mock(), mock()) // in this case we don't need TagService and SeriesService
+    protected val remoteSerializer = DeepThoughtJacksonJsonSerializer(mock(), mock()) // in this case we don't need TagService and SeriesService
 
     protected val remoteThreadPool = ThreadPool()
 
