@@ -1,6 +1,5 @@
 package net.dankito.deepthought.di
 
-import com.fasterxml.jackson.databind.module.SimpleModule
 import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.database.EntityManagerConfiguration
@@ -15,11 +14,10 @@ import net.dankito.deepthought.files.MimeTypeService
 import net.dankito.deepthought.files.synchronization.FileServer
 import net.dankito.deepthought.files.synchronization.FileSyncService
 import net.dankito.deepthought.model.INetworkSettings
-import net.dankito.deepthought.model.Series
-import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
 import net.dankito.deepthought.service.permissions.IPermissionsService
+import net.dankito.deepthought.utils.DeepThoughtJacksonJsonSerializer
 import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
@@ -30,11 +28,6 @@ import net.dankito.utils.IThreadPool
 import net.dankito.utils.hashing.HashService
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.ISerializer
-import net.dankito.utils.serialization.JacksonJsonSerializer
-import net.dankito.utils.serialization.serializer.PersistedSeriesDeserializer
-import net.dankito.utils.serialization.serializer.PersistedSeriesSerializer
-import net.dankito.utils.serialization.serializer.PersistedTagDeserializer
-import net.dankito.utils.serialization.serializer.PersistedTagSerializer
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.ui.dialogs.IDialogService
 import javax.inject.Singleton
@@ -149,16 +142,7 @@ class CommonDataModule {
     @Provides
     @Singleton
     fun provideSerializer(tagService: TagService, seriesService: SeriesService) : ISerializer {
-        val module = SimpleModule() // TODO: find a better place for this
-
-        module.addSerializer(Tag::class.java, PersistedTagSerializer())
-        module.addDeserializer(Tag::class.java, PersistedTagDeserializer(tagService))
-        module.addSerializer(Series::class.java, PersistedSeriesSerializer())
-        module.addDeserializer(Series::class.java, PersistedSeriesDeserializer(seriesService))
-
-        return JacksonJsonSerializer { mapper ->
-            mapper.registerModule(module)
-        }
+        return DeepThoughtJacksonJsonSerializer(tagService, seriesService)
     }
 
     @Provides

@@ -48,9 +48,9 @@ subprojects {
     task allDeps(type: DependencyReportTask) {} // to have a simple way to print all dependencies to console
 
     apply plugin: 'jacoco'
-    apply plugin: 'checkstyle'
-    apply plugin: 'pmd'
-    apply plugin: 'findbugs'
+//    apply plugin: 'checkstyle'
+//    apply plugin: 'pmd'
+//    apply plugin: 'findbugs'
     apply plugin: "org.sonarqube"
 
 
@@ -69,31 +69,31 @@ subprojects {
         classpath = files()
     }
 
-    task findbugs(type: FindBugs) {
-        group = "Reporting"
-
-        ignoreFailures = true
-        effort = "max"
-        reportLevel = "high"
-//    excludeFilter = new File("${project.rootDir}/config/quality/findbugs/findbugs-filter.xml")
-        classes = files("$project.buildDir/intermediates/classes/")
-
-        source 'src'
-        include '**/*.java'
-        exclude '**/gen/**'
-
-        reports {
-            xml {
-                destination file("$project.buildDir/reports/findbugs/findbugs.xml")
-                xml.withMessages true
-            }
-            html {
-                enabled false
-            }
-        }
-
-        classpath = files()
-    }
+//    task findbugs(type: FindBugs) {
+//        group = "Reporting"
+//
+//        ignoreFailures = true
+//        effort = "max"
+//        reportLevel = "high"
+////    excludeFilter = new File("${project.rootDir}/config/quality/findbugs/findbugs-filter.xml")
+//        classes = files("$project.buildDir/intermediates/classes/")
+//
+//        source 'src'
+//        include '**/*.java'
+//        exclude '**/gen/**'
+//
+//        reports {
+//            xml {
+//                destination file("$project.buildDir/reports/findbugs/findbugs.xml")
+//                xml.withMessages true
+//            }
+//            html {
+//                enabled false
+//            }
+//        }
+//
+//        classpath = files()
+//    }
 
     task pmd(type: Pmd) {
         group = "Reporting"

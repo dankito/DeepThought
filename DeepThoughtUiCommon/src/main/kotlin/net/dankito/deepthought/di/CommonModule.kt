@@ -9,8 +9,6 @@ import net.dankito.data_access.network.communication.IClientCommunicator
 import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.discovery.IDevicesDiscoverer
-import net.dankito.utils.web.client.IWebClient
-import net.dankito.utils.web.client.OkHttpWebClient
 import net.dankito.deepthought.communication.CommunicationManager
 import net.dankito.deepthought.communication.ICommunicationManager
 import net.dankito.deepthought.files.FileManager
@@ -23,6 +21,7 @@ import net.dankito.deepthought.service.clipboard.OptionsForClipboardContentDetec
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.tags.TagsSearchResultsUtil
+import net.dankito.deepthought.utils.DeepThoughtLocalization
 import net.dankito.faviconextractor.FaviconComparator
 import net.dankito.faviconextractor.FaviconExtractor
 import net.dankito.feedaddressextractor.FeedAddressExtractor
@@ -48,13 +47,15 @@ import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ImageCache
 import net.dankito.utils.OsHelper
+import net.dankito.utils.hashing.HashService
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.ISerializer
-import net.dankito.utils.hashing.HashService
 import net.dankito.utils.hashing.IBase64Service
 import net.dankito.utils.services.network.NetworkHelper
 import net.dankito.utils.ui.dialogs.IDialogService
+import net.dankito.utils.web.client.IWebClient
+import net.dankito.utils.web.client.OkHttpWebClient
 import javax.inject.Singleton
 
 
@@ -64,7 +65,7 @@ open class CommonModule {
     @Provides
     @Singleton
     open fun provideLocalization() : Localization {
-        return Localization("Messages")
+        return DeepThoughtLocalization()
     }
 
 

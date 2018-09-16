@@ -230,7 +230,7 @@ dependencies {
 }
 
 
-check.dependsOn 'checkstyle', 'findbugs', 'pmd'
+//check.dependsOn 'checkstyle', 'findbugs', 'pmd'
 
 sonarqube {
     properties {
