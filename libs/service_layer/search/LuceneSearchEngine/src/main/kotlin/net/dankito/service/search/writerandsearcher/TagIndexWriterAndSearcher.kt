@@ -23,7 +23,6 @@ import org.apache.lucene.document.Document
 import org.apache.lucene.document.Field
 import org.apache.lucene.document.StringField
 import org.apache.lucene.index.Term
-import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.*
 import org.slf4j.LoggerFactory
 
@@ -112,7 +111,7 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osH
     }
 
     private fun executeSearchForNonBlankSingleTagName(search: TagsSearch, tagNameToSearchFor: String): Boolean {
-        val searchTerm = QueryParser.escape(tagNameToSearchFor.toLowerCase())
+        val searchTerm = tagNameToSearchFor.toLowerCase()
         if(search.isInterrupted) {
             return true
         }
@@ -143,7 +142,7 @@ class TagIndexWriterAndSearcher(tagService: TagService, eventBus: IEventBus, osH
                 return
             }
 
-            val searchTerm = QueryParser.escape(result.searchTerm.toLowerCase())
+            val searchTerm = result.searchTerm.toLowerCase()
             if(result == search.results.lastResult || result.hasSingleMatch()) { // from last TagSearchResult use all matches, but from all others only exact or single matches
                 sortRelevantTagsQuery.add(WildcardQuery(Term(FieldName.TagName, "*$searchTerm*")), BooleanClause.Occur.SHOULD)
             }
