@@ -15,11 +15,12 @@ import net.dankito.data_access.network.communication.callback.DeviceRegistration
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.data_access.network.discovery.UdpDevicesDiscoverer
-import net.dankito.utils.web.client.IWebClient
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
+import net.dankito.deepthought.utils.DeepThoughtJacksonJsonSerializer
+import net.dankito.deepthought.utils.DeepThoughtLocalization
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.summary.ArticleSummaryExtractorBase
 import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractor
@@ -33,9 +34,8 @@ import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHan
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.utils.ThreadPool
-import net.dankito.utils.localization.Localization
-import net.dankito.utils.serialization.JacksonJsonSerializer
 import net.dankito.utils.hashing.HashService
+import net.dankito.utils.localization.Localization
 import net.dankito.utils.services.hashing.IBase64Service
 import net.dankito.utils.services.network.NetworkConnectivityManagerBase
 import net.dankito.utils.services.network.NetworkHelper
@@ -43,6 +43,7 @@ import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.settings.LocalSettingsStoreBase
 import net.dankito.utils.ui.IDialogService
 import net.dankito.utils.version.Versions
+import net.dankito.utils.web.client.IWebClient
 import net.engio.mbassy.listener.Handler
 import net.engio.mbassy.listener.Listener
 import net.engio.mbassy.listener.References
@@ -84,7 +85,7 @@ class CommunicationManagerTest {
     }
 
 
-    private val localization: Localization = Localization()
+    private val localization: Localization = DeepThoughtLocalization()
 
     private val base64Service: IBase64Service = mock()
 
@@ -92,7 +93,7 @@ class CommunicationManagerTest {
 
     private val fileStorageService = JavaFileStorageService()
 
-    private val serializer = JacksonJsonSerializer(mock(), mock())
+    private val serializer = DeepThoughtJacksonJsonSerializer(mock(), mock())
 
 
     private lateinit var localDevice: Device
