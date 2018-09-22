@@ -42,8 +42,8 @@ class CommunicationManager(private val connectedDevicesService: IConnectedDevice
 
         val random = Random(System.nanoTime())
 
-        val desiredSynchronizationPort = messagesReceiverPort + random.nextInt(400)
-        val desiredBasicDataSynchronizationPort = desiredSynchronizationPort + random.nextInt(700)
+        val desiredSynchronizationPort = messagesReceiverPort + random.nextInt(400) // TODO: desiredSynchronizationPort is never used
+        val desiredBasicDataSynchronizationPort = desiredSynchronizationPort + random.nextInt(700) // TODO: using a random port is really ugly
 
         syncManager.startAsync(desiredSynchronizationPort, desiredBasicDataSynchronizationPort) {
             successfullyStartedSyncManager(it)
