@@ -8,8 +8,7 @@
     android:background="@color/edit_entity_activity_background"
 >
 
-    <LinearLayout
-        android:orientation="vertical"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/move_upward_behaviour"
@@ -19,6 +18,7 @@
             android:id="@+id/lytItemFieldsPreview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:layout_marginTop="@dimen/activity_edit_item_fields_margin_top"
             android:layout_marginLeft="@dimen/activity_edit_item_field_margin_left"
             android:layout_marginStart="@dimen/activity_edit_item_field_margin_left"
@@ -59,18 +59,19 @@
         <net.dankito.deepthought.android.views.ItemContentView
             android:id="@+id/itemContentView"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            />
-
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lytItemFieldsPreview"
+            android:layout_above="@+id/toolbar"
+        />
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
+            android:layout_alignParentBottom="true"
             app:title="@string/activity_edit_item_title"
             style="@style/ToolbarStyle"
         />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <include
         layout="@layout/view_floating_action_button_item_fields"
