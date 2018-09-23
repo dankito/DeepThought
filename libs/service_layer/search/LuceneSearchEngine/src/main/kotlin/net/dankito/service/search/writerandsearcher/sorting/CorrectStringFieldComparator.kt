@@ -10,7 +10,7 @@ import java.text.Collator
 
 
 /**
- * This is a copy of FieldComparator.TermOrdValComparator class which thanks to the final keyword i cannot derive from (must useless keyword ever *g*).
+ * This is a copy of FieldComparator.TermOrdValComparator class which thanks to the final keyword i cannot derive from (most useless keyword ever *g*).
  * I only changed the compare() method to do sorting via a Collator so that e.g. also German Umlaute are sorted correctly.
  */
 class CorrectStringFieldComparator : FieldComparator<BytesRef> {
@@ -263,7 +263,7 @@ class CorrectStringFieldComparator : FieldComparator<BytesRef> {
             return -missingSortCmp
         }
 
-        val string1 = String(val1.bytes).trim() // don't know why but same terms have (a lot of) white spaces at the starts, so remove them
+        val string1 = String(val1.bytes).trim() // don't know why but some terms have (a lot of) white spaces at the starts, so remove them
         val string2 = String(val2.bytes).trim()
 
         return collator.compare(string1, string2)
