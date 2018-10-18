@@ -12,7 +12,6 @@ Local data storage and sync, no external servers involved.
 - local data storage
 - cloudless data synchronization over local network
 - a Rich Text editor
-- real time full text search engine (my one gigabyte database is searched in less than 100 milliseconds.)
 - extracting data from web sites (the same technique as for the Firefox reader view is used)
 - extracting text from PDF files
 - attaching files (including automatic file synchronization)
