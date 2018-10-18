@@ -44,6 +44,145 @@ allprojects {
     }
 }
 
+subprojects {
+    task allDeps(type: DependencyReportTask) {} // to have a simple way to print all dependencies to console
+
+    apply plugin: 'jacoco'
+    apply plugin: 'checkstyle'
+    apply plugin: 'pmd'
+    apply plugin: 'findbugs'
+    apply plugin: "org.sonarqube"
+
+
+    ext.jacocoOutputFile = file("$buildDir/jacoco/jacocoTest.exec")
+
+
+    task checkstyle(type: Checkstyle) {
+        group = "Reporting"
+
+        ignoreFailures = true
+        configFile file("${project.rootDir}/config/quality/checkstyle/checkstyle.xml")
+        source 'src'
+        include '**/*.java'
+        exclude '**/gen/**'
+
+        classpath = files()
+    }
+
+    task findbugs(type: FindBugs) {
+        group = "Reporting"
+
+        ignoreFailures = true
+        effort = "max"
+        reportLevel = "high"
+//    excludeFilter = new File("${project.rootDir}/config/quality/findbugs/findbugs-filter.xml")
+        classes = files("$project.buildDir/intermediates/classes/")
+
+        source 'src'
+        include '**/*.java'
+        exclude '**/gen/**'
+
+        reports {
+            xml {
+                destination file("$project.buildDir/reports/findbugs/findbugs.xml")
+                xml.withMessages true
+            }
+            html {
+                enabled false
+            }
+        }
+
+        classpath = files()
+    }
+
+    task pmd(type: Pmd) {
+        group = "Reporting"
+
+//    ruleSetFiles = files("${project.rootDir}/config/quality/pmd/pmd-ruleset.xml")
+        ignoreFailures = true
+        ruleSets = ["java-basic", "java-braces", "java-strings"]
+//    ruleSets = [
+//            'java-basic',
+//            'java-braces',
+//            'java-clone',
+//            'java-codesize',
+//            'java-comments',
+//            'java-controversial',
+//            'java-coupling',
+//            'java-design',
+//            'java-empty',
+//            'java-finalizers',
+//            'java-imports',
+//            'java-optimizations',
+//            'java-strictexception',
+//            'java-strings',
+//            'java-typeresolution',
+//            'java-unnecessary',
+//            'java-unusedcode'
+//    ]
+
+        source 'src'
+        include '**/*.java'
+        exclude '**/gen/**'
+
+        reports {
+            xml.enabled = true
+            html.enabled = false
+        }
+    }
+
+
+    sonarqube {
+        properties {
+
+            property "sonar.projectKey", "net.dankito.deepthought.$project.name".replace(" ", "_")
+            property "sonar.projectName", "$project.name"
+
+            property "sonar.android.lint.report", "build/outputs/lint-results.xml"
+            property "sonar.java.binaries", "${buildDir}/intermediates/classes/debug"
+
+//        property "sonar.host.url", "url-to-your-sonar-instance"
+//        property "sonar.username", "your-sonar-username"
+//        property "sonar.password", "your-sonar-password"
+//
+//        property "sonar.projectName", "Some Project Name"
+//        property "sonar.projectVersion", "${version}"
+//
+//        property "sonar.sources", "src"
+//
+//        property "sonar.java.source", "7"
+        }
+    }
+
+    task setJacocoReportPaths {
+        doFirst {
+            def reportPaths = [];
+
+            reportPaths.addAll(getTestReportsFromDirectory("${buildDir}/jacoco/"))
+
+            reportPaths.addAll(getTestReportsFromDirectory("${buildDir}/outputs/code-coverage/connected/"))
+
+            File mergedCoverageFile = file("${buildDir}/spoon/debug/coverage/merged-coverage.ec");
+            if(mergedCoverageFile.exists()) {
+                reportPaths.add(file("${buildDir}/spoon/debug/coverage/merged-coverage.ec"))
+            }
+            else if(mergedCoverageFile.parentFile.exists()) {
+                reportPaths.addAll(getTestReportsFromDirectory("${buildDir}/spoon/debug/coverage/"))
+            }
+
+            println "reportPaths $reportPaths"
+
+            sonarqube {
+                properties {
+                    property "sonar.jacoco.reportPaths", reportPaths
+                }
+            }
+        }
+    }
+
+    tasks.getByName("sonarqube").dependsOn 'setJacocoReportPaths'
+}
+
 def getTestReportsFromDirectory(String directoryPath) {
     fileTree(directoryPath).filter { isTestReportFile(it) }.files
 }
