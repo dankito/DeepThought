@@ -5,7 +5,7 @@ import kotlinx.android.synthetic.main.activity_view_pdf.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.ViewPdfActivityParameters
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.utils.extensions.hideKeyboard
+import net.dankito.utils.android.extensions.hideKeyboard
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Item

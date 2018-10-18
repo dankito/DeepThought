@@ -17,12 +17,10 @@ import net.dankito.deepthought.android.fragments.TagsListView
 import net.dankito.deepthought.android.service.AndroidClipboardService
 import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.SnackbarService
+import net.dankito.deepthought.android.service.WebPageLoader
 import net.dankito.deepthought.android.service.clipboard.AndroidClipboardWatcher
 import net.dankito.deepthought.android.service.network.NetworkConnectivityChangeBroadcastReceiver
-import net.dankito.deepthought.android.views.EditEntityFilesField
-import net.dankito.deepthought.android.views.EditEntityTagsField
-import net.dankito.deepthought.android.views.EditItemSourceField
-import net.dankito.deepthought.android.views.EditSourceSeriesField
+import net.dankito.deepthought.android.views.*
 import net.dankito.deepthought.di.BaseModule
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.di.CommonDataModule
@@ -66,6 +64,8 @@ interface AppComponent : CommonComponent {
 
     fun inject(extractArticleHandler: ExtractArticleHandler)
 
+    fun inject(webPageLoader: WebPageLoader)
+
     fun inject(itemsListView: ItemsListView)
 
     fun inject(tagsListView: TagsListView)
@@ -93,6 +93,8 @@ interface AppComponent : CommonComponent {
     fun inject(articleSummaryActivity: ArticleSummaryActivity)
 
     fun inject(editItemActivityBase: EditItemActivityBase)
+
+    fun inject(itemContentView: ItemContentView)
 
     fun inject(editEntityTagsField: EditEntityTagsField)
 

@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.ClipboardManager
 import android.content.Context
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.service.AppLifeCycleListener
+import net.dankito.utils.android.ui.activities.AppLifeCycleListener
 import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.android.service.SnackbarService
 import net.dankito.deepthought.service.clipboard.OptionsForClipboardContent

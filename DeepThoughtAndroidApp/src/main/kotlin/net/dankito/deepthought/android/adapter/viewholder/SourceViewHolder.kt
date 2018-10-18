@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.ImageView
 import kotlinx.android.synthetic.main.list_item_source.view.*
 import net.dankito.deepthought.android.views.IsAddedToEntityView
-import net.dankito.deepthought.android.views.SwipeButton
+import net.dankito.utils.android.ui.view.SwipeButton
 
 
 class SourceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

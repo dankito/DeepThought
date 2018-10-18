@@ -13,7 +13,7 @@ import android.widget.ListView
 import android.widget.PopupWindow
 import android.widget.TextView
 import net.dankito.deepthought.android.R
-import net.dankito.utils.extensions.isTouchInsideView
+import net.dankito.utils.android.extensions.isTouchInsideView
 
 
 class OpenUrlOptionsView {
@@ -38,7 +38,7 @@ class OpenUrlOptionsView {
 
 
     fun showMenuCenter(anyViewInHierarchyJustForAnchor: View, optionSelectedListener: (OpenUrlOption) -> Unit) {
-        displayedPopupWindow?.let { closeMenu(it) }
+        cleanUp()
 
         val context = anyViewInHierarchyJustForAnchor.context
         val popupWindow = PopupWindow(context)
@@ -65,6 +65,11 @@ class OpenUrlOptionsView {
         popupWindow.showAtLocation(anyViewInHierarchyJustForAnchor, Gravity.CENTER, 0, 0)
 
         this.displayedPopupWindow = popupWindow
+    }
+
+
+    fun cleanUp() {
+        displayedPopupWindow?.let { closeMenu(it) }
     }
 
     private fun closeMenu(popupWindow: PopupWindow) {

@@ -10,30 +10,12 @@
 
     <dimen name="toolbar_height">40dp</dimen>
 
-    <dimen name="header_1_text_size">14sp</dimen>
-    <dimen name="header_1_larger_text_size">15sp</dimen>
-    <dimen name="header_2_text_size">13sp</dimen>
-    <dimen name="text_body_text_size">12sp</dimen>
     <dimen name="single_line_list_item_text_size">18sp</dimen>
-
-    <dimen name="action_item_width">58dp</dimen>
-    <dimen name="action_title_height">13dp</dimen>
-    <dimen name="action_title_text_size">10sp</dimen>
-    <dimen name="action_padding_top_bottom">6dp</dimen>
-    <dimen name="action_margin_right">1dp</dimen>
-
-    <dimen name="swipe_button_margin">3dp</dimen>
-    <dimen name="swipe_button_max_icon_height">55dp</dimen>
-    <dimen name="swipe_button_corner_radius">6dp</dimen>
 
     <dimen name="fragment_tab_items_filtered_entities_margin_top">12dp</dimen>
     <dimen name="fragment_tab_items_filtered_entities_margin_bottom">20dp</dimen>
     <dimen name="fragment_tab_items_onboarding_text_size">16sp</dimen>
     <dimen name="fragment_tab_items_onboarding_left_right_margin">20dp</dimen>
-
-    <dimen name="chevron_right_width">40dp</dimen>
-    <dimen name="chevron_right_text_size">20sp</dimen>
-    <dimen name="chevron_right_margin_left">8dp</dimen>
 
     <dimen name="view_context_help_text_min_height">60dp</dimen>
     <dimen name="view_context_help_padding">8dp</dimen>
@@ -129,9 +111,6 @@
 
     <dimen name="list_item_article_summary_extractor_config_icon_padding">4dp</dimen>
 
-    <dimen name="divider_height">1dp</dimen>
-    <dimen name="divider_margin_left_right">20dp</dimen>
-
     <dimen name="activity_edit_item_fields_margin_top">8dp</dimen>
     <dimen name="activity_edit_item_field_margin_left">12dp</dimen>
     <dimen name="activity_edit_item_field_margin_right">12dp</dimen>
@@ -141,6 +120,7 @@
     <dimen name="activity_edit_item_html_editor_toolbar_height">36dp</dimen>
     <dimen name="activity_edit_item_html_editor_toolbar_button_width">36dp</dimen>
     <dimen name="activity_edit_item_html_editor_toolbar_button_margin_right">4dp</dimen>
+    <dimen name="activity_edit_item_html_editor_toolbar_margin_left_right">18dp</dimen>
     <dimen name="activity_edit_item_onboarding_left_right_margin">20dp</dimen>
 
     <dimen name="fullscreen_web_view_options_bar_button_height">40dp</dimen>

@@ -35,13 +35,13 @@ import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.hashing.HashService
+import net.dankito.utils.hashing.IBase64Service
 import net.dankito.utils.localization.Localization
-import net.dankito.utils.services.hashing.IBase64Service
 import net.dankito.utils.services.network.NetworkConnectivityManagerBase
 import net.dankito.utils.services.network.NetworkHelper
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.settings.LocalSettingsStoreBase
-import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.dialogs.IDialogService
 import net.dankito.utils.version.Versions
 import net.dankito.utils.web.client.IWebClient
 import net.engio.mbassy.listener.Handler

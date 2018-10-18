@@ -2,7 +2,7 @@ package net.dankito.data_access.network.communication.message
 
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.enums.OsType
-import net.dankito.utils.version.Version
+import net.dankito.utils.Version
 import net.dankito.utils.version.Versions
 
 

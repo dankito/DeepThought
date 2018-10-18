@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.list_item_file.view.*
-import net.dankito.deepthought.android.views.SwipeButton
+import net.dankito.utils.android.ui.view.SwipeButton
 
 
 class FileLinkViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

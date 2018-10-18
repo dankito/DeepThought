@@ -17,7 +17,7 @@ class EditItemExtractionResultActivity : EditItemActivityBase() {
     }
 
 
-    private var itemExtractionResult: ItemExtractionResult? = null
+    private lateinit var itemExtractionResult: ItemExtractionResult
 
 
     override fun getItemExtractionResult(): ItemExtractionResult? {
@@ -26,7 +26,6 @@ class EditItemExtractionResultActivity : EditItemActivityBase() {
 
     override fun showParameters(parameters: EditItemActivityParameters) {
         parameters.itemExtractionResult?.let {
-            isInReaderMode = it.couldExtractContent
             editItemExtractionResult(it)
         }
     }
@@ -44,20 +43,16 @@ class EditItemExtractionResultActivity : EditItemActivityBase() {
     }
 
     override fun saveState(outState: Bundle) {
-        itemExtractionResult?.let {
-            serializeStateToDiskIfNotNull(outState, ITEM_EXTRACTION_RESULT_INTENT_EXTRA_NAME, it)
-        }
+        serializeStateToDiskIfNotNull(outState, ITEM_EXTRACTION_RESULT_INTENT_EXTRA_NAME, itemExtractionResult)
     }
 
 
     override fun resetSeries() {
-        itemExtractionResult?.series = null
+        itemExtractionResult.series = null
     }
 
 
     override fun adjustViewHtmlOptionsMenu(menu: Menu) {
-        mnToggleReaderMode?.isVisible = itemExtractionResult?.couldExtractContent == true // show mnToggleReaderMode only if original web site has been shown before
-
         mnSaveItemExtractionResultForLaterReading?.isVisible = true
     }
 
@@ -87,20 +82,18 @@ class EditItemExtractionResultActivity : EditItemActivityBase() {
     }
 
     private fun saveItemForLaterReading(callback: (Boolean) -> Unit) {
-        val content = contentToEdit ?: ""
+        val content = itemContentView.currentValue
         val summary = lytSummaryPreview.getCurrentFieldValue()
 
-        itemExtractionResult?.let { itemExtractionResult ->
-            updateItem(itemExtractionResult.item, content, summary)
-            itemExtractionResult.source = updateSource()
-            itemExtractionResult.series = lytSourcePreview.series
-            itemExtractionResult.tags = tagsOnItem
-            itemExtractionResult.files = lytFilesPreview.getEditedFiles().toMutableList()
+        updateItem(itemExtractionResult.item, content, summary)
+        itemExtractionResult.source = updateSource()
+        itemExtractionResult.series = lytSourcePreview.series
+        itemExtractionResult.tags = tagsOnItem
+        itemExtractionResult.files = lytFilesPreview.getEditedFiles().toMutableList()
 
-            presenter.saveItemExtractionResultForLaterReading(itemExtractionResult)
-            setActivityResult(EditItemActivityResult(didSaveForLaterReading = true, savedItem = itemExtractionResult.item))
-            callback(true)
-        } ?: callback(false)
+        presenter.saveItemExtractionResultForLaterReading(itemExtractionResult)
+        setActivityResult(EditItemActivityResult(didSaveForLaterReading = true, savedItem = itemExtractionResult.item))
+        callback(true)
     }
 
 }

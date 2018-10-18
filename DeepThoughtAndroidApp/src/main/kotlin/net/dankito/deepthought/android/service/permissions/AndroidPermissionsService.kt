@@ -6,7 +6,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.service.permissions.IPermissionsService
-import net.dankito.utils.permissions.PermissionsService
+import net.dankito.utils.android.permissions.PermissionsService
 
 
 class AndroidPermissionsService(private val applicationContext: Context, private val activityTracker: CurrentActivityTracker) : IPermissionsService {

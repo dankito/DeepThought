@@ -8,11 +8,11 @@ import android.widget.EditText
 import android.widget.Toast
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.service.CurrentActivityTracker
-import net.dankito.utils.extensions.showKeyboardDelayed
+import net.dankito.utils.android.extensions.showKeyboardDelayed
 import net.dankito.utils.localization.Localization
-import net.dankito.utils.ui.IDialogService
-import net.dankito.utils.ui.model.ConfirmationDialogButton
-import net.dankito.utils.ui.model.ConfirmationDialogConfig
+import net.dankito.utils.ui.dialogs.IDialogService
+import net.dankito.utils.ui.dialogs.ConfirmationDialogButton
+import net.dankito.utils.ui.dialogs.ConfirmationDialogConfig
 
 
 class AndroidDialogService(private val currentActivityTracker: CurrentActivityTracker, private val localizationProperty: Localization) : IDialogService {
@@ -98,17 +98,17 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
         buildAndShowDialog(builder)
     }
 
-    override fun askForTextInput(questionText: CharSequence, alertTitleText: CharSequence?, defaultValue: CharSequence?, type: net.dankito.utils.ui.InputType, callback: (Boolean, String?) -> Unit) {
+    override fun askForTextInput(questionText: CharSequence, alertTitleText: CharSequence?, defaultValue: CharSequence?, type: net.dankito.utils.ui.dialogs.InputType, callback: (Boolean, String?) -> Unit) {
         currentActivityTracker.currentActivity?.let { activity ->
             activity.runOnUiThread { askForTextInputOnUIThread(activity, questionText, alertTitleText, defaultValue, type, callback) }
         }
     }
 
-    private fun askForTextInputOnUIThread(activity: Activity, questionText: CharSequence, alertTitleText: CharSequence?, defaultValue: CharSequence?, type: net.dankito.utils.ui.InputType, callback: (Boolean, String?) -> Unit) {
+    private fun askForTextInputOnUIThread(activity: Activity, questionText: CharSequence, alertTitleText: CharSequence?, defaultValue: CharSequence?, type: net.dankito.utils.ui.dialogs.InputType, callback: (Boolean, String?) -> Unit) {
         val builder = createDialog(activity, questionText, alertTitleText)
 
         val input = EditText(activity)
-        input.inputType = if(type == net.dankito.utils.ui.InputType.Numbers) InputType.TYPE_CLASS_NUMBER else InputType.TYPE_CLASS_TEXT
+        input.inputType = if(type == net.dankito.utils.ui.dialogs.InputType.Numbers) InputType.TYPE_CLASS_NUMBER else InputType.TYPE_CLASS_TEXT
         defaultValue?.let { input.setText(it) }
         builder.setView(input)
 

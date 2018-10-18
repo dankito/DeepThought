@@ -21,8 +21,8 @@ class EditItemActivityFloatingActionMenuButton(floatingActionMenu: FloatingActio
     }
 
 
-    fun setVisibilityOnUIThread(forceHidingFloatingActionButton: Boolean = false, hasUserEverEnteredSomeContent: Boolean) {
-        if(forceHidingFloatingActionButton) {
+    fun setVisibilityOnUIThread(forceHideFloatingActionButton: Boolean = false, hasUserEverEnteredSomeContent: Boolean) {
+        if(forceHideFloatingActionButton) {
             floatingActionMenu.floatingActionMenu.visibility = View.GONE
         }
         else if(hasUserEverEnteredSomeContent && isAnyFloatingActionMenuButtonVisible()) {

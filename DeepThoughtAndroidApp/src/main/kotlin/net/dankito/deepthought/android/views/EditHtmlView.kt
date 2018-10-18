@@ -4,25 +4,32 @@ import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import kotlinx.android.synthetic.main.activity_edit_item.view.*
+import kotlinx.android.synthetic.main.view_item_content.view.*
 import net.dankito.deepthought.android.R
-import net.dankito.richtexteditor.Color
 import net.dankito.richtexteditor.android.AndroidIcon
 import net.dankito.richtexteditor.android.RichTextEditor
-import net.dankito.richtexteditor.android.command.*
+import net.dankito.richtexteditor.android.toolbar.EditorToolbar
+import net.dankito.richtexteditor.android.util.StyleApplier
 import net.dankito.richtexteditor.command.ToolbarCommandStyle
-import net.dankito.utils.extensions.getColorFromResource
+import net.dankito.utils.Color
+import net.dankito.utils.android.extensions.ColorExtensions
+import net.dankito.utils.android.extensions.getColorFromResource
+import net.dankito.utils.android.ui.view.IHandlesBackButtonPress
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicReference
 
 
-class EditHtmlView : View {
+class EditHtmlView : View, IHandlesBackButtonPress {
 
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
 
 
     private lateinit var editor: RichTextEditor
+
+    private lateinit var editorToolbar: EditorToolbar
 
     private var setHtml: String? = null
 
@@ -36,6 +43,10 @@ class EditHtmlView : View {
         }
 
         setupEditorToolbar(rootView)
+
+        val optionsBar = rootView.lytFullscreenWebViewOptionsBar
+        optionsBar.showMarkSelectedTextButton(editor)
+        editor.setEditorToolbarAndOptionsBar(rootView.lytEditorToolbar, optionsBar)
     }
 
     private fun editorHasLoaded() {
@@ -44,32 +55,39 @@ class EditHtmlView : View {
     }
 
     private fun setupEditorToolbar(rootView: View) {
-        val editorToolbar = rootView.editorToolbar
+        val styleApplier = StyleApplier()
+        styleApplier.applyCommandStyle(AndroidIcon(R.drawable.ic_check_white_48dp), ToolbarCommandStyle(), rootView.btnApplyEditedContent)
+
+        editorToolbar = rootView.editorToolbar
         editorToolbar.editor = editor
 
-        editorToolbar.commandStyle.isActivatedColor = Color.fromArgb(context.getColorFromResource(R.color.colorPrimaryDark))
+        val primaryColorDark = context.getColorFromResource(R.color.colorPrimaryDark)
+        val primaryColorDarkWithTransparency = ColorExtensions.setTransparency(primaryColorDark, ToolbarCommandStyle.GroupedViewsDefaultBackgroundTransparency)
+        editorToolbar.commandStyle.isActivatedColor = Color.fromArgb(primaryColorDarkWithTransparency)
+        editorToolbar.styleChanged(true) // isActivatedColor should also get applied to GroupedCommandView's toolbars
 
-        editorToolbar.addCommand(BoldCommand())
-        editorToolbar.addCommand(ItalicCommand())
-        editorToolbar.addCommand(UnderlineCommand())
-        val switchBackgroundColorCommand = SwitchTextBackgroundColorOnOffCommand(icon = AndroidIcon(R.drawable.ic_marker_white_48dp), setOnColorToCurrentColor = false)
-        switchBackgroundColorCommand.style.marginRightDp = ToolbarCommandStyle.GroupDefaultMarginRightDp
-        editorToolbar.addCommand(switchBackgroundColorCommand)
-
-        editorToolbar.addCommand(UndoCommand())
-        val redoCommand = RedoCommand()
-        redoCommand.style.marginRightDp = ToolbarCommandStyle.GroupDefaultMarginRightDp
-        editorToolbar.addCommand(redoCommand)
-
-        editorToolbar.addCommand(InsertBulletListCommand())
-        editorToolbar.addCommand(InsertNumberedListCommand())
-
-        editorToolbar.addSearchView()
+        editorToolbar.commandStyle.widthDp = 48
+        editorToolbar.styleChanged() // but not widthDp, they should keep their default width
     }
 
 
-    fun getHtml(): String {
-        return editor.getHtml()
+    override fun handlesBackButtonPress(): Boolean {
+        return editorToolbar.handlesBackButtonPress()
+    }
+
+
+    fun getCurrentHtmlBlocking(): String {
+        val retrievedHtml = AtomicReference<String>(editor.getCachedHtml()) // as a fallback use cached html
+        val countDownLatch = CountDownLatch(1)
+
+        editor.getCurrentHtmlAsync { currentHtml ->
+            retrievedHtml.set(currentHtml)
+            countDownLatch.countDown()
+        }
+
+        try { countDownLatch.await(10, TimeUnit.SECONDS) } catch (ignored: Exception) { } // don't block endlessly (10 seconds are already a lot of time)
+
+        return retrievedHtml.get()
     }
 
     fun setHtml(html: String, baseUrl: String?) {

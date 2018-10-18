@@ -5,7 +5,7 @@ import android.support.v7.widget.PopupMenu
 import android.util.AttributeSet
 import android.view.ViewGroup
 import net.dankito.deepthought.android.R
-import net.dankito.utils.extensions.setTintColor
+import net.dankito.utils.android.extensions.setTintColor
 
 
 abstract class EditEntityEntityReferenceField : EditEntityField {

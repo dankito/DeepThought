@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import android.widget.AbsListView
 import android.widget.LinearLayout
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.views.ToolbarUtil
+import net.dankito.utils.android.ui.view.ToolbarUtil
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.LinkedHashMap

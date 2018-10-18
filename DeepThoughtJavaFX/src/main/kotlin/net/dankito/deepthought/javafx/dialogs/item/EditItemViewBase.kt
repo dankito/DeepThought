@@ -246,14 +246,16 @@ abstract class EditItemViewBase : DialogFragment() {
 
     private fun updateItemAndSaveAsync(done: () -> Unit) {
         item?.let { item ->
-            item.content = htmlEditor.getHtml()
-            item.summary = editedSummary.value
-            item.indication = editSourceField.enteredIndication
+            htmlEditor.getCurrentHtmlAsync { html ->
+                item.content = html
+                item.summary = editedSummary.value
+                item.indication = editSourceField.enteredIndication
 
-            val source = updateSource()
+                val source = updateSource()
 
-            presenter.saveItemAsync(item, source, editSourceField.seriesToEdit, editTagsField.applyChangesAndGetTags(), editFilesField.getEditedFiles()) {
-                done()
+                presenter.saveItemAsync(item, source, editSourceField.seriesToEdit, editTagsField.applyChangesAndGetTags(), editFilesField.getEditedFiles()) {
+                    done()
+                }
             }
         }
     }

@@ -12,6 +12,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.BitmapCache
 import net.dankito.faviconextractor.Favicon
+import net.dankito.utils.android.ui.adapter.ListAdapter
 import net.dankito.utils.ImageCache
 import javax.inject.Inject
 

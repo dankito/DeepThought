@@ -9,16 +9,16 @@ import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityRe
 import net.dankito.deepthought.android.activities.arguments.EditSourceActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditSourceActivityResult
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.dialogs.PickDateDialog
-import net.dankito.deepthought.android.views.ToolbarUtil
+import net.dankito.utils.android.ui.dialogs.PickDateDialog
+import net.dankito.utils.android.ui.view.ToolbarUtil
 import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.fields.SourceField
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditSourcePresenter
-import net.dankito.utils.permissions.IPermissionsService
-import net.dankito.utils.permissions.PermissionsService
+import net.dankito.utils.android.permissions.IPermissionsService
+import net.dankito.utils.android.permissions.PermissionsService
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.SeriesService
 import net.dankito.service.data.SourceService
@@ -27,9 +27,9 @@ import net.dankito.service.data.messages.EntityChangeType
 import net.dankito.service.data.messages.SourceChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.ui.IClipboardService
-import net.dankito.utils.ui.IDialogService
-import net.dankito.utils.ui.model.ConfirmationDialogButton
-import net.dankito.utils.ui.model.ConfirmationDialogConfig
+import net.dankito.utils.ui.dialogs.IDialogService
+import net.dankito.utils.ui.dialogs.ConfirmationDialogButton
+import net.dankito.utils.ui.dialogs.ConfirmationDialogConfig
 import net.engio.mbassy.listener.Handler
 import java.util.*
 import javax.inject.Inject
@@ -124,7 +124,7 @@ class EditSourceActivity : BaseActivity() {
                     outState.putString(SOURCE_ID_BUNDLE_EXTRA_NAME, source.id)
                 }
                 else {
-                    outState.putString(UNPERSISTED_SOURCE_BUNDLE_EXTRA_NAME, serializer.serializeObject(source))
+                    serializeStateToDiskIfNotNull(outState, UNPERSISTED_SOURCE_BUNDLE_EXTRA_NAME, source)
                 }
             }
 
@@ -139,7 +139,7 @@ class EditSourceActivity : BaseActivity() {
             savedInstanceState.getString(SOURCE_ID_BUNDLE_EXTRA_NAME)?.let { sourceId -> showSource(sourceId) }
 
             // TODO: also restore selected Series
-            savedInstanceState.getString(UNPERSISTED_SOURCE_BUNDLE_EXTRA_NAME)?.let { showSource(serializer.deserializeObject(it, Source::class.java)) }
+            restoreStateFromDisk(savedInstanceState, UNPERSISTED_SOURCE_BUNDLE_EXTRA_NAME, Source::class.java)?.let { showSource(it) }
 
             savedInstanceState.getString(ORIGINALLY_SET_SOURCE_SERIES_ID_BUNDLE_EXTRA_NAME)?.let { originallySetSeriesId ->
                 this.originallySetSeries = seriesService.retrieve(originallySetSeriesId)

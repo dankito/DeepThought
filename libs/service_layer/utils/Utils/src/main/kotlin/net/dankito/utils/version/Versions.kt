@@ -1,5 +1,7 @@
 package net.dankito.utils.version
 
+import net.dankito.utils.Version
+
 
 class Versions {
 

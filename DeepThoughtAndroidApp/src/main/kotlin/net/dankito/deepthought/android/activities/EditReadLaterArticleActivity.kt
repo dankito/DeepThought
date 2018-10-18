@@ -9,7 +9,8 @@ import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.ReadLaterArticleChanged
-import net.dankito.utils.ui.model.ConfirmationDialogConfig
+import net.dankito.utils.android.extensions.HtmlExtensions
+import net.dankito.utils.ui.dialogs.ConfirmationDialogConfig
 import net.engio.mbassy.listener.Handler
 
 
@@ -49,7 +50,6 @@ class EditReadLaterArticleActivity : EditItemActivityBase() {
 
     override fun showParameters(parameters: EditItemActivityParameters) {
         parameters.readLaterArticle?.let {
-            isInReaderMode = it.itemExtractionResult.couldExtractContent
             editReadLaterArticle(it)
         }
     }
@@ -79,8 +79,6 @@ class EditReadLaterArticleActivity : EditItemActivityBase() {
 
     override fun adjustViewHtmlOptionsMenu(menu: Menu) {
         mnSaveItem?.setIcon(R.drawable.ic_tab_items)
-
-        mnToggleReaderMode?.isVisible = readLaterArticle.itemExtractionResult.couldExtractContent == true // show mnToggleReaderMode only if original web site has been shown before
 
         mnDeleteReadLaterArticle = menu.findItem(R.id.mnDeleteReadLaterArticle)
         mnDeleteReadLaterArticle?.isVisible = true
@@ -145,8 +143,8 @@ class EditReadLaterArticleActivity : EditItemActivityBase() {
             localSettings.didShowSavedReadLaterArticleIsNowInItemsHelp = true
             itemService.dataManager.localSettingsUpdated()
 
-            val helpText = getText(R.string.context_help_saved_read_later_article_is_now_in_items).toString()
-            dialogService.showConfirmationDialog(contextHelpUtil.stringUtil.getSpannedFromHtml(helpText), config = ConfirmationDialogConfig(false)) {
+            dialogService.showConfirmationDialog(HtmlExtensions.getSpannedFromHtml(this, R.string.context_help_saved_read_later_article_is_now_in_items),
+                    config = ConfirmationDialogConfig(false)) {
                 callback()
             }
         }

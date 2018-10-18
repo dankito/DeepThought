@@ -17,7 +17,7 @@ import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.TagService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.SearchEngineBase
-import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.dialogs.IDialogService
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.LinkedHashSet

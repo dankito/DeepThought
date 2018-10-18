@@ -3,6 +3,7 @@ package net.dankito.deepthought.android.di
 import android.content.Context
 import dagger.Module
 import dagger.Provides
+import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.deepthought.android.appstart.AndroidAppInitializer
 import net.dankito.deepthought.android.appstart.CommunicationManagerStarter
@@ -14,22 +15,29 @@ import net.dankito.deepthought.android.service.communication.AndroidDeviceRegist
 import net.dankito.deepthought.android.service.network.AndroidNetworkConnectivityManager
 import net.dankito.deepthought.android.service.permissions.AndroidPermissionsService
 import net.dankito.deepthought.android.service.settings.AndroidLocalSettingsStore
+import net.dankito.deepthought.android.ui.UiStatePersister
+import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.AllCalculatedTags
+import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.permissions.IPermissionsService
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
+import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.localization.Localization
+import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.services.network.INetworkConnectivityManager
 import net.dankito.utils.services.network.NetworkHelper
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.ui.IApplicationsService
 import net.dankito.utils.ui.IClipboardService
-import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.dialogs.IDialogService
+import net.dankito.utils.android.ui.activities.AppLifeCycleListener
 import javax.inject.Singleton
 
 
@@ -72,6 +80,12 @@ class ActivitiesModule(private val applicationContext: Context) {
     @Singleton
     fun provideActivityParameterHolder() : ActivityParameterHolder {
         return ActivityParameterHolder()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUiStatePersister(fileStorageService: IFileStorageService, serializer: ISerializer) : UiStatePersister {
+        return UiStatePersister(fileStorageService, serializer)
     }
 
     @Provides
@@ -127,6 +141,13 @@ class ActivitiesModule(private val applicationContext: Context) {
     @Singleton
     fun provideAllCalculatedTags(searchEngine: ISearchEngine, eventBus: IEventBus, entityChangedNotifier: EntityChangedNotifier, localization: Localization) : AllCalculatedTags {
         return AllCalculatedTags(searchEngine, eventBus, entityChangedNotifier, localization)
+    }
+
+    @Provides
+    @Singleton
+    fun provideArticleSummaryPresenter(itemPersister: ItemPersister, readLaterArticleService: ReadLaterArticleService, articleExtractorManager: ArticleExtractorManager,
+                                       router: IRouter, clipboardService: IClipboardService, dialogService: IDialogService) : ArticleSummaryPresenter {
+        return ArticleSummaryPresenter(itemPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService)
     }
 
 

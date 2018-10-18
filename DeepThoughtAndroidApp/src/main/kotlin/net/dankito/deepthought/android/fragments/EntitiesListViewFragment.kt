@@ -19,14 +19,15 @@ import kotlinx.android.synthetic.main.fragment_entities_list_view.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
-import net.dankito.utils.extensions.hideKeyboard
+import net.dankito.utils.android.extensions.hideKeyboard
 import net.dankito.deepthought.android.views.ContextHelpUtil
-import net.dankito.deepthought.android.views.FullscreenRecyclerView
+import net.dankito.utils.android.ui.view.FullscreenRecyclerView
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
+import net.dankito.utils.android.extensions.getSpannedFromHtmlWithImages
 import javax.inject.Inject
 
 
@@ -329,7 +330,8 @@ abstract class EntitiesListViewFragment<T : BaseEntity>(private val contextualAc
         txtOnboardingText?.let { txtOnboardingText ->
             lytOnboardingText?.visibility = View.VISIBLE
 
-            txtOnboardingText.text = contextHelpUtil.stringUtil.getSpannedFromHtmlWithImages(context.getText(onboardingTextResourceId).toString(), context, txtOnboardingText.currentTextColor)
+            val unresolvedHtml = context.getText(onboardingTextResourceId).toString()
+            txtOnboardingText.text = unresolvedHtml.getSpannedFromHtmlWithImages(context, txtOnboardingText.currentTextColor)
         }
 
         searchMenuItem?.isVisible = false
@@ -457,7 +459,7 @@ abstract class EntitiesListViewFragment<T : BaseEntity>(private val contextualAc
             try {
                 val cursorDrawableField = TextView::class.java.getDeclaredField("mCursorDrawableRes") // textCursorDrawable is only accessible in xml, not in code -> get it via reflection
                 cursorDrawableField.isAccessible = true
-                cursorDrawableField.set(searchField, R.drawable.search_view_cursor_drawable) // with default style cursor is invisible -> set it to white
+                cursorDrawableField.set(searchField, R.drawable.text_view_cursor_drawable) // with default style cursor is invisible -> set it to white
             } catch(ignored: Exception) { }
         }
 

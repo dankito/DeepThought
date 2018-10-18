@@ -7,8 +7,8 @@ import android.view.animation.AccelerateInterpolator
 import android.widget.Button
 import android.widget.TextView
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.service.StringUtil
-import net.dankito.utils.extensions.executeActionAfterMeasuringSize
+import net.dankito.utils.android.extensions.executeActionAfterMeasuringSize
+import net.dankito.utils.android.extensions.getSpannedFromHtml
 
 
 class ContextHelpUtil {
@@ -18,16 +18,13 @@ class ContextHelpUtil {
     }
 
 
-    val stringUtil = StringUtil()
-
-
     fun showContextHelp(lytContextHelp: View, helpTextResourceId: Int, helpDismissedListener: (() -> Unit)? = null) {
         showContextHelp(lytContextHelp, lytContextHelp.context.getText(helpTextResourceId).toString(), helpDismissedListener)
     }
 
     fun showContextHelp(lytContextHelp: View, helpText: String, helpDismissedListener: (() -> Unit)? = null) {
         val txtContextHelpText = lytContextHelp.findViewById(R.id.txtContextHelpText) as TextView
-        txtContextHelpText.text = stringUtil.getSpannedFromHtml(helpText)
+        txtContextHelpText.text = helpText.getSpannedFromHtml()
 
         val btnDismissContextHelp = lytContextHelp.findViewById(R.id.btnDismissContextHelp) as Button
         btnDismissContextHelp.setOnClickListener {
@@ -48,7 +45,7 @@ class ContextHelpUtil {
 
     fun showAsConfirmation(lytContextHelp: View, confirmationText: String, didConfirm: () -> Unit) {
         val txtContextHelpText = lytContextHelp.findViewById(R.id.txtContextHelpText) as TextView
-        txtContextHelpText.text = stringUtil.getSpannedFromHtml(confirmationText)
+        txtContextHelpText.text = confirmationText.getSpannedFromHtml()
 
         lytContextHelp.findViewById(R.id.btnDismissContextHelp)?.visibility = View.GONE
 

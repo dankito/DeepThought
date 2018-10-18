@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
-import net.dankito.utils.web.client.IWebClient
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
+import net.dankito.utils.web.client.IWebClient
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.text.DateFormat
@@ -139,8 +139,10 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
             }
 
             baseBox.select("iframe").forEach { iframe ->
-                if(iframe.attr("data-src").startsWith("http://www.nl-services.com/subscribe/") || // subscribe to newsletter
-                        iframe.attr("data-src").startsWith("https://widget.whatsbroadcast.com/")) { // get notified via WhatsApp
+                val dataSrc = iframe.attr("data-src")
+
+                if(dataSrc.startsWith("http://www.nl-services.com/subscribe/") || dataSrc.contains("/sueddeutsche-zeitung/subscribe/") || // subscribe to newsletter
+                        dataSrc.startsWith("https://widget.whatsbroadcast.com/")) { // get notified via WhatsApp
                     tryToRemoveWhatsAppPrivacyPolicyNotification(baseBox) // has to be done before removing baseBox element
 
                     baseBox.remove()

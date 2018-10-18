@@ -3,12 +3,13 @@ package net.dankito.deepthought.android.activities
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import kotlinx.android.synthetic.main.activity_edit_item.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditItemActivityParameters
 import net.dankito.deepthought.model.Item
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.ItemChanged
-import net.dankito.utils.ui.model.ConfirmationDialogButton
+import net.dankito.utils.ui.dialogs.ConfirmationDialogButton
 import net.engio.mbassy.listener.Handler
 
 
@@ -59,7 +60,7 @@ class EditItemActivity : EditItemActivityBase() {
         editItem(Item(""))
 
         if(editContent) {
-            editContent() // go directly to edit content dialog, there's absolutely nothing to see on this almost empty screen
+            itemContentView.editContent() // go directly to edit content dialog, there's absolutely nothing to see on this almost empty screen
         }
     }
 

@@ -19,8 +19,8 @@ import net.dankito.faviconextractor.FaviconComparator
 import net.dankito.faviconextractor.FaviconExtractor
 import net.dankito.faviconextractor.FaviconType
 import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractor
-import net.dankito.utils.ui.IDialogService
-import net.dankito.utils.ui.model.ConfirmationDialogButton
+import net.dankito.utils.ui.dialogs.IDialogService
+import net.dankito.utils.ui.dialogs.ConfirmationDialogButton
 import javax.inject.Inject
 
 

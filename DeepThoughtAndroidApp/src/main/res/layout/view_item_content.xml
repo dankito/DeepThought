@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+
+    <RelativeLayout
+        android:id="@+id/lytViewContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+    >
+
+        <TextView
+            android:id="@+id/txtItemContentLabel"
+            android:layout_width="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="@dimen/activity_edit_item_content_label_margin_top"
+            android:layout_marginLeft="@dimen/activity_edit_item_field_margin_left"
+            android:layout_marginStart="@dimen/activity_edit_item_field_margin_left"
+            android:layout_marginRight="@dimen/activity_edit_item_field_margin_right"
+            android:layout_marginEnd="@dimen/activity_edit_item_field_margin_right"
+            android:layout_marginBottom="@dimen/activity_edit_item_content_label_margin_bottom"
+            style="@style/EntityFieldName"
+            android:layout_centerHorizontal="true"
+            android:textAlignment="center"
+            android:gravity="center_horizontal"
+            android:text="@string/activity_edit_item_content_label"
+        />
+
+        <ProgressBar
+            android:id="@+id/prgIsLoadingWebPage"
+            android:layout_width="@dimen/activity_edit_item_progress_is_loading_web_page_width"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/txtItemContentLabel"
+            android:layout_toEndOf="@+id/txtItemContentLabel"
+            android:layout_alignTop="@+id/txtItemContentLabel"
+            android:layout_alignBottom="@+id/txtItemContentLabel"
+            android:visibility="gone"
+        />
+
+        <include
+            layout="@layout/layout_context_help"
+            android:id="@+id/lytContextHelpFullscreenMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtItemContentLabel"
+        />
+
+        <LinearLayout
+            android:id="@+id/lytContentViewAndOnboardingText"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lytContextHelpFullscreenMode"
+            android:layout_alignParentBottom="true"
+        >
+
+            <TextView
+                android:id="@+id/txtEnterContentHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="4dp"
+                style="@style/TextBodyStyle"
+                android:textSize="16sp"
+                android:text="@string/activity_edit_item_edit_content_hint"
+                android:visibility="gone"
+            />
+
+            <RelativeLayout
+                android:id="@+id/lytContentView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="10"
+            >
+
+                <net.dankito.richtexteditor.android.RichTextEditor
+                    android:id="@+id/contentEditor"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:visibility="visible"
+                />
+
+                <net.dankito.richtexteditor.android.view.FullscreenWebViewOptionsBar
+                    android:id="@+id/lytFullscreenWebViewOptionsBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/fullscreen_web_view_options_bar_button_height"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:visibility="gone"
+                />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lytEditorToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/activity_edit_item_html_editor_toolbar_height"
+                android:background="@color/colorAccent"
+                android:visibility="gone"
+            >
+
+                <net.dankito.richtexteditor.android.toolbar.GroupedCommandsEditorToolbar
+                    android:id="@+id/editorToolbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_toLeftOf="@+id/btnApplyEditedContent"
+                    android:layout_toStartOf="@+id/btnApplyEditedContent"
+                    android:layout_marginRight="@dimen/activity_edit_item_html_editor_toolbar_margin_left_right"
+                    android:layout_marginEnd="@dimen/activity_edit_item_html_editor_toolbar_margin_left_right"
+                    android:background="@android:color/transparent"
+                />
+
+                <ImageButton
+                    android:id="@+id/btnApplyEditedContent"
+                    android:layout_width="@dimen/activity_edit_item_html_editor_toolbar_height"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_check_white_48dp"
+                />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/lytOnboardingText"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="10"
+                android:visibility="gone"
+            >
+
+                <TextView
+                    android:id="@+id/txtOnboardingText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_edit_item_onboarding_left_right_margin"
+                    android:layout_marginStart="@dimen/activity_edit_item_onboarding_left_right_margin"
+                    android:layout_marginRight="@dimen/activity_edit_item_onboarding_left_right_margin"
+                    android:layout_marginEnd="@dimen/activity_edit_item_onboarding_left_right_margin"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:textAlignment="center"
+                    android:gravity="center_horizontal"
+                    android:ellipsize="end"
+                    android:minLines="2"
+                />
+
+                <net.dankito.deepthought.android.views.PointToFloatingActionButtonArrow
+                    android:id="@+id/arrowToFloatingActionButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtOnboardingText"
+                    android:layout_alignParentBottom="true"
+                    android:visibility="gone"
+                />
+
+            </RelativeLayout>
+
+            <include
+                layout="@layout/layout_context_help"
+                android:id="@+id/lytContextHelpReaderView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+            />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

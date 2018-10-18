@@ -5,14 +5,14 @@ import net.dankito.data_access.network.communication.callback.DeviceRegistration
 import net.dankito.data_access.network.communication.message.DeviceInfo
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.service.SnackbarService
-import net.dankito.deepthought.android.service.StringUtil
 import net.dankito.deepthought.model.DiscoveredDevice
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.service.synchronization.initialsync.model.SyncInfo
+import net.dankito.utils.android.extensions.getSpannedFromHtml
 import net.dankito.utils.localization.Localization
-import net.dankito.utils.ui.IDialogService
-import net.dankito.utils.ui.model.ConfirmationDialogButton
+import net.dankito.utils.ui.dialogs.IDialogService
+import net.dankito.utils.ui.dialogs.ConfirmationDialogButton
 
 
 class AndroidDeviceRegistrationHandler(private var context: Context, dataManager: DataManager, initialSyncManager: InitialSyncManager, dialogService: IDialogService,
@@ -32,7 +32,7 @@ class AndroidDeviceRegistrationHandler(private var context: Context, dataManager
 
     override fun showResponseToEnterOnOtherDeviceNonBlocking(remoteDeviceInfo: DeviceInfo, correctResponse: String) {
         val htmlFormattedMessage = context.getString(R.string.alert_message_enter_this_code_on_remote_device, remoteDeviceInfo.toString(), correctResponse)
-        val message = StringUtil().getSpannedFromHtml(htmlFormattedMessage)
+        val message = htmlFormattedMessage.getSpannedFromHtml()
 
         dialogService.showInfoMessage(message)
     }

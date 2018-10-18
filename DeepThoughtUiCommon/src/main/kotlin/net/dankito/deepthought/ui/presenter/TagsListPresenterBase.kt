@@ -17,7 +17,7 @@ import net.dankito.service.search.specific.TagsSearch
 import net.dankito.service.search.specific.TagsSearchResults
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.localization.Localization
-import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.dialogs.IDialogService
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 

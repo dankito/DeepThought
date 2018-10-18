@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.list_item_item.view.*
-import net.dankito.deepthought.android.views.SwipeButton
+import net.dankito.utils.android.ui.view.SwipeButton
 
 
 class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

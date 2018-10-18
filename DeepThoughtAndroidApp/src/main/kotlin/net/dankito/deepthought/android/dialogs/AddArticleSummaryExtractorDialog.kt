@@ -25,7 +25,7 @@ import net.dankito.feedaddressextractor.FeedAddressExtractor
 import net.dankito.feedaddressextractor.FeedType
 import net.dankito.newsreader.feed.IFeedReader
 import net.dankito.newsreader.model.FeedArticleSummary
-import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.dialogs.IDialogService
 import javax.inject.Inject
 
 

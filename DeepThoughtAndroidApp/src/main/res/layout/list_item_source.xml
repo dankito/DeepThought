@@ -16,21 +16,21 @@
         android:orientation="horizontal"
     >
 
-        <net.dankito.deepthought.android.views.SwipeButton
+        <net.dankito.utils.android.ui.view.SwipeButton
             android:id="@+id/btnEditSource"
             android:layout_width="@dimen/list_item_source_button_width"
             android:layout_height="match_parent"
             app:icon="@drawable/ic_mode_edit_white_48dp"
         />
 
-        <net.dankito.deepthought.android.views.SwipeButton
+        <net.dankito.utils.android.ui.view.SwipeButton
             android:id="@+id/btnShareSource"
             android:layout_width="@dimen/list_item_source_button_width"
             android:layout_height="match_parent"
             app:icon="@drawable/ic_share_white_48dp"
         />
 
-        <net.dankito.deepthought.android.views.SwipeButton
+        <net.dankito.utils.android.ui.view.SwipeButton
             android:id="@+id/btnDeleteSource"
             android:layout_width="@dimen/list_item_source_button_width"
             android:layout_height="match_parent"

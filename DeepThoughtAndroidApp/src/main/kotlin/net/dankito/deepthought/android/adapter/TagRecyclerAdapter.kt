@@ -8,7 +8,7 @@ import android.widget.ImageView
 import com.daimajia.swipe.SwipeLayout
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.TagViewHolder
-import net.dankito.utils.extensions.setTintColor
+import net.dankito.utils.android.extensions.setTintColor
 import net.dankito.deepthought.model.CalculatedTag
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.presenter.TagsListPresenter

@@ -19,7 +19,7 @@ import net.dankito.deepthought.android.activities.arguments.ArticleSummaryActivi
 import net.dankito.deepthought.android.adapter.ArticleSummaryItemRecyclerAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.views.ToolbarUtil
+import net.dankito.utils.android.ui.view.ToolbarUtil
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.article.ArticleExtractorManager
@@ -31,7 +31,7 @@ import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.utils.ImageCache
 import net.dankito.utils.ui.IClipboardService
-import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.dialogs.IDialogService
 import org.slf4j.LoggerFactory
 import java.io.File
 import javax.inject.Inject

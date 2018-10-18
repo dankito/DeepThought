@@ -6,46 +6,21 @@
     <color name="colorPrimaryDark">#22685d</color>
     <color name="colorAccent">#078176</color>
 
-    <!-- blue / orange -->
-    <!--<color name="colorPrimary">#0D47A1</color> &lt;!&ndash; Material Design Color Code: Blue 900 &ndash;&gt;-->
-    <!--<color name="colorPrimaryDark">#1A237E</color> &lt;!&ndash; Material Design Color Code: Indigo 900 &ndash;&gt;-->
-    <!--<color name="colorAccent">#FF9100</color> &lt;!&ndash; Material Design Color Code: Orange A400 &ndash;&gt;-->
-
     <color name="colorPrimaryGradientStart">#078176</color>
     <!-- according to design actually #319B7C should be used -->
     <color name="colorPrimaryGradientEnd">#309c7c</color>
 
 
-    <color name="header_1_text_color">#212121</color>
-    <color name="header_2_text_color">#999999</color>
-    <!-- Should actually be #b8b8b8 according to design guideline -->
-    <!-- May change to 666666 (like Heise, but there it looks brighter to me) or 888888. 7f7f7f = half way between 777777 and 888888 -->
-    <color name="text_body_text_color">#7f7f7f</color>
-
     <!-- this is the same background color as for Snackbars -->
     <color name="context_help_background_color">#323232</color>
     <color name="context_help_text_color">#E76999</color>
 
-    <color name="black_semi_transparent">#B2000000</color>
-    <color name="gray">#b8b8b8</color>
-    <color name="darker_gray">#888888</color>
-
-    <color name="default_text_color">#000000</color>
-    <color name="unselected_item_text_color">#000000</color>
     <color name="view_pdf_select_page_text_color">@color/header_1_text_color</color>
 
     <color name="list_item_default_background">@android:color/background_light</color>
     <color name="list_item_selected_background">#d2e8e5</color>
 
     <color name="view_is_added_to_entity_border">#1fbb68</color>
-
-    <color name="disabled_color">#D2D2D2</color>
-
-
-    <color name="alert_cancel_button_text_color">@color/darker_gray</color>
-    <color name="alert_delete_button_text_color">#FF0000</color>
-
-    <color name="divider_line_color">@color/darker_gray</color>
 
     <color name="edit_entity_activity_background">#F0F0F0</color>
 
@@ -56,7 +31,7 @@
     <color name="entity_field_divider_color">#E0E0E0</color>
 
     <!-- The same as colorPrimary but with a higher transparency -->
-    <color name="web_view_toolbar_background">#7D359e7d</color>
+    <color name="richtexteditor_fullscreen_options_bar_background">#7D359e7d</color>
 
     <!-- This is bad: Actually i wanted to define tag background colors centrally in one place for Android and JavaFX, but their parse methods have different formats (Android
          has opacity at the beginning, JavaFX at the end) -->
@@ -64,11 +39,5 @@
     <color name="tag_state_exact_or_single_match_but_not_of_last_result">@color/colorPrimaryGradientEnd</color>
     <color name="tag_state_exact_or_single_match_of_last_result">#800277BD</color>
     <color name="tag_state_default">@android:color/transparent</color>
-
-
-    <!-- Overwrite FileChooserDialog colors -->
-
-    <color name="file_chooser_dialog_list_item_default_background">@color/list_item_default_background</color>
-    <color name="file_chooser_dialog_list_item_selected_background">@color/list_item_selected_background</color>
 
 </resources>

@@ -11,7 +11,7 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.utils.ui.IClipboardService
-import net.dankito.utils.ui.IDialogService
+import net.dankito.utils.ui.dialogs.IDialogService
 import tornadofx.borderpane
 import javax.inject.Inject
 

@@ -3,7 +3,7 @@ package net.dankito.deepthought.android.views
 import android.os.Bundle
 import android.view.MotionEvent
 import com.github.clans.fab.FloatingActionMenu
-import net.dankito.utils.extensions.isTouchInsideView
+import net.dankito.utils.android.extensions.isTouchInsideView
 
 
 open class FloatingActionMenuButton(protected val floatingActionMenu: FloatingActionMenu) {
