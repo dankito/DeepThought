@@ -41,7 +41,7 @@ dependencies {
     compile "org.apache.commons:commons-lang3:$commonsLangVersion"
 
     compile "net.dankito.mime:mime-utils:$mimeUtilsVersion", {
-        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jre7:'
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7:'
         exclude group: 'org.slf4j', module: 'slf4j-api'
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
         exclude group: 'org.jsoup', module: 'jsoup'
