@@ -44,7 +44,7 @@ ext {
 
     romeVersion = '1.9.0'
 
-    mimeUtilsVersion = '1.0.0'
+    mimeUtilsVersion = '1.0.2'
 
     javaxPersistenceVersion = '2.1.1'
 
