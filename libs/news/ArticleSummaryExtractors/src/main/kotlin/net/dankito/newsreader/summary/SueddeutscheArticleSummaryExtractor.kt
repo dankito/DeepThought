@@ -61,6 +61,10 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
                 item.summary = summaryElement.text()
             }
 
+            teaserElement.select(".sz-teaser__overline-title").first()?.let { overlineTitle ->
+                item.title = overlineTitle.text().trim() + " - " + item.title
+            }
+
             return item
         }
 
