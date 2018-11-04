@@ -60,6 +60,11 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
 
     private fun parseHeiseNewsArticle(articleElement: Element, url: String): ArticleSummaryItem? {
         val articleUrl = makeLinkAbsolute(articleElement.attr("href"), url)
+        if (articleUrl.contains("//www.heise-events.de/", true) || articleUrl.contains("//shop.heise.de/", true) ||
+                articleUrl.contains("//spiele.heise.de/", true)) { // filter out ads for events, shop offers and games
+            return null
+        }
+
         val article = ArticleSummaryItem(articleUrl, articleElement.attr("title"), getArticleExtractorClass(articleUrl))
 
         extractKicker(articleElement, article)
