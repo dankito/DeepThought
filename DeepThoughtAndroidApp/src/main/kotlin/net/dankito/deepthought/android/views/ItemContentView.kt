@@ -84,11 +84,11 @@ class ItemContentView @JvmOverloads constructor(
 
 
     val currentValue: String
-        get() = contentToEdit
+        get() = editHtmlView.getCurrentHtmlBlocking()
 
     val isContentSet: Boolean
-        get() {
-            return currentValue.isBlank() == false && currentValue != "<p>\u200B</p>" // = RichTextEditor's default html
+        get() { // don't use currentValue here, would call editHtmlView.getCurrentHtmlBlocking() way too often
+            return contentToEdit.isBlank() == false && contentToEdit != "<p>\u200B</p>" // = RichTextEditor's default html
         }
 
     var didContentChange: Boolean = false
