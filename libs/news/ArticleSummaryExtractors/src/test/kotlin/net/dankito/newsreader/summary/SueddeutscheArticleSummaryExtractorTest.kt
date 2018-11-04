@@ -55,7 +55,7 @@ class SueddeutscheArticleSummaryExtractorTest : ArticleSummaryExtractorTestBase(
             }
         }
 
-        countDownLatch.await(31, TimeUnit.MINUTES)
+        countDownLatch.await(31, TimeUnit.SECONDS)
 
         testSummary(summary)
 

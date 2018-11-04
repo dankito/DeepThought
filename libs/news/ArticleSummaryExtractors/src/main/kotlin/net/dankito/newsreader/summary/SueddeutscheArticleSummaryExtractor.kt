@@ -42,7 +42,7 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
 
     private fun extractTeasers(articles: MutableList<ArticleSummaryItem>, siteUrl: String, document: Document) {
         articles.addAll(
-                document.body().select(".teaserlist > .sz-teaser")
+                document.body().select("a.sz-teaser")
                         .map { mapTeaserElementToArticleSummaryItem(it, siteUrl) }.filterNotNull()
         )
     }
