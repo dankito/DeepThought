@@ -169,10 +169,10 @@ class ArticleSummaryActivity : BaseActivity() {
 
     private fun recyclerViewEnteredFullscreenMode() {
         if(adapter.isInMultiSelectMode()) {
-            findViewById(android.support.v7.appcompat.R.id.action_mode_bar)?.visibility = View.GONE
+            findViewById<View>(android.support.v7.appcompat.R.id.action_mode_bar)?.visibility = View.GONE
         }
         else {
-            findViewById(R.id.toolbar)?.visibility = View.GONE
+            findViewById<View>(R.id.toolbar)?.visibility = View.GONE
         }
 
         recyclerViewMarginBottom = (rcyArticleSummaryItems.layoutParams as? ViewGroup.MarginLayoutParams)?.bottomMargin ?: -1
@@ -185,10 +185,10 @@ class ArticleSummaryActivity : BaseActivity() {
 
     private fun recyclerViewLeftFullscreenMode() {
         if(adapter.isInMultiSelectMode()) {
-            findViewById(android.support.v7.appcompat.R.id.action_mode_bar)?.visibility = View.VISIBLE
+            findViewById<View>(android.support.v7.appcompat.R.id.action_mode_bar)?.visibility = View.VISIBLE
         }
         else {
-            findViewById(R.id.toolbar)?.visibility = View.VISIBLE
+            findViewById<View>(R.id.toolbar)?.visibility = View.VISIBLE
         }
 
         if(recyclerViewMarginBottom >= 0) {

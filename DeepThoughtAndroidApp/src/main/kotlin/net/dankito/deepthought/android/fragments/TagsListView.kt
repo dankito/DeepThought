@@ -177,7 +177,7 @@ class TagsListView : EntitiesListViewFragment<Tag>(R.menu.tag_contextual_action_
     }
 
     private fun isTagItemsListDialogVisible(): Boolean {
-        return fragmentManager.findFragmentByTag(TagItemsListDialog.TAG) != null
+        return fragmentManager?.findFragmentByTag(TagItemsListDialog.TAG) != null
     }
 
 

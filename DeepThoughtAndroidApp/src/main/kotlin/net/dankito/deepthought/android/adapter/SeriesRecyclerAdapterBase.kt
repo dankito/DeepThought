@@ -25,8 +25,8 @@ abstract class SeriesRecyclerAdapterBase(private val presenter: SeriesPresenterB
     override fun getSwipeLayoutResourceId(position: Int) = R.id.seriesSwipeLayout
 
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): SeriesViewHolder {
-        val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_series, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeriesViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_series, parent, false)
 
         val viewHolder = SeriesViewHolder(itemView)
 

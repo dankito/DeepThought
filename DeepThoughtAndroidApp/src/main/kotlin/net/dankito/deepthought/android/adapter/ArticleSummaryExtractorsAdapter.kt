@@ -39,8 +39,8 @@ class ArticleSummaryExtractorsAdapter(private val activity: AppCompatActivity, p
 
     override fun getSwipeLayoutResourceId(position: Int) = R.id.articleSummaryExtractorSwipeLayout
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ArticleSummaryExtractorViewHolder {
-        val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_article_summary_extractor, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleSummaryExtractorViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_article_summary_extractor, parent, false)
 
         val viewHolder = ArticleSummaryExtractorViewHolder(itemView)
 

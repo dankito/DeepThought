@@ -83,7 +83,7 @@ class TagItemsListDialog : ItemsListDialogBase() {
     }
 
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
         outState?.let {

@@ -6,6 +6,7 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import com.github.clans.fab.FloatingActionButton
+import com.github.clans.fab.FloatingActionMenu
 import net.dankito.deepthought.android.R
 
 
@@ -92,7 +93,7 @@ class PointToFloatingActionButtonArrow : View {
     private fun getFloatingActionButton(): FloatingActionButton? {
         if(floatingActionButton == null) {
             (context as? Activity)?.let { activity ->
-                activity.findViewById(R.id.floatingActionMenu)?.let { fab ->
+                activity.findViewById<FloatingActionMenu>(R.id.floatingActionMenu)?.let { fab ->
                     val mMenuButtonField = fab::class.java.getDeclaredField("mMenuButton")
                     mMenuButtonField.isAccessible = true
 

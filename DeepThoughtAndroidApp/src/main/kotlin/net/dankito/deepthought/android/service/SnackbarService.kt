@@ -265,9 +265,9 @@ class SnackbarService {
 
 
     private fun showSnackbarOnUiThread(text: CharSequence, snackbarId: Any, activity: Activity, customizeSnackbarListener: ((Snackbar) -> Unit)? = null, actionInvokedListener: (Snackbar) -> Unit) {
-        var rootView = activity.findViewById(R.id.content_layout_root) // content_layout_root only works for MainActivity -> find a generic solution
+        var rootView = activity.findViewById<View>(R.id.content_layout_root) // content_layout_root only works for MainActivity -> find a generic solution
         if(rootView == null) {
-            rootView = activity.findViewById(android.R.id.content)
+            rootView = activity.findViewById<View>(android.R.id.content)
         }
 
         synchronized(this) {

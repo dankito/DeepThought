@@ -204,10 +204,10 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
 
         override fun onDestroyActionMode(mode: android.view.ActionMode) {
             activity?.let { activity ->
-                activity.findViewById(android.support.v7.appcompat.R.id.action_mode_bar)?.let { actionModeBar ->
+                activity.findViewById<View>(android.support.v7.appcompat.R.id.action_mode_bar)?.let { actionModeBar ->
                     actionModeBar.visibility = View.GONE // hide action_mode_bar here as otherwise it will be displayed together with toolbar
 
-                    activity.findViewById(R.id.toolbar)?.let { it.visibility = View.VISIBLE }
+                    activity.findViewById<View>(R.id.toolbar)?.let { it.visibility = View.VISIBLE }
                 }
 
                 selectedItemsInContextualActionMode.clear()
@@ -255,7 +255,7 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
             actionModeBar?.let { toolbarUtil.adjustToolbarLayoutDelayed(it, reserveOverflow = false) }
 
             if(hideToolbar) {
-                activity.findViewById(R.id.toolbar)?.let { it.visibility = View.GONE }
+                activity.findViewById<View>(R.id.toolbar)?.let { it.visibility = View.GONE }
             }
 
             actionModeBarVisibilityListener?.invoke(true)

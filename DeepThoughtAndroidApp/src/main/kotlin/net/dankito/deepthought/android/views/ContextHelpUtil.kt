@@ -47,9 +47,9 @@ class ContextHelpUtil {
         val txtContextHelpText = lytContextHelp.findViewById(R.id.txtContextHelpText) as TextView
         txtContextHelpText.text = confirmationText.getSpannedFromHtml()
 
-        lytContextHelp.findViewById(R.id.btnDismissContextHelp)?.visibility = View.GONE
+        lytContextHelp.findViewById<View>(R.id.btnDismissContextHelp)?.visibility = View.GONE
 
-        lytContextHelp.findViewById(R.id.lytConfirmButtons)?.visibility = View.VISIBLE
+        lytContextHelp.findViewById<View>(R.id.lytConfirmButtons)?.visibility = View.VISIBLE
 
         val btnDeny = lytContextHelp.findViewById(R.id.btnDeny) as Button
         btnDeny.setOnClickListener { hide(lytContextHelp) }

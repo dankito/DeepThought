@@ -103,9 +103,11 @@ class ItemsListView : EntitiesListViewFragment<Item>(R.menu.item_contextual_acti
         arrowToFloatingActionButton.visibility = View.VISIBLE
 
         // show txtOnboardingText a little bit above the center as it looks more natural and leaves more room for arrowToFloatingActionButton
-        val translationY = 50 * context.resources.displayMetrics.density
-        txtOnboardingText?.translationY = -1 * translationY
-        vwStartingWhereTranslatedTextViewOnboardingTextEnds.layoutParams.height = translationY.toInt()
+        context?.let { context ->
+            val translationY = 50 * context.resources.displayMetrics.density
+            txtOnboardingText?.translationY = -1 * translationY
+            vwStartingWhereTranslatedTextViewOnboardingTextEnds.layoutParams.height = translationY.toInt()
+        }
     }
 
     override fun hideOnboardingView() {

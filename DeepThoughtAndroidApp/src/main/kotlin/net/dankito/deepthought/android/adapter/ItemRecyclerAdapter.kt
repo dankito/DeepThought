@@ -25,8 +25,8 @@ class ItemRecyclerAdapter(private val presenter: ItemsListPresenterBase): MultiS
         return R.id.itemSwipeLayout
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ItemViewHolder {
-        val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_item, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_item, parent, false)
 
         val viewHolder = ItemViewHolder(itemView)
 

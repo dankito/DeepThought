@@ -65,8 +65,8 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
     }
 
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater?.inflate(R.layout.dialog_add_article_summary_extractor, container)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.dialog_add_article_summary_extractor, container)
 
         view?.let {
             view.btnCancel.setOnClickListener { dismiss() }

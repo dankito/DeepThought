@@ -29,8 +29,8 @@ class TagsOnItemRecyclerAdapter(private val presenter: TagsOnItemListPresenter, 
     override fun getSwipeLayoutResourceId(position: Int) = R.id.tagOnItemSwipeLayout
 
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TagsOnItemViewHolder {
-        val context = parent?.context
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagsOnItemViewHolder {
+        val context = parent.context
         val itemView = LayoutInflater.from(context).inflate(R.layout.list_item_tag_on_item, parent, false)
 
         val viewHolder = TagsOnItemViewHolder(itemView)

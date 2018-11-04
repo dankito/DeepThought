@@ -96,7 +96,7 @@ class SourcesListView : EntitiesListViewFragment<Source>(R.menu.source_contextua
     }
 
     private fun isSourceItemsListDialogVisible(): Boolean {
-        return fragmentManager.findFragmentByTag(SourceItemsListDialog.TAG) != null
+        return fragmentManager?.findFragmentByTag(SourceItemsListDialog.TAG) != null
     }
 
 

@@ -21,8 +21,8 @@ class FilesRecyclerAdapter(private val presenter: FileListPresenter, private val
     private val fileChooserDialogConfig = FileChooserDialogConfig() // needed for PreviewImageService to set if thumbnails should get loaded or not
 
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): FileLinkViewHolder {
-        val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_file, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileLinkViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_file, parent, false)
 
         val viewHolder = FileLinkViewHolder(itemView)
 

@@ -103,8 +103,8 @@ abstract class EntitiesListViewFragment<T : BaseEntity>(private val contextualAc
     protected open fun clearFilteredEntities() { }
 
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater?.inflate(R.layout.fragment_entities_list_view, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val rootView = inflater.inflate(R.layout.fragment_entities_list_view, container, false)
 
         rootView?.let {
             lytOnboardingText = rootView.lytOnboardingText
@@ -135,7 +135,7 @@ abstract class EntitiesListViewFragment<T : BaseEntity>(private val contextualAc
 //        recyclerView?.leaveFullscreenModeListener = { recyclerViewLeftFullscreenMode() }
         recyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
-                activity.findViewById(R.id.floatingActionMenu)?.visibility = if(newState == RecyclerView.SCROLL_STATE_IDLE) View.VISIBLE else View.GONE
+                activity?.findViewById<View>(R.id.floatingActionMenu)?.visibility = if(newState == RecyclerView.SCROLL_STATE_IDLE) View.VISIBLE else View.GONE
 
                 super.onScrollStateChanged(recyclerView, newState)
             }
@@ -165,7 +165,7 @@ abstract class EntitiesListViewFragment<T : BaseEntity>(private val contextualAc
     }
 
     protected open fun multiSelectActionModeBarVisibilityChanged(visible: Boolean) {
-        activity?.findViewById(R.id.floatingActionMenu)?.visibility = if(visible) View.GONE else View.VISIBLE
+        activity?.findViewById<View>(R.id.floatingActionMenu)?.visibility = if(visible) View.GONE else View.VISIBLE
 
         if(visible) {
             checkIfContextHelpListItemActionsHasBeenShownToUserOnUiThread()
@@ -187,7 +187,7 @@ abstract class EntitiesListViewFragment<T : BaseEntity>(private val contextualAc
 
     private fun recyclerViewEnteredFullscreenMode() {
         activity?.let { activity ->
-            layoutRootOriginalTopMargin = activity.findViewById(R.id.appBarLayout)?.height ?: 0
+            layoutRootOriginalTopMargin = activity.findViewById<View>(R.id.appBarLayout)?.height ?: 0
 
             setLayoutForTogglingFullscreenMode(activity, View.GONE, 0)
         }
@@ -200,16 +200,16 @@ abstract class EntitiesListViewFragment<T : BaseEntity>(private val contextualAc
     }
 
     private fun setLayoutForTogglingFullscreenMode(activity: Activity, viewVisibility: Int, topMargin: Int) {
-        activity.findViewById(R.id.appBarLayout)?.visibility = viewVisibility // TODO: bug here, don't show appBarLayout when in MultiSelectMode
+        activity.findViewById<View>(R.id.appBarLayout)?.visibility = viewVisibility // TODO: bug here, don't show appBarLayout when in MultiSelectMode
 
         if(recyclerAdapter?.isInMultiSelectMode() == false) {
             if(isCurrentSelectedTab) { // don't set fab_menu's visibility when another tab fragment is currently selected
-                activity.findViewById(R.id.floatingActionMenu)?.visibility = viewVisibility
+                activity.findViewById<View>(R.id.floatingActionMenu)?.visibility = viewVisibility
             }
         }
         else {
             recyclerAdapter?.actionModeBar?.visibility = viewVisibility
-            activity.findViewById(R.id.floatingActionMenu)?.visibility = View.GONE
+            activity.findViewById<View>(R.id.floatingActionMenu)?.visibility = View.GONE
         }
 
         if(topMargin >= 0) {
@@ -277,7 +277,7 @@ abstract class EntitiesListViewFragment<T : BaseEntity>(private val contextualAc
     }
 
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
         outState?.let {
@@ -330,8 +330,10 @@ abstract class EntitiesListViewFragment<T : BaseEntity>(private val contextualAc
         txtOnboardingText?.let { txtOnboardingText ->
             lytOnboardingText?.visibility = View.VISIBLE
 
-            val unresolvedHtml = context.getText(onboardingTextResourceId).toString()
-            txtOnboardingText.text = unresolvedHtml.getSpannedFromHtmlWithImages(context, txtOnboardingText.currentTextColor)
+            context?.let { context ->
+                val unresolvedHtml = context.getText(onboardingTextResourceId).toString()
+                txtOnboardingText.text = unresolvedHtml.getSpannedFromHtmlWithImages(context, txtOnboardingText.currentTextColor)
+            }
         }
 
         searchMenuItem?.isVisible = false
@@ -369,7 +371,7 @@ abstract class EntitiesListViewFragment<T : BaseEntity>(private val contextualAc
     }
 
     private fun addSearchResultTextViewToSearchView(searchView: SearchView) {
-        searchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn)?.let { searchCloseButton ->
+        searchView.findViewById<View>(android.support.v7.appcompat.R.id.search_close_btn)?.let { searchCloseButton ->
             (searchCloseButton.parent as? LinearLayout)?.let { searchLayout ->
                 val index = searchLayout.indexOfChild(searchCloseButton)
 

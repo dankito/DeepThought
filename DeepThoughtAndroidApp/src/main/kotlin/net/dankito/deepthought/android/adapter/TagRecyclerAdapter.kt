@@ -37,8 +37,8 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
     }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TagViewHolder {
-        val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_tag, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TagViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_tag, parent, false)
 
         val viewHolder = TagViewHolder(itemView)
 

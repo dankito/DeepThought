@@ -28,8 +28,8 @@ abstract class SourceRecyclerAdapterBase(private val presenter: SourcePresenterB
     override fun getSwipeLayoutResourceId(position: Int) = R.id.sourceSwipeLayout
 
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): SourceViewHolder {
-        val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_source, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SourceViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_source, parent, false)
 
         itemView.vwIsSourceSetOnEntity.isShowAddedViewEnabled = shouldShowImageIsSourceAddedToItem
         itemView.vwIsSourceSetOnEntity.setEntityNameTextSizeToHeader1TextSize()

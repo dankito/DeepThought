@@ -23,8 +23,8 @@ class ArticleSummaryItemRecyclerAdapter(activity: AppCompatActivity, private val
     override fun getSwipeLayoutResourceId(position: Int) = R.id.readLaterArticleSwipeLayout
 
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ArticleSummaryItemViewHolder {
-        val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.list_item_read_later_article, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleSummaryItemViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.list_item_read_later_article, parent, false)
 
         val viewHolder = ArticleSummaryItemViewHolder(itemView)
 
