@@ -1,9 +1,9 @@
 package net.dankito.newsreader.summary
 
-import net.dankito.utils.web.client.IWebClient
 import net.dankito.newsreader.article.ArticleExtractorBase
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
+import net.dankito.utils.web.client.IWebClient
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
@@ -49,7 +49,13 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
     }
 
     private fun extractNewHeiseArticles(url: String, document: Document): Collection<ArticleSummaryItem> {
-        return document.select(".a-article-teaser > a").map { parseHeiseNewsArticle(it, url) }.filterNotNull()
+        return document.select(".a-article-teaser > a")
+                .filter { containsAdForIX(it) == false }
+                .map { parseHeiseNewsArticle(it, url) }.filterNotNull()
+    }
+
+    private fun containsAdForIX(element: Element?): Boolean {
+        return element?.select(".news-source-logo--ix")?.isNotEmpty() == true
     }
 
     private fun parseHeiseNewsArticle(articleElement: Element, url: String): ArticleSummaryItem? {
