@@ -1,13 +1,13 @@
 package net.dankito.newsreader.article
 
-import net.dankito.utils.web.client.IWebClient
-import net.dankito.utils.AsyncResult
 import net.dankito.data_access.network.webclient.extractor.ExtractorBase
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.extensions.getPlainTextForHtml
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.newsreader.model.ArticleSummaryItem
+import net.dankito.utils.AsyncResult
+import net.dankito.utils.web.client.IWebClient
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
