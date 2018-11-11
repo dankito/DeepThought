@@ -66,6 +66,8 @@ class ReadLaterArticleListPresenter(private val view: IReadLaterArticleView, pri
     }
 
     fun showArticle(article: ReadLaterArticle) {
+        deserializeItemExtractionResult(article)
+
         router.showEditItemView(article)
     }
 

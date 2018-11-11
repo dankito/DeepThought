@@ -33,8 +33,6 @@ class ReadLaterArticleRecyclerAdapter(private val presenter: ReadLaterArticleLis
     }
 
     override fun bindItemToView(viewHolder: ReadLaterArticleViewHolder, item: ReadLaterArticle) {
-        presenter.deserializeItemExtractionResult(item)
-
         viewHolder.txtTitle.visibility = if(item.sourcePreview.isNullOrBlank()) View.GONE else View.VISIBLE
         viewHolder.txtTitle.text = item.sourcePreview
 
