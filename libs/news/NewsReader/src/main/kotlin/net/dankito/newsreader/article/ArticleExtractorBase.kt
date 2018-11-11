@@ -110,7 +110,7 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
     private fun parseMetaData(extractionResult: ItemExtractionResult, document: Document) {
         val metaData = metaDataExtractor.extractMetaData(document)
 
-        metaData.title?.let { extractionResult.source?.title = it }
+        metaData.title?.let { extractionResult.source?.title = it.trim() }
 
         // do not set summary anymore, neither here nor in setInfoFromArticleSummaryItemOnExtractionResult()
 
