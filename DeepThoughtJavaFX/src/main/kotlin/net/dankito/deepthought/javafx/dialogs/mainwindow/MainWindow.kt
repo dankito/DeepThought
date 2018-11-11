@@ -20,7 +20,7 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
 
         private fun getAppVersion(): String {
             val javaPackage = javaClass.getPackage()
-            if(javaPackage != null) {
+            if(javaPackage != null && javaPackage.implementationVersion != null) {
                 return javaPackage.implementationVersion
             }
             else {
