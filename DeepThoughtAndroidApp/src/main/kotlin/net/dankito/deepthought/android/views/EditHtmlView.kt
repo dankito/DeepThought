@@ -76,11 +76,15 @@ class EditHtmlView : View, IHandlesBackButtonPress {
     }
 
 
+    fun getCurrentHtmlAsync(callback: (html: String) -> Unit) {
+        editor.getCurrentHtmlAsync(callback)
+    }
+
     fun getCurrentHtmlBlocking(): String {
         val retrievedHtml = AtomicReference<String>(editor.getCachedHtml()) // as a fallback use cached html
         val countDownLatch = CountDownLatch(1)
 
-        editor.getCurrentHtmlAsync { currentHtml ->
+        getCurrentHtmlAsync { currentHtml ->
             retrievedHtml.set(currentHtml)
             countDownLatch.countDown()
         }

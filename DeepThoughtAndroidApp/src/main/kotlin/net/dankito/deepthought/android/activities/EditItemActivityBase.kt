@@ -14,9 +14,8 @@ import net.dankito.deepthought.android.activities.arguments.EditItemActivityPara
 import net.dankito.deepthought.android.activities.arguments.EditItemActivityResult
 import net.dankito.deepthought.android.activities.arguments.EditSourceActivityResult
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.utils.android.OnSwipeTouchListener
-import net.dankito.utils.android.extensions.executeActionAfterMeasuringSize
-import net.dankito.deepthought.android.views.*
+import net.dankito.deepthought.android.views.EditItemActivityFloatingActionMenuButton
+import net.dankito.deepthought.android.views.IEditItemView
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.getPlainTextForHtml
@@ -25,20 +24,22 @@ import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditItemPresenter
-import net.dankito.utils.android.permissions.IPermissionsService
-import net.dankito.utils.android.permissions.PermissionsService
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ItemService
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.service.data.TagService
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.android.OnSwipeTouchListener
+import net.dankito.utils.android.extensions.executeActionAfterMeasuringSize
+import net.dankito.utils.android.permissions.IPermissionsService
+import net.dankito.utils.android.permissions.PermissionsService
 import net.dankito.utils.android.ui.view.ToolbarUtil
 import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.ui.IClipboardService
-import net.dankito.utils.ui.dialogs.IDialogService
 import net.dankito.utils.ui.dialogs.ConfirmationDialogButton
 import net.dankito.utils.ui.dialogs.ConfirmationDialogConfig
+import net.dankito.utils.ui.dialogs.IDialogService
 import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
@@ -725,17 +726,18 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
     }
 
     private fun saveItemAsync(callback: (Boolean) -> Unit) {
-        val content = itemContentView.currentValue
-        val summary = lytSummaryPreview.getCurrentFieldValue()
-        val editedSource = updateSource()
-        val editedSeries = lytSourcePreview.series
+        itemContentView.getCurrentHtmlAsync { content ->
+            val summary = lytSummaryPreview.getCurrentFieldValue()
+            val editedSource = updateSource()
+            val editedSeries = lytSourcePreview.series
 
-        // TODO: save extracted content when in reader mode and webSiteHtml when not in reader mode
-        // TODO: contentToEdit show now always contain the correct value depending on is or is not in reader mode, doesn't it?
+            // TODO: save extracted content when in reader mode and webSiteHtml when not in reader mode
+            // TODO: contentToEdit show now always contain the correct value depending on is or is not in reader mode, doesn't it?
 
-        updateItem(itemToSave, content, summary)
-        presenter.saveItemAsync(itemToSave, editedSource, editedSeries, tagsOnItem, lytFilesPreview.getEditedFiles()) { successful ->
-            callback(successful)
+            updateItem(itemToSave, content, summary)
+            presenter.saveItemAsync(itemToSave, editedSource, editedSeries, tagsOnItem, lytFilesPreview.getEditedFiles()) { successful ->
+                callback(successful)
+            }
         }
     }
 

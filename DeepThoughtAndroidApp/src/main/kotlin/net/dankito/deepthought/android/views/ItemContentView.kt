@@ -86,6 +86,10 @@ class ItemContentView @JvmOverloads constructor(
     val currentValue: String
         get() = editHtmlView.getCurrentHtmlBlocking()
 
+    fun getCurrentHtmlAsync(callback: (html: String) -> Unit) {
+        editHtmlView.getCurrentHtmlAsync(callback)
+    }
+
     val isContentSet: Boolean
         get() { // don't use currentValue here, would call editHtmlView.getCurrentHtmlBlocking() way too often
             return contentToEdit.isBlank() == false && contentToEdit != "<p>\u200B</p>" // = RichTextEditor's default html
