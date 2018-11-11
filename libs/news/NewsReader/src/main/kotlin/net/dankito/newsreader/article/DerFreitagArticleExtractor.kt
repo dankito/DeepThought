@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
-import net.dankito.utils.web.client.IWebClient
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
+import net.dankito.utils.web.client.IWebClient
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
@@ -48,17 +48,31 @@ class DerFreitagArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(w
             var content = articleElement.select(".abstract").first()?.outerHtml() ?: ""
             content += textElement.outerHtml()
 
-            articleElement.select(".c-article-image--lead").first()?.let { previewImageElement ->
-                if(previewImageElement.html().isNotBlank()) {
-                    loadLazyLoadingElements(previewImageElement)
-                    content = previewImageElement.outerHtml() + content
-                }
+            getPreviewImageHtml(articleElement)?.let { previewImageHtml ->
+                content = previewImageHtml + content
             }
 
             return content
         }
         
         return ""
+    }
+
+    private fun getPreviewImageHtml(articleElement: Element): String? {
+        articleElement.select(".c-article-image--lead").first()?.let { previewImageElement ->
+            if (previewImageElement.html().isNotBlank()) {
+                loadLazyLoadingElements(previewImageElement)
+
+                // remove height and width attributes otherwise image would get displayed on Android with a lot of white space around it
+                previewImageElement.select("img").firstOrNull()?.let { imgElement ->
+                    imgElement.removeAttr("height").removeAttr("width")
+                }
+
+                return previewImageElement.outerHtml()
+            }
+        }
+
+        return null
     }
 
     private fun removeSurveys(textElement: Element) {
