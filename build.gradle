@@ -4,7 +4,7 @@ apply plugin: 'kotlin'
 
 
 buildscript {
-    ext.kotlin_version = '1.2.71' // don't know why but gradle cannot resolve variable kotlinVersion from versions.gradle
+    ext.kotlin_version = '1.2.61' // don't know why but gradle cannot resolve variable kotlinVersion from versions.gradle
 
     repositories {
         mavenCentral()
