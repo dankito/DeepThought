@@ -22,15 +22,15 @@ class ChefkochArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(web
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         document.body().select("div.content-wrapper.clearfix").first()?.let { contentWrapper ->
             var title = ""
-            var content = ""
+            val content = StringBuilder()
 
             contentWrapper.select("h1.page-title").first()?.let { pageTitle ->
                 title = pageTitle.text().trim()
-                content += pageTitle.outerHtml()
+                content.append(pageTitle.outerHtml())
             }
 
             contentWrapper.select("div.summary").first()?.let { summaryElement ->
-                content += summaryElement.outerHtml()
+                content.append(summaryElement.outerHtml())
             }
 
             // TODO: extract images
@@ -45,10 +45,10 @@ class ChefkochArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(web
                 // TODO: get ingredient form to work
                 mainContent.select("#incredientform").remove()
 
-                content += mainContent.outerHtml()
+                content.append(mainContent.outerHtml())
             }
 
-            extractionResult.setExtractedContent(Item(content), Source(title, url))
+            extractionResult.setExtractedContent(Item(content.toString()), Source(title, url))
         }
     }
 
