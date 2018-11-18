@@ -133,5 +133,15 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
                 3000) // first page has a length of little more than 2900
     }
 
+    @Test
+    fun extractKarriereMultiPageArticle() {
+        getAndTestArticle("https://www.sueddeutsche.de/karriere/sabbatical-job-auszeit-karriere-1.4212445",
+                "Hilft eine Auszeit vom Job wirklich weiter?",
+                "Batterien aufladen, das Leben entschleunigen, sich selbst finden: Die Erwartungen an ein Sabbatical sind hoch. An die Rückkehr denkt dabei fast niemand.",
+                "https://media-cdn.sueddeutsche.de/image/sz.1.4212473/640x360?v=1542389482000",
+                4400,
+                subTitle = "Sabbatical") // first page has a length of little more than 4200
+    }
+
 
 }

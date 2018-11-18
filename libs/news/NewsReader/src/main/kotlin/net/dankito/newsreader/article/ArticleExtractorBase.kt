@@ -86,9 +86,9 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
         }
     }
 
-    protected open fun extractArticleWithPost(extractionResult: ItemExtractionResult, url: String, body: String? = null) {
+    protected open fun extractArticleWithPost(extractionResult: ItemExtractionResult, url: String, body: String? = null, contentType: String? = null) {
         try {
-            requestUrlWithPost(url, body).let { document ->
+            requestUrlWithPost(url, body, contentType).let { document ->
                 parseHtmlToArticle(extractionResult, document, url)
             }
         } catch (e: Exception) {

@@ -6,7 +6,6 @@ import net.dankito.utils.web.client.RequestParameters
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import java.net.URI
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -37,8 +36,9 @@ abstract class ExtractorBase(val webClient : IWebClient, protected val urlUtil: 
         }
     }
 
-    protected fun requestUrlWithPost(url: String, body: String? = null): Document {
+    protected fun requestUrlWithPost(url: String, body: String? = null, contentType: String? = null): Document {
         val parameters = createParametersForUrl(url, body)
+        parameters.contentType = contentType
 
         webClient.post(parameters).let { response ->
             if(response.isSuccessful) {
