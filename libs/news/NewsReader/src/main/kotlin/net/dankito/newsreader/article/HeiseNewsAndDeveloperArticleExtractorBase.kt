@@ -87,7 +87,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         val summaryElement = articleMeldungElement.select(".article-content__lead").firstOrNull()
 
         if(previewImageElement != null || summaryElement != null) {
-            contentHtml = "<div>" + previewImageElement?.outerHtml() + (summaryElement?.outerHtml() ?: "") + contentHtml + "</div>"
+            contentHtml = "<div>" + (previewImageElement?.outerHtml() ?: "") + (summaryElement?.outerHtml() ?: "") + contentHtml + "</div>"
         }
 
         val item = Item(contentHtml)
