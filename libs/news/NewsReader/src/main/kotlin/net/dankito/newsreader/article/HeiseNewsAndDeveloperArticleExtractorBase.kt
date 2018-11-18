@@ -84,7 +84,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         var contentHtml = extractArticleMeldungContent(articleMeldungElement, url)
 
         val previewImageElement = articleMeldungElement.select(".article-image").firstOrNull()
-        val summaryElement = articleMeldungElement.select(".article-content__lead").firstOrNull()
+        val summaryElement = articleMeldungElement.select(".article-content__lead, .article-header__lead").firstOrNull()
 
         if(previewImageElement != null || summaryElement != null) {
             contentHtml = "<div>" + (previewImageElement?.outerHtml() ?: "") + (summaryElement?.outerHtml() ?: "") + contentHtml + "</div>"
