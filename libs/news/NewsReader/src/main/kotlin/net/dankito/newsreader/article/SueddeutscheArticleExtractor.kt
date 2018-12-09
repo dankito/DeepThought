@@ -199,9 +199,13 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
             inlineCarousel.select("ul.biga__carousel__list li.js-carousel-item").forEach { carouselItem ->
                 val img = carouselItem.select("img.biga__carousel__list__item-image").first()
-                // may also add caption: div.biga__carousel__list__item-source
-                inlineCarousel.parent().insertChildren(childIndex, Arrays.asList(img))
-                childIndex = childIndex + 2
+                inlineCarousel.parent().insertChildren(childIndex, img)
+                childIndex++
+
+                carouselItem.select(".biga__carousel__list__item-caption").firstOrNull()?.let { imageCaption ->
+                    inlineCarousel.parent().insertChildren(childIndex, imageCaption)
+                    childIndex++
+                }
             }
 
             inlineCarousel.remove()
