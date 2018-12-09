@@ -1,5 +1,6 @@
 package net.dankito.deepthought.javafx.dialogs.item.controls
 
+import javafx.scene.control.ContextMenu
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.service.events.EditingSourceDoneEvent
 import net.dankito.deepthought.javafx.ui.controls.EditEntityReferenceField
@@ -121,6 +122,21 @@ class EditItemSourceField : EditEntityReferenceField<Source>(FX.messages["edit.i
         return entity?.getSeriesAndPublishingDatePreview(seriesToEdit)
     }
 
+
+    override fun createContextMenu(): ContextMenu {
+        val contextMenu = super.createContextMenu()
+
+        sourceToEdit?.let { source ->
+            if(source.url.isNullOrBlank() == false) {
+                contextMenu.item(messages["edit.item.source.field.copy.url.to.clipboard"]) {
+                    action { copySourceUrlToClipboard(source) }
+                }
+            }
+        }
+
+        return contextMenu
+    }
+
     override fun createNewEntity(entityTitle: String): Source {
         return Source(entityTitle)
     }
@@ -129,6 +145,10 @@ class EditItemSourceField : EditEntityReferenceField<Source>(FX.messages["edit.i
         eventBus.register(EventBusListener())
 
         router.showEditItemSourceView(entityToEdit, seriesToEdit, enteredTitle)
+    }
+
+    private fun copySourceUrlToClipboard(source: Source) {
+        presenter.copySourceUrlToClipboard(source)
     }
 
 
