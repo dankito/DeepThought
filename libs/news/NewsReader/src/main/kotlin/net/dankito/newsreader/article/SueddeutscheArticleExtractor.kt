@@ -118,7 +118,8 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
     private fun cleanArticleBody(articleBody: Element) {
-        articleBody.select("#article-sidebar-wrapper, #sharingbaranchor, .ad, .authors, .teaserable-layout, .flexible-teaser, #iq-artikelanker, [data-poll]").remove()
+        articleBody.select("#article-sidebar-wrapper, #sharingbaranchor, .ad, .authors, .teaserable-layout, .flexible-teaser, .sz-teaser--article, " +
+                "#iq-artikelanker, [data-poll]").remove()
 
         // remove scripts with try{window.performance.mark('monitor_articleTeaser');}catch(e){};
         articleBody.select("script").filter { it.html().contains("window.performance.mark") }.forEach { it.remove() }
