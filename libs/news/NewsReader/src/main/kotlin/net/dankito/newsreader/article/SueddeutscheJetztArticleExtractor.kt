@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
-import net.dankito.utils.web.client.IWebClient
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
+import net.dankito.utils.web.client.IWebClient
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
@@ -58,8 +58,13 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
 
         // data-type=html and iframe e.g. for WhatsApp Kolumne
         articleContentElement.select(".apos-item[data-type=\"richText\"], .apos-item[data-type=\"html\"], .apos-rich-text, .apos-slideshow").forEach { itemsContainer ->
-            itemsContainer.select("p, h3, div.apos-slideshow, iframe").forEach { paragraph ->
-                content += parseParagraph(paragraph)
+            if(itemsContainer.select("div.apos-slideshow").firstOrNull() != null) { // so that <p>s in slideshow don't get added multiple times in below's forEach
+                content += itemsContainer
+            }
+            else {
+                itemsContainer.select("p, h3, iframe").forEach { paragraph ->
+                    content += parseParagraph(paragraph)
+                }
             }
         }
 
@@ -71,7 +76,7 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
             return paragraph.parent().parent().outerHtml()
         }
 
-        if (isEmptyParagraph(paragraph)) {
+        if (isEmptyParagraph(paragraph) || isInSlideShow(paragraph)) {
             return ""
         }
 
@@ -85,6 +90,20 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
 
         val text = paragraph.text().replace(160.toChar(), ' ').replace(8234.toChar(), ' ') // replace non breakable spaces
         return text.trim().isBlank()
+    }
+
+    private fun isInSlideShow(paragraph: Element): Boolean {
+        var parent = paragraph.parent()
+
+        while(parent != null) {
+            if(parent.hasClass("apos-slideshow")) {
+                return true
+            }
+
+            parent = parent.parent()
+        }
+
+        return false
     }
 
 
