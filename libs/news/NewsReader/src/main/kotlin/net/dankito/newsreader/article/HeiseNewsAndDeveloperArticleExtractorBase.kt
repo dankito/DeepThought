@@ -184,7 +184,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
 
 
     protected open fun extractArticleMeldungContent(articleElement: Element, url: String): String {
-        return extractContent(articleElement, url, ".akwa-article__content")
+        return extractContent(articleElement, url, ".akwa-article__content, .article-content")
     }
 
     protected open fun extractMeldungWrapperContent(articleElement: Element, url: String): String {
