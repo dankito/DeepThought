@@ -137,6 +137,10 @@ class EditSourceSeriesField : EditEntityEntityReferenceField, ISeriesListView {
         stopEditing()
     }
 
+    override fun shareUrl() {
+        // nothing to do here, menu item isn't shown for Series
+    }
+
     private fun existingSeriesSelected(series: Series) {
         seriesChanged(series)
 

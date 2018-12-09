@@ -218,6 +218,12 @@ class EditItemSourceField : EditEntityEntityReferenceField, ISourcesListView {
         stopEditing()
     }
 
+    override fun shareUrl() {
+        source?.let { source ->
+            presenter.copySourceUrlToClipboard(source)
+        }
+    }
+
     private fun existingSourceSelected(source: Source) {
         sourceChanged(source)
 
@@ -240,6 +246,8 @@ class EditItemSourceField : EditEntityEntityReferenceField, ISourcesListView {
         existingSourcesSearchResultsAdapter.selectedSource = source
 
         setFieldValueForCurrentSourceOnUiThread()
+
+        this.showShareUrlMenuItem = source?.url?.isNullOrBlank() == false
 
         sourceChangedListener?.invoke(source)
     }

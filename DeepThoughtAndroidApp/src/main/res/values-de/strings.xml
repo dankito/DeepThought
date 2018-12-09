@@ -247,6 +247,7 @@
         Sie die Reihe hier nun ebenfalls speichern, überschreiben Sie jene Änderungen.</string>
 
     <string name="edit_entity_source_field_source_label">Quelle</string>
+    <string name="edit_entity_source_field_share_url_menu_item_title">Link teilen</string>
     <string name="edit_entity_source_field_add_indication_menu_item_title">Stelle setzen</string>
     <string name="edit_entity_source_field_indication_label">Stelle</string>
     <string name="edit_entity_source_field_indication_hint">S. 14, 2:14 min, …</string>

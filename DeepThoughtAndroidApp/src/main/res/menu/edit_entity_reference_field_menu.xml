@@ -16,6 +16,12 @@
         android:title="@string/activity_edit_item_edit_source_menu_remove_entity"
     />
 
+    <item
+        android:id="@+id/mnShareUrl"
+        android:title="@string/edit_entity_source_field_share_url_menu_item_title"
+        android:visible="false"
+    />
+
     <!-- title gets set in source -->
     <item
         android:id="@+id/mnAddSecondaryInformation"

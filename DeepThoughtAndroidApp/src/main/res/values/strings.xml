@@ -207,6 +207,7 @@
     </string>
 
     <string name="edit_entity_source_field_source_label">Source</string>
+    <string name="edit_entity_source_field_share_url_menu_item_title">Share link</string>
     <string name="edit_entity_source_field_add_indication_menu_item_title">Set indication</string>
     <string name="edit_entity_source_field_indication_label">Indication</string>
     <string name="edit_entity_source_field_indication_hint">p. 14, 2:14 min, …</string>

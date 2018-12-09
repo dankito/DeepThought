@@ -21,6 +21,8 @@ abstract class EditEntityEntityReferenceField : EditEntityField {
 
     protected var showEditDetailsMenuItem = true
 
+    protected var showShareUrlMenuItem = false
+
     protected var addSecondaryInformationMenuItemTitleResId: Int? = null
 
 
@@ -101,6 +103,8 @@ abstract class EditEntityEntityReferenceField : EditEntityField {
 
         popup.menu.findItem(R.id.mnEditDetails)?.isVisible = showEditDetailsMenuItem
 
+        popup.menu.findItem(R.id.mnShareUrl)?.isVisible = showShareUrlMenuItem
+
         mayShowAddSecondaryInformationMenuItem(popup)
 
         popup.setOnMenuItemClickListener { item ->
@@ -108,6 +112,7 @@ abstract class EditEntityEntityReferenceField : EditEntityField {
                 R.id.mnEditDetails -> editDetails()
                 R.id.mnCreateNewEntity -> createNewEntity()
                 R.id.mnRemoveEntity -> removeEntity()
+                R.id.mnShareUrl -> shareUrl()
                 R.id.mnAddSecondaryInformation -> showAndFocusSecondaryInformationOnUiThread()
             }
             true
@@ -127,11 +132,13 @@ abstract class EditEntityEntityReferenceField : EditEntityField {
         }
     }
 
-    abstract fun editDetails()
+    protected abstract fun editDetails()
 
-    abstract fun createNewEntity()
+    protected abstract fun createNewEntity()
 
-    abstract fun removeEntity()
+    protected abstract fun removeEntity()
+
+    protected abstract fun shareUrl()
 
 
     fun getEditedValue() = valueToEdit
