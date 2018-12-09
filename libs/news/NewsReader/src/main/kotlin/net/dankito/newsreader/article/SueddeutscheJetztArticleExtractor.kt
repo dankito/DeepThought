@@ -54,21 +54,21 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
     }
 
     private fun parseContent(articleContentElement: Element): String {
-        var content = ""
+        val content = StringBuilder()
 
         // data-type=html and iframe e.g. for WhatsApp Kolumne
         articleContentElement.select(".apos-item[data-type=\"richText\"], .apos-item[data-type=\"html\"], .apos-rich-text, .apos-slideshow").forEach { itemsContainer ->
             if(itemsContainer.select("div.apos-slideshow").firstOrNull() != null) { // so that <p>s in slideshow don't get added multiple times in below's forEach
-                content += itemsContainer
+                content.append(itemsContainer)
             }
             else {
                 itemsContainer.select("p, h3, iframe").forEach { paragraph ->
-                    content += parseParagraph(paragraph)
+                    content.append(parseParagraph(paragraph))
                 }
             }
         }
 
-        return content
+        return content.toString()
     }
 
     private fun parseParagraph(paragraph: Element): String {
