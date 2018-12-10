@@ -67,11 +67,16 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
     protected open fun parseArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleElement: Element, url: String, title: String) {
         articleElement.select("article#meldung").first()?.let { articleMeldungElement -> // article#meldung is the new version
             parseArticleMeldungArticle(extractionResult, headerElement, articleMeldungElement, url, title)
+            if(extractionResult.couldExtractContent) {
+                return
+            }
         }
 
         articleElement.select(".meldung_wrapper").first()?.let { contentElement ->
             parseMeldungWrapperArticle(extractionResult, headerElement, articleElement, contentElement, url, title)
-            return
+            if(extractionResult.couldExtractContent) {
+                return
+            }
         }
 
         articleElement.select(".article-content").first()?.let { articleContentElement ->
