@@ -3,6 +3,7 @@
 
     <!-- Oliver's green based design -->
     <color name="colorPrimary">#359e7d</color>
+    <color name="colorPrimary_50PercentAlpha">#7D359e7d</color>
     <color name="colorPrimaryDark">#22685d</color>
     <color name="colorAccent">#078176</color>
 
@@ -29,9 +30,6 @@
     <color name="entity_field_value_text_color">#000000</color>
     <color name="entity_field_onboarding_text_color">@color/darker_gray</color>
     <color name="entity_field_divider_color">#E0E0E0</color>
-
-    <!-- The same as colorPrimary but with a higher transparency -->
-    <color name="richtexteditor_fullscreen_options_bar_background">#7D359e7d</color>
 
     <!-- This is bad: Actually i wanted to define tag background colors centrally in one place for Android and JavaFX, but their parse methods have different formats (Android
          has opacity at the beginning, JavaFX at the end) -->
