@@ -1,11 +1,14 @@
 <resources>
 
-    <style name="AppTheme.NoActionBar" parent="AppTheme">
+    <style name="AppTheme.NoActionBar">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:statusBarColor">?attr/colorPrimaryDark</item>
 
         <item name="actionModeBackground">?attr/colorPrimary</item>
+
+        <item name="richTextEditorFullscreenOptionsBarBackground">@color/colorPrimary_50PercentAlpha</item>
+        <item name="richTextEditorFullscreenOptionsBarSearchViewBackground">@color/colorPrimary</item>
     </style>
 
 </resources>
