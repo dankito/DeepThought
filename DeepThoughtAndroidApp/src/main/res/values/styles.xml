@@ -1,5 +1,21 @@
 <resources>
 
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="richTextEditorFullscreenOptionsBarBackground">@color/colorPrimary_50PercentAlpha</item>
+        <item name="richTextEditorFullscreenOptionsBarSearchViewBackground">@color/colorPrimary</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+
+        <item name="actionModeBackground">?attr/colorPrimary</item>
+    </style>
+
     <!-- Floating Action Button -->
 
     <style name="MenuLabelsStyle">
