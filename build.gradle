@@ -12,6 +12,7 @@ buildscript {
         maven { url 'https://maven.google.com' }
         jcenter()
         maven { url "https://plugins.gradle.org/m2/" }
+        maven { url 'http://repo.spring.io/plugins-release/' }
 
         maven { url 'https://www.testfairy.com/maven' }
         maven { url 'https://maven.fabric.io/public' }
@@ -41,6 +42,7 @@ allprojects {
         jcenter()
         mavenCentral()
         mavenLocal()
+        maven { url 'http://repo.spring.io/plugins-release/' } // older pre AndroidX builds of com.google.android:flexbox are now hosted in Spring Plugin Repo
     }
 }
 
