@@ -26,7 +26,7 @@
             android:name=".MainActivity"
             android:launchMode="singleTask"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -68,64 +68,64 @@
         <activity
             android:name=".activities.ArticleSummaryActivity"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize"
         />
 
         <activity
             android:name=".activities.EditItemActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize"
         />
 
         <activity
             android:name=".activities.EditItemExtractionResultActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize"
         />
 
         <activity
             android:name=".activities.EditReadLaterArticleActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize"
         />
 
         <activity
             android:name=".activities.EditSourceActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize"
         />
 
         <activity
             android:name=".activities.EditSeriesActivity"
             android:label="@string/activity_edit_source_title"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize"
         />
 
         <activity
             android:name=".activities.TagsListViewActivity"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize"
         />
 
         <activity
             android:name=".activities.SourcesListViewActivity"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize"
         />
 
         <activity
             android:name=".activities.ReadLaterArticlesListViewActivity"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize"
         />
 
         <activity android:name=".activities.ViewPdfActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize"
         />
 

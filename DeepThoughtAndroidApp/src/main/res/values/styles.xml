@@ -1,13 +1,25 @@
 <resources>
 
-    <style name="AppTheme.NoActionBar">
+    <!-- Base application theme. -->
+    <style name="AppThemeBase" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
 
+        <!-- defined in AndroidUtils -->
+        <item name="actionModeStyle">@style/ActionModeStyle</item>
         <item name="actionModeBackground">?attr/colorPrimary</item>
 
         <item name="richTextEditorFullscreenOptionsBarBackground">@color/colorPrimary_50PercentAlpha</item>
         <item name="richTextEditorFullscreenOptionsBarSearchViewBackground">@color/colorPrimary</item>
+    </style>
+
+    <style name="AppTheme" parent="AppThemeBase">
+        <!-- adds nothing to AppThemeBase but in v21/styles.xml specific attributes for Lollipop and above are added -->
     </style>
 
     <!-- Floating Action Button -->
