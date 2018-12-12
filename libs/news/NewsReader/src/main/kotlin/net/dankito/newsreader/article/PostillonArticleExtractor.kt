@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
-import net.dankito.utils.web.client.IWebClient
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
+import net.dankito.utils.web.client.IWebClient
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Node
@@ -45,6 +45,8 @@ class PostillonArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
     }
 
     private fun extractContent(bodyElement: Element): String {
+        bodyElement.select("img").forEach { it.attr("width", "100%") }
+
         return bodyElement.childNodes().filter { shouldFilterNode(it) == false }.joinToString(separator = "") { getTextRepresentationForContentNode(it) }
     }
 
