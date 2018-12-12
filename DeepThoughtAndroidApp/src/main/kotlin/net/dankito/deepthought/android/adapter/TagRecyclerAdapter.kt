@@ -122,6 +122,6 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
         }
     }
 
-    private fun getDefaultBackgroundColor() = R.drawable.list_item_background
+    private fun getDefaultBackgroundColor() = R.drawable.list_item_background // TODO: make theme dependent
 
 }

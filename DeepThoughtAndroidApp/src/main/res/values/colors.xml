@@ -12,6 +12,19 @@
     <color name="colorPrimaryGradientEnd">#309c7c</color>
 
 
+    <!-- dark theme -->
+    <color name="colorPrimary_Dark">#212121</color>
+    <color name="colorPrimary_50PercentAlpha_Dark">#57212121</color>
+    <color name="colorPrimaryDark_Dark">#000000</color>
+    <color name="colorAccent_Dark">#FF9100</color>
+
+    <color name="colorPrimaryGradientStart_Dark">#212121</color>
+    <color name="colorPrimaryGradientEnd_Dark">#212121</color>
+
+    <color name="colorPrimary_33PercentAlpha_Dark">#5722685e</color>
+    <!--<color name="colorPrimary_50PercentAlpha_Dark">#22685e</color>-->
+
+
     <!-- this is the same background color as for Snackbars -->
     <color name="context_help_background_color">#323232</color>
     <color name="context_help_text_color">#E76999</color>
@@ -19,7 +32,9 @@
     <color name="view_pdf_select_page_text_color">@color/header_1_text_color</color>
 
     <color name="list_item_default_background">@android:color/background_light</color>
+    <color name="list_item_default_background_Dark">@android:color/background_dark</color>
     <color name="list_item_selected_background">#d2e8e5</color>
+    <color name="list_item_selected_background_Dark">#9a9a9a</color>
 
     <color name="view_is_added_to_entity_border">#1fbb68</color>
 

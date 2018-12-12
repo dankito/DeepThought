@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="themes">
+
+        <attr name="colorPrimaryGradientStart" format="reference"/>
+        <attr name="colorPrimaryGradientEnd" format="reference"/>
+
+        <attr name="listItemBackground" format="reference"/>
+
+    </declare-styleable>
+
+</resources>

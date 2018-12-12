@@ -7,3 +7,20 @@ h1, h2, h3, h4, h5, h6 {
     font-family: Roboto, sans-serif;
     color: #7f7f7f;
 }
+
+
+/*      Style for dark theme    */
+
+html[data-theme='dark'] {
+    color: #bababa;
+    background: #303030; /* dark grey, see Material Design background color for colorPrimary Grey_900 (#212121) */
+}
+
+[data-theme='dark'] h1, [data-theme='dark'] h2, [data-theme='dark'] h3,
+[data-theme='dark'] h4, [data-theme='dark'] h5, [data-theme='dark'] h6 {
+    color: rgba(34, 104, 93, 1.0); /* colorPrimaryDark without transparency */
+}
+
+[data-theme='dark'] a {
+    color: rgba(34, 104, 93, 0.75); /* colorPrimaryDark with transparency */
+}

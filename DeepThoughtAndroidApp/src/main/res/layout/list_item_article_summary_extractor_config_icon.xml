@@ -4,7 +4,7 @@
                 android:layout_height="wrap_content"
                 android:minHeight="32dp"
                 android:padding="@dimen/list_item_article_summary_extractor_config_icon_padding"
-                android:background="@drawable/list_item_background"
+                android:background="?attr/listItemBackground"
 >
 
     <ImageView

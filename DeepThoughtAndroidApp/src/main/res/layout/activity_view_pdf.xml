@@ -110,7 +110,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:tint="@color/colorPrimary"
+            android:tint="?attr/colorPrimary"
             android:src="@drawable/ic_tab_items"
             android:enabled="false"
         />

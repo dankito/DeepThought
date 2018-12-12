@@ -38,6 +38,9 @@ class EditHtmlView : View, IHandlesBackButtonPress {
         editor = rootView.contentEditor
         editor.setEditorHeight(500) // don't know why but it's important to set a height (at least on some older Androids)
 
+        // dark mode
+//        editor.setTheme("dark")
+
         editor.javaScriptExecutor.addLoadedListener {
             (context as? Activity)?.runOnUiThread { editorHasLoaded() }
         }

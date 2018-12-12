@@ -1,11 +1,15 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppThemeBase" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <!-- the problem attributes from parent="" overwrite that ones from '.' derivation -> -->
+    <!-- as Light and Dark theme have different parents we have to define these properties redundantly -->
+
+    <style name="AppThemeLightBase" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="colorPrimaryGradientStart">@color/colorPrimaryGradientEnd</item>
+        <item name="colorPrimaryGradientEnd">@color/colorPrimaryGradientEnd</item>
 
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
@@ -14,12 +18,44 @@
         <item name="actionModeStyle">@style/ActionModeStyle</item>
         <item name="actionModeBackground">?attr/colorPrimary</item>
 
+        <item name="listItemBackground">@drawable/list_item_background</item>
+
         <item name="richTextEditorFullscreenOptionsBarBackground">@color/colorPrimary_50PercentAlpha</item>
         <item name="richTextEditorFullscreenOptionsBarSearchViewBackground">@color/colorPrimary</item>
     </style>
 
-    <style name="AppTheme" parent="AppThemeBase">
+    <style name="AppThemeDarkBase" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/colorPrimary_Dark</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark_Dark</item>
+        <item name="colorAccent">@color/colorAccent_Dark</item>
+
+        <item name="colorPrimaryGradientStart">@color/colorPrimaryGradientEnd_Dark</item>
+        <item name="colorPrimaryGradientEnd">@color/colorPrimaryGradientEnd_Dark</item>
+
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+
+        <!-- defined in AndroidUtils -->
+        <item name="actionModeStyle">@style/ActionModeStyle</item>
+        <item name="actionModeBackground">@color/colorPrimary_Dark</item>
+
+        <item name="listItemBackground">@drawable/list_item_background_dark</item>
+
+        <item name="richTextEditorFullscreenOptionsBarBackground">@color/colorPrimary_50PercentAlpha_Dark</item>
+        <item name="richTextEditorFullscreenOptionsBarSearchViewBackground">@color/colorPrimary_Dark</item>
+    </style>
+
+    <style name="AppThemeLight" parent="AppThemeLightBase">
         <!-- adds nothing to AppThemeBase but in v21/styles.xml specific attributes for Lollipop and above are added -->
+    </style>
+
+    <style name="AppThemeDark" parent="AppThemeDarkBase">
+        <!-- adds nothing to AppThemeBase but in v21/styles.xml specific attributes for Lollipop and above are added -->
+    </style>
+
+    <!-- currently only used to easily switch between AppThemeLight and AppThemeDark -->
+    <style name="AppTheme" parent="AppThemeLight">
+
     </style>
 
     <!-- Floating Action Button -->

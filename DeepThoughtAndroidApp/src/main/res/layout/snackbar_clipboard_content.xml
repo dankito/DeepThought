@@ -12,7 +12,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:tint="@color/colorPrimary"
+        android:tint="?attr/colorPrimary"
         android:src="@drawable/ic_help_outline_white_48dp"
     />
 
@@ -41,7 +41,7 @@
             android:layout_marginTop="6dp"
             android:layout_gravity="center_horizontal"
             android:maxLines="1"
-            android:textColor="@color/colorPrimary"
+            android:textColor="?attr/colorPrimary"
         />
 
     </LinearLayout>
@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/snackbar_clipboard_content_options_header_padding_top"
             android:paddingBottom="@dimen/snackbar_clipboard_content_options_header_padding_bottom"
-            android:textColor="@color/colorPrimary"
+            android:textColor="?attr/colorPrimary"
         />
 
         <LinearLayout

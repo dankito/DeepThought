@@ -1,7 +1,13 @@
 <resources>
 
 
-    <style name="AppTheme" parent="AppThemeBase">
+    <style name="AppThemeLight" parent="AppThemeLightBase">
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowEnterTransition">@android:transition/slide_right</item>
+        <item name="android:windowExitTransition">@android:transition/slide_left</item>
+    </style>
+
+    <style name="AppThemeDark" parent="AppThemeDarkBase">
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowEnterTransition">@android:transition/slide_right</item>
         <item name="android:windowExitTransition">@android:transition/slide_left</item>

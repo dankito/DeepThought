@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="@dimen/list_item_read_later_article_min_height"
-    android:background="@drawable/list_item_background"
+    android:background="?attr/listItemBackground"
 >
 
     <!-- Bottom View Start (the view that gets displayed when the user swipes from right to left. for explanation see https://github.com/daimajia/AndroidSwipeLayout/wiki/usage) -->
@@ -59,7 +59,7 @@
         android:layout_marginBottom="@dimen/list_item_read_later_article_content_margin_bottom"
         android:layout_marginRight="@dimen/list_item_read_later_article_content_margin_right"
         android:layout_marginEnd="@dimen/list_item_read_later_article_content_margin_right"
-        android:background="@drawable/list_item_background">
+        android:background="?attr/listItemBackground">
 
         <ImageView
             android:id="@+id/imgPreviewImage"
