@@ -12,12 +12,6 @@ apply plugin: 'testfairy'
 apply from: '../keys.gradle'
 
 
-repositories {
-    maven { url 'https://www.testfairy.com/maven' }
-    maven { url 'https://maven.fabric.io/public' }
-}
-
-
 android {
     compileSdkVersion androidCompileSdkVersion
     buildToolsVersion androidBuildToolsVersion
