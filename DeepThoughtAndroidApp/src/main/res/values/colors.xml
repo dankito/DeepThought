@@ -30,6 +30,14 @@
     <color name="editEntityActivityBackground_Light">#F0F0F0</color>
 
 
+    <color name="fabTextColor_Light">#FFFFFF</color>
+    <color name="fabTextColor_Dark">@color/fabTextColor_Light</color>
+    <color name="fabLabelBackgroundColor_Light">@color/black_semi_transparent</color>
+    <color name="fabLabelBackgroundColor_Dark">#085448</color>
+    <color name="fabShadowColor_Light">#444</color>
+    <color name="fabShadowColor_Dark">@color/fabShadowColor_Light</color>
+
+
     <!-- this is the same background color as for Snackbars -->
     <color name="context_help_background_color">#323232</color>
     <color name="context_help_text_color">#E76999</color>

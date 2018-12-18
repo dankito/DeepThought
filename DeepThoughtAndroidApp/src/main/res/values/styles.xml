@@ -22,6 +22,10 @@
         <item name="actionModeStyle">@style/ActionModeStyle</item>
         <item name="actionModeBackground">?attr/colorPrimary</item>
 
+        <item name="fabTextColor">@color/fabTextColor_Light</item>
+        <item name="fabLabelBackgroundColor">@color/fabLabelBackgroundColor_Light</item>
+        <item name="fabShadowColor">@color/fabShadowColor_Light</item>
+
         <item name="backgroundColor">@color/backgroundColor_Light</item>
 
         <item name="dialogsAndCardsBackgroundColor">@color/dialogsAndCardsBackgroundColor_Light</item>
@@ -63,6 +67,10 @@
         <item name="actionModeStyle">@style/ActionModeStyle</item>
         <item name="actionModeBackground">@color/colorPrimary_Dark</item>
 
+        <item name="fabTextColor">@color/fabTextColor_Dark</item>
+        <item name="fabLabelBackgroundColor">@color/fabLabelBackgroundColor_Dark</item>
+        <item name="fabShadowColor">@color/fabShadowColor_Dark</item>
+
         <item name="backgroundColor">@color/backgroundColor_Dark</item>
 
         <item name="dialogsAndCardsBackgroundColor">@color/dialogsAndCardsBackgroundColor_Dark</item>
@@ -102,12 +110,12 @@
 
     <style name="MenuLabelsStyle">
         <item name="android:background">@drawable/fab_label_background</item>
-        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textColor">?attr/fabTextColor</item>
         <item name="android:textSize">14sp</item>
         <item name="android:maxLines">2</item>
         <item name="android:ellipsize">end</item>
 
-        <item name="menu_shadowColor">#444</item>
+        <item name="menu_shadowColor">?attr/fabShadowColor</item>
         <item name="menu_colorNormal">?attr/colorPrimary</item>
         <item name="menu_colorPressed">?attr/colorAccent</item>
         <item name="menu_colorRipple">?attr/colorPrimaryDark</item>
@@ -117,11 +125,11 @@
     </style>
 
     <style name="MenuButtonsStyle">
-        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textColor">?attr/fabTextColor</item>
 
         <item name="fab_size">mini</item>
 
-        <item name="fab_shadowColor">#444</item>
+        <item name="fab_shadowColor">?attr/fabShadowColor</item>
         <item name="fab_colorNormal">?attr/colorAccent</item>
         <item name="fab_colorPressed">?attr/colorPrimary</item>
         <item name="fab_colorRipple">?attr/colorPrimaryDark</item>
