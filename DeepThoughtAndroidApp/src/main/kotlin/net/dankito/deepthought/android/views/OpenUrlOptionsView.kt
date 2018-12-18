@@ -13,6 +13,7 @@ import android.widget.ListView
 import android.widget.PopupWindow
 import android.widget.TextView
 import net.dankito.deepthought.android.R
+import net.dankito.utils.android.extensions.getColorForAttributeId
 import net.dankito.utils.android.extensions.isTouchInsideView
 
 
@@ -49,7 +50,7 @@ class OpenUrlOptionsView {
         }
 
         val optionsListView = ListView(context)
-        optionsListView.setBackgroundColor(Color.WHITE)
+        optionsListView.setBackgroundColor(context.getColorForAttributeId(R.attr.backgroundColor, Color.WHITE))
         optionsListView.adapter = adapter
 
         optionsListView.setOnItemClickListener { _, _, position, _ -> // for newer / non-Samsung Androids

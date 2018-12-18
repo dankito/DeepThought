@@ -1,5 +1,6 @@
 package net.dankito.deepthought.android.adapter
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -8,14 +9,15 @@ import android.widget.ImageView
 import com.daimajia.swipe.SwipeLayout
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.TagViewHolder
-import net.dankito.utils.android.extensions.setTintColor
 import net.dankito.deepthought.model.CalculatedTag
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.presenter.TagsListPresenter
 import net.dankito.deepthought.ui.tags.TagSearchResultState
+import net.dankito.utils.android.extensions.setTintColor
+import net.dankito.utils.android.extensions.getResourceIdForAttributeId
 
 
-class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectListRecyclerSwipeAdapter<Tag, TagViewHolder>() {
+class TagRecyclerAdapter(private val context: Context, private val presenter: TagsListPresenter): MultiSelectListRecyclerSwipeAdapter<Tag, TagViewHolder>() {
 
     override fun getSwipeLayoutResourceId(position: Int) = R.id.tagSwipeLayout
 
@@ -122,6 +124,6 @@ class TagRecyclerAdapter(private val presenter: TagsListPresenter): MultiSelectL
         }
     }
 
-    private fun getDefaultBackgroundColor() = R.drawable.list_item_background // TODO: make theme dependent
+    private fun getDefaultBackgroundColor() = context.getResourceIdForAttributeId(R.attr.listItemBackground, R.drawable.list_item_background)
 
 }

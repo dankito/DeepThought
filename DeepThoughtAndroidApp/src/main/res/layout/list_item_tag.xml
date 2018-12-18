@@ -72,7 +72,7 @@
             android:layout_toStartOf="@+id/imgChevronRight"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
-            android:textColor="@color/unselected_item_text_color"
+            android:textColor="?attr/unselectedItemTextColor"
             style="@android:style/TextAppearance.Medium"
         />
 

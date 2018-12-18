@@ -11,6 +11,10 @@
         <item name="colorPrimaryGradientStart">@color/colorPrimaryGradientEnd</item>
         <item name="colorPrimaryGradientEnd">@color/colorPrimaryGradientEnd</item>
 
+        <item name="header1TextColor">@color/header1TextColor_Light</item>
+        <item name="header2TextColor">@color/header2TextColor_Light</item>
+        <item name="textBodyTextColor">@color/textBodyTextColor_Light</item>
+
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
 
@@ -18,7 +22,23 @@
         <item name="actionModeStyle">@style/ActionModeStyle</item>
         <item name="actionModeBackground">?attr/colorPrimary</item>
 
+        <item name="backgroundColor">@color/backgroundColor_Light</item>
+
+        <item name="dialogsAndCardsBackgroundColor">@color/dialogsAndCardsBackgroundColor_Light</item>
+
         <item name="listItemBackground">@drawable/list_item_background</item>
+        <item name="unselectedItemTextColor">@color/unselectedItemTextColor_Light</item>
+
+        <item name="dividerColor">@color/dividerColor_Light</item>
+
+        <item name="editEntityActivityBackground">@color/editEntityActivityBackground_Light</item>
+
+        <item name="entityFieldValueTextColor">@android:color/black</item>
+
+        <item name="viewTagTextColor">@color/viewTagTextColor_Light</item>
+        <item name="viewTagBackground">@color/viewTagBackground_Light</item>
+
+        <item name="viewPdfSelectPageTextColor">?attr/header1TextColor</item>
 
         <item name="richTextEditorFullscreenOptionsBarBackground">@color/colorPrimary_50PercentAlpha</item>
         <item name="richTextEditorFullscreenOptionsBarSearchViewBackground">@color/colorPrimary</item>
@@ -32,6 +52,10 @@
         <item name="colorPrimaryGradientStart">@color/colorPrimaryGradientEnd_Dark</item>
         <item name="colorPrimaryGradientEnd">@color/colorPrimaryGradientEnd_Dark</item>
 
+        <item name="header1TextColor">@color/header1TextColor_Dark</item>
+        <item name="header2TextColor">@color/header2TextColor_Dark</item>
+        <item name="textBodyTextColor">@color/textBodyTextColor_Dark</item>
+
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
 
@@ -39,7 +63,23 @@
         <item name="actionModeStyle">@style/ActionModeStyle</item>
         <item name="actionModeBackground">@color/colorPrimary_Dark</item>
 
+        <item name="backgroundColor">@color/backgroundColor_Dark</item>
+
+        <item name="dialogsAndCardsBackgroundColor">@color/dialogsAndCardsBackgroundColor_Dark</item>
+
         <item name="listItemBackground">@drawable/list_item_background_dark</item>
+        <item name="unselectedItemTextColor">@color/unselectedItemTextColor_Dark</item>
+
+        <item name="dividerColor">@color/dividerColor_Dark</item>
+
+        <item name="editEntityActivityBackground">?attr/backgroundColor</item>
+
+        <item name="entityFieldValueTextColor">?attr/textBodyTextColor</item>
+
+        <item name="viewTagTextColor">@color/viewTagTextColor_Dark</item>
+        <item name="viewTagBackground">@color/viewTagBackground_Dark</item>
+
+        <item name="viewPdfSelectPageTextColor">?attr/header1TextColor</item>
 
         <item name="richTextEditorFullscreenOptionsBarBackground">@color/colorPrimary_50PercentAlpha_Dark</item>
         <item name="richTextEditorFullscreenOptionsBarSearchViewBackground">@color/colorPrimary_Dark</item>
@@ -69,8 +109,8 @@
 
         <item name="menu_shadowColor">#444</item>
         <item name="menu_colorNormal">?attr/colorPrimary</item>
-        <item name="menu_colorPressed">?android:attr/colorAccent</item>
-        <item name="menu_colorRipple">?android:attr/colorPrimaryDark</item>
+        <item name="menu_colorPressed">?attr/colorAccent</item>
+        <item name="menu_colorRipple">?attr/colorPrimaryDark</item>
 
         <item name="fab_showAnimation">@anim/jump_from_down</item>
         <item name="fab_hideAnimation">@anim/jump_to_down</item>
@@ -82,9 +122,9 @@
         <item name="fab_size">mini</item>
 
         <item name="fab_shadowColor">#444</item>
-        <item name="fab_colorNormal">@color/colorAccent</item>
-        <item name="fab_colorPressed">@color/colorPrimary</item>
-        <item name="fab_colorRipple">@color/colorPrimaryDark</item>
+        <item name="fab_colorNormal">?attr/colorAccent</item>
+        <item name="fab_colorPressed">?attr/colorPrimary</item>
+        <item name="fab_colorRipple">?attr/colorPrimaryDark</item>
 
         <item name="fab_showAnimation">@anim/jump_from_down</item>
         <item name="fab_hideAnimation">@anim/jump_to_down</item>
@@ -98,12 +138,12 @@
     <style name="EntityFieldName">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/entity_field_name_text_color</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
         <item name="android:textSize">12sp</item>
     </style>
 
     <style name="EntityFieldValue">
-        <item name="android:textColor">@color/entity_field_value_text_color</item>
+        <item name="android:textColor">?attr/entityFieldValueTextColor</item>
         <item name="android:textSize">13sp</item>
     </style>
 

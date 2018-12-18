@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:background="@color/edit_entity_activity_background"
+    android:background="?attr/editEntityActivityBackground"
 >
     <!-- Set focusable and focusableInTouchMode to true so that keyboard doesn't get shown on Activity start -->
 

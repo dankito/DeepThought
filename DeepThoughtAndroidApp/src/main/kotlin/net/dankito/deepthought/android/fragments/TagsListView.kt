@@ -62,9 +62,9 @@ class TagsListView : EntitiesListViewFragment<Tag>(R.menu.tag_contextual_action_
     override fun initPresenter(): IMainViewSectionPresenter {
         presenter = TagsListPresenter(this, allCalculatedTags, searchEngine, searchResultsUtil, tagService, deleteEntityService, dialogService, router)
 
-        adapter = TagRecyclerAdapter(presenter)
+        adapter = TagRecyclerAdapter(context!!, presenter)
 
-        filteredTagsAdapter = TagRecyclerAdapter(presenter)
+        filteredTagsAdapter = TagRecyclerAdapter(context!!, presenter)
         filteredTagsAdapter.itemClickListener = { listItemClicked(it) }
         presenter.tagFilterListener = { filteredTagsChanged(it) }
 

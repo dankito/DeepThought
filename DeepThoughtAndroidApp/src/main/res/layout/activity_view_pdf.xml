@@ -43,6 +43,7 @@
                 android:padding="@dimen/activity_view_pdf_button_previous_next_padding"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_navigate_before_black_48dp"
+                android:tint="?attr/viewPdfSelectPageTextColor"
                 android:enabled="false"
             />
 
@@ -55,7 +56,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textAlignment="gravity"
-                android:textColor="@color/view_pdf_select_page_text_color"
+                android:textColor="?attr/viewPdfSelectPageTextColor"
                 android:textSize="@dimen/activity_view_pdf_page_select_page_text_size"
                 android:enabled="false"
             />
@@ -70,7 +71,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textAlignment="gravity"
-                android:textColor="@color/view_pdf_select_page_text_color"
+                android:textColor="?attr/viewPdfSelectPageTextColor"
                 android:focusable="true"
                 android:textSize="@dimen/activity_view_pdf_page_select_page_text_size"
                 android:text="@string/activity_view_pdf_current_page_and_count_pages_separator"
@@ -83,7 +84,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textAlignment="gravity"
-                android:textColor="@color/view_pdf_select_page_text_color"
+                android:textColor="?attr/viewPdfSelectPageTextColor"
                 android:focusable="true"
                 android:textSize="@dimen/activity_view_pdf_page_select_page_text_size"
             />
@@ -97,6 +98,7 @@
                 android:padding="@dimen/activity_view_pdf_button_previous_next_padding"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_navigate_next_black_48dp"
+                android:tint="?attr/viewPdfSelectPageTextColor"
                 android:enabled="false"
             />
 

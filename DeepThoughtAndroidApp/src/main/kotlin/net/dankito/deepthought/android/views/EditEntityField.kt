@@ -1,6 +1,7 @@
 package net.dankito.deepthought.android.views
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
@@ -17,10 +18,7 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.view_edit_entity_field.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
-import net.dankito.utils.android.extensions.hideKeyboard
-import net.dankito.utils.android.extensions.setTextColorToColorResource
-import net.dankito.utils.android.extensions.setTintColor
-import net.dankito.utils.android.extensions.showKeyboard
+import net.dankito.utils.android.extensions.*
 import net.dankito.utils.android.ui.view.MaxHeightRecyclerView
 
 
@@ -219,7 +217,7 @@ open class EditEntityField : RelativeLayout {
         setEditTextEntityFieldValueOnUiThread(fieldValue ?: "")
 
         edtxtEntityFieldValue.setTypeface(null, Typeface.NORMAL)
-        edtxtEntityFieldValue.setTextColorToColorResource(R.color.entity_field_value_text_color)
+        edtxtEntityFieldValue.setTextColor(context.getColorForAttributeId(R.attr.entityFieldValueTextColor, Color.BLACK))
 
         originalValue = fieldValue
         updateDidValueChange(false)
@@ -229,7 +227,7 @@ open class EditEntityField : RelativeLayout {
         setEditTextEntityFieldValueOnUiThread(context.getString(onboardingTextResourceId))
 
         edtxtEntityFieldValue.setTypeface(null, Typeface.ITALIC)
-        edtxtEntityFieldValue.setTextColorToColorResource(R.color.entity_field_onboarding_text_color)
+        edtxtEntityFieldValue.setTextColorToColorResource(R.color.entity_field_onboarding_text_color) // TODO: make themeable
 
         updateDidValueChange(false)
     }

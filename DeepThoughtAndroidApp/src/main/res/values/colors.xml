@@ -16,7 +16,7 @@
     <color name="colorPrimary_Dark">#212121</color>
     <color name="colorPrimary_50PercentAlpha_Dark">#57212121</color>
     <color name="colorPrimaryDark_Dark">#000000</color>
-    <color name="colorAccent_Dark">#FF9100</color>
+    <color name="colorAccent_Dark">@color/colorPrimaryDark</color>
 
     <color name="colorPrimaryGradientStart_Dark">#212121</color>
     <color name="colorPrimaryGradientEnd_Dark">#212121</color>
@@ -25,24 +25,28 @@
     <!--<color name="colorPrimary_50PercentAlpha_Dark">#22685e</color>-->
 
 
+    <color name="backgroundColor_Light">#FFFFFF</color>
+
+    <color name="editEntityActivityBackground_Light">#F0F0F0</color>
+
+
     <!-- this is the same background color as for Snackbars -->
     <color name="context_help_background_color">#323232</color>
     <color name="context_help_text_color">#E76999</color>
-
-    <color name="view_pdf_select_page_text_color">@color/header_1_text_color</color>
 
     <color name="list_item_default_background">@android:color/background_light</color>
     <color name="list_item_default_background_Dark">@android:color/background_dark</color>
     <color name="list_item_selected_background">#d2e8e5</color>
     <color name="list_item_selected_background_Dark">#9a9a9a</color>
 
+    <color name="viewTagTextColor_Light">#9A9A9A</color>
+    <color name="viewTagTextColor_Dark">#B7B7B8</color>
+    <color name="viewTagBackground_Light">#f2f2f2</color>
+    <color name="viewTagBackground_Dark">#363637</color>
+
     <color name="view_is_added_to_entity_border">#1fbb68</color>
 
-    <color name="edit_entity_activity_background">#F0F0F0</color>
-
-    <color name="entity_field_background_color">#FFFFFF</color>
-    <color name="entity_field_name_text_color">#9a9a9a</color>
-    <color name="entity_field_value_text_color">#000000</color>
+    <!-- TODO: -->
     <color name="entity_field_onboarding_text_color">@color/darker_gray</color>
     <color name="entity_field_divider_color">#E0E0E0</color>
 

@@ -3,7 +3,7 @@
 
     <item
         android:state_activated="false"
-        android:color="@color/unselected_item_text_color"
+        android:color="?android:textColorPrimaryInverse"
         />
 
     <item
