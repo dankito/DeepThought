@@ -83,7 +83,7 @@ ext {
 
     picassoVersion = '2.5.2'
 
-    fileChooserVersion = '1.1.5'
+    fileChooserVersion = '1.2.0-SNAPSHOT'
 
     pdfBoxAndroidVersion = '1.8.9.1'
 
