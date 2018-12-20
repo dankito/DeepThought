@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- the theme name used throughout the app so you can easily switch between AppThemeLight and AppThemeDark here -->
+    <style name="AppTheme" parent="AppThemeLight">
+
+    </style>
+
+    <style name="AppThemeLight" parent="DeepThoughtAppThemeLightBase">
+        <!-- adds nothing to AppThemeBase but in v21/styles.xml specific attributes for Lollipop and above are added -->
+    </style>
+
+    <style name="AppThemeDark" parent="DeepThoughtAppThemeDarkBase">
+        <!-- adds nothing to AppThemeBase but in v21/styles.xml specific attributes for Lollipop and above are added -->
+    </style>
+
+    <!-- the problem attributes from parent="" overwrite that ones from '.' derivation -> -->
+    <!-- as Light and Dark theme have different parents we have to define these properties redundantly -->
+
+    <style name="DeepThoughtAppThemeLightBase" parent="RichTextEditorAppThemeLight">
+
+        <item name="colorPrimaryGradientStart">@color/colorPrimaryGradientEnd</item>
+        <item name="colorPrimaryGradientEnd">@color/colorPrimaryGradientEnd</item>
+
+        <item name="fabTextColor">@color/fabTextColor_Light</item>
+        <item name="fabLabelBackgroundColor">@color/fabLabelBackgroundColor_Light</item>
+        <item name="fabShadowColor">@color/fabShadowColor_Light</item>
+
+        <item name="editEntityActivityBackground">@color/editEntityActivityBackground_Light</item>
+
+        <item name="entityFieldValueTextColor">@android:color/black</item>
+
+        <item name="viewTagTextColor">@color/viewTagTextColor_Light</item>
+        <item name="viewTagBackground">@color/viewTagBackground_Light</item>
+
+        <item name="viewPdfSelectPageTextColor">?attr/header1TextColor</item>
+
+        <item name="richTextEditorFullscreenOptionsBarBackground">@color/colorPrimary_50PercentAlpha</item>
+        <item name="richTextEditorFullscreenOptionsBarSearchViewBackground">@color/colorPrimary</item>
+    </style>
+
+    <style name="DeepThoughtAppThemeDarkBase" parent="RichTextEditorAppThemeDark">
+
+        <item name="colorPrimaryGradientStart">@color/colorPrimaryGradientEnd_Dark</item>
+        <item name="colorPrimaryGradientEnd">@color/colorPrimaryGradientEnd_Dark</item>
+
+        <item name="fabTextColor">@color/fabTextColor_Dark</item>
+        <item name="fabLabelBackgroundColor">@color/fabLabelBackgroundColor_Dark</item>
+        <item name="fabShadowColor">@color/fabShadowColor_Dark</item>
+
+        <item name="editEntityActivityBackground">?attr/backgroundColor</item>
+
+        <item name="entityFieldValueTextColor">?attr/textBodyTextColor</item>
+
+        <item name="viewTagTextColor">@color/viewTagTextColor_Dark</item>
+        <item name="viewTagBackground">@color/viewTagBackground_Dark</item>
+
+        <item name="viewPdfSelectPageTextColor">?attr/header1TextColor</item>
+
+        <item name="richTextEditorFullscreenOptionsBarBackground">@color/colorPrimary_50PercentAlpha_Dark</item>
+        <item name="richTextEditorFullscreenOptionsBarSearchViewBackground">@color/colorPrimary_Dark</item>
+    </style>
+
+</resources>
