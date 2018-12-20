@@ -1,5 +1,18 @@
 <resources>
 
+    <!-- the theme name used throughout the app so you can easily switch between AppThemeLightBase and AppThemeDarkBase here -->
+    <style name="AppTheme" parent="AppThemeLight">
+
+    </style>
+
+    <style name="AppThemeLight" parent="DeepThoughtAppThemeLightBase">
+        <!-- adds nothing to AppThemeBase but in v21/styles.xml specific attributes for Lollipop and above are added -->
+    </style>
+
+    <style name="AppThemeDark" parent="DeepThoughtAppThemeDarkBase">
+        <!-- adds nothing to AppThemeBase but in v21/styles.xml specific attributes for Lollipop and above are added -->
+    </style>
+
     <!-- the problem attributes from parent="" overwrite that ones from '.' derivation -> -->
     <!-- as Light and Dark theme have different parents we have to define these properties redundantly -->
 
@@ -47,18 +60,6 @@
         <item name="richTextEditorFullscreenOptionsBarSearchViewBackground">@color/colorPrimary_Dark</item>
     </style>
 
-    <style name="AppThemeLight" parent="DeepThoughtAppThemeLightBase">
-        <!-- adds nothing to AppThemeBase but in v21/styles.xml specific attributes for Lollipop and above are added -->
-    </style>
-
-    <style name="AppThemeDark" parent="DeepThoughtAppThemeDarkBase">
-        <!-- adds nothing to AppThemeBase but in v21/styles.xml specific attributes for Lollipop and above are added -->
-    </style>
-
-    <!-- currently only used to easily switch between AppThemeLight and AppThemeDark -->
-    <style name="AppTheme" parent="AppThemeDark">
-
-    </style>
 
     <!-- Floating Action Button -->
 
