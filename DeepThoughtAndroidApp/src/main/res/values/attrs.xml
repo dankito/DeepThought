@@ -6,18 +6,9 @@
         <attr name="colorPrimaryGradientStart" format="reference"/>
         <attr name="colorPrimaryGradientEnd" format="reference"/>
 
-        <attr name="header1TextColor" format="reference"/>
-        <attr name="header2TextColor" format="reference"/>
-
-        <attr name="textBodyTextColor" format="reference"/>
-
         <attr name="fabTextColor" format="reference"/>
         <attr name="fabLabelBackgroundColor" format="reference"/>
         <attr name="fabShadowColor" format="reference"/>
-
-        <attr name="dividerColor" format="reference"/>
-
-        <attr name="listItemBackground" format="reference"/>
 
         <attr name="editEntityActivityBackground" format="reference"/>
 

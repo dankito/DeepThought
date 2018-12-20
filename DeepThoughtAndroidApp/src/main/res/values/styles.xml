@@ -3,37 +3,14 @@
     <!-- the problem attributes from parent="" overwrite that ones from '.' derivation -> -->
     <!-- as Light and Dark theme have different parents we have to define these properties redundantly -->
 
-    <style name="AppThemeLightBase" parent="Theme.AppCompat.Light">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="DeepThoughtAppThemeLightBase" parent="RichTextEditorAppThemeLight">
 
         <item name="colorPrimaryGradientStart">@color/colorPrimaryGradientEnd</item>
         <item name="colorPrimaryGradientEnd">@color/colorPrimaryGradientEnd</item>
 
-        <item name="header1TextColor">@color/header1TextColor_Light</item>
-        <item name="header2TextColor">@color/header2TextColor_Light</item>
-        <item name="textBodyTextColor">@color/textBodyTextColor_Light</item>
-
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-
-        <!-- defined in AndroidUtils -->
-        <item name="actionModeStyle">@style/ActionModeStyle</item>
-        <item name="actionModeBackground">?attr/colorPrimary</item>
-
         <item name="fabTextColor">@color/fabTextColor_Light</item>
         <item name="fabLabelBackgroundColor">@color/fabLabelBackgroundColor_Light</item>
         <item name="fabShadowColor">@color/fabShadowColor_Light</item>
-
-        <item name="backgroundColor">@color/backgroundColor_Light</item>
-
-        <item name="dialogsAndCardsBackgroundColor">@color/dialogsAndCardsBackgroundColor_Light</item>
-
-        <item name="listItemBackground">@drawable/list_item_background</item>
-        <item name="unselectedItemTextColor">@color/unselectedItemTextColor_Light</item>
-
-        <item name="dividerColor">@color/dividerColor_Light</item>
 
         <item name="editEntityActivityBackground">@color/editEntityActivityBackground_Light</item>
 
@@ -48,37 +25,14 @@
         <item name="richTextEditorFullscreenOptionsBarSearchViewBackground">@color/colorPrimary</item>
     </style>
 
-    <style name="AppThemeDarkBase" parent="Theme.AppCompat">
-        <item name="colorPrimary">@color/colorPrimary_Dark</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark_Dark</item>
-        <item name="colorAccent">@color/colorAccent_Dark</item>
+    <style name="DeepThoughtAppThemeDarkBase" parent="RichTextEditorAppThemeDark">
 
         <item name="colorPrimaryGradientStart">@color/colorPrimaryGradientEnd_Dark</item>
         <item name="colorPrimaryGradientEnd">@color/colorPrimaryGradientEnd_Dark</item>
 
-        <item name="header1TextColor">@color/header1TextColor_Dark</item>
-        <item name="header2TextColor">@color/header2TextColor_Dark</item>
-        <item name="textBodyTextColor">@color/textBodyTextColor_Dark</item>
-
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-
-        <!-- defined in AndroidUtils -->
-        <item name="actionModeStyle">@style/ActionModeStyle</item>
-        <item name="actionModeBackground">@color/colorPrimary_Dark</item>
-
         <item name="fabTextColor">@color/fabTextColor_Dark</item>
         <item name="fabLabelBackgroundColor">@color/fabLabelBackgroundColor_Dark</item>
         <item name="fabShadowColor">@color/fabShadowColor_Dark</item>
-
-        <item name="backgroundColor">@color/backgroundColor_Dark</item>
-
-        <item name="dialogsAndCardsBackgroundColor">@color/dialogsAndCardsBackgroundColor_Dark</item>
-
-        <item name="listItemBackground">@drawable/list_item_background_dark</item>
-        <item name="unselectedItemTextColor">@color/unselectedItemTextColor_Dark</item>
-
-        <item name="dividerColor">@color/dividerColor_Dark</item>
 
         <item name="editEntityActivityBackground">?attr/backgroundColor</item>
 
@@ -93,16 +47,16 @@
         <item name="richTextEditorFullscreenOptionsBarSearchViewBackground">@color/colorPrimary_Dark</item>
     </style>
 
-    <style name="AppThemeLight" parent="AppThemeLightBase">
+    <style name="AppThemeLight" parent="DeepThoughtAppThemeLightBase">
         <!-- adds nothing to AppThemeBase but in v21/styles.xml specific attributes for Lollipop and above are added -->
     </style>
 
-    <style name="AppThemeDark" parent="AppThemeDarkBase">
+    <style name="AppThemeDark" parent="DeepThoughtAppThemeDarkBase">
         <!-- adds nothing to AppThemeBase but in v21/styles.xml specific attributes for Lollipop and above are added -->
     </style>
 
     <!-- currently only used to easily switch between AppThemeLight and AppThemeDark -->
-    <style name="AppTheme" parent="AppThemeLight">
+    <style name="AppTheme" parent="AppThemeDark">
 
     </style>
 

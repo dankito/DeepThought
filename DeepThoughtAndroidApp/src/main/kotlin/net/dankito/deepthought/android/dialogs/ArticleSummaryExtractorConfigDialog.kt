@@ -2,6 +2,7 @@ package net.dankito.deepthought.android.dialogs
 
 import android.app.Activity
 import android.content.DialogInterface
+import android.graphics.Color
 import android.support.v7.app.AlertDialog
 import android.view.WindowManager
 import android.widget.EditText
@@ -19,8 +20,9 @@ import net.dankito.faviconextractor.FaviconComparator
 import net.dankito.faviconextractor.FaviconExtractor
 import net.dankito.faviconextractor.FaviconType
 import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractor
-import net.dankito.utils.ui.dialogs.IDialogService
+import net.dankito.utils.android.extensions.getColorForAttributeId
 import net.dankito.utils.ui.dialogs.ConfirmationDialogButton
+import net.dankito.utils.ui.dialogs.IDialogService
 import javax.inject.Inject
 
 
@@ -106,11 +108,11 @@ class ArticleSummaryExtractorConfigDialog {
 
     private fun setupButtons(activity: Activity, dialog: AlertDialog) {
         dialog.getButton(DialogInterface.BUTTON_NEGATIVE)?.let { negativeButton ->
-            negativeButton.setTextColor(activity.resources.getColor(R.color.alert_cancel_button_text_color))
+            negativeButton.setTextColor(activity.getColorForAttributeId(R.attr.alertCancelButtonTextColor, Color.DKGRAY))
         }
 
         dialog.getButton(DialogInterface.BUTTON_NEUTRAL)?.let { neutralButton ->
-            neutralButton.setTextColor(activity.resources.getColor(R.color.alert_delete_button_text_color))
+            neutralButton.setTextColor(activity.getColorForAttributeId(R.attr.alertDeleteButtonTextColor, Color.RED))
         }
     }
 
