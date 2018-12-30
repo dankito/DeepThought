@@ -89,7 +89,7 @@ ext {
 
     multiDexVersion = '1.0.1'
 
-    leakCanaryVersion = '1.5.4'
+    leakCanaryVersion = '1.6.2'
 
     testFairyVersion = '1.6'
 
