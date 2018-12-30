@@ -1,9 +1,9 @@
 package net.dankito.newsreader.article
 
-import net.dankito.utils.web.client.IWebClient
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
+import net.dankito.utils.web.client.IWebClient
 import org.jsoup.nodes.Comment
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -12,12 +12,17 @@ import org.jsoup.nodes.TextNode
 
 class SueddeutscheMagazinArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient) {
 
+    companion object {
+        private val BaseUrl = "sz-magazin.sueddeutsche.de/"
+    }
+
+
     override fun getName(): String? {
         return "SZ Magazin"
     }
 
     override fun canExtractItemFromUrl(url: String): Boolean {
-        return isHttpOrHttpsUrlFromHost(url, "sz-magazin.sueddeutsche.de/texte/")
+        return isHttpOrHttpsUrlFromHost(url, BaseUrl) && url.length > (BaseUrl.length + 10) // we cannot parse home page, but BaseUrl points to home page -> url must be longer
     }
 
 
