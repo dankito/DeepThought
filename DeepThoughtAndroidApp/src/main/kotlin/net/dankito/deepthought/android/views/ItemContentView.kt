@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.os.Parcelable
 import android.support.v4.app.ActivityCompat.invalidateOptionsMenu
 import android.util.AttributeSet
@@ -29,6 +30,7 @@ import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.richtexteditor.JavaScriptExecutorBase
 import net.dankito.richtexteditor.android.FullscreenWebView
+import net.dankito.richtexteditor.android.RichTextEditor
 import net.dankito.utils.android.animation.ShowHideViewAnimator
 import net.dankito.utils.android.OnSwipeTouchListener
 import net.dankito.utils.android.ui.view.ToolbarUtil
@@ -147,6 +149,8 @@ class ItemContentView @JvmOverloads constructor(
     private val openUrlOptionsView = OpenUrlOptionsView()
 
     private var currentWebPageLoader: WebPageLoader? = null
+
+    private val getAnchorUrlHandler = Handler()
 
 
 
@@ -710,15 +714,35 @@ class ItemContentView @JvmOverloads constructor(
      */
     private fun elementInEditorClicked(type: Int): Boolean {
         if(contentEditor.isInViewingMode && ClickableElementTypes.contains(type)) {
-            contentEditor.hitTestResult?.extra?.let { extra -> // extra contains url if clicked on a link
-                if(urlUtil.isHttpUri(extra)) {
-                    userClickedOnUrl(extra)
+            getClickedUrl(contentEditor, type)?.let { clickedUrl ->
+                if(urlUtil.isHttpUri(clickedUrl)) {
+                    userClickedOnUrl(clickedUrl)
                     // do not return true even though we handled click as otherwise text user clicked on would get selected (still have to figure out why?)
                 }
             }
         }
 
         return false
+    }
+
+    private fun getClickedUrl(contentEditor: RichTextEditor, clickedElementType: Int): String? {
+        // if user clicked on an image in an anchor, we want to get anchor's src url not image's src, but contentEditor.hitTestResult?.extra contains image's src
+        // -> get anchor's src, see e. g. https://stackoverflow.com/questions/12168039/how-to-get-link-url-in-android-webview-with-hittestresult-for-a-linked-image-an
+        if (clickedElementType == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
+            val message = getAnchorUrlHandler.obtainMessage()
+            contentEditor.requestFocusNodeHref(message)
+
+            val url = message?.data?.get("url") as? String
+            val imageSrc = message?.data?.get("src") as? String
+
+            if (url == imageSrc) { // if <img> is in an <a> element, then url != imageSrc
+                return null // if <img> is not in an <a> element, don't offer to open image in other application
+            }
+
+            return url
+        }
+
+        return contentEditor.hitTestResult?.extra // extra contains url if clicked on a link
     }
 
     private fun userClickedOnUrl(url: String) {
