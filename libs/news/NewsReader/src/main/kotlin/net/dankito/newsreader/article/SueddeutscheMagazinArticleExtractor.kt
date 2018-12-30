@@ -8,12 +8,17 @@ import org.jsoup.nodes.Comment
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class SueddeutscheMagazinArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient) {
 
     companion object {
         private val BaseUrl = "sz-magazin.sueddeutsche.de/"
+
+        private val SueddeutscheMagazinDateFormat: DateFormat = SimpleDateFormat("dd. MMM yyyy")
     }
 
 
@@ -27,17 +32,13 @@ class SueddeutscheMagazinArticleExtractor(webClient: IWebClient) : ArticleExtrac
 
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
-        val sourceAndSummary = extractSourceAndSummary(document, url)
+        document.body().select("article").firstOrNull()?.let { articleElement ->
+            val sourceAndSummary = extractSourceAndSummary(articleElement, url)
 
-        document.body().select(".content").first()?.let { contentElement ->
-
-            contentElement.select(".maincontent").first()?.let { mainContent ->
+            articleElement.select("main > .articlemain__inner").first()?.let { mainContent ->
                 val item = Item((sourceAndSummary?.second ?: "") + extractContent(mainContent))
 
                 val source = sourceAndSummary?.first
-                mainContent.select(".text-image-container img, .img-text-fullwidth-container img").first()?.let {
-                    source?.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
-                }
 
                 extractionResult.setExtractedContent(item, source)
             }
@@ -48,6 +49,8 @@ class SueddeutscheMagazinArticleExtractor(webClient: IWebClient) : ArticleExtrac
         mainContent.select("script, #sticky-sharingbar-container, #mehrtexte, .adbox, .ad-label, #article-authorbox, #szm-footer, #footerende").remove()
 
         removeWhiteSpaceAtEndOfArticle(mainContent)
+
+        loadLazyLoadingElements(mainContent)
 
         return mainContent.html()
     }
@@ -82,21 +85,30 @@ class SueddeutscheMagazinArticleExtractor(webClient: IWebClient) : ArticleExtrac
     }
 
 
-    private fun extractSourceAndSummary(document: Document, siteUrl: String): Pair<Source, String?>? {
+    private fun extractSourceAndSummary(articleElement: Element, siteUrl: String): Pair<Source, String?>? {
         var source: Source? = null
         var summary: String? = null
 
-        document.body().select("#artikelhead").first()?.let { articleHeader ->
-            articleHeader.select(".vorspann").first()?.let { vorspanElement ->
-                vorspanElement.select("h1").first()?.let { titleElement ->
-                    source = Source(titleElement.text(), siteUrl)
-                    titleElement.remove()
-                    vorspanElement.select(".autor").remove()
-                    summary = convertNonBreakableSpans(vorspanElement.outerHtml())
+        articleElement.select("header").firstOrNull()?.let { headerElement ->
+            headerElement.select(".articleheader__textsection").firstOrNull()?.let { textSectionElement ->
+                textSectionElement.select("h1").first()?.let { titleElement ->
+                    source = Source(titleElement.text().trim(), siteUrl)
+
+                    textSectionElement.select(".subline, .articleheader__subline text__large--italic").firstOrNull()?.let { summaryElement ->
+                        summary = "<p>" + convertNonBreakableSpans(summaryElement.text().trim()) + "</p>"
+                    }
                 }
             }
 
-            extractSubTitleAndPublishingDate(articleHeader, source)
+            headerElement.select(".articleheader__mediasection").firstOrNull()?.let { mediaSectionElement ->
+                mediaSectionElement.select("figure img").firstOrNull()?.let {
+                    val previewImageUrl = if (it.hasAttr("data-src")) it.attr("data-src") else it.attr("src")
+
+                    source?.previewImageUrl = makeLinkAbsolute(previewImageUrl, siteUrl)
+                }
+            }
+
+            extractSubTitleAndPublishingDate(headerElement, source)
         }
 
         source?.let { source ->
@@ -106,19 +118,25 @@ class SueddeutscheMagazinArticleExtractor(webClient: IWebClient) : ArticleExtrac
         return null
     }
 
-    private fun extractSubTitleAndPublishingDate(articleHeader: Element, source: Source?): Unit? {
-        return articleHeader.select(".klassifizierung").first()?.let { classificationElement ->
-            classificationElement.select(".label").first()?.let { labelElement ->
-                source?.subTitle = labelElement.text()
+    private fun extractSubTitleAndPublishingDate(articleHeader: Element, source: Source?) {
+        articleHeader.select(".articleheader__metabar").first()?.let { metabarElement ->
+            metabarElement.select(".metabar__item--leadtag > a")?.firstOrNull()?.let { subTitleElement ->
+                source?.subTitle = subTitleElement.text().trim()
+            }
 
-                classificationElement.select("a.heft").first()?.let {
-                    source?.issue = it.text().replace("Heft", "").trim()
-                }
-                if (labelElement.nextElementSibling() != null) {
-                    source?.issue = labelElement.nextElementSibling().text()
-                }
+            metabarElement.select(".metabar__item--date").firstOrNull()?.let { dateElement ->
+                val dateString = dateElement.text().trim()
+                source?.setPublishingDate(parseSueddeutscheMagazinDate(dateString), dateString)
+            }
+
+            metabarElement.select(".metabar__item--issue > a > span").firstOrNull()?.let { issueElement ->
+                source?.issue = issueElement.text().trim()
             }
         }
+    }
+
+    private fun parseSueddeutscheMagazinDate(dateString: String): Date? {
+        return parseDateString(dateString, SueddeutscheMagazinDateFormat)
     }
 
 }
