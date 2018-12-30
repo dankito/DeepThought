@@ -72,7 +72,7 @@ class EditItemExtractionResultActivity : EditItemActivityBase() {
 
         saveItemForLaterReading { successful ->
             if(successful) {
-                runOnUiThread { closeDialog() }
+                closeDialog()
             }
             else {
                 mnSaveItem?.isEnabled = true
@@ -82,18 +82,22 @@ class EditItemExtractionResultActivity : EditItemActivityBase() {
     }
 
     private fun saveItemForLaterReading(callback: (Boolean) -> Unit) {
-        val content = itemContentView.currentValue
-        val summary = lytSummaryPreview.getCurrentFieldValue()
+        itemContentView.getCurrentHtmlAsync { content ->
+            val summary = lytSummaryPreview.getCurrentFieldValue()
 
-        updateItem(itemExtractionResult.item, content, summary)
-        itemExtractionResult.source = updateSource()
-        itemExtractionResult.series = lytSourcePreview.series
-        itemExtractionResult.tags = tagsOnItem
-        itemExtractionResult.files = lytFilesPreview.getEditedFiles().toMutableList()
+            updateItem(itemExtractionResult.item, content, summary)
+            itemExtractionResult.source = updateSource()
+            itemExtractionResult.series = lytSourcePreview.series
+            itemExtractionResult.tags = tagsOnItem
+            itemExtractionResult.files = lytFilesPreview.getEditedFiles().toMutableList()
 
-        presenter.saveItemExtractionResultForLaterReading(itemExtractionResult)
-        setActivityResult(EditItemActivityResult(didSaveForLaterReading = true, savedItem = itemExtractionResult.item))
-        callback(true)
+            presenter.saveItemExtractionResultForLaterReading(itemExtractionResult)
+
+            runOnUiThread {
+                setActivityResult(EditItemActivityResult(didSaveForLaterReading = true, savedItem = itemExtractionResult.item))
+                callback(true)
+            }
+        }
     }
 
 }
