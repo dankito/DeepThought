@@ -120,9 +120,10 @@ class SueddeutscheMagazinArticleExtractor(webClient: IWebClient) : ArticleExtrac
 
     private fun extractSubTitleAndPublishingDate(articleHeader: Element, source: Source?) {
         articleHeader.select(".articleheader__metabar").first()?.let { metabarElement ->
-            metabarElement.select(".metabar__item--leadtag > a")?.firstOrNull()?.let { subTitleElement ->
-                source?.subTitle = subTitleElement.text().trim()
-            }
+            // sub title is in most cases useless
+//            metabarElement.select(".metabar__item--leadtag > a")?.firstOrNull()?.let { subTitleElement ->
+//                source?.subTitle = subTitleElement.text().trim()
+//            }
 
             metabarElement.select(".metabar__item--date").firstOrNull()?.let { dateElement ->
                 val dateString = dateElement.text().trim()
