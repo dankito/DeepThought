@@ -46,7 +46,7 @@ class SueddeutscheMagazinArticleExtractor(webClient: IWebClient) : ArticleExtrac
     }
 
     private fun extractContent(mainContent: Element): String {
-        mainContent.select("script, #sticky-sharingbar-container, #mehrtexte, .adbox, .ad-label, #article-authorbox, #szm-footer, #footerende").remove()
+        mainContent.select("script, #sticky-sharingbar-container, #mehrtexte, .web-teaser__logo, .ad, .adbox, .ad-label, #article-authorbox, #szm-footer, #footerende").remove()
 
         removeWhiteSpaceAtEndOfArticle(mainContent)
 
