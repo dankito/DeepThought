@@ -707,7 +707,8 @@ class ItemContentView @JvmOverloads constructor(
      * Don't know why webViewClient doesn't receive clicks on urls anymore, so handling them manually
      */
     private fun elementInEditorClicked(type: Int): Boolean {
-        if(contentEditor.isInViewingMode && (type == WebView.HitTestResult.SRC_ANCHOR_TYPE || type == WebView.HitTestResult.ANCHOR_TYPE)) {
+        if(contentEditor.isInViewingMode &&
+                (type == WebView.HitTestResult.SRC_ANCHOR_TYPE || type == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE || type == WebView.HitTestResult.ANCHOR_TYPE)) {
             contentEditor.hitTestResult?.extra?.let { extra -> // extra contains url if clicked on a link
                 if(urlUtil.isHttpUri(extra)) {
                     userClickedOnUrl(extra)
