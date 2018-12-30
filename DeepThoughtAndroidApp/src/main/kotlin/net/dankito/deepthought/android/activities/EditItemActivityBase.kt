@@ -700,9 +700,10 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
     private fun shareItemContent() {
         itemContentView.getCurrentHtmlAsync { content ->
             val currentSource = lytSourcePreview.source
+            val editedSourceTitle = lytSourcePreview.getEditedValue() ?: lytSourcePreview.getCurrentFieldValue()
 
             presenter.shareItem(Item(content, lytSummaryPreview.getCurrentFieldValue()), tagsOnItem,
-                    Source(lytSourcePreview.getCurrentFieldValue(), currentSource?.url ?: "", currentSource?.publishingDate, currentSource?.subTitle), lytSourcePreview.series)
+                    Source(editedSourceTitle, currentSource?.url ?: "", currentSource?.publishingDate, currentSource?.subTitle), lytSourcePreview.series)
         }
     }
 
