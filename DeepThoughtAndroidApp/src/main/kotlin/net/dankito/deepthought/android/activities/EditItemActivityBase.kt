@@ -698,10 +698,12 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
     }
 
     private fun shareItemContent() {
-        val currentSource = lytSourcePreview.source
+        itemContentView.getCurrentHtmlAsync { content ->
+            val currentSource = lytSourcePreview.source
 
-        presenter.shareItem(Item(itemContentView.currentValue, lytSummaryPreview.getCurrentFieldValue()), tagsOnItem,
-                Source(lytSourcePreview.getCurrentFieldValue(), currentSource?.url ?: "", currentSource?.publishingDate, currentSource?.subTitle), lytSourcePreview.series)
+            presenter.shareItem(Item(content, lytSummaryPreview.getCurrentFieldValue()), tagsOnItem,
+                    Source(lytSourcePreview.getCurrentFieldValue(), currentSource?.url ?: "", currentSource?.publishingDate, currentSource?.subTitle), lytSourcePreview.series)
+        }
     }
 
 
