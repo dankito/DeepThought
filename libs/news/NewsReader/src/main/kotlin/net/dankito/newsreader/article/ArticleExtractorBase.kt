@@ -12,6 +12,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
+import java.text.DateFormat
 import java.util.*
 import java.util.regex.Pattern
 import kotlin.collections.ArrayList
@@ -183,6 +184,15 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
 
     protected fun startsWithHttpOrHttps(hostAndPath: String): Boolean {
         return StartsWithHttpOrHttpsMatcher.matcher(hostAndPath).find()
+    }
+
+
+    protected open fun parseDateString(dateString: String, dateFormat: DateFormat) : Date? {
+        try {
+            return dateFormat.parse(dateString)
+        } catch(e: Exception) { log.info("Could not parse date string '$dateString' with DateFormat $dateFormat") }
+
+        return null
     }
 
 }

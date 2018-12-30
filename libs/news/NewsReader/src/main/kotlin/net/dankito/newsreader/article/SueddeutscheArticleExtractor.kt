@@ -305,11 +305,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
     private fun parseSueddeutscheDateString(dateString: String) : Date? {
-        try {
-            return SueddeutscheHeaderDateFormat.parse(dateString)
-        } catch(ignored: Exception) { }
-
-        return null
+        return parseDateString(dateString, SueddeutscheHeaderDateFormat)
     }
 
 }
