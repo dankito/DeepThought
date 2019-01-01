@@ -105,16 +105,16 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
         super.loadLazyLoadingElements(articleBody)
 
-        var content = articleBody.html()
+        val content = StringBuilder(articleBody.html())
 
         siteContent.select(".topenrichment").first()?.let { topEnrichment ->
             topEnrichment.select("iframe").first()?.let { topEnrichmentIFrame ->
                 loadLazyLoadingElement(topEnrichmentIFrame)
-                content = topEnrichment.outerHtml() + content
+                content.insert(0,  topEnrichment.outerHtml())
             }
         }
 
-        return content
+        return content.toString()
     }
 
     private fun cleanArticleBody(articleBody: Element) {
