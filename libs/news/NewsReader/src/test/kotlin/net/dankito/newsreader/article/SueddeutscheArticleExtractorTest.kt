@@ -71,6 +71,15 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun extractBarTip() {
+        getAndTestArticle("https://www.sueddeutsche.de/muenchen/cafe-gartensalon-als-saesse-man-im-wohnzimmer-eines-astrid-lindgren-romans-1.3832224",
+                "Als säße man im Wohnzimmer eines Astrid-Lindgren-Romans",
+                "Das Café Gartensalon ist in vielerlei Hinsicht süß. Besonders verlockend ist die Kuchentheke.",
+                "https://media-cdn.sueddeutsche.de/image/sz.1.3832423/640x360?v=1519293595000",
+                4600, subTitle = "Café Gartensalon")
+    }
+
+    @Test
     fun ensureSurveysGetsRemoved() {
         getAndTestArticle("http://www.sueddeutsche.de/panorama/eil-bundesverfassungsgericht-fordert-drittes-geschlecht-im-geburtenregister-1.3740223",
                 "Bundesverfassungsgericht fordert drittes Geschlecht im Geburtenregister",

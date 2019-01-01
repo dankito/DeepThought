@@ -114,6 +114,11 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
             }
         }
 
+        siteContent.select("section.article-info").firstOrNull()?.let { articleInfo ->
+            articleInfo.select(".locationinfo-map").remove()
+            content.append(articleInfo.outerHtml())
+        }
+
         return content.toString()
     }
 
