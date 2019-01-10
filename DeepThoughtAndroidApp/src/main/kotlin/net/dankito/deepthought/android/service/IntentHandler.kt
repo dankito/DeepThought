@@ -2,6 +2,8 @@ package net.dankito.deepthought.android.service
 
 import android.content.Intent
 import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.Source
+import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.utils.web.UrlUtil
 
@@ -32,7 +34,8 @@ class IntentHandler(private val extractArticleHandler: ExtractArticleHandler, pr
 
     private fun handleReceivedPlainText(intent: Intent) {
         intent.getStringExtra(Intent.EXTRA_TEXT)?.let { sharedText ->
-            val trimmedText = sharedText.trim() // K9 Mail sometimes add empty lines at the end
+            val trimmedText = sharedText.trim() // K9 Mail sometimes adds empty lines at the end
+
             if(urlUtil.isHttpUri(trimmedText)) {
                 extractArticleHandler.extractAndShowArticleUserDidSeeBefore(trimmedText)
             }
@@ -49,12 +52,15 @@ class IntentHandler(private val extractArticleHandler: ExtractArticleHandler, pr
     }
 
     private fun handleReceivedText(intent: Intent, sharedText: String) {
-        var abstractPlain: String? = intent.getStringExtra(Intent.EXTRA_SUBJECT) // e.g. Firefox also sends Page Title // TODO: shouldn't it then be used as source title?
-        if(abstractPlain == null && intent.hasExtra(Intent.EXTRA_TITLE)) {
-            abstractPlain = intent.getStringExtra(Intent.EXTRA_TITLE)
+        var sourceTitle: String? = intent.getStringExtra(Intent.EXTRA_SUBJECT) // e.g. Firefox also sends Page Title // TODO: shouldn't it then be used as source title?
+        if(sourceTitle == null && intent.hasExtra(Intent.EXTRA_TITLE)) {
+            sourceTitle = intent.getStringExtra(Intent.EXTRA_TITLE)
         }
 
-        router.showEditItemView(Item("<p>$sharedText</p>", abstractPlain ?: ""))
+        val source = if (sourceTitle != null) Source(sourceTitle) else null
+        val extractionResult = ItemExtractionResult(Item("<p>$sharedText</p>"), source, couldExtractContent = true)
+
+        router.showEditItemView(extractionResult)
     }
 
 
