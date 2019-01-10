@@ -35,9 +35,13 @@ class IntentHandler(private val extractArticleHandler: ExtractArticleHandler, pr
     private fun handleReceivedPlainText(intent: Intent) {
         intent.getStringExtra(Intent.EXTRA_TEXT)?.let { sharedText ->
             val trimmedText = sharedText.trim() // K9 Mail sometimes adds empty lines at the end
+            val extractedUrl = urlUtil.extractHttpUri(trimmedText) // some app like New York Times and SZ send article title and uri in EXTRA_TEXT -> extract article uri
 
             if(urlUtil.isHttpUri(trimmedText)) {
                 extractArticleHandler.extractAndShowArticleUserDidSeeBefore(trimmedText)
+            }
+            else if(extractedUrl != null && urlUtil.isHttpUri(extractedUrl)) {
+                extractArticleHandler.extractAndShowArticleUserDidSeeBefore(extractedUrl)
             }
             else {
                 handleReceivedText(intent, sharedText)
