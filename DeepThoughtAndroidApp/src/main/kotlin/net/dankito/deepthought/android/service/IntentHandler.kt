@@ -40,7 +40,8 @@ class IntentHandler(private val extractArticleHandler: ExtractArticleHandler, pr
             if(urlUtil.isHttpUri(trimmedText)) {
                 extractArticleHandler.extractAndShowArticleUserDidSeeBefore(trimmedText)
             }
-            else if(extractedUrl != null && urlUtil.isHttpUri(extractedUrl)) {
+            else if(extractedUrl != null && urlUtil.isHttpUri(extractedUrl) &&
+                    trimmedText.endsWith(extractedUrl) && (trimmedText.length - extractedUrl.length < 100)) { // check if shared text has structure <article title> <article url>
                 extractArticleHandler.extractAndShowArticleUserDidSeeBefore(extractedUrl)
             }
             else {
