@@ -50,6 +50,8 @@ interface AppComponent : CommonComponent {
 
     fun inject(mainActivity: MainActivity)
 
+    fun inject(intentReceiverActivity: IntentReceiverActivity)
+
     fun inject(appInitializer: AndroidAppInitializer)
 
     fun inject(communicationManagerStarter: CommunicationManagerStarter)

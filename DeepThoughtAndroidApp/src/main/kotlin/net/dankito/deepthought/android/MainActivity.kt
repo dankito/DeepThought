@@ -54,9 +54,6 @@ class MainActivity : BaseActivity() {
     protected lateinit var router: IRouter
 
     @Inject
-    protected lateinit var urlUtil: UrlUtil
-
-    @Inject
     protected lateinit var eventBus: IEventBus
 
     @Inject
@@ -64,9 +61,6 @@ class MainActivity : BaseActivity() {
 
     @Inject
     protected lateinit var summaryExtractorManager: ArticleSummaryExtractorConfigManager
-
-    @Inject
-    protected lateinit var extractArticleHandler: ExtractArticleHandler
 
 
     init {
@@ -82,12 +76,6 @@ class MainActivity : BaseActivity() {
         setupUI()
 
         dataManager.addInitializationListener { initializedDataManager() }
-
-        handleIntent(intent)
-    }
-
-    override fun onNewIntent(intent: Intent) {
-        handleIntent(intent)
     }
 
 
@@ -262,15 +250,6 @@ class MainActivity : BaseActivity() {
         val id = parameterHolder.setParameters(parameters)
 
         intent.putExtra(BaseActivity.ParametersId, id)
-    }
-
-
-    private fun handleIntent(intent: Intent?) {
-        if(intent == null) {
-            return
-        }
-
-        IntentHandler(extractArticleHandler, router, urlUtil).handle(intent)
     }
 
 }
