@@ -408,6 +408,7 @@ abstract class IndexWriterAndSearcher<TEntity : BaseEntity>(val entityService: E
                 val (fieldName, order, type) = sortOptions[i]
 
                 if(type == SortField.Type.STRING || type == SortField.Type.STRING_VAL) { // TODO: only use one CorrectStringComparatorSource() instance?
+                    // TODO: check if this implementation is correct, doesn't work for stored field FieldName.ItemSourcePreviewForSorting if only summary got indexed
                     sortFields[i] = SortField(fieldName, CorrectStringComparatorSource(), order === SortOrder.Descending)
                 }
                 else {

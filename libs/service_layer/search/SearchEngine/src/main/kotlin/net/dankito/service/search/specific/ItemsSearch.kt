@@ -4,6 +4,7 @@ package net.dankito.service.search.specific
 import net.dankito.deepthought.model.*
 import net.dankito.service.search.Search
 import net.dankito.service.search.SearchWithCollectionResult
+import net.dankito.service.search.util.SortOption
 
 
 class ItemsSearch(searchTerm: String = Search.EmptySearchTerm,
@@ -14,6 +15,7 @@ class ItemsSearch(searchTerm: String = Search.EmptySearchTerm,
                   val itemsMustHaveTheseTags: Collection<Tag> = mutableListOf(),
                   val itemsMustHaveThisSource: Source? = null, val itemsMustHaveThisSeries: Series? = null,
                   val itemsMustHaveTheseFiles: Collection<FileLink> = mutableListOf(),
+                  val sortOptions: List<SortOption> = emptyList(),
                   completedListener: (List<Item>) -> Unit) : SearchWithCollectionResult<Item>(searchTerm, completedListener) {
 
     fun isSearchingForItemIds(): Boolean {

@@ -39,6 +39,9 @@ object FieldName {
     val ItemNotes = "notes"
     val ItemNoNotes = "no_notes"
 
+    val ItemPreviewForSorting = "item_preview_for_sorting"
+    val ItemSourcePreviewForSorting = "item_source_preview_for_sorting"
+
 
     /*      Tags      */
 

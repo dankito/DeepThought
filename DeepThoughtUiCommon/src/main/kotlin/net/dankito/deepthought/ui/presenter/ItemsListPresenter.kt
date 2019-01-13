@@ -10,6 +10,7 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
 import net.dankito.service.search.specific.ItemsSearch
+import net.dankito.service.search.util.SortOption
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IClipboardService
 import net.engio.mbassy.listener.Handler
@@ -30,6 +31,8 @@ class ItemsListPresenter(private val itemsListView: IItemsListView, private val 
     private var lastSearchTermProperty = Search.EmptySearchTerm
 
     private var lastItemsSearch: ItemsSearch? = null
+
+    private val itemsSortOptions: MutableList<SortOption> = mutableListOf()
 
 
     @Inject
@@ -73,11 +76,11 @@ class ItemsListPresenter(private val itemsListView: IItemsListView, private val 
     }
 
     fun searchItems(searchTerm: String, searchInContent: Boolean = true, searchInSummary: Boolean = true, searchInSource: Boolean = true, searchInTags: Boolean = true,
-                    searchInFiles: Boolean = true, searchCompleted: ((List<Item>) -> Unit)? = null) {
+                    searchInFiles: Boolean = true, sortOrder: List<SortOption> = itemsSortOptions, searchCompleted: ((List<Item>) -> Unit)? = null) {
         lastItemsSearch?.interrupt()
         lastSearchTermProperty = searchTerm
 
-        val itemsSearch = createItemsSearch(searchTerm, searchInContent, searchInSummary, searchInTags, searchInSource, searchInFiles) { result ->
+        val itemsSearch = createItemsSearch(searchTerm, searchInContent, searchInSummary, searchInTags, searchInSource, searchInFiles, sortOrder) { result ->
             itemsListView.showEntities(result)
 
             searchCompleted?.invoke(result)
@@ -88,7 +91,7 @@ class ItemsListPresenter(private val itemsListView: IItemsListView, private val 
     }
 
     private fun createItemsSearch(searchTerm: String, searchInContent: Boolean, searchInSummary: Boolean, searchInTags: Boolean, searchInSource: Boolean,
-                                  searchInFiles: Boolean, searchCompleted: (List<Item>) -> Unit): ItemsSearch {
+                                  searchInFiles: Boolean, sortOrder: List<SortOption>, searchCompleted: (List<Item>) -> Unit): ItemsSearch {
         var searchOnlyItemsWithoutTags = false
         val itemsMustHaveTheseTags = ArrayList(tagsFilter)
 
@@ -100,7 +103,7 @@ class ItemsListPresenter(private val itemsListView: IItemsListView, private val 
         }
 
         return ItemsSearch(searchTerm, searchInContent, searchInSummary, searchInTags, searchInSource, searchInFiles, searchOnlyItemsWithoutTags,
-                itemsMustHaveTheseTags, itemsMustHaveThisSource = selectedSource, completedListener = searchCompleted)
+                itemsMustHaveTheseTags, itemsMustHaveThisSource = selectedSource, sortOptions = sortOrder, completedListener = searchCompleted)
     }
 
     override fun getLastSearchTerm(): String {

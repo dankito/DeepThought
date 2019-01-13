@@ -35,11 +35,17 @@ import net.dankito.utils.settings.LocalSettingsStoreBase
 import net.dankito.utils.version.Versions
 import org.junit.After
 import java.io.File
+import java.text.SimpleDateFormat
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
 
 abstract class LuceneSearchEngineIntegrationTestBase {
+
+    companion object {
+        val SourcePublishingDateFormat = SimpleDateFormat("dd.MM.yyyy")
+    }
+
 
     protected val underTest: LuceneSearchEngine
 
@@ -151,8 +157,25 @@ abstract class LuceneSearchEngineIntegrationTestBase {
     }
 
 
+    protected fun createSource(title: String, publishingDateString: String, series: Series? = null): Source {
+        return Source(title, "", SourcePublishingDateFormat.parse(publishingDateString), series = series)
+    }
+
+
     protected fun persist(item: Item) {
         itemService.persist(item)
+    }
+
+    protected fun persist(tag: Tag) {
+        tagService.persist(tag)
+    }
+
+    protected fun persist(source: Source) {
+        sourceService.persist(source)
+    }
+
+    protected fun persist(series: Series) {
+        seriesService.persist(series)
     }
 
     protected fun waitTillEntityGetsIndexed() {

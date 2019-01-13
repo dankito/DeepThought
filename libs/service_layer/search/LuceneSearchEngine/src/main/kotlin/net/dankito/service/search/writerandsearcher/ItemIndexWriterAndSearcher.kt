@@ -1,9 +1,7 @@
 package net.dankito.service.search.writerandsearcher
 
 import net.dankito.deepthought.model.Item
-import net.dankito.deepthought.model.extensions.contentPlainText
 import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
-import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.service.data.ItemService
 import net.dankito.service.data.messages.ItemChanged
 import net.dankito.service.eventbus.EventBusPriorities
@@ -11,9 +9,8 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.FieldName
 import net.dankito.service.search.FieldValue
 import net.dankito.service.search.FieldValue.NoTagsFieldValue
-import net.dankito.service.search.SortOption
-import net.dankito.service.search.SortOrder
 import net.dankito.service.search.specific.ItemsSearch
+import net.dankito.service.search.writerandsearcher.sorting.getLuceneSortOptions
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.OsHelper
 import net.engio.mbassy.listener.Handler
@@ -24,11 +21,7 @@ import org.apache.lucene.search.*
 
 
 class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool)
-    : IndexWriterAndSearcher<Item>(itemService, eventBus, osHelper, threadPool) {
-
-    companion object {
-        private val MaxItemsSearchResults = 1000000 // e.g. for AllItemsCalculatedTag all items must be returned
-    }
+    : ItemIndexWriterAndSearcherBase(itemService, eventBus, osHelper, threadPool) {
 
 
     override fun getDirectoryName(): String {
@@ -40,24 +33,19 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
     }
 
 
-    override fun addEntityFieldsToDocument(entity: Item, doc: Document) {
-        val contentPlainText = entity.contentPlainText
-        val summaryPlainText = entity.summaryPlainText
-
+    override fun addAdditionalFieldsToDocument(item: Item, contentPlainText: String, summaryPlainText: String, doc: Document) {
         doc.add(Field(FieldName.ItemSummary, summaryPlainText, TextField.TYPE_NOT_STORED))
         doc.add(Field(FieldName.ItemContent, contentPlainText, TextField.TYPE_NOT_STORED))
 
-        doc.add(LongField(FieldName.ItemIndex, entity.itemIndex, Field.Store.YES))
+        doc.add(LongField(FieldName.ItemIndex, item.itemIndex, Field.Store.YES))
 
-        doc.add(LongField(FieldName.ItemCreated, entity.createdOn.time, Field.Store.YES))
+        addTagsToDocument(item, doc)
 
-        addTagsToDocument(entity, doc)
+        addSourceToDocument(item, doc)
 
-        addSourceToDocument(entity, doc)
+        addFilesToDocument(item, doc)
 
-        addFilesToDocument(entity, doc)
-
-        defaultAnalyzer.setNextItemToBeAnalyzed(entity, contentPlainText, summaryPlainText)
+        defaultAnalyzer.setNextItemToBeAnalyzed(item, contentPlainText, summaryPlainText)
     }
 
     private fun addTagsToDocument(item: Item, doc: Document) {
@@ -109,7 +97,7 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
 
         addQueryForSearchTerm(termsToFilterFor, query, search)
 
-        executeQueryForSearchWithCollectionResult(search, query, Item::class.java, MaxItemsSearchResults, SortOption(FieldName.ItemCreated, SortOrder.Descending, SortField.Type.LONG))
+        executeQueryForSearchWithCollectionResult(search, query, Item::class.java, MaxItemsSearchResults, *search.getLuceneSortOptions())
     }
 
     private fun addQueryForOptions(search: ItemsSearch, query: BooleanQuery) {
