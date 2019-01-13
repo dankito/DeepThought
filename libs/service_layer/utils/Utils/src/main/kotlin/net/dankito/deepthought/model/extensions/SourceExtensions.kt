@@ -50,7 +50,7 @@ fun Source?.getSeriesAndPublishingDatePreview(series: Series? = null): String {
 
 val Source?.previewWithSeriesAndPublishingDate: String
     get() {
-        return getPreviewWithSeriesAndPublishingDate()
+        return getPreviewWithSeriesAndPublishingDate(this?.series)
     }
 
 fun Source?.getPreviewWithSeriesAndPublishingDate(series: Series? = null): String {
