@@ -70,14 +70,25 @@ fun Item.getItemPreviewWithSeriesAndPublishingDate(source: Source?, series: Seri
 
 val Item.sourcePreview: String
     get() {
-        var preview = source.preview
+        val preview = source.preview
 
-        if(this.hasIndication()) {
-            preview += " $indication"
-        }
-
-        return preview
+        return addIndicationIfSet(preview)
     }
+
+val Item.sourcePreviewWithSeriesAndPublishingDate: String
+    get() {
+        val preview = source.previewWithSeriesAndPublishingDate
+
+        return addIndicationIfSet(preview)
+    }
+
+private fun Item.addIndicationIfSet(preview: String): String {
+    if (this.hasIndication()) {
+        return "$preview $indication"
+    }
+
+    return preview
+}
 
 
 val Item.tagsPreview: String

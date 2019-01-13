@@ -15,4 +15,8 @@ dependencies {
         exclude group: 'com.thoughtworks.xstream', module: 'xstream'
     }
 
+
+    testCompile "junit:junit:$junitVersion"
+    testCompile "org.assertj:assertj-core:$assertJVersion"
+
 }
