@@ -84,6 +84,10 @@ val Item.sourcePreviewWithSeriesAndPublishingDate: String
 
 private fun Item.addIndicationIfSet(preview: String): String {
     if (this.hasIndication()) {
+        if(preview.isNullOrBlank()) {
+            return indication
+        }
+
         return "$preview $indication"
     }
 
