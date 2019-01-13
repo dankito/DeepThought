@@ -9,7 +9,7 @@ import net.dankito.deepthought.android.adapter.viewholder.ItemViewHolder
 import net.dankito.deepthought.android.views.TagsPreviewViewHelper
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.extensions.getItemPreviewWithSeriesAndPublishingDate
-import net.dankito.deepthought.model.extensions.preview
+import net.dankito.deepthought.model.extensions.sourcePreview
 import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.deepthought.ui.presenter.ItemsListPresenterBase
 
@@ -43,7 +43,7 @@ class ItemRecyclerAdapter(private val presenter: ItemsListPresenterBase): MultiS
     }
 
     override fun bindItemToView(viewHolder: ItemViewHolder, item: Item) {
-        var sourcePreview = item.source.preview
+        var sourcePreview = item.sourcePreview
         if(sourcePreview.isNullOrBlank() && item.summary.isNullOrBlank() == false) {
             sourcePreview = item.summaryPlainText
         }

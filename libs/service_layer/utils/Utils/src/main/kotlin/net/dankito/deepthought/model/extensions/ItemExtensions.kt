@@ -69,17 +69,13 @@ fun Item.getItemPreviewWithSeriesAndPublishingDate(source: Source?, series: Seri
 
 val Item.sourcePreview: String
     get() {
-        this.source?.let { source ->
-            var preview = source.title
+        var preview = source.preview
 
-            if(source.subTitle.isNullOrBlank() == false) {
-                preview = source.subTitle + ": " + preview
-            }
-
-            return preview
+        if(this.hasIndication()) {
+            preview += " $indication"
         }
 
-        return ""
+        return preview
     }
 
 

@@ -3,7 +3,7 @@ package net.dankito.deepthought.ui.presenter
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.*
-import net.dankito.deepthought.model.extensions.preview
+import net.dankito.deepthought.model.extensions.sourcePreview
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.data.ReadLaterArticleService
@@ -30,7 +30,7 @@ class EditItemPresenter(private val itemPersister: ItemPersister, private val re
 
     fun saveItemExtractionResultForLaterReading(extractionResult: ItemExtractionResult) {
         readLaterArticleService.persist(ReadLaterArticle(extractionResult, "",
-                extractionResult.source.preview, extractionResult.source?.url, extractionResult.source?.previewImageUrl)) // articlePreview gets set in ReadLaterArticleService
+                extractionResult.item.sourcePreview, extractionResult.source?.url, extractionResult.source?.previewImageUrl)) // articlePreview gets set in ReadLaterArticleService
     }
 
     fun deleteReadLaterArticle(article: ReadLaterArticle) {
