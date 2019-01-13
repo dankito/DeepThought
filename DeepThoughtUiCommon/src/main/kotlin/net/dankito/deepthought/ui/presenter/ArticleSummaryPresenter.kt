@@ -1,6 +1,5 @@
 package net.dankito.deepthought.ui.presenter
 
-import net.dankito.utils.AsyncResult
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.extensions.extractor
@@ -12,6 +11,7 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.service.data.ReadLaterArticleService
+import net.dankito.utils.AsyncResult
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IClipboardService
@@ -80,7 +80,7 @@ class ArticleSummaryPresenter(protected val itemPersister: ItemPersister, protec
         }
     }
 
-    open fun getAndShowArticle(item: ArticleSummaryItem, callback: ((Boolean) -> Unit)? = null) {
+    fun getAndShowArticle(item: ArticleSummaryItem, callback: ((Boolean) -> Unit)? = null) {
         articleExtractorManager.extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(item) { result ->
             result.result?.let { showArticle(it) }
 
