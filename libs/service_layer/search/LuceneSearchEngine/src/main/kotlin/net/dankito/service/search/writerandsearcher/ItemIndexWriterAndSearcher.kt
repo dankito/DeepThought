@@ -51,38 +51,47 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
 
         doc.add(LongField(FieldName.ItemCreated, entity.createdOn.time, Field.Store.YES))
 
-        if(entity.hasTags()) {
-            for(tag in entity.tags.filterNotNull().filter { it.id != null }) {
+        addTagsToDocument(entity, doc)
+
+        addSourceToDocument(entity, doc)
+
+        addFilesToDocument(entity, doc)
+
+        defaultAnalyzer.setNextItemToBeAnalyzed(entity, contentPlainText, summaryPlainText)
+    }
+
+    private fun addTagsToDocument(entity: Item, doc: Document) {
+        if (entity.hasTags()) {
+            for (tag in entity.tags.filterNotNull().filter { it.id != null }) {
                 doc.add(StringField(FieldName.ItemTagsIds, tag.id, Field.Store.YES))
                 doc.add(Field(FieldName.ItemTagsNames, tag.name, TextField.TYPE_NOT_STORED))
             }
+        } else {
+            doc.add(StringField(FieldName.ItemNoTags, NoTagsFieldValue, Field.Store.NO))
         }
-        else {
-            doc.add(StringField(FieldName.ItemNoTags, FieldValue.NoTagsFieldValue, Field.Store.NO))
-        }
+    }
 
+    private fun addSourceToDocument(entity: Item, doc: Document) {
         val source = entity.source
-        if(source != null) {
+        if (source != null) {
             doc.add(Field(FieldName.ItemSource, source.previewWithSeriesAndPublishingDate, TextField.TYPE_NOT_STORED))
             doc.add(StringField(FieldName.ItemSourceId, source.id, Field.Store.YES))
 
             source.series?.let { doc.add(StringField(FieldName.ItemSourceSeriesId, it.id, Field.Store.YES)) }
-        }
-        else {
+        } else {
             doc.add(StringField(FieldName.ItemNoSource, FieldValue.NoSourceFieldValue, Field.Store.NO))
         }
+    }
 
-        if(entity.hasAttachedFiles()) {
-            for(file in entity.attachedFiles.filterNotNull().filter { it.id != null }) {
+    private fun addFilesToDocument(entity: Item, doc: Document) {
+        if (entity.hasAttachedFiles()) {
+            for (file in entity.attachedFiles.filterNotNull().filter { it.id != null }) {
                 doc.add(StringField(FieldName.ItemAttachedFilesIds, file.id, Field.Store.YES))
                 doc.add(StringField(FieldName.ItemAttachedFilesDetails, file.name.toLowerCase(), Field.Store.NO)) // TODO: which information should get stored for a File?
             }
-        }
-        else {
+        } else {
             doc.add(StringField(FieldName.ItemNoAttachedFiles, FieldValue.NoFilesFieldValue, Field.Store.NO))
         }
-
-        defaultAnalyzer.setNextItemToBeAnalyzed(entity, contentPlainText, summaryPlainText)
     }
 
 
