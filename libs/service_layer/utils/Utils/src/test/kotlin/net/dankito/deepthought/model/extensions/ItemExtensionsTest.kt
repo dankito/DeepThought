@@ -16,7 +16,7 @@ class ItemExtensionsTest {
         private const val SourceSubTitle = "SubTitle"
 
         private const val SourcePublishingDateString = "27.03.88"
-        private val SourcePublishingDateFormat = SimpleDateFormat("dd.MM.yy")
+        private val SourcePublishingDateFormat = SimpleDateFormat("dd.MM.yy") // in preview publishing date gets only displayed with short date format -> only to digits for year
         private val SourcePublishingDate = SourcePublishingDateFormat.parse(SourcePublishingDateString)
 
         private const val SeriesTitle = "Series"
