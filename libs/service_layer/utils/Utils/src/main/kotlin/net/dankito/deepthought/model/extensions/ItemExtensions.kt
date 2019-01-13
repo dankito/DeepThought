@@ -32,21 +32,22 @@ val Item.itemPreview: String
 
 
 fun Item.getItemPreview(includeItemSummary: Boolean): String {
-    var preview = if(includeItemSummary) this.summaryPlainText else ""
+    val preview = StringBuilder( if(includeItemSummary) this.summaryPlainText else "" )
 
     if(preview.length < MaxPreviewLength) {
         if(preview.isNotEmpty()) {
-            preview += " - "
+            preview.append(" - ")
         }
 
-        preview += this.contentPlainText
+        preview.append(this.contentPlainText)
     }
 
     if(preview.length > MaxPreviewLength) {
-        preview = preview.substring(0, MaxPreviewLength) + "..."
+        preview.setLength(MaxPreviewLength)
+        preview.append("...")
     }
 
-    return preview
+    return preview.toString()
 }
 
 
