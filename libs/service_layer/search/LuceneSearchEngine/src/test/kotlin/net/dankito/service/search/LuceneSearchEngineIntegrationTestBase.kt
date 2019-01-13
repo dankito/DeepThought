@@ -11,6 +11,7 @@ import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.di.DaggerBaseComponent
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.files.MimeTypeService
+import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.enums.OsType
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.service.data.DefaultDataInitializer
@@ -22,6 +23,8 @@ import net.dankito.service.data.*
 import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
+import net.dankito.service.search.specific.ItemsSearch
+import net.dankito.service.search.util.SortOption
 import net.dankito.utils.OsHelper
 import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.utils.ThreadPool
@@ -34,6 +37,7 @@ import org.junit.After
 import java.io.File
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicReference
 
 abstract class LuceneSearchEngineIntegrationTestBase {
 
@@ -147,10 +151,40 @@ abstract class LuceneSearchEngineIntegrationTestBase {
     }
 
 
+    protected fun persist(item: Item) {
+        itemService.persist(item)
+    }
+
     protected fun waitTillEntityGetsIndexed() {
         try {
             Thread.sleep(1000)
         } catch (ignored: Exception) { }
+    }
+
+
+    protected fun searchItems(searchTerm: String, searchInContent: Boolean = true, searchInSummary: Boolean = true,
+                              searchInTags: Boolean = true,
+                              searchInSource: Boolean = true, searchInFiles: Boolean = true,
+                              searchOnlyItemsWithoutTags: Boolean = false,
+                              itemsMustHaveTheseTags: Collection<Tag> = mutableListOf(),
+                              itemsMustHaveThisSource: Source? = null, itemsMustHaveThisSeries: Series? = null,
+                              itemsMustHaveTheseFiles: Collection<FileLink> = mutableListOf(),
+                              sortOptions: List<SortOption> = emptyList()): List<Item>? {
+        val resultHolder = AtomicReference<List<Item>?>(null)
+        val waitForResultLatch = CountDownLatch(1)
+
+        underTest.searchItems(ItemsSearch(searchTerm, searchInContent, searchInSummary, searchInTags, searchInSource, searchInFiles, searchOnlyItemsWithoutTags,
+                itemsMustHaveTheseTags, itemsMustHaveThisSource, itemsMustHaveThisSeries, itemsMustHaveTheseFiles, sortOptions) { result ->
+            resultHolder.set(result)
+
+            waitForResultLatch.countDown()
+        })
+
+        try {
+            waitForResultLatch.await(4, TimeUnit.SECONDS)
+        } catch (ignored: Exception) { }
+
+        return resultHolder.get()
     }
 
 

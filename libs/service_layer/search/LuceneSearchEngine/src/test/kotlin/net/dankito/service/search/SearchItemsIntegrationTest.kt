@@ -2,14 +2,10 @@ package net.dankito.service.search
 
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Item
-import net.dankito.service.search.specific.ItemsSearch
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.Assert.assertThat
 import org.junit.Test
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicReference
 
 
 class SearchItemsIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
@@ -40,22 +36,12 @@ class SearchItemsIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
 
 
     private fun getAndTestResult(testResult: Item, searchTerm: String = Search.EmptySearchTerm, searchInFiles: Boolean = false, itemsMustHaveTheseFiles: Collection<FileLink> = listOf()) {
-        val resultHolder = AtomicReference<List<Item>?>(null)
-        val waitForResultLatch = CountDownLatch(1)
-
-        underTest.searchItems(ItemsSearch(searchTerm, false, false, false, false, searchInFiles,
-                itemsMustHaveTheseFiles = itemsMustHaveTheseFiles) { result ->
-            resultHolder.set(result)
-
-            waitForResultLatch.countDown()
-        })
-
-        try { waitForResultLatch.await(4, TimeUnit.SECONDS) } catch (ignored: Exception) { }
+        val result = searchItems(searchTerm, searchInFiles = searchInFiles, itemsMustHaveTheseFiles = itemsMustHaveTheseFiles)
 
 
-        assertThat(resultHolder.get(), notNullValue())
-        assertThat(resultHolder.get()?.size, `is`(1))
-        assertThat(resultHolder.get()?.get(0), `is`(testResult))
+        assertThat(result, notNullValue())
+        assertThat(result?.size, `is`(1))
+        assertThat(result?.get(0), `is`(testResult))
     }
 
     private fun persistItemWithAttachedFile(countDummyItems: Int = 3): Pair<Item, FileLink> {
@@ -64,11 +50,11 @@ class SearchItemsIntegrationTest : LuceneSearchEngineIntegrationTestBase() {
 
         val item = Item("Test")
         item.addAttachedFile(file)
-        itemService.persist(item)
+        persist(item)
 
 
         for(i in 0 until 3) {
-            itemService.persist(Item("$i"))
+            persist(Item("$i"))
         }
 
 
