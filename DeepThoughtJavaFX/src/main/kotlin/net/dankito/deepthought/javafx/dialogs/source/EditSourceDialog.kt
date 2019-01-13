@@ -6,10 +6,10 @@ import javafx.scene.Parent
 import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
+import net.dankito.deepthought.javafx.dialogs.source.controls.EditSourcePublishingDateField
 import net.dankito.deepthought.javafx.dialogs.source.controls.EditSourceSeriesField
 import net.dankito.deepthought.javafx.service.events.EditingSourceDoneEvent
 import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
-import net.dankito.deepthought.javafx.ui.controls.EditEntityDateField
 import net.dankito.deepthought.javafx.ui.controls.EditEntityField
 import net.dankito.deepthought.javafx.ui.controls.EditEntityFilesField
 import net.dankito.deepthought.model.Series
@@ -18,6 +18,8 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditSourcePresenter
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.eventbus.IEventBus
+import net.dankito.utils.datetime.asLocalDate
+import net.dankito.utils.datetime.asUtilDate
 import net.dankito.utils.ui.IClipboardService
 import tornadofx.*
 import javax.inject.Inject
@@ -54,7 +56,7 @@ class EditSourceDialog : DialogFragment() {
 
     private val lengthField = EditEntityField(messages["edit.source.length"])
 
-    private val publishingDateField = EditEntityDateField(messages["edit.source.publishing.date"])
+    private val publishingDateField: EditSourcePublishingDateField
 
     private val webAddressField = EditEntityField(messages["edit.source.web.address"])
 
@@ -79,6 +81,8 @@ class EditSourceDialog : DialogFragment() {
         AppComponent.component.inject(this)
 
         presenter = EditSourcePresenter(router, clipboardService, deleteEntityService, sourcePersister)
+
+        publishingDateField = EditSourcePublishingDateField(presenter, source.publishingDate.asLocalDate())
     }
 
 
@@ -139,7 +143,7 @@ class EditSourceDialog : DialogFragment() {
 
         val series = updateSeries()
 
-        presenter.saveSourceAsync(source, series, null, publishingDateField.value, editFilesField.getEditedFiles()) {
+        presenter.saveSourceAsync(source, series, publishingDateField.selectedDate.asUtilDate(), publishingDateField.value, editFilesField.getEditedFiles()) {
             postResult(EditingSourceDoneEvent(true, source))
             done()
         }
