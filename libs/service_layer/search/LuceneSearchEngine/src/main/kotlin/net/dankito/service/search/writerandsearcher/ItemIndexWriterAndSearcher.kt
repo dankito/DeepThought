@@ -60,36 +60,40 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
         defaultAnalyzer.setNextItemToBeAnalyzed(entity, contentPlainText, summaryPlainText)
     }
 
-    private fun addTagsToDocument(entity: Item, doc: Document) {
-        if (entity.hasTags()) {
-            for (tag in entity.tags.filterNotNull().filter { it.id != null }) {
+    private fun addTagsToDocument(item: Item, doc: Document) {
+        if (item.hasTags()) {
+            for (tag in item.tags.filterNotNull().filter { it.id != null }) {
                 doc.add(StringField(FieldName.ItemTagsIds, tag.id, Field.Store.YES))
                 doc.add(Field(FieldName.ItemTagsNames, tag.name, TextField.TYPE_NOT_STORED))
             }
-        } else {
+        }
+        else {
             doc.add(StringField(FieldName.ItemNoTags, NoTagsFieldValue, Field.Store.NO))
         }
     }
 
-    private fun addSourceToDocument(entity: Item, doc: Document) {
-        val source = entity.source
+    private fun addSourceToDocument(item: Item, doc: Document) {
+        val source = item.source
+
         if (source != null) {
             doc.add(Field(FieldName.ItemSource, source.previewWithSeriesAndPublishingDate, TextField.TYPE_NOT_STORED))
             doc.add(StringField(FieldName.ItemSourceId, source.id, Field.Store.YES))
 
             source.series?.let { doc.add(StringField(FieldName.ItemSourceSeriesId, it.id, Field.Store.YES)) }
-        } else {
+        }
+        else {
             doc.add(StringField(FieldName.ItemNoSource, FieldValue.NoSourceFieldValue, Field.Store.NO))
         }
     }
 
-    private fun addFilesToDocument(entity: Item, doc: Document) {
-        if (entity.hasAttachedFiles()) {
-            for (file in entity.attachedFiles.filterNotNull().filter { it.id != null }) {
+    private fun addFilesToDocument(item: Item, doc: Document) {
+        if (item.hasAttachedFiles()) {
+            for (file in item.attachedFiles.filterNotNull().filter { it.id != null }) {
                 doc.add(StringField(FieldName.ItemAttachedFilesIds, file.id, Field.Store.YES))
                 doc.add(StringField(FieldName.ItemAttachedFilesDetails, file.name.toLowerCase(), Field.Store.NO)) // TODO: which information should get stored for a File?
             }
-        } else {
+        }
+        else {
             doc.add(StringField(FieldName.ItemNoAttachedFiles, FieldValue.NoFilesFieldValue, Field.Store.NO))
         }
     }
