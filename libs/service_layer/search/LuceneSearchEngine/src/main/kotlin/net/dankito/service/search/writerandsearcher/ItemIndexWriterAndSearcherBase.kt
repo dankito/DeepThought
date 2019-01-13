@@ -44,8 +44,6 @@ abstract class ItemIndexWriterAndSearcherBase(itemService: ItemService, eventBus
 
         val sourceOrAbstractPreview = (item.sourcePreviewWithSeriesAndPublishingDate + " " + summaryPlainText).ofMaxLength(MaxSourcePreviewSortLength)
         doc.add(StringField(FieldName.ItemSourcePreviewForSorting, sourceOrAbstractPreview, Field.Store.YES))
-
-        println("sourceOrAbstractPreview = '$sourceOrAbstractPreview'") // TODO: remove
     }
 
     protected open fun addAdditionalFieldsToDocument(item: Item, contentPlainText: String, summaryPlainText: String, doc: Document) {
