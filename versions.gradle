@@ -70,6 +70,8 @@ ext {
 
     mockitoKotlinVersion = '1.5.0'
 
+    assertJVersion = '3.11.1'
+
     hamcrestVersion = '1.3'
 
 

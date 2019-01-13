@@ -91,6 +91,18 @@ private fun Item.addIndicationIfSet(preview: String): String {
 }
 
 
+val Item.sourcePreviewOrSummary: String
+    get() {
+        val sourcePreview = this.sourcePreview
+
+        if(sourcePreview.isNullOrBlank() && this.summary.isNullOrBlank() == false) {
+            return this.summaryPlainText
+        }
+
+        return sourcePreview
+    }
+
+
 val Item.tagsPreview: String
     get() {
         return this.tags.toSortedString()

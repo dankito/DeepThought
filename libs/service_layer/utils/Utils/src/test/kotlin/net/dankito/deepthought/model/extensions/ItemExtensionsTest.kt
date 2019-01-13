@@ -10,6 +10,8 @@ import java.text.SimpleDateFormat
 class ItemExtensionsTest {
 
     companion object {
+        private const val Summary = "Summary"
+
         private const val SourceTitle = "Title"
         private const val SourceSubTitle = "SubTitle"
 
@@ -133,6 +135,87 @@ class ItemExtensionsTest {
 
         // then
         assertThat(result).isEqualTo(SeriesTitle + " " + SourcePublishingDateString + " " + SourceSubTitle + ": " + SourceTitle + " " + Indication)
+    }
+
+
+    @Test
+    fun sourcePreviewOrSummary_SourceWithoutSubTitle_NoIndication() {
+        // given
+        val item = Item("", Summary)
+        item.source = createSource(false)
+
+        // when
+        val result = item.sourcePreviewOrSummary
+
+        // then
+        assertThat(result).isEqualTo(SourceTitle)
+    }
+
+    @Test
+    fun sourcePreviewOrSummary_SourceWithSubTitle_NoIndication() {
+        // given
+        val item = Item("", Summary)
+        item.source = createSource(true)
+
+        // when
+        val result = item.sourcePreviewOrSummary
+
+        // then
+        assertThat(result).isEqualTo(SourceSubTitle + ": " + SourceTitle)
+    }
+
+    @Test
+    fun sourcePreviewOrSummary_SourceWithoutSubTitle_IndicationSet() {
+        // given
+        val item = Item("", Summary)
+        item.source = createSource(false)
+        item.indication = Indication
+
+        // when
+        val result = item.sourcePreviewOrSummary
+
+        // then
+        assertThat(result).isEqualTo(SourceTitle + " " + Indication)
+    }
+
+    @Test
+    fun sourcePreviewOrSummary_SourceWithSubTitle_IndicationSet() {
+        // given
+        val item = Item("", Summary)
+        item.source = createSource(true)
+        item.indication = Indication
+
+        // when
+        val result = item.sourcePreviewOrSummary
+
+        // then
+        assertThat(result).isEqualTo(SourceSubTitle + ": " + SourceTitle + " " + Indication)
+    }
+
+
+    @Test
+    fun sourcePreviewOrSummary_NoSource_NoIndication() {
+        // given
+        val item = Item("", Summary)
+
+        // when
+        val result = item.sourcePreviewOrSummary
+
+        // then
+        assertThat(result).isEqualTo(Summary)
+    }
+
+    @Test
+    fun sourcePreviewOrSummary_NoSource_IndicationSet() {
+        // given
+        val item = Item("", Summary)
+        item.indication = Indication
+
+        // when
+        val result = item.sourcePreviewOrSummary
+
+        // then
+        assertThat(result).isEqualTo(Indication)
     }
 
 
