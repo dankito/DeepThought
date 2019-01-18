@@ -55,6 +55,47 @@ class ItemIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
 
 
     @Test
+    fun sortByItemPreview_SortByContent_CaseSensitive_Ascending() {
+        sortByItemPreview_SortByContent_CaseSensitive(true)
+    }
+
+    // FIXME: CorrectStringComparatorSource doesn't work in this case, test therefore fails
+    @Test
+    fun sortByItemPreview_SortByContent_CaseSensitive_Descending() {
+        sortByItemPreview_SortByContent_CaseSensitive(false)
+    }
+
+    private fun sortByItemPreview_SortByContent_CaseSensitive(ascending: Boolean) {
+        // given
+        val itemWithSecondContent = Item("Queen")
+        persist(itemWithSecondContent)
+
+        val itemWithThirdContent = Item("the Strokes")
+        persist(itemWithThirdContent)
+
+        val itemWithFirstContent = Item("bloc Party")
+        persist(itemWithFirstContent)
+
+        waitTillEntityGetsIndexed()
+
+
+        // when
+        val result = searchItems("", sortOptions = listOf(SortOption(FieldName.ItemPreviewForSorting, ascending)))
+
+
+        // then
+        assertThat(result).hasSize(3)
+
+        if(ascending) {
+            assertThat(result).containsExactly(itemWithFirstContent, itemWithSecondContent, itemWithThirdContent)
+        }
+        else {
+            assertThat(result).containsExactly(itemWithThirdContent, itemWithSecondContent, itemWithFirstContent)
+        }
+    }
+
+
+    @Test
     fun sortBySourcePreview_SortBySeriesAndPublishingDate_Ascending() {
         sortBySourcePreview_SortBySeriesAndPublishingDate(true)
     }
@@ -228,6 +269,75 @@ class ItemIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
         }
         else {
             assertThat(result).containsExactly(itemWithSecondTitleSecondSummary, itemWithSecondTitleFirstSummary, itemWithFirstTitleSecondSummary, itemWithFirstTitleFirstSummary)
+        }
+    }
+
+
+    // FIXME: CorrectStringComparatorSource doesn't work in this case, test therefore fails
+    @Test
+    fun sortBySourcePreview_SortBySeriesPublishingDateSourceTitleAndSummary_CaseSensitive_Ascending() {
+        sortBySourcePreview_SortBySeriesPublishingDateSourceTitleAndSummary_CaseSensitive(true)
+    }
+
+    // FIXME: CorrectStringComparatorSource doesn't work in this case, test therefore fails
+    @Test
+    fun sortBySourcePreview_SortBySeriesPublishingDateSourceTitleAndSummary_CaseSensitive_Descending() {
+        sortBySourcePreview_SortBySeriesPublishingDateSourceTitleAndSummary_CaseSensitive(false)
+    }
+
+    private fun sortBySourcePreview_SortBySeriesPublishingDateSourceTitleAndSummary_CaseSensitive(ascending: Boolean) {
+        // given
+        val lowerCaseSeries = Series("c't")
+        persist(lowerCaseSeries)
+        val upperCaseSeries = Series("Heise")
+        persist(upperCaseSeries)
+
+        val publishingDate = "27.03.2019"
+
+        val sourceWithFirstTitleUpperCaseSeries = createSource("millions of passwords leaked", publishingDate, upperCaseSeries)
+        persist(sourceWithFirstTitleUpperCaseSeries)
+
+        val sourceWithSecondTitleUpperCaseSeries = createSource("No passwords leaked", publishingDate, upperCaseSeries)
+        persist(sourceWithSecondTitleUpperCaseSeries)
+
+        val sourceWithFirstTitleLowerCaseSeries = createSource("millions of passwords leaked", publishingDate, lowerCaseSeries)
+        persist(sourceWithFirstTitleLowerCaseSeries)
+
+        val sourceWithSecondTitleLowerCaseSeries = createSource("No passwords leaked", publishingDate, lowerCaseSeries)
+        persist(sourceWithSecondTitleLowerCaseSeries)
+
+
+        val forthItem = Item(sourceWithSecondTitleUpperCaseSeries.previewWithSeriesAndPublishingDate) // to fix Item's equals() method in assert()
+        forthItem.source = sourceWithSecondTitleUpperCaseSeries
+        persist(forthItem)
+
+        val secondItem = Item(sourceWithSecondTitleLowerCaseSeries.previewWithSeriesAndPublishingDate)
+        secondItem.source = sourceWithSecondTitleLowerCaseSeries
+        persist(secondItem)
+
+        val firstItem = Item(sourceWithFirstTitleLowerCaseSeries.previewWithSeriesAndPublishingDate)
+        firstItem.source = sourceWithFirstTitleLowerCaseSeries
+        persist(firstItem)
+
+        val thirdItem = Item(sourceWithFirstTitleUpperCaseSeries.previewWithSeriesAndPublishingDate)
+        thirdItem.source = sourceWithFirstTitleUpperCaseSeries
+        persist(thirdItem)
+
+        waitTillEntityGetsIndexed()
+
+
+        // when
+        val result = searchItems("", sortOptions = listOf(SortOption(FieldName.ItemSourcePreviewForSorting, ascending)))
+
+
+        // then
+        assertThat(result).hasSize(4)
+
+        if(ascending) {
+            assertThat(result).containsExactly(firstItem, secondItem, thirdItem, forthItem)
+        }
+        else {
+            assertThat(result).containsExactly(forthItem, thirdItem, secondItem, firstItem)
         }
     }
 

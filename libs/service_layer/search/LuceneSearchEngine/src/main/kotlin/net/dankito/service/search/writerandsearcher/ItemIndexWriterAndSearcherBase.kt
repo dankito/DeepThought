@@ -46,9 +46,9 @@ abstract class ItemIndexWriterAndSearcherBase(itemService: ItemService, eventBus
     }
 
     protected open fun addPreviewsForSortingToDocument(item: Item, contentPlainText: String, summaryPlainText: String, doc: Document) {
-        doc.add(StringField(FieldName.ItemPreviewForSorting, contentPlainText.trim().ofMaxLength(MaxItemPreviewSortLength), Field.Store.YES))
+        doc.add(StringField(FieldName.ItemPreviewForSorting, contentPlainText.trim().ofMaxLength(MaxItemPreviewSortLength).toLowerCase(), Field.Store.YES))
 
-        val sourceOrAbstractPreview = (createSourcePreviewWithSeriesAndPublishingDate(item) + " " + summaryPlainText).trim().ofMaxLength(MaxSourcePreviewSortLength)
+        val sourceOrAbstractPreview = (createSourcePreviewWithSeriesAndPublishingDate(item) + " " + summaryPlainText).trim().ofMaxLength(MaxSourcePreviewSortLength).toLowerCase()
         doc.add(StringField(FieldName.ItemSourcePreviewForSorting, sourceOrAbstractPreview, Field.Store.YES))
     }
 
