@@ -2,6 +2,7 @@ package net.dankito.service.search.writerandsearcher
 
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.extensions.contentPlainText
+import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.service.data.ItemService
 import net.dankito.service.eventbus.IEventBus
@@ -23,8 +24,13 @@ abstract class ItemIndexWriterAndSearcherBase(itemService: ItemService, eventBus
         @JvmStatic
         protected val MaxItemsSearchResults = 1000000 // e.g. for AllItemsCalculatedTag all items must be returned
 
-        private val MaxItemPreviewSortLength = 75
-        private val MaxSourcePreviewSortLength = 75
+        @JvmStatic
+        protected val PublishingDateFormat = SimpleDateFormat("yyyy.MM.dd")
+
+        @JvmStatic
+        protected val MaxItemPreviewSortLength = 50
+        @JvmStatic
+        protected val MaxSourcePreviewSortLength = 50
     }
 
 
@@ -40,10 +46,24 @@ abstract class ItemIndexWriterAndSearcherBase(itemService: ItemService, eventBus
     }
 
     protected open fun addPreviewsForSortingToDocument(item: Item, contentPlainText: String, summaryPlainText: String, doc: Document) {
-        doc.add(StringField(FieldName.ItemPreviewForSorting, contentPlainText.ofMaxLength(MaxItemPreviewSortLength), Field.Store.YES))
+        doc.add(StringField(FieldName.ItemPreviewForSorting, contentPlainText.trim().ofMaxLength(MaxItemPreviewSortLength), Field.Store.YES))
 
-        val sourceOrAbstractPreview = (item.sourcePreviewWithSeriesAndPublishingDate + " " + summaryPlainText).ofMaxLength(MaxSourcePreviewSortLength)
+        val sourceOrAbstractPreview = (createSourcePreviewWithSeriesAndPublishingDate(item) + " " + summaryPlainText).trim().ofMaxLength(MaxSourcePreviewSortLength)
         doc.add(StringField(FieldName.ItemSourcePreviewForSorting, sourceOrAbstractPreview, Field.Store.YES))
+    }
+
+    protected open fun createSourcePreviewWithSeriesAndPublishingDate(item: Item): String {
+        item.source?.let { source ->
+            var preview = source.series?.title ?: ""
+
+            source.publishingDate?.let { publishingDate ->
+                preview += " " + PublishingDateFormat.format(publishingDate)
+            }
+
+            return (preview.trim() + " " + source.preview).trim()
+        }
+
+        return ""
     }
 
     protected open fun addAdditionalFieldsToDocument(item: Item, contentPlainText: String, summaryPlainText: String, doc: Document) {

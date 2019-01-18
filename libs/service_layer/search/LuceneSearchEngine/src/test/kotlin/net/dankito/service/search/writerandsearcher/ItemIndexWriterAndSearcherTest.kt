@@ -68,21 +68,21 @@ class ItemIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
         val series = Series("New York Times")
         persist(series)
 
-        val sourceWithSecondPublishingDate = createSource("", "27.03.19", series)
+        val sourceWithSecondPublishingDate = createSource("", "27.03.2019", series)
         persist(sourceWithSecondPublishingDate)
 
         val itemWithSecondPublishingDate = Item("")
         itemWithSecondPublishingDate.source = sourceWithSecondPublishingDate
         persist(itemWithSecondPublishingDate)
 
-        val sourceWithThirdPublishingDate = createSource("", "07.05.19", series)
+        val sourceWithThirdPublishingDate = createSource("", "07.05.2019", series)
         persist(sourceWithThirdPublishingDate)
 
         val itemWithThirdPublishingDate = Item("")
         itemWithThirdPublishingDate.source = sourceWithThirdPublishingDate
         persist(itemWithThirdPublishingDate)
 
-        val sourceWithFirstPublishingDate = createSource("", "14.02.19", series)
+        val sourceWithFirstPublishingDate = createSource("", "14.02.2019", series)
         persist(sourceWithFirstPublishingDate)
 
         val itemWithFirstPublishingDate = Item("")
@@ -123,28 +123,28 @@ class ItemIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
         val series = Series("New York Times")
         persist(series)
 
-        val sourceWithSecondPublishingDateSecondTitle = createSource("Trump shocks the world", "27.03.19", series)
+        val sourceWithSecondPublishingDateSecondTitle = createSource("Trump shocks the world", "27.03.2019", series)
         persist(sourceWithSecondPublishingDateSecondTitle)
 
         val itemWithSecondPublishingDateSecondTitle = Item("")
         itemWithSecondPublishingDateSecondTitle.source = sourceWithSecondPublishingDateSecondTitle
         persist(itemWithSecondPublishingDateSecondTitle)
 
-        val sourceWithThirdPublishingDate = createSource("", "07.05.19", series)
+        val sourceWithThirdPublishingDate = createSource("", "07.05.2019", series)
         persist(sourceWithThirdPublishingDate)
 
         val itemWithThirdPublishingDate = Item("")
         itemWithThirdPublishingDate.source = sourceWithThirdPublishingDate
         persist(itemWithThirdPublishingDate)
 
-        val sourceWithFirstPublishingDate = createSource("", "14.02.19", series)
+        val sourceWithFirstPublishingDate = createSource("", "14.02.2019", series)
         persist(sourceWithFirstPublishingDate)
 
         val itemWithFirstPublishingDate = Item("")
         itemWithFirstPublishingDate.source = sourceWithFirstPublishingDate
         persist(itemWithFirstPublishingDate)
 
-        val sourceWithSecondPublishingDateFirstTitle = createSource("Obama rocks the world", "27.03.19", series)
+        val sourceWithSecondPublishingDateFirstTitle = createSource("Obama rocks the world", "27.03.2019", series)
         persist(sourceWithSecondPublishingDateFirstTitle)
 
         val itemWithSecondPublishingDateFirstTitle = Item("")
@@ -187,10 +187,12 @@ class ItemIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
         val series = Series("New York Times")
         persist(series)
 
-        val sourceWithFirstTitle = createSource("Obama rocks the world", "27.03.19", series)
+        val publishingDate = "27.03.2019"
+
+        val sourceWithFirstTitle = createSource("Obama rocks the world", publishingDate, series)
         persist(sourceWithFirstTitle)
 
-        val sourceWithSecondTitle = createSource("Trump shocks the world", "27.03.19", series)
+        val sourceWithSecondTitle = createSource("Trump shocks the world", publishingDate, series)
         persist(sourceWithSecondTitle)
 
 
