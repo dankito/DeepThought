@@ -2,6 +2,7 @@ package net.dankito.service.search.writerandsearcher
 
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Series
+import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.service.search.FieldName
 import net.dankito.service.search.LuceneSearchEngineIntegrationTestBase
 import net.dankito.service.search.util.SortOption
@@ -71,21 +72,21 @@ class ItemIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
         val sourceWithSecondPublishingDate = createSource("", "27.03.2019", series)
         persist(sourceWithSecondPublishingDate)
 
-        val itemWithSecondPublishingDate = Item("")
+        val itemWithSecondPublishingDate = Item(sourceWithSecondPublishingDate.previewWithSeriesAndPublishingDate) // to fix Item's equals() method in assert()
         itemWithSecondPublishingDate.source = sourceWithSecondPublishingDate
         persist(itemWithSecondPublishingDate)
 
         val sourceWithThirdPublishingDate = createSource("", "07.05.2019", series)
         persist(sourceWithThirdPublishingDate)
 
-        val itemWithThirdPublishingDate = Item("")
+        val itemWithThirdPublishingDate = Item(sourceWithThirdPublishingDate.previewWithSeriesAndPublishingDate)
         itemWithThirdPublishingDate.source = sourceWithThirdPublishingDate
         persist(itemWithThirdPublishingDate)
 
         val sourceWithFirstPublishingDate = createSource("", "14.02.2019", series)
         persist(sourceWithFirstPublishingDate)
 
-        val itemWithFirstPublishingDate = Item("")
+        val itemWithFirstPublishingDate = Item(sourceWithFirstPublishingDate.previewWithSeriesAndPublishingDate)
         itemWithFirstPublishingDate.source = sourceWithFirstPublishingDate
         persist(itemWithFirstPublishingDate)
 
@@ -126,28 +127,28 @@ class ItemIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
         val sourceWithSecondPublishingDateSecondTitle = createSource("Trump shocks the world", "27.03.2019", series)
         persist(sourceWithSecondPublishingDateSecondTitle)
 
-        val itemWithSecondPublishingDateSecondTitle = Item("")
+        val itemWithSecondPublishingDateSecondTitle = Item(sourceWithSecondPublishingDateSecondTitle.previewWithSeriesAndPublishingDate) // to fix Item's equals() method in assert()
         itemWithSecondPublishingDateSecondTitle.source = sourceWithSecondPublishingDateSecondTitle
         persist(itemWithSecondPublishingDateSecondTitle)
 
         val sourceWithThirdPublishingDate = createSource("", "07.05.2019", series)
         persist(sourceWithThirdPublishingDate)
 
-        val itemWithThirdPublishingDate = Item("")
+        val itemWithThirdPublishingDate = Item(sourceWithThirdPublishingDate.previewWithSeriesAndPublishingDate)
         itemWithThirdPublishingDate.source = sourceWithThirdPublishingDate
         persist(itemWithThirdPublishingDate)
 
         val sourceWithFirstPublishingDate = createSource("", "14.02.2019", series)
         persist(sourceWithFirstPublishingDate)
 
-        val itemWithFirstPublishingDate = Item("")
+        val itemWithFirstPublishingDate = Item(sourceWithFirstPublishingDate.previewWithSeriesAndPublishingDate)
         itemWithFirstPublishingDate.source = sourceWithFirstPublishingDate
         persist(itemWithFirstPublishingDate)
 
         val sourceWithSecondPublishingDateFirstTitle = createSource("Obama rocks the world", "27.03.2019", series)
         persist(sourceWithSecondPublishingDateFirstTitle)
 
-        val itemWithSecondPublishingDateFirstTitle = Item("")
+        val itemWithSecondPublishingDateFirstTitle = Item(sourceWithSecondPublishingDateFirstTitle.previewWithSeriesAndPublishingDate)
         itemWithSecondPublishingDateFirstTitle.source = sourceWithSecondPublishingDateFirstTitle
         persist(itemWithSecondPublishingDateFirstTitle)
 
