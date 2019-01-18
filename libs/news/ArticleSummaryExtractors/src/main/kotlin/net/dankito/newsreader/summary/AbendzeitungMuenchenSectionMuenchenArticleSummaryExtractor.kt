@@ -14,7 +14,7 @@ class AbendzeitungMuenchenSectionMuenchenArticleSummaryExtractor(webClient: IWeb
     }
 
     override fun getUrl(): String {
-        return "http://www.abendzeitung-muenchen.de/muenchen"
+        return "https://www.abendzeitung-muenchen.de/muenchen"
     }
 
 

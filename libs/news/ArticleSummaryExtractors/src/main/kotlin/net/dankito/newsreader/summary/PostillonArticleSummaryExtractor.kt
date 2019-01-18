@@ -1,9 +1,9 @@
 package net.dankito.newsreader.summary
 
-import net.dankito.utils.web.client.IWebClient
 import net.dankito.newsreader.article.PostillonArticleExtractor
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
+import net.dankito.utils.web.client.IWebClient
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
@@ -15,7 +15,7 @@ class PostillonArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
     }
 
     override fun getUrl(): String {
-        return "http://www.der-postillon.com"
+        return "https://www.der-postillon.com"
     }
 
 

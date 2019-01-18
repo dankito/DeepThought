@@ -18,7 +18,7 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
     }
 
     override fun getUrl(): String {
-        return "http://www.sueddeutsche.de/"
+        return "https://www.sueddeutsche.de/"
     }
 
     override fun parseHtmlToArticleSummary(url: String, document: Document, forLoadingMoreItems: Boolean): ArticleSummary {

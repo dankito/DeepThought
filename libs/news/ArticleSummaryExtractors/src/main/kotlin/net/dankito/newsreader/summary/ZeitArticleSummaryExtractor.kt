@@ -16,7 +16,7 @@ class ZeitArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryExtract
     }
 
     override fun getUrl(): String {
-        return "http://www.zeit.de"
+        return "https://www.zeit.de/"
     }
 
     override fun parseHtmlToArticleSummary(url: String, document: Document, forLoadingMoreItems: Boolean): ArticleSummary {
