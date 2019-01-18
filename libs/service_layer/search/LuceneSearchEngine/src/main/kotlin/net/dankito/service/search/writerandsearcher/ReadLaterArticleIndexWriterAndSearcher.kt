@@ -56,8 +56,8 @@ class ReadLaterArticleIndexWriterAndSearcher(readLaterArticleService: ReadLaterA
 
         addQueryForSearchTerm(termsToSearchFor, query)
 
-        executeQueryForSearchWithCollectionResult(search, query, ReadLaterArticle::class.java, sortOptions =
-                SortOption(FieldName.ModifiedOn, SortOrder.Descending, SortField.Type.LONG)
+        executeQueryForSearchWithCollectionResult(search, query, ReadLaterArticle::class.java,
+                sortOptions = *arrayOf(SortOption(FieldName.ModifiedOn, SortOrder.Descending, SortField.Type.LONG))
         )
     }
 

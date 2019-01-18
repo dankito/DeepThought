@@ -47,7 +47,8 @@ class SeriesIndexWriterAndSearcher(seriesService: SeriesService, eventBus: IEven
             return
         }
 
-        executeQueryForSearchWithCollectionResult(search, query, Series::class.java, sortOptions = SortOption(FieldName.SeriesTitle, SortOrder.Ascending, SortField.Type.STRING))
+        executeQueryForSearchWithCollectionResult(search, query, Series::class.java,
+                sortOptions = *arrayOf(SortOption(FieldName.SeriesTitle, SortOrder.Ascending, SortField.Type.STRING)))
     }
 
     private fun addQueryForSearchTerm(termsToFilterFor: List<String>, query: BooleanQuery) {

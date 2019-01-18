@@ -63,7 +63,8 @@ class FileLinkIndexWriterAndSearcher(fileService: FileService, eventBus: IEventB
             return
         }
 
-        executeQueryForSearchWithCollectionResult(search, query, FileLink::class.java, sortOptions = SortOption(FieldName.FileName, SortOrder.Ascending, SortField.Type.STRING))
+        executeQueryForSearchWithCollectionResult(search, query, FileLink::class.java,
+                sortOptions = *arrayOf(SortOption(FieldName.FileName, SortOrder.Ascending, SortField.Type.STRING)))
     }
 
     private fun addQueryForSearchTerm(search: FilesSearch, termsToFilterFor: List<String>, query: BooleanQuery) {

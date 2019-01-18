@@ -2,7 +2,6 @@ package net.dankito.service.search.writerandsearcher
 
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.extensions.contentPlainText
-import net.dankito.deepthought.model.extensions.sourcePreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.service.data.ItemService
 import net.dankito.service.eventbus.IEventBus
@@ -14,6 +13,7 @@ import org.apache.lucene.document.Document
 import org.apache.lucene.document.Field
 import org.apache.lucene.document.LongField
 import org.apache.lucene.document.StringField
+import java.text.SimpleDateFormat
 
 
 abstract class ItemIndexWriterAndSearcherBase(itemService: ItemService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool)
