@@ -127,6 +127,9 @@ class ItemsListView : EntitiesListViewFragment<Item>(R.menu.item_contextual_acti
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
 
+        setSortMenuItemCheckState(menu, R.id.mnSortItemsByDateCreatedAscending, FieldName.ItemCreated, true)
+        setSortMenuItemCheckState(menu, R.id.mnSortItemsByDateCreatedDescending, FieldName.ItemCreated, false)
+
         setSortMenuItemCheckState(menu, R.id.mnSortItemsByPreviewAscending, FieldName.ItemPreviewForSorting, true)
         setSortMenuItemCheckState(menu, R.id.mnSortItemsByPreviewDescending, FieldName.ItemPreviewForSorting, false)
 
@@ -142,6 +145,8 @@ class ItemsListView : EntitiesListViewFragment<Item>(R.menu.item_contextual_acti
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.mnSortItemsByDateCreatedAscending -> setSortOptions(FieldName.ItemCreated, true)
+            R.id.mnSortItemsByDateCreatedDescending -> setSortOptions(FieldName.ItemCreated, false)
             R.id.mnSortItemsByPreviewAscending -> setSortOptions(FieldName.ItemPreviewForSorting, true)
             R.id.mnSortItemsByPreviewDescending -> setSortOptions(FieldName.ItemPreviewForSorting, false)
             R.id.mnSortItemsBySourcePreviewAscending -> setSortOptions(FieldName.ItemSourcePreviewForSorting, true)

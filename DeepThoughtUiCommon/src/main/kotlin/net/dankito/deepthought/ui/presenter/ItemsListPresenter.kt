@@ -7,6 +7,7 @@ import net.dankito.deepthought.ui.view.IItemsListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
 import net.dankito.service.eventbus.IEventBus
+import net.dankito.service.search.FieldName
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
 import net.dankito.service.search.specific.ItemsSearch
@@ -32,7 +33,7 @@ class ItemsListPresenter(private val itemsListView: IItemsListView, router: IRou
 
     private var lastItemsSearch: ItemsSearch? = null
 
-    private val itemsSortOptions: MutableList<SortOption> = mutableListOf()
+    private val itemsSortOptions: MutableList<SortOption> = mutableListOf(SortOption(FieldName.ItemCreated, false)) // = default sort option: sort by created descending
 
 
     @Inject
