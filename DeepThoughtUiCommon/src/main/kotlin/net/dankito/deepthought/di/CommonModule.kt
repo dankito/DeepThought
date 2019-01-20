@@ -48,11 +48,12 @@ import net.dankito.utils.IThreadPool
 import net.dankito.utils.ImageCache
 import net.dankito.utils.OsHelper
 import net.dankito.utils.hashing.HashService
+import net.dankito.utils.hashing.IBase64Service
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.ISerializer
-import net.dankito.utils.hashing.IBase64Service
 import net.dankito.utils.services.network.NetworkHelper
+import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.ui.dialogs.IDialogService
 import net.dankito.utils.web.client.IWebClient
 import net.dankito.utils.web.client.OkHttpWebClient
@@ -116,10 +117,10 @@ open class CommonModule {
 
     @Provides
     @Singleton
-    open fun provideSearchEngine(dataManager: DataManager, languageDetector: ILanguageDetector, threadPool: IThreadPool, osHelper: OsHelper, eventBus: IEventBus,
-                                 itemService: ItemService, tagService: TagService, sourceService: SourceService, seriesService: SeriesService,
+    open fun provideSearchEngine(settingsStore: ILocalSettingsStore, dataManager: DataManager, languageDetector: ILanguageDetector, threadPool: IThreadPool, osHelper: OsHelper,
+                                 eventBus: IEventBus, itemService: ItemService, tagService: TagService, sourceService: SourceService, seriesService: SeriesService,
                                  readLaterArticleService: ReadLaterArticleService, fileService: FileService, localFileInfoService: LocalFileInfoService) : ISearchEngine {
-        return LuceneSearchEngine(dataManager, languageDetector, osHelper, threadPool, eventBus, itemService, tagService, sourceService, seriesService,
+        return LuceneSearchEngine(settingsStore, dataManager, languageDetector, osHelper, threadPool, eventBus, itemService, tagService, sourceService, seriesService,
                 readLaterArticleService, fileService, localFileInfoService)
     }
 

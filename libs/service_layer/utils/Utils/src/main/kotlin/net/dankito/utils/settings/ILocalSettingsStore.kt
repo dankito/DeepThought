@@ -11,4 +11,8 @@ interface ILocalSettingsStore {
 
     fun setDatabaseDataModelVersion(newDataModelVersion: Int)
 
+    fun getSearchEngineIndexVersion(): Int
+
+    fun setSearchEngineIndexVersion(newSearchIndexVersion: Int)
+
 }

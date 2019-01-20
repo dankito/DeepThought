@@ -15,6 +15,8 @@ import net.dankito.utils.IThreadPool
 import net.dankito.utils.OsHelper
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.services.Times
+import net.dankito.utils.settings.ILocalSettingsStore
+import net.dankito.utils.version.Versions
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.FSDirectory
 import org.slf4j.LoggerFactory
@@ -25,7 +27,8 @@ import kotlin.concurrent.schedule
 import kotlin.concurrent.thread
 
 
-class LuceneSearchEngine(private val dataManager: DataManager, private val languageDetector: ILanguageDetector, osHelper: OsHelper, threadPool: IThreadPool, private val eventBus: IEventBus,
+class LuceneSearchEngine(private val settingsStore: ILocalSettingsStore, private val dataManager: DataManager, private val languageDetector: ILanguageDetector,
+                         osHelper: OsHelper, threadPool: IThreadPool, private val eventBus: IEventBus,
                          itemService: ItemService, tagService: TagService, sourceService: SourceService, seriesService: SeriesService,
                          readLaterArticleService: ReadLaterArticleService, fileService: FileService, localFileInfoService: LocalFileInfoService)
     : SearchEngineBase(threadPool) {
@@ -86,6 +89,12 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
                 if(indexDirExists == false) {
                     // TODO: inform user that index is going to be rebuilt and that this takes some time
                     rebuildIndex() // do not rebuild index asynchronously as Application depends on some functions of SearchEngine (like Items without Tags)
+                    if(settingsStore.getSearchEngineIndexVersion() != Versions.SearchEngineIndexVersion) {
+                        updateSearchIndexVersionInSettingsStore()
+                    }
+                }
+                else if(settingsStore.getSearchEngineIndexVersion() != Versions.SearchEngineIndexVersion) {
+                    updateIndexToCurrentVersion(settingsStore.getSearchEngineIndexVersion(), Versions.SearchEngineIndexVersion)
                 }
 
                 searchEngineInitialized()
@@ -184,6 +193,28 @@ class LuceneSearchEngine(private val dataManager: DataManager, private val langu
         localFileInfoIndexWriterAndSearcher.optimizeIndex()
 
         log.info("Done optimizing indices")
+    }
+
+    private fun updateIndexToCurrentVersion(currentIndexVersion: Int, searchEngineIndexVersion: Int) {
+        if(currentIndexVersion == 2 && searchEngineIndexVersion == 3) {
+            updateIndexFromVersion2To3()
+        }
+
+        updateSearchIndexVersionInSettingsStore()
+    }
+
+    private fun updateSearchIndexVersionInSettingsStore() {
+        settingsStore.setSearchEngineIndexVersion(Versions.SearchEngineIndexVersion)
+    }
+
+    private fun updateIndexFromVersion2To3() {
+        itemIdsIndexWriterAndSearcher.searchItemIds(ItemsSearch("") { result ->
+            result.forEach { item ->
+                val changedEntity = ChangedEntity(Item::class.java, item, item.id)
+                itemIdsIndexWriterAndSearcher.updateEntityInIndex(changedEntity)
+                itemIndexWriterAndSearcher.updateEntityInIndex(changedEntity)
+            }
+        }, listOf())
     }
 
 

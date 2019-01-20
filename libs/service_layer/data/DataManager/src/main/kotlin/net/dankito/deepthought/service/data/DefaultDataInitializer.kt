@@ -23,7 +23,7 @@ open class DefaultDataInitializer(private val platformConfiguration: IPlatformCo
 
         val localDevice = createUserDefaultDevice(localUser)
 
-        val localSettings = LocalSettings(Versions.CommunicationProtocolVersion, Versions.SearchIndexVersion, Versions.HtmlEditorVersion, Date(0), 0, Date(0))
+        val localSettings = LocalSettings(Versions.CommunicationProtocolVersion, Versions.SearchEngineIndexVersion, Versions.HtmlEditorVersion, Date(0), 0, Date(0))
 
         val deepThought = DeepThought(localUser, localDevice, localSettings)
 

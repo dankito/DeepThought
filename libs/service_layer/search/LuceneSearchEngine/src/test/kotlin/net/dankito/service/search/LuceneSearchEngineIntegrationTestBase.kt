@@ -109,7 +109,8 @@ abstract class LuceneSearchEngineIntegrationTestBase {
 
         val localization = DeepThoughtLocalization()
         val entityManagerConfiguration = EntityManagerConfiguration(platformConfiguration.getDefaultDataFolder().path, "lucene_test")
-        val entityManager = JavaCouchbaseLiteEntityManager(entityManagerConfiguration, createLocalSettingsStore())
+        val localSettingsStore = createLocalSettingsStore()
+        val entityManager = JavaCouchbaseLiteEntityManager(entityManagerConfiguration, localSettingsStore)
         val dataManager = DataManager(entityManager, entityManagerConfiguration, DefaultDataInitializer(platformConfiguration, localization), platformConfiguration)
         initDataManager(dataManager)
 
@@ -125,8 +126,8 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         fileService = FileService(dataManager, entityChangedNotifier)
         mimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypeCategorizer, dataManager)
 
-        underTest = LuceneSearchEngine(dataManager, NoOpLanguageDetector(), OsHelper(platformConfiguration), ThreadPool(), eventBus,
-                itemService, tagService, sourceService, seriesService, readLaterArticleService, fileService, localFileInfoService)
+        underTest = LuceneSearchEngine(localSettingsStore, dataManager, NoOpLanguageDetector(), OsHelper(platformConfiguration),
+                ThreadPool(), eventBus, itemService, tagService, sourceService, seriesService, readLaterArticleService, fileService, localFileInfoService)
         initLuceneSearchEngine(underTest)
 
         deleteEntityService = DeleteEntityService(itemService, tagService, sourceService, seriesService, fileService, localFileInfoService, underTest, mock(), threadPool)
@@ -224,6 +225,12 @@ abstract class LuceneSearchEngineIntegrationTestBase {
             }
 
             override fun setDatabaseDataModelVersion(newDataModelVersion: Int) { }
+
+            override fun getSearchEngineIndexVersion(): Int {
+                return Versions.SearchEngineIndexVersion
+            }
+
+            override fun setSearchEngineIndexVersion(newSearchIndexVersion: Int) { }
 
         }
     }

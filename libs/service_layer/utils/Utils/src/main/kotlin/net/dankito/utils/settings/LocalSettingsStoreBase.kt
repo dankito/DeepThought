@@ -10,9 +10,14 @@ abstract class LocalSettingsStoreBase : ILocalSettingsStore {
 
         const val DatabaseDataModelVersionKey = "data.model.version"
 
+        const val SearchEngineIndexVersionKey = "search.engine.index.version"
+
         const val DefaultDataFolder = "data/"
 
         const val DefaultDatabaseDataModelVersion = Versions.DataModelVersion
+
+//        const val DefaultSearchEngineIndexVersion = Versions.SearchEngineIndexVersion // TODO: undo
+        const val DefaultSearchEngineIndexVersion = 2 // currently needed for first app run as otherwise Versions.SearchEngineIndexVersion gets returned and index therefore not updated
     }
 
 
@@ -40,6 +45,14 @@ abstract class LocalSettingsStoreBase : ILocalSettingsStore {
 
     override fun setDatabaseDataModelVersion(newDataModelVersion: Int) {
         saveIntValue(DatabaseDataModelVersionKey, newDataModelVersion)
+    }
+
+    override fun getSearchEngineIndexVersion(): Int {
+        return readIntValue(SearchEngineIndexVersionKey, DefaultSearchEngineIndexVersion)
+    }
+
+    override fun setSearchEngineIndexVersion(newSearchIndexVersion: Int) {
+        saveIntValue(SearchEngineIndexVersionKey, newSearchIndexVersion)
     }
 
 

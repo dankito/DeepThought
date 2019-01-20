@@ -12,7 +12,7 @@ class Versions {
 
         const val CommunicationProtocolVersion = 2
 
-        const val SearchIndexVersion = 2
+        const val SearchEngineIndexVersion = 3
 
         const val HtmlEditorVersion = 2
     }
@@ -41,6 +41,9 @@ class Versions {
 
         - 1 -> 2:
           Added FileLink- and LocalFileInfoIndexWriterAndSearcher. Implemented searching for files and LocalFileInfo.
+
+        - 2 -> 3:
+          Added fields for sorting items by content and source preview
 
 
         HTML editor:

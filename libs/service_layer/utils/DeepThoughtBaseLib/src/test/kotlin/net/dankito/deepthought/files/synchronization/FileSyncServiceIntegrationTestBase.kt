@@ -46,9 +46,9 @@ import net.dankito.utils.OsHelper
 import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.hashing.HashService
+import net.dankito.utils.hashing.IBase64Service
 import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.utils.localization.Localization
-import net.dankito.utils.hashing.IBase64Service
 import net.dankito.utils.services.network.NetworkConnectivityManagerBase
 import net.dankito.utils.services.network.NetworkHelper
 import net.dankito.utils.settings.ILocalSettingsStore
@@ -144,7 +144,9 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     protected val localEntityManagerConfiguration = EntityManagerConfiguration(localPlatformConfiguration.getDefaultDataFolder().path, "test")
 
-    protected val localEntityManager = JavaCouchbaseLiteEntityManager(localEntityManagerConfiguration, createLocalSettingsStore())
+    protected val localSettingsStore = createLocalSettingsStore()
+
+    protected val localEntityManager = JavaCouchbaseLiteEntityManager(localEntityManagerConfiguration, localSettingsStore)
 
     protected val localDialogService = mock<IDialogService>()
 
@@ -324,8 +326,9 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         localFileService = FileService(localDataManager, localEntityChangedNotifier)
 
-        localSearchEngine = LuceneSearchEngine(localDataManager, NoOpLanguageDetector(), OsHelper(localPlatformConfiguration), localThreadPool, localEventBus,
-                localItemService, localTagService, localSourceService, localSeriesService, localReadLaterArticleService, localFileService, localLocalFileInfoService)
+        localSearchEngine = LuceneSearchEngine(localSettingsStore, localDataManager, NoOpLanguageDetector(), OsHelper(localPlatformConfiguration),
+                localThreadPool, localEventBus, localItemService, localTagService, localSourceService, localSeriesService, localReadLaterArticleService,
+                localFileService, localLocalFileInfoService)
 
         localDataManager.addInitializationListener {
             localDevice = localDataManager.localDevice
@@ -382,8 +385,9 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         remoteFileService = FileService(remoteDataManager, remoteEntityChangedNotifier)
 
-        remoteSearchEngine = LuceneSearchEngine(remoteDataManager, NoOpLanguageDetector(), OsHelper(remotePlatformConfiguration), remoteThreadPool, remoteEventBus,
-                remoteItemService, remoteTagService, remoteSourceService, remoteSeriesService, remoteReadLaterArticleService, remoteFileService, remoteLocalFileInfoService)
+        remoteSearchEngine = LuceneSearchEngine(createLocalSettingsStore(), remoteDataManager, NoOpLanguageDetector(), OsHelper(remotePlatformConfiguration),
+                remoteThreadPool, remoteEventBus, remoteItemService, remoteTagService, remoteSourceService, remoteSeriesService, remoteReadLaterArticleService,
+                remoteFileService, remoteLocalFileInfoService)
 
         remoteDataManager.addInitializationListener {
             remoteDevice = remoteDataManager.localDevice
@@ -475,6 +479,12 @@ abstract class FileSyncServiceIntegrationTestBase {
             }
 
             override fun setDatabaseDataModelVersion(newDataModelVersion: Int) { }
+
+            override fun getSearchEngineIndexVersion(): Int {
+                return Versions.SearchEngineIndexVersion
+            }
+
+            override fun setSearchEngineIndexVersion(newSearchIndexVersion: Int) { }
 
         }
     }
