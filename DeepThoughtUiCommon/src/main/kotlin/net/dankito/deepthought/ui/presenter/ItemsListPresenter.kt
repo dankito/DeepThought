@@ -111,6 +111,10 @@ class ItemsListPresenter(private val itemsListView: IItemsListView, router: IRou
     }
 
 
+    fun isSortOptionSet(propertyName: String, ascending: Boolean): Boolean {
+        return itemsSortOptions.firstOrNull { it.property == propertyName && it.ascending == ascending } != null
+    }
+
     fun setSortOptionsAsync(sortOptions: List<SortOption>) {
         threadPool.runAsync {
             setSortOptions(sortOptions)

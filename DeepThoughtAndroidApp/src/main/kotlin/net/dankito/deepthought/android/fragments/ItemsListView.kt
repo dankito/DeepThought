@@ -124,6 +124,22 @@ class ItemsListView : EntitiesListViewFragment<Item>(R.menu.item_contextual_acti
         inflater.inflate(R.menu.fragment_items_list_view_menu, menu)
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+
+        setSortMenuItemCheckState(menu, R.id.mnSortItemsByPreviewAscending, FieldName.ItemPreviewForSorting, true)
+        setSortMenuItemCheckState(menu, R.id.mnSortItemsByPreviewDescending, FieldName.ItemPreviewForSorting, false)
+
+        setSortMenuItemCheckState(menu, R.id.mnSortItemsBySourcePreviewAscending, FieldName.ItemSourcePreviewForSorting, true)
+        setSortMenuItemCheckState(menu, R.id.mnSortItemsBySourcePreviewDescending, FieldName.ItemSourcePreviewForSorting, false)
+    }
+
+    private fun setSortMenuItemCheckState(menu: Menu, menuItemId: Int, propertyName: String, ascending: Boolean) {
+        menu.findItem(menuItemId)?.let {
+            it.isChecked = presenter.isSortOptionSet(propertyName, ascending)
+        }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.mnSortItemsByPreviewAscending -> setSortOptions(FieldName.ItemPreviewForSorting, true)
