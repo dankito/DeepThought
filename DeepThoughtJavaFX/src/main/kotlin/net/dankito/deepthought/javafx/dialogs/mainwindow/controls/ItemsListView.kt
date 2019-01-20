@@ -1,8 +1,13 @@
 package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 
+import com.sun.javafx.scene.control.skin.TableHeaderRow
+import com.sun.javafx.scene.control.skin.TableViewSkinBase
 import javafx.scene.control.ContextMenu
+import javafx.scene.control.TableColumn
 import javafx.scene.control.TableView
+import javafx.scene.input.MouseButton
 import javafx.scene.layout.Priority
+import javafx.util.Callback
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.ItemItemViewModel
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
@@ -18,15 +23,19 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ItemsListPresenter
 import net.dankito.service.data.DeleteEntityService
+import net.dankito.service.search.FieldName
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
+import net.dankito.service.search.util.SortOption
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.dialogs.ConfirmationDialogButton
 import net.dankito.utils.ui.dialogs.IDialogService
 import tornadofx.*
 import java.text.DateFormat
+import java.util.*
 import javax.inject.Inject
+import kotlin.concurrent.schedule
 
 
 class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
@@ -104,12 +113,22 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
         add(searchBar.root)
 
         tableItems = tableview<Item>(items) {
-            column(messages["item.column.header.index"], Item::itemIndex).prefWidth(46.0)
-            column(messages["item.column.header.source"], Item::sourcePreviewOrSummary).weightedWidth(4.0)
-            column(messages["item.column.header.preview"], Item::preview).weightedWidth(4.0)
-            column(messages["item.column.header.tags"], Item::tagsPreview).weightedWidth(2.0)
+            column(messages["item.column.header.index"], Item::itemIndex).prefWidth(46.0).isSortable = false
+            val sourcePreviewColumn = column(messages["item.column.header.source"], Item::sourcePreviewOrSummary).weightedWidth(4.0)
+            val contentPreviewColumn = column(messages["item.column.header.preview"], Item::preview).weightedWidth(4.0)
+            column(messages["item.column.header.tags"], Item::tagsPreview).weightedWidth(2.0).isSortable = false
     //        column(messages["item.column.header.created"], stringBinding(Item::createdOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
     //        column(messages["item.column.header.modified"], stringBinding(Item::modifiedOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
+
+            contentPreviewColumn.id = FieldName.ItemPreviewForSorting
+
+            sourcePreviewColumn.id = FieldName.ItemSourcePreviewForSorting
+
+            sortPolicyProperty().set(Callback<TableView<Item>, Boolean> {
+                true
+            })
+
+            setHeaderClickListeners(this, sourcePreviewColumn, contentPreviewColumn)
 
             columnResizePolicy = SmartResize.POLICY
 
@@ -134,6 +153,31 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
 
             contextmenu {
 
+            }
+        }
+    }
+
+    private fun setHeaderClickListeners(tableView: TableView<Item>, sourcePreviewColumn: TableColumn<Item, String>, contentPreviewColumn: TableColumn<Item, String>) {
+        tableView.skinProperty().addListener { _, _, newValue ->
+            Timer().schedule(2 * 1000) {
+                // if called immediately getTableHeaderRow() returns null -> wait some time till header row is set
+                runLater {
+                    (newValue as? TableViewSkinBase<*, *, *, *, *, *>)?.getTableHeaderRow()?.let { headerRow ->
+                        setHeaderClickListener(tableView, headerRow, sourcePreviewColumn)
+                        setHeaderClickListener(tableView, headerRow, contentPreviewColumn)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setHeaderClickListener(tableView: TableView<Item>, headerRow: TableHeaderRow, column: TableColumn<Item, *>) {
+        headerRow.getColumnHeaderFor(column)?.let { columnHeader ->
+            columnHeader.setOnMouseClicked { event ->
+                if (event.button == MouseButton.PRIMARY && event.clickCount == 1) {
+                    val sortOptions = tableView.sortOrder.map { SortOption(it.id, it.sortType == TableColumn.SortType.ASCENDING) }
+                    presenter.setSortOptionsAsync(sortOptions)
+                }
             }
         }
     }

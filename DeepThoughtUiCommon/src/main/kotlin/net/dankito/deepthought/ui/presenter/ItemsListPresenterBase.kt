@@ -7,8 +7,8 @@ import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IClipboardService
 
 
-abstract class ItemsListPresenterBase(private val deleteEntityService: DeleteEntityService, private val clipboardService: IClipboardService, private val router: IRouter,
-                                      private val threadPool: IThreadPool) {
+abstract class ItemsListPresenterBase(protected val deleteEntityService: DeleteEntityService, protected val clipboardService: IClipboardService,
+                                      protected val router: IRouter, protected val threadPool: IThreadPool) {
 
 
     fun showItem(item: Item) {

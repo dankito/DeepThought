@@ -18,7 +18,7 @@ import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class ItemsListPresenter(private val itemsListView: IItemsListView, private val router: IRouter, private val searchEngine: ISearchEngine,
+class ItemsListPresenter(private val itemsListView: IItemsListView, router: IRouter, private val searchEngine: ISearchEngine,
                          deleteEntityService: DeleteEntityService, clipboardService: IClipboardService, threadPool: IThreadPool)
     : ItemsListPresenterBase(deleteEntityService, clipboardService, router, threadPool), IMainViewSectionPresenter {
 
@@ -108,6 +108,21 @@ class ItemsListPresenter(private val itemsListView: IItemsListView, private val 
 
     override fun getLastSearchTerm(): String {
         return lastSearchTermProperty
+    }
+
+
+    fun setSortOptionsAsync(sortOptions: List<SortOption>) {
+        threadPool.runAsync {
+            setSortOptions(sortOptions)
+        }
+    }
+
+    fun setSortOptions(sortOptions: List<SortOption>) {
+        this.itemsSortOptions.clear()
+
+        this.itemsSortOptions.addAll(sortOptions)
+
+        searchItems()
     }
 
 
