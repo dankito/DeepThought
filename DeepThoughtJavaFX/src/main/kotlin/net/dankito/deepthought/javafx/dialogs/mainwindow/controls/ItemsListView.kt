@@ -41,7 +41,7 @@ import kotlin.concurrent.schedule
 class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
 
     companion object {
-        private val dateTimeFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG)
+        private val dateTimeFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM)
     }
 
 
@@ -118,6 +118,7 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
 
                 isSortable = false
             }
+
             val sourcePreviewColumn = column(messages["item.column.header.source"], Item::sourcePreviewOrSummary) {
                 prefWidth(360)
 
@@ -128,15 +129,35 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
 
                 id = FieldName.ItemSourcePreviewForSorting
             }
+
             column(messages["item.column.header.tags"], Item::tagsPreview).prefWidth(190).isSortable = false
-//            column(messages["item.column.header.created"], stringBinding(Item::createdOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
-//            column(messages["item.column.header.modified"], stringBinding(Item::modifiedOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
+
+            val createdColumn = column(messages["item.column.header.created"], Item::createdOn) {
+                prefWidth(130)
+
+                id = FieldName.ItemCreated
+
+                isVisible = false
+
+                cellFormat { text = dateTimeFormat.format(it) }
+            }
+            val modifiedColumn = column(messages["item.column.header.modified"], Item::modifiedOn) {
+                prefWidth(130)
+
+                id = FieldName.ModifiedOn
+
+                isVisible = false
+
+                cellFormat { text = dateTimeFormat.format(it) }
+            }
+
+            isTableMenuButtonVisible = true
 
             sortPolicyProperty().set(Callback<TableView<Item>, Boolean> {
                 true
             })
 
-            setHeaderClickListeners(this, sourcePreviewColumn, contentPreviewColumn)
+            setHeaderClickListeners(this, sourcePreviewColumn, contentPreviewColumn, createdColumn, modifiedColumn)
 
             columnResizePolicy = TableView.UNCONSTRAINED_RESIZE_POLICY
 
@@ -165,14 +186,15 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
         }
     }
 
-    private fun setHeaderClickListeners(tableView: TableView<Item>, sourcePreviewColumn: TableColumn<Item, String>, contentPreviewColumn: TableColumn<Item, String>) {
+    private fun setHeaderClickListeners(tableView: TableView<Item>, vararg columns: TableColumn<Item, *>) {
         tableView.skinProperty().addListener { _, _, newValue ->
             Timer().schedule(2 * 1000) {
                 // if called immediately getTableHeaderRow() returns null -> wait some time till header row is set
                 runLater {
                     (newValue as? TableViewSkinBase<*, *, *, *, *, *>)?.getTableHeaderRow()?.let { headerRow ->
-                        setHeaderClickListener(tableView, headerRow, sourcePreviewColumn)
-                        setHeaderClickListener(tableView, headerRow, contentPreviewColumn)
+                        columns.forEach { column ->
+                            setHeaderClickListener(tableView, headerRow, column)
+                        }
                     }
                 }
             }
