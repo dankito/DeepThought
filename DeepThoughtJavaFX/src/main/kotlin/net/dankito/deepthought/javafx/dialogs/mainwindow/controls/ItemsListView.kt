@@ -112,17 +112,25 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
     override val root = vbox {
         add(searchBar.root)
 
-        tableItems = tableview<Item>(items) {
-            column(messages["item.column.header.index"], Item::itemIndex).prefWidth(46.0).isSortable = false
-            val sourcePreviewColumn = column(messages["item.column.header.source"], Item::sourcePreviewOrSummary).weightedWidth(4.0)
-            val contentPreviewColumn = column(messages["item.column.header.preview"], Item::preview).weightedWidth(4.0)
-            column(messages["item.column.header.tags"], Item::tagsPreview).weightedWidth(2.0).isSortable = false
-    //        column(messages["item.column.header.created"], stringBinding(Item::createdOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
-    //        column(messages["item.column.header.modified"], stringBinding(Item::modifiedOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
+        tableItems = tableview(items) {
+            column(messages["item.column.header.index"], Item::itemIndex) {
+                prefWidth(46.0)
 
-            contentPreviewColumn.id = FieldName.ItemPreviewForSorting
+                isSortable = false
+            }
+            val sourcePreviewColumn = column(messages["item.column.header.source"], Item::sourcePreviewOrSummary) {
+                prefWidth(360)
 
-            sourcePreviewColumn.id = FieldName.ItemSourcePreviewForSorting
+                id = FieldName.ItemPreviewForSorting
+            }
+            val contentPreviewColumn = column(messages["item.column.header.preview"], Item::preview) {
+                prefWidth(360)
+
+                id = FieldName.ItemSourcePreviewForSorting
+            }
+            column(messages["item.column.header.tags"], Item::tagsPreview).prefWidth(190).isSortable = false
+//            column(messages["item.column.header.created"], stringBinding(Item::createdOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
+//            column(messages["item.column.header.modified"], stringBinding(Item::modifiedOn) { dateTimeFormat.format(this) }).weigthedWidth(1.0)
 
             sortPolicyProperty().set(Callback<TableView<Item>, Boolean> {
                 true
@@ -130,7 +138,7 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
 
             setHeaderClickListeners(this, sourcePreviewColumn, contentPreviewColumn)
 
-            columnResizePolicy = SmartResize.POLICY
+            columnResizePolicy = TableView.UNCONSTRAINED_RESIZE_POLICY
 
             bindSelected(itemModel)
 
