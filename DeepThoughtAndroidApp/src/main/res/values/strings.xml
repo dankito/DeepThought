@@ -53,6 +53,12 @@
     <string name="search_hint_sources">Source title, date, series, issue, …</string>
     <string name="search_hint_read_later_articles">Title, summary, date, series</string>
 
+    <string name="fragment_items_list_view_menu_sort_title">Sort</string>
+    <string name="fragment_items_list_view_menu_sort_by_preview_ascending_title">Content ascending</string>
+    <string name="fragment_items_list_view_menu_sort_by_preview_descending_title">Content descending</string>
+    <string name="fragment_items_list_view_menu_sort_by_source_preview_ascending_title">Source ascending</string>
+    <string name="fragment_items_list_view_menu_sort_by_source_preview_descending_title">Source descending</string>
+
 
     <string name="loading">Loading …</string>
 

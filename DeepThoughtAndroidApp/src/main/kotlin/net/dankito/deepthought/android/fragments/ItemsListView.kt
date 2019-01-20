@@ -3,9 +3,7 @@ package net.dankito.deepthought.android.fragments
 import android.app.Activity
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.view.ActionMode
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ItemRecyclerAdapter
 import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
@@ -16,6 +14,8 @@ import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.deepthought.ui.presenter.ItemsListPresenter
 import net.dankito.deepthought.ui.view.IItemsListView
 import net.dankito.service.data.DeleteEntityService
+import net.dankito.service.search.FieldName
+import net.dankito.service.search.util.SortOption
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IClipboardService
 import javax.inject.Inject
@@ -116,6 +116,28 @@ class ItemsListView : EntitiesListViewFragment<Item>(R.menu.item_contextual_acti
         if(itemAdapter.isInMultiSelectMode() == false) {
             arrowToFloatingActionButton.visibility = View.GONE
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        inflater.inflate(R.menu.fragment_items_list_view_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.mnSortItemsByPreviewAscending -> setSortOptions(FieldName.ItemPreviewForSorting, true)
+            R.id.mnSortItemsByPreviewDescending -> setSortOptions(FieldName.ItemPreviewForSorting, false)
+            R.id.mnSortItemsBySourcePreviewAscending -> setSortOptions(FieldName.ItemSourcePreviewForSorting, true)
+            R.id.mnSortItemsBySourcePreviewDescending -> setSortOptions(FieldName.ItemSourcePreviewForSorting, false)
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun setSortOptions(property: String, ascending: Boolean): Boolean {
+        presenter.setSortOptionsAsync(listOf(SortOption(property, ascending)))
+
+        return true
     }
 
 

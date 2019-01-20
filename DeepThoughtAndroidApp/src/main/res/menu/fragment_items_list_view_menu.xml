@@ -1,0 +1,42 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="net.dankito.deepthought.MainActivity">
+
+    <item
+        android:title="@string/fragment_items_list_view_menu_sort_title"
+        app:showAsAction="never"
+        >
+
+        <menu>
+
+            <item
+                android:id="@+id/mnSortItemsByPreviewAscending"
+                android:title="@string/fragment_items_list_view_menu_sort_by_preview_ascending_title"
+                app:showAsAction="never"
+            />
+
+            <item
+                android:id="@+id/mnSortItemsByPreviewDescending"
+                android:title="@string/fragment_items_list_view_menu_sort_by_preview_descending_title"
+                app:showAsAction="never"
+            />
+
+            <item
+                android:id="@+id/mnSortItemsBySourcePreviewAscending"
+                android:title="@string/fragment_items_list_view_menu_sort_by_source_preview_ascending_title"
+                app:showAsAction="never"
+            />
+
+            <item
+                android:id="@+id/mnSortItemsBySourcePreviewDescending"
+                android:title="@string/fragment_items_list_view_menu_sort_by_source_preview_descending_title"
+                app:showAsAction="never"
+            />
+
+        </menu>
+
+    </item>
+
+</menu>
