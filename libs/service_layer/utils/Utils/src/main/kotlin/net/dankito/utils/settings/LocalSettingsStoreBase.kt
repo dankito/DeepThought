@@ -1,6 +1,7 @@
 package net.dankito.utils.settings
 
 import net.dankito.utils.version.Versions
+import org.slf4j.LoggerFactory
 
 
 abstract class LocalSettingsStoreBase : ILocalSettingsStore {
@@ -18,6 +19,9 @@ abstract class LocalSettingsStoreBase : ILocalSettingsStore {
 
 //        const val DefaultSearchEngineIndexVersion = Versions.SearchEngineIndexVersion // TODO: undo
         const val DefaultSearchEngineIndexVersion = 2 // currently needed for first app run as otherwise Versions.SearchEngineIndexVersion gets returned and index therefore not updated
+
+
+        private val log = LoggerFactory.getLogger(LocalSettingsStoreBase::class.java)
     }
 
 
@@ -83,11 +87,13 @@ abstract class LocalSettingsStoreBase : ILocalSettingsStore {
     }
 
     protected fun saveStringValue(key: String, value: String) {
+        log.info("Updating '$key' to '$value'")
+
         saveValueToStore(key, value)
     }
 
     protected fun saveIntValue(key: String, value: Int) {
-        saveValueToStore(key, Integer.toString(value))
+        saveStringValue(key, Integer.toString(value))
     }
 
 }
