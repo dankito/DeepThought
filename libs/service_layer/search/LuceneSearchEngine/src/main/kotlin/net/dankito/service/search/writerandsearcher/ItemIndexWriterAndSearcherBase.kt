@@ -10,10 +10,7 @@ import net.dankito.service.search.FieldName
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.OsHelper
 import net.dankito.utils.extensions.ofMaxLength
-import org.apache.lucene.document.Document
-import org.apache.lucene.document.Field
-import org.apache.lucene.document.LongField
-import org.apache.lucene.document.StringField
+import org.apache.lucene.document.*
 import java.text.SimpleDateFormat
 
 
@@ -30,7 +27,7 @@ abstract class ItemIndexWriterAndSearcherBase(itemService: ItemService, eventBus
         @JvmStatic
         protected val MaxItemPreviewSortLength = 50
         @JvmStatic
-        protected val MaxSourcePreviewSortLength = 50
+        protected val MaxItemSummaryPreviewForSortingLength = 20
     }
 
 
@@ -48,22 +45,22 @@ abstract class ItemIndexWriterAndSearcherBase(itemService: ItemService, eventBus
     protected open fun addPreviewsForSortingToDocument(item: Item, contentPlainText: String, summaryPlainText: String, doc: Document) {
         doc.add(StringField(FieldName.ItemPreviewForSorting, contentPlainText.trim().ofMaxLength(MaxItemPreviewSortLength).toLowerCase(), Field.Store.YES))
 
-        val sourceOrAbstractPreview = (createSourcePreviewWithSeriesAndPublishingDate(item) + " " + summaryPlainText).trim().ofMaxLength(MaxSourcePreviewSortLength).toLowerCase()
-        doc.add(StringField(FieldName.ItemSourcePreviewForSorting, sourceOrAbstractPreview, Field.Store.YES))
-    }
-
-    protected open fun createSourcePreviewWithSeriesAndPublishingDate(item: Item): String {
-        item.source?.let { source ->
-            var preview = source.series?.title ?: ""
-
-            source.publishingDate?.let { publishingDate ->
-                preview += " " + PublishingDateFormat.format(publishingDate)
-            }
-
-            return (preview.trim() + " " + source.preview).trim()
+        item.source?.series?.let {  series ->
+            doc.add(StringField(FieldName.ItemSeries, series.title.toLowerCase(), Field.Store.YES))
         }
 
-        return ""
+        item.source?.let { source ->
+            source.publishingDate?.let { publishingDate ->
+                doc.add(LongField(FieldName.ItemSourcePublishingDate, publishingDate.time, Field.Store.YES))
+                doc.add(StringField(FieldName.ItemSourcePublishingDateString, PublishingDateFormat.format(publishingDate).toLowerCase(), Field.Store.YES))
+            } ?: source.publishingDateString?.let { publishingDateString ->
+                doc.add(StringField(FieldName.ItemSourcePublishingDateString, publishingDateString.toLowerCase(), Field.Store.YES))
+            }
+
+            doc.add(Field(FieldName.ItemSource, source.preview, TextField.TYPE_NOT_STORED))
+        }
+
+        doc.add(StringField(FieldName.ItemSummaryForSorting, summaryPlainText.ofMaxLength(MaxItemSummaryPreviewForSortingLength).toLowerCase(), Field.Store.YES))
     }
 
     protected open fun addAdditionalFieldsToDocument(item: Item, contentPlainText: String, summaryPlainText: String, doc: Document) {

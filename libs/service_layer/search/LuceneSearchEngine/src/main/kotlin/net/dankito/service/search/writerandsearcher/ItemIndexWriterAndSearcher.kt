@@ -1,7 +1,6 @@
 package net.dankito.service.search.writerandsearcher
 
 import net.dankito.deepthought.model.Item
-import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.service.data.ItemService
 import net.dankito.service.data.messages.ItemChanged
 import net.dankito.service.eventbus.EventBusPriorities
@@ -64,7 +63,6 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
         val source = item.source
 
         if (source != null) {
-            doc.add(Field(FieldName.ItemSource, source.previewWithSeriesAndPublishingDate, TextField.TYPE_NOT_STORED))
             doc.add(StringField(FieldName.ItemSourceId, source.id, Field.Store.YES))
 
             source.series?.let { doc.add(StringField(FieldName.ItemSourceSeriesId, it.id, Field.Store.YES)) }
