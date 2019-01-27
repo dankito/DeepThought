@@ -31,7 +31,7 @@ class ItemIdsIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBu
     }
 
 
-    fun searchItemIds(search: ItemsSearch, termsToFilterFor: List<String>) {
+    fun searchItemIds(search: ItemsSearch) {
         val query = WildcardQuery(Term(getIdFieldName(), "*"))
 
         executeQueryForSearchWithCollectionResult(search, query, Item::class.java, MaxItemsSearchResults, *search.getLuceneSortOptions())

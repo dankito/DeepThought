@@ -216,7 +216,7 @@ class LuceneSearchEngine(private val settingsStore: ILocalSettingsStore, private
                 itemIdsIndexWriterAndSearcher.updateEntityInIndex(changedEntity)
                 itemIndexWriterAndSearcher.updateEntityInIndex(changedEntity)
             }
-        }, listOf())
+        })
     }
 
 
@@ -263,7 +263,7 @@ class LuceneSearchEngine(private val settingsStore: ILocalSettingsStore, private
 
     override fun searchItems(search: ItemsSearch, termsToSearchFor: List<String>) {
         if(search.isSearchingForItemIds()) {
-            itemIdsIndexWriterAndSearcher.searchItemIds(search, termsToSearchFor)
+            itemIdsIndexWriterAndSearcher.searchItemIds(search)
         }
         else {
             itemIndexWriterAndSearcher.searchItems(search, termsToSearchFor)
