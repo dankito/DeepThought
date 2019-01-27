@@ -48,12 +48,21 @@ class MainMenuBar(private val dataManager: DataManager) : View() {
     private lateinit var mnitmFileExport: Menu
 
 
+    private var isDataManagerInitialized = false
+
+    private var isUiInitialized = false
+
+
     init {
         dataManager.addInitializationListener {
             AppComponent.component.inject(this)
 
+            isDataManagerInitialized = true
+
             clipboardWatcher.addClipboardContentChangedExternallyListener { clipboardContentChangedExternally(it) }
             clipboardWatcher.addClipboardOptionsChangedListener { clipboardContentOptionsChanged(it) }
+
+            addImporterAndExporterIfInitialized()
         }
     }
 
@@ -90,8 +99,6 @@ class MainMenuBar(private val dataManager: DataManager) : View() {
                     mnitmFileImport = menu(messages["main.window.menu.file.import"])
 
                     mnitmFileExport = menu(messages["main.window.menu.file.export"])
-
-                    addImporterAndExporterAfterDataManagerInitialization()
 
                     separator()
 
@@ -135,6 +142,10 @@ class MainMenuBar(private val dataManager: DataManager) : View() {
 
             add(ArticleExtractorsMenuButton())
         }
+
+        isUiInitialized = true
+
+        addImporterAndExporterIfInitialized()
     }
 
 
@@ -143,11 +154,9 @@ class MainMenuBar(private val dataManager: DataManager) : View() {
     }
 
 
-    private fun addImporterAndExporterAfterDataManagerInitialization() {
-        dataManager.addInitializationListener {
-            runLater {
-                addImporterAndExporter()
-            }
+    private fun addImporterAndExporterIfInitialized() {
+        if (isDataManagerInitialized == isUiInitialized) {
+            addImporterAndExporter()
         }
     }
 
