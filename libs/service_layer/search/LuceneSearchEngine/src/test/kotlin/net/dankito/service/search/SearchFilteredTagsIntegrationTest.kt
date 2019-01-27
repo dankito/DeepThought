@@ -84,7 +84,7 @@ class SearchFilteredTagsIntegrationTest : LuceneSearchEngineIntegrationTestBase(
         val result = resultHolder.get()
         assertThat(result, notNullValue())
 
-        assertThat(result.tagsOnItemsContainingFilteredTags.size, `is`(testData.countTagsToFilter + testData.countTagsOnItemsWithTagsToFilter))
+        assertThat(result.tagsOnItemsContainingFilteredTags.size, `is`(testData.countTagsOnItemsWithTagsToFilter))
         assertThat(result.itemsHavingFilteredTags.size, `is`(testData.countItemsOnTagsToFilter))
     }
 
@@ -99,6 +99,9 @@ class SearchFilteredTagsIntegrationTest : LuceneSearchEngineIntegrationTestBase(
         testData.noiseTags = createNoiseTags(testData.countNoiseTags)
 
         testData.noiseItems = createNoiseItems(testData.countNoiseItems, testData.noiseTags, testData.tagsOnItemsWithTagsToFilter)
+
+        waitTillEntityGetsIndexed()
+        waitTillEntityGetsIndexed()
     }
 
     private fun createTagsToFilter(countTagsToFilter: Int): MutableList<Tag> {
