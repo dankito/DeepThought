@@ -2,8 +2,7 @@ package net.dankito.service.search.writerandsearcher
 
 import net.dankito.deepthought.model.Tag
 import net.dankito.service.search.LuceneSearchEngineIntegrationTestBase
-import org.hamcrest.CoreMatchers.`is`
-import org.hamcrest.MatcherAssert.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 
@@ -20,10 +19,10 @@ class TagIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
         val result = searchTags(tagWithSpace.name)
 
         // then
-        assertThat(result.results.size, `is`(1))
-        assertThat(result.results[0].hasExactMatches(), `is`(true))
-        assertThat(result.results[0].exactMatches.size, `is`(1))
-        assertThat(result.results[0].exactMatches[0], `is`(tagWithSpace))
+        assertThat(result.results).hasSize(1)
+        assertThat(result.results[0].hasExactMatches()).isTrue()
+        assertThat(result.results[0].exactMatches).hasSize(1)
+        assertThat(result.results[0].exactMatches[0]).isEqualTo(tagWithSpace)
     }
 
     @Test
@@ -36,10 +35,10 @@ class TagIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
         val result = searchTags(tagWithDash.name)
 
         // then
-        assertThat(result.results.size, `is`(1))
-        assertThat(result.results[0].hasExactMatches(), `is`(true))
-        assertThat(result.results[0].exactMatches.size, `is`(1))
-        assertThat(result.results[0].exactMatches[0], `is`(tagWithDash))
+        assertThat(result.results).hasSize(1)
+        assertThat(result.results[0].hasExactMatches()).isTrue()
+        assertThat(result.results[0].exactMatches).hasSize(1)
+        assertThat(result.results[0].exactMatches[0]).isEqualTo(tagWithDash)
     }
 
 
