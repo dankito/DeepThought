@@ -123,12 +123,12 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
             val sourcePreviewColumn = column(messages["item.column.header.source"], Item::sourcePreviewOrSummary) {
                 prefWidth(350)
 
-                id = FieldName.ItemPreviewForSorting
+                id = FieldName.ItemSourcePreviewForSorting
             }
             val contentPreviewColumn = column(messages["item.column.header.preview"], Item::preview) {
                 prefWidth(350)
 
-                id = FieldName.ItemSourcePreviewForSorting
+                id = FieldName.ItemPreviewForSorting
             }
 
             column(messages["item.column.header.tags"], Item::tagsPreview).prefWidth(196).isSortable = false
