@@ -41,23 +41,57 @@ class TagIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
         assertThat(result.results[0].exactMatches[0]).isEqualTo(tagWithDash)
     }
 
+    @Test
+    fun searchTags_TestSortOrder() {
+        // given
+        persist(Tag("A"))
+        persist(Tag("B"))
+        persist(Tag("c"))
+        persist(Tag("D"))
+        persist(Tag("E"))
+        persist(Tag("F"))
+        persist(Tag("G"))
+        persist(Tag("h"))
+        persist(Tag("o"))
+        persist(Tag("U"))
+        persist(Tag("Z"))
+        persist(Tag("Ärger"))
+        persist(Tag("Armutszeugnis"))
+        persist(Tag("Verschlüsselung"))
+        persist(Tag("Bild"))
+        persist(Tag("bundesregierung"))
+        persist(Tag("Heise"))
+        persist(Tag("Öl"))
+        persist(Tag("Polizei"))
+        persist(Tag("Verschlusselung"))
+        persist(Tag("Überwachungsstaat"))
 
-    private fun getSearchResult(searchTerm: String = Search.EmptySearchTerm) : TagsSearchResults {
-        val resultHolder = AtomicReference<TagsSearchResults?>(null)
-        val waitForResultLatch = CountDownLatch(1)
-
-        underTest.searchTags(TagsSearch(searchTerm) { result ->
-            resultHolder.set(result)
-
-            waitForResultLatch.countDown()
-        })
-
-        try { waitForResultLatch.await(4, TimeUnit.MINUTES) } catch (ignored: Exception) { }
+        waitTillEntityGetsIndexed()
 
 
-        assertThat(resultHolder.get(), CoreMatchers.notNullValue())
+        // when
+        val result = searchTags()
 
-        return resultHolder.get()!!
+        // then
+        assertThat(result.results).hasSize(1)
+//        assertThat(result.results[0].allMatchesCount).isEqualTo(21) // TODO
+        assertThat(result.results[0].hasExactMatches()).isFalse()
+
+        assertThat(result.getRelevantMatchesSorted()).extracting("name").containsExactly(
+                "A", "Ärger", "Armutszeugnis",
+                "B", "Bild", "bundesregierung",
+                "c",
+                "D",
+                "E",
+                "F",
+                "G",
+                "h", "Heise",
+                "o", "Öl",
+                "Polizei",
+                "U", "Überwachungsstaat",
+                "Verschlusselung", "Verschlüsselung",
+                "Z"
+        )
     }
 
     private fun persistTag(tag: Tag, countDummyTags: Int = 3) {

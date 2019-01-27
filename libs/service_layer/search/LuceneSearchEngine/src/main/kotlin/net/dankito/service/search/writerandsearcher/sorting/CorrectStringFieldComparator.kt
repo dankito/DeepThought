@@ -105,14 +105,16 @@ class CorrectStringFieldComparator : FieldComparator<BytesRef> {
     }
 
     override fun compare(slot1: Int, slot2: Int): Int {
-        if(readerGen[slot1] == readerGen[slot2]) {
+        // i don't know why but for most slots readerGen stays '0'.
+        // So i added 'readerGen[slot1] != 0' as otherwise doCompareValues() never gets called for them but a wrong value from ords[] gets returned
+        if(readerGen[slot1] == readerGen[slot2] && readerGen[slot1] != 0) {
             return ords[slot1] - ords[slot2]
         }
 
         val val1 = values[slot1]
         val val2 = values[slot2]
 
-        return compareValues(val1, val2)
+        return doCompareValues(val1, val2)
     }
 
     override fun compareBottom(doc: Int): Int {
