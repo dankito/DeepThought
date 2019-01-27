@@ -243,14 +243,7 @@ class CorrectStringFieldComparator : FieldComparator<BytesRef> {
     }
 
     override fun compareValues(val1: BytesRef?, val2: BytesRef?): Int {
-        val compareResult = doCompareValues(val1, val2)
-
-        if(reversed) {
-            return compareResult * -1
-        }
-        else {
-            return compareResult
-        }
+        return doCompareValues(val1, val2)
     }
 
     private fun doCompareValues(val1: BytesRef?, val2: BytesRef?): Int {
