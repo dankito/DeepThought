@@ -18,7 +18,6 @@ class ItemIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
         sortByItemPreview_SortByContent(true)
     }
 
-    // FIXME: CorrectStringComparatorSource doesn't work in this case, test therefore fails
     @Test
     fun sortByItemPreview_SortByContent_Descending() {
         sortByItemPreview_SortByContent(false)
@@ -59,7 +58,6 @@ class ItemIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
         sortByItemPreview_SortByContent_CaseSensitive(true)
     }
 
-    // FIXME: CorrectStringComparatorSource doesn't work in this case, test therefore fails
     @Test
     fun sortByItemPreview_SortByContent_CaseSensitive_Descending() {
         sortByItemPreview_SortByContent_CaseSensitive(false)
@@ -212,13 +210,11 @@ class ItemIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
     }
 
 
-    // FIXME: CorrectStringComparatorSource doesn't work in this case, test therefore fails
     @Test
     fun sortBySourcePreview_SortBySeriesPublishingDateSourceTitleAndSummary_Ascending() {
         sortBySourcePreview_SortBySeriesPublishingDateSourceTitleAndSummary(true)
     }
 
-    // FIXME: CorrectStringComparatorSource doesn't work in this case, test therefore fails
     @Test
     fun sortBySourcePreview_SortBySeriesPublishingDateSourceTitleAndSummary_Descending() {
         sortBySourcePreview_SortBySeriesPublishingDateSourceTitleAndSummary(false)
@@ -273,13 +269,11 @@ class ItemIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
     }
 
 
-    // FIXME: CorrectStringComparatorSource doesn't work in this case, test therefore fails
     @Test
     fun sortBySourcePreview_SortBySeriesPublishingDateSourceTitleAndSummary_CaseSensitive_Ascending() {
         sortBySourcePreview_SortBySeriesPublishingDateSourceTitleAndSummary_CaseSensitive(true)
     }
 
-    // FIXME: CorrectStringComparatorSource doesn't work in this case, test therefore fails
     @Test
     fun sortBySourcePreview_SortBySeriesPublishingDateSourceTitleAndSummary_CaseSensitive_Descending() {
         sortBySourcePreview_SortBySeriesPublishingDateSourceTitleAndSummary_CaseSensitive(false)
@@ -347,7 +341,6 @@ class ItemIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
         sortBySourcePreview_SortBySummary(true)
     }
 
-    // FIXME: CorrectStringComparatorSource doesn't work in this case, test therefore fails
     @Test
     fun sortBySourcePreview_SortBySummary_Descending() {
         sortBySourcePreview_SortBySummary(false)
