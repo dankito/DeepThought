@@ -15,7 +15,7 @@ object FieldName {
 
     val ItemId = "item_id"
 
-    val ItemSummary = "summary"
+    val ItemSummary = "item_summary"
     val ItemSummaryForSorting = "item_summary_for_sorting"
 
     val ItemContent = "item_content"
@@ -30,19 +30,19 @@ object FieldName {
 
     val ItemSeries = "item_series"
 
-    val ItemSource = "source_title"
+    val ItemSource = "item_source_title"
     val ItemSourcePublishingDate = "item_source_publishing_date"
     val ItemSourcePublishingDateString = "item_source_publishing_date_string"
-    val ItemSourceId = "source_id"
-    val ItemSourceSeriesId = "source_series_id"
-    val ItemNoSource = "no_source"
+    val ItemSourceId = "item_source_id"
+    val ItemSourceSeriesId = "item_source_series_id"
+    val ItemNoSource = "item_no_source"
 
     val ItemAttachedFilesIds = "item_attached_files_ids"
     val ItemAttachedFilesDetails = "item_attached_files_details"
     val ItemNoAttachedFiles = "item_no_attached_files"
 
-    val ItemNotes = "notes"
-    val ItemNoNotes = "no_notes"
+    val ItemNotes = "item_notes"
+    val ItemNoNotes = "item_no_notes"
 
     val ItemPreviewForSorting = "item_preview_for_sorting"
     val ItemSourcePreviewForSorting = "item_source_preview_for_sorting" // artificial key for ItemSeries, ItemSource, ItemSourcePublishingDate and ItemSourcePublishingDateString

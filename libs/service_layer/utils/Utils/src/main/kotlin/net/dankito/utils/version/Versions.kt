@@ -44,6 +44,7 @@ class Versions {
 
         - 2 -> 3:
           Added fields for sorting items by content and source preview
+          Prefixed item fields names with 'item_'
 
 
         HTML editor:
