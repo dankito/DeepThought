@@ -24,6 +24,8 @@ import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.eventbus.MBassadorEventBus
 import net.dankito.service.search.specific.ItemsSearch
+import net.dankito.service.search.specific.TagsSearch
+import net.dankito.service.search.specific.TagsSearchResults
 import net.dankito.service.search.util.SortOption
 import net.dankito.utils.OsHelper
 import net.dankito.utils.PlatformConfigurationBase
@@ -33,6 +35,8 @@ import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.settings.LocalSettingsStoreBase
 import net.dankito.utils.version.Versions
+import org.hamcrest.CoreMatchers
+import org.hamcrest.MatcherAssert
 import org.junit.After
 import java.io.File
 import java.text.SimpleDateFormat
@@ -209,6 +213,25 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         } catch (ignored: Exception) { }
 
         return resultHolder.get()
+    }
+
+
+    protected fun searchTags(searchTerm: String = Search.EmptySearchTerm) : TagsSearchResults {
+        val resultHolder = AtomicReference<TagsSearchResults?>(null)
+        val waitForResultLatch = CountDownLatch(1)
+
+        underTest.searchTags(TagsSearch(searchTerm) { result ->
+            resultHolder.set(result)
+
+            waitForResultLatch.countDown()
+        })
+
+        try { waitForResultLatch.await(4, TimeUnit.MINUTES) } catch (ignored: Exception) { }
+
+
+        MatcherAssert.assertThat(resultHolder.get(), CoreMatchers.notNullValue())
+
+        return resultHolder.get()!!
     }
 
 

@@ -2,16 +2,9 @@ package net.dankito.service.search.writerandsearcher
 
 import net.dankito.deepthought.model.Tag
 import net.dankito.service.search.LuceneSearchEngineIntegrationTestBase
-import net.dankito.service.search.Search
-import net.dankito.service.search.specific.TagsSearch
-import net.dankito.service.search.specific.TagsSearchResults
-import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicReference
 
 
 class TagIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
@@ -24,7 +17,7 @@ class TagIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
         persistTag(tagWithSpace)
 
         // when
-        val result = getSearchResult(tagWithSpace.name)
+        val result = searchTags(tagWithSpace.name)
 
         // then
         assertThat(result.results.size, `is`(1))
@@ -40,7 +33,7 @@ class TagIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
         persistTag(tagWithDash)
 
         // when
-        val result = getSearchResult(tagWithDash.name)
+        val result = searchTags(tagWithDash.name)
 
         // then
         assertThat(result.results.size, `is`(1))
@@ -69,10 +62,10 @@ class TagIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
     }
 
     private fun persistTag(tag: Tag, countDummyTags: Int = 3) {
-        tagService.persist(tag)
+        persist(tag)
 
         for(i in 0 until countDummyTags) {
-            tagService.persist(Tag("$i"))
+            persist(Tag("$i"))
         }
 
         waitTillEntityGetsIndexed()
