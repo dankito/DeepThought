@@ -212,9 +212,11 @@ class LuceneSearchEngine(private val settingsStore: ILocalSettingsStore, private
     private fun updateIndexFromVersion2To3() {
         itemIdsIndexWriterAndSearcher.searchItemIds(ItemsSearch("") { result ->
             result.forEach { item ->
-                val changedEntity = ChangedEntity(Item::class.java, item, item.id)
-                itemIdsIndexWriterAndSearcher.updateEntityInIndex(changedEntity)
-                itemIndexWriterAndSearcher.updateEntityInIndex(changedEntity)
+                if (item != null) { // happened to me during tests. Don't know how this can ever be the case?
+                    val changedEntity = ChangedEntity(Item::class.java, item, item.id)
+                    itemIdsIndexWriterAndSearcher.updateEntityInIndex(changedEntity)
+                    itemIndexWriterAndSearcher.updateEntityInIndex(changedEntity)
+                }
             }
         })
     }
