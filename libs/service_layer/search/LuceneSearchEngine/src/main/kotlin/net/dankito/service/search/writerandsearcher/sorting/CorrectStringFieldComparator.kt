@@ -256,8 +256,8 @@ class CorrectStringFieldComparator : FieldComparator<BytesRef> {
             return -missingSortCmp
         }
 
-        val string1 = String(val1.bytes).trim() // don't know why but some terms have (a lot of) white spaces at the starts, so remove them
-        val string2 = String(val2.bytes).trim()
+        val string1 = val1.utf8ToString()
+        val string2 = val2.utf8ToString()
 
         return collator.compare(string1, string2)
     }
