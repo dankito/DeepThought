@@ -196,6 +196,8 @@ class LuceneSearchEngine(private val settingsStore: ILocalSettingsStore, private
     }
 
     private fun updateIndexToCurrentVersion(currentIndexVersion: Int, searchEngineIndexVersion: Int) {
+        log.info("Going to update search index from version $currentIndexVersion to $searchEngineIndexVersion ...")
+
         if(currentIndexVersion == 2 && searchEngineIndexVersion == 3) {
             updateIndexFromVersion2To3()
         }
