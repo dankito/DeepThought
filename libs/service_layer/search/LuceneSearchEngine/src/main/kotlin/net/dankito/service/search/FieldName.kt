@@ -28,6 +28,8 @@ object FieldName {
     val ItemTagsNames = "item_tags_names"
     val ItemNoTags = "item_no_tags"
 
+    val ItemIndication = "item_indication"
+
     val ItemSeries = "item_series"
 
     val ItemSource = "item_source_title"

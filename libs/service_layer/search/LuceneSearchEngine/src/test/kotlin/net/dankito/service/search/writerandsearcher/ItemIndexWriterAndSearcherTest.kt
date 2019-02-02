@@ -419,4 +419,95 @@ class ItemIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
         }
     }
 
+
+    @Test
+    fun sortBySourcePreview_SortBySeriesPublishingDateSourceTitleSummaryAndIndication_CaseSensitive_Ascending() {
+        sortBySourcePreview_SortBySeriesPublishingDateSourceTitleSummaryAndIndication_CaseSensitive(true)
+    }
+
+    @Test
+    fun sortBySourcePreview_SortBySeriesPublishingDateSourceTitleSummaryAndIndication_CaseSensitive_Descending() {
+        sortBySourcePreview_SortBySeriesPublishingDateSourceTitleSummaryAndIndication_CaseSensitive(false)
+    }
+
+    private fun sortBySourcePreview_SortBySeriesPublishingDateSourceTitleSummaryAndIndication_CaseSensitive(ascending: Boolean) {
+        // given
+        val lowerCaseSeries = Series("c't")
+        persist(lowerCaseSeries)
+        val upperCaseSeries = Series("Heise")
+        persist(upperCaseSeries)
+
+        val publishingDate = "27.03.2019"
+
+        val sourceWithFirstTitleUpperCaseSeries = createSource("millions of passwords leaked", publishingDate, upperCaseSeries)
+        persist(sourceWithFirstTitleUpperCaseSeries)
+
+        val sourceWithSecondTitleUpperCaseSeries = createSource("No passwords leaked", publishingDate, upperCaseSeries)
+        persist(sourceWithSecondTitleUpperCaseSeries)
+
+        val sourceWithFirstTitleLowerCaseSeries = createSource("millions of passwords leaked", publishingDate, lowerCaseSeries)
+        persist(sourceWithFirstTitleLowerCaseSeries)
+
+        val sourceWithSecondTitleLowerCaseSeries = createSource("No passwords leaked", publishingDate, lowerCaseSeries)
+        persist(sourceWithSecondTitleLowerCaseSeries)
+
+
+        val sixthItem = Item(sourceWithFirstTitleUpperCaseSeries.previewWithSeriesAndPublishingDate + "p. 88") // to fix Item's equals() method in assert()
+        sixthItem.indication = "p. 88"
+        sixthItem.source = sourceWithFirstTitleUpperCaseSeries
+        persist(sixthItem)
+
+        val secondItem = Item(sourceWithFirstTitleLowerCaseSeries.previewWithSeriesAndPublishingDate + "p. 21")
+        secondItem.indication = "p. 21"
+        secondItem.source = sourceWithFirstTitleLowerCaseSeries
+        persist(secondItem)
+
+        val eighthItem = Item(sourceWithSecondTitleUpperCaseSeries.previewWithSeriesAndPublishingDate + "p. 2")
+        eighthItem.indication = "p. 2"
+        eighthItem.source = sourceWithSecondTitleUpperCaseSeries
+        persist(eighthItem)
+
+        val fourthItem = Item(sourceWithSecondTitleLowerCaseSeries.previewWithSeriesAndPublishingDate + "p. 56")
+        fourthItem.indication = "p. 56"
+        fourthItem.source = sourceWithSecondTitleLowerCaseSeries
+        persist(fourthItem)
+
+        val firstItem = Item(sourceWithFirstTitleLowerCaseSeries.previewWithSeriesAndPublishingDate + "p. 20")
+        firstItem.indication = "p. 20"
+        firstItem.source = sourceWithFirstTitleLowerCaseSeries
+        persist(firstItem)
+
+        val fifthItem = Item(sourceWithFirstTitleUpperCaseSeries.previewWithSeriesAndPublishingDate + "p. 87")
+        fifthItem.indication = "p. 87"
+        fifthItem.source = sourceWithFirstTitleUpperCaseSeries
+        persist(fifthItem)
+
+        val thirdItem = Item(sourceWithSecondTitleLowerCaseSeries.previewWithSeriesAndPublishingDate + "p. 55")
+        thirdItem.indication = "p. 55"
+        thirdItem.source = sourceWithSecondTitleLowerCaseSeries
+        persist(thirdItem)
+
+        val seventhItem = Item(sourceWithSecondTitleUpperCaseSeries.previewWithSeriesAndPublishingDate + "p. 1")
+        seventhItem.indication = "p. 1"
+        seventhItem.source = sourceWithSecondTitleUpperCaseSeries
+        persist(seventhItem)
+
+        waitTillEntityGetsIndexed()
+
+
+        // when
+        val result = searchItems("", sortOptions = listOf(SortOption(FieldName.ItemSourcePreviewForSorting, ascending)))
+
+
+        // then
+        assertThat(result).hasSize(8)
+
+        if(ascending) {
+            assertThat(result).containsExactly(firstItem, secondItem, thirdItem, fourthItem, fifthItem, sixthItem, seventhItem, eighthItem)
+        }
+        else {
+            assertThat(result).containsExactly(eighthItem, seventhItem, sixthItem, fifthItem, fourthItem, thirdItem, secondItem, firstItem)
+        }
+    }
+
 }

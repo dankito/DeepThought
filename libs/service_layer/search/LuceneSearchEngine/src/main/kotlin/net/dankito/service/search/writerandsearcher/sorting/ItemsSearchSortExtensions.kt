@@ -12,7 +12,8 @@ private val ItemSourcePreviewAscendingSortOptions = listOf(
         SortOption(FieldName.ItemSourcePublishingDate, SortOrder.Ascending, SortField.Type.LONG),
         SortOption(FieldName.ItemSourcePublishingDateString, SortOrder.Ascending, SortField.Type.STRING),
         SortOption(FieldName.ItemSource, SortOrder.Ascending, SortField.Type.STRING),
-        SortOption(FieldName.ItemSummaryForSorting, SortOrder.Ascending, SortField.Type.STRING)
+        SortOption(FieldName.ItemSummaryForSorting, SortOrder.Ascending, SortField.Type.STRING),
+        SortOption(FieldName.ItemIndication, SortOrder.Ascending, SortField.Type.STRING)
 )
 
 private val ItemSourcePreviewDescendingSortOptions = listOf(
@@ -20,7 +21,8 @@ private val ItemSourcePreviewDescendingSortOptions = listOf(
         SortOption(FieldName.ItemSourcePublishingDate, SortOrder.Descending, SortField.Type.LONG),
         SortOption(FieldName.ItemSourcePublishingDateString, SortOrder.Descending, SortField.Type.STRING),
         SortOption(FieldName.ItemSource, SortOrder.Descending, SortField.Type.STRING),
-        SortOption(FieldName.ItemSummaryForSorting, SortOrder.Descending, SortField.Type.STRING)
+        SortOption(FieldName.ItemSummaryForSorting, SortOrder.Descending, SortField.Type.STRING),
+        SortOption(FieldName.ItemIndication, SortOrder.Descending, SortField.Type.STRING)
 )
 
 
