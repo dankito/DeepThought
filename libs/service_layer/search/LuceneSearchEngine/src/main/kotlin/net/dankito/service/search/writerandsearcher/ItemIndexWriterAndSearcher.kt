@@ -152,6 +152,7 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
                     termQuery.add(PrefixQuery(Term(FieldName.ItemSummary, escapedTerm)), BooleanClause.Occur.SHOULD)
                 }
                 if(search.searchInSource) {
+                    termQuery.add(PrefixQuery(Term(FieldName.ItemSeries, escapedTerm)), BooleanClause.Occur.SHOULD)
                     termQuery.add(PrefixQuery(Term(FieldName.ItemSource, escapedTerm)), BooleanClause.Occur.SHOULD)
                 }
                 if(search.searchInTags) {

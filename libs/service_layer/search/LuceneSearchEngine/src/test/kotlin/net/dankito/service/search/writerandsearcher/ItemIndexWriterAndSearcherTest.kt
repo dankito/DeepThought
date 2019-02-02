@@ -68,6 +68,37 @@ class ItemIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
 
 
     @Test
+    fun seriesTitleContains() {
+        // given
+        val series = Series("This is Series")
+        persist(series)
+
+        val source = createSource("Source Title", "27.03.2019")
+        source.series = series
+        persist(source)
+
+        val itemWithSource = Item("With source")
+        itemWithSource.source = source
+        persist(itemWithSource)
+
+        val itemWithoutSource = Item("Without source")
+        persist(itemWithoutSource)
+
+        waitTillEntityGetsIndexed()
+
+
+        // when
+        val result = searchItems("series")
+
+
+        // then
+        assertThat(result).hasSize(1)
+
+        assertThat(result).containsExactly(itemWithSource)
+    }
+
+
+    @Test
     fun sortByItemPreview_SortByContent_Ascending() {
         sortByItemPreview_SortByContent(true)
     }

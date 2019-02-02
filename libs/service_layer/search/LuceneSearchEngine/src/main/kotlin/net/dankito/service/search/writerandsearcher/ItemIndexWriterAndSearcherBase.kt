@@ -10,10 +10,7 @@ import net.dankito.service.search.FieldName
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.OsHelper
 import net.dankito.utils.extensions.ofMaxLength
-import org.apache.lucene.document.Document
-import org.apache.lucene.document.Field
-import org.apache.lucene.document.LongField
-import org.apache.lucene.document.StringField
+import org.apache.lucene.document.*
 import java.text.SimpleDateFormat
 
 
@@ -49,7 +46,7 @@ abstract class ItemIndexWriterAndSearcherBase(itemService: ItemService, eventBus
         doc.add(StringField(FieldName.ItemPreviewForSorting, contentPlainText.trim().ofMaxLength(MaxItemPreviewSortLength).toLowerCase(), Field.Store.YES))
 
         item.source?.series?.let {  series ->
-            doc.add(StringField(FieldName.ItemSeries, series.title.toLowerCase(), Field.Store.YES))
+            doc.add(Field(FieldName.ItemSeries, series.title, TextField.TYPE_NOT_STORED))
         }
 
         item.source?.let { source ->
