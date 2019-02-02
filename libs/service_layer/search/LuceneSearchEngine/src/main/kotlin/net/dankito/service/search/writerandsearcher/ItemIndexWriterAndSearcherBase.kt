@@ -52,9 +52,9 @@ abstract class ItemIndexWriterAndSearcherBase(itemService: ItemService, eventBus
         item.source?.let { source ->
             source.publishingDate?.let { publishingDate ->
                 doc.add(LongField(FieldName.ItemSourcePublishingDate, publishingDate.time, Field.Store.YES))
-                doc.add(StringField(FieldName.ItemSourcePublishingDateString, PublishingDateFormat.format(publishingDate).toLowerCase(), Field.Store.YES))
+                doc.add(Field(FieldName.ItemSourcePublishingDateString, PublishingDateFormat.format(publishingDate).toLowerCase(), TextField.TYPE_NOT_STORED))
             } ?: source.publishingDateString?.let { publishingDateString ->
-                doc.add(StringField(FieldName.ItemSourcePublishingDateString, publishingDateString.toLowerCase(), Field.Store.YES))
+                doc.add(Field(FieldName.ItemSourcePublishingDateString, publishingDateString, TextField.TYPE_NOT_STORED))
             }
 
             doc.add(Field(FieldName.ItemSource, source.preview, TextField.TYPE_NOT_STORED))

@@ -66,6 +66,33 @@ class ItemIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
         assertThat(result).containsExactly(itemWithSource)
     }
 
+    @Test
+    fun sourcePublishingDateContains() {
+        // given
+        val source = createSource("Source Title", "27.03.2019")
+        persist(source)
+
+        val itemWithSource = Item("With source")
+        itemWithSource.source = source
+        persist(itemWithSource)
+
+        val itemWithoutSource = Item("Without source")
+        persist(itemWithoutSource)
+
+        waitTillEntityGetsIndexed()
+
+
+        // when
+        val result = searchItems("27")
+        val result2 = searchItems("2019")
+
+
+        // then
+        assertThat(result).hasSize(1)
+
+        assertThat(result).containsExactly(itemWithSource)
+    }
+
 
     @Test
     fun seriesTitleContains() {

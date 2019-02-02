@@ -143,6 +143,7 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
         else {
             for(term in termsToFilterFor) {
                 val escapedTerm = QueryParser.escape(term)
+                val wildcardEscapedTerm = "*$escapedTerm*"
                 val termQuery = BooleanQuery()
 
                 if(search.searchInContent) {
@@ -153,6 +154,7 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
                 }
                 if(search.searchInSource) {
                     termQuery.add(PrefixQuery(Term(FieldName.ItemSeries, escapedTerm)), BooleanClause.Occur.SHOULD)
+                    termQuery.add(WildcardQuery(Term(FieldName.ItemSourcePublishingDateString, wildcardEscapedTerm)), BooleanClause.Occur.SHOULD)
                     termQuery.add(PrefixQuery(Term(FieldName.ItemSource, escapedTerm)), BooleanClause.Occur.SHOULD)
                 }
                 if(search.searchInTags) {
