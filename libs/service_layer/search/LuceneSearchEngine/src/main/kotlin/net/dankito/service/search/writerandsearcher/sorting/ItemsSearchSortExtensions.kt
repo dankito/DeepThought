@@ -7,6 +7,10 @@ import net.dankito.service.search.specific.ItemsSearch
 import org.apache.lucene.search.SortField
 
 
+private val ItemDefaultSortOption = SortOption(FieldName.ItemCreated, SortOrder.Descending, SortField.Type.LONG)
+
+private val ItemDefaultSortOptions = Array(1) { ItemDefaultSortOption }
+
 private val ItemSourcePreviewAscendingSortOptions = listOf(
         SortOption(FieldName.ItemSeries, SortOrder.Ascending, SortField.Type.STRING),
         SortOption(FieldName.ItemSourcePublishingDate, SortOrder.Ascending, SortField.Type.LONG),
@@ -28,7 +32,7 @@ private val ItemSourcePreviewDescendingSortOptions = listOf(
 
 fun ItemsSearch.getLuceneSortOptions(): Array<SortOption> {
     if(this.sortOptions.isEmpty()) { // then use default sorting: sort by ItemCreated
-        return Array(1) { createDefaultSortOption() }
+        return ItemDefaultSortOptions
     }
     else {
         return this.sortOptions.map { mapToLuceneSortOption(it) }.filterNotNull().flatten().toTypedArray()
@@ -44,8 +48,6 @@ private fun mapToLuceneSortOption(sortOption: net.dankito.service.search.util.So
         else -> null
     }
 }
-
-private fun createDefaultSortOption() = SortOption(FieldName.ItemCreated, SortOrder.Descending, SortField.Type.LONG)
 
 private fun mapToSortOrder(ascending: Boolean): SortOrder {
     return if(ascending) SortOrder.Ascending else SortOrder.Descending
