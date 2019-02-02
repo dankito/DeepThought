@@ -94,6 +94,90 @@ class ItemIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
 
 
     @Test
+    fun sortBySourcePreview_SortBySummary_Ascending() {
+        sortBySourcePreview_SortBySummary(true)
+    }
+
+    @Test
+    fun sortBySourcePreview_SortBySummary_Descending() {
+        sortBySourcePreview_SortBySummary(false)
+    }
+
+    private fun sortBySourcePreview_SortBySummary(ascending: Boolean) {
+        // given
+        val itemWithSecondSummary = Item("", "Queen")
+        persist(itemWithSecondSummary)
+
+        val itemWithThirdSummary = Item("", "The Strokes")
+        persist(itemWithThirdSummary)
+
+        val itemWithFirstSummary = Item("", "Bloc Party")
+        persist(itemWithFirstSummary)
+
+        waitTillEntityGetsIndexed()
+
+
+        // when
+        val result = searchItems("", sortOptions = listOf(SortOption(FieldName.ItemSourcePreviewForSorting, ascending)))
+
+
+        // then
+        assertThat(result).hasSize(3)
+
+        if(ascending) {
+            assertThat(result).containsExactly(itemWithFirstSummary, itemWithSecondSummary, itemWithThirdSummary)
+        }
+        else {
+            assertThat(result).containsExactly(itemWithThirdSummary, itemWithSecondSummary, itemWithFirstSummary)
+        }
+    }
+
+
+    @Test
+    fun sortBySourcePreview_SortByIndication_Ascending() {
+        sortBySourcePreview_SortByIndication(true)
+    }
+
+    @Test
+    fun sortBySourcePreview_SortByIndication_Descending() {
+        sortBySourcePreview_SortByIndication(false)
+    }
+
+    private fun sortBySourcePreview_SortByIndication(ascending: Boolean) {
+        // given
+        val itemWithSecondIndication = Item("p. 16") // set content as equals() in assertThat() takes only content and summary into account
+        itemWithSecondIndication.indication = "p. 16"
+        persist(itemWithSecondIndication)
+
+        val itemWithThirdIndication = Item("p. 111") // set content as equals() in assertThat() takes only content and summary into account
+        itemWithThirdIndication.indication = "p. 111"
+        persist(itemWithThirdIndication)
+
+        val itemWithFirstIndication = Item("p. 5") // set content as equals() in assertThat() takes only content and summary into account
+        itemWithFirstIndication.indication = "p. 5"
+        persist(itemWithFirstIndication)
+
+        waitTillEntityGetsIndexed()
+
+
+        // when
+        val result = searchItems("", sortOptions = listOf(SortOption(FieldName.ItemSourcePreviewForSorting, ascending)))
+
+
+        // then
+        assertThat(result).hasSize(3)
+
+        // the problem is indication is a String and therefore sorted alphanumerically. The correct sort order would be reverse.
+        if(ascending) {
+            assertThat(result).containsExactly(itemWithThirdIndication, itemWithSecondIndication, itemWithFirstIndication)
+        }
+        else {
+            assertThat(result).containsExactly(itemWithFirstIndication, itemWithSecondIndication, itemWithThirdIndication)
+        }
+    }
+
+
+    @Test
     fun sortBySourcePreview_SortBySeriesAndPublishingDate_Ascending() {
         sortBySourcePreview_SortBySeriesAndPublishingDate(true)
     }
@@ -332,90 +416,6 @@ class ItemIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
         }
         else {
             assertThat(result).containsExactly(forthItem, thirdItem, secondItem, firstItem)
-        }
-    }
-
-
-    @Test
-    fun sortBySourcePreview_SortBySummary_Ascending() {
-        sortBySourcePreview_SortBySummary(true)
-    }
-
-    @Test
-    fun sortBySourcePreview_SortBySummary_Descending() {
-        sortBySourcePreview_SortBySummary(false)
-    }
-
-    private fun sortBySourcePreview_SortBySummary(ascending: Boolean) {
-        // given
-        val itemWithSecondSummary = Item("", "Queen")
-        persist(itemWithSecondSummary)
-
-        val itemWithThirdSummary = Item("", "The Strokes")
-        persist(itemWithThirdSummary)
-
-        val itemWithFirstSummary = Item("", "Bloc Party")
-        persist(itemWithFirstSummary)
-
-        waitTillEntityGetsIndexed()
-
-
-        // when
-        val result = searchItems("", sortOptions = listOf(SortOption(FieldName.ItemSourcePreviewForSorting, ascending)))
-
-
-        // then
-        assertThat(result).hasSize(3)
-
-        if(ascending) {
-            assertThat(result).containsExactly(itemWithFirstSummary, itemWithSecondSummary, itemWithThirdSummary)
-        }
-        else {
-            assertThat(result).containsExactly(itemWithThirdSummary, itemWithSecondSummary, itemWithFirstSummary)
-        }
-    }
-
-
-    @Test
-    fun sortBySourcePreview_SortByIndication_Ascending() {
-        sortBySourcePreview_SortByIndication(true)
-    }
-
-    @Test
-    fun sortBySourcePreview_SortByIndication_Descending() {
-        sortBySourcePreview_SortByIndication(false)
-    }
-
-    private fun sortBySourcePreview_SortByIndication(ascending: Boolean) {
-        // given
-        val itemWithSecondIndication = Item("")
-        itemWithSecondIndication.indication = "p. 16"
-        persist(itemWithSecondIndication)
-
-        val itemWithThirdIndication = Item("")
-        itemWithThirdIndication.indication = "p. 111"
-        persist(itemWithThirdIndication)
-
-        val itemWithFirstIndication = Item("")
-        itemWithFirstIndication.indication = "p. 5"
-        persist(itemWithFirstIndication)
-
-        waitTillEntityGetsIndexed()
-
-
-        // when
-        val result = searchItems("", sortOptions = listOf(SortOption(FieldName.ItemSourcePreviewForSorting, ascending)))
-
-
-        // then
-        assertThat(result).hasSize(3)
-
-        // the problem is indication is a String and therefore sorted alphanumerically. The correct sort order would be reverse.
-        if(ascending) {
-            assertThat(result).containsExactly(itemWithThirdIndication, itemWithSecondIndication, itemWithFirstIndication)
-        }
-        else {
-            assertThat(result).containsExactly(itemWithFirstIndication, itemWithSecondIndication, itemWithThirdIndication)
         }
     }
 
