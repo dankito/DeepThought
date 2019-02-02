@@ -22,7 +22,7 @@ object FieldName {
 
     val ItemIndex = "item_index"
 
-    val ItemCreated = "created"
+    val ItemCreated = "item_created"
 
     val ItemTagsIds = "item_tags_ids"
     val ItemTagsNames = "item_tags_names"
