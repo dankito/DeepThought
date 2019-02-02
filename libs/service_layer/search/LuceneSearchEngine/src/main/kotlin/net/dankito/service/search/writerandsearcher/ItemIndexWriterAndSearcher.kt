@@ -1,6 +1,9 @@
 package net.dankito.service.search.writerandsearcher
 
 import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.model.extensions.contentPlainText
+import net.dankito.deepthought.model.extensions.preview
+import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.service.data.ItemService
 import net.dankito.service.data.messages.ItemChanged
 import net.dankito.service.eventbus.EventBusPriorities
@@ -12,15 +15,30 @@ import net.dankito.service.search.specific.ItemsSearch
 import net.dankito.service.search.writerandsearcher.sorting.getLuceneSortOptions
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.OsHelper
+import net.dankito.utils.extensions.ofMaxLength
 import net.engio.mbassy.listener.Handler
 import org.apache.lucene.document.*
 import org.apache.lucene.index.Term
 import org.apache.lucene.queryparser.classic.QueryParser
 import org.apache.lucene.search.*
+import java.text.SimpleDateFormat
 
 
 class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, osHelper: OsHelper, threadPool: IThreadPool)
-    : ItemIndexWriterAndSearcherBase(itemService, eventBus, osHelper, threadPool) {
+    : IndexWriterAndSearcher<Item>(itemService, eventBus, osHelper, threadPool) {
+
+    companion object {
+        @JvmStatic
+        protected val MaxItemsSearchResults = 1000000 // e.g. for AllItemsCalculatedTag all items must be returned
+
+        @JvmStatic
+        protected val PublishingDateFormat = SimpleDateFormat("yyyy.MM.dd")
+
+        @JvmStatic
+        protected val MaxItemPreviewSortLength = 50
+        @JvmStatic
+        protected val MaxItemSummaryPreviewForSortingLength = 20
+    }
 
 
     override fun getDirectoryName(): String {
@@ -32,19 +50,29 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
     }
 
 
-    override fun addAdditionalFieldsToDocument(item: Item, contentPlainText: String, summaryPlainText: String, doc: Document) {
+    override fun addEntityFieldsToDocument(entity: Item, doc: Document) {
+        val contentPlainText = entity.contentPlainText
+        val summaryPlainText = entity.summaryPlainText
+
+        doc.add(LongField(FieldName.ItemCreated, entity.createdOn.time, Field.Store.YES))
+
         doc.add(Field(FieldName.ItemSummary, summaryPlainText, TextField.TYPE_NOT_STORED))
         doc.add(Field(FieldName.ItemContent, contentPlainText, TextField.TYPE_NOT_STORED))
 
-        doc.add(LongField(FieldName.ItemIndex, item.itemIndex, Field.Store.YES))
+        doc.add(StringField(FieldName.ItemSummaryForSorting, summaryPlainText.ofMaxLength(MaxItemSummaryPreviewForSortingLength).toLowerCase(), Field.Store.YES))
+        doc.add(StringField(FieldName.ItemPreviewForSorting, contentPlainText.trim().ofMaxLength(MaxItemPreviewSortLength).toLowerCase(), Field.Store.YES))
 
-        addTagsToDocument(item, doc)
+        doc.add(StringField(FieldName.ItemIndication, entity.indication.toLowerCase(), Field.Store.YES))
 
-        addSourceToDocument(item, doc)
+        doc.add(LongField(FieldName.ItemIndex, entity.itemIndex, Field.Store.YES))
 
-        addFilesToDocument(item, doc)
+        addTagsToDocument(entity, doc)
 
-        defaultAnalyzer.setNextItemToBeAnalyzed(item, contentPlainText, summaryPlainText)
+        addSourceToDocument(entity, doc)
+
+        addFilesToDocument(entity, doc)
+
+        defaultAnalyzer.setNextItemToBeAnalyzed(entity, contentPlainText, summaryPlainText)
     }
 
     private fun addTagsToDocument(item: Item, doc: Document) {
@@ -64,8 +92,19 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
 
         if (source != null) {
             doc.add(StringField(FieldName.ItemSourceId, source.id, Field.Store.YES))
+            doc.add(Field(FieldName.ItemSource, source.preview, TextField.TYPE_NOT_STORED))
 
-            source.series?.let { doc.add(StringField(FieldName.ItemSourceSeriesId, it.id, Field.Store.YES)) }
+            source.publishingDate?.let { publishingDate ->
+                doc.add(LongField(FieldName.ItemSourcePublishingDate, publishingDate.time, Field.Store.YES))
+                doc.add(Field(FieldName.ItemSourcePublishingDateString, PublishingDateFormat.format(publishingDate), TextField.TYPE_NOT_STORED))
+            } ?: source.publishingDateString?.let { publishingDateString ->
+                doc.add(Field(FieldName.ItemSourcePublishingDateString, publishingDateString, TextField.TYPE_NOT_STORED))
+            }
+
+            source.series?.let {  series ->
+                doc.add(StringField(FieldName.ItemSourceSeriesId, series.id, Field.Store.YES))
+                doc.add(Field(FieldName.ItemSeries, series.title, TextField.TYPE_NOT_STORED))
+            }
         }
         else {
             doc.add(StringField(FieldName.ItemNoSource, FieldValue.NoSourceFieldValue, Field.Store.NO))

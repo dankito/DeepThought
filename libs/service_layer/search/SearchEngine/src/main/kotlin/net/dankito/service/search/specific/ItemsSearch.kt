@@ -20,7 +20,12 @@ class ItemsSearch(searchTerm: String = Search.EmptySearchTerm,
 
     fun isSearchingForItemIds(): Boolean {
         return searchTerm.isBlank() && searchOnlyItemsWithoutTags == false && itemsMustHaveTheseTags.isEmpty() &&
-                itemsMustHaveThisSource == null && itemsMustHaveThisSeries == null && itemsMustHaveTheseFiles.isEmpty()
+                itemsMustHaveThisSource == null && itemsMustHaveThisSeries == null && itemsMustHaveTheseFiles.isEmpty() &&
+                (sortOptions.isEmpty() || isOnlySortingByItemCreated(sortOptions))
+    }
+
+    private fun isOnlySortingByItemCreated(sortOptions: List<SortOption>): Boolean {
+        return sortOptions.size == 1 && sortOptions[0].property == "item_created" // this is bad, we cannot reference FieldName.ItemCreated here
     }
 
 }
