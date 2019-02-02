@@ -14,6 +14,30 @@ class ItemIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
 
 
     @Test
+    fun indicationContains() {
+        // given
+        val itemWithSource = Item("With indication")
+        itemWithSource.indication = "p. 72"
+        persist(itemWithSource)
+
+        val itemWithoutSource = Item("Without indication")
+        persist(itemWithoutSource)
+
+        waitTillEntityGetsIndexed()
+
+
+        // when
+        val result = searchItems("72")
+
+
+        // then
+        assertThat(result).hasSize(1)
+
+        assertThat(result).containsExactly(itemWithSource)
+    }
+
+
+    @Test
     fun sourceTitleContains() {
         // given
         val source = createSource("Source Title", "27.03.2019")
