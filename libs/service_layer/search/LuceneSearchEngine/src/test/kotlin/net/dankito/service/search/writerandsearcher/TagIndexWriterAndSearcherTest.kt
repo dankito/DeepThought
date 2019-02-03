@@ -67,6 +67,7 @@ class TagIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
         persist(Tag("Überwachungsstaat"))
 
         waitTillEntityGetsIndexed()
+        waitTillEntityGetsIndexed()
 
 
         // when
