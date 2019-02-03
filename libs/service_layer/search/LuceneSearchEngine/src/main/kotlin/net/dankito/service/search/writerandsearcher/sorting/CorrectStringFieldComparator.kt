@@ -105,9 +105,9 @@ class CorrectStringFieldComparator : FieldComparator<BytesRef> {
     }
 
     override fun compare(slot1: Int, slot2: Int): Int {
-        // i don't know why but for most slots readerGen stays '0'.
-        // So i added 'readerGen[slot1] != 0' as otherwise doCompareValues() never gets called for them but a wrong value from ords[] gets returned
-        if(readerGen[slot1] == readerGen[slot2] && readerGen[slot1] != 0) {
+        // i don't know why but for most slots readerGen stays '0' and therefore doCompareValues() never gets called for them.
+        // But for terms with accents ords[] contains a wrong value. For these terms ensure doCompareValues() gets called.
+        if(readerGen[slot1] == readerGen[slot2] && containsNonAsciiCharacters(slot1, slot2) == false) {
             return ords[slot1] - ords[slot2]
         }
 
@@ -115,6 +115,30 @@ class CorrectStringFieldComparator : FieldComparator<BytesRef> {
         val val2 = values[slot2]
 
         return doCompareValues(val1, val2)
+    }
+
+    private fun containsNonAsciiCharacters(slot1: Int, slot2: Int): Boolean {
+        val val1 = values[slot1]
+        val val2 = values[slot2]
+
+        if (val1 == null || val2 == null) {
+            return false
+        }
+
+        return containsNonAsciiCharacters(val1) || containsNonAsciiCharacters(val2)
+    }
+
+    private fun containsNonAsciiCharacters(bytesRef: BytesRef): Boolean {
+        // the actual characters in bytesRef range from bytesRef.offset to (bytesRef.offset + bytesRef.length)
+        IntRange(bytesRef.offset, bytesRef.offset + bytesRef.length - 1).forEach { charIndex ->
+            val byte = bytesRef.bytes[charIndex]
+
+            if (byte.toInt().and(255) > 127) { // check if byte is a non ASCII character == is greater than 127
+                return true
+            }
+        }
+
+        return false
     }
 
     override fun compareBottom(doc: Int): Int {
