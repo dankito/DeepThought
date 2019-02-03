@@ -1,13 +1,11 @@
 package net.dankito.newsreader.summary
 
-import net.dankito.utils.web.client.IWebClient
 import net.dankito.newsreader.article.ZeitArticleExtractor
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
+import net.dankito.utils.web.client.IWebClient
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import java.util.*
-import kotlin.collections.HashMap
 
 class ZeitArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryExtractorBase(webClient) {
 
@@ -43,8 +41,8 @@ class ZeitArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryExtract
                 val summary = articleDiv.select("p").first()?.text()?.trim() ?: ""
                 if(summary.isNotBlank() || articleElement.className()?.contains("teaser-topic-item") == true
                         || articleElement.className()?.contains("teaser-buzzboard") == true) { // teaser topics don't have a summary
-                    articleDiv.select("h2 a").first()?.let { headerAnchor ->
-                        return extractItemFromHeaderAnchor(headerAnchor, summary, articleElement, articleDiv, alreadyExtractedArticles)
+                    articleDiv.select("h3").first()?.let { headerElement ->
+                        return extractItem(headerElement, summary, articleElement, articleDiv, alreadyExtractedArticles)
                     }
                 }
             }
@@ -53,16 +51,16 @@ class ZeitArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryExtract
         return null
     }
 
-    private fun extractItemFromHeaderAnchor(headerAnchor: Element, summary: String, articleElement: Element, articleDiv: Element, alreadyExtractedArticles: HashMap<String, ArticleSummaryItem>): ArticleSummaryItem? {
-        val url = headerAnchor.attr("href")
+    private fun extractItem(headerElement: Element, summary: String, articleElement: Element, articleDiv: Element, alreadyExtractedArticles: HashMap<String, ArticleSummaryItem>): ArticleSummaryItem? {
+        val header = headerElement.text().trim()
+        val url = articleElement.select("a").firstOrNull()?.attr("href") ?: ""
 
         if(shouldAddArticle(url, summary, alreadyExtractedArticles)) {
-            val item = ArticleSummaryItem(url, headerAnchor.attr("title").trim(), ZeitArticleExtractor::class.java, summary)
+            val item = ArticleSummaryItem(url, header, ZeitArticleExtractor::class.java, summary)
 
-            item.previewImageUrl = extractPreviewImageUrl(articleElement)
-            item.publishedDate = extractPublishingDate(articleDiv)
+            item.previewImageUrl = articleElement.select("img").firstOrNull()?.attr("src")
 
-            if(articleElement.attr("data-zplus") == "zplus-register") {
+            if(articleElement.attr("data-zplus").contains("zplus")) {
                 item.title = "ZeitPlus: " + item.title
             }
 
@@ -85,22 +83,6 @@ class ZeitArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryExtract
         }
 
         return false
-    }
-
-    private fun extractPreviewImageUrl(articleElement: Element): String? {
-        articleElement.select("figure meta[itemprop=\'url\']").first()?.let { figureUrlMetaElement ->
-            return figureUrlMetaElement.attr("content")
-        }
-
-        return null
-    }
-
-    private fun extractPublishingDate(articleDiv: Element): Date? {
-        articleDiv.select("div time").first()?.let { timeElement ->
-            return parseIsoDateTimeString(timeElement.attr("datetime"))
-        }
-
-        return null
     }
 
 
