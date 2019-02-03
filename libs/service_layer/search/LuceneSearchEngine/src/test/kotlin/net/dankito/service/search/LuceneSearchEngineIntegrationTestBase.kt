@@ -183,6 +183,10 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         seriesService.persist(series)
     }
 
+    protected fun persist(file: FileLink) {
+        fileService.persist(file)
+    }
+
     protected fun waitTillEntityGetsIndexed() {
         try {
             Thread.sleep(1000)

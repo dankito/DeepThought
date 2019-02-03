@@ -1,7 +1,9 @@
 package net.dankito.service.search.writerandsearcher
 
+import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Series
+import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.service.search.FieldName
 import net.dankito.service.search.LuceneSearchEngineIntegrationTestBase
@@ -644,6 +646,254 @@ class ItemIndexWriterAndSearcherTest : LuceneSearchEngineIntegrationTestBase() {
         else {
             assertThat(result).containsExactly(eighthItem, seventhItem, sixthItem, fifthItem, fourthItem, thirdItem, secondItem, firstItem)
         }
+    }
+
+
+    @Test
+    fun searchTermMatchContainsNotContent() {
+        // given
+        val itemObama = Item("Obama")
+        persist(itemObama)
+
+        val itemObamaTrump = Item("Obama Trump")
+        persist(itemObamaTrump)
+
+        waitTillEntityGetsIndexed()
+
+
+        // when
+        val result = searchItems("obama !trump")
+
+
+        // then
+        assertThat(result).hasSize(1)
+
+        assertThat(result).containsExactly(itemObama)
+    }
+
+    @Test
+    fun searchTermMatchContainsNotSummary() {
+        // given
+        val itemObama = Item("", "Obama")
+        persist(itemObama)
+
+        val itemObamaTrump = Item("", "Obama Trump")
+        persist(itemObamaTrump)
+
+        waitTillEntityGetsIndexed()
+
+
+        // when
+        val result = searchItems("obama !trump")
+
+
+        // then
+        assertThat(result).hasSize(1)
+
+        assertThat(result).containsExactly(itemObama)
+    }
+
+    @Test
+    fun searchTermMatchContainsNotIndication() {
+        // given
+        val itemObama = Item("Obama")
+        itemObama.indication = "p. 1"
+        persist(itemObama)
+
+        val itemObamaTrump = Item("Obama Trump")
+        itemObamaTrump.indication = "p. 2"
+        persist(itemObamaTrump)
+
+        waitTillEntityGetsIndexed()
+
+
+        // when
+        val result = searchItems("1 !2")
+
+
+        // then
+        assertThat(result).hasSize(1)
+
+        assertThat(result).containsExactly(itemObama)
+    }
+
+    @Test
+    fun searchTermMatchContainsNotSourceTitle() {
+        // given
+        val sourceObama = createSource("Obama", "04.08.1961")
+        persist(sourceObama)
+
+        val itemObama = Item("O")
+        itemObama.source = sourceObama
+        persist(itemObama)
+
+        val sourceObamaTrump = createSource("Obama Trump", "14.06.1946")
+        persist(sourceObamaTrump)
+
+        val itemObamaTrump = Item("O T")
+        itemObamaTrump.source = sourceObamaTrump
+        persist(itemObamaTrump)
+
+        waitTillEntityGetsIndexed()
+
+
+        // when
+        val result = searchItems("obama !trump")
+
+
+        // then
+        assertThat(result).hasSize(1)
+
+        assertThat(result).containsExactly(itemObama)
+    }
+
+    @Test
+    fun searchTermMatchContainsNotSourcePublishingDate() {
+        // given
+        val sourceObama = createSource("Obama", "04.08.1961")
+        persist(sourceObama)
+
+        val itemObama = Item("O")
+        itemObama.source = sourceObama
+        persist(itemObama)
+
+        val sourceObamaTrump = createSource("Obama Trump", "14.06.1946")
+        persist(sourceObamaTrump)
+
+        val itemObamaTrump = Item("O T")
+        itemObamaTrump.source = sourceObamaTrump
+        persist(itemObamaTrump)
+
+        waitTillEntityGetsIndexed()
+
+
+        // when
+        val result = searchItems("1961 !1946")
+
+
+        // then
+        assertThat(result).hasSize(1)
+
+        assertThat(result).containsExactly(itemObama)
+    }
+
+    @Test
+    fun searchTermMatchContainsNotSeriesTitle() {
+        // given
+        val seriesObama = Series("Obama")
+        persist(seriesObama)
+
+        val sourceObama = createSource("", "04.08.1961", seriesObama)
+        persist(sourceObama)
+
+        val itemObama = Item("O")
+        itemObama.source = sourceObama
+        persist(itemObama)
+
+        val seriesObamaTrump = Series("Obama Trump")
+        persist(seriesObamaTrump)
+
+        val sourceObamaTrump = createSource("", "14.06.1946", seriesObamaTrump)
+        persist(sourceObamaTrump)
+
+        val itemObamaTrump = Item("O T")
+        itemObamaTrump.source = sourceObamaTrump
+        persist(itemObamaTrump)
+
+        waitTillEntityGetsIndexed()
+
+
+        // when
+        val result = searchItems("obama !trump")
+
+
+        // then
+        assertThat(result).hasSize(1)
+
+        assertThat(result).containsExactly(itemObama)
+    }
+
+    @Test
+    fun searchTermMatchContainsNotTagName() {
+        // given
+        val tagObama = Tag("Obama")
+        persist(tagObama)
+
+        val itemObama = Item("O")
+        itemObama.addTag(tagObama)
+        persist(itemObama)
+
+        val tagObamaTrump = Tag("Obama Trump")
+        persist(tagObamaTrump)
+
+        val itemObamaTrump = Item("O T")
+        itemObamaTrump.addTag(tagObamaTrump)
+        persist(itemObamaTrump)
+
+        waitTillEntityGetsIndexed()
+
+
+        // when
+        val result = searchItems("obama !trump")
+
+
+        // then
+        assertThat(result).hasSize(1)
+
+        assertThat(result).containsExactly(itemObama)
+    }
+
+    @Test
+    fun searchTermMatchContainsNotFile() {
+        // given
+        val fileObama = FileLink("", "Obama")
+        persist(fileObama)
+
+        val itemObama = Item("O")
+        itemObama.addAttachedFile(fileObama)
+        persist(itemObama)
+
+        val fileObamaTrump = FileLink("", "Obama Trump")
+        persist(fileObamaTrump)
+
+        val itemObamaTrump = Item("O T")
+        itemObamaTrump.addAttachedFile(fileObamaTrump)
+        persist(itemObamaTrump)
+
+        waitTillEntityGetsIndexed()
+
+
+        // when
+        val result = searchItems("obama !trump")
+
+
+        // then
+        assertThat(result).hasSize(1)
+
+        assertThat(result).containsExactly(itemObama)
+    }
+
+    @Test
+    fun searchTermMatchContainsNotWithoutTerm() {
+        // given
+        val itemObama = Item("Obama")
+        persist(itemObama)
+
+        val itemObamaTrump = Item("Obama Trump")
+        persist(itemObamaTrump)
+
+        waitTillEntityGetsIndexed()
+
+
+        // when
+        // check if '!' without a term following it messes up search results. Needed as otherwise while typing '!' returns an empty result list
+        val result = searchItems("obama ! ")
+
+
+        // then
+        assertThat(result).hasSize(2)
+
+        assertThat(result).containsExactlyInAnyOrder(itemObama, itemObamaTrump)
     }
 
 }

@@ -18,7 +18,7 @@ class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool
     override fun close() {
     }
 
-    override fun searchItems(search: ItemsSearch, termsToSearchFor: List<String>) {
+    override fun searchItems(search: ItemsSearch, termsToSearchFor: List<SearchTerm>) {
         if(search.searchOnlyItemsWithoutTags) {
             getItemsWithoutTags(search)
         }
@@ -77,27 +77,27 @@ class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool
     }
 
     override fun searchSources(search: SourceSearch, termsToSearchFor: List<String>) {
-        searchForEntitiesOfType(Source::class.java, search, termsToSearchFor, { it.sortedBy { it.title }.sortedByDescending { it.publishingDate }.sortedBy { it.series?.title }}) { source ->
+        searchForEntitiesOfType(Source::class.java, search, termsToSearchFor.map { SearchTerm(it, SearchTermMatch.Contains) }, { it.sortedBy { it.title }.sortedByDescending { it.publishingDate }.sortedBy { it.series?.title }}) { source ->
             listOf(source.title.toLowerCase(), source.subTitle.toLowerCase(), source.series?.title?.toLowerCase() ?: "",
                     source.publishingDateString ?: "", source.issue?.toLowerCase() ?: "")
         }
     }
 
     override fun searchSeries(search: SeriesSearch, termsToSearchFor: List<String>) {
-        searchForEntitiesOfType(Series::class.java, search, termsToSearchFor, { it.sortedBy { it.title } }) { series ->
+        searchForEntitiesOfType(Series::class.java, search, termsToSearchFor.map { SearchTerm(it, SearchTermMatch.Contains) }, { it.sortedBy { it.title } }) { series ->
             listOf(series.title.toLowerCase())
         }
     }
 
     override fun searchReadLaterArticles(search: ReadLaterArticleSearch, termsToSearchFor: List<String>) {
-        searchForEntitiesOfType(ReadLaterArticle::class.java, search, termsToSearchFor, { it.sortedByDescending { it.createdOn } }) { article ->
+        searchForEntitiesOfType(ReadLaterArticle::class.java, search, termsToSearchFor.map { SearchTerm(it, SearchTermMatch.Contains) }, { it.sortedByDescending { it.createdOn } }) { article ->
             listOf(article.itemPreview.toLowerCase(), article.sourcePreview.toLowerCase())
         }
     }
 
     override fun searchFiles(search: FilesSearch, termsToSearchFor: List<String>) {
         // TODO: implement fileType, searchUri, ...
-        searchForEntitiesOfType(FileLink::class.java, search, termsToSearchFor, { it.sortedByDescending { it.createdOn } }) { file ->
+        searchForEntitiesOfType(FileLink::class.java, search, termsToSearchFor.map { SearchTerm(it, SearchTermMatch.Contains) }, { it.sortedByDescending { it.createdOn } }) { file ->
             listOf(file.uriString.toLowerCase(), file.name.toLowerCase(), file.description.toLowerCase(), file.sourceUriString.toLowerCase())
         }
     }
@@ -123,8 +123,8 @@ class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool
     }
 
 
-    private fun <T : BaseEntity> searchForEntitiesOfType(type: Class<T>, search: SearchWithCollectionResult<T>, termsToSearchFor: List<String>, sortResults: ((List<T>) -> List<T>)? = null,
-                                                         mapEntityToValues: (T) -> List<String>) {
+    private fun <T : BaseEntity> searchForEntitiesOfType(type: Class<T>, search: SearchWithCollectionResult<T>, termsToSearchFor: List<SearchTerm>,
+                                                         sortResults: ((List<T>) -> List<T>)? = null, mapEntityToValues: (T) -> List<String>) {
         val items = entityManager.getAllEntitiesOfType(type)
         var results: List<T> = ArrayList()
 
@@ -133,7 +133,7 @@ class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool
         }
         else {
             items.forEach itemLoop@ { item ->
-                if(containsSearchTerms(termsToSearchFor, *mapEntityToValues(item).toTypedArray())) {
+                if(matchesSearchTerms(termsToSearchFor, *mapEntityToValues(item).toTypedArray())) {
                     (results as MutableList).add(item)
                 }
 
@@ -149,18 +149,22 @@ class InMemorySearchEngine(private val entityManager: IEntityManager, threadPool
         search.fireSearchCompleted()
     }
 
-    private fun containsSearchTerms(termsToSearchFor: List<String>, vararg entityValues: String): Boolean {
+    private fun matchesSearchTerms(termsToSearchFor: List<SearchTerm>, vararg entityValues: String): Boolean {
         termsToSearchFor.forEach { term ->
-            var containsTerm = false
+            var matchesTerm = false
 
             entityValues.forEach { value ->
-                if(value.contains(term)) {
-                    containsTerm = true
+                if(term.match == SearchTermMatch.Contains && value.contains(term.term)) {
+                    matchesTerm = true
+                    return@forEach
+                }
+                else if(term.match == SearchTermMatch.ContainsNot && value.contains(term.term) == false) {
+                    matchesTerm = true
                     return@forEach
                 }
             }
 
-            if(containsTerm == false) {
+            if(matchesTerm == false) {
                 return false
             }
         }

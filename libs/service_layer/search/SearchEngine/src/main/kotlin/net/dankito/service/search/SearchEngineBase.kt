@@ -20,16 +20,16 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
 
 
     override fun searchItems(search: ItemsSearch) {
-        val termsToSearchFor = getSingleSearchTerms(search.searchTerm, DefaultSearchTermSeparator)
+        val termsToSearchFor = getParsedSingleSearchTerms(search.searchTerm, DefaultSearchTermSeparator)
 
         threadPool.runAsync { searchItems(search, termsToSearchFor) }
     }
 
-    abstract fun searchItems(search: ItemsSearch, termsToSearchFor: List<String>)
+    abstract fun searchItems(search: ItemsSearch, termsToSearchFor: List<SearchTerm>)
 
 
     override fun searchTags(search: TagsSearch) {
-        var tagNamesToFilterFor: List<String> = ArrayList<String>()
+        var tagNamesToFilterFor: List<String> = ArrayList()
 
         if (search.searchTerm.isNullOrBlank() == false) {
             tagNamesToFilterFor = getSingleSearchTerms(search.searchTerm, TagsSearchTermSeparator, false, false)
@@ -44,7 +44,7 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
 
 
     override fun searchFilteredTags(search: FilteredTagsSearch) {
-        var tagNamesToFilterFor: List<String> = ArrayList<String>()
+        var tagNamesToFilterFor: List<String> = ArrayList()
 
         if (search.searchTerm.isNullOrBlank() == false) {
             tagNamesToFilterFor = getSingleSearchTerms(search.searchTerm, TagsSearchTermSeparator, removeEmptySearchTerms = false)
@@ -103,6 +103,26 @@ abstract class SearchEngineBase(protected val threadPool: IThreadPool) : ISearch
         else {
             return singleSearchTerms
         }
+    }
+
+    private fun getParsedSingleSearchTerms(overallSearchTerm: String, separator: String, lowerCaseSearchTerm: Boolean = true, removeEmptySearchTerms: Boolean = true):
+            List<SearchTerm> {
+
+        val searchTermsStrings = getSingleSearchTerms(overallSearchTerm, separator, lowerCaseSearchTerm, removeEmptySearchTerms)
+
+        return searchTermsStrings.map { parseSearchTerm(it) }.filterNotNull()
+    }
+
+    private fun parseSearchTerm(searchTermString: String): SearchTerm? {
+        if (searchTermString.startsWith("!")) {
+            if (searchTermString == "!") { // filter out '!' without a search term following it as otherwise an empty search result list would be returned
+                return null
+            }
+
+            return SearchTerm(searchTermString.substring(1), SearchTermMatch.ContainsNot)
+        }
+
+        return SearchTerm(searchTermString, SearchTermMatch.Contains)
     }
 
 

@@ -11,6 +11,8 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.FieldName
 import net.dankito.service.search.FieldValue
 import net.dankito.service.search.FieldValue.NoTagsFieldValue
+import net.dankito.service.search.SearchTerm
+import net.dankito.service.search.SearchTermMatch
 import net.dankito.service.search.specific.ItemsSearch
 import net.dankito.service.search.writerandsearcher.sorting.getLuceneSortOptions
 import net.dankito.utils.IThreadPool
@@ -115,7 +117,7 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
         if (item.hasAttachedFiles()) {
             for (file in item.attachedFiles.filterNotNull().filter { it.id != null }) {
                 doc.add(StringField(FieldName.ItemAttachedFilesIds, file.id, Field.Store.YES))
-                doc.add(StringField(FieldName.ItemAttachedFilesDetails, file.name.toLowerCase(), Field.Store.NO)) // TODO: which information should get stored for a File?
+                doc.add(Field(FieldName.ItemAttachedFilesDetails, file.name, TextField.TYPE_NOT_STORED)) // TODO: which information should get stored for a File?
             }
         }
         else {
@@ -124,7 +126,7 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
     }
 
 
-    fun searchItems(search: ItemsSearch, termsToFilterFor: List<String>) {
+    fun searchItems(search: ItemsSearch, termsToFilterFor: List<SearchTerm>) {
         val query = BooleanQuery()
 
         addQueryForOptions(search, query)
@@ -175,33 +177,39 @@ class ItemIndexWriterAndSearcher(itemService: ItemService, eventBus: IEventBus, 
         }
     }
 
-    private fun addQueryForSearchTerm(termsToFilterFor: List<String>, query: BooleanQuery, search: ItemsSearch) {
+    private fun addQueryForSearchTerm(termsToFilterFor: List<SearchTerm>, query: BooleanQuery, search: ItemsSearch) {
         if(termsToFilterFor.isEmpty()) {
             query.add(WildcardQuery(Term(FieldName.ItemId, "*")), BooleanClause.Occur.MUST)
         }
         else {
             for(term in termsToFilterFor) {
-                val escapedTerm = QueryParser.escape(term)
+                val escapedTerm = QueryParser.escape(term.term)
                 val wildcardEscapedTerm = "*$escapedTerm*"
+
                 val termQuery = BooleanQuery()
+                val booleanClause = if (term.match == SearchTermMatch.Contains) BooleanClause.Occur.SHOULD else BooleanClause.Occur.MUST_NOT
+
+                if (term.match == SearchTermMatch.ContainsNot) { // needed as otherwise Occur.MUST_NOT would return no documents / search results at all
+                    termQuery.add(MatchAllDocsQuery(), BooleanClause.Occur.MUST)
+                }
 
                 if(search.searchInContent) {
-                    termQuery.add(PrefixQuery(Term(FieldName.ItemContent, escapedTerm)), BooleanClause.Occur.SHOULD)
+                    termQuery.add(PrefixQuery(Term(FieldName.ItemContent, escapedTerm)), booleanClause)
                 }
                 if(search.searchInSummary) {
-                    termQuery.add(PrefixQuery(Term(FieldName.ItemSummary, escapedTerm)), BooleanClause.Occur.SHOULD)
+                    termQuery.add(PrefixQuery(Term(FieldName.ItemSummary, escapedTerm)), booleanClause)
                 }
                 if(search.searchInSource) {
-                    termQuery.add(WildcardQuery(Term(FieldName.ItemIndication, wildcardEscapedTerm)), BooleanClause.Occur.SHOULD)
-                    termQuery.add(PrefixQuery(Term(FieldName.ItemSeries, escapedTerm)), BooleanClause.Occur.SHOULD)
-                    termQuery.add(WildcardQuery(Term(FieldName.ItemSourcePublishingDateString, wildcardEscapedTerm)), BooleanClause.Occur.SHOULD)
-                    termQuery.add(PrefixQuery(Term(FieldName.ItemSource, escapedTerm)), BooleanClause.Occur.SHOULD)
+                    termQuery.add(WildcardQuery(Term(FieldName.ItemIndication, wildcardEscapedTerm)), booleanClause)
+                    termQuery.add(PrefixQuery(Term(FieldName.ItemSeries, escapedTerm)), booleanClause)
+                    termQuery.add(WildcardQuery(Term(FieldName.ItemSourcePublishingDateString, wildcardEscapedTerm)), booleanClause)
+                    termQuery.add(PrefixQuery(Term(FieldName.ItemSource, escapedTerm)), booleanClause)
                 }
                 if(search.searchInTags) {
-                    termQuery.add(PrefixQuery(Term(FieldName.ItemTagsNames, escapedTerm)), BooleanClause.Occur.SHOULD)
+                    termQuery.add(PrefixQuery(Term(FieldName.ItemTagsNames, escapedTerm)), booleanClause)
                 }
                 if(search.searchInFiles) {
-                    termQuery.add(PrefixQuery(Term(FieldName.ItemAttachedFilesDetails, escapedTerm)), BooleanClause.Occur.SHOULD)
+                    termQuery.add(PrefixQuery(Term(FieldName.ItemAttachedFilesDetails, escapedTerm)), booleanClause)
                 }
 
                 query.add(termQuery, BooleanClause.Occur.MUST)

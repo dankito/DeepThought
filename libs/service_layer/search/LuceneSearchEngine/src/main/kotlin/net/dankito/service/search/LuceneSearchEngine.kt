@@ -263,7 +263,7 @@ class LuceneSearchEngine(private val settingsStore: ILocalSettingsStore, private
 
     /*      ISearchEngine implementation        */
 
-    override fun searchItems(search: ItemsSearch, termsToSearchFor: List<String>) {
+    override fun searchItems(search: ItemsSearch, termsToSearchFor: List<SearchTerm>) {
         if(search.isSearchingForItemIds()) {
             itemIdsIndexWriterAndSearcher.searchItemIds(search)
         }
