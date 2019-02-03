@@ -191,17 +191,7 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
     }
 
     private fun determineConfigsPerUrl(): MutableMap<String, List<ArticleSummaryExtractorConfig>> {
-        val configsPerUrl = HashMap<String, List<ArticleSummaryExtractorConfig>>()
-
-        configurations.forEach { config ->
-            if(configsPerUrl[config.url] == null) {
-                configsPerUrl.put(config.url, ArrayList())
-            }
-
-            (configsPerUrl[config.url] as? MutableList)?.let { it.add(config) }
-        }
-
-        return configsPerUrl
+        return configurations.groupBy { it.url } as MutableMap<String, List<ArticleSummaryExtractorConfig>>
     }
 
 
