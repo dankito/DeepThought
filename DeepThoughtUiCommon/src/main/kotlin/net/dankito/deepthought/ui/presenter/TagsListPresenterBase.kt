@@ -130,6 +130,8 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
     }
 
     fun deleteTag(tag: Tag) {
+        tagsFilter.remove(tag) // ensure tag gets removed from tagsFilter as otherwise SearchEngine throws a NPE as tag.id then is null
+
         deleteEntityService.deleteTag(tag)
     }
 
