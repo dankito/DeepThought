@@ -8,6 +8,7 @@ import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Node
 import org.jsoup.nodes.TextNode
+import org.slf4j.LoggerFactory
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -16,6 +17,8 @@ class PostillonArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
 
     companion object {
         private val PostillionDateFormat = SimpleDateFormat("EEEE, dd. MMMMM yyyy", Locale.GERMAN)
+
+        private val log = LoggerFactory.getLogger(PostillonArticleExtractor::class.java)
     }
 
 
@@ -95,7 +98,11 @@ class PostillonArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
 
     private fun extractPublishingDate(postElement: Element): Date? {
         postElement.select(".date-header span").first()?.let {
-            return PostillionDateFormat.parse(it.text())
+            try {
+                return PostillionDateFormat.parse(it.text())
+            } catch (e: Exception) {
+                log.warn("Could not parse Postillon date '${it.text()}'", e)
+            }
         }
 
         return null
