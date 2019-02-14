@@ -1,8 +1,11 @@
 package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 
-import com.sun.javafx.scene.control.skin.TableHeaderRow
+import com.sun.javafx.scene.control.skin.TableColumnHeader
 import com.sun.javafx.scene.control.skin.TableViewSkinBase
+import javafx.beans.value.ChangeListener
+import javafx.beans.value.ObservableValue
 import javafx.scene.control.ContextMenu
+import javafx.scene.control.Skin
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableView
 import javafx.scene.input.MouseButton
@@ -141,6 +144,8 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
                 isVisible = false
 
                 cellFormat { text = dateTimeFormat.format(it) }
+
+                AddColumnSorterWhenColumnBecomesVisible(this@ItemsListView, tableView, this)
             }
             val modifiedColumn = column(messages["item.column.header.modified"], Item::modifiedOn) {
                 prefWidth(130)
@@ -150,6 +155,8 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
                 isVisible = false
 
                 cellFormat { text = dateTimeFormat.format(it) }
+
+                AddColumnSorterWhenColumnBecomesVisible(this@ItemsListView, tableView, this)
             }
 
             isTableMenuButtonVisible = true
@@ -189,26 +196,33 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
 
     private fun setHeaderClickListeners(tableView: TableView<Item>, vararg columns: TableColumn<Item, *>) {
         tableView.skinProperty().addListener { _, _, newValue ->
-            Timer().schedule(2 * 1000) {
-                // if called immediately getTableHeaderRow() returns null -> wait some time till header row is set
-                runLater {
-                    (newValue as? TableViewSkinBase<*, *, *, *, *, *>)?.getTableHeaderRow()?.let { headerRow ->
-                        columns.forEach { column ->
-                            setHeaderClickListener(tableView, headerRow, column)
-                        }
-                    }
+            setHeaderClickListenersDelayed(tableView, newValue, *columns)
+        }
+    }
+
+    private fun setHeaderClickListenersDelayed(tableView: TableView<Item>, tableViewSkin: Skin<*>, vararg columns: TableColumn<Item, *>) {
+        Timer().schedule(1000) { // at this point getTableHeaderRow() is null or columnHeader is not added yet to header row -> wait some time
+            runLater {
+                setHeaderClickListeners(tableView, tableViewSkin, *columns)
+            }
+        }
+    }
+
+    private fun setHeaderClickListeners(tableView: TableView<Item>, tableViewSkin: Skin<*>, vararg columns: TableColumn<Item, *>) {
+        (tableViewSkin as? TableViewSkinBase<*, *, *, *, *, *>)?.getTableHeaderRow()?.let { headerRow ->
+            columns.forEach { column ->
+                headerRow.getColumnHeaderFor(column)?.let { columnHeader ->
+                    sortColumnHeaderOnClick(tableView, columnHeader)
                 }
             }
         }
     }
 
-    private fun setHeaderClickListener(tableView: TableView<Item>, headerRow: TableHeaderRow, column: TableColumn<Item, *>) {
-        headerRow.getColumnHeaderFor(column)?.let { columnHeader ->
-            columnHeader.setOnMouseClicked { event ->
-                if (event.button == MouseButton.PRIMARY && event.clickCount == 1) {
-                    val sortOptions = tableView.sortOrder.map { SortOption(it.id, it.sortType == TableColumn.SortType.ASCENDING) }
-                    presenter.setSortOptionsAsync(sortOptions)
-                }
+    private fun sortColumnHeaderOnClick(tableView: TableView<Item>, columnHeader: TableColumnHeader) {
+        columnHeader.setOnMouseClicked { event ->
+            if (event.button == MouseButton.PRIMARY && event.clickCount == 1) {
+                val sortOptions = tableView.sortOrder.map { SortOption(it.id, it.sortType == TableColumn.SortType.ASCENDING) }
+                presenter.setSortOptionsAsync(sortOptions)
             }
         }
     }
@@ -271,6 +285,24 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
 
     override fun showItemsForSource(source: Source) {
         presenter.showItemsForSource(source)
+    }
+
+
+    private class AddColumnSorterWhenColumnBecomesVisible(private val itemsListView: ItemsListView, private val tableView: TableView<Item>,
+                                                          private val column: TableColumn<Item, *>) : ChangeListener<Boolean> {
+
+        init {
+            column.visibleProperty().addListener(this)
+        }
+
+        override fun changed(observable: ObservableValue<out Boolean>, oldValue: Boolean, newValue: Boolean) {
+            if (newValue) {
+                column.visibleProperty().removeListener(this)
+
+                itemsListView.setHeaderClickListenersDelayed(tableView, tableView.skin, column)
+            }
+        }
+
     }
 
 }
