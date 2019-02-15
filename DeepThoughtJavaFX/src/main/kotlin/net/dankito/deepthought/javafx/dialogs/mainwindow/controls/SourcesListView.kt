@@ -5,6 +5,8 @@ import javafx.collections.ObservableList
 import javafx.scene.control.ContextMenu
 import javafx.scene.control.ListView
 import javafx.scene.control.SelectionMode
+import javafx.scene.input.KeyCode
+import javafx.scene.input.KeyEvent
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.SourceViewModel
@@ -90,6 +92,10 @@ class SourcesListView : EntitiesListView(), ISourcesListView {
             // don't know why but selectionModel.selectedItemProperty() doesn't work reliably. Another source gets selected but selectedItemProperty() doesn't fire this change
             selectionModel.selectedIndexProperty().addListener { _, _, newValue -> sourceSelected(newValue.toInt()) }
 
+            setOnKeyReleased { event ->
+                handleKeyReleaseEvent(this, event)
+            }
+
             var currentMenu: ContextMenu? = null
             setOnContextMenuRequested { event ->
                 currentMenu?.hide()
@@ -99,6 +105,32 @@ class SourcesListView : EntitiesListView(), ISourcesListView {
             }
         }
     }
+
+
+    private fun handleKeyReleaseEvent(listView: ListView<Source>, event: KeyEvent) {
+        if (event.code == KeyCode.ENTER) {
+            handleEnterKeyReleased(listView.selectionModel.selectedItems)
+        }
+        else if (event.code == KeyCode.DELETE) {
+            handleDeleteKeyReleased(listView.selectionModel.selectedItems)
+        }
+    }
+
+    private fun handleEnterKeyReleased(selectedSources: List<Source>) {
+        selectedSources.forEach { item ->
+            router.showEditSourceView(item)
+        }
+    }
+
+    private fun handleDeleteKeyReleased(selectedSources: List<Source>) {
+        if (selectedSources.size == 1) {
+            presenter.confirmDeleteSourceAsync(selectedSources[0])
+        }
+        else if (selectedSources.isNotEmpty()) {
+            presenter.confirmDeleteSourcesAsync(selectedSources)
+        }
+    }
+
 
     private fun createContextMenuForItems(sources: List<Source>): ContextMenu? {
         if (sources.isEmpty()) {
