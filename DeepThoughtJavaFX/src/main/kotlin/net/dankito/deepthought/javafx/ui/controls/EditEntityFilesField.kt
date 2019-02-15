@@ -200,7 +200,7 @@ class EditEntityFilesField : View() {
 
     private fun showFile(file: FileLink?) {
         file?.let {
-            fileListPresenter.showFile(file, sourceForFile)
+            fileListPresenter.showFile(file)
         }
     }
 

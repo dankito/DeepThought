@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.FilesRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.utils.android.extensions.setLeftMargin
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Source
@@ -20,9 +19,10 @@ import net.dankito.deepthought.ui.presenter.FileListPresenter
 import net.dankito.filechooserdialog.FileChooserDialog
 import net.dankito.filechooserdialog.model.FileChooserDialogConfig
 import net.dankito.filechooserdialog.service.PreviewImageService
-import net.dankito.utils.android.permissions.IPermissionsService
 import net.dankito.service.data.messages.FileChanged
 import net.dankito.service.eventbus.IEventBus
+import net.dankito.utils.android.extensions.setLeftMargin
+import net.dankito.utils.android.permissions.IPermissionsService
 import net.dankito.utils.extensions.didCollectionChange
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IApplicationsService
@@ -193,7 +193,7 @@ class EditEntityFilesField : EditEntityField {
 
 
     private fun showFile(file: FileLink) {
-        fileListPresenter.showFile(file, sourceForFile)
+        fileListPresenter.showFile(file)
     }
 
 

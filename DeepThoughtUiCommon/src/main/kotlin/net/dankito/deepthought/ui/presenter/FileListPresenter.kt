@@ -14,14 +14,8 @@ import java.io.File
 class FileListPresenter(private val fileManager: FileManager, private val applicationsService: IApplicationsService, private val localization: Localization,
                         private val router: IRouter) {
 
-    fun showFile(file: FileLink, sourceForFile: Source? = null) {
-        // TODO: check if file can be opened in DeepThought directly, e.g PDFs
-        if(isPdfFile(file)) { // TODO: remove for 0.4.0 release
-            router.showPdfView(file, sourceForFile)
-        }
-        else {
-            applicationsService.openFileInOsDefaultApplication(file)
-        }
+    fun showFile(file: FileLink) {
+        applicationsService.openFileInOsDefaultApplication(file)
     }
 
     fun openContainingDirectoryOfFile(file: FileLink) {
