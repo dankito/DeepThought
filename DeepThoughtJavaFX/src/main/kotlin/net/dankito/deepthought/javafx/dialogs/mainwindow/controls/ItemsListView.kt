@@ -5,6 +5,8 @@ import com.sun.javafx.scene.control.skin.TableViewSkinBase
 import javafx.beans.value.ChangeListener
 import javafx.beans.value.ObservableValue
 import javafx.scene.control.*
+import javafx.scene.input.KeyCode
+import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseButton
 import javafx.scene.layout.Priority
 import javafx.util.Callback
@@ -175,6 +177,10 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
                 selectionModel.selectedItem?.let { router.showEditItemView(it) }
             }
 
+            setOnKeyReleased { event ->
+                handleKeyReleaseEvent(this, event)
+            }
+
             var currentMenu: ContextMenu? = null
             setOnContextMenuRequested { event ->
                 currentMenu?.hide()
@@ -221,6 +227,23 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
             }
         }
     }
+
+
+    private fun handleKeyReleaseEvent(tableView: TableView<Item>, event: KeyEvent) {
+        if (event.code == KeyCode.DELETE) {
+            handleDeleteKeyReleased(tableView.selectionModel.selectedItems)
+        }
+    }
+
+    private fun handleDeleteKeyReleased(selectedItems: List<Item>) {
+        if (selectedItems.size == 1) {
+            askIfShouldDeleteItem(selectedItems[0])
+        }
+        else if (selectedItems.isNotEmpty()) {
+            askIfShouldDeleteItems(selectedItems)
+        }
+    }
+
 
     private fun createContextMenuForItems(items: List<Item>): ContextMenu? {
         if (items.isEmpty()) {
