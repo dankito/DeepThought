@@ -18,6 +18,14 @@
     >
 
         <net.dankito.utils.android.ui.view.SwipeButton
+            android:id="@+id/btnOpenInDeepThought"
+            android:layout_width="@dimen/list_item_file_button_width"
+            android:layout_height="match_parent"
+            app:icon="@drawable/ic_visibility_white_48dp"
+            android:visibility="gone"
+        />
+
+        <net.dankito.utils.android.ui.view.SwipeButton
             android:id="@+id/btnOpenContainingFolder"
             android:layout_width="@dimen/list_item_file_button_width"
             android:layout_height="match_parent"

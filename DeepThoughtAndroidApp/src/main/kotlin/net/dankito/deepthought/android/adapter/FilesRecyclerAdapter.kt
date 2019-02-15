@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.FileLinkViewHolder
 import net.dankito.deepthought.model.FileLink
+import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.presenter.FileListPresenter
 import net.dankito.filechooserdialog.model.FileChooserDialogConfig
 import net.dankito.filechooserdialog.service.PreviewImageService
@@ -17,6 +18,8 @@ class FilesRecyclerAdapter(private val presenter: FileListPresenter, private val
 
     override fun getSwipeLayoutResourceId(position: Int) = R.id.fileLinkSwipeLayout
 
+
+    var sourceForFile: Source? = null
 
     private val fileChooserDialogConfig = FileChooserDialogConfig() // needed for PreviewImageService to set if thumbnails should get loaded or not
 
@@ -69,6 +72,11 @@ class FilesRecyclerAdapter(private val presenter: FileListPresenter, private val
 
 
     override fun setupSwipeView(viewHolder: FileLinkViewHolder, item: FileLink) {
+        viewHolder.btnOpenInDeepThought.visibility = if (presenter.canFileBeOpenedInDeepThought(item)) View.VISIBLE else View.GONE
+        viewHolder.btnOpenInDeepThought.setOnClickListener {
+            presenter.openFileInDeepThought(item, sourceForFile)
+        }
+
         viewHolder.btnOpenContainingFolder.setOnClickListener {
             presenter.openContainingDirectoryOfFile(item)
 

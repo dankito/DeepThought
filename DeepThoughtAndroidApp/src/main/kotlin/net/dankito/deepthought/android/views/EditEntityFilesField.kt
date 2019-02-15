@@ -64,8 +64,6 @@ class EditEntityFilesField : EditEntityField {
 
     private var originalFiles: MutableCollection<FileLink> = ArrayList()
 
-    private var sourceForFile: Source? = null
-
     private lateinit var permissionsService: IPermissionsService
 
     private val fileListPresenter: FileListPresenter
@@ -146,11 +144,11 @@ class EditEntityFilesField : EditEntityField {
 
     fun setFiles(originalFiles: MutableCollection<FileLink>, permissionsManager: IPermissionsService, sourceForFile: Source? = null) {
         this.originalFiles = originalFiles
-        this.sourceForFile = sourceForFile
         this.permissionsService = permissionsManager
 
         fileListPresenter.forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(originalFiles)
 
+        attachedFilesAdapter.sourceForFile = sourceForFile
         attachedFilesAdapter.items = ArrayList(originalFiles) // make a copy to not edit original files
     }
 

@@ -29,6 +29,17 @@ class FileListPresenter(private val fileManager: FileManager, private val applic
     }
 
 
+    fun canFileBeOpenedInDeepThought(file: FileLink): Boolean {
+        return isPdfFile(file)
+    }
+
+    fun openFileInDeepThought(file: FileLink, sourceForFile: Source? = null) {
+        if(isPdfFile(file)) {
+            router.showPdfView(file, sourceForFile)
+        }
+    }
+
+
     fun forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(files: Collection<FileLink>) {
         fileManager.forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(files)
     }
