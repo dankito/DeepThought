@@ -4,17 +4,13 @@ import com.sun.javafx.scene.control.skin.TableColumnHeader
 import com.sun.javafx.scene.control.skin.TableViewSkinBase
 import javafx.beans.value.ChangeListener
 import javafx.beans.value.ObservableValue
-import javafx.scene.control.ContextMenu
-import javafx.scene.control.Skin
-import javafx.scene.control.TableColumn
-import javafx.scene.control.TableView
+import javafx.scene.control.*
 import javafx.scene.input.MouseButton
 import javafx.scene.layout.Priority
 import javafx.util.Callback
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.ItemItemViewModel
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
-import net.dankito.deepthought.javafx.service.extensions.findClickedTableRow
 import net.dankito.deepthought.javafx.ui.controls.IItemsListViewJavaFX
 import net.dankito.deepthought.javafx.util.LazyLoadingObservableList
 import net.dankito.deepthought.model.Item
@@ -159,6 +155,8 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
                 AddColumnSorterWhenColumnBecomesVisible(this@ItemsListView, tableView, this)
             }
 
+            selectionModel.selectionMode = SelectionMode.MULTIPLE
+
             isTableMenuButtonVisible = true
 
             sortPolicyProperty().set(Callback<TableView<Item>, Boolean> {
@@ -181,11 +179,8 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
             setOnContextMenuRequested { event ->
                 currentMenu?.hide()
 
-                val tableRow = event.pickResult?.findClickedTableRow<Item>()
-                tableRow?.item?.let { clickedItem ->
-                    currentMenu = createContextMenuForItem(clickedItem)
-                    currentMenu?.show(this, event.screenX, event.screenY)
-                }
+                currentMenu = createContextMenuForItems(this.selectionModel.selectedItems)
+                currentMenu?.show(this, event.screenX, event.screenY)
             }
 
             contextmenu {
@@ -227,7 +222,19 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
         }
     }
 
-    private fun createContextMenuForItem(item: Item): ContextMenu {
+    private fun createContextMenuForItems(items: List<Item>): ContextMenu? {
+        if (items.isEmpty()) {
+            return null
+        }
+        else if (items.size == 1) {
+            return createContextMenuForSingleItem(items[0])
+        }
+        else {
+            return createContextMenuForMultipleItems(items)
+        }
+    }
+
+    private fun createContextMenuForSingleItem(item: Item): ContextMenu {
         val contextMenu = ContextMenu()
 
         if(item.source?.url.isNullOrBlank() == false) {
@@ -253,6 +260,24 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
         dialogService.showConfirmationDialog(dialogService.getLocalization().getLocalizedString("alert.message.really.delete.item")) { selectedButton ->
             if(selectedButton == ConfirmationDialogButton.Confirm) {
                 presenter.deleteItemAsync(item)
+            }
+        }
+    }
+
+    private fun createContextMenuForMultipleItems(items: List<Item>): ContextMenu {
+        val contextMenu = ContextMenu()
+
+        contextMenu.item(messages["context.menu.item.delete"]) {
+            action { askIfShouldDeleteItems(items) }
+        }
+
+        return contextMenu
+    }
+
+    private fun askIfShouldDeleteItems(items: List<Item>) {
+        dialogService.showConfirmationDialog(dialogService.getLocalization().getLocalizedString("alert.message.really.delete.items", items.size)) { selectedButton ->
+            if(selectedButton == ConfirmationDialogButton.Confirm) {
+                presenter.deleteItemsAsync(items)
             }
         }
     }
