@@ -253,9 +253,11 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
 
 
     private fun deleteTag(tag: Tag) {
-        removeTagFromItem(tag)
-
-        presenter.deleteTagAsync(tag)
+        presenter.confirmDeleteTagAsync(tag) { tagGetsDeleted ->
+            if (tagGetsDeleted) {
+                removeTagFromItem(tag)
+            }
+        }
     }
 
     private fun removeTagFromItem(tag: Tag) {

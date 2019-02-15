@@ -13,8 +13,8 @@ import net.dankito.deepthought.model.CalculatedTag
 import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.ui.presenter.TagsListPresenter
 import net.dankito.deepthought.ui.tags.TagSearchResultState
-import net.dankito.utils.android.extensions.setTintColor
 import net.dankito.utils.android.extensions.getResourceIdForAttributeId
+import net.dankito.utils.android.extensions.setTintColor
 
 
 class TagRecyclerAdapter(private val context: Context, private val presenter: TagsListPresenter): MultiSelectListRecyclerSwipeAdapter<Tag, TagViewHolder>() {
@@ -81,8 +81,8 @@ class TagRecyclerAdapter(private val context: Context, private val presenter: Ta
         }
 
         viewHolder.btnDeleteTag.setOnClickListener {
-            presenter.deleteTagAsync(item)
             closeSwipeView(viewHolder)
+            presenter.confirmDeleteTagAsync(item)
         }
 
         (viewHolder.itemView as? SwipeLayout)?.isSwipeEnabled = item is CalculatedTag == false

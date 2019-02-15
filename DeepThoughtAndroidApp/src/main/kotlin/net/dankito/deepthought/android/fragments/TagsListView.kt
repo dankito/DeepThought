@@ -109,11 +109,20 @@ class TagsListView : EntitiesListViewFragment<Tag>(R.menu.tag_contextual_action_
                 return true
             }
             R.id.mnDeleteTag -> {
-                selectedItems.forEach { presenter.deleteTagAsync(it) }
+                confirmDeleteTags(ArrayList(selectedItems))
                 mode.finish()
                 return true
             }
             else -> return false
+        }
+    }
+
+    private fun confirmDeleteTags(tags: List<Tag>) {
+        if (tags.size == 1) {
+            presenter.confirmDeleteTagAsync(tags[0])
+        }
+        else if (tags.isNotEmpty()) {
+            presenter.confirmDeleteTagsAsync(tags)
         }
     }
 
