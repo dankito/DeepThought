@@ -11,13 +11,14 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
 import net.dankito.service.search.specific.SeriesSearch
+import net.dankito.utils.ui.dialogs.IDialogService
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class SeriesListPresenter(private val view: ISeriesListView, private val searchEngine: ISearchEngine, router: IRouter, deleteEntityService: DeleteEntityService)
-    : SeriesPresenterBase(router, deleteEntityService), IMainViewSectionPresenter {
+class SeriesListPresenter(private val view: ISeriesListView, private val searchEngine: ISearchEngine, router: IRouter, dialogService: IDialogService, deleteEntityService: DeleteEntityService)
+    : SeriesPresenterBase(router, dialogService, deleteEntityService), IMainViewSectionPresenter {
 
 
     @Inject

@@ -5,10 +5,11 @@ import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.ui.dialogs.IDialogService
 
 
-class EditSeriesPresenter(router: IRouter, deleteEntityService: DeleteEntityService, private val seriesPersister: SeriesPersister, private val threadPool: IThreadPool)
-    : SeriesPresenterBase(router, deleteEntityService) {
+class EditSeriesPresenter(router: IRouter, dialogService: IDialogService, deleteEntityService: DeleteEntityService, private val seriesPersister: SeriesPersister,
+                          private val threadPool: IThreadPool) : SeriesPresenterBase(router, dialogService, deleteEntityService) {
 
 
     fun saveSeriesAsync(series: Series, callback: (Boolean) -> Unit) {
