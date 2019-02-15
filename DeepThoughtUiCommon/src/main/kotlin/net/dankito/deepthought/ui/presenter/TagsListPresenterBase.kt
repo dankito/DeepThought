@@ -137,7 +137,7 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
 
     fun deleteTagsAsync(tags: List<Tag>) {
         threadPool.runAsync {
-            tags.forEach { tag ->
+            ArrayList(tags).forEach { tag ->
                 deleteTag(tag)
             }
         }

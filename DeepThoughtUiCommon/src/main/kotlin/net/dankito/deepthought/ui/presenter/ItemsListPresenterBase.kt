@@ -28,7 +28,7 @@ abstract class ItemsListPresenterBase(protected val deleteEntityService: DeleteE
 
     fun deleteItemsAsync(items: Collection<Item>) {
         threadPool.runAsync {
-            items.forEach {
+            ArrayList(items).forEach {
                 deleteItem(it)
             }
         }
